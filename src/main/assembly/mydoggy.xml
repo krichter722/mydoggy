@@ -1,0 +1,63 @@
+<assembly>
+    <id>dist</id>
+    <formats>
+        <format>dir</format>
+    </formats>
+    
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <moduleSets>
+        <moduleSet>
+            <includes>
+                <include>org.noos.xing:mydoggy-examples</include>
+            </includes>
+            <binaries>
+                <outputDirectory>lib</outputDirectory>
+                <includeDependencies>true</includeDependencies>
+                <unpack>false</unpack>
+            </binaries>
+        </moduleSet>
+
+        <moduleSet>
+            <includes>
+                <include>org.noos.xing:mydoggy-api</include>
+                <include>org.noos.xing:mydoggy-plaf</include>
+                <include>org.noos.xing:mydoggy-examples</include>
+            </includes>
+            <excludes>
+                <exclude>*.iml</exclude>
+            </excludes>
+            <sources>
+                <outputDirectory>src/${artifactId}</outputDirectory>
+            </sources>
+        </moduleSet>
+    </moduleSets>
+
+    <fileSets>
+        <fileSet>
+            <directory>mydoggy-transparency/src</directory>
+            <outputDirectory>src/mydoggy-transparency</outputDirectory>
+            <includes/>
+        </fileSet>
+        <fileSet>
+            <directory>license</directory>
+            <outputDirectory>license</outputDirectory>
+            <includes/>
+        </fileSet>
+
+        <fileSet>
+            <directory>${artifactId}/target/javadoc</directory>
+            <outputDirectory>license</outputDirectory>
+            <includes/>
+        </fileSet>
+
+    </fileSets>
+
+    <files>
+        <file>
+            <source>TransparencyManager.dll</source>
+            <outputDirectory>transparency/win32</outputDirectory>
+        </file>
+    </files>
+
+</assembly>
