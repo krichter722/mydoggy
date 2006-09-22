@@ -1,0 +1,113 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.noos.xing</groupId>
+    <artifactId>mydoggy</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0</version>
+    <name>MyDoggy - My Java Docking Framework</name>
+    <url>http://mydoggy.sourceforge.net</url>
+    <description>
+        MyDoggy is a Java docking framework for use in cross-platform Swing applications.
+    </description>
+
+    <developers>
+        <developer>
+            <id>adecaro</id>
+            <name>Angelo De Caro</name>
+            <email>angelo.decaro@gmail.com</email>
+            <roles>
+                <role>Project Manager</role>
+                <role>Architect</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>LGPL - GNU LESSER GENERAL PUBLIC LICENSE</name>
+            <url>http://www.gnu.org/licenses/lgpl.txt</url>
+        </license>
+    </licenses>
+
+    <modules>
+        <module>mydoggy-api</module>
+        <module>mydoggy-plaf</module>
+        <module>mydoggy-examples</module>
+    </modules>
+
+    <scm>
+        <connection>scm:svn:https://svn.sourceforge.net/svnroot/mydoggy</connection>
+        <developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/mydoggy</developerConnection>
+        <url>https://svn.sourceforge.net/viewcvs.cgi/svnroot/mydoggy</url>
+    </scm>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>tablelayout</groupId>
+            <artifactId>TableLayout</artifactId>
+            <version>20020517</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/mydoggy.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!--
+        <reporting>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>jxr-maven-plugin</artifactId>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <reportSets>
+                        <reportSet>
+                            <reports>
+                                <report>dependencies</report>
+                                <report>project-team</report>
+                                <report>mailing-list</report>
+                                <report>license</report>
+                                <report>scm</report>
+                            </reports>
+                        </reportSet>
+                    </reportSets>
+                </plugin>
+            </plugins>
+        </reporting>
+    -->
+</project>

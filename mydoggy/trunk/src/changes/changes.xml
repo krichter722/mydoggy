@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+    <properties>
+        <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
+        <title>MyDoggy - Changes</title>
+    </properties>
+    <body>
+
+		<release version="current" description="Current work version">    
+	        <action dev="Duke Java" type="add">
+	            A new cool feature.
+	        </action>                      
+      	</release>
+
+	</body>
+</document>
