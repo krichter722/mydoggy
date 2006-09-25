@@ -3,14 +3,18 @@ package org.noos.xing.mydoggy.examples.sample;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.examples.sample.ui.CheckBoxCellRenderer;
+import org.noos.xing.mydoggy.examples.sample.model.ToolsTableModel;
+import org.noos.xing.mydoggy.examples.sample.model.ToolGroupsTableModel;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -21,6 +25,9 @@ public class SampleApp {
 
     private Component toolsContent;
     private Component groupEditorContent;
+
+    private JPopupMenu toolsPopupMenu;
+    private JPopupMenu groupsPopupMenu;
 
     protected void setUp() throws Exception {
         initComponents();
@@ -36,6 +43,8 @@ public class SampleApp {
     }
 
     protected void initComponents() {
+        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+
         this.frame = new JFrame("Sample App...");
         this.frame.setSize(640, 480);
         this.frame.setLocation(100, 100);
@@ -66,9 +75,11 @@ public class SampleApp {
                         return;
                 }
 
-                toolWindowManager.getContentManager().addContent("Tools", null, toolsContent);
+                manager.addContent("Tools", null, toolsContent);
+                manager.setPopupMenuAt(manager.getContentCount() - 1, toolsPopupMenu);
             }
         });
+
         JMenuItem groupEditorContentItem = new JMenuItem("Groups");
         groupEditorContentItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -78,7 +89,8 @@ public class SampleApp {
                         return;
                 }
 
-                toolWindowManager.getContentManager().addContent("Group Editor", null, groupEditorContent);
+                manager.addContent("Group Editor", null, groupEditorContent);
+                manager.setPopupMenuAt(manager.getContentCount() - 1, groupsPopupMenu);
             }
         });
 
@@ -170,6 +182,10 @@ public class SampleApp {
         groupEditorContent = initGroupEditorContent();
 
         toolWindowManager.getContentManager().addContent("Tools", null, toolsContent);
+        toolWindowManager.getContentManager().setPopupMenuAt(
+                toolWindowManager.getContentManager().getContentCount() - 1,
+                toolsPopupMenu
+        );
 
         // Add ToolWindowManager content pane to frame
 //        this.frame.getContentPane().add(myDoggyToolWindowManager.getContentPane(), "0,0,");
@@ -180,6 +196,29 @@ public class SampleApp {
         toolsTable.getColumnModel().getColumn(4).setCellRenderer(new CheckBoxCellRenderer());
         toolsTable.getColumnModel().getColumn(5).setCellRenderer(new CheckBoxCellRenderer());
         toolsTable.getColumnModel().getColumn(6).setCellRenderer(new CheckBoxCellRenderer());
+
+        toolsPopupMenu = new JPopupMenu("Tools");
+        toolsPopupMenu.addPopupMenuListener(new PopupMenuListener() {
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                toolsPopupMenu.removeAll();
+                for (ToolWindow toolWindow : toolWindowManager.getToolWindows()) {
+                    JMenuItem item = new JMenuItem(toolWindow.getTitle());
+                    item.setActionCommand(toolWindow.getId());
+                    item.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            toolWindowManager.getToolWindow(e.getActionCommand()).setActive(true);
+                        }
+                    });
+                    toolsPopupMenu.add(item);
+                }
+            }
+
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+            }
+
+            public void popupMenuCanceled(PopupMenuEvent e) {
+            }
+        });
 
         return new JScrollPane(toolsTable);
     }
@@ -220,6 +259,29 @@ public class SampleApp {
         toolGroupsPanel.add(toolGroupsTableScroll, "0,0,0,5,FULL,FULL");
         toolGroupsPanel.add(showGroup, "2,1,c,c");
         toolGroupsPanel.add(hideGroup, "2,3,c,c");
+
+        groupsPopupMenu = new JPopupMenu("Groups");
+        groupsPopupMenu.addPopupMenuListener(new PopupMenuListener() {
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                groupsPopupMenu.removeAll();
+                for (ToolWindowGroup toolWindowGroup : toolWindowManager.getToolWindowGroups()) {
+                    JMenuItem item = new JMenuItem(toolWindowGroup.getName());
+                    item.setActionCommand(toolWindowGroup.getName());
+                    item.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            toolWindowManager.getToolWindowGroup(e.getActionCommand()).setVisible(true);
+                        }
+                    });
+                    groupsPopupMenu.add(item);
+                }
+            }
+
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+            }
+
+            public void popupMenuCanceled(PopupMenuEvent e) {
+            }
+        });
 
         return toolGroupsPanel;
     }
