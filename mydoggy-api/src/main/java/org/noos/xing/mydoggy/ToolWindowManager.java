@@ -4,30 +4,39 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
+ * This interface is the main entry point to manager MyDoggy. Using this interface
+ * the user can register/unregister tool windows, groups. The user can get the
+ * content manager instance and type descriptor templates.
+ *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @see ToolWindow
+ * @see ToolWindowGroup
+ * @see ToolWindowContentManager
+ * @see ToolWindowTypeDescriptor
+ * @see ToolWindowManagerListener
  */
 public interface ToolWindowManager {
 
     /**
-     * Returns an instance of <code>ToolWindowContentManager</code> that manages tool window manager
-     * contents.
+     * Returns the instance of <code>ToolWindowContentManager</code> that manages main window contents.
+     *
      * @return an instance of <code>ToolWindowContentManager</code>.
      * @see org.noos.xing.mydoggy.ToolWindowContentManager
      */
     ToolWindowContentManager getContentManager();
 
-
     /**
      * Register a new tool window into this window manager based on the passed parameters.
      *
-     * @param id id of tool window to be registered.
-     * @param title title of tool window to be registered (can be null).
-     * @param icon icon of tool window to be registered (can be null).
+     * @param id        id of tool window to be registered.
+     * @param title     title of tool window to be registered (can be null).
+     * @param icon      icon of tool window to be registered (can be null).
      * @param component component which represents tool window content.
-     * @param anchor anchor of tool window to be registered.
+     * @param anchor    anchor of tool window to be registered.
      * @return the registered tool window.
-     * @throws java.lang.IllegalArgumentException if exist a tool window registered
-     * with the same id or one or more of the parameters is null.
+     * @throws java.lang.IllegalArgumentException
+     *          if exist a tool window registered
+     *          with the same id or one or more of the parameters is null.
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
      * @see org.noos.xing.mydoggy.ToolWindowManager
      * @see #unregisterToolWindow(String)
@@ -39,9 +48,10 @@ public interface ToolWindowManager {
      * Removes the tool window for this id from this window manager if it is present.
      *
      * @param id id of tool window to be removed.
-     * @see #registerToolWindow(String, String, javax.swing.Icon, java.awt.Component, ToolWindowAnchor)
+     * @throws java.lang.IllegalArgumentException
+     *          - if tool window with specified id isn't registered.
+     * @see #registerToolWindow(String,String,javax.swing.Icon,java.awt.Component,ToolWindowAnchor)
      * @see #unregisterAllToolWindow()
-     * @throws java.lang.IllegalArgumentException - if tool window with specified id isn't registered.
      */
     void unregisterToolWindow(String id);
 
@@ -51,11 +61,11 @@ public interface ToolWindowManager {
     void unregisterAllToolWindow();
 
     /**
+     * Returns the id of currently active tool window.
      *
      * @return <tt>ID</tt> of currently active tool window or <tt>null</tt> if there is no active tool window.
      */
     String getActiveToolWindowId();
-
 
     /**
      * Returns the tool window to which this manager maps the specified id.
@@ -63,17 +73,23 @@ public interface ToolWindowManager {
      *
      * @param id id of tool window
      * @return registered tool window with specified id. If there is no registered tool
-     * window with specified id then the method returns <tt>null</tt>.
+     *         window with specified id then the method returns <tt>null</tt>.
      */
     ToolWindow getToolWindow(String id);
 
+    /**
+     * Returns the tool window whose index is <code>index</code>.
+     *
+     * @param index tool window index.
+     * @return the tool window whose index is <code>index</code>.
+     */
     ToolWindow getToolWindow(int index);
 
     /**
      * Returns an array of the tools window registered into this manager.
      *
      * @return an array of the tools window registered into this manager.
-     * If there is no tool registered then it returns an empty array.
+     *         If there is no tool registered then it returns an empty array.
      */
     ToolWindow[] getToolWindows();
 
@@ -83,8 +99,8 @@ public interface ToolWindowManager {
      *
      * @param anchor anchor which tools window are anchored.
      * @return an array of the tools window, registered into this manager,
-     * anchored on passed anchor. If there is no registered tool window anchored on that anchor
-     * then it returns an empty array.
+     *         anchored on passed anchor. If there is no registered tool window anchored on that anchor
+     *         then it returns an empty array.
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
      */
     ToolWindow[] getToolsByAnchor(ToolWindowAnchor anchor);
@@ -95,6 +111,7 @@ public interface ToolWindowManager {
      * If the manager contains no mapping for this name then the manager create a new instance
      * of ToolWindowGroup and associates the group created with the specified name in this manager.
      * .
+     *
      * @param name name of tool window group.
      * @return the tool window group to which this manager maps the specified name.
      * @see org.noos.xing.mydoggy.ToolWindowGroup
@@ -106,7 +123,7 @@ public interface ToolWindowManager {
      * Returns an array of the tools window groups registered into this manager.
      *
      * @return an array of the tools window groups registered into this manager.
-     * If there is no group registered then it returns an empty array.
+     *         If there is no group registered then it returns an empty array.
      * @see #getToolWindowGroup(String)
      */
     ToolWindowGroup[] getToolWindowGroups();
@@ -130,12 +147,15 @@ public interface ToolWindowManager {
 
 
     /**
+     * Returns the template type descrptor for <code>type</code>.
+     * Any modifications to those templates will be reflected on registered tool windows.
      *
      * @param type type whose template is to be returned from the manager.
-     * @return
+     * @return the type descrptor for <code>type</code>.
+     * @throws java.lang.IllegalArgumentException
+     *          - if doen't exist a template for <code>type</code>.
      * @see ToolWindowType
      * @see org.noos.xing.mydoggy.ToolWindowTypeDescriptor
-     * @throws java.lang.IllegalArgumentException - if doen't exist a template for <code>type</code>.
      */
     ToolWindowTypeDescriptor getTypeDescriptorTemplate(ToolWindowType type);
 
@@ -146,7 +166,7 @@ public interface ToolWindowManager {
      * If listener <code>listener</code> is <code>null</code>,
      * no exception is thrown and no action is performed.
      *
-     * @param listener  the <code>ToolWindowManagerListener</code> to register.
+     * @param listener the <code>ToolWindowManagerListener</code> to register.
      * @see ToolWindowManagerListener
      */
     void addToolWindowManagerListener(ToolWindowManagerListener listener);
@@ -158,7 +178,7 @@ public interface ToolWindowManager {
      * If listener <code>listener</code> is <code>null</code>,
      * no exception is thrown and no action is performed.
      *
-     * @param listener  the <code>ToolWindowManagerListener</code> to be removed
+     * @param listener the <code>ToolWindowManagerListener</code> to be removed
      * @see #addToolWindowManagerListener(ToolWindowManagerListener)
      */
     void removeToolWindowManagerListener(ToolWindowManagerListener listener);

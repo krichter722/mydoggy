@@ -7,7 +7,7 @@ import java.util.EventListener;
 /**
  * The listener interface for receiving "interesting" events
  * (showed, hided, tool added, tool removed) on a tool window group.
- *
+ * <p/>
  * The listener object created is then registered with a
  * tool window group using the groups's <code>addToolWindowGroupListener</code>
  * method.
@@ -15,7 +15,7 @@ import java.util.EventListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @see org.noos.xing.mydoggy.ToolWindowGroup
  * @see org.noos.xing.mydoggy.ToolWindowGroup#addToolWindowGroupListener(ToolWindowGroupListener)
- * @see org.noos.xing.mydoggy.event.ToolWindowGroupEvent.Id
+ * @see org.noos.xing.mydoggy.event.ToolWindowGroupEvent.ActionId
  */
 public interface ToolWindowGroupListener extends EventListener {
 
@@ -47,7 +47,7 @@ public interface ToolWindowGroupListener extends EventListener {
      * Invoked when the tool window group has been hided.
      *
      * @param event the fired event.
-     * @see ToolWindowGroupEvent 
+     * @see ToolWindowGroupEvent
      */
     void groupHided(ToolWindowGroupEvent event);
 
