@@ -55,6 +55,7 @@ public class SlidingContainer extends FloatingContainer {
             barContainer.getParent().getLayout().layoutContainer(barContainer.getParent());
             resize();
 
+            content.setVisible(true);
             sheet.add(content, "1,1,FULL,FULL");
 
             // Prepare sheet

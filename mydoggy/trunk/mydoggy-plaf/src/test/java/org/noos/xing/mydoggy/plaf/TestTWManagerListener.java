@@ -34,7 +34,7 @@ public class TestTWManagerListener extends TestCase {
 
         assertTrue(listener.isWindowRegistered());
         assertNotNull(listener.getLastEvent());
-        assertEquals(ToolWindowManagerEvent.Id.TOOL_REGISTERED, listener.getLastEvent().getId());
+        assertEquals(ToolWindowManagerEvent.ActionId.TOOL_REGISTERED, listener.getLastEvent().getActionId());
         assertEquals(tool, listener.getLastEvent().getToolWindow());
     }
 
@@ -49,7 +49,7 @@ public class TestTWManagerListener extends TestCase {
 
         assertTrue(listener.isWindowUnregistered());
         assertNotNull(listener.getLastEvent());
-        assertEquals(ToolWindowManagerEvent.Id.TOOL_UNREGISTERED, listener.getLastEvent().getId());
+        assertEquals(ToolWindowManagerEvent.ActionId.TOOL_UNREGISTERED, listener.getLastEvent().getActionId());
         assertEquals(tool, listener.getLastEvent().getToolWindow());
     }
 
@@ -64,7 +64,7 @@ public class TestTWManagerListener extends TestCase {
 
         assertTrue(listener.isWindowUnregistered());
         assertNotNull(listener.getLastEvent());
-        assertEquals(ToolWindowManagerEvent.Id.TOOL_UNREGISTERED, listener.getLastEvent().getId());
+        assertEquals(ToolWindowManagerEvent.ActionId.TOOL_UNREGISTERED, listener.getLastEvent().getActionId());
         assertEquals(tool, listener.getLastEvent().getToolWindow());
     }
 
@@ -76,7 +76,7 @@ public class TestTWManagerListener extends TestCase {
 
         assertTrue(listener.isWindowGroupAdded());
         assertNotNull(listener.getLastEvent());
-        assertEquals(ToolWindowManagerEvent.Id.GROUP_ADDED, listener.getLastEvent().getId());
+        assertEquals(ToolWindowManagerEvent.ActionId.GROUP_ADDED, listener.getLastEvent().getActionId());
         assertEquals(group, listener.getLastEvent().getToolWindowGroup());
     }
 
@@ -89,7 +89,7 @@ public class TestTWManagerListener extends TestCase {
 
         assertTrue(listener.isWindowGroupRemoved());
         assertNotNull(listener.getLastEvent());
-        assertEquals(ToolWindowManagerEvent.Id.GROUP_REMOVED, listener.getLastEvent().getId());
+        assertEquals(ToolWindowManagerEvent.ActionId.GROUP_REMOVED, listener.getLastEvent().getActionId());
         assertEquals(group, listener.getLastEvent().getToolWindowGroup());
     }
 

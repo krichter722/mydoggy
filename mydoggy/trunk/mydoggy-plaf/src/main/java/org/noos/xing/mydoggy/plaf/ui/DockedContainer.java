@@ -45,6 +45,8 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
     boolean valueAdjusting;
 
+    private IconProvider iconProvider;
+
     public DockedContainer(ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
@@ -95,27 +97,28 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
     protected void setSliding() {
-        dockButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/docked.png"));
+        dockButton.setIcon(iconProvider.docked);
         dockButton.setToolTipText(ResourceBoundles.getResourceBoundle().getString("@@tool.tooltip.dock"));
     }
 
     protected void setDocked() {
-        dockButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/sliding.png"));
+        dockButton.setIcon(iconProvider.sliding);
         dockButton.setToolTipText(ResourceBoundles.getResourceBoundle().getString("@@tool.tooltip.undock"));
     }
 
     protected void setFix() {
-        floatingButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/fix.png"));
+        floatingButton.setIcon(iconProvider.fix);
         floatingButton.setToolTipText(ResourceBoundles.getResourceBoundle().getString("@@tool.tooltip.fix"));
     }
 
     protected void setFloating() {
-        floatingButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/floating.png"));
+        floatingButton.setIcon(iconProvider.floating);
         floatingButton.setToolTipText(ResourceBoundles.getResourceBoundle().getString("@@tool.tooltip.float"));
     }
 
 
     private void initDockedComponents() {
+        iconProvider = new IconProvider();
         this.propertyChangeListeners = new ResolvableHashtable<String, List<PropertyChangeListener>>(
                 new ResolvableHashtable.Resolver<List<PropertyChangeListener>>() {
                     public List<PropertyChangeListener> get(Object key) {
@@ -188,10 +191,10 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 boolean newValue = ((Boolean) evt.getNewValue());
 
                 if (newValue) {
-                    pinButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/autohideOn.png"));
+                    pinButton.setIcon(iconProvider.autoHideOn);
                     pinButton.setToolTipText(ResourceBoundles.getResourceBoundle().getString("@@tool.tooltip.pin"));
                 } else {
-                    pinButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/autohideOff.png"));
+                    pinButton.setIcon(iconProvider.autoHideOff);
                     pinButton.setToolTipText(ResourceBoundles.getResourceBoundle().getString("@@tool.tooltip.unpin"));
                 }
             }
@@ -318,44 +321,92 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
             if (active) {
                 if (toolWindow.isAutoHide()) {
-                    pinButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/autohideOn.png"));
+                    pinButton.setIcon(iconProvider.autoHideOn);
                 } else
-                    pinButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/autohideOff.png"));
+                    pinButton.setIcon(iconProvider.autoHideOff);
 
-                hideButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/hideToolWindow.png"));
+                hideButton.setIcon(iconProvider.hideToolWindow);
 
                 if (toolWindow.getType() == ToolWindowType.SLIDING) {
-                    dockButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/docked.png"));
+                    dockButton.setIcon(iconProvider.docked);
                 } else
-                    dockButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/sliding.png"));
+                    dockButton.setIcon(iconProvider.sliding);
 
                 if (toolWindow.getType() == ToolWindowType.FLOATING) {
-                    floatingButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/fix.png"));
+                    floatingButton.setIcon(iconProvider.fix);
                 } else
-                    floatingButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/floating.png"));
+                    floatingButton.setIcon(iconProvider.floating);
 
             } else {
                 if (toolWindow.isAutoHide()) {
-                    pinButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/autohideOnInactive.png"));
+                    pinButton.setIcon(iconProvider.autoHideOnInactive);
                 } else
-                    pinButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/autohideOffInactive.png"));
+                    pinButton.setIcon(iconProvider.autoHideOffInactive);
 
-                hideButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/hideToolWindowInactive.png"));
+                hideButton.setIcon(iconProvider.hideToolWindowInactive);
 
                 if (toolWindow.getType() == ToolWindowType.SLIDING) {
-                    dockButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/dockedInactive.png"));
+                    dockButton.setIcon(iconProvider.dockedInactive);
                 } else
-                    dockButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/slidingInactive.png"));
+                    dockButton.setIcon(iconProvider.slidingInactive);
 
                 if (toolWindow.getType() == ToolWindowType.FLOATING) {
-                    floatingButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/fixInactive.png"));
+                    floatingButton.setIcon(iconProvider.fixInactive);
                 } else
-                    floatingButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/floatingInactive.png"));
+                    floatingButton.setIcon(iconProvider.floatingInactive);
             }
 
             if (active && focusRequester != null && !valueAdjusting) {
                 SwingUtil.requestFocus(focusRequester);
             }
         }
+    }
+
+    class IconProvider {
+        Icon docked;
+        Icon dockedInactive;
+
+        Icon sliding;
+        Icon slidingInactive;
+
+        Icon floating;
+        Icon floatingInactive;
+
+        Icon fix;
+        Icon fixInactive;
+
+        Icon autoHideOn;
+        Icon autoHideOnInactive;
+
+        Icon autoHideOff;
+        Icon autoHideOffInactive;
+
+        Icon hideToolWindow;
+        Icon hideToolWindowInactive;
+
+
+        public IconProvider() {
+            sliding = SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/sliding.png");
+            slidingInactive = SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/slidingInactive.png");
+
+            floating = SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/floating.png");
+            floatingInactive = SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/floatingInactive.png");
+
+            fix = SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/fix.png");
+            fixInactive = SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/fixInactive.png");
+
+            docked = SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/docked.png");
+            dockedInactive = SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/dockedInactive.png");
+
+            autoHideOn = SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/autohideOn.png");
+            autoHideOnInactive = SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/autohideOnInactive.png");
+
+            autoHideOff = SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/autohideOff.png");
+            autoHideOffInactive = SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/autohideOffInactive.png");
+
+            hideToolWindow = SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/hideToolWindow.png");
+            hideToolWindowInactive = SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/hideToolWindowInactive.png");
+        }
+
     }
 }

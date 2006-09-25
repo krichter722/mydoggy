@@ -43,6 +43,7 @@ public class FloatingContainer extends DockedContainer {
             window.getContentPane().removeAll();
 
             Component content = getContentContainer();
+            content.setVisible(true);
             window.getContentPane().add(content, "1,1,FULL,FULL");
 
             if (lastBounds == null) {

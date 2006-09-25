@@ -38,7 +38,7 @@ public class TestTWGroupListener extends TestCase {
 
         assertTrue(listener.isToolAdded());
         assertNotNull(listener.getLastEvent());
-        assertEquals(ToolWindowGroupEvent.Id.TOOL_ADDED, listener.getLastEvent().getId());
+        assertEquals(ToolWindowGroupEvent.ActionId.TOOL_ADDED, listener.getLastEvent().getId());
         assertEquals(group, listener.getLastEvent().getToolWindowGroup());
         assertEquals(tool, listener.getLastEvent().getToolWindow());
     }
@@ -58,7 +58,7 @@ public class TestTWGroupListener extends TestCase {
 
         assertTrue(listener.isToolRemoved());
         assertNotNull(listener.getLastEvent());
-        assertEquals(ToolWindowGroupEvent.Id.TOOL_REMOVED, listener.getLastEvent().getId());
+        assertEquals(ToolWindowGroupEvent.ActionId.TOOL_REMOVED, listener.getLastEvent().getId());
         assertEquals(group, listener.getLastEvent().getToolWindowGroup());
         assertEquals(tool, listener.getLastEvent().getToolWindow());
     }
@@ -78,7 +78,7 @@ public class TestTWGroupListener extends TestCase {
 
         assertTrue(listener.isGroupShowed());
         assertNotNull(listener.getLastEvent());
-        assertEquals(ToolWindowGroupEvent.Id.GROUP_SHOWED, listener.getLastEvent().getId());
+        assertEquals(ToolWindowGroupEvent.ActionId.GROUP_SHOWED, listener.getLastEvent().getId());
         assertEquals(group, listener.getLastEvent().getToolWindowGroup());
         assertNull(listener.getLastEvent().getToolWindow());
 
@@ -100,7 +100,7 @@ public class TestTWGroupListener extends TestCase {
 
         assertTrue(listener.isGroupHided());
         assertNotNull(listener.getLastEvent());
-        assertEquals(ToolWindowGroupEvent.Id.GROUP_HIDED, listener.getLastEvent().getId());
+        assertEquals(ToolWindowGroupEvent.ActionId.GROUP_HIDED, listener.getLastEvent().getId());
         assertEquals(group, listener.getLastEvent().getToolWindowGroup());
         assertNull(listener.getLastEvent().getToolWindow());
     }

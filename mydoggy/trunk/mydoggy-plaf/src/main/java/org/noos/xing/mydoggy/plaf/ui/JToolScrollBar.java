@@ -130,7 +130,7 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
 
     protected Component renderArrow(String name, String iconName) {
         JLabel label = new JLabel();
-        label.setUI(new ScrollToolBarArrowlUI());
+        label.setUI(new ScrollToolBarArrowUI());
         label.setPreferredSize(new Dimension(16,16));
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setVerticalAlignment(SwingConstants.CENTER);

@@ -13,7 +13,7 @@ import java.awt.event.MouseEvent;
 /**
  * @author Angelo De Caro
  */
-public class ScrollToolBarArrowlUI extends MetalLabelUI {
+public class ScrollToolBarArrowUI extends MetalLabelUI {
 
     static final Color start = new Color(255, 212, 151);
     static final Color end = new Color(255, 244, 204);
@@ -31,7 +31,7 @@ public class ScrollToolBarArrowlUI extends MetalLabelUI {
     protected void installListeners(JLabel c) {
         super.installListeners(c);
 
-        BarLabelMouseAdapter adapter = new BarLabelMouseAdapter();
+        ScrollToolBarArrowMouseAdapter adapter = new ScrollToolBarArrowMouseAdapter();
         c.addMouseListener(adapter);
     }
 
@@ -47,7 +47,7 @@ public class ScrollToolBarArrowlUI extends MetalLabelUI {
         paint(g, c);
     }
 
-    class BarLabelMouseAdapter extends MouseAdapter {
+    class ScrollToolBarArrowMouseAdapter extends MouseAdapter {
 
         public void mouseEntered(MouseEvent e) {
             if (!label.isOpaque()) {

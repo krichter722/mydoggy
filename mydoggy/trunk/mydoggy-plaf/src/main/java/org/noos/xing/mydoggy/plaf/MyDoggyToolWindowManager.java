@@ -302,6 +302,7 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
         this.toolWindowContentManager = new MyDoggyWindowContentManager(this);
 
         ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
+        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 
         // Init data structures
         bars = new MyDoggyToolWindowBar[4];
@@ -344,7 +345,7 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
         glassPane.setLayout(null);
 
         glassPane.addContainerListener(new ContainerAdapter() {
-            GlassPaneMouseAdapter adapter = new GlassPaneMouseAdapter((RootPaneContainer) anchestor, glassPane);
+            GlassPaneMouseAdapter adapter = new GlassPaneMouseAdapter((RootPaneContainer) anchestor);
 
             public void componentAdded(ContainerEvent e) {
                 glassPane.setVisible(true);
@@ -396,7 +397,7 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
 
     protected void fireRegisteredToolEvent(ToolWindow toolWindow) {
         ToolWindowManagerEvent event = new ToolWindowManagerEvent(this,
-                                                                  ToolWindowManagerEvent.Id.TOOL_REGISTERED,
+                                                                  ToolWindowManagerEvent.ActionId.TOOL_REGISTERED,
                                                                   toolWindow);
         for (ToolWindowManagerListener listener : twmListeners.getListeners(ToolWindowManagerListener.class)) {
             listener.toolWindowRegistered(event);
@@ -405,7 +406,7 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
 
     protected void fireUnregisteredToolEvent(ToolWindow toolWindow) {
         ToolWindowManagerEvent event = new ToolWindowManagerEvent(this,
-                                                                  ToolWindowManagerEvent.Id.TOOL_UNREGISTERED,
+                                                                  ToolWindowManagerEvent.ActionId.TOOL_UNREGISTERED,
                                                                   toolWindow);
         for (ToolWindowManagerListener listener : twmListeners.getListeners(ToolWindowManagerListener.class)) {
             listener.toolWindowUnregistered(event);
@@ -414,7 +415,7 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
 
     protected void fireAddedGroupEvent(ToolWindowGroup toolWindowGroup) {
         ToolWindowManagerEvent event = new ToolWindowManagerEvent(this,
-                                                                  ToolWindowManagerEvent.Id.GROUP_ADDED,
+                                                                  ToolWindowManagerEvent.ActionId.GROUP_ADDED,
                                                                   toolWindowGroup);
         for (ToolWindowManagerListener listener : twmListeners.getListeners(ToolWindowManagerListener.class)) {
             listener.toolWindowGroupAdded(event);
@@ -423,7 +424,7 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
 
     protected void fireRemovedGroupEvent(ToolWindowGroup toolWindowGroup) {
         ToolWindowManagerEvent event = new ToolWindowManagerEvent(this,
-                                                                  ToolWindowManagerEvent.Id.GROUP_REMOVED,
+                                                                  ToolWindowManagerEvent.ActionId.GROUP_REMOVED,
                                                                   toolWindowGroup);
         for (ToolWindowManagerListener listener : twmListeners.getListeners(ToolWindowManagerListener.class)) {
             listener.toolWindowGroupRemoved(event);

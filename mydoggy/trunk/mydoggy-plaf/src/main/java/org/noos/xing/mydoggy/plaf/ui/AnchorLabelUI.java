@@ -19,7 +19,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro
  */
-public class BarLabelUI extends MetalLabelUI {
+public class AnchorLabelUI extends MetalLabelUI {
 
     static final Color start = new Color(255, 212, 151);
     static final Color end = new Color(255, 244, 204);
@@ -30,7 +30,7 @@ public class BarLabelUI extends MetalLabelUI {
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
 
-    public BarLabelUI(ToolWindowDescriptor descriptor, ToolWindow toolWindow) {
+    public AnchorLabelUI(ToolWindowDescriptor descriptor, ToolWindow toolWindow) {
         this.descriptor = descriptor;
         this.toolWindow = toolWindow;
     }
@@ -60,7 +60,7 @@ public class BarLabelUI extends MetalLabelUI {
             c.setToolTipText(oldText);
         }
 
-        BarLabelMouseAdapter adapter = new BarLabelMouseAdapter();
+        AnchorLabelMouseAdapter adapter = new AnchorLabelMouseAdapter();
         c.addMouseListener(adapter);
         c.addMouseMotionListener(adapter);
         descriptor.getToolWindow().addInternalPropertyChangeListener(this);
@@ -92,11 +92,16 @@ public class BarLabelUI extends MetalLabelUI {
                 labelBorder.setLineColor(Color.GRAY);
 
             SwingUtil.repaint(label);
+
+            // Move to Visible  TODO: fail with FLOATING_WINDOW and for other resaons.
+            JViewport viewport = (JViewport) label.getParent().getParent();
+            System.out.println(label.getBounds());
+            viewport.scrollRectToVisible(label.getBounds());
         }
     }
 
 
-    class BarLabelMouseAdapter extends MouseInputAdapter implements ActionListener, PropertyChangeListener {
+    class AnchorLabelMouseAdapter extends MouseInputAdapter implements ActionListener, PropertyChangeListener {
 
         JPopupMenu popupMenu;
 
@@ -111,7 +116,7 @@ public class BarLabelUI extends MetalLabelUI {
         JMenuItem top;
         JMenuItem bottom;
 
-        public BarLabelMouseAdapter() {
+        public AnchorLabelMouseAdapter() {
             initPopupMenu();
             descriptor.getToolWindow().addInternalPropertyChangeListener(this);
         }
