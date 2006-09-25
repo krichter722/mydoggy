@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.examples.sample;
+package org.noos.xing.mydoggy.examples.sample.model;
 
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowManager;
