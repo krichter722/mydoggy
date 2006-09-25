@@ -1,21 +1,21 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
     <properties>
-        <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
         <title>MyDoggy - Introduction</title>
+        <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
     </properties>
-   
+
     <body>
         <section name="Introduction">
             <p>
-                This application demonstrates Maven 2 site generation functionalities. One of the nicer features of
-                Maven is the ability to create an internal technical web site
-                at very little cost. Maven 2 extends this functionality, and gives you powerful new ways
-                to generate site content...
+                MyDoggy is an IntelliJ Idea like docking framework for managing secondary windows within the main
+                window. MyDoggy allows to move, resize or extract those secondary windows. Also, MyDoggy provides
+                support for content management of the main window.
             </p>
 
-            <subsection name="Team Communication">
-
-                <!-- You can also include preformatted source blocks in the document -->
+            <subsection name="Module Separation">
                 <p>
                     Team communication is an essential part of any project. And wasting time looking for technical
                     project information can be costly and frustrating. Clearly, any IT project will benefit from

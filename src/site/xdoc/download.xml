@@ -1,0 +1,66 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy - Download</title>
+        <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="Download">
+            <h1>Binary Releases</h1>
+
+            <ul class="arrow">
+                <li>
+                    Please see our
+                    <a href="license.html">License FAQ</a>
+                    before downloading.
+                </li>
+            </ul>
+
+            <table style="border: 1px solid rgb(204, 204, 204); background-color: rgb(238, 238, 238); margin-top: 10px; margin-bottom: 10px;"
+                   cellpadding="5">
+                <tbody>
+                    <tr valign="top">
+                        <td colspan="1">
+                            <strong>Package</strong>
+                        </td>
+                        <td colspan="1">
+                            <strong>Version</strong>
+                        </td>
+
+                        <td colspan="1">
+                            <strong>Release date</strong>
+                        </td>
+                        <td colspan="1">
+                            <strong>Category</strong>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+
+                    <tr valign="top">
+                        <td colspan="1">MyDoggy</td>
+                        <td colspan="1">1.0</td>
+                        <td colspan="1">January 9, 2005</td>
+                        <td colspan="1">Beta</td>
+
+                        <td colspan="1">
+                            <em>
+                                <a href="http://sourceforge.net/project/showfiles.php?group_id=119727&amp;package_id=130419&amp;release_id=295608">
+                                    Download
+                                </a>
+                            </em>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <strong>
+                <a href="http://prdownloads.sourceforge.net/mydoggy/?sort_by=date&amp;sort=desc">Browse all MyDoggy
+                    Framework downloads
+                </a>
+            </strong>
+        </section>
+    </body>
+</document>
