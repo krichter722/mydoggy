@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowBar;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.icons.CompositeIcon;
 import org.noos.xing.mydoggy.plaf.ui.icons.TextIcon;
@@ -23,9 +24,9 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     private MyDoggyToolWindow toolWindow;
 
     private Window windowAnchestor;
-    private Component component;
-    private JLabel barLabel;
     private ToolWindowContainer toolWindowContainer;
+    private Component component;
+    private JLabel anchorLabel;
 
     private int divederLocation = -1;
 
@@ -46,9 +47,9 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         initTypeDescriptors();
     }
 
-    private void initTypeDescriptors() {
-        floatingTypeDescriptor = (FloatingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING)).cloneMe();
-        dockedTypeDescriptor = (DockedTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).cloneMe();
+    public void unregister() {
+        toolWindow.removePropertyChangeListener(this);
+        getToolWindowContainer().uninstall();
     }
 
 
@@ -59,73 +60,38 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
             else if (evt.getOldValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING)
                 setFloatingWindow(false);
         } else if ("index".equals(evt.getPropertyName())) {
-            updateBarLabel();
+            updateAnchorLabel();
         } else if ("icon".equals(evt.getPropertyName())) {
-            updateBarLabel();
+            updateAnchorLabel();
         } else if ("title".equals(evt.getPropertyName())) {
-            updateBarLabel();
+            updateAnchorLabel();
         }
     }
 
-
-    public void unregister() {
-        toolWindow.removePropertyChangeListener(this);
-        getToolWindowContainer().uninstall();
-    }
 
     public MyDoggyToolWindowManager getManager() {
         return manager;
     }
 
-    public Component getComponent() {
-        return component;
+    public MyDoggyToolWindowBar getToolBar(ToolWindowAnchor anchor) {
+        return manager.getBar(anchor);
     }
 
     public MyDoggyToolWindow getToolWindow() {
         return toolWindow;
     }
 
-    public int getDivederLocation() {
-        if (divederLocation == -1)
-            this.divederLocation = ((DockedTypeDescriptor) getTypeDescriptor(ToolWindowType.DOCKED)).getDockLength();
 
-        return divederLocation;
+    public Container getToolWindowManagerContainer() {
+        return manager.getContentPane();
     }
 
-    public void setDivederLocation(int divederLocation) {
-        this.divederLocation = divederLocation;
+    public Window getWindowAnchestor() {
+        return windowAnchestor;
     }
 
-    public JLabel getBarLabel(Component container) {
-        if (barLabel == null) {
-            ToolWindowAnchor anchor = toolWindow.getAnchor();
-
-            String toolBarLabelName = (toolWindow.getIndex() > 0) ? toolWindow.getIndex() + " : " + toolWindow.getTitle()
-                                                                  : toolWindow.getTitle();
-
-            if (anchor == ToolWindowAnchor.BOTTOM || anchor == ToolWindowAnchor.TOP) {
-                barLabel = new JLabel(toolBarLabelName, toolWindow.getIcon(), JLabel.CENTER);
-            } else {
-                TextIcon textIcon = new TextIcon(container, toolBarLabelName, anchor == ToolWindowAnchor.LEFT ? TextIcon.ROTATE_LEFT : TextIcon.ROTATE_RIGHT);
-                CompositeIcon compositeIcon = new CompositeIcon(textIcon, toolWindow.getIcon());
-                barLabel = new JLabel(compositeIcon, JLabel.CENTER);
-            }
-
-            barLabel.setName(toolBarLabelName);
-            barLabel.setUI(createLabelUI());
-            barLabel.setOpaque(false);
-            barLabel.setFocusable(false);
-            barLabel.setBackground(Colors.skin);
-        }
-        return barLabel;
-    }
-
-    public JLabel getBarLabel() {
-        return barLabel;
-    }
-
-    public void resetBarLabel() {
-        barLabel = null;
+    public Component getComponent() {
+        return component;
     }
 
     public ToolWindowContainer getToolWindowContainer() {
@@ -145,6 +111,52 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         throw new IllegalStateException("Doen't exist a TypeDescriptor for : " + type);
     }
 
+
+    public int getDivederLocation() {
+        if (divederLocation == -1)
+            this.divederLocation = ((DockedTypeDescriptor) getTypeDescriptor(ToolWindowType.DOCKED)).getDockLength();
+
+        return divederLocation;
+    }
+
+    public void setDivederLocation(int divederLocation) {
+        this.divederLocation = divederLocation;
+    }
+
+
+    public JLabel getAnchorLabel(Component container) {
+        if (anchorLabel == null) {
+            ToolWindowAnchor anchor = toolWindow.getAnchor();
+
+            String toolAnchorLabelName = (toolWindow.getIndex() > 0) ? toolWindow.getIndex() + " : " + toolWindow.getTitle()
+                                                                  : toolWindow.getTitle();
+
+            if (anchor == ToolWindowAnchor.BOTTOM || anchor == ToolWindowAnchor.TOP) {
+                anchorLabel = new JLabel(toolAnchorLabelName, toolWindow.getIcon(), JLabel.CENTER);
+            } else {
+                TextIcon textIcon = new TextIcon(container, toolAnchorLabelName, anchor == ToolWindowAnchor.LEFT ? TextIcon.ROTATE_LEFT : TextIcon.ROTATE_RIGHT);
+                CompositeIcon compositeIcon = new CompositeIcon(textIcon, toolWindow.getIcon());
+                anchorLabel = new JLabel(compositeIcon, JLabel.CENTER);
+            }
+
+            anchorLabel.setName(toolAnchorLabelName);
+            anchorLabel.setUI(createLabelUI());
+            anchorLabel.setOpaque(false);
+            anchorLabel.setFocusable(false);
+            anchorLabel.setBackground(Colors.skin);
+        }
+        return anchorLabel;
+    }
+
+    public JLabel getAnchorLabel() {
+        return anchorLabel;
+    }
+
+    public void resetAnchorLabel() {
+        anchorLabel = null;
+    }
+
+
     public boolean isFloatingWindow() {
         return floatingWindow;
     }
@@ -153,41 +165,35 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         this.floatingWindow = floatingWindow;
     }
 
-    public org.noos.xing.mydoggy.plaf.MyDoggyToolWindowBar getToolBar(ToolWindowAnchor anchor) {
-        return manager.getBar(anchor);
-    }
 
-    public Container getToolWindowManagerContainer() {
-        return manager.getContentPane();
-    }
-
-    public Window getWindowAnchestor() {
-        return windowAnchestor;
+    protected void initTypeDescriptors() {
+        floatingTypeDescriptor = (FloatingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING)).cloneMe();
+        dockedTypeDescriptor = (DockedTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).cloneMe();
     }
 
 
     protected LabelUI createLabelUI() {
-        return new BarLabelUI(this, toolWindow);
+        return new AnchorLabelUI(this, toolWindow);
     }
 
-    protected void updateBarLabel() {
-        if (barLabel != null) {
+    protected void updateAnchorLabel() {
+        if (anchorLabel != null) {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
-            String toolBarLabelName = (toolWindow.getIndex() > 0) ? toolWindow.getIndex() + " : " + toolWindow.getTitle()
+            String toolAnchorLabelName = (toolWindow.getIndex() > 0) ? toolWindow.getIndex() + " : " + toolWindow.getTitle()
                                                                   : toolWindow.getTitle();
 
 
             if (anchor == ToolWindowAnchor.BOTTOM || anchor == ToolWindowAnchor.TOP) {
-                barLabel.setIcon(toolWindow.getIcon());
-                barLabel.setText(toolBarLabelName);
+                anchorLabel.setIcon(toolWindow.getIcon());
+                anchorLabel.setText(toolAnchorLabelName);
             } else {
-                TextIcon textIcon = new TextIcon(((TextIcon) ((CompositeIcon) barLabel.getIcon()).getIcon1()).getComponent(),
-                                                 toolBarLabelName,
+                TextIcon textIcon = new TextIcon(((TextIcon) ((CompositeIcon) anchorLabel.getIcon()).getIcon1()).getComponent(),
+                                                 toolAnchorLabelName,
                                                  anchor == ToolWindowAnchor.LEFT ? TextIcon.ROTATE_LEFT : TextIcon.ROTATE_RIGHT);
                 CompositeIcon compositeIcon = new CompositeIcon(textIcon, toolWindow.getIcon());
-                barLabel.setText(null);
-                barLabel.setIcon(compositeIcon);
+                anchorLabel.setText(null);
+                anchorLabel.setIcon(compositeIcon);
             }
         }
     }

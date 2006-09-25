@@ -26,9 +26,9 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.listenerList = new EventListenerList();
     }
 
-    public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength) {
+    public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled) {
         this.menu = new JMenu(ResourceBoundles.getResourceBoundle().getString("@@tool.userDefined"));
-        this.popupMenuEnabled = true;
+        this.popupMenuEnabled = popupMenuEnabled;
         this.dockLength = dockLength;
         parent.addPropertyChangeListener(this);
     }
@@ -58,7 +58,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     }
 
     public ToolWindowTypeDescriptor cloneMe() {
-        return new DefaultDockedTypeDescriptor(this, dockLength);
+        return new DefaultDockedTypeDescriptor(this, dockLength, popupMenuEnabled);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

@@ -17,7 +17,7 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
     private List<ToolWindow> tools;
     private EventListenerList listenerList;
 
-    public MyDoggyToolWindowGroup(ToolWindowManager manager, String name) {
+    MyDoggyToolWindowGroup(ToolWindowManager manager, String name) {
         this.manager = manager;
         this.name = name;
         this.tools = new ArrayList<ToolWindow>();
@@ -112,28 +112,28 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
 
 
     protected void fireGroupShowed() {
-        ToolWindowGroupEvent event = new ToolWindowGroupEvent(this, ToolWindowGroupEvent.Id.GROUP_SHOWED, this);
+        ToolWindowGroupEvent event = new ToolWindowGroupEvent(manager, ToolWindowGroupEvent.ActionId.GROUP_SHOWED, this);
         for (ToolWindowGroupListener listener : listenerList.getListeners(ToolWindowGroupListener.class)) {
             listener.groupShowed(event);
         }
     }
 
     protected void fireGroupHided() {
-        ToolWindowGroupEvent event = new ToolWindowGroupEvent(this, ToolWindowGroupEvent.Id.GROUP_HIDED, this);
+        ToolWindowGroupEvent event = new ToolWindowGroupEvent(manager, ToolWindowGroupEvent.ActionId.GROUP_HIDED, this);
         for (ToolWindowGroupListener listener : listenerList.getListeners(ToolWindowGroupListener.class)) {
             listener.groupHided(event);
         }
     }
 
     protected void fireAddedTool(ToolWindow toolWindow) {
-        ToolWindowGroupEvent event = new ToolWindowGroupEvent(this, ToolWindowGroupEvent.Id.TOOL_ADDED, this, toolWindow);
+        ToolWindowGroupEvent event = new ToolWindowGroupEvent(manager, ToolWindowGroupEvent.ActionId.TOOL_ADDED, this, toolWindow);
         for (ToolWindowGroupListener listener : listenerList.getListeners(ToolWindowGroupListener.class)) {
             listener.toolAdded(event);
         }
     }
 
     protected void fireRemovedTool(ToolWindow toolWindow) {
-        ToolWindowGroupEvent event = new ToolWindowGroupEvent(this, ToolWindowGroupEvent.Id.TOOL_REMOVED, this, toolWindow);
+        ToolWindowGroupEvent event = new ToolWindowGroupEvent(manager, ToolWindowGroupEvent.ActionId.TOOL_REMOVED, this, toolWindow);
         for (ToolWindowGroupListener listener : listenerList.getListeners(ToolWindowGroupListener.class)) {
             listener.toolRemoved(event);
         }

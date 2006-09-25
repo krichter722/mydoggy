@@ -69,7 +69,7 @@ public class TestTWManagerVisibileTool extends TestCase {
 
         window.setVisible(true);
 
-        assertTrue(toolContent.isVisible());
+        assertNotNull(toolContent.getParent().getParent());
 
         assertTrue(window.isAvailable());
         assertTrue(window.isVisible());
@@ -89,7 +89,7 @@ public class TestTWManagerVisibileTool extends TestCase {
 
         window.setVisible(false);
 
-//TODO        assertFalse(toolContent.getParent().isVisible());
+        assertNull(toolContent.getParent().getParent());
 
         assertTrue(window.isAvailable());
         assertFalse(window.isVisible());
@@ -106,7 +106,7 @@ public class TestTWManagerVisibileTool extends TestCase {
 
         window.setVisible(true);
 
-        assertTrue(toolContent.isVisible());
+        assertNotNull(toolContent.getParent().getParent());
 
         assertTrue(window.isAvailable());
         assertTrue(window.isVisible());
@@ -127,7 +127,7 @@ public class TestTWManagerVisibileTool extends TestCase {
 
         window.setVisible(false);
 
-//TODO        assertFalse(toolContent.getParent().isVisible());
+        assertNull(toolContent.getParent().getParent());
 
         assertTrue(window.isAvailable());
         assertFalse(window.isVisible());
@@ -145,7 +145,7 @@ public class TestTWManagerVisibileTool extends TestCase {
 
         window.setVisible(true);
 
-        assertTrue(toolContent.isVisible());
+        assertNotNull(toolContent.getParent().getParent());
 
         assertTrue(window.isAvailable());
         assertTrue(window.isVisible());
@@ -166,7 +166,7 @@ public class TestTWManagerVisibileTool extends TestCase {
 
         window.setVisible(false);
 
-//TODO        assertFalse(toolContent.getParent().isVisible());
+//TODO        assertNull(SwingUtilities.getWindowAncestor(toolContent));
 
         assertTrue(window.isAvailable());
         assertFalse(window.isVisible());
@@ -184,7 +184,7 @@ public class TestTWManagerVisibileTool extends TestCase {
 
         window.setVisible(true);
 
-        assertTrue(toolContent.isVisible());
+//TODO        assertNotNull(SwingUtilities.getWindowAncestor(toolContent));
 
         assertTrue(window.isAvailable());
         assertTrue(window.isVisible());
@@ -205,7 +205,7 @@ public class TestTWManagerVisibileTool extends TestCase {
 
         window.setVisible(false);
 
-//TODO        assertFalse(toolContent.getParent().isVisible());
+//        assertNull(toolContent.getParent().getParent());
 
         assertTrue(window.isAvailable());
         assertFalse(window.isVisible());

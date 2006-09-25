@@ -1,14 +1,19 @@
 package org.noos.xing.mydoggy.plaf.ui.content;
 
+import org.noos.xing.mydoggy.plaf.ui.TransparencyAnimation;
+import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.event.MouseInputListener;
-import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.metal.MetalTabbedPaneUI;
 import java.awt.*;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.lang.reflect.Field;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -23,6 +28,9 @@ public class TabbedContentManagerUI extends MetalTabbedPaneUI {
     private static Color notSelectedColor = new Color(189, 187, 182);
     private boolean noIconSpace;
 
+    private Frame parentFrame;
+    private JTabbedContentManager tabbedContentManager;
+
     private MouseInputListener mouseOverTabListener;
     private int mouseOverTab = -1;
     private boolean isCloseButtonEnabled = true;
@@ -34,20 +42,37 @@ public class TabbedContentManagerUI extends MetalTabbedPaneUI {
     private Image closeImgD;
     private Image maxImgD;
 
-    public static ComponentUI createUI(JComponent jcomponent) {
-        return new TabbedContentManagerUI();
+    private java.util.List internalPages;
+    private Map<Object, ContentPage> contentPages;
+
+    private JPopupMenu defaultContentPopupMenu;
+
+
+    public TabbedContentManagerUI(Frame parentFrame) {
+        this.parentFrame = parentFrame;
+        this.contentPages = new Hashtable<Object, ContentPage>();
+
+        this.noIconSpace = false;
+
+        this.maxImgI = loadImage("org/noos/xing/mydoggy/plaf/ui/icons/detach.png");
+        this.closeImgI = loadImage("org/noos/xing/mydoggy/plaf/ui/icons/close.png");
+
+        this.maxImgD = loadImage("org/noos/xing/mydoggy/plaf/ui/icons/detachInactive.png");
+        this.closeImgD = loadImage("org/noos/xing/mydoggy/plaf/ui/icons/closeInactive.png");
     }
 
-    public TabbedContentManagerUI() {
-        noIconSpace = false;
 
-        maxImgI = loadImage("org/noos/xing/mydoggy/plaf/ui/icons/detach.png");
-        closeImgI = loadImage("org/noos/xing/mydoggy/plaf/ui/icons/close.png");
-
-        maxImgD = loadImage("org/noos/xing/mydoggy/plaf/ui/icons/detachInactive.png");
-        closeImgD = loadImage("org/noos/xing/mydoggy/plaf/ui/icons/closeInactive.png");
+    public void installUI(JComponent c) {
+        super.installUI(c);
+        this.tabbedContentManager = (JTabbedContentManager) c;
+        try {
+            Field field = JTabbedPane.class.getDeclaredField("pages");
+            field.setAccessible(true);
+            this.internalPages = (java.util.List) field.get(c);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
-
 
     public void update(Graphics g, JComponent c) {
         if (c.isOpaque()) {
@@ -58,6 +83,144 @@ public class TabbedContentManagerUI extends MetalTabbedPaneUI {
     }
 
 
+    public void setNoIconSpace(boolean noIconSpace) {
+        this.noIconSpace = noIconSpace;
+    }
+
+    public boolean isCloseEnabled() {
+        return isCloseButtonEnabled;
+    }
+
+    public boolean isDetachEnabled() {
+        return isDetachButtonEnabled;
+    }
+
+    public void setCloseEnabled(boolean b) {
+        isCloseButtonEnabled = b;
+    }
+
+    public void setDetachEnabled(boolean b) {
+        isDetachButtonEnabled = b;
+    }
+
+    public String getToolTipTextAt(MouseEvent e, int index, String defaultTip) {
+        if (index != -1) {
+            if (isCloseButtonEnabled) {
+                Rectangle tabRect = rects[index];
+                if (e.getX() > tabRect.x + tabRect.width - BUTTONSIZE - WIDTHDELTA &&
+                    e.getX() < tabRect.x + tabRect.width - BUTTONSIZE + 5) {
+                    return "Close";
+                }
+            }
+
+            if (isDetachButtonEnabled) {
+                Rectangle tabRect = rects[index];
+                if (e.getX() > tabRect.x + tabRect.width - BUTTONSIZE - BUTTONSIZE - WIDTHDELTA &&
+                    e.getX() < tabRect.x + tabRect.width - BUTTONSIZE - BUTTONSIZE + 5) {
+                    return "Detach";
+                }
+            }
+
+            return defaultTip;
+        }
+        return defaultTip;
+    }
+
+    public void setPopupMenuAt(int index, JPopupMenu popupMenu) {
+        ContentPage contentPage = contentPages.get(internalPages.get(index));
+        if (contentPage == null) {
+            contentPage = new ContentPage();
+            contentPages.put(internalPages.get(index), contentPage);
+        }
+
+        contentPage.setPopupMenu(popupMenu);
+    }
+
+    public JPopupMenu getPopupMenuAt(int index) {
+        ContentPage contentPage = contentPages.get(internalPages.get(index));
+        return (contentPage != null) ? contentPage.getPopupMenu() : null;
+    }
+
+    public void setPopupMenu(JPopupMenu popupMenu) {
+        this.defaultContentPopupMenu = popupMenu;
+    }
+
+    public JPopupMenu getPopupMenu() {
+        return defaultContentPopupMenu;
+    }
+
+    public void detachTab(int index) {
+        final JDialog dialog = new JDialog(parentFrame, false);
+        dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        Window parentWindow = SwingUtilities.windowForComponent(tabbedContentManager);
+
+        final int tabIndex = index;
+        final JComponent c = (JComponent) tabbedContentManager.getComponentAt(tabIndex);
+
+        final Icon icon = tabbedContentManager.getIconAt(tabIndex);
+        final String title = tabbedContentManager.getTitleAt(tabIndex);
+        final String toolTip = tabbedContentManager.getToolTipTextAt(tabIndex);
+        final Border border = c.getBorder();
+        final JPopupMenu popupMenu = getPopupMenuAt(tabIndex);
+
+        tabbedContentManager.removeTabAt(index);
+
+        c.setPreferredSize(c.getSize());
+
+        dialog.setTitle(title);
+        dialog.getContentPane().add(c);
+        Point location = parentWindow.getLocation();
+        location.x += 5;
+        location.y += 5;
+        dialog.setLocation(location);
+        dialog.pack();
+
+        if (TransparencyManager.getInstance().isServiceAvailable()) {
+            TransparencyListener transparencyListener = new TransparencyListener(dialog);
+            dialog.addWindowListener(transparencyListener);
+            dialog.addWindowFocusListener(transparencyListener);
+        }
+
+        dialog.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent event) {
+                dialog.dispose();
+
+                int newIndex = Math.min(tabIndex, tabbedContentManager.getTabCount());
+                tabbedContentManager.insertTab(title, icon, c, toolTip, newIndex);
+                setPopupMenuAt(newIndex, popupMenu);
+                c.setBorder(border);
+                tabbedContentManager.setSelectedComponent(c);
+            }
+        });
+
+        if (parentFrame == null) {
+            WindowFocusListener windowFocusListener = new WindowFocusListener() {
+                long start;
+                long end;
+
+                public void windowGainedFocus(WindowEvent e) {
+                    start = System.currentTimeMillis();
+                }
+
+                public void windowLostFocus(WindowEvent e) {
+                    end = System.currentTimeMillis();
+                    long elapsed = end - start;
+                    //System.out.println(elapsed);
+                    if (elapsed < 100)
+                        dialog.toFront();
+
+                    dialog.removeWindowFocusListener(this);
+                }
+            };
+            dialog.addWindowFocusListener(windowFocusListener);
+        }
+
+        dialog.toFront();
+        dialog.setVisible(true);
+    }
+
+    
     protected void installListeners() {
         super.installListeners();
         mouseOverTabListener = new MouseOverTabListener();
@@ -146,8 +309,6 @@ public class TabbedContentManagerUI extends MetalTabbedPaneUI {
         }
     }
 
-//    private Rectangle[] my_rects;
-
     protected void paintTab(Graphics g, int tabPlacement, Rectangle[] rects, int tabIndex, Rectangle iconRect, Rectangle textRect) {
         super.paintTab(g, tabPlacement, rects, tabIndex, iconRect, textRect);    //To change body of overridden methods use File | Settings | File Templates.
 
@@ -231,27 +392,6 @@ public class TabbedContentManagerUI extends MetalTabbedPaneUI {
     }
 
 
-    public void setNoIconSpace(boolean noIconSpace) {
-        this.noIconSpace = noIconSpace;
-    }
-
-    public boolean isCloseEnabled() {
-        return isCloseButtonEnabled;
-    }
-
-    public boolean isDetachEnabled() {
-        return isDetachButtonEnabled;
-    }
-
-    public void setCloseEnabled(boolean b) {
-        isCloseButtonEnabled = b;
-    }
-
-    public void setDetachEnabled(boolean b) {
-        isDetachButtonEnabled = b;
-    }
-
-
     protected Image loadImage(String url) {
         return Toolkit.getDefaultToolkit().getImage(
                 Thread.currentThread().getContextClassLoader().getResource(url));
@@ -275,56 +415,42 @@ public class TabbedContentManagerUI extends MetalTabbedPaneUI {
             g.drawImage(maxImgD, dx, dy + 1, null);
     }
 
-    private void ensureCurrentLayout() {
-        if (!tabPane.isValid()) {
-            tabPane.validate();
+
+    class ContentPage {
+        private JPopupMenu popupMenu;
+        private boolean closable;
+        private boolean detachable;
+
+        public ContentPage() {
+            this.closable = detachable = true;
         }
-        /* If tabPane doesn't have a peer yet, the validate() call will
-         * silently fail.  We handle that by forcing a layout if tabPane
-         * is still invalid.  See bug 4237677.
-         */
-        if (!tabPane.isValid()) {
-            TabbedPaneLayout layout = (TabbedPaneLayout) tabPane.getLayout();
-            layout.calculateLayoutInfo();
+
+        public boolean isClosable() {
+            return closable;
+        }
+
+        public void setClosable(boolean closable) {
+            this.closable = closable;
+        }
+
+        public boolean isDetachable() {
+            return detachable;
+        }
+
+        public void setDetachable(boolean detachable) {
+            this.detachable = detachable;
+        }
+
+        public JPopupMenu getPopupMenu() {
+            return popupMenu;
+        }
+
+        public void setPopupMenu(JPopupMenu popupMenu) {
+            this.popupMenu = popupMenu;
         }
     }
 
-    private int getTabAtLocation(int x, int y) {
-        ensureCurrentLayout();
-        int tabCount = tabPane.getTabCount();
-        for (int i = 0; i < tabCount; i++) {
-            if (rects[i].contains(x, y)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public String getToolTipTextAt(MouseEvent e, int index, String defaultTip) {
-        if (index != -1) {
-            if (isCloseButtonEnabled) {
-                Rectangle tabRect = rects[index];
-                if (e.getX() > tabRect.x + tabRect.width - BUTTONSIZE - WIDTHDELTA &&
-                    e.getX() < tabRect.x + tabRect.width - BUTTONSIZE + 5) {
-                    return "Close";
-                }
-            }
-
-            if (isDetachButtonEnabled) {
-                Rectangle tabRect = rects[index];
-                if (e.getX() > tabRect.x + tabRect.width - BUTTONSIZE - BUTTONSIZE - WIDTHDELTA &&
-                    e.getX() < tabRect.x + tabRect.width - BUTTONSIZE - BUTTONSIZE + 5) {
-                    return "Detach";
-                }
-            }
-
-            return defaultTip;
-        }
-        return defaultTip;
-    }
-
-
-    public class MouseOverTabListener extends MouseInputAdapter {
+    class MouseOverTabListener extends MouseInputAdapter {
 
         public void mouseClicked(MouseEvent e) {
             if (mouseOverTab != -1) {
@@ -333,7 +459,8 @@ public class TabbedContentManagerUI extends MetalTabbedPaneUI {
 
                     if (e.getX() > tabRect.x + tabRect.width - BUTTONSIZE - WIDTHDELTA &&
                         e.getX() < tabRect.x + tabRect.width - BUTTONSIZE + 5) {
-                        ((JTabbedContentManager) tabPane).fireCloseTabEvent(e, mouseOverTab);
+                        tabbedContentManager.fireCloseTabEvent(e, mouseOverTab);
+                        return;
                     }
                 }
 
@@ -342,9 +469,23 @@ public class TabbedContentManagerUI extends MetalTabbedPaneUI {
 
                     if (e.getX() > tabRect.x + tabRect.width - BUTTONSIZE - BUTTONSIZE - WIDTHDELTA &&
                         e.getX() < tabRect.x + tabRect.width - BUTTONSIZE - BUTTONSIZE + 5) {
-                        ((JTabbedContentManager) tabPane).fireDetachTabEvent(e, mouseOverTab);
+                        tabbedContentManager.fireDetachTabEvent(e, mouseOverTab);
+                        return;
                     }
                 }
+
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    JPopupMenu popupMenu = getPopupMenuAt(mouseOverTab);
+                    if (popupMenu == null)
+                        popupMenu = defaultContentPopupMenu;
+
+                    if (popupMenu != null) {
+                        popupMenu.show(tabPane, e.getX(), e.getY());
+                    }
+
+                }
+            } else if (SwingUtilities.isRightMouseButton(e)) {
+                tabbedContentManager.firePopupOutsideTabEvent(e);
             }
         }
 
@@ -376,4 +517,50 @@ public class TabbedContentManagerUI extends MetalTabbedPaneUI {
             }
         }
     }
+
+    class TransparencyListener extends WindowAdapter implements WindowFocusListener, ActionListener {
+        private final TransparencyManager transparencyManager = TransparencyManager.getInstance();
+
+        private TransparencyAnimation animation;
+
+        private Timer timer;
+        private Window window;
+
+        public TransparencyListener(Window window) {
+            this.window = window;
+            this.animation = new TransparencyAnimation(window, 0.8f);
+        }
+
+        public void windowGainedFocus(WindowEvent e) {
+            if (transparencyManager.isAlphaModeEnabled(e.getWindow())) {
+                animation.hide();
+                transparencyManager.setAlphaModeRatio(e.getWindow(), 0.0f);
+            }
+        }
+
+        public void windowLostFocus(WindowEvent e) {
+            if (!transparencyManager.isAlphaModeEnabled(e.getWindow())) {
+                timer = new Timer(1000, this);
+                timer.start();
+            }
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            if (timer.isRunning()) {
+                timer.stop();
+                synchronized (transparencyManager) {
+                    animation.show();
+                }
+            }
+        }
+
+        public void windowClosing(WindowEvent event) {
+            if (transparencyManager.isAlphaModeEnabled(event.getWindow())) {
+                animation.hide();
+                transparencyManager.setAlphaModeRatio(window, 0.0f);
+            }
+        }
+
+    }
+
 }

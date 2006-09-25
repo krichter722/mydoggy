@@ -74,6 +74,9 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
     }
 
     public void setTransparentRatio(float transparentRatio) {
+        if (transparentRatio < 0.0f || transparentRatio > 1.0f)
+            throw new IllegalArgumentException("Invalid transparent ratio. Valid range is [0.0f, 1.0f]. [transparentRatio : " + transparentRatio + "]");
+
         float old = this.transparentRatio;
         this.transparentRatio = transparentRatio;
         firePropertyChange("transparentRatio", old, transparentRatio);
@@ -88,12 +91,13 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         this.transparentMode = transparentMode;
         firePropertyChange("transparentMode", old, transparentMode);
     }
-
+                             
     public int getTransparentDelay() {
         return transparentDelay;
     }
 
     public void setTransparentDelay(int transparentDelay) {
+
         int old = this.transparentDelay;
         this.transparentDelay = transparentDelay;
         firePropertyChange("transparentDelay", old, transparentDelay);

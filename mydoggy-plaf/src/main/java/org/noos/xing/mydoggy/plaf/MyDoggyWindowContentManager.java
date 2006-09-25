@@ -15,16 +15,17 @@ import java.awt.*;
 public class MyDoggyWindowContentManager implements ToolWindowContentManager {
     private MyDoggyToolWindowManager windowManager;
 
-    private JTabbedPane tabbedPane;
+    private JTabbedContentManager tabbedContentManager;
     private Component singleComponent;
     private boolean showAlwaysTab;
 
-    public MyDoggyWindowContentManager(MyDoggyToolWindowManager windowManager) {
+    MyDoggyWindowContentManager(MyDoggyToolWindowManager windowManager) {
         this.windowManager = windowManager;
         this.showAlwaysTab = false;
 
         initComponents();
     }
+
 
     public boolean isShowAlwaysTab() {
         return showAlwaysTab;
@@ -34,47 +35,46 @@ public class MyDoggyWindowContentManager implements ToolWindowContentManager {
         this.showAlwaysTab = showAlwaysTab;
 
         if (showAlwaysTab) {
-            if (tabbedPane.getTabCount() == 1 && windowManager.getMainContent() != tabbedPane) {
+            if (tabbedContentManager.getTabCount() == 1 && windowManager.getMainContent() != tabbedContentManager) {
                 if (singleComponent != null) {
-                    tabbedPane.setComponentAt(0, singleComponent);
+                    tabbedContentManager.setComponentAt(0, singleComponent);
                     singleComponent = null;
                 }
-                windowManager.setMainContent(tabbedPane);
+                windowManager.setMainContent(tabbedContentManager);
             }
-        } else {
-            // TODO: implement this  
-        }
+        } 
     }
 
 
     public int getContentCount() {
-        return tabbedPane.getTabCount();
+        return tabbedContentManager.getTabCount();
     }
+
 
     public void addContent(String title, Icon icon, Component component, String tip) {
         if (!showAlwaysTab) {
-            tabbedPane.addTab(title, icon, new JPanel(), tip);
+            tabbedContentManager.addTab(title, icon, new JPanel(), tip);
 
-            if (tabbedPane.getTabCount() == 1) {
+            if (tabbedContentManager.getTabCount() == 1) {
                 singleComponent = component;
 
                 windowManager.setMainContent(component);
             } else {
                 if (singleComponent != null) {
-                    tabbedPane.setComponentAt(0, singleComponent);
+                    tabbedContentManager.setComponentAt(0, singleComponent);
                     singleComponent = null;
                 }
-                tabbedPane.setComponentAt(tabbedPane.getTabCount() - 1, component);
+                tabbedContentManager.setComponentAt(tabbedContentManager.getTabCount() - 1, component);
 
-                windowManager.setMainContent(tabbedPane);
+                windowManager.setMainContent(tabbedContentManager);
             }
         } else {
-            tabbedPane.addTab(title, icon, component, tip);
-            windowManager.setMainContent(tabbedPane);
+            tabbedContentManager.addTab(title, icon, component, tip);
+            windowManager.setMainContent(tabbedContentManager);
         }
 
-        if (!tabbedPane.isEnabledAt(tabbedPane.getSelectedIndex())) {
-            tabbedPane.setSelectedIndex(tabbedPane.getTabCount() - 1);
+        if (!tabbedContentManager.isEnabledAt(tabbedContentManager.getSelectedIndex())) {
+            tabbedContentManager.setSelectedIndex(tabbedContentManager.getTabCount() - 1);
         }
 
     }
@@ -84,66 +84,90 @@ public class MyDoggyWindowContentManager implements ToolWindowContentManager {
     }
 
     public void removeContentAt(int index) {
-        tabbedPane.remove(index);
+        tabbedContentManager.remove(index);
     }
 
 
-    public Component getComponentAt(int index) {
-        if (tabbedPane.getTabCount() == 1 && windowManager.getMainContent() != tabbedPane && index == 0)
-            return windowManager.getMainContent(); 
-        return tabbedPane.getComponentAt(index);
+    public void setSelectedContent(int index) {
+        tabbedContentManager.setSelectedIndex(index);
     }
 
-    public Icon getDisabledIconAt(int index) {
-        return tabbedPane.getDisabledIconAt(index);
-    }
-
-    public Icon getIconAt(int index) {
-        return tabbedPane.getIconAt(index);
-    }
-
-    public String getTitleAt(int index) {
-        return tabbedPane.getTitleAt(index);
-    }
-
-    public String getToolTipTextAt(int index) {
-        return tabbedPane.getToolTipTextAt(index);
-    }
-
-    public boolean isEnabledAt(int index) {
-        return tabbedPane.isEnabledAt(index);
+    public int getSelectedContent() {
+        return tabbedContentManager.getSelectedIndex();
     }
 
 
     public void setComponentAt(int index, Component component) {
-        if (tabbedPane.getTabCount() == 1 && windowManager.getMainContent() != tabbedPane && index == 0) {
+        if (tabbedContentManager.getTabCount() == 1 && windowManager.getMainContent() != tabbedContentManager && index == 0) {
             singleComponent = component;
             windowManager.setMainContent(component);
         } else
-            tabbedPane.setComponentAt(index, component);
+            tabbedContentManager.setComponentAt(index, component);
+    }
+
+    public Component getComponentAt(int index) {
+        if (tabbedContentManager.getTabCount() == 1 && windowManager.getMainContent() != tabbedContentManager && index == 0)
+            return windowManager.getMainContent(); 
+        return tabbedContentManager.getComponentAt(index);
     }
 
     public void setDisabledIconAt(int index, Icon disabledIcon) {
-        tabbedPane.setDisabledIconAt(index, disabledIcon);
+        tabbedContentManager.setDisabledIconAt(index, disabledIcon);
     }
 
-    public void setEnabledAt(int index, boolean enabled) {
-        if (tabbedPane.getSelectedIndex() == index && !enabled)
-            tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() + 1 % tabbedPane.getTabCount());
-
-        tabbedPane.setEnabledAt(index, enabled);
+    public Icon getDisabledIconAt(int index) {
+        return tabbedContentManager.getDisabledIconAt(index);
     }
 
     public void setIconAt(int index, Icon icon) {
-        tabbedPane.setIconAt(index, icon);
+        tabbedContentManager.setIconAt(index, icon);
+    }
+
+    public Icon getIconAt(int index) {
+        return tabbedContentManager.getIconAt(index);
     }
 
     public void setTitleAt(int index, String title) {
-        tabbedPane.setTitleAt(index, title);
+        tabbedContentManager.setTitleAt(index, title);
+    }
+
+    public String getTitleAt(int index) {
+        return tabbedContentManager.getTitleAt(index);
     }
 
     public void setToolTipTextAt(int index, String toolTipText) {
-        tabbedPane.setToolTipTextAt(index, toolTipText);
+        tabbedContentManager.setToolTipTextAt(index, toolTipText);
+    }
+
+    public String getToolTipTextAt(int index) {
+        return tabbedContentManager.getToolTipTextAt(index);
+    }
+
+    public void setEnabledAt(int index, boolean enabled) {
+        if (tabbedContentManager.getSelectedIndex() == index && !enabled)
+            tabbedContentManager.setSelectedIndex(tabbedContentManager.getSelectedIndex() + 1 % tabbedContentManager.getTabCount());
+
+        tabbedContentManager.setEnabledAt(index, enabled);
+    }
+
+    public boolean isEnabledAt(int index) {
+        return tabbedContentManager.isEnabledAt(index);
+    }
+
+    public void setPopupMenuAt(int index, JPopupMenu popupMenu) {
+        tabbedContentManager.setPopupMenuAt(index, popupMenu);
+    }
+
+    public JPopupMenu getPopupMenuAt(int index) {
+        return tabbedContentManager.getPopupMenuAt(index);
+    }
+
+    public void setPopupMenu(JPopupMenu popupMenu) {
+        tabbedContentManager.setPopupMenu(popupMenu);
+    }
+
+    public JPopupMenu getPopupMenu() {
+        return tabbedContentManager.getPopupMenu();
     }
 
 
@@ -164,7 +188,7 @@ public class MyDoggyWindowContentManager implements ToolWindowContentManager {
             }
         });
 
-        this.tabbedPane = tabbedContentManager;
+        this.tabbedContentManager = tabbedContentManager;
     }
 
 }

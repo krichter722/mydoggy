@@ -15,9 +15,12 @@ import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro
- * @todo there are some syncronization problems if we use a tool window in a multi thread environment. Investigate it. 
  */
 public class MyDoggyToolWindow implements ToolWindow {
+    static final Object LOCK = new ToolWindowTreeLock();
+    static class ToolWindowTreeLock {
+    }
+
     private String id;
     private int index;
     private ToolWindowAnchor anchor;
@@ -38,9 +41,9 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     private int lastAnchorIndex;
 
-    private boolean fireToAllListeners = true;  // TODO: eliminate it.
+    private boolean publicEvent = true;
 
-    public MyDoggyToolWindow(MyDoggyToolWindowManager manager, Window anchestor, String id, int index,
+    MyDoggyToolWindow(MyDoggyToolWindowManager manager, Window anchestor, String id, int index,
                              ToolWindowAnchor anchor, ToolWindowType type,
                              String title, Icon icon, Component component,
                              ResourceBoundle resourceBoundle) {
@@ -73,10 +76,12 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (index != -1 && index <= 0 && index > 9)
             throw new IllegalArgumentException("Invalid index. Valid index range is [-1, 1-9]. [tool : " + getId() + ", index : " + index + "]");
 
-        int old = this.index;
-        this.index = index;
+        synchronized (getTreeLock()) {
+            int old = this.index;
+            this.index = index;
 
-        firePropertyChangeEvent("index", old, index);
+            firePropertyChangeEvent("index", old, index);
+        }
     }
 
     public boolean isAvailable() {
@@ -87,17 +92,19 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (this.available == available)
             return;
 
-        if (!available) {
-            if (isActive())
-                setActive(false);
-            if (isVisible())
-                setVisible(false);
+        synchronized (getTreeLock()) {
+            if (!available) {
+                if (isActive())
+                    setActive(false);
+                if (isVisible())
+                    setVisible(false);
+            }
+
+            boolean old = this.available;
+            this.available = available;
+
+            firePropertyChangeEvent("available", old, available);
         }
-
-        boolean old = this.available;
-        this.available = available;
-
-        firePropertyChangeEvent("available", old, available);
     }
 
     public boolean isVisible() {
@@ -108,15 +115,17 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (this.visible == visible)
             return;
 
-        if (visible)
-            setAvailable(visible);
-        else if (active)
-            setActive(false);
+        synchronized (getTreeLock()) {
+            if (visible)
+                setAvailable(visible);
+            else if (active)
+                setActive(false);
 
-        boolean old = this.visible;
-        this.visible = visible;
+            boolean old = this.visible;
+            this.visible = visible;
 
-        firePropertyChangeEvent("visible", old, visible);
+            firePropertyChangeEvent("visible", old, visible);
+        }
     }
 
     public boolean isActive() {
@@ -127,15 +136,17 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (this.active == active)
             return;
 
-        if (active) {
-            setAvailable(active);
-            setVisible(active);
+        synchronized (getTreeLock()) {
+            if (active) {
+                setAvailable(active);
+                setVisible(active);
+            }
+
+            boolean old = this.active;
+            this.active = active;
+
+            firePropertyChangeEvent("active", old, active);
         }
-
-        boolean old = this.active;
-        this.active = active;
-
-        firePropertyChangeEvent("active", old, active);
     }
 
     public ToolWindowAnchor getAnchor() {
@@ -146,21 +157,23 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (this.anchor == anchor && anchor.getIndex() == lastAnchorIndex)
             return;
 
-        boolean tempVisible = isVisible();
-        boolean tempActive = isActive();
+        synchronized (getTreeLock()) {
+            boolean tempVisible = isVisible();
+            boolean tempActive = isActive();
 
-        setAvailable(false);
-        ToolWindowAnchor oldAnchor = this.anchor;
-        this.anchor = anchor;
-        this.lastAnchorIndex = anchor.getIndex();
+            setAvailable(false);
+            ToolWindowAnchor oldAnchor = this.anchor;
+            this.anchor = anchor;
+            this.lastAnchorIndex = anchor.getIndex();
 
-        setAvailable(true);
-        if (tempActive)
-            setActive(true);
-        else if (tempVisible)
-            setVisible(true);
+            setAvailable(true);
+            if (tempActive)
+                setActive(true);
+            else if (tempVisible)
+                setVisible(true);
 
-        fireAnchorEvent(oldAnchor, anchor);
+            fireAnchorEvent(oldAnchor, anchor);
+        }
     }
 
     public boolean isAutoHide() {
@@ -171,9 +184,11 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (this.autoHide == autoHide)
             return;
 
-        boolean old = this.autoHide;
-        this.autoHide = autoHide;
-        firePropertyChangeEvent("autoHide", old, autoHide);
+        synchronized (getTreeLock()) {
+            boolean old = this.autoHide;
+            this.autoHide = autoHide;
+            firePropertyChangeEvent("autoHide", old, autoHide);
+        }
     }
 
     public ToolWindowType getType() {
@@ -184,27 +199,28 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (this.type == type)
             return;
 
+        synchronized (getTreeLock()) {
+            boolean tempVisible = isVisible();
+            boolean tempActive = isActive();
 
-        boolean tempVisible = isVisible();
-        boolean tempActive = isActive();
+            publicEvent = false;
 
-        fireToAllListeners = false;
+            setActive(false);
+            setVisible(false);
 
-        setActive(false);
-        setVisible(false);
+            publicEvent = true;
 
-        fireToAllListeners = true;
-
-        ToolWindowType oldType = this.type;
-        this.type = type;
+            ToolWindowType oldType = this.type;
+            this.type = type;
 
 
-        fireTypeEvent(oldType, type);
+            fireTypeEvent(oldType, type);
 
-        if (tempActive) {
-            setActive(true);
-        } else if (tempVisible)
-            setVisible(true);
+            if (tempActive) {
+                setActive(true);
+            } else if (tempVisible)
+                setVisible(true);
+        }
     }
 
     public Icon getIcon() {
@@ -212,10 +228,12 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setIcon(Icon icon) {
-        Icon old = this.icon;
-        this.icon = icon;
+        synchronized (getTreeLock()) {
+            Icon old = this.icon;
+            this.icon = icon;
 
-        fireIconEvent(old, icon);
+            fireIconEvent(old, icon);
+        }
     }
 
     public String getTitle() {
@@ -223,11 +241,13 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setTitle(String title) {
-        String newTitle = (resourceBoundle != null) ? resourceBoundle.getString(title) : title;
-        String old = this.title;
-        this.title = newTitle;
+        synchronized (getTreeLock()) {
+            String newTitle = (resourceBoundle != null) ? resourceBoundle.getString(title) : title;
+            String old = this.title;
+            this.title = newTitle;
 
-        fireTitleEvent(old, newTitle);
+            fireTitleEvent(old, newTitle);
+        }
     }
 
     public ToolWindowTypeDescriptor getTypeDescriptor(ToolWindowType type) {
@@ -251,6 +271,10 @@ public class MyDoggyToolWindow implements ToolWindow {
         return getClass().getName() + "[index : " + index + ", active : " + active + ", visible : " + visible + ", available : " + available + ']';
     }
 
+
+    public final Object getTreeLock() {
+        return LOCK;
+    }
 
     public ToolWindowDescriptor getDescriptor() {
         return descriptor;
@@ -295,7 +319,7 @@ public class MyDoggyToolWindow implements ToolWindow {
             listener.propertyChange(event);
         }
 
-        if (fireToAllListeners) {
+        if (publicEvent) {
             listeners = listenerList.getListeners(PropertyChangeListener.class);
             for (PropertyChangeListener listener : listeners) {
                 listener.propertyChange(event);
