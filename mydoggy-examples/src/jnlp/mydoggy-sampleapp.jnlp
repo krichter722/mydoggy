@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE jnlp SYSTEM "http://java.sun.com/dtd/JNLP-1.5.dtd">
+<jnlp codebase="http://localhost/" href="hello.jnlp">
+    <information>
+        <title>MyDoggy - Sample App</title>
+        <vendor>mydoggy</vendor>
+        <description>MyDoggy - Sample App</description>
+        <description kind="short">MyDoggy - Sample App</description>
+        <offline-allowed/>
+    </information>
+    <resources>
+        <j2se version="1.5"/>
+        <jar href="TableLayout-20020517.jar"/>
+        <jar href="mydoggy-api-1.0.0.jar"/>
+        <jar href="mydoggy-plaf-1.0.0.jar"/>
+        <jar href="mydoggy-examples-1.0.0.jar"/>
+    </resources>
+    <application-desc main-class="org.noos.xing.mydoggy.examples.sample.SampleApp"/>
+</jnlp>
