@@ -2,6 +2,8 @@
     <id>dist</id>
     <formats>
         <format>dir</format>
+        <format>zip</format>
+        <format>tar.gz</format>
     </formats>
     
     <includeBaseDirectory>false</includeBaseDirectory>
@@ -28,7 +30,7 @@
                 <exclude>*.iml</exclude>
             </excludes>
             <sources>
-                <outputDirectory>src/${artifactId}</outputDirectory>
+                <outputDirectory>${artifactId}</outputDirectory>
             </sources>
         </moduleSet>
     </moduleSets>
@@ -36,7 +38,7 @@
     <fileSets>
         <fileSet>
             <directory>mydoggy-transparency/src</directory>
-            <outputDirectory>src/mydoggy-transparency</outputDirectory>
+            <outputDirectory>mydoggy-transparency</outputDirectory>
             <includes/>
         </fileSet>
         <fileSet>
@@ -45,18 +47,24 @@
             <includes/>
         </fileSet>
 
+<!--
         <fileSet>
             <directory>${artifactId}/target/javadoc</directory>
             <outputDirectory>license</outputDirectory>
             <includes/>
         </fileSet>
+-->
 
     </fileSets>
 
     <files>
         <file>
             <source>TransparencyManager.dll</source>
-            <outputDirectory>transparency/win32</outputDirectory>
+            <outputDirectory>lib/win32</outputDirectory>
+        </file>
+        <file>
+            <source>pom.xml</source>
+            <outputDirectory>.</outputDirectory>
         </file>
     </files>
 

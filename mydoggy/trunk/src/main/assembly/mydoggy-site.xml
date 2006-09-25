@@ -1,0 +1,35 @@
+<assembly>
+    <id>site</id>
+    <formats>
+        <format>dir</format>
+    </formats>
+    
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <fileSets>
+        <fileSet>
+            <directory>target/site</directory>
+            <outputDirectory>site</outputDirectory>
+            <includes/>
+        </fileSet>
+
+        <fileSet>
+            <directory>mydoggy-api/target/site</directory>
+            <outputDirectory>site/mydoggy-api</outputDirectory>
+            <includes/>
+        </fileSet>
+
+        <fileSet>
+            <directory>mydoggy-plaf/target/site</directory>
+            <outputDirectory>site/mydoggy-plaf</outputDirectory>
+            <includes/>
+        </fileSet>
+
+        <fileSet>
+            <directory>mydoggy-examples/target/site</directory>
+            <outputDirectory>site/mydoggy-examples</outputDirectory>
+            <includes/>
+        </fileSet>
+    </fileSets>
+
+</assembly>
