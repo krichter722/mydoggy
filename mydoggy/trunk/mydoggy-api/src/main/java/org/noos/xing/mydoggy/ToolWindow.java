@@ -19,18 +19,23 @@ public interface ToolWindow {
      */
     String getId();
 
-    int getIndex();
-
-
+    /**
+     * This method is used to set the index for the tool. The index is used to activate or hide
+     * the tool with that index when the user uses the key combination ALT-index.
+     * Valid indexs are -1 or [1..9] where -1 means no index for the tool.
+     *
+     * @param index the new index for the tool.
+     * @see #getIcon()
+     */
     void setIndex(int index);
 
     /**
-     * Returns <tt>true</tt> is the tool is available.
+     * Returns the tool's index.
      *
-     * @return <tt>true</tt> is the tool is available, false otherwise.
-     * @see #setAvailable(boolean)
+     * @return tool's index.
+     * @see #setIndex(int)
      */
-    boolean isAvailable();
+    int getIndex();
 
     /**
      * The method is used to set the available property of the tool.
@@ -45,12 +50,12 @@ public interface ToolWindow {
     void setAvailable(boolean available);
 
     /**
-     * Returns <tt>true</tt> is the tool is visible.
+     * Returns <tt>true</tt> is the tool is available.
      *
-     * @return <tt>true</tt> is the tool is vixible, false otherwise.
-     * @see #setVisible(boolean)
+     * @return <tt>true</tt> is the tool is available, false otherwise.
+     * @see #setAvailable(boolean)
      */
-    boolean isVisible();
+    boolean isAvailable();
 
     /**
      * The method is used to set the visible property of the tool.
@@ -65,12 +70,12 @@ public interface ToolWindow {
     void setVisible(boolean visible);
 
     /**
-     * Returns <tt>true</tt> is the tool is active.
+     * Returns <tt>true</tt> is the tool is visible.
      *
-     * @return <tt>true</tt> is the tool is active, false otherwise.
-     * @see #setActive(boolean)
+     * @return <tt>true</tt> is the tool is vixible, false otherwise.
+     * @see #setVisible(boolean)
      */
-    boolean isActive();
+    boolean isVisible();
 
     /**
      * The method is used to set the active property of the tool.
@@ -86,13 +91,12 @@ public interface ToolWindow {
     void setActive(boolean active);
 
     /**
-     * Returns the anchor which the tool is anchored.
+     * Returns <tt>true</tt> is the tool is active.
      *
-     * @return the anchor for the tool.
-     * @see #setAnchor(ToolWindowAnchor)
-     * @see org.noos.xing.mydoggy.ToolWindowAnchor
+     * @return <tt>true</tt> is the tool is active, false otherwise.
+     * @see #setActive(boolean)
      */
-    ToolWindowAnchor getAnchor();
+    boolean isActive();
 
     /**
      * This method is used to set the anchor for the tool. The anchor specifies the position of the tool when
@@ -104,18 +108,32 @@ public interface ToolWindow {
      */
     void setAnchor(ToolWindowAnchor anchor);
 
-    boolean isAutoHide();
+    /**
+     * Returns the anchor which the tool is anchored.
+     *
+     * @return the anchor for the tool.
+     * @see #setAnchor(ToolWindowAnchor)
+     * @see org.noos.xing.mydoggy.ToolWindowAnchor
+     */
+    ToolWindowAnchor getAnchor();
 
+    /**
+     * This method is used to set the autoHide property for the tool.
+     *
+     * @param autoHide <code>true</code> to hide the tool when the tool losts focus;
+     *                 <code>false</code> to make inactive the tool when the tool losts focus.
+     * @see #isAutoHide() ()
+     */
     void setAutoHide(boolean autoHide);
 
     /**
-     * Returns the tool type.
+     * Returns the autoHide property value of the tool.
      *
-     * @return the type for the tool.
-     * @see #setType(ToolWindowType)
-     * @see ToolWindowType
+     * @return autoHide property value.
+     * @see #setAutoHide(boolean)
      */
-    ToolWindowType getType();
+    boolean isAutoHide();
+
 
     /**
      * This method is used to set the type for the tool. The type specifies the way the tool is showed, made available,
@@ -128,12 +146,13 @@ public interface ToolWindow {
     void setType(ToolWindowType type);
 
     /**
-     * Returns the tool icon.
+     * Returns the tool type.
      *
-     * @return the icon for the tool.
-     * @see #setIcon(javax.swing.Icon)
+     * @return the type for the tool.
+     * @see #setType(ToolWindowType)
+     * @see ToolWindowType
      */
-    Icon getIcon();
+    ToolWindowType getType();
 
     /**
      * This method is used to set the icon for the tool.
@@ -144,12 +163,12 @@ public interface ToolWindow {
     void setIcon(Icon icon);
 
     /**
-     * Returns the tool title.
+     * Returns the tool icon.
      *
-     * @return the title for the tool.
-     * @see #setTitle(String)
+     * @return the icon for the tool.
+     * @see #setIcon(javax.swing.Icon)
      */
-    String getTitle();
+    Icon getIcon();
 
     /**
      * This method is used to set the title for the tool.
@@ -158,6 +177,14 @@ public interface ToolWindow {
      * @see #getTitle() ()
      */
     void setTitle(String title);
+
+    /**
+     * Returns the tool title.
+     *
+     * @return the title for the tool.
+     * @see #setTitle(String)
+     */
+    String getTitle();
 
     /**
      * This method retrieves the TypeDescriptor for <code>type</code> that the tool use to modify the behaviours
@@ -208,8 +235,8 @@ public interface ToolWindow {
      * registered on this tool.
      *
      * @return all of this tool's <code>PropertyChangeListener</code>s
-     * or an empty array if no property change
-     * listeners are currently registered.
+     *         or an empty array if no property change
+     *         listeners are currently registered.
      * @see #addPropertyChangeListener
      * @see #removePropertyChangeListener
      */

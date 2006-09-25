@@ -12,6 +12,7 @@ public interface ToolWindowGroup {
 
     /**
      * Returns the group's name.
+     *
      * @return group's name.
      */
     String getName();
@@ -21,7 +22,7 @@ public interface ToolWindowGroup {
      * Appends the specified tool window to the end of this group.
      *
      * @param toolWindow tool window to be appended to this group.
-     * @throws NullPointerException if the specified tool window is null.
+     * @throws NullPointerException     if the specified tool window is null.
      * @throws IllegalArgumentException if tool window was already added.
      */
     void addToolWindow(ToolWindow toolWindow);
@@ -58,7 +59,7 @@ public interface ToolWindowGroup {
      * in proper sequence.
      *
      * @param visible true to make the tools, contained in this group, visible, false to hide.
-     * @see ToolWindow#setVisible(boolean)  
+     * @see ToolWindow#setVisible(boolean)
      */
     void setVisible(boolean visible);
 
@@ -69,7 +70,7 @@ public interface ToolWindowGroup {
      * If listener <code>listener</code> is <code>null</code>,
      * no exception is thrown and no action is performed.
      *
-     * @param listener  the <code>ToolWindowGroupListener</code> to register.
+     * @param listener the <code>ToolWindowGroupListener</code> to register.
      * @see ToolWindowGroupListener
      */
     void addToolWindowGroupListener(ToolWindowGroupListener listener);
@@ -81,7 +82,7 @@ public interface ToolWindowGroup {
      * If listener <code>listener</code> is <code>null</code>,
      * no exception is thrown and no action is performed.
      *
-     * @param listener  the <code>ToolWindowGroupListener</code> to be removed
+     * @param listener the <code>ToolWindowGroupListener</code> to be removed
      * @see #addToolWindowGroupListener(ToolWindowGroupListener)
      */
     void removeToolWindowGroupListener(ToolWindowGroupListener listener);
