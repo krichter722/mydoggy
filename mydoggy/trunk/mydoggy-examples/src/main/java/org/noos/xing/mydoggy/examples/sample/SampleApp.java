@@ -2,13 +2,15 @@ package org.noos.xing.mydoggy.examples.sample;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.examples.sample.ui.CheckBoxCellRenderer;
-import org.noos.xing.mydoggy.examples.sample.model.ToolsTableModel;
 import org.noos.xing.mydoggy.examples.sample.model.ToolGroupsTableModel;
+import org.noos.xing.mydoggy.examples.sample.model.ToolsTableModel;
+import org.noos.xing.mydoggy.examples.sample.ui.CheckBoxCellRenderer;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 
 import javax.swing.*;
+import javax.swing.table.TableColumn;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
@@ -119,14 +121,19 @@ public class SampleApp {
 
         ToolWindow toolWindow = toolWindowManager.registerToolWindow("8", "title4", null, new JButton("ciao4"), ToolWindowAnchor.RIGHT);
         toolWindow.setAvailable(true);
+
         toolWindow = toolWindowManager.registerToolWindow("9", "title4", null, new JButton("ciao4"), ToolWindowAnchor.RIGHT);
         toolWindow.setAvailable(true);
+
         toolWindow = toolWindowManager.registerToolWindow("10", "title4", null, new JButton("ciao4"), ToolWindowAnchor.RIGHT);
         toolWindow.setAvailable(true);
+
         toolWindow = toolWindowManager.registerToolWindow("11", "title4", null, new JButton("ciao4"), ToolWindowAnchor.RIGHT);
         toolWindow.setAvailable(true);
+
         toolWindow = toolWindowManager.registerToolWindow("12", "title4", null, new JButton("ciao4"), ToolWindowAnchor.RIGHT);
         toolWindow.setAvailable(true);
+
         toolWindow = toolWindowManager.registerToolWindow("13", "title4", null, new JButton("ciao4"), ToolWindowAnchor.RIGHT);
         toolWindow.setAvailable(true);
         toolWindow.setTitle("New Title");
@@ -193,9 +200,48 @@ public class SampleApp {
 
     protected Component initToolsContent() {
         JTable toolsTable = new JTable(new ToolsTableModel(toolWindowManager));
+        toolsTable.getTableHeader().setReorderingAllowed(false);
+
+
+        // Type column
+        JComboBox types = new JComboBox(new Object[]{ToolWindowType.DOCKED,
+                                                     ToolWindowType.SLIDING, ToolWindowType.FLOATING, ToolWindowType.FLOATING_WINDOW});
+        toolsTable.getColumnModel().getColumn(2).setCellEditor(
+                new DefaultCellEditor(types));
+
+        // Anchor column
+        JComboBox anchors = new JComboBox(new Object[]{ToolWindowAnchor.LEFT,
+                                                       ToolWindowAnchor.RIGHT, ToolWindowAnchor.BOTTOM, ToolWindowAnchor.TOP});
+        toolsTable.getColumnModel().getColumn(3).setCellEditor(
+                new DefaultCellEditor(anchors));
+
+        // TODO
         toolsTable.getColumnModel().getColumn(4).setCellRenderer(new CheckBoxCellRenderer());
         toolsTable.getColumnModel().getColumn(5).setCellRenderer(new CheckBoxCellRenderer());
         toolsTable.getColumnModel().getColumn(6).setCellRenderer(new CheckBoxCellRenderer());
+
+        // Index column
+        TableColumn indexColumn = toolsTable.getColumnModel().getColumn(7);
+        indexColumn.setCellRenderer(new DefaultTableCellRenderer(){
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                Integer index = (Integer) value;
+                if (index == -1)
+                    setText("No Index");
+                return c;
+            }
+        });
+        JComboBox indexs = new JComboBox(new Object[]{-1,1,2,3,4,5,6,7,8,9});
+        indexs.setRenderer(new DefaultListCellRenderer(){
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                Integer toolIndex = (Integer) value;
+                if (toolIndex == -1)
+                    setText("No Index");
+                return c;
+            }
+        });
+        indexColumn.setCellEditor(new DefaultCellEditor(indexs));
 
         toolsPopupMenu = new JPopupMenu("Tools");
         toolsPopupMenu.addPopupMenuListener(new PopupMenuListener() {
@@ -287,7 +333,8 @@ public class SampleApp {
     }
 
 
-    public static void main(String[] args) {
+    public static void main
+            (String[] args) {
         SampleApp test = new SampleApp();
         try {
             test.setUp();
