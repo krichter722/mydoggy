@@ -77,6 +77,9 @@ public class MyDoggyToolWindow implements ToolWindow {
             throw new IllegalArgumentException("Invalid index. Valid index range is [-1, 1-9]. [tool : " + getId() + ", index : " + index + "]");
 
         synchronized (getTreeLock()) {
+            if (index == this.index)
+                return;
+            
             int old = this.index;
             this.index = index;
 
@@ -154,10 +157,10 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setAnchor(ToolWindowAnchor anchor) {
-        if (this.anchor == anchor && anchor.getIndex() == lastAnchorIndex)
-            return;
-
         synchronized (getTreeLock()) {
+            if (this.anchor == anchor && anchor.getIndex() == lastAnchorIndex)
+                return;
+
             boolean tempVisible = isVisible();
             boolean tempActive = isActive();
 
@@ -196,10 +199,10 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setType(ToolWindowType type) {
-        if (this.type == type)
-            return;
-
         synchronized (getTreeLock()) {
+            if (this.type == type)
+                return;
+
             boolean tempVisible = isVisible();
             boolean tempActive = isActive();
 
@@ -229,6 +232,9 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     public void setIcon(Icon icon) {
         synchronized (getTreeLock()) {
+            if (this.icon == icon)
+                return;
+
             Icon old = this.icon;
             this.icon = icon;
 
@@ -243,6 +249,9 @@ public class MyDoggyToolWindow implements ToolWindow {
     public void setTitle(String title) {
         synchronized (getTreeLock()) {
             String newTitle = (resourceBoundle != null) ? resourceBoundle.getString(title) : title;
+            if (newTitle != null && newTitle.equals(this.title))
+                return;
+
             String old = this.title;
             this.title = newTitle;
 
@@ -268,7 +277,7 @@ public class MyDoggyToolWindow implements ToolWindow {
 
 
     public String toString() {
-        return getClass().getName() + "[index : " + index + ", active : " + active + ", visible : " + visible + ", available : " + available + ']';
+        return getClass().getName() + "[index : " + index + ", active : " + active + ", visible : " + visible + ", available : " + available + ", title : " + title +"]";
     }
 
 

@@ -627,11 +627,11 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
                 if (horizontal) {
                     int width = anchorLabel.getPreferredSize().width + 6;
+
                     contentPaneLayout.setColumn(constraints.col1, width);
                 } else {
-                    int height = Math.max(anchorLabel.getHeight(),
-                                          Math.max(anchorLabel.getPreferredSize().height,
-                                                   anchorLabel.getSize().height)) + 12;
+                    int height = Math.max(anchorLabel.getPreferredSize().height,
+                                                   anchorLabel.getSize().height);
                     contentPaneLayout.setRow(constraints.row1, height);
                 }
 

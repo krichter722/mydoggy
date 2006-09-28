@@ -63,6 +63,7 @@ public class AnchorLabelUI extends MetalLabelUI {
         AnchorLabelMouseAdapter adapter = new AnchorLabelMouseAdapter();
         c.addMouseListener(adapter);
         c.addMouseMotionListener(adapter);
+
         descriptor.getToolWindow().addInternalPropertyChangeListener(this);
     }
 
@@ -86,17 +87,19 @@ public class AnchorLabelUI extends MetalLabelUI {
         if ("visible".equals(e.getPropertyName())) {
             boolean visible = (Boolean) e.getNewValue();
             label.setOpaque(visible);
-            if (visible)
+            if (visible) {
                 labelBorder.setLineColor(Color.BLACK);
-            else
+
+                System.out.println(label.getBounds());
+                if (label.getParent() != null) {
+                    JViewport viewport = (JViewport) label.getParent().getParent();
+                    // TODO: calibrare correttamente il rettangolo.. 
+                    viewport.scrollRectToVisible(label.getVisibleRect() );
+                }
+            } else
                 labelBorder.setLineColor(Color.GRAY);
 
             SwingUtil.repaint(label);
-
-            // Move to Visible  TODO: fail with FLOATING_WINDOW and for other resaons.
-            JViewport viewport = (JViewport) label.getParent().getParent();
-            System.out.println(label.getBounds());
-            viewport.scrollRectToVisible(label.getBounds());
         }
     }
 
