@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="Doggy">
+<project name="MyDoggy">
 
     <bannerLeft>
         <name>MyDoggy - My Java Docking Framework</name>
@@ -17,21 +17,23 @@
     </poweredBy>
 
     <skin>
-        <groupId>org.apache.maven.skins</groupId>
-        <artifactId>maven-default-skin</artifactId>
+        <groupId>org.noos.xing</groupId>
+        <artifactId>mydoggy-site-skin</artifactId>
         <version>1.0-SNAPSHOT</version>
     </skin>
 
     <body>
         <links>
             <item name="Maven" href="http://maven.apache.org/"/>
-            <item name="Apache" href="http://www.apache.org/"/>
         </links>
 
         <menu name="MyDoggy">
             <item name="Introduction" href="index.html"/>
             <item name="Download" href="download.html"/>
-            <item name="FAQs" href="/faqs.html"/>
+        </menu>
+
+        <menu name="Sample App.">
+            <item name="MyDoggySet" href="/mydoggy-examples/index.html"/>
         </menu>
 
         <menu name="Modules">

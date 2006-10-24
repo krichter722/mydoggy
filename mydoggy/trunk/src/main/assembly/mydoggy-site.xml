@@ -30,6 +30,28 @@
             <outputDirectory>site/mydoggy-examples</outputDirectory>
             <includes/>
         </fileSet>
+
+        <fileSet>
+            <directory>mydoggy-examples/src/jnlp</directory>
+            <outputDirectory>site/mydoggy-examples/jnlp</outputDirectory>
+            <includes/>
+        </fileSet>
+
     </fileSets>
+
+    <files>
+        <file>
+            <source>mydoggy-api/target/mydoggy-api-1.0.0.jar</source>
+            <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
+        </file>
+        <file>
+            <source>mydoggy-plaf/target/mydoggy-plaf-1.0.0.jar</source>
+            <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
+        </file>
+        <file>
+            <source>mydoggy-examples/target/mydoggy-examples-1.0.0.jar</source>
+            <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
+        </file>
+    </files>
 
 </assembly>

@@ -36,6 +36,7 @@
     </licenses>
 
     <modules>
+        <module>mydoggy-site-skin</module>
         <module>mydoggy-api</module>
         <module>mydoggy-plaf</module>
         <module>mydoggy-examples</module>
@@ -61,6 +62,53 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <!-- Profile which creates an assembly using mydoggy-distro.xml -->
+        <profile>
+            <id>distro</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/main/assembly/mydoggy-distro.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <activation>
+                <property>
+                    <name>distro</name>
+                </property>
+            </activation>
+        </profile>
+
+        <!-- Profile which creates an assembly using mydoggy-site.xml -->
+        <profile>
+            <id>site</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/main/assembly/mydoggy-site.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <activation>
+                <property>
+                    <name>site</name>
+                </property>
+            </activation>
+        </profile>
+    </profiles>
+
+
     <build>
         <plugins>
             <plugin>
@@ -69,15 +117,6 @@
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <descriptors>
-                        <descriptor>src/main/assembly/mydoggy.xml</descriptor>
-                    </descriptors>
                 </configuration>
             </plugin>
         </plugins>
@@ -91,7 +130,6 @@
                 <reportSets>
                     <reportSet>
                         <reports>
-                            <report>dependencies</report>
                             <report>project-team</report>
                             <report>mailing-list</report>
                             <report>license</report>
@@ -99,6 +137,11 @@
                         </reports>
                     </reportSet>
                 </reportSets>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>changes-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </reporting>
