@@ -1,0 +1,28 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy-Examples : Introduction</title>
+        <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="Introduction">
+            <p>
+                MyDoggy-Examples contains some examples to see MyDoggy in action.
+                <ul>
+                    <li>
+                        <a href="./myDoggySet.html">MyDoggySet</a>
+                        is a sample application to see in action many functionalities of MyDoggy.
+                        You can modify tool window properties, show or hide groups and manage main window's contents.
+                        <p>
+                            If you can use WebStart click on the link to see MyDoggySet in action.
+                            <a href="./jnlp/mydoggyset/mydoggyset.jnlp">MyDoggySet</a>
+                        </p>
+                    </li>
+                </ul>
+            </p>
+        </section>
+    </body>
+</document>
