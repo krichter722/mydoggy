@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="MyDoggy-Plaf">
+
+    <bannerLeft>
+        <name>MyDoggy - My Java Docking Framework</name>
+        <src>/images/logo.png</src>
+        <href>http://mydoggy.sourceforge.net</href>
+    </bannerLeft>
+
+    <bannerRight>
+        <src>http://maven.apache.org/images/maven-small.gif</src>
+    </bannerRight>
+
+    <poweredBy>
+        <item img="http://sourceforge.net/sflogo.php?group_id=16035&amp;type=1"
+              name="Hosted by SourceForge" href="http://www.sourceforge.net"/>
+    </poweredBy>
+
+    <skin>
+        <groupId>org.noos.xing</groupId>
+        <artifactId>mydoggy-site-skin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </skin>
+
+    <body>
+        <links>
+            <item name="MyDoggy" href="./../index.html"/>
+            <item name="Maven" href="http://maven.apache.org/"/>
+        </links>
+
+        <menu name="MyDoggy">
+            <item name="Introduction" href="index.html"/>
+            <item name="FAQs" href="/faqs.html"/>
+        </menu>
+
+        ${reports}
+    </body>
+
+</project>
