@@ -4,6 +4,7 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.border.SlidingBorder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -238,6 +239,8 @@ public class SlidingContainer extends FloatingContainer {
         private static final float ANIMATION_DURATION = 100f;
         private static final int ANIMATION_SLEEP = 1;
 
+        private final Object LOCK = new Object();
+
         private boolean animating;
         private int animationDirection;
         private Timer animationTimer;
@@ -253,96 +256,103 @@ public class SlidingContainer extends FloatingContainer {
                 // calculate height to show
                 float animationPercent = (System.currentTimeMillis() - animationStart) / ANIMATION_DURATION;
                 animationPercent = Math.min(1.0f, animationPercent);
-                try {
-                    int animatingLength = 0;
 
-                    switch (toolWindow.getAnchor()) {
-                        case LEFT:
-                            if (animationDirection == INCOMING)
-                                animatingLength = (int) (animationPercent * length);
-                            else
-                                animatingLength = (int) ((1f - animationPercent) * length);
-                            sheet.setSize(animatingLength, sheet.getHeight());
-                            break;
-                        case RIGHT:
-                            animatingLength = (int) (animationPercent * length);
-                            if (animationDirection == INCOMING) {
-                                sheet.setLocation(sheet.getX() - (animatingLength - lastLen), sheet.getY());
+                synchronized(LOCK) {
+                    try {
+                        int animatingLength = 0;
+
+                        switch (toolWindow.getAnchor()) {
+                            case LEFT:
+                                if (animationDirection == INCOMING)
+                                    animatingLength = (int) (animationPercent * length);
+                                else
+                                    animatingLength = (int) ((1f - animationPercent) * length);
                                 sheet.setSize(animatingLength, sheet.getHeight());
-                            } else {
-                                sheet.setLocation(bounds.x + animatingLength, sheet.getY());
-                                sheet.setSize((int) ((1f - animationPercent) * length), sheet.getHeight());
-                            }
-                            break;
-                        case TOP:
-                            if (animationDirection == INCOMING)
+                                break;
+                            case RIGHT:
                                 animatingLength = (int) (animationPercent * length);
-                            else
-                                animatingLength = (int) ((1f - animationPercent) * length);
-                            sheet.setSize(sheet.getWidth(), animatingLength);
-                            break;
-                        case BOTTOM:
-                            animatingLength = (int) (animationPercent * length);
-                            if (animationDirection == INCOMING) {
-                                sheet.setLocation(sheet.getX(), sheet.getY() - (animatingLength - lastLen));
+                                if (animationDirection == INCOMING) {
+                                    sheet.setLocation(sheet.getX() - (animatingLength - lastLen), sheet.getY());
+                                    sheet.setSize(animatingLength, sheet.getHeight());
+                                } else {
+                                    sheet.setLocation(bounds.x + animatingLength, sheet.getY());
+                                    sheet.setSize((int) ((1f - animationPercent) * length), sheet.getHeight());
+                                }
+                                break;
+                            case TOP:
+                                if (animationDirection == INCOMING)
+                                    animatingLength = (int) (animationPercent * length);
+                                else
+                                    animatingLength = (int) ((1f - animationPercent) * length);
                                 sheet.setSize(sheet.getWidth(), animatingLength);
-                            } else {
-                                sheet.setLocation(sheet.getX(), bounds.y + animatingLength);
-                                sheet.setSize(sheet.getWidth(), (int) ((1f - animationPercent) * length));
-                            }
+                                break;
+                            case BOTTOM:
+                                animatingLength = (int) (animationPercent * length);
+                                if (animationDirection == INCOMING) {
+                                    sheet.setLocation(sheet.getX(), sheet.getY() - (animatingLength - lastLen));
+                                    sheet.setSize(sheet.getWidth(), animatingLength);
+                                } else {
+                                    sheet.setLocation(sheet.getX(), bounds.y + animatingLength);
+                                    sheet.setSize(sheet.getWidth(), (int) ((1f - animationPercent) * length));
+                                }
 
-                            break;
-                    }
-                    sheet.validate();
-                    sheet.repaint();
+                                break;
+                        }
+                        sheet.validate();
+                        sheet.repaint();
 
-                    lastLen = animatingLength;
-                } finally {
-                    if (animationPercent >= 1.0f) {
-                        stopAnimation();
-                        finishAnimation();
+                        lastLen = animatingLength;
+                    } finally {
+                        if (animationPercent >= 1.0f) {
+                            stopAnimation();
+                            finishAnimation();
+                        }
                     }
                 }
             }
         }
 
-        public synchronized void show(Rectangle bounds) {
-            if (animating) {
-                stopAnimation();
-//                finishAnimation();
+        public void show(Rectangle bounds) {
+            synchronized(LOCK) {
+                if (animating) {
+                    stopAnimation();
+    //                finishAnimation();
+                }
+
+                this.bounds = bounds;
+
+                switch (toolWindow.getAnchor()) {
+                    case LEFT:
+                        sheet.setSize(0, sheet.getHeight());
+                        break;
+                    case RIGHT:
+                        sheet.setLocation(sheet.getX() + sheet.getWidth(), sheet.getY());
+                        sheet.setSize(0, sheet.getHeight());
+                        break;
+                    case TOP:
+                        sheet.setSize(sheet.getWidth(), 0);
+                        break;
+                    case BOTTOM:
+                        sheet.setLocation(sheet.getX(), sheet.getY() + sheet.getHeight());
+                        sheet.setSize(sheet.getWidth(), 0);
+                        break;
+                }
+
+                startAnimation(INCOMING);
             }
-
-            this.bounds = bounds;
-
-            switch (toolWindow.getAnchor()) {
-                case LEFT:
-                    sheet.setSize(0, sheet.getHeight());
-                    break;
-                case RIGHT:
-                    sheet.setLocation(sheet.getX() + sheet.getWidth(), sheet.getY());
-                    sheet.setSize(0, sheet.getHeight());
-                    break;
-                case TOP:
-                    sheet.setSize(sheet.getWidth(), 0);
-                    break;
-                case BOTTOM:
-                    sheet.setLocation(sheet.getX(), sheet.getY() + sheet.getHeight());
-                    sheet.setSize(sheet.getWidth(), 0);
-                    break;
-            }
-
-            startAnimation(INCOMING);
         }
 
-        public synchronized void hide(Rectangle bounds) {
-            if (animating) {
-                stopAnimation();
-                finishAnimation();
+        public void hide(Rectangle bounds) {
+            synchronized(LOCK) {
+                if (animating) {
+                    stopAnimation();
+                    finishAnimation();
+                }
+
+                this.bounds = bounds;
+
+                startAnimation(OUTGOING);
             }
-
-            this.bounds = bounds;
-
-            startAnimation(OUTGOING);
         }
 
 

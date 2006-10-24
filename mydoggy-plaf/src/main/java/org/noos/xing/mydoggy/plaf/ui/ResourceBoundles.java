@@ -1,28 +1,22 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
-import org.noos.xing.mydoggy.plaf.boundle.DefaultResourceBoundle;
-import org.noos.xing.mydoggy.plaf.boundle.ResourceBoundle;
-
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ResourceBoundles {
-    private static ResourceBoundle resourceBoundle;
+    private static ResourceBundle resourceBundle;
 
     public static void initResourceBoundles(Locale locale) {
         if (locale == null)
             locale = Locale.getDefault();
 
-        DefaultResourceBoundle defaultResourceBoundle = new DefaultResourceBoundle("ToolWindowManager");
-        defaultResourceBoundle.addResource("org/noos/xing/mydoggy/plaf/ui/messages/messages",
-                                           locale,
-                                           null);
-        resourceBoundle = defaultResourceBoundle;
+        resourceBundle = ResourceBundle.getBundle("org/noos/xing/mydoggy/plaf/ui/messages/messages", locale);
     }
 
-    public static ResourceBoundle getResourceBoundle() {
-        return resourceBoundle;
+    public static ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 }

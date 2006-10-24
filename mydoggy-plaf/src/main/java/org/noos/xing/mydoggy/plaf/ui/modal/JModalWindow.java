@@ -12,12 +12,9 @@ public class JModalWindow extends JWindow {
 
     public JModalWindow(Window owner, Component returnFocus, boolean modal) {
         super(owner);
-
         this.returnFocus = returnFocus;
-
-        if (modal) {
+        if (modal)
             modalToWindow = owner;
-        }
 
         synchronized (JModalWindow.this) {
             notifiedModalToWindow = true;
@@ -26,30 +23,25 @@ public class JModalWindow extends JWindow {
         enableEvents(WindowEvent.WINDOW_EVENT_MASK | ComponentEvent.MOUSE_MOTION_EVENT_MASK);
     }
 
-    public void show() {
-        synchronized (JModalWindow.this) {
-            if ((modalToWindow != null) && notifiedModalToWindow) {
-                modalToWindow.setEnabled(false);
-                notifiedModalToWindow = false;
+    public void setVisible(boolean visible) {
+        if (!visible)
+            restoreOwner();
+        else {
+            if (!isVisible()) {
+                synchronized (JModalWindow.this) {
+                    if ((modalToWindow != null) && notifiedModalToWindow) {
+                        modalToWindow.setEnabled(false);
+                        notifiedModalToWindow = false;
+                    }
+                }
             }
         }
-
-        super.show();
-    }
-
-    public void setVisible(boolean visible) {
-        if (!visible) {
-            restoreOwner();
-        }
-
+        
         super.setVisible(visible);
     }
 
     public void setModal(boolean modal) {
-        if (modal) {
-            modalToWindow = getOwner();
-        } else
-            modalToWindow = null;
+        modalToWindow = modal ? getOwner() : null;
     }
 
     public boolean isModal() {

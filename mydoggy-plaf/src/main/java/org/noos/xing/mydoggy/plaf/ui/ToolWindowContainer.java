@@ -7,6 +7,8 @@ import java.beans.PropertyChangeListener;
  */
 public interface ToolWindowContainer extends PropertyChangeListener {
 
+    void updateUI();
+
     void uninstall();
 
 }

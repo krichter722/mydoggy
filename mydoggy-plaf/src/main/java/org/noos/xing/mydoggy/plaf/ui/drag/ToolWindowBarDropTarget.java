@@ -91,9 +91,9 @@ public class ToolWindowBarDropTarget extends DropTarget implements DropTargetLis
     }
 
 
-    private interface SeparatorLabel {}
+    private static interface SeparatorLabel {}
 
-    private class VerticalSeparatorLabel extends JLabel implements SeparatorLabel {
+    private static class VerticalSeparatorLabel extends JLabel implements SeparatorLabel {
         public VerticalSeparatorLabel() {
             setIcon(
                     new ImageIcon(Toolkit.getDefaultToolkit().getImage(
@@ -104,7 +104,7 @@ public class ToolWindowBarDropTarget extends DropTarget implements DropTargetLis
         }
     }
 
-    private class HorizontalSeparatorLabel extends JLabel implements SeparatorLabel {
+    private static class HorizontalSeparatorLabel extends JLabel implements SeparatorLabel {
         public HorizontalSeparatorLabel() {
             setIcon(
                     new ImageIcon(Toolkit.getDefaultToolkit().getImage(
@@ -114,7 +114,6 @@ public class ToolWindowBarDropTarget extends DropTarget implements DropTargetLis
             );
         }
     }
-
 
     private static class BarDropTargetListener extends DropTargetAdapter {
         private ToolWindowAnchor anchor;
@@ -179,6 +178,5 @@ public class ToolWindowBarDropTarget extends DropTarget implements DropTargetLis
         }
 
     }
-
 
 }

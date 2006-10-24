@@ -13,10 +13,11 @@ import java.awt.event.ActionListener;
 public class TransparencyAnimation implements ActionListener {
     public static final int INCOMING = 1;
     public static final int OUTGOING = -1;
-    public static final float ANIMATION_DURATION = 1000f;
+    public static final float ANIMATION_DURATION = 2000f;
     public static final int ANIMATION_SLEEP = 10;
 
     private final TransparencyManager transparencyManager = TransparencyManager.getInstance();
+    private final Object LOCK = new Object();
 
     private boolean animating;
     private int animationDirection;
@@ -39,40 +40,46 @@ public class TransparencyAnimation implements ActionListener {
             float animationPercent = (System.currentTimeMillis() - animationStart) / ANIMATION_DURATION;
             animationPercent = Math.min(1.0f, animationPercent);
 
-            float animatingLengthX = 1f - (animationPercent * alpha);
-            if (animatingLengthX < alpha) {
-                animationPercent = 1.0f;
-            } else if (animationDirection == INCOMING) {
-                transparencyManager.setAlphaModeRatio(window, animatingLengthX);
-            }
+            synchronized (LOCK) {
+                float animatingLengthX = 1f - (animationPercent * alpha);
+                if (animatingLengthX < alpha) {
+                    animationPercent = 1.0f;
+                } else if (animationDirection == INCOMING) {
+                    transparencyManager.setAlphaModeRatio(window, animatingLengthX);
+                }
 
-            if (animationPercent >= 1.0f) {
-                stopAnimation();
-                finishAnimation();
+                if (animationPercent >= 1.0f) {
+                    stopAnimation();
+                    finishAnimation();
+                }
             }
         }
     }
 
 
-    public synchronized void show() {
-        if (animating) {
-            stopAnimation();
-            animationDirection = OUTGOING;
-            finishAnimation();
-        }
+    public void show() {
+        synchronized (LOCK) {
+            if (animating) {
+                stopAnimation();
+                animationDirection = OUTGOING;
+                finishAnimation();
+            }
 
-        startAnimation(INCOMING);
+            startAnimation(INCOMING);
+        }
     }
 
     public synchronized void hide() {
-        if (animating) {
-            stopAnimation();
-            animationDirection = INCOMING;
-            finishAnimation();
-        }
+        synchronized (LOCK) {
+            if (animating) {
+                stopAnimation();
+                animationDirection = INCOMING;
+                finishAnimation();
+            }
 
-        if (endAnimation)
-            startAnimation(OUTGOING);
+            if (endAnimation)
+                startAnimation(OUTGOING);
+        }
     }
 
     public void setAlpha(float alpha) {

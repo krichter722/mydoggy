@@ -10,6 +10,9 @@ public class CompositeIcon implements Icon, SwingConstants {
     protected Icon icon1;
     protected Icon icon2;
 
+    protected Rectangle icon1Rec;
+    protected Rectangle icon2Rec;
+
     protected int position;
     protected int horizontalOrientation;
     protected int verticalOrientation;
@@ -66,6 +69,36 @@ public class CompositeIcon implements Icon, SwingConstants {
         }
     }
 
+    public int getIconWidth() {
+        if (position == LEFT || position == RIGHT)
+            return getIconWidth(icon1) + getIconWidth(icon2);
+        return Math.max(getIconWidth(icon1), getIconWidth(icon2));
+    }
+
+    public int getIconHeight() {
+        if (position == TOP || position == BOTTOM)
+            return getIconHeight(icon1) + getIconHeight(icon2);
+        return Math.max(getIconHeight(icon1), getIconHeight(icon2));
+    }
+
+
+    public Icon getIcon1() {
+        return icon1;
+    }
+
+    public Icon getIcon2() {
+        return icon2;
+    }
+
+    public Rectangle getIcon1Rec() {
+        return icon1Rec;
+    }
+
+    public Rectangle getIcon2Rec() {
+        return icon2Rec;
+    }
+    
+
     protected void paintIconInternal(Component c, Graphics g, Icon icon, int x, int y, int width, int height,
                                      int horizontalOrientation, int verticalOrientation) {
         if (icon == null)
@@ -94,34 +127,24 @@ public class CompositeIcon implements Icon, SwingConstants {
                 yIcon = y + (height - icon.getIconHeight() >> 1);
                 break;
         }
-        icon.paintIcon(c, g, xIcon, yIcon);
+        paint(c, g, icon, xIcon, yIcon);
     }
 
-    public int getIconWidth() {
-        if (position == LEFT || position == RIGHT)
-            return getIconWidth(icon1) + getIconWidth(icon2);
-        return Math.max(getIconWidth(icon1), getIconWidth(icon2));
+    protected void paint(Component c, Graphics g, Icon icon, int x, int y) {
+        icon.paintIcon(c, g, x, y);
+
+        if (icon == icon1) {
+            icon1Rec = new Rectangle(x, y, getIconWidth(icon1), getIconHeight(icon1));
+        } else
+            icon2Rec = new Rectangle(x, y, getIconWidth(icon2), getIconHeight(icon2));
     }
 
-    public int getIconHeight() {
-        if (position == TOP || position == BOTTOM)
-            return getIconHeight(icon1) + getIconHeight(icon2);
-        return Math.max(getIconHeight(icon1), getIconHeight(icon2));
-    }
-
-    public Icon getIcon1() {
-        return icon1;
-    }
-
-    public Icon getIcon2() {
-        return icon2;
-    }
-
-    private int getIconWidth(Icon icon) {
+    protected int getIconWidth(Icon icon) {
         return (icon != null) ? icon.getIconWidth() : 0;
     }
 
-    private int getIconHeight(Icon icon) {
+    protected int getIconHeight(Icon icon) {
         return (icon != null) ? icon.getIconHeight() : 0;
     }
+
 }

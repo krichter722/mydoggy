@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 
 import javax.swing.event.MouseInputListener;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -70,8 +71,12 @@ public class SlidingMouseInputHandler implements MouseInputListener {
     }
 
     public void mouseReleased(MouseEvent ev) {
+        Component w = (Component) ev.getSource();
+
         dragCursor = 0;
         lastCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
+
+        w.setCursor(Cursor.getDefaultCursor());
     }
 
     public void mouseMoved(MouseEvent ev) {
@@ -121,12 +126,16 @@ public class SlidingMouseInputHandler implements MouseInputListener {
             }
 
             if (!r.equals(startBounds)) {
+                JMenuBar menuBar = ((RootPaneContainer) descriptor.getManager().getAnchestor()).getRootPane().getJMenuBar();
+
+                Rectangle containerRect = descriptor.getToolWindowManagerContainer().getBounds();
+
                 switch (toolWindow.getAnchor()) {
                     case LEFT:
                         if (r.width < 5)
                             r.width = 5;
 
-                        int maxWidth = descriptor.getToolWindowManagerContainer().getWidth();
+                        int maxWidth = containerRect.width;
                         if (descriptor.getToolBar(ToolWindowAnchor.RIGHT).getAvailableTools() > 0)
                             maxWidth -= 46;
                         else
@@ -139,34 +148,31 @@ public class SlidingMouseInputHandler implements MouseInputListener {
                         if (r.width < 5)
                             r.width = 5;
 
-                        // Max x
-                        int maxX = descriptor.getToolWindowManagerContainer().getWidth() - 28;
-                        if (r.x > maxX) {
-                            r.x = maxX;
-                        }
+                        int toolsOnLeft = descriptor.getToolBar(ToolWindowAnchor.LEFT).getAvailableTools();
 
-                        // Min x
-                        int minX = descriptor.getToolWindowManagerContainer().getX();
-                        if (descriptor.getToolBar(ToolWindowAnchor.LEFT).getAvailableTools() > 0) {
-                            minX += 22;
-                        }
+                        // Min y
+                        int minX = containerRect.x + (toolsOnLeft > 0 ? 23 : 0);
                         if (r.x < minX)
                             r.x = minX;
 
-                        // Max width
-                        maxWidth = descriptor.getToolWindowManagerContainer().getWidth();
-                        maxWidth -= descriptor.getToolBar(ToolWindowAnchor.LEFT).getAvailableTools() > 0 ? 45 : 23;
+                        // Max y
+                        int maxX = (containerRect.x + containerRect.width) - 5 - 23;
+                        if (r.x > maxX)
+                            r.x = maxX;
 
+                        // Max height
+                        maxWidth = containerRect.width - (toolsOnLeft > 0 ? 46 : 23);
                         if (r.width > maxWidth)
                             r.width = maxWidth;
+
                         break;
                     case TOP:
                         if (r.height < 5)
                             r.height = 5;
 
                         // Max width
-                        int diff = descriptor.getToolBar(ToolWindowAnchor.BOTTOM).getAvailableTools() > 0 ? 45 : 22;
-                        int maxHeight = descriptor.getToolWindowManagerContainer().getHeight() - diff;
+                        int diff = descriptor.getToolBar(ToolWindowAnchor.BOTTOM).getAvailableTools() > 0 ? 46 : 23;
+                        int maxHeight = containerRect.height - diff;
                         if (r.height > maxHeight)
                             r.height = maxHeight;
 
@@ -175,28 +181,23 @@ public class SlidingMouseInputHandler implements MouseInputListener {
                         if (r.height < 5)
                             r.height = 5;
 
-                        // Min y
-                        int minY = descriptor.getToolWindowManagerContainer().getY();
-                        minY -= descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0 ? -24 : -1;
-                        if (r.y < minY) {
-                            r.y = minY;
-                        }
+                        int toolsOnTop = descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools();
+                        int diffMenu = (menuBar != null) ? menuBar.getHeight() : 0;
 
-                        // Max width
-                        diff = descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0 ? 47 : 24;
-                        maxHeight = descriptor.getToolWindowManagerContainer().getHeight() - diff;
-                        if (r.height > maxHeight)
-                            r.height = maxHeight;
+                        // Min y
+                        int minY = containerRect.y + (toolsOnTop > 0 ? 23 : 0) + diffMenu;
+                        if (r.y < minY)
+                            r.y = minY;
 
                         // Max y
-                        int maxY = descriptor.getToolWindowManagerContainer().getHeight();
-                        if (descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0) {
-                            maxY -= 28;
-                        } else
-                            maxY -= 28;
-
+                        int maxY = (containerRect.y + containerRect.height) - 5 - 23 + diffMenu;
                         if (r.y > maxY)
                             r.y = maxY;
+
+                        // Max height
+                        maxHeight = containerRect.height - (toolsOnTop > 0 ? 46 : 23);
+                        if (r.height > maxHeight)
+                            r.height = maxHeight;
 
                         break;
                 }
@@ -214,7 +215,7 @@ public class SlidingMouseInputHandler implements MouseInputListener {
 
     public void mouseExited(MouseEvent ev) {
         Component w = (Component) ev.getSource();
-        w.setCursor(lastCursor);
+        w.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     public void mouseClicked(MouseEvent ev) {

@@ -17,6 +17,7 @@ public class TextIcon implements Icon, PropertyChangeListener {
     static final double NINETY_DEGREES = Math.toRadians(90.0);
     static final int kBufferSpace = 5;
 
+    protected Color foreground;
     protected Component component;
     protected String text;
     protected int rotation;
@@ -38,12 +39,12 @@ public class TextIcon implements Icon, PropertyChangeListener {
     }
 
     public void paintIcon(Component c, Graphics g, int x, int y) {
-        g.setColor(c.getForeground());
+        g.setColor(foreground != null ? foreground : c.getForeground());
         g.setFont(c.getFont());
 
         switch (rotation) {
             case ROTATE_NONE:
-                g.drawString(text, kBufferSpace, -fDescent);
+                g.drawString(text, x + kBufferSpace, y + fHeight - fDescent);
                 break;
             case ROTATE_LEFT:
                 Graphics2D g2D = (Graphics2D) g;
@@ -87,6 +88,13 @@ public class TextIcon implements Icon, PropertyChangeListener {
         return component;
     }
 
+    public Color getForeground() {
+        return foreground;
+    }
+
+    public void setForeground(Color foreground) {
+        this.foreground = foreground;
+    }
 
     protected void recalcDimensions() {
         int wOld = getIconWidth();

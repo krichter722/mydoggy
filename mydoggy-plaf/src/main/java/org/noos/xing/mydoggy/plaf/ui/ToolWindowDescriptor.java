@@ -77,6 +77,10 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         return manager.getBar(anchor);
     }
 
+    public MyDoggyToolWindowBar getToolBar() {
+        return manager.getBar(toolWindow.getAnchor());
+    }
+
     public MyDoggyToolWindow getToolWindow() {
         return toolWindow;
     }
@@ -132,11 +136,11 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
                                                                   : toolWindow.getTitle();
 
             if (anchor == ToolWindowAnchor.BOTTOM || anchor == ToolWindowAnchor.TOP) {
-                anchorLabel = new JLabel(toolAnchorLabelName, toolWindow.getIcon(), JLabel.CENTER);
+                anchorLabel = new AnchorLabel(toolAnchorLabelName, toolWindow.getIcon(), JLabel.CENTER);
             } else {
                 TextIcon textIcon = new TextIcon(container, toolAnchorLabelName, anchor == ToolWindowAnchor.LEFT ? TextIcon.ROTATE_LEFT : TextIcon.ROTATE_RIGHT);
                 CompositeIcon compositeIcon = new CompositeIcon(textIcon, toolWindow.getIcon());
-                anchorLabel = new JLabel(compositeIcon, JLabel.CENTER);
+                anchorLabel = new AnchorLabel(compositeIcon, JLabel.CENTER);
             }
 
             anchorLabel.setName(toolAnchorLabelName);
@@ -195,6 +199,34 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
                 anchorLabel.setText(null);
                 anchorLabel.setIcon(compositeIcon);
             }
+        }
+    }
+
+    public void updateUI() {
+        getToolWindowContainer().updateUI();
+        SwingUtilities.updateComponentTreeUI(getComponent());
+        if (getAnchorLabel() != null)
+            getAnchorLabel().updateUI();
+    }
+
+
+    private class AnchorLabel extends JLabel {
+
+        public AnchorLabel(Icon image, int horizontalAlignment) {
+            super(image, horizontalAlignment);
+            super.setUI(createLabelUI());
+        }
+
+        public AnchorLabel(String text, Icon icon, int horizontalAlignment) {
+            super(text, icon, horizontalAlignment);
+            super.setUI(createLabelUI());
+        }
+
+        public void setUI(LabelUI ui) {
+        }
+
+        public void updateUI() {
+            firePropertyChange("UI", null, getUI());
         }
     }
 

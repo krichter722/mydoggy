@@ -4,11 +4,12 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.collections.ResolvableHashtable;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ButtonUI;
+import javax.swing.plaf.PanelUI;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,11 +21,15 @@ import java.beans.PropertyChangeListener;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * @author Angelo De Caro
  */
 public class DockedContainer implements PropertyChangeListener, ToolWindowContainer {
+    private static ResourceBundle resourceBundle = ResourceBoundles.getResourceBundle();
+    private static IconProvider iconProvider;
+
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
 
@@ -45,8 +50,6 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
     boolean valueAdjusting;
 
-    private IconProvider iconProvider;
-
     public DockedContainer(ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
@@ -64,6 +67,10 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
     public Container getContentContainer() {
         return container;
+    }
+
+    public void updateUI() {
+        SwingUtilities.updateComponentTreeUI(getContentContainer());
     }
 
     public void uninstall() {
@@ -98,24 +105,38 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
     protected void setSliding() {
         dockButton.setIcon(iconProvider.docked);
-        dockButton.setToolTipText(ResourceBoundles.getResourceBoundle().getString("@@tool.tooltip.dock"));
+        dockButton.setToolTipText(ResourceBoundles.getResourceBundle().getString("@@tool.tooltip.dock"));
     }
 
     protected void setDocked() {
         dockButton.setIcon(iconProvider.sliding);
-        dockButton.setToolTipText(ResourceBoundles.getResourceBoundle().getString("@@tool.tooltip.undock"));
+        dockButton.setToolTipText(ResourceBoundles.getResourceBundle().getString("@@tool.tooltip.undock"));
     }
 
     protected void setFix() {
         floatingButton.setIcon(iconProvider.fix);
-        floatingButton.setToolTipText(ResourceBoundles.getResourceBoundle().getString("@@tool.tooltip.fix"));
+        floatingButton.setToolTipText(ResourceBoundles.getResourceBundle().getString("@@tool.tooltip.fix"));
     }
 
     protected void setFloating() {
         floatingButton.setIcon(iconProvider.floating);
-        floatingButton.setToolTipText(ResourceBoundles.getResourceBoundle().getString("@@tool.tooltip.float"));
+        floatingButton.setToolTipText(ResourceBoundles.getResourceBundle().getString("@@tool.tooltip.float"));
     }
 
+    protected Component findFocusable(Component cmp) {
+        if (cmp.isFocusable())
+            return cmp;
+
+        if (cmp instanceof Container) {
+            Container container = (Container) cmp;
+            for (int i = 0, size = container.getComponentCount(); i < size; i++) {
+                Component finded = findFocusable(container.getComponent(i));
+                if (finded != null)
+                    return finded;
+            }
+        }
+        return null;
+    }
 
     private void initDockedComponents() {
         iconProvider = new IconProvider();
@@ -134,12 +155,18 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
         // Container
         container = new JPanel(new TableLayout(new double[][]{{TableLayout.FILL}, {16, TableLayout.FILL}}));
-        container.setBorder(new LineBorder(Color.GRAY, 1, true, 3,3));
+        container.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
         container.setFocusCycleRoot(false);
 
         // Application Bar
-        applicationBar = new JPanel(new TableLayout(new double[][]{{3, TableLayout.FILL, 3, 15, 2, 15, 2, 15, 2, 15, 3}, {1, 14, 1}}));
+        applicationBar = new JPanel(new TableLayout(new double[][]{{3, TableLayout.FILL, 3, 15, 2, 15, 2, 15, 2, 15, 3}, {1, 14, 1}})) {
+            public void setUI(PanelUI ui) {
+                if (ui instanceof ApplicationBarPanelUI)
+                    super.setUI(ui);
+            }
+        };
         applicationBar.setBorder(null);
+        applicationBar.setEnabled(false);
         applicationBar.setUI(new ApplicationBarPanelUI(descriptor, this));
 
         // Title
@@ -154,7 +181,6 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         pinButton = renderApplicationButton("autohideOff", "pin", applicationBarActionListener, "@@tool.tooltip.unpin");
         floatingButton = renderApplicationButton("floating", "floating", applicationBarActionListener, "@@tool.tooltip.float");
         dockButton = renderApplicationButton("sliding", "undock", applicationBarActionListener, "@@tool.tooltip.undock");
-        hideButton.setFocusable(true);
 
         // Set ApplicationBar content
         applicationBar.add(applicationBarTitle, "1,1");
@@ -162,7 +188,6 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         applicationBar.add(floatingButton, "5,1");
         applicationBar.add(pinButton, "7,1");
         applicationBar.add(hideButton, "9,1");
-        focusRequester = hideButton;
 
         Component toolWindowCmp = descriptor.getComponent();
         toolWindowCmp.addMouseListener(applicationBarMouseAdapter);
@@ -171,6 +196,11 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         container.add(applicationBar, "0,0");
         container.add(toolWindowCmp, "0,1");
 
+        focusRequester = findFocusable(toolWindowCmp);
+        if (focusRequester == null) {
+            hideButton.setFocusable(true);
+            focusRequester = hideButton;
+        }
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", new FocusOwnerPropertyChangeListener());
     }
 
@@ -192,10 +222,10 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
                 if (newValue) {
                     pinButton.setIcon(iconProvider.autoHideOn);
-                    pinButton.setToolTipText(ResourceBoundles.getResourceBoundle().getString("@@tool.tooltip.pin"));
+                    pinButton.setToolTipText(resourceBundle.getString("@@tool.tooltip.pin"));
                 } else {
                     pinButton.setIcon(iconProvider.autoHideOff);
-                    pinButton.setToolTipText(ResourceBoundles.getResourceBoundle().getString("@@tool.tooltip.unpin"));
+                    pinButton.setToolTipText(resourceBundle.getString("@@tool.tooltip.unpin"));
                 }
             }
         });
@@ -212,17 +242,17 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
     private JButton renderApplicationButton(String iconName, String actionCommnad, ActionListener actionListener, String tooltip) {
-        JButton button = new JButton();
+        JButton button = new ApplicationButton();
         button.setUI((ButtonUI) BasicButtonUI.createUI(button));
         button.setName(actionCommnad);
         button.setRolloverEnabled(true);
         button.setOpaque(false);
         button.setFocusPainted(false);
         button.setFocusable(false);
-        button.setActionCommand(actionCommnad);
         button.setBorderPainted(false);
+        button.setActionCommand(actionCommnad);
         button.addActionListener(actionListener);
-        button.setToolTipText(ResourceBoundles.getResourceBoundle().getString(tooltip));
+        button.setToolTipText(resourceBundle.getString(tooltip));
         button.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/" + iconName + ".png"));
 
         return button;
@@ -286,13 +316,20 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
             if (isInternalComponent(component)) {
                 toolWindow.setActive(true);
-                focusRequester = component;
+                if (focusRequester == null)
+                    focusRequester = component;
+                else {
+                    if (!(focusRequester instanceof ApplicationButton))
+                        focusRequester = component;
+                    else
+                        focusRequester.requestFocus();
+                }
             } else {
                 toolWindow.setActive(false);
                 if (toolWindow.isAutoHide())
                     toolWindow.setVisible(false);
             }
-            
+
             valueAdjusting = false;
         }
 
@@ -362,7 +399,18 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         }
     }
 
-    class IconProvider {
+    static class ApplicationButton extends JButton {
+        public void setUI(ButtonUI ui) {
+            super.setUI((ButtonUI) BasicButtonUI.createUI(this));
+            setRolloverEnabled(true);
+            setOpaque(false);
+            setFocusPainted(false);
+            setFocusable(false);
+            setBorderPainted(false);
+        }
+    }
+
+    static class IconProvider {
         Icon docked;
         Icon dockedInactive;
 

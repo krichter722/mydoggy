@@ -34,15 +34,17 @@ public class ToolsOnBarMouseListener extends MouseAdapter implements ActionListe
             if (tools.length > 0) {
 
                 for (ToolWindow tool : tools) {
-                    JMenuItem showTool = new JMenuItem();
-                    showTool.setText(tool.getTitle());
-                    showTool.setActionCommand("tool.visible." + tool.getId());
-                    showTool.addActionListener(this);
+                    if (tool.isAvailable()) {
+                        JMenuItem showTool = new JMenuItem();
+                        showTool.setText(tool.getTitle());
+                        showTool.setActionCommand("tool.visible." + tool.getId());
+                        showTool.addActionListener(this);
 
-                    popupMenu.add(showTool);
+                        popupMenu.add(showTool);
+                    }
                 }
-
-                popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                if (popupMenu.getComponentCount() > 0)
+                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
             }
         }
     }

@@ -1,6 +1,9 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.DockedTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTransferHandler;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
@@ -15,20 +18,25 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ResourceBundle;
 
 /**
  * @author Angelo De Caro
  */
 public class AnchorLabelUI extends MetalLabelUI {
+    private static ResourceBundle resourceBundle = ResourceBoundles.getResourceBundle();
 
     static final Color start = new Color(255, 212, 151);
     static final Color end = new Color(255, 244, 204);
+    static final Color gray = new Color(247, 243, 239);
 
     protected JLabel label;
     protected LineBorder labelBorder;
 
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
+
+    private AnchorLabelMouseAdapter adapter;
 
     public AnchorLabelUI(ToolWindowDescriptor descriptor, ToolWindow toolWindow) {
         this.descriptor = descriptor;
@@ -60,7 +68,7 @@ public class AnchorLabelUI extends MetalLabelUI {
             c.setToolTipText(oldText);
         }
 
-        AnchorLabelMouseAdapter adapter = new AnchorLabelMouseAdapter();
+        adapter = new AnchorLabelMouseAdapter();
         c.addMouseListener(adapter);
         c.addMouseMotionListener(adapter);
 
@@ -69,15 +77,18 @@ public class AnchorLabelUI extends MetalLabelUI {
 
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
+
         toolWindow.removePropertyChangeListener(this);
+        c.removeMouseListener(adapter);
+        c.removeMouseMotionListener(adapter);
     }
 
     public void update(Graphics g, JComponent c) {
-        if (c.isOpaque())
+        if (c.isOpaque()) {
             GraphicsUtil.fillRect(g, new Rectangle(0, 0, c.getWidth(), c.getHeight()),
                                   start, end, null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
-        else {
-            g.setColor(c.getParent().getBackground());
+        } else {
+            g.setColor(gray);
             g.fillRect(0, 0, c.getWidth(), c.getHeight());
         }
         paint(g, c);
@@ -90,16 +101,13 @@ public class AnchorLabelUI extends MetalLabelUI {
             if (visible) {
                 labelBorder.setLineColor(Color.BLACK);
 
-                System.out.println(label.getBounds());
-                if (label.getParent() != null) {
-                    JViewport viewport = (JViewport) label.getParent().getParent();
-                    // TODO: calibrare correttamente il rettangolo.. 
-                    viewport.scrollRectToVisible(label.getVisibleRect() );
-                }
+                descriptor.getToolBar().ensureVisible(label);
             } else
                 labelBorder.setLineColor(Color.GRAY);
 
             SwingUtil.repaint(label);
+        } else if ("UI".equals(e.getPropertyName())) {
+            adapter.propertyChange(e);
         }
     }
 
@@ -207,6 +215,11 @@ public class AnchorLabelUI extends MetalLabelUI {
                 pinnedMode.setVisible(type != ToolWindowType.SLIDING);
 
                 floatingMode.setState(type == ToolWindowType.FLOATING);
+            } else if ("UI".equals(evt.getPropertyName())) {
+                SwingUtilities.updateComponentTreeUI(popupMenu);
+
+                DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+                SwingUtilities.updateComponentTreeUI(descriptor.getUserDefinedMenu());
             }
         }
 
@@ -229,42 +242,42 @@ public class AnchorLabelUI extends MetalLabelUI {
             visible.addActionListener(this);
 
             floatingMode = new JCheckBoxMenuItem(null, toolWindow.getType() == ToolWindowType.FLOATING);
-            floatingMode.setText(ResourceBoundles.getResourceBoundle().getString("@@tool.mode.floating"));
+            floatingMode.setText(resourceBundle.getString("@@tool.mode.floating"));
             floatingMode.setActionCommand("floating");
             floatingMode.addActionListener(this);
 
             dockedMode = new JCheckBoxMenuItem(null, toolWindow.getType() == ToolWindowType.DOCKED);
-            dockedMode.setText(ResourceBoundles.getResourceBoundle().getString("@@tool.mode.docked"));
+            dockedMode.setText(resourceBundle.getString("@@tool.mode.docked"));
             dockedMode.setActionCommand("docked");
             dockedMode.addActionListener(this);
 
             pinnedMode = new JCheckBoxMenuItem(null, !toolWindow.isAutoHide());
-            pinnedMode.setText(ResourceBoundles.getResourceBoundle().getString("@@tool.mode.pinned"));
+            pinnedMode.setText(resourceBundle.getString("@@tool.mode.pinned"));
             pinnedMode.setActionCommand("pinned");
             pinnedMode.addActionListener(this);
 
             // MoveTo SubMenu
             moveTo = new JMenu();
             moveTo.getPopupMenu().setLightWeightPopupEnabled(false);
-            moveTo.setText(ResourceBoundles.getResourceBoundle().getString("@@tool.moveTo"));
+            moveTo.setText(resourceBundle.getString("@@tool.moveTo"));
 
             right = new JMenuItem();
-            right.setText(ResourceBoundles.getResourceBoundle().getString("@@tool.move.right"));
+            right.setText(resourceBundle.getString("@@tool.move.right"));
             right.setActionCommand("move.right");
             right.addActionListener(this);
 
             left = new JMenuItem();
-            left.setText(ResourceBoundles.getResourceBoundle().getString("@@tool.move.left"));
+            left.setText(resourceBundle.getString("@@tool.move.left"));
             left.setActionCommand("move.left");
             left.addActionListener(this);
 
             top = new JMenuItem();
-            top.setText(ResourceBoundles.getResourceBoundle().getString("@@tool.move.top"));
+            top.setText(resourceBundle.getString("@@tool.move.top"));
             top.setActionCommand("move.top");
             top.addActionListener(this);
 
             bottom = new JMenuItem();
-            bottom.setText(ResourceBoundles.getResourceBoundle().getString("@@tool.move.bottom"));
+            bottom.setText(resourceBundle.getString("@@tool.move.bottom"));
             bottom.setActionCommand("move.bottom");
             bottom.addActionListener(this);
 
@@ -283,8 +296,8 @@ public class AnchorLabelUI extends MetalLabelUI {
 
         protected void enableVisible() {
             visible.setText(toolWindow.isVisible() ?
-                            ResourceBoundles.getResourceBoundle().getString("@@tool.hide") :
-                            ResourceBoundles.getResourceBoundle().getString("@@tool.show"));
+                            resourceBundle.getString("@@tool.hide") :
+                            resourceBundle.getString("@@tool.show"));
         }
 
         protected void enableMoveToItem() {
@@ -313,7 +326,6 @@ public class AnchorLabelUI extends MetalLabelUI {
         }
 
         private JMenu old;
-
         protected void enableUserDefined() {
             DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
             if (old != null) {
@@ -321,7 +333,7 @@ public class AnchorLabelUI extends MetalLabelUI {
             }
 
             JMenu menu = descriptor.getUserDefinedMenu();
-            if (menu.getComponentCount() > 0) {
+            if (menu.getMenuComponentCount() > 0) {
                 popupMenu.add(menu, 4);
                 old = menu;
             }

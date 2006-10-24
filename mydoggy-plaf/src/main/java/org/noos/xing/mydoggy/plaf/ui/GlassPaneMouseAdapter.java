@@ -27,7 +27,6 @@ public class GlassPaneMouseAdapter implements MouseListener, MouseMotionListener
         redispatchMouseEvent(e, true);
     }
 
-
     public void mouseClicked(MouseEvent e) {
         redispatchMouseEvent(e, false);
     }
@@ -62,20 +61,31 @@ public class GlassPaneMouseAdapter implements MouseListener, MouseMotionListener
         component = SwingUtilities.getDeepestComponentAt(container, containerPoint.x, containerPoint.y);
 
         if (previousMoveComponent != null && component != previousMoveComponent) {
-            MouseEvent me = new MouseEvent(previousMoveComponent, MouseEvent.MOUSE_EXITED, e.getWhen(),
+            Component exitedCmp = getComponentFor(previousMoveComponent, MouseEvent.MOUSE_EXITED);
+            if (exitedCmp == null)
+                exitedCmp = previousMoveComponent;
+
+            MouseEvent me = new MouseEvent(exitedCmp, MouseEvent.MOUSE_EXITED, e.getWhen(),
                                            0, 0, 0, 0, false);
-            previousMoveComponent.dispatchEvent(me);
+            exitedCmp.dispatchEvent(me);
         }
 
         if (component != null) {
             Cursor cursor2 = component.getCursor();
             if (cursor2 != glassPane.getCursor())
                 glassPane.setCursor(cursor2);
+            else
+                glassPane.setCursor(Cursor.getDefaultCursor());
+
 
             if (component != previousMoveComponent) {
-                MouseEvent me = new MouseEvent(component, MouseEvent.MOUSE_ENTERED, e.getWhen(),
+                Component enteredCmp = getComponentFor(component, MouseEvent.MOUSE_ENTERED);
+                if (enteredCmp == null) 
+                    enteredCmp = component;
+
+                MouseEvent me = new MouseEvent(enteredCmp, MouseEvent.MOUSE_ENTERED, e.getWhen(),
                                                0, 0, 0, 0, false);
-                component.dispatchEvent(me);
+                enteredCmp.dispatchEvent(me);
             }
             previousMoveComponent = component;
 
@@ -88,18 +98,57 @@ public class GlassPaneMouseAdapter implements MouseListener, MouseMotionListener
                     mouseEventTarget = component;
                 }
 
+
                 if (mouseEventTarget != null) {
                     Point mouseEventTargetPoint = SwingUtilities.convertPoint(glassPane, glassPanePoint, mouseEventTarget);
 
-                    mouseEventTarget.dispatchEvent(new MouseEvent(mouseEventTarget, e.getID(), e.getWhen(), e.getModifiers(),
-                                                                  mouseEventTargetPoint.x,
-                                                                  mouseEventTargetPoint.y,
-                                                                  e.getClickCount(),
-                                                                  e.isPopupTrigger()));
+                    Component targetCmp = getComponentFor(mouseEventTarget, e.getID());
+                    if (targetCmp == null)
+                        targetCmp = mouseEventTarget;
+
+                    MouseEvent event = new MouseEvent(targetCmp, e.getID(), e.getWhen(), e.getModifiers(),
+                                                      mouseEventTargetPoint.x,
+                                                      mouseEventTargetPoint.y,
+                                                      e.getClickCount(),
+                                                      e.isPopupTrigger(),
+                                                      e.getButton());
+                    targetCmp.dispatchEvent(event);
                 }
             }
         }
+    }
 
+    public Component getComponentFor(Component component, int mouseType) {
+        while (component != null) {
+            switch(mouseType) {
+                case MouseEvent.MOUSE_CLICKED:
+                case MouseEvent.MOUSE_PRESSED:
+                case MouseEvent.MOUSE_RELEASED:
+                case MouseEvent.MOUSE_ENTERED:
+                case MouseEvent.MOUSE_EXITED:
+                    if (component.getMouseListeners().length == 0) {
+                        component = component.getParent();
+                    } else
+                        return component;
+                    break;
+
+                case MouseEvent.MOUSE_DRAGGED:
+                case MouseEvent.MOUSE_MOVED:
+                    if (component.getMouseMotionListeners().length == 0) {
+                        component = component.getParent();
+                    } else
+                        return component;
+                    break;
+
+                case MouseEvent.MOUSE_WHEEL:
+                    if (component.getMouseWheelListeners().length == 0) {
+                        component = component.getParent();
+                    } else
+                        return component;
+                    break;
+            }
+        }
+        return component;
     }
 
     /*

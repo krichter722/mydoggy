@@ -4,7 +4,6 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
-import org.noos.xing.mydoggy.plaf.boundle.ResourceBoundle;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
 import javax.swing.*;
@@ -12,16 +11,18 @@ import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ResourceBundle;
 
 /**
  * @author Angelo De Caro
  */
 public class MyDoggyToolWindow implements ToolWindow {
-    static final Object LOCK = new ToolWindowTreeLock();
-    static class ToolWindowTreeLock {
+    static final Object LOCK = new ToolWindowLock();
+
+    static class ToolWindowLock {
     }
 
-    private String id;
+    private Object id;
     private int index;
     private ToolWindowAnchor anchor;
     private ToolWindowType type;
@@ -33,25 +34,25 @@ public class MyDoggyToolWindow implements ToolWindow {
     private boolean visible;
     private boolean active;
 
-    private ResourceBoundle resourceBoundle;
+    private ResourceBundle resourceBoundle;
     private ToolWindowDescriptor descriptor;
 
     private EventListenerList internalListenerList;
     private EventListenerList listenerList;
 
-    private int lastAnchorIndex;
+    private int lastAnchorIndex = -1;
 
     private boolean publicEvent = true;
 
-    MyDoggyToolWindow(MyDoggyToolWindowManager manager, Window anchestor, String id, int index,
-                             ToolWindowAnchor anchor, ToolWindowType type,
-                             String title, Icon icon, Component component,
-                             ResourceBoundle resourceBoundle) {
+    MyDoggyToolWindow(MyDoggyToolWindowManager manager, Window anchestor, Object id, int index,
+                      ToolWindowAnchor anchor, ToolWindowType type,
+                      String title, Icon icon, Component component,
+                      ResourceBundle resourceBundle) {
         this.internalListenerList = new EventListenerList();
         this.listenerList = new EventListenerList();
 
         this.descriptor = new ToolWindowDescriptor(manager, this, anchestor, component);
-        this.resourceBoundle = resourceBoundle;
+        this.resourceBoundle = resourceBundle;
 
         this.id = id;
         this.index = index;
@@ -64,7 +65,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
 
-    public String getId() {
+    public Object getId() {
         return id;
     }
 
@@ -76,10 +77,10 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (index != -1 && index <= 0 && index > 9)
             throw new IllegalArgumentException("Invalid index. Valid index range is [-1, 1-9]. [tool : " + getId() + ", index : " + index + "]");
 
-        synchronized (getTreeLock()) {
+        synchronized (getLock()) {
             if (index == this.index)
                 return;
-            
+
             int old = this.index;
             this.index = index;
 
@@ -95,7 +96,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (this.available == available)
             return;
 
-        synchronized (getTreeLock()) {
+        synchronized (getLock()) {
             if (!available) {
                 if (isActive())
                     setActive(false);
@@ -118,7 +119,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (this.visible == visible)
             return;
 
-        synchronized (getTreeLock()) {
+        synchronized (getLock()) {
             if (visible)
                 setAvailable(visible);
             else if (active)
@@ -139,7 +140,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (this.active == active)
             return;
 
-        synchronized (getTreeLock()) {
+        synchronized (getLock()) {
             if (active) {
                 setAvailable(active);
                 setVisible(active);
@@ -157,25 +158,38 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setAnchor(ToolWindowAnchor anchor) {
-        synchronized (getTreeLock()) {
+        synchronized (getLock()) {
             if (this.anchor == anchor && anchor.getIndex() == lastAnchorIndex)
                 return;
 
-            boolean tempVisible = isVisible();
-            boolean tempActive = isActive();
+            if (getType() == ToolWindowType.DOCKED || getType() == ToolWindowType.SLIDING) {
+                boolean tempVisible = isVisible();
+                boolean tempActive = isActive();
 
-            setAvailable(false);
-            ToolWindowAnchor oldAnchor = this.anchor;
-            this.anchor = anchor;
-            this.lastAnchorIndex = anchor.getIndex();
+                publicEvent = false;
 
-            setAvailable(true);
-            if (tempActive)
-                setActive(true);
-            else if (tempVisible)
-                setVisible(true);
+                setAvailable(false);
 
-            fireAnchorEvent(oldAnchor, anchor);
+                ToolWindowAnchor oldAnchor = this.anchor;
+                this.anchor = anchor;
+                this.lastAnchorIndex = anchor.getIndex();
+
+                setAvailable(true);
+                if (tempActive)
+                    setActive(true);
+                else if (tempVisible)
+                    setVisible(true);
+
+                publicEvent = true;
+
+                fireAnchorEvent(oldAnchor, anchor);
+            } else {
+                ToolWindowAnchor oldAnchor = this.anchor;
+                this.anchor = anchor;
+                this.lastAnchorIndex = anchor.getIndex();
+
+                fireAnchorEvent(oldAnchor, anchor);
+            }
         }
     }
 
@@ -187,7 +201,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (this.autoHide == autoHide)
             return;
 
-        synchronized (getTreeLock()) {
+        synchronized (getLock()) {
             boolean old = this.autoHide;
             this.autoHide = autoHide;
             firePropertyChangeEvent("autoHide", old, autoHide);
@@ -199,7 +213,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setType(ToolWindowType type) {
-        synchronized (getTreeLock()) {
+        synchronized (getLock()) {
             if (this.type == type)
                 return;
 
@@ -231,7 +245,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setIcon(Icon icon) {
-        synchronized (getTreeLock()) {
+        synchronized (getLock()) {
             if (this.icon == icon)
                 return;
 
@@ -247,7 +261,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setTitle(String title) {
-        synchronized (getTreeLock()) {
+        synchronized (getLock()) {
             String newTitle = (resourceBoundle != null) ? resourceBoundle.getString(title) : title;
             if (newTitle != null && newTitle.equals(this.title))
                 return;
@@ -277,11 +291,22 @@ public class MyDoggyToolWindow implements ToolWindow {
 
 
     public String toString() {
-        return getClass().getName() + "[index : " + index + ", active : " + active + ", visible : " + visible + ", available : " + available + ", title : " + title +"]";
+        return "MyDoggyToolWindow{" +
+               "id='" + id + '\'' +
+               ", index=" + index +
+               ", available=" + available +
+               ", visible=" + visible +
+               ", active=" + active +
+               ", anchor=" + anchor +
+               ", type=" + type +
+               ", title='" + title + '\'' +
+               ", descriptor=" + descriptor +
+               ", autoHide=" + autoHide +
+               '}';
     }
 
 
-    public final Object getTreeLock() {
+    public final Object getLock() {
         return LOCK;
     }
 
