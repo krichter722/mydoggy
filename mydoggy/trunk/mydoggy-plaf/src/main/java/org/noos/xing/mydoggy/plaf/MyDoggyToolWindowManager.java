@@ -10,11 +10,12 @@ import org.noos.xing.mydoggy.plaf.descriptors.DefaultFloatingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.GlassPaneMouseAdapter;
 import org.noos.xing.mydoggy.plaf.ui.ResourceBoundles;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
+import javax.swing.plaf.SplitPaneUI;
 import java.awt.*;
 import java.awt.event.ContainerAdapter;
 import java.awt.event.ContainerEvent;
@@ -34,21 +35,23 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
 
     public static ToolWindowGroup currentGroup;
 
-    private ToolWindowContentManager toolWindowContentManager;
+    private MyDoggyContentManager contentManager;
 
     private Window anchestor;
 
     private MyDoggyToolWindowBar[] bars;
-    private Map<String, ToolWindowDescriptor> tools;
+    private Map<Object, ToolWindowDescriptor> tools;
     private Map<Object, ToolWindowGroup> toolWindowGroups;
 
     private TableLayout contentPaneLayout;
     private JPanel contentPane;
+
     private JSplitPane mainSplitPane;
+    private JPanel mainContainer;
 
     private Map<String, PropertyChangeListener> listeners;
 
-    private String activeToolWindowId;
+    private Object activeToolWindowId;
 
     // Type Descriptors Template.
     private DefaultFloatingTypeDescriptor floatingTypeDescriptor;
@@ -80,15 +83,15 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
     }
 
 
-    public ToolWindowContentManager getContentManager() {
-        return toolWindowContentManager;
+    public ContentManager getContentManager() {
+        return contentManager;
     }
 
-    public ToolWindow registerToolWindow(String id, String title, Icon icon,
+    public ToolWindow registerToolWindow(Object id, String title, Icon icon,
                                          Component component,
                                          ToolWindowAnchor anchor) {
-        if (id == null || id.length() == 0)
-            throw new IllegalArgumentException("Cannot register tool window with an invalid id. Id cannot be null or empty.");
+        if (id == null)
+            throw new IllegalArgumentException("Cannot register tool window with an invalid id. Id cannot be null.");
         if (component == null)
             throw new IllegalArgumentException("Cannot register tool window with a null component. [id : " + id + "]");
         if (anchor == null)
@@ -118,7 +121,7 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
         return toolWindow;
     }
 
-    public void unregisterToolWindow(String id) {
+    public void unregisterToolWindow(Object id) {
         ToolWindowDescriptor toolWindowDescriptor = tools.get(id);
 
         if (toolWindowDescriptor != null) {
@@ -152,11 +155,11 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
         return result.toArray(new ToolWindow[0]);
     }
 
-    public String getActiveToolWindowId() {
+    public Object getActiveToolWindowId() {
         return activeToolWindowId;
     }
 
-    public ToolWindow getToolWindow(String id) {
+    public ToolWindow getToolWindow(Object id) {
         ToolWindowDescriptor descriptor = tools.get(id);
 
         return (descriptor != null) ? descriptor.getToolWindow() : null;
@@ -279,13 +282,22 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
         return contentPane;
     }
 
-    public void setMainContent(Object content) {
-        mainSplitPane.setLeftComponent((Component) content);
+
+    public void setMainContent(Component content) {
+        mainContainer.setOpaque(false);
+        mainContainer.removeAll();
+        mainContainer.add(content, "0,0,FULL,FULL");
         SwingUtil.repaint(mainSplitPane);
     }
 
+    public void resetMainContent() {
+        mainContainer.removeAll();
+        SwingUtil.repaint(mainSplitPane);
+        mainContainer.setOpaque(true);
+    }
+
     public Component getMainContent() {
-        return mainSplitPane.getLeftComponent();
+        return (mainContainer.getComponentCount() == 0) ? null : mainContainer.getComponent(0);
     }
 
     public MyDoggyToolWindowBar getBar(ToolWindowAnchor anchor) {
@@ -299,14 +311,14 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
 
     protected void initComponents() {
         this.twmListeners = new EventListenerList();
-        this.toolWindowContentManager = new MyDoggyWindowContentManager(this);
+        this.contentManager = new MyDoggyContentManager(this);
 
         ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 
         // Init data structures
         bars = new MyDoggyToolWindowBar[4];
-        tools = new LinkedHashMap<String, ToolWindowDescriptor>();
+        tools = new LinkedHashMap<Object, ToolWindowDescriptor>();
         toolWindowGroups = new ResolvableHashtable<Object, ToolWindowGroup>(new ResolvableHashtable.Resolver<ToolWindowGroup>() {
             public ToolWindowGroup get(Object key) {
                 ToolWindowGroup group = new MyDoggyToolWindowGroup(MyDoggyToolWindowManager.this, key.toString());
@@ -325,6 +337,16 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
         // Register bars, one for every anchor
         addBar(LEFT, JSplitPane.HORIZONTAL_SPLIT, "0,1", "0,0,c,c");
         mainSplitPane = addBar(RIGHT, JSplitPane.HORIZONTAL_SPLIT, "2,1", "2,0,c,c");
+        mainSplitPane.addPropertyChangeListener("UI", new UpdateUIChangeListener());
+
+        mainContainer = new JPanel();
+        mainContainer.setBackground(Color.GRAY);
+        mainContainer.setLayout(new ExtendedTableLayout(new double[][] {{-1},{-1}}));
+        mainContainer.setFocusCycleRoot(true);
+
+
+        mainSplitPane.setLeftComponent(mainContainer);
+
         addBar(TOP, JSplitPane.VERTICAL_SPLIT, "1,0", "2,2,c,c");
         JSplitPane bottomSplit = addBar(BOTTOM, JSplitPane.VERTICAL_SPLIT, "1,2", "0,2,c,c");
 
@@ -384,7 +406,13 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
 
 
     protected JSplitPane renderSplitPane(int orientation) {
-        JSplitPane splitPane = new JSplitPane(orientation);
+        JSplitPane splitPane = new JSplitPane(orientation) {
+            public void setUI(SplitPaneUI ui) {
+                super.setUI(ui);
+                setBorder(null);
+                setContinuousLayout(true);
+            }
+        };
         splitPane.setBorder(null);
         splitPane.setContinuousLayout(true);
         splitPane.setDividerSize(0);
@@ -490,15 +518,10 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
             }
         }
 
-        if (revalidate) {
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    contentPane.revalidate();
-                    contentPane.repaint();
-                }
-            });
-        }
+        if (revalidate)
+            SwingUtil.repaint(contentPane);
     }
+
 
     class AvailablePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
@@ -551,12 +574,28 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
 
     class AnchorPropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
+            ToolWindowDescriptor window = (ToolWindowDescriptor) evt.getSource();
+
+            ToolWindowType windowType = window.getToolWindow().getType();
+            if (windowType == ToolWindowType.FLOATING || windowType == ToolWindowType.FLOATING_WINDOW) {
+                ToolWindowAnchor oldAnchor = (ToolWindowAnchor) evt.getOldValue();
+                ToolWindowAnchor newAnchor = (ToolWindowAnchor) evt.getNewValue();
+
+                PropertyChangeEvent avEvent = new PropertyChangeEvent(evt.getSource(), "available", true, false);
+                getBar(oldAnchor).propertyChange(avEvent);
+                syncPanel(oldAnchor);
+
+                avEvent = new PropertyChangeEvent(evt.getSource(), "available", false, true);
+                getBar(newAnchor).propertyChange(avEvent);
+                syncPanel(newAnchor);
+            }
+
             for (ToolWindowDescriptor tool : tools.values())
                 tool.getToolWindowContainer().propertyChange(evt);
         }
     }
 
-    class AutoHideChangeListener implements PropertyChangeListener {
+    static class AutoHideChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ((ToolWindowDescriptor) evt.getSource()).getToolWindowContainer().propertyChange(evt);
         }
@@ -580,7 +619,6 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
             ToolWindow modifiedTool = descriptor.getToolWindow();
 
-            int oldIndex = (Integer) evt.getNewValue();
             int newIndex = (Integer) evt.getNewValue();
 
             if (newIndex > 0) {
@@ -615,9 +653,19 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
         }
     }
 
+    class UpdateUIChangeListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            contentManager.updateUI();
+
+            for (ToolWindowDescriptor descriptor : tools.values()) {
+                descriptor.updateUI();
+            }
+        }
+    }
 
 
-    class DummyPropertyChangeListener implements PropertyChangeListener {
+    static class DummyPropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             System.out.println("NTW - DUMMY : " + evt);
         }

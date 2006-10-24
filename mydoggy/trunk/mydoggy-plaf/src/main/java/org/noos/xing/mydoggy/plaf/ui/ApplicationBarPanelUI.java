@@ -38,13 +38,6 @@ public class ApplicationBarPanelUI extends PanelUI {
         endDisabled = new Color(167, 164, 157);
     }
 
-    public ApplicationBarPanelUI(Color startEnabled, Color endEnabled, Color startDisabled, Color endDisabled) {
-        this.startEnabled = startEnabled;
-        this.endEnabled = endEnabled;
-        this.startDisabled = startDisabled;
-        this.endDisabled = endDisabled;
-    }
-
     public void installUI(JComponent c) {
         super.installUI(c);
         installDefaults(c);
@@ -112,6 +105,8 @@ public class ApplicationBarPanelUI extends PanelUI {
         }
 
         private class GradientAnimation implements ActionListener {
+            private final Object LOCK = new Object();
+
             public static final int INCOMING = 1;
             public static final int OUTGOING = -1;
             public static final float ANIMATION_DURATION = 300f;
@@ -129,131 +124,137 @@ public class ApplicationBarPanelUI extends PanelUI {
                     float animationPercent = (System.currentTimeMillis() - animationStart) / ANIMATION_DURATION;
                     animationPercent = Math.min(1.0f, animationPercent);
 
-                    switch (animationDirection) {
-                        case INCOMING:
-                            int r = (int) (animationPercent * Math.abs((startEnabled.getRed() - startDisabled.getRed())));
-                            if (startEnabled.getRed() < startDisabled.getRed()) {
-                                r = startDisabled.getRed() - r;
-                            } else
-                                r = startDisabled.getRed() + r;
+                    synchronized(LOCK) {
+                        switch (animationDirection) {
+                            case INCOMING:
+                                int r = (int) (animationPercent * Math.abs((startEnabled.getRed() - startDisabled.getRed())));
+                                if (startEnabled.getRed() < startDisabled.getRed()) {
+                                    r = startDisabled.getRed() - r;
+                                } else
+                                    r = startDisabled.getRed() + r;
 
-                            int g = (int) (animationPercent * Math.abs((startEnabled.getGreen() - startDisabled.getGreen())));
-                            if (startEnabled.getGreen() < startDisabled.getGreen()) {
-                                g = startDisabled.getGreen() - g;
-                            } else
-                                g = startDisabled.getGreen() + g;
-
-
-                            int b = (int) (animationPercent * Math.abs((startEnabled.getBlue() - startDisabled.getBlue())));
-                            if (startEnabled.getBlue() < startDisabled.getBlue()) {
-                                b = startDisabled.getBlue() - b;
-                            } else
-                                b = startDisabled.getBlue() + b;
-
-                            startTemp = new Color(r, g, b);
-
-                            r = (int) (animationPercent * Math.abs((endEnabled.getRed() - endDisabled.getRed())));
-                            if (endEnabled.getRed() < endDisabled.getRed()) {
-                                r = endDisabled.getRed() - r;
-                            } else
-                                r = endDisabled.getRed() + r;
-
-                            g = (int) (animationPercent * Math.abs((endEnabled.getGreen() - endDisabled.getGreen())));
-                            if (endEnabled.getGreen() < endDisabled.getGreen()) {
-                                g = endDisabled.getGreen() - g;
-                            } else
-                                g = endDisabled.getGreen() + g;
+                                int g = (int) (animationPercent * Math.abs((startEnabled.getGreen() - startDisabled.getGreen())));
+                                if (startEnabled.getGreen() < startDisabled.getGreen()) {
+                                    g = startDisabled.getGreen() - g;
+                                } else
+                                    g = startDisabled.getGreen() + g;
 
 
-                            b = (int) (animationPercent * Math.abs((endEnabled.getBlue() - endDisabled.getBlue())));
-                            if (endEnabled.getBlue() < endDisabled.getBlue()) {
-                                b = endDisabled.getBlue() - b;
-                            } else
-                                b = endDisabled.getBlue() + b;
+                                int b = (int) (animationPercent * Math.abs((startEnabled.getBlue() - startDisabled.getBlue())));
+                                if (startEnabled.getBlue() < startDisabled.getBlue()) {
+                                    b = startDisabled.getBlue() - b;
+                                } else
+                                    b = startDisabled.getBlue() + b;
 
-                            endTemp = new Color(r, g, b);
-                            break;
+                                startTemp = new Color(r, g, b);
 
-                        case OUTGOING:
+                                r = (int) (animationPercent * Math.abs((endEnabled.getRed() - endDisabled.getRed())));
+                                if (endEnabled.getRed() < endDisabled.getRed()) {
+                                    r = endDisabled.getRed() - r;
+                                } else
+                                    r = endDisabled.getRed() + r;
 
-                            r = (int) (animationPercent * Math.abs((startEnabled.getRed() - startDisabled.getRed())));
-                            if (startEnabled.getRed() < startDisabled.getRed()) {
-                                r = startEnabled.getRed() + r;
-                            } else
-                                r = startEnabled.getRed() - r;
-
-                            g = (int) (animationPercent * Math.abs((startEnabled.getGreen() - startDisabled.getGreen())));
-                            if (startEnabled.getGreen() < startDisabled.getGreen()) {
-                                g = startEnabled.getGreen() + g;
-                            } else
-                                g = startEnabled.getGreen() - g;
+                                g = (int) (animationPercent * Math.abs((endEnabled.getGreen() - endDisabled.getGreen())));
+                                if (endEnabled.getGreen() < endDisabled.getGreen()) {
+                                    g = endDisabled.getGreen() - g;
+                                } else
+                                    g = endDisabled.getGreen() + g;
 
 
-                             b = (int) (animationPercent * Math.abs((startEnabled.getBlue() - startDisabled.getBlue())));
-                            if (startEnabled.getBlue() < startDisabled.getBlue()) {
-                                b = startEnabled.getBlue() + b;
-                            } else
-                                b = startEnabled.getBlue() - b;
+                                b = (int) (animationPercent * Math.abs((endEnabled.getBlue() - endDisabled.getBlue())));
+                                if (endEnabled.getBlue() < endDisabled.getBlue()) {
+                                    b = endDisabled.getBlue() - b;
+                                } else
+                                    b = endDisabled.getBlue() + b;
 
-                            startTemp = new Color(r, g, b);
+                                endTemp = new Color(r, g, b);
+                                break;
 
-                            r = (int) (animationPercent * Math.abs((endEnabled.getRed() - endDisabled.getRed())));
-                            if (endEnabled.getRed() < endDisabled.getRed()) {
-                                r = endEnabled.getRed() + r;
-                            } else
-                                r = endEnabled.getRed() - r;
+                            case OUTGOING:
 
-                            g = (int) (animationPercent * Math.abs((endEnabled.getGreen() - endDisabled.getGreen())));
-                            if (endEnabled.getGreen() < endDisabled.getGreen()) {
-                                g = endEnabled.getGreen() + g;
-                            } else
-                                g = endEnabled.getGreen() - g;
+                                r = (int) (animationPercent * Math.abs((startEnabled.getRed() - startDisabled.getRed())));
+                                if (startEnabled.getRed() < startDisabled.getRed()) {
+                                    r = startEnabled.getRed() + r;
+                                } else
+                                    r = startEnabled.getRed() - r;
+
+                                g = (int) (animationPercent * Math.abs((startEnabled.getGreen() - startDisabled.getGreen())));
+                                if (startEnabled.getGreen() < startDisabled.getGreen()) {
+                                    g = startEnabled.getGreen() + g;
+                                } else
+                                    g = startEnabled.getGreen() - g;
 
 
-                            b = (int) (animationPercent * Math.abs((endEnabled.getBlue() - endDisabled.getBlue())));
-                            if (endEnabled.getBlue() < endDisabled.getBlue()) {
-                                b = endEnabled.getBlue() + b;
-                            } else
-                                b = endEnabled.getBlue() - b;
+                                 b = (int) (animationPercent * Math.abs((startEnabled.getBlue() - startDisabled.getBlue())));
+                                if (startEnabled.getBlue() < startDisabled.getBlue()) {
+                                    b = startEnabled.getBlue() + b;
+                                } else
+                                    b = startEnabled.getBlue() - b;
 
-                            endTemp = new Color(r, g, b);
-                            break;
+                                startTemp = new Color(r, g, b);
+
+                                r = (int) (animationPercent * Math.abs((endEnabled.getRed() - endDisabled.getRed())));
+                                if (endEnabled.getRed() < endDisabled.getRed()) {
+                                    r = endEnabled.getRed() + r;
+                                } else
+                                    r = endEnabled.getRed() - r;
+
+                                g = (int) (animationPercent * Math.abs((endEnabled.getGreen() - endDisabled.getGreen())));
+                                if (endEnabled.getGreen() < endDisabled.getGreen()) {
+                                    g = endEnabled.getGreen() + g;
+                                } else
+                                    g = endEnabled.getGreen() - g;
+
+
+                                b = (int) (animationPercent * Math.abs((endEnabled.getBlue() - endDisabled.getBlue())));
+                                if (endEnabled.getBlue() < endDisabled.getBlue()) {
+                                    b = endEnabled.getBlue() + b;
+                                } else
+                                    b = endEnabled.getBlue() - b;
+
+                                endTemp = new Color(r, g, b);
+                                break;
+                        }
+
+                        SwingUtil.repaint(panel);
+
+                        if (animationPercent >= 1.0f) {
+                            stopAnimation();
+                            finishAnimation();
+                        }
                     }
+                }
+            }
 
-                    SwingUtil.repaint(panel);
 
-                    if (animationPercent >= 1.0f) {
+            public void show() {
+                synchronized(LOCK) {
+                    startTemp = startDisabled;
+                    endTemp = endDisabled;
+
+                    if (animating) {
                         stopAnimation();
+                        animationDirection = OUTGOING;
                         finishAnimation();
                     }
+
+                    startAnimation(INCOMING);
                 }
             }
 
+            public void hide() {
+                synchronized(LOCK) {
+                    startTemp = startEnabled;
+                    endTemp = endEnabled;
 
-            public synchronized void show() {
-                startTemp = startDisabled;
-                endTemp = endDisabled;
+                    if (animating) {
+                        stopAnimation();
+                        animationDirection = INCOMING;
+                        finishAnimation();
+                    }
 
-                if (animating) {
-                    stopAnimation();
-                    animationDirection = OUTGOING;
-                    finishAnimation();
+                    startAnimation(OUTGOING);
                 }
-
-                startAnimation(INCOMING);
-            }
-
-            public synchronized void hide() {
-                startTemp = startEnabled;
-                endTemp = endEnabled;
-
-                if (animating) {
-                    stopAnimation();
-                    animationDirection = INCOMING;
-                    finishAnimation();
-                }
-
-                startAnimation(OUTGOING);
             }
 
 

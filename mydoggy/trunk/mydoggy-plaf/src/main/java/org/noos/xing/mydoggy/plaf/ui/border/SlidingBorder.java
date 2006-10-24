@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.plaf.ui;
+package org.noos.xing.mydoggy.plaf.ui.border;
 
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 

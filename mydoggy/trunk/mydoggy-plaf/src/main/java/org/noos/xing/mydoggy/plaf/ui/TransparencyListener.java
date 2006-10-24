@@ -13,7 +13,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class TransparencyListener extends ComponentAdapter implements PropertyChangeListener, ActionListener {
+public class TransparencyListener implements PropertyChangeListener, ActionListener {
     private ToolWindowDescriptor descriptor;
     private Window window;
     private final TransparencyManager transparencyManager = TransparencyManager.getInstance();

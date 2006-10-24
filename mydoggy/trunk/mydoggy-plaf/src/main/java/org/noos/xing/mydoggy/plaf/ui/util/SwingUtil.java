@@ -173,4 +173,10 @@ public class SwingUtil {
                 Thread.currentThread().getContextClassLoader().getResource(url))
         );
     }
+
+    public static Image loadImage(String url) {
+        return Toolkit.getDefaultToolkit().getImage(
+                Thread.currentThread().getContextClassLoader().getResource(url));
+    }
+
 }

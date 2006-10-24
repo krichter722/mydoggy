@@ -64,29 +64,39 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
         if (manager.containsGroup(name)) {
 
             synchronized (MyDoggyToolWindowManager.sync) {
-                for (final ToolWindow tool : manager.getToolWindows()) {
-                    tool.setVisible(false);
-                }
 
-                MyDoggyToolWindowManager.currentGroup = manager.getToolWindowGroup(name);
-                try {
-                    for (final ToolWindow tool : MyDoggyToolWindowManager.currentGroup.getToolsWindow()) {
-                        if (tool.getType() == ToolWindowType.SLIDING)
-                            tool.setType(ToolWindowType.DOCKED);
-
-                            if (visible)
-                                tool.setActive(true);
-                            else
-                                tool.setVisible(false);
+                boolean doAction = false;
+                for (ToolWindow tool : manager.getToolWindowGroup(name).getToolsWindow()) {
+                    if (tool.isVisible() != visible) {
+                        doAction = true;
+                        break;
                     }
-                } finally {
-                    MyDoggyToolWindowManager.currentGroup = null;
                 }
+                
+                if (doAction) {
+                    for (ToolWindow tool : manager.getToolWindows()) {
+                        tool.setVisible(false);
+                    }
 
-                if (visible)
-                    fireGroupShowed();
-                else
-                    fireGroupHided();
+                    MyDoggyToolWindowManager.currentGroup = manager.getToolWindowGroup(name);
+                    try {
+                        for (ToolWindow tool : MyDoggyToolWindowManager.currentGroup.getToolsWindow()) {
+                            if (tool.getType() == ToolWindowType.SLIDING)
+                                tool.setType(ToolWindowType.DOCKED);
+
+                            tool.setVisible(visible);
+                        }
+                        if (visible)
+                            MyDoggyToolWindowManager.currentGroup.getToolsWindow()[0].setActive(true);
+                    } finally {
+                        MyDoggyToolWindowManager.currentGroup = null;
+                    }
+
+                    if (visible)
+                        fireGroupShowed();
+                    else
+                        fireGroupHided();
+                }
             }
         }
     }
@@ -110,6 +120,13 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
         return listenerList.getListeners(ToolWindowGroupListener.class);
     }
 
+
+    public String toString() {
+        return "MyDoggyToolWindowGroup{" +
+               "name='" + name + '\'' +
+               ", tools=" + tools +
+               '}';
+    }
 
     protected void fireGroupShowed() {
         ToolWindowGroupEvent event = new ToolWindowGroupEvent(manager, ToolWindowGroupEvent.ActionId.GROUP_SHOWED, this);

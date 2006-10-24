@@ -34,13 +34,6 @@ public class ResolvableHashtable<K, V> extends Hashtable<K, V> {
         return (result != null) ? result : resolver.get(key);
     }
 
-    public void setDefaultInstance(final V defaultInstance) {
-        this.resolver = new Resolver<V>() {
-            public V get(Object key) {
-                return defaultInstance;
-            }
-        };
-    }
 
     public interface Resolver<V> extends Serializable {
 

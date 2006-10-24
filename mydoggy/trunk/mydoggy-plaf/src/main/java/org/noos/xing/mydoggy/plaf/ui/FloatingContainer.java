@@ -81,7 +81,7 @@ public class FloatingContainer extends DockedContainer {
 
 
     private void initFloatingComponents() {
-        window = new JModalWindow(descriptor.getWindowAnchestor(), null, false); 
+        window = new JModalWindow(descriptor.getWindowAnchestor(), null, false);
 //                new JWindow(descriptor.getWindowAnchestor());
 
         JPanel contentPane = new JPanel(new ExtendedTableLayout(new double[][]{{1, TableLayout.FILL, 1}, {1, TableLayout.FILL, 1}}));
@@ -125,8 +125,35 @@ public class FloatingContainer extends DockedContainer {
                 }
             }
         });
+        
+        addPropertyChangeListener("location", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (window.isVisible()) {
+                    Point location = (Point) evt.getNewValue();
+                    window.setLocation(location);
+                }
+            }
+        });
+        addPropertyChangeListener("size", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (window.isVisible()) {
+                    Dimension size = (Dimension) evt.getNewValue();
+                    window.setSize(size);
+                }
+            }
+        });
+        addPropertyChangeListener("modal", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (window.isVisible()) {
+                    window.setModal((Boolean) evt.getNewValue());
+                }
+            }
+        });
 
-        TransparencyListener listener = new TransparencyListener(this, descriptor, window);
+        FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
+        typeDescriptor.addPropertyChangeListener(this);
+
+        new TransparencyListener(this, descriptor, window);
     }
 
 
@@ -147,6 +174,8 @@ public class FloatingContainer extends DockedContainer {
 
 
     private class FloatingAnimation implements ActionListener {
+        private final Object LOCK = new Object();
+
         public static final int INCOMING = 1;
         public static final int OUTGOING = -1;
         public static final float ANIMATION_DURATION = 80f;
@@ -168,72 +197,78 @@ public class FloatingContainer extends DockedContainer {
                 float animationPercent = (System.currentTimeMillis() - animationStart) / ANIMATION_DURATION;
                 animationPercent = Math.min(1.0f, animationPercent);
 
-                int animatingLengthX = (int) (animationPercent * originalBounds.width);
-                int animatingLengthY = (int) (animationPercent * originalBounds.height);
-                if (animationDirection == INCOMING) {
-                    window.setLocation(
-                            window.getX() - (animatingLengthX / 2 - lastLenX / 2),
-                            window.getY() - (animatingLengthY / 2 - lastLenY / 2)
-                    );
-                    window.setSize(
-                            window.getWidth() + (animatingLengthX - lastLenX),
-                            window.getHeight() + (animatingLengthY - lastLenY)
-                    );
-                } else {
-                    window.setLocation(
-                            window.getX() + (animatingLengthX / 2 - lastLenX / 2),
-                            window.getY() + (animatingLengthY / 2 - lastLenY / 2)
-                    );
-                    window.setSize(
-                            window.getWidth() - (animatingLengthX - lastLenX),
-                            window.getHeight() - (animatingLengthY - lastLenY)
-                    );
+                synchronized(LOCK) {
+                    int animatingLengthX = (int) (animationPercent * originalBounds.width);
+                    int animatingLengthY = (int) (animationPercent * originalBounds.height);
+                    if (animationDirection == INCOMING) {
+                        window.setLocation(
+                                window.getX() - (animatingLengthX / 2 - lastLenX / 2),
+                                window.getY() - (animatingLengthY / 2 - lastLenY / 2)
+                        );
+                        window.setSize(
+                                window.getWidth() + (animatingLengthX - lastLenX),
+                                window.getHeight() + (animatingLengthY - lastLenY)
+                        );
+                    } else {
+                        window.setLocation(
+                                window.getX() + (animatingLengthX / 2 - lastLenX / 2),
+                                window.getY() + (animatingLengthY / 2 - lastLenY / 2)
+                        );
+                        window.setSize(
+                                window.getWidth() - (animatingLengthX - lastLenX),
+                                window.getHeight() - (animatingLengthY - lastLenY)
+                        );
+                    }
+
+    //                window.validate();
+    //                window.repaint();
+
+                    lastLenX = animatingLengthX;
+                    lastLenY = animatingLengthY;
+                    if (animationPercent >= 1.0f) {
+                        stopAnimation();
+                        finishAnimation();
+                    }
                 }
+            }
+        }
 
-//                window.validate();
-//                window.repaint();
 
-                lastLenX = animatingLengthX;
-                lastLenY = animatingLengthY;
-                if (animationPercent >= 1.0f) {
+        public void show() {
+            synchronized(LOCK) {
+                if (animating) {
                     stopAnimation();
+                    animationDirection = OUTGOING;
                     finishAnimation();
                 }
+
+                this.originalBounds = window.getBounds();
+                window.setBounds(new Rectangle(originalBounds.x + (originalBounds.width / 2),
+                                               originalBounds.y + (originalBounds.height / 2),
+                                               0, 0));
+
+                FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
+                window.setModal(typeDescriptor.isModal());
+                window.setVisible(true);
+                window.getContentPane().setVisible(true);
+
+                startAnimation(INCOMING);
             }
         }
 
+        public void hide() {
+            synchronized(LOCK) {
+                if (animating) {
+                    stopAnimation();
+                    animationDirection = INCOMING;
+                    finishAnimation();
+                }
 
-        public synchronized void show() {
-            if (animating) {
-                stopAnimation();
-                animationDirection = OUTGOING;
-                finishAnimation();
+                this.originalBounds = window.getBounds();
+                window.getContentPane().setVisible(false);
+
+                startAnimation(OUTGOING);
             }
-
-            this.originalBounds = window.getBounds();
-            window.setBounds(new Rectangle(originalBounds.x + (originalBounds.width / 2),
-                                           originalBounds.y + (originalBounds.height / 2),
-                                           0, 0));
-
-            FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
-            window.setModal(typeDescriptor.isModal());
-            window.setVisible(true);
-            window.getContentPane().setVisible(false);
-
-            startAnimation(INCOMING);
-        }
-
-        public synchronized void hide() {
-            if (animating) {
-                stopAnimation();
-                animationDirection = INCOMING;
-                finishAnimation();
-            }
-
-            this.originalBounds = window.getBounds();
-            window.getContentPane().setVisible(false);
-
-            startAnimation(OUTGOING);
         }
 
 
@@ -261,8 +296,7 @@ public class FloatingContainer extends DockedContainer {
             switch (animationDirection) {
                 case INCOMING:
                     window.setBounds(originalBounds);
-                    window.getContentPane().setVisible(true);
-                    window.setVisible(true);
+                    SwingUtil.repaint(window);
                     break;
                 case OUTGOING:
                     window.getContentPane().setVisible(true);

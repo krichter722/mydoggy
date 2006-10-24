@@ -20,11 +20,11 @@ import java.awt.event.MouseEvent;
 public class JToolScrollBar extends JComponent implements ChangeListener {
     private int orientation;
     private JViewport viewport;
-    private Component content;
+    private Container container;
 
-    public JToolScrollBar(int orientation, Component content) {
+    public JToolScrollBar(int orientation, Container container) {
         this.orientation = orientation;
-        this.content = content;
+        this.container = container;
         initComponents();
     }
 
@@ -55,10 +55,37 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
         }
     }
 
+    public void ensureVisible(Component component) {
+        // Check for component
+        boolean found = false;
+        for (int i = 0, size = container.getComponentCount(); i < size; i++) {
+            if (container.getComponent(i) == component)
+                found = true;
+        }
+
+        if (found) {
+            // scrollRectToVisible
+            Rectangle cellBounds = component.getBounds();
+            if (cellBounds != null) {
+                switch(orientation) {
+                    case JSplitPane.VERTICAL_SPLIT:
+                        cellBounds.y = cellBounds.y - viewport.getViewPosition().y;
+                        viewport.scrollRectToVisible(cellBounds);
+                        break;
+                    case JSplitPane.HORIZONTAL_SPLIT:
+                        cellBounds.x = cellBounds.x - viewport.getViewPosition().x;
+                        viewport.scrollRectToVisible(cellBounds);
+                        break;
+
+                }
+            }
+        }
+    }
+
 
     protected void initComponents() {
         viewport = new JViewport();
-        viewport.setView(content);
+        viewport.setView(container);
 
         switch (orientation) {
             case JSplitPane.VERTICAL_SPLIT:
@@ -70,9 +97,9 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
                 break;
             case JSplitPane.HORIZONTAL_SPLIT:
                 setLayout(new ExtendedTableLayout(new double[][]{{0, TableLayout.FILL, 0}, {TableLayout.FILL}}));
-                add(renderArrow("U", "arrowUp"), "0,0,c,c");
+                add(renderArrow("U", "arrowLeft"), "0,0,c,c");
                 add(viewport, "1,0,FULL,FULL");
-                add(renderArrow("D", "arrowDown"), "2,0,c,c");
+                add(renderArrow("D", "arrowRight"), "2,0,c,c");
 
                 break;
         }
@@ -83,17 +110,17 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
         switch (orientation) {
             case JSplitPane.VERTICAL_SPLIT:
                 switch (direction) {
-                    case 0 :
+                    case 0:
                         Rectangle visRect = viewport.getViewRect();
-                        Rectangle bounds = content.getBounds();
+                        Rectangle bounds = container.getBounds();
 
                         visRect.y += units;
                         if (visRect.y + visRect.height >= bounds.height)
                             visRect.y = bounds.height - visRect.height;
-                        
+
                         viewport.setViewPosition(new Point(visRect.x, visRect.y));
                         break;
-                    case 1 :
+                    case 1:
                         visRect = viewport.getViewRect();
 
                         visRect.y -= units;
@@ -105,9 +132,9 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
                 break;
             case JSplitPane.HORIZONTAL_SPLIT:
                 switch (direction) {
-                    case 0 :
+                    case 0:
                         Rectangle visRect = viewport.getViewRect();
-                        Rectangle bounds = content.getBounds();
+                        Rectangle bounds = container.getBounds();
 
                         visRect.x += units;
                         if (visRect.x + visRect.width >= bounds.width)
@@ -115,7 +142,7 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
 
                         viewport.setViewPosition(new Point(visRect.x, visRect.y));
                         break;
-                    case 1 :
+                    case 1:
                         visRect = viewport.getViewRect();
 
                         visRect.x -= units;
@@ -131,7 +158,7 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
     protected Component renderArrow(String name, String iconName) {
         JLabel label = new JLabel();
         label.setUI(new ScrollToolBarArrowUI());
-        label.setPreferredSize(new Dimension(16,16));
+        label.setPreferredSize(new Dimension(16, 16));
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setVerticalAlignment(SwingConstants.CENTER);
         label.setOpaque(false);
@@ -143,6 +170,7 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
 
         return label;
     }
+
 
     protected class ArrowListener extends MouseAdapter implements ActionListener {
         boolean handledEvent;
