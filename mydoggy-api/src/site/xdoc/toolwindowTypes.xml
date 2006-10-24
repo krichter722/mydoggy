@@ -1,0 +1,73 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy-Api : ToolWindow Types</title>
+        <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="ToolWindow Types">
+            <p>
+                A tool window can be showed in several ways. A ToolWindowType is used to choose between different
+                viewing modes. Now we describe the types provided.
+            </p>
+            <p>
+                <ul>
+                    <li>
+                        <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">ToolWindowType.DOCKED</a>
+                        - When DOCKED type is used, the tool window shares frame space and fixes to a docking
+                        area along one of the tool window bars (the one containing the corresponding representative button).
+
+                        <p>
+                            To set ToolWindowType.DOCKED type use the following:
+                            <code>
+                                ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug Tool");
+                                toolWindow.setType(ToolWindowType.DOCKED);
+                            </code>
+                        </p>
+                    </li>
+                    <li>
+                        <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">ToolWindowType.SLIDING</a>
+                        - When SLIDING type is used, the tool window overlaps the main frame and/or other tool windows.
+                        When it loses focus, the tool window hides itself.
+                    </li>
+                    <li>
+                        <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">ToolWindowType.FLOATING</a>
+                        - This type enables a tool window to be detached from the main window frame.
+                        When Floating type is used, the tool window detaches to the position where it was last floated
+                        (or screen center or location setted for toolwindow's
+                        <a href="./apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">FloatingTypeDescriptor</a>
+                        , if never before floated)
+                    </li>
+                    <li>
+                        <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">ToolWindowType.FLOATING_WINDOW</a>
+                        This type differs from FLOATING type for the absence of the representative button
+                        on the tool window bar.
+                    </li>
+                </ul>
+            </p>
+        </section>
+
+        <section name="ToolWindow Type Descriptors">
+            <p>
+                A ToolWindowTypeDescriptor is an interface to modify the behaviours of a specific tool window type.
+            </p>
+
+            <p>
+                <ul>
+                    <li>
+                        <a href="./apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">DockedTypeDescriptor</a>
+                        Using this interface you can modify...
+                        <!-- TODO -->
+                    </li>
+                    <li>
+                        <a href="./apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">FloatingTypeDescriptor</a>
+                        Using this interface you can modify...
+                    </li>
+                </ul>
+            </p>
+        </section>
+    </body>
+</document>

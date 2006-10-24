@@ -11,7 +11,7 @@ import javax.swing.*;
 public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
 
     /**
-     * Specifies whether the popup menu of the representative anchor label of the tool should be enabled.
+     * Specifies whether the popup menu of the representative anchor button of the tool should be enabled.
      *
      * @param enabled <code>true</code> to enable popup menu.
      *                <code>false</code> otherwise.
@@ -22,7 +22,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
     void setPopupMenuEnabled(boolean enabled);
 
     /**
-     * Indicates whether the popup menu of the representative anchor label of the tool is enabled.
+     * Indicates whether the popup menu of the representative anchor button of the tool is enabled.
      *
      * @return <code>true</code> if the popup menu is enabled;
      *         <code>false</code> otherwise.
@@ -32,7 +32,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
     boolean isPopupMenuEnabled();
 
     /**
-     * The user can add specific menu items to the popup menu of the representative anchor label of the tool using
+     * The user can add specific menu items to the popup menu of the representative anchor button of the tool using
      * the result of this method invocation.
      *
      * @return the menu where to add new menu items.

@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy;
 
 import java.awt.*;
+import java.beans.PropertyChangeListener;
 
 /**
  * This interface is used to modify the behaviours of FLOATING and FLOATING_WINDOW type.
@@ -102,10 +103,9 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
     /**
      * Sets the transparent ratio. Valid range is [0.0, 1.0]
      *
-     * @param ratio value used to describe the opacity of the window.
-     *              When ratio is 0, the window is completely transparent. When bAlpha is 1, the window is opaque.
+     * @param transparentRatio
      */
-    void setTransparentRatio(float ratio);
+    void setTransparentRatio(float transparentRatio);
 
     /**
      * Returns the transparent ratio.
@@ -118,9 +118,9 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * Sets the transparent delay. When the window losts focus, after delay time the window will become
      * transparent.
      *
-     * @param delay delay in milliseconds before the window became transparent.
+     * @param transparentDelay
      */
-    void setTransparentDelay(int delay);
+    void setTransparentDelay(int transparentDelay);
 
     /**
      * Returns the transparent delay.
@@ -128,5 +128,50 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * @return delay in milliseconds.
      */
     int getTransparentDelay();
+
+    /**
+     * Adds a PropertyChangeListener to the listener list. The listener is
+     * registered for all bound properties of this class, including the
+     * following:
+     * <ul>
+     * <li>this window's location ("location")</li>
+     * <li>this window's size ("sise")</li>
+     * <li>this window's modal ("modal")</li>
+     * <li>this window's transparentMode ("transparentMode")</li>
+     * <li>this window's transparentRatio ("transparentRatio")</li>
+     * <li>this window's transparentDelay ("transparentDelay")</li>
+     * </ul>
+     * <p/>
+     * If listener is null, no exception is thrown and no action is performed.
+     *
+     * @param listener the PropertyChangeListener to be added
+     * @see #getPropertyChangeListeners()
+     * @see #removePropertyChangeListener
+     */
+    void addPropertyChangeListener(PropertyChangeListener listener);
+
+    /**
+     * Removes a PropertyChangeListener from the listener list.
+     * <p/>
+     * If listener is null, no exception is thrown and no action is performed.
+     *
+     * @param listener the PropertyChangeListener to be removed.
+     * @see #addPropertyChangeListener
+     * @see #getPropertyChangeListeners
+     */
+    void removePropertyChangeListener(PropertyChangeListener listener);
+
+    /**
+     * Returns an array of all the property change listeners
+     * registered on this descritpro.
+     *
+     * @return all of this descriptor's <code>PropertyChangeListener</code>s
+     *         or an empty array if no property change
+     *         listeners are currently registered.
+     * @see #addPropertyChangeListener
+     * @see #removePropertyChangeListener
+     */
+    PropertyChangeListener[] getPropertyChangeListeners();
+
 
 }

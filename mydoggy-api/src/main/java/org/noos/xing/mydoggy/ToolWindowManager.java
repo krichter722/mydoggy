@@ -11,19 +11,19 @@ import java.awt.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @see ToolWindow
  * @see ToolWindowGroup
- * @see ToolWindowContentManager
+ * @see ContentManager
  * @see ToolWindowTypeDescriptor
  * @see ToolWindowManagerListener
  */
 public interface ToolWindowManager {
 
     /**
-     * Returns the instance of <code>ToolWindowContentManager</code> that manages main window contents.
+     * Returns the instance of <code>ContentManager</code> that manages main window contents.
      *
-     * @return an instance of <code>ToolWindowContentManager</code>.
-     * @see org.noos.xing.mydoggy.ToolWindowContentManager
+     * @return an instance of <code>ContentManager</code>.
+     * @see org.noos.xing.mydoggy.ContentManager
      */
-    ToolWindowContentManager getContentManager();
+    ContentManager getContentManager();
 
     /**
      * Register a new tool window into this window manager based on the passed parameters.
@@ -39,9 +39,9 @@ public interface ToolWindowManager {
      *          with the same id or one or more of the parameters is null.
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
      * @see org.noos.xing.mydoggy.ToolWindowManager
-     * @see #unregisterToolWindow(String)
+     * @see #unregisterToolWindow(Object)
      */
-    ToolWindow registerToolWindow(String id, String title, Icon icon,
+    ToolWindow registerToolWindow(Object id, String title, Icon icon,
                                   Component component, ToolWindowAnchor anchor);
 
     /**
@@ -50,10 +50,10 @@ public interface ToolWindowManager {
      * @param id id of tool window to be removed.
      * @throws java.lang.IllegalArgumentException
      *          - if tool window with specified id isn't registered.
-     * @see #registerToolWindow(String,String,javax.swing.Icon,java.awt.Component,ToolWindowAnchor)
+     * @see #registerToolWindow(Object,String,javax.swing.Icon,java.awt.Component,ToolWindowAnchor)
      * @see #unregisterAllToolWindow()
      */
-    void unregisterToolWindow(String id);
+    void unregisterToolWindow(Object id);
 
     /**
      * Removes all tools window from this window manager if there are any.
@@ -65,7 +65,7 @@ public interface ToolWindowManager {
      *
      * @return <tt>ID</tt> of currently active tool window or <tt>null</tt> if there is no active tool window.
      */
-    String getActiveToolWindowId();
+    Object getActiveToolWindowId();
 
     /**
      * Returns the tool window to which this manager maps the specified id.
@@ -75,7 +75,7 @@ public interface ToolWindowManager {
      * @return registered tool window with specified id. If there is no registered tool
      *         window with specified id then the method returns <tt>null</tt>.
      */
-    ToolWindow getToolWindow(String id);
+    ToolWindow getToolWindow(Object id);
 
     /**
      * Returns the tool window whose index is <code>index</code>.
