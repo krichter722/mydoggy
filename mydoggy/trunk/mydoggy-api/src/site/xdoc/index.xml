@@ -1,0 +1,60 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy-Api : Introduction</title>
+        <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="Introduction">
+            <p>
+                MyDoggy-Api contains the application program interface of MyDoggy to manage every aspects of the
+                framework. We start introducing the main classes used to manage MyDoggy.
+            </p>
+
+            <p>
+                <ul>
+                    <li>
+                        <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowManager.html">ToolWindowManager</a>
+                        - This interface is the main entry point to manager MyDoggy. Using this interface
+                        the user can register/unregister tool windows, groups. The user can get the
+                        content manager instance and type descriptor templates.
+                    </li>
+                    <li>
+                        <a href="./apidocs/org/noos/xing/mydoggy/ToolWindow.html">ToolWindow</a>
+                        - The ToolWindow interface models the concept of a secondary window that provide access to
+                        and/or support for a particular functionality.
+                        This interface is the main entry point to modify tool window properties. Moreover there are
+                        methods to make the tool available, visible and active.
+                    </li>
+                    <li>
+                        <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowGroup.html">ToolWindowGroup</a>
+                        - This interface lets the user to manager a group of tool window. The idea is to provide the
+                        same mechanism of prospectives of eclipse ide for tools window. The typical usage is to
+                        retrieve a group from the tool window manager and to add any tools window.
+                        After that we can show or hide all tools registerd in a group.
+                    </li>
+                    <li>
+                        <a href="./apidocs/org/noos/xing/mydoggy/ContentManager.html">ContentManager</a>
+                        - This manager manages the main window. You can add sereval contents to be displayed
+                        in the main window. The user can switch between displayed contents.
+                        Contents are added to the
+                        <code>ContentManager</code>
+                        by using the
+                        <code>addContent</code>
+                        method.
+                    </li>
+                    <li>
+                        <a href="./apidocs/org/noos/xing/mydoggy/Content.html">Content</a>
+                        - A content is a wrapper of a component decorated with some properties like
+                        a title, an icon, etc. The visualization of a content dependes on specific
+                        platform implementation. A platform implementation can use a JTabbedPane
+                        or a JDesktopPane for example.
+                    </li>
+                </ul>
+            </p>
+        </section>
+    </body>
+</document>

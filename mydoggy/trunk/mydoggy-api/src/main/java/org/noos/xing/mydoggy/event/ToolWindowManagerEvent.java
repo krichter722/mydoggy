@@ -12,6 +12,8 @@ import java.util.EventObject;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ToolWindowManagerEvent extends EventObject {
+    private static final long serialVersionUID = 1719383277615714309L;
+
     /**
      * Action Identifier Enum.
      */
@@ -92,7 +94,7 @@ public class ToolWindowManagerEvent extends EventObject {
      *
      * @return the action identifier.
      */
-    public ActionId getActionId() {
+    public ActionId getId() {
         return actionId;
     }
 

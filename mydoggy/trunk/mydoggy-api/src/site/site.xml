@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="MyDoggy-Api">
+
+    <bannerLeft>
+        <name>MyDoggy - My Java Docking Framework</name>
+        <src>/images/logo.png</src>
+        <href>http://mydoggy.sourceforge.net</href>
+    </bannerLeft>
+
+    <bannerRight>
+        <src>http://maven.apache.org/images/maven-small.gif</src>
+    </bannerRight>
+
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-default-skin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </skin>
+
+    <body>
+        <links>
+            <item name="MyDoggy" href="./../index.html"/>
+            <item name="Maven" href="http://maven.apache.org/"/>
+        </links>
+
+        <menu name="MyDoggy - Api">
+            <item name="Introduction" href="index.html"/>
+            <subitem name="ToolWindow" href="toolwindow.html">
+                <item name="Types" href="toolwindowTypes.html"/>
+                <item name="Using" href="toolwindowUsing.html"/>
+            </subitem>
+            <item name="FAQs" href="/faqs.html"/>
+        </menu>
+
+        ${reports}
+    </body>
+
+</project>

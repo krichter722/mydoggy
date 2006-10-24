@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.beans.PropertyChangeListener;
 
 /**
+ * Tool Windows are secondary windows within the main window that provide access to and/or
+ * support for a particular functionality.
  * This interface is the main entry point to modify tool window properties.
  * Moreover there are methods to make the tool available, visible and active.
  *
@@ -17,7 +19,7 @@ public interface ToolWindow {
      *
      * @return tool id.
      */
-    String getId();
+    Object getId();
 
     /**
      * This method is used to set the index for the tool. The index is used to activate or hide

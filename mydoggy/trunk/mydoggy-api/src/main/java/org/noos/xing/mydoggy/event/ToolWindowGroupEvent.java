@@ -12,6 +12,8 @@ import java.util.EventObject;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ToolWindowGroupEvent extends EventObject {
+    private static final long serialVersionUID = -6028203866456501444L;
+
     /**
      * An event which indicates that an action occurred in the tool window manager.
      *

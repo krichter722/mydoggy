@@ -1,0 +1,55 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy-Api : ToolWindow</title>
+        <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="ToolWindow">
+            <p>
+                A ToolWindow is a secondary window used to provide one or more particular functionalities.
+            </p>
+
+            <table border="0" width="711">
+                <tbody>
+                    <tr>
+                        <td width="453">
+                            <img src="./images/toolwindow.png" alt="ToolWindow" border="0" hspace="18"/>
+                        </td>
+                        <td width="248">
+                            <p>
+                                Shortcut-accessible Tool Windows:
+                            </p>
+                            <ul>
+                                <li>
+                                    <a href="../ant/antToolWindow.html">Ant Build</a>
+                                </li>
+                                <li>
+                                    <a href="../vcs/cvsIntegration.html#cvstool">CVS</a>
+                                </li>
+                                <li>
+                                    <a href="../codeInspection/index.html">Inspection</a>
+                                </li>
+                                <li>Dependency Viewer</li>
+                                <li>File View</li>
+                                <li>
+                                    <a href="idetalk.html">IDEtalk</a>
+                                </li>
+                                <li>
+                                    <a href="idetalk.html#msg">IDEtalk Messages</a>
+                                </li>
+                                <li>Module Dependencies</li>
+                                <li>Palette</li>
+                                <li>UI Designer</li>
+                                <li>Version Control</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </body>
+</document>

@@ -5,7 +5,7 @@ package org.noos.xing.mydoggy;
  * The user can specifies also an index relative to the other tools attached
  * to the same anchor, like a list.
  * Every anchor rapresents a tool window bar where for every tool a representative
- * label is positioned.
+ * button is positioned.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
