@@ -23,20 +23,18 @@ HMODULE hUser32 = NULL;
 /* Cache the handle to the library */
 HINSTANCE g_hInstance = NULL;
 
-BOOL WINAPI DllMain(HANDLE hInstDLL, DWORD dwReason, LPVOID lpvReserved)
-{
-if (dwReason == DLL_PROCESS_ATTACH) {
-if (g_hInstance == NULL) g_hInstance = hInstDLL;
-// Here we import the function from USER32.DLL
-hUser32 = GetModuleHandle("USER32.DLL");
-if (hUser32 != NULL)
-{
-SetLayeredWindowAttributes = (lpfnSetLayeredWindowAttributes)GetProcAddress(hUser32, "SetLayeredWindowAttributes");
-GetLayeredWindowAttributes = (lpfnGetLayeredWindowAttributes)GetProcAddress(hUser32, "GetLayeredWindowAttributes");
-}
-else return FALSE;
-}
-return TRUE;
+BOOL WINAPI DllMain(HANDLE hInstDLL, DWORD dwReason, LPVOID lpvReserved){
+	if (dwReason == DLL_PROCESS_ATTACH) {
+		if (g_hInstance == NULL) g_hInstance = hInstDLL;
+		// Here we import the function from USER32.DLL
+		hUser32 = GetModuleHandle("USER32.DLL");
+		if (hUser32 != NULL){
+			SetLayeredWindowAttributes = (lpfnSetLayeredWindowAttributes)GetProcAddress(hUser32, "SetLayeredWindowAttributes");
+			GetLayeredWindowAttributes = (lpfnGetLayeredWindowAttributes)GetProcAddress(hUser32, "GetLayeredWindowAttributes");
+		} else 
+			return FALSE;
+	}
+	return TRUE;
 }
 
 /* Natives */
@@ -55,27 +53,27 @@ JNIEXPORT jboolean JNICALL OS_NATIVE(isAlphaModeEnabledWin32Impl)
 	/* Get the AWT */
 	awt.version = JAWT_VERSION_1_3;
 	if (JAWT_GetAWT(env, &awt) == JNI_FALSE) {
-		printf("Cannot get awt!!!");
+		//printf("Cannot get awt!!!");
 		return FALSE;
 	}
 
 	/* Get the drawing surface */
 	ds = awt.GetDrawingSurface(env, component);
 	if (ds == 0) {
-		printf("Cannot get DrawingSurface!!!");
+		//printf("Cannot get DrawingSurface!!!");
 		return FALSE;
 	}
 
 	/* Lock the drawing surface */
 	if ((ds->Lock(ds) & JAWT_LOCK_ERROR) != 0) {
-		printf("isAlphaModeEnabledWin32Impl : Cannot lock DrawingSurface!!!");
+		//printf("isAlphaModeEnabledWin32Impl : Cannot lock DrawingSurface!!!");
 		return FALSE;
 	}
 
 	/* Get the drawing surface info */
 	dsi = ds->GetDrawingSurfaceInfo(ds);
 	if (dsi == 0) {
-		printf("Cannot get DrawingSurfaceInfo!!!");
+		//printf("Cannot get DrawingSurfaceInfo!!!");
 		return FALSE;
 	}
 	
@@ -83,7 +81,7 @@ JNIEXPORT jboolean JNICALL OS_NATIVE(isAlphaModeEnabledWin32Impl)
 	dsi_win = (JAWT_Win32DrawingSurfaceInfo*)dsi->platformInfo;
 	hWnd = dsi_win->hwnd;
 	if (hWnd == NULL) {
-		printf("Cannot get hWnd!!!");
+		//printf("Cannot get hWnd!!!");
 		return FALSE;
 	}		
 
@@ -115,27 +113,27 @@ JNIEXPORT void JNICALL OS_NATIVE(setAlphaModeEnabledWin32Impl)
 	/* Get the AWT */
 	awt.version = JAWT_VERSION_1_3;
 	if (JAWT_GetAWT(env, &awt) == JNI_FALSE) {
-		printf("Cannot get awt!!!");
+		//printf("Cannot get awt!!!");
 		return;
 	}
 
 	/* Get the drawing surface */
 	ds = awt.GetDrawingSurface(env, component);
 	if (ds == 0) {
-		printf("Cannot get DrawingSurface!!!");
+		//printf("Cannot get DrawingSurface!!!");
 		return;
 	}
 
 	/* Lock the drawing surface */
 	if ((ds->Lock(ds) & JAWT_LOCK_ERROR) != 0) {
-		printf("setAlphaModeEnabledWin32Impl : Cannot lock DrawingSurface!!!");
+		//printf("setAlphaModeEnabledWin32Impl : Cannot lock DrawingSurface!!!");
 		return;
 	}
 
 	/* Get the drawing surface info */
 	dsi = ds->GetDrawingSurfaceInfo(ds);
 	if (dsi == 0) {
-		printf("Cannot get DrawingSurfaceInfo!!!");
+		//printf("Cannot get DrawingSurfaceInfo!!!");
 		return;
 	}
 	
@@ -143,7 +141,7 @@ JNIEXPORT void JNICALL OS_NATIVE(setAlphaModeEnabledWin32Impl)
 	dsi_win = (JAWT_Win32DrawingSurfaceInfo*)dsi->platformInfo;
 	hWnd = dsi_win->hwnd;
 	if (hWnd == NULL) {
-		printf("Cannot get hWnd!!!");
+		//printf("Cannot get hWnd!!!");
 		return;
 	}
 	
@@ -188,27 +186,27 @@ JNIEXPORT void JNICALL OS_NATIVE(setAlphaModeRatioWin32Impl)
 	/* Get the AWT */
 	awt.version = JAWT_VERSION_1_3;
 	if (JAWT_GetAWT(env, &awt) == JNI_FALSE) {
-		printf("Cannot get awt!!!");
+		//printf("Cannot get awt!!!");
 		return;
 	}
 
 	/* Get the drawing surface */
 	ds = awt.GetDrawingSurface(env, component);
 	if (ds == 0) {
-		printf("Cannot get DrawingSurface!!!");
+		//printf("Cannot get DrawingSurface!!!");
 		return;
 	}
 
 	/* Lock the drawing surface */
 	if ((ds->Lock(ds) & JAWT_LOCK_ERROR) != 0) {
-		printf("setAlphaModeRatioWin32Impl : Cannot lock DrawingSurface!!!");
+		//printf("setAlphaModeRatioWin32Impl : Cannot lock DrawingSurface!!!");
 		return;
 	}
 
 	/* Get the drawing surface info */
 	dsi = ds->GetDrawingSurfaceInfo(ds);
 	if (dsi == 0) {
-		printf("Cannot get DrawingSurfaceInfo!!!");
+		//printf("Cannot get DrawingSurfaceInfo!!!");
 		return;
 	}
 	
@@ -216,7 +214,7 @@ JNIEXPORT void JNICALL OS_NATIVE(setAlphaModeRatioWin32Impl)
 	dsi_win = (JAWT_Win32DrawingSurfaceInfo*)dsi->platformInfo;
 	hWnd = dsi_win->hwnd;
 	if (hWnd == NULL) {
-		printf("Cannot get hWnd!!!");
+		//printf("Cannot get hWnd!!!");
 		return;
 	}
 	

@@ -1,5 +1,5 @@
 <assembly>
-    <id>dist</id>
+    <id>distro</id>
     <formats>
         <format>dir</format>
         <format>zip</format>
@@ -47,14 +47,11 @@
             <includes/>
         </fileSet>
 
-<!--
         <fileSet>
-            <directory>${artifactId}/target/javadoc</directory>
-            <outputDirectory>license</outputDirectory>
+            <directory>mydoggy-examples/src/script</directory>
+            <outputDirectory>bin</outputDirectory>
             <includes/>
         </fileSet>
--->
-
     </fileSets>
 
     <files>

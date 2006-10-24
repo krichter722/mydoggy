@@ -19,8 +19,7 @@
                 </li>
             </ul>
 
-            <table style="border: 1px solid rgb(204, 204, 204); background-color: rgb(238, 238, 238); margin-top: 10px; margin-bottom: 10px;"
-                   cellpadding="5">
+            <table cellpadding="5">
                 <tbody>
                     <tr valign="top">
                         <td colspan="1">
@@ -41,9 +40,9 @@
 
                     <tr valign="top">
                         <td colspan="1">MyDoggy</td>
-                        <td colspan="1">1.0</td>
+                        <td colspan="1">1.0.0</td>
                         <td colspan="1">January 9, 2005</td>
-                        <td colspan="1">Beta</td>
+                        <td colspan="1">Stable</td>
 
                         <td colspan="1">
                             <em>
