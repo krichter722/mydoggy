@@ -1,0 +1,47 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy-Examples : MyDoggySet - Screenshots</title>
+        <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="Screenshots">
+            <p>
+                Here you can see some screenshots of the example application provided.
+            </p>
+        </section>
+
+        <section name="MyDoggySet Screenshots">
+            <p>
+                Here are some screenshots of MyDoggySet.
+            </p>
+            <table>
+                <tr>
+                    <td>
+                        Img 1
+                    </td>
+                    <td>
+                        Img 2
+                    </td>
+                    <td>
+                        Img 3
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Img 4
+                    </td>
+                    <td>
+                        Img 5
+                    </td>
+                    <td>
+                        Img 6                        
+                    </td>
+                </tr>
+            </table>
+        </section>
+    </body>
+</document>
