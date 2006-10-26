@@ -33,7 +33,7 @@ public class TestTWManagerVisibileTool extends TestCase {
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
                 frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
-                frame.getContentPane().add(myDoggyToolWindowManager.getContentPane(), "0,0,");
+                frame.getContentPane().add(myDoggyToolWindowManager, "0,0,");
 
                 frame.setVisible(true);
             }

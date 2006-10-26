@@ -27,7 +27,7 @@ import java.util.*;
 /**
  * @author Angelo De Caro
  */
-public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChangeListener, KeyEventPostProcessor {
+public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener, KeyEventPostProcessor {
     private static final int COLUMN_LENGTH = 23;
     private static final int ROW_LENGTH = 23;
 
@@ -73,13 +73,6 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
         initResourceBoundles(locale);
         initComponents();
         initListeners();
-    }
-
-    public MyDoggyToolWindowManager(Window windowAnchestor, Locale locale, Object constraint) {
-        this(windowAnchestor, locale);
-
-        RootPaneContainer container = (RootPaneContainer) windowAnchestor;
-        container.getContentPane().add(getContentPane(), constraint);
     }
 
 
@@ -278,10 +271,6 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
         return anchestor;
     }
 
-    public JPanel getContentPane() {
-        return contentPane;
-    }
-
 
     public void setMainContent(Component content) {
         mainContainer.setOpaque(false);
@@ -332,7 +321,7 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
         // Init gui
         contentPane = new JPanel();
         contentPaneLayout = new ExtendedTableLayout(new double[][]{{0, TableLayout.FILL, 0}, {0, TableLayout.FILL, 0}});
-        contentPane.setLayout(contentPaneLayout);
+        setLayout(contentPaneLayout);
 
         // Register bars, one for every anchor
         addBar(LEFT, JSplitPane.HORIZONTAL_SPLIT, "0,1", "0,0,c,c");
@@ -350,7 +339,7 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
         addBar(TOP, JSplitPane.VERTICAL_SPLIT, "1,0", "2,2,c,c");
         JSplitPane bottomSplit = addBar(BOTTOM, JSplitPane.VERTICAL_SPLIT, "1,2", "0,2,c,c");
 
-        contentPane.add(bottomSplit, "1,1,FULL,FULL");
+        add(bottomSplit, "1,1,FULL,FULL");
 
         getBar(BOTTOM).getSplitPane().setTopComponent(getBar(TOP).getSplitPane());
         getBar(TOP).getSplitPane().setBottomComponent(getBar(LEFT).getSplitPane());
@@ -468,13 +457,13 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
                                                           anchor);
 
         // Add Bar to Container
-        contentPane.add(bars[anchor.ordinal()].getToolScrollBar(), barConstraints);
+        add(bars[anchor.ordinal()].getToolScrollBar(), barConstraints);
 
         // Add Corner to Container
 //        JLabel groupLabel = new JLabel("G");
 //        groupLabel.addMouseListener(new GroupMouseListener());
         JPanel groupLabel = new JPanel();
-        contentPane.add(groupLabel, cornerConstraints);
+        add(groupLabel, cornerConstraints);
 
         return bars[anchor.ordinal()].getSplitPane();
     }
@@ -519,7 +508,7 @@ public class MyDoggyToolWindowManager implements ToolWindowManager, PropertyChan
         }
 
         if (revalidate)
-            SwingUtil.repaint(contentPane);
+            SwingUtil.repaint(this);
     }
 
 

@@ -1,0 +1,17 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy-Plaf : Introduction</title>
+        <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="Introduction">
+            <p>
+                MyDoggy-Plaf...
+            </p>
+        </section>
+    </body>
+</document>
