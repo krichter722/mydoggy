@@ -87,7 +87,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
 
     public Container getToolWindowManagerContainer() {
-        return manager.getContentPane();
+        return manager;
     }
 
     public Window getWindowAnchestor() {
