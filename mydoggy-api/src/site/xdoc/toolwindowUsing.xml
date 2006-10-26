@@ -3,16 +3,12 @@
         "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
     <properties>
-        <title>MyDoggy-Api : ToolWindow</title>
+        <title>MyDoggy-Api : Using</title>
         <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
     </properties>
 
     <body>
-        <section name="Introduction">
-            <p>
-
-            </p>
-            <!-- TODO -->
+        <section name="Using">
         </section>
     </body>
 </document>

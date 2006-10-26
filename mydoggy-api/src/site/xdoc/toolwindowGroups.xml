@@ -3,30 +3,31 @@
         "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
     <properties>
-        <title>MyDoggy-Api : ToolWindow</title>
+        <title>MyDoggy-Api : ToolWindowGroup</title>
         <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
     </properties>
 
     <body>
-        <section name="ToolWindow">
+        <section name="Groups - ToolWindowGroup">
             <p>
-                A Tool Window is a secondary window used to provide one or more particular functionalities.
+                The idea is to provide the same mechanism of prospectives of eclipse ide for tools window.
+                The typical usage is to retrieve a group from the tool window manager and to add any tools window.
+                After that we can show or hide all tools registerd in a group.                
             </p>
 
             <table>
                 <tbody>
                     <tr>
                         <td>
-                            <img src="./images/toolwindow.png" alt="ToolWindow" border="0" hspace="18"/>
+                            <img src="./images/group_1.png" alt="ToolWindow" border="0" hspace="18"/>
                         </td>
                         <td>
                             <p>
                                 To register a new tool window use the following:
                             </p>
                             <source>ToolWindowManager toolWindowManager = new ...;
-toolWindowManager.registerToolWindow("Debug Tool", "Debug Tool Title",
-                                     debugIcon, debugPanel,
-                                     ToolWindowAnchor.LEFT)</source>
+toolWindowManager.registerToolWindow("Debug Tool", "Debug Tool Title", debugIcon, debugPanel, ToolWindowAnchor.LEFT)</source>
+
                             <p>
                                 Here are some properties of a tool window:
                             </p>

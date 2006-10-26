@@ -7,9 +7,9 @@
     </properties>
 
     <body>
-        <release version="1.0.0" description="Current work version">
-            <action dev="Duke Java" type="add">
-                A new cool feature.
+        <release version="1.0.0" date="2006-10-31" description="First release">
+            <action dev="adecaro" type="add">
+                Uploaded distro release.
             </action>
         </release>
     </body>

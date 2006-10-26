@@ -25,6 +25,7 @@
                 <include>org.noos.xing:mydoggy-api</include>
                 <include>org.noos.xing:mydoggy-plaf</include>
                 <include>org.noos.xing:mydoggy-examples</include>
+                <include>org.noos.xing:mydoggy-site-skin</include>
             </includes>
             <excludes>
                 <exclude>*.iml</exclude>
