@@ -35,6 +35,11 @@
         </license>
     </licenses>
 
+    <mailingLists>
+        <mailingList>
+        </mailingList>
+    </mailingLists>
+
     <modules>
         <module>mydoggy-site-skin</module>
         <module>mydoggy-api</module>
@@ -43,9 +48,9 @@
     </modules>
 
     <scm>
-        <connection>scm:svn:https://svn.sourceforge.net/svnroot/mydoggy</connection>
-        <developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/mydoggy</developerConnection>
-        <url>http://svn.sourceforge.net/viewvc/mydoggy/</url>
+        <connection>scm:svn:https://svn.sourceforge.net/svnroot/mydoggy/mydoggy</connection>
+        <developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/mydoggy/mydoggy</developerConnection>
+        <url>http://svn.sourceforge.net/viewvc/mydoggy/mydoggy</url>
     </scm>
 
     <dependencies>
@@ -140,8 +145,15 @@
             </plugin>
 
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>changes-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changes-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>changes-report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
         </plugins>
     </reporting>

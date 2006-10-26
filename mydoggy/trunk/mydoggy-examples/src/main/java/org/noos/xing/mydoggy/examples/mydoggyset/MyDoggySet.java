@@ -151,7 +151,9 @@ public class MyDoggySet {
     }
 
     protected void initToolWindowManager() {
-        this.toolWindowManager = new MyDoggyToolWindowManager(frame, null, "1,1,");
+        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame, null);
+        this.toolWindowManager = myDoggyToolWindowManager;
+
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);
         typeDescriptor.setTransparentDelay(0);
 
@@ -241,8 +243,8 @@ public class MyDoggySet {
                 .setPopupMenu(toolsPopupMenu);
         toolWindowManager.getContentManager().getContent(0).setTitle("ToolWindows");
 
-        // Add ToolWindowManager content pane to frame
-//        this.frame.getContentPane().add(myDoggyToolWindowManager.getContentPane(), "0,0,");
+        // Add MyDoggyToolWindowManager to frame
+        this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
     }
 
     protected Component initToolsContent() {

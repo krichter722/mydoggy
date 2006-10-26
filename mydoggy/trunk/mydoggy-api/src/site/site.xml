@@ -2,19 +2,15 @@
 <project name="MyDoggy-Api">
 
     <bannerLeft>
+        <href>http://mydoggy.sourceforge.net/</href>
         <name>MyDoggy - My Java Docking Framework</name>
-        <src>/images/logo.png</src>
-        <href>http://mydoggy.sourceforge.net</href>
+        <src>/images/banners/banner.png</src>
     </bannerLeft>
 
-    <bannerRight>
-        <src>http://maven.apache.org/images/maven-small.gif</src>
-    </bannerRight>
-
     <skin>
-        <groupId>org.apache.maven.skins</groupId>
-        <artifactId>maven-default-skin</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <groupId>org.noos.xing</groupId>
+        <artifactId>mydoggy-site-skin</artifactId>
+        <version>1.0.0</version>
     </skin>
 
     <body>
@@ -25,10 +21,11 @@
 
         <menu name="MyDoggy - Api">
             <item name="Introduction" href="index.html"/>
-            <subitem name="ToolWindow" href="toolwindow.html">
+            <item name="ToolWindow" href="toolwindow.html">
                 <item name="Types" href="toolwindowTypes.html"/>
+                <item name="Groups" href="toolwindowGroups.html"/>
                 <item name="Using" href="toolwindowUsing.html"/>
-            </subitem>
+            </item>
             <item name="FAQs" href="/faqs.html"/>
         </menu>
 
