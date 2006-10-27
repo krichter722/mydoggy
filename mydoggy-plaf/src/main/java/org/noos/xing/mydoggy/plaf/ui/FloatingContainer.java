@@ -100,7 +100,7 @@ public class FloatingContainer extends DockedContainer {
                     return;
 
                 assert"type".equals(evt.getPropertyName());
-                if (evt.getNewValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING_WINDOW) {
+                if (evt.getNewValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING_FREE) {
                     window.removeMouseMotionListener(resizeMouseInputHandler);
                     window.removeMouseListener(resizeMouseInputHandler);
 

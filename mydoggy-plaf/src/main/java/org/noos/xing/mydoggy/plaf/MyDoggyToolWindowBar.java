@@ -125,7 +125,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         listeners.put("visible.before", new VisibleBeforeListener());
         listeners.put("visible.DOCKED", new VisibleDockedListener());
         listeners.put("visible.FLOATING", new VisibleFloatingListener());
-        listeners.put("visible.FLOATING_WINDOW", new VisibleFloatingWindowListener());
+        listeners.put("visible.FLOATING_FREE", new VisibleFloatingWindowListener());
         listeners.put("visible.SLIDING", new VisibleSlidingListener());
         listeners.put("visible", new VisibleListener());
         listeners.put("active.before", new ActiveBeforeListener());
@@ -143,7 +143,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
 
-            if (descriptor.getToolWindow().getType() != ToolWindowType.FLOATING_WINDOW) {
+            if (descriptor.getToolWindow().getType() != ToolWindowType.FLOATING_FREE) {
                 boolean oldAvailable = (Boolean) evt.getOldValue();
                 boolean newAvailable = (Boolean) evt.getNewValue();
 
@@ -303,12 +303,12 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
 
-            if (evt.getOldValue() == ToolWindowType.FLOATING_WINDOW) {
+            if (evt.getOldValue() == ToolWindowType.FLOATING_FREE) {
                 addAnchorLabel(toolWindowDescriptor.getAnchorLabel(contentPane));
                 ensureVisible(toolWindowDescriptor.getAnchorLabel());
 
                 SwingUtil.repaint(contentPane);
-            } else if (evt.getNewValue() == ToolWindowType.FLOATING_WINDOW &&
+            } else if (evt.getNewValue() == ToolWindowType.FLOATING_FREE &&
                        toolWindowDescriptor.getAnchorLabel() != null) {
 
                 removeAnchorLabel(toolWindowDescriptor.getAnchorLabel(), toolWindowDescriptor);
@@ -334,7 +334,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
                     if (MyDoggyToolWindowManager.currentGroup == null) {
                         if (toolWindow.getType() == ToolWindowType.FLOATING ||
-                            toolWindow.getType() == ToolWindowType.FLOATING_WINDOW)
+                            toolWindow.getType() == ToolWindowType.FLOATING_FREE)
                             continue;
 
                         if (toolWindow.getAnchor().equals(sourceTool.getAnchor()))

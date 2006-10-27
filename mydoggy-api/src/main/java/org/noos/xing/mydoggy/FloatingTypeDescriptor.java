@@ -4,7 +4,7 @@ import java.awt.*;
 import java.beans.PropertyChangeListener;
 
 /**
- * This interface is used to modify the behaviours of FLOATING and FLOATING_WINDOW type.
+ * This interface is used to modify the behaviours of FLOATING and FLOATING_FREE type.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @see org.noos.xing.mydoggy.ToolWindowType
@@ -60,7 +60,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
     Dimension getSize();
 
     /**
-     * Specifies whether the window used by <code>FLOATING</code> and <code>FLOATING_WINDOW</code> type should be modal.
+     * Specifies whether the window used by <code>FLOATING</code> and <code>FLOATING_FREE</code> type should be modal.
      *
      * @param modal <code>true</code> to make the window modal;
      *              <code>false</code> otherwise.
@@ -69,7 +69,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
     void setModal(boolean modal);
 
     /**
-     * Indicates whether the window used by <code>FLOATING</code> and <code>FLOATING_WINDOW</code> type is modal.
+     * Indicates whether the window used by <code>FLOATING</code> and <code>FLOATING_FREE</code> type is modal.
      * When a modal window is made visible, user input will be
      * blocked to the other windows in the application.
      *
@@ -81,7 +81,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
 
     /**
      * Sets the transparent mode. If the transparent mode is enabled then when
-     * the window used by <code>FLOATING</code> and <code>FLOATING_WINDOW</code> type losts
+     * the window used by <code>FLOATING</code> and <code>FLOATING_FREE</code> type losts
      * the focus it becomes transparent. This facility is os-dependent.
      *
      * @param transparentMode <code>true</code> to enable trasparent mode;

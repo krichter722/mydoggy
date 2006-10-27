@@ -19,29 +19,29 @@
                 <tbody>
                     <tr>
                         <td>
-                            <img src="./images/group_1.png" alt="ToolWindow" border="0" hspace="18"/>
+                            <img src="./images/toolWindowGroup_1.png" alt="ToolWindowGroup" border="0" hspace="18"/>
                         </td>
                         <td>
                             <p>
-                                To register a new tool window use the following:
+                                To obtain an instance of ToolWindowGroup interface use the following:
                             </p>
                             <source>ToolWindowManager toolWindowManager = new ...;
-toolWindowManager.registerToolWindow("Debug Tool", "Debug Tool Title", debugIcon, debugPanel, ToolWindowAnchor.LEFT)</source>
-
+ToolWindowGroup group = toolWindowManager.getToolWindowGroup(
+                                                "main"  // ToolWindowGroup name
+                                            );</source>
                             <p>
-                                Here are some properties of a tool window:
+                                If the manager contains no mapping for this name then the manager create a new instance
+                                of ToolWindowGroup and associate the group created with the specified name in the manager.
+                                <br></br>
+                                After that, you can populate the group.
                             </p>
-                            <ul>
-                                <li>
-                                    id : tool window identifier;
-                                </li>
-                                <li>
-                                    title : tool window title;
-                                </li>
-                                <li>
-                                    anchor : tool window anchor;
-                                </li>
-                            </ul>
+                            <source>mainGroup.addToolWindow(toolWindowManager.getToolWindow(0));</source>
+                            <p>
+                                To shor or hide a group use the following:
+                            </p>
+                            <source>mainGroup.setVisible(
+                                                true        // true to show, false to hide
+                                    );</source>
                         </td>
                     </tr>
                 </tbody>

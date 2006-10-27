@@ -1,0 +1,58 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy-Api : ContentManager</title>
+        <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="ContentManager">
+            <p>
+                The Content Manager manages the main window contents. You can add sereval contents to be displayed
+                in the main window. The user can switch between displayed contents.
+            </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <img src="./images/contentManager.png" alt="ContentManager" border="0" hspace="18"/>
+                        </td>
+                        <td>
+                            <p>
+                                To add a new content use the following:
+                            </p>
+                            <source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">...</a>;
+ContentManager contentManager = toolWindowManager.getContentManager();
+contentManager.addContent("Tools",  // Content title
+                          null,     // Content Item
+                          toolsContent, // Content component
+                          "ToolWindows" // Content tooltip text
+);
+                            </source>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section name="Content">
+            <p>
+                A content is a wrapper of a component decorated with some properties like a title, an icon, etc.
+                The visualization of a content dependes on specific platform implementation.
+                A platform implementation can use a JTabbedPane or a JDesktopPane for example.
+            </p>
+            <p>
+                When you add a new content using the ContentManager you obtain an instance of Content interface.
+                This instance is used to modify content's properties.
+                <br></br>
+                To retrieve a content previously added use the following :
+            </p>
+            <source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">...</a>;
+ContentManager contentManager = toolWindowManager.getContentManager();
+Content content = contentManager.getContent(0);
+            </source>
+        </section>
+    </body>
+</document>

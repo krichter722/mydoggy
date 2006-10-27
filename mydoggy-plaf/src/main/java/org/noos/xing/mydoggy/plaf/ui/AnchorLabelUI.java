@@ -187,7 +187,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                 toolWindow.setAnchor(ToolWindowAnchor.BOTTOM);
             } else if ("floating".equals(actionCommand)) {
                 if (floatingMode.isSelected()) {
-                    toolWindow.setType((descriptor.isFloatingWindow()) ? ToolWindowType.FLOATING_WINDOW : ToolWindowType.FLOATING);
+                    toolWindow.setType((descriptor.isFloatingWindow()) ? ToolWindowType.FLOATING_FREE : ToolWindowType.FLOATING);
                     dockedMode.setVisible(!floatingMode.isSelected());
                 } else
                     toolWindow.setType(ToolWindowType.DOCKED);
@@ -219,7 +219,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                 SwingUtilities.updateComponentTreeUI(popupMenu);
 
                 DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-                SwingUtilities.updateComponentTreeUI(descriptor.getUserDefinedMenu());
+                SwingUtilities.updateComponentTreeUI(descriptor.getToolsMenu());
             }
         }
 
@@ -332,7 +332,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                 popupMenu.remove(old);
             }
 
-            JMenu menu = descriptor.getUserDefinedMenu();
+            JMenu menu = descriptor.getToolsMenu();
             if (menu.getMenuComponentCount() > 0) {
                 popupMenu.add(menu, 4);
                 old = menu;

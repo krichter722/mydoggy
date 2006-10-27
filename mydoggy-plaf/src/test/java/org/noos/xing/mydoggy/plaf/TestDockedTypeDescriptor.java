@@ -50,7 +50,7 @@ public class TestDockedTypeDescriptor extends TestCase {
 
     public void testDockedTypeDescriptorUserDefinedMenu() {
         DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.DOCKED);
-        assertNotNull(descriptor.getUserDefinedMenu());
+        assertNotNull(descriptor.getToolsMenu());
     }
 
 

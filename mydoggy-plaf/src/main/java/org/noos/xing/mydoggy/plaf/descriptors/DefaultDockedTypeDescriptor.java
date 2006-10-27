@@ -16,18 +16,18 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
 
     private EventListenerList listenerList;
     private boolean popupMenuEnabled;
-    private JMenu menu;
+    private JMenu toolsMenu;
     private int dockLength;
 
     public DefaultDockedTypeDescriptor() {
-        this.menu = new JMenu(ResourceBoundles.getResourceBundle().getString("@@tool.userDefined"));
+        this.toolsMenu = new JMenu(ResourceBoundles.getResourceBundle().getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = true;
         this.dockLength = 200;
         this.listenerList = new EventListenerList();
     }
 
     public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled) {
-        this.menu = new JMenu(ResourceBoundles.getResourceBundle().getString("@@tool.userDefined"));
+        this.toolsMenu = new JMenu(ResourceBoundles.getResourceBundle().getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = popupMenuEnabled;
         this.dockLength = dockLength;
         parent.addPropertyChangeListener(this);
@@ -44,8 +44,8 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         return popupMenuEnabled;
     }
 
-    public JMenu getUserDefinedMenu() {
-        return menu;
+    public JMenu getToolsMenu() {
+        return toolsMenu;
     }
 
     public int getDockLength() {

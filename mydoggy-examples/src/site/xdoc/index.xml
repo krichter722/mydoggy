@@ -11,17 +11,28 @@
         <section name="Introduction">
             <p>
                 MyDoggy-Examples contains some examples to see MyDoggy in action.
-                <ul>
-                    <li>
-                        <a href="./myDoggySet.html">MyDoggySet</a>
-                        is a sample application to see in action many functionalities of MyDoggy.
-                        You can modify tool window properties, show or hide groups and manage main window's contents.
-                        <p>
-                            If you can use WebStart click on the link to see MyDoggySet in action.
-                            <a href="./jnlp/mydoggyset/mydoggyset.jnlp">MyDoggySet</a>
-                        </p>
-                    </li>
-                </ul>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./images/mydoggyset.png" alt="MyDoggySet" border="0" hspace="18"/>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li>
+                                        <a href="./myDoggySet.html">MyDoggySet</a>
+                                        is a sample application to see in action many functionalities of MyDoggy.
+                                        You can modify tool window properties, show or hide groups and manage main window's contents.
+                                        <br></br>
+                                        If you can use WebStart click on the link to see MyDoggySet in action.
+                                        <a href="./jnlp/mydoggyset/mydoggyset.jnlp">MyDoggySet</a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
             </p>
         </section>
     </body>

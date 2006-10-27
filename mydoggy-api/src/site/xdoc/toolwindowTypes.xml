@@ -21,7 +21,7 @@
                         area along one of the tool window bars (the one containing the corresponding representative
                         button).
 
-                        <p>To set ToolWindowType.DOCKED type use the following:</p>
+                        <br></br>To set ToolWindowType.DOCKED type use the following:
                         <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug Tool");
 toolWindow.setType(ToolWindowType.DOCKED);</source>
                     </li>
@@ -30,7 +30,7 @@ toolWindow.setType(ToolWindowType.DOCKED);</source>
                         - When SLIDING type is used, the tool window overlaps the main frame and/or other tool windows.
                         When it loses focus, the tool window hides itself.
 
-                        <p>To set ToolWindowType.SLIDING type use the following:</p>
+                        <br></br>To set ToolWindowType.SLIDING type use the following:
                         <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug Tool");
 toolWindow.setType(ToolWindowType.SLIDING);</source>
                     </li>
@@ -42,18 +42,18 @@ toolWindow.setType(ToolWindowType.SLIDING);</source>
                         <a href="./apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">FloatingTypeDescriptor</a>
                         , if never before floated)
 
-                        <p>To set ToolWindowType.FLOATING type use the following:</p>
+                        <br></br>To set ToolWindowType.FLOATING type use the following:
                         <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug Tool");
 toolWindow.setType(ToolWindowType.FLOATING);</source>
                     </li>
                     <li>
-                        <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">ToolWindowType.FLOATING_WINDOW</a>
+                        <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">ToolWindowType.FLOATING_FREE</a>
                         This type differs from FLOATING type for the absence of the representative button
                         on the tool window bar.
 
-                        <p>To set ToolWindowType.FLOATING_WINDOW type use the following:</p>
+                        <br></br>To set ToolWindowType.FLOATING_FREE type use the following:
                         <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug Tool");
-toolWindow.setType(ToolWindowType.FLOATING_WINDOW);</source>
+toolWindow.setType(ToolWindowType.FLOATING_FREE);</source>
                     </li>
                 </ul>
             </p>
@@ -70,15 +70,15 @@ toolWindow.setType(ToolWindowType.FLOATING_WINDOW);</source>
                         <a href="./apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">DockedTypeDescriptor</a>
                         This interface is used to modify the behaviours of DOCKED type.
 
-                        <p>To get a DockedTypeDescriptor instance use the following:</p>
+                        <br></br>To get a DockedTypeDescriptor instance use the following:
                         <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug Tool");
 DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);</source>
                     </li>
                     <li>
                         <a href="./apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">FloatingTypeDescriptor</a>
-                        This interface is used to modify the behaviours of FLOATING and FLOATING_WINDOW type.
+                        This interface is used to modify the behaviours of FLOATING and FLOATING_FREE type.
 
-                        <p>To get a DockedTypeDescriptor instance use the following:</p>
+                        <br></br>To get a DockedTypeDescriptor instance use the following:
                         <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug Tool");
 FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);</source>
                     </li>

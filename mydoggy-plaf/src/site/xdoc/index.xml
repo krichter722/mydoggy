@@ -10,7 +10,18 @@
     <body>
         <section name="Introduction">
             <p>
-                MyDoggy-Plaf...
+                To obtain an instance of ToolWindowManager interface you have to instantiate the
+                MyDoggyToolWindowManager class. This is the default implementation.
+                To obtain an instance use the following (for example): 
+            </p>
+            <source>ToolWindowManager toolWindowManager = new MyDoggyToolWindowManager(
+              frame,      // A window implementing the RootPaneContainer interface
+              Locale.getDefault() // A Locale instance
+);
+            </source>
+            <p>
+                A window implementing the RootPaneContainer interface is requested becouse the default
+                implmentation use the glass pane for the ToolWindowType.SLIDING type.
             </p>
         </section>
     </body>
