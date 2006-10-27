@@ -110,7 +110,6 @@ public interface ToolWindowManager {
      * Returns the tool window group to which this manager maps the specified name.
      * If the manager contains no mapping for this name then the manager create a new instance
      * of ToolWindowGroup and associates the group created with the specified name in this manager.
-     * .
      *
      * @param name name of tool window group.
      * @return the tool window group to which this manager maps the specified name.

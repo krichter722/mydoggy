@@ -55,7 +55,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
     public void propertyChange(PropertyChangeEvent evt) {
         if ("type".equals(evt.getPropertyName())) {
-            if (evt.getOldValue() == ToolWindowType.FLOATING_WINDOW || evt.getNewValue() == ToolWindowType.FLOATING_WINDOW)
+            if (evt.getOldValue() == ToolWindowType.FLOATING_FREE || evt.getNewValue() == ToolWindowType.FLOATING_FREE)
                 setFloatingWindow(true);
             else if (evt.getOldValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING)
                 setFloatingWindow(false);
@@ -107,7 +107,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     public ToolWindowTypeDescriptor getTypeDescriptor(ToolWindowType type) {
         switch (type) {
             case FLOATING:
-            case FLOATING_WINDOW:
+            case FLOATING_FREE:
                 return floatingTypeDescriptor;
             case DOCKED:
                 return dockedTypeDescriptor;

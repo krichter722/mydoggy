@@ -176,7 +176,7 @@ public class TestTWManagerVisibileTool extends TestCase {
 
     public void testSetVisibileTrueFloatingWindow() {
         ToolWindow window = toolWindowManager.getToolWindow("id");
-        window.setType(ToolWindowType.FLOATING_WINDOW);
+        window.setType(ToolWindowType.FLOATING_FREE);
 
         assertFalse(window.isAvailable());
         assertFalse(window.isVisible());
@@ -195,7 +195,7 @@ public class TestTWManagerVisibileTool extends TestCase {
 
     public void testSetVisibileFalseFloatingWindow() {
         ToolWindow window = toolWindowManager.getToolWindow("id");
-        window.setType(ToolWindowType.FLOATING_WINDOW);
+        window.setType(ToolWindowType.FLOATING_FREE);
 
         assertFalse(window.isAvailable());
         assertFalse(window.isVisible());

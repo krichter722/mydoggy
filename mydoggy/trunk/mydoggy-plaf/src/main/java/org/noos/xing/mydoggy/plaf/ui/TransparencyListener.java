@@ -31,20 +31,20 @@ public class TransparencyListener implements PropertyChangeListener, ActionListe
 
             floatingContainer.addPropertyChangeListener("active", this);
             floatingContainer.addPropertyChangeListener("visible.FLOATING", this);
-            floatingContainer.addPropertyChangeListener("visible.FLOATING_WINDOW", this);
+            floatingContainer.addPropertyChangeListener("visible.FLOATING_FREE", this);
         }
     }
 
     public synchronized void propertyChange(PropertyChangeEvent evt) {
         if (evt.getSource() != descriptor /*|| !descriptor.getToolWindow().isVisible()*/
             || (descriptor.getToolWindow().getType() != ToolWindowType.FLOATING &&
-                descriptor.getToolWindow().getType() != ToolWindowType.FLOATING_WINDOW))
+                descriptor.getToolWindow().getType() != ToolWindowType.FLOATING_FREE))
             return;
 
         assert evt.getPropertyName() != null;
 //        assert descriptor.getToolWindow().isVisible();
         assert(descriptor.getToolWindow().getType() == ToolWindowType.FLOATING ||
-               descriptor.getToolWindow().getType() == ToolWindowType.FLOATING_WINDOW);
+               descriptor.getToolWindow().getType() == ToolWindowType.FLOATING_FREE);
 
         if ("active".equals(evt.getPropertyName())) {
             FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
@@ -79,7 +79,7 @@ public class TransparencyListener implements PropertyChangeListener, ActionListe
             timer.stop();
             if (!descriptor.getToolWindow().isVisible()
                 || (descriptor.getToolWindow().getType() != ToolWindowType.FLOATING &&
-                    descriptor.getToolWindow().getType() != ToolWindowType.FLOATING_WINDOW))
+                    descriptor.getToolWindow().getType() != ToolWindowType.FLOATING_FREE))
                 return;
 
             FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);

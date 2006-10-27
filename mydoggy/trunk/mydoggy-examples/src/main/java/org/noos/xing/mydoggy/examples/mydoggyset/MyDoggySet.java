@@ -1,7 +1,15 @@
 package org.noos.xing.mydoggy.examples.mydoggyset;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.ContentManager;
+import org.noos.xing.mydoggy.DockedTypeDescriptor;
+import org.noos.xing.mydoggy.FloatingTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowGroup;
+import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ContentsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ToolGroupsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ToolsTableModel;
@@ -194,11 +202,11 @@ public class MyDoggySet {
         // Set properties for tool window 2
         toolWindow = toolWindowManager.getToolWindow("2");
         dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-        dockedTypeDescriptor.getUserDefinedMenu().add(new JMenuItem("Prova"));
+        dockedTypeDescriptor.getToolsMenu().add(new JMenuItem("Prova"));
 
-        toolWindow.setType(ToolWindowType.FLOATING_WINDOW);
+        toolWindow.setType(ToolWindowType.FLOATING_FREE);
 
-        FloatingTypeDescriptor descriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_WINDOW);
+        FloatingTypeDescriptor descriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_FREE);
         descriptor.setLocation(100, 100);
         descriptor.setSize(250, 250);
 
@@ -213,18 +221,18 @@ public class MyDoggySet {
                 JOptionPane.showMessageDialog(frame, "Hello World!!!");
             }
         });
-        dockedTypeDescriptor.getUserDefinedMenu().add(menuItem);
+        dockedTypeDescriptor.getToolsMenu().add(menuItem);
 
         mainGroup.addToolWindow(toolWindow);
 
         // Set properties for tool window 4
         toolWindow = toolWindowManager.getToolWindow("4");
-        toolWindow.setType(ToolWindowType.FLOATING_WINDOW);
+        toolWindow.setType(ToolWindowType.FLOATING_FREE);
         submainGroup.addToolWindow(toolWindow);
 
         // Set properties for tool window 5
         toolWindow = toolWindowManager.getToolWindow("5");
-        toolWindow.setType(ToolWindowType.FLOATING_WINDOW);
+        toolWindow.setType(ToolWindowType.FLOATING_FREE);
 
         submainGroup.addToolWindow(toolWindowManager.getToolWindow("6"));
 
@@ -253,7 +261,7 @@ public class MyDoggySet {
 
         // Type column
         JComboBox types = new JComboBox(new Object[]{ToolWindowType.DOCKED,
-                                                     ToolWindowType.SLIDING, ToolWindowType.FLOATING, ToolWindowType.FLOATING_WINDOW});
+                                                     ToolWindowType.SLIDING, ToolWindowType.FLOATING, ToolWindowType.FLOATING_FREE});
         toolsTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(types));
 
         // Anchor column

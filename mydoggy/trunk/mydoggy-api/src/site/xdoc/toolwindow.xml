@@ -21,26 +21,21 @@
                         </td>
                         <td>
                             <p>
-                                To register a new tool window use the following:
+                                To register a tool window use the following:
                             </p>
-                            <source>ToolWindowManager toolWindowManager = new ...;
-toolWindowManager.registerToolWindow("Debug Tool", "Debug Tool Title",
-                                     debugIcon, debugPanel,
-                                     ToolWindowAnchor.LEFT)</source>
+                            <source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">...</a>;
+ToolWindow toolwindow = toolWindowManager.
+    registerToolWindow("Title 1",  // Tool Window identifier
+                       "Title 1",  // Tool Window Title
+                       icon,       // Tool Window Icon
+                       component,  // Tool Window component
+                       ToolWindowAnchor.LEFT)  // Tool Window anchor
+                            </source>
                             <p>
-                                Here are some properties of a tool window:
+                                When you register a tool window you obtain an instance of ToolWindow interface.
+                                This interface is the main entry point to modify tool window properties.
+                                Moreover there are methods to make the tool available, visible and active.
                             </p>
-                            <ul>
-                                <li>
-                                    id : tool window identifier;
-                                </li>
-                                <li>
-                                    title : tool window title;
-                                </li>
-                                <li>
-                                    anchor : tool window anchor;
-                                </li>
-                            </ul>
                         </td>
                     </tr>
                 </tbody>

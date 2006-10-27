@@ -205,7 +205,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public ToolWindowTypeDescriptor getTypeDescriptorTemplate(ToolWindowType type) {
         switch (type) {
             case FLOATING:
-            case FLOATING_WINDOW:
+            case FLOATING_FREE:
                 if (floatingTypeDescriptor == null)
                     floatingTypeDescriptor = new DefaultFloatingTypeDescriptor();
                 return floatingTypeDescriptor;
@@ -566,7 +566,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             ToolWindowDescriptor window = (ToolWindowDescriptor) evt.getSource();
 
             ToolWindowType windowType = window.getToolWindow().getType();
-            if (windowType == ToolWindowType.FLOATING || windowType == ToolWindowType.FLOATING_WINDOW) {
+            if (windowType == ToolWindowType.FLOATING || windowType == ToolWindowType.FLOATING_FREE) {
                 ToolWindowAnchor oldAnchor = (ToolWindowAnchor) evt.getOldValue();
                 ToolWindowAnchor newAnchor = (ToolWindowAnchor) evt.getNewValue();
 

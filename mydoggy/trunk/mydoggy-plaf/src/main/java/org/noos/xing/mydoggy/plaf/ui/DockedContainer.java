@@ -284,10 +284,10 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 toolWindow.setAutoHide(!toolWindow.isAutoHide());
             } else if ("floating".equals(actionCommnad)) {
                 ToolWindowType type = toolWindow.getType();
-                if (type == ToolWindowType.FLOATING || type == ToolWindowType.FLOATING_WINDOW) {
+                if (type == ToolWindowType.FLOATING || type == ToolWindowType.FLOATING_FREE) {
                     toolWindow.setType(ToolWindowType.DOCKED);
                 } else if (type == ToolWindowType.DOCKED || type == ToolWindowType.SLIDING) {
-                    toolWindow.setType(descriptor.isFloatingWindow() ? ToolWindowType.FLOATING_WINDOW : ToolWindowType.FLOATING);
+                    toolWindow.setType(descriptor.isFloatingWindow() ? ToolWindowType.FLOATING_FREE : ToolWindowType.FLOATING);
                 }
             } else if ("undock".equals(actionCommnad)) {
                 ToolWindowType type = toolWindow.getType();

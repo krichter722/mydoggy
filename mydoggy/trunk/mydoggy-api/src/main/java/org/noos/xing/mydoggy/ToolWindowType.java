@@ -34,5 +34,5 @@ public enum ToolWindowType {
      *
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
      */
-    FLOATING_WINDOW
+    FLOATING_FREE
 }

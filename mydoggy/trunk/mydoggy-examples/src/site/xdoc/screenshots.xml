@@ -20,25 +20,31 @@
             </p>
             <table>
                 <tr>
-                    <td>
-                        Img 1
+                    <td align="center">
+                        <img src="./images/screenshots/mydoggyset/thumbs/mydoggyset.png" alt="MyDoggySet"/>
+                        <p align="center">MyDoggySet</p>
                     </td>
                     <td>
-                        Img 2
+                        <img src="./images/screenshots/mydoggyset/thumbs/tw_docked.png" alt="Tool Window Docked"/>
+                        <p align="center">A ToolWindow with ToolWindowType.DOCKED type.</p>
                     </td>
                     <td>
-                        Img 3
+                        <img src="./images/screenshots/mydoggyset/thumbs/tw_floating.png" alt="Tool Window Floating"/>
+                        <p align="center">A ToolWindow with ToolWindowType.FLOATING type.</p>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        Img 4
+                        <img src="./images/screenshots/mydoggyset/thumbs/tw_floating_modal.png" alt="Tool Window Floating Modal"/>
+                        <p align="center">A ToolWindow with ToolWindowType.FLOATING type and modal.</p>
                     </td>
                     <td>
-                        Img 5
+                        <img src="./images/screenshots/mydoggyset/thumbs/tw_sliding.png" alt="Tool Window Sliding"/>
+                        <p align="center">A ToolWindow with ToolWindowType.SLIDING type.</p>
                     </td>
                     <td>
-                        Img 6                        
+                        <img src="./images/screenshots/mydoggyset/thumbs/tw_group.png" alt="Tool Window Group"/>
+                        <p align="center">A toolWindow group showed.</p>
                     </td>
                 </tr>
             </table>

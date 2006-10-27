@@ -78,7 +78,7 @@ public class TestTWManagerBasic extends TestCase {
 
     public void testToolWindowTypeDescriptor() {
         assertNotNull(toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING));
-        assertNotNull(toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING_WINDOW));
+        assertNotNull(toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING_FREE));
         assertNotNull(toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.DOCKED));
     }
 }

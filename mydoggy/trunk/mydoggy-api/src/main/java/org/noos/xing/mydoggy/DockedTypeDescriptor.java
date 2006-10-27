@@ -38,7 +38,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * @return the menu where to add new menu items.
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
      */
-    JMenu getUserDefinedMenu();
+    JMenu getToolsMenu();
 
     /**
      * Sets the width or heigth, based on anchor of tool window, of the dock panel.
