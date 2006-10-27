@@ -1,36 +1,5 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-#macro ( banner $banner $id )
-  #if ( $banner )
-    #if( $banner.href )
-      <a href="$banner.href" id="$id">
-    #else
-        <span id="$id">
-    #end
-
-    #if( $banner.src )
-        #set ( $src = $banner.src )
-        #if ( ! ( $src.toLowerCase().startsWith("http") || $src.toLowerCase().startsWith("https") ) )
-            #set ( $src = $PathTool.calculateLink( $src, $relativePath ) )
-            #set ( $src = $src.replaceAll( "\\", "/" ) )
-        #end
-        #if ( $banner.alt )
-            #set ( $alt = $banner.alt )
-        #else
-            #set ( $alt = "" )
-        #end
-        <img id="bannerImage" src="$src" alt="$alt" />
-    #else
-        $banner.name
-    #end
-
-    #if( $banner.href )
-        </a>
-    #else
-        </span>
-    #end
-  #end
-#end
 
 #macro ( links $links )
   #set ( $counter = 0 )
@@ -255,16 +224,16 @@
             <a href="$href" title="$name" id="poweredBy">
               #set ( $img = $PathTool.calculateLink( $img, $relativePath ) )
               #set ( $img = $img.replaceAll( "\\", "/" ) )
-              <img alt="$name" src="$img" />
+              <img border="0" alt="$name" src="$img" />
             </a>
         #end
 
         #if( $poweredBy.isEmpty() )
           <a href="http://www.sourceforge.net" id="poweredBy">
-            <img alt="Hosted by SourceForge" src="$relativePath/images/logos/sflogo.png"/>
+            <img border="0" alt="Hosted by SourceForge" src="$relativePath/images/logos/sflogo.png"/>
           </a>
           <a href="http://maven.apache.org/" title="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" id="poweredBy">
-            <img alt="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" src="$relativePath/images/logos/maven-feather.png"></img>
+            <img border="0" alt="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" src="$relativePath/images/logos/maven-feather.png"></img>
           </a>
         #end
     #else
@@ -302,9 +271,10 @@
   </head>
   <body class="composite">
     <div id="banner">
-      #banner( $decoration.bannerLeft "bannerLeft" )
-      #banner( $decoration.bannerRight "bannerRight" )
-      <div class="clear">
+        <a href="" id="bannerLeft">
+            <img id="bannerImage" src="images/banners/banner.png" alt="" />
+        </a>
+        <div class="clear">
         <hr/>
       </div>
     </div>

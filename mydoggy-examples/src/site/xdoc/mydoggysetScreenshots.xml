@@ -8,12 +8,6 @@
     </properties>
 
     <body>
-        <section name="Screenshots">
-            <p>
-                Here you can see some screenshots of the example application provided.
-            </p>
-        </section>
-
         <section name="MyDoggySet Screenshots">
             <p>
                 Here are some screenshots of MyDoggySet.
@@ -21,29 +15,41 @@
             <table>
                 <tr>
                     <td align="center">
-                        <img src="./images/screenshots/mydoggyset/thumbs/mydoggyset.png" alt="MyDoggySet"/>
+                        <a href="./images/screenshots/mydoggyset/mydoggyset.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/mydoggyset.png" alt="MyDoggySet"/>
+                        </a>
                         <p align="center">MyDoggySet</p>
                     </td>
                     <td>
-                        <img src="./images/screenshots/mydoggyset/thumbs/tw_docked.png" alt="Tool Window Docked"/>
+                        <a href="./images/screenshots/mydoggyset/tw_docked.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/tw_docked.png" alt="Tool Window Docked"/>
+                        </a>
                         <p align="center">A ToolWindow with ToolWindowType.DOCKED type.</p>
                     </td>
                     <td>
-                        <img src="./images/screenshots/mydoggyset/thumbs/tw_floating.png" alt="Tool Window Floating"/>
+                        <a href="./images/screenshots/mydoggyset/tw_floating.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/tw_floating.png" alt="Tool Window Floating"/>
+                        </a>
                         <p align="center">A ToolWindow with ToolWindowType.FLOATING type.</p>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <img src="./images/screenshots/mydoggyset/thumbs/tw_floating_modal.png" alt="Tool Window Floating Modal"/>
+                        <a href="./images/screenshots/mydoggyset/tw_floating_modal.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/tw_floating_modal.png" alt="Tool Window Floating Modal"/>
+                        </a>
                         <p align="center">A ToolWindow with ToolWindowType.FLOATING type and modal.</p>
                     </td>
                     <td>
-                        <img src="./images/screenshots/mydoggyset/thumbs/tw_sliding.png" alt="Tool Window Sliding"/>
+                        <a href="./images/screenshots/mydoggyset/tw_sliding.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/tw_sliding.png" alt="Tool Window Sliding"/>
+                        </a>
                         <p align="center">A ToolWindow with ToolWindowType.SLIDING type.</p>
                     </td>
                     <td>
-                        <img src="./images/screenshots/mydoggyset/thumbs/tw_group.png" alt="Tool Window Group"/>
+                        <a href="./images/screenshots/mydoggyset/tw_group.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/tw_group.png" alt="Tool Window Group"/>
+                        </a>
                         <p align="center">A toolWindow group showed.</p>
                     </td>
                 </tr>

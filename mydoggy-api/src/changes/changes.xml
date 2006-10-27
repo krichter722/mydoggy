@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+
+    <properties>
+        <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
+        <title>MyDoggy - Changes</title>
+    </properties>
+
+    <body>
+        <release version="1.0.0" date="2006-10-31" description="First release">
+            <action dev="adecaro" type="add">
+                MyDoggy First release.
+            </action>
+        </release>
+    </body>
+
+</document>

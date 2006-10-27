@@ -3,18 +3,12 @@
         "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
     <properties>
-        <title>MyDoggy-Examples : Introduction</title>
+        <title>MyDoggy-Examples : MyDoggySet</title>
         <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
     </properties>
 
     <body>
-        <section name="Introduction">
-            <p>
-                MyDoggy-Examples contains some examples to see MyDoggy in action.
-            </p>
-        </section>
-
-        <section name="Examples">
+        <section name="MyDoggySet">
             <table>
                 <tbody>
                     <tr>
@@ -24,8 +18,7 @@
                         <td>
                             <ul>
                                 <li>
-                                    <a href="mydoggyset.html">MyDoggySet</a>
-                                    is a sample application to see in action many functionalities of MyDoggy.
+                                    MyDoggySet is a sample application to see in action many functionalities of MyDoggy.
                                     You can modify tool window properties, show or hide groups and manage main window's contents.
                                     <br></br>
                                     Launch <a href="./jnlp/mydoggyset/mydoggyset.jnlp">MyDoggySet</a> using Java Web Start.

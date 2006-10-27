@@ -26,6 +26,7 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Locale;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -159,7 +160,7 @@ public class MyDoggySet {
     }
 
     protected void initToolWindowManager() {
-        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame, null);
+        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame, Locale.UK);
         this.toolWindowManager = myDoggyToolWindowManager;
 
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);

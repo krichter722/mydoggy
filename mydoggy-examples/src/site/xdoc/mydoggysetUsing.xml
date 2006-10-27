@@ -1,0 +1,112 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy-Examples : MyDoggySet - Using</title>
+        <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="MyDoggySet Using">
+            <subsection name="To show or hide a tool window">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./images/toolwindowShowOrHide.png" alt="To show or hide a tool window" border="0" hspace="18"/>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li>
+                                        Click
+                                        <img src="./images/toolwindowHideButton.png" alt="Hide Button"/>
+                                        button on the titlebar of the tool window to hide.
+                                    </li>
+                                    <li>
+                                        Right-click Tool Window button in the Tool Window Bar and choose Show/Hide on the context menu.
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
+            <subsection name="To move a tool window">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./images/toolwindowMove.png" alt="To move a tool window" border="0" hspace="18"/>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li>
+                                        Right-click Tool Window button in the Tool Window Bar and choose Move on the context menu.
+                                        On the submenu, choose the destination Tool Window Bar.
+                                    </li>
+                                    <li>
+                                        Drag the Tool Window button in the Tool Window Bar to the new position. 
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
+            <subsection name="To change type of a tool window">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./images/toolwindowTypes.png" alt="To change type of a tool window" border="0" hspace="18"/>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li>
+                                        Click
+                                        <img src="./images/toolwindowFloatingButton.png" alt="Hide Button"/>
+                                        button on the titlebar of the tool window to set <code>ToolWindowType.FLOATING</code> type.
+                                    </li>
+                                    <li>
+                                        Click
+                                        <img src="./images/toolwindowSlidingButton.png" alt="Hide Button"/>
+                                        button on the titlebar of the tool window to set <code>ToolWindowType.SLIDING</code> type.
+                                    </li>
+                                    <li>
+                                        Right-click Tool Window button in the Tool Window Bar and choose the mode.
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
+            <subsection name="To hide or detach a content">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./images/contentManager.png" alt="To hide or detach a content" border="0" hspace="18"/>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li>
+                                        Click
+                                        <img src="./images/contentManagerContentClose.png" alt="Close Button"/>
+                                        button to remove the content.
+                                    </li>
+                                    <li>
+                                        Click
+                                        <img src="./images/contentManagerContentDetach.png" alt="Detach Button"/>
+                                        button to detach the content from the window.
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
+        </section>
+    </body>
+</document>

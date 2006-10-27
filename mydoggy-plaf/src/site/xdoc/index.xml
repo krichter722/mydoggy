@@ -10,9 +10,10 @@
     <body>
         <section name="Introduction">
             <p>
-                To obtain an instance of ToolWindowManager interface you have to instantiate the
-                MyDoggyToolWindowManager class. This is the default implementation.
-                To obtain an instance use the following (for example): 
+                To obtain an instance of <code>ToolWindowManager</code> interface you have to instantiate the
+                <code>MyDoggyToolWindowManager</code> class. This is the default implementation.
+                <br></br>
+                To obtain an instance use the following (for example):
             </p>
             <source>ToolWindowManager toolWindowManager = new MyDoggyToolWindowManager(
               frame,      // A window implementing the RootPaneContainer interface
@@ -20,8 +21,8 @@
 );
             </source>
             <p>
-                A window implementing the RootPaneContainer interface is requested becouse the default
-                implmentation use the glass pane for the ToolWindowType.SLIDING type.
+                A window implementing the <code>RootPaneContainer</code> interface is required becouse the default
+                implementation use the glass pane for the <code>ToolWindowType.SLIDING</code> type.
             </p>
         </section>
     </body>
