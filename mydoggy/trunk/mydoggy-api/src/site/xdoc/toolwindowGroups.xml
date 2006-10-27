@@ -23,25 +23,28 @@
                         </td>
                         <td>
                             <p>
-                                To obtain an instance of ToolWindowGroup interface use the following:
+                                To obtain an instance of <code>ToolWindowGroup</code> interface use the following:
                             </p>
-                            <source>ToolWindowManager toolWindowManager = new ...;
-ToolWindowGroup group = toolWindowManager.getToolWindowGroup(
-                                                "main"  // ToolWindowGroup name
-                                            );</source>
+                            <source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">...</a>;
+ToolWindowGroup group = toolWindowManager
+             .getToolWindowGroup(
+                 "main"  // ToolWindowGroup name
+              );</source>
                             <p>
                                 If the manager contains no mapping for this name then the manager create a new instance
                                 of ToolWindowGroup and associate the group created with the specified name in the manager.
                                 <br></br>
                                 After that, you can populate the group.
                             </p>
-                            <source>mainGroup.addToolWindow(toolWindowManager.getToolWindow(0));</source>
+                            <source>mainGroup.addToolWindow(
+             toolWindowManager.getToolWindow(0)
+          );</source>
                             <p>
                                 To shor or hide a group use the following:
                             </p>
                             <source>mainGroup.setVisible(
-                                                true        // true to show, false to hide
-                                    );</source>
+             true   // true to show, false to hide
+          );</source>
                         </td>
                     </tr>
                 </tbody>

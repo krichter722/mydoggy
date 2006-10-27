@@ -35,11 +35,6 @@
         </license>
     </licenses>
 
-    <mailingLists>
-        <mailingList>
-        </mailingList>
-    </mailingLists>
-
     <modules>
         <module>mydoggy-site-skin</module>
         <module>mydoggy-api</module>
@@ -48,9 +43,9 @@
     </modules>
 
     <scm>
-        <connection>scm:svn:https://svn.sourceforge.net/svnroot/mydoggy/mydoggy</connection>
-        <developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/mydoggy/mydoggy</developerConnection>
-        <url>http://svn.sourceforge.net/viewvc/mydoggy/mydoggy</url>
+        <connection>scm:svn:https://svn.sourceforge.net/svnroot/mydoggy/mydoggy/trunk</connection>
+        <developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/mydoggy/mydoggy/trunk</developerConnection>
+        <url>http://svn.sourceforge.net/viewvc/mydoggy/mydoggy/trunk</url>
     </scm>
 
     <dependencies>
@@ -136,7 +131,6 @@
                     <reportSet>
                         <reports>
                             <report>project-team</report>
-                            <report>mailing-list</report>
                             <report>license</report>
                             <report>scm</report>
                         </reports>
