@@ -22,6 +22,7 @@
         <menu name="MyDoggy">
             <item name="Introduction" href="index.html"/>
             <item name="Download" href="download.html"/>
+            <item name="Build Howto" href="buildHowto.html"/>
         </menu>
 
         <menu name="Sample App.">

@@ -9,57 +9,55 @@
 
     <body>
         <section name="Download">
-            <h1>Binary Releases</h1>
+            <subsection name="Binary Releases">
+                <ul class="arrow">
+                    <li>
+                        Please see our
+                        <a href="license.html">License FAQ</a>
+                        before downloading.
+                    </li>
+                </ul>
 
-            <ul class="arrow">
-                <li>
-                    Please see our
-                    <a href="license.html">License FAQ</a>
-                    before downloading.
-                </li>
-            </ul>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>Package</strong>
+                            </td>
+                            <td>
+                                <strong>Version</strong>
+                            </td>
+                            <td>
+                                <strong>Release date</strong>
+                            </td>
+                            <td>
+                                <strong>Category</strong>
+                            </td>
+                            <td></td>
+                        </tr>
 
-            <table cellpadding="5">
-                <tbody>
-                    <tr valign="top">
-                        <td colspan="1">
-                            <strong>Package</strong>
-                        </td>
-                        <td colspan="1">
-                            <strong>Version</strong>
-                        </td>
-
-                        <td colspan="1">
-                            <strong>Release date</strong>
-                        </td>
-                        <td colspan="1">
-                            <strong>Category</strong>
-                        </td>
-                        <td colspan="2"></td>
-                    </tr>
-
-                    <tr valign="top">
-                        <td colspan="1">MyDoggy</td>
-                        <td colspan="1">1.0.0</td>
-                        <td colspan="1">January 9, 2005</td>
-                        <td colspan="1">Stable</td>
-
-                        <td colspan="1">
-                            <em>
-                                <a href="http://sourceforge.net/project/showfiles.php?group_id=119727&amp;package_id=130419&amp;release_id=295608">
-                                    Download
-                                </a>
-                            </em>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <strong>
-                <a href="http://prdownloads.sourceforge.net/mydoggy/?sort_by=date&amp;sort=desc">Browse all MyDoggy
-                    Framework downloads
-                </a>
-            </strong>
+                        <tr valign="top">
+                            <td>MyDoggy</td>
+                            <td>1.0.0</td>
+                            <td>January 9, 2005</td>
+                            <td>Stable</td>
+                            <td>
+                                <em>
+                                    <a href="http://sourceforge.net/project/showfiles.php?group_id=119727&amp;package_id=130419&amp;release_id=295608">
+                                        Download
+                                    </a>
+                                </em>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br></br>
+                <strong>
+                    <a href="http://prdownloads.sourceforge.net/mydoggy/?sort_by=date&amp;sort=desc">Browse all MyDoggy
+                        downloads
+                    </a>
+                </strong>
+            </subsection>
         </section>
     </body>
 </document>
