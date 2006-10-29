@@ -78,7 +78,7 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
                         tool.setVisible(false);
                     }
 
-                    MyDoggyToolWindowManager.currentGroup = manager.getToolWindowGroup(name);
+                    MyDoggyToolWindowManager.currentGroup = this;
                     try {
                         for (ToolWindow tool : MyDoggyToolWindowManager.currentGroup.getToolsWindow()) {
                             if (tool.getType() == ToolWindowType.SLIDING)
@@ -86,8 +86,6 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
 
                             tool.setVisible(visible);
                         }
-                        if (visible)
-                            MyDoggyToolWindowManager.currentGroup.getToolsWindow()[0].setActive(true);
                     } finally {
                         MyDoggyToolWindowManager.currentGroup = null;
                     }
@@ -97,6 +95,9 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
                     else
                         fireGroupHided();
                 }
+
+                if (visible && tools.size() > 0)
+                    tools.get(0).setActive(true);
             }
         }
     }
