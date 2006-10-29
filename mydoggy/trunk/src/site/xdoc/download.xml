@@ -10,7 +10,7 @@
     <body>
         <section name="Download">
             <subsection name="Binary Releases">
-                <ul class="arrow">
+                <ul>
                     <li>
                         Please see our
                         <a href="license.html">License FAQ</a>
