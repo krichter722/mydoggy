@@ -65,7 +65,15 @@
             <outputDirectory>lib/win32</outputDirectory>
         </file>
         <file>
+            <source>mydoggy-site.iml</source>
+            <outputDirectory>.</outputDirectory>
+        </file>
+        <file>
             <source>pom.xml</source>
+            <outputDirectory>.</outputDirectory>
+        </file>
+        <file>
+            <source>README.txt</source>
             <outputDirectory>.</outputDirectory>
         </file>
     </files>
