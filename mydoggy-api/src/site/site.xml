@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="MyDoggy-Api">
 
-    <bannerLeft>
-        <href>http://mydoggy.sourceforge.net/</href>
-        <name>MyDoggy - My Java Docking Framework</name>
-        <src>/images/banners/banner.png</src>
-    </bannerLeft>
-
     <skin>
         <groupId>org.noos.xing</groupId>
         <artifactId>mydoggy-site-skin</artifactId>

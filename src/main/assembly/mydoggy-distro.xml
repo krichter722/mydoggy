@@ -27,9 +27,6 @@
                 <include>org.noos.xing:mydoggy-examples</include>
                 <include>org.noos.xing:mydoggy-site-skin</include>
             </includes>
-            <excludes>
-                <exclude>*.iml</exclude>
-            </excludes>
             <sources>
                 <outputDirectory>${artifactId}</outputDirectory>
             </sources>
@@ -42,6 +39,13 @@
             <outputDirectory>mydoggy-transparency</outputDirectory>
             <includes/>
         </fileSet>
+
+        <fileSet>
+            <directory>src</directory>
+            <outputDirectory>src</outputDirectory>
+            <includes/>
+        </fileSet>
+
         <fileSet>
             <directory>license</directory>
             <outputDirectory>license</outputDirectory>
