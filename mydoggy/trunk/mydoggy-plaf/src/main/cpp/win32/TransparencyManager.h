@@ -10,26 +10,26 @@ extern "C" {
 
 	/*
  * Class:     org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager
- * Method:    isAlphaModeEnabledWin32Impl
+ * Method:    isAlphaModeEnabledNative
  * Signature: (Ljava/awt/Window;)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager_isAlphaModeEnabledWin32Impl
+JNIEXPORT jboolean JNICALL Java_org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager_isAlphaModeEnabledNative
   (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager
- * Method:    setAlphaModeEnabledWin32Impl
+ * Method:    setAlphaModeEnabledNative
  * Signature: (Ljava/awt/Window;Z)V
  */
-JNIEXPORT void JNICALL Java_org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager_setAlphaModeEnabledWin32Impl
+JNIEXPORT void JNICALL Java_org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager_setAlphaModeEnabledNative
   (JNIEnv *, jclass, jobject, jboolean);
 
 /*
  * Class:     org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager
- * Method:    setAlphaModeRatioWin32Impl
+ * Method:    setAlphaModeRatioNative
  * Signature: (Ljava/awt/Window;F)V
  */
-JNIEXPORT void JNICALL Java_org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager_setAlphaModeRatioWin32Impl
+JNIEXPORT void JNICALL Java_org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager_setAlphaModeRatioNative
   (JNIEnv *, jclass, jobject, jfloat);
 
 #ifdef __cplusplus

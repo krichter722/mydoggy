@@ -40,7 +40,7 @@ BOOL WINAPI DllMain(HANDLE hInstDLL, DWORD dwReason, LPVOID lpvReserved){
 /* Natives */
 #define OS_NATIVE(method) Java_org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager_##method
 
-JNIEXPORT jboolean JNICALL OS_NATIVE(isAlphaModeEnabledWin32Impl)
+JNIEXPORT jboolean JNICALL OS_NATIVE(isAlphaModeEnabledNative)
 				   (JNIEnv * env, jclass obj, jobject component) {
 
 	/* Declarations */
@@ -66,7 +66,7 @@ JNIEXPORT jboolean JNICALL OS_NATIVE(isAlphaModeEnabledWin32Impl)
 
 	/* Lock the drawing surface */
 	if ((ds->Lock(ds) & JAWT_LOCK_ERROR) != 0) {
-		//printf("isAlphaModeEnabledWin32Impl : Cannot lock DrawingSurface!!!");
+		//printf("isAlphaModeEnabledNative : Cannot lock DrawingSurface!!!");
 		return FALSE;
 	}
 
@@ -99,9 +99,7 @@ JNIEXPORT jboolean JNICALL OS_NATIVE(isAlphaModeEnabledWin32Impl)
 	awt.FreeDrawingSurface(ds);
 }
 
-
-
-JNIEXPORT void JNICALL OS_NATIVE(setAlphaModeEnabledWin32Impl)
+JNIEXPORT void JNICALL OS_NATIVE(setAlphaModeEnabledNative)
 					   (JNIEnv *env, jclass object, jobject component, jboolean alphaMode) {
 	/* Declarations */
 	HWND hWnd;
@@ -126,7 +124,7 @@ JNIEXPORT void JNICALL OS_NATIVE(setAlphaModeEnabledWin32Impl)
 
 	/* Lock the drawing surface */
 	if ((ds->Lock(ds) & JAWT_LOCK_ERROR) != 0) {
-		//printf("setAlphaModeEnabledWin32Impl : Cannot lock DrawingSurface!!!");
+		//printf("setAlphaModeEnabledNative : Cannot lock DrawingSurface!!!");
 		return;
 	}
 
@@ -169,12 +167,7 @@ JNIEXPORT void JNICALL OS_NATIVE(setAlphaModeEnabledWin32Impl)
 	awt.FreeDrawingSurface(ds);
 }
 
-
-
-
-
-
-JNIEXPORT void JNICALL OS_NATIVE(setAlphaModeRatioWin32Impl)
+JNIEXPORT void JNICALL OS_NATIVE(setAlphaModeRatioNative)
 					    (JNIEnv* env, jclass obj, jobject component, jfloat alpha) {
 	/* Declarations */
 	HWND hWnd;
@@ -199,7 +192,7 @@ JNIEXPORT void JNICALL OS_NATIVE(setAlphaModeRatioWin32Impl)
 
 	/* Lock the drawing surface */
 	if ((ds->Lock(ds) & JAWT_LOCK_ERROR) != 0) {
-		//printf("setAlphaModeRatioWin32Impl : Cannot lock DrawingSurface!!!");
+		//printf("setAlphaModeRatioNative : Cannot lock DrawingSurface!!!");
 		return;
 	}
 
