@@ -16,6 +16,7 @@
 
         <menu name="MyDoggy">
             <item name="Introduction" href="index.html"/>
+            <item name="Transparency" href="transparency.html"/>
         </menu>
 
         ${reports}

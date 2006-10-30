@@ -1,0 +1,30 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy-Plaf : Transparency</title>
+        <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="Transparency">
+            <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./images/tw_transparency.png" alt="ToolWindow Transparency" border="0" hspace="18"/>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li>
+                                        On window platform...
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+        </section>
+    </body>
+</document>

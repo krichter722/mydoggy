@@ -9,6 +9,10 @@
 
     <body>
         <section name="Introduction">
+            MyDoggy-Plaf is the default implementation of mydoggy-api.
+        </section>
+
+        <section name="MyDoggyToolWindowManager">
             <p>
                 To obtain an instance of <code>ToolWindowManager</code> interface you have to instantiate the
                 <code>MyDoggyToolWindowManager</code> class. This is the default implementation.
@@ -24,6 +28,17 @@
                 A window implementing the <code>RootPaneContainer</code> interface is required becouse the default
                 implementation use the glass pane for the <code>ToolWindowType.SLIDING</code> type.
             </p>
+            <br></br>
+            <p>
+                MyDoggyToolWindowManager is implemented like a JPanel so you can use it like any other component.
+                <br></br>
+                For example:
+            </p>
+            <source>JFrame frame = new JFrame("MyDoggy-Set...");
+...
+MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
+...
+frame.getContentPane().add(myDoggyToolWindowManager);</source>
         </section>
     </body>
 </document>
