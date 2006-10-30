@@ -37,3 +37,10 @@ body ul {
 #downloadbox li {
   font-size: smaller;
 }
+
+#cc_license_image {
+    border: none;
+    float: left;
+    margin-left: 20px;
+    padding-right: 8px;
+}

@@ -268,11 +268,17 @@
         #end
       #end
     #end
+    <script type="text/javascript">
+        function changeBanner() {
+            prefix = (Math.floor (Math.random () * 4 + 1 ));
+            document.getElementById("bannerImage").src = "images/banners/banner_" + prefix + ".png";
+        }
+    </script>
   </head>
-  <body class="composite">
+  <body class="composite" onload="changeBanner();">
     <div id="banner">
-        <a href="" id="bannerLeft">
-            <img id="bannerImage" src="images/banners/banner.png" alt="" />
+        <a href="http://mydoggy.sourceforge.net" id="bannerLeft">
+            <img id="bannerImage" src="images/banners/banner_4.png" alt="" />
         </a>
         <div class="clear">
         <hr/>
@@ -302,7 +308,18 @@
       <hr/>
     </div>
     <div id="footer">
-      <div class="xright">&#169;#copyright()#publishDate( "bottom" $decoration.publishDate $decoration.version )</div>
+      <div class="xright">
+          <a rel="license" href="http://creativecommons.org/licenses/by-nc/2.5/">
+              <img
+                  alt="Creative Commons License" src="http://creativecommons.org/images/public/somerights20.gif"
+                  id="cc_license_image"/>
+          </a>
+          Except where otherwise noted, content on this site is
+          licensed under a
+          <a style="border-bottom-style: groove;" rel="license" href="http://creativecommons.org/licenses/by/2.5/" class="subfoot">Creative Commons
+          Attribution 2.5 License</a>
+          &#169;#publishDate( "bottom" $decoration.publishDate $decoration.version )
+      </div>
       <div class="clear">
         <hr/>
       </div>
