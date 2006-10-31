@@ -18,7 +18,7 @@
 
             <subsection name="Main Modules">
                 <p>
-                    MyDoggy is separeted in two main modules.
+                    MyDoggy is separated in two main modules.
                     <ul>
                         <li>
                             <a href="./mydoggy-api/index.html">MyDoggy-Api</a>

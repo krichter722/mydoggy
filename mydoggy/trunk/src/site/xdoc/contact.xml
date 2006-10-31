@@ -1,0 +1,56 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy : Introduction</title>
+        <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="Contact">
+            MyDoggy is developed by
+            <a href="team-list.html#adecaro">Angelo De Caro</a>
+            , a computer science student from Italy.
+            <br></br>
+            Feel free to contact me at
+            <a href="mailto:adecaro@users.sourceforge.net">adecaro@users.sourceforge.net</a>.
+            <br></br>
+            <p>
+                If you need help with something or just want to say hello, you can also use the forums or the support
+                section at sourceforge.net.
+            </p>
+            <ul>
+                <li>
+                    <a href="https://sourceforge.net/forum/?group_id=178005">Forums
+                        <img src="./images/external.png" alt="external link" border="0"/>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://sourceforge.net/tracker/?atid=883496&amp;group_id=178005&amp;func=browse">Support
+                        requests
+                        <img src="./images/external.png" alt="external link" border="0"/>
+                    </a>
+                </li>
+            </ul>
+        </section>
+
+        <section name="Contribute">
+            You can contribute to MyDoggy in a number of ways. The most obvious way is to report bugs
+            or request new features that would make MyDoggy a better application.
+            <ul>
+                <li>
+                    <a href="https://sourceforge.net/tracker/?atid=883495&amp;group_id=178005&amp;func=browse">Bug tracker
+                        <img src="./images/external.png" alt="external link" border="0"/>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://sourceforge.net/tracker/?atid=883498&amp;group_id=178005&amp;func=browse">Feature
+                        requests
+                        <img src="./images/external.png" alt="external link" border="0"/>
+                    </a>
+                </li>
+            </ul>
+        </section>
+    </body>
+</document>

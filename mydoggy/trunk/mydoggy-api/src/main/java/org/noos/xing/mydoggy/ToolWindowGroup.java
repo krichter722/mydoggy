@@ -4,7 +4,7 @@ package org.noos.xing.mydoggy;
  * This interface lets the user to manager a group of tool window. The idea is to provide the same mechanism of
  * prospectives of eclipse ide for tools window.
  * The typical usage is to retrieve a group from the tool window manager and to add any tools window.
- * After that we can show or hide all tools registerd in a group.
+ * After that we can show or hide all tools registered in a group.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */

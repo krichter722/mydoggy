@@ -56,7 +56,7 @@
                 <tr>
                     <td>
                         <a href="./images/screenshots/mydoggyset/tw_transparency.png">
-                            <img src="./images/screenshots/mydoggyset/thumbs/tw_tw_transparency.png" alt="Tool Window Transparent"/>
+                            <img src="./images/screenshots/mydoggyset/thumbs/tw_transparency.png" alt="Tool Window Transparent"/>
                         </a>
                         <p align="center">A ToolWindowType.FLOATING ToolWindow transparent.</p>
                     </td>

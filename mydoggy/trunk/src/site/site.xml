@@ -11,16 +11,19 @@
         <links>
             <item name="Maven" href="http://maven.apache.org/"/>
             <item name="SourceForge" href="http://sourceforge.net/"/>
+            <item name="Project page" href="http://sourceforge.net/projects/mydoggy/"/>
         </links>
 
         <menu name="MyDoggy">
             <item name="Introduction" href="index.html"/>
             <item name="Download" href="download.html"/>
             <item name="Build Howto" href="buildHowto.html"/>
+            <item name="Contact" href="Contact.html"/>
         </menu>
 
         <menu name="Sample App.">
-            <item name="MyDoggySet" href="/mydoggy-examples/index.html"/>
+            <item name="MyDoggySet" href="/mydoggy-examples/mydoggyset.html"/>
+            <item name="Screenshots" href="/mydoggy-examples/mydoggysetScreenshots.html"/>
         </menu>
 
         <menu name="Modules">

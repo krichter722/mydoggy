@@ -10,7 +10,7 @@
     <body>
         <section name="ContentManager">
             <p>
-                The Content Manager manages the main window contents. You can add sereval contents to be displayed
+                The Content Manager manages the main window contents. You can add several contents to be displayed
                 in the main window. The user can switch between displayed contents.
             </p>
             <table>
@@ -40,7 +40,7 @@ contentManager.addContent("Tools",  // Content title
         <section name="Content">
             <p>
                 A content is a wrapper of a component decorated with some properties like a title, an icon, etc.
-                The visualization of a content dependes on specific platform implementation.
+                The visualization of a content depends on specific platform implementation.
                 A platform implementation can use a JTabbedPane or a JDesktopPane for example.
             </p>
             <p>

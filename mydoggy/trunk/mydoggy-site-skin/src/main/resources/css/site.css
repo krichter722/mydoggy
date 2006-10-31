@@ -38,7 +38,13 @@ body ul {
   font-size: smaller;
 }
 
-#cc_license_image {
+.license {
+  float:none;
+  text-shadow: #7CFC00;
+  text-align: center;
+}
+
+#license_image {
     border: none;
     float: left;
     margin-left: 20px;

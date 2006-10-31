@@ -6,7 +6,7 @@
         <title>MyDoggy - MyDoggySet</title>
         <vendor>mydoggy</vendor>
         <description>MyDoggy - MyDoggySet</description>
-        <description kind="short">MyDoggy - MyDoggy Set</description>
+        <description kind="showt">MyDoggy - MyDoggy Set</description>
         <offline-allowed/>
     </information>
 

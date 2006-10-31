@@ -22,15 +22,13 @@
                             <img src="./images/mydoggyset.png" alt="MyDoggySet" border="0" hspace="18"/>
                         </td>
                         <td>
-                            <ul>
-                                <li>
-                                    <a href="mydoggyset.html">MyDoggySet</a>
-                                    is a sample application to see in action many functionalities of MyDoggy.
-                                    You can modify tool window properties, show or hide groups and manage main window's contents.
-                                    <br></br>
-                                    Launch <a href="./jnlp/mydoggyset/mydoggyset.jnlp">MyDoggySet</a> using Java Web Start.
-                                </li>
-                            </ul>
+                            <p>
+                                <a href="mydoggyset.html">MyDoggySet</a>
+                                is a sample application to see in action many functionalities of MyDoggy.
+                                You can modify tool window properties, show or hide groups and manage main window's contents.
+                                <br></br>
+                                Launch <a href="./jnlp/mydoggyset/mydoggyset.jnlp">MyDoggySet</a> using Java Web Start.
+                            </p>
                         </td>
                     </tr>
                 </tbody>
