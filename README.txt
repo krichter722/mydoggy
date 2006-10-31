@@ -34,15 +34,15 @@ Directory Structure
 ===================
 
 MyDoggy
-????bin                         - Contains scripts for launching mydoggy examples.
-????lib                         - Contains mydoggy jars.
-????license                     - Contains license information.
-????mydoggy-api                 - Contains sources of mydoggy api.
-????mydoggy-examples            - Contains sources of mydoggy examples.
-????mydoggy-plaf                - Contains sources of mydoggy plaf (the default implementation of api).
-????mydoggy-site-skin           - Contains sources of mydoggy site skin.
-????mydoggy-transparency        - Contains sources of transparency lib (just for win32 but...).
-????src                         - Contains sources of mydoggy site.
+    bin                         - Contains scripts for launching mydoggy examples.
+    lib                         - Contains mydoggy jars.
+        win32                   - Contains TransparencyManager.dll
+    license                     - Contains license information.
+    mydoggy-api                 - Contains sources of mydoggy api.
+    mydoggy-examples            - Contains sources of mydoggy examples.
+    mydoggy-plaf                - Contains sources of mydoggy plaf (the default implementation of api).
+    mydoggy-site-skin           - Contains sources of mydoggy site skin.
+    src                         - Contains sources of mydoggy site.
 
 
 Usage and Installation
@@ -50,7 +50,7 @@ Usage and Installation
 
 The plugin is build using Maven-2. So first you have to download Maven-2 from
 http://maven.apache.org. The POM declares a few dependencies which are hosted
-on any publically available Maven Repository.
+on any publicly available Maven Repository.
 
 
 Building instructions

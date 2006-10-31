@@ -35,12 +35,6 @@
 
     <fileSets>
         <fileSet>
-            <directory>mydoggy-transparency/src</directory>
-            <outputDirectory>mydoggy-transparency</outputDirectory>
-            <includes/>
-        </fileSet>
-
-        <fileSet>
             <directory>src</directory>
             <outputDirectory>src</outputDirectory>
             <includes/>
