@@ -191,7 +191,7 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
             SwingUtil.repaint(c);
 
 
-            direction = ("U".equals(c.getName())) ? 0 : 1;
+            direction = ("U".equals(c.getName())) ? 1 : 0;
             scrollBy(direction, 10);
 
             scrollTimer.stop();
