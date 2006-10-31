@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * This manager manages the main window. You can add sereval contents to be displayed
+ * This manager manages the main window. You can add several contents to be displayed
  * in the main window. The user can switch between displayed contents.
  * Contents are added to the <code>ContentManager</code> by using the
  * <code>addContent</code> method.

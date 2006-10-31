@@ -12,7 +12,7 @@
             <p>
                 The idea is to provide the same mechanism of prospectives of eclipse ide for tools window.
                 The typical usage is to retrieve a group from the tool window manager and to add any tools window.
-                After that we can show or hide all tools registerd in a group.                
+                After that we can show or hide all tools registered in a group.
             </p>
 
             <table>
@@ -40,7 +40,7 @@ ToolWindowGroup group = toolWindowManager
              toolWindowManager.getToolWindow(0)
           );</source>
                             <p>
-                                To shor or hide a group use the following:
+                                To show or hide a group use the following:
                             </p>
                             <source>mainGroup.setVisible(
              true   // true to show, false to hide

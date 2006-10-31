@@ -40,13 +40,13 @@
                         - This interface lets the user to manager a group of tool window. The idea is to provide the
                         same mechanism of prospectives of eclipse ide for tools window. The typical usage is to
                         retrieve a group from the tool window manager and to add any tools window.
-                        After that we can show or hide all tools registerd in a group.
+                        After that we can show or hide all tools registered in a group.
                     </li>
                     <li>
                         <a href="./apidocs/org/noos/xing/mydoggy/ContentManager.html">
                             <code>ContentManager</code>
                         </a>
-                        - This manager manages the main window. You can add sereval contents to be displayed
+                        - This manager manages the main window. You can add several contents to be displayed
                         in the main window. The user can switch between displayed contents.
                         Contents are added to the
                         <code>ContentManager</code>
@@ -59,7 +59,7 @@
                             <code>Content</code>
                         </a>
                         - A content is a wrapper of a component decorated with some properties like
-                        a title, an icon, etc. The visualization of a content dependes on specific
+                        a title, an icon, etc. The visualization of a content depends on specific
                         platform implementation. A platform implementation can use a
                         <code>JTabbedPane</code>
                         or a

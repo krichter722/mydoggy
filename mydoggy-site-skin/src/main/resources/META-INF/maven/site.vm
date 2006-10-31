@@ -7,7 +7,11 @@
     #set ( $counter = $counter + 1 )
     #set ( $currentItemHref = $PathTool.calculateLink( $item.href, $relativePath ) )
     #set ( $currentItemHref = $currentItemHref.replaceAll( "\\", "/" ) )
-    <a href="$currentItemHref">$item.name</a>
+    <a href="$currentItemHref">$item.name
+        #if ($item.img)
+            <img src="$item.img"/>
+        #end
+    </a>
     #if ( $links.size() > $counter )
       |
     #end
@@ -259,6 +263,7 @@
       <meta name="author" content="$author" />
     #end
     <meta http-equiv="Content-Type" content="text/html; charset=${outputEncoding}" />
+    <meta name="keywords" content="Java, IntelliJ, Docking, Swing, Open Source, Development, Developers, Projects, Downloads, OSTG, VA Software, SF.net, SourceForge" />
     #if ( $decoration.body.head )
       #foreach( $item in $decoration.body.head.getChildren() )
         #if ( $item.name == "script" )
@@ -271,14 +276,14 @@
     <script type="text/javascript">
         function changeBanner() {
             prefix = (Math.floor (Math.random () * 4 + 1 ));
-            document.getElementById("bannerImage").src = "images/banners/banner_" + prefix + ".png";
+            document.getElementById("bannerImage").src = "images/banners/banner_" + prefix + ".jpg";
         }
     </script>
   </head>
-  <body class="composite" onload="changeBanner();">
+  <body class="composite">
     <div id="banner">
         <a href="http://mydoggy.sourceforge.net" id="bannerLeft">
-            <img id="bannerImage" src="images/banners/banner_4.png" alt="" />
+            <img id="bannerImage" src="images/banners/banner_2.jpg" alt="" />
         </a>
         <div class="clear">
         <hr/>
@@ -308,17 +313,18 @@
       <hr/>
     </div>
     <div id="footer">
-      <div class="xright">
+      <div class="license">
           <a rel="license" href="http://creativecommons.org/licenses/by-nc/2.5/">
               <img
                   alt="Creative Commons License" src="http://creativecommons.org/images/public/somerights20.gif"
-                  id="cc_license_image"/>
+                  id="license_image"/>
           </a>
           Except where otherwise noted, content on this site is
           licensed under a
-          <a style="border-bottom-style: groove;" rel="license" href="http://creativecommons.org/licenses/by/2.5/" class="subfoot">Creative Commons
-          Attribution 2.5 License</a>
-          &#169;#publishDate( "bottom" $decoration.publishDate $decoration.version )
+          <a style="border-bottom-style: groove;" rel="license" href="http://creativecommons.org/licenses/by/2.5/" class="subfoot">
+              Creative Commons Attribution 2.5 License
+          </a>
+          &#169;#copyright()#publishDate( "bottom" $decoration.publishDate $decoration.version )
       </div>
       <div class="clear">
         <hr/>

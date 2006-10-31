@@ -38,9 +38,8 @@ div.clear hr{
   text-shadow: #7CFC00;
 }
 .xright, #bannerRight img {
-  float:none;
+  float:right;
   text-shadow: #7CFC00;
-  text-align: center;
 }
 #banner {
   padding: 0px;

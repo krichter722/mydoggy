@@ -25,10 +25,9 @@
 );
             </source>
             <p>
-                A window implementing the <code>RootPaneContainer</code> interface is required becouse the default
+                A window implementing the <code>RootPaneContainer</code> interface is required because the default
                 implementation use the glass pane for the <code>ToolWindowType.SLIDING</code> type.
             </p>
-            <br></br>
             <p>
                 MyDoggyToolWindowManager is implemented like a JPanel so you can use it like any other component.
                 <br></br>

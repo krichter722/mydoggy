@@ -6,7 +6,7 @@ import java.awt.*;
 
 /**
  * A content is a wrapper of a component decorated with some properties like
- * a title, an icon, etc. The visualization of a content dependes on specific
+ * a title, an icon, etc. The visualization of a content depends on specific
  * platform implementation. A platform implementation can use a JTabbedPane
  * or a JDesktopPane for example.
  * 
