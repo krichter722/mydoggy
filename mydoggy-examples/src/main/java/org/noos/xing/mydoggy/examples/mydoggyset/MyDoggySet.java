@@ -160,7 +160,7 @@ public class MyDoggySet {
     }
 
     protected void initToolWindowManager() {
-        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame, Locale.UK);
+        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
         this.toolWindowManager = myDoggyToolWindowManager;
 
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);
