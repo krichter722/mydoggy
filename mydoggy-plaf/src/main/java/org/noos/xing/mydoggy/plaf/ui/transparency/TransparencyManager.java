@@ -13,7 +13,6 @@ public class TransparencyManager {
 
     static {
         try {
-            // TODO: add so checck...
             Toolkit.getDefaultToolkit();    // To init necessary libraries if not already loaded.
             System.loadLibrary("jawt");
             System.loadLibrary("TransparencyManager");
