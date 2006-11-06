@@ -22,8 +22,8 @@ public interface ContentManager {
     int getContentCount();
 
     /**
-     * Adds a <code>component</code> represented by a <code>title</code>
-     * and/or <code>icon</code>, either of which can be <code>null</code>.
+     * Adds a <code>component</code> represented by a unique identifier <code>key</code>
+     * with a <code>title</code> and/or <code>icon</code>, either of which can be <code>null</code>.
      *
      * @param key       key with which the specified content is to be associated.
      * @param title     the title to be displayed in this content
@@ -36,8 +36,8 @@ public interface ContentManager {
     Content addContent(Object key, String title, Icon icon, Component component);
 
     /**
-     * Adds a <code>component</code> represented by a <code>title</code>
-     * and/or <code>icon</code>, either of which can be <code>null</code>.
+     * Adds a <code>component</code> represented by a unique identifier <code>key</code>
+     * with a <code>title</code> and/or <code>icon</code>, either of which can be <code>null</code>.
      *
      * @param key       key with which the specified content is to be associated.
      * @param title     the title to be displayed in this content

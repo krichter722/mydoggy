@@ -49,6 +49,9 @@ public class MyDoggyContentManager implements ContentManager {
         if (component == null)
             throw new IllegalArgumentException("Component cannot be null.");
 
+        if (contentMap.containsKey(key))
+            throw new IllegalArgumentException("Cannot register content with passed key. An already registered content exists. [key : " + key + "]");
+
         MyDoggyContent content = new MyDoggyContent(this, key, title, icon, component, tip);
         contents.add(content);
         contentMap.put(key, content);

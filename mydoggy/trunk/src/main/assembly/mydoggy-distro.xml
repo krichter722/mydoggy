@@ -54,7 +54,7 @@
 
     <files>
         <file>
-            <source>TransparencyManager.dll</source>
+            <source>lib/win32/TransparencyManager.dll</source>
             <outputDirectory>lib/win32</outputDirectory>
         </file>
         <file>

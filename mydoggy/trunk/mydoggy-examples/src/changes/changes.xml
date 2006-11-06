@@ -2,14 +2,14 @@
 <document>
 
     <properties>
-        <author email="angelo.decaro@gmail.com">Angelo De Caro</author>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
         <title>MyDoggy - Changes</title>
     </properties>
 
     <body>
         <release version="1.0.0" date="2006-10-31" description="First release">
             <action dev="adecaro" type="add">
-                MyDoggy First release.
+                MyDoggy 1.0.0 released.
             </action>
         </release>
     </body>

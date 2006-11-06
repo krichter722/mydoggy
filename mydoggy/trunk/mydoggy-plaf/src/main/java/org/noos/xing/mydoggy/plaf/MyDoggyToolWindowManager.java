@@ -94,6 +94,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         if (index > 9)
             index = -1;
 
+        if (tools.containsKey(id))
+            throw new IllegalArgumentException("Cannot register tool window with passed id. An already registered tool exists. [id : " + id + "]");
+
         MyDoggyToolWindow toolWindow = new MyDoggyToolWindow(this,
                                                              anchestor, id,
                                                              index,
@@ -103,10 +106,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                                                              null);
         toolWindow.addInternalPropertyChangeListener(this);
 
-        if (!tools.containsKey(toolWindow.getId()))
-            tools.put(toolWindow.getId(), toolWindow.getDescriptor());
-        else
-            throw new IllegalArgumentException("Cannot register tool window with passed id. An already registered tool exists. [id : " + id + "]");
+        tools.put(toolWindow.getId(), toolWindow.getDescriptor());
 
         // fire Event
         fireRegisteredToolEvent(toolWindow);
