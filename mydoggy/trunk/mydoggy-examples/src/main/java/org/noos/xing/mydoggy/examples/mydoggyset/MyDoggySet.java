@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy.examples.mydoggyset;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.DockedTypeDescriptor;
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
@@ -92,14 +91,8 @@ public class MyDoggySet {
         toolsContentItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ContentManager contentManager = toolWindowManager.getContentManager();
-
-                Content[] contents = contentManager.getContents();
-                for (Content content : contents) {
-                    if (content.getComponent() == toolsContent)
-                        return;
-                }
-
-                contentManager.addContent("Tools", "Tools", null, toolsContent, "ToolWindows").setPopupMenu(toolsPopupMenu);
+                if (contentManager.getContent("Tools") == null)
+                    contentManager.addContent("Tools", "Tools", null, toolsContent, "ToolWindows").setPopupMenu(toolsPopupMenu);
             }
         });
 
@@ -108,13 +101,8 @@ public class MyDoggySet {
             public void actionPerformed(ActionEvent e) {
                 ContentManager contentManager = toolWindowManager.getContentManager();
 
-                Content[] contents = contentManager.getContents();
-                for (Content content : contents) {
-                    if (content.getComponent() == groupEditorContent)
-                        return;
-                }
-
-                contentManager.addContent("Group Editor", "Group Editor", null, groupEditorContent, "ToolWindowGroup").setPopupMenu(groupsPopupMenu);
+                if (contentManager.getContent("Group Editor") == null)
+                    contentManager.addContent("Group Editor", "Group Editor", null, groupEditorContent, "ToolWindowGroup").setPopupMenu(groupsPopupMenu);
             }
         });
 
@@ -123,13 +111,8 @@ public class MyDoggySet {
             public void actionPerformed(ActionEvent e) {
                 ContentManager contentManager = toolWindowManager.getContentManager();
 
-                Content[] contents = contentManager.getContents();
-                for (Content content : contents) {
-                    if (content.getComponent() == contentsContent)
-                        return;
-                }
-
-                contentManager.addContent("Tools", "Contents", null, contentsContent, "Contents Editor");
+                if (contentManager.getContent("Contents") == null)
+                    contentManager.addContent("Contents", "Contents", null, contentsContent, "Contents Editor");
             }
         });
 
