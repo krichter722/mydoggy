@@ -13,7 +13,8 @@ import java.beans.PropertyChangeListener;
  */
 public class MyDoggyContent implements ContentUI {
     private MyDoggyContentManager contentManager;
-    
+
+    private Object key;
     private String title;
     private Color foreground;
     private Icon icon;
@@ -28,8 +29,9 @@ public class MyDoggyContent implements ContentUI {
     private EventListenerList listeners;
 
 
-    public MyDoggyContent(MyDoggyContentManager contentManager, String title, Icon icon, Component component, String toolTipText) {
+    public MyDoggyContent(MyDoggyContentManager contentManager, Object key, String title, Icon icon, Component component, String toolTipText) {
         this.contentManager = contentManager;
+        this.key = key;
         this.title = title;
         this.icon = icon;
         this.component = component;
@@ -40,6 +42,10 @@ public class MyDoggyContent implements ContentUI {
         this.internalListeners = new EventListenerList();
     }
 
+
+    public Object getKey() {
+        return key;
+    }
 
     public Component getComponent() {
         return component;

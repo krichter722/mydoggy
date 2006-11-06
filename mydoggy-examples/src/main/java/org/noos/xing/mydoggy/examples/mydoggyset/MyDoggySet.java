@@ -26,7 +26,6 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Locale;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -100,7 +99,7 @@ public class MyDoggySet {
                         return;
                 }
 
-                contentManager.addContent("Tools", null, toolsContent, "ToolWindows").setPopupMenu(toolsPopupMenu);
+                contentManager.addContent("Tools", "Tools", null, toolsContent, "ToolWindows").setPopupMenu(toolsPopupMenu);
             }
         });
 
@@ -115,7 +114,7 @@ public class MyDoggySet {
                         return;
                 }
 
-                contentManager.addContent("Group Editor", null, groupEditorContent, "ToolWindowGroup").setPopupMenu(groupsPopupMenu);
+                contentManager.addContent("Group Editor", "Group Editor", null, groupEditorContent, "ToolWindowGroup").setPopupMenu(groupsPopupMenu);
             }
         });
 
@@ -130,7 +129,7 @@ public class MyDoggySet {
                         return;
                 }
 
-                contentManager.addContent("Contents", null, contentsContent, "Contents Editor");
+                contentManager.addContent("Tools", "Contents", null, contentsContent, "Contents Editor");
             }
         });
 
@@ -248,7 +247,7 @@ public class MyDoggySet {
         groupEditorContent = initGroupEditorContent();
         contentsContent = initContentsContent();
 
-        toolWindowManager.getContentManager().addContent("Tools", null, toolsContent, "ToolWindows")
+        toolWindowManager.getContentManager().addContent("Tools", "Tools", null, toolsContent, "ToolWindows")
                 .setPopupMenu(toolsPopupMenu);
         toolWindowManager.getContentManager().getContent(0).setTitle("ToolWindows");
 

@@ -33,7 +33,7 @@ public class TestContentManagerListener extends TestCase {
         TestCMListener listener = new TestCMListener();
         contentManager.addContentManagerListener(listener);
 
-        Content content = contentManager.addContent("content", null, new JButton("Hello World!!!"));
+        Content content = contentManager.addContent("key", "content", null, new JButton("Hello World!!!"));
 
         assertTrue(listener.isContentAdded());
         assertNotNull(listener.getLastEvent());
@@ -47,7 +47,7 @@ public class TestContentManagerListener extends TestCase {
         TestCMListener listener = new TestCMListener();
         contentManager.addContentManagerListener(listener);
 
-        Content content = contentManager.addContent("content", null, new JButton("Hello World!!!"));
+        Content content = contentManager.addContent("key", "content", null, new JButton("Hello World!!!"));
         assertTrue(contentManager.removeContent(content));
 
         assertTrue(listener.isContentRemoved());

@@ -14,6 +14,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Hashtable;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -24,6 +26,7 @@ public class MyDoggyContentManager implements ContentManager {
     private MyDoggyToolWindowManager toolWindowManager;
 
     private List<Content> contents;
+    private Map<Object, Content> contentMap;
     private ContentManagerUI contentManagerUI;
 
     private EventListenerList listeners;
@@ -31,6 +34,7 @@ public class MyDoggyContentManager implements ContentManager {
     MyDoggyContentManager(MyDoggyToolWindowManager windowManager) {
         this.toolWindowManager = windowManager;
         this.contents = new ArrayList<Content>();
+        this.contentMap = new Hashtable<Object, Content>();
         this.listeners = new EventListenerList();
         this.contentManagerUI = new TabbedContentManagerUI(this);
     }
@@ -39,9 +43,15 @@ public class MyDoggyContentManager implements ContentManager {
         return contents.size();
     }
 
-    public Content addContent(String title, Icon icon, Component component, String tip) {
-        MyDoggyContent content = new MyDoggyContent(this, title, icon, component, tip);
+    public Content addContent(Object key, String title, Icon icon, Component component, String tip) {
+        if (key == null)
+            throw new IllegalArgumentException("Key cannot be null.");
+        if (component == null)
+            throw new IllegalArgumentException("Component cannot be null.");
+
+        MyDoggyContent content = new MyDoggyContent(this, key, title, icon, component, tip);
         contents.add(content);
+        contentMap.put(key, content);
         contentManagerUI.addContent(content);
 
         fireContentAdded(content);
@@ -49,16 +59,21 @@ public class MyDoggyContentManager implements ContentManager {
         return content;
     }
 
-    public Content addContent(String title, Icon icon, Component component) {
-        return addContent(title, icon, component, null);
+    public Content addContent(Object key, String title, Icon icon, Component component) {
+        return addContent(key, title, icon, component, null);
     }
 
     public boolean removeContent(Content content) {
+        if (content == null)
+            throw new IllegalArgumentException("Content cannot be null");
+        
         contentManagerUI.removeContent((MyDoggyContent) content);
         boolean result = contents.remove(content);
 
-        if (result)
+        if (result) {
+            contentMap.remove(content.getKey());
             fireContentRemoved(content);
+        }
 
         return result;
     }
@@ -70,6 +85,10 @@ public class MyDoggyContentManager implements ContentManager {
 
     public Content getContent(int index) {
         return contents.get(index);
+    }
+
+    public Content getContent(Object key) {
+        return contentMap.get(key);
     }
 
     public Content[] getContents() {

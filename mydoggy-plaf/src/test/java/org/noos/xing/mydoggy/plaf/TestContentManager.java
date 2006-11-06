@@ -31,7 +31,7 @@ public class TestContentManager extends TestCase {
 
     public void testAddContentOne() {
         ContentManager contentManager = toolWindowManager.getContentManager();
-        Content content = contentManager.addContent("title", null, new JButton("Hello World!!!"));
+        Content content = contentManager.addContent("key", "title", null, new JButton("Hello World!!!"));
 
         assertNotNull(content);
         assertEquals(contentManager.getContentCount(), 1);
@@ -42,11 +42,18 @@ public class TestContentManager extends TestCase {
         assertEquals(content.getIcon(), null);
         assertEquals(content.getToolTipText(), null);
         assertTrue(content.getComponent() instanceof JButton);
+
+        content = contentManager.getContent("key");
+
+        assertEquals(content.getTitle(), "title");
+        assertEquals(content.getIcon(), null);
+        assertEquals(content.getToolTipText(), null);
+        assertTrue(content.getComponent() instanceof JButton);
     }
 
     public void testAddContentTwo() {
         ContentManager contentManager = toolWindowManager.getContentManager();
-        Content content = contentManager.addContent("title", null, new JButton("Hello World!!!"), "tip");
+        Content content = contentManager.addContent("key", "title", null, new JButton("Hello World!!!"), "tip");
 
         assertNotNull(content);
         assertEquals(contentManager.getContentCount(), 1);

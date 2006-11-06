@@ -15,6 +15,13 @@ import java.awt.*;
 public interface Content {
 
     /**
+      * Return the content unique identifier.
+      *
+      * @return the content unique identifier.
+      */
+    Object getKey();
+
+    /**
      * Sets the title to <code>title</code> which can be <code>null</code>.
      *
      * @param title the title to be displayed for the content.

@@ -25,34 +25,37 @@ public interface ContentManager {
      * Adds a <code>component</code> represented by a <code>title</code>
      * and/or <code>icon</code>, either of which can be <code>null</code>.
      *
+     * @param key       key with which the specified content is to be associated.
      * @param title     the title to be displayed in this content
      * @param icon      the icon to be displayed in this content
-     * @param component the component to be displayed when this content is selected.
-     * @return the a <code>Content</code> object rapresents the content added.
+     * @param component the component to be displayed when this content is selected. @return the a <code>Content</code> object rapresents the content added.
      * @see #removeContent(Content)
      * @see Content
+     * @return a <code>Content</code> instance that rapresents the <code>component</code>
      */
-    Content addContent(String title, Icon icon, Component component);
+    Content addContent(Object key, String title, Icon icon, Component component);
 
     /**
      * Adds a <code>component</code> represented by a <code>title</code>
      * and/or <code>icon</code>, either of which can be <code>null</code>.
      *
+     * @param key       key with which the specified content is to be associated.
      * @param title     the title to be displayed in this content
      * @param icon      the icon to be displayed in this content
      * @param component the component to be displayed when this content is selected.
-     * @param tip       the tool tip text
-     * @return the a <code>Content</code> object rapresents the content added.
+     * @param tip       the tool tip text @return the a <code>Content</code> object rapresents the content added.
      * @see #removeContent(Content)
+     * @return a <code>Content</code> instance that rapresents the <code>component</code>
      */
-    Content addContent(String title, Icon icon, Component component, String tip);
+    Content addContent(Object key, String title, Icon icon, Component component, String tip);
 
     /**
      * Removes the content <code>content</code>.
      *
      * @param content content to be removed from this manager, if present.
      * @return <tt>true</tt> if this manager contained the specified element.
-     * @see #addContent(String,javax.swing.Icon,java.awt.Component)
+     * @see #addContent(Object,String,javax.swing.Icon,java.awt.Component)
+     * @see #addContent(Object,String,javax.swing.Icon,java.awt.Component,String)
      */
     boolean removeContent(Content content);
 
@@ -71,7 +74,7 @@ public interface ContentManager {
      * @param index index of content to return.
      * @return the content at the specified position in this manager.
      * @throws IndexOutOfBoundsException if the index is out of range (index
-     * 		  &lt; 0 || index &gt;= getContentCount()).
+     *                                   &lt; 0 || index &gt;= getContentCount()).
      */
     Content getContent(int index);
 
@@ -85,6 +88,17 @@ public interface ContentManager {
     Content[] getContents();
 
     /**
+     * Returns the content to which this manager maps the specified key.  Returns
+     * <tt>null</tt> if the manager contains no mapping for this key.
+     *
+     * @param key key whose associated content is to be returned.
+     * @return the content to which this manager maps the specified key
+     *
+     * @throws NullPointerException if the key is <tt>null</tt>.
+     */
+    Content getContent(Object key);
+
+    /**
      * Sets the default popup menu for the contents.
      * If a content has no specific popup menu then the content manager will show
      * <code>popupMenu</code>.
@@ -96,7 +110,7 @@ public interface ContentManager {
     /**
      * Returns the default popup menu for the contents.
      *
-     * @return the default <code>PopupMenu</code> for the contents. 
+     * @return the default <code>PopupMenu</code> for the contents.
      * @see #setPopupMenu(javax.swing.JPopupMenu)
      */
     JPopupMenu getPopupMenu();
