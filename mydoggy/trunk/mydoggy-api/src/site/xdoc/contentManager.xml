@@ -25,7 +25,8 @@
                             </p>
                             <source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">...</a>;
 ContentManager contentManager = toolWindowManager.getContentManager();
-contentManager.addContent("Tools",  // Content title
+contentManager.addContent("Tools"   // Content Key
+                          "Tools",  // Content title
                           null,     // Content Item
                           toolsContent, // Content component
                           "ToolWindows" // Content tooltip text
@@ -51,7 +52,7 @@ contentManager.addContent("Tools",  // Content title
             </p>
             <source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">...</a>;
 ContentManager contentManager = toolWindowManager.getContentManager();
-Content content = contentManager.getContent(0);
+Content content = contentManager.getContent("Tools");
             </source>
         </section>
     </body>
