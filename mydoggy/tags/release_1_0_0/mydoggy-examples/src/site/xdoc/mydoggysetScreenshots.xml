@@ -1,0 +1,71 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy-Examples : MyDoggySet - Screenshots</title>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="MyDoggySet Screenshots">
+            <p>
+                Here are some screenshots of MyDoggySet.
+            </p>
+            <table>
+                <tr>
+                    <td align="center">
+                        <a href="./images/screenshots/mydoggyset/mydoggyset.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/mydoggyset.png" alt="MyDoggySet"/>
+                        </a>
+                        <p align="center">MyDoggySet</p>
+                    </td>
+                    <td>
+                        <a href="./images/screenshots/mydoggyset/tw_docked.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/tw_docked.png" alt="Tool Window Docked"/>
+                        </a>
+                        <p align="center">A ToolWindow with ToolWindowType.DOCKED type.</p>
+                    </td>
+                    <td>
+                        <a href="./images/screenshots/mydoggyset/tw_floating.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/tw_floating.png" alt="Tool Window Floating"/>
+                        </a>
+                        <p align="center">A ToolWindow with ToolWindowType.FLOATING type.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="./images/screenshots/mydoggyset/tw_floating_modal.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/tw_floating_modal.png" alt="Tool Window Floating Modal"/>
+                        </a>
+                        <p align="center">A ToolWindow with ToolWindowType.FLOATING type and modal.</p>
+                    </td>
+                    <td>
+                        <a href="./images/screenshots/mydoggyset/tw_sliding.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/tw_sliding.png" alt="Tool Window Sliding"/>
+                        </a>
+                        <p align="center">A ToolWindow with ToolWindowType.SLIDING type.</p>
+                    </td>
+                    <td>
+                        <a href="./images/screenshots/mydoggyset/tw_group.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/tw_group.png" alt="Tool Window Group"/>
+                        </a>
+                        <p align="center">A toolWindow group showed.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="./images/screenshots/mydoggyset/tw_transparency.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/tw_transparency.png" alt="Tool Window Transparent"/>
+                        </a>
+                        <p align="center">A ToolWindowType.FLOATING ToolWindow transparent.</p>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            </table>
+        </section>
+    </body>
+</document>
