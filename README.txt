@@ -18,7 +18,7 @@ MyDoggy is licensed under the LGPL, please see the LGPL.txt file for more inform
 System Requirements
 ===================
 
-MyDoggy requires JDK5 for compilation.
+MyDoggy requires JDK5 or higher.
 
 
 Introduction
