@@ -1,0 +1,38 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy-Api : Using</title>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="Using Tool Window">
+            <subsection name="To Show or Hide">
+                Use the following :
+                <source>
+ToolWindow tool = toolWindowManager.getToolWindow(0);
+tool.setVisibile(true); // false to hide                    
+</source>
+                <p>The tool shows or hides the component in a way that depends on tool window type.</p>
+            </subsection>
+            <subsection name="To Activate">
+                Use the following :
+                <source>
+ToolWindow tool = toolWindowManager.getToolWindow(0);
+tool.setActive(true); // false to deactivate
+</source>
+                <p>The tool grabs the focus from focus owner and becomes active.</p>
+            </subsection>
+            <subsection name="To Move">
+                Use the following :
+                <source>
+ToolWindow tool = toolWindowManager.getToolWindow(0);
+tool.setAnchor(ToolWindowAnchor.TOP);
+</source>
+                <p>The anchor specifies the position of the tool when it is anchored to the docking system.</p>
+            </subsection>
+        </section>
+    </body>
+</document>
