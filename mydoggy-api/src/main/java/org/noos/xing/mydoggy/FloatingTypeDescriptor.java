@@ -12,7 +12,7 @@ import java.beans.PropertyChangeListener;
 public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
 
     /**
-     * Sets the window location. This location is used the first time the window becomes visible.
+     * Sets the window location. This location is also used the first time the window becomes visible.
      * The top-left corner of the new location
      * is specified by the <code>x</code> and <code>y</code>
      * parameters in the system coordinate space.
@@ -37,7 +37,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
     Point getLocation();
 
     /**
-     * Sets the window size. This size is used the first time the window becomes visible.
+     * Sets the window size. This size is also used the first time the window becomes visible.
      *
      * @param width  the new width of this component in pixels
      * @param height the new height of this component in pixels

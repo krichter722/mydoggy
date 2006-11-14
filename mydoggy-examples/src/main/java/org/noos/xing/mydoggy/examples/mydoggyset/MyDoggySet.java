@@ -1,20 +1,14 @@
 package org.noos.xing.mydoggy.examples.mydoggyset;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.ContentManager;
-import org.noos.xing.mydoggy.DockedTypeDescriptor;
-import org.noos.xing.mydoggy.FloatingTypeDescriptor;
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowGroup;
-import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ContentsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ToolGroupsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ToolsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.CheckBoxCellRenderer;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.content.desktop.MyDoggyDesktopContentManagerUI;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -45,6 +39,8 @@ public class MyDoggySet {
     private JPopupMenu groupsPopupMenu;
 
     private JMenu lafMenu;
+
+    private ContentManagerUI defaultManagerUI;
 
     protected void setUp() throws Exception {
         initComponents();
@@ -120,6 +116,29 @@ public class MyDoggySet {
         contentMenu.add(groupEditorContentItem);
         contentMenu.add(contentsContentItem);
 
+        // Content Manager UI
+
+        JMenu contentManagerMenu = new JMenu("Content Manager UI");
+
+        JMenuItem tabUIItem = new JMenuItem("Tab");
+        tabUIItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                toolWindowManager.getContentManager().setContentManagerUI(defaultManagerUI);
+            }
+        });
+
+        JMenuItem desktopUIItem = new JMenuItem("Desktop");
+        desktopUIItem.addActionListener(new ActionListener() {
+            MyDoggyDesktopContentManagerUI desktopContentManagerUI = new MyDoggyDesktopContentManagerUI();
+
+            public void actionPerformed(ActionEvent e) {
+                toolWindowManager.getContentManager().setContentManagerUI(desktopContentManagerUI);
+            }
+        });
+
+        contentManagerMenu.add(tabUIItem);
+        contentManagerMenu.add(desktopUIItem);
+
         // L&F Menu
         lafMenu = new JMenu("Looks");
 
@@ -136,6 +155,7 @@ public class MyDoggySet {
 
         menuBar.add(fileMenu);
         menuBar.add(contentMenu);
+        menuBar.add(contentManagerMenu);
         menuBar.add(lafMenu);
 
         this.frame.setJMenuBar(menuBar);
@@ -230,9 +250,14 @@ public class MyDoggySet {
         groupEditorContent = initGroupEditorContent();
         contentsContent = initContentsContent();
 
+        defaultManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
+        TabbedContentManagerUI tabbedContentManagerUI = (TabbedContentManagerUI) defaultManagerUI;
+        tabbedContentManagerUI.setShowAlwaysTab(true);
+
         toolWindowManager.getContentManager().addContent("Tools", "Tools", null, toolsContent, "ToolWindows")
                 .setPopupMenu(toolsPopupMenu);
         toolWindowManager.getContentManager().getContent(0).setTitle("ToolWindows");
+
 
         // Add MyDoggyToolWindowManager to frame
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
