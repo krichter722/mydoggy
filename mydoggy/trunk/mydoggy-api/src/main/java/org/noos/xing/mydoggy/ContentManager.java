@@ -15,6 +15,20 @@ import java.awt.*;
 public interface ContentManager {
 
     /**
+     * TODO
+     * @since 1.1.0
+     * @param contentManagerUI
+     */
+    void setContentManagerUI(ContentManagerUI contentManagerUI);
+
+    /**
+     * TODO
+     * @since 1.1.0
+     * @return
+     */
+    ContentManagerUI getContentManagerUI();
+
+    /**
      * Returns the number of contents in this manager.
      *
      * @return the number of contents.

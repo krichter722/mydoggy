@@ -7,6 +7,20 @@
     </properties>
 
     <body>
+        <release version="1.1.0">
+            <action dev="adecacro" type="add">
+                New interface ContentManagerUI: This is a markup interface for all ContentManagerUI.
+                A ContentManagerUI is an interface to modify the ui behaviours of content manager.
+            </action>
+            <action dev="adecacro" type="add">
+                New interface TabbedContentManagerUI: is used to modify the ui behaviours of a JTabbedPane
+                that shows registered contents.
+            </action>
+            <action dev="adecacro" type="add">
+                New interface DesktopContentManagerUI: is used to modify the ui behaviours of a JDesktopPane
+                that shows registered contents.
+            </action>
+        </release>
         <release version="1.0.0" date="2006-10-31" description="First release">
             <action dev="adecaro" type="add">
                 MyDoggy 1.0.0 released.
