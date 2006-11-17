@@ -82,6 +82,9 @@ public interface ContentManager {
      */
     boolean removeContent(int index);
 
+
+    void removeAllContents();
+
     /**
      * Returns the content at the specified position in this manager.
      *
