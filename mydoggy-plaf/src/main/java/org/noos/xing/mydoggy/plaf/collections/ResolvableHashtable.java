@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.plaf.collections;
+package org.noos.xing.mydoggy.plaf.support;
 
 import java.util.Hashtable;
 import java.io.Serializable;

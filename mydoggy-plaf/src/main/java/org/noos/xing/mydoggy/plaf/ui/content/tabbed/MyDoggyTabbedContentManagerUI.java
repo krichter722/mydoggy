@@ -1,12 +1,17 @@
 package org.noos.xing.mydoggy.plaf.ui.content.tabbed;
 
 import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.TabbedContentManagerUI;
+import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.collections.ResolvableHashtable;
+import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.ui.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.content.ContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.content.ContentUI;
+import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.JTabbedContentManager;
+import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.TabEvent;
+import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.TabListener;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -14,32 +19,73 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class TabbedContentManagerUI implements ContentManagerUI, PropertyChangeListener {
+public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, ContentManagerUI, PropertyChangeListener {
     private MyDoggyToolWindowManager toolWindowManager;
     private MyDoggyContentManager contentManager;
 
     private JTabbedContentManager tabbedContentManager;
+    private boolean showAlwaysTab;
 
-    private Map<String, PropertyChangeListener> listeners;
+    private PropertyChangeSupport propertyChangeSupport;
 
     boolean valueAdjusting;
+    boolean contentValueAdjusting;
 
-    public TabbedContentManagerUI(MyDoggyContentManager contentManager) {
-        this.contentManager = contentManager;
-        this.toolWindowManager = contentManager.getToolWindowManager();
-
+    public MyDoggyTabbedContentManagerUI() {
         initComponents();
-        initListeners();
     }
 
+
+    public boolean isShowAlwaysTab() {
+        return showAlwaysTab;
+    }
+
+    public void setShowAlwaysTab(boolean showAlwaysTab) {
+        this.showAlwaysTab = showAlwaysTab;
+
+        if (showAlwaysTab) {
+            if (contentManager.getContentCount() == 1 && toolWindowManager.getMainContent() != tabbedContentManager && tabbedContentManager.getParent() == null) {
+                valueAdjusting = true;
+                addTab(contentManager.getContent(toolWindowManager.getMainContent()));
+                valueAdjusting = false;
+
+                toolWindowManager.setMainContent(tabbedContentManager);
+            }
+        }
+    }
+
+
+    public void install(ToolWindowManager manager) {
+        this.toolWindowManager = (MyDoggyToolWindowManager) manager;
+        this.contentManager = (MyDoggyContentManager) manager.getContentManager();
+        initListeners();
+
+        contentValueAdjusting = true;
+        for (Content content : contentManager.getContents()) {
+            addContent((ContentUI) content);
+            contentValueAdjusting = false;
+        }
+        contentValueAdjusting = false;
+    }
+
+    public void unistall() {
+        contentValueAdjusting = true;
+        for (Content content : contentManager.getContents()) {
+            removeContent((ContentUI) content);
+        }
+        contentValueAdjusting = false;
+    }
 
     public void addContent(ContentUI content) {
         addUIForContent(content);
@@ -63,17 +109,6 @@ public class TabbedContentManagerUI implements ContentManagerUI, PropertyChangeL
         content.removeUIPropertyChangeListener(this);
     }
 
-    public void detach(Content content) {
-    }
-
-    public JPopupMenu getPopupMenu() {
-        return tabbedContentManager.getPopupMenu();
-    }
-
-    public void setPopupMenu(JPopupMenu popupMenu) {
-        tabbedContentManager.setPopupMenu(popupMenu);
-    }
-
     public boolean isSelected(Content content) {
         if (content.isDetached()) {
             Window anchestor = SwingUtilities.windowForComponent(content.getComponent());
@@ -87,10 +122,14 @@ public class TabbedContentManagerUI implements ContentManagerUI, PropertyChangeL
             if (index != -1)
                 return tabbedContentManager.getSelectedIndex() == index;
             else {
-                if (toolWindowManager.getMainContent() != content.getComponent())
-                    throw new IllegalStateException("Invalid content ui state.");
-                else
-                    return true;
+                if (contentValueAdjusting) {
+                    return false;
+                } else {
+                    if (toolWindowManager.getMainContent() != content.getComponent())
+                        throw new IllegalStateException("Invalid content ui state.");
+                    else
+                        return true;
+                }
             }
         }
     }
@@ -102,11 +141,21 @@ public class TabbedContentManagerUI implements ContentManagerUI, PropertyChangeL
             );
         } else {
             int index = tabbedContentManager.indexOfComponent(content.getComponent());
-            if (index != -1)
+            if (index != -1) {
+                valueAdjusting = true;
                 tabbedContentManager.setSelectedIndex(index);
-            else if (toolWindowManager.getMainContent() != content.getComponent())
+                valueAdjusting = false;
+            } else if (toolWindowManager.getMainContent() != content.getComponent())
                 throw new IllegalStateException("Invalid content ui state.");
         }
+    }
+
+    public JPopupMenu getPopupMenu() {
+        return tabbedContentManager.getPopupMenu();
+    }
+
+    public void setPopupMenu(JPopupMenu popupMenu) {
+        tabbedContentManager.setPopupMenu(popupMenu);
     }
 
     public void updateUI() {
@@ -115,19 +164,20 @@ public class TabbedContentManagerUI implements ContentManagerUI, PropertyChangeL
 
 
     public void propertyChange(PropertyChangeEvent evt) {
-        listeners.get(evt.getPropertyName()).propertyChange(evt);
+        propertyChangeSupport.firePropertyChangeEvent(evt);
     }
 
 
     protected void initComponents() {
-        final JTabbedContentManager tabbedContentManager = new JTabbedContentManager(
-        );
+        final JTabbedContentManager tabbedContentManager = new JTabbedContentManager();
 
         tabbedContentManager.addTabListener(new TabListener() {
             public void tabEventFired(TabEvent event) {
                 switch (event.getActionId()) {
                     case ON_CLOSE:
-                        contentManager.removeContent(event.getContentManager().getComponentAt(event.getOverTabIndex()));
+                        contentManager.removeContent(
+                                event.getContentManager().getComponentAt(event.getOverTabIndex())
+                        );
                         break;
                     case ON_DETACH:
                         contentManager.getContent(
@@ -167,34 +217,30 @@ public class TabbedContentManagerUI implements ContentManagerUI, PropertyChangeL
     }
 
     protected void initListeners() {
-        listeners = new ResolvableHashtable<String, PropertyChangeListener>(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                System.out.println("NO LISTENER FOR : " + evt.getPropertyName());
-            }
-        });
-        listeners.put("component", new ComponentListener());
-        listeners.put("disabledIcon", new DisabledIconListener());
-        listeners.put("icon", new IconListener());
-        listeners.put("enabled", new EnabledListener());
-        listeners.put("foreground", new ForegroundListener());
-        listeners.put("popupMenu", new PopupMenuListener());
-        listeners.put("title", new TitleListener());
-        listeners.put("toolTipText", new ToolTipTextListener());
-        listeners.put("detached", new DetachedListener());
-        listeners.put("selected", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-//                System.out.println("SELECTED " + evt.getNewValue());
-            }
-        });
-
-        contentManager.addPropertyChangeListener(this);
+        if (propertyChangeSupport == null) {
+            propertyChangeSupport = new PropertyChangeSupport();
+            propertyChangeSupport.addPropertyChangeListener("component", new ComponentListener());
+            propertyChangeSupport.addPropertyChangeListener("disabledIcon", new DisabledIconListener());
+            propertyChangeSupport.addPropertyChangeListener("icon", new IconListener());
+            propertyChangeSupport.addPropertyChangeListener("enabled", new EnabledListener());
+            propertyChangeSupport.addPropertyChangeListener("foreground", new ForegroundListener());
+            propertyChangeSupport.addPropertyChangeListener("popupMenu", new PopupMenuListener());
+            propertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
+            propertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
+            propertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
+            propertyChangeSupport.addPropertyChangeListener("selected", new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+    //                System.out.println("SELECTED " + evt.getNewValue());
+                }
+            });
+        }
     }
 
     protected void addUIForContent(Content content) {
-        if (tabbedContentManager.getTabCount() == 0 && toolWindowManager.getMainContent() == null) {
+        if (!showAlwaysTab && tabbedContentManager.getTabCount() == 0 && (contentValueAdjusting || toolWindowManager.getMainContent() == null)) {
             toolWindowManager.setMainContent(content.getComponent());
         } else {
-            if (tabbedContentManager.getParent() == null) {
+            if (!showAlwaysTab && tabbedContentManager.getParent() == null) {
                 valueAdjusting = true;
                 addTab(contentManager.getContent(toolWindowManager.getMainContent()));
                 valueAdjusting = false;
