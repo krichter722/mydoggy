@@ -4,12 +4,14 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
-import org.noos.xing.mydoggy.plaf.collections.ResolvableHashtable;
+import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
+import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultDockedTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultFloatingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.GlassPaneMouseAdapter;
 import org.noos.xing.mydoggy.plaf.ui.ResourceBoundles;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.content.tabbed.MyDoggyTabbedContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -49,7 +51,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     private JSplitPane mainSplitPane;
     private JPanel mainContainer;
 
-    private Map<String, PropertyChangeListener> listeners;
+    private PropertyChangeSupport propertyChangeSupport;
 
     private Object activeToolWindowId;
 
@@ -263,7 +265,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             return;
         }
 
-        listeners.get(evt.getPropertyName()).propertyChange(evt);
+        propertyChangeSupport.firePropertyChangeEvent(evt);
     }
 
 
@@ -301,6 +303,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected void initComponents() {
         this.twmListeners = new EventListenerList();
         this.contentManager = new MyDoggyContentManager(this);
+        this.contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
 
         ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
@@ -351,7 +354,18 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     protected void initGlassPane() {
-        final Container glassPane = (Container) ((RootPaneContainer) anchestor).getGlassPane();
+        ((RootPaneContainer) anchestor).setGlassPane(new JPanel(){
+            public void setVisible(boolean aFlag) {
+                if (!aFlag) {
+                    if (getComponentCount() == 0)
+                        super.setVisible(aFlag);
+                } else
+                    super.setVisible(aFlag);
+            }
+        });
+
+        final JPanel glassPane = (JPanel) ((RootPaneContainer) anchestor).getGlassPane();
+        glassPane.setOpaque(false);
         glassPane.setVisible(false);
         glassPane.setLayout(null);
 
@@ -379,16 +393,16 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     protected void initListeners() {
-        listeners = new ResolvableHashtable<String, PropertyChangeListener>(new DummyPropertyChangeListener());
-        listeners.put("available", new AvailablePropertyChangeListener());
-        listeners.put("visible", new VisiblePropertyChangeListener());
-        listeners.put("active", new ActivePropertyChangeListener());
-        listeners.put("anchor", new AnchorPropertyChangeListener());
-        listeners.put("type", new TypePropertyChangeListener());
-        listeners.put("autoHide", new AutoHideChangeListener());
-        listeners.put("index", new IndexChangeListener());
-        listeners.put("icon", new IconChangeListener());
-        listeners.put("title", new TitleChangeListener());
+        propertyChangeSupport = new PropertyChangeSupport();
+        propertyChangeSupport.addPropertyChangeListener("available", new AvailablePropertyChangeListener());
+        propertyChangeSupport.addPropertyChangeListener("visible", new VisiblePropertyChangeListener());
+        propertyChangeSupport.addPropertyChangeListener("active", new ActivePropertyChangeListener());
+        propertyChangeSupport.addPropertyChangeListener("anchor", new AnchorPropertyChangeListener());
+        propertyChangeSupport.addPropertyChangeListener("type", new TypePropertyChangeListener());
+        propertyChangeSupport.addPropertyChangeListener("autoHide", new AutoHideChangeListener());
+        propertyChangeSupport.addPropertyChangeListener("index", new IndexChangeListener());
+        propertyChangeSupport.addPropertyChangeListener("icon", new IconChangeListener());
+        propertyChangeSupport.addPropertyChangeListener("title", new TitleChangeListener());
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(this);
     }

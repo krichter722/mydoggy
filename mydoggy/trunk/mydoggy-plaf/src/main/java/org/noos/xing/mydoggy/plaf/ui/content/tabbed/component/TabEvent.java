@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.plaf.ui.content.tabbed;
+package org.noos.xing.mydoggy.plaf.ui.content.tabbed.component;
 
 import java.awt.event.MouseEvent;
 import java.util.EventObject;

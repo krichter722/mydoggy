@@ -11,6 +11,7 @@ import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowBarDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.icons.TextIcon;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +47,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     private int orientation;
     private boolean horizontal;
 
-    private Map<String, PropertyChangeListener> listeners;
+    private PropertyChangeSupport propertyChangeSupport;
 
 
     MyDoggyToolWindowBar(ToolWindowManager manager, JSplitPane splitPane, ToolWindowAnchor anchor) {
@@ -62,7 +63,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
 
     public void propertyChange(PropertyChangeEvent evt) {
-        listeners.get(evt.getPropertyName()).propertyChange(evt);
+        propertyChangeSupport.firePropertyChangeEvent(evt);
     }
 
     public String toString() {
@@ -120,21 +121,21 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     }
 
     protected void initListeners() {
-        this.listeners = new Hashtable<String, PropertyChangeListener>();
-        listeners.put("available", new AvailableListener());
-        listeners.put("visible.before", new VisibleBeforeListener());
-        listeners.put("visible.DOCKED", new VisibleDockedListener());
-        listeners.put("visible.FLOATING", new VisibleFloatingListener());
-        listeners.put("visible.FLOATING_FREE", new VisibleFloatingWindowListener());
-        listeners.put("visible.SLIDING", new VisibleSlidingListener());
-        listeners.put("visible", new VisibleListener());
-        listeners.put("active.before", new ActiveBeforeListener());
-        listeners.put("active", new ActiveListener());
-        listeners.put("type", new TypeListener());
+        propertyChangeSupport = new PropertyChangeSupport();
+        propertyChangeSupport.addPropertyChangeListener("available", new AvailableListener());
+        propertyChangeSupport.addPropertyChangeListener("visible.before", new VisibleBeforeListener());
+        propertyChangeSupport.addPropertyChangeListener("visible.DOCKED", new VisibleDockedListener());
+        propertyChangeSupport.addPropertyChangeListener("visible.FLOATING", new VisibleFloatingListener());
+        propertyChangeSupport.addPropertyChangeListener("visible.FLOATING_FREE", new VisibleFloatingWindowListener());
+        propertyChangeSupport.addPropertyChangeListener("visible.SLIDING", new VisibleSlidingListener());
+        propertyChangeSupport.addPropertyChangeListener("visible", new VisibleListener());
+        propertyChangeSupport.addPropertyChangeListener("active.before", new ActiveBeforeListener());
+        propertyChangeSupport.addPropertyChangeListener("active", new ActiveListener());
+        propertyChangeSupport.addPropertyChangeListener("type", new TypeListener());
 
-        listeners.put("index", new IndexListener());
-        listeners.put("title", new TitleListener());
-        listeners.put("icon", new IconListener());
+        propertyChangeSupport.addPropertyChangeListener("index", new IndexListener());
+        propertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
+        propertyChangeSupport.addPropertyChangeListener("icon", new IconListener());
     }
 
 

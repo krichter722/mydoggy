@@ -3,7 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowType;
-import org.noos.xing.mydoggy.plaf.collections.ResolvableHashtable;
+import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -18,9 +18,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -46,7 +43,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     protected JButton hideButton;
 
     private MouseAdapter applicationBarMouseAdapter;
-    private Map<String, List<PropertyChangeListener>> propertyChangeListeners;
+    private PropertyChangeSupport propertyChangeSupport;
 
     boolean valueAdjusting;
 
@@ -59,10 +56,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        List<PropertyChangeListener> listeners = propertyChangeListeners.get(evt.getPropertyName());
-        for (PropertyChangeListener listener : listeners) {
-            listener.propertyChange(evt);
-        }
+        propertyChangeSupport.firePropertyChangeEvent(evt);
     }
 
     public Container getContentContainer() {
@@ -79,13 +73,11 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
     protected void addPropertyChangeListener(String property, PropertyChangeListener listener) {
-        List<PropertyChangeListener> listeners = propertyChangeListeners.get(property);
-        listeners.add(listener);
+        propertyChangeSupport.addPropertyChangeListener(property, listener);
     }
 
     protected void removePropertyChangeListener(String property, PropertyChangeListener listener) {
-        List<PropertyChangeListener> listeners = propertyChangeListeners.get(property);
-        listeners.remove(listener);
+        propertyChangeSupport.removePropertyChangeListener(property, listener);
     }
 
     protected void setPinVisible(boolean visible) {
@@ -140,15 +132,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
     private void initDockedComponents() {
         iconProvider = new IconProvider();
-        this.propertyChangeListeners = new ResolvableHashtable<String, List<PropertyChangeListener>>(
-                new ResolvableHashtable.Resolver<List<PropertyChangeListener>>() {
-                    public List<PropertyChangeListener> get(Object key) {
-                        List<PropertyChangeListener> result = new LinkedList<PropertyChangeListener>();
-                        propertyChangeListeners.put((String) key, result);
-                        return result;
-                    }
-                }
-        );
+        propertyChangeSupport = new PropertyChangeSupport();
 
         applicationBarMouseAdapter = new ApplicationBarMouseAdapter();
         ActionListener applicationBarActionListener = new ApplicationBarActionListener();

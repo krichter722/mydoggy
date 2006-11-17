@@ -17,6 +17,8 @@ public class CompositeIcon implements Icon, SwingConstants {
     protected int horizontalOrientation;
     protected int verticalOrientation;
 
+    protected Shape shape;
+
     public CompositeIcon(Icon icon1, Icon icon2) {
         this(icon1, icon2, TOP);
     }
@@ -137,6 +139,13 @@ public class CompositeIcon implements Icon, SwingConstants {
             icon1Rec = new Rectangle(x, y, getIconWidth(icon1), getIconHeight(icon1));
         } else
             icon2Rec = new Rectangle(x, y, getIconWidth(icon2), getIconHeight(icon2));
+
+        shape =  g.getClip();
+    }
+
+
+    public Rectangle getClip() {
+        return (Rectangle) shape;
     }
 
     protected int getIconWidth(Icon icon) {

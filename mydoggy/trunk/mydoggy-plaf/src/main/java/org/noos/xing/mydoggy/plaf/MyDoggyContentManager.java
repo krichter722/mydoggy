@@ -5,7 +5,6 @@ import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.ContentManagerListener;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
 import org.noos.xing.mydoggy.plaf.ui.content.ContentManagerUI;
-import org.noos.xing.mydoggy.plaf.ui.content.tabbed.TabbedContentManagerUI;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -13,9 +12,9 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Hashtable;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -36,7 +35,25 @@ public class MyDoggyContentManager implements ContentManager {
         this.contents = new ArrayList<Content>();
         this.contentMap = new Hashtable<Object, Content>();
         this.listeners = new EventListenerList();
-        this.contentManagerUI = new TabbedContentManagerUI(this);
+    }
+
+
+    public void setContentManagerUI(org.noos.xing.mydoggy.ContentManagerUI contentManagerUI) {
+        if (!(contentManagerUI instanceof ContentManagerUI))
+            throw new IllegalArgumentException("ContentManagerUI type not supported. See Plaf prescription.");
+
+        if (this.contentManagerUI == contentManagerUI)
+            return;
+
+        if (this.contentManagerUI != null)
+            this.contentManagerUI.unistall();
+
+        this.contentManagerUI = (ContentManagerUI) contentManagerUI;
+        this.contentManagerUI.install(toolWindowManager);
+    }
+
+    public ContentManagerUI getContentManagerUI() {
+        return contentManagerUI;
     }
 
     public int getContentCount() {
@@ -84,6 +101,11 @@ public class MyDoggyContentManager implements ContentManager {
     public boolean removeContent(int index) {
         Content content = contents.get(index);
         return removeContent(content);
+    }
+
+    public void removeAllContents() {
+        for (int i = 0, size = getContentCount(); i < size; i++)
+            removeContent(i);
     }
 
     public Content getContent(int index) {
@@ -150,10 +172,6 @@ public class MyDoggyContentManager implements ContentManager {
             SwingUtilities.updateComponentTreeUI(getPopupMenu());
 
         contentManagerUI.updateUI();
-    }
-
-    public ContentManagerUI getContentManagerUI() {
-        return contentManagerUI;
     }
 
     

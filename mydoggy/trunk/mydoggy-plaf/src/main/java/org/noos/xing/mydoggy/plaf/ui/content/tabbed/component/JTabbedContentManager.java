@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.plaf.ui.content.tabbed;
+package org.noos.xing.mydoggy.plaf.ui.content.tabbed.component;
 
 import org.noos.xing.mydoggy.plaf.ui.icons.CompositeIcon;
 import org.noos.xing.mydoggy.plaf.ui.icons.TextIcon;
@@ -193,16 +193,19 @@ public class JTabbedContentManager extends JTabbedPane {
             if (index != -1) {
                 CompositeIcon compositeIcon = (CompositeIcon) ((CompositeIcon) getContentIcon()).getIcon2();
 
+                // TODO: pericoloso...attenzione
+                Point point = SwingUtilities.convertPoint(tabbedPane, e.getPoint(), ((JViewport) tabbedPane.getComponent(2)).getView());
+
                 if (isDetachable()) {
                     Rectangle detachIconRect = compositeIcon.getIcon1Rec();
-                    if (e.getX() > detachIconRect.x && e.getX() < detachIconRect.x + detachIconRect.width) {
+                    if (point.getX() > detachIconRect.x && point.getX() < detachIconRect.x + detachIconRect.width) {
                         return "Detach";
                     }
                 }
 
                 if (isClosable()) {
                     Rectangle closeIconRect = compositeIcon.getIcon2Rec();
-                    if (e.getX() > closeIconRect.x && e.getX() < closeIconRect.x + closeIconRect.width) {
+                    if (point.getX() > closeIconRect.x && point.getX() < closeIconRect.x + closeIconRect.width) {
                         return "Close";
                     }
                 }
@@ -316,18 +319,27 @@ public class JTabbedContentManager extends JTabbedPane {
     class MouseOverTabListener extends MouseInputAdapter {
         private int mouseOverTab = -1;
 
+
         public void mouseClicked(MouseEvent e) {
             if (mouseOverTab >= 0 && mouseOverTab < getTabCount()) {
                 CompositeIcon compositeIcon = (CompositeIcon) ((CompositeIcon) getContentPage(mouseOverTab).getContentIcon()).getIcon2();
 
+                // TODO: pericoloso...attenzione
+
+                Point point = SwingUtilities.convertPoint(JTabbedContentManager.this, e.getPoint(), 
+                                                          ((JViewport) JTabbedContentManager.this.getComponent(2)).getView());
+
                 Rectangle detachIconRect = compositeIcon.getIcon1Rec();
-                if (e.getX() > detachIconRect.x && e.getX() < detachIconRect.x + detachIconRect.width) {
+
+                if ((point.getX() > detachIconRect.x && point.getX() < detachIconRect.x + detachIconRect.width) ||
+                    (e.getX() > detachIconRect.x && e.getX() < detachIconRect.x + detachIconRect.width)) {
                     fireDetachTabEvent(e, mouseOverTab);
                     return;
                 }
 
                 Rectangle closeIconRect = compositeIcon.getIcon2Rec();
-                if (e.getX() > closeIconRect.x && e.getX() < closeIconRect.x + closeIconRect.width) {
+                if ((point.getX() > closeIconRect.x && point.getX() < closeIconRect.x + closeIconRect.width) ||
+                    (e.getX() > closeIconRect.x && e.getX() < closeIconRect.x + closeIconRect.width)) {
                     fireCloseTabEvent(e, mouseOverTab);
                     return;
                 }
