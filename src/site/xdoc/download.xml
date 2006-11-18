@@ -49,6 +49,20 @@
                                 </em>
                             </td>
                         </tr>
+                        <!-- TODO -->
+                        <tr valign="top">
+                            <td>MyDoggy</td>
+                            <td>1.1.0</td>
+                            <td>2006-11-07</td>
+                            <td>Stable</td>
+                            <td>
+                                <em>
+                                    <a href="http://sourceforge.net/project/showfiles.php?group_id=178005">
+                                        Download
+                                    </a>
+                                </em>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <br></br>
