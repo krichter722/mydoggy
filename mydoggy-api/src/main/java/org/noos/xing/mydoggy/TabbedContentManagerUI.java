@@ -25,5 +25,12 @@ public interface TabbedContentManagerUI extends ContentManagerUI {
      * @see #setShowAlwaysTab(boolean)
      */
     boolean isShowAlwaysTab();
+
+    void setCloseable(boolean closeable);
+
+    void setDetachable(boolean detacchable);
+
+
+    TabbedContentUI getTabbedContentUI(Content content);
     
 }
