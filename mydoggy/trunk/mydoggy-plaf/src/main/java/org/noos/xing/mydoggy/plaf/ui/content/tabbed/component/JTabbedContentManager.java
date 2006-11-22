@@ -1,5 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.content.tabbed.component;
 
+import org.noos.xing.mydoggy.TabbedContentUI;
 import org.noos.xing.mydoggy.plaf.ui.icons.CompositeIcon;
 import org.noos.xing.mydoggy.plaf.ui.icons.TextIcon;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -21,10 +22,14 @@ public class JTabbedContentManager extends JTabbedPane {
 
     private Map<Accessible, ContentPage> contentPages;
 
+    private boolean closeable;
+    private boolean detachable;
+
     public JTabbedContentManager() {
         super.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
         this.contentPages = new Hashtable<Accessible, ContentPage>();
+        this.closeable = this.detachable = true;
         setFocusable(false);
 
         MouseInputAdapter mouseInputAdapter = new MouseOverTabListener();
@@ -93,6 +98,23 @@ public class JTabbedContentManager extends JTabbedPane {
         return defaultContentPopupMenu;
     }
 
+    public void setCloseable(boolean closeable) {
+        this.closeable = closeable;
+        // TODO: update all registered content page
+    }
+
+    public boolean isCloseable() {
+        return closeable;
+    }
+
+    public boolean isDetachable() {
+        return detachable;
+    }
+
+    public void setDetachable(boolean detachable) {
+        this.detachable = detachable;
+    }
+
 
     public void addTabListener(TabListener l) {
         listenerList.add(TabListener.class, l);
@@ -131,7 +153,7 @@ public class JTabbedContentManager extends JTabbedPane {
     }
 
 
-    public static class ContentPage {
+    static class ContentPage implements TabbedContentUI {
         static Icon closeImgI;
         static Icon maxImgI;
         static Icon closeImgD;
@@ -161,16 +183,18 @@ public class JTabbedContentManager extends JTabbedPane {
         public ContentPage(JTabbedContentManager tabbedPane, final AccessibleContext accessible) {
             this.tabbedPane = tabbedPane;
             this.accessible = accessible;
-            this.closable = detachable = true;
+            this.closable = tabbedPane.isCloseable();
+            this.detachable = tabbedPane.isDetachable();
         }
 
 
-        public boolean isClosable() {
+        public boolean isCloseable() {
             return closable;
         }
 
-        public void setClosable(boolean closable) {
+        public void setCloseable(boolean closable) {
             this.closable = closable;
+            SwingUtil.repaint(tabbedPane);
         }
 
         public boolean isDetachable() {
@@ -179,7 +203,9 @@ public class JTabbedContentManager extends JTabbedPane {
 
         public void setDetachable(boolean detachable) {
             this.detachable = detachable;
+            SwingUtil.repaint(tabbedPane);
         }
+
 
         public JPopupMenu getPopupMenu() {
             return popupMenu;
@@ -187,31 +213,6 @@ public class JTabbedContentManager extends JTabbedPane {
 
         public void setPopupMenu(JPopupMenu popupMenu) {
             this.popupMenu = popupMenu;
-        }
-
-        public String getToolTipTextAt(MouseEvent e, int index, String defaultTip) {
-            if (index != -1) {
-                CompositeIcon compositeIcon = (CompositeIcon) ((CompositeIcon) getContentIcon()).getIcon2();
-
-                // TODO: pericoloso...attenzione
-                Point point = SwingUtilities.convertPoint(tabbedPane, e.getPoint(), ((JViewport) tabbedPane.getComponent(2)).getView());
-
-                if (isDetachable()) {
-                    Rectangle detachIconRect = compositeIcon.getIcon1Rec();
-                    if (point.getX() > detachIconRect.x && point.getX() < detachIconRect.x + detachIconRect.width) {
-                        return "Detach";
-                    }
-                }
-
-                if (isClosable()) {
-                    Rectangle closeIconRect = compositeIcon.getIcon2Rec();
-                    if (point.getX() > closeIconRect.x && point.getX() < closeIconRect.x + closeIconRect.width) {
-                        return "Close";
-                    }
-                }
-                return (defaultTip.equals("")) ? null : defaultTip;
-            }
-            return (defaultTip.equals("")) ? null : defaultTip;
         }
 
         public void setTitle(String title) {
@@ -232,6 +233,31 @@ public class JTabbedContentManager extends JTabbedPane {
             contentIcon = null;
         }
 
+        public String getToolTipTextAt(MouseEvent e, int index, String defaultTip) {
+            if (index != -1) {
+                CompositeIcon compositeIcon = (CompositeIcon) ((CompositeIcon) getContentIcon()).getRightIcon();
+
+                Point point = SwingUtilities.convertPoint(tabbedPane, e.getPoint(), getDestination());
+
+                if (isDetachable()) {
+                    Rectangle detachIconRect = compositeIcon.getLastPaintedLeftRec();
+                    if (point.getX() > detachIconRect.x && point.getX() < detachIconRect.x + detachIconRect.width) {
+                        return "Detach";
+                    }
+                }
+
+                if (isCloseable()) {
+                    Rectangle closeIconRect = compositeIcon.getLastPaintedRightRec();
+                    if (point.getX() > closeIconRect.x && point.getX() < closeIconRect.x + closeIconRect.width) {
+                        return "Close";
+                    }
+                }
+                return (defaultTip.equals("")) ? null : defaultTip;
+            }
+            return (defaultTip.equals("")) ? null : defaultTip;
+        }
+
+
         public Icon getContentIcon() {
             if (contentIcon == null) {
                 String title = getTitle();
@@ -241,78 +267,97 @@ public class JTabbedContentManager extends JTabbedPane {
                 Icon leftIcon;
                 Icon titleIcon = null;
                 if (title != null)
-                    titleIcon = new TextIcon(tabbedPane, title, TextIcon.ROTATE_NONE) {
-                        public void paintIcon(Component c, Graphics g, int x, int y) {
-                            Component tabComponent = (Component) accessible.getAccessibleChild(0);
-
-                            boolean isSelected = false;
-                            int index = -1;
-                            for (int i = 0, size = tabbedPane.getTabCount(); i < size; i++) {
-                                if (tabbedPane.getComponentAt(i) == tabComponent) {
-                                    index = i;
-                                    if (tabbedPane.getSelectedIndex() == i)
-                                        isSelected = true;
-                                    break;
-                                }
-                            }
-
-                            if (index != -1) {
-                                if (isSelected) {
-                                    this.setForeground(tabbedPane.getForegroundAt(index));
-                                } else
-                                    this.setForeground(tabbedPane.getForegroundAt(index).brighter().brighter());
-                                super.paintIcon(c, g, x, y);
-                            } else
-                                throw new IllegalStateException("Invalid Content Index");
-                        }
-                    };
-                leftIcon = new CompositeIcon(titleIcon, icon, SwingConstants.LEFT);
+                    titleIcon = new DynamicTextIcon();
 
                 // Right Part
-                Icon rightIcon = new CompositeIcon(maxImgD, closeImgD, SwingConstants.LEFT) {
-                    boolean isSelected;
-                    int count;
-
-                    public void paintIcon(Component c, Graphics g, int x, int y) {
-                        Component tabComponent = (Component) accessible.getAccessibleChild(0);
-                        isSelected = false;
-                        for (int i = 0, size = tabbedPane.getTabCount(); i < size; i++) {
-                            if (tabbedPane.getComponentAt(i) == tabComponent) {
-                                if (tabbedPane.getSelectedIndex() == i)
-                                    isSelected = true;
-                                break;
-                            }
-                        }
-                        count = 0;
-                        super.paintIcon(c, g, x, y);
-                    }
-
-                    protected void paintIconInternal(Component c, Graphics g, Icon icon, int x, int y, int width, int height, int horizontalOrientation, int verticalOrientation) {
-                        if (count == 0) {
-                            super.paintIconInternal(c, g,
-                                                    isSelected ? maxImgI : maxImgD,
-                                                    x, y, width, height, horizontalOrientation, verticalOrientation);
-
-                        } else if (count == 1) {
-                            super.paintIconInternal(c, g,
-                                                    isSelected ? closeImgI : closeImgD,
-                                                    x, y, width, height, horizontalOrientation, verticalOrientation);
-                        }
-                        count = (count + 1) % 2;
-                    }
-
-                    protected void paint(Component c, Graphics g, Icon icon, int x, int y) {
-                        super.paint(c, g, icon, x, y);
-                        if (count == 0) {
-                            icon1Rec = new Rectangle(x, y, getIconWidth(icon1), getIconHeight(icon1));
-                        } else
-                            icon2Rec = new Rectangle(x, y, getIconWidth(icon2), getIconHeight(icon2));
-                    }
-                };
-
-                contentIcon = new CompositeIcon(leftIcon, rightIcon, SwingConstants.LEFT);
+                contentIcon = new CompositeIcon(new CompositeIcon(icon, titleIcon, SwingConstants.LEFT),
+                                                new DoubleIcon(), SwingConstants.LEFT);
             }
             return contentIcon;
+        }
+
+
+        private Component getDestination() {
+            // TODO: pericoloso...attenzione
+            return ((JViewport) tabbedPane.getComponent(2)).getView();
+        }
+
+        private CompositeIcon getUICompositeIcon() {
+            return (CompositeIcon) ((CompositeIcon) getContentIcon()).getRightIcon();
+        }
+
+
+        class DynamicTextIcon extends TextIcon {
+
+            public DynamicTextIcon() {
+                super(tabbedPane, title, TextIcon.ROTATE_NONE);
+            }
+
+            public void paintIcon(Component c, Graphics g, int x, int y) {
+                Component tabComponent = (Component) accessible.getAccessibleChild(0);
+
+                boolean isSelected = false;
+                int index = -1;
+                for (int i = 0, size = tabbedPane.getTabCount(); i < size; i++) {
+                    if (tabbedPane.getComponentAt(i) == tabComponent) {
+                        index = i;
+                        if (tabbedPane.getSelectedIndex() == i)
+                            isSelected = true;
+                        break;
+                    }
+                }
+
+                if (index != -1) {
+                    if (isSelected) {
+                        this.setForeground(tabbedPane.getForegroundAt(index));
+                    } else
+                        this.setForeground(tabbedPane.getForegroundAt(index).brighter().brighter());
+                    super.paintIcon(c, g, x, y);
+                } else
+                    throw new IllegalStateException("Invalid Content Index");
+            }
+        }
+
+        class DoubleIcon extends CompositeIcon {
+            private boolean isSelected;
+
+            public DoubleIcon() {
+                super(maxImgD, closeImgD, SwingConstants.LEFT);
+            }
+
+            public void paintIcon(Component c, Graphics g, int x, int y) {
+                Component tabComponent = (Component) accessible.getAccessibleChild(0);
+                isSelected = false;
+                for (int i = 0, size = tabbedPane.getTabCount(); i < size; i++) {
+                    if (tabbedPane.getComponentAt(i) == tabComponent) {
+                        if (tabbedPane.getSelectedIndex() == i)
+                            isSelected = true;
+                        break;
+                    }
+                }
+                super.paintIcon(c, g, x, y);
+            }
+
+            protected void paintLeftIcon(Component c, Graphics g, Icon icon, int x, int y, int width, int height, int horizontalOrientation, int verticalOrientation) {
+                super.paintLeftIcon(c, g,
+                                    isSelected ? maxImgI : maxImgD,
+                                    x, y, width, height, horizontalOrientation, verticalOrientation);
+            }
+
+            protected void paintRightIcon(Component c, Graphics g, Icon icon, int x, int y, int width, int height, int horizontalOrientation, int verticalOrientation) {
+                super.paintRightIcon(c, g,
+                                     isSelected ? closeImgI : closeImgD,
+                                     x, y, width, height, horizontalOrientation, verticalOrientation);
+            }
+
+            public boolean isLeftVisible() {
+                return isDetachable();
+            }
+
+            public boolean isRightVisible() {
+                return isCloseable();
+            }
+
         }
     }
 
@@ -322,24 +367,22 @@ public class JTabbedContentManager extends JTabbedPane {
 
         public void mouseClicked(MouseEvent e) {
             if (mouseOverTab >= 0 && mouseOverTab < getTabCount()) {
-                CompositeIcon compositeIcon = (CompositeIcon) ((CompositeIcon) getContentPage(mouseOverTab).getContentIcon()).getIcon2();
+                ContentPage contentPage = getContentPage(mouseOverTab);
 
-                // TODO: pericoloso...attenzione
 
-                Point point = SwingUtilities.convertPoint(JTabbedContentManager.this, e.getPoint(), 
-                                                          ((JViewport) JTabbedContentManager.this.getComponent(2)).getView());
+                Point relativeMousePoint = SwingUtilities.convertPoint(JTabbedContentManager.this, e.getPoint(), contentPage.getDestination());
+                CompositeIcon uiCompositeIcon = contentPage.getUICompositeIcon();
 
-                Rectangle detachIconRect = compositeIcon.getIcon1Rec();
-
-                if ((point.getX() > detachIconRect.x && point.getX() < detachIconRect.x + detachIconRect.width) ||
-                    (e.getX() > detachIconRect.x && e.getX() < detachIconRect.x + detachIconRect.width)) {
+                Rectangle detachIconRect = uiCompositeIcon.getLastPaintedLeftRec();
+                if (contentPage.isDetachable() && ((relativeMousePoint.getX() > detachIconRect.x && relativeMousePoint.getX() < detachIconRect.x + detachIconRect.width) ||
+                                                   (e.getX() > detachIconRect.x && e.getX() < detachIconRect.x + detachIconRect.width))) {
                     fireDetachTabEvent(e, mouseOverTab);
                     return;
                 }
 
-                Rectangle closeIconRect = compositeIcon.getIcon2Rec();
-                if ((point.getX() > closeIconRect.x && point.getX() < closeIconRect.x + closeIconRect.width) ||
-                    (e.getX() > closeIconRect.x && e.getX() < closeIconRect.x + closeIconRect.width)) {
+                Rectangle closeIconRect = uiCompositeIcon.getLastPaintedRightRec();
+                if (contentPage.isCloseable() && ((relativeMousePoint.getX() > closeIconRect.x && relativeMousePoint.getX() < closeIconRect.x + closeIconRect.width) ||
+                                                  (e.getX() > closeIconRect.x && e.getX() < closeIconRect.x + closeIconRect.width))) {
                     fireCloseTabEvent(e, mouseOverTab);
                     return;
                 }

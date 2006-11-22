@@ -6,7 +6,7 @@ import java.awt.*;
  * TODO
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public interface ContentFrameDescriptor {
+public interface DesktopContentUI {
 
     /**
      * Sets the content frame location.
@@ -57,7 +57,7 @@ public interface ContentFrameDescriptor {
     Dimension getSize();
 
     /**
-     * Returns whether the <code>ContentFrameDescriptor</code> is currently iconified.
+     * Returns whether the <code>DesktopContentUI</code> is currently iconified.
      *
      * @return <code>true</code> if this content frame is iconified
      * @see #setIconified(boolean)

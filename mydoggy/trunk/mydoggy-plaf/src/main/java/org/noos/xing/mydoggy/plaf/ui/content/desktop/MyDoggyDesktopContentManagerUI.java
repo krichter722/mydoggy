@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.content.desktop;
 
 import org.noos.xing.mydoggy.Content;
-import org.noos.xing.mydoggy.ContentFrameDescriptor;
+import org.noos.xing.mydoggy.DesktopContentUI;
 import org.noos.xing.mydoggy.DesktopContentManagerUI;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
@@ -45,8 +45,8 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     }
 
 
-    public ContentFrameDescriptor getFrameDescriptor(Content content) {
-        return (ContentFrameDescriptor) getFrameByComponent(content.getComponent());
+    public DesktopContentUI getDesktopContentUI(Content content) {
+        return (DesktopContentUI) getFrameByComponent(content.getComponent());
     }
 
 
@@ -179,7 +179,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     int count = 0;  // TODO: controllare sto count
 
     protected void addUIForContent(Content content) {
-        JInternalFrame internalFrame = new ContentFrame(content.getTitle(), true, true, true, true);
+        JInternalFrame internalFrame = new DesktopContentFrame(content.getTitle(), true, true, true, true);
         internalFrame.setFrameIcon(content.getIcon());
         internalFrame.getContentPane().add(content.getComponent());
         internalFrame.setBounds(10, 10, 320, 200);
@@ -487,9 +487,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     }
 
 
-    class ContentFrame extends JInternalFrame implements ContentFrameDescriptor {
+    class DesktopContentFrame extends JInternalFrame implements DesktopContentUI {
 
-        public ContentFrame(String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
+        public DesktopContentFrame(String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
             super(title, resizable, closable, maximizable, iconifiable);
         }
 

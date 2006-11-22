@@ -139,7 +139,9 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
                 anchorLabel = new AnchorLabel(toolAnchorLabelName, toolWindow.getIcon(), JLabel.CENTER);
             } else {
                 TextIcon textIcon = new TextIcon(container, toolAnchorLabelName, anchor == ToolWindowAnchor.LEFT ? TextIcon.ROTATE_LEFT : TextIcon.ROTATE_RIGHT);
-                CompositeIcon compositeIcon = new CompositeIcon(textIcon, toolWindow.getIcon());
+                CompositeIcon compositeIcon = new CompositeIcon(textIcon, toolWindow.getIcon(),
+                                                                (anchor == ToolWindowAnchor.LEFT) ? SwingConstants.TOP
+                                                                : SwingConstants.BOTTOM);
                 anchorLabel = new AnchorLabel(compositeIcon, JLabel.CENTER);
             }
 
@@ -192,10 +194,12 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
                 anchorLabel.setIcon(toolWindow.getIcon());
                 anchorLabel.setText(toolAnchorLabelName);
             } else {
-                TextIcon textIcon = new TextIcon(((TextIcon) ((CompositeIcon) anchorLabel.getIcon()).getIcon1()).getComponent(),
+                TextIcon textIcon = new TextIcon(((TextIcon) ((CompositeIcon) anchorLabel.getIcon()).getLeftIcon()).getComponent(),
                                                  toolAnchorLabelName,
                                                  anchor == ToolWindowAnchor.LEFT ? TextIcon.ROTATE_LEFT : TextIcon.ROTATE_RIGHT);
-                CompositeIcon compositeIcon = new CompositeIcon(textIcon, toolWindow.getIcon());
+                CompositeIcon compositeIcon = new CompositeIcon(textIcon, toolWindow.getIcon(),
+                                                                (anchor == ToolWindowAnchor.LEFT) ? SwingConstants.TOP
+                                                                : SwingConstants.BOTTOM);
                 anchorLabel.setText(null);
                 anchorLabel.setIcon(compositeIcon);
             }

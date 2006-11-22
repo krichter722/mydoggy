@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.content.tabbed;
 
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.TabbedContentManagerUI;
+import org.noos.xing.mydoggy.TabbedContentUI;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
@@ -51,6 +52,14 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Co
         return showAlwaysTab;
     }
 
+    public void setCloseable(boolean closeable) {
+        tabbedContentManager.setCloseable(closeable);
+    }
+
+    public void setDetachable(boolean detacchable) {
+        tabbedContentManager.setDetachable(detacchable);
+    }
+
     public void setShowAlwaysTab(boolean showAlwaysTab) {
         this.showAlwaysTab = showAlwaysTab;
 
@@ -63,6 +72,11 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Co
                 toolWindowManager.setMainContent(tabbedContentManager);
             }
         }
+    }
+
+    public TabbedContentUI getTabbedContentUI(Content content) {
+        return tabbedContentManager.getContentPage(
+                tabbedContentManager.indexOfComponent(content.getComponent()));
     }
 
 
@@ -230,7 +244,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Co
             propertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
             propertyChangeSupport.addPropertyChangeListener("selected", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
-    //                System.out.println("SELECTED " + evt.getNewValue());
+                    //                System.out.println("SELECTED " + evt.getNewValue());
                 }
             });
         }

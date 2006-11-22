@@ -11,6 +11,6 @@ public interface DesktopContentManagerUI extends ContentManagerUI {
      * @param content
      * @return
      */
-    ContentFrameDescriptor getFrameDescriptor(Content content);
+    DesktopContentUI getDesktopContentUI(Content content);
 
 }
