@@ -93,12 +93,12 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     }
 
     public JPopupMenu getPopupMenu() {
-//        return desktopPane.getPopupMenu();
+//        return desktopPane.getPopupMenu();    // TODO: che fare del PopupMenu
         return null;
     }
 
     public void setPopupMenu(JPopupMenu popupMenu) {
-//        desktopPane.setPopupMenu(popupMenu);
+//        desktopPane.getUI().setPopupMenu(popupMenu);
     }
 
     public boolean isSelected(Content content) {
@@ -176,13 +176,11 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         }
     }
 
-    int count = 0;  // TODO: controllare sto count
-
     protected void addUIForContent(Content content) {
         JInternalFrame internalFrame = new DesktopContentFrame(content.getTitle(), true, true, true, true);
         internalFrame.setFrameIcon(content.getIcon());
         internalFrame.getContentPane().add(content.getComponent());
-        internalFrame.setBounds(10, 10, 320, 200);
+        internalFrame.setBounds(10, 10, 320, 200);   // TODO: lasciare al desktop manager questa scelta??
         internalFrame.addInternalFrameListener(new InternalFrameAdapter() {
             public void internalFrameClosed(InternalFrameEvent e) {
                 contentManager.removeContent(
@@ -193,18 +191,21 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         internalFrame.addPropertyChangeListener(JInternalFrame.IS_SELECTED_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (!valueAdjusting && !contentValueAdjusting) {
-                    Component cmp = ((JInternalFrame) evt.getSource()).getContentPane().getComponent(0);
-                    for (Content content : contentManager.getContents()) {
-                        if (content.getComponent() == cmp) {
-                            ((ContentUI) content).fireSelected((Boolean) evt.getNewValue());
-                            break;
+                    Container container = ((JInternalFrame) evt.getSource()).getContentPane();
+                    if (container.getComponentCount() > 0) {
+                        Component cmp = container.getComponent(0);
+                        for (Content content : contentManager.getContents()) {
+                            if (content.getComponent() == cmp) {
+                                ((ContentUI) content).fireSelected((Boolean) evt.getNewValue());
+                                break;
+                            }
                         }
                     }
                 }
             }
         });
 
-        desktopPane.add(internalFrame, ++count);
+        desktopPane.add(internalFrame);
 
         internalFrame.show();
 
@@ -222,39 +223,27 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     class ComponentListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
-            Component oldCmp = (Component) evt.getOldValue();
-            Component newCmp = (Component) evt.getNewValue();
 
             if (content.isDetached()) {
                 RootPaneContainer rootPaneContainer = (RootPaneContainer) SwingUtilities.windowForComponent(content.getComponent());
                 Container container = rootPaneContainer.getContentPane();
                 container.removeAll();
-                container.add(newCmp);
+                container.add((Component) evt.getNewValue());
             } else {
-//                int index = desktopPane.indexOfComponent(oldCmp);
-//                if (index != -1)
-//                    desktopPane.setComponentAt(index, newCmp);
-//                else {
-//                    if (toolWindowManager.getMainContent() == oldCmp)
-//                        toolWindowManager.setMainContent(newCmp);
-//                    else
-//                        throw new IllegalStateException("Invalid content ui state.");
-//                }
+                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
+                if (internalFrame != null) {
+                    Container container = internalFrame.getContentPane();
+                    container.removeAll();
+                    container.add((Component) evt.getNewValue());
+                } else
+                    throw new IllegalStateException("Invalid content ui state.");
             }
         }
     }
 
     class DisabledIconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
-            Content content = (Content) evt.getSource();
-
-            if (!content.isDetached()) {
-//                int index = desktopPane.indexOfComponent(content.getComponent());
-//                if (index != -1)
-//                    desktopPane.setDisabledIconAt(index, (Icon) evt.getNewValue());
-//                else if (toolWindowManager.getMainContent() != content.getComponent())
-//                    throw new IllegalStateException("Invalid content ui state.");
-            }
+            // TODO: in which way can i support this???
         }
     }
 
@@ -277,11 +266,11 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             Content content = (Content) evt.getSource();
 
             if (!content.isDetached()) {
-//                int index = desktopPane.indexOfComponent(content.getComponent());
-//                if (index != -1)
-//                    desktopPane.setEnabledAt(index, (Boolean) evt.getNewValue());
-//                else if (toolWindowManager.getMainContent() != content.getComponent())
-//                    throw new IllegalStateException("Invalid content ui state.");
+                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
+                if (internalFrame != null) {
+                    internalFrame.setEnabled((Boolean) evt.getNewValue());
+                } else
+                    throw new IllegalStateException("Invalid content ui state.");
             }
         }
     }
@@ -357,86 +346,83 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-//            Content content = (Content) evt.getSource();
-//            boolean oldValue = (Boolean) evt.getOldValue();
-//            boolean newValue = (Boolean) evt.getNewValue();
-//
-//            if (!oldValue && newValue) {
-//                final JDialog dialog = new JDialog(parentFrame, false);
-//                dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-//
-//                Window parentWindow = SwingUtilities.windowForComponent(desktopPane);
-//                Component component = content.getComponent();
-//
-//                int tabIndex = desktopPane.indexOfComponent(component);
-//                if (tabIndex != -1) {
-//                    desktopPane.removeTabAt(tabIndex);
-//                } else {
-//                    if (desktopPane.getParent() == null)
-//                        toolWindowManager.setMainContent(null);
-//                    else
-//                        throw new IllegalStateException("Invalid Content : " + content);
-//                }
-//
-//                component.setPreferredSize(component.getSize());
-//
-//                dialog.setTitle(content.getTitle());
-//                dialog.getContentPane().add(component);
-//
-//                Point location = parentWindow.getLocation();
-//                location.x += 5;
-//                location.y += 5;
-//                dialog.setLocation(location);
-//
-//                dialog.pack();
-//
-//                if (TransparencyManager.getInstance().isServiceAvailable()) {
-//                    MyDoggyDesktopContentManagerUI.DetachedListener.TransparencyListener transparencyListener = new MyDoggyDesktopContentManagerUI.DetachedListener.TransparencyListener(dialog);
-//                    dialog.addWindowListener(transparencyListener);
-//                    dialog.addWindowFocusListener(transparencyListener);
-//                }
-//
-//                dialog.addWindowListener(new WindowAdapter() {
-//                    public void windowClosing(WindowEvent event) {
-//                        Component component = dialog.getContentPane().getComponent(0);
-//                        Content content = contentManager.getContent(component);
-//                        content.setDetached(false);
-//                    }
-//                });
-//
-//                if (parentFrame == null) {
-//                    WindowFocusListener windowFocusListener = new WindowFocusListener() {
-//                        long start;
-//                        long end;
-//
-//                        public void windowGainedFocus(WindowEvent e) {
-//                            start = System.currentTimeMillis();
-//                        }
-//
-//                        public void windowLostFocus(WindowEvent e) {
-//                            end = System.currentTimeMillis();
-//                            long elapsed = end - start;
-//                            //System.out.println(elapsed);
-//                            if (elapsed < 100)
-//                                dialog.toFront();
-//
-//                            dialog.removeWindowFocusListener(this);
-//                        }
-//                    };
-//                    dialog.addWindowFocusListener(windowFocusListener);
-//                }
-//
-//                dialog.toFront();
-//                dialog.setVisible(true);
-//                SwingUtil.requestFocus(dialog);
-//            } else if (oldValue && !newValue) {
-//                Window window = SwingUtilities.windowForComponent(content.getComponent());
-//                window.setVisible(false);
-//                window.dispose();
-//
-//                addUIForContent(content);
-//                desktopPane.setSelectedIndex(desktopPane.getTabCount() - 1);
-//            }
+            Content content = (Content) evt.getSource();
+            boolean oldValue = (Boolean) evt.getOldValue();
+            boolean newValue = (Boolean) evt.getNewValue();
+
+            if (!oldValue && newValue) {
+                final JDialog dialog = new JDialog(parentFrame, false);
+                dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+                Window parentWindow = SwingUtilities.windowForComponent(desktopPane);
+                Component component = content.getComponent();
+
+                JInternalFrame internalFrame = getFrameByComponent(component);
+                if (internalFrame != null) {
+                    desktopPane.remove(internalFrame);
+                } else
+                    throw new IllegalStateException("Invalid Content : " + content);
+
+                component.setPreferredSize(component.getSize());
+
+                dialog.setTitle(content.getTitle());
+                dialog.getContentPane().add(component);
+
+                Point location = parentWindow.getLocation();
+                location.x += 5;
+                location.y += 5;
+                dialog.setLocation(location);
+
+                dialog.pack();
+
+                if (TransparencyManager.getInstance().isServiceAvailable()) {
+                    MyDoggyDesktopContentManagerUI.DetachedListener.TransparencyListener transparencyListener = new MyDoggyDesktopContentManagerUI.DetachedListener.TransparencyListener(dialog);
+                    dialog.addWindowListener(transparencyListener);
+                    dialog.addWindowFocusListener(transparencyListener);
+                }
+
+                dialog.addWindowListener(new WindowAdapter() {
+                    public void windowClosing(WindowEvent event) {
+                        Component component = dialog.getContentPane().getComponent(0);
+                        Content content = contentManager.getContent(component);
+                        content.setDetached(false);
+                    }
+                });
+
+                if (parentFrame == null) {
+                    WindowFocusListener windowFocusListener = new WindowFocusListener() {
+                        long start;
+                        long end;
+
+                        public void windowGainedFocus(WindowEvent e) {
+                            start = System.currentTimeMillis();
+                        }
+
+                        public void windowLostFocus(WindowEvent e) {
+                            end = System.currentTimeMillis();
+                            long elapsed = end - start;
+                            //System.out.println(elapsed);
+                            if (elapsed < 100)
+                                dialog.toFront();
+
+                            dialog.removeWindowFocusListener(this);
+                        }
+                    };
+                    dialog.addWindowFocusListener(windowFocusListener);
+                }
+
+                dialog.toFront();
+                dialog.setVisible(true);
+                SwingUtil.repaint(desktopPane);
+                SwingUtil.requestFocus(dialog);
+            } else if (oldValue && !newValue) {
+                Window window = SwingUtilities.windowForComponent(content.getComponent());
+                window.setVisible(false);
+                window.dispose();
+
+                addUIForContent(content);
+                content.setSelected(true);
+            }
         }
 
         class TransparencyListener extends WindowAdapter implements WindowFocusListener, ActionListener {
@@ -494,14 +480,14 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         }
 
         public boolean isIconified() {
-            return isIcon;
+            return super.isIcon();
         }
 
         public void setIconified(boolean iconified) {
             try {
                 setIcon(iconified);
-            } catch (PropertyVetoException e) {
-                e.printStackTrace();  // TODO: che farne di questa
+            } catch (PropertyVetoException ignore) {
+                ignore.printStackTrace();
             }
         }
     }

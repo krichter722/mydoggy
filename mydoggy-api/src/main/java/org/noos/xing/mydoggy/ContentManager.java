@@ -11,6 +11,7 @@ import java.awt.*;
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @see Content
+ * @since 1.0.0
  */
 public interface ContentManager {
 
@@ -32,6 +33,7 @@ public interface ContentManager {
      * Returns the number of contents in this manager.
      *
      * @return the number of contents.
+     * @since 1.0.0
      */
     int getContentCount();
 
@@ -46,6 +48,7 @@ public interface ContentManager {
      * @see #removeContent(Content)
      * @see Content
      * @return a <code>Content</code> instance that rapresents the <code>component</code>
+     * @since 1.0.0
      */
     Content addContent(Object key, String title, Icon icon, Component component);
 
@@ -60,6 +63,7 @@ public interface ContentManager {
      * @param tip       the tool tip text @return the a <code>Content</code> object rapresents the content added.
      * @see #removeContent(Content)
      * @return a <code>Content</code> instance that rapresents the <code>component</code>
+     * @since 1.0.0
      */
     Content addContent(Object key, String title, Icon icon, Component component, String tip);
 
@@ -70,6 +74,7 @@ public interface ContentManager {
      * @return <tt>true</tt> if this manager contained the specified element.
      * @see #addContent(Object,String,javax.swing.Icon,java.awt.Component)
      * @see #addContent(Object,String,javax.swing.Icon,java.awt.Component,String)
+     * @since 1.0.0
      */
     boolean removeContent(Content content);
 
@@ -79,10 +84,14 @@ public interface ContentManager {
      * @param index the index of the element to removed.
      * @return <tt>true</tt> if this manager contained the specified element.
      * @throws IndexOutOfBoundsException if the index is out of range (index &lt; 0 || index &gt;= getContentCount()).
+     * @since 1.0.0
      */
     boolean removeContent(int index);
 
-
+    /**
+     *
+     * @since 1.1.0
+     */
     void removeAllContents();
 
     /**
@@ -92,6 +101,7 @@ public interface ContentManager {
      * @return the content at the specified position in this manager.
      * @throws IndexOutOfBoundsException if the index is out of range (index
      *                                   &lt; 0 || index &gt;= getContentCount()).
+     * @since 1.0.0
      */
     Content getContent(int index);
 
@@ -101,6 +111,7 @@ public interface ContentManager {
      *
      * @return an array containing all of the contents in this list in proper sequence.
      * @see #getContent(int)
+     * @since 1.0.0
      */
     Content[] getContents();
 
@@ -112,6 +123,7 @@ public interface ContentManager {
      * @return the content to which this manager maps the specified key
      *
      * @throws NullPointerException if the key is <tt>null</tt>.
+     * @since 1.0.0
      */
     Content getContent(Object key);
 
@@ -121,6 +133,7 @@ public interface ContentManager {
      * <code>popupMenu</code>.
      *
      * @param popupMenu the default popup menu for the contents.
+     * @since 1.0.0
      */
     void setPopupMenu(JPopupMenu popupMenu);
 
@@ -129,6 +142,7 @@ public interface ContentManager {
      *
      * @return the default <code>PopupMenu</code> for the contents.
      * @see #setPopupMenu(javax.swing.JPopupMenu)
+     * @since 1.0.0
      */
     JPopupMenu getPopupMenu();
 
@@ -140,6 +154,7 @@ public interface ContentManager {
      *
      * @param listener the <code>ContentManagerListener</code> to register.
      * @see ContentManagerListener
+     * @since 1.0.0
      */
     void addContentManagerListener(ContentManagerListener listener);
 
@@ -152,6 +167,7 @@ public interface ContentManager {
      *
      * @param listener the <code>ContentManagerListener</code> to be removed
      * @see #addContentManagerListener(ContentManagerListener)
+     * @since 1.0.0
      */
     void removeContentManagerListener(ContentManagerListener listener);
 
@@ -163,9 +179,9 @@ public interface ContentManager {
      *         or an empty array if no tool window manager listeners are currently registered.
      * @see #addContentManagerListener(ContentManagerListener)
      * @see #removeContentManagerListener(ContentManagerListener)
+     * @since 1.0.0
      */
     ContentManagerListener[] getContentManagerListeners();
-
 
 }
 

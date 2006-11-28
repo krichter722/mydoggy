@@ -9,6 +9,7 @@ import org.noos.xing.mydoggy.examples.mydoggyset.ui.CheckBoxCellRenderer;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.content.desktop.MyDoggyDesktopContentManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -174,7 +175,9 @@ public class MyDoggySet {
 
         toolWindowManager.registerToolWindow("1", "Title 1", null, new JButton("Hello World 1"), ToolWindowAnchor.LEFT);
         toolWindowManager.registerToolWindow("2", "Title 2", null, panel, ToolWindowAnchor.RIGHT);
-        toolWindowManager.registerToolWindow("3", "Title 3", null, new JButton("Hello World 3"), ToolWindowAnchor.LEFT);
+        toolWindowManager.registerToolWindow("3", "Title 3",
+                                             SwingUtil.loadIcon("org/noos/xing/mydoggy/examples/mydoggyset/icons/save.png"),
+                                             new JButton("Hello World 3"), ToolWindowAnchor.LEFT);
         toolWindowManager.registerToolWindow("4", "Title 4", null, new JButton("Hello World 4"), ToolWindowAnchor.TOP);
         toolWindowManager.registerToolWindow("5", "Title 5", null, new JButton("Hello World 5"), ToolWindowAnchor.TOP);
         toolWindowManager.registerToolWindow("6", "Title 6", null, new JButton("Hello World 6"), ToolWindowAnchor.BOTTOM);
@@ -253,6 +256,8 @@ public class MyDoggySet {
         defaultManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
         TabbedContentManagerUI tabbedContentManagerUI = (TabbedContentManagerUI) defaultManagerUI;
         tabbedContentManagerUI.setShowAlwaysTab(true);
+//        tabbedContentManagerUI.setCloseable(false);
+//        tabbedContentManagerUI.setDetachable(false);
 
         toolWindowManager.getContentManager().addContent("Tools", "Tools", null, toolsContent, "ToolWindows")
                 .setPopupMenu(toolsPopupMenu);
