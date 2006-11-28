@@ -5,6 +5,7 @@ import java.awt.*;
 /**
  * TODO
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @since 1.1.0
  */
 public interface DesktopContentUI {
 
@@ -19,6 +20,7 @@ public interface DesktopContentUI {
      * @param y the <i>y</i>-coordinate of the new location's
      *          top-left corner in the system's coordinate space
      * @see #getLocation
+     * @since 1.1.0
      */
     void setLocation(int x, int y);
 
@@ -30,6 +32,7 @@ public interface DesktopContentUI {
      * @return an instance of <code>Point</code> representing the top-left corner of the component's bounds in
      *         the system coordinate space.
      * @see #setLocation
+     * @since 1.1.0
      */
     Point getLocation();
 
@@ -39,6 +42,7 @@ public interface DesktopContentUI {
      * @param width  the new width of this component in pixels
      * @param height the new height of this component in pixels
      * @see #getSize
+     * @since 1.1.0
      */
     void setSize(int width, int height);
 
@@ -53,6 +57,7 @@ public interface DesktopContentUI {
      * @return a <code>Dimension</code> object that indicates the
      *         size of this content frame.
      * @see #setSize
+     * @since 1.1.0
      */
     Dimension getSize();
 
@@ -61,6 +66,7 @@ public interface DesktopContentUI {
      *
      * @return <code>true</code> if this content frame is iconified
      * @see #setIconified(boolean)
+     * @since 1.1.0
      */
     boolean isIconified();
 
@@ -70,6 +76,7 @@ public interface DesktopContentUI {
      * @param iconified a boolean, where <code>true</code> means to iconify this content frame and
      *                  <code>false</code> means to de-iconify it.
      * @see #isIconified()
+     * @since 1.1.0
      */
     void setIconified(boolean iconified);
 

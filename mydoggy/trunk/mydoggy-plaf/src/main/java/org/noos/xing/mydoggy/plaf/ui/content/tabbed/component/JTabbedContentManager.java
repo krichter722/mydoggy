@@ -100,7 +100,9 @@ public class JTabbedContentManager extends JTabbedPane {
 
     public void setCloseable(boolean closeable) {
         this.closeable = closeable;
-        // TODO: update all registered content page
+        for (ContentPage contentPage : contentPages.values()) {
+            contentPage.setCloseable(closeable);
+        }
     }
 
     public boolean isCloseable() {
@@ -113,8 +115,10 @@ public class JTabbedContentManager extends JTabbedPane {
 
     public void setDetachable(boolean detachable) {
         this.detachable = detachable;
+        for (ContentPage contentPage : contentPages.values()) {
+            contentPage.setDetachable(detachable);
+        }
     }
-
 
     public void addTabListener(TabListener l) {
         listenerList.add(TabListener.class, l);
@@ -264,7 +268,6 @@ public class JTabbedContentManager extends JTabbedPane {
                 Icon icon = getIcon();
 
                 // Left Part
-                Icon leftIcon;
                 Icon titleIcon = null;
                 if (title != null)
                     titleIcon = new DynamicTextIcon();
