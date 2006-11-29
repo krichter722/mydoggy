@@ -281,8 +281,11 @@ public class JTabbedContentManager extends JTabbedPane {
 
 
         private Component getDestination() {
-            // TODO: pericoloso...attenzione
-            return ((JViewport) tabbedPane.getComponent(2)).getView();
+            for (int i = 0, size = tabbedPane.getComponentCount(); i < size; i++) {
+                if (tabbedPane.getComponent(i) instanceof JViewport)
+                    return ((JViewport) tabbedPane.getComponent(i)).getView();
+            }
+            return tabbedPane;
         }
 
         private CompositeIcon getUICompositeIcon() {
@@ -373,7 +376,8 @@ public class JTabbedContentManager extends JTabbedPane {
                 ContentPage contentPage = getContentPage(mouseOverTab);
 
 
-                Point relativeMousePoint = SwingUtilities.convertPoint(JTabbedContentManager.this, e.getPoint(), contentPage.getDestination());
+                Point relativeMousePoint = SwingUtilities.convertPoint(JTabbedContentManager.this, e.getPoint(),
+                                                                       contentPage.getDestination());
                 CompositeIcon uiCompositeIcon = contentPage.getUICompositeIcon();
 
                 Rectangle detachIconRect = uiCompositeIcon.getLastPaintedLeftRec();

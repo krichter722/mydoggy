@@ -16,10 +16,8 @@ public class ToolWindowGroupEvent extends EventObject {
 
     /**
      * An event which indicates that an action occurred in the tool window manager.
-     *
-     * @author Angelo De Caro (angelo.decaro@gmail.com)
      */
-    public static enum ActionId {
+    public enum ActionId {
         TOOL_ADDED,         // When a tool window is added to a group.
         TOOL_REMOVED,       // When a tool window is added from a group.
         GROUP_SHOWED,       // When a group is made visible.

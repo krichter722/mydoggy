@@ -9,6 +9,62 @@
 
     <body>
         <section name="Introduction">
+            <div id="downloadbox">
+                <h5>Get Maven 2.0.4</h5>
+                <span style="display: block; text-align: right; font-size: smaller">Released: 10 April 2006</span>
+
+                <p>
+                    <a href="download.html">
+                        <img valign="top" src="images/folder-open.gif" border="0" alt="" title="download"></img>
+                        Maven 2.0.4
+                    </a>
+                    <small>(1.1Mb)</small>
+                    <span style="font-size: smaller">
+                        <br></br>
+                        <a href="download.html#requirements">System Requirements</a>
+                        ,
+                        <a href="download.html#installation">Installation Instructions</a>
+                        ,
+                        <a href="release-notes.html">Release Notes</a>
+
+                    </span>
+                </p>
+                <p>
+                    <a href="download.html">
+                        <img valign="top" src="images/folder-open.gif" border="0" alt="" title="download"></img>
+                        Maven Tasks for Ant 2.0.4
+                    </a>
+                    <small>(870k)</small>
+                    <span style="font-size: smaller">
+
+                        <br></br>
+
+                        <a href="ant-tasks.html">Documentation</a>
+                    </span>
+                </p>
+
+
+                <h5>Other Maven Projects</h5>
+                <p>
+                    <a href="continuum">
+                        <img src="images/continuum.png" border="0" width="76" height="32"
+                             style="float: left; margin-right: 1em;"></img>
+
+                        Continuum
+                    </a>
+                    continuous integration server
+                </p>
+                <p>
+                    <a href="archiva">
+                        <img src="images/archiva.png" border="0" width="76" height="32"
+                             style="float: left; margin-right: 1em;"></img>
+                        Archiva
+                    </a>
+                    repository and artifact management server
+                </p>
+
+            </div>
+            
             <p>
                 MyDoggy is a Java docking framework for use in cross-platform Swing applications.
                 MyDoggy is an IntelliJ Idea like docking framework for managing secondary windows within the main
@@ -19,30 +75,28 @@
             <subsection name="Main Modules">
                 <p>
                     MyDoggy is separated in two main modules.
-                    <ul>
-                        <li>
-                            <a href="./mydoggy-api/index.html">MyDoggy-Api</a>
-                            contains the application program interface of MyDoggy to manage every aspects of
-                            the framework.
-                        </li>
-                        <li>
-                            <a href="./mydoggy-plaf/index.html">MyDoggy-Plaf</a>
-                            contains the default implementation of mydoggy-api.
-                        </li>
-                    </ul>
                 </p>
+                <ul>
+                    <li>
+                        <a href="./mydoggy-api/index.html">MyDoggy-Api</a>
+                        contains the application program interface of MyDoggy to manage every aspects of
+                        the framework.
+                    </li>
+                    <li>
+                        <a href="./mydoggy-plaf/index.html">MyDoggy-Plaf</a>
+                        contains the default implementation of mydoggy-api.
+                    </li>
+                </ul>
             </subsection>
 
             <subsection name="Other Modules">
-                <p>
-                    There are also other modules that cover secondary aspects of MyDoggy.
-                    <ul>
-                        <li>
-                            <a href="./mydoggy-examples/index.html">MyDoggy-Examples</a>
-                            contains some examples to see MyDoggy in action.
-                        </li>
-                    </ul>
-                </p>
+                There are also other modules that cover secondary aspects of MyDoggy.
+                <ul>
+                    <li>
+                        <a href="./mydoggy-examples/index.html">MyDoggy-Examples</a>
+                        contains some examples to see MyDoggy in action.
+                    </li>
+                </ul>
             </subsection>
         </section>
     </body>

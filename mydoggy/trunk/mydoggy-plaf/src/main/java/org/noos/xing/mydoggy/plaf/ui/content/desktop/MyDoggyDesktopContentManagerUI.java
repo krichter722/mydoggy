@@ -220,6 +220,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         return null;
     }
 
+
     class ComponentListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();

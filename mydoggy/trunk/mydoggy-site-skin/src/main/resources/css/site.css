@@ -9,10 +9,13 @@ body ul {
 
 #downloadbox {
   float: right;
-  margin: 0 1em 2em 2em;
-  padding: 1em;
+  margin-left: 2em;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-bottom: 1em;
   border: 1px solid #999;
   background-color: #eee;
+  width: 17.5em;
 }
 
 #downloadbox h5 {
@@ -21,11 +24,16 @@ body ul {
   border-bottom: 1px solid #aaaaaa;
   font-size: smaller;
   padding: 0;
+  margin-top: 1em;
 }
 
 #downloadbox p {
   margin-top: 1em;
   margin-bottom: 0;
+}
+
+#downloadbox a {
+    white-space: nowrap;
 }
 
 #downloadbox ul {

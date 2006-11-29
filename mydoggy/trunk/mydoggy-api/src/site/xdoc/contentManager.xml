@@ -55,5 +55,27 @@ ContentManager contentManager = toolWindowManager.getContentManager();
 Content content = contentManager.getContent("Tools");
             </source>
         </section>
+
+        <section name="ContentManagerUI">
+            <p>
+                A ContentManagerUI is an interface to modify the ui behaviours of a content manager.
+                MyDoggy provides two king of ContentManagerUI
+            </p>
+
+            <ul>
+                <li>
+                    <a href="./apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html">
+                        <code>TabbedContentManagerUI</code>
+                    </a>
+                    -
+                </li>
+                <li>
+                    <a href="./apidocs/org/noos/xing/mydoggy/DesktopContentManagerUI.html">
+                        <code>DesktopContentManagerUI</code>
+                    </a>
+                    -
+                </li>
+            </ul>
+        </section>
     </body>
 </document>
