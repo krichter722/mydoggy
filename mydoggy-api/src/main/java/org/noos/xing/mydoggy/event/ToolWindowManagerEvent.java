@@ -17,7 +17,7 @@ public class ToolWindowManagerEvent extends EventObject {
     /**
      * Action Identifier Enum.
      */
-    public static enum ActionId {
+    public enum ActionId {
         TOOL_REGISTERED,    // When a tool window is registered.
         TOOL_UNREGISTERED,  // When a tool window is unregistered.
         GROUP_ADDED,        // When a tool window group is added.

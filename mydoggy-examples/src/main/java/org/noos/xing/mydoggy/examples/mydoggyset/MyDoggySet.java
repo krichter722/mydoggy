@@ -256,6 +256,8 @@ public class MyDoggySet {
         defaultManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
         TabbedContentManagerUI tabbedContentManagerUI = (TabbedContentManagerUI) defaultManagerUI;
         tabbedContentManagerUI.setShowAlwaysTab(true);
+        tabbedContentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
+        tabbedContentManagerUI.setTabLayout(TabbedContentManagerUI.TabLayout.WRAP);
 //        tabbedContentManagerUI.setCloseable(false);
 //        tabbedContentManagerUI.setDetachable(false);
 

@@ -2,10 +2,78 @@ package org.noos.xing.mydoggy;
 
 /**
  * TODO
+ *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.1.0
  */
 public interface TabbedContentManagerUI extends ContentManagerUI {
+
+    enum TabPlacement {
+        TOP,
+        LEFT,
+        BOTTOM,
+        RIGHT
+    }
+
+    /**
+     * The tab layout enum used in laying out the tabs when all the tabs will not fit within a single line.
+     * @since 1.1.0
+     */
+    enum TabLayout {
+        /**
+         * The tab layout for wrapping tabs in multiple lines when all tabs will not fit within a single line.
+         * @since 1.1.0
+         */
+        WRAP,
+
+        /**
+         * The tab layout for providing a subset of available tabs when all the tabs will not fit within a single line.
+         * @since 1.1.0
+         */
+        SCROLL
+    }
+
+
+    /**
+     * Sets the tab placement for this manager.
+     *
+     * @param tabPlacement the placement for the tabs relative to the content
+     * @see org.noos.xing.mydoggy.TabbedContentManagerUI.TabPlacement
+     * @since 1.1.0
+     */
+    void setTabPlacement(TabPlacement tabPlacement);
+
+    /**
+     * Returns the placement of the tabs for this manager.
+     *
+     * @return the placement of the tabs for this manager.
+     * @see #setTabPlacement
+     * @see org.noos.xing.mydoggy.TabbedContentManagerUI.TabPlacement
+     * @since 1.1.0
+     */
+    TabPlacement getTabPlacement();
+
+    /**
+     * Sets the layout type which the manager will use in laying out the tabs
+     * when all the tabs will not fit within a single line.
+     *
+     * @param tabLayout the layoyt type used to layout the tabs
+     * @see #getTabLayout()
+     * @see org.noos.xing.mydoggy.TabbedContentManagerUI.TabLayout
+     * @since 1.1.0
+     */
+    void setTabLayout(TabLayout tabLayout);
+
+    /**
+     * Returns the layout type used by the manager to layout the tabs when all the
+     * tabs will not fit within a single line.
+     *
+     * @return layout type used by the manager to layout the tabs.
+     * @see #setTabLayout(org.noos.xing.mydoggy.TabbedContentManagerUI.TabLayout)
+     * @see org.noos.xing.mydoggy.TabbedContentManagerUI.TabLayout
+     * @since 1.1.0
+     */
+    TabLayout getTabLayout();
 
     /**
      * Sets whether or not the ui must show a tab for all contents also
@@ -30,25 +98,34 @@ public interface TabbedContentManagerUI extends ContentManagerUI {
     boolean isShowAlwaysTab();
 
     /**
-     *
+     * @return
+     * @since 1.1.0
+     */
+    boolean isCloseable();
+
+    /**
      * @param closeable
      * @since 1.1.0
      */
     void setCloseable(boolean closeable);
 
     /**
-     *
-     * @param detacchable
+     * @return
      * @since 1.1.0
      */
-    void setDetachable(boolean detacchable);
+    boolean isDetachable();
 
     /**
-     *
+     * @param detachable
+     * @since 1.1.0
+     */
+    void setDetachable(boolean detachable);
+
+    /**
      * @param content
      * @return
      * @since 1.1.0
      */
     TabbedContentUI getTabbedContentUI(Content content);
-    
+
 }

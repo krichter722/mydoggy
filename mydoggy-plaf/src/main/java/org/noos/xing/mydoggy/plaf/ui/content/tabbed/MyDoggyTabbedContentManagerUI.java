@@ -52,12 +52,56 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Co
         return showAlwaysTab;
     }
 
+    public boolean isCloseable() {
+        return tabbedContentManager.isCloseable();
+    }
+
     public void setCloseable(boolean closeable) {
         tabbedContentManager.setCloseable(closeable);
     }
 
-    public void setDetachable(boolean detacchable) {
-        tabbedContentManager.setDetachable(detacchable);
+    public boolean isDetachable() {
+        return tabbedContentManager.isDetachable();
+    }
+
+    public void setDetachable(boolean detachable) {
+        tabbedContentManager.setDetachable(detachable);
+    }
+
+    public void setTabPlacement(TabPlacement tabPlacement) {
+        if (tabPlacement == null)
+            return;
+        tabbedContentManager.setTabPlacement(tabPlacement.ordinal() + 1);
+    }
+
+    public TabPlacement getTabPlacement() {
+        switch(tabbedContentManager.getTabPlacement()) {
+            case SwingConstants.TOP :
+                return TabPlacement.TOP;
+            case SwingConstants.LEFT :
+                return TabPlacement.LEFT;
+            case SwingConstants.BOTTOM :
+                return TabPlacement.BOTTOM;
+            case SwingConstants.RIGHT :
+                return TabPlacement.RIGHT;
+        }
+        throw new IllegalStateException("Invalid Tab Placement...");
+    }
+
+    public void setTabLayout(TabLayout tabLayout) {
+        if (tabLayout == null)
+            return;
+        tabbedContentManager.setTabLayoutPolicy(tabLayout.ordinal());
+    }
+
+    public TabLayout getTabLayout() {
+        switch(tabbedContentManager.getTabLayoutPolicy()) {
+            case JTabbedPane.WRAP_TAB_LAYOUT:
+                return TabLayout.WRAP;
+            case JTabbedPane.SCROLL_TAB_LAYOUT :
+                return TabLayout.SCROLL;
+        }
+        throw new IllegalStateException("Invalid Tab Layout...");
     }
 
     public void setShowAlwaysTab(boolean showAlwaysTab) {
