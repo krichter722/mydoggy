@@ -66,29 +66,6 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
         }
     }
 
-    private void adjust(Rectangle bounds, Dimension min, int deltaX, int deltaY, int deltaWidth, int deltaHeight) {
-        bounds.x += deltaX;
-        bounds.y += deltaY;
-        bounds.width += deltaWidth;
-        bounds.height += deltaHeight;
-        if (min != null) {
-            if (bounds.width < min.width) {
-                int correction = min.width - bounds.width;
-                if (deltaX != 0) {
-                    bounds.x -= correction;
-                }
-                bounds.width = min.width;
-            }
-            if (bounds.height < min.height) {
-                int correction = min.height - bounds.height;
-                if (deltaY != 0) {
-                    bounds.y -= correction;
-                }
-                bounds.height = min.height;
-            }
-        }
-    }
-
     public void mouseDragged(MouseEvent ev) {
         Point pt = ev.getPoint();
 
@@ -167,6 +144,30 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
     }
 
     public void mouseClicked(MouseEvent ev) {
+    }
+
+
+    private void adjust(Rectangle bounds, Dimension min, int deltaX, int deltaY, int deltaWidth, int deltaHeight) {
+        bounds.x += deltaX;
+        bounds.y += deltaY;
+        bounds.width += deltaWidth;
+        bounds.height += deltaHeight;
+        if (min != null) {
+            if (bounds.width < min.width) {
+                int correction = min.width - bounds.width;
+                if (deltaX != 0) {
+                    bounds.x -= correction;
+                }
+                bounds.width = min.width;
+            }
+            if (bounds.height < min.height) {
+                int correction = min.height - bounds.height;
+                if (deltaY != 0) {
+                    bounds.y -= correction;
+                }
+                bounds.height = min.height;
+            }
+        }
     }
 
     private int calculateCorner(Component c, int x, int y) {
