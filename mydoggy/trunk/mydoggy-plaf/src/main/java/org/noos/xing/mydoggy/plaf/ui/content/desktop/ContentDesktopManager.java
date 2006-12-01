@@ -5,21 +5,7 @@ import java.awt.*;
 import java.beans.PropertyVetoException;
 
 /**
- * This is an implementation of the <code>DesktopManager</code>.
- * It currently implements the basic behaviors for managing
- * <code>JInternalFrame</code>s in an arbitrary parent.
- * <code>JInternalFrame</code>s that are not children of a
- * <code>JDesktop</code> will use this component
- * to handle their desktop-like actions.
- * <p>This class provides a policy for the various JInternalFrame methods,
- * it is not meant to be called directly rather the various JInternalFrame
- * methods will call into the DesktopManager.</p>
- *
- * @author David Kloba
- * @author Steve Wilson
- * @version 1.52 12/19/03
- * @see javax.swing.JDesktopPane
- * @see javax.swing.JInternalFrame
+ * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ContentDesktopManager implements DesktopManager, java.io.Serializable {
     final static String HAS_BEEN_ICONIFIED_PROPERTY = "wasIconOnce";

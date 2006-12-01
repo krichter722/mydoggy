@@ -72,6 +72,87 @@
                     </a>
                 </strong>
             </subsection>
+
+            <subsection name="System Requirements">
+                <a name="Requirements"/>
+                <table>
+                    <tbody>
+                        <tr class="b">
+                            <td align="left">
+                                <b>JDK</b>
+                            </td>
+                            <td align="left">1.5 or above
+                            </td>
+                        </tr>
+                        <tr class="a">
+                            <td align="left">
+                                <b>Memory</b>
+                            </td>
+                            <td align="left">No minimum requirement</td>
+                        </tr>
+                        <tr class="b">
+                            <td align="left">
+                                <b>Disk</b>
+                            </td>
+                            <td align="left">Approximately 2MB will be used.
+                            </td>
+                        </tr>
+                        <tr class="a">
+                            <td align="left">
+                                <b>Operating System</b>
+                            </td>
+                            <td align="left">No minimum requirement. Tested on Windows XP, Ubuntu 6.10.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
+
+            <subsection name="Usage">
+                <a name="Usage"/>
+                <h4>Windows 2000/XP</h4>
+                <ol type="1">
+                    <li>Unzip
+                        <tt>mydoggy-1.1.0.zip</tt>
+                        to the directory you wish to install MyDoggy 1.1.0. These instructions assume you chose
+                        <tt>C:\Program Files\mydoggy-1.1.0</tt>
+                    </li>
+                    <li>Move to
+                        <tt>bin</tt>
+                        directory.
+                        <tt>&quot;C:\Program Files\mydoggy-1.1.0\bin&quot;</tt>
+                    </li>
+                    <li>In the same dialog, make sure that
+                        <tt>JAVA_HOME</tt>
+                        is set to the location of your JDK, eg.
+                        <tt>C:\Program Files\Java\jdk1.5.0_02</tt>
+                    </li>
+                    <li>Run
+                        <tt>mydoggyset</tt>
+                    </li>
+                </ol>
+                <h4>Unix-based Operating Systems (Linux, Solaris and Mac OS X)</h4>
+                <ol type="1">
+                    <li>Unzip
+                        <tt>mydoggy-1.1.0.zip</tt>
+                        to the directory you wish to install MyDoggy 1.1.0. These instructions assume you chose
+                        <tt>/usr/local/mydoggy-1.1.0</tt>
+                    </li>
+                    <li>Move to
+                        <tt>bin</tt>
+                        directory.
+                        <tt>&quot;/usr/local/mydoggy-1.1.0/bin&quot;</tt>
+                    </li>
+                    <li>In the same dialog, make sure that
+                        <tt>JAVA_HOME</tt>
+                        is set to the location of your JDK, eg.
+                        <tt>/usr/java/jdk1.5.0_02</tt>
+                    </li>
+                    <li>Run
+                        <tt>./mydoggyset.sh</tt>
+                    </li>
+                </ol>
+            </subsection>
         </section>
     </body>
 </document>
