@@ -35,10 +35,11 @@ public class FloatingMoveMouseInputHandler implements MouseInputListener {
     }
 
     public void mousePressed(MouseEvent ev) {
-        Point dragWindowOffset = ev.getPoint();
         Component w = (Component) ev.getSource();
         if (w != null) {
             window.toFront();
+
+            Point dragWindowOffset = ev.getPoint();
             Point convertedDragWindowOffset = SwingUtilities.convertPoint(w, dragWindowOffset, titlePane);
 
             if (titlePane != null && titlePane.contains(convertedDragWindowOffset)) {
@@ -54,22 +55,23 @@ public class FloatingMoveMouseInputHandler implements MouseInputListener {
     }
 
     public void mouseReleased(MouseEvent ev) {
-        if (dragCursor != 0 && window != null && !window.isValid()) {
-            // Some Window systems validate as you resize, others won't,
-            // thus the check for validity before repainting.
-            window.validate();
+        if (isMovingWindow) {
+            if (dragCursor != 0 && window != null && !window.isValid()) {
+                // Some Window systems validate as you resize, others won't,
+                // thus the check for validity before repainting.
+                window.validate();
+            }
+            isMovingWindow = false;
+            dragCursor = 0;
         }
-        isMovingWindow = false;
-        dragCursor = 0;
     }
 
     public void mouseMoved(MouseEvent ev) {
     }
 
     public void mouseDragged(MouseEvent ev) {
-        Point pt = ev.getPoint();
-
         if (isMovingWindow) {
+            Point pt = ev.getPoint();
             Point windowPt = window.getLocationOnScreen();
 
             windowPt.x += pt.x - dragOffsetX;
