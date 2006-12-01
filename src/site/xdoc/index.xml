@@ -10,59 +10,24 @@
     <body>
         <section name="Introduction">
             <div id="downloadbox">
-                <h5>Get Maven 2.0.4</h5>
+                <h5>Get MyDoggy 1.1.0</h5>
                 <span style="display: block; text-align: right; font-size: smaller">Released: 10 April 2006</span>
 
                 <p>
                     <a href="download.html">
                         <img valign="top" src="images/folder-open.gif" border="0" alt="" title="download"></img>
-                        Maven 2.0.4
+                        MyDoggy 1.1.0
                     </a>
-                    <small>(1.1Mb)</small>
+                    <small>(1.0Mb)</small>
                     <span style="font-size: smaller">
                         <br></br>
                         <a href="download.html#requirements">System Requirements</a>
                         ,
-                        <a href="download.html#installation">Installation Instructions</a>
+                        <a href="download.html#usage">Usage Instructions</a>
                         ,
                         <a href="release-notes.html">Release Notes</a>
-
                     </span>
                 </p>
-                <p>
-                    <a href="download.html">
-                        <img valign="top" src="images/folder-open.gif" border="0" alt="" title="download"></img>
-                        Maven Tasks for Ant 2.0.4
-                    </a>
-                    <small>(870k)</small>
-                    <span style="font-size: smaller">
-
-                        <br></br>
-
-                        <a href="ant-tasks.html">Documentation</a>
-                    </span>
-                </p>
-
-
-                <h5>Other Maven Projects</h5>
-                <p>
-                    <a href="continuum">
-                        <img src="images/continuum.png" border="0" width="76" height="32"
-                             style="float: left; margin-right: 1em;"></img>
-
-                        Continuum
-                    </a>
-                    continuous integration server
-                </p>
-                <p>
-                    <a href="archiva">
-                        <img src="images/archiva.png" border="0" width="76" height="32"
-                             style="float: left; margin-right: 1em;"></img>
-                        Archiva
-                    </a>
-                    repository and artifact management server
-                </p>
-
             </div>
             
             <p>
