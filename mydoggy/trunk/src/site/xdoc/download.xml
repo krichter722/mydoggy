@@ -8,8 +8,8 @@
     </properties>
 
     <body>
-        <section name="Download">
-            <subsection name="Binary Releases">
+        <section name="Download MyDoggy">
+            <subsection name="Releases">
                 <ul>
                     <li>
                         Please see our
@@ -74,7 +74,7 @@
             </subsection>
 
             <subsection name="System Requirements">
-                <a name="Requirements"/>
+                <a name="requirements"/>
                 <table>
                     <tbody>
                         <tr class="b">
@@ -109,12 +109,37 @@
             </subsection>
 
             <subsection name="Usage">
-                <a name="Usage"/>
+                <ol type="1">
+                    <li>Unzip
+                        <tt>mydoggy-1.1.0.zip</tt>
+                        to the directory you wish to unzip MyDoggy 1.1.0.
+                    </li>
+                    <li>Move to
+                        <tt>lib</tt>
+                        directory where you can found mydoggy jar files.
+                    </li>
+                    <li>To use mydoggy add to your classpath
+                        <tt>mydoggy_1.1.0-api.jar</tt> and
+                        <tt>mydoggy_1.1.0-plaf.jar</tt>
+                    </li>
+                </ol>
+                <h4>Transparency on Windows 2000/XP</h4>
+                <p>
+                    To see in action the transparency effect you have to put TransparencyManager.dll into a system
+                    directory. Refers to java property "java.library.path" for those directories.
+                    <br/>
+                    You can found the precompiled TransparencyManager.dll file into <tt>/lib/win32</tt>
+                    starting from the directory you have choosed to unzip mydoggy.
+                </p>
+            </subsection>
+
+            <subsection name="MyDoggySet Usage">
+                <a name="mydoggyset"/>
                 <h4>Windows 2000/XP</h4>
                 <ol type="1">
                     <li>Unzip
                         <tt>mydoggy-1.1.0.zip</tt>
-                        to the directory you wish to install MyDoggy 1.1.0. These instructions assume you chose
+                        to the directory you wish to unzip MyDoggy 1.1.0. These instructions assume you chose
                         <tt>C:\Program Files\mydoggy-1.1.0</tt>
                     </li>
                     <li>Move to
