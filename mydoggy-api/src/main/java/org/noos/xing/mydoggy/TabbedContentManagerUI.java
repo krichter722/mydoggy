@@ -1,13 +1,18 @@
 package org.noos.xing.mydoggy;
 
 /**
- * TODO
+ * This interface rapresents a ui that use a component that lets the user switch between
+ * a group of components by clicking on a tab with a given title and/or icon (i.e. JTabbedPane). 
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.1.0
  */
 public interface TabbedContentManagerUI extends ContentManagerUI {
 
+    /**
+     * The tab placement enum used in positioning the component that show tabs.
+     * @since 1.1.0
+     */
     enum TabPlacement {
         TOP,
         LEFT,
@@ -104,6 +109,7 @@ public interface TabbedContentManagerUI extends ContentManagerUI {
     boolean isCloseable();
 
     /**
+     *
      * @param closeable
      * @since 1.1.0
      */

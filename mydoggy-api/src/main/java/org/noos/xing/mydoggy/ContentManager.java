@@ -16,16 +16,20 @@ import java.awt.*;
 public interface ContentManager {
 
     /**
-     * TODO
+     * Sets the content manager ui to <code>contentManagerUI</code>.
+     *
      * @since 1.1.0
-     * @param contentManagerUI
+     * @param contentManagerUI the content manager ui.
+     * @see #getContentManagerUI()
+     * @see org.noos.xing.mydoggy.ContentManagerUI
      */
     void setContentManagerUI(ContentManagerUI contentManagerUI);
 
     /**
-     * TODO
+     * Returns the content manager ui.
      * @since 1.1.0
-     * @return
+     * @return the content manager ui.
+     * @see org.noos.xing.mydoggy.ContentManagerUI
      */
     ContentManagerUI getContentManagerUI();
 
@@ -89,7 +93,8 @@ public interface ContentManager {
     boolean removeContent(int index);
 
     /**
-     *
+     * Removes all of the contents from this manager.
+     * 
      * @since 1.1.0
      */
     void removeAllContents();

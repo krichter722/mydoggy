@@ -19,17 +19,20 @@
                         MyDoggy 1.1.0
                     </a>
                     <small>(1.0Mb)</small>
-                    <span style="font-size: smaller">
-                        <br></br>
-                        <a href="download.html#requirements">System Requirements</a>
-                        ,
-                        <a href="download.html#mydoggyset">MyDoggySet Usage</a>
-                        ,
-                        <a href="release-notes.html">Release Notes</a>
-                    </span>
                 </p>
+                <ul>
+                    <li>
+                        <a href="download.html#requirements">System Requirements</a>
+                    </li>
+                    <li>
+                        <a href="download.html#mydoggyset">MyDoggySet Usage</a>
+                    </li>
+                    <li>
+                        <a href="release-notes.html">Release Notes</a>
+                    </li>
+                </ul>
             </div>
-            
+
             <p>
                 MyDoggy is a Java docking framework for use in cross-platform Swing applications.
                 MyDoggy is an IntelliJ Idea like docking framework for managing secondary windows within the main
