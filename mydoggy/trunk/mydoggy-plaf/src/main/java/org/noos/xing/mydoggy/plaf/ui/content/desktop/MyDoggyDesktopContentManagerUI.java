@@ -1,8 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui.content.desktop;
 
 import org.noos.xing.mydoggy.Content;
-import org.noos.xing.mydoggy.DesktopContentUI;
 import org.noos.xing.mydoggy.DesktopContentManagerUI;
+import org.noos.xing.mydoggy.DesktopContentUI;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
@@ -22,6 +22,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
@@ -39,6 +41,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     boolean valueAdjusting;
     boolean contentValueAdjusting;
+
+    private int contentX, contentY, contentIndex = 0;
+
 
     public MyDoggyDesktopContentManagerUI() {
         initComponents();
@@ -152,8 +157,8 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
 
     protected void initComponents() {
-        this.desktopPane = new JDesktopPane();
-        this.desktopPane.setDesktopManager(new ContentDesktopManager());
+        desktopPane = new JDesktopPane();
+        desktopPane.setDesktopManager(new ContentDesktopManager());
     }
 
     protected void initListeners() {
@@ -170,9 +175,11 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             propertyChangeSupport.addPropertyChangeListener("detached", new MyDoggyDesktopContentManagerUI.DetachedListener());
             propertyChangeSupport.addPropertyChangeListener("selected", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
-    //                System.out.println("SELECTED " + evt.getNewValue());
+                    //                System.out.println("SELECTED " + evt.getNewValue());
                 }
             });
+
+            desktopPane.addMouseListener(new PopupMouseListener());
         }
     }
 
@@ -180,7 +187,15 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         JInternalFrame internalFrame = new DesktopContentFrame(content.getTitle(), true, true, true, true);
         internalFrame.setFrameIcon(content.getIcon());
         internalFrame.getContentPane().add(content.getComponent());
-        internalFrame.setBounds(10, 10, 320, 200);   // TODO: lasciare al desktop manager questa scelta??
+
+        contentY = contentX = 10 + (contentIndex++ * 25);
+        if (contentX > desktopPane.getWidth() - 320 || contentY > desktopPane.getHeight() - 200) {
+            contentIndex = 0;
+            contentY = contentX = 10;
+        }
+
+        internalFrame.setBounds(contentX, contentY, 320, 200);
+
         internalFrame.addInternalFrameListener(new InternalFrameAdapter() {
             public void internalFrameClosed(InternalFrameEvent e) {
                 contentManager.removeContent(
@@ -206,9 +221,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         });
 
         desktopPane.add(internalFrame);
-
         internalFrame.show();
-
         toolWindowManager.setMainContent(desktopPane);
     }
 
@@ -256,7 +269,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
                 if (internalFrame != null)
                     internalFrame.setFrameIcon((Icon) evt.getNewValue());
-                else 
+                else
                     throw new IllegalStateException("Invalid content ui state.");
             }
         }
@@ -492,4 +505,49 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             }
         }
     }
+
+    class PopupMouseListener extends MouseAdapter implements ActionListener{
+        private JPopupMenu popupMenu;
+
+        public PopupMouseListener() {
+            popupMenu = new JPopupMenu();
+        }
+
+        public void mouseClicked(MouseEvent e) {
+            if (SwingUtilities.isRightMouseButton(e)) {
+                popupMenu.removeAll();
+
+                for (Content content : contentManager.getContents()) {
+                    JMenu menu = new JMenu(content.getTitle());
+
+                    JMenuItem detach = new JMenuItem("Detach");
+                    detach.putClientProperty("content", content);
+                    detach.setActionCommand("Detach");
+                    detach.addActionListener(this);
+
+                    menu.add(detach);
+                    menu.addSeparator();
+                    if (content.getPopupMenu() != null) {
+                        for (Component c : content.getPopupMenu().getComponents()) {
+                            menu.add(c);
+                        }
+                    }
+
+                    popupMenu.add(menu);
+                }
+
+                popupMenu.show(desktopPane, e.getX(), e.getY());
+            }
+        }
+
+
+        public void actionPerformed(ActionEvent e) {
+            String actionCommand = e.getActionCommand();
+            if ("Detach".equals(actionCommand)) {
+                JComponent c = (JComponent) e.getSource();
+                ((Content) c.getClientProperty("content")).setDetached(true);
+            }
+        }
+    }
+
 }
