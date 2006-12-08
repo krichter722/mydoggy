@@ -16,12 +16,9 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
     int dragMode = DEFAULT_DRAG_MODE;
 
     private transient Rectangle currentBounds = null;
+    private transient Point currentLoc = null;
 
-    /**
-     * Normally this method will not be called. If it is, it
-     * try to determine the appropriate parent from the desktopIcon of the frame.
-     * Will remove the desktopIcon from its parent if it successfully adds the frame.
-     */
+    
     public void openFrame(JInternalFrame f) {
         if (f.getDesktopIcon().getParent() != null) {
             f.getDesktopIcon().getParent().add(f);
@@ -29,12 +26,6 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
         }
     }
 
-    /**
-     * Removes the frame, and, if necessary, the
-     * <code>desktopIcon</code>, from its parent.
-     *
-     * @param f the <code>JInternalFrame</code> to be removed
-     */
     public void closeFrame(JInternalFrame f) {
         boolean findNext = f.isSelected();
         Container c = f.getParent();
@@ -55,11 +46,6 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
         if (findNext) activateNextFrame(c);
     }
 
-    /**
-     * Resizes the frame to fill its parents bounds.
-     *
-     * @param f the frame to be resized
-     */
     public void maximizeFrame(JInternalFrame f) {
         if (f.isIcon()) {
             try {
@@ -82,12 +68,6 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
         }
     }
 
-    /**
-     * Restores the frame back to its size and position prior
-     * to a <code>maximizeFrame</code> call.
-     *
-     * @param f the <code>JInternalFrame</code> to be restored
-     */
     public void minimizeFrame(JInternalFrame f) {
         // If the frame was an icon restore it back to an icon.
         if (f.isIcon()) {
@@ -106,12 +86,6 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
         }
     }
 
-    /**
-     * Removes the frame from its parent and adds its
-     * <code>desktopIcon</code> to the parent.
-     *
-     * @param f the <code>JInternalFrame</code> to be iconified
-     */
     public void iconifyFrame(JInternalFrame f) {
         JInternalFrame.JDesktopIcon desktopIcon;
         Container c = f.getParent();
@@ -155,33 +129,6 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
         }
     }
 
-    void activateNextFrame(Container c) {
-        int i;
-        JInternalFrame nextFrame = null;
-        if (c == null) return;
-        for (i = 0; i < c.getComponentCount(); i++) {
-            if (c.getComponent(i) instanceof JInternalFrame) {
-                nextFrame = (JInternalFrame) c.getComponent(i);
-                break;
-            }
-        }
-        if (nextFrame != null) {
-            try {
-                nextFrame.setSelected(true);
-            }
-            catch (PropertyVetoException e2) {
-            }
-            nextFrame.moveToFront();
-        }
-
-    }
-
-    /**
-     * Removes the desktopIcon from its parent and adds its frame
-     * to the parent.
-     *
-     * @param f the <code>JInternalFrame</code> to be de-iconified
-     */
     public void deiconifyFrame(JInternalFrame f) {
         JInternalFrame.JDesktopIcon desktopIcon = f.getDesktopIcon();
         Container c = desktopIcon.getParent();
@@ -209,14 +156,6 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
         }
     }
 
-    /**
-     * This will activate <b>f</b> moving it to the front. It will
-     * set the current active frame's (if any)
-     * <code>IS_SELECTED_PROPERTY</code> to <code>false</code>.
-     * There can be only one active frame across all Layers.
-     *
-     * @param f the <code>JInternalFrame</code> to be activated
-     */
     public void activateFrame(JInternalFrame f) {
         Container p = f.getParent();
         Component[] c;
@@ -252,7 +191,6 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
         f.moveToFront();
     }
 
-    // implements javax.swing.DesktopManager
     public void deactivateFrame(JInternalFrame f) {
         JDesktopPane d = f.getDesktopPane();
         JInternalFrame currentlyActiveFrame =
@@ -261,41 +199,10 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
             d.setSelectedFrame(null);
     }
 
-    // implements javax.swing.DesktopManager
     public void beginDraggingFrame(JComponent f) {
         setupDragMode(f);
     }
 
-    private void setupDragMode(JComponent f) {
-        JDesktopPane p = getDesktopPane(f);
-        if (p != null) {
-            String mode = (String) p.getClientProperty("JDesktopPane.dragMode");
-            if (mode != null && mode.equals("outline")) {
-                dragMode = OUTLINE_DRAG_MODE;
-            } else if (mode != null && mode.equals("faster") && f instanceof JInternalFrame && f.isOpaque()) {
-                dragMode = DEFAULT_DRAG_MODE;
-            } else {
-                if (p.getDragMode() == JDesktopPane.OUTLINE_DRAG_MODE) {
-                    dragMode = OUTLINE_DRAG_MODE;
-                } else if (p.getDragMode() == JDesktopPane.LIVE_DRAG_MODE
-                           && f instanceof JInternalFrame
-                           && ((JInternalFrame) f).isOpaque()) {
-                    dragMode = DEFAULT_DRAG_MODE;
-                } else {
-                    dragMode = DEFAULT_DRAG_MODE;
-                }
-            }
-        }
-    }
-
-    private transient Point currentLoc = null;
-
-    /**
-     * Moves the visible location of the frame being dragged
-     * to the location specified.  The means by which this occurs can vary depending
-     * on the dragging algorithm being used.  The actual logical location of the frame
-     * might not change until <code>endDraggingFrame</code> is called.
-     */
     public void dragFrame(JComponent f, int newX, int newY) {
         if (dragMode == OUTLINE_DRAG_MODE) {
             JDesktopPane desktopPane = getDesktopPane(f);
@@ -316,7 +223,6 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
         }
     }
 
-    // implements javax.swing.DesktopManager
     public void endDraggingFrame(JComponent f) {
         if (dragMode == OUTLINE_DRAG_MODE && currentLoc != null) {
             setBoundsForFrame(f, currentLoc.x, currentLoc.y, f.getWidth(), f.getHeight());
@@ -324,20 +230,10 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
         }
     }
 
-    // implements javax.swing.DesktopManager
     public void beginResizingFrame(JComponent f, int direction) {
         setupDragMode(f);
     }
 
-    /**
-     * Calls <code>setBoundsForFrame</code> with the new values.
-     *
-     * @param f         the component to be resized
-     * @param newX      the new x-coordinate
-     * @param newY      the new y-coordinate
-     * @param newWidth  the new width
-     * @param newHeight the new height
-     */
     public void resizeFrame(JComponent f, int newX, int newY, int newWidth, int newHeight) {
         if (dragMode == DEFAULT_DRAG_MODE) {
             setBoundsForFrame(f, newX, newY, newWidth, newHeight);
@@ -359,7 +255,6 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
 
     }
 
-    // implements javax.swing.DesktopManager
     public void endResizingFrame(JComponent f) {
         if (dragMode == OUTLINE_DRAG_MODE && currentBounds != null) {
             setBoundsForFrame(f, currentBounds.x, currentBounds.y, currentBounds.width, currentBounds.height);
@@ -367,10 +262,6 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
         }
     }
 
-
-    /**
-     * This moves the <code>JComponent</code> and repaints the damaged areas.
-     */
     public void setBoundsForFrame(JComponent f, int newX, int newY, int newWidth, int newHeight) {
         boolean didResize = (f.getWidth() != newWidth || f.getHeight() != newHeight);
         f.setBounds(newX, newY, newWidth, newHeight);
@@ -379,9 +270,50 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
         }
     }
 
-    /**
-     * Convenience method to remove the desktopIcon of <b>f</b> is necessary.
-     */
+
+    protected void activateNextFrame(Container c) {
+        int i;
+        JInternalFrame nextFrame = null;
+        if (c == null) return;
+        for (i = 0; i < c.getComponentCount(); i++) {
+            if (c.getComponent(i) instanceof JInternalFrame) {
+                nextFrame = (JInternalFrame) c.getComponent(i);
+                break;
+            }
+        }
+        if (nextFrame != null) {
+            try {
+                nextFrame.setSelected(true);
+            }
+            catch (PropertyVetoException e2) {
+            }
+            nextFrame.moveToFront();
+        }
+
+    }
+
+    protected void setupDragMode(JComponent f) {
+        JDesktopPane p = getDesktopPane(f);
+        if (p != null) {
+            String mode = (String) p.getClientProperty("JDesktopPane.dragMode");
+            if (mode != null && mode.equals("outline")) {
+                dragMode = OUTLINE_DRAG_MODE;
+            } else if (mode != null && mode.equals("faster") && f instanceof JInternalFrame && f.isOpaque()) {
+                dragMode = DEFAULT_DRAG_MODE;
+            } else {
+                if (p.getDragMode() == JDesktopPane.OUTLINE_DRAG_MODE) {
+                    dragMode = OUTLINE_DRAG_MODE;
+                } else if (p.getDragMode() == JDesktopPane.LIVE_DRAG_MODE
+                           && f instanceof JInternalFrame
+                           && ((JInternalFrame) f).isOpaque()) {
+                    dragMode = DEFAULT_DRAG_MODE;
+                } else {
+                    dragMode = DEFAULT_DRAG_MODE;
+                }
+            }
+        }
+    }
+
     protected void removeIconFor(JInternalFrame f) {
         JInternalFrame.JDesktopIcon di = f.getDesktopIcon();
         Container c = di.getParent();
@@ -390,11 +322,6 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
             c.repaint(di.getX(), di.getY(), di.getWidth(), di.getHeight());
         }
     }
-
-    /**
-     * The iconifyFrame() code calls this to determine the proper bounds
-     * for the desktopIcon.
-     */
 
     protected Rectangle getBoundsForIconOf(JInternalFrame f) {
         //
@@ -488,27 +415,12 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
         return (availableRectangle);
     }
 
-
-
-    /**
-     * Sets that the component has been iconized and the bounds of the
-     * <code>desktopIcon</code> are valid.
-     */
     protected void setWasIcon(JInternalFrame f, Boolean value) {
         if (value != null) {
             f.putClientProperty(HAS_BEEN_ICONIFIED_PROPERTY, value);
         }
     }
 
-    /**
-     * Returns <code>true</code> if the component has been iconized
-     * and the bounds of the <code>desktopIcon</code> are valid,
-     * otherwise returns <code>false</code>.
-     *
-     * @param f the <code>JInternalFrame</code> of interest
-     * @return <code>true</code> if the component has been iconized;
-     *         otherwise returns <code>false</code>
-     */
     protected boolean wasIcon(JInternalFrame f) {
         return (f.getClientProperty(HAS_BEEN_ICONIFIED_PROPERTY) == Boolean.TRUE);
     }
