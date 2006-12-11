@@ -278,6 +278,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         mainContainer.setOpaque(false);
         mainContainer.removeAll();
         mainContainer.add(content, "0,0,FULL,FULL");
+
+        mainSplitPane.invalidate();
+        mainSplitPane.validate();
+        
         SwingUtil.repaint(mainSplitPane);
     }
 

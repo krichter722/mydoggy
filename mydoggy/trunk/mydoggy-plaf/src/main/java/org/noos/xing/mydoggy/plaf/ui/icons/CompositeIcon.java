@@ -20,33 +20,33 @@ public class CompositeIcon implements Icon, SwingConstants {
     protected int horizontalOrientation;
     protected int verticalOrientation;
 
-    public CompositeIcon(Icon icon1, Icon icon2) {
-        this(icon1, icon2, TOP);
+    public CompositeIcon(Icon leftIcon, Icon rightVisible) {
+        this(leftIcon, rightVisible, TOP);
     }
 
-    public CompositeIcon(Icon icon1, Icon icon2, int position) {
-        this(icon1, icon2, position, CENTER, CENTER);
+    public CompositeIcon(Icon leftIcon, Icon rightVisible, int position) {
+        this(leftIcon, rightVisible, position, CENTER, CENTER);
     }
 
-    public CompositeIcon(Icon icon1, Icon icon2, int position, int horizontalOrientation, int verticalOrientation) {
+    public CompositeIcon(Icon leftIcon, Icon rightVisible, int position, int horizontalOrientation, int verticalOrientation) {
         this.position = position;
 
         switch (position) {
             case LEFT:
-                this.leftIcon = icon1;
-                this.rightIcon = icon2;
+                this.leftIcon = leftIcon;
+                this.rightIcon = rightVisible;
                 break;
             case RIGHT:
-                this.leftIcon = icon2;
-                this.rightIcon = icon1;
+                this.leftIcon = rightVisible;
+                this.rightIcon = leftIcon;
                 break;
             case TOP:
-                this.leftIcon = icon1;
-                this.rightIcon = icon2;
+                this.leftIcon = leftIcon;
+                this.rightIcon = rightVisible;
                 break;
             case BOTTOM:
-                this.leftIcon = icon2;
-                this.rightIcon = icon1;
+                this.leftIcon = rightVisible;
+                this.rightIcon = leftIcon;
                 break;
         }
 
@@ -56,6 +56,7 @@ public class CompositeIcon implements Icon, SwingConstants {
         this.leftVisible = this.rightVisible = true;
     }
 
+
     public void paintIcon(Component c, Graphics g, int x, int y) {
         int width = getIconWidth();
         int height = getIconHeight();
@@ -64,7 +65,7 @@ public class CompositeIcon implements Icon, SwingConstants {
             case LEFT:
             case RIGHT:
                 if (leftIcon != null && isLeftVisible()) {
-                    paintLeftIcon(c, g, leftIcon, x, y, width, height, horizontalOrientation, TOP);
+                    paintLeftIcon(c, g, leftIcon, x, y, width, height, horizontalOrientation, verticalOrientation);
                     if (isRightVisible())
                         paintRightIcon(c, g, rightIcon, x + leftIcon.getIconWidth(), y , width, height, horizontalOrientation, TOP);
                 } else
@@ -138,26 +139,55 @@ public class CompositeIcon implements Icon, SwingConstants {
 
     protected void paintLeftIcon(Component c, Graphics g, Icon icon, int x, int y, int width, int height,
                                  int horizontalOrientation, int verticalOrientation) {
-        paintIconInternal(c, g,
+        Point p = paintIconInternal(c, g,
                           icon,
                           x, y, width, height, horizontalOrientation, verticalOrientation);
-        lastPaintedLeftRec = new Rectangle(x, y, getIconWidth(icon), getIconHeight(icon));
+        lastPaintedLeftRec = new Rectangle(p.x, p.y, getIconWidth(icon), getIconHeight(icon));
     }
 
     protected void paintRightIcon(Component c, Graphics g, Icon icon, int x, int y, int width, int height,
                                   int horizontalOrientation, int verticalOrientation) {
-        paintIconInternal(c, g,
+        Point p = paintIconInternal(c, g,
                           icon,
                           x, y, width, height, horizontalOrientation, verticalOrientation);
-        lastPaintedRightRec = new Rectangle(x, y, getIconWidth(icon), getIconHeight(icon));
+        lastPaintedRightRec = new Rectangle(p.x, p.y, getIconWidth(icon), getIconHeight(icon));
     }
 
 
-    protected void paintIconInternal(Component c, Graphics g, Icon icon, int x, int y, int width, int height,
+    protected Point paintIconInternal(Component c, Graphics g, Icon icon, int x, int y, int width, int height,
                                      int horizontalOrientation, int verticalOrientation) {
         if (icon == null)
-            return;
-        icon.paintIcon(c, g, x, y);
+            return new Point(x,y);
+
+        int xIcon = x;
+        int yIcon = y;
+
+        switch (horizontalOrientation) {
+            case LEFT:
+                xIcon = x;
+                break;
+            case RIGHT:
+                xIcon = x + width - icon.getIconWidth();
+                break;
+            default:
+                xIcon = x + (width - icon.getIconWidth() >> 1);
+                break;
+        }
+
+        switch (verticalOrientation) {
+            case TOP:
+                yIcon = y;
+                break;
+            case BOTTOM:
+                yIcon = y + height - icon.getIconHeight();
+                break;
+            default:
+                yIcon = y + (height - icon.getIconHeight() >> 1);
+                break;
+        }
+
+        icon.paintIcon(c, g, xIcon, yIcon);
+        return new Point(xIcon, yIcon);
     }
 
     protected int getIconWidth(Icon icon) {
