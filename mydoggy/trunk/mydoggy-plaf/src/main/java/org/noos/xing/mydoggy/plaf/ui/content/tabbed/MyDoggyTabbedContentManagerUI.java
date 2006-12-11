@@ -40,8 +40,11 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Co
 
     private PropertyChangeSupport propertyChangeSupport;
 
+    private ContentUI lastSelected;
+
     boolean valueAdjusting;
     boolean contentValueAdjusting;
+
 
     public MyDoggyTabbedContentManagerUI() {
         initComponents();
@@ -129,6 +132,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Co
         this.contentManager = (MyDoggyContentManager) manager.getContentManager();
         initListeners();
 
+        lastSelected = null;
         contentValueAdjusting = true;
         for (Content content : contentManager.getContents()) {
             addContent((ContentUI) content);
@@ -168,28 +172,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Co
     }
 
     public boolean isSelected(Content content) {
-        if (content.isDetached()) {
-            Window anchestor = SwingUtilities.windowForComponent(content.getComponent());
-            boolean focused = anchestor.isFocused();
-            if (focused)
-                return true;
-            Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-            return focusOwner != null && anchestor == SwingUtilities.windowForComponent(focusOwner);
-        } else {
-            int index = tabbedContentManager.indexOfComponent(content.getComponent());
-            if (index != -1)
-                return tabbedContentManager.getSelectedIndex() == index;
-            else {
-                if (contentValueAdjusting) {
-                    return false;
-                } else {
-                    if (toolWindowManager.getMainContent() != content.getComponent())
-                        throw new IllegalStateException("Invalid content ui state.");
-                    else
-                        return true;
-                }
-            }
-        }
+        return content == lastSelected;
     }
 
     public void setSelected(Content content, boolean selected) {
@@ -247,26 +230,24 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Co
         });
 
         tabbedContentManager.addChangeListener(new ChangeListener() {
-            private Component lastCmp;
 
             public void stateChanged(ChangeEvent e) {
-                if (!valueAdjusting) {
-                    Component selectedCmp = tabbedContentManager.getSelectedComponent();
+                if (!valueAdjusting && !contentValueAdjusting) {
+                    ContentUI newSelected = (ContentUI) contentManager.getContent(
+                            tabbedContentManager.getSelectedComponent());
 
-                    if (lastCmp != null) {
+                    if (newSelected == lastSelected)
+                        return;
+
+                    if (lastSelected != null) {
                         try {
-                            ((ContentUI) contentManager.getContent(lastCmp)).fireSelected(false);
+                            lastSelected.fireSelected(false);
                         } catch (Exception ignoreIt) {
                         }
                     }
 
-                    for (Content content : contentManager.getContents()) {
-                        if (content.getComponent() == selectedCmp) {
-                            lastCmp = selectedCmp;
-                            ((ContentUI) content).fireSelected(true);
-                            break;
-                        }
-                    }
+                    lastSelected = newSelected;
+                    newSelected.fireSelected(true);
                 }
             }
         });
@@ -514,15 +495,26 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Co
 
                 dialog.addWindowFocusListener(new WindowFocusListener() {
                     public void windowGainedFocus(WindowEvent e) {
-                        ContentUI content = (ContentUI) contentManager.getContent(dialog.getContentPane().getComponent(0));
-                        content.fireSelected(true);
+                        if (!valueAdjusting && !contentValueAdjusting) {
+                            ContentUI newSelected = (ContentUI) contentManager.getContent(
+                                    dialog.getContentPane().getComponent(0));
+
+                            if (newSelected == lastSelected)
+                                return;
+
+                            if (lastSelected != null) {
+                                try {
+                                    lastSelected.fireSelected(false);
+                                } catch (Exception ignoreIt) {
+                                }
+                            }
+
+                            lastSelected = newSelected;
+                            newSelected.fireSelected(true);
+                        }
                     }
 
                     public void windowLostFocus(WindowEvent e) {
-                        if (dialog.getContentPane().getComponentCount() > 0) {
-                            ContentUI content = (ContentUI) contentManager.getContent(dialog.getContentPane().getComponent(0));
-                            content.fireSelected(false);
-                        }
                     }
                 });
 
@@ -609,4 +601,5 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Co
 
         }
     }
+
 }
