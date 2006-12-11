@@ -182,7 +182,7 @@ public class MyDoggyContent implements ContentUI {
     }
 
     public void fireSelected(boolean selected) {
-        System.out.println(key + " " + selected);
+//        System.out.println(key + " " + selected);
         firePropertyChange("selected", !selected, selected);
     }
 

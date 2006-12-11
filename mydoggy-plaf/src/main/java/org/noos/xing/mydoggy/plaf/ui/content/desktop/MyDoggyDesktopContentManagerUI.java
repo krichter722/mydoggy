@@ -39,6 +39,8 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     private PropertyChangeSupport propertyChangeSupport;
 
+    private ContentUI lastSelected;
+
     boolean valueAdjusting;
     boolean contentValueAdjusting;
 
@@ -107,23 +109,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     }
 
     public boolean isSelected(Content content) {
-        if (content.isDetached()) {
-            return SwingUtilities.windowForComponent(content.getComponent()).isFocused();
-        } else {
-            JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
-            if (internalFrame != null)
-                return internalFrame.isSelected();
-            else {
-                if (contentValueAdjusting)
-                    return false;
-                else {
-                    if (contentManager.getContent(content.getKey()) != null)
-                        return false;
-                    else
-                        throw new IllegalStateException("Invalid content ui state.");
-                }
-            }
-        }
+        return content == lastSelected;
     }
 
     public void setSelected(Content content, boolean selected) {
@@ -206,16 +192,26 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         internalFrame.addPropertyChangeListener(JInternalFrame.IS_SELECTED_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (!valueAdjusting && !contentValueAdjusting) {
+
                     Container container = ((JInternalFrame) evt.getSource()).getContentPane();
                     if (container.getComponentCount() > 0) {
                         Component cmp = container.getComponent(0);
                         for (Content content : contentManager.getContents()) {
                             if (content.getComponent() == cmp) {
+                                boolean value = (Boolean) evt.getNewValue();
+                                if (value) {
+                                    if (lastSelected != null) {
+                                        if (lastSelected.isDetached())
+                                            lastSelected.fireSelected(false);
+                                    }
+                                    lastSelected = (ContentUI) content;
+                                }
                                 ((ContentUI) content).fireSelected((Boolean) evt.getNewValue());
                                 break;
                             }
                         }
                     }
+
                 }
             }
         });
@@ -398,8 +394,35 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 dialog.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent event) {
                         Component component = dialog.getContentPane().getComponent(0);
-                        Content content = contentManager.getContent(component);
+                        ContentUI content = (ContentUI) contentManager.getContent(component);
+                        content.fireSelected(false);
                         content.setDetached(false);
+                    }
+                });
+
+                dialog.addWindowFocusListener(new WindowFocusListener() {
+                    public void windowGainedFocus(WindowEvent e) {
+                        if (!valueAdjusting && !contentValueAdjusting) {
+                            ContentUI newSelected = (ContentUI) contentManager.getContent(
+                                    dialog.getContentPane().getComponent(0));
+
+                            if (newSelected == lastSelected)
+                                return;
+
+                            if (lastSelected != null) {
+                                try {
+                                    getFrameByComponent(lastSelected.getComponent()).setSelected(false);
+//                                    lastSelected.fireSelected(false);
+                                } catch (Exception ignoreIt) {
+                                }
+                            }
+
+                            lastSelected = newSelected;
+                            newSelected.fireSelected(true);
+                        }
+                    }
+
+                    public void windowLostFocus(WindowEvent e) {
                     }
                 });
 
