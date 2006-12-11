@@ -233,8 +233,10 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Co
 
             public void stateChanged(ChangeEvent e) {
                 if (!valueAdjusting && !contentValueAdjusting) {
-                    ContentUI newSelected = (ContentUI) contentManager.getContent(
-                            tabbedContentManager.getSelectedComponent());
+                    Component selectedComponent = tabbedContentManager.getSelectedComponent();
+                    if (selectedComponent == null)
+                        return;
+                    ContentUI newSelected = (ContentUI) contentManager.getContent(selectedComponent);
 
                     if (newSelected == lastSelected)
                         return;

@@ -121,14 +121,14 @@ public class MyDoggySet {
 
         JMenu contentManagerMenu = new JMenu("Content Manager UI");
 
-        JMenuItem tabUIItem = new JMenuItem("Tab");
+        JMenuItem tabUIItem = new JMenuItem("TabbedContentManagerUI");
         tabUIItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 toolWindowManager.getContentManager().setContentManagerUI(defaultManagerUI);
             }
         });
 
-        JMenuItem desktopUIItem = new JMenuItem("Desktop");
+        JMenuItem desktopUIItem = new JMenuItem("DesktopContentManagerUI");
         desktopUIItem.addActionListener(new ActionListener() {
             MyDoggyDesktopContentManagerUI desktopContentManagerUI = new MyDoggyDesktopContentManagerUI();
 

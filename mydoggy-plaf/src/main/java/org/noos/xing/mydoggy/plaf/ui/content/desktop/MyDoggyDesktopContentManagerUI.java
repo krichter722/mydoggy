@@ -44,7 +44,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     boolean valueAdjusting;
     boolean contentValueAdjusting;
 
-    private int contentX, contentY, contentIndex = 0;
+    private int contentIndex = 0;
 
 
     public MyDoggyDesktopContentManagerUI() {
@@ -60,8 +60,11 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     public void install(ToolWindowManager manager) {
         this.toolWindowManager = (MyDoggyToolWindowManager) manager;
         this.contentManager = (MyDoggyContentManager) manager.getContentManager();
+        this.contentIndex = 0;
 
         initListeners();
+
+        toolWindowManager.setMainContent(desktopPane);
 
         contentValueAdjusting = true;
         for (Content content : contentManager.getContents()) {
@@ -174,6 +177,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         internalFrame.setFrameIcon(content.getIcon());
         internalFrame.getContentPane().add(content.getComponent());
 
+        int contentX;
+        int contentY;
+
         contentY = contentX = 10 + (contentIndex++ * 25);
         if (contentX > desktopPane.getWidth() - 320 || contentY > desktopPane.getHeight() - 200) {
             contentIndex = 0;
@@ -218,7 +224,6 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
         desktopPane.add(internalFrame);
         internalFrame.show();
-        toolWindowManager.setMainContent(desktopPane);
     }
 
     protected JInternalFrame getFrameByComponent(Component component) {

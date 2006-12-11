@@ -274,7 +274,8 @@ public class JTabbedContentManager extends JTabbedPane {
 
                 // Right Part
                 contentIcon = new CompositeIcon(new CompositeIcon(icon, titleIcon, SwingConstants.LEFT),
-                                                new DoubleIcon(), SwingConstants.LEFT);
+                                                new DoubleIcon(), SwingConstants.LEFT,
+                                                SwingConstants.LEFT, SwingConstants.TOP);
             }
             return contentIcon;
         }
