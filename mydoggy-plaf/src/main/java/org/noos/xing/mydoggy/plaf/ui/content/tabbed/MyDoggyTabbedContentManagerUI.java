@@ -8,6 +8,8 @@ import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.ui.TransparencyAnimation;
+import org.noos.xing.mydoggy.plaf.ui.ToFrontWindowFocusListener;
+import org.noos.xing.mydoggy.plaf.ui.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.content.ContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.content.ContentUI;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.JTabbedContentManager;
@@ -481,7 +483,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Co
                 dialog.pack();
 
                 if (TransparencyManager.getInstance().isServiceAvailable()) {
-                    TransparencyListener transparencyListener = new TransparencyListener(dialog);
+                    WindowTransparencyListener transparencyListener = new WindowTransparencyListener(dialog);
                     dialog.addWindowListener(transparencyListener);
                     dialog.addWindowFocusListener(transparencyListener);
                 }
@@ -520,27 +522,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Co
                     }
                 });
 
-                if (parentFrame == null) {
-                    WindowFocusListener windowFocusListener = new WindowFocusListener() {
-                        long start;
-                        long end;
-
-                        public void windowGainedFocus(WindowEvent e) {
-                            start = System.currentTimeMillis();
-                        }
-
-                        public void windowLostFocus(WindowEvent e) {
-                            end = System.currentTimeMillis();
-                            long elapsed = end - start;
-                            //System.out.println(elapsed);
-                            if (elapsed < 100)
-                                dialog.toFront();
-
-                            dialog.removeWindowFocusListener(this);
-                        }
-                    };
-                    dialog.addWindowFocusListener(windowFocusListener);
-                }
+                if (parentFrame == null)
+                    dialog.addWindowFocusListener(new ToFrontWindowFocusListener(dialog));
 
                 dialog.toFront();
                 dialog.setVisible(true);
@@ -555,53 +538,6 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Co
             }
         }
 
-        class TransparencyListener extends WindowAdapter implements WindowFocusListener, ActionListener {
-            private final TransparencyManager transparencyManager = TransparencyManager.getInstance();
-
-            private TransparencyAnimation animation;
-
-            private Timer timer;
-            private JDialog window;
-
-            public TransparencyListener(JDialog window) {
-                this.window = window;
-                this.animation = new TransparencyAnimation(window, 0.7f);
-            }
-
-            public void windowGainedFocus(WindowEvent e) {
-                if (timer != null)
-                    timer.stop();
-
-                if (transparencyManager.isAlphaModeEnabled(e.getWindow())) {
-                    animation.hide();
-                    transparencyManager.setAlphaModeRatio(e.getWindow(), 0.0f);
-                }
-            }
-
-            public void windowLostFocus(WindowEvent e) {
-                if (!transparencyManager.isAlphaModeEnabled(e.getWindow())) {
-                    timer = new Timer(1500, this);
-                    timer.start();
-                }
-            }
-
-            public void actionPerformed(ActionEvent e) {
-                if (timer.isRunning()) {
-                    timer.stop();
-                    synchronized (transparencyManager) {
-                        animation.show();
-                    }
-                }
-            }
-
-            public void windowClosing(WindowEvent event) {
-                if (transparencyManager.isAlphaModeEnabled(event.getWindow())) {
-                    animation.hide();
-                    transparencyManager.setAlphaModeRatio(window, 0.0f);
-                }
-            }
-
-        }
     }
 
 }
