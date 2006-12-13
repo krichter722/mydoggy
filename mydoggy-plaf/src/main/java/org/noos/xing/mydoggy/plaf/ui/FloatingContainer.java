@@ -153,7 +153,7 @@ public class FloatingContainer extends DockedContainer {
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
         typeDescriptor.addPropertyChangeListener(this);
 
-        new FloatingTransparencyListener(this, descriptor, window);
+        new FloatingToolTransparencyListener(this, descriptor, window);
     }
 
 
