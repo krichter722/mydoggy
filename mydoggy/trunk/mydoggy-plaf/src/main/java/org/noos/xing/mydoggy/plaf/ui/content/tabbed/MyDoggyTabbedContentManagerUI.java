@@ -483,9 +483,9 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Co
                 dialog.pack();
 
                 if (TransparencyManager.getInstance().isServiceAvailable()) {
-                    WindowTransparencyListener transparencyListener = new WindowTransparencyListener(dialog);
-                    dialog.addWindowListener(transparencyListener);
-                    dialog.addWindowFocusListener(transparencyListener);
+                    WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(dialog);
+                    dialog.addWindowListener(windowTransparencyListener);
+                    dialog.addWindowFocusListener(windowTransparencyListener);
                 }
 
                 dialog.addWindowListener(new WindowAdapter() {
