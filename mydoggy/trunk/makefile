@@ -4,10 +4,7 @@ JAVA_HOME="E:/Programmi/Java/jdk1.5.0_09"
 JAVA_INCLUDE=-I${JAVA_HOME}/include -I${JAVA_HOME}/include/win32
 JAVA_LIB=-L${JAVA_HOME}/lib
 
-MATLAB_HOME="E:/Programmi/MATLAB/R2006b"
-MATLAB_INCLUDE=-I${JAVA_HOME}/extern/include
-
-INCLUDE=${JAVA_INCLUDE} ${MATLAB_INCLUDE}
+INCLUDE=${JAVA_INCLUDE}
 
 SOURCES=./mydoggy-plaf/src/main/cpp/win32/TransparencyManager.c
 LIBS=-luser32 -ljawt
