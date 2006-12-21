@@ -12,7 +12,20 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="mydoggy-api" />
     <orderEntry type="module" module-name="mydoggy-plaf" />
-    <orderEntry type="library" name="TableLayout-20020517" level="project" />
+    <orderEntry type="module-library">
+      <library name="Maven Dependency: junit:junit:jar:3.8.1:test">
+        <CLASSES />
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven Dependency: tablelayout:TableLayout:jar:20020517:compile">
+        <CLASSES />
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntryProperties />
   </component>
 </module>
