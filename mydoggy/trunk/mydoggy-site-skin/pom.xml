@@ -11,7 +11,7 @@
     <artifactId>mathava-site-skin</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
-    <name>Mathava - - Skin</name>
+    <name>Mathava - Skin</name>
     <url>http://mathava.sourceforge.net</url>
     <description>
 		Mathava is an object oriented bridge for MATLAB. Mathava hides the details of use of MATLAB,
