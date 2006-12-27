@@ -3,12 +3,12 @@ package org.noos.xing.mydoggy;
 import java.awt.*;
 
 /**
- * This interface rapresents a ui that use a container to create a multiple-document interface
- * or a virtual desktop. 
+ * This interface let you modify ui behaviours of a content when a <code>DesktopContentManagerUI</code> is used
+ * as current <code>ContentManagerUI</code>.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.1.0
- * TODO: aggiungere altri metodi
+ * @see DesktopContentManagerUI
  */
 public interface DesktopContentUI {
 
