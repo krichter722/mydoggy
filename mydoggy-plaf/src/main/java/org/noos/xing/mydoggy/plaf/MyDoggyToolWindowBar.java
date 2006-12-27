@@ -362,7 +362,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
 
     class VisibleDockedListener implements PropertyChangeListener {
-        private Animation animation = new Animation();
+        private final Animation animation = new Animation();
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
@@ -376,7 +376,14 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
             if (content == null || descriptor.getDivederLocation() > 0 && splitPane.getDividerSize() != 0) {
                 if (MyDoggyToolWindowManager.currentGroup == null) {
-                    switch (anchor) {
+					synchronized (animation) {
+						if (animation.animating) {
+							animation.stopAnimation();
+							animation.finishAnimation();
+						}
+					}
+
+					switch (anchor) {
                         case LEFT:
                         case TOP:
                             descriptor.setDivederLocation(splitPane.getDividerLocation());
@@ -500,7 +507,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             private int dividerLocation;
             private int sheetHeight;
 
-            public void actionPerformed(ActionEvent e) {
+            public synchronized void actionPerformed(ActionEvent e) {
                 if (animating) {
                     // calculate height to show
                     float animationPercent = (System.currentTimeMillis() - animationStart) / ANIMATION_DURATION;
@@ -579,7 +586,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 if (splitPane.getDividerSize() == 0) {
                     setSplitPaneContent(null);
                 } else {
-//                    splitPane.setDividerLocation(dividerLocation);
+                    splitPane.setDividerLocation(dividerLocation);
                 }
             }
 
