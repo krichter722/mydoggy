@@ -127,11 +127,12 @@ public interface TabbedContentManagerUI extends ContentManagerUI {
      */
     void setDetachable(boolean detachable);
 
-    /**
-     * @param content
-     * @return
-     * @since 1.1.0
-     */
+	/**
+	 * Returns the ui part to which this manager maps the specified <code>content<code>.
+	 * @param content content whose associated ui part is to be returned.
+	 * @return the ui part to which this manager maps the specified <code>content<code>.
+	 * @since 1.1.0
+	 */
     TabbedContentUI getTabbedContentUI(Content content);
 
 }
