@@ -1,7 +1,5 @@
 package org.noos.xing.mydoggy.plaf;
 
-import org.noos.xing.mydoggy.plaf.ui.content.BackContentUI;
-
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import java.awt.*;
