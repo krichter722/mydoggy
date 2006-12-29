@@ -504,7 +504,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             private long animationStart;
 
             private int dividerLocation;
-            private int sheetHeight;
+            private int sheetLen;
 
             public synchronized void actionPerformed(ActionEvent e) {
                 if (animating) {
@@ -514,9 +514,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     int animatingHeight;
 
                     if (animationDirection == INCOMING)
-                        animatingHeight = (int) (animationPercent * sheetHeight);
+                        animatingHeight = (int) (animationPercent * sheetLen);
                     else
-                        animatingHeight = (int) ((1.0f - animationPercent) * sheetHeight);
+                        animatingHeight = (int) ((1.0f - animationPercent) * sheetLen);
 
                     switch (anchor) {
                         case LEFT:
@@ -564,7 +564,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
             private void startAnimation(int incoming) {
                 if (!animating) {
-                    sheetHeight = dividerLocation;
+                    sheetLen = dividerLocation;
                     animationDirection = incoming;
 
                     // start animation timer
@@ -585,7 +585,19 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 if (splitPane.getDividerSize() == 0) {
                     setSplitPaneContent(null);
                 } else {
-                    splitPane.setDividerLocation(dividerLocation);
+					switch (anchor) {
+						case LEFT:
+						case TOP:
+							if (splitPane.getDividerLocation() <= sheetLen)
+								splitPane.setDividerLocation(sheetLen);
+							break;
+						case RIGHT:
+							splitPane.setDividerLocation(splitPane.getWidth() - sheetLen);
+							break;
+						case BOTTOM:
+							splitPane.setDividerLocation(splitPane.getHeight() - sheetLen);
+							break;
+					}
                 }
             }
 

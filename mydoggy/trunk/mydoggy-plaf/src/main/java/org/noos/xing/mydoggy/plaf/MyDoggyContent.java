@@ -1,6 +1,6 @@
 package org.noos.xing.mydoggy.plaf;
 
-import org.noos.xing.mydoggy.plaf.ui.content.ContentUI;
+import org.noos.xing.mydoggy.plaf.ui.content.BackContentUI;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -11,7 +11,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyContent implements ContentUI {
+public class MyDoggyContent implements BackContentUI {
     private MyDoggyContentManager contentManager;
 
     private Object key;
@@ -29,7 +29,8 @@ public class MyDoggyContent implements ContentUI {
     private EventListenerList listeners;
 
 
-    public MyDoggyContent(MyDoggyContentManager contentManager, Object key, String title, Icon icon, Component component, String toolTipText) {
+    public MyDoggyContent(MyDoggyContentManager contentManager,
+						  Object key, String title, Icon icon, Component component, String toolTipText) {
         this.contentManager = contentManager;
         this.key = key;
         this.title = title;
@@ -83,13 +84,13 @@ public class MyDoggyContent implements ContentUI {
     }
 
     public boolean isSelected() {
-        return contentManager.getContentManagerUI().isSelected(this);
+        return contentManager.getBackContentManagerUI().isSelected(this);
     }
 
     public void setSelected(boolean selected) {
         if (isSelected() != selected) {
             boolean old = isSelected();
-            contentManager.getContentManagerUI().setSelected(this, selected);
+            contentManager.getBackContentManagerUI().setSelected(this, selected);
 
             firePropertyChange("selected", old, selected);
         }
