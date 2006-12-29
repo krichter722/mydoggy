@@ -25,8 +25,8 @@
 );
             </source>
             <p>
-                A window implementing the <code>RootPaneContainer</code> interface is required because the default
-                implementation use the glass pane for the <code>ToolWindowType.SLIDING</code> type.
+                A window implementing the <code>RootPaneContainer</code> interface is required because
+				<code>MyDoggyToolWindowManager</code> uses the glass pane for the <code>ToolWindowType.SLIDING</code> type.
             </p>
             <p>
                 MyDoggyToolWindowManager is implemented like a JPanel so you can use it like any other component.
@@ -39,5 +39,32 @@ MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager
 ...
 frame.getContentPane().add(myDoggyToolWindowManager);</source>
         </section>
+
+		<a name="ContentManageUI"/>
+		<section name="ContentManageUI">
+			<p>
+				The default implementation provides an implementation for the <code>TabbedContentManagerUI</code>
+				and for the <code>DesktopContentManagerUI</code>.
+				<br></br>
+				To obtain an instance use the following (for example):
+			</p>
+			<source>import org.noos.xing.mydoggy.plaf.ui.content.desktop;
+...
+ContentManagerUI contentManagerUI = new MyDoggyDesktopContentManagerUI();
+			</source>
+			or
+			<source>import org.noos.xing.mydoggy.plaf.ui.content.tabbed;
+...
+ContentManagerUI contentManagerUI = new MyDoggyTabbedContentManagerUI();
+			</source>
+
+			<p>
+				If you want to implement your own <code>ContentManageUI,</code> your class must implement non only the
+				<code>ContentManageUI</code> interface but also the <code>BackContentManagerUI</code> interface in the
+				package <code>org.noos.xing.mydoggy.plaf.ui.content.</code>.
+				<br></br>
+				This is to provide all neccesary methods to use the manager. 
+			</p>
+		</section>
     </body>
 </document>

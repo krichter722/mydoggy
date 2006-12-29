@@ -325,7 +325,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         });
 
         // Init gui
-		JPanel contentPane = new JPanel();
 		contentPaneLayout = new ExtendedTableLayout(new double[][]{{0, TableLayout.FILL, 0}, {0, TableLayout.FILL, 0}});
         setLayout(contentPaneLayout);
 

@@ -3,8 +3,9 @@ package org.noos.xing.mydoggy.plaf;
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.ContentManagerListener;
+import org.noos.xing.mydoggy.ContentManagerUI;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
-import org.noos.xing.mydoggy.plaf.ui.content.ContentManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.content.BackContentManagerUI;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -26,7 +27,7 @@ public class MyDoggyContentManager implements ContentManager {
 
     private List<Content> contents;
     private Map<Object, Content> contentMap;
-    private ContentManagerUI contentManagerUI;
+    private BackContentManagerUI backContentManagerUI;
 
     private EventListenerList listeners;
 
@@ -38,22 +39,22 @@ public class MyDoggyContentManager implements ContentManager {
     }
 
 
-    public void setContentManagerUI(org.noos.xing.mydoggy.ContentManagerUI contentManagerUI) {
-        if (!(contentManagerUI instanceof ContentManagerUI))
+    public void setContentManagerUI(ContentManagerUI contentManagerUI) {
+        if (!(contentManagerUI instanceof BackContentManagerUI))
             throw new IllegalArgumentException("ContentManagerUI type not supported. See Plaf prescription.");
 
-        if (this.contentManagerUI == contentManagerUI)
+        if (this.backContentManagerUI == contentManagerUI)
             return;
 
-        if (this.contentManagerUI != null)
-            this.contentManagerUI.unistall();
+        if (this.backContentManagerUI != null)
+            this.backContentManagerUI.unistall();
 
-        this.contentManagerUI = (ContentManagerUI) contentManagerUI;
-        this.contentManagerUI.install(toolWindowManager);
+        this.backContentManagerUI = (BackContentManagerUI) contentManagerUI;
+        this.backContentManagerUI.install(toolWindowManager);
     }
 
     public ContentManagerUI getContentManagerUI() {
-        return contentManagerUI;
+        return (ContentManagerUI) backContentManagerUI;
     }
 
     public int getContentCount() {
@@ -72,7 +73,7 @@ public class MyDoggyContentManager implements ContentManager {
         MyDoggyContent content = new MyDoggyContent(this, key, title, icon, component, tip);
         contents.add(content);
         contentMap.put(key, content);
-        contentManagerUI.addContent(content);
+        backContentManagerUI.addContent(content);
 
         fireContentAdded(content);
 
@@ -87,7 +88,7 @@ public class MyDoggyContentManager implements ContentManager {
         if (content == null)
             throw new IllegalArgumentException("Content cannot be null");
         
-        contentManagerUI.removeContent((MyDoggyContent) content);
+        backContentManagerUI.removeContent((MyDoggyContent) content);
         boolean result = contents.remove(content);
 
         if (result) {
@@ -121,11 +122,11 @@ public class MyDoggyContentManager implements ContentManager {
     }
 
     public void setPopupMenu(JPopupMenu popupMenu) {
-        contentManagerUI.setPopupMenu(popupMenu);
+        backContentManagerUI.setPopupMenu(popupMenu);
     }
 
     public JPopupMenu getPopupMenu() {
-        return contentManagerUI.getPopupMenu();
+        return backContentManagerUI.getPopupMenu();
     }
 
     public void addContentManagerListener(ContentManagerListener listener) {
@@ -171,11 +172,15 @@ public class MyDoggyContentManager implements ContentManager {
         if (getPopupMenu() != null)
             SwingUtilities.updateComponentTreeUI(getPopupMenu());
 
-        contentManagerUI.updateUI();
+        backContentManagerUI.updateUI();
     }
 
-    
-    protected void firePropertyChange(String property, Object oldValue, Object newValue) {
+	public BackContentManagerUI getBackContentManagerUI() {
+		return backContentManagerUI;
+	}
+
+	
+	protected void firePropertyChange(String property, Object oldValue, Object newValue) {
         PropertyChangeEvent event = new PropertyChangeEvent(this, property, oldValue, newValue);
 
         for (PropertyChangeListener listener : listeners.getListeners(PropertyChangeListener.class)) {
