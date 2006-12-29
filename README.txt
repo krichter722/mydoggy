@@ -68,6 +68,6 @@ To build the site simply call :
 
     mvn -Dsite clean package site assembly:assembly
 
-To build TransparencyManager.dll simply call :
+To build TransparencyManager.dll simply call (from mydoggy root directory):
 
  	mingw32-make
