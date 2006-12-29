@@ -8,8 +8,8 @@ import javax.swing.table.DefaultTableModel;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolGroupsTableModel extends DefaultTableModel {
-    private ToolWindowManager windowManager;
+public final class ToolGroupsTableModel extends DefaultTableModel {
+    private final ToolWindowManager windowManager;
 
     public ToolGroupsTableModel(ToolWindowManager windowManager) {
         this.windowManager = windowManager;

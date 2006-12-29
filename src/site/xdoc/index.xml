@@ -10,12 +10,11 @@
     <body>
         <section name="Introduction">
             <div id="downloadbox">
-                <h5>Get MyDoggy 1.1.0</h5>
+                <h5>Get MyDoggy 1.1.0 Now!!!</h5>
                 <span style="display: block; text-align: right; font-size: smaller">Released: 10 April 2006</span>
 
                 <p>
                     <a href="download.html">
-                        <img valign="top" src="images/folder-open.gif" border="0" alt="" title="download"></img>
                         MyDoggy 1.1.0
                     </a>
                     <small>(1.0Mb)</small>
@@ -24,21 +23,22 @@
                     <li>
                         <a href="download.html#requirements">System Requirements</a>
                     </li>
+					<li>
+						<a href="download.html#usage">MyDoggy Usage</a>
+					</li>
                     <li>
-                        <a href="download.html#mydoggyset">MyDoggySet Usage</a>
-                    </li>
-                    <li>
-                        <a href="release-notes.html">Release Notes</a>
+                        <a href="download.html#mydoggyset">MyDoggySet Usage (Demo App)</a>
                     </li>
                 </ul>
             </div>
 
-            <p>
-                MyDoggy is a Java docking framework for use in cross-platform Swing applications.
-                MyDoggy is an IntelliJ Idea like docking framework for managing secondary windows within the main
-                window. MyDoggy allows to move, resize or extract those secondary windows.
-                Also, MyDoggy provides support for content management of the main window.
-            </p>
+			<p>
+				<img src="./images/mydoggy.png" alt="MyDoggy" border="0" hspace="18" align="left"/>
+				MyDoggy is a Java docking framework for use in cross-platform Swing applications.
+				MyDoggy is an IntelliJ Idea like docking framework for managing secondary windows within the main
+				window. MyDoggy allows to move, resize or extract those secondary windows.
+				Also, MyDoggy provides support for content management of the main window.
+			</p>
 
             <subsection name="Main Modules">
                 <p>

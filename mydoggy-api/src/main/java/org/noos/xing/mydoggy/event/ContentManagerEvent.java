@@ -25,12 +25,12 @@ public class ContentManagerEvent extends EventObject {
      *
      * @see ContentManagerEvent.ActionId
      */
-    private ContentManagerEvent.ActionId actionId;
+    private final ContentManagerEvent.ActionId actionId;
 
     /**
      * Indicates the content on which the action has occured.
      */
-    private Content content;
+    private final Content content;
 
     /**
      * Constructs a <code>ContentManagerEvent</code> object with the

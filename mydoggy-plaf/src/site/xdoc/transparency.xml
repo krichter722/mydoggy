@@ -32,23 +32,32 @@
                 </table>
         </section>
         <section name="Build Howto">
-            I have used Microsoft Visual C++ 2005 Express Edition using following properties:
-            <br></br>
-            <br></br>
-            For C/C++ Configuration Properties :
-            <source>/Od /I "E:\Programmi\Java\jdk1.5.0_07\include\win32" /I "E:\Programmi\Java\jdk1.5.0_07\include"
+			<p>
+				Clearly you can use your preferred c++ compiler.
+			</p>
+
+			<subsection name="Mingw">
+				In the distribution there is a makefile to build TransparencyManager.dll. Before use mingw32-make check
+				all variables into the makefile to validate it.
+			</subsection>
+
+			<subsection name="Microsoft Visual C++ 2005 Express Edition">
+				I have used Microsoft Visual C++ 2005 Express Edition using following properties:
+				<br></br>
+				<br></br>
+				For C/C++ Configuration Properties :
+				<source>/Od /I "E:\Programmi\Java\jdk1.5.0_07\include\win32" /I "E:\Programmi\Java\jdk1.5.0_07\include"
 /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_USRDLL" /D "TRANSPARENCYMANAGER_EXPORTS"
 /D "_WINDLL" /Gm /EHsc /RTC1 /MDd /Fo"Debug\\" /Fd"Debug\vc80.pdb"
 /W3 /nologo /c /Wp64 /ZI /TP /errorReport:prompt
-            </source>
-            For Linker Configuration Properties :
-            <source>/OUT:"..\mydoggy\TransparencyManager.dll" /INCREMENTAL /NOLOGO
+				</source>
+				For Linker Configuration Properties :
+				<source>/OUT:"..\mydoggy\TransparencyManager.dll" /INCREMENTAL /NOLOGO
 /LIBPATH:"E:\Programmi\Java\jdk1.5.0_07\lib" /DLL /MANIFEST
 /MANIFESTFILE:"Debug\TransparencyManager.dll.intermediate.manifest"
 /DEBUG /PDB:"e:\sourceforge\java\prjs\mydoggy\mydoggy\TransparencyManager.pdb"
 /SUBSYSTEM:WINDOWS /MACHINE:X86 /ERRORREPORT:PROMPT user32.lib jawt.lib  kernel32.lib</source>
-            <br></br>
-            Clearly you can use your preferred c++ compiler.
+			</subsection>
         </section>
     </body>
 </document>

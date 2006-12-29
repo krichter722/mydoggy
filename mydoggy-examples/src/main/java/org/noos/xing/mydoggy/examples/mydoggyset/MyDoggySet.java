@@ -29,7 +29,6 @@ public class MyDoggySet {
     private String currentLookAndFeel;
 
     private JFrame frame;
-    private Component contentPane;
     private ToolWindowManager toolWindowManager;
 
     private Component toolsContent;
@@ -43,7 +42,7 @@ public class MyDoggySet {
 
     private ContentManagerUI defaultManagerUI;
 
-    protected void setUp() throws Exception {
+    protected void setUp() {
         initComponents();
         initToolWindowManager();
     }
@@ -65,8 +64,6 @@ public class MyDoggySet {
         this.frame.setLocation(100, 100);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
-
-        this.contentPane = this.frame.getContentPane();
 
         JMenuBar menuBar = new JMenuBar();
 
@@ -130,7 +127,7 @@ public class MyDoggySet {
 
         JMenuItem desktopUIItem = new JMenuItem("DesktopContentManagerUI");
         desktopUIItem.addActionListener(new ActionListener() {
-            MyDoggyDesktopContentManagerUI desktopContentManagerUI = new MyDoggyDesktopContentManagerUI();
+            final MyDoggyDesktopContentManagerUI desktopContentManagerUI = new MyDoggyDesktopContentManagerUI();
 
             public void actionPerformed(ActionEvent e) {
                 toolWindowManager.getContentManager().setContentManagerUI(desktopContentManagerUI);
@@ -471,9 +468,8 @@ public class MyDoggySet {
 
             SwingUtilities.updateComponentTreeUI(contentsContent);
         } catch (Exception ex) {
-            System.out.println("Failed loading L&F: " + currentLookAndFeel);
-            System.out.println(ex);
-        }
+			ex.printStackTrace();
+		}
     }
 
 
@@ -489,7 +485,7 @@ public class MyDoggySet {
 
 
     class ChangeLookAndFeelAction extends AbstractAction {
-        MyDoggySet myDoggySet;
+        final MyDoggySet myDoggySet;
 
         protected ChangeLookAndFeelAction(MyDoggySet myDoggySet) {
             super("ChangeTheme");

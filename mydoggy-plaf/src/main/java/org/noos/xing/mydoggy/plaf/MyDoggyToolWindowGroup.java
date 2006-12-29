@@ -11,13 +11,13 @@ import java.util.List;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyToolWindowGroup implements ToolWindowGroup {
-    private ToolWindowManager manager;
+    private MyDoggyToolWindowManager manager;
 
     private String name;
     private List<ToolWindow> tools;
     private EventListenerList listenerList;
 
-    MyDoggyToolWindowGroup(ToolWindowManager manager, String name) {
+    MyDoggyToolWindowGroup(MyDoggyToolWindowManager manager, String name) {
         this.manager = manager;
         this.name = name;
         this.tools = new ArrayList<ToolWindow>();
@@ -78,17 +78,17 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
                         tool.setVisible(false);
                     }
 
-                    MyDoggyToolWindowManager.currentGroup = this;
+					manager.setShowingGroup(this);
                     try {
-                        for (ToolWindow tool : MyDoggyToolWindowManager.currentGroup.getToolsWindow()) {
+                        for (ToolWindow tool : getToolsWindow()) {
                             if (tool.getType() == ToolWindowType.SLIDING)
                                 tool.setType(ToolWindowType.DOCKED);
 
                             tool.setVisible(visible);
                         }
                     } finally {
-                        MyDoggyToolWindowManager.currentGroup = null;
-                    }
+						manager.resetShowingGroup();
+					}
 
                     if (visible)
                         fireGroupShowed();

@@ -10,13 +10,13 @@
     <body>
         <section name="Download MyDoggy">
             <subsection name="Releases">
-                <ul>
-                    <li>
-                        Please see our
-                        <a href="license.html">License FAQ</a>
-                        before downloading.
-                    </li>
-                </ul>
+				<ul>
+					<li>
+						Please see our
+						<a href="license.html">License FAQ</a>
+						before downloading.
+					</li>
+				</ul>
 
                 <table>
                     <tbody>
@@ -38,21 +38,6 @@
 
                         <tr valign="top">
                             <td>MyDoggy</td>
-                            <td>1.0.0</td>
-                            <td>2006-11-07</td>
-                            <td>Stable</td>
-                            <td>
-                                <em>
-                                    <a href="http://sourceforge.net/project/showfiles.php?group_id=178005">
-                                        Download
-                                    </a>
-                                </em>
-                            </td>
-                        </tr>
-						
-						<!-- TODO -->
-                        <tr valign="top">
-                            <td>MyDoggy</td>
                             <td>1.1.0</td>
                             <td>2006-11-07</td>
                             <td>Stable</td>
@@ -66,16 +51,10 @@
                         </tr>
                     </tbody>
                 </table>
-                <br></br>
-                <strong>
-                    <a href="http://prdownloads.sourceforge.net/mydoggy/?sort_by=date&amp;sort=desc">Browse all MyDoggy
-                        downloads
-                    </a>
-                </strong>
             </subsection>
 
+			<a name="requirements"/>
             <subsection name="System Requirements">
-                <a name="requirements"/>
                 <table>
                     <tbody>
                         <tr class="b">
@@ -109,6 +88,7 @@
                 </table>
             </subsection>
 
+			<a name="usage"/>
             <subsection name="Usage">
                 <ol type="1">
                     <li>Unzip
@@ -134,8 +114,8 @@
                 </p>
             </subsection>
 
+			<a name="mydoggyset"/>
             <subsection name="MyDoggySet Usage">
-                <a name="mydoggyset"/>
                 <h4>Windows 2000/XP</h4>
                 <ol type="1">
                     <li>Unzip
@@ -179,6 +159,48 @@
                     </li>
                 </ol>
             </subsection>
+
+			<subsection name="Previous Releases">
+				<table>
+					<tbody>
+						<tr>
+							<td>
+								<strong>Package</strong>
+							</td>
+							<td>
+								<strong>Version</strong>
+							</td>
+							<td>
+								<strong>Release date</strong>
+							</td>
+							<td>
+								<strong>Category</strong>
+							</td>
+							<td></td>
+						</tr>
+
+						<tr valign="top">
+							<td>MyDoggy</td>
+							<td>1.0.0</td>
+							<td>2006-11-07</td>
+							<td>Stable</td>
+							<td>
+								<em>
+									<a href="http://sourceforge.net/project/showfiles.php?group_id=178005">
+										Download
+									</a>
+								</em>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<br></br>
+				<strong>
+					<a href="http://prdownloads.sourceforge.net/mydoggy/?sort_by=date&amp;sort=desc">Browse all MyDoggy
+						downloads
+					</a>
+				</strong>
+			</subsection>
         </section>
     </body>
 </document>

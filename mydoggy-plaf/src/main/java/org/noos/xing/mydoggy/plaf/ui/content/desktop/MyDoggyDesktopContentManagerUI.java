@@ -55,14 +55,27 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     }
 
 
-    public DesktopContentUI getDesktopContentUI(Content content) {
+	public void setCloseable(boolean closeable) {
+		for (JInternalFrame frame : desktopPane.getAllFrames()) {
+			frame.setClosable(closeable);
+		}
+	}
+
+	public void setDetachable(boolean detachable) {
+		JInternalFrame[] frames = desktopPane.getAllFrames();
+		for (JInternalFrame internalFrame : frames) {
+			DesktopContentFrame frame = (DesktopContentFrame) internalFrame;
+			frame.setDetachable(detachable);
+		}
+	}
+
+	public DesktopContentUI getDesktopContentUI(Content content) {
         return (DesktopContentUI) getFrameByComponent(content.getComponent());
     }
 
 
     public void install(ToolWindowManager manager) {
-        // TODO: import preference from old ContentManagerUI
-        this.toolWindowManager = (MyDoggyToolWindowManager) manager;
+		this.toolWindowManager = (MyDoggyToolWindowManager) manager;
         this.contentManager = (MyDoggyContentManager) manager.getContentManager();
         this.contentIndex = 0;
 
@@ -70,7 +83,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
         toolWindowManager.setMainContent(desktopPane);
 
-        contentValueAdjusting = true;
+		setPopupMenu(contentManager.getPopupMenu());
+
+		contentValueAdjusting = true;
         for (Content content : contentManager.getContents()) {
             addContent((ContentUI) content);
         }
@@ -455,8 +470,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
 
     class DesktopContentFrame extends JInternalFrame implements DesktopContentUI {
+		private boolean detachable;
 
-        public DesktopContentFrame(String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
+		public DesktopContentFrame(String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
             super(title, resizable, closable, maximizable, iconifiable);
         }
 
@@ -471,7 +487,15 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 ignore.printStackTrace();
             }
         }
-    }
+
+		public boolean isDetachable() {
+			return detachable;
+		}
+
+		public void setDetachable(boolean detachable) {
+			this.detachable = detachable;
+		}
+	}
 
     class PopupMouseListener extends MouseAdapter implements ActionListener{
         private JPopupMenu popupMenu;

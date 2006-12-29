@@ -34,12 +34,12 @@ public class ToolWindowGroupEvent extends EventObject {
     /**
      * Indicates the tool window group on which the action has occured. Cannot be null.
      */
-    private ToolWindowGroup toolWindowGroup;
+    private transient ToolWindowGroup toolWindowGroup;
 
     /**
      * Indicates the tool window involved in the action. Can be null.
      */
-    private ToolWindow toolWindow;
+    private transient ToolWindow toolWindow;
 
     /**
      * Constructs a <code>ToolWindowGroupEvent</code> object with the

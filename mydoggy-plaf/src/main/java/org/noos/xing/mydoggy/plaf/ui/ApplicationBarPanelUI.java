@@ -26,7 +26,7 @@ public class ApplicationBarPanelUI extends PanelUI {
 
     private boolean animating = false;
 
-    private JPanel panel;
+    private JComponent panel;
 
     public ApplicationBarPanelUI(ToolWindowDescriptor descriptor, DockedContainer dockedContainer) {
         dockedContainer.addPropertyChangeListener("active", new GradientActivationListener(descriptor));
@@ -41,7 +41,7 @@ public class ApplicationBarPanelUI extends PanelUI {
     public void installUI(JComponent c) {
         super.installUI(c);
         installDefaults(c);
-        this.panel = (JPanel) c;
+        this.panel = c;
     }
 
     public void uninstallUI(JComponent c) {

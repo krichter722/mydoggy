@@ -103,7 +103,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
     /**
      * Sets the transparent ratio. Valid range is [0.0, 1.0]
      *
-     * @param transparentRatio
+     * @param transparentRatio the transparent ratio.
      */
     void setTransparentRatio(float transparentRatio);
 
@@ -118,7 +118,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * Sets the transparent delay. When the window losts focus, after delay time the window will become
      * transparent.
      *
-     * @param transparentDelay
+     * @param transparentDelay the transparent delay
      */
     void setTransparentDelay(int transparentDelay);
 

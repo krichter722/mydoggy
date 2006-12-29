@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy;
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.awt.*;
+import java.io.Serializable;
 
 /**
  * A content is a wrapper of a component decorated with some properties like
@@ -12,7 +13,7 @@ import java.awt.*;
  * 
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public interface Content {
+public interface Content extends Serializable {
 
     /**
       * Return the content unique identifier.

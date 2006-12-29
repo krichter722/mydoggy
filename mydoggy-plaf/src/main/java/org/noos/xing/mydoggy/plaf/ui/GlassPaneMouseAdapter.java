@@ -20,39 +20,39 @@ public class GlassPaneMouseAdapter implements MouseListener, MouseMotionListener
     }
 
     public void mouseDragged(MouseEvent e) {
-        redispatchMouseEvent(e, true);
+        redispatchMouseEvent(e);
     }
 
     public void mouseMoved(MouseEvent e) {
-        redispatchMouseEvent(e, true);
+        redispatchMouseEvent(e);
     }
 
     public void mouseClicked(MouseEvent e) {
-        redispatchMouseEvent(e, false);
+        redispatchMouseEvent(e);
     }
 
     public void mouseEntered(MouseEvent e) {
-        redispatchMouseEvent(e, false);
+        redispatchMouseEvent(e);
     }
 
     public void mouseExited(MouseEvent e) {
-        redispatchMouseEvent(e, false);
+        redispatchMouseEvent(e);
     }
 
     public void mousePressed(MouseEvent e) {
-        redispatchMouseEvent(e, false);
+        redispatchMouseEvent(e);
     }
 
     public void mouseReleased(MouseEvent e) {
-        redispatchMouseEvent(e, false);
+        redispatchMouseEvent(e);
     }
 
     public void mouseWheelMoved(MouseWheelEvent e) {
-        redispatchMouseEvent(e, false);
+        redispatchMouseEvent(e);
     }
 
 
-    private void redispatchMouseEvent(MouseEvent e, boolean updateCursor) {
+    private void redispatchMouseEvent(MouseEvent e) {
         Point glassPanePoint = e.getPoint();
         Component component;
         Container container = contentPane;

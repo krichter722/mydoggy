@@ -29,19 +29,19 @@ public class ToolWindowManagerEvent extends EventObject {
      *
      * @see org.noos.xing.mydoggy.event.ToolWindowManagerEvent.ActionId
      */
-    private ActionId actionId;
+    private final ActionId actionId;
 
     /**
      * Indicates the tool window on which the action has occured.
      * It is not null id <code>actionID</code> is ActionId.TOOL_REGISTERED or ActionId.TOOL_UNREGISTERED.
      */
-    private ToolWindow toolWindow;
+    private transient ToolWindow toolWindow = null;
 
     /**
      * Indicates the tool window on which the action has occured.
      * It is not null id <code>actionID</code> is ActionId.GROUP_ADDED or ActionId.GROUP_REMOVED.
      */
-    private ToolWindowGroup toolWindowGroup;
+    private transient ToolWindowGroup toolWindowGroup = null;
 
     /**
      * Constructs a <code>ToolWindowManagerEvent</code> object with the

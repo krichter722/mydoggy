@@ -18,14 +18,13 @@ public class ScrollToolBarArrowUI extends MetalLabelUI {
     static final Color start = new Color(255, 212, 151);
     static final Color end = new Color(255, 244, 204);
 
-    protected JLabel label;
     protected LineBorder labelBorder;
 
     public void installUI(JComponent c) {
         super.installUI(c);
-        label = (JLabel) c;
+
         labelBorder = new LineBorder(Color.GRAY, 1, true, 3, 3);
-        label.setBorder(labelBorder);
+        c.setBorder(labelBorder);
     }
 
     protected void installListeners(JLabel c) {
@@ -50,16 +49,18 @@ public class ScrollToolBarArrowUI extends MetalLabelUI {
     class ScrollToolBarArrowMouseAdapter extends MouseAdapter {
 
         public void mouseEntered(MouseEvent e) {
-            if (!label.isOpaque()) {
+			Component source = e.getComponent();
+			if (!source.isOpaque()) {
                 labelBorder.setLineColor(Color.BLACK);
-                SwingUtil.repaint(label);
+                SwingUtil.repaint(source);
             }
         }
 
         public void mouseExited(MouseEvent e) {
-            if (!label.isOpaque()) {
+			Component source = e.getComponent();
+			if (!source.isOpaque()) {
                 labelBorder.setLineColor(Color.GRAY);
-                SwingUtil.repaint(label);
+                SwingUtil.repaint(source);
             }
         }
 

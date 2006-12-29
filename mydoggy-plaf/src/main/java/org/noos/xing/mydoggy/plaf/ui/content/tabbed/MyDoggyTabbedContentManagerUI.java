@@ -7,7 +7,6 @@ import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
-import org.noos.xing.mydoggy.plaf.ui.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.content.ContentManagerUI;
@@ -22,8 +21,6 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
@@ -57,16 +54,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Co
         return showAlwaysTab;
     }
 
-    public boolean isCloseable() {
-        return tabbedContentManager.isCloseable();
-    }
-
     public void setCloseable(boolean closeable) {
         tabbedContentManager.setCloseable(closeable);
-    }
-
-    public boolean isDetachable() {
-        return tabbedContentManager.isDetachable();
     }
 
     public void setDetachable(boolean detachable) {
@@ -133,6 +122,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Co
         this.toolWindowManager = (MyDoggyToolWindowManager) manager;
         this.contentManager = (MyDoggyContentManager) manager.getContentManager();
         initListeners();
+
+		setPopupMenu(contentManager.getPopupMenu());
 
         lastSelected = null;
         contentValueAdjusting = true;

@@ -102,31 +102,6 @@ public interface TabbedContentManagerUI extends ContentManagerUI {
      */
     boolean isShowAlwaysTab();
 
-    /**
-     * @return
-     * @since 1.1.0
-     */
-    boolean isCloseable();
-
-    /**
-     *
-     * @param closeable
-     * @since 1.1.0
-     */
-    void setCloseable(boolean closeable);
-
-    /**
-     * @return
-     * @since 1.1.0
-     */
-    boolean isDetachable();
-
-    /**
-     * @param detachable
-     * @since 1.1.0
-     */
-    void setDetachable(boolean detachable);
-
 	/**
 	 * Returns the ui part to which this manager maps the specified <code>content<code>.
 	 * @param content content whose associated ui part is to be returned.

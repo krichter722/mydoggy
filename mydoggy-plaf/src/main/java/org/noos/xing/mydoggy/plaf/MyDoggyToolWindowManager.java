@@ -35,7 +35,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     public final static Object sync = new Object();
 
-    public static ToolWindowGroup currentGroup;
+    private ToolWindowGroup showingGroup;
 
     private MyDoggyContentManager contentManager;
 
@@ -46,9 +46,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     private Map<Object, ToolWindowGroup> toolWindowGroups;
 
     private TableLayout contentPaneLayout;
-    private JPanel contentPane;
 
-    private JSplitPane mainSplitPane;
+	private JSplitPane mainSplitPane;
     private JPanel mainContainer;
 
     private PropertyChangeSupport propertyChangeSupport;
@@ -326,8 +325,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         });
 
         // Init gui
-        contentPane = new JPanel();
-        contentPaneLayout = new ExtendedTableLayout(new double[][]{{0, TableLayout.FILL, 0}, {0, TableLayout.FILL, 0}});
+		JPanel contentPane = new JPanel();
+		contentPaneLayout = new ExtendedTableLayout(new double[][]{{0, TableLayout.FILL, 0}, {0, TableLayout.FILL, 0}});
         setLayout(contentPaneLayout);
 
         // Register bars, one for every anchor
@@ -530,7 +529,20 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
 
-    class AvailablePropertyChangeListener implements PropertyChangeListener {
+	void setShowingGroup(ToolWindowGroup toolWindowGroup) {
+		this.showingGroup = toolWindowGroup;
+	}
+
+	void resetShowingGroup() {
+		this.showingGroup = null;
+	}
+
+	public ToolWindowGroup getShowingGroup() {
+		return this.showingGroup;
+	}
+
+
+	class AvailablePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor window = (ToolWindowDescriptor) evt.getSource();
 

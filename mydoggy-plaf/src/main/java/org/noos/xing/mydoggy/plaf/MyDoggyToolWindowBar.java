@@ -4,7 +4,6 @@ import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowBarDropTarget;
@@ -33,7 +32,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     private static final double[] COLUMNS = {2, 19, 2};
     private static final double[] ROWS = COLUMNS;
 
-    private ToolWindowManager manager;
+    private MyDoggyToolWindowManager manager;
 
     private ToolWindowAnchor anchor;
 
@@ -50,7 +49,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     private PropertyChangeSupport propertyChangeSupport;
 
 
-    MyDoggyToolWindowBar(ToolWindowManager manager, JSplitPane splitPane, ToolWindowAnchor anchor) {
+    MyDoggyToolWindowBar(MyDoggyToolWindowManager manager, JSplitPane splitPane, ToolWindowAnchor anchor) {
         this.manager = manager;
         this.splitPane = splitPane;
         splitPane.setDividerLocation(0);
@@ -94,8 +93,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         return availableTools;
     }
 
-    public void ensureVisible(JLabel label) {
-        toolScrollBar.ensureVisible(label);
+    public void ensureVisible(Component component) {
+        toolScrollBar.ensureVisible(component);
     }
 
 
@@ -333,7 +332,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     if (toolWindow == sourceTool)
                         continue;
 
-                    if (MyDoggyToolWindowManager.currentGroup == null) {
+                    if (manager.getShowingGroup() == null) {
                         if (toolWindow.getType() == ToolWindowType.FLOATING ||
                             toolWindow.getType() == ToolWindowType.FLOATING_FREE)
                             continue;
@@ -375,7 +374,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             }
 
             if (content == null || descriptor.getDivederLocation() > 0 && splitPane.getDividerSize() != 0) {
-                if (MyDoggyToolWindowManager.currentGroup == null) {
+                if (manager.getShowingGroup() == null) {
 					synchronized (animation) {
 						if (animation.animating) {
 							animation.stopAnimation();
@@ -408,7 +407,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 if (component instanceof MultiSplitContainer) {
                     MultiSplitContainer multiSplitContainer = (MultiSplitContainer) component;
 
-                    if (MyDoggyToolWindowManager.currentGroup != null) {
+                    if (manager.getShowingGroup() != null) {
                         multiSplitContainer.addContent(content);
                     } else {
                         if (content == null) {
@@ -424,7 +423,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                             setSplitPaneContent(content);
                         }
                     }
-                } else if (MyDoggyToolWindowManager.currentGroup != null && content != null) {
+                } else if (manager.getShowingGroup() != null && content != null) {
                     MultiSplitContainer container = new MultiSplitContainer(orientation);
                     container.addContent(content);
 
@@ -432,7 +431,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 } else if (content != null)
                     setSplitPaneContent(content);
             } else {
-                if (MyDoggyToolWindowManager.currentGroup != null && content != null) {
+                if (manager.getShowingGroup() != null && content != null) {
                     MultiSplitContainer container = new MultiSplitContainer(orientation);
                     container.addContent(content);
 

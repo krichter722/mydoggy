@@ -271,7 +271,7 @@ public class FloatingContainer extends DockedContainer {
 		}
 
 
-		private void startAnimation(int incoming) {
+		private synchronized void startAnimation(int incoming) {
 			if (!animating) {
 				lastLenX = 0;
 				lastLenY = 0;
@@ -286,7 +286,7 @@ public class FloatingContainer extends DockedContainer {
 			}
 		}
 
-		private void stopAnimation() {
+		private synchronized void stopAnimation() {
 			animationTimer.stop();
 			animating = false;
 		}

@@ -16,8 +16,7 @@ import java.awt.*;
 public class TestTWManagerVisibileTool extends TestCase {
 
     private JFrame frame;
-    private Component toolContent;
-    private ToolWindowManager toolWindowManager;
+	private ToolWindowManager toolWindowManager;
 
     protected void setUp() throws Exception {
         frame = new JFrame("test");
@@ -45,8 +44,8 @@ public class TestTWManagerVisibileTool extends TestCase {
     }
 
     private void registerToolWindow() {
-        toolContent = new JLabel("label");
-        ToolWindow toolWindow = toolWindowManager.registerToolWindow(
+		Component toolContent = new JLabel("label");
+		ToolWindow toolWindow = toolWindowManager.registerToolWindow(
                 "id", "title", null, toolContent, ToolWindowAnchor.LEFT
         );
 
