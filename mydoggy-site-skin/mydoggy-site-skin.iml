@@ -20,15 +20,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven Dependency: tablelayout:TableLayout:jar:20020517:compile">
-        <CLASSES>
-          <root url="jar://C:/Documents and Settings/angelo/.m2/repository/tablelayout/TableLayout/20020517/TableLayout-20020517.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntryProperties />
   </component>
 </module>
