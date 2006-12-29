@@ -5,7 +5,6 @@ import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.ContentManagerListener;
 import org.noos.xing.mydoggy.ContentManagerUI;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
-import org.noos.xing.mydoggy.plaf.ui.content.BackContentManagerUI;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;

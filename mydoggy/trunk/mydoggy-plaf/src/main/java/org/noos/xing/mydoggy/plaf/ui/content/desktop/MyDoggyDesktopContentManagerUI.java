@@ -7,12 +7,12 @@ import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
-import org.noos.xing.mydoggy.plaf.ui.content.BackContentManagerUI;
-import org.noos.xing.mydoggy.plaf.ui.content.BackContentUI;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.ToFrontWindowFocusListener;
+import org.noos.xing.mydoggy.plaf.ui.content.BackContentManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.content.BackContentUI;
 
 import javax.swing.*;
 import javax.swing.event.InternalFrameAdapter;
