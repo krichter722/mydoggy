@@ -11,4 +11,18 @@ package org.noos.xing.mydoggy;
  * @see DesktopContentManagerUI
  */
 public interface ContentManagerUI {
+
+	/**
+	 *
+	 * @param closeable
+	 * @since 1.1.0
+	 */
+	void setCloseable(boolean closeable);
+
+	/**
+	 * @param detachable
+	 * @since 1.1.0
+	 */
+	void setDetachable(boolean detachable);
+
 }

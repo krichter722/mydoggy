@@ -30,8 +30,9 @@ public class AnchorLabelUI extends MetalLabelUI {
     static final Color end = new Color(255, 244, 204);
     static final Color gray = new Color(247, 243, 239);
 
-    protected JLabel label;
-    protected LineBorder labelBorder;
+	private JComponent component;
+
+	protected LineBorder labelBorder;
 
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
@@ -45,11 +46,11 @@ public class AnchorLabelUI extends MetalLabelUI {
 
     public void installUI(JComponent c) {
         super.installUI(c);
-        label = (JLabel) c;
-        labelBorder = new LineBorder(Color.GRAY, 1, true, 3, 3);
-        label.setBorder(labelBorder);
+		this.component = c;
+		labelBorder = new LineBorder(Color.GRAY, 1, true, 3, 3);
 
-        label.setTransferHandler(new ToolWindowTransferHandler(toolWindow));
+        c.setBorder(labelBorder);
+        c.setTransferHandler(new ToolWindowTransferHandler(toolWindow));
     }
 
     protected void installListeners(JLabel c) {
@@ -96,16 +97,16 @@ public class AnchorLabelUI extends MetalLabelUI {
 
     public void propertyChange(PropertyChangeEvent e) {
         if ("visible".equals(e.getPropertyName())) {
-            boolean visible = (Boolean) e.getNewValue();
-            label.setOpaque(visible);
+			boolean visible = (Boolean) e.getNewValue();
+            component.setOpaque(visible);
             if (visible) {
                 labelBorder.setLineColor(Color.BLACK);
 
-                descriptor.getToolBar().ensureVisible(label);
+                descriptor.getToolBar().ensureVisible(component);
             } else
                 labelBorder.setLineColor(Color.GRAY);
 
-            SwingUtil.repaint(label);
+            SwingUtil.repaint(component);
         } else if ("UI".equals(e.getPropertyName())) {
             adapter.propertyChange(e);
         }
@@ -148,22 +149,24 @@ public class AnchorLabelUI extends MetalLabelUI {
                     enableMoveToItem();
                     enableUserDefined();
 
-                    popupMenu.show(label, e.getX(), e.getY());
+                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
         }
 
         public void mouseEntered(MouseEvent e) {
-            if (!label.isOpaque()) {
+			Component source = e.getComponent();
+			if (!source.isOpaque()) {
                 labelBorder.setLineColor(Color.BLACK);
-                SwingUtil.repaint(label);
+                SwingUtil.repaint(source);
             }
         }
 
         public void mouseExited(MouseEvent e) {
-            if (!label.isOpaque()) {
+			Component source = e.getComponent();
+			if (!source.isOpaque()) {
                 labelBorder.setLineColor(Color.GRAY);
-                SwingUtil.repaint(label);
+                SwingUtil.repaint(source);
             }
         }
 

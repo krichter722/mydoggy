@@ -93,8 +93,6 @@ public class SlidingContainer extends FloatingContainer {
 					descriptor.setDivederLocation(sheet.getHeight());
 					break;
 				case LEFT:
-					descriptor.setDivederLocation(sheet.getWidth());
-					break;
 				case RIGHT:
 					descriptor.setDivederLocation(sheet.getWidth());
 					break;
@@ -114,7 +112,7 @@ public class SlidingContainer extends FloatingContainer {
 		layout.setRow(0, 0);
 		layout.setRow(2, 0);
 
-		barContainer.getParent().getLayout().layoutContainer(barContainer.getParent());
+		barContainer.getParent().getLayout().layoutContainer(barContainer.getParent());	// TODO : si verifica un errore nei test...
 		resize();
 
 		Component content = getContentContainer();
@@ -355,7 +353,7 @@ public class SlidingContainer extends FloatingContainer {
 		}
 
 
-		private void startAnimation(int incoming) {
+		private synchronized void startAnimation(int incoming) {
 			if (!animating) {
 				lastLen = 0;
 				switch (toolWindow.getAnchor()) {
@@ -379,7 +377,7 @@ public class SlidingContainer extends FloatingContainer {
 			}
 		}
 
-		private void stopAnimation() {
+		private synchronized void stopAnimation() {
 			animationTimer.stop();
 			animating = false;
 		}

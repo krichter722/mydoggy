@@ -10,10 +10,12 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ContentsTableModel extends DefaultTableModel implements PropertyChangeListener, ContentManagerListener {
-    private ToolWindowManager windowManager;
+public final class ContentsTableModel extends DefaultTableModel implements PropertyChangeListener, ContentManagerListener {
+	private static final long serialVersionUID = -7576229275613987979L;
 
-    public ContentsTableModel(ToolWindowManager windowManager) {
+    private final ToolWindowManager windowManager;
+
+	public ContentsTableModel(ToolWindowManager windowManager) {
         this.windowManager = windowManager;
         setColumnIdentifiers(new Object[]{
                 "Title", "Enabled", "Selected", "Detached"

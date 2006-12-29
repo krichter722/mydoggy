@@ -8,7 +8,9 @@ import java.beans.PropertyVetoException;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ContentDesktopManager implements DesktopManager, java.io.Serializable {
-    final static String HAS_BEEN_ICONIFIED_PROPERTY = "wasIconOnce";
+	private static final long serialVersionUID = -2247702899708786437L;
+
+	final static String HAS_BEEN_ICONIFIED_PROPERTY = "wasIconOnce";
 
     final static int DEFAULT_DRAG_MODE = 0;
     final static int OUTLINE_DRAG_MODE = 1;
@@ -89,7 +91,6 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
     public void iconifyFrame(JInternalFrame f) {
         JInternalFrame.JDesktopIcon desktopIcon;
         Container c = f.getParent();
-        JDesktopPane d = f.getDesktopPane();
         boolean findNext = f.isSelected();
 
         desktopIcon = f.getDesktopIcon();
@@ -104,9 +105,8 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
         }
 
         if (c instanceof JLayeredPane) {
-            JLayeredPane lp = (JLayeredPane) c;
-            int layer = lp.getLayer(f);
-            lp.putLayer(desktopIcon, layer);
+            int layer = JLayeredPane.getLayer(f);
+            JLayeredPane.putLayer(desktopIcon, layer);
         }
 
         // If we are maximized we already have the normal bounds recorded
@@ -158,11 +158,10 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
 
     public void activateFrame(JInternalFrame f) {
         Container p = f.getParent();
-        Component[] c;
         JDesktopPane d = f.getDesktopPane();
-        JInternalFrame currentlyActiveFrame =
-                (d == null) ? null : d.getSelectedFrame();
-        // fix for bug: 4162443
+        JInternalFrame currentlyActiveFrame = (d == null) ? null : d.getSelectedFrame();
+
+		// fix for bug: 4162443
         if (p == null) {
             // If the frame is not in parent, its icon maybe, check it
             p = f.getDesktopIcon().getParent();
@@ -305,7 +304,7 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
                     dragMode = OUTLINE_DRAG_MODE;
                 } else if (p.getDragMode() == JDesktopPane.LIVE_DRAG_MODE
                            && f instanceof JInternalFrame
-                           && ((JInternalFrame) f).isOpaque()) {
+                           && f.isOpaque()) {
                     dragMode = DEFAULT_DRAG_MODE;
                 } else {
                     dragMode = DEFAULT_DRAG_MODE;
@@ -368,37 +367,32 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
 
             found = true;
 
-            for (int i = 0; i < components.length; i++) {
+			for (Component component : components) {
+				if (component instanceof JInternalFrame) {
+					currentIcon = ((JInternalFrame) component).getDesktopIcon();
+				} else if (component instanceof JInternalFrame.JDesktopIcon) {
+					currentIcon = (JInternalFrame.JDesktopIcon) component;
+				} else
+					/* found a child that's neither an internal frame nor
+									an icon. I don't believe this should happen, but at
+									present it does and causes a null pointer exception.
+									Even when that gets fixed, this code protects against
+									the npe. hania */
+					continue;
 
-                //
-                // Get the icon for this component
-                //
+				//
+				// If this icon intersects the current location, get next location.
+				//
 
-                if (components[i] instanceof JInternalFrame) {
-                    currentIcon = ((JInternalFrame) components[i]).getDesktopIcon();
-                } else if (components[i] instanceof JInternalFrame.JDesktopIcon) {
-                    currentIcon = (JInternalFrame.JDesktopIcon) components[i];
-                } else
-                    /* found a child that's neither an internal frame nor
-                an icon. I don't believe this should happen, but at
-                present it does and causes a null pointer exception.
-                Even when that gets fixed, this code protects against
-                the npe. hania */
-                    continue;
+				if (!currentIcon.equals(icon)) {
+					if (availableRectangle.intersects(currentIcon.getBounds())) {
+						found = false;
+						break;
+					}
+				}
+			}
 
-                //
-                // If this icon intersects the current location, get next location.
-                //
-
-                if (!currentIcon.equals(icon)) {
-                    if (availableRectangle.intersects(currentIcon.getBounds())) {
-                        found = false;
-                        break;
-                    }
-                }
-            }
-
-            if (currentIcon == null)
+			if (currentIcon == null)
                 /* didn't find any useful children above. This probably shouldn't
            happen, but this check protects against an npe if it ever does
            (and it's happening now) */

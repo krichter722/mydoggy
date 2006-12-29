@@ -173,7 +173,6 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
 
 
     protected class ArrowListener extends MouseAdapter implements ActionListener {
-        boolean handledEvent;
         private Timer scrollTimer;
 
         private int direction;
@@ -196,8 +195,6 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
 
             scrollTimer.stop();
             scrollTimer.start();
-
-            handledEvent = true;
         }
 
         public void mouseReleased(MouseEvent e) {
@@ -206,7 +203,6 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
             SwingUtil.repaint(c);
 
             scrollTimer.stop();
-            handledEvent = false;
         }
 
 

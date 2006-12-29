@@ -10,7 +10,7 @@
     <body>
         <section name="Build Howto">
             <p>
-                The plugin is build using Maven-2. So first you have to download Maven-2 from
+                MyDoggy is build using Maven-2. So first you have to download Maven-2 from
                 <a href="http://maven.apache.org">http://maven.apache.org</a>.
                 <br></br>
                 The POM declares a few dependencies which are hosted on any publicly available Maven Repository.

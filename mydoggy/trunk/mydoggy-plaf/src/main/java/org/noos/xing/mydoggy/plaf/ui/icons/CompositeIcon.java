@@ -20,32 +20,26 @@ public class CompositeIcon implements Icon, SwingConstants {
     protected int horizontalOrientation;
     protected int verticalOrientation;
 
-    public CompositeIcon(Icon leftIcon, Icon rightVisible) {
-        this(leftIcon, rightVisible, TOP);
+    public CompositeIcon(Icon leftIcon, Icon rightIcon) {
+        this(leftIcon, rightIcon, TOP);
     }
 
-    public CompositeIcon(Icon leftIcon, Icon rightVisible, int position) {
-        this(leftIcon, rightVisible, position, CENTER, CENTER);
+    public CompositeIcon(Icon leftIcon, Icon rightIcon, int position) {
+        this(leftIcon, rightIcon, position, CENTER, CENTER);
     }
 
-    public CompositeIcon(Icon leftIcon, Icon rightVisible, int position, int horizontalOrientation, int verticalOrientation) {
+    public CompositeIcon(Icon leftIcon, Icon rightIcon, int position, int horizontalOrientation, int verticalOrientation) {
         this.position = position;
 
         switch (position) {
             case LEFT:
+			case TOP:
                 this.leftIcon = leftIcon;
-                this.rightIcon = rightVisible;
+                this.rightIcon = rightIcon;
                 break;
             case RIGHT:
-                this.leftIcon = rightVisible;
-                this.rightIcon = leftIcon;
-                break;
-            case TOP:
-                this.leftIcon = leftIcon;
-                this.rightIcon = rightVisible;
-                break;
-            case BOTTOM:
-                this.leftIcon = rightVisible;
+			case BOTTOM:
+                this.leftIcon = rightIcon;
                 this.rightIcon = leftIcon;
                 break;
         }
@@ -159,8 +153,8 @@ public class CompositeIcon implements Icon, SwingConstants {
         if (icon == null)
             return new Point(x,y);
 
-        int xIcon = x;
-        int yIcon = y;
+        int xIcon;
+        int yIcon;
 
         switch (horizontalOrientation) {
             case LEFT:

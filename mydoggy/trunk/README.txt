@@ -1,4 +1,4 @@
-MyDoggy - My Java Docking Framework 1.0.0
+MyDoggy - My Java Docking Framework 1.1.0
 
 CONTENTS
 ========
@@ -40,10 +40,10 @@ MyDoggy
     license                     - Contains license information.
     mydoggy-api                 - Contains sources of mydoggy api.
     mydoggy-examples            - Contains sources of mydoggy examples.
-    mydoggy-plaf                - Contains sources of mydoggy plaf (the default implementation of api).
+    mydoggy-plaf                - Contains sources of mydoggy plaf (the default implementation of the api).
     mydoggy-site-skin           - Contains sources of mydoggy site skin.
     src                         - Contains sources of mydoggy site.
-
+    makefile                    - The makefile to build TransparencyManager.dll
 
 Usage and Installation
 ======================
@@ -67,3 +67,7 @@ To build the binary and the source distribution simply call :
 To build the site simply call :
 
     mvn -Dsite clean package site assembly:assembly
+
+To build TransparencyManager.dll simply call :
+
+ 	mingw32-make
