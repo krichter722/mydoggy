@@ -84,7 +84,7 @@ Content content = contentManager.getContent("Tools");
 			</p>
 			<source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">...</a>;
 ContentManager contentManager = toolWindowManager.getContentManager();
-ContentManagerUI contentManagerUI = new <a href="./../mydoggy-plaf/index.html">... TODO</a>	
+ContentManagerUI contentManagerUI = new <a href="./../mydoggy-plaf/index.html#ContentManageUI">... TODO</a>	
 contentManager.setContentManagerUI(contentManagerUI);
 			</source>
         </section>

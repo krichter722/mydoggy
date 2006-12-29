@@ -69,8 +69,9 @@
                     <a href="./apidocs/org/noos/xing/mydoggy/ContentManagerUI.html">
                         <code>ContentManagerUI</code>
                     </a>
-                    This is a markup interface for all ContentManagerUI.
-                    A ContentManagerUI is an interface to modify the ui behaviours of a content manager.
+					A ContentManagerUI is an interface to modify the ui behaviours of
+					a content manager. For example this is used to modify the way a content
+					is showed.
                 </li>
             </ul>
         </section>

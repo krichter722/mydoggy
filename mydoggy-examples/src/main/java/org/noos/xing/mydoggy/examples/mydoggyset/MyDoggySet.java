@@ -383,7 +383,7 @@ public class MyDoggySet {
         toolGroupsPanel.add(hideGroup, "2,3,c,c");
 
         groupsPopupMenu = new JPopupMenu("Groups");
-        groupsPopupMenu.addPopupMenuListener(new PopupMenuListener() {
+		groupsPopupMenu.addPopupMenuListener(new PopupMenuListener() {
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                 groupsPopupMenu.removeAll();
                 for (ToolWindowGroup toolWindowGroup : toolWindowManager.getToolWindowGroups()) {

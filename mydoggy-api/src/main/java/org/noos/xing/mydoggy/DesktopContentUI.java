@@ -10,7 +10,7 @@ import java.awt.*;
  * @since 1.1.0
  * @see DesktopContentManagerUI
  */
-public interface DesktopContentUI {
+public interface DesktopContentUI extends ContentUI {
 
     /**
      * Sets the content frame location.
