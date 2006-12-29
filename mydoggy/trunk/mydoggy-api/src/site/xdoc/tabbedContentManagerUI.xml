@@ -17,7 +17,7 @@
 						</td>
 						<td>
 							<p>
-								This interface rapresents a ui that use a component that lets the user switch between
+								This interface represents a ui that use a component that lets the user switch between
 								a group of components by clicking on a tab with a given title and/or icon (i.e. JTabbedPane). 
 							</p>
 						</td>

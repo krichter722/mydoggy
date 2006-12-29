@@ -1,13 +1,13 @@
 package org.noos.xing.mydoggy;
 
 /**
- * This interface rapresents a ui that use a component that lets the user switch between
+ * This interface represents a ui that use a component that lets the user switch between
  * a group of components by clicking on a tab with a given title and/or icon (i.e. JTabbedPane). 
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.1.0
  */
-public interface TabbedContentManagerUI extends ContentManagerUI {
+public interface TabbedContentManagerUI extends ContentManagerUI<TabbedContentUI> {
 
     /**
      * The tab placement enum used in positioning the component that show tabs.
@@ -101,13 +101,5 @@ public interface TabbedContentManagerUI extends ContentManagerUI {
      * @since 1.1.0
      */
     boolean isShowAlwaysTab();
-
-	/**
-	 * Returns the ui part to which this manager maps the specified <code>content<code>.
-	 * @param content content whose associated ui part is to be returned.
-	 * @return the ui part to which this manager maps the specified <code>content<code>.
-	 * @since 1.1.0
-	 */
-    TabbedContentUI getTabbedContentUI(Content content);
 
 }
