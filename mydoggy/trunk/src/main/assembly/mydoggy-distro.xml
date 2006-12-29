@@ -69,6 +69,10 @@
             <source>README.txt</source>
             <outputDirectory>.</outputDirectory>
         </file>
+		<file>
+			<source>makefile</source>
+			<outputDirectory>.</outputDirectory>
+		</file>
     </files>
 
 </assembly>
