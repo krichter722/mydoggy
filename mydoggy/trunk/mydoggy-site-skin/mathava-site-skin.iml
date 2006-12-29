@@ -12,9 +12,13 @@
     <orderEntry type="library" name="Groovy from GroovyJ 0.1.8 (Demetra)" level="application" />
     <orderEntry type="module-library">
       <library name="Maven Dependency: junit:junit:jar:3.8.1:test">
-        <CLASSES />
+        <CLASSES>
+          <root url="jar://C:/Documents and Settings/angelo/.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar!/" />
+        </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://C:/Documents and Settings/angelo/.m2/repository/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntryProperties />
