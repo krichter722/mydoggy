@@ -7,8 +7,8 @@ import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
-import org.noos.xing.mydoggy.plaf.ui.content.ContentManagerUI;
-import org.noos.xing.mydoggy.plaf.ui.content.ContentUI;
+import org.noos.xing.mydoggy.plaf.ui.content.BackContentManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.content.BackContentUI;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.WindowTransparencyListener;
@@ -32,7 +32,7 @@ import java.beans.PropertyVetoException;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, ContentManagerUI, PropertyChangeListener {
+public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, BackContentManagerUI, PropertyChangeListener {
     private MyDoggyToolWindowManager toolWindowManager;
     private MyDoggyContentManager contentManager;
 
@@ -40,7 +40,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     private PropertyChangeSupport propertyChangeSupport;
 
-    private ContentUI lastSelected;
+    private BackContentUI lastSelected;
 
     boolean valueAdjusting;
     boolean contentValueAdjusting;
@@ -69,9 +69,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 		}
 	}
 
-	public DesktopContentUI getDesktopContentUI(Content content) {
-        return (DesktopContentUI) getFrameByComponent(content.getComponent());
-    }
+	public DesktopContentUI getContentUI(Content content) {
+		return (DesktopContentUI) getFrameByComponent(content.getComponent());
+	}
 
 
     public void install(ToolWindowManager manager) {
@@ -87,7 +87,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
 		contentValueAdjusting = true;
         for (Content content : contentManager.getContents()) {
-            addContent((ContentUI) content);
+            addContent((BackContentUI) content);
         }
         contentValueAdjusting = false;
 
@@ -98,16 +98,16 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     public void unistall() {
         for (Content content : contentManager.getContents()) {
-            removeContent((ContentUI) content);
+            removeContent((BackContentUI) content);
         }
     }
 
-    public void addContent(ContentUI content) {
+    public void addContent(BackContentUI content) {
         addUIForContent(content);
         content.addUIPropertyChangeListener(this);
     }
 
-    public void removeContent(ContentUI content) {
+    public void removeContent(BackContentUI content) {
         if (content.isDetached())
             content.setDetached(false);
 
@@ -228,9 +228,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                                         if (lastSelected.isDetached())
                                             lastSelected.fireSelected(false);
                                     }
-                                    lastSelected = (ContentUI) content;
+                                    lastSelected = (BackContentUI) content;
                                 }
-                                ((ContentUI) content).fireSelected((Boolean) evt.getNewValue());
+                                ((BackContentUI) content).fireSelected((Boolean) evt.getNewValue());
                                 break;
                             }
                         }
@@ -276,7 +276,6 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     class DisabledIconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
-            // TODO: in which way can i support this???
         }
     }
 
@@ -417,7 +416,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 dialog.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent event) {
                         Component component = dialog.getContentPane().getComponent(0);
-                        ContentUI content = (ContentUI) contentManager.getContent(component);
+                        BackContentUI content = (BackContentUI) contentManager.getContent(component);
                         content.fireSelected(false);
                         content.setDetached(false);
                     }
@@ -426,7 +425,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 dialog.addWindowFocusListener(new WindowFocusListener() {
                     public void windowGainedFocus(WindowEvent e) {
                         if (!valueAdjusting && !contentValueAdjusting) {
-                            ContentUI newSelected = (ContentUI) contentManager.getContent(
+                            BackContentUI newSelected = (BackContentUI) contentManager.getContent(
                                     dialog.getContentPane().getComponent(0));
 
                             if (newSelected == lastSelected)
@@ -488,6 +487,14 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             }
         }
 
+		public boolean isCloseable() {
+			return isClosable();
+		}
+
+		public void setCloseable(boolean closeable) {
+			setClosable(closeable);
+		}
+
 		public boolean isDetachable() {
 			return detachable;
 		}
@@ -515,13 +522,11 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                     detach.putClientProperty("content", content);
                     detach.setActionCommand("Detach");
                     detach.addActionListener(this);
-
-                    menu.add(detach);
-
-                    // TODO : è possibile visualizzare il popup del content???
+					detach.setEnabled(getContentUI(content).isDetachable());
+					menu.add(detach);
 
                     popupMenu.add(menu);
-                }
+				}
 
                 popupMenu.show(desktopPane, e.getX(), e.getY());
             }
