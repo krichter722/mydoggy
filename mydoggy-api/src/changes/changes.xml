@@ -1,31 +1,67 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <document>
 
-    <properties>
-        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
-        <title>MyDoggy - Changes</title>
-    </properties>
+	<properties>
+		<author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+		<title>MyDoggy - Changes</title>
+	</properties>
 
-    <body>
-        <release version="1.1.0">
-            <action dev="adecacro" type="add">
-                New interface ContentManagerUI: This is a markup interface for all ContentManagerUI.
-                A ContentManagerUI is an interface to modify the ui behaviours of content manager.
-            </action>
-            <action dev="adecacro" type="add">
-                New interface TabbedContentManagerUI: is used to modify the ui behaviours of a JTabbedPane
-                that shows registered contents.
-            </action>
-            <action dev="adecacro" type="add">
-                New interface DesktopContentManagerUI: is used to modify the ui behaviours of a JDesktopPane
-                that shows registered contents.
-            </action>
-        </release>
-        <release version="1.0.0" date="2006-10-31" description="First release">
-            <action dev="adecaro" type="add">
-                MyDoggy 1.0.0 released.
-            </action>
-        </release>
-    </body>
+	<body>
+		<release version="1.1.0" date="2007-01-31" description="Second release">
+			<action dev="adecaro" type="add">
+				ContentManagerUI - A ContentManagerUI is an interface to modify the ui behaviours of
+				a content manager. For example this is used to modify the way a content
+				is showed.
+			</action>
+			<action dev="adecaro" type="add">
+				ContentUI -
+			</action>
+			<action dev="adecaro" type="add">
+				TabbedContentManagerUI - This interface represents a ui that use a component that lets the user switch
+				between a group of components by clicking on a tab with a given title and/or icon (i.e. JTabbedPane).
+			</action>
+			<action dev="adecaro" type="add">
+				TabbedContentUI - This interface let you modify ui behaviours of a content when a
+				<![CDATA[<code>TabbedContentManagerUI</code>]]>
+				is used as current <![CDATA[<code>ContentManagerUI</code>]]>.
+			</action>
+			<action dev="adecaro" type="add">
+				DesktopContentManagerUI - This interface represents a ui that use a container to create a
+				multiple-document interface or a virtual desktop.
+			</action>
+			<action dev="adecaro" type="add">
+				DesktopContentUI - This interface let you modify ui behaviours of a content when a
+				<![CDATA[<code>DesktopContentManagerUI</code>]]>
+				is used as current <![CDATA[<code>ContentManagerUI</code>]]>.
+			</action>
+			<action dev="adecaro" type="add">
+				ContentManager - Added Method :
+				<![CDATA[
+				<ul>
+					<li>
+						<code>void setContentManagerUI(ContentManagerUI contentManagerUI);</code>
+						<br></br>
+						Sets the content manager ui to <code>contentManagerUI</code>.
+					</li>
+					<li>
+						<code>ContentManagerUI getContentManagerUI();</code>
+						<br></br>
+						Returns the content manager ui.
+					</li>
+					<li>
+						<code>void removeAllContents();</code>
+						<br></br>
+						Removes all of the contents from this manager.
+					</li>
+				</ul>
+				]]>
+			</action>
+		</release>
+		<release version="1.0.0" date="2006-10-31" description="First release">
+			<action dev="adecaro" type="add">
+				MyDoggy 1.0.0 released.
+			</action>
+		</release>
+	</body>
 
 </document>

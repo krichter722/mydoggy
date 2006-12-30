@@ -8,6 +8,7 @@ package org.noos.xing.mydoggy;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @see TabbedContentManagerUI
  * @see DesktopContentManagerUI
+ * @since 1.1.0
  */
 public interface ContentManagerUI<C extends ContentUI> {
 
