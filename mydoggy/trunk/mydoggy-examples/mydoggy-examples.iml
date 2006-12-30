@@ -10,8 +10,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="mydoggy-api" />
-    <orderEntry type="module" module-name="mydoggy-plaf" />
+    <orderEntry type="module" module-name="mydoggy-site" />
     <orderEntry type="module-library">
       <library name="Maven Dependency: junit:junit:jar:3.8.1:test">
         <CLASSES>
