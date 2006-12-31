@@ -9,8 +9,6 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -26,7 +24,7 @@ public class FloatingContainer extends DockedContainer {
 
 	private Rectangle lastBounds;
 
-	private FloatingAnimation floatingAnimation;
+	private final FloatingAnimation floatingAnimation = new FloatingAnimation();
 
 	public FloatingContainer(ToolWindowDescriptor descriptor) {
 		super(descriptor);
@@ -38,10 +36,8 @@ public class FloatingContainer extends DockedContainer {
 
 	public void setVisible(boolean visible) {
 		synchronized (floatingAnimation) {
-			if (floatingAnimation.animating) {
-				floatingAnimation.stopAnimation();
-				floatingAnimation.finishAnimation();
-			}
+			if (floatingAnimation.isAnimating()) 
+				floatingAnimation.stop();
 		}
 
 		if (visible) {
@@ -97,7 +93,6 @@ public class FloatingContainer extends DockedContainer {
 
 		resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window);
 		moveMouseInputHandler = new FloatingMoveMouseInputHandler(window, applicationBarTitle);
-		floatingAnimation = new FloatingAnimation();
 	}
 
 	private void initFloatingListeners() {
@@ -180,119 +175,51 @@ public class FloatingContainer extends DockedContainer {
 	}
 
 
-	private class FloatingAnimation implements ActionListener {
-		public static final int INCOMING = 1;
-		public static final int OUTGOING = -1;
-		public static final float ANIMATION_DURATION = 80f;
-		public static final int ANIMATION_SLEEP = 1;
-
-		private boolean animating;
-		private int animationDirection;
-		private Timer animationTimer;
-		private long animationStart;
-
+	private class FloatingAnimation extends AbstractAnimation {
 		private Rectangle originalBounds;
-
 		private int lastLenX = 0;
 		private int lastLenY = 0;
 
-		public synchronized void actionPerformed(ActionEvent e) {
-			if (animating) {
-				// calculate height to +show
-				float animationPercent = (System.currentTimeMillis() - animationStart) / ANIMATION_DURATION;
-				animationPercent = Math.min(1.0f, animationPercent);
-
-				int animatingLengthX = (int) (animationPercent * originalBounds.width);
-				int animatingLengthY = (int) (animationPercent * originalBounds.height);
-				if (animationDirection == INCOMING) {
-					window.setLocation(
-							window.getX() - (animatingLengthX / 2 - lastLenX / 2),
-							window.getY() - (animatingLengthY / 2 - lastLenY / 2)
-					);
-					window.setSize(
-							window.getWidth() + (animatingLengthX - lastLenX),
-							window.getHeight() + (animatingLengthY - lastLenY)
-					);
-				} else {
-					window.setLocation(
-							window.getX() + (animatingLengthX / 2 - lastLenX / 2),
-							window.getY() + (animatingLengthY / 2 - lastLenY / 2)
-					);
-					window.setSize(
-							window.getWidth() - (animatingLengthX - lastLenX),
-							window.getHeight() - (animatingLengthY - lastLenY)
-					);
-				}
-
-				//                window.validate();
-				//                window.repaint();
-
-				lastLenX = animatingLengthX;
-				lastLenY = animatingLengthY;
-				if (animationPercent >= 1.0f) {
-					stopAnimation();
-					finishAnimation();
-				}
-			}
+		public FloatingAnimation() {
+			super(80f);
 		}
 
 
-		public synchronized void show() {
-			if (animating) {
-				stopAnimation();
-				animationDirection = OUTGOING;
-				finishAnimation();
+		protected float onAnimating(float animationPercent) {
+			int animatingLengthX = (int) (animationPercent * originalBounds.width);
+			int animatingLengthY = (int) (animationPercent * originalBounds.height);
+
+			if (getAnimationDirection() == Direction.INCOMING) {
+				window.setLocation(
+						window.getX() - (animatingLengthX / 2 - lastLenX / 2),
+						window.getY() - (animatingLengthY / 2 - lastLenY / 2)
+				);
+				window.setSize(
+						window.getWidth() + (animatingLengthX - lastLenX),
+						window.getHeight() + (animatingLengthY - lastLenY)
+				);
+			} else {
+				window.setLocation(
+						window.getX() + (animatingLengthX / 2 - lastLenX / 2),
+						window.getY() + (animatingLengthY / 2 - lastLenY / 2)
+				);
+				window.setSize(
+						window.getWidth() - (animatingLengthX - lastLenX),
+						window.getHeight() - (animatingLengthY - lastLenY)
+				);
 			}
 
-			this.originalBounds = window.getBounds();
-			window.setBounds(new Rectangle(originalBounds.x + (originalBounds.width / 2),
-										   originalBounds.y + (originalBounds.height / 2),
-										   0, 0));
+			//                window.validate();
+			//                window.repaint();
 
-			FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
-			window.setModal(typeDescriptor.isModal());
-			window.setVisible(true);
-			window.getContentPane().setVisible(true);
+			lastLenX = animatingLengthX;
+			lastLenY = animatingLengthY;
 
-			startAnimation(INCOMING);
+			return animationPercent;
 		}
 
-		public synchronized void hide() {
-			if (animating) {
-				stopAnimation();
-				animationDirection = INCOMING;
-				finishAnimation();
-			}
-
-			this.originalBounds = window.getBounds();
-			window.getContentPane().setVisible(false);
-
-			startAnimation(OUTGOING);
-		}
-
-
-		private synchronized void startAnimation(int incoming) {
-			if (!animating) {
-				lastLenX = 0;
-				lastLenY = 0;
-
-				animationDirection = incoming;
-				// start floatingAnimation timer
-				animationStart = System.currentTimeMillis();
-				if (animationTimer == null)
-					animationTimer = new Timer(ANIMATION_SLEEP, this);
-				animating = true;
-				animationTimer.start();
-			}
-		}
-
-		private synchronized void stopAnimation() {
-			animationTimer.stop();
-			animating = false;
-		}
-
-		private void finishAnimation() {
-			switch (animationDirection) {
+		protected void onFinishAnimation() {
+			switch (getAnimationDirection()) {
 				case INCOMING:
 					window.setBounds(originalBounds);
 					SwingUtil.repaint(window);
@@ -304,6 +231,29 @@ public class FloatingContainer extends DockedContainer {
 					break;
 			}
 		}
+
+		protected void onHide(Object... params) {
+			this.originalBounds = window.getBounds();
+			window.getContentPane().setVisible(false);
+		}
+
+		protected void onShow(Object... params) {
+			this.originalBounds = window.getBounds();
+			window.setBounds(new Rectangle(originalBounds.x + (originalBounds.width / 2),
+										   originalBounds.y + (originalBounds.height / 2),
+										   0, 0));
+
+			FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
+			window.setModal(typeDescriptor.isModal());
+			window.setVisible(true);
+			window.getContentPane().setVisible(true);
+		}
+
+		protected void onStartAnimation(Direction direction) {
+			lastLenX = 0;
+			lastLenY = 0;
+		}
+
 	}
 
 }

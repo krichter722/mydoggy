@@ -7,8 +7,8 @@ import java.awt.*;
  * @author Angelo De Caro
  */
 public class CompositeIcon implements Icon, SwingConstants {
-    protected Icon leftIcon;
-    protected Icon rightIcon;
+    protected Icon leftIcon, passedLeftIcon;
+    protected Icon rightIcon, passedRightIcon;
 
     protected boolean leftVisible;
     protected boolean rightVisible;
@@ -30,8 +30,10 @@ public class CompositeIcon implements Icon, SwingConstants {
 
     public CompositeIcon(Icon leftIcon, Icon rightIcon, int position, int horizontalOrientation, int verticalOrientation) {
         this.position = position;
+		this.passedLeftIcon = leftIcon;
+		this.passedRightIcon = rightIcon;
 
-        switch (position) {
+		switch (position) {
             case LEFT:
 			case TOP:
                 this.leftIcon = leftIcon;
@@ -99,11 +101,11 @@ public class CompositeIcon implements Icon, SwingConstants {
 
 
     public Icon getLeftIcon() {
-        return leftIcon;
+        return passedLeftIcon;
     }
 
     public Icon getRightIcon() {
-        return rightIcon;
+        return passedRightIcon;
     }
 
     public boolean isLeftVisible() {
