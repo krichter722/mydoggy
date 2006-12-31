@@ -8,8 +8,6 @@ import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
@@ -19,7 +17,7 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro
  */
 public class SlidingContainer extends FloatingContainer {
-	private SlidingAnimation slidingAnimation;
+	private final SlidingAnimation slidingAnimation = new SlidingAnimation();
 
 	private SlidingBorder border;
 	private Container barContainer;
@@ -44,10 +42,8 @@ public class SlidingContainer extends FloatingContainer {
 		sheet.remove(content);
 
 		synchronized (slidingAnimation) {
-			if (slidingAnimation.animating) {
-				slidingAnimation.stopAnimation();
-				slidingAnimation.finishAnimation();
-			}
+			if (slidingAnimation.isAnimating())
+				slidingAnimation.stop();
 		}
 
 		if (visible) {
@@ -186,8 +182,6 @@ public class SlidingContainer extends FloatingContainer {
 		if (anchestor instanceof RootPaneContainer) {
 			glassPane = (Container) ((RootPaneContainer) anchestor).getGlassPane();
 
-			slidingAnimation = new SlidingAnimation();
-
 			anchestor.addComponentListener(new ComponentAdapter() {
 				public void componentResized(ComponentEvent e) {
 					if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
@@ -238,88 +232,48 @@ public class SlidingContainer extends FloatingContainer {
 	}
 
 
-	private class SlidingAnimation implements ActionListener {
-		private static final int INCOMING = 1;
-		private static final int OUTGOING = -1;
-		private static final float ANIMATION_DURATION = 100f;
-		private static final int ANIMATION_SLEEP = 1;
-
-		private boolean animating;
-		private int animationDirection;
-		private Timer animationTimer;
-		private long animationStart;
-
+	private class SlidingAnimation extends AbstractAnimation {
 		private int length;
 		private Rectangle bounds;
-
 		private int lastLen = 0;
 
-		public synchronized void actionPerformed(ActionEvent e) {
-			if (animating) {
-				// calculate height to show
-				float animationPercent = (System.currentTimeMillis() - animationStart) / ANIMATION_DURATION;
-				animationPercent = Math.min(1.0f, animationPercent);
+		public SlidingAnimation() {
+			super(100f);
+		}
 
-				try {
-					int animatingLength = 0;
-
-					switch (toolWindow.getAnchor()) {
-						case LEFT:
-							if (animationDirection == INCOMING)
-								animatingLength = (int) (animationPercent * length);
-							else
-								animatingLength = (int) ((1f - animationPercent) * length);
-							sheet.setSize(animatingLength, sheet.getHeight());
-							break;
-						case RIGHT:
-							animatingLength = (int) (animationPercent * length);
-							if (animationDirection == INCOMING) {
-								sheet.setLocation(sheet.getX() - (animatingLength - lastLen), sheet.getY());
-								sheet.setSize(animatingLength, sheet.getHeight());
-							} else {
-								sheet.setLocation(bounds.x + animatingLength, sheet.getY());
-								sheet.setSize((int) ((1f - animationPercent) * length), sheet.getHeight());
-							}
-							break;
-						case TOP:
-							if (animationDirection == INCOMING)
-								animatingLength = (int) (animationPercent * length);
-							else
-								animatingLength = (int) ((1f - animationPercent) * length);
-							sheet.setSize(sheet.getWidth(), animatingLength);
-							break;
-						case BOTTOM:
-							animatingLength = (int) (animationPercent * length);
-							if (animationDirection == INCOMING) {
-								sheet.setLocation(sheet.getX(), sheet.getY() - (animatingLength - lastLen));
-								sheet.setSize(sheet.getWidth(), animatingLength);
-							} else {
-								sheet.setLocation(sheet.getX(), bounds.y + animatingLength);
-								sheet.setSize(sheet.getWidth(), (int) ((1f - animationPercent) * length));
-							}
-
-							break;
-					}
-					sheet.validate();
-					sheet.repaint();
-
-					lastLen = animatingLength;
-				} finally {
-					if (animationPercent >= 1.0f) {
-						stopAnimation();
-						finishAnimation();
-					}
-				}
+		protected void onStartAnimation(Direction direction) {
+			lastLen = 0;
+			switch (toolWindow.getAnchor()) {
+				case LEFT:
+				case RIGHT:
+					length = bounds.width;
+					break;
+				case TOP:
+				case BOTTOM:
+					length = bounds.height;
+					break;
 			}
 		}
 
-		public synchronized void show(Rectangle bounds) {
-			if (animating) {
-				stopAnimation();
-				//                finishAnimation();
+		protected void onFinishAnimation() {
+			switch (getAnimationDirection()) {
+				case INCOMING:
+					sheet.setBounds(bounds);
+					break;
+				case OUTGOING:
+					glassPane.remove(sheet);
+					sheet.setBorder(null);
+					sheet.removeAll();
+					break;
 			}
+		}
 
-			this.bounds = bounds;
+		protected void onHide(Object... params) {
+			this.bounds = (Rectangle) params[0];
+		}
+
+		protected void onShow(Object... params) {
+			this.bounds = (Rectangle) params[0];
 
 			switch (toolWindow.getAnchor()) {
 				case LEFT:
@@ -337,64 +291,56 @@ public class SlidingContainer extends FloatingContainer {
 					sheet.setSize(sheet.getWidth(), 0);
 					break;
 			}
-
-			startAnimation(INCOMING);
 		}
 
-		public synchronized void hide(Rectangle bounds) {
-			if (animating) {
-				stopAnimation();
-				finishAnimation();
-			}
+		protected float onAnimating(float animationPercent) {
+			int animatingLength = 0;
 
-			this.bounds = bounds;
-
-			startAnimation(OUTGOING);
-		}
-
-
-		private synchronized void startAnimation(int incoming) {
-			if (!animating) {
-				lastLen = 0;
-				switch (toolWindow.getAnchor()) {
-					case LEFT:
-					case RIGHT:
-						length = bounds.width;
-						break;
-					case TOP:
-					case BOTTOM:
-						length = bounds.height;
-						break;
-				}
-
-				animationDirection = incoming;
-				// start slidingAnimation timer
-				animationStart = System.currentTimeMillis();
-				if (animationTimer == null)
-					animationTimer = new Timer(ANIMATION_SLEEP, this);
-				animating = true;
-				animationTimer.start();
-			}
-		}
-
-		private synchronized void stopAnimation() {
-			animationTimer.stop();
-			animating = false;
-		}
-
-		private void finishAnimation() {
-			switch (animationDirection) {
-				case INCOMING:
-					sheet.setBounds(bounds);
+			Direction direction = getAnimationDirection();
+			switch (toolWindow.getAnchor()) {
+				case LEFT:
+					if (direction == Direction.INCOMING)
+						animatingLength = (int) (animationPercent * length);
+					else
+						animatingLength = (int) ((1f - animationPercent) * length);
+					sheet.setSize(animatingLength, sheet.getHeight());
 					break;
-				case OUTGOING:
-					glassPane.remove(sheet);
-					sheet.setBorder(null);
-					sheet.removeAll();
+				case RIGHT:
+					animatingLength = (int) (animationPercent * length);
+					if (direction == Direction.INCOMING) {
+						sheet.setLocation(sheet.getX() - (animatingLength - lastLen), sheet.getY());
+						sheet.setSize(animatingLength, sheet.getHeight());
+					} else {
+						sheet.setLocation(bounds.x + animatingLength, sheet.getY());
+						sheet.setSize((int) ((1f - animationPercent) * length), sheet.getHeight());
+					}
+					break;
+				case TOP:
+					if (direction == Direction.INCOMING)
+						animatingLength = (int) (animationPercent * length);
+					else
+						animatingLength = (int) ((1f - animationPercent) * length);
+					sheet.setSize(sheet.getWidth(), animatingLength);
+					break;
+				case BOTTOM:
+					animatingLength = (int) (animationPercent * length);
+					if (direction == Direction.INCOMING) {
+						sheet.setLocation(sheet.getX(), sheet.getY() - (animatingLength - lastLen));
+						sheet.setSize(sheet.getWidth(), animatingLength);
+					} else {
+						sheet.setLocation(sheet.getX(), bounds.y + animatingLength);
+						sheet.setSize(sheet.getWidth(), (int) ((1f - animationPercent) * length));
+					}
+
 					break;
 			}
+			sheet.validate();
+			sheet.repaint();
+
+			lastLen = animatingLength;
+
+			return animationPercent;
 		}
 
 	}
-
 }

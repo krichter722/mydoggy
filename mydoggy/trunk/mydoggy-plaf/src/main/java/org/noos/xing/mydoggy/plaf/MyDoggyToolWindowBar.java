@@ -14,8 +14,6 @@ import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Hashtable;
@@ -361,7 +359,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
 
     class VisibleDockedListener implements PropertyChangeListener {
-        private final Animation animation = new Animation();
+        private final SplitAnimation splitAnimation = new SplitAnimation();
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
@@ -375,11 +373,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
             if (content == null || descriptor.getDivederLocation() > 0 && splitPane.getDividerSize() != 0) {
                 if (manager.getShowingGroup() == null) {
-					synchronized (animation) {
-						if (animation.animating) {
-							animation.stopAnimation();
-							animation.finishAnimation();
-						}
+					synchronized (splitAnimation) {
+						if (splitAnimation.isAnimating())
+							splitAnimation.stop();
 					}
 
 					switch (anchor) {
@@ -443,10 +439,10 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             if (animate) {
                 if (content != null) {
                     splitPane.setDividerSize(5);
-                    animation.show(divederLocation);
+                    splitAnimation.show(divederLocation);
                 } else {
                     splitPane.setDividerSize(0);
-                    animation.hide(divederLocation);
+                    splitAnimation.hide(divederLocation);
                 }
             } else {
                 SwingUtil.repaint(splitPane);
@@ -492,99 +488,47 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         }
 
 
-        private class Animation implements ActionListener {
-            private static final int INCOMING = 1;
-            private static final int OUTGOING = -1;
-            private static final float ANIMATION_DURATION = 100f;
-            private static final int ANIMATION_SLEEP = 1;
-
-            private boolean animating;
-            private int animationDirection;
-            private Timer animationTimer;
-            private long animationStart;
-
+        private class SplitAnimation extends AbstractAnimation {
             private int dividerLocation;
             private int sheetLen;
 
-            public synchronized void actionPerformed(ActionEvent e) {
-                if (animating) {
-                    // calculate height to show
-                    float animationPercent = (System.currentTimeMillis() - animationStart) / ANIMATION_DURATION;
-                    animationPercent = Math.min(1.0f, animationPercent);
-                    int animatingHeight;
+			public SplitAnimation() {
+				super(100f);
+			}
 
-                    if (animationDirection == INCOMING)
-                        animatingHeight = (int) (animationPercent * sheetLen);
-                    else
-                        animatingHeight = (int) ((1.0f - animationPercent) * sheetLen);
+			protected float onAnimating(float animationPercent) {
+				int animatingHeight;
 
-                    switch (anchor) {
-                        case LEFT:
-                        case TOP:
-                            if (animationDirection == INCOMING) {
-                                if (splitPane.getDividerLocation() <= animatingHeight)
-                                    splitPane.setDividerLocation(animatingHeight);
-                            } else
-                                splitPane.setDividerLocation(animatingHeight);
-                            break;
-                        case RIGHT:
-                            splitPane.setDividerLocation(splitPane.getWidth() - animatingHeight);
-                            break;
-                        case BOTTOM:
-                            splitPane.setDividerLocation(splitPane.getHeight() - animatingHeight);
-                            break;
-                    }
+				Direction direction = getAnimationDirection();
+				if (direction == Direction.INCOMING)
+					animatingHeight = (int) (animationPercent * sheetLen);
+				else
+					animatingHeight = (int) ((1.0f - animationPercent) * sheetLen);
 
+				switch (anchor) {
+					case LEFT:
+					case TOP:
+						if (direction == Direction.INCOMING) {
+							if (splitPane.getDividerLocation() <= animatingHeight)
+								splitPane.setDividerLocation(animatingHeight);
+						} else
+							splitPane.setDividerLocation(animatingHeight);
+						break;
+					case RIGHT:
+						splitPane.setDividerLocation(splitPane.getWidth() - animatingHeight);
+						break;
+					case BOTTOM:
+						splitPane.setDividerLocation(splitPane.getHeight() - animatingHeight);
+						break;
+				}
 
-                    if (animationPercent >= 1.0f) {
-                        stopAnimation();
-                        finishAnimation();
-                    }
-                }
-            }
+				return animationPercent;
+			}
 
-            public synchronized void show(int divederLocation) {
-                if (animating) {
-                    stopAnimation();
-                    finishAnimation();
-                }
-                this.dividerLocation = divederLocation;
-                startAnimation(INCOMING);
-            }
-
-            public synchronized void hide(int divederLocation) {
-                if (animating) {
-                    stopAnimation();
-                    finishAnimation();
-                }
-                this.dividerLocation = divederLocation;
-                startAnimation(OUTGOING);
-            }
-
-
-            private void startAnimation(int incoming) {
-                if (!animating) {
-                    sheetLen = dividerLocation;
-                    animationDirection = incoming;
-
-                    // start animation timer
-                    animationStart = System.currentTimeMillis();
-                    if (animationTimer == null)
-                        animationTimer = new Timer(ANIMATION_SLEEP, this);
-                    animating = true;
-                    animationTimer.start();
-                }
-            }
-
-            private void stopAnimation() {
-                animationTimer.stop();
-                animating = false;
-            }
-
-            private void finishAnimation() {
-                if (splitPane.getDividerSize() == 0) {
-                    setSplitPaneContent(null);
-                } else {
+			protected void onFinishAnimation() {
+				if (splitPane.getDividerSize() == 0) {
+					setSplitPaneContent(null);
+				} else {
 					switch (anchor) {
 						case LEFT:
 						case TOP:
@@ -598,8 +542,20 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 							splitPane.setDividerLocation(splitPane.getHeight() - sheetLen);
 							break;
 					}
-                }
-            }
+				}
+			}
+
+			protected void onHide(Object... params) {
+				this.dividerLocation = (Integer) params[0];
+			}
+
+			protected void onShow(Object... params) {
+				this.dividerLocation = (Integer) params[0];
+			}
+
+			protected void onStartAnimation(Direction direction) {
+				sheetLen = dividerLocation;
+			}
 
         }
 
