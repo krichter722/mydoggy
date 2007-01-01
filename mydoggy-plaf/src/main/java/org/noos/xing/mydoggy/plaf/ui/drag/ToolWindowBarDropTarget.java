@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolWindowBarDropTarget extends DropTarget implements DropTargetListener {
+public class ToolWindowBarDropTarget extends DropTarget {
     private ToolWindowAnchor anchor;
     private Container container;
 

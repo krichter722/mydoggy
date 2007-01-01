@@ -22,8 +22,6 @@ public class ApplicationBarPanelUI extends PanelUI {
 	private Color startDisabled;
 	private Color endDisabled;
 
-	private boolean animating = false;
-
 	private JComponent panel;
 
 	private GradientAnimation animation;

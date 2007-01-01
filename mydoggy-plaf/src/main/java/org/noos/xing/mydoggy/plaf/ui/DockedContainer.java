@@ -394,7 +394,10 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         }
     }
 
-    static class IconProvider {
+	/**
+	 * TODO: find a best form for this.
+	 */
+	static class IconProvider {
         Icon docked;
         Icon dockedInactive;
 
