@@ -263,7 +263,7 @@
       <meta name="author" content="$author" />
     #end
     <meta http-equiv="Content-Type" content="text/html; charset=${outputEncoding}" />
-    <meta name="keywords" content="Java, IntelliJ, Docking, Swing, Open Source, Development, Developers, Projects, Downloads, SF.net, SourceForge, Eclipse, Transparency, Transparent, Dll, Eclipse, ToolWindow, Doggy" />
+    <meta name="keywords" content="intellij, docking, swing, eclipse, java" />
     #if ( $decoration.body.head )
       #foreach( $item in $decoration.body.head.getChildren() )
         #if ( $item.name == "script" )
@@ -273,12 +273,6 @@
         #end
       #end
     #end
-    <script type="text/javascript">
-        function changeBanner() {
-            prefix = (Math.floor (Math.random () * 4 + 1 ));
-            document.getElementById("bannerImage").src = "images/banners/banner_" + prefix + ".jpg";
-        }
-    </script>
   </head>
   <body class="composite">
     <div id="banner">

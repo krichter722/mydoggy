@@ -8,15 +8,9 @@
 
     <body>
         <release version="1.1.0" date="2006-10-31" description="Second release">
-            <action dev="adecaro" type="add">
-                Various Refactoring.
-            </action>
-            <action dev="adecaro" type="add">
-                MyDoggyDesktopContentManagerUI and ContentDesktopManager.
-            </action>
-            <action dev="adecaro" type="add">
-                PropertyChangeSupport for multi-firing property change evet
-            </action>
+			<action dev="adecaro" type="add">
+				Support for <![CDATA[<a href="index.html#ContentManageUI"><code>ContentManagerUI</code></a>]]>
+			</action>
         </release>
         <release version="1.0.0" date="2006-10-31" description="First release">
             <action dev="adecaro" type="add">

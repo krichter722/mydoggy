@@ -12,12 +12,8 @@
             <div id="downloadbox">
                 <h5>Get MyDoggy 1.1.0 Now!!!</h5>
                 <span style="display: block; text-align: right; font-size: smaller">Released: 10 April 2006</span>
-
                 <p>
-                    <a href="download.html">
-                        MyDoggy 1.1.0
-                    </a>
-                    <small>(1.0Mb)</small>
+                    <a href="download.html">MyDoggy 1.1.0</a><small> (1.0Mb)</small>
                 </p>
                 <ul>
                     <li>
@@ -27,8 +23,9 @@
 						<a href="download.html#usage">MyDoggy Usage</a>
 					</li>
                     <li>
-                        <a href="download.html#mydoggyset">MyDoggySet Usage (Demo App)</a>
-                    </li>
+                        <a href="download.html#mydoggyset">MyDoggySet Usage</a>
+						<a href="./mydoggy-examples/mydoggyset.html">(WebStart)</a>
+					</li>
                 </ul>
             </div>
 
