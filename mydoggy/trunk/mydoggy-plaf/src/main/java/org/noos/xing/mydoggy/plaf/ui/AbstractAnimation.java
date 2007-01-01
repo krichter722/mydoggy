@@ -9,7 +9,8 @@ import java.awt.event.ActionListener;
  */
 public abstract class AbstractAnimation implements ActionListener {
 
-	protected enum Direction {INCOMING, OUTGOING}
+	protected enum Direction {INCOMING, OUTGOING, NONE}
+	protected enum Type {SHOW, HIDE}
 
 	private static final int ANIMATION_SLEEP = 1;
 
@@ -42,7 +43,9 @@ public abstract class AbstractAnimation implements ActionListener {
 	public final synchronized void show(Object... params) {
 		if (animating) {
 			stopAnimation();
-			onFinishAnimation();
+			animationDirection = chooseFinishDirection(Type.SHOW);
+			if (animationDirection != Direction.NONE)
+				onFinishAnimation();
 		}
 		onShow(params);
 		startAnimation(Direction.INCOMING);
@@ -51,7 +54,9 @@ public abstract class AbstractAnimation implements ActionListener {
 	public final synchronized void hide(Object... params) {
 		if (animating) {
 			stopAnimation();
-			onFinishAnimation();
+			animationDirection = chooseFinishDirection(Type.HIDE);
+			if (animationDirection != Direction.NONE)
+				onFinishAnimation();
 		}
 		onHide(params);
 		startAnimation(Direction.OUTGOING);
@@ -88,7 +93,8 @@ public abstract class AbstractAnimation implements ActionListener {
 	}
 
 	private synchronized void stopAnimation() {
-		animationTimer.stop();
+		if (animationTimer != null)
+			animationTimer.stop();
 		animating = false;
 	}
 
@@ -102,5 +108,9 @@ public abstract class AbstractAnimation implements ActionListener {
 	protected abstract void onFinishAnimation();
 
 	protected abstract float onAnimating(float animationPercent);
+
+	protected Direction chooseFinishDirection(Type type) {
+		return getAnimationDirection();
+	}
 
 }

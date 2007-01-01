@@ -50,6 +50,10 @@ public class TransparencyAnimation extends AbstractAnimation {
 	protected void onStartAnimation(Direction direction) {
 	}
 
+	protected Direction chooseFinishDirection(Type type) {
+		return (type == Type.SHOW) ? Direction.OUTGOING : Direction.INCOMING;
+	}
+
     public void setAlpha(float alpha) {
         this.alpha = alpha;
     }

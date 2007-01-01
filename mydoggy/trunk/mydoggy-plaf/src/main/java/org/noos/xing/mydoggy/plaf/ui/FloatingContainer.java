@@ -254,6 +254,9 @@ public class FloatingContainer extends DockedContainer {
 			lastLenY = 0;
 		}
 
+		protected Direction chooseFinishDirection(Type type) {
+			return (type == Type.SHOW) ? Direction.OUTGOING : Direction.INCOMING;
+		}
 	}
 
 }

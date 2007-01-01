@@ -342,5 +342,9 @@ public class SlidingContainer extends FloatingContainer {
 			return animationPercent;
 		}
 
+		protected Direction chooseFinishDirection(Type type) {
+			return (type == Type.SHOW) ? Direction.NONE : super.chooseFinishDirection(type);
+		}
+
 	}
 }
