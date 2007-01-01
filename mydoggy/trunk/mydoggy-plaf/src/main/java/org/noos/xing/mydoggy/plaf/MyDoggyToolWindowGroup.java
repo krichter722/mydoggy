@@ -52,7 +52,7 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
     }
 
     public ToolWindow[] getToolsWindow() {
-        return tools.toArray(new ToolWindow[0]);
+        return tools.toArray(new ToolWindow[tools.size()]);
     }
 
     public boolean containesToolWindow(ToolWindow toolWindow) {

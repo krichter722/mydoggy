@@ -8,12 +8,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class WindowTransparencyListener extends WindowAdapter implements WindowFocusListener, ActionListener {
+public class WindowTransparencyListener extends WindowAdapter implements ActionListener {
     private final TransparencyManager transparencyManager = TransparencyManager.getInstance();
 
     private TransparencyAnimation animation;

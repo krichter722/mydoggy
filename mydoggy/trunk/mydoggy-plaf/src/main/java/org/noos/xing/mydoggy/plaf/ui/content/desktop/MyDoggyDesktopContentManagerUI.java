@@ -468,7 +468,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     }
 
 
-    class DesktopContentFrame extends JInternalFrame implements DesktopContentUI {
+    static class DesktopContentFrame extends JInternalFrame implements DesktopContentUI {
 		private boolean detachable;
 
 		public DesktopContentFrame(String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {

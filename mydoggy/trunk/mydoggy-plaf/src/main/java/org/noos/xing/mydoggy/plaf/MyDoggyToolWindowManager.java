@@ -146,7 +146,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         for (ToolWindowDescriptor tool : tools.values())
             result.add(tool.getToolWindow());
 
-        return result.toArray(new ToolWindow[0]);
+        return result.toArray(new ToolWindow[result.size()]);
     }
 
     public Object getActiveToolWindowId() {
@@ -179,7 +179,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 result.add(tool.getToolWindow());
         }
 
-        return result.toArray(new ToolWindow[0]);
+        return result.toArray(new ToolWindow[result.size()]);
     }
 
     public ToolWindowGroup getToolWindowGroup(String name) {
@@ -187,7 +187,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public ToolWindowGroup[] getToolWindowGroups() {
-        return toolWindowGroups.values().toArray(new ToolWindowGroup[0]);
+		Collection<ToolWindowGroup> c = toolWindowGroups.values();
+		return c.toArray(new ToolWindowGroup[c.size()]);
     }
 
     public boolean removeToolWindowGroup(String name) {
