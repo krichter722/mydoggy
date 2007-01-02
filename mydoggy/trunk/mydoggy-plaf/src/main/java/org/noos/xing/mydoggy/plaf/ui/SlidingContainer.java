@@ -108,7 +108,8 @@ public class SlidingContainer extends FloatingContainer {
 		layout.setRow(0, 0);
 		layout.setRow(2, 0);
 
-		barContainer.getParent().getLayout().layoutContainer(barContainer.getParent());	// TODO : si verifica un errore nei test...
+		if (barContainer != null)
+			barContainer.getParent().getLayout().layoutContainer(barContainer.getParent());
 		resize();
 
 		Component content = getContentContainer();
