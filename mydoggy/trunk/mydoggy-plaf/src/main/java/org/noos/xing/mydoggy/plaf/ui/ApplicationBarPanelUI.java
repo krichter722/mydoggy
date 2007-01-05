@@ -97,6 +97,8 @@ public class ApplicationBarPanelUI extends PanelUI {
 					if (startTemp == null || startTemp.equals(startEnabled))
 						animation.hide();
 				} else {
+//					System.out.println(descriptor.getToolWindow().getId());
+//					new RuntimeException().printStackTrace();
 					if (startTemp == null || startTemp.equals(startDisabled))
 						animation.show();
 				}

@@ -36,7 +36,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     private boolean floatingWindow = false;
 
 
-    public ToolWindowDescriptor(MyDoggyToolWindowManager manager, MyDoggyToolWindow toolWindow, Window windowAnchestor, Component component) {
+    public ToolWindowDescriptor(MyDoggyToolWindowManager manager, MyDoggyToolWindow toolWindow,
+								Window windowAnchestor, Component component) {
         this.manager = manager;
         this.windowAnchestor = windowAnchestor;
         this.component = component;

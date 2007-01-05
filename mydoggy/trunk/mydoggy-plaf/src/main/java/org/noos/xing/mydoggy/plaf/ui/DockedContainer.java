@@ -142,7 +142,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         container.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
         container.setFocusCycleRoot(false);
 
-        // Application Bar
+		// Application Bar
         applicationBar = new JPanel(new TableLayout(new double[][]{{3, TableLayout.FILL, 3, 15, 2, 15, 2, 15, 2, 15, 3}, {1, 14, 1}})) {
             public void setUI(PanelUI ui) {
                 if (ui instanceof ApplicationBarPanelUI)
@@ -189,7 +189,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
     private void initDockedListeners() {
-        addPropertyChangeListener("focusOwner", new FocusOwnerPropertyChangeListener());
+//        addPropertyChangeListener("focusOwner", new FocusOwnerPropertyChangeListener());
         addPropertyChangeListener("active", new ActivePropertyChangeListener());
         addPropertyChangeListener("anchor", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
@@ -223,7 +223,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 }
             }
         });
-    }
+	}
 
     private JButton renderApplicationButton(String iconName, String actionCommnad, ActionListener actionListener, String tooltip) {
         JButton button = new ApplicationButton();
@@ -286,7 +286,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
 
-    class FocusOwnerPropertyChangeListener implements PropertyChangeListener {
+	class FocusOwnerPropertyChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             if (!toolWindow.isVisible())
@@ -296,9 +296,9 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             if (component == null) return;
             if (component instanceof JRootPane) return;
 
-            valueAdjusting = true;
+			valueAdjusting = true;
 
-            if (isInternalComponent(component)) {
+			if (isInternalComponent(component)) {
                 toolWindow.setActive(true);
                 if (focusRequester == null)
                     focusRequester = component;

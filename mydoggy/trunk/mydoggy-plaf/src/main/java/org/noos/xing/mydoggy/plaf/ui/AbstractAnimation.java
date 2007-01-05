@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
  */
 public abstract class AbstractAnimation implements ActionListener {
 
-	protected enum Direction {INCOMING, OUTGOING, NONE}
+	public enum Direction {INCOMING, OUTGOING, NONE}
 	protected enum Type {SHOW, HIDE}
 
 	private static final int ANIMATION_SLEEP = 1;
