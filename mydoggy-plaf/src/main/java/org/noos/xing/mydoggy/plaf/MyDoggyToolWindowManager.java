@@ -1,13 +1,20 @@
 package org.noos.xing.mydoggy.plaf;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.ContentManager;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
+import org.noos.xing.mydoggy.ToolWindowGroup;
+import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.ToolWindowManagerListener;
+import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
-import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
-import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultDockedTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultFloatingTypeDescriptor;
+import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
+import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
 import org.noos.xing.mydoggy.plaf.ui.GlassPaneMouseAdapter;
 import org.noos.xing.mydoggy.plaf.ui.ResourceBoundles;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
@@ -24,7 +31,12 @@ import java.awt.event.ContainerEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author Angelo De Caro
@@ -337,10 +349,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         mainContainer = new JPanel();
         mainContainer.setBackground(Color.GRAY);
         mainContainer.setLayout(new ExtendedTableLayout(new double[][] {{-1},{-1}}));
-        mainContainer.setFocusCycleRoot(true);
+        mainContainer.setFocusCycleRoot(true);		
 
-
-        mainSplitPane.setLeftComponent(mainContainer);
+		mainSplitPane.setLeftComponent(mainContainer);
 
         addBar(TOP, JSplitPane.VERTICAL_SPLIT, "1,0", "2,2,c,c");
         JSplitPane bottomSplit = addBar(BOTTOM, JSplitPane.VERTICAL_SPLIT, "1,2", "0,2,c,c");
@@ -573,8 +584,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     class ActivePropertyChangeListener implements PropertyChangeListener {
-        public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
+		public void propertyChange(PropertyChangeEvent evt) {
+			ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
 
             // Fire "active.before" for all bars
             PropertyChangeEvent event = new PropertyChangeEvent(evt.getSource(), "active.before",
@@ -582,13 +593,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             for (MyDoggyToolWindowBar bar : bars)
                 bar.propertyChange(event);
 
-            // Fire "active" for specific bar
+			// Fire "active" for specific bar
             getBar(descriptor.getToolWindow().getAnchor()).propertyChange(evt);
 
-            if (evt.getNewValue() == Boolean.FALSE)
+            if (Boolean.FALSE.equals(evt.getNewValue())) {
                 activeToolWindowId = null;
-            else activeToolWindowId = descriptor.getToolWindow().getId();
-        }
+			} else activeToolWindowId = descriptor.getToolWindow().getId();
+		}
     }
 
     class AnchorPropertyChangeListener implements PropertyChangeListener {

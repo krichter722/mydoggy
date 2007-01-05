@@ -35,7 +35,7 @@ public class JTabbedContentManager extends JTabbedPane {
         MouseInputAdapter mouseInputAdapter = new MouseOverTabListener();
         addMouseListener(mouseInputAdapter);
         addMouseMotionListener(mouseInputAdapter);
-    }
+	}
 
 
     public void insertTab(String title, Icon icon, Component component, String tip, int index) {
