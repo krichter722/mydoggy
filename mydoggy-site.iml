@@ -11,13 +11,6 @@
       <sourceFolder url="file://$MODULE_DIR$/mydoggy-plaf/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/mydoggy-plaf/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/mydoggy-site-skin/src/main/resources" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-api/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-examples/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-examples/src/main/resources" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-plaf/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-plaf/src/main/resources" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-plaf/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-site-skin/src/main/resources" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/Debug" />
       <excludeFolder url="file://$MODULE_DIR$/lib" />
       <excludeFolder url="file://$MODULE_DIR$/target" />

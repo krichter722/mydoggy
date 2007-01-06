@@ -406,6 +406,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         });
     }
 
+	Component last = null;
     protected void initListeners() {
         propertyChangeSupport = new PropertyChangeSupport();
         propertyChangeSupport.addPropertyChangeListener("available", new AvailablePropertyChangeListener());
@@ -419,7 +420,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         propertyChangeSupport.addPropertyChangeListener("title", new TitleChangeListener());
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(this);
-    }
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				Component newFocusOwner = (Component) evt.getNewValue();
+				if (newFocusOwner != null && SwingUtilities.isDescendingFrom(newFocusOwner, mainContainer))
+					last = newFocusOwner;
+			}
+		});
+	}
 
 
     protected JSplitPane renderSplitPane(int orientation) {
@@ -583,8 +591,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    class ActivePropertyChangeListener implements PropertyChangeListener {
-		public void propertyChange(PropertyChangeEvent evt) {
+	class ActivePropertyChangeListener implements PropertyChangeListener {
+
+		public synchronized void propertyChange(PropertyChangeEvent evt) {
 			ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
 
             // Fire "active.before" for all bars
@@ -598,6 +607,19 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
             if (Boolean.FALSE.equals(evt.getNewValue())) {
                 activeToolWindowId = null;
+
+				if (last != null) {
+					boolean shouldRequest = true;
+					for (MyDoggyToolWindowBar bar : bars) {
+						if (bar.valueAdjusting && getBar(descriptor.getToolWindow().getAnchor()) == bar) {
+							shouldRequest = false;
+							break;
+						}
+					}
+					if (shouldRequest) {
+						last.requestFocusInWindow();
+					}
+				}
 			} else activeToolWindowId = descriptor.getToolWindow().getId();
 		}
     }

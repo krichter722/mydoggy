@@ -30,7 +30,7 @@ public class SwingUtil {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 //                System.out.println("IN RUN - requestFocus for : " + component.isFocusable() + " - " + component);
-                component.requestFocus();
+                component.requestFocusInWindow();
             }
         });
     }
@@ -179,4 +179,18 @@ public class SwingUtil {
                 Thread.currentThread().getContextClassLoader().getResource(url));
     }
 
+	public static Component findFocusable(Component cmp) {
+		if (cmp.isFocusable())
+			return cmp;
+
+		if (cmp instanceof Container) {
+			Container container = (Container) cmp;
+			for (int i = 0, size = container.getComponentCount(); i < size; i++) {
+				Component finded = findFocusable(container.getComponent(i));
+				if (finded != null)
+					return finded;
+			}
+		}
+		return null;
+	}
 }
