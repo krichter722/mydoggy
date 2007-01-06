@@ -53,6 +53,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
 	private PropertyChangeSupport propertyChangeSupport;
 
+	boolean valueAdjusting = false;
 
 	MyDoggyToolWindowBar(MyDoggyToolWindowManager manager, JSplitPane splitPane, ToolWindowAnchor anchor) {
 		this.manager = manager;
@@ -279,7 +280,6 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
 	}
 
-
 	class ActiveBeforeListener implements PropertyChangeListener {
 		public void propertyChange(PropertyChangeEvent evt) {
 			ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
@@ -291,7 +291,10 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 				for (ToolWindow toolWindow : toolWindows) {
 					if (toolWindow == sourceTool)
 						continue;
+
+					valueAdjusting = true;
 					toolWindow.setActive(false);
+					valueAdjusting = false;
 				}
 			}
 		}
@@ -456,7 +459,6 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 			} else {
 				SwingUtil.repaint(splitPane);
 			}
-
 		}
 
 		protected void setSplitPaneContent(Component content) {

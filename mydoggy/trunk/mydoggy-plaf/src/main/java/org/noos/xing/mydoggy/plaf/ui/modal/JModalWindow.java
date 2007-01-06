@@ -79,7 +79,7 @@ public class JModalWindow extends JWindow {
                 stillBusy = !owner.isEnabled();
 
                 if (!stillBusy) {
-                    returnFocus.requestFocus();
+                    returnFocus.requestFocusInWindow();
                 }
             }
         }
