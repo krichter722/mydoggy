@@ -9,26 +9,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library name="Maven Dependency: junit:junit:jar:3.8.1:test">
-        <CLASSES>
-          <root url="jar://C:/Documents and Settings/angelo/.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://C:/Documents and Settings/angelo/.m2/repository/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven Dependency: tablelayout:TableLayout:jar:20020517:compile">
-        <CLASSES>
-          <root url="jar://C:/Documents and Settings/angelo/.m2/repository/tablelayout/TableLayout/20020517/TableLayout-20020517.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntryProperties />
   </component>
 </module>
