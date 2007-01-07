@@ -35,7 +35,7 @@ Like Eclipse, MyDoggy supports the concept of "prospective" using mydoggy groups
 Directory Structure
 ===================
 
-MyDoggy
+mydoggy-1.1.0
     bin                         - Contains scripts for launching mydoggy examples.
     lib                         - Contains mydoggy jars (
     								mydoggy-api-1.1.0.jar,
@@ -75,7 +75,7 @@ To build the site simply call :
 
     mvn -Dsite clean package site assembly:assembly
 
-To build TransparencyManager.dll simply call (from mydoggy root directory):
+To build TransparencyManager.dll simply call (starting from the directory you have choosed to unzip mydoggy):
 
  	mingw32-make
 
