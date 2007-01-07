@@ -39,7 +39,7 @@
                         <tr valign="top">
                             <td>MyDoggy</td>
                             <td>1.1.0</td>
-                            <td>2007-01-15</td>
+                            <td>2007-01-08</td>
                             <td>Stable</td>
                             <td>
                                 <em>
@@ -107,7 +107,7 @@
                 </ol>
                 <h4>Transparency on Windows 2000/XP</h4>
                 <p>
-                    To see in action the transparency effect you have to put TransparencyManager.dll into a system
+                    To see the transparency effect in action, you have to put TransparencyManager.dll into a system
                     directory. Refers to java property "java.library.path" for those directories.
                     <br/>
                     You can found the precompiled TransparencyManager.dll file into <tt>/lib/win32</tt>
@@ -187,7 +187,7 @@
 							<td>Stable</td>
 							<td>
 								<em>
-									<a href="http://sourceforge.net/project/showfiles.php?group_id=178005">
+									<a href="http://sourceforge.net/project/showfiles.php?group_id=178005&amp;package_id=205132&amp;release_id=461605">
 										Download
 									</a>
 								</em>
