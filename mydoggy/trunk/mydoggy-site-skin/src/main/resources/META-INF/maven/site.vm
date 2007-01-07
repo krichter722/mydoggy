@@ -263,7 +263,7 @@
       <meta name="author" content="$author" />
     #end
     <meta http-equiv="Content-Type" content="text/html; charset=${outputEncoding}" />
-    <meta name="keywords" content="intellij, docking, swing, eclipse, java" />
+    <meta name="keywords" content="intellij, docking, mydoggy, swing, eclipse, java" />
     #if ( $decoration.body.head )
       #foreach( $item in $decoration.body.head.getChildren() )
         #if ( $item.name == "script" )
