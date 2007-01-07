@@ -17,14 +17,14 @@
                             </td>
                             <td>
                                 <p>
-                                    On Windows platform, starting from Windows 2000, you can see in action the transparency mode
+                                    On Windows platform, starting from Windows 2000, you can see the transparency in action
                                     for floating tool window and for detached contents.
                                     <br></br>
                                     In fact, when a tool window or a detached content lost the focus, they become
                                     transparent in a few milliseconds.
                                     <br></br>
                                     To see this effect you must put the TransparencyManager.dll into a system directory.
-                                    Into the distribution package you can found pre-compiled dll and sources.
+                                    Into the distribution package you can found a pre-compiled dll and sources.
                                 </p>
                             </td>
                         </tr>
