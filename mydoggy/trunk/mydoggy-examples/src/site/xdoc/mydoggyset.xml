@@ -24,6 +24,10 @@
                                 Launch
                                 <a href="./jnlp/mydoggyset/mydoggyset.jnlp">MyDoggySet</a>
                                 using Java Web Start.
+								<br></br>
+								On Windows Platform to see the transparency in action you have to
+								<a href="./../download.html">download</a>
+								a mydoggy distribution.
                             </p>
                         </td>
                     </tr>
