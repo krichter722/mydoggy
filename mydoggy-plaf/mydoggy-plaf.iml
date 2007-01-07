@@ -11,7 +11,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="mydoggy-api" exported="" />
+    <orderEntry type="module" module-name="mydoggy-api" />
     <orderEntry type="module-library" exported="">
       <library name="Maven Dependency: junit:junit:jar:3.8.1:test">
         <CLASSES>
