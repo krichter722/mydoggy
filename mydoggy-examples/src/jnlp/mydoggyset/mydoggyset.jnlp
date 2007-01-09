@@ -11,7 +11,7 @@
     </information>
 
     <resources>
-        <j2se version="1.5"/>
+        <j2se version="1.5+"/>
         <jar href="TableLayout-20020517.jar"/>
         <jar href="mydoggy-api-1.1.0.jar"/>
         <jar href="mydoggy-plaf-1.1.0.jar"/>
