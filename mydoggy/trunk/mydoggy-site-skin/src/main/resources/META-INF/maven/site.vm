@@ -233,17 +233,17 @@
         #end
 
         #if( $poweredBy.isEmpty() )
-          <a href="http://www.sourceforge.net" id="poweredBy">
-            <img border="0" alt="Hosted by SourceForge" src="$relativePath/images/logos/sflogo.png"/>
-          </a>
+		  <a href="http://sourceforge.net" id="poweredBy">
+			  <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=178005&amp;type=1" width="88" height="31" border="0" alt="SourceForge.net Logo" />
+		  </a>
           <a href="http://maven.apache.org/" title="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" id="poweredBy">
             <img border="0" alt="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" src="$relativePath/images/logos/maven-feather.png"></img>
           </a>
         #end
     #else
-        <a href="http://www.sourceforge.net" id="poweredBy">
-          <img alt="Hosted by SourceForge" src="http://sourceforge.net/sflogo.php?group_id=16035&amp;type=1"/>
-        </a>
+		<a href="http://sourceforge.net" id="poweredBy">
+			<img src="http://sflogo.sourceforge.net/sflogo.php?group_id=178005&amp;type=1" width="88" height="31" border="0" alt="SourceForge.net Logo" />
+		</a>
         <a href="http://maven.apache.org/" title="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" id="poweredBy">
           <img alt="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" src="$relativePath/images/logos/maven-feather.png"></img>
         </a>
