@@ -169,15 +169,22 @@ public class SwingUtil {
     }
 
     public static Icon loadIcon(String url) {
-        return new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                Thread.currentThread().getContextClassLoader().getResource(url))
-        );
-    }
+		try {
+			return new ImageIcon(Toolkit.getDefaultToolkit().getImage(SwingUtil.class.getClassLoader().getResource(url)));
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
     public static Image loadImage(String url) {
-        return Toolkit.getDefaultToolkit().getImage(
-                Thread.currentThread().getContextClassLoader().getResource(url));
-    }
+		try {
+			return Toolkit.getDefaultToolkit().getImage(SwingUtil.class.getClassLoader().getResource(url));
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public static Component findFocusable(Component cmp) {
 		if (cmp.isFocusable())

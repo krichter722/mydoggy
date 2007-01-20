@@ -7,8 +7,8 @@ import org.noos.xing.mydoggy.examples.mydoggyset.model.ToolGroupsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ToolsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.CheckBoxCellRenderer;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.content.desktop.MyDoggyDesktopContentManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -170,7 +170,7 @@ public class MyDoggySet {
         JPanel panel = new JPanel(new TableLayout(new double[][]{{20, -1, 20}, {20, -1, 20}}));
         panel.add(new JButton("Hello World 2"), "1,1,FULL,FULL");
 
-        toolWindowManager.registerToolWindow("1", "Title 1", null, new JButton("Hello World 1"), ToolWindowAnchor.LEFT);
+		toolWindowManager.registerToolWindow("1", "Title 1", null, new JButton("Hello World 1"), ToolWindowAnchor.LEFT);
         toolWindowManager.registerToolWindow("2", "Title 2", null, panel, ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("3", "Title 3",
                                              SwingUtil.loadIcon("org/noos/xing/mydoggy/examples/mydoggyset/icons/save.png"),
