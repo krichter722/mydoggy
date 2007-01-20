@@ -25,6 +25,8 @@ public interface ToolWindowManager {
      */
     ContentManager getContentManager();
 
+    ToolWindowManagerDescriptor getToolWindowManagerDescriptor();
+
     /**
      * Register a new tool window into this window manager based on the passed parameters.
      *

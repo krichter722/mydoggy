@@ -1,15 +1,8 @@
 package org.noos.xing.mydoggy.plaf;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.ContentManager;
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
-import org.noos.xing.mydoggy.ToolWindowGroup;
-import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.ToolWindowManagerListener;
-import org.noos.xing.mydoggy.ToolWindowType;
-import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultDockedTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultFloatingTypeDescriptor;
@@ -41,7 +34,7 @@ import java.util.Map;
 /**
  * @author Angelo De Caro
  */
-public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener, KeyEventPostProcessor {
+public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener, KeyEventPostProcessor, ToolWindowManagerDescriptor {
     private static final int COLUMN_LENGTH = 23;
     private static final int ROW_LENGTH = 23;
 
@@ -65,6 +58,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     private PropertyChangeSupport propertyChangeSupport;
 
     private Object activeToolWindowId;
+
+    private Dock dock;
 
     // Type Descriptors Template.
     private DefaultFloatingTypeDescriptor floatingTypeDescriptor;
@@ -91,6 +86,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     public ContentManager getContentManager() {
         return contentManager;
+    }
+
+    public ToolWindowManagerDescriptor getToolWindowManagerDescriptor() {
+        return this;
     }
 
     public ToolWindow registerToolWindow(Object id, String title, Icon icon,
@@ -244,6 +243,52 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return twmListeners.getListeners(ToolWindowManagerListener.class);
     }
 
+    public void setDock(Dock dock) {
+        if (this.dock == dock)
+            return;
+
+        // TODO: bisogna migliorare il blocco
+        switch(dock) {
+            case LEFT:
+                getBar(LEFT).getSplitPane().setLeftComponent(null);
+                getBar(LEFT).getSplitPane().setRightComponent(null);
+
+                getBar(RIGHT).getSplitPane().setLeftComponent(null);
+                getBar(RIGHT).getSplitPane().setRightComponent(null);
+
+                getBar(TOP).getSplitPane().setLeftComponent(null);
+                getBar(TOP).getSplitPane().setRightComponent(null);
+
+                getBar(BOTTOM).getSplitPane().setLeftComponent(null);
+                getBar(BOTTOM).getSplitPane().setRightComponent(null);
+
+                getBar(LEFT).getSplitPane().setRightComponent(getBar(RIGHT).getSplitPane());
+                getBar(RIGHT).getSplitPane().setLeftComponent(getBar(TOP).getSplitPane());
+                getBar(TOP).getSplitPane().setBottomComponent(getBar(BOTTOM).getSplitPane());
+                getBar(BOTTOM).getSplitPane().setResizeWeight(1);
+                add(getBar(LEFT).getSplitPane(), "1,1,FULL,FULL");
+
+                mainSplitPane = getBar(BOTTOM).getSplitPane();
+                mainSplitPane.setTopComponent(mainContainer);
+                break;
+            case TOP:
+                getBar(BOTTOM).getSplitPane().setTopComponent(getBar(TOP).getSplitPane());
+                getBar(TOP).getSplitPane().setBottomComponent(getBar(LEFT).getSplitPane());
+                getBar(LEFT).getSplitPane().setRightComponent(getBar(RIGHT).getSplitPane());
+                getBar(RIGHT).getSplitPane().setResizeWeight(1);
+
+                add(getBar(BOTTOM).getSplitPane(), "1,1,FULL,FULL");
+
+                mainSplitPane = getBar(RIGHT).getSplitPane();
+                mainSplitPane.setLeftComponent(mainContainer);
+                break;
+        }
+    }
+
+    public Dock getDock() {
+        return dock;
+    }
+
 
     public boolean postProcessKeyEvent(KeyEvent e) {
         if (e.getID() == KeyEvent.KEY_TYPED) {
@@ -343,25 +388,26 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         // Register bars, one for every anchor
         addBar(LEFT, JSplitPane.HORIZONTAL_SPLIT, "0,1", "0,0,c,c");
-        mainSplitPane = addBar(RIGHT, JSplitPane.HORIZONTAL_SPLIT, "2,1", "2,0,c,c");
-        mainSplitPane.addPropertyChangeListener("UI", new UpdateUIChangeListener());
+        addBar(RIGHT, JSplitPane.HORIZONTAL_SPLIT, "2,1", "2,0,c,c");
+        addBar(TOP, JSplitPane.VERTICAL_SPLIT, "1,0", "2,2,c,c");
+        addBar(BOTTOM, JSplitPane.VERTICAL_SPLIT, "1,2", "0,2,c,c");
 
         mainContainer = new JPanel();
         mainContainer.setBackground(Color.GRAY);
         mainContainer.setLayout(new ExtendedTableLayout(new double[][] {{-1},{-1}}));
-        mainContainer.setFocusCycleRoot(true);		
+        mainContainer.setFocusCycleRoot(true);
 
-		mainSplitPane.setLeftComponent(mainContainer);
-
-        addBar(TOP, JSplitPane.VERTICAL_SPLIT, "1,0", "2,2,c,c");
-        JSplitPane bottomSplit = addBar(BOTTOM, JSplitPane.VERTICAL_SPLIT, "1,2", "0,2,c,c");
-
-        add(bottomSplit, "1,1,FULL,FULL");
-
+        this.dock = Dock.TOP;
         getBar(BOTTOM).getSplitPane().setTopComponent(getBar(TOP).getSplitPane());
         getBar(TOP).getSplitPane().setBottomComponent(getBar(LEFT).getSplitPane());
         getBar(LEFT).getSplitPane().setRightComponent(getBar(RIGHT).getSplitPane());
         getBar(RIGHT).getSplitPane().setResizeWeight(1);
+
+        add(getBar(BOTTOM).getSplitPane(), "1,1,FULL,FULL");
+
+        mainSplitPane = getBar(RIGHT).getSplitPane();
+        mainSplitPane.addPropertyChangeListener("UI", new UpdateUIChangeListener());
+		mainSplitPane.setLeftComponent(mainContainer);
 
         // Init glass pane used for SLIDING
         initGlassPane();
