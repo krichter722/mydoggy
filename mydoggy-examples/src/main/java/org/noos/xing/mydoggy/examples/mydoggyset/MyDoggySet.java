@@ -262,6 +262,7 @@ public class MyDoggySet {
                 .setPopupMenu(toolsPopupMenu);
         toolWindowManager.getContentManager().getContent(0).setTitle("ToolWindows");
 
+        toolWindowManager.getToolWindowManagerDescriptor().setDock(ToolWindowManagerDescriptor.Dock.LEFT);
 
         // Add MyDoggyToolWindowManager to frame
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
