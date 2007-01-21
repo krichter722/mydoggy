@@ -6,7 +6,7 @@ import javax.swing.*;
  * This interface is used to modify the behaviours of DOCKED type.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * @see org.noos.xing.mydoggy.ToolWindowType
+ * @see org.noos.xing.mydoggy.ToolWindowType#DOCKED
  */
 public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
 

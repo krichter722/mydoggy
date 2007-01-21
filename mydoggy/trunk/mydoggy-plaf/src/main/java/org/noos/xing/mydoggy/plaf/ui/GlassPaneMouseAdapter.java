@@ -80,7 +80,7 @@ public class GlassPaneMouseAdapter implements MouseListener, MouseMotionListener
 
             if (component != previousMoveComponent) {
                 Component enteredCmp = getComponentFor(component, MouseEvent.MOUSE_ENTERED);
-                if (enteredCmp == null) 
+                if (enteredCmp == null)
                     enteredCmp = component;
 
                 MouseEvent me = new MouseEvent(enteredCmp, MouseEvent.MOUSE_ENTERED, e.getWhen(),
@@ -106,12 +106,26 @@ public class GlassPaneMouseAdapter implements MouseListener, MouseMotionListener
                     if (targetCmp == null)
                         targetCmp = mouseEventTarget;
 
-                    MouseEvent event = new MouseEvent(targetCmp, e.getID(), e.getWhen(), e.getModifiers(),
-                                                      mouseEventTargetPoint.x,
-                                                      mouseEventTargetPoint.y,
-                                                      e.getClickCount(),
-                                                      e.isPopupTrigger(),
-                                                      e.getButton());
+                    MouseEvent event;
+                    if (e.getID() == MouseEvent.MOUSE_WHEEL) {
+                        MouseWheelEvent mwEvent = (MouseWheelEvent) e;
+                        event = new MouseWheelEvent(targetCmp, e.getID(), e.getWhen(), e.getModifiers(),
+                                                    mouseEventTargetPoint.x,
+                                                    mouseEventTargetPoint.y,
+                                                    e.getClickCount(),
+                                                    e.isPopupTrigger(),
+                                                    mwEvent.getScrollType(),
+                                                    mwEvent.getScrollAmount(),
+                                                    mwEvent.getWheelRotation());
+                    } else {
+                        event = new MouseEvent(targetCmp, e.getID(), e.getWhen(), e.getModifiers(),
+                                               mouseEventTargetPoint.x,
+                                               mouseEventTargetPoint.y,
+                                               e.getClickCount(),
+                                               e.isPopupTrigger(),
+                                               e.getButton());
+                    }
+
                     targetCmp.dispatchEvent(event);
                 }
             }
@@ -120,7 +134,7 @@ public class GlassPaneMouseAdapter implements MouseListener, MouseMotionListener
 
     public Component getComponentFor(Component component, int mouseType) {
         while (component != null) {
-            switch(mouseType) {
+            switch (mouseType) {
                 case MouseEvent.MOUSE_CLICKED:
                 case MouseEvent.MOUSE_PRESSED:
                 case MouseEvent.MOUSE_RELEASED:

@@ -32,6 +32,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
     private FloatingTypeDescriptor floatingTypeDescriptor;
     private DockedTypeDescriptor dockedTypeDescriptor;
+    private SlidingTypeDescriptor slidingTypeDescriptor;
 
     private boolean floatingWindow = false;
 
@@ -112,6 +113,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
                 return floatingTypeDescriptor;
             case DOCKED:
                 return dockedTypeDescriptor;
+            case SLIDING:
+                return slidingTypeDescriptor;
         }
         throw new IllegalStateException("Doen't exist a TypeDescriptor for : " + type);
     }
@@ -176,6 +179,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     protected void initTypeDescriptors() {
         floatingTypeDescriptor = (FloatingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING)).cloneMe();
         dockedTypeDescriptor = (DockedTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).cloneMe();
+        slidingTypeDescriptor = (SlidingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.SLIDING)).cloneMe();
     }
 
 

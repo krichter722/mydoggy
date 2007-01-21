@@ -6,11 +6,13 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultDockedTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultFloatingTypeDescriptor;
+import org.noos.xing.mydoggy.plaf.descriptors.DefaultSlidingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
 import org.noos.xing.mydoggy.plaf.ui.GlassPaneMouseAdapter;
 import org.noos.xing.mydoggy.plaf.ui.ResourceBoundles;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.SlidingContainer;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.MyDoggyTabbedContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -64,6 +66,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     // Type Descriptors Template.
     private DefaultFloatingTypeDescriptor floatingTypeDescriptor;
     private DefaultDockedTypeDescriptor dockingTypeDescriptor;
+    private DefaultSlidingTypeDescriptor slidingTypeDescriptor;
 
     // ToolWindwoManager Listener List
     private EventListenerList twmListeners;
@@ -226,6 +229,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 if (dockingTypeDescriptor == null)
                     dockingTypeDescriptor = new DefaultDockedTypeDescriptor();
                 return dockingTypeDescriptor;
+            case SLIDING:
+                if (slidingTypeDescriptor == null)
+                    slidingTypeDescriptor = new DefaultSlidingTypeDescriptor();
+                return slidingTypeDescriptor;
         }
         throw new IllegalStateException("Doen't exist a TypeDescriptor for : " + type);
     }
@@ -421,6 +428,30 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                         super.setVisible(aFlag);
                 } else
                     super.setVisible(aFlag);
+            }
+
+            private AlphaComposite makeComposite(float alpha) {
+                int type = AlphaComposite.SRC_OVER;
+                return (AlphaComposite.getInstance(type, alpha));
+            }
+
+            public Graphics getGraphics() {
+                Graphics2D g2d = (Graphics2D) super.getGraphics();
+                if (SlidingContainer.aa) {
+                    g2d.setComposite(makeComposite(0.5f));
+                }
+                return g2d;
+            }
+
+            protected void paintChildren(Graphics g) {
+                if (SlidingContainer.aa) {
+                    Graphics2D g2d = (Graphics2D) g;
+                    Composite originalComposite = g2d.getComposite();
+                    g2d.setComposite(makeComposite(0.5f));
+                    super.paintChildren(g);
+                    g2d.setComposite(originalComposite);
+                } else
+                    super.paintChildren(g);
             }
         });
 
