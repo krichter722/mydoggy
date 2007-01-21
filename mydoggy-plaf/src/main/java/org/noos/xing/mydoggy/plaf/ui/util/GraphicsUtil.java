@@ -88,7 +88,9 @@ public class GraphicsUtil {
 
             Paint oldPaint = g2D.getPaint();
 
-            g2D.setComposite(AlphaComposite.SrcAtop);
+            if (g2D.getComposite() == null)
+                g2D.setComposite(AlphaComposite.SrcAtop);
+
             g2D.setPaint(new GradientPaint(x1, y1, color1, x2, y2, color2));
             g2D.fillRect(r.x, r.y, r.width, r.height);
             g2D.setPaint(oldPaint);

@@ -25,6 +25,11 @@ public interface ToolWindowManager {
      */
     ContentManager getContentManager();
 
+    /**
+     *
+     * @return
+     * @since 1.2.0
+     */
     ToolWindowManagerDescriptor getToolWindowManagerDescriptor();
 
     /**

@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.border.SlidingBorder;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +28,8 @@ public class SlidingContainer extends FloatingContainer {
 	private SlidingMouseInputHandler slidingMouseInputHandler;
 
 	private JPanel mainPanel = new JPanel();
-	private JComponent sheet = new JPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
+    public static boolean aa = false;
+    private JComponent sheet = new JPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
 
 	public SlidingContainer(ToolWindowDescriptor descriptor) {
 		super(descriptor);
@@ -221,8 +223,23 @@ public class SlidingContainer extends FloatingContainer {
 				}
 			}
 		});
+        addPropertyChangeListener("active", new PropertyChangeListener() {
 
-		slidingMouseInputHandler = new SlidingMouseInputHandler(descriptor);
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (descriptor.getToolWindow().getType() == ToolWindowType.SLIDING) {
+                    if (Boolean.TRUE.equals(evt.getNewValue())) {
+                        aa = false;
+                    } else {
+                        aa = true;
+                    }
+
+                    JFrame frame = (JFrame) descriptor.getWindowAnchestor();
+                    SwingUtil.repaint(frame.getRootPane().getGlassPane());
+                }
+            }
+        });
+
+        slidingMouseInputHandler = new SlidingMouseInputHandler(descriptor);
 	}
 
 
