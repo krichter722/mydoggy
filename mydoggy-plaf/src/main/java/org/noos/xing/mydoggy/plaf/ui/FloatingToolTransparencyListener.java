@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui;
 
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 
 import javax.swing.*;
@@ -16,8 +17,8 @@ import java.beans.PropertyChangeListener;
 public class FloatingToolTransparencyListener implements PropertyChangeListener, ActionListener {
     private ToolWindowDescriptor descriptor;
     private Window window;
-    private final TransparencyManager transparencyManager = TransparencyManager.getInstance();
-
+    
+    private final TransparencyManager<Window> transparencyManager = WindowTransparencyManager.getInstance();
     private TransparencyAnimation transparencyAnimation;
 
     private Timer timer;

@@ -9,20 +9,16 @@ import org.noos.xing.mydoggy.plaf.descriptors.DefaultFloatingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultSlidingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
-import org.noos.xing.mydoggy.plaf.ui.GlassPaneMouseAdapter;
-import org.noos.xing.mydoggy.plaf.ui.ResourceBoundles;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.SlidingContainer;
+import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.MyDoggyTabbedContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.persistence.XmlPersistenceDelegate;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import javax.swing.plaf.SplitPaneUI;
 import java.awt.*;
-import java.awt.event.ContainerAdapter;
-import java.awt.event.ContainerEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -62,6 +58,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     private Object activeToolWindowId;
 
     private Dock dock;
+    private Component lastFocusOwner = null;
 
     // Type Descriptors Template.
     private DefaultFloatingTypeDescriptor floatingTypeDescriptor;
@@ -70,6 +67,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     // ToolWindwoManager Listener List
     private EventListenerList twmListeners;
+
+    private PersistenceDelegate persistenceDelegate;
 
     public MyDoggyToolWindowManager(Window windowAnchestor) {
         this(windowAnchestor, Locale.getDefault());
@@ -81,6 +80,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         this.anchestor = windowAnchestor;
 
+        this.persistenceDelegate = new XmlPersistenceDelegate(this);
         initResourceBoundles(locale);
         initComponents();
         initListeners();
@@ -93,6 +93,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     public ToolWindowManagerDescriptor getToolWindowManagerDescriptor() {
         return this;
+    }
+
+    public PersistenceDelegate getPersistenceDelegate() {
+        return persistenceDelegate;
     }
 
     public ToolWindow registerToolWindow(Object id, String title, Icon icon,
@@ -421,69 +425,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     protected void initGlassPane() {
-        ((RootPaneContainer) anchestor).setGlassPane(new JPanel(){
-            public void setVisible(boolean aFlag) {
-                if (!aFlag) {
-                    if (getComponentCount() == 0)
-                        super.setVisible(aFlag);
-                } else
-                    super.setVisible(aFlag);
-            }
-
-            private AlphaComposite makeComposite(float alpha) {
-                int type = AlphaComposite.SRC_OVER;
-                return (AlphaComposite.getInstance(type, alpha));
-            }
-
-            public Graphics getGraphics() {
-                Graphics2D g2d = (Graphics2D) super.getGraphics();
-                if (SlidingContainer.aa) {
-                    g2d.setComposite(makeComposite(0.5f));
-                }
-                return g2d;
-            }
-
-            protected void paintChildren(Graphics g) {
-                if (SlidingContainer.aa) {
-                    Graphics2D g2d = (Graphics2D) g;
-                    Composite originalComposite = g2d.getComposite();
-                    g2d.setComposite(makeComposite(0.5f));
-                    super.paintChildren(g);
-                    g2d.setComposite(originalComposite);
-                } else
-                    super.paintChildren(g);
-            }
-        });
-
-        final JPanel glassPane = (JPanel) ((RootPaneContainer) anchestor).getGlassPane();
-        glassPane.setOpaque(false);
-        glassPane.setVisible(false);
-        glassPane.setLayout(null);
-
-        glassPane.addContainerListener(new ContainerAdapter() {
-            GlassPaneMouseAdapter adapter = new GlassPaneMouseAdapter((RootPaneContainer) anchestor);
-
-            public void componentAdded(ContainerEvent e) {
-                glassPane.setVisible(true);
-                if (glassPane.getComponentCount() == 1) {
-                    glassPane.addMouseListener(adapter);
-                    glassPane.addMouseMotionListener(adapter);
-                    glassPane.addMouseWheelListener(adapter);
-                }
-            }
-
-            public void componentRemoved(ContainerEvent e) {
-                if (glassPane.getComponentCount() == 0) {
-                    glassPane.setVisible(false);
-                    glassPane.removeMouseListener(adapter);
-                    glassPane.removeMouseMotionListener(adapter);
-                    glassPane.removeMouseWheelListener(adapter);
-                }
-            }
-        });
+        RootPaneContainer rootPaneContainer = (RootPaneContainer) anchestor;
+        rootPaneContainer.setGlassPane(new GlassPanel(rootPaneContainer));
     }
 
-	Component last = null;
     protected void initListeners() {
         propertyChangeSupport = new PropertyChangeSupport();
         propertyChangeSupport.addPropertyChangeListener("available", new AvailablePropertyChangeListener());
@@ -501,7 +446,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 			public void propertyChange(PropertyChangeEvent evt) {
 				Component newFocusOwner = (Component) evt.getNewValue();
 				if (newFocusOwner != null && SwingUtilities.isDescendingFrom(newFocusOwner, mainContainer))
-					last = newFocusOwner;
+					lastFocusOwner = newFocusOwner;
 			}
 		});
 	}
@@ -685,7 +630,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             if (Boolean.FALSE.equals(evt.getNewValue())) {
                 activeToolWindowId = null;
 
-				if (last != null) {
+				if (lastFocusOwner != null) {
 					boolean shouldRequest = true;
 					for (MyDoggyToolWindowBar bar : bars) {
 						if (bar.valueAdjusting && getBar(descriptor.getToolWindow().getAnchor()) == bar) {
@@ -694,7 +639,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 						}
 					}
 					if (shouldRequest) {
-						last.requestFocusInWindow();
+						lastFocusOwner.requestFocusInWindow();
 					}
 				}
 			} else activeToolWindowId = descriptor.getToolWindow().getId();

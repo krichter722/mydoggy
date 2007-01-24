@@ -7,7 +7,7 @@ import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
-import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
+import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.ToFrontWindowFocusListener;
@@ -407,8 +407,8 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
                 dialog.pack();
 
-                if (TransparencyManager.getInstance().isServiceAvailable()) {
-                    WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(dialog);
+                if (WindowTransparencyManager.getInstance().isServiceAvailable()) {
+                    WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(getContentUI(content), dialog);
                     dialog.addWindowListener(windowTransparencyListener);
                     dialog.addWindowFocusListener(windowTransparencyListener);
                 }
@@ -470,9 +470,15 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     static class DesktopContentFrame extends JInternalFrame implements DesktopContentUI {
 		private boolean detachable;
+        private boolean transparentMode;
+        private float transparentRatio;
+        private int transparentDelay;
 
-		public DesktopContentFrame(String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
+        public DesktopContentFrame(String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
             super(title, resizable, closable, maximizable, iconifiable);
+            this.transparentMode = true;
+            this.transparentRatio = 0.8f;
+            this.transparentDelay = 1000;
         }
 
         public boolean isIconified() {
@@ -502,7 +508,31 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 		public void setDetachable(boolean detachable) {
 			this.detachable = detachable;
 		}
-	}
+
+        public boolean isTransparentMode() {
+            return transparentMode;
+        }
+
+        public void setTransparentMode(boolean transparentMode) {
+            this.transparentMode = transparentMode;
+        }
+
+        public float getTransparentRatio() {
+            return transparentRatio;
+        }
+
+        public void setTransparentRatio(float transparentRatio) {
+            this.transparentRatio = transparentRatio;
+        }
+
+        public int getTransparentDelay() {
+            return transparentDelay;
+        }
+
+        public void setTransparentDelay(int transparentDelay) {
+            this.transparentDelay = transparentDelay;
+        }
+    }
 
     class PopupMouseListener extends MouseAdapter implements ActionListener{
         private JPopupMenu popupMenu;
