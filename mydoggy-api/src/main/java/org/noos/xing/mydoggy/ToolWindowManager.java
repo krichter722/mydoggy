@@ -33,6 +33,13 @@ public interface ToolWindowManager {
     ToolWindowManagerDescriptor getToolWindowManagerDescriptor();
 
     /**
+     *
+     * @return
+     * @since 1.2.0
+     */
+    PersistenceDelegate getPersistenceDelegate();
+    
+    /**
      * Register a new tool window into this window manager based on the passed parameters.
      *
      * @param id        id of tool window to be registered.

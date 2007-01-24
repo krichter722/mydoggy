@@ -57,4 +57,5 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      */
     int getDockLength();
 
+
 }
