@@ -19,8 +19,8 @@ public class DefaultSlidingTypeDescriptor implements SlidingTypeDescriptor, Prop
 
     public DefaultSlidingTypeDescriptor() {
         transparentMode = true;
-        transparentRatio = 0.7f;
-        transparentDelay = 1500;
+        transparentRatio = 0.5f;
+        transparentDelay = 1000;
     }
 
     public DefaultSlidingTypeDescriptor(DefaultSlidingTypeDescriptor parent, int transparentDelay, float transparentRatio, boolean useTransparentMode) {

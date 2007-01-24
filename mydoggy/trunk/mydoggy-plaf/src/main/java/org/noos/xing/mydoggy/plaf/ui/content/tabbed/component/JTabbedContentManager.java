@@ -181,6 +181,9 @@ public class JTabbedContentManager extends JTabbedPane {
 
         private boolean closable;
         private boolean detachable;
+        private boolean transparentMode;
+        private float transparentRatio;
+        private int transparentDelay;
 
         private Icon contentIcon;
 
@@ -189,6 +192,9 @@ public class JTabbedContentManager extends JTabbedPane {
             this.accessible = accessible;
             this.closable = tabbedPane.isCloseable();
             this.detachable = tabbedPane.isDetachable();
+            this.transparentMode = true;
+            this.transparentRatio = 0.8f;
+            this.transparentDelay = 1000;
         }
 
 
@@ -261,6 +267,29 @@ public class JTabbedContentManager extends JTabbedPane {
             return (defaultTip.equals("")) ? null : defaultTip;
         }
 
+        public boolean isTransparentMode() {
+            return transparentMode;
+        }
+
+        public void setTransparentMode(boolean transparentMode) {
+            this.transparentMode = transparentMode;
+        }
+
+        public float getTransparentRatio() {
+            return transparentRatio;
+        }
+
+        public void setTransparentRatio(float transparentRatio) {
+            this.transparentRatio = transparentRatio;
+        }
+
+        public int getTransparentDelay() {
+            return transparentDelay;
+        }
+
+        public void setTransparentDelay(int transparentDelay) {
+            this.transparentDelay = transparentDelay;
+        }
 
         public Icon getContentIcon() {
             if (contentIcon == null) {

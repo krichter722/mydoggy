@@ -283,7 +283,9 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
 			valueAdjusting = true;
 
-			if (isInternalComponent(component)) {
+//            System.out.println("component = " + component);
+
+            if (isInternalComponent(component)) {
                 toolWindow.setActive(true);
                 if (focusRequester == null)
                     focusRequester = component;

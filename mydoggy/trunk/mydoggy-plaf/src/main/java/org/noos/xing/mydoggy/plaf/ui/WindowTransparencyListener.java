@@ -1,6 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
+import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
+import org.noos.xing.mydoggy.ContentUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,16 +15,18 @@ import java.awt.event.WindowEvent;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class WindowTransparencyListener extends WindowAdapter implements ActionListener {
-    private final TransparencyManager transparencyManager = TransparencyManager.getInstance();
+    private final TransparencyManager<Window> transparencyManager = WindowTransparencyManager.getInstance();
 
     private TransparencyAnimation animation;
 
     private Timer timer;
+    private ContentUI contentUI;
     private Window window;
 
-    public WindowTransparencyListener(Window window) {
+    public WindowTransparencyListener(ContentUI contentUI, Window window) {
+        this.contentUI = contentUI;
         this.window = window;
-        this.animation = new TransparencyAnimation(window, 0.8f);
+        this.animation = new TransparencyAnimation(window, contentUI.getTransparentRatio());
     }
 
     public void windowGainedFocus(WindowEvent e) {
@@ -34,9 +38,11 @@ public class WindowTransparencyListener extends WindowAdapter implements ActionL
     }
 
     public void windowLostFocus(WindowEvent e) {
-        if (!transparencyManager.isAlphaModeEnabled(e.getWindow())) {
-            timer = new Timer(2000, this);
-            timer.start();
+        if (contentUI.isTransparentMode()) {
+            if (!transparencyManager.isAlphaModeEnabled(e.getWindow())) {
+                timer = new Timer(contentUI.getTransparentDelay(), this);
+                timer.start();
+            }
         }
     }
 
@@ -44,6 +50,7 @@ public class WindowTransparencyListener extends WindowAdapter implements ActionL
         if (timer.isRunning()) {
             timer.stop();
             synchronized (transparencyManager) {
+                animation.setAlpha(contentUI.getTransparentRatio());
                 animation.show();
             }
         }

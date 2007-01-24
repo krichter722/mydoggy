@@ -14,7 +14,7 @@ import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.TabEvent;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.TabListener;
 import org.noos.xing.mydoggy.plaf.ui.content.BackContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.content.BackContentUI;
-import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
+import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -26,6 +26,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -44,6 +45,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
     boolean valueAdjusting;
     boolean contentValueAdjusting;
 
+    private Map<JDialog, TabbedContentUI> detachedContentUIMap;
 
     public MyDoggyTabbedContentManagerUI() {
         initComponents();
@@ -113,8 +115,12 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
     }
 
 	public TabbedContentUI getContentUI(Content content) {
-		return tabbedContentManager.getContentPage(
-				tabbedContentManager.indexOfComponent(content.getComponent()));
+        if (content.isDetached()) {
+            JDialog dialog = (JDialog) SwingUtilities.windowForComponent(content.getComponent());
+            return detachedContentUIMap.get(dialog);
+        } else
+            return tabbedContentManager.getContentPage(
+                    tabbedContentManager.indexOfComponent(content.getComponent()));
 	}
 
 
@@ -473,8 +479,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
 
                 dialog.pack();
 
-                if (TransparencyManager.getInstance().isServiceAvailable()) {
-                    WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(dialog);
+                if (WindowTransparencyManager.getInstance().isServiceAvailable()) {
+                    WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(getContentUI(content), dialog);
                     dialog.addWindowListener(windowTransparencyListener);
                     dialog.addWindowFocusListener(windowTransparencyListener);
                 }
