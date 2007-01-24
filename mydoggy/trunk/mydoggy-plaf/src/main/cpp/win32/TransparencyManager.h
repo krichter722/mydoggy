@@ -2,34 +2,34 @@
 #include <jni.h>
 /* Header for class org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager */
 
-#ifndef _Included_org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager
-#define _Included_org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager
+#ifndef _Included_org_noos_xing_mydoggy_plaf_ui_transparency_WindowTransparencyManager
+#define _Included_org_noos_xing_mydoggy_plaf_ui_transparency_WindowTransparencyManager
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 	/*
- * Class:     org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager
+ * Class:     org_noos_xing_mydoggy_plaf_ui_transparency_WindowTransparencyManager
  * Method:    isAlphaModeEnabledNative
  * Signature: (Ljava/awt/Window;)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager_isAlphaModeEnabledNative
+JNIEXPORT jboolean JNICALL Java_org_noos_xing_mydoggy_plaf_ui_transparency_WindowTransparencyManager_isAlphaModeEnabledNative
   (JNIEnv *, jclass, jobject);
 
 /*
- * Class:     org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager
+ * Class:     org_noos_xing_mydoggy_plaf_ui_transparency_WindowTransparencyManager
  * Method:    setAlphaModeEnabledNative
  * Signature: (Ljava/awt/Window;Z)V
  */
-JNIEXPORT void JNICALL Java_org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager_setAlphaModeEnabledNative
+JNIEXPORT void JNICALL Java_org_noos_xing_mydoggy_plaf_ui_transparency_WindowTransparencyManager_setAlphaModeEnabledNative
   (JNIEnv *, jclass, jobject, jboolean);
 
 /*
- * Class:     org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager
+ * Class:     org_noos_xing_mydoggy_plaf_ui_transparency_WindowTransparencyManager
  * Method:    setAlphaModeRatioNative
  * Signature: (Ljava/awt/Window;F)V
  */
-JNIEXPORT void JNICALL Java_org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager_setAlphaModeRatioNative
+JNIEXPORT void JNICALL Java_org_noos_xing_mydoggy_plaf_ui_transparency_WindowTransparencyManager_setAlphaModeRatioNative
   (JNIEnv *, jclass, jobject, jfloat);
 
 #ifdef __cplusplus
