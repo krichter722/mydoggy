@@ -38,7 +38,7 @@ BOOL WINAPI DllMain(HANDLE hInstDLL, DWORD dwReason, LPVOID lpvReserved){
 }
 
 /* Natives */
-#define OS_NATIVE(method) Java_org_noos_xing_mydoggy_plaf_ui_transparency_TransparencyManager_##method
+#define OS_NATIVE(method) Java_org_noos_xing_mydoggy_plaf_ui_transparency_WindowTransparencyManager_##method
 
 JNIEXPORT jboolean JNICALL OS_NATIVE(isAlphaModeEnabledNative)
 				   (JNIEnv * env, jclass obj, jobject component) {
