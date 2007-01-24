@@ -38,6 +38,7 @@ public interface SlidingTypeDescriptor extends ToolWindowTypeDescriptor {
      * Sets the transparent ratio. Valid range is [0.0, 1.0]
      *
      * @param transparentRatio the transparent ratio.
+     * @since 1.2.0
      */
     void setTransparentRatio(float transparentRatio);
 
