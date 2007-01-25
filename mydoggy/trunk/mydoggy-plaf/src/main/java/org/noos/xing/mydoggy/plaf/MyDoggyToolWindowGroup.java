@@ -66,7 +66,7 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
             synchronized (MyDoggyToolWindowManager.sync) {
 
                 boolean doAction = false;
-                for (ToolWindow tool : manager.getToolWindowGroup(name).getToolsWindow()) {
+                for (ToolWindow tool : getToolsWindow()) {
                     if (tool.isVisible() != visible) {
                         doAction = true;
                         break;
@@ -74,9 +74,8 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
                 }
                 
                 if (doAction) {
-                    for (ToolWindow tool : manager.getToolWindows()) {
+                    for (ToolWindow tool : manager.getToolWindows())
                         tool.setVisible(false);
-                    }
 
 					manager.setShowingGroup(this);
                     try {
