@@ -119,6 +119,7 @@ public interface ToolWindowManager {
      */
     ToolWindow[] getToolsByAnchor(ToolWindowAnchor anchor);
 
+    ToolWindowGroup getToolWindowGroup();
 
     /**
      * Returns the tool window group to which this manager maps the specified name.

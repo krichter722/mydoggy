@@ -20,6 +20,7 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileOutputStream;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -69,6 +70,21 @@ public class MyDoggySet {
 
         // File Menu
         JMenu fileMenu = new JMenu("File");
+
+        JMenuItem store = new JMenuItem("Store Workspace");
+        store.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    FileOutputStream output = new FileOutputStream("workspace.xml");
+                    toolWindowManager.getPersistenceDelegate().save(output);
+                    output.close();
+                } catch (Exception e1) {
+                    e1.printStackTrace(); 
+                }
+            }
+        });
+        fileMenu.add(store);
+
         JMenuItem exit = new JMenuItem("Exit");
         exit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -76,6 +92,7 @@ public class MyDoggySet {
                 frame.dispose();
             }
         });
+        fileMenu.addSeparator();
         fileMenu.add(exit);
 
         // Content Menu
@@ -151,10 +168,29 @@ public class MyDoggySet {
             }
         }
 
+        // File Menu
+        JMenu pushAwayMenu = new JMenu("PushAway");
+        JMenuItem left = new JMenuItem("Left");
+        left.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(ToolWindowManagerDescriptor.PushAwayMode.LEFT);
+            }
+        });
+
+        JMenuItem top = new JMenuItem("Top");
+        top.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(ToolWindowManagerDescriptor.PushAwayMode.TOP);
+            }
+        });
+        pushAwayMenu.add(left);
+        pushAwayMenu.add(top);
+
         menuBar.add(fileMenu);
         menuBar.add(contentMenu);
         menuBar.add(contentManagerMenu);
         menuBar.add(lafMenu);
+        menuBar.add(pushAwayMenu);
 
         this.frame.setJMenuBar(menuBar);
     }
@@ -262,7 +298,7 @@ public class MyDoggySet {
                 .setPopupMenu(toolsPopupMenu);
         toolWindowManager.getContentManager().getContent(0).setTitle("ToolWindows");
 
-        toolWindowManager.getToolWindowManagerDescriptor().setDock(ToolWindowManagerDescriptor.Dock.LEFT);
+//        toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(ToolWindowManagerDescriptor.PushAwayMode.LEFT);
 
         // Add MyDoggyToolWindowManager to frame
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
