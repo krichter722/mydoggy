@@ -4,6 +4,7 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.SlidingTypeDescriptor;
+import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.border.SlidingBorder;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -91,11 +92,11 @@ public class SlidingContainer extends FloatingContainer {
             switch (descriptor.getToolWindow().getAnchor()) {
                 case TOP:
                 case BOTTOM:
-                    descriptor.setDivederLocation(sheet.getHeight());
+                    descriptor.setDividerLocation(sheet.getHeight());
                     break;
                 case LEFT:
                 case RIGHT:
-                    descriptor.setDivederLocation(sheet.getWidth());
+                    descriptor.setDividerLocation(sheet.getWidth());
                     break;
             }
             slidingAnimation.hide(sheet.getBounds());
@@ -136,7 +137,7 @@ public class SlidingContainer extends FloatingContainer {
     }
 
     protected void resize() {
-        int length = descriptor.getDivederLocation();
+        int length = descriptor.getDividerLocation();
         if (length == -1)
             length = 200;
 
@@ -235,7 +236,7 @@ public class SlidingContainer extends FloatingContainer {
 
     private void configureSlidingIcons() {
         setPinVisible(false);
-        setFloatingVisible(true);
+        setFloatingVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
         setSliding();
     }
 
@@ -367,9 +368,12 @@ public class SlidingContainer extends FloatingContainer {
         public void propertyChange(PropertyChangeEvent evt) {
             if (descriptor.getToolWindow().getType() == ToolWindowType.SLIDING) {
                 if (Boolean.TRUE.equals(evt.getNewValue())) {
-                    if (timer !=  null)
+                    if (timer !=  null) {
                         timer.stop();
-
+                        if (animation.isAnimating())
+                            animation.stop();
+                    }
+                               
                     sheet.setAlpha(1.0f);
                 } else {
                     SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING);

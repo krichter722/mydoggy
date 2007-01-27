@@ -45,6 +45,13 @@ public class SwingUtil {
         });
     }
 
+    public static void repaintNow(Component component) {
+        component.invalidate();
+        component.validate();
+        component.repaint();
+    }
+
+
     public static boolean isLeftToRight(Component c) {
         return c != null && c.getComponentOrientation().isLeftToRight();
     }
@@ -200,4 +207,5 @@ public class SwingUtil {
 		}
 		return null;
 	}
+
 }

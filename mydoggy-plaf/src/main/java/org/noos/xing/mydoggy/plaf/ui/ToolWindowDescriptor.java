@@ -2,8 +2,8 @@ package org.noos.xing.mydoggy.plaf.ui;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowBar;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.icons.CompositeIcon;
 import org.noos.xing.mydoggy.plaf.ui.icons.TextIcon;
@@ -38,7 +38,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
 
     public ToolWindowDescriptor(MyDoggyToolWindowManager manager, MyDoggyToolWindow toolWindow,
-								Window windowAnchestor, Component component) {
+                                Window windowAnchestor, Component component) {
         this.manager = manager;
         this.windowAnchestor = windowAnchestor;
         this.component = component;
@@ -67,6 +67,17 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
             updateAnchorLabel();
         } else if ("title".equals(evt.getPropertyName())) {
             updateAnchorLabel();
+        } else if ("dockLength".equals(evt.getPropertyName())) {
+            if (!valueAdj) {
+                this.divederLocation = (Integer) evt.getNewValue();
+                getToolBar(toolWindow.getAnchor()).propertyChange(
+                        new PropertyChangeEvent(toolWindow,
+                                                evt.getPropertyName(),
+                                                evt.getOldValue(),
+                                                evt.getNewValue()
+                        )                        
+                );
+            }
         }
     }
 
@@ -120,15 +131,24 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     }
 
 
-    public int getDivederLocation() {
+    public int getDividerLocation() {
         if (divederLocation == -1)
             this.divederLocation = ((DockedTypeDescriptor) getTypeDescriptor(ToolWindowType.DOCKED)).getDockLength();
 
         return divederLocation;
     }
 
-    public void setDivederLocation(int divederLocation) {
+    boolean valueAdj =   false;
+    public void setDividerLocation(int divederLocation) {
         this.divederLocation = divederLocation;
+
+        DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+        valueAdj = true;
+        try {
+            dockedTypeDescriptor.setDockLength(divederLocation);
+        } finally {
+            valueAdj = false;
+        }
     }
 
 
@@ -137,7 +157,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
             String toolAnchorLabelName = (toolWindow.getIndex() > 0) ? toolWindow.getIndex() + " : " + toolWindow.getTitle()
-                                                                  : toolWindow.getTitle();
+                                         : toolWindow.getTitle();
 
             if (anchor == ToolWindowAnchor.BOTTOM || anchor == ToolWindowAnchor.TOP) {
                 anchorLabel = new AnchorLabel(toolAnchorLabelName, toolWindow.getIcon(), JLabel.CENTER);
@@ -178,7 +198,11 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
     protected void initTypeDescriptors() {
         floatingTypeDescriptor = (FloatingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING)).cloneMe();
+        floatingTypeDescriptor.addPropertyChangeListener(this);
+
         dockedTypeDescriptor = (DockedTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).cloneMe();
+        dockedTypeDescriptor.addPropertyChangeListener(this);
+
         slidingTypeDescriptor = (SlidingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.SLIDING)).cloneMe();
     }
 
@@ -192,7 +216,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
             String toolAnchorLabelName = (toolWindow.getIndex() > 0) ? toolWindow.getIndex() + " : " + toolWindow.getTitle()
-                                                                  : toolWindow.getTitle();
+                                         : toolWindow.getTitle();
 
 
             if (anchor == ToolWindowAnchor.BOTTOM || anchor == ToolWindowAnchor.TOP) {

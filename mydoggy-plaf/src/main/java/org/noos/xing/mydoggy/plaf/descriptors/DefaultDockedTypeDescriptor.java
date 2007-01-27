@@ -23,13 +23,14 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.toolsMenu = new JMenu(ResourceBoundles.getResourceBundle().getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = true;
         this.dockLength = 200;
-        this.listenerList = new EventListenerList();
     }
 
     public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled) {
         this.toolsMenu = new JMenu(ResourceBoundles.getResourceBundle().getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = popupMenuEnabled;
         this.dockLength = dockLength;
+        this.listenerList = new EventListenerList();
+
         parent.addPropertyChangeListener(this);
     }
 
@@ -71,9 +72,18 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         }
     }
 
-
-    private void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
+    public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
+        if (listenerList == null)
+            listenerList = new EventListenerList();
         listenerList.add(PropertyChangeListener.class, propertyChangeListener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        listenerList.remove(PropertyChangeListener.class, listener);
+    }
+
+    public PropertyChangeListener[] getPropertyChangeListeners() {
+        return listenerList.getListeners(PropertyChangeListener.class);
     }
 
     private void firePropertyChange(String propertyName, Object oldValue, Object newValue) {

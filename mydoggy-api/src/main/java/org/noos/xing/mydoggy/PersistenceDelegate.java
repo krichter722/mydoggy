@@ -21,6 +21,6 @@ public interface PersistenceDelegate {
      * @param inputStream
      * @since 1.2.0
      */
-    void load(InputStream inputStream);
+    void apply(InputStream inputStream);
 
 }
