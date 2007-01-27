@@ -9,6 +9,8 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -22,7 +24,9 @@ public class FloatingContainer extends DockedContainer {
 	private FloatingMoveMouseInputHandler moveMouseInputHandler;
 	private boolean settedListener = false;
 
-	private Rectangle lastBounds;
+    private boolean valueAdjusting = false;
+
+    private Rectangle lastBounds;
 
 	private final FloatingAnimation floatingAnimation = new FloatingAnimation();
 
@@ -90,9 +94,6 @@ public class FloatingContainer extends DockedContainer {
 		JPanel contentPane = new JPanel(new ExtendedTableLayout(new double[][]{{1, TableLayout.FILL, 1}, {1, TableLayout.FILL, 1}}));
 		contentPane.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 		window.setContentPane(contentPane);
-
-		resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window);
-		moveMouseInputHandler = new FloatingMoveMouseInputHandler(window, applicationBarTitle);
 	}
 
 	private void initFloatingListeners() {
@@ -127,21 +128,28 @@ public class FloatingContainer extends DockedContainer {
 				}
 			}
 		});
-
 		addPropertyChangeListener("location", new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-				if (window.isVisible()) {
+                if (valueAdjusting)
+                    return;
+
+                if (window.isVisible()) {
 					Point location = (Point) evt.getNewValue();
 					window.setLocation(location);
 				}
-			}
+                lastBounds = null;
+            }
 		});
 		addPropertyChangeListener("size", new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
+                if (valueAdjusting)
+                    return;
+
 				if (window.isVisible()) {
 					Dimension size = (Dimension) evt.getNewValue();
 					window.setSize(size);
 				}
+                lastBounds = null;
 			}
 		});
 		addPropertyChangeListener("modal", new PropertyChangeListener() {
@@ -156,6 +164,34 @@ public class FloatingContainer extends DockedContainer {
 		typeDescriptor.addPropertyChangeListener(this);
 
 		new FloatingToolTransparencyListener(this, descriptor, window);
+        resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window);
+		moveMouseInputHandler = new FloatingMoveMouseInputHandler(window, applicationBarTitle);
+
+        window.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                valueAdjusting = true;
+                try {
+                    ((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).setSize(
+                            window.getWidth(),
+                            window.getHeight()
+                    );
+                } finally {
+                    valueAdjusting = false;
+                }
+            }
+
+            public void componentMoved(ComponentEvent e) {
+                valueAdjusting = true;
+                try {
+                    ((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).setLocation(
+                            window.getX(),
+                            window.getY()
+                    );
+                } finally {
+                    valueAdjusting = false;
+                }
+            }
+        });
 	}
 
 

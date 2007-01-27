@@ -44,6 +44,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     private MyDoggyToolWindowBar[] bars;
     private Map<Object, ToolWindowDescriptor> tools;
     private Map<Object, ToolWindowGroup> toolWindowGroups;
+    private Map<Object, ToolWindow> aliases;
 
     private ToolWindowGroup allToolWindowGroup;
 
@@ -81,6 +82,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         this.persistenceDelegate = new XmlPersistenceDelegate(this);
         this.allToolWindowGroup = new AllToolWindowGroup();
+        this.aliases = new Hashtable<Object, ToolWindow>();
+
         initResourceBoundles(locale);
         initComponents();
         initListeners();
@@ -99,7 +102,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return persistenceDelegate;
     }
 
-    public ToolWindow registerToolWindow(Object id, String title, Icon icon,
+    public ToolWindow registerToolWindow(String id, String title, Icon icon,
                                          Component component,
                                          ToolWindowAnchor anchor) {
         if (id == null)
@@ -156,6 +159,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             fireUnregisteredToolEvent(toolWindowDescriptor.getToolWindow());
             it.remove();
         }
+    }
+
+    public void addAlias(ToolWindow toolWindow, Object alias) {
+        aliases.put(alias, toolWindow);
+    }
+
+    public ToolWindow getToolWindowByAlias(Object alias) {
+        return aliases.get(alias);
     }
 
     public ToolWindow[] getToolWindows() {
