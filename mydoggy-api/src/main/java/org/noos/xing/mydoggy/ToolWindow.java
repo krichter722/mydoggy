@@ -19,7 +19,7 @@ public interface ToolWindow {
      *
      * @return tool id.
      */
-    Object getId();
+    String getId();
 
     /**
      * This method is used to set the index for the tool. The index is used to activate or hide
