@@ -35,6 +35,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public final static Object sync = new Object();
 
     private ToolWindowGroup showingGroup;
+    private boolean shiftShow;
 
     private MyDoggyContentManager contentManager;
 
@@ -584,10 +585,28 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     void resetShowingGroup() {
         this.showingGroup = null;
+        this.shiftShow = false;
+    }
+
+    boolean isShiftShow() {
+        return shiftShow;
+    }
+
+    void enableShiftShow() {
+        setShowingGroup(allToolWindowGroup);
+        this.shiftShow = true;
+    }
+
+    void resetShiftShow() {
+        resetShowingGroup();
     }
 
     public ToolWindowGroup getShowingGroup() {
         return this.showingGroup;
+    }
+
+    public ToolWindowDescriptor getDescriptor(ToolWindow toolWindow) {
+        return tools.get(toolWindow.getId());
     }
 
 

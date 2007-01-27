@@ -1,9 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
-import org.noos.xing.mydoggy.DockedTypeDescriptor;
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTransferHandler;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
@@ -30,9 +27,9 @@ public class AnchorLabelUI extends MetalLabelUI {
     static final Color end = new Color(255, 244, 204);
     static final Color gray = new Color(247, 243, 239);
 
-	private JComponent component;
+    private JComponent component;
 
-	protected LineBorder labelBorder;
+    protected LineBorder labelBorder;
 
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
@@ -46,8 +43,8 @@ public class AnchorLabelUI extends MetalLabelUI {
 
     public void installUI(JComponent c) {
         super.installUI(c);
-		this.component = c;
-		labelBorder = new LineBorder(Color.GRAY, 1, true, 3, 3);
+        this.component = c;
+        labelBorder = new LineBorder(Color.GRAY, 1, true, 3, 3);
 
         c.setBorder(labelBorder);
         c.setTransferHandler(new ToolWindowTransferHandler(toolWindow));
@@ -97,7 +94,7 @@ public class AnchorLabelUI extends MetalLabelUI {
 
     public void propertyChange(PropertyChangeEvent e) {
         if ("visible".equals(e.getPropertyName())) {
-			boolean visible = (Boolean) e.getNewValue();
+            boolean visible = (Boolean) e.getNewValue();
             component.setOpaque(visible);
             if (visible) {
                 labelBorder.setLineColor(Color.BLACK);
@@ -118,6 +115,7 @@ public class AnchorLabelUI extends MetalLabelUI {
         JPopupMenu popupMenu;
 
         JMenuItem visible;
+        JMenuItem aggregate;
         JCheckBoxMenuItem floatingMode;
         JCheckBoxMenuItem dockedMode;
         JCheckBoxMenuItem pinnedMode;
@@ -138,10 +136,20 @@ public class AnchorLabelUI extends MetalLabelUI {
                 return;
 
             if (SwingUtilities.isLeftMouseButton(e)) {
-                if (toolWindow.isVisible()) {
-                    toolWindow.setVisible(false);
+                int onmask = MouseEvent.SHIFT_DOWN_MASK;
+                if ((e.getModifiersEx() & onmask) == onmask) {
+                    if (toolWindow.isVisible()) {
+                        toolWindow.setVisible(false);
+                    } else { 
+                        toolWindow.aggregate();
+                        toolWindow.setActive(true);
+                    }
                 } else {
-                    toolWindow.setActive(true);
+                    if (toolWindow.isVisible()) {
+                        toolWindow.setVisible(false);
+                    } else {
+                        toolWindow.setActive(true);
+                    }
                 }
             } else if (SwingUtilities.isRightMouseButton(e)) {
                 if (((DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED)).isPopupMenuEnabled()) {
@@ -155,16 +163,16 @@ public class AnchorLabelUI extends MetalLabelUI {
         }
 
         public void mouseEntered(MouseEvent e) {
-			Component source = e.getComponent();
-			if (!source.isOpaque()) {
+            Component source = e.getComponent();
+            if (!source.isOpaque()) {
                 labelBorder.setLineColor(Color.BLACK);
                 SwingUtil.repaint(source);
             }
         }
 
         public void mouseExited(MouseEvent e) {
-			Component source = e.getComponent();
-			if (!source.isOpaque()) {
+            Component source = e.getComponent();
+            if (!source.isOpaque()) {
                 labelBorder.setLineColor(Color.GRAY);
                 SwingUtil.repaint(source);
             }
@@ -180,6 +188,16 @@ public class AnchorLabelUI extends MetalLabelUI {
                     toolWindow.setVisible(false);
                 else
                     toolWindow.setActive(true);
+            } else if ("aggregate".equals(actionCommand)) {
+                if (toolWindow.isActive()) {
+                    toolWindow.setActive(false);
+                    toolWindow.setVisible(false);
+                } else if (toolWindow.isVisible())
+                    toolWindow.setVisible(false);
+                else {
+                    toolWindow.aggregate();
+                    toolWindow.setActive(true);
+                }
             } else if ("move.right".equals(actionCommand)) {
                 toolWindow.setAnchor(ToolWindowAnchor.RIGHT);
             } else if ("move.left".equals(actionCommand)) {
@@ -244,6 +262,11 @@ public class AnchorLabelUI extends MetalLabelUI {
             visible.setActionCommand("visible");
             visible.addActionListener(this);
 
+            aggregate = new JMenuItem();
+            aggregate.setText(resourceBundle.getString("@@tool.aggregate"));
+            aggregate.setActionCommand("aggregate");
+            aggregate.addActionListener(this);
+
             floatingMode = new JCheckBoxMenuItem(null, toolWindow.getType() == ToolWindowType.FLOATING);
             floatingMode.setText(resourceBundle.getString("@@tool.mode.floating"));
             floatingMode.setActionCommand("floating");
@@ -295,12 +318,20 @@ public class AnchorLabelUI extends MetalLabelUI {
             popupMenu.add(moveTo);
             popupMenu.addSeparator();
             popupMenu.add(visible);
+            popupMenu.add(aggregate);
         }
 
         protected void enableVisible() {
+            aggregate.setVisible(!toolWindow.isVisible());
             visible.setText(toolWindow.isVisible() ?
                             resourceBundle.getString("@@tool.hide") :
                             resourceBundle.getString("@@tool.show"));
+
+            if (toolWindow.getType() == ToolWindowType.DOCKED) {
+                dockedMode.setVisible(((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled());
+                floatingMode.setVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
+            } else if (toolWindow.getType() == ToolWindowType.SLIDING)
+                floatingMode.setVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
         }
 
         protected void enableMoveToItem() {
@@ -329,6 +360,7 @@ public class AnchorLabelUI extends MetalLabelUI {
         }
 
         private JMenu old;
+
         protected void enableUserDefined() {
             DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
             if (old != null) {

@@ -80,6 +80,11 @@ public interface ToolWindow {
     boolean isVisible();
 
     /**
+     * @since 1.2.0
+     */
+    void aggregate();
+
+    /**
      * The method is used to set the active property of the tool.
      * If <code>active</code> is <tt>true</tt> then tool becomes available and visibile if not already was.
      * Moreover the tool grabs the focus from focus owner and becomes active.

@@ -120,7 +120,7 @@ public class XMLWriter {
         }
     }
 
-    public void emptyElement(String elementName, Attributes atts) throws SAXException {
+    public void dataElement(String elementName, Attributes atts) throws SAXException {
         state = SEEN_ELEMENT;
         if (depth > 0)
             characters("\n");
@@ -188,10 +188,10 @@ public class XMLWriter {
     private void writeAttributes(Attributes atts) throws SAXException {
         int len = atts.getLength();
         for (int i = 0; i < len; i++) {
-            char ch[] = atts.getValue(i).toCharArray();
             write(' ');
             writeName(atts.getLocalName(i));
             write("=\"");
+            char ch[] = atts.getValue(i).toCharArray();
             writeEsc(ch, 0, ch.length, true);
             write('"');
         }

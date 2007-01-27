@@ -68,13 +68,28 @@ public interface SlidingTypeDescriptor extends ToolWindowTypeDescriptor {
     int getTransparentDelay();
 
     /**
+     *
+     * @param enabled
+     * @since 1.2.0
+     */
+    void setEnabled(boolean enabled);
+
+    /**
+     *
+     * @return
+     * @since 1.2.0
+     */
+    boolean isEnabled();
+
+    /**
      * Adds a PropertyChangeListener to the listener list. The listener is
      * registered for all bound properties of this class, including the
      * following:
      * <ul>
-     * <li>this window's transparentMode ("transparentMode")</li>
-     * <li>this window's transparentRatio ("transparentRatio")</li>
-     * <li>this window's transparentDelay ("transparentDelay")</li>
+     * <li>this sliding's transparentMode ("transparentMode")</li>
+     * <li>this sliding's transparentRatio ("transparentRatio")</li>
+     * <li>this sliding's transparentDelay ("transparentDelay")</li>
+     * <li>this sliding's enabled property ("enabled")</li>
      * </ul>
      * <p/>
      * If listener is null, no exception is thrown and no action is performed.

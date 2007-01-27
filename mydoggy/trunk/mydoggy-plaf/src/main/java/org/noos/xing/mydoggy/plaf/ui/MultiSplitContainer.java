@@ -32,6 +32,7 @@ public class MultiSplitContainer extends JPanel {
             JSplitPane split = new JSplitPane(orientation);
             split.setResizeWeight(0.5d);
             split.setContinuousLayout(true);
+            split.setBorder(null);
             split.setLeftComponent(c);
             split.setRightComponent(content);
             add(split, "0,0");

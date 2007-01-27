@@ -21,6 +21,8 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
     private float transparentRatio;
     private int transparentDelay;
 
+    private boolean enabled;
+
     private EventListenerList listenerList;
 
     public DefaultFloatingTypeDescriptor() {
@@ -28,15 +30,19 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         transparentRatio = 0.7f;
         transparentDelay = 1500;
         modal = false;
+        enabled = true;
     }
 
-    public DefaultFloatingTypeDescriptor(DefaultFloatingTypeDescriptor parent, Point location, Dimension size, int transparentDelay, float transparentRatio, boolean useTransparentMode, boolean modal) {
+    public DefaultFloatingTypeDescriptor(DefaultFloatingTypeDescriptor parent, Point location, Dimension size,
+                                         int transparentDelay, float transparentRatio, boolean useTransparentMode,
+                                         boolean modal, boolean enabled) {
         this.location = location;
         this.size = size;
         this.transparentDelay = transparentDelay;
         this.transparentRatio = transparentRatio;
         this.transparentMode = useTransparentMode;
         this.modal = modal;
+        this.enabled = enabled;
 
         parent.addPropertyChangeListener(this);
     }
@@ -120,6 +126,20 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         return transparentDelay;
     }
 
+    public void setEnabled(boolean enabled) {
+        if (this.enabled == enabled)
+            return;
+
+        boolean old = this.enabled;
+        this.enabled = enabled;
+
+        firePropertyChange("enabled", old, enabled);
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     public void setTransparentDelay(int transparentDelay) {
         if (this.transparentDelay == transparentDelay)
             return;
@@ -132,7 +152,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
 
 
     public ToolWindowTypeDescriptor cloneMe() {
-        return new DefaultFloatingTypeDescriptor(this, getLocation(), getSize(), getTransparentDelay(), getTransparentRatio(), isTransparentMode(), modal);
+        return new DefaultFloatingTypeDescriptor(this, getLocation(), getSize(), getTransparentDelay(), getTransparentRatio(), isTransparentMode(), modal, isEnabled());
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
@@ -150,6 +170,8 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
             setTransparentRatio((Float) evt.getNewValue());
         } else if ("transparentDelay".equals(evt.getPropertyName())) {
             setTransparentDelay((Integer) evt.getNewValue());
+        } else if ("enabled".equals(evt.getPropertyName())) {
+            setEnabled((Boolean) evt.getNewValue());
         }
     }
 

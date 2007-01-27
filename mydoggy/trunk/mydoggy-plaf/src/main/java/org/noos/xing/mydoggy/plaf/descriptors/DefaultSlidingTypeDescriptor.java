@@ -14,6 +14,7 @@ public class DefaultSlidingTypeDescriptor implements SlidingTypeDescriptor, Prop
     private boolean transparentMode;
     private float transparentRatio;
     private int transparentDelay;
+    private boolean enabled;
 
     private EventListenerList listenerList;
 
@@ -21,12 +22,14 @@ public class DefaultSlidingTypeDescriptor implements SlidingTypeDescriptor, Prop
         transparentMode = true;
         transparentRatio = 0.5f;
         transparentDelay = 1000;
+        enabled = true;
     }
 
-    public DefaultSlidingTypeDescriptor(DefaultSlidingTypeDescriptor parent, int transparentDelay, float transparentRatio, boolean useTransparentMode) {
+    public DefaultSlidingTypeDescriptor(DefaultSlidingTypeDescriptor parent, int transparentDelay, float transparentRatio, boolean transparentMode, boolean enabled) {
         this.transparentDelay = transparentDelay;
         this.transparentRatio = transparentRatio;
-        this.transparentMode = useTransparentMode;
+        this.transparentMode = transparentMode;
+        this.enabled = enabled;
 
         parent.addPropertyChangeListener(this);
     }
@@ -65,6 +68,20 @@ public class DefaultSlidingTypeDescriptor implements SlidingTypeDescriptor, Prop
     public int getTransparentDelay() {
         return transparentDelay;
     }
+             
+    public void setEnabled(boolean enabled) {
+        if (this.enabled == enabled)
+            return;
+
+        boolean old = this.enabled;
+        this.enabled = enabled;
+
+        firePropertyChange("enabled", old, enabled);
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
 
     public void setTransparentDelay(int transparentDelay) {
         if (this.transparentDelay == transparentDelay)
@@ -78,7 +95,9 @@ public class DefaultSlidingTypeDescriptor implements SlidingTypeDescriptor, Prop
 
 
     public ToolWindowTypeDescriptor cloneMe() {
-        return new DefaultSlidingTypeDescriptor(this, getTransparentDelay(), getTransparentRatio(), isTransparentMode());
+        return new DefaultSlidingTypeDescriptor(this,
+                                                getTransparentDelay(), getTransparentRatio(),
+                                                isTransparentMode(), isEnabled());
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
@@ -88,6 +107,8 @@ public class DefaultSlidingTypeDescriptor implements SlidingTypeDescriptor, Prop
             setTransparentRatio((Float) evt.getNewValue());
         } else if ("transparentDelay".equals(evt.getPropertyName())) {
             setTransparentDelay((Integer) evt.getNewValue());
+        } else if ("enabled".equals(evt.getPropertyName())) {
+            setEnabled((Boolean) evt.getNewValue());
         }
     }
 

@@ -3,6 +3,8 @@ package org.noos.xing.mydoggy.plaf.ui;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.SlidingTypeDescriptor;
+import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -171,6 +173,8 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             focusRequester = hideButton;
         }
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", new FocusOwnerPropertyChangeListener());
+
+        configureDockedIcons();
     }
 
     private void initDockedListeners() {
@@ -179,7 +183,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         addPropertyChangeListener("anchor", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
 //                if (evt.getSource() == descriptor)
-//                    descriptor.setDivederLocation(-1);
+//                    descriptor.setDividerLocation(-1);
             }
         });
         addPropertyChangeListener("autoHide", new PropertyChangeListener() {
@@ -208,7 +212,19 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 }
             }
         });
-	}
+        ((SlidingTypeDescriptor)descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).addPropertyChangeListener(
+                new PropertyChangeListener() {
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        if ("enabled".equals(evt.getPropertyName())) {
+                            boolean newValue = (Boolean) evt.getNewValue();
+                            setDockedVisible(newValue);
+                            if (!newValue && toolWindow.getType() == ToolWindowType.SLIDING)
+                                toolWindow.setType(ToolWindowType.DOCKED);
+                        }
+                    }
+                }
+        );
+    }
 
     private JButton renderApplicationButton(String iconName, String actionCommnad, ActionListener actionListener, String tooltip) {
         JButton button = new ApplicationButton();
@@ -229,9 +245,11 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
     private void configureDockedIcons() {
         setPinVisible(true);
+
         setFloating();
-        setFloatingVisible(true);
-        setDockedVisible(true);
+        setFloatingVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
+
+        setDockedVisible(((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled());
         setDocked();
     }
 

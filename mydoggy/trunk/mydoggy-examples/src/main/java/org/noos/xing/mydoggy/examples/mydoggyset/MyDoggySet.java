@@ -21,6 +21,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileOutputStream;
+import java.io.FileInputStream;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -84,6 +85,20 @@ public class MyDoggySet {
             }
         });
         fileMenu.add(store);
+
+        JMenuItem load = new JMenuItem("Load Workspace");
+        load.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    FileInputStream inputStream = new FileInputStream("workspace.xml");
+                    toolWindowManager.getPersistenceDelegate().apply(inputStream);
+                    inputStream.close();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        fileMenu.add(load);
 
         JMenuItem exit = new JMenuItem("Exit");
         exit.addActionListener(new ActionListener() {
@@ -262,6 +277,12 @@ public class MyDoggySet {
         });
         dockedTypeDescriptor.getToolsMenu().add(menuItem);
 
+        SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);
+        slidingTypeDescriptor.setEnabled(false);
+
+        FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor ) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
+        floatingTypeDescriptor.setEnabled(false);
+
         mainGroup.addToolWindow(toolWindow);
 
         // Set properties for tool window 4
@@ -279,7 +300,7 @@ public class MyDoggySet {
         toolWindow = toolWindowManager.getToolWindow("7");
         toolWindow.setType(ToolWindowType.FLOATING);
 
-        FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
+        floatingTypeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
         floatingTypeDescriptor.setModal(true);
 
         toolsContent = initToolsContent();
