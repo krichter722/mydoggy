@@ -22,7 +22,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     static class ToolWindowLock {
     }
 
-    private Object id;
+    private String id;
     private int index;
     private ToolWindowAnchor anchor;
     private ToolWindowType type;
@@ -44,7 +44,7 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     private boolean publicEvent = true;
 
-    MyDoggyToolWindow(MyDoggyToolWindowManager manager, Window anchestor, Object id, int index,
+    MyDoggyToolWindow(MyDoggyToolWindowManager manager, Window anchestor, String id, int index,
                       ToolWindowAnchor anchor, ToolWindowType type,
                       String title, Icon icon, Component component,
                       ResourceBundle resourceBundle) {
@@ -65,7 +65,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
 
-    public Object getId() {
+    public String getId() {
         return id;
     }
 

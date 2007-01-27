@@ -1,5 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
+import org.noos.xing.mydoggy.FloatingTypeDescriptor;
+
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
@@ -76,6 +78,7 @@ public class FloatingMoveMouseInputHandler implements MouseInputListener {
 
             windowPt.x += pt.x - dragOffsetX;
             windowPt.y += pt.y - dragOffsetY;
+
             window.setLocation(windowPt);
         }
     }
