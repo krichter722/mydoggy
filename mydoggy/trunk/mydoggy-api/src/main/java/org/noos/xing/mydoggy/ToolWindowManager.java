@@ -55,7 +55,7 @@ public interface ToolWindowManager {
      * @see org.noos.xing.mydoggy.ToolWindowManager
      * @see #unregisterToolWindow(Object)
      */
-    ToolWindow registerToolWindow(Object id, String title, Icon icon,
+    ToolWindow registerToolWindow(String id, String title, Icon icon,
                                   Component component, ToolWindowAnchor anchor);
 
     /**
@@ -64,7 +64,7 @@ public interface ToolWindowManager {
      * @param id id of tool window to be removed.
      * @throws java.lang.IllegalArgumentException
      *          - if tool window with specified id isn't registered.
-     * @see #registerToolWindow(Object,String,javax.swing.Icon,java.awt.Component,ToolWindowAnchor)
+     * @see #registerToolWindow(String,String,javax.swing.Icon,java.awt.Component,ToolWindowAnchor)
      * @see #unregisterAllToolWindow()
      */
     void unregisterToolWindow(Object id);
@@ -73,6 +73,22 @@ public interface ToolWindowManager {
      * Removes all tools window from this window manager if there are any.
      */
     void unregisterAllToolWindow();
+
+    /**
+     * TODO: add javadoc
+     * @param toolWindow
+     * @param alias
+     * @since 1.2.0
+     */
+    void addAlias(ToolWindow toolWindow, Object alias);
+
+    /**
+     * TODO: add javadoc
+     * @param alias
+     * @return
+     * @since 1.2.0
+     */
+    ToolWindow getToolWindowByAlias(Object alias);
 
     /**
      * Returns the id of currently active tool window.
