@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.persistence.PersistedDockedType;
 import org.noos.xing.mydoggy.plaf.persistence.PersistedFloatingType;
 import org.noos.xing.mydoggy.plaf.persistence.PersistedToolWindow;
+import org.noos.xing.mydoggy.plaf.persistence.PersistedSlidingType;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

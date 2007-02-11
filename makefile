@@ -4,7 +4,7 @@
 
 CC=gcc
 
-JAVA_HOME=E:/Programmi/Java/jdk1.5.0_09
+JAVA_HOME=E:/Programmi/Java/jdk1.5.0_11
 JAVA_INCLUDE=-I${JAVA_HOME}/include -I${JAVA_HOME}/include/win32
 JAVA_LIB=-L${JAVA_HOME}/lib
 

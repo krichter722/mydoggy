@@ -5,7 +5,6 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.SlidingTypeDescriptor;
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
-import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -20,6 +19,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ResourceBundle;
 
 /**
@@ -58,7 +58,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        propertyChangeSupport.firePropertyChangeEvent(evt);
+        propertyChangeSupport.firePropertyChange(evt);
     }
 
     public Container getContentContainer() {
@@ -119,7 +119,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
 	private void initDockedComponents() {
         iconProvider = new IconProvider();
-        propertyChangeSupport = new PropertyChangeSupport();
+        propertyChangeSupport = new PropertyChangeSupport(this);
 
         applicationBarMouseAdapter = new ApplicationBarMouseAdapter();
         ActionListener applicationBarActionListener = new ApplicationBarActionListener();

@@ -6,7 +6,6 @@ import org.noos.xing.mydoggy.ContentUI;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.ui.content.BackContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.content.BackContentUI;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.JTabbedContentManager;
@@ -20,6 +19,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -115,7 +115,7 @@ public class MyDoggySingleContentManagerUI implements ContentManagerUI, BackCont
 
 
     public void propertyChange(PropertyChangeEvent evt) {
-        propertyChangeSupport.firePropertyChangeEvent(evt);
+        propertyChangeSupport.firePropertyChange(evt);
     }
 
 
@@ -168,7 +168,7 @@ public class MyDoggySingleContentManagerUI implements ContentManagerUI, BackCont
 
     protected void initListeners() {
         if (propertyChangeSupport == null) {
-            propertyChangeSupport = new PropertyChangeSupport();
+            propertyChangeSupport = new PropertyChangeSupport(this);
             propertyChangeSupport.addPropertyChangeListener("component", new ComponentListener());
             propertyChangeSupport.addPropertyChangeListener("disabledIcon", new DisabledIconListener());
             propertyChangeSupport.addPropertyChangeListener("icon", new IconListener());
