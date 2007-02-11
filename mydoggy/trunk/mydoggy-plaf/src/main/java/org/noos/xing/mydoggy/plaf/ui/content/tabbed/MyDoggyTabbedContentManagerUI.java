@@ -6,7 +6,6 @@ import org.noos.xing.mydoggy.TabbedContentUI;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.ui.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.JTabbedContentManager;
@@ -26,6 +25,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Map;
 
 /**
@@ -204,7 +204,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
 
 
     public void propertyChange(PropertyChangeEvent evt) {
-        propertyChangeSupport.firePropertyChangeEvent(evt);
+        propertyChangeSupport.firePropertyChange(evt);
     }
 
 
@@ -258,7 +258,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
 
     protected void initListeners() {
         if (propertyChangeSupport == null) {
-            propertyChangeSupport = new PropertyChangeSupport();
+            propertyChangeSupport = new PropertyChangeSupport(this);
             propertyChangeSupport.addPropertyChangeListener("component", new ComponentListener());
             propertyChangeSupport.addPropertyChangeListener("disabledIcon", new DisabledIconListener());
             propertyChangeSupport.addPropertyChangeListener("icon", new IconListener());

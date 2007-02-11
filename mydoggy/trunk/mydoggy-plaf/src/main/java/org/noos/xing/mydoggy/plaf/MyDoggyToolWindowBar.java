@@ -5,7 +5,6 @@ import info.clearthought.layout.TableLayoutConstraints;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
-import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowBarDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.icons.TextIcon;
@@ -16,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -61,7 +61,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
 
     public void propertyChange(PropertyChangeEvent evt) {
-        propertyChangeSupport.firePropertyChangeEvent(evt);
+        propertyChangeSupport.firePropertyChange(evt);
     }
 
     public String toString() {
@@ -121,7 +121,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     }
 
     protected void initListeners() {
-        propertyChangeSupport = new PropertyChangeSupport();
+        propertyChangeSupport = new PropertyChangeSupport(this);
         propertyChangeSupport.addPropertyChangeListener("available", new AvailableListener());
         propertyChangeSupport.addPropertyChangeListener("visible.before", new VisibleBeforeListener());
         propertyChangeSupport.addPropertyChangeListener("visible.DOCKED", new VisibleDockedListener());

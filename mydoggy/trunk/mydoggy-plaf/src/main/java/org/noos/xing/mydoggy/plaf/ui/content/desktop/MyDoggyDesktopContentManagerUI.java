@@ -6,7 +6,6 @@ import org.noos.xing.mydoggy.DesktopContentUI;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.WindowTransparencyListener;
@@ -28,6 +27,7 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
+import java.beans.PropertyChangeSupport;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -159,7 +159,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
 
     public void propertyChange(PropertyChangeEvent evt) {
-        propertyChangeSupport.firePropertyChangeEvent(evt);
+        propertyChangeSupport.firePropertyChange(evt);
     }
 
 
@@ -170,7 +170,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     protected void initListeners() {
         if (propertyChangeSupport == null) {
-            propertyChangeSupport = new PropertyChangeSupport();
+            propertyChangeSupport = new PropertyChangeSupport(this);
             propertyChangeSupport.addPropertyChangeListener("component", new MyDoggyDesktopContentManagerUI.ComponentListener());
             propertyChangeSupport.addPropertyChangeListener("disabledIcon", new MyDoggyDesktopContentManagerUI.DisabledIconListener());
             propertyChangeSupport.addPropertyChangeListener("icon", new MyDoggyDesktopContentManagerUI.IconListener());

@@ -8,7 +8,6 @@ import org.noos.xing.mydoggy.event.ToolWindowGroupEvent;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultDockedTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultFloatingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultSlidingTypeDescriptor;
-import org.noos.xing.mydoggy.plaf.support.PropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.MyDoggyTabbedContentManagerUI;
@@ -23,6 +22,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.*;
 
 /**
@@ -353,7 +353,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             return;
         }
 
-        propertyChangeSupport.firePropertyChangeEvent(evt);
+        propertyChangeSupport.firePropertyChange(evt);
     }
 
 
@@ -450,7 +450,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     protected void initListeners() {
-        propertyChangeSupport = new PropertyChangeSupport();
+        propertyChangeSupport = new PropertyChangeSupport(this);
         propertyChangeSupport.addPropertyChangeListener("available", new AvailablePropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("visible", new VisiblePropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("active", new ActivePropertyChangeListener());
