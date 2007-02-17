@@ -1,6 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
-import org.progx.collage.dnd.DragAndDropLock;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragAndDropLock;
 
 import javax.swing.*;
 import java.awt.event.ContainerEvent;
