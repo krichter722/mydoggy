@@ -1,4 +1,4 @@
-MyDoggy - My Java Docking Framework 1.1.0 (http://mydoggy.sourceforge.net/)
+MyDoggy - My Java Docking Framework 1.2.0 (http://mydoggy.sourceforge.net/)
 
 CONTENTS
 ========

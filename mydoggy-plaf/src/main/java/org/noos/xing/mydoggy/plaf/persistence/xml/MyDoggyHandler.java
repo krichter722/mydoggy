@@ -61,17 +61,17 @@ public class MyDoggyHandler extends DefaultHandler {
 
                     state = State.TOOLS;
                 } else
-                    throw new SAXException("Invalid element at this position. Aspeting <mydoggy>");
+                    throw new SAXException("Invalid element at this position. Expecting <mydoggy>");
                 break;
             case TOOLS:
                 if (!"tools".equals(qName))
-                    throw new SAXException("Invalid element at this position. Aspeting <tools>");
+                    throw new SAXException("Invalid element at this position. Expecting <tools>");
                 state = State.TOOL;
                 break;
             case TOOL:
                 if (subState == State.NOP) {
                     if (!"tool".equals(qName))
-                        throw new SAXException("Invalid element at this position. Aspeting <tool>");
+                        throw new SAXException("Invalid element at this position. Expecting <tool>");
 
                     persistedToolWindow = new PersistedToolWindow(attributes);
                     dockedType = null;

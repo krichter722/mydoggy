@@ -13,6 +13,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.dnd.DragSourceDropEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -45,6 +46,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     private boolean horizontal;
 
     private PropertyChangeSupport propertyChangeSupport;
+
+    private boolean tempShowed;
 
     boolean valueAdjusting = false;
 
@@ -94,6 +97,19 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
     public void ensureVisible(Component component) {
         toolScrollBar.ensureVisible(component);
+    }
+
+    public boolean isPointOnBar(Point point) {
+        return false;
+    }
+
+    public boolean isTempShowed() {
+        return tempShowed;
+    }
+
+    public void setTempShowed(boolean tempShowed) {
+        this.tempShowed = tempShowed;
+        manager.syncPanel(anchor);
     }
 
 
@@ -158,7 +174,11 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 }
             }
         });
-    }
+
+        DragListener dragListener = new DragListener();
+        propertyChangeSupport.addPropertyChangeListener("startDrag", dragListener);
+        propertyChangeSupport.addPropertyChangeListener("endDrag", dragListener);
+    }               
 
 
     class AvailableListener implements PropertyChangeListener {
@@ -371,7 +391,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                             toolWindow.setVisible(false);
                     } else if (toolWindow.getType() == ToolWindowType.SLIDING
                                && toolWindow.getAnchor() == sourceTool.getAnchor()
-                               && manager.isShiftShow())                    
+                               && manager.isShiftShow())
                         toolWindow.setVisible(false);
                 }
             }
@@ -572,32 +592,17 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     case TOP:
                         if (direction == Direction.INCOMING) {
                             if (splitPane.getDividerLocation() <= animatingHeight) {
-                                final int length = animatingHeight;
-                                SwingUtilities.invokeLater(new Runnable() {
-                                    public void run() {
-                                        splitPane.setDividerLocation(length);
-                                    }
-                                });
+                                splitPane.setDividerLocation(animatingHeight);
                             }
                         } else
                             splitPane.setDividerLocation(animatingHeight);
                         break;
                     case RIGHT:
                         final int length = splitPane.getWidth() - animatingHeight;
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                splitPane.setDividerLocation(length);
-                            }
-                        });
+                        splitPane.setDividerLocation(length);
                         break;
                     case BOTTOM:
-//                        splitPane.setDividerLocation(splitPane.getHeight() - animatingHeight);
-                        final int lengthBottom = splitPane.getHeight() - animatingHeight;
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                splitPane.setDividerLocation(lengthBottom);
-                            }
-                        });
+                        splitPane.setDividerLocation(splitPane.getHeight() - animatingHeight);
                         break;
 
                 }
@@ -628,35 +633,17 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                             case LEFT:
                             case TOP:
                                 if (splitPane.getDividerLocation() <= sheetLen) {
-//                                    splitPane.setDividerLocation(sheetLen);
-                                    final int length = sheetLen;
-                                    SwingUtilities.invokeLater(new Runnable() {
-                                        public void run() {
-                                            splitPane.setDividerLocation(length);
-                                            SwingUtil.repaintNow(splitPane);
-                                        }
-                                    });
+                                    splitPane.setDividerLocation(sheetLen);
+                                    SwingUtil.repaintNow(splitPane);
                                 }
                                 break;
                             case RIGHT:
-//                                splitPane.setDividerLocation(splitPane.getWidth() - sheetLen);
-                                final int length = splitPane.getWidth() - sheetLen;
-                                SwingUtilities.invokeLater(new Runnable() {
-                                    public void run() {
-                                        splitPane.setDividerLocation(length);
-                                        SwingUtil.repaintNow(splitPane);
-                                    }
-                                });
+                                splitPane.setDividerLocation(splitPane.getWidth() - sheetLen);
+                                SwingUtil.repaintNow(splitPane);
                                 break;
                             case BOTTOM:
-//                                splitPane.setDividerLocation(splitPane.getHeight() - sheetLen);
-                                final int lengthBottom = splitPane.getHeight() - sheetLen;
-                                SwingUtilities.invokeLater(new Runnable() {
-                                    public void run() {
-                                        splitPane.setDividerLocation(lengthBottom);
-                                        SwingUtil.repaintNow(splitPane);
-                                    }
-                                });
+                                splitPane.setDividerLocation(splitPane.getHeight() - sheetLen);
+                                SwingUtil.repaintNow(splitPane);
                                 break;
                         }
                     }
@@ -762,4 +749,49 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     class TitleListener extends IndexListener {
     }
 
+
+    class DragListener implements PropertyChangeListener {
+        private int len;
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            if ("startDrag".equals(evt.getPropertyName())) {
+                Component cmp = (Component) evt.getSource();
+                TableLayout layout = (TableLayout) contentPane.getLayout();
+                switch (anchor) {
+                    case LEFT:
+                    case RIGHT:
+                        len = cmp.getHeight();
+                        layout.setRow(layout.getConstraints(cmp).row1, 0);
+                        break;
+                    case TOP:
+                    case BOTTOM:
+                        len = cmp.getWidth();
+                        layout.setColumn(layout.getConstraints(cmp).col1, 0);
+                        break;
+                }
+                SwingUtil.repaint(contentPane);
+            } else if ("endDrag".equals(evt.getPropertyName())) {
+                DragSourceDropEvent dragEvent = (DragSourceDropEvent) evt.getNewValue();
+                if (!dragEvent.getDropSuccess()) {
+                    for (Component cmp : contentPane.getComponents()) {
+                        if (cmp == evt.getSource()) {
+                            TableLayout layout = (TableLayout) contentPane.getLayout();
+                            switch (anchor) {
+                                case LEFT:
+                                case TOP:
+                                    layout.setRow(layout.getConstraints(cmp).row1, len);
+                                    break;
+                                case RIGHT:
+                                case BOTTOM:
+                                    layout.setColumn(layout.getConstraints(cmp).col1, len);
+                                    break;
+                            }
+                            SwingUtil.repaint(contentPane);
+                        }
+                    }
+                }
+            } else
+                throw new IllegalArgumentException("Invalid Property Name : " + evt.getPropertyName());
+        }
+    }
 }

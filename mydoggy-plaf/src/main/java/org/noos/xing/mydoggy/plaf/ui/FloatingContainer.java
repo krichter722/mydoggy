@@ -18,154 +18,154 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro
  */
 public class FloatingContainer extends DockedContainer {
-	private JModalWindow window;
+    private JModalWindow window;
 
-	private FloatingResizeMouseInputHandler resizeMouseInputHandler;
-	private FloatingMoveMouseInputHandler moveMouseInputHandler;
-	private boolean settedListener = false;
+    private FloatingResizeMouseInputHandler resizeMouseInputHandler;
+    private FloatingMoveMouseInputHandler moveMouseInputHandler;
+    private boolean settedListener = false;
 
     private boolean valueAdjusting = false;
 
     private Rectangle lastBounds;
 
-	private final FloatingAnimation floatingAnimation = new FloatingAnimation();
+    private final FloatingAnimation floatingAnimation = new FloatingAnimation();
 
-	public FloatingContainer(ToolWindowDescriptor descriptor) {
-		super(descriptor);
+    public FloatingContainer(ToolWindowDescriptor descriptor) {
+        super(descriptor);
 
-		initFloatingComponents();
-		initFloatingListeners();
-	}
-
-
-	public void setVisible(boolean visible) {
-		synchronized (floatingAnimation) {
-			if (floatingAnimation.isAnimating()) 
-				floatingAnimation.stop();
-		}
-
-		if (visible) {
-			configureFloatingIcons();
-
-			window.getContentPane().removeAll();
-
-			Component content = getContentContainer();
-			content.setVisible(true);
-			window.getContentPane().add(content, "1,1,FULL,FULL");
-
-			if (lastBounds == null) {
-				FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
-
-				// Set Size
-				if (typeDescriptor.getSize() == null) {
-					Window windowAnchestor = descriptor.getWindowAnchestor();
-					window.setSize(windowAnchestor.getWidth() / 2, (int) (windowAnchestor.getHeight() / 1.5));
-				} else {
-					window.setSize(typeDescriptor.getSize());
-				}
-
-				// Set Location
-				if (typeDescriptor.getLocation() == null) {
-					if (content.getX() == 0 || content.getY() == 0)
-						SwingUtil.centrePositionOnScreen(window);
-				} else
-					window.setLocation(typeDescriptor.getLocation());
-			} else {
-				window.setBounds(lastBounds);
-				lastBounds = null;
-			}
-
-			applicationBarTitle.setIcon(toolWindow.getIcon());
-
-			floatingAnimation.show();
-		} else {
-			lastBounds = window.getBounds();
-			applicationBarTitle.setIcon(null);
-
-			floatingAnimation.hide();
-		}
-	}
+        initFloatingComponents();
+        initFloatingListeners();
+    }
 
 
-	private void initFloatingComponents() {
-		window = new JModalWindow(descriptor.getWindowAnchestor(), null, false);
-//                new JWindow(descriptor.getWindowAnchestor());
+    public void setVisible(boolean visible) {
+        synchronized (floatingAnimation) {
+            if (floatingAnimation.isAnimating()) {
+                floatingAnimation.stop();
+            }
+        }
 
-		JPanel contentPane = new JPanel(new ExtendedTableLayout(new double[][]{{1, TableLayout.FILL, 1}, {1, TableLayout.FILL, 1}}));
-		contentPane.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-		window.setContentPane(contentPane);
-	}
+        if (visible) {
+            configureFloatingIcons();
 
-	private void initFloatingListeners() {
-		addPropertyChangeListener("type", new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				if (evt.getSource() != descriptor)
-					return;
+            window.getContentPane().removeAll();
 
-				assert "type".equals(evt.getPropertyName());
-				if (evt.getNewValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING_FREE) {
-					window.removeMouseMotionListener(resizeMouseInputHandler);
-					window.removeMouseListener(resizeMouseInputHandler);
+            Component content = getContentContainer();
+            content.setVisible(true);
+            window.getContentPane().add(content, "1,1,FULL,FULL");
 
-					applicationBarTitle.removeMouseMotionListener(moveMouseInputHandler);
-					applicationBarTitle.removeMouseListener(moveMouseInputHandler);
+            if (lastBounds == null) {
+                FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
 
-					window.addMouseMotionListener(resizeMouseInputHandler);
-					window.addMouseListener(resizeMouseInputHandler);
+                // Set Size
+                if (typeDescriptor.getSize() == null) {
+                    Window windowAnchestor = descriptor.getWindowAnchestor();
+                    window.setSize(windowAnchestor.getWidth() / 2, (int) (windowAnchestor.getHeight() / 1.5));
+                } else {
+                    window.setSize(typeDescriptor.getSize());
+                }
 
-					applicationBarTitle.addMouseMotionListener(moveMouseInputHandler);
-					applicationBarTitle.addMouseListener(moveMouseInputHandler);
-					settedListener = true;
-				} else {
-					if (settedListener)
-						lastBounds = window.getBounds();
-					window.removeMouseMotionListener(resizeMouseInputHandler);
-					window.removeMouseListener(resizeMouseInputHandler);
+                // Set Location
+                if (typeDescriptor.getLocation() == null) {
+                    if (content.getX() == 0 || content.getY() == 0)
+                        SwingUtil.centrePositionOnScreen(window);
+                } else
+                    window.setLocation(typeDescriptor.getLocation());
+            } else {
+                window.setBounds(lastBounds);
+                lastBounds = null;
+            }
 
-					applicationBarTitle.removeMouseMotionListener(moveMouseInputHandler);
-					applicationBarTitle.removeMouseListener(moveMouseInputHandler);
-					settedListener = false;
-				}
-			}
-		});
-		addPropertyChangeListener("location", new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
+            applicationBarTitle.setIcon(toolWindow.getIcon());
+
+            floatingAnimation.show();
+        } else {
+            lastBounds = window.getBounds();
+            applicationBarTitle.setIcon(null);
+
+            floatingAnimation.hide();
+        }
+    }
+
+
+    private void initFloatingComponents() {
+        window = new JModalWindow(descriptor.getWindowAnchestor(), null, false);
+
+        JPanel contentPane = new JPanel(new ExtendedTableLayout(new double[][]{{1, TableLayout.FILL, 1}, {1, TableLayout.FILL, 1}}));
+        contentPane.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        window.setContentPane(contentPane);
+    }
+
+    private void initFloatingListeners() {
+        addPropertyChangeListener("type", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getSource() != descriptor)
+                    return;
+
+                assert "type".equals(evt.getPropertyName());
+                if (evt.getNewValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING_FREE) {
+                    window.removeMouseMotionListener(resizeMouseInputHandler);
+                    window.removeMouseListener(resizeMouseInputHandler);
+
+                    applicationBarTitle.removeMouseMotionListener(moveMouseInputHandler);
+                    applicationBarTitle.removeMouseListener(moveMouseInputHandler);
+
+                    window.addMouseMotionListener(resizeMouseInputHandler);
+                    window.addMouseListener(resizeMouseInputHandler);
+
+                    applicationBarTitle.addMouseMotionListener(moveMouseInputHandler);
+                    applicationBarTitle.addMouseListener(moveMouseInputHandler);
+                    settedListener = true;
+                } else {
+                    if (settedListener)
+                        lastBounds = window.getBounds();
+                    window.removeMouseMotionListener(resizeMouseInputHandler);
+                    window.removeMouseListener(resizeMouseInputHandler);
+
+                    applicationBarTitle.removeMouseMotionListener(moveMouseInputHandler);
+                    applicationBarTitle.removeMouseListener(moveMouseInputHandler);
+                    settedListener = false;
+                }
+            }
+        });
+        addPropertyChangeListener("location", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
                 if (valueAdjusting)
                     return;
 
                 if (window.isVisible()) {
-					Point location = (Point) evt.getNewValue();
-					window.setLocation(location);
-				}
+                    Point location = (Point) evt.getNewValue();
+                    window.setLocation(location);
+                }
                 lastBounds = null;
             }
-		});
-		addPropertyChangeListener("size", new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
+        });
+        addPropertyChangeListener("size", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
                 if (valueAdjusting)
                     return;
 
-				if (window.isVisible()) {
-					Dimension size = (Dimension) evt.getNewValue();
-					window.setSize(size);
-				}
+                if (window.isVisible()) {
+                    Dimension size = (Dimension) evt.getNewValue();
+                    window.setSize(size);
+                }
                 lastBounds = null;
-			}
-		});
-		addPropertyChangeListener("modal", new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				if (window.isVisible()) {
-					window.setModal((Boolean) evt.getNewValue());
-				}
-			}
-		});
+            }
+        });
+        addPropertyChangeListener("modal", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (window.isVisible()) {
+                    window.setModal((Boolean) evt.getNewValue());
+                }
+            }
+        });
 
-		FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
-		typeDescriptor.addPropertyChangeListener(this);
+        FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
+        typeDescriptor.addPropertyChangeListener(this);
 
-		new FloatingToolTransparencyListener(this, descriptor, window);
+        new FloatingToolTransparencyListener(this, descriptor, window);
         resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window);
-		moveMouseInputHandler = new FloatingMoveMouseInputHandler(window, applicationBarTitle);
+        moveMouseInputHandler = new FloatingMoveMouseInputHandler(window, applicationBarTitle);
 
         window.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
@@ -192,107 +192,107 @@ public class FloatingContainer extends DockedContainer {
                 }
             }
         });
-	}
+    }
 
 
-	private void configureFloatingIcons() {
-		FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
+    private void configureFloatingIcons() {
+        FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
 
-		if (typeDescriptor.isModal()) {
-			setPinVisible(false);
-			setFloatingVisible(false);
-			setDockedVisible(false);
-		} else {
-			setPinVisible(true);
-			setFloatingVisible(true);
-			setDockedVisible(false);
-			setFix();
-		}
-	}
-
-
-	private class FloatingAnimation extends AbstractAnimation {
-		private Rectangle originalBounds;
-		private int lastLenX = 0;
-		private int lastLenY = 0;
-
-		public FloatingAnimation() {
-			super(80f);
-		}
+        if (typeDescriptor.isModal()) {
+            setPinVisible(false);
+            setFloatingVisible(false);
+            setDockedVisible(false);
+        } else {
+            setPinVisible(true);
+            setFloatingVisible(true);
+            setDockedVisible(false);
+            setFix();
+        }
+    }
 
 
-		protected float onAnimating(float animationPercent) {
-			int animatingLengthX = (int) (animationPercent * originalBounds.width);
-			int animatingLengthY = (int) (animationPercent * originalBounds.height);
+    private class FloatingAnimation extends AbstractAnimation {
+        private Rectangle originalBounds;
+        private int lastLenX = 0;
+        private int lastLenY = 0;
 
-			if (getAnimationDirection() == Direction.INCOMING) {
-				window.setLocation(
-						window.getX() - (animatingLengthX / 2 - lastLenX / 2),
-						window.getY() - (animatingLengthY / 2 - lastLenY / 2)
-				);
-				window.setSize(
-						window.getWidth() + (animatingLengthX - lastLenX),
-						window.getHeight() + (animatingLengthY - lastLenY)
-				);
-			} else {
-				window.setLocation(
-						window.getX() + (animatingLengthX / 2 - lastLenX / 2),
-						window.getY() + (animatingLengthY / 2 - lastLenY / 2)
-				);
-				window.setSize(
-						window.getWidth() - (animatingLengthX - lastLenX),
-						window.getHeight() - (animatingLengthY - lastLenY)
-				);
-			}
+        public FloatingAnimation() {
+            super(80f);
+        }
 
-			//                window.validate();
-			//                window.repaint();
 
-			lastLenX = animatingLengthX;
-			lastLenY = animatingLengthY;
+        protected float onAnimating(float animationPercent) {
+            final int animatingLengthX = (int) (animationPercent * originalBounds.width);
+            final int animatingLengthY = (int) (animationPercent * originalBounds.height);
 
-			return animationPercent;
-		}
+            if (getAnimationDirection() == Direction.INCOMING) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        window.setBounds(
+                                window.getX() - (animatingLengthX / 2 - lastLenX / 2),
+                                window.getY() - (animatingLengthY / 2 - lastLenY / 2),
+                                window.getWidth() + (animatingLengthX - lastLenX),
+                                window.getHeight() + (animatingLengthY - lastLenY));
+                    }
+                }
+                );
+            } else {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        window.setBounds(window.getX() + (animatingLengthX / 2 - lastLenX / 2),
+                                         window.getY() + (animatingLengthY / 2 - lastLenY / 2),
+                                         window.getWidth() - (animatingLengthX - lastLenX),
+                                         window.getHeight() - (animatingLengthY - lastLenY)
+                        );
+                    }
+                });
+            }
 
-		protected void onFinishAnimation() {
-			switch (getAnimationDirection()) {
-				case INCOMING:
-					window.setBounds(originalBounds);
-					SwingUtil.repaint(window);
-					break;
-				case OUTGOING:
-					window.getContentPane().setVisible(true);
-					window.setVisible(false);
-					window.setBounds(originalBounds);
-					break;
-			}
-		}
+            lastLenX = animatingLengthX;
+            lastLenY = animatingLengthY;
 
-		protected void onHide(Object... params) {
-			this.originalBounds = window.getBounds();
-			window.getContentPane().setVisible(false);
-		}
+            return animationPercent;
+        }
 
-		protected void onShow(Object... params) {
-			this.originalBounds = window.getBounds();
-			window.setBounds(new Rectangle(originalBounds.x + (originalBounds.width / 2),
-										   originalBounds.y + (originalBounds.height / 2),
-										   0, 0));
+        protected void onFinishAnimation() {
+            switch (getAnimationDirection()) {
+                case INCOMING:
+                    window.setBounds(originalBounds);
+                    SwingUtil.repaint(window);
+                    break;
+                case OUTGOING:
+                    window.getContentPane().setVisible(true);
+                    window.setVisible(false);
+                    window.setBounds(originalBounds);
+                    break;
+            }
+        }
 
-			FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
-			window.setModal(typeDescriptor.isModal());
-			window.setVisible(true);
-			window.getContentPane().setVisible(true);
-		}
+        protected void onHide(Object... params) {
+            this.originalBounds = window.getBounds();
+            window.getContentPane().setVisible(false);
+        }
 
-		protected void onStartAnimation(Direction direction) {
-			lastLenX = 0;
-			lastLenY = 0;
-		}
+        protected void onShow(Object... params) {
+            this.originalBounds = window.getBounds();
+            window.setBounds(new Rectangle(originalBounds.x + (originalBounds.width / 2),
+                                           originalBounds.y + (originalBounds.height / 2),
+                                           0, 0));
 
-		protected Direction chooseFinishDirection(Type type) {
-			return (type == Type.SHOW) ? Direction.OUTGOING : Direction.INCOMING;
-		}
-	}
+            FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
+            window.setModal(typeDescriptor.isModal());
+            window.setVisible(true);
+            window.getContentPane().setVisible(true);
+        }
+
+        protected void onStartAnimation(Direction direction) {
+            lastLenX = 0;
+            lastLenY = 0;
+        }
+
+        protected Direction chooseFinishDirection(Type type) {
+            return (type == Type.SHOW) ? Direction.OUTGOING : Direction.INCOMING;
+        }
+    }
 
 }
