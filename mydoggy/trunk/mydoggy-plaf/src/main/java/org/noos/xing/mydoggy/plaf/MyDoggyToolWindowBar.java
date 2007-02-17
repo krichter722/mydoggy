@@ -771,23 +771,20 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 }
                 SwingUtil.repaint(contentPane);
             } else if ("endDrag".equals(evt.getPropertyName())) {
-                DragSourceDropEvent dragEvent = (DragSourceDropEvent) evt.getNewValue();
-                if (!dragEvent.getDropSuccess()) {
-                    for (Component cmp : contentPane.getComponents()) {
-                        if (cmp == evt.getSource()) {
-                            TableLayout layout = (TableLayout) contentPane.getLayout();
-                            switch (anchor) {
-                                case LEFT:
-                                case TOP:
-                                    layout.setRow(layout.getConstraints(cmp).row1, len);
-                                    break;
-                                case RIGHT:
-                                case BOTTOM:
-                                    layout.setColumn(layout.getConstraints(cmp).col1, len);
-                                    break;
-                            }
-                            SwingUtil.repaint(contentPane);
+                for (Component cmp : contentPane.getComponents()) {
+                    if (cmp == evt.getSource()) {
+                        TableLayout layout = (TableLayout) contentPane.getLayout();
+                        switch (anchor) {
+                            case LEFT:
+                            case RIGHT:
+                                layout.setRow(layout.getConstraints(cmp).row1, len);
+                                break;
+                            case TOP:
+                            case BOTTOM:
+                                layout.setColumn(layout.getConstraints(cmp).col1, len);
+                                break;
                         }
+                        SwingUtil.repaint(contentPane);
                     }
                 }
             } else

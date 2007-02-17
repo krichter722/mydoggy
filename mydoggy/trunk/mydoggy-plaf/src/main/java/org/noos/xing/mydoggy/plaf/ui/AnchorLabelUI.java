@@ -3,9 +3,9 @@ package org.noos.xing.mydoggy.plaf.ui;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTrasferable;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragAndDropLock;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.progx.collage.dnd.DragAndDropLock;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
@@ -426,7 +426,7 @@ public class AnchorLabelUI extends MetalLabelUI {
             p = (Point) dsde.getLocation().clone();
             SwingUtilities.convertPointFromScreen(p, descriptor.getManager());
             ToolWindowAnchor newAnchor = descriptor.getToolWindowAnchor(p);
-            
+
             if (newAnchor != lastAnchor) {
                 Rectangle dirtyRegion = glassPane.getRepaintRect();
 
@@ -439,24 +439,48 @@ public class AnchorLabelUI extends MetalLabelUI {
 
                     switch (newAnchor) {
                         case LEFT:
+                            switch (descriptor.getToolWindow().getAnchor()) {
+                                case LEFT:
+                                    glassPane.setImage(ghostImage);
+                                    break;
+                                case RIGHT:
+                                    glassPane.setImage(GraphicsUtil.rotate(ghostImage, Math.PI));
+                                    break;
+                                default:
+                                    glassPane.setImage(GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI));
+                                    break;
+                            }
+                            break;
                         case RIGHT:
-                            if (descriptor.getToolWindow().getAnchor() == ToolWindowAnchor.LEFT ||
-                                descriptor.getToolWindow().getAnchor() == ToolWindowAnchor.RIGHT)
-                                glassPane.setImage(ghostImage);
-                            else
-                                glassPane.setImage(GraphicsUtil.tilt(ghostImage, Math.PI / 2));
+                            switch (descriptor.getToolWindow().getAnchor()) {
+                                case LEFT:
+                                    glassPane.setImage(GraphicsUtil.rotate(ghostImage, Math.PI));
+                                    break;
+                                case RIGHT:
+                                    glassPane.setImage(ghostImage);
+                                    break;
+                                default:
+                                    glassPane.setImage(GraphicsUtil.rotate(ghostImage, -1.5 * Math.PI));
+                                    break;
+                            }
                             break;
                         case TOP:
                         case BOTTOM:
-                            if (descriptor.getToolWindow().getAnchor() == ToolWindowAnchor.TOP ||
-                                descriptor.getToolWindow().getAnchor() == ToolWindowAnchor.BOTTOM)
-                                glassPane.setImage(ghostImage);
-                            else
-                                glassPane.setImage(GraphicsUtil.tilt(ghostImage, Math.PI / 2));
+                            switch (descriptor.getToolWindow().getAnchor()) {
+                                case LEFT:
+                                    glassPane.setImage(GraphicsUtil.rotate(ghostImage, -1.5 * Math.PI));
+                                    break;
+                                case RIGHT:
+                                    glassPane.setImage(GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI));
+                                    break;
+                                default:
+                                    glassPane.setImage(ghostImage);
+                                    break;
+                            }
                             break;
                     }
                 }
-                
+
                 lastAnchor = newAnchor;
                 glassPane.repaint(dirtyRegion);
             }
@@ -494,7 +518,7 @@ public class AnchorLabelUI extends MetalLabelUI {
 
             ghostImage = null;
             lastAnchor = null;
-            
+
             DragAndDropLock.setLocked(false);
         }
 
