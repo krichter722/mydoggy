@@ -2,17 +2,20 @@ package org.noos.xing.mydoggy.plaf.ui;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTransferHandler;
+import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTrasferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.progx.collage.dnd.DragAndDropLock;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.metal.MetalLabelUI;
 import java.awt.*;
+import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ResourceBundle;
@@ -43,34 +46,15 @@ public class AnchorLabelUI extends MetalLabelUI {
 
     public void installUI(JComponent c) {
         super.installUI(c);
+
         this.component = c;
         labelBorder = new LineBorder(Color.GRAY, 1, true, 3, 3);
-
         c.setBorder(labelBorder);
-        c.setTransferHandler(new ToolWindowTransferHandler(toolWindow));
-    }
 
-    protected void installListeners(JLabel c) {
-        super.installListeners(c);
-
-        // Forse PropertyChangeListener
-        String oldText = c.getText();
-        if (oldText != null) {
-            c.setText(null);
-            c.setText(oldText);
-        }
-
-        oldText = c.getToolTipText();
-        if (oldText != null) {
-            c.setToolTipText(null);
-            c.setToolTipText(oldText);
-        }
-
-        adapter = new AnchorLabelMouseAdapter();
-        c.addMouseListener(adapter);
-        c.addMouseMotionListener(adapter);
-
-        descriptor.getToolWindow().addInternalPropertyChangeListener(this);
+        DragGesture dragGesture = new DragGesture();
+        DragSource dragSource = DragSource.getDefaultDragSource();
+        dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, dragGesture);
+        dragSource.addDragSourceMotionListener(dragGesture);
     }
 
     public void uninstallUI(JComponent c) {
@@ -109,6 +93,29 @@ public class AnchorLabelUI extends MetalLabelUI {
         }
     }
 
+    protected void installListeners(JLabel c) {
+        super.installListeners(c);
+
+        // Forse PropertyChangeListener
+        String oldText = c.getText();
+        if (oldText != null) {
+            c.setText(null);
+            c.setText(oldText);
+        }
+
+        oldText = c.getToolTipText();
+        if (oldText != null) {
+            c.setToolTipText(null);
+            c.setToolTipText(oldText);
+        }
+
+        adapter = new AnchorLabelMouseAdapter();
+        c.addMouseListener(adapter);
+        c.addMouseMotionListener(adapter);
+
+        descriptor.getToolWindow().addInternalPropertyChangeListener(this);
+    }
+
 
     class AnchorLabelMouseAdapter extends MouseInputAdapter implements ActionListener, PropertyChangeListener {
 
@@ -140,7 +147,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                 if ((e.getModifiersEx() & onmask) == onmask) {
                     if (toolWindow.isVisible()) {
                         toolWindow.setVisible(false);
-                    } else { 
+                    } else {
                         toolWindow.aggregate();
                         toolWindow.setActive(true);
                     }
@@ -244,14 +251,6 @@ public class AnchorLabelUI extends MetalLabelUI {
             }
         }
 
-
-        public void mouseDragged(MouseEvent e) {
-            if (SwingUtilities.isLeftMouseButton(e)) {
-                JComponent c = (JComponent) e.getSource();
-                TransferHandler handler = c.getTransferHandler();
-                handler.exportAsDrag(c, e, TransferHandler.MOVE);
-            }
-        }
 
         protected void initPopupMenu() {
             popupMenu = new JPopupMenu("ToolWindowBarPopupMenu");
@@ -372,6 +371,131 @@ public class AnchorLabelUI extends MetalLabelUI {
                 popupMenu.add(menu, 4);
                 old = menu;
             }
+        }
+
+    }
+
+    class DragGesture implements DragGestureListener, DragSourceMotionListener, DragSourceListener {
+        private BufferedImage ghostImage;
+        private ToolWindowAnchor lastAnchor;
+
+        public void dragGestureRecognized(DragGestureEvent dge) {
+            if (DragAndDropLock.isLocked()) {
+                DragAndDropLock.setDragAndDropStarted(false);
+                return;
+            }
+            DragAndDropLock.setLocked(true);
+            DragAndDropLock.setDragAndDropStarted(true);
+
+            // Start Drag
+            dge.startDrag(Cursor.getDefaultCursor(), new ToolWindowTrasferable(toolWindow), this);
+
+            // Prepare glassPane for ghost image
+            GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
+            glassPane.setVisible(true);
+
+            Point p = (Point) dge.getDragOrigin().clone();
+            SwingUtilities.convertPointToScreen(p, descriptor.getManager());
+            SwingUtilities.convertPointFromScreen(p, glassPane);
+
+            // Build orginalDragImage            
+            JComponent c = descriptor.getAnchorLabel();
+            ghostImage = new BufferedImage(c.getWidth(), c.getHeight(), BufferedImage.TYPE_INT_RGB);
+            descriptor.getAnchorLabel().print(ghostImage.createGraphics());
+
+            descriptor.getToolBar().propertyChange(new PropertyChangeEvent(component, "startDrag", null, dge));
+
+            // Setup glasspane
+            glassPane.setPoint(p);
+            glassPane.setImage(ghostImage);
+            glassPane.repaint();
+
+            lastAnchor = null;
+        }
+
+        public void dragMouseMoved(DragSourceDragEvent dsde) {
+            if (!DragAndDropLock.isDragAndDropStarted() || ghostImage == null)
+                return;
+
+            GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
+
+            Point p = (Point) dsde.getLocation().clone();
+            SwingUtilities.convertPointFromScreen(p, glassPane);
+            glassPane.setPoint(p);
+
+            p = (Point) dsde.getLocation().clone();
+            SwingUtilities.convertPointFromScreen(p, descriptor.getManager());
+            ToolWindowAnchor newAnchor = descriptor.getToolWindowAnchor(p);
+            
+            if (newAnchor != lastAnchor) {
+                Rectangle dirtyRegion = glassPane.getRepaintRect();
+
+                if (newAnchor == null) {
+                    glassPane.setImage(ghostImage);
+                    descriptor.getToolBar(lastAnchor).setTempShowed(false);
+                } else {
+                    if (descriptor.getToolBar(newAnchor).getAvailableTools() == 0)
+                        descriptor.getToolBar(newAnchor).setTempShowed(true);
+
+                    switch (newAnchor) {
+                        case LEFT:
+                        case RIGHT:
+                            if (descriptor.getToolWindow().getAnchor() == ToolWindowAnchor.LEFT ||
+                                descriptor.getToolWindow().getAnchor() == ToolWindowAnchor.RIGHT)
+                                glassPane.setImage(ghostImage);
+                            else
+                                glassPane.setImage(GraphicsUtil.tilt(ghostImage, Math.PI / 2));
+                            break;
+                        case TOP:
+                        case BOTTOM:
+                            if (descriptor.getToolWindow().getAnchor() == ToolWindowAnchor.TOP ||
+                                descriptor.getToolWindow().getAnchor() == ToolWindowAnchor.BOTTOM)
+                                glassPane.setImage(ghostImage);
+                            else
+                                glassPane.setImage(GraphicsUtil.tilt(ghostImage, Math.PI / 2));
+                            break;
+                    }
+                }
+                
+                lastAnchor = newAnchor;
+                glassPane.repaint(dirtyRegion);
+            }
+
+            glassPane.repaint(glassPane.getRepaintRect());
+        }
+
+        public void dragEnter(DragSourceDragEvent dsde) {
+        }
+
+        public void dragOver(DragSourceDragEvent dsde) {
+        }
+
+        public void dropActionChanged(DragSourceDragEvent dsde) {
+        }
+
+        public void dragExit(DragSourceEvent dse) {
+        }
+
+        public void dragDropEnd(DragSourceDropEvent dsde) {
+            if (!DragAndDropLock.isDragAndDropStarted() || ghostImage == null)
+                return;
+
+            DragAndDropLock.setDragAndDropStarted(false);
+
+            descriptor.getToolBar().propertyChange(new PropertyChangeEvent(component, "endDrag", null, dsde));
+
+            GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
+
+            Point p = (Point) dsde.getLocation().clone();
+            SwingUtilities.convertPointFromScreen(p, glassPane);
+
+            glassPane.setImage(null);
+            glassPane.setVisible(false);
+
+            ghostImage = null;
+            lastAnchor = null;
+            
+            DragAndDropLock.setLocked(false);
         }
 
     }

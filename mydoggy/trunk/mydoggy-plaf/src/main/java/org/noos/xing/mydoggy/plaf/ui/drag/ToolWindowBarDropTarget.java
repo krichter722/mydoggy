@@ -1,9 +1,11 @@
 package org.noos.xing.mydoggy.plaf.ui.drag;
 
+import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.GlassPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,11 +19,13 @@ import java.io.IOException;
 public class ToolWindowBarDropTarget extends DropTarget {
     private ToolWindowAnchor anchor;
     private Container container;
+    private TableLayout layout;
 
     public ToolWindowBarDropTarget(ToolWindowAnchor anchor, Container container) throws HeadlessException {
         super(container, new BarDropTargetListener(anchor));
         this.anchor = anchor;
         this.container = container;
+        this.layout = (TableLayout) container.getLayout();
     }
 
     private int showPosition(DropTargetDragEvent dtde) {
@@ -48,61 +52,103 @@ public class ToolWindowBarDropTarget extends DropTarget {
                 throw new IllegalStateException("Invalid anchor");
         }
 
-        for (Component component : container.getComponents()) {
-            if (component instanceof HorizontalSeparatorLabel) {
-                container.remove(component);
-            }
-        }
-
         for (int i = 0; i < intervals.length; i++) {
             double interval = intervals[i];
             if (position >= sum && position <= sum + interval) {
+                if (i % 2 == 0 && i != 0) {
+                    int diff = -1;
+                    for (Component component : container.getComponents()) {
+                        if (component instanceof SeparatorLabel) {
+                            switch (anchor) {
+                                case TOP:
+                                case BOTTOM:
+                                    if (layout.getConstraints(component).col1 == i - 1)
+                                        diff = 1;
+                                    break;
+                                case LEFT:
+                                case RIGHT:
+                                    if (layout.getConstraints(component).row1 == i - 1)
+                                        diff = 1;
+                                    break;
+                            }
+                            if (diff == 1)
+                                break;
+                        }
+                    }
+                    i += diff;
+
+                    switch (anchor) {
+                        case TOP:
+                        case BOTTOM:
+                            if (i >= layout.getNumColumn()) {
+                                sum += interval;
+                                hidePosition(false);
+                                continue;
+                            }
+                            break;
+                        case LEFT:
+                        case RIGHT:
+                            if (i >= layout.getNumRow()) {
+                                sum += interval;
+                                hidePosition(false);
+                                continue;
+                            }
+                            break;
+                    }
+                }
+                hidePosition(false);
+
+                GlassPanel glassPanel = (GlassPanel) SwingUtilities.getRootPane(container).getGlassPane();
                 switch (anchor) {
                     case TOP:
                     case BOTTOM:
                         container.add(new VerticalSeparatorLabel(), i + ",1,c,c");
+                        layout.setColumn(i, glassPanel.getDragged().getWidth(container) + 6);
                         break;
                     case LEFT:
                     case RIGHT:
                         container.add(new HorizontalSeparatorLabel(), "1," + i + ",c,c");
+                        layout.setRow(i, glassPanel.getDragged().getHeight(container) + 6);
                         break;
-                    default:
-                        throw new IllegalStateException("Invalid anchor");
                 }
+
                 index = i / 2;
                 break;
             } else
                 sum += interval;
         }
 
-        container.validate();
-        container.repaint();
-
+        SwingUtil.repaint(container);
         return index;
     }
 
-    private void hidePosition() {
+    private void hidePosition(boolean repaint) {
         for (Component component : container.getComponents()) {
-            if (component instanceof SeparatorLabel)
+            if (component instanceof SeparatorLabel) {
+                if (component instanceof HorizontalSeparatorLabel) {
+                    layout.setRow(layout.getConstraints(component).row1, 3);
+                } else
+                    layout.setColumn(layout.getConstraints(component).col1, 3);
+
                 container.remove(component);
+            }
         }
 
-        container.validate();
-        container.repaint();
+        if (repaint)
+            SwingUtil.repaint(container);
     }
 
 
-    private static interface SeparatorLabel {}
+    private static interface SeparatorLabel {
+    }
 
-    private static class VerticalSeparatorLabel extends JLabel implements SeparatorLabel {
+    private static class VerticalSeparatorLabel extends JPanel implements SeparatorLabel {
         public VerticalSeparatorLabel() {
-            setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/separatorVertical.png"));
         }
     }
 
-    private static class HorizontalSeparatorLabel extends JLabel implements SeparatorLabel {
+    private static class HorizontalSeparatorLabel extends JPanel implements SeparatorLabel {
         public HorizontalSeparatorLabel() {
-            setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/separatorHorizontal.png"));
         }
     }
 
@@ -118,11 +164,13 @@ public class ToolWindowBarDropTarget extends DropTarget {
             if (dtde.getTransferable().isDataFlavorSupported(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR)) {
                 dtde.acceptDrop(DnDConstants.ACTION_MOVE);
                 try {
-                    ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition();
+                    ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
 
                     anchor.setIndex(index);
                     ((ToolWindow) dtde.getTransferable().getTransferData(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR))
                             .setAnchor(anchor);
+
+                    dtde.dropComplete(true);
                 } catch (UnsupportedFlavorException e) {
                     e.printStackTrace();
                     dtde.rejectDrop();
@@ -149,7 +197,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
         }
 
         public void dragExit(DropTargetEvent dte) {
-            ((ToolWindowBarDropTarget) dte.getDropTargetContext().getDropTarget()).hidePosition();
+            ((ToolWindowBarDropTarget) dte.getDropTargetContext().getDropTarget()).hidePosition(true);
             index = -1;
         }
 

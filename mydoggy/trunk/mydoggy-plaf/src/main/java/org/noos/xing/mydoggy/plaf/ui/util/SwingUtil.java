@@ -1,7 +1,9 @@
 package org.noos.xing.mydoggy.plaf.ui.util;
 
 import javax.swing.*;
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -187,6 +189,15 @@ public class SwingUtil {
     public static Image loadImage(String url) {
 		try {
 			return Toolkit.getDefaultToolkit().getImage(SwingUtil.class.getClassLoader().getResource(url));
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+    public static BufferedImage loadImageIO(String url) {
+		try {
+			return ImageIO.read(SwingUtil.class.getClassLoader().getResource(url));
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}

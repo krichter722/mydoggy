@@ -6,6 +6,7 @@ import java.io.OutputStream;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.2.0
+ * @todo add javadocs...
  */
 public interface PersistenceDelegate {
 

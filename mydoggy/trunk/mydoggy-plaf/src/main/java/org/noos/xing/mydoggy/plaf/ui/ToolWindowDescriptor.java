@@ -75,7 +75,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
                                                 evt.getPropertyName(),
                                                 evt.getOldValue(),
                                                 evt.getNewValue()
-                        )                        
+                        )
                 );
             }
         }
@@ -138,7 +138,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         return divederLocation;
     }
 
-    boolean valueAdj =   false;
+    boolean valueAdj = false;
+
     public void setDividerLocation(int divederLocation) {
         this.divederLocation = divederLocation;
 
@@ -240,6 +241,21 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         SwingUtilities.updateComponentTreeUI(getComponent());
         if (getAnchorLabel() != null)
             getAnchorLabel().updateUI();
+    }
+
+    public ToolWindowAnchor getToolWindowAnchor(Point p) {
+        Rectangle b = getManager().getBounds();
+
+        if (p.x <= 18 && p.y >= 18 && p.y <= b.height - 18) {
+            return ToolWindowAnchor.LEFT;
+        } else if (p.x >= b.width - 18 && p.y >= 18 && p.y <= b.height - 18) {
+            return ToolWindowAnchor.RIGHT;
+        } else if (p.y <= 18 && p.x >= 18 && p.x <= b.width - 18) {
+            return ToolWindowAnchor.TOP;
+        } else if (p.y >= b.height - 18 && p.x >= 18 && p.x <= b.width - 18) {
+            return ToolWindowAnchor.BOTTOM;
+        }
+        return null;
     }
 
 
