@@ -39,16 +39,7 @@ public class JTabbedContentManager extends JTabbedPane {
 
 
     public void insertTab(String title, Icon icon, Component component, String tip, int index) {
-        if (tip == null)
-            tip = "";
-        super.insertTab(title, icon, component, tip, index);
-
-        ContentPage contentPage = getContentPage(index);
-        contentPage.setTitle(title);
-        contentPage.setIcon(icon);
-
-        super.setTitleAt(index, "");
-        super.setIconAt(index, getContentPage(index).getContentIcon());
+        this.insertTab(title, icon, component, tip, index, null);
     }
 
     public String getToolTipText(MouseEvent event) {
@@ -78,6 +69,10 @@ public class JTabbedContentManager extends JTabbedPane {
 
     public Icon getDisabledIconAt(int index) {
         return getContentPage(index).getContentIcon();
+    }
+
+    public void addTab(String title, Icon icon, Component component, String tip, TabbedContentUI tabbedContentUI) {
+        insertTab(title, icon, component, tip, getTabCount(), tabbedContentUI);
     }
 
     public void setPopupMenuAt(int index, JPopupMenu popupMenu) {
@@ -130,14 +125,36 @@ public class JTabbedContentManager extends JTabbedPane {
 
 
     public ContentPage getContentPage(int index) {
+        return getContentPage(index, null);
+    }
+
+
+    protected void insertTab(String title, Icon icon, Component component, String tip, int index, TabbedContentUI tabbedContentUI) {
+        if (tip == null)
+            tip = "";
+        super.insertTab(title, icon, component, tip, index);
+
+        ContentPage contentPage = getContentPage(index, tabbedContentUI);
+        contentPage.setTitle(title);
+        contentPage.setIcon(icon);
+
+        super.setTitleAt(index, "");
+        super.setIconAt(index, getContentPage(index).getContentIcon());
+    }
+
+    protected ContentPage getContentPage(int index, TabbedContentUI tabbedContentUI) {
         Accessible accessible = getAccessibleContext().getAccessibleChild(index);
         ContentPage contentPage = contentPages.get(accessible);
         if (contentPage == null) {
-            contentPage = new ContentPage(this, (AccessibleContext) accessible);
+            if (tabbedContentUI == null)
+                contentPage = new ContentPage(this, (AccessibleContext) accessible);
+            else
+                contentPage = (ContentPage) tabbedContentUI;
             contentPages.put(accessible, contentPage);
         }
         return contentPage;
     }
+
 
     protected void checkIndex(int index) {
         if (index < 0 || index >= getTabCount())

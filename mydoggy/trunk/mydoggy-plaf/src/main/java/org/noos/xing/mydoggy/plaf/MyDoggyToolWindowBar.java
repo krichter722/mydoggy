@@ -13,7 +13,6 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.dnd.DragSourceDropEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -178,7 +177,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         DragListener dragListener = new DragListener();
         propertyChangeSupport.addPropertyChangeListener("startDrag", dragListener);
         propertyChangeSupport.addPropertyChangeListener("endDrag", dragListener);
-    }               
+    }
 
 
     class AvailableListener implements PropertyChangeListener {
@@ -606,8 +605,6 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                         break;
 
                 }
-                SwingUtil.repaint(splitPane);
-
                 return animationPercent;
             }
 
