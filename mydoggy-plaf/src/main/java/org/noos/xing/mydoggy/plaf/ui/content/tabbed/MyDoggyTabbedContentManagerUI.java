@@ -27,6 +27,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Map;
+import java.util.Hashtable;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -45,7 +46,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
     boolean valueAdjusting;
     boolean contentValueAdjusting;
 
-    private Map<JDialog, TabbedContentUI> detachedContentUIMap;
+    private Map<Content, TabbedContentUI> detachedContentUIMap;
 
     public MyDoggyTabbedContentManagerUI() {
         initComponents();
@@ -71,14 +72,14 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
     }
 
     public TabPlacement getTabPlacement() {
-        switch(tabbedContentManager.getTabPlacement()) {
-            case SwingConstants.TOP :
+        switch (tabbedContentManager.getTabPlacement()) {
+            case SwingConstants.TOP:
                 return TabPlacement.TOP;
-            case SwingConstants.LEFT :
+            case SwingConstants.LEFT:
                 return TabPlacement.LEFT;
-            case SwingConstants.BOTTOM :
+            case SwingConstants.BOTTOM:
                 return TabPlacement.BOTTOM;
-            case SwingConstants.RIGHT :
+            case SwingConstants.RIGHT:
                 return TabPlacement.RIGHT;
         }
         throw new IllegalStateException("Invalid Tab Placement...");
@@ -91,10 +92,10 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
     }
 
     public TabLayout getTabLayout() {
-        switch(tabbedContentManager.getTabLayoutPolicy()) {
+        switch (tabbedContentManager.getTabLayoutPolicy()) {
             case JTabbedPane.WRAP_TAB_LAYOUT:
                 return TabLayout.WRAP;
-            case JTabbedPane.SCROLL_TAB_LAYOUT :
+            case JTabbedPane.SCROLL_TAB_LAYOUT:
                 return TabLayout.SCROLL;
         }
         throw new IllegalStateException("Invalid Tab Layout...");
@@ -114,14 +115,13 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
         }
     }
 
-	public TabbedContentUI getContentUI(Content content) {
+    public TabbedContentUI getContentUI(Content content) {
         if (content.isDetached()) {
-            JDialog dialog = (JDialog) SwingUtilities.windowForComponent(content.getComponent());
-            return detachedContentUIMap.get(dialog);
+            return detachedContentUIMap.get(content);
         } else
             return tabbedContentManager.getContentPage(
                     tabbedContentManager.indexOfComponent(content.getComponent()));
-	}
+    }
 
 
     public void install(ToolWindowManager manager) {
@@ -129,7 +129,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
         this.contentManager = (MyDoggyContentManager) manager.getContentManager();
         initListeners();
 
-		setPopupMenu(contentManager.getPopupMenu());
+        setPopupMenu(contentManager.getPopupMenu());
 
         lastSelected = null;
         contentValueAdjusting = true;
@@ -209,6 +209,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
 
 
     protected void initComponents() {
+        detachedContentUIMap = new Hashtable<Content, TabbedContentUI>();
+
         final JTabbedContentManager tabbedContentManager = new JTabbedContentManager();
 
         tabbedContentManager.addTabListener(new TabListener() {
@@ -279,6 +281,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
     protected void addUIForContent(Content content) {
         if (!showAlwaysTab && tabbedContentManager.getTabCount() == 0 && (contentValueAdjusting || toolWindowManager.getMainContent() == null)) {
             toolWindowManager.setMainContent(content.getComponent());
+            // TODO: where is the content ui???
         } else {
             if (!showAlwaysTab && tabbedContentManager.getParent() == null) {
                 valueAdjusting = true;
@@ -298,7 +301,9 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
         tabbedContentManager.addTab(content.getTitle(),
                                     content.getIcon(),
                                     content.getComponent(),
-                                    content.getToolTipText());
+                                    content.getToolTipText(),
+                                    detachedContentUIMap.remove(content));
+
         int index = tabbedContentManager.getTabCount() - 1;
         tabbedContentManager.setDisabledIconAt(index, content.getDisabledIcon());
         tabbedContentManager.setPopupMenuAt(index, content.getPopupMenu());
@@ -451,6 +456,10 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (!oldValue && newValue) {
+                TabbedContentUI contentUI = tabbedContentManager.getContentPage(
+                        tabbedContentManager.indexOfComponent(content.getComponent()));
+                detachedContentUIMap.put(content, contentUI);
+
                 final JDialog dialog = new JDialog(parentFrame, false);
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -480,7 +489,9 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
                 dialog.pack();
 
                 if (WindowTransparencyManager.getInstance().isServiceAvailable()) {
-                    WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(getContentUI(content), dialog);
+                    WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(
+                            getContentUI(content), dialog
+                    );
                     dialog.addWindowListener(windowTransparencyListener);
                     dialog.addWindowFocusListener(windowTransparencyListener);
                 }

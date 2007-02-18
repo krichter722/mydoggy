@@ -28,7 +28,7 @@ import java.util.*;
 /**
  * @author Angelo De Caro
  */
-public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener, KeyEventPostProcessor, ToolWindowManagerDescriptor {
+public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener, KeyEventPostProcessor {
     private static final int COLUMN_LENGTH = 23;
     private static final int ROW_LENGTH = 23;
 
@@ -50,20 +50,21 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     private TableLayout contentPaneLayout;
 
-    private JSplitPane mainSplitPane;
-    private JPanel mainContainer;
+    JSplitPane mainSplitPane;
+    JPanel mainContainer;
 
     private PropertyChangeSupport propertyChangeSupport;
 
     private Object activeToolWindowId;
 
-    private PushAwayMode pushAwayMode;
     private Component lastFocusOwner = null;
 
     // Type Descriptors Template.
     private DefaultFloatingTypeDescriptor floatingTypeDescriptor;
     private DefaultDockedTypeDescriptor dockingTypeDescriptor;
     private DefaultSlidingTypeDescriptor slidingTypeDescriptor;
+
+    private ToolWindowManagerDescriptor toolWindowManagerDescriptor;
 
     // ToolWindwoManager Listener List
     private EventListenerList twmListeners;
@@ -83,6 +84,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         this.persistenceDelegate = new XmlPersistenceDelegate(this);
         this.allToolWindowGroup = new AllToolWindowGroup();
         this.aliases = new Hashtable<Object, ToolWindow>();
+        this.toolWindowManagerDescriptor = new MyDoggyToolWindowManagerDescriptor(this);
 
         initResourceBoundles(locale);
         initComponents();
@@ -95,7 +97,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public ToolWindowManagerDescriptor getToolWindowManagerDescriptor() {
-        return this;
+        return toolWindowManagerDescriptor;
     }
 
     public PersistenceDelegate getPersistenceDelegate() {
@@ -269,57 +271,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return twmListeners.getListeners(ToolWindowManagerListener.class);
     }
 
-    public void setPushAwayMode(PushAwayMode pushAwayMode) {
-        if (this.pushAwayMode == pushAwayMode)
-            return;
-
-        this.pushAwayMode = pushAwayMode;
-
-        // TODO: bisogna migliorare il blocco
-        getToolWindowGroup().setVisible(false);
-
-        getBar(LEFT).getSplitPane().setLeftComponent(null);
-        getBar(LEFT).getSplitPane().setRightComponent(null);
-
-        getBar(RIGHT).getSplitPane().setLeftComponent(null);
-        getBar(RIGHT).getSplitPane().setRightComponent(null);
-
-        getBar(TOP).getSplitPane().setLeftComponent(null);
-        getBar(TOP).getSplitPane().setRightComponent(null);
-
-        getBar(BOTTOM).getSplitPane().setLeftComponent(null);
-        getBar(BOTTOM).getSplitPane().setRightComponent(null);
-        switch (pushAwayMode) {
-            case LEFT:
-                getBar(LEFT).getSplitPane().setRightComponent(getBar(RIGHT).getSplitPane());
-                getBar(RIGHT).getSplitPane().setLeftComponent(getBar(TOP).getSplitPane());
-                getBar(TOP).getSplitPane().setBottomComponent(getBar(BOTTOM).getSplitPane());
-                getBar(BOTTOM).getSplitPane().setResizeWeight(1);
-
-                add(getBar(LEFT).getSplitPane(), "1,1,FULL,FULL");
-
-                mainSplitPane = getBar(BOTTOM).getSplitPane();
-                mainSplitPane.setTopComponent(mainContainer);
-                break;
-            case TOP:
-                getBar(BOTTOM).getSplitPane().setTopComponent(getBar(TOP).getSplitPane());
-                getBar(TOP).getSplitPane().setBottomComponent(getBar(LEFT).getSplitPane());
-                getBar(LEFT).getSplitPane().setRightComponent(getBar(RIGHT).getSplitPane());
-                getBar(RIGHT).getSplitPane().setResizeWeight(1);
-
-                add(getBar(BOTTOM).getSplitPane(), "1,1,FULL,FULL");
-
-                mainSplitPane = getBar(RIGHT).getSplitPane();
-                mainSplitPane.setLeftComponent(mainContainer);
-                break;
-        }
-        SwingUtil.repaint(this);
-    }
-
-    public PushAwayMode getPushAwayMode() {
-        return pushAwayMode;
-    }
-
 
     public boolean postProcessKeyEvent(KeyEvent e) {
         if (e.getID() == KeyEvent.KEY_TYPED) {
@@ -428,7 +379,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         mainContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         mainContainer.setFocusCycleRoot(true);
 
-        this.pushAwayMode = PushAwayMode.TOP;
         getBar(BOTTOM).getSplitPane().setTopComponent(getBar(TOP).getSplitPane());
         getBar(TOP).getSplitPane().setBottomComponent(getBar(LEFT).getSplitPane());
         getBar(LEFT).getSplitPane().setRightComponent(getBar(RIGHT).getSplitPane());
