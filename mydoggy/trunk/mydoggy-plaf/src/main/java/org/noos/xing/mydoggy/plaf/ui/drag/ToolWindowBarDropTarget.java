@@ -22,11 +22,12 @@ public class ToolWindowBarDropTarget extends DropTarget {
     private TableLayout layout;
 
     public ToolWindowBarDropTarget(ToolWindowAnchor anchor, Container container) throws HeadlessException {
-        super(container, new BarDropTargetListener(anchor));
+        super(container, new ToolWindowBarDropTargetListener(anchor));
         this.anchor = anchor;
         this.container = container;
         this.layout = (TableLayout) container.getLayout();
     }
+
 
     private int showPosition(DropTargetDragEvent dtde) {
         Point dtdeLocation = dtde.getLocation();
@@ -54,6 +55,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
 
         for (int i = 0; i < intervals.length; i++) {
             double interval = intervals[i];
+
             if (position >= sum && position <= sum + interval) {
                 if (i % 2 == 0 && i != 0) {
                     int diff = -1;
@@ -96,6 +98,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
                             break;
                     }
                 }
+
                 hidePosition(false);
 
                 GlassPanel glassPanel = (GlassPanel) SwingUtilities.getRootPane(container).getGlassPane();
@@ -139,24 +142,11 @@ public class ToolWindowBarDropTarget extends DropTarget {
     }
 
 
-    private static interface SeparatorLabel {
-    }
-
-    private static class VerticalSeparatorLabel extends JPanel implements SeparatorLabel {
-        public VerticalSeparatorLabel() {
-        }
-    }
-
-    private static class HorizontalSeparatorLabel extends JPanel implements SeparatorLabel {
-        public HorizontalSeparatorLabel() {
-        }
-    }
-
-    private static class BarDropTargetListener extends DropTargetAdapter {
+    private static class ToolWindowBarDropTargetListener extends DropTargetAdapter {
         private ToolWindowAnchor anchor;
         private int index;
 
-        public BarDropTargetListener(ToolWindowAnchor anchor) {
+        public ToolWindowBarDropTargetListener(ToolWindowAnchor anchor) {
             this.anchor = anchor;
         }
 
@@ -218,4 +208,16 @@ public class ToolWindowBarDropTarget extends DropTarget {
 
     }
 
+    private static interface SeparatorLabel {
+    }
+
+    private static class VerticalSeparatorLabel extends JPanel implements SeparatorLabel {
+        public VerticalSeparatorLabel() {
+        }
+    }
+
+    private static class HorizontalSeparatorLabel extends JPanel implements SeparatorLabel {
+        public HorizontalSeparatorLabel() {
+        }
+    }
 }

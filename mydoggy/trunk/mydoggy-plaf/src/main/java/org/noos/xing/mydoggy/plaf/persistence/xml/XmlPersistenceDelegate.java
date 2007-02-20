@@ -45,9 +45,9 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
 
             writer.flush();
         } catch (SAXException e) {
-            e.printStackTrace();  //TODO To change body of catch statement use File | Settings | File Templates.
+            throw new RuntimeException(e);
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            throw new RuntimeException(e);
         }
     }
 
