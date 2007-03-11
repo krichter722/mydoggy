@@ -45,11 +45,11 @@ public class TestTWManagerBasic extends TestCase {
         assertNotNull(toolWindowManager.getToolsByAnchor(ToolWindowAnchor.BOTTOM));
         assertEquals(0, toolWindowManager.getToolsByAnchor(ToolWindowAnchor.BOTTOM).length);
 
-        // getToolsByAnchor(ToolWindowAnchor.TOP)
+        // getToolsByAnchor(ToolWindowAnchor.VERTICAL)
         assertNotNull(toolWindowManager.getToolsByAnchor(ToolWindowAnchor.TOP));
         assertEquals(0, toolWindowManager.getToolsByAnchor(ToolWindowAnchor.TOP).length);
 
-        // getToolsByAnchor(ToolWindowAnchor.LEFT)
+        // getToolsByAnchor(ToolWindowAnchor.HORIZONTAL)
         assertNotNull(toolWindowManager.getToolsByAnchor(ToolWindowAnchor.LEFT));
         assertEquals(0, toolWindowManager.getToolsByAnchor(ToolWindowAnchor.LEFT).length);
 
