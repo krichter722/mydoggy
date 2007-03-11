@@ -7,6 +7,70 @@
 	</properties>
 
 	<body>
+        <release version="1.2.0" date="2007-03-15" description="Third release">
+            <action dev="adecaro" type="add">
+                SlidingTypeDescriptor - This interface is used to modify the behaviours of SLIDING type.
+                Now you can enable or disable sliding mode for a specific tool window and it is now supported
+                transparency mode also for this type.
+            </action>
+            <action dev="adecaro" type="add">
+                PersistenceDelegate - TODO add java doc
+            </action>
+            <action dev="adecaro" type="add">
+                ToolWindowManagerDescriptor - TODO add java doc
+            </action>
+
+            <action dev="adecaro" type="update">
+                ContentUI - Added methods for transparency support.
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">
+                    <code>FloatingTypeDescriptor</code>
+                </a> - Added Methods :
+                <ul>
+                    <li>
+                        <code>void setEnabled(boolean enabled);</code>
+                        <br></br>
+                        TODO add java doc
+                    </li>
+                    <li>
+                        <code>void isEnabled();</code>
+                        <br></br>
+                        TODO add java doc
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                ToolWindowManager - Added Methods :
+                <![CDATA[
+                <ul>
+                    <li>
+                        <code>ToolWindowManagerDescriptor getToolWindowManagerDescriptor();</code>
+                        <br></br>
+                        TODO add java doc
+                    </li>
+                    <li>
+                        <code>PersistenceDelegate getPersistenceDelegate();</code>
+                        <br></br>
+                        TODO add java doc
+                    </li>
+                    <li>
+                        <code>void addAlias(ToolWindow toolWindow, Object alias);</code>
+                        <br></br>
+                        TODO add java doc
+                    </li>
+                    <li>
+                        <code>ToolWindow getToolWindowByAlias(Object alias);</code>
+                        <br></br>
+                        TODO add java doc
+                    </li>
+
+                </ul>
+                ]]>
+            </action>
+        </release>
 		<release version="1.1.0" date="2007-01-31" description="Second release">
 			<action dev="adecaro" type="add">
 				ContentManagerUI - A ContentManagerUI is an interface to modify the ui behaviours of
@@ -35,7 +99,7 @@
 				is used as current <![CDATA[<code>ContentManagerUI</code>]]>.
 			</action>
 			<action dev="adecaro" type="add">
-				ContentManager - Added Method :
+				ContentManager - Added Methods :
 				<![CDATA[
 				<ul>
 					<li>
