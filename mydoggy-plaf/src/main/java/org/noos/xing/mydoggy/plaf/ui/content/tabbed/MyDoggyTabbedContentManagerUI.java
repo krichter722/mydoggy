@@ -11,6 +11,7 @@ import org.noos.xing.mydoggy.plaf.ui.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.JTabbedContentManager;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.TabEvent;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.TabListener;
+import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.ContentPage;
 import org.noos.xing.mydoggy.plaf.ui.content.BackContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.content.BackContentUI;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
@@ -116,7 +117,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
     }
 
     public TabbedContentUI getContentUI(Content content) {
-        if (content.isDetached()) {
+        if (content.isDetached() || tabbedContentManager.getTabCount() == 0) {
             return detachedContentUIMap.get(content);
         } else
             return tabbedContentManager.getContentPage(
@@ -134,6 +135,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
         lastSelected = null;
         contentValueAdjusting = true;
         for (Content content : contentManager.getContents()) {
+            toolWindowManager.getContentManager().getContentManagerUI().getContentUI(content);
             addContent((BackContentUI) content);
             contentValueAdjusting = false;
         }
@@ -280,8 +282,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
 
     protected void addUIForContent(Content content) {
         if (!showAlwaysTab && tabbedContentManager.getTabCount() == 0 && (contentValueAdjusting || toolWindowManager.getMainContent() == null)) {
+            detachedContentUIMap.put(content, new ContentPage(tabbedContentManager, null));
             toolWindowManager.setMainContent(content.getComponent());
-            // TODO: where is the content ui???
         } else {
             if (!showAlwaysTab && tabbedContentManager.getParent() == null) {
                 valueAdjusting = true;
@@ -456,9 +458,12 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (!oldValue && newValue) {
-                TabbedContentUI contentUI = tabbedContentManager.getContentPage(
-                        tabbedContentManager.indexOfComponent(content.getComponent()));
-                detachedContentUIMap.put(content, contentUI);
+                if (tabbedContentManager.getTabCount() != 0) {
+                    TabbedContentUI contentUI = tabbedContentManager.getContentPage(
+                            tabbedContentManager.indexOfComponent(content.getComponent())
+                    );
+                    detachedContentUIMap.put(content, contentUI);
+                }   
 
                 final JDialog dialog = new JDialog(parentFrame, false);
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

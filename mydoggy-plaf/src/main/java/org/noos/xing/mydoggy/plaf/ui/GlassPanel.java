@@ -1,22 +1,16 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
-import org.noos.xing.mydoggy.plaf.ui.drag.DragAndDropLock;
-
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
-import java.awt.*;
 import java.awt.geom.Area;
+import java.awt.image.BufferedImage;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class GlassPanel extends JPanel implements ContainerListener {
-    private final int ANIMATION_DELAY = 500;
-
     private Image dragged = null;
     private Point location = new Point(0, 0);
     private Point oldLocation = new Point(0, 0);
@@ -24,9 +18,6 @@ public class GlassPanel extends JPanel implements ContainerListener {
     private int width;
     private int height;
     private Rectangle visibleRect = null;
-
-    private float zoom = 1.0f;
-    private float alpha = 0.7f;
 
     private GlassPaneMouseAdapter adapter;
 
@@ -62,14 +53,14 @@ public class GlassPanel extends JPanel implements ContainerListener {
     }
 
     public Rectangle getRepaintRect() {
-        int x = (int) (location.getX() - (width * zoom / 2));
-        int y = (int) (location.getY() - (height * zoom / 2));
+        int x = (int) (location.getX() - (width / 2));
+        int y = (int) (location.getY() - (height / 2));
 
-        int x2 = (int) (oldLocation.getX() - (width * zoom / 2));
-        int y2 = (int) (oldLocation.getY() - (height * zoom / 2));
+        int x2 = (int) (oldLocation.getX() - (width / 2));
+        int y2 = (int) (oldLocation.getY() - (height / 2));
 
-        int width = (int) (this.width * zoom);
-        int height = (int) (this.height * zoom);
+        int width = this.width;
+        int height = this.height;
 
         return new Rectangle(x, y, width, height).union(new Rectangle(x2, y2, width, height));
     }
@@ -84,8 +75,8 @@ public class GlassPanel extends JPanel implements ContainerListener {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                             RenderingHints.VALUE_ANTIALIAS_ON);
 
-        int x = (int) (location.getX() - (width * zoom / 2));
-        int y = (int) (location.getY() - (height * zoom / 2));
+        int x = (int) (location.getX() - (width / 2));
+        int y = (int) (location.getY() - (height / 2));
 
         if (visibleRect != null) {
             g2.setClip(visibleRect);
@@ -96,38 +87,7 @@ public class GlassPanel extends JPanel implements ContainerListener {
             g2.setClip(clip);
         }
 
-        g2.drawImage(dragged, x, y, (int) (width * zoom), (int) (height * zoom), null);
-    }
-
-    public void startAnimation(Rectangle visibleRect) {
-        this.visibleRect = visibleRect;
-        new Timer(1000 / 30, new FadeOutAnimation()).start();
-    }
-
-    private class FadeOutAnimation implements ActionListener {
-        private long start;
-
-        FadeOutAnimation() {
-            this.start = System.currentTimeMillis();
-            oldLocation = location;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            long elapsed = System.currentTimeMillis() - start;
-            if (elapsed > ANIMATION_DELAY) {
-                ((Timer) e.getSource()).stop();
-                setVisible(false);
-                zoom = 1.0f;
-                alpha = 0.6f;
-                visibleRect = null;
-                dragged = null;
-                DragAndDropLock.setLocked(false);
-            } else {
-                alpha = 0.6f - (0.6f * (float) elapsed / (float) ANIMATION_DELAY);
-                zoom = 1.0f + 3.0f * ((float) elapsed / (float) ANIMATION_DELAY);
-            }
-            repaint(getRepaintRect());
-        }
+        g2.drawImage(dragged, x, y, width, height, null);
     }
 
     public void componentAdded(ContainerEvent e) {
