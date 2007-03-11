@@ -31,8 +31,11 @@ ToolWindowGroup group = toolWindowManager
                  "main"  // ToolWindowGroup name
               );</source>
                             <p>
-                                If the manager contains no mapping for this name then the manager create a new instance
-                                of ToolWindowGroup and associate the group created with the specified name in the manager.
+                                If the manager contains no mapping for name passed to the
+                                <code>getToolWindowGroup</code>
+                                method then
+                                the manager create a new instance of ToolWindowGroup and associate the group created
+                                with the specified name in the manager.
                                 <br></br>
                                 After that, you can populate the group.
                             </p>

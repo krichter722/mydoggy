@@ -16,6 +16,8 @@
 
         <menu name="MyDoggy - Api">
             <item name="Introduction" href="index.html"/>
+            <item name="ToolWindowManager" href="toolwindowManager.html">
+            </item>
             <item name="ToolWindow" href="toolwindow.html">
                 <item name="Types" href="toolwindowTypes.html"/>
                 <item name="Groups" href="toolwindowGroups.html"/>

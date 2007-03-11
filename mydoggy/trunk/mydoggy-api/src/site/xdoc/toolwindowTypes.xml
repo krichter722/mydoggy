@@ -91,6 +91,16 @@ toolWindow.setType(ToolWindowType.FLOATING_FREE);</source>
 DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);</source>
                     </li>
                     <li>
+                        <a href="./apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">
+                            <code>SlidingTypeDescriptor</code>
+                        </a>
+                        This interface is used to modify the behaviours of <code>SLIDING</code> type.
+
+                        <br></br>To get a <code>DockedTypeDescriptor</code> instance use the following:
+                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug Tool");
+SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);</source>
+                    </li>
+                    <li>
                         <a href="./apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">
                             <code>FloatingTypeDescriptor</code>
                         </a>
