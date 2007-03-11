@@ -185,17 +185,17 @@ public class MyDoggySet {
 
         // File Menu
         JMenu pushAwayMenu = new JMenu("PushAway");
-        JMenuItem left = new JMenuItem("Left");
+        JMenuItem left = new JMenuItem("Horizontal");
         left.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(ToolWindowManagerDescriptor.PushAwayMode.LEFT);
+                toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(ToolWindowManagerDescriptor.PushAwayMode.HORIZONTAL);
             }
         });
 
-        JMenuItem top = new JMenuItem("Top");
+        JMenuItem top = new JMenuItem("Vertical");
         top.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(ToolWindowManagerDescriptor.PushAwayMode.TOP);
+                toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(ToolWindowManagerDescriptor.PushAwayMode.VERTICAL);
             }
         });
         pushAwayMenu.add(left);
@@ -309,7 +309,7 @@ public class MyDoggySet {
 
         defaultManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
         TabbedContentManagerUI tabbedContentManagerUI = (TabbedContentManagerUI) defaultManagerUI;
-        tabbedContentManagerUI.setShowAlwaysTab(true);
+        tabbedContentManagerUI.setShowAlwaysTab(false);
         tabbedContentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
         tabbedContentManagerUI.setTabLayout(TabbedContentManagerUI.TabLayout.WRAP);
 //        tabbedContentManagerUI.setCloseable(false);
@@ -317,9 +317,11 @@ public class MyDoggySet {
 
         toolWindowManager.getContentManager().addContent("Tools", "Tools", null, toolsContent, "ToolWindows")
                 .setPopupMenu(toolsPopupMenu);
-        toolWindowManager.getContentManager().getContent(0).setTitle("ToolWindows");
+        assert toolWindowManager.getContentManager().getContentManagerUI().getContentUI(
+                toolWindowManager.getContentManager().getContent(0)
+        ) != null;
 
-//        toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(ToolWindowManagerDescriptor.PushAwayMode.LEFT);
+//        toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(ToolWindowManagerDescriptor.PushAwayMode.HORIZONTAL);
 
         // Add MyDoggyToolWindowManager to frame
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
@@ -380,7 +382,7 @@ public class MyDoggySet {
                 toolsPopupMenu.removeAll();
                 for (ToolWindow toolWindow : toolWindowManager.getToolWindows()) {
                     JMenuItem item = new JMenuItem(toolWindow.getTitle());
-                    item.setActionCommand((String) toolWindow.getId());
+                    item.setActionCommand(toolWindow.getId());
 
                     item.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
