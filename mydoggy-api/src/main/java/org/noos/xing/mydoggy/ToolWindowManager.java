@@ -26,15 +26,17 @@ public interface ToolWindowManager {
     ContentManager getContentManager();
 
     /**
+     * Returns the type descrptor for this manager.
      *
-     * @return
+     * @return type descrptor for this manager.
      * @since 1.2.0
      */
     ToolWindowManagerDescriptor getToolWindowManagerDescriptor();
 
     /**
+     * Returns an instance of <code>PersistenceDelegate</code> relative to this manager.
      *
-     * @return
+     * @return an instance of <code>PersistenceDelegate</code> relative to this manager.
      * @since 1.2.0
      */
     PersistenceDelegate getPersistenceDelegate();
@@ -75,17 +77,24 @@ public interface ToolWindowManager {
     void unregisterAllToolWindow();
 
     /**
-     * TODO: add javadoc
-     * @param toolWindow
-     * @param alias
+     * Associates the specified toolWindow with the specified alias in this manager.
+     * If the manager previously contained a mapping for this alias, the old toolWindow is replaced
+     * by the specified toolWindow.
+     *
+     * @param toolWindow toolWindow to be associated with the specified alias.
+     * @param alias alias with which the specified toolWindow is to be associated.
      * @since 1.2.0
+     * @see #getToolWindowByAlias(Object)
      */
     void addAlias(ToolWindow toolWindow, Object alias);
 
     /**
-     * TODO: add javadoc
-     * @param alias
-     * @return
+     * Returns the toolWindow to which this manager maps the specified alias.  Returns
+     * <tt>null</tt> if the manager contains no mapping for this alias.
+     *
+     * @param alias alias whose associated toolWindow is to be returned.
+     * @return the toolWindow to which this manager maps the specified alias, or
+     *	       <tt>null</tt> if the manager contains no mapping for this alias.
      * @since 1.2.0
      */
     ToolWindow getToolWindowByAlias(Object alias);

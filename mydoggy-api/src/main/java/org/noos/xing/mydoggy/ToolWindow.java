@@ -46,7 +46,7 @@ public interface ToolWindow {
      * type.
      *
      * @param available <tt>true</tt> to make the tool available, <tt>false</tt> to make the tool not available.
-     * @see #setAvailable(boolean)
+     * @see #isAvailable()
      * @see #setVisible(boolean)
      */
     void setAvailable(boolean available);
@@ -67,7 +67,7 @@ public interface ToolWindow {
      * Moreover the tool hides the component in a way that depends on tool window type and becomes not visible.
      *
      * @param visible <tt>true</tt> to make the tool visible, <tt>false</tt> to make the tool not visible.
-     * @see #setAvailable(boolean)
+     * @see #isVisible()
      */
     void setVisible(boolean visible);
 
@@ -80,6 +80,10 @@ public interface ToolWindow {
     boolean isVisible();
 
     /**
+     * The method is used to set to the true value the visible property of the tool.
+     * The tool becomes visible in a special way. In fact, if there is another tool visible
+     * with the same anchor than these two tools will be aggregate to be visible both.
+     *  
      * @since 1.2.0
      */
     void aggregate();
