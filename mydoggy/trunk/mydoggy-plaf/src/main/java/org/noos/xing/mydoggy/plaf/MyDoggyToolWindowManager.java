@@ -4,7 +4,6 @@ import info.clearthought.layout.TableLayout;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
-import org.noos.xing.mydoggy.event.ToolWindowGroupEvent;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultDockedTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultFloatingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultSlidingTypeDescriptor;
@@ -236,6 +235,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public boolean containsGroup(String name) {
+        if (allToolWindowGroup.getName().equals(name))
+            return true;
         return toolWindowGroups.containsKey(name);
     }
 
@@ -733,15 +734,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    class AllToolWindowGroup implements ToolWindowGroup {
-        private EventListenerList listenerList;
+    class AllToolWindowGroup extends MyDoggyToolWindowGroup {
 
         AllToolWindowGroup() {
-            this.listenerList = new EventListenerList();
-        }
-
-        public String getName() {
-            return "all";
+            super(MyDoggyToolWindowManager.this, "all");
         }
 
         public void addToolWindow(ToolWindow toolWindow) {
@@ -760,98 +756,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             return true;
         }
 
-        public void setVisible(final boolean visible) {
-            synchronized (MyDoggyToolWindowManager.sync) {
-                boolean doAction = false;
-                for (ToolWindow tool : getToolsWindow()) {
-                    if (tool.isVisible() != visible) {
-                        doAction = true;
-                        break;
-                    }
-                }
-
-                if (doAction) {
-                    for (ToolWindow tool : getToolWindows())
-                        tool.setVisible(false);
-
-                    setShowingGroup(this);
-                    try {
-                        for (ToolWindow tool : getToolsWindow()) {
-                            if (tool.getType() == ToolWindowType.SLIDING)
-                                tool.setType(ToolWindowType.DOCKED);
-
-                            tool.setVisible(visible);
-                        }
-                    } finally {
-                        resetShowingGroup();
-                    }
-
-                    if (visible)
-                        fireGroupShowed();
-                    else
-                        fireGroupHided();
-                }
-
-                if (visible && tools.size() > 0)
-                    tools.get(0).getToolWindow().setActive(true);
-            }
-        }
-
-
-        public void addToolWindowGroupListener(ToolWindowGroupListener listener) {
-            if (listener == null)
-                return;
-
-            listenerList.add(ToolWindowGroupListener.class, listener);
-        }
-
-        public void removeToolWindowGroupListener(ToolWindowGroupListener listener) {
-            if (listener == null)
-                return;
-
-            listenerList.remove(ToolWindowGroupListener.class, listener);
-        }
-
-        public ToolWindowGroupListener[] getToolWindowGroupListeners() {
-            return listenerList.getListeners(ToolWindowGroupListener.class);
-        }
-
-
         public String toString() {
             return "MyDoggyToolWindowGroup{" +
                    "name='all'" +
-                   ", tools=" + tools + // TODO: i don't like this.
+                   ", tools=" + tools + 
                    '}';
         }
-
-        protected void fireGroupShowed() {
-            ToolWindowGroupEvent event = new ToolWindowGroupEvent(MyDoggyToolWindowManager.this, ToolWindowGroupEvent.ActionId.GROUP_SHOWED, this);
-            for (ToolWindowGroupListener listener : listenerList.getListeners(ToolWindowGroupListener.class)) {
-                listener.groupShowed(event);
-            }
-        }
-
-        protected void fireGroupHided() {
-            ToolWindowGroupEvent event = new ToolWindowGroupEvent(MyDoggyToolWindowManager.this, ToolWindowGroupEvent.ActionId.GROUP_HIDED, this);
-            for (ToolWindowGroupListener listener : listenerList.getListeners(ToolWindowGroupListener.class)) {
-                listener.groupHided(event);
-            }
-        }
-
-        protected void fireAddedTool(ToolWindow toolWindow) {
-            ToolWindowGroupEvent event = new ToolWindowGroupEvent(MyDoggyToolWindowManager.this, ToolWindowGroupEvent.ActionId.TOOL_ADDED, this, toolWindow);
-            for (ToolWindowGroupListener listener : listenerList.getListeners(ToolWindowGroupListener.class)) {
-                listener.toolAdded(event);
-            }
-        }
-
-        protected void fireRemovedTool(ToolWindow toolWindow) {
-            ToolWindowGroupEvent event = new ToolWindowGroupEvent(MyDoggyToolWindowManager.this, ToolWindowGroupEvent.ActionId.TOOL_REMOVED, this, toolWindow);
-            for (ToolWindowGroupListener listener : listenerList.getListeners(ToolWindowGroupListener.class)) {
-                listener.toolRemoved(event);
-            }
-        }
-
     }
 
 

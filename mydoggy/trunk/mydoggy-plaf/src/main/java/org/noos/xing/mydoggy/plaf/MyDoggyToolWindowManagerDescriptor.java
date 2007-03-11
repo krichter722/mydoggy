@@ -19,7 +19,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
 
     public MyDoggyToolWindowManagerDescriptor(MyDoggyToolWindowManager manager) {
         this.manager = manager;
-        this.pushAwayMode = PushAwayMode.TOP;
+        this.pushAwayMode = PushAwayMode.VERTICAL;
     }
 
     public void setPushAwayMode(PushAwayMode pushAwayMode) {
@@ -28,12 +28,14 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
 
         this.pushAwayMode = pushAwayMode;
 
+        // Store workspace
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         manager.getPersistenceDelegate().save(outputStream);
 
-        // TODO: is there something better???
+        // Hi all tools
         manager.getToolWindowGroup().setVisible(false);
 
+        // Change mode
         manager.getBar(LEFT).getSplitPane().setLeftComponent(null);
         manager.getBar(LEFT).getSplitPane().setRightComponent(null);
 
@@ -47,7 +49,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         manager.getBar(BOTTOM).getSplitPane().setRightComponent(null);
         
         switch (pushAwayMode) {
-            case LEFT:
+            case HORIZONTAL:
                 manager.getBar(LEFT).getSplitPane().setRightComponent(manager.getBar(RIGHT).getSplitPane());
                 manager.getBar(RIGHT).getSplitPane().setLeftComponent(manager.getBar(TOP).getSplitPane());
                 manager.getBar(TOP).getSplitPane().setBottomComponent(manager.getBar(BOTTOM).getSplitPane());
@@ -58,7 +60,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
                 manager.mainSplitPane = manager.getBar(BOTTOM).getSplitPane();
                 manager.mainSplitPane.setTopComponent(manager.mainContainer);
                 break;
-            case TOP:
+            case VERTICAL:
                 manager.getBar(BOTTOM).getSplitPane().setTopComponent(manager.getBar(TOP).getSplitPane());
                 manager.getBar(TOP).getSplitPane().setBottomComponent(manager.getBar(LEFT).getSplitPane());
                 manager.getBar(LEFT).getSplitPane().setRightComponent(manager.getBar(RIGHT).getSplitPane());
@@ -71,6 +73,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
                 break;
         }
 
+        // Reload workspace
         manager.getPersistenceDelegate().apply(new ByteArrayInputStream(outputStream.toByteArray()));
                 
         SwingUtil.repaint(manager);

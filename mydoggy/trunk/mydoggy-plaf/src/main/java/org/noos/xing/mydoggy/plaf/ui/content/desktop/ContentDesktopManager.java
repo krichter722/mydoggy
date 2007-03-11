@@ -302,11 +302,11 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
             } else {
                 if (p.getDragMode() == JDesktopPane.OUTLINE_DRAG_MODE) {
                     dragMode = OUTLINE_DRAG_MODE;
-                } else if (p.getDragMode() == JDesktopPane.LIVE_DRAG_MODE
+                } /*else if (p.getDragMode() == JDesktopPane.LIVE_DRAG_MODE
                            && f instanceof JInternalFrame
                            && f.isOpaque()) {
                     dragMode = DEFAULT_DRAG_MODE;
-                } else {
+                } */ else {
                     dragMode = DEFAULT_DRAG_MODE;
                 }
             }
