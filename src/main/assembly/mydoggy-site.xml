@@ -50,11 +50,11 @@
         </file>
         <file>
             <source>mydoggy-examples/target/mydoggy-examples-1.2.0.jar</source>
-            <outputDirectory>site/mydoggy-examples/resources/dtd</outputDirectory>
+            <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
         </file>
         <file>
             <source>mydoggy-plaf/src/main/resources/workspace.dtd</source>
-            <outputDirectory>site/mydoggy-plaf/jnlp/mydoggyset</outputDirectory>
+            <outputDirectory>site/mydoggy-examples/resources/dtd</outputDirectory>
         </file>
     </files>
 
