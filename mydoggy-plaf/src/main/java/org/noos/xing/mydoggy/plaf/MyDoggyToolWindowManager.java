@@ -137,7 +137,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return toolWindow;
     }
 
-    public void unregisterToolWindow(Object id) {
+    public void unregisterToolWindow(String id) {
         ToolWindowDescriptor toolWindowDescriptor = tools.get(id);
 
         if (toolWindowDescriptor != null) {
@@ -655,6 +655,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
             for (ToolWindowDescriptor tool : tools.values())
                 tool.getToolWindowContainer().propertyChange(evt);
+
+
+            syncPanel((ToolWindowAnchor)evt.getOldValue());
+            syncPanel((ToolWindowAnchor)evt.getNewValue());
         }
     }
 

@@ -1,10 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowType;
-import org.noos.xing.mydoggy.SlidingTypeDescriptor;
-import org.noos.xing.mydoggy.FloatingTypeDescriptor;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.icons.IconProvider;
@@ -266,6 +263,11 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             String actionCommnad = e.getActionCommand();
             if ("visible".equals(actionCommnad)) {
                 toolWindow.setVisible(false);
+                ToolWindowActionHandler toolWindowActionHandler = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowActionHandler();
+                if (toolWindowActionHandler != null)
+                    toolWindowActionHandler.onHideButtonClick(toolWindow);
+                else
+                    toolWindow.setVisible(false);
             } else if ("pin".equals(actionCommnad)) {
                 toolWindow.setAutoHide(!toolWindow.isAutoHide());
             } else if ("floating".equals(actionCommnad)) {
