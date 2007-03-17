@@ -3,12 +3,12 @@
         "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
     <properties>
-        <title>MyDoggy-Api : Using</title>
+        <title>MyDoggy-Api : ToolWindow Using</title>
         <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
     </properties>
 
     <body>
-        <section name="Using Tool Window">
+        <section name="Using ToolWindow">
             <subsection name="To Show or Hide">
                 Use the following :
                 <source>

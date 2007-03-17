@@ -17,6 +17,13 @@
                 To obtain an instance of ToolWindowManager interface see
                 <a href="./../mydoggy-plaf/index.html">mydoggy-plaf</a>
             </p>
+            
+            <subsection name="ToolWindowManagerDescriptor">
+                <p>
+                    This interface is used to modify the behaviours of the ToolWindowManager.
+                </p>
+            </subsection>
+
         </section>
     </body>
 </document>
