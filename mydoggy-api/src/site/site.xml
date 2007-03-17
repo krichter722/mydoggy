@@ -17,15 +17,22 @@
         <menu name="MyDoggy - Api">
             <item name="Introduction" href="index.html"/>
             <item name="ToolWindowManager" href="toolwindowManager.html">
+                <item name="PersistenceDelegate" href="persistenceDelegate.html"/>
+                <item name="Using" href="toolwindowManagerUsing.html"/>
             </item>
             <item name="ToolWindow" href="toolwindow.html">
                 <item name="Types" href="toolwindowTypes.html"/>
-                <item name="Groups" href="toolwindowGroups.html"/>
                 <item name="Using" href="toolwindowUsing.html"/>
             </item>
+            <item name="ToolWindowGroups" href="toolwindowGroups.html">
+                <item name="Using" href="toolwindowGroupsUsing.html"/>
+            </item>
             <item name="ContentManager" href="contentManager.html">
-                <item name="TabbedUI" href="tabbedContentManagerUI.html"/>
-                <item name="DesktopUI" href="desktopContentManagerUI.html"/>
+                <item name="UI" href="contentManagerUI.html">
+                    <item name="TabbedUI" href="tabbedContentManagerUI.html"/>
+                    <item name="DesktopUI" href="desktopContentManagerUI.html"/>
+                </item>
+                <item name="Using" href="contentManagerUsing.html"/>
             </item>
         </menu>
 
