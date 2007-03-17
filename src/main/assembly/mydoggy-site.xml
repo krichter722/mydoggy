@@ -53,8 +53,8 @@
             <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
         </file>
         <file>
-            <source>mydoggy-plaf/src/main/resources/workspace.dtd</source>
-            <outputDirectory>site/mydoggy-examples/resources/dtd</outputDirectory>
+            <source>mydoggy-plaf/src/main/resources/persistence.dtd</source>
+            <outputDirectory>site/mydoggy-plaf/resources/dtd</outputDirectory>
         </file>
     </files>
 

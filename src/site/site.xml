@@ -19,11 +19,13 @@
             <item name="Download" href="download.html"/>
             <item name="Build Howto" href="buildHowto.html"/>
             <item name="Contact" href="contact.html"/>
+            <item name="Tutorial" href="/tutorial/tutorial.html"/>
         </menu>
 
         <menu name="Sample App.">
             <item name="MyDoggySet" href="/mydoggy-examples/mydoggyset.html"/>
             <item name="Screenshots" href="/mydoggy-examples/mydoggysetScreenshots.html"/>
+            <item name="Using" href="/mydoggy-examples/mydoggysetUsing.html"/>
         </menu>
 
         <menu name="Modules">
