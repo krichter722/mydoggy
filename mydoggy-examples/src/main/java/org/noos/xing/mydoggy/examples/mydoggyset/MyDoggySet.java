@@ -188,14 +188,14 @@ public class MyDoggySet {
         JMenuItem left = new JMenuItem("Horizontal");
         left.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(ToolWindowManagerDescriptor.PushAwayMode.HORIZONTAL);
+                toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(PushAwayMode.HORIZONTAL);
             }
         });
 
         JMenuItem top = new JMenuItem("Vertical");
         top.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(ToolWindowManagerDescriptor.PushAwayMode.VERTICAL);
+                toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(PushAwayMode.VERTICAL);
             }
         });
         pushAwayMenu.add(left);
