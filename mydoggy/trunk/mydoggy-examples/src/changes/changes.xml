@@ -7,6 +7,18 @@
     </properties>
 
     <body>
+        <release version="1.2.0" date="2007-3-15" description="Third release">
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                Support for all new features.
+                <a href="./mydoggysetScreenshots.html">
+                    Screenshots.
+                </a>
+                <a href="./mydoggysetUsing.html">
+                    Using.
+                </a> ]]>
+            </action>
+        </release>
         <release version="1.1.0" date="2006-10-31" description="Second release">
             <action dev="adecaro" type="add">
                 Support for ContentManagerUI.

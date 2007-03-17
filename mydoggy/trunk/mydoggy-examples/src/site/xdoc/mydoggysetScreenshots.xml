@@ -67,6 +67,10 @@
 						<p align="center">ContentManager using a DesktopContentManagerUI.</p>
                     </td>
                     <td>
+                        <a href="./images/screenshots/mydoggyset/drag_drop.gif">
+                            <img src="./images/screenshots/mydoggyset/thumbs/drag_drop.png" alt="Drag And Drop System"/>
+                        </a>
+                        <p align="center">New Drag and Drop system. Click to view the animation.</p>
                     </td>
                 </tr>
             </table>
