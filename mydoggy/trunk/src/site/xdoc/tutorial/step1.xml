@@ -1,0 +1,84 @@
+<!DOCTYPE document PUBLIC
+		"-//Apache Software Foundation//DTD XDOC 1.0//EN"
+		"http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+	<properties>
+		<title>MyDoggy : Tutorial - Step 1</title>
+		<author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+	</properties>
+
+	<body>
+		<section name="Tutorial - Step 1">
+            <p>
+                First of all, we'll start with a basic skeleton class that instantiate a simple JFrame titled 'Sample App...'.
+            </p>
+            <source>
+package org.noos.xing.mydoggy.tutorial;
+
+import info.clearthought.layout.TableLayout;
+import javax.swing.*;
+
+public class org.noos.xing.mydoggy.tutorial.SampleApp {
+    private JFrame frame;
+
+    protected void setUp() {
+        initComponents();
+    }
+
+    protected void start() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                frame.setVisible(true);
+            }
+        });
+    }
+
+    protected void initComponents() {
+        // This is need to a correct visualization of all JPopupMenu.
+        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+
+        this.frame = new JFrame("Sample App...");
+        this.frame.setSize(640, 480);
+        this.frame.setLocation(100, 100);
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // I love TableLayout. It's great.
+        this.frame.getContentPane().setLayout(new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
+    }
+
+    public static void main(String[] args) {
+        org.noos.xing.mydoggy.tutorial.SampleApp test = new org.noos.xing.mydoggy.tutorial.SampleApp();
+        try {
+            test.setUp();
+            test.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}</source>
+            <subsection name="Result">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div align="center">
+                                    <img align="middle" src="./../images/tutorial/step2.png" alt="ContentManager" border="0" hspace="18"/>
+                                </div>
+                            </td>
+                            <td>
+                                <div align="left">
+                                    <p>
+                                        This is the effect.
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>
+                    Good! Next step. <a href="./step2.html">Step 2 </a>.
+                </p>
+            </subsection>
+        </section>
+	</body>
+</document>
