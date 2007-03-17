@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module relativePaths="true" type="JAVA_MODULE" version="4">
   <component name="ModuleRootManager" />
-  <component inherit-compiler-output="true" name="NewModuleRootManager">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder isTestSource="false" url="file://$MODULE_DIR$/mydoggy-api/src/main/java" />
-      <sourceFolder isTestSource="false" url="file://$MODULE_DIR$/mydoggy-examples/src/main/java" />
-      <sourceFolder isTestSource="false" url="file://$MODULE_DIR$/mydoggy-examples/src/main/resources" />
-      <sourceFolder isTestSource="false" url="file://$MODULE_DIR$/mydoggy-plaf/src/main/java" />
-      <sourceFolder isTestSource="false" url="file://$MODULE_DIR$/mydoggy-plaf/src/main/resources" />
-      <sourceFolder isTestSource="true" url="file://$MODULE_DIR$/mydoggy-plaf/src/test/java" />
-      <sourceFolder isTestSource="false" url="file://$MODULE_DIR$/mydoggy-site-skin/src/main/resources" />
-      <sourceFolder isTestSource="false" url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-api/src/main/java" />
-      <sourceFolder isTestSource="false" url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-examples/src/main/java" />
-      <sourceFolder isTestSource="false" url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-examples/src/main/resources" />
-      <sourceFolder isTestSource="false" url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-plaf/src/main/java" />
-      <sourceFolder isTestSource="false" url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-plaf/src/main/resources" />
-      <sourceFolder isTestSource="true" url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-plaf/src/test/java" />
-      <sourceFolder isTestSource="false" url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-site-skin/src/main/resources" />
+      <sourceFolder url="file://$MODULE_DIR$/mydoggy-api/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mydoggy-examples/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mydoggy-examples/src/main/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mydoggy-plaf/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mydoggy-plaf/src/main/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mydoggy-plaf/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/mydoggy-site-skin/src/main/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-api/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-examples/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-examples/src/main/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-plaf/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-plaf/src/main/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-plaf/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/target/mydoggy-1.1.0.dir/mydoggy-site-skin/src/main/resources" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/Debug" />
       <excludeFolder url="file://$MODULE_DIR$/lib" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry jdkName="1.5" jdkType="JavaSDK" type="jdk" />
-    <orderEntry forTests="false" type="sourceFolder" />
+    <orderEntry type="jdk" jdkName="1.5" jdkType="JavaSDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
     <orderEntryProperties />
   </component>
 </module>
