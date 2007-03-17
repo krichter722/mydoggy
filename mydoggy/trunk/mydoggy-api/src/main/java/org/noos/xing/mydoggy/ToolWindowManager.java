@@ -26,7 +26,7 @@ public interface ToolWindowManager {
     ContentManager getContentManager();
 
     /**
-     * Returns the type descrptor for this manager.
+     * Returns the type descriptor for this manager.
      *
      * @return type descrptor for this manager.
      * @since 1.2.0
@@ -55,7 +55,7 @@ public interface ToolWindowManager {
      *          with the same id or one or more of the parameters is null.
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
      * @see org.noos.xing.mydoggy.ToolWindowManager
-     * @see #unregisterToolWindow(Object)
+     * @see #unregisterToolWindow(String)
      */
     ToolWindow registerToolWindow(String id, String title, Icon icon,
                                   Component component, ToolWindowAnchor anchor);
@@ -69,7 +69,7 @@ public interface ToolWindowManager {
      * @see #registerToolWindow(String,String,javax.swing.Icon,java.awt.Component,ToolWindowAnchor)
      * @see #unregisterAllToolWindow()
      */
-    void unregisterToolWindow(Object id);
+    void unregisterToolWindow(String id);
 
     /**
      * Removes all tools window from this window manager if there are any.
