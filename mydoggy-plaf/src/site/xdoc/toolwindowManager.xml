@@ -1,0 +1,39 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy-Plaf : ToolWindowManager</title>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="MyDoggyToolWindowManager">
+            <p>
+                To obtain an instance of <code>ToolWindowManager</code> interface you have to instantiate the
+                <code>MyDoggyToolWindowManager</code> class. This is the default implementation.
+                <br></br>
+                To obtain an instance use the following (for example):
+            </p>
+            <source>ToolWindowManager toolWindowManager = new MyDoggyToolWindowManager(
+              frame,      // A window implementing the RootPaneContainer interface
+              Locale.getDefault() // A Locale instance
+);
+            </source>
+            <p>
+                A window implementing the <code>RootPaneContainer</code> interface is required because
+				<code>MyDoggyToolWindowManager</code> uses the glass pane for the <code>ToolWindowType.SLIDING</code> type.
+            </p>
+            <p>
+                MyDoggyToolWindowManager is implemented like a JPanel so you can use it like any other component.
+                <br></br>
+                For example:
+            </p>
+            <source>JFrame frame = new JFrame("MyDoggy-Set...");
+...
+MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
+...
+frame.getContentPane().add(myDoggyToolWindowManager);</source>
+        </section>
+    </body>
+</document>
