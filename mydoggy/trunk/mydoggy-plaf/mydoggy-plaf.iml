@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module relativePaths="true" type="JAVA_MODULE" version="4">
   <component name="ModuleRootManager" />
-  <component inherit-compiler-output="true" name="NewModuleRootManager">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder isTestSource="false" url="file://$MODULE_DIR$/src/main/java" />
-      <sourceFolder isTestSource="false" url="file://$MODULE_DIR$/src/main/resources" />
-      <sourceFolder isTestSource="true" url="file://$MODULE_DIR$/src/test/java" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry jdkName="1.5" jdkType="JavaSDK" type="jdk" />
-    <orderEntry forTests="false" type="sourceFolder" />
-    <orderEntry exported="" module-name="mydoggy-api" type="module" />
-    <orderEntry exported="" type="module-library">
+    <orderEntry type="jdk" jdkName="1.5" jdkType="JavaSDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="mydoggy-api" exported="" />
+    <orderEntry type="module-library" exported="">
       <library name="Maven Dependency: junit:junit:jar:3.8.1:test">
         <CLASSES>
           <root url="jar://C:/Documents and Settings/Angelo/.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar!/" />
@@ -23,7 +23,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry exported="" type="module-library">
+    <orderEntry type="module-library" exported="">
       <library name="Maven Dependency: tablelayout:TableLayout:jar:20020517:compile">
         <CLASSES>
           <root url="jar://C:/Documents and Settings/Angelo/.m2/repository/tablelayout/TableLayout/20020517/TableLayout-20020517.jar!/" />
