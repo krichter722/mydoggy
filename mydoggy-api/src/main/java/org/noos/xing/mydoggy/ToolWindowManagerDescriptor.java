@@ -7,10 +7,6 @@ package org.noos.xing.mydoggy;
  * @since 1.2.0
  */
 public interface ToolWindowManagerDescriptor {
-    public enum PushAwayMode {
-        HORIZONTAL,
-        VERTICAL
-    }
 
     /**
      *

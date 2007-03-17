@@ -1,27 +1,52 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <document>
 
-	<properties>
-		<author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
-		<title>MyDoggy - Changes</title>
-	</properties>
+    <properties>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+        <title>MyDoggy - Changes</title>
+    </properties>
 
-	<body>
+    <body>
         <release version="1.2.0" date="2007-03-15" description="Third release">
             <action dev="adecaro" type="add">
-                SlidingTypeDescriptor - This interface is used to modify the behaviours of SLIDING type.
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">
+                    <code>SlidingTypeDescriptor</code>
+                </a> ]]>
+                - This interface is used to modify the behaviours of SLIDING type.
                 Now you can enable or disable sliding mode for a specific tool window and it is now supported
                 transparency mode also for this type.
             </action>
             <action dev="adecaro" type="add">
-                PersistenceDelegate - TODO add java doc
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/PersistenceDelegate.html">
+                    <code>PersistenceDelegate</code>
+                </a>
+                - This interface provides useful methods to save and load the tool window manager's
+                workspace.
+                When you request to save the workspace, all settings of ToolWindows with relative descriptors are saved.
+                To obtain an instance of PersistenceDelegate you have to invoke the method
+                <code>getPersistenceDelegate</code>
+                of
+                <code>ToolWindowManager</code>
+                interface. So you can obtain a persistence delegate specific to a
+                particular tool window manager.
+                ]]>
             </action>
             <action dev="adecaro" type="add">
-                ToolWindowManagerDescriptor - TODO add java doc
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowManagerDescriptor.html">
+                    <code>ToolWindowManagerDescriptor</code>
+                </a> ]]>
+                - This interface is used to modify the behaviours of the ToolWindowManager.
             </action>
 
             <action dev="adecaro" type="update">
-                ContentUI - Added methods for transparency support.
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentUI.html">
+                    <code>ContentUI</code>
+                </a> ]]>
+                - Added methods for transparency support.
             </action>
             <action dev="adecaro" type="update">
                 <![CDATA[
@@ -32,75 +57,115 @@
                     <li>
                         <code>void setEnabled(boolean enabled);</code>
                         <br></br>
-                        TODO add java doc
+                        Enables or disables this mode, depending on the value of the
+                        parameter <code>enabled</code>. An enabled mode can used by user.
+                        This Mode is enabled initially by default.
                     </li>
                     <li>
                         <code>void isEnabled();</code>
                         <br></br>
-                        TODO add java doc
+                        Determines whether this mode is enabled. An enabled mode
+                        can used by user. This Mode is enabled initially by default.
+                        This mode may be enabled or disabled by
+                        calling its <code>setEnabled</code> method.
                     </li>
                 </ul>
                 ]]>
             </action>
+
             <action dev="adecaro" type="update">
-                ToolWindowManager - Added Methods :
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">
+                    <code>ToolWindowManager</code>
+                </a> ]]>
+                - Added Methods :
                 <![CDATA[
                 <ul>
                     <li>
                         <code>ToolWindowManagerDescriptor getToolWindowManagerDescriptor();</code>
                         <br></br>
-                        TODO add java doc
+                        Returns the type descriptor for this manager.
                     </li>
                     <li>
                         <code>PersistenceDelegate getPersistenceDelegate();</code>
                         <br></br>
-                        TODO add java doc
+                        Returns an instance of <code>PersistenceDelegate</code> relative to this manager.
                     </li>
                     <li>
                         <code>void addAlias(ToolWindow toolWindow, Object alias);</code>
                         <br></br>
-                        TODO add java doc
+                        Associates the specified toolWindow with the specified alias in this manager.
+                        If the manager previously contained a mapping for this alias, the old toolWindow is replaced
+                        by the specified toolWindow.
                     </li>
                     <li>
                         <code>ToolWindow getToolWindowByAlias(Object alias);</code>
                         <br></br>
-                        TODO add java doc
+                        Returns the toolWindow to which this manager maps the specified alias.  Returns
+                        <tt>null</tt> if the manager contains no mapping for this alias.
                     </li>
-
                 </ul>
                 ]]>
             </action>
         </release>
-		<release version="1.1.0" date="2007-01-31" description="Second release">
-			<action dev="adecaro" type="add">
-				ContentManagerUI - A ContentManagerUI is an interface to modify the ui behaviours of
-				a content manager. For example this is used to modify the way a content
-				is showed.
-			</action>
-			<action dev="adecaro" type="add">
-				ContentUI -
-			</action>
-			<action dev="adecaro" type="add">
-				TabbedContentManagerUI - This interface represents a ui that use a component that lets the user switch
-				between a group of components by clicking on a tab with a given title and/or icon (i.e. JTabbedPane).
-			</action>
-			<action dev="adecaro" type="add">
-				TabbedContentUI - This interface let you modify ui behaviours of a content when a
-				<![CDATA[<code>TabbedContentManagerUI</code>]]>
-				is used as current <![CDATA[<code>ContentManagerUI</code>]]>.
-			</action>
-			<action dev="adecaro" type="add">
-				DesktopContentManagerUI - This interface represents a ui that use a container to create a
-				multiple-document interface or a virtual desktop.
-			</action>
-			<action dev="adecaro" type="add">
-				DesktopContentUI - This interface let you modify ui behaviours of a content when a
-				<![CDATA[<code>DesktopContentManagerUI</code>]]>
-				is used as current <![CDATA[<code>ContentManagerUI</code>]]>.
-			</action>
-			<action dev="adecaro" type="add">
-				ContentManager - Added Methods :
-				<![CDATA[
+        <release version="1.1.0" date="2007-01-31" description="Second release">
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentManagerUI.html">
+                    <code>ContentManagerUI</code>
+                </a> ]]>
+                 - A ContentManagerUI is an interface to modify the ui behaviours of
+                a content manager. For example this is used to modify the way a content
+                is showed.
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentUI.html">
+                    <code>ContentUI</code>
+                </a> ]]>
+                 -
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html">
+                    <code>TabbedContentManagerUI</code>
+                </a> ]]>
+                - This interface represents a ui that use a component that lets the user switch
+                between a group of components by clicking on a tab with a given title and/or icon (i.e. JTabbedPane).
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/TabbedContentUI.html">
+                    <code>TabbedContentUI</code>
+                </a> ]]>
+                - This interface let you modify ui behaviours of a content when a
+                <![CDATA[<code>TabbedContentManagerUI</code>]]>
+                is used as current <![CDATA[<code>ContentManagerUI</code>]]>.
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/DesktopContentManagerUI.html">
+                    <code>DesktopContentManagerUI</code>
+                </a> ]]>
+                - This interface represents a ui that use a container to create a
+                multiple-document interface or a virtual desktop.
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/DesktopContentUI.html">
+                    <code>DesktopContentUI</code>
+                </a> ]]>
+                - This interface let you modify ui behaviours of a content when a
+                <![CDATA[<code>DesktopContentManagerUI</code>]]>
+                is used as current <![CDATA[<code>ContentManagerUI</code>]]>.
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentManager.html">
+                    <code>ContentManager</code>
+                </a> ]]>
+                - Added Methods :
+                <![CDATA[
 				<ul>
 					<li>
 						<code>void setContentManagerUI(ContentManagerUI contentManagerUI);</code>
@@ -119,13 +184,13 @@
 					</li>
 				</ul>
 				]]>
-			</action>
-		</release>
-		<release version="1.0.0" date="2006-10-31" description="First release">
-			<action dev="adecaro" type="add">
-				MyDoggy 1.0.0 released.
-			</action>
-		</release>
-	</body>
+            </action>
+        </release>
+        <release version="1.0.0" date="2006-10-31" description="First release">
+            <action dev="adecaro" type="add">
+                MyDoggy 1.0.0 released.
+            </action>
+        </release>
+    </body>
 
 </document>

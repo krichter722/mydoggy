@@ -17,6 +17,7 @@ public class ContentManagerEvent extends EventObject {
      */
     public enum ActionId {
         CONTENT_ADDED,        // When a content is added.
+        CONTENT_REMOVING,       // When a content is removing.
         CONTENT_REMOVED       // When a content is removed.
     }
 
