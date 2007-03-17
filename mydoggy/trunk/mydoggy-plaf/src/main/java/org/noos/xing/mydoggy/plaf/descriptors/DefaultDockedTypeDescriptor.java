@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.descriptors;
 
 import org.noos.xing.mydoggy.DockedTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindowActionHandler;
 import org.noos.xing.mydoggy.plaf.ui.ResourceBoundles;
 
 import javax.swing.*;
@@ -13,7 +14,7 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
-
+    private ToolWindowActionHandler toolWindowActionHandler;
     private EventListenerList listenerList;
     private boolean popupMenuEnabled;
     private JMenu toolsMenu;
@@ -23,12 +24,14 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.toolsMenu = new JMenu(ResourceBoundles.getResourceBundle().getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = true;
         this.dockLength = 200;
+        this.toolWindowActionHandler = null;
     }
 
-    public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled) {
+    public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled, ToolWindowActionHandler toolWindowActionHandler) {
         this.toolsMenu = new JMenu(ResourceBoundles.getResourceBundle().getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = popupMenuEnabled;
         this.dockLength = dockLength;
+        this.toolWindowActionHandler = toolWindowActionHandler;
         this.listenerList = new EventListenerList();
 
         parent.addPropertyChangeListener(this);
@@ -60,8 +63,16 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         firePropertyChange("dockLength", old, dockLength);
     }
 
+    public ToolWindowActionHandler getToolWindowActionHandler() {
+        return toolWindowActionHandler;
+    }
+
+    public void setToolWindowActionHandler(ToolWindowActionHandler toolWindowActionHandler) {
+        this.toolWindowActionHandler = toolWindowActionHandler;
+    }
+
     public ToolWindowTypeDescriptor cloneMe() {
-        return new DefaultDockedTypeDescriptor(this, dockLength, popupMenuEnabled);
+        return new DefaultDockedTypeDescriptor(this, dockLength, popupMenuEnabled, toolWindowActionHandler);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

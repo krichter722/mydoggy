@@ -18,19 +18,25 @@ import java.io.IOException;
  */
 public class ToolWindowBarDropTarget extends DropTarget {
     private ToolWindowAnchor anchor;
+
     private Container container;
     private TableLayout layout;
+    private Point lastPosition;
 
     public ToolWindowBarDropTarget(ToolWindowAnchor anchor, Container container) throws HeadlessException {
         super(container, new ToolWindowBarDropTargetListener(anchor));
         this.anchor = anchor;
         this.container = container;
         this.layout = (TableLayout) container.getLayout();
+        this.lastPosition = null;
     }
 
 
-    private int showPosition(DropTargetDragEvent dtde) {
+    private int showPosition(DropTargetDragEvent dtde, int lastIndex) {
         Point dtdeLocation = dtde.getLocation();
+        if (lastPosition != null && lastPosition.equals(dtdeLocation))
+            return lastIndex;
+
         int index = -1;
 
         ExtendedTableLayout tableLayout = (ExtendedTableLayout) container.getLayout();
@@ -50,14 +56,15 @@ public class ToolWindowBarDropTarget extends DropTarget {
                 intervals = tableLayout.getRowsInPixel();
                 break;
             default:
-                throw new IllegalStateException("Invalid anchor");
+                throw new IllegalStateException("Invalid anchor.");
         }
 
         for (int i = 0; i < intervals.length; i++) {
             double interval = intervals[i];
 
-            if (position >= sum && position <= sum + interval) {
+            if (position >= sum + 5 && position <= sum + interval - 5) {
                 if (i % 2 == 0 && i != 0) {
+
                     int diff = -1;
                     for (Component component : container.getComponents()) {
                         if (component instanceof SeparatorLabel) {
@@ -77,6 +84,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
                                 break;
                         }
                     }
+
                     i += diff;
 
                     switch (anchor) {
@@ -98,6 +106,9 @@ public class ToolWindowBarDropTarget extends DropTarget {
                             break;
                     }
                 }
+
+                if (i / 2 == lastIndex)
+                    return lastIndex;
 
                 hidePosition(false);
 
@@ -122,6 +133,9 @@ public class ToolWindowBarDropTarget extends DropTarget {
         }
 
         SwingUtil.repaint(container);
+
+        lastPosition = dtdeLocation;
+
         return index;
     }
 
@@ -175,15 +189,13 @@ public class ToolWindowBarDropTarget extends DropTarget {
         }
 
         public void dragEnter(DropTargetDragEvent dtde) {
-            if (checkEvent(dtde)) {
-                index = ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).showPosition(dtde);
-            }
+            if (checkEvent(dtde))
+                index = ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).showPosition(dtde, index);
         }
 
         public void dragOver(DropTargetDragEvent dtde) {
-            if (checkEvent(dtde)) {
-                index = ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).showPosition(dtde);
-            }
+            if (checkEvent(dtde))
+                index = ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).showPosition(dtde, index);
         }
 
         public void dragExit(DropTargetEvent dte) {

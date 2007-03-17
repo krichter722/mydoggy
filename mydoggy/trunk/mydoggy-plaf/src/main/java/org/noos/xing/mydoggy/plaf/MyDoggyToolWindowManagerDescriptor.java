@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf;
 
 import org.noos.xing.mydoggy.ToolWindowManagerDescriptor;
+import org.noos.xing.mydoggy.PushAwayMode;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.LEFT;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.RIGHT;

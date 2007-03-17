@@ -135,7 +135,6 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
         lastSelected = null;
         contentValueAdjusting = true;
         for (Content content : contentManager.getContents()) {
-            toolWindowManager.getContentManager().getContentManagerUI().getContentUI(content);
             addContent((BackContentUI) content);
             contentValueAdjusting = false;
         }

@@ -4,8 +4,8 @@ import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.ContentManagerListener;
 import org.noos.xing.mydoggy.ContentManagerUI;
-import org.noos.xing.mydoggy.plaf.ui.content.BackContentManagerUI;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
+import org.noos.xing.mydoggy.plaf.ui.content.BackContentManagerUI;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -87,7 +87,10 @@ public class MyDoggyContentManager implements ContentManager {
     public boolean removeContent(Content content) {
         if (content == null)
             throw new IllegalArgumentException("Content cannot be null");
-        
+
+        if (!fireContentRemoving(content))
+            throw new RuntimeException("Cannot remove Content", null);
+
         backContentManagerUI.removeContent((MyDoggyContent) content);
         boolean result = contents.remove(content);
 
@@ -201,4 +204,14 @@ public class MyDoggyContentManager implements ContentManager {
             listener.contentRemoved(event);
         }
     }
+
+    protected boolean fireContentRemoving(Content content) {
+        ContentManagerEvent event = new ContentManagerEvent(this, ContentManagerEvent.ActionId.CONTENT_REMOVING, content);
+        boolean result = true;
+        for (ContentManagerListener listener : listeners.getListeners(ContentManagerListener.class)) {
+            result = result & listener.contentRemoving(event);
+        }
+        return result;
+    }
+
 }

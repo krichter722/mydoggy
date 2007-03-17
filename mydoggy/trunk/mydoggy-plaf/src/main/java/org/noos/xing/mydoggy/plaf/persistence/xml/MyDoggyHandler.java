@@ -56,7 +56,7 @@ public class MyDoggyHandler extends DefaultHandler {
 
                     if (attributes.getValue("pushAwayMode") != null)
                         toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(
-                                ToolWindowManagerDescriptor.PushAwayMode.valueOf(attributes.getValue("pushAwayMode"))
+                                PushAwayMode.valueOf(attributes.getValue("pushAwayMode"))
                         );
 
                     state = State.TOOLS;
