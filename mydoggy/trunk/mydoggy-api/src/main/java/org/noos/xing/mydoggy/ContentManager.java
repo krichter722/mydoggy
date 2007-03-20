@@ -132,6 +132,8 @@ public interface ContentManager {
      */
     Content getContent(Object key);
 
+    Content getContentByComponent(Component component);
+
     /**
      * Sets the default popup menu for the contents.
      * If a content has no specific popup menu then the content manager will show

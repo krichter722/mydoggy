@@ -73,10 +73,6 @@ public class TestContentManagerListener extends TestCase {
             this.lastEvent = event;
         }
 
-        public boolean contentRemoving(ContentManagerEvent event) {
-            return true;
-        }
-
         public boolean isContentAdded() {
             return contentAdded;
         }

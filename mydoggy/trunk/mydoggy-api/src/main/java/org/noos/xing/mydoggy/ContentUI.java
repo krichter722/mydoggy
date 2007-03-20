@@ -6,7 +6,9 @@ package org.noos.xing.mydoggy;
  */
 public interface ContentUI {
 
-	/**
+    Content getContent();
+
+    /**
 	 * Returns whether this content could be close using the ui.
 	 * @return <code>true</code> if this content can be closed using the ui, <code>false</code> otherwise.
 	 * @since 1.1.0

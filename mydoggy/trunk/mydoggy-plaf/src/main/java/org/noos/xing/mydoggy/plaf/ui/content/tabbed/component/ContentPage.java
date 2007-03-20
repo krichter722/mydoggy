@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.content.tabbed.component;
 
 import org.noos.xing.mydoggy.TabbedContentUI;
+import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.icons.CompositeIcon;
 import org.noos.xing.mydoggy.plaf.ui.icons.TextIcon;
@@ -30,6 +31,8 @@ public class ContentPage implements TabbedContentUI {
 
     private JTabbedContentManager tabbedPane;
 
+    private Content content;
+
     private AccessibleContext accessible;
 
     private String title;
@@ -44,7 +47,9 @@ public class ContentPage implements TabbedContentUI {
 
     private Icon contentIcon;
 
-    public ContentPage(JTabbedContentManager tabbedPane, final AccessibleContext accessible) {
+
+    public ContentPage(Content content, JTabbedContentManager tabbedPane, final AccessibleContext accessible) {
+        this.content = content;
         this.tabbedPane = tabbedPane;
         this.accessible = accessible;
 
@@ -55,6 +60,14 @@ public class ContentPage implements TabbedContentUI {
         this.transparentDelay = 1000;
     }
 
+    public ContentPage(JTabbedContentManager tabbedPane, final AccessibleContext accessible) {
+        this(null, tabbedPane, accessible);
+    }
+
+
+    public Content getContent() {
+        return content;
+    }
 
     public boolean isCloseable() {
         return closable;
@@ -184,6 +197,19 @@ public class ContentPage implements TabbedContentUI {
                                    (point.getX() > detachIconRect.x && point.getX() < detachIconRect.x + detachIconRect.width)));
     }
 
+    public void setContent(Content content) {
+        this.content = content;
+    }
+    
+    public boolean isCloseFired(Point point) {
+        Point relativeMousePoint = SwingUtilities.convertPoint(tabbedPane, point, getDestination());
+        CompositeIcon uiCompositeIcon = getUICompositeIcon();
+
+        Rectangle closeIconRect = uiCompositeIcon.getLastPaintedRightRec();
+        return (isCloseable() && ((relativeMousePoint.getX() > closeIconRect.x && relativeMousePoint.getX() < closeIconRect.x + closeIconRect.width) ||
+                                  (point.getX() > closeIconRect.x && point.getX() < closeIconRect.x + closeIconRect.width)));
+    }
+
 
     private Component getDestination() {
         for (int i = 0, size = tabbedPane.getComponentCount(); i < size; i++) {
@@ -195,15 +221,6 @@ public class ContentPage implements TabbedContentUI {
 
     private CompositeIcon getUICompositeIcon() {
         return (CompositeIcon) ((CompositeIcon) getContentIcon()).getRightIcon();
-    }
-
-    public boolean isCloseFired(Point point) {
-        Point relativeMousePoint = SwingUtilities.convertPoint(tabbedPane, point, getDestination());
-        CompositeIcon uiCompositeIcon = getUICompositeIcon();
-
-        Rectangle closeIconRect = uiCompositeIcon.getLastPaintedRightRec();
-        return (isCloseable() && ((relativeMousePoint.getX() > closeIconRect.x && relativeMousePoint.getX() < closeIconRect.x + closeIconRect.width) ||
-                                  (point.getX() > closeIconRect.x && point.getX() < closeIconRect.x + closeIconRect.width)));
     }
 
 

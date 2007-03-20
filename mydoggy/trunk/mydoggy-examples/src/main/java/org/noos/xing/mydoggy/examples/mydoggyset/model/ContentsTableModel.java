@@ -51,10 +51,6 @@ public final class ContentsTableModel extends DefaultTableModel implements Prope
         updateModel();
     }
 
-    public boolean contentRemoving(ContentManagerEvent event) {
-        return true;
-    }
-
     public void contentRemoved(ContentManagerEvent event) {
         event.getContent().removePropertyChangeListener(this);
         updateModel();

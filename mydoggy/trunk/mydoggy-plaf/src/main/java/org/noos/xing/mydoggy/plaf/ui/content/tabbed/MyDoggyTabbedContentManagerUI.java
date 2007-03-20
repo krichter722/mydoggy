@@ -1,25 +1,23 @@
 package org.noos.xing.mydoggy.plaf.ui.content.tabbed;
 
-import org.noos.xing.mydoggy.Content;
-import org.noos.xing.mydoggy.TabbedContentManagerUI;
-import org.noos.xing.mydoggy.TabbedContentUI;
-import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
+import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.WindowTransparencyListener;
+import org.noos.xing.mydoggy.plaf.ui.content.BackContentManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.content.BackContentUI;
+import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.ContentPage;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.JTabbedContentManager;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.TabEvent;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.TabListener;
-import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.ContentPage;
-import org.noos.xing.mydoggy.plaf.ui.content.BackContentManagerUI;
-import org.noos.xing.mydoggy.plaf.ui.content.BackContentUI;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -27,20 +25,21 @@ import java.awt.event.WindowFocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Map;
 import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, BackContentManagerUI, PropertyChangeListener {
     private MyDoggyToolWindowManager toolWindowManager;
-    private MyDoggyContentManager contentManager;
+    private ContentManager contentManager;
 
     private JTabbedContentManager tabbedContentManager;
     private boolean showAlwaysTab;
 
     private PropertyChangeSupport propertyChangeSupport;
+    private EventListenerList contentManagerUIListeners;
 
     private BackContentUI lastSelected;
 
@@ -108,7 +107,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
         if (showAlwaysTab) {
             if (contentManager.getContentCount() == 1 && toolWindowManager.getMainContent() != tabbedContentManager && tabbedContentManager.getParent() == null) {
                 valueAdjusting = true;
-                addTab(contentManager.getContent(toolWindowManager.getMainContent()));
+                addTab(contentManager.getContentByComponent(toolWindowManager.getMainContent()));
                 valueAdjusting = false;
 
                 toolWindowManager.setMainContent(tabbedContentManager);
@@ -127,7 +126,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
 
     public void install(ToolWindowManager manager) {
         this.toolWindowManager = (MyDoggyToolWindowManager) manager;
-        this.contentManager = (MyDoggyContentManager) manager.getContentManager();
+        this.contentManager = manager.getContentManager();
         initListeners();
 
         setPopupMenu(contentManager.getPopupMenu());
@@ -203,6 +202,18 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
         tabbedContentManager.updateUI();
     }
 
+    public void addContentManagerUIListener(ContentManagerUIListener listener) {
+        contentManagerUIListeners.add(ContentManagerUIListener.class, listener);
+    }
+
+    public void removeContentManagerUIListener(ContentManagerUIListener listener) {
+        contentManagerUIListeners.remove(ContentManagerUIListener.class, listener);
+    }
+
+    public ContentManagerUIListener[] getContentManagerUiListener() {
+        return contentManagerUIListeners.getListeners(ContentManagerUIListener.class);
+    }
+
 
     public void propertyChange(PropertyChangeEvent evt) {
         propertyChangeSupport.firePropertyChange(evt);
@@ -216,16 +227,18 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
 
         tabbedContentManager.addTabListener(new TabListener() {
             public void tabEventFired(TabEvent event) {
+                Content content = contentManager.getContentByComponent(event.getContentManager().getComponentAt(event.getOverTabIndex()));
                 switch (event.getActionId()) {
                     case ON_CLOSE:
-                        contentManager.removeContent(
-                                event.getContentManager().getComponentAt(event.getOverTabIndex())
-                        );
+                        try {
+                            fireContentUIRemoving(getContentUI(content));
+                            contentManager.removeContent(content);
+                        } catch (Exception ignore) {
+                        }
                         break;
                     case ON_DETACH:
-                        contentManager.getContent(
-                                event.getContentManager().getComponentAt(event.getOverTabIndex())
-                        ).setDetached(true);
+                        content.setDetached(true);
+                        fireContentUIDetached(getContentUI(content));
                         break;
                 }
             }
@@ -238,7 +251,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
                     Component selectedComponent = tabbedContentManager.getSelectedComponent();
                     if (selectedComponent == null)
                         return;
-                    BackContentUI newSelected = (BackContentUI) contentManager.getContent(selectedComponent);
+                    BackContentUI newSelected = (BackContentUI) contentManager.getContentByComponent(selectedComponent);
 
                     if (newSelected == lastSelected)
                         return;
@@ -277,16 +290,17 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
                 }
             });
         }
+        contentManagerUIListeners = new EventListenerList();
     }
 
     protected void addUIForContent(Content content) {
         if (!showAlwaysTab && tabbedContentManager.getTabCount() == 0 && (contentValueAdjusting || toolWindowManager.getMainContent() == null)) {
-            detachedContentUIMap.put(content, new ContentPage(tabbedContentManager, null));
+            detachedContentUIMap.put(content, new ContentPage(content, tabbedContentManager, null));
             toolWindowManager.setMainContent(content.getComponent());
         } else {
             if (!showAlwaysTab && tabbedContentManager.getParent() == null) {
                 valueAdjusting = true;
-                addTab(contentManager.getContent(toolWindowManager.getMainContent()));
+                addTab(contentManager.getContentByComponent(toolWindowManager.getMainContent()));
                 valueAdjusting = false;
             }
 
@@ -306,11 +320,26 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
                                     detachedContentUIMap.remove(content));
 
         int index = tabbedContentManager.getTabCount() - 1;
+        tabbedContentManager.getContentPage(index).setContent(content);
         tabbedContentManager.setDisabledIconAt(index, content.getDisabledIcon());
         tabbedContentManager.setPopupMenuAt(index, content.getPopupMenu());
         tabbedContentManager.setForegroundAt(index, content.getForeground());
     }
 
+    protected void fireContentUIRemoving(ContentUI contentUI) {
+        ContentManagerUIEvent event = new ContentManagerUIEvent(this, ContentManagerUIEvent.ActionId.CONTENTUI_REMOVING, contentUI);
+        for (ContentManagerUIListener listener : contentManagerUIListeners.getListeners(ContentManagerUIListener.class)) {
+            if (!listener.contentUIRemoving(event))
+                throw new RuntimeException("Cannot remove Content.");
+        }
+    }
+
+    protected void fireContentUIDetached(ContentUI contentUI) {
+        ContentManagerUIEvent event = new ContentManagerUIEvent(this, ContentManagerUIEvent.ActionId.CONTENTUI_DETACHED, contentUI);
+        for (ContentManagerUIListener listener : contentManagerUIListeners.getListeners(ContentManagerUIListener.class)) {
+            listener.contentUIDetached(event);
+        }
+    }
 
     class ComponentListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
@@ -503,7 +532,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
                 dialog.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent event) {
                         Component component = dialog.getContentPane().getComponent(0);
-                        BackContentUI content = (BackContentUI) contentManager.getContent(component);
+                        BackContentUI content = (BackContentUI) contentManager.getContentByComponent(component);
                         content.fireSelected(false);
                         content.setDetached(false);
                     }
@@ -512,7 +541,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
                 dialog.addWindowFocusListener(new WindowFocusListener() {
                     public void windowGainedFocus(WindowEvent e) {
                         if (!valueAdjusting && !contentValueAdjusting) {
-                            BackContentUI newSelected = (BackContentUI) contentManager.getContent(
+                            BackContentUI newSelected = (BackContentUI) contentManager.getContentByComponent(
                                     dialog.getContentPane().getComponent(0));
 
                             if (newSelected == lastSelected)

@@ -1,33 +1,26 @@
 package org.noos.xing.mydoggy.plaf.ui.content.desktop;
 
-import org.noos.xing.mydoggy.Content;
-import org.noos.xing.mydoggy.DesktopContentManagerUI;
-import org.noos.xing.mydoggy.DesktopContentUI;
-import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.plaf.ui.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.ToFrontWindowFocusListener;
+import org.noos.xing.mydoggy.plaf.ui.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.content.BackContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.content.BackContentUI;
+import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
+import javax.swing.event.EventListenerList;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyVetoException;
 import java.beans.PropertyChangeSupport;
+import java.beans.PropertyVetoException;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -39,6 +32,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     private JDesktopPane desktopPane;
 
     private PropertyChangeSupport propertyChangeSupport;
+    private EventListenerList contentManagerUIListeners;
 
     private BackContentUI lastSelected;
 
@@ -55,27 +49,27 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     }
 
 
-	public void setCloseable(boolean closeable) {
-		for (JInternalFrame frame : desktopPane.getAllFrames()) {
-			frame.setClosable(closeable);
-		}
-	}
+    public void setCloseable(boolean closeable) {
+        for (JInternalFrame frame : desktopPane.getAllFrames()) {
+            frame.setClosable(closeable);
+        }
+    }
 
-	public void setDetachable(boolean detachable) {
-		JInternalFrame[] frames = desktopPane.getAllFrames();
-		for (JInternalFrame internalFrame : frames) {
-			DesktopContentFrame frame = (DesktopContentFrame) internalFrame;
-			frame.setDetachable(detachable);
-		}
-	}
+    public void setDetachable(boolean detachable) {
+        JInternalFrame[] frames = desktopPane.getAllFrames();
+        for (JInternalFrame internalFrame : frames) {
+            DesktopContentFrame frame = (DesktopContentFrame) internalFrame;
+            frame.setDetachable(detachable);
+        }
+    }
 
-	public DesktopContentUI getContentUI(Content content) {
-		return (DesktopContentUI) getFrameByComponent(content.getComponent());
-	}
+    public DesktopContentUI getContentUI(Content content) {
+        return (DesktopContentUI) getFrameByComponent(content.getComponent());
+    }
 
 
     public void install(ToolWindowManager manager) {
-		this.toolWindowManager = (MyDoggyToolWindowManager) manager;
+        this.toolWindowManager = (MyDoggyToolWindowManager) manager;
         this.contentManager = (MyDoggyContentManager) manager.getContentManager();
         this.contentIndex = 0;
 
@@ -83,9 +77,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
         toolWindowManager.setMainContent(desktopPane);
 
-		setPopupMenu(contentManager.getPopupMenu());
+        setPopupMenu(contentManager.getPopupMenu());
 
-		contentValueAdjusting = true;
+        contentValueAdjusting = true;
         for (Content content : contentManager.getContents()) {
             addContent((BackContentUI) content);
         }
@@ -157,6 +151,18 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         desktopPane.updateUI();
     }
 
+    public void addContentManagerUIListener(ContentManagerUIListener listener) {
+        contentManagerUIListeners.add(ContentManagerUIListener.class, listener);
+    }
+
+    public void removeContentManagerUIListener(ContentManagerUIListener listener) {
+        contentManagerUIListeners.remove(ContentManagerUIListener.class, listener);
+    }
+
+    public ContentManagerUIListener[] getContentManagerUiListener() {
+        return contentManagerUIListeners.getListeners(ContentManagerUIListener.class);
+    }
+
 
     public void propertyChange(PropertyChangeEvent evt) {
         propertyChangeSupport.firePropertyChange(evt);
@@ -188,10 +194,11 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
             desktopPane.addMouseListener(new PopupMouseListener());
         }
+        this.contentManagerUIListeners = new EventListenerList();
     }
 
     protected void addUIForContent(Content content) {
-        JInternalFrame internalFrame = new DesktopContentFrame(content.getTitle(), true, true, true, true);
+        JInternalFrame internalFrame = new DesktopContentFrame(content, content.getTitle(), true, true, true, true);
         internalFrame.setFrameIcon(content.getIcon());
         internalFrame.getContentPane().add(content.getComponent());
 
@@ -208,9 +215,12 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
         internalFrame.addInternalFrameListener(new InternalFrameAdapter() {
             public void internalFrameClosed(InternalFrameEvent e) {
-                contentManager.removeContent(
-                        contentManager.getContent(e.getInternalFrame().getContentPane().getComponent(0))
-                );
+                try {
+                    Content content = contentManager.getContentByComponent(e.getInternalFrame().getContentPane().getComponent(0));
+                    fireContentUIRemoving(getContentUI(content));
+                    contentManager.removeContent(content);
+                } catch (Exception ignore) {
+                }
             }
         });
         internalFrame.addPropertyChangeListener(JInternalFrame.IS_SELECTED_PROPERTY, new PropertyChangeListener() {
@@ -252,6 +262,20 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         return null;
     }
 
+    protected void fireContentUIRemoving(ContentUI contentUI) {
+        ContentManagerUIEvent event = new ContentManagerUIEvent(this, ContentManagerUIEvent.ActionId.CONTENTUI_REMOVING, contentUI);
+        for (ContentManagerUIListener listener : contentManagerUIListeners.getListeners(ContentManagerUIListener.class)) {
+            if (!listener.contentUIRemoving(event))
+                throw new RuntimeException("Cannot remove Content.");
+        }
+    }
+
+    protected void fireContentUIDetached(ContentUI contentUI) {
+        ContentManagerUIEvent event = new ContentManagerUIEvent(this, ContentManagerUIEvent.ActionId.CONTENTUI_DETACHED, contentUI);
+        for (ContentManagerUIListener listener : contentManagerUIListeners.getListeners(ContentManagerUIListener.class)) {
+            listener.contentUIDetached(event);
+        }
+    }
 
     class ComponentListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
@@ -416,7 +440,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 dialog.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent event) {
                         Component component = dialog.getContentPane().getComponent(0);
-                        BackContentUI content = (BackContentUI) contentManager.getContent(component);
+                        BackContentUI content = (BackContentUI) contentManager.getContentByComponent(component);
                         content.fireSelected(false);
                         content.setDetached(false);
                     }
@@ -425,7 +449,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 dialog.addWindowFocusListener(new WindowFocusListener() {
                     public void windowGainedFocus(WindowEvent e) {
                         if (!valueAdjusting && !contentValueAdjusting) {
-                            BackContentUI newSelected = (BackContentUI) contentManager.getContent(
+                            BackContentUI newSelected = (BackContentUI) contentManager.getContentByComponent(
                                     dialog.getContentPane().getComponent(0));
 
                             if (newSelected == lastSelected)
@@ -468,7 +492,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     }
 
 
-    class PopupMouseListener extends MouseAdapter implements ActionListener{
+    class PopupMouseListener extends MouseAdapter implements ActionListener {
         private JPopupMenu popupMenu;
 
         public PopupMouseListener() {
@@ -486,11 +510,11 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                     detach.putClientProperty("content", content);
                     detach.setActionCommand("Detach");
                     detach.addActionListener(this);
-					detach.setEnabled(getContentUI(content).isDetachable());
-					menu.add(detach);
+                    detach.setEnabled(getContentUI(content).isDetachable());
+                    menu.add(detach);
 
                     popupMenu.add(menu);
-				}
+                }
 
                 popupMenu.show(desktopPane, e.getX(), e.getY());
             }
@@ -501,7 +525,11 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             String actionCommand = e.getActionCommand();
             if ("Detach".equals(actionCommand)) {
                 JComponent c = (JComponent) e.getSource();
-                ((Content) c.getClientProperty("content")).setDetached(true);
+
+                Content content = ((Content) c.getClientProperty("content"));
+                contentManager.removeContent(content);
+                content.setDetached(true);
+                fireContentUIDetached(getContentUI(content));
             }
         }
     }

@@ -40,6 +40,21 @@
                 </a> ]]>
                 - This interface is used to modify the behaviours of the ToolWindowManager.
             </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentManagerUIListener.html">
+                    <code>ContentManagerUIListener</code>
+                </a> ]]>
+                - The listener interface for receiving "interesting" events
+                (content removing, content detached) on the content manager ui.
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentManagerUI.html">
+                    <code>ContentManagerUI</code>
+                </a> ]]>
+                - Add support for ContentManagerUIListener. 
+            </action>
 
             <action dev="adecaro" type="update">
                 <![CDATA[
