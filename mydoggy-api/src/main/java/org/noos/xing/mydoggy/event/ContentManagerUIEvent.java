@@ -9,28 +9,27 @@ import java.util.EventObject;
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ContentManagerEvent extends EventObject {
-    private static final long serialVersionUID = -4432400424463237878L;
+public class ContentManagerUIEvent extends EventObject {
 
     /**
      * Action Identifier Enum.
      */
     public enum ActionId {
-        CONTENT_ADDED,        // When a content is added.
-        CONTENT_REMOVED       // When a content is removed.
+        CONTENTUI_REMOVING,        // When a content is added.
+        CONTENTUI_DETACHED         // When a content is removed.
     }
 
     /**
      * Indicates the action identifier.
      *
-     * @see ContentManagerEvent.ActionId
+     * @see org.noos.xing.mydoggy.event.ContentManagerEvent.ActionId
      */
-    private final ContentManagerEvent.ActionId actionId;
+    private final ContentManagerUIEvent.ActionId actionId;
 
     /**
      * Indicates the content on which the action has occured.
      */
-    private final Content content;
+    private final ContentUI content;
 
     /**
      * Constructs a <code>ContentManagerEvent</code> object with the
@@ -46,10 +45,10 @@ public class ContentManagerEvent extends EventObject {
      * @param actionId   the action identifier
      * @param content    the content subject of the action.
      * @see org.noos.xing.mydoggy.ContentManager
-     * @see ContentManagerEvent.ActionId
+     * @see org.noos.xing.mydoggy.event.ContentManagerEvent.ActionId
      * @see org.noos.xing.mydoggy.Content
      */
-    public ContentManagerEvent(ContentManager source, ContentManagerEvent.ActionId actionId, Content content) {
+    public ContentManagerUIEvent(ContentManagerUI source, ContentManagerUIEvent.ActionId actionId, ContentUI content) {
         super(source);
         this.actionId = actionId;
         this.content = content;
@@ -70,7 +69,7 @@ public class ContentManagerEvent extends EventObject {
      *
      * @return the content.
      */
-    public Content getContent() {
+    public ContentUI getContentUI() {
         return content;
     }
 

@@ -28,13 +28,6 @@ public interface ContentManagerListener extends EventListener {
     void contentAdded(ContentManagerEvent event);
 
     /**
-     *
-     * @param event
-     * @return
-     */
-    boolean contentRemoving(ContentManagerEvent event);
-
-    /**
      * Invoked when a content has been removed to the manager.
      *
      * @param event the fired event.

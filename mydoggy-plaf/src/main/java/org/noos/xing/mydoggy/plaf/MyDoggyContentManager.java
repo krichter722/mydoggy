@@ -88,9 +88,6 @@ public class MyDoggyContentManager implements ContentManager {
         if (content == null)
             throw new IllegalArgumentException("Content cannot be null");
 
-        if (!fireContentRemoving(content))
-            throw new RuntimeException("Cannot remove Content", null);
-
         backContentManagerUI.removeContent((MyDoggyContent) content);
         boolean result = contents.remove(content);
 
@@ -120,6 +117,14 @@ public class MyDoggyContentManager implements ContentManager {
         return contentMap.get(key);
     }
 
+    public Content getContentByComponent(Component component) {
+        for (Content content : contents) {
+            if (content.getComponent() == component)
+                return content;
+        }
+        throw new IllegalArgumentException("Cannot found content for component. [cmp : " + component + ']');
+    }
+
     public Content[] getContents() {
         return contents.toArray(EMPTY_CONTENT_ARRAY);
     }
@@ -144,26 +149,6 @@ public class MyDoggyContentManager implements ContentManager {
         return listeners.getListeners(ContentManagerListener.class);
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        listeners.add(PropertyChangeListener.class, listener);
-    }
-
-
-    public void removeContent(Component component) {
-        removeContent(getContent(component));
-    }
-
-    public Content getContent(Component component) {
-        for (Content content : contents) {
-            if (content.getComponent() == component)
-                return content;
-        }
-        throw new IllegalArgumentException("Cannot found content for component. [cmp : " + component + ']'); 
-    }
-
-    public MyDoggyToolWindowManager getToolWindowManager() {
-        return toolWindowManager;
-    }
 
     public void updateUI() {
         for (Content content : contents) {
@@ -203,15 +188,6 @@ public class MyDoggyContentManager implements ContentManager {
         for (ContentManagerListener listener : listeners.getListeners(ContentManagerListener.class)) {
             listener.contentRemoved(event);
         }
-    }
-
-    protected boolean fireContentRemoving(Content content) {
-        ContentManagerEvent event = new ContentManagerEvent(this, ContentManagerEvent.ActionId.CONTENT_REMOVING, content);
-        boolean result = true;
-        for (ContentManagerListener listener : listeners.getListeners(ContentManagerListener.class)) {
-            result = result & listener.contentRemoving(event);
-        }
-        return result;
     }
 
 }

@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.content.desktop;
 
 import org.noos.xing.mydoggy.DesktopContentUI;
+import org.noos.xing.mydoggy.Content;
 
 import javax.swing.*;
 import java.beans.PropertyVetoException;
@@ -13,9 +14,11 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
     private boolean transparentMode;
     private float transparentRatio;
     private int transparentDelay;
+    private Content content;
 
-    public DesktopContentFrame(String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
+    public DesktopContentFrame(Content content, String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
         super(title, resizable, closable, maximizable, iconifiable);
+        this.content = content;
         this.transparentMode = true;
         this.transparentRatio = 0.8f;
         this.transparentDelay = 1000;
@@ -71,5 +74,9 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
 
     public void setTransparentDelay(int transparentDelay) {
         this.transparentDelay = transparentDelay;
+    }
+
+    public Content getContent() {
+        return content;
     }
 }

@@ -656,7 +656,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             for (ToolWindowDescriptor tool : tools.values())
                 tool.getToolWindowContainer().propertyChange(evt);
 
-
             syncPanel((ToolWindowAnchor)evt.getOldValue());
             syncPanel((ToolWindowAnchor)evt.getNewValue());
         }
