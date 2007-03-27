@@ -13,7 +13,33 @@
                 Use the following :
                 <source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">MyDoggyToolWindowManager(...)</a>;</source>
             </subsection>
+            <subsection name="To Register a ToolWindow">
+                Use the following :
+                <source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">MyDoggyToolWindowManager(...)</a>;
+ToolWindow debugTool = toolWindowManager.registerToolWindow(
+       "Debug Tool",  // Tool Window identifier
+       "Debug Tool Title",  // Tool Window Title
+       icon,       // Tool Window Icon
+       component,  // Tool Window component
+       ToolWindowAnchor.LEFT  // Tool Window anchor
+);
+</source>
+            </subsection>
+            <subsection name="To UnRegister a ToolWindow">
+                Use the following :
+                <source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">MyDoggyToolWindowManager(...)</a>;
+toolWindowManager.unregisterToolWindow("Debug Tool");
+</source>
+            </subsection>
+            <subsection name="To add an Alias">
+                Use the following :
+                <source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">MyDoggyToolWindowManager(...)</a>;
+toolWindowManager.addAlias(debugTool, new DebugTool());
+</source>
+            </subsection>
         </section>
+
+
         <section name="Using ToolWindowManagerDescriptor">
             <subsection name="ToolWindowManagerDescriptor">
                 <p>

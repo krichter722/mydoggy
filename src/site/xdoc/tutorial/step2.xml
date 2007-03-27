@@ -20,10 +20,10 @@
 package org.noos.xing.mydoggy.tutorial;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html">import org.noos.xing.mydoggy.ToolWindow;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowAnchor.html">import org.noos.xing.mydoggy.ToolWindowAnchor;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html">import org.noos.xing.mydoggy.ToolWindowManager;</a>
+<a href="./../mydoggy-plaf/toolwindowManager.html">import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;</a>
 
 import javax.swing.*;
 
@@ -33,7 +33,7 @@ public class SampleApp {
 
     protected void setUp() {
         initComponents();
-        <strong>initToolWindowManager();</strong>
+        <strong><a href="#initToolWindowManager">initToolWindowManager();</a></strong>
     }
 
     protected void start() {
@@ -57,21 +57,22 @@ public class SampleApp {
     }
 
 <strong>
+    <a name="initToolWindowManager"/>
     protected void initToolWindowManager() {
         // Create a new instance of MyDoggyToolWindowManager passing the frame.
-        <a href="./../mydoggy-plaf/toolwindowManager.html">MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);</a>
+        <a href="./../mydoggy-plaf/toolwindowManager.html">MyDoggyToolWindowManager</a> myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
         this.toolWindowManager = myDoggyToolWindowManager;
 
         // Register a Tool.
-        toolWindowManager.registerToolWindow("1",                           // Id
-                                             "Hello World",                 // Title
+        toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#registerToolWindow(java.lang.String, java.lang.String, javax.swing.Icon, java.awt.Component, org.noos.xing.mydoggy.ToolWindowAnchor)">registerToolWindow</a>("Debug Tool",       // Id
+                                             "Debug Tool",                 // Title
                                              null,                          // Icon
-                                             new JButton("Hello World"),    // Component
+                                             new JButton("Debug Tool"),    // Component
                                              ToolWindowAnchor.LEFT);        // Anchor
 
         // Made all tools available
-        for (ToolWindow window : toolWindowManager.getToolWindows())
-            window.setAvailable(true);
+        for (<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html">ToolWindow</a> window : toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getToolWindows()">getToolWindows</a>())
+            window.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#setAvailable(boolean)">setAvailable</a>(true);
 
         // Add myDoggyToolWindowManager to the frame. MyDoggyToolWindowManager is an extension of a JPanel
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");

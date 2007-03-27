@@ -11,6 +11,7 @@
       <sourceFolder url="file://$MODULE_DIR$/mydoggy-plaf/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/mydoggy-site-skin/src/main/resources" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/lib" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="jdk" jdkName="1.5" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />

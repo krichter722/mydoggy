@@ -16,6 +16,7 @@ import java.util.EventListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @see org.noos.xing.mydoggy.ContentManager
  * @see ContentManager#addContentManagerListener(ContentManagerListener)
+ * @since 1.1.0
  */
 public interface ContentManagerListener extends EventListener {
 
@@ -24,6 +25,7 @@ public interface ContentManagerListener extends EventListener {
      *
      * @param event the fired event.
      * @see org.noos.xing.mydoggy.event.ContentManagerEvent
+     * @since 1.1.0
      */
     void contentAdded(ContentManagerEvent event);
 
@@ -32,6 +34,7 @@ public interface ContentManagerListener extends EventListener {
      *
      * @param event the fired event.
      * @see org.noos.xing.mydoggy.event.ContentManagerEvent
+     * @since 1.1.0
      */
     void contentRemoved(ContentManagerEvent event);
 }

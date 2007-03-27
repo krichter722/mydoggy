@@ -76,6 +76,9 @@ toolWindow.setType(ToolWindowType.FLOATING_FREE);</source>
         <section name="ToolWindow Type Descriptors">
             <p>
                 A <code>ToolWindowTypeDescriptor</code> is an interface to modify the behaviours of a specific tool window type.
+                Go to the
+                <a href="./toolwindowUsing.html">Using</a>
+                page to see how to use these interfaces.
             </p>
 
             <p>

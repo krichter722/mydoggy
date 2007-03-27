@@ -15,7 +15,20 @@
 ToolWindow tool = toolWindowManager.getToolWindow(0);
 tool.setVisibile(true); // false to hide                    
 </source>
-                <p>The tool shows or hides the component in a way that depends on tool window type.</p>
+                <p>
+                    The tool shows or hides the component in a way that depends on tool window type.
+                    <br></br>
+                    There is an another way to show a tool. You can use the aggregate methedo
+                </p>
+                <source>
+ToolWindow tool = toolWindowManager.getToolWindow(0);
+tool.aggregate();
+</source>
+                <p>
+                    The method is used to set to the true value the visible property of the tool.
+                    The tool becomes visible in a special way. In fact, if there is another tool visible
+                    with the same anchor than these two tools will be aggregate to be visible both.
+                </p>
             </subsection>
             <subsection name="To Activate">
                 Use the following :
@@ -32,6 +45,157 @@ ToolWindow tool = toolWindowManager.getToolWindow(0);
 tool.setAnchor(ToolWindowAnchor.TOP);
 </source>
                 <p>The anchor specifies the position of the tool when it is anchored to the docking system.</p>
+            </subsection>
+            <subsection name="Add PropertyChangeListener">
+                Use the following :
+                <source>
+ToolWindow tool = toolWindowManager.getToolWindow(0);
+tool.setAnchor(ToolWindowAnchor.TOP);
+</source>
+                <p>
+                     Adds a PropertyChangeListener to the listener list. The listener is
+                     registered for all bound properties of this class, including the
+                     following:
+                     <ul>
+                         <li>this tool's index ("index")</li>
+                         <li>this tool's aailable status ("available")</li>
+                         <li>this tool's visible status ("visible")</li>
+                         <li>this tool's active status ("active")</li>
+                         <li>this tool's anchor ("anchor")</li>
+                         <li>this tool's autoHide ("autoHide")</li>
+                         <li>this tool's type ("type")</li>
+                         <li>this tool's icon ("icon")</li>
+                         <li>this tool's title ("title")</li>
+                     </ul>
+                </p>
+            </subsection>
+
+        </section>
+
+        <section name="DockedTypeDescriptor">
+            <subsection name="Enable/Disable PopupMenu">
+                Use the following :
+                <source>
+DockedTypeDescriptor desc = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
+desc.setPopupMenuEnabled(true); // false to denie.
+</source>
+                <p>
+                    So you can Specifies whether the popup menu of the representative anchor button of the tool should be enabled.
+                </p>
+            </subsection>
+            <subsection name="Tools Menu">
+                Use the following to retrieve the tools menu:
+                <source>
+DockedTypeDescriptor desc = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
+JMenu menu = desc.getToolsMenu();
+menu.addJMenuItem(new JMenuItem("Hello World!!!");
+</source>
+                <p>
+                    The user can add specific menu items to the popup menu of the representative anchor button of the tool using
+                    the result of this method invocation.
+                </p>
+            </subsection>
+            <subsection name="Dock Panel Length">
+                Use the following:
+                <source>
+DockedTypeDescriptor desc = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
+desc.setDockLength(150);
+</source>
+                <p>
+                    Sets the width or heigth, based on anchor of tool window, of the dock panel.
+                    This value is used by DOCKED and SLIDING tool window type.
+                </p>
+            </subsection>
+            <subsection name="ToolWindowActionHandler">
+                Use the following:
+                <source>
+DockedTypeDescriptor desc = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
+desc.setToolWindowActionHandler(new ToolWindowActionHandler(){...});
+</source>
+                <p>
+                </p>
+            </subsection>
+        </section>
+
+        <section name="SlidingTypeDescriptor">
+            <subsection name="Enable Transparent Mode">
+                Use the following :
+                <source>
+SlidingTypeDescriptor desc = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
+desc.setTransparentMode(true); // false to disable
+</source>
+                <p>
+                    Sets the transparent mode. If the transparent mode is enabled then when the toolwindow's content
+                    losts the focus it becomes transparent. This facility is os-independent.
+                    <br></br>
+                    You can use use <code>setTransparentRatio</code> and <code>setTransparentDelay</code> methods
+                    to set transparency paramenters.
+                </p>
+            </subsection>
+            <subsection name="Enable/Disable">
+                Use the following :
+                <source>
+SlidingTypeDescriptor desc = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
+desc.setEnabled(true); // false to disable
+</source>
+                <p>
+                    Enables or disables this mode, depending on the value of the
+                    parameter <code>enabled</code>. An enabled mode can used by user.
+                    This Mode is enabled initially by default.
+                </p>
+            </subsection>
+        </section>
+
+        <section name="FloatingTypeDescriptor">
+            <subsection name="Enable Transparent Mode">
+                Use the following :
+                <source>
+FloatingTypeDescriptor desc = (FloatingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
+desc.setTransparentMode(true); // false to disable
+</source>
+                <p>
+                    Sets the transparent mode. If the transparent mode is enabled then when
+                    the window used by <code>FLOATING</code> and <code>FLOATING_FREE</code> type losts
+                    the focus it becomes transparent. This facility is os-dependent.
+                    <br></br>
+                    You can use use <code>setTransparentRatio</code> and <code>setTransparentDelay</code> methods
+                    to set transparency paramenters.
+                </p>
+            </subsection>
+            <subsection name="Enable/Disable">
+                Use the following :
+                <source>
+FloatingTypeDescriptor desc = (FloatingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
+desc.setEnabled(true); // false to disable
+</source>
+                <p>
+                    Enables or disables this mode, depending on the value of the
+                    parameter <code>enabled</code>. An enabled mode can used by user.
+                    This Mode is enabled initially by default.
+                </p>
+            </subsection>
+            <subsection name="Change Window Position">
+                Use the following :
+                <source>
+FloatingTypeDescriptor desc = (FloatingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
+desc.setPosition(150, 220);
+</source>
+                <p>
+                    Sets the window location. This location is also used the first time the window becomes visible.
+                    The top-left corner of the new location
+                    is specified by the <code>x</code> and <code>y</code>
+                    parameters in the system coordinate space.
+                </p>
+            </subsection>
+            <subsection name="Change Window Size">
+                Use the following :
+                <source>
+FloatingTypeDescriptor desc = (FloatingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
+desc.setSize(320, 200);
+</source>
+                <p>
+                    Sets the window size. This size is also used the first time the window becomes visible.
+                </p>
             </subsection>
         </section>
     </body>

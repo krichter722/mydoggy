@@ -17,13 +17,13 @@
 
             <ul>
                 <li>
-                    <a href="./step1.html">Step 1</a> :  Starting Sample App.
+                    <a href="./step1.html">Step 1</a> : Starting "Sample App".
                 </li>
                 <li>
-                    <a href="./step2.html">Step 2</a> :
+                    <a href="./step2.html">Step 2</a> : Introduce ToolWindowManager.
                 </li>
                 <li>
-                    <a href="./step3.html">Step 3</a> :
+                    <a href="./step3.html">Step 3</a> : Play with TypeDescriptors.
                 </li>
             </ul>
         </section>
