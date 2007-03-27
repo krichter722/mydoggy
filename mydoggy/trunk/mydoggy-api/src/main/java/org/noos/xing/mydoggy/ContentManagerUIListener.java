@@ -14,7 +14,8 @@ import java.util.EventListener;
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @see org.noos.xing.mydoggy.ContentManagerUI
- * @see ContentManagerUI#addContentManagerUIListener(ContentManagerUIListener) 
+ * @see ContentManagerUI#addContentManagerUIListener(ContentManagerUIListener)
+ * @since 1.2.0
  */
 public interface ContentManagerUIListener extends EventListener {
 
@@ -24,7 +25,8 @@ public interface ContentManagerUIListener extends EventListener {
      * @param event the fired event.
      * @return false if you want to rollback the remove action.
      * @see org.noos.xing.mydoggy.event.ContentManagerUIEvent
-     */
+     * @since 1.2.0
+      */
     boolean contentUIRemoving(ContentManagerUIEvent event);
 
     /**
@@ -33,6 +35,7 @@ public interface ContentManagerUIListener extends EventListener {
       *
       * @param event the fired event.
       * @see org.noos.xing.mydoggy.event.ContentManagerUIEvent
-      */
+     * @since 1.2.0
+       */
     void contentUIDetached(ContentManagerUIEvent event);
 }

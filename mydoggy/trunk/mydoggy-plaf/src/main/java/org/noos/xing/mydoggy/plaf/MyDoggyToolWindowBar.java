@@ -532,6 +532,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         }
 
         protected void setSplitPaneContent(Component content) {
+            if (content != null)
+                splitPane.setDividerLocation(1);
+
             switch (anchor) {
                 case LEFT:
                     splitPane.setLeftComponent(content);
@@ -586,11 +589,12 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 else
                     animatingHeight = (int) ((1.0f - animationPercent) * sheetLen);
 
+
                 switch (anchor) {
                     case LEFT:
                     case TOP:
                         if (direction == Direction.INCOMING) {
-                            if (splitPane.getDividerLocation() <= animatingHeight) {
+                            if (splitPane.getDividerLocation() != animatingHeight) {
                                 splitPane.setDividerLocation(animatingHeight);
                             }
                         } else
@@ -605,7 +609,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                         break;
 
                 }
-                return animationPercent;
+                return animationPercent;            
             }
 
             protected void onFinishAnimation() {

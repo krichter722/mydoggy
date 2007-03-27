@@ -36,13 +36,13 @@ public interface ContentManagerUI<C extends ContentUI> {
 
     /**
      * Registers <code>listener</code> so that it will receive events when
-     * contents are registered or removed..
+     * contentUIs are removed or detached.
      * If listener <code>listener</code> is <code>null</code>,
      * no exception is thrown and no action is performed.
      *
      * @param listener the <code>ContentManagerUIListener</code> to register.
      * @see ContentManagerListener
-     * @since 1.0.0
+     * @since 1.2.0
      */
     void addContentManagerUIListener(ContentManagerUIListener listener);
 
@@ -55,7 +55,7 @@ public interface ContentManagerUI<C extends ContentUI> {
      *
      * @param listener the <code>ContentManagerUIListener</code> to be removed
      * @see #addContentManagerUIListener(ContentManagerUIListener)
-     * @since 1.0.0
+     * @since 1.2.0
      */
     void removeContentManagerUIListener(ContentManagerUIListener listener);
 
@@ -67,7 +67,7 @@ public interface ContentManagerUI<C extends ContentUI> {
      *         or an empty array if no tool window manager listeners are currently registered.
      * @see #addContentManagerUIListener(ContentManagerUIListener)
      * @see #removeContentManagerUIListener(ContentManagerUIListener)
-     * @since 1.0.0
+     * @since 1.2.0
      */
     ContentManagerUIListener[] getContentManagerUiListener();
 

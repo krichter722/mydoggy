@@ -6,6 +6,11 @@ package org.noos.xing.mydoggy;
  */
 public interface ContentUI {
 
+    /**
+     * Returns the Content contropart of this ContentUI.
+     * @return the Content contropart.
+     * @since 1.2.0
+     */
     Content getContent();
 
     /**

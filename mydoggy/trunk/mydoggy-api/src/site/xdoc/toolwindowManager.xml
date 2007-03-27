@@ -21,6 +21,8 @@
             <subsection name="ToolWindowManagerDescriptor">
                 <p>
                     This interface is used to modify the behaviours of the ToolWindowManager.
+                    <br></br>
+                    You can now change the push-away mode of tool windows. See Using page for how to.
                 </p>
             </subsection>
 
