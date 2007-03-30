@@ -86,6 +86,12 @@ public class SampleApp {
 
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setDockLength(int)">setDockLength</a>(300);
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPopupMenuEnabled(boolean)">setPopupMenuEnabled</a>(false);
+        JMenu toolsMenu = dockedTypeDescriptor.getToolsMenu();
+        toolsMenu.add(new AbstractAction("Hello World!!!") {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame, "Hello World!!!");
+            }
+        });
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setToolWindowActionHandler(org.noos.xing.mydoggy.ToolWindowActionHandler)">setToolWindowActionHandler</a>(new ToolWindowActionHandler() {
             public void <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowActionHandler.html#onHideButtonClick(org.noos.xing.mydoggy.ToolWindow)">onHideButtonClick</a>(ToolWindow toolWindow) {
                 JOptionPane.showMessageDialog(frame, "Hiding...");
