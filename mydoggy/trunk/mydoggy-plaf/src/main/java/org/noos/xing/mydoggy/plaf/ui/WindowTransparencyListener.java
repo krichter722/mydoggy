@@ -38,7 +38,7 @@ public class WindowTransparencyListener extends WindowAdapter implements ActionL
     }
 
     public void windowLostFocus(WindowEvent e) {
-        if (contentUI.isTransparentMode()) {
+        if (contentUI.isTransparentMode() && !window.isFocused()) {
             if (!transparencyManager.isAlphaModeEnabled(e.getWindow())) {
                 timer = new Timer(contentUI.getTransparentDelay(), this);
                 timer.start();

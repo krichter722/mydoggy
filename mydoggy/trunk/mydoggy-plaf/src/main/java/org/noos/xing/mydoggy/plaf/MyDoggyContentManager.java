@@ -125,6 +125,14 @@ public class MyDoggyContentManager implements ContentManager {
         throw new IllegalArgumentException("Cannot found content for component. [cmp : " + component + ']');
     }
 
+    public Content getSelectedContent() {
+        for (Content content : contents) {
+            if (content.isSelected())
+                return content;
+        }
+        return null;
+    }
+
     public Content[] getContents() {
         return contents.toArray(EMPTY_CONTENT_ARRAY);
     }

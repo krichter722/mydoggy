@@ -19,6 +19,7 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
     public DesktopContentFrame(Content content, String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
         super(title, resizable, closable, maximizable, iconifiable);
         this.content = content;
+        this.detachable = true;
         this.transparentMode = true;
         this.transparentRatio = 0.8f;
         this.transparentDelay = 1000;

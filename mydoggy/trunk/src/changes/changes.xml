@@ -25,7 +25,7 @@
                         <a href="./mydoggy-examples/mydoggysetScreenshots.html">Transparency</a> support for Slidying Mode.
                     </li>
                     <li>
-                        New <a href="./mydoggy-examples/mydoggysetScreenshots.html">drag&drop</a> system for the toolwindow's representative button.
+                        New <a href="./mydoggy-examples/mydoggysetScreenshots.html">drag&drop</a> system for the toolwindow representative buttons.
                     </li>
                     <li>
                         Support for <a href="./mydoggy-api/toolwindowManager.html">PushAway Mode</a> of the ToolWindowManager
