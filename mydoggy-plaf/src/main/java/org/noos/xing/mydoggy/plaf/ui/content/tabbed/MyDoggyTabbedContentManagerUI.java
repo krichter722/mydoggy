@@ -164,10 +164,14 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
         } else if (toolWindowManager.getMainContent() != content.getComponent())
             throw new IllegalStateException("Invalid content ui state.");
 
-        if (tabbedContentManager.getTabCount() == 0)
-            toolWindowManager.resetMainContent();
-
         content.removeUIPropertyChangeListener(this);
+
+        if (tabbedContentManager.getTabCount() == 0) {
+            toolWindowManager.resetMainContent();
+            lastSelected = null;
+        } else {
+            tabbedContentManager.getContentPage(tabbedContentManager.getSelectedIndex()).getContent().setSelected(true);
+        }
     }
 
     public boolean isSelected(Content content) {
@@ -184,6 +188,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
             if (index != -1) {
                 valueAdjusting = true;
                 tabbedContentManager.setSelectedIndex(index);
+                lastSelected = (BackContentUI) content;
                 valueAdjusting = false;
             } else if (toolWindowManager.getMainContent() != content.getComponent())
                 throw new IllegalStateException("Invalid content ui state.");
@@ -297,6 +302,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
         if (!showAlwaysTab && tabbedContentManager.getTabCount() == 0 && (contentValueAdjusting || toolWindowManager.getMainContent() == null)) {
             detachedContentUIMap.put(content, new ContentPage(content, tabbedContentManager, null));
             toolWindowManager.setMainContent(content.getComponent());
+            lastSelected = (BackContentUI) content;
         } else {
             if (!showAlwaysTab && tabbedContentManager.getParent() == null) {
                 valueAdjusting = true;
