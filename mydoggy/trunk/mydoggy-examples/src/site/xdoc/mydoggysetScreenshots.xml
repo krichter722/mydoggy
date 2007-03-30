@@ -53,6 +53,7 @@
                         <p align="center">A toolWindow group showed.</p>
                     </td>
                 </tr>
+                <a name="dragdrap"/>
                 <tr>
                     <td>
                         <a href="./images/screenshots/mydoggyset/tw_transparency.png">
@@ -71,6 +72,15 @@
                             <img src="./images/screenshots/mydoggyset/thumbs/drag_drop.png" alt="Drag And Drop System"/>
                         </a>
                         <p align="center">New Drag and Drop system. Click to view the animation.</p>
+                    </td>
+                </tr>
+                <a name="slidingTrasparent"/>
+                <tr>
+                    <td>
+                        <a href="./images/screenshots/mydoggyset/tw_sliding_transparency.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/tw_sliding_transparency.png" alt="ToolWindow Sliding Transparent"/>
+                        </a>
+                        <p align="center">A ToolWindowType.SLIDING ToolWindow transparent.</p>
                     </td>
                 </tr>
             </table>

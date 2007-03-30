@@ -33,12 +33,16 @@ public class SampleApp {
 
     protected void setUp() {
         initComponents();
-        <strong><a href="#initToolWindowManager">initToolWindowManager();</a></strong>
+        <strong style="color:green"><a href="#initToolWindowManager">initToolWindowManager</a>();</strong>
     }
 
     protected void start() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                // Set debug tool active
+                ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
+                debugTool.setActive(true);
+
                 frame.setVisible(true);
             }
         });
@@ -56,7 +60,7 @@ public class SampleApp {
         this.frame.getContentPane().setLayout(new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
     }
 
-<strong>
+<strong style="color:green">
     <a name="initToolWindowManager"/>
     protected void initToolWindowManager() {
         // Create a new instance of MyDoggyToolWindowManager passing the frame.

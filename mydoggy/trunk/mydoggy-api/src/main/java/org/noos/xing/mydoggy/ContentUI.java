@@ -45,8 +45,8 @@ public interface ContentUI {
 
     /**
      * Sets the transparent mode. If the transparent mode is enabled then when
-     * the window used by <code>FLOATING</code> and <code>FLOATING_FREE</code> type losts
-     * the focus it becomes transparent. This facility is os-dependent.
+     * the content is detached and the window containing the content losts
+     * the focus then the window becomes transparent. This facility is os-dependent.
      *
      * @param transparentMode <code>true</code> to enable trasparent mode;
      *                        <code>false</code> to disable transparent mode.

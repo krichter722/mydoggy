@@ -19,13 +19,13 @@
                 <![CDATA[
                 <ul>
                     <li>
-                        A <a href="./mydoggy-api/toolwindowManager.html">Persistence Mechanism</a> to load and store the ToolWindowManager's workspace.
+                        A <a href="./mydoggy-api/persistenceDelegate.html">Persistence Mechanism</a> to load and store the ToolWindowManager's workspace.
                     </li>
                     <li>
-                        <a href="./mydoggy-examples/mydoggysetScreenshots.html">Transparency</a> support for Slidying Mode.
+                        <a href="./mydoggy-examples/mydoggysetScreenshots.html#slidingTrasparent">Transparency</a> support for Slidying Mode.
                     </li>
                     <li>
-                        New <a href="./mydoggy-examples/mydoggysetScreenshots.html">drag&drop</a> system for the toolwindow representative buttons.
+                        New <a href="./mydoggy-examples/mydoggysetScreenshots.html#dragdrap">drag&drop</a> system for the toolwindow representative buttons.
                     </li>
                     <li>
                         Support for <a href="./mydoggy-api/toolwindowManager.html">PushAway Mode</a> of the ToolWindowManager

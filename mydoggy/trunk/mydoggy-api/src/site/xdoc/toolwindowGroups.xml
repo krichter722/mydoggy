@@ -10,8 +10,8 @@
     <body>
         <section name="Groups - ToolWindowGroup">
             <p>
-                The idea is to provide the same mechanism of prospectives of eclipse ide for tools window.
-                The typical usage is to retrieve a group from the tool window manager and to add any tools window.
+                The idea is to provide the same mechanism of prospectives of eclipse ide for toolwindows.
+                The typical usage is to retrieve a group from the tool window manager and to add any toolwindows.
                 After that we can show or hide all tools registered in a group.
             </p>
 

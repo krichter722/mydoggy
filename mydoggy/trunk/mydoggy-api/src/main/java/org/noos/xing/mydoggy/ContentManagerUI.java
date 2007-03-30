@@ -27,9 +27,9 @@ public interface ContentManagerUI<C extends ContentUI> {
 	void setDetachable(boolean detachable);
 
 	/**
-	 * Returns the ui part to which this manager maps the specified <code>content<code>.
+	 * Returns the ui part to which this manager maps the specified <code>content</code>.
 	 * @param content content whose associated ui part is to be returned.
-	 * @return the ui part to which this manager maps the specified <code>content<code>.
+	 * @return the ui part to which this manager maps the specified <code>content</code>.
 	 * @since 1.1.0
 	 */
 	C getContentUI(Content content);

@@ -9,64 +9,102 @@
 
     <body>
         <section name="Using ContentManagerUI">
-            <subsection name="To Show or Hide">
+            <subsection name="To obtain the instance of ContentManagerUI">
                 Use the following :
                 <source>
-ToolWindow tool = toolWindowManager.getToolWindow(0);
-tool.setVisibile(true); // false to hide
+ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
 </source>
                 <p>
-                    The tool shows or hides the component in a way that depends on tool window type.
-                    <br></br>
-                    There is an another way to show a tool. You can use the aggregate methedo
-                </p>
-                <source>
-ToolWindow tool = toolWindowManager.getToolWindow(0);
-tool.aggregate();
-</source>
-                <p>
-                    The method is used to set to the true value the visible property of the tool.
-                    The tool becomes visible in a special way. In fact, if there is another tool visible
-                    with the same anchor than these two tools will be aggregate to be visible both.
+                    Returns the content manager ui.
                 </p>
             </subsection>
-            <subsection name="To Activate">
+            <subsection name="To change ContentManagerUI">
                 Use the following :
                 <source>
-ToolWindow tool = toolWindowManager.getToolWindow(0);
-tool.setActive(true); // false to deactivate
-</source>
-                <p>The tool grabs the focus from focus owner and becomes active.</p>
-            </subsection>
-            <subsection name="To Move">
-                Use the following :
-                <source>
-ToolWindow tool = toolWindowManager.getToolWindow(0);
-tool.setAnchor(ToolWindowAnchor.TOP);
-</source>
-                <p>The anchor specifies the position of the tool when it is anchored to the docking system.</p>
-            </subsection>
-            <subsection name="Add PropertyChangeListener">
-                Use the following :
-                <source>
-ToolWindow tool = toolWindowManager.getToolWindow(0);
-tool.setAnchor(ToolWindowAnchor.TOP);
+toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyDesktopContentManagerUI());
 </source>
                 <p>
-                     Adds a PropertyChangeListener to the listener list. The listener is
-                     registered for all bound properties of this class, including the
-                     following:
-                     <ul>
-                         <li>this tool's index ("index")</li>
-                         <li>this tool's aailable status ("available")</li>
-                         <li>this tool's visible status ("visible")</li>
-                         <li>this tool's active status ("active")</li>
-                         <li>this tool's anchor ("anchor")</li>
-                         <li>this tool's autoHide ("autoHide")</li>
-                         <li>this tool's type ("type")</li>
-                         <li>this tool's icon ("icon")</li>
-                         <li>this tool's title ("title")</li>
-                     </ul>
+                    Sets the content manager ui.
+                </p>
+            </subsection>
+            <subsection name="To set 'Closeable' and 'Detachable' property">
+                Use the following :
+                <source>
+ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
+contentManagerUI.setCloseable(true);
+contentManagerUI.setsetDetachable(true);
+</source>
+                <p>
+                    Sets the 'Closeable' and/or 'Detachable' property of all contents registered to content manager.
+                </p>
+            </subsection>
+            <subsection name="To add a ContentManagerUIListener">
+                Use the following :
+                <source>
+ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
+contentManagerUI.addContentManagerUIListener(listener);
+</source>
+                <p>
+                    Registers <code>listener</code> so that it will receive events when
+                    contentUIs are removed or detached.
+                    If listener <code>listener</code> is <code>null</code>,
+                    no exception is thrown and no action is performed.
+                </p>
+            </subsection>
+        </section>
+
+        <section name="Using ContentUI">
+            <subsection name="To retrieve the ContentUI for a Content">
+                Use the following :
+                <source>
+ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
+Content content = toolWindowManager.getContentManager().getContent(0);
+ContentUI contentUi = contentManagerUI.getContentUI(content);
+</source>
+                <p>
+                    Returns the ui part to which this manager maps the specified <code>content</code>.
+                </p>
+            </subsection>
+
+            <subsection name="To retrieve the Content from a ContentUI">
+                Use the following :
+                <source>
+ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
+Content content = toolWindowManager.getContentManager().getContent(0);
+ContentUI contentUi = contentManagerUI.getContentUI(content);
+assert contentUi.getContent() == content;
+</source>
+                <p>
+                    Returns the Content contropart of a ContentUI instance.
+                </p>
+            </subsection>
+            <subsection name="To set 'Closeable' and 'Detachable' property">
+                Use the following :
+                <source>
+ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
+Content content = toolWindowManager.getContentManager().getContent(0);
+ContentUI contentUi = contentManagerUI.getContentUI(content);
+contentUi.setCloseable(true);
+contentUi.setDetachable(true);
+</source>
+                <p>
+                    Sets the 'Closeable' and/or 'Detachable' property of a specific ContentUI.
+                </p>
+            </subsection>
+            <subsection name="To customize transparency support.">
+                Use the following :
+                <source>
+ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
+Content content = toolWindowManager.getContentManager().getContent(0);
+ContentUI contentUi = contentManagerUI.getContentUI(content);
+contentUi.setTransparentMode(true);
+contentUi.setTransparentRatio(0.7f);
+contentUi.setTransparentDelay(1000);
+</source>
+                <p>
+                    Sets the transparent mode. If the transparent mode is enabled then when
+                    the content is detached and the window containing the content losts
+                    the focus then the window becomes transparent. This facility is os-dependent.
                 </p>
             </subsection>
 

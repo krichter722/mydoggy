@@ -2,8 +2,8 @@ package org.noos.xing.mydoggy;
 
 /**
  * This interface lets the user to manager a group of tool window. The idea is to provide the same mechanism of
- * prospectives of eclipse ide for tools window.
- * The typical usage is to retrieve a group from the tool window manager and to add any tools window.
+ * prospectives of eclipse ide for toolwindows.
+ * The typical usage is to retrieve a group from the tool window manager and to add any toolwindows.
  * After that we can show or hide all tools registered in a group.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -37,7 +37,7 @@ public interface ToolWindowGroup {
     boolean removeToolWindow(ToolWindow toolWindow);
 
     /**
-     * Returns an array containing all of the tools window in this group in proper
+     * Returns an array containing all of the toolwindows in this group in proper
      * sequence.
      *
      * @return an array containing all of the elements in this group in proper sequence.
@@ -55,7 +55,7 @@ public interface ToolWindowGroup {
 
 
     /**
-     * Invokes <code>setVisible(visible)</code> on all tools window contained in this group
+     * Invokes <code>setVisible(visible)</code> on all toolwindows contained in this group
      * in proper sequence.
      *
      * @param visible true to make the tools, contained in this group, visible, false to hide.
@@ -66,7 +66,7 @@ public interface ToolWindowGroup {
 
     /**
      * Registers <code>listener</code> so that it will receive events when
-     * the groups are made visibile or invisible.
+     * the groups are made visibile or invisible, when a tool is added or removed
      * If listener <code>listener</code> is <code>null</code>,
      * no exception is thrown and no action is performed.
      *

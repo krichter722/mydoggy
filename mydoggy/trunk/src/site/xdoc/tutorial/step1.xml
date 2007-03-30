@@ -7,8 +7,10 @@
 		<author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
 	</properties>
 
-	<body>
-		<section name="Tutorial - Step 1">
+
+    <body>
+        <navbar home="./tutorial.html" next="./step2.html"/>
+        <section name="Tutorial - Step 1">
             <p>
                 First of all, we'll start with a basic skeleton class that instantiate a simple JFrame titled 'Sample App...'.
             </p>
@@ -62,7 +64,7 @@ public class org.noos.xing.mydoggy.tutorial.SampleApp {
                         <tr>
                             <td>
                                 <div align="center">
-                                    <img align="middle" src="./../images/tutorial/step2.png" alt="ContentManager" border="0" hspace="18"/>
+                                    <img align="middle" src="./../images/tutorial/step1.png" alt="ContentManager" border="0" hspace="18"/>
                                 </div>
                             </td>
                             <td>
