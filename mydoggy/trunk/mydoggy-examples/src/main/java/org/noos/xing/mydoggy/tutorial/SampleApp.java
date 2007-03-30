@@ -43,33 +43,30 @@ public class SampleApp {
         toolWindowManager.registerToolWindow("Debug Tool",                           // Id
                                              "Debug Tool",                 // Title
                                              null,                          // Icon
-                                             new JScrollPane(new JTable()),    // Component
-                                             ToolWindowAnchor.LEFT);        // Anchor
+                                             new JScrollPane(new JButton(new AbstractAction() {
+                                                 public void actionPerformed(ActionEvent e) {
+                                                     toolWindowManager.getContentManager().removeContent(
+                                                             toolWindowManager.getContentManager().getSelectedContent()
+                                                     );
+                                                 }
+                                             })),    // Component
+                                                     ToolWindowAnchor.LEFT);        // Anchor
 
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
             window.setAvailable(true);
 
         setupDebugTool();
-        setupContentManager();
+
+        initContentManager();
 
         // Add myDoggyToolWindowManager to the frame. MyDoggyToolWindowManager is an extension of a JPanel
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
     }
 
-    private void setupContentManager() {
-        JButton b = new JButton(new AbstractAction("click") {
-
-            public void actionPerformed(ActionEvent e) {
-                toolWindowManager.getContentManager().addContent("Hello2", "Hello2", null, new JButton());
-            }
-        });
-
-        toolWindowManager.getContentManager().addContent("Hello", "Hello", null, b);
-    }
-
     protected void setupDebugTool() {
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
+        debugTool.setVisible(true);
 
         DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
         dockedTypeDescriptor.setDockLength(100);
@@ -96,6 +93,18 @@ public class SampleApp {
         floatingTypeDescriptor.setTransparentRatio(0.2f);
         floatingTypeDescriptor.setTransparentDelay(1000);
     }
+
+    protected void initContentManager() {
+        JTree treeContent = new JTree();
+
+        ContentManager contentManager = toolWindowManager.getContentManager();
+        Content content = contentManager.addContent("Tree Key",
+                                                    "Tree Title",
+                                                    null,      // An icon
+                                                    treeContent);
+        content.setToolTipText("Tree tip");
+    }
+
 
     public static void main(String[] args) {
         SampleApp test = new SampleApp();

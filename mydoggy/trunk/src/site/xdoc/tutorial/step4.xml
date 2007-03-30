@@ -3,7 +3,7 @@
 		"http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
 	<properties>
-		<title>MyDoggy : Tutorial - Step 3</title>
+		<title>MyDoggy : Tutorial - Step 4</title>
 		<author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
         <script language="JavaScript">
             function HighlightText(divid){
@@ -18,7 +18,9 @@
     <body>
 		<section name="Tutorial - Step 3">
             <p>
-                Now we'll play with TypeDesciptors.
+                Now we'll play with
+                <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html">ContentManager</a>
+                class.
             </p>
 
             <div id="codebutton"><input name="btn" value="Copy to Clipboard" onclick="HighlightText(52);" type="button"></div>
@@ -29,6 +31,7 @@ import info.clearthought.layout.TableLayout;
 <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html">import org.noos.xing.mydoggy.ToolWindow;</a>
 <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowAnchor.html">import org.noos.xing.mydoggy.ToolWindowAnchor;</a>
 <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html">import org.noos.xing.mydoggy.ToolWindowManager;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/Content.html">import org.noos.xing.mydoggy.Content;</a>
 <a href="./../mydoggy-plaf/toolwindowManager.html">import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;</a>
 
 import javax.swing.*;
@@ -78,13 +81,14 @@ public class SampleApp {
         for (ToolWindow window : toolWindowManager.getToolWindows())
             window.setAvailable(true);
 
-        <strong><a href="#setupDebugTool">setupDebugTool();</a></strong>
+        <a href="#setupDebugTool">setupDebugTool();</a>
+        <strong><a href="#initContentManager">initContentManager();</a></strong>
 
         // Add myDoggyToolWindowManager to the frame. MyDoggyToolWindowManager is an extension of a JPanel
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
     }
 
-    <strong><a name="setupDebugTool"/>
+    <a name="setupDebugTool"/>
     protected void setupDebugTool() {
         <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html">ToolWindow</a> debugTool = toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getToolWindow(java.lang.Object)">getToolWindow</a>("Debug Tool");
 
@@ -114,6 +118,18 @@ public class SampleApp {
         floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setTransparentRatio(float)">setTransparentRatio(0.2f)</a>;
         floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setTransparentDelay(int)">setTransparentDelay(1000)</a>;
     }
+
+    <strong><a name="initContentManager"/>
+    protected void initContentManager() {
+         JTree treeContent = new JTree();
+
+        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html">ContentManager</> contentManager = toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getContentManager()">getContentManager</a>();
+        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/Content.html">Content content</a> = contentManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html#addContent(java.lang.Object, java.lang.String, javax.swing.Icon, java.awt.Component)">addContent</a>("Tree Key",
+                                                    "Tree Title",
+                                                    null,      // An icon
+                                                    treeContent);
+        content.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/Content.html#setToolTipText(java.lang.String)">setToolTipText</a>("Tree tip");
+     }
     </strong>
 
     public static void main(String[] args) {
@@ -127,10 +143,31 @@ public class SampleApp {
     }
 }</source>
             <subsection name="Result">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div align="center">
+                                    <img align="middle" src="./../images/tutorial/step2.png" alt="ContentManager" border="0" hspace="18"/>
+                                </div>
+                            </td>
+                            <td>
+                                <div align="left">
+                                    <p>
+                                        This is the effect. For example try to drag the tool to other position or right click
+                                        on the toolwindow's representative button.
+                                        <br></br>
+                                        See the using for
+                                        <a href="./../mydoggy-examples/mydoggysetUsing.html">MyDoggySet.</a>
+
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
                 <p>
-                    Play with the application to see in action your customizations.
-                    <br></br>
-                    Good! Next step. <a href="./step4.html">Step 4</a>.
+                    Good! Next step. <a href="./step5.html">Step 5</a>.
                 </p>
             </subsection>
         </section>
