@@ -72,7 +72,7 @@ public interface ToolWindowManager {
     void unregisterToolWindow(String id);
 
     /**
-     * Removes all tools window from this window manager if there are any.
+     * Removes all toolwindows from this window manager if there are any.
      */
     void unregisterAllToolWindow();
 
@@ -125,25 +125,30 @@ public interface ToolWindowManager {
     ToolWindow getToolWindow(int index);
 
     /**
-     * Returns an array of the tools window registered into this manager.
+     * Returns an array of the toolwindows registered into this manager.
      *
-     * @return an array of the tools window registered into this manager.
+     * @return an array of the toolwindows registered into this manager.
      *         If there is no tool registered then it returns an empty array.
      */
     ToolWindow[] getToolWindows();
 
     /**
-     * Returns an array of the tools window, registered into this manager,
+     * Returns an array of the toolwindows, registered into this manager,
      * anchored on passed anchor.
      *
-     * @param anchor anchor which tools window are anchored.
-     * @return an array of the tools window, registered into this manager,
+     * @param anchor anchor which toolwindows are anchored.
+     * @return an array of the toolwindows, registered into this manager,
      *         anchored on passed anchor. If there is no registered tool window anchored on that anchor
      *         then it returns an empty array.
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
      */
     ToolWindow[] getToolsByAnchor(ToolWindowAnchor anchor);
 
+    /**
+     *
+     * @return
+     * @since 1.2.0
+     */
     ToolWindowGroup getToolWindowGroup();
 
     /**
@@ -159,9 +164,9 @@ public interface ToolWindowManager {
     ToolWindowGroup getToolWindowGroup(String name);
 
     /**
-     * Returns an array of the tools window groups registered into this manager.
+     * Returns an array of the toolwindows groups registered into this manager.
      *
-     * @return an array of the tools window groups registered into this manager.
+     * @return an array of the toolwindows groups registered into this manager.
      *         If there is no group registered then it returns an empty array.
      * @see #getToolWindowGroup(String)
      */
@@ -201,7 +206,7 @@ public interface ToolWindowManager {
 
     /**
      * Registers <code>listener</code> so that it will receive events when
-     * the tools window and groups are registered or removed..
+     * the toolwindows and groups are registered or removed..
      * If listener <code>listener</code> is <code>null</code>,
      * no exception is thrown and no action is performed.
      *

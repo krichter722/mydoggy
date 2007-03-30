@@ -10,8 +10,8 @@
     <body>
         <section name="ToolWindowManager">
             <p>
-                This interface is the main entry point to manager MyDoggy. Using this interface
-                the user can register/unregister tool windows, groups. The user can get the
+                This interface is the main entry point to manage MyDoggy. Using this interface
+                the user can register/unregister toolwindows, groups. The user can get the
                 content manager instance and type descriptor templates.
                 <br></br>
                 To obtain an instance of ToolWindowManager interface see
@@ -22,7 +22,7 @@
                 <p>
                     This interface is used to modify the behaviours of the ToolWindowManager.
                     <br></br>
-                    You can now change the push-away mode of tool windows. See Using page for how to.
+                    You can now change the push-away mode of toolwindows. See Using page for how to.
                 </p>
             </subsection>
 

@@ -9,67 +9,22 @@
 
     <body>
         <section name="Using ContentManager">
-            <subsection name="To Show or Hide">
+            <subsection name="To add a content">
                 Use the following :
                 <source>
-ToolWindow tool = toolWindowManager.getToolWindow(0);
-tool.setVisibile(true); // false to hide
+ContentManager contentManager = toolWindowManager.getContentManager();
+contentManager.addContent("Tools"   // Content Key
+                          "Tools",  // Content title
+                          null,     // Content Item
+                          toolsContent, // Content component
+                          "ToolWindows" // Content tooltip text
+);
 </source>
                 <p>
-                    The tool shows or hides the component in a way that depends on tool window type.
-                    <br></br>
-                    There is an another way to show a tool. You can use the aggregate methedo
-                </p>
-                <source>
-ToolWindow tool = toolWindowManager.getToolWindow(0);
-tool.aggregate();
-</source>
-                <p>
-                    The method is used to set to the true value the visible property of the tool.
-                    The tool becomes visible in a special way. In fact, if there is another tool visible
-                    with the same anchor than these two tools will be aggregate to be visible both.
+                    Adds a <code>component</code> represented by a unique identifier <code>key</code>
+                    with a <code>title</code> and/or <code>icon</code>, either of which can be <code>null</code>.
                 </p>
             </subsection>
-            <subsection name="To Activate">
-                Use the following :
-                <source>
-ToolWindow tool = toolWindowManager.getToolWindow(0);
-tool.setActive(true); // false to deactivate
-</source>
-                <p>The tool grabs the focus from focus owner and becomes active.</p>
-            </subsection>
-            <subsection name="To Move">
-                Use the following :
-                <source>
-ToolWindow tool = toolWindowManager.getToolWindow(0);
-tool.setAnchor(ToolWindowAnchor.TOP);
-</source>
-                <p>The anchor specifies the position of the tool when it is anchored to the docking system.</p>
-            </subsection>
-            <subsection name="Add PropertyChangeListener">
-                Use the following :
-                <source>
-ToolWindow tool = toolWindowManager.getToolWindow(0);
-tool.setAnchor(ToolWindowAnchor.TOP);
-</source>
-                <p>
-                     Adds a PropertyChangeListener to the listener list. The listener is
-                     registered for all bound properties of this class, including the
-                     following:
-                     <ul>
-                         <li>this tool's index ("index")</li>
-                         <li>this tool's aailable status ("available")</li>
-                         <li>this tool's visible status ("visible")</li>
-                         <li>this tool's active status ("active")</li>
-                         <li>this tool's anchor ("anchor")</li>
-                         <li>this tool's autoHide ("autoHide")</li>
-                         <li>this tool's type ("type")</li>
-                         <li>this tool's icon ("icon")</li>
-                         <li>this tool's title ("title")</li>
-                     </ul>
-                </p>
-            </subsection>
-
         </section>
     </body>
 </document>

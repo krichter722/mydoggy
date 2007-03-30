@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.tutorial;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import javax.swing.*;
@@ -19,6 +20,10 @@ public class SampleApp {
     protected void start() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                // Set debug tool active
+                ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
+                debugTool.setActive(true);
+                
                 frame.setVisible(true);
             }
         });
@@ -37,26 +42,21 @@ public class SampleApp {
     }
 
     protected void initToolWindowManager() {
+        // Create a new instance of MyDoggyToolWindowManager passing the frame.
         MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
         this.toolWindowManager = myDoggyToolWindowManager;
 
-        toolWindowManager.registerToolWindow("Debug Tool",                           // Id
+        // Register a Tool.
+        toolWindowManager.registerToolWindow("Debug Tool",       // Id
                                              "Debug Tool",                 // Title
                                              null,                          // Icon
-                                             new JScrollPane(new JButton(new AbstractAction() {
-                                                 public void actionPerformed(ActionEvent e) {
-                                                     toolWindowManager.getContentManager().removeContent(
-                                                             toolWindowManager.getContentManager().getSelectedContent()
-                                                     );
-                                                 }
-                                             })),    // Component
-                                                     ToolWindowAnchor.LEFT);        // Anchor
+                                             new JButton("Debug Tool"),    // Component
+                                             ToolWindowAnchor.LEFT);        // Anchor
+        setupDebugTool();
 
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
             window.setAvailable(true);
-
-        setupDebugTool();
 
         initContentManager();
 
@@ -66,11 +66,16 @@ public class SampleApp {
 
     protected void setupDebugTool() {
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
-        debugTool.setVisible(true);
 
         DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
-        dockedTypeDescriptor.setDockLength(100);
+        dockedTypeDescriptor.setDockLength(200);
         dockedTypeDescriptor.setPopupMenuEnabled(false);
+        JMenu toolsMenu = dockedTypeDescriptor.getToolsMenu();
+        toolsMenu.add(new AbstractAction("Hello World!!!") {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame, "Hello World!!!");
+            }
+        });
         dockedTypeDescriptor.setToolWindowActionHandler(new ToolWindowActionHandler() {
             public void onHideButtonClick(ToolWindow toolWindow) {
                 JOptionPane.showMessageDialog(frame, "Hiding...");
@@ -103,6 +108,30 @@ public class SampleApp {
                                                     null,      // An icon
                                                     treeContent);
         content.setToolTipText("Tree tip");
+
+        setupContentManagerUI();
+    }
+
+    protected void setupContentManagerUI() {
+        TabbedContentManagerUI contentManagerUI = (TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
+        contentManagerUI.setShowAlwaysTab(true);
+        contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
+        contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
+            public boolean contentUIRemoving(ContentManagerUIEvent event) {
+                return true;
+            }
+
+            public void contentUIDetached(ContentManagerUIEvent event) {
+                JOptionPane.showMessageDialog(frame, "Hello World!!!");
+            }
+        });
+
+        TabbedContentUI contentUI = contentManagerUI.getContentUI(toolWindowManager.getContentManager().getContent(0));
+        contentUI.setCloseable(false);
+        contentUI.setDetachable(true);
+        contentUI.setTransparentMode(true);
+        contentUI.setTransparentRatio(0.7f);
+        contentUI.setTransparentDelay(1000);
     }
 
 

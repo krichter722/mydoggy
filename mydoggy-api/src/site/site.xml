@@ -24,14 +24,14 @@
                 <item name="Types" href="toolwindowTypes.html"/>
                 <item name="Using" href="toolwindowUsing.html"/>
             </item>
-            <item name="ToolWindowGroups" href="toolwindowGroups.html">
+            <item name="ToolWindowGroup" href="toolwindowGroups.html">
                 <item name="Using" href="toolwindowGroupsUsing.html"/>
             </item>
             <item name="ContentManager" href="contentManager.html">
                 <item name="ContentManagerUI" href="contentManagerUI.html">
                     <item name="TabbedUI" href="tabbedContentManagerUI.html"/>
                     <item name="DesktopUI" href="desktopContentManagerUI.html"/>
-                    <item name="Using" href="contentManagerUIUsing"/>
+                    <item name="Using" href="contentManagerUIUsing.html"/>
                 </item>
                 <item name="Using" href="contentManagerUsing.html"/>
             </item>

@@ -3,14 +3,14 @@
 		"http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
 	<properties>
-		<title>MyDoggy : Tutorial - Step 3</title>
+		<title>MyDoggy : Tutorial - Step 4</title>
 		<author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
 	</properties>
 
     <body>
-		<section name="Tutorial - Step 3">
+		<section name="Tutorial - Step 4">
             <p>
-                Now we'll play with TypeDesciptors.
+                Now we'll play with <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html">ContentManager</a> class.
             </p>
 
             <source>
@@ -20,6 +20,7 @@ import info.clearthought.layout.TableLayout;
 <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html">import org.noos.xing.mydoggy.ToolWindow;</a>
 <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowAnchor.html">import org.noos.xing.mydoggy.ToolWindowAnchor;</a>
 <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html">import org.noos.xing.mydoggy.ToolWindowManager;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/Content.html">import org.noos.xing.mydoggy.Content;</a>
 <a href="./../mydoggy-plaf/toolwindowManager.html">import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;</a>
 
 import javax.swing.*;
@@ -68,17 +69,20 @@ public class SampleApp {
                                              null,                         // Icon
                                              new JButton("Debug Tool"),    // Component
                                              ToolWindowAnchor.LEFT);       // Anchor
-        <strong style="color:green"><a href="#setupDebugTool">setupDebugTool</a>();</strong>
+
+        <a href="#setupDebugTool">setupDebugTool();</a>
 
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
             window.setAvailable(true);
 
+        <a href="#initContentManager">initContentManager();</a>
+
         // Add myDoggyToolWindowManager to the frame. MyDoggyToolWindowManager is an extension of a JPanel
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
     }
 
-    <strong style="color:green"><a name="setupDebugTool"/>
+    <a name="setupDebugTool"/>
     protected void setupDebugTool() {
         <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html">ToolWindow</a> debugTool = toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getToolWindow(java.lang.Object)">getToolWindow</a>("Debug Tool");
 
@@ -86,6 +90,12 @@ public class SampleApp {
 
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setDockLength(int)">setDockLength</a>(300);
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPopupMenuEnabled(boolean)">setPopupMenuEnabled</a>(false);
+        JMenu toolsMenu = dockedTypeDescriptor.getToolsMenu();
+        toolsMenu.add(new AbstractAction("Hello World!!!") {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame, "Hello World!!!");
+            }
+        });
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setToolWindowActionHandler(org.noos.xing.mydoggy.ToolWindowActionHandler)">setToolWindowActionHandler</a>(new ToolWindowActionHandler() {
             public void <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowActionHandler.html#onHideButtonClick(org.noos.xing.mydoggy.ToolWindow)">onHideButtonClick</a>(ToolWindow toolWindow) {
                 JOptionPane.showMessageDialog(frame, "Hiding...");
@@ -108,6 +118,44 @@ public class SampleApp {
         floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setTransparentRatio(float)">setTransparentRatio(0.2f)</a>;
         floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setTransparentDelay(int)">setTransparentDelay(1000)</a>;
     }
+
+    <a name="initContentManager"/>
+    protected void initContentManager() {
+         JTree treeContent = new JTree();
+
+        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html">ContentManager</a> contentManager = toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getContentManager()">getContentManager</a>();
+        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/Content.html">Content content</a> = contentManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html#addContent(java.lang.Object, java.lang.String, javax.swing.Icon, java.awt.Component)">addContent</a>("Tree Key",
+                                                    "Tree Title",
+                                                    null,      // An icon
+                                                    treeContent);
+        content.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/Content.html#setToolTipText(java.lang.String)">setToolTipText</a>("Tree tip");
+
+        <strong style="color:green"><a href="setupContentManagerUI">setupContentManagerUI</a>();</strong>
+     }
+
+    <strong style="color:green"><a name="setupContentManagerUI"/>
+    protected void setupContentManagerUI() {
+        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html">TabbedContentManagerUI</a> contentManagerUI = (TabbedContentManagerUI) toolWindowManager.getContentManager().<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html#getContentManagerUI()">getContentManagerUI</a>();
+        contentManagerUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html#setShowAlwaysTab(boolean)">setShowAlwaysTab</a>(true);
+        contentManagerUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html#setTabPlacement(org.noos.xing.mydoggy.TabbedContentManagerUI.TabPlacement.BOTTOM)">setTabPlacement</a>(TabbedContentManagerUI.TabPlacement.BOTTOM);
+        contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
+            public boolean contentUIRemoving(ContentManagerUIEvent event) {
+                return true;
+            }
+
+            public void contentUIDetached(ContentManagerUIEvent event) {
+                JOptionPane.showMessageDialog(frame, "Hello World!!!");
+            }
+        });
+
+        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/TabbedContentUI.html">TabbedContentUI</a> contentUI = contentManagerUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManagerUI.html#getContentUI(org.noos.xing.mydoggy.Content)">getContentUI</a>(toolWindowManager.getContentManager().getContent(0));
+
+        contentUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentUI.html#setCloseable(boolean)">setCloseable</a>(false);
+        contentUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentUI.html#setDetachable(boolean)">setDetachable</a>(true);
+        contentUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentUI.html#setTransparentMode(boolean)">setTransparentMode</a>(true);
+        contentUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentUI.html#setTransparentRatio(float)">setTransparentRatio</a>(0.7f);
+        contentUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentUI.html#setTransparentDelay(int)">setTransparentDelay</a>(1000);
+    }
     </strong>
 
     public static void main(String[] args) {
@@ -121,10 +169,32 @@ public class SampleApp {
     }
 }</source>
             <subsection name="Result">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div align="center">
+                                    <img align="middle" src="./../images/tutorial/step5.png" alt="ContentManager" border="0" hspace="18"/>
+                                </div>
+                            </td>
+                            <td>
+                                <div align="left">
+                                    <p>
+                                        This is the effect. For example try to drag the tool to other position or right click
+                                        on the toolwindow's representative button.
+                                        <br></br>
+                                        See the using for
+                                        <a href="./../mydoggy-examples/mydoggysetUsing.html">MyDoggySet.</a>
+
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
                 <p>
-                    Play with the application to see in action your customizations.
-                    <br></br>
-                    Good! Next step. <a href="./step4.html">Step 4</a>.
+                    Good! We are now at the end of this tutorial. I hope this will be useful, if not please
+                    help me to improve mydoggy.
                 </p>
             </subsection>
         </section>

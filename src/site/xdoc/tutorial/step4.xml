@@ -4,27 +4,16 @@
 <document>
 	<properties>
 		<title>MyDoggy : Tutorial - Step 4</title>
-		<author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
-        <script language="JavaScript">
-            function HighlightText(divid){
-                var code = document.body.createTextRange();
-                code.moveToElementText(document.getElementById('codewrap' + divid));
-                code.execCommand("SelectAll");
-                code.execCommand("Copy");
-            }
-        </script>
+		<author email="adecaro@users.sourceforge.net">Angelo De Caro</author>        
 	</properties>
 
     <body>
-		<section name="Tutorial - Step 3">
+		<section name="Tutorial - Step 4">
             <p>
-                Now we'll play with
-                <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html">ContentManager</a>
-                class.
+                Now we'll play with <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html">ContentManager</a> class.
             </p>
 
-            <div id="codebutton"><input name="btn" value="Copy to Clipboard" onclick="HighlightText(52);" type="button"></div>
-            <source id="codewrap52">
+            <source>
 package org.noos.xing.mydoggy.tutorial;
 
 import info.clearthought.layout.TableLayout;
@@ -48,6 +37,10 @@ public class SampleApp {
     protected void start() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                // Set debug tool active
+                ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
+                debugTool.setActive(true);
+
                 frame.setVisible(true);
             }
         });
@@ -77,12 +70,13 @@ public class SampleApp {
                                              new JButton("Debug Tool"),    // Component
                                              ToolWindowAnchor.LEFT);       // Anchor
 
+        <a href="#setupDebugTool">setupDebugTool();</a>
+
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
             window.setAvailable(true);
 
-        <a href="#setupDebugTool">setupDebugTool();</a>
-        <strong><a href="#initContentManager">initContentManager();</a></strong>
+        <strong style="color:green"><a href="#initContentManager">initContentManager</a>();</strong>
 
         // Add myDoggyToolWindowManager to the frame. MyDoggyToolWindowManager is an extension of a JPanel
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
@@ -96,6 +90,12 @@ public class SampleApp {
 
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setDockLength(int)">setDockLength</a>(300);
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPopupMenuEnabled(boolean)">setPopupMenuEnabled</a>(false);
+        JMenu toolsMenu = dockedTypeDescriptor.getToolsMenu();
+        toolsMenu.add(new AbstractAction("Hello World!!!") {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame, "Hello World!!!");
+            }
+        });
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setToolWindowActionHandler(org.noos.xing.mydoggy.ToolWindowActionHandler)">setToolWindowActionHandler</a>(new ToolWindowActionHandler() {
             public void <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowActionHandler.html#onHideButtonClick(org.noos.xing.mydoggy.ToolWindow)">onHideButtonClick</a>(ToolWindow toolWindow) {
                 JOptionPane.showMessageDialog(frame, "Hiding...");
@@ -119,11 +119,11 @@ public class SampleApp {
         floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setTransparentDelay(int)">setTransparentDelay(1000)</a>;
     }
 
-    <strong><a name="initContentManager"/>
+    <strong style="color:green"><a name="initContentManager"/>
     protected void initContentManager() {
          JTree treeContent = new JTree();
 
-        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html">ContentManager</> contentManager = toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getContentManager()">getContentManager</a>();
+        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html">ContentManager</a> contentManager = toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getContentManager()">getContentManager</a>();
         <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/Content.html">Content content</a> = contentManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html#addContent(java.lang.Object, java.lang.String, javax.swing.Icon, java.awt.Component)">addContent</a>("Tree Key",
                                                     "Tree Title",
                                                     null,      // An icon
@@ -148,7 +148,7 @@ public class SampleApp {
                         <tr>
                             <td>
                                 <div align="center">
-                                    <img align="middle" src="./../images/tutorial/step2.png" alt="ContentManager" border="0" hspace="18"/>
+                                    <img align="middle" src="./../images/tutorial/step4.png" alt="ContentManager" border="0" hspace="18"/>
                                 </div>
                             </td>
                             <td>

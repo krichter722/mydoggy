@@ -28,6 +28,9 @@
                 <li>
                     <a href="./step4.html">Step 4</a> : Add first content.
                 </li>
+                <li>
+                    <a href="./step4.html">Step 5</a> : Configure ContentManagerUI.
+                </li>
             </ul>
         </section>
 	</body>

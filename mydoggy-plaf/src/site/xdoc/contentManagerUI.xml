@@ -8,28 +8,27 @@
     </properties>
 
     <body>
-        <a name="ContentManageUI"/>
         <section name="ContentManageUI">
             <p>
-                The default implementation provides an implementation for the <code>TabbedContentManagerUI</code>
+                Exists an implementation for the <code>TabbedContentManagerUI</code>
                 and for the <code>DesktopContentManagerUI</code>.
                 <br></br>
-                To obtain an instance use the following (for example):
+                To obtain a specific instance use the following (for example):
             </p>
             <source>import org.noos.xing.mydoggy.plaf.ui.content.desktop;
 ...
-ContentManagerUI contentManagerUI = new MyDoggyDesktopContentManagerUI();
+contentManager.setContentManagerUI(new MyDoggyDesktopContentManagerUI());
             </source>
             or
             <source>import org.noos.xing.mydoggy.plaf.ui.content.tabbed;
 ...
-ContentManagerUI contentManagerUI = new MyDoggyTabbedContentManagerUI();
+contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
             </source>
 
             <p>
                 If you want to implement your own <code>ContentManageUI,</code> your class must implement non only the
                 <code>ContentManageUI</code> interface but also the <code>BackContentManagerUI</code> interface in the
-                package <code>org.noos.xing.mydoggy.plaf.ui.content.</code>.
+                package <code>org.noos.xing.mydoggy.plaf.ui.content</code>.
                 <br></br>
                 This is to provide all neccesary methods to use the manager.
             </p>
