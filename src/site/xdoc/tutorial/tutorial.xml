@@ -20,10 +20,13 @@
                     <a href="./step1.html">Step 1</a> : Starting "Sample App".
                 </li>
                 <li>
-                    <a href="./step2.html">Step 2</a> : Introduce ToolWindowManager.
+                    <a href="./step2.html">Step 2</a> : Add ToolWindowManager.
                 </li>
                 <li>
                     <a href="./step3.html">Step 3</a> : Play with TypeDescriptors.
+                </li>
+                <li>
+                    <a href="./step4.html">Step 4</a> : Add first content.
                 </li>
             </ul>
         </section>
