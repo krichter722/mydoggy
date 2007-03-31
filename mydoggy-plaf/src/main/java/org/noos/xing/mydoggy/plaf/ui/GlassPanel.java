@@ -40,6 +40,7 @@ public class GlassPanel extends JPanel implements ContainerListener {
             height = (int) (width / ratio);
         }
 
+        this.location = null;
         this.dragged = dragged;
     }
 
@@ -53,6 +54,9 @@ public class GlassPanel extends JPanel implements ContainerListener {
     }
 
     public Rectangle getRepaintRect() {
+        if (location == null || oldLocation == null)
+            return getBounds();
+        
         int x = (int) (location.getX() - (width / 2));
         int y = (int) (location.getY() - (height / 2));
 
@@ -67,7 +71,7 @@ public class GlassPanel extends JPanel implements ContainerListener {
 
     @Override
     protected void paintComponent(Graphics g) {
-        if (dragged == null || !isVisible())
+        if (dragged == null || !isVisible() || location == null)
             return;
 
         Graphics2D g2 = (Graphics2D) g.create();
