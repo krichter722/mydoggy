@@ -10,7 +10,7 @@
     <body>
 		<section name="Tutorial - Step 3">
             <p>
-                Now we'll play with TypeDesciptors.
+                Now we'll play with <a href="./../mydoggy-api/toolwindowTypes">TypeDesciptors.</a>
             </p>
 
             <source>
@@ -130,7 +130,7 @@ public class SampleApp {
                 <p>
                     Play with the application to see in action your customizations.
                     <br></br>
-                    Good! Next step. <a href="./step4.html">Step 4</a>.
+                    Good! Next step. <a href="./step4.html">Step 4</a> - Add first Content.
                 </p>
             </subsection>
         </section>

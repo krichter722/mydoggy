@@ -35,13 +35,13 @@ Like Eclipse, MyDoggy supports the concept of "prospective" using mydoggy groups
 Directory Structure
 ===================
 
-mydoggy-1.1.0
+mydoggy-1.2.0
     bin                         - Contains scripts for launching mydoggy examples.
     lib                         - Contains mydoggy jars (
-    								mydoggy-api-1.1.0.jar,
-    								mydoggy-plaf-1.1.0.jar,
+    								mydoggy-api-1.2.0.jar,
+    								mydoggy-plaf-1.2.0.jar,
     							    TableLayout-20020517.jar,     
-    							    mydoggy-examples-1.1.0.jar,
+    							    mydoggy-examples-1.2.0.jar,
     							    junit-3.8.1.jar).
         win32                   - Contains TransparencyManager.dll
     license                     - Contains license information.

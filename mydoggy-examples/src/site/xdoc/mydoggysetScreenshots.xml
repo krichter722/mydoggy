@@ -74,6 +74,7 @@
                         <p align="center">New Drag and Drop system. Click to view the animation.</p>
                     </td>
                 </tr>
+
                 <a name="slidingTrasparent"/>
                 <tr>
                     <td>
@@ -81,6 +82,18 @@
                             <img src="./images/screenshots/mydoggyset/thumbs/tw_sliding_transparency.png" alt="ToolWindow Sliding Transparent"/>
                         </a>
                         <p align="center">A ToolWindowType.SLIDING ToolWindow transparent.</p>
+                    </td>
+                    <td>
+                        <a href="./images/screenshots/mydoggyset/pushAwayHorizontal.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/pushAwayHorizontal.png" alt="PushAwayMode.HORIZONTAL"/>
+                        </a>
+                        <p align="center">PushAwayMode.HORIZONTAL</p>
+                    </td>
+                    <td>
+                        <a href="./images/screenshots/mydoggyset/pushAwayVertical.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/pushAwayVertical.png" alt="PushAwayMode.VERTICAL"/>
+                        </a>
+                        <p align="center">PushAwayMode.VERTICAL</p>
                     </td>
                 </tr>
             </table>

@@ -10,17 +10,37 @@
     <body>
         <section name="PersistenceDelegate">
             <p>
-                PersistenceDelegate interface provides useful methods to save and load the tool window manager's workspace.
+                PersistenceDelegate interface provides useful methods to save and load the tool window manager's
+                workspace.
                 When you request to save the workspace, all settings of ToolWindows with relative descriptors are saved.
-                To obtain an instance of PersistenceDelegate you have to invoke the method <code>getPersistenceDelegate</code>
-                of <code>ToolWindowManager</code> interface. So you can obtain a persistence delegate specific to a
+                To obtain an instance of PersistenceDelegate you have to invoke the method
+                <code>getPersistenceDelegate</code>
+                of
+                <code>ToolWindowManager</code>
+                interface. So you can obtain a persistence delegate specific to a
                 particular tool window manager.
             </p>
             <p>
                 MyDoggy arrives with a default implementation provided by
-                <code>org.noos.xing.mydoggy.plaf.persistence.xml.XmlPersistenceDelegate</code>.
-                This implementation use the xml format to store all necessary data. You can found the relative DTD <a href="./resources/dtd/persistence.dtd">here</a>
+                <code>org.noos.xing.mydoggy.plaf.persistence.xml.XmlPersistenceDelegate</code>
+                .
+                This implementation use the xml format to store all necessary data. You can found the relative DTD
+                <a href="./resources/dtd/persistence.dtd">here</a>
             </p>
+
+            <source xml:space="preserve">
+&lt;?xml version="1.0" standalone="yes"?&gt;
+&lt;mydoggy version="1.2.0" pushAwayMode="VERTICAL"&gt;
+    &lt;tools&gt;
+        &lt;tool id="Debug Tool" available="true" visible="true" active="true" autoHide="false" anchor="LEFT" type="DOCKED"&gt;
+            &lt;descriptors&gt;
+                &lt;docked dockLength="1" popupMenuEnabled="false"/&gt;
+                &lt;sliding transparentMode="true" transparentDelay="0" transparentRatio="0.8" enabled="false"/&gt;
+                &lt;floating modal="false" transparentMode="true" transparentDelay="1000" transparentRatio="0.2" enabled="true" x="150" y="200" width="320" height="200"/&gt;&lt;/descriptors&gt;
+        &lt;/tool&gt;
+    &lt;/tools&gt;
+&lt;/mydoggy&gt;
+            </source>
         </section>
     </body>
 </document>
