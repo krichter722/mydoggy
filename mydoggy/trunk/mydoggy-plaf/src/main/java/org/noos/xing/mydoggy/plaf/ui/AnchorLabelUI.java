@@ -506,6 +506,8 @@ public class AnchorLabelUI extends MetalLabelUI {
 
             DragAndDropLock.setDragAndDropStarted(false);
 
+            if (lastAnchor != null)
+                descriptor.getToolBar(lastAnchor).setTempShowed(false);
             descriptor.getToolBar().propertyChange(new PropertyChangeEvent(component, "endDrag", null, dsde));
 
             GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();

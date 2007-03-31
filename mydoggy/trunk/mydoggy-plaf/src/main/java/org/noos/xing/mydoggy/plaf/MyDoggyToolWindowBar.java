@@ -786,6 +786,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                                 break;
                         }
                         SwingUtil.repaint(contentPane);
+                        manager.syncPanel(anchor);
                     }
                 }
             } else
