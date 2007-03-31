@@ -1,7 +1,7 @@
 @echo off
 
 ::----------------------------------------------------------------------
-:: MyDoggySet Startup Script for Windows
+:: SampleApp Startup Script for Windows
 ::----------------------------------------------------------------------
 
 IF "%MYDOGGY_JDK%" == "" SET MYDOGGY_JDK=%JAVA_HOME%
@@ -12,7 +12,7 @@ SET MYDOGGY_HOME=..
 SET JAVA_EXE=%MYDOGGY_JDK%\jre\bin\java.exe
 IF NOT EXIST "%JAVA_EXE%" goto error
 
-SET MYDOGGYSET_MCN=org.noos.xing.mydoggy.examples.mydoggyset.MyDoggySet
+SET MYDOGGYSET_MCN=org.noos.xing.mydoggy.tutorial.SampleApp
 
 set REQUIRED_MYDOGGYSET_JVM_ARGS=-Dsun.java2d.noddraw=true -Djava.library.path=%MYDOGGY_HOME%\lib\win32
 SET JVM_ARGS=%REQUIRED_MYDOGGYSET_JVM_ARGS%

@@ -9,7 +9,6 @@
 
 
     <body>
-        <navbar home="./tutorial.html" next="./step2.html"/>
         <section name="Tutorial - Step 1">
             <p>
                 First of all, we'll start with a basic skeleton class that instantiate a simple JFrame titled 'Sample App...'.
@@ -70,7 +69,7 @@ public class org.noos.xing.mydoggy.tutorial.SampleApp {
                             <td>
                                 <div align="left">
                                     <p>
-                                        This is the effect.
+                                        On left you can see the execution's result.
                                     </p>
                                 </div>
                             </td>
@@ -78,9 +77,11 @@ public class org.noos.xing.mydoggy.tutorial.SampleApp {
                     </tbody>
                 </table>
                 <p>
-                    Good! Next step. <a href="./step2.html">Step 2 </a>.
+                    Good! Next step. <a href="./step2.html">Step 2</a> - Introduce ToolWindowManager with your first ToolWindow.
                 </p>
             </subsection>
         </section>
+
+        <navbar home="./tutorial.html" next="./step2.html"/>
 	</body>
 </document>

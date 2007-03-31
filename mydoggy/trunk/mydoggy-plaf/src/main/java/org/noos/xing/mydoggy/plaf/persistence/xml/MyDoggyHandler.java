@@ -98,52 +98,54 @@ public class MyDoggyHandler extends DefaultHandler {
                     subState = State.NOP;
 
                     ToolWindow toolWindow = toolWindowManager.getToolWindow(persistedToolWindow.getId());
+                    if (toolWindow != null) {
 
-                    // Apply descriptors
-                    if (dockedType != null) {
-                        DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-                        descriptor.setDockLength(dockedType.getDockLength());
-                        descriptor.setPopupMenuEnabled(dockedType.isPopupMenuEnabled());
+                        // Apply descriptors
+                        if (dockedType != null) {
+                            DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+                            descriptor.setDockLength(dockedType.getDockLength());
+                            descriptor.setPopupMenuEnabled(dockedType.isPopupMenuEnabled());
+                        }
+
+                        if (slidingType != null) {
+                            SlidingTypeDescriptor descriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);
+                            descriptor.setEnabled(slidingType.isEnabled());
+                            descriptor.setTransparentDelay(slidingType.getTransparentDelay());
+                            descriptor.setTransparentMode(slidingType.isTransparentMode());
+                            descriptor.setTransparentRatio(slidingType.getTransparentRatio());
+                        }
+
+                        if (floatingType != null) {
+                            FloatingTypeDescriptor descriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
+                            descriptor.setEnabled(floatingType.isEnabled());
+                            descriptor.setTransparentDelay(floatingType.getTransparentDelay());
+                            descriptor.setTransparentMode(floatingType.isTransparentMode());
+                            descriptor.setTransparentRatio(floatingType.getTransparentRatio());
+                            descriptor.setModal(floatingType.isModal());
+
+                            Point point = floatingType.getLocation();
+                            if (point != null)
+                                descriptor.setLocation(point.x, point.y);
+                            Dimension dimension = floatingType.getSize();
+                            if (dimension != null)
+                                descriptor.setSize(dimension.width, dimension.height);
+                        }
+
+                        toolWindow.setAnchor(persistedToolWindow.getAnchor());
+                        toolWindow.setType(persistedToolWindow.getType());
+                        toolWindow.setAutoHide(persistedToolWindow.isAutoHide());
+                        toolWindow.setAvailable(persistedToolWindow.isAvailable());
+
+                        if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
+                            toolWindow.setVisible(persistedToolWindow.isVisible());
+                        } else {
+                            if (persistedToolWindow.isVisible())
+                                toolWindow.aggregate();
+                            else
+                                toolWindow.setVisible(false);
+                        }
+                        toolWindow.setActive(persistedToolWindow.isActive());
                     }
-
-                    if (slidingType != null) {
-                        SlidingTypeDescriptor descriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);
-                        descriptor.setEnabled(slidingType.isEnabled());
-                        descriptor.setTransparentDelay(slidingType.getTransparentDelay());
-                        descriptor.setTransparentMode(slidingType.isTransparentMode());
-                        descriptor.setTransparentRatio(slidingType.getTransparentRatio());
-                    }
-
-                    if (floatingType != null) {
-                        FloatingTypeDescriptor descriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
-                        descriptor.setEnabled(floatingType.isEnabled());
-                        descriptor.setTransparentDelay(floatingType.getTransparentDelay());
-                        descriptor.setTransparentMode(floatingType.isTransparentMode());
-                        descriptor.setTransparentRatio(floatingType.getTransparentRatio());
-                        descriptor.setModal(floatingType.isModal());
-
-                        Point point = floatingType.getLocation();
-                        if (point != null)
-                            descriptor.setLocation(point.x, point.y);
-                        Dimension dimension = floatingType.getSize();
-                        if (dimension != null)
-                            descriptor.setSize(dimension.width, dimension.height);
-                    }
-
-                    toolWindow.setAnchor(persistedToolWindow.getAnchor());
-                    toolWindow.setType(persistedToolWindow.getType());
-                    toolWindow.setAutoHide(persistedToolWindow.isAutoHide());
-                    toolWindow.setAvailable(persistedToolWindow.isAvailable());
-
-                    if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-                        toolWindow.setVisible(persistedToolWindow.isVisible());
-                    } else {
-                        if (persistedToolWindow.isVisible())
-                            toolWindow.aggregate();
-                        else
-                            toolWindow.setVisible(false);
-                    }
-                    toolWindow.setActive(persistedToolWindow.isActive());
                 }
                 break;
             case TOOLS:

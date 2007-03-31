@@ -184,7 +184,7 @@ public class MyDoggySet {
         }
 
         // File Menu
-        JMenu pushAwayMenu = new JMenu("PushAway");
+        JMenu pushAwayMenu = new JMenu("PushAway Mode");
         JMenuItem left = new JMenuItem("Horizontal");
         left.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

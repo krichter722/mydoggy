@@ -7,6 +7,7 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.io.FileOutputStream;
 
 public class SampleApp {
     private JFrame frame;
@@ -50,7 +51,17 @@ public class SampleApp {
         toolWindowManager.registerToolWindow("Debug Tool",       // Id
                                              "Debug Tool",                 // Title
                                              null,                          // Icon
-                                             new JButton("Debug Tool"),    // Component
+                                             new JButton(new AbstractAction("Stpre") {
+                                                 public void actionPerformed(ActionEvent e) {
+                                                     try {
+                                                         FileOutputStream output = new FileOutputStream("workspace.xml");
+                                                         toolWindowManager.getPersistenceDelegate().save(output);
+                                                         output.close();
+                                                     } catch (Exception e1) {
+                                                         e1.printStackTrace();
+                                                     }
+                                                 }
+                                             }),    // Component
                                              ToolWindowAnchor.LEFT);        // Anchor
         setupDebugTool();
 

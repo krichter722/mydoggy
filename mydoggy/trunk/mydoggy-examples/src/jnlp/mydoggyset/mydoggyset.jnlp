@@ -13,9 +13,9 @@
     <resources>
         <j2se version="1.5+"/>
         <jar href="TableLayout-20020517.jar"/>
-        <jar href="mydoggy-api-1.1.0.jar"/>
-        <jar href="mydoggy-plaf-1.1.0.jar"/>
-        <jar main="true" href="mydoggy-examples-1.1.0.jar"/>
+        <jar href="mydoggy-api-1.2.0.jar"/>
+        <jar href="mydoggy-plaf-1.2.0.jar"/>
+        <jar main="true" href="mydoggy-examples-1.2.0.jar"/>
     </resources>
 
     <application-desc main-class="org.noos.xing.mydoggy.examples.mydoggyset.MyDoggySet"/>

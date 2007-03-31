@@ -13,7 +13,7 @@
                 Now we'll introduce <a href="./../mydoggy-plaf/toolwindowManager.html">MyDoggyToolWindowManager</a>
                 component that is the default implementation for the
                 <a href="./../mydoggy-api/toolwindowManager.html">ToolWindowManager</a> interface. Also we'll add a first
-                <a href="./../mydoggy-api/toolwindow.html">tool window</a>.
+                <a href="./../mydoggy-api/toolwindow.html">ToolWindow</a>.
             </p>
 
             <source>
@@ -110,7 +110,6 @@ public class SampleApp {
                                         <br></br>
                                         See the using for
                                         <a href="./../mydoggy-examples/mydoggysetUsing.html">MyDoggySet.</a>
-
                                     </p>
                                 </div>
                             </td>
@@ -118,7 +117,7 @@ public class SampleApp {
                     </tbody>
                 </table>
                 <p>
-                    Good! Next step. <a href="./step3.html">Step 3</a>.
+                    Good! Next step. <a href="./step3.html">Step 3</a> - Play with TypeDescriptors.
                 </p>
             </subsection>
         </section>

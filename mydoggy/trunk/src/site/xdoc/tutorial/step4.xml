@@ -10,7 +10,8 @@
     <body>
 		<section name="Tutorial - Step 4">
             <p>
-                Now we'll play with <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html">ContentManager</a> class.
+                Now we'll play with <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html">ContentManager</a> class
+                and we'll add our first Content.
             </p>
 
             <source>
@@ -154,12 +155,7 @@ public class SampleApp {
                             <td>
                                 <div align="left">
                                     <p>
-                                        This is the effect. For example try to drag the tool to other position or right click
-                                        on the toolwindow's representative button.
-                                        <br></br>
-                                        See the using for
-                                        <a href="./../mydoggy-examples/mydoggysetUsing.html">MyDoggySet.</a>
-
+                                        This is the effect. You can see a tab entitled "Tree Title".
                                     </p>
                                 </div>
                             </td>
@@ -167,7 +163,7 @@ public class SampleApp {
                     </tbody>
                 </table>
                 <p>
-                    Good! Next step. <a href="./step5.html">Step 5</a>.
+                    Good! Final step. <a href="./step5.html">Step 5</a> - Configure ContentManagerUI.
                 </p>
             </subsection>
         </section>
