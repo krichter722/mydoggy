@@ -28,6 +28,10 @@
                 <a href="./resources/dtd/persistence.dtd">here</a>
             </p>
 
+            <p>
+                Here is an example of a saved workspace.
+            </p>
+
             <source xml:space="preserve">
 &lt;?xml version="1.0" standalone="yes"?&gt;
 &lt;mydoggy version="1.2.0" pushAwayMode="VERTICAL"&gt;
@@ -36,7 +40,8 @@
             &lt;descriptors&gt;
                 &lt;docked dockLength="1" popupMenuEnabled="false"/&gt;
                 &lt;sliding transparentMode="true" transparentDelay="0" transparentRatio="0.8" enabled="false"/&gt;
-                &lt;floating modal="false" transparentMode="true" transparentDelay="1000" transparentRatio="0.2" enabled="true" x="150" y="200" width="320" height="200"/&gt;&lt;/descriptors&gt;
+                &lt;floating modal="false" transparentMode="true" transparentDelay="1000" transparentRatio="0.2" enabled="true" x="150" y="200" width="320" height="200"/&gt;
+            &lt;/descriptors&gt;
         &lt;/tool&gt;
     &lt;/tools&gt;
 &lt;/mydoggy&gt;

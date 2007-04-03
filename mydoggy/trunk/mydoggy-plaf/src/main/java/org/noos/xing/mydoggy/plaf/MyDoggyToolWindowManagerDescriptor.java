@@ -1,15 +1,12 @@
 package org.noos.xing.mydoggy.plaf;
 
-import org.noos.xing.mydoggy.ToolWindowManagerDescriptor;
 import org.noos.xing.mydoggy.PushAwayMode;
+import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
+import org.noos.xing.mydoggy.ToolWindowManagerDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import static org.noos.xing.mydoggy.ToolWindowAnchor.LEFT;
-import static org.noos.xing.mydoggy.ToolWindowAnchor.RIGHT;
-import static org.noos.xing.mydoggy.ToolWindowAnchor.TOP;
-import static org.noos.xing.mydoggy.ToolWindowAnchor.BOTTOM;
 
-import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -76,8 +73,8 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
 
         // Reload workspace
         manager.getPersistenceDelegate().apply(new ByteArrayInputStream(outputStream.toByteArray()));
-                
-        SwingUtil.repaint(manager);
+
+        SwingUtil.repaintNow(manager);
     }
 
     public PushAwayMode getPushAwayMode() {

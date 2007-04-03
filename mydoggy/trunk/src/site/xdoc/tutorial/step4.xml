@@ -90,7 +90,7 @@ public class SampleApp {
         <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">DockedTypeDescriptor</a> dockedTypeDescriptor = (DockedTypeDescriptor) debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#getTypeDescriptor(org.noos.xing.mydoggy.ToolWindowType)">getTypeDescriptor</a>(<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html#DOCKED">ToolWindowType.DOCKED</a>);
 
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setDockLength(int)">setDockLength</a>(300);
-        dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPopupMenuEnabled(boolean)">setPopupMenuEnabled</a>(false);
+        dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPopupMenuEnabled(boolean)">setPopupMenuEnabled</a>(true);
         JMenu toolsMenu = dockedTypeDescriptor.getToolsMenu();
         toolsMenu.add(new AbstractAction("Hello World!!!") {
             public void actionPerformed(ActionEvent e) {

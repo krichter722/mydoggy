@@ -13,6 +13,49 @@
                 Here are some screenshots of MyDoggySet.
             </p>
             <table>
+                <a name="slidingTrasparent"/>
+                <a name="PushAwayMode"/>
+                <tr>
+                    <td>
+                        <a href="./images/screenshots/mydoggyset/tw_sliding_transparency.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/tw_sliding_transparency.png" alt="ToolWindow Sliding Transparent"/>
+                        </a>
+                        <p align="center">A ToolWindowType.SLIDING ToolWindow transparent.</p>
+                    </td>
+                    <td>
+                        <a href="./images/screenshots/mydoggyset/pushAwayHorizontal.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/pushAwayHorizontal.png" alt="PushAwayMode.HORIZONTAL"/>
+                        </a>
+                        <p align="center">PushAwayMode.HORIZONTAL</p>
+                    </td>
+                    <td>
+                        <a href="./images/screenshots/mydoggyset/pushAwayVertical.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/pushAwayVertical.png" alt="PushAwayMode.VERTICAL"/>
+                        </a>
+                        <p align="center">PushAwayMode.VERTICAL</p>
+                    </td>
+                </tr>
+                <a name="dragdrap"/>
+                <tr>
+                    <td>
+                        <a href="./images/screenshots/mydoggyset/tw_transparency.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/tw_transparency.png" alt="Tool Window Transparent"/>
+                        </a>
+                        <p align="center">A ToolWindowType.FLOATING ToolWindow transparent.</p>
+                    </td>
+                    <td>
+						<a href="./images/screenshots/mydoggyset/desktopContentManager.png">
+							<img src="./images/screenshots/mydoggyset/thumbs/desktopContentManager.png" alt="DesktopContentManager"/>
+						</a>
+						<p align="center">ContentManager using a DesktopContentManagerUI.</p>
+                    </td>
+                    <td>
+                        <a href="./images/screenshots/mydoggyset/drag_drop.gif">
+                            <img src="./images/screenshots/mydoggyset/thumbs/drag_drop.png" alt="Drag And Drop System"/>
+                        </a>
+                        <p align="center">New Drag and Drop system. Click to view the animation.</p>
+                    </td>
+                </tr>
                 <tr>
                     <td align="center">
                         <a href="./images/screenshots/mydoggyset/mydoggyset.png">
@@ -51,49 +94,6 @@
                             <img src="./images/screenshots/mydoggyset/thumbs/tw_group.png" alt="Tool Window Group"/>
                         </a>
                         <p align="center">A toolWindow group showed.</p>
-                    </td>
-                </tr>
-                <a name="dragdrap"/>
-                <tr>
-                    <td>
-                        <a href="./images/screenshots/mydoggyset/tw_transparency.png">
-                            <img src="./images/screenshots/mydoggyset/thumbs/tw_transparency.png" alt="Tool Window Transparent"/>
-                        </a>
-                        <p align="center">A ToolWindowType.FLOATING ToolWindow transparent.</p>
-                    </td>
-                    <td>
-						<a href="./images/screenshots/mydoggyset/desktopContentManager.png">
-							<img src="./images/screenshots/mydoggyset/thumbs/desktopContentManager.png" alt="DesktopContentManager"/>
-						</a>
-						<p align="center">ContentManager using a DesktopContentManagerUI.</p>
-                    </td>
-                    <td>
-                        <a href="./images/screenshots/mydoggyset/drag_drop.gif">
-                            <img src="./images/screenshots/mydoggyset/thumbs/drag_drop.png" alt="Drag And Drop System"/>
-                        </a>
-                        <p align="center">New Drag and Drop system. Click to view the animation.</p>
-                    </td>
-                </tr>
-
-                <a name="slidingTrasparent"/>
-                <tr>
-                    <td>
-                        <a href="./images/screenshots/mydoggyset/tw_sliding_transparency.png">
-                            <img src="./images/screenshots/mydoggyset/thumbs/tw_sliding_transparency.png" alt="ToolWindow Sliding Transparent"/>
-                        </a>
-                        <p align="center">A ToolWindowType.SLIDING ToolWindow transparent.</p>
-                    </td>
-                    <td>
-                        <a href="./images/screenshots/mydoggyset/pushAwayHorizontal.png">
-                            <img src="./images/screenshots/mydoggyset/thumbs/pushAwayHorizontal.png" alt="PushAwayMode.HORIZONTAL"/>
-                        </a>
-                        <p align="center">PushAwayMode.HORIZONTAL</p>
-                    </td>
-                    <td>
-                        <a href="./images/screenshots/mydoggyset/pushAwayVertical.png">
-                            <img src="./images/screenshots/mydoggyset/thumbs/pushAwayVertical.png" alt="PushAwayMode.VERTICAL"/>
-                        </a>
-                        <p align="center">PushAwayMode.VERTICAL</p>
                     </td>
                 </tr>
             </table>
