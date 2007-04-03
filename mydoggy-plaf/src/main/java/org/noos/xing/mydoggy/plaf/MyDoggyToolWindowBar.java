@@ -53,7 +53,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     MyDoggyToolWindowBar(MyDoggyToolWindowManager manager, JSplitPane splitPane, ToolWindowAnchor anchor) {
         this.manager = manager;
         this.splitPane = splitPane;
-        splitPane.setDividerLocation(0);
+        ((MyDoggyToolWindowManager.JSP)splitPane).setToolWindowBar(this);
         this.anchor = anchor;
         this.availableTools = 0;
 
@@ -116,7 +116,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         splitPane.setName(anchor.toString());
         splitPane.setFocusCycleRoot(true);
 
-        contentPane = new JPanel();
+        contentPane = new JPanel();        
         if (anchor == ToolWindowAnchor.LEFT || anchor == ToolWindowAnchor.RIGHT) {
             horizontal = false;
             contentPane.setLayout(new ExtendedTableLayout(new double[][]{COLUMNS, {0}}));
@@ -156,19 +156,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             public void propertyChange(PropertyChangeEvent evt) {
                 ToolWindow toolWindow = (ToolWindow) evt.getSource();
                 if (toolWindow.isVisible()) {
-                    int dividerLocation = (Integer) evt.getNewValue();
-                    switch (anchor) {
-                        case LEFT:
-                        case TOP:
-                            splitPane.setDividerLocation(dividerLocation);
-                            break;
-                        case RIGHT:
-                            splitPane.setDividerLocation(splitPane.getWidth() - dividerLocation);
-                            break;
-                        case BOTTOM:
-                            splitPane.setDividerLocation(splitPane.getHeight() - dividerLocation);
-                            break;
-                    }
+                    setSplitDividerLocation((Integer) evt.getNewValue());
                     SwingUtil.repaint(splitPane);
                 }
             }
@@ -177,6 +165,38 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         DragListener dragListener = new DragListener();
         propertyChangeSupport.addPropertyChangeListener("startDrag", dragListener);
         propertyChangeSupport.addPropertyChangeListener("endDrag", dragListener);
+    }
+
+
+    protected int getSplitDividerLocation() {
+        int dividerLocation = 0;
+        switch (anchor) {
+            case LEFT:
+            case TOP:
+                dividerLocation = splitPane.getDividerLocation();
+                break;
+            case RIGHT:
+                dividerLocation = splitPane.getWidth() - splitPane.getDividerLocation();
+                break;
+            case BOTTOM:
+                dividerLocation = splitPane.getHeight() - splitPane.getDividerLocation();
+        }
+        return dividerLocation;
+    }
+
+    protected void setSplitDividerLocation(int divederLocation) {
+        switch (anchor) {
+            case LEFT:
+            case TOP:
+                splitPane.setDividerLocation(divederLocation);
+                break;
+            case RIGHT:
+                splitPane.setDividerLocation(splitPane.getWidth() - divederLocation);
+                break;
+            case BOTTOM:
+                splitPane.setDividerLocation(splitPane.getHeight() - divederLocation);
+                break;
+        }
     }
 
 
@@ -412,27 +432,16 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
     class VisibleDockedListener implements PropertyChangeListener {
         private final SplitAnimation splitAnimation = new SplitAnimation();
+        private boolean valueAdjusting = false;
 
         public VisibleDockedListener() {
             splitPane.addPropertyChangeListener("dividerLocation", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
-                    if (splitAnimation.isAnimating())
+                    if (splitAnimation.isAnimating() || valueAdjusting)
                         return;
 
+                    int dividerLocation = getSplitDividerLocation();
                     for (ToolWindow toolWindow : manager.getToolsByAnchor(anchor)) {
-                        int dividerLocation = 0;
-                        switch (anchor) {
-                            case LEFT:
-                            case TOP:
-                                dividerLocation = splitPane.getDividerLocation();
-                                break;
-                            case RIGHT:
-                                dividerLocation = splitPane.getWidth() - splitPane.getDividerLocation();
-                                break;
-                            case BOTTOM:
-                                dividerLocation = splitPane.getHeight() - splitPane.getDividerLocation();
-                        }
-
                         if (toolWindow.isVisible())
                             manager.getDescriptor(toolWindow).setDividerLocation(dividerLocation);
                     }
@@ -456,17 +465,18 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                         if (splitAnimation.isAnimating())
                             splitAnimation.stop();
                     }
+                    descriptor.setDividerLocation(getSplitDividerLocation());
+                } else {
+                    synchronized (splitAnimation) {
+                        if (splitAnimation.isAnimating()) {
+                            splitAnimation.stop();
+                        }
+                    }
 
-                    switch (anchor) {
-                        case LEFT:
-                        case TOP:
-                            descriptor.setDividerLocation(splitPane.getDividerLocation());
-                            break;
-                        case RIGHT:
-                            descriptor.setDividerLocation(splitPane.getWidth() - splitPane.getDividerLocation());
-                            break;
-                        case BOTTOM:
-                            descriptor.setDividerLocation(splitPane.getHeight() - splitPane.getDividerLocation());
+                    int divederLocation = descriptor.getDividerLocation();
+                    for (ToolWindow toolWindow : manager.getToolsByAnchor(anchor)) {
+                        if (toolWindow.isVisible())
+                            manager.getDescriptor(toolWindow).setDividerLocation(divederLocation);
                     }
                 }
             }
@@ -475,6 +485,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 return;
 
             int divederLocation = descriptor.getDividerLocation();
+            System.out.println("divederLocation(" + anchor + ") : " + divederLocation);
 
             Component splitPaneContent = getSplitPaneContent();
             boolean animate = true;
@@ -521,7 +532,17 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             if (animate) {
                 if (content != null) {
                     splitPane.setDividerSize(5);
-                    splitAnimation.show(divederLocation);
+                    if (manager.getShowingGroup() == null ) {
+                        splitAnimation.show(divederLocation);
+                    } else {
+                        if (divederLocation != 0) {
+                            valueAdjusting = true;
+                            setSplitDividerLocation(divederLocation);
+                            valueAdjusting = false;
+
+                            SwingUtil.repaintNow(splitPane);
+                        }
+                    }
                 } else {
                     splitPane.setDividerSize(0);
                     splitAnimation.hide(divederLocation);
@@ -532,29 +553,34 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         }
 
         protected void setSplitPaneContent(Component content) {
-            if (content != null)
-                splitPane.setDividerLocation(1);
+            valueAdjusting = true;
+            try {
+//                if (content != null && splitPane.getDividerLocation() == 0)
+//                    splitPane.setDividerLocation(1);
 
-            switch (anchor) {
-                case LEFT:
-                    splitPane.setLeftComponent(content);
-                    break;
-                case RIGHT:
-                    splitPane.setRightComponent(content);
-                    if (content != null)
-                        splitPane.setDividerLocation(splitPane.getWidth());
-                    break;
-                case BOTTOM:
-                    splitPane.setBottomComponent(content);
-                    if (content != null)
-                        splitPane.setDividerLocation(splitPane.getHeight());
-                    break;
-                case TOP:
-                    splitPane.setTopComponent(content);
-                    break;
+                switch (anchor) {
+                    case LEFT:
+                        splitPane.setLeftComponent(content);
+                        break;
+                    case RIGHT:
+                        splitPane.setRightComponent(content);
+                        if (content != null)
+                            splitPane.setDividerLocation(splitPane.getWidth());
+                        break;
+                    case BOTTOM:
+                        splitPane.setBottomComponent(content);
+                        if (content != null)
+                            splitPane.setDividerLocation(splitPane.getHeight());
+                        break;
+                    case TOP:
+                        splitPane.setTopComponent(content);
+                        break;
+                }
+                if (content != null)
+                    content.setVisible(true);
+            } finally {
+                valueAdjusting = false;
             }
-            if (content != null)
-                content.setVisible(true);
         }
 
         protected Component getSplitPaneContent() {
@@ -570,7 +596,6 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             }
             throw new IllegalStateException();
         }
-
 
         private class SplitAnimation extends AbstractAnimation {
             private int dividerLocation;
@@ -589,27 +614,24 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 else
                     animatingHeight = (int) ((1.0f - animationPercent) * sheetLen);
 
-
                 switch (anchor) {
                     case LEFT:
                     case TOP:
                         if (direction == Direction.INCOMING) {
-                            if (splitPane.getDividerLocation() != animatingHeight) {
+                            if (splitPane.getDividerLocation() != animatingHeight) 
                                 splitPane.setDividerLocation(animatingHeight);
-                            }
                         } else
                             splitPane.setDividerLocation(animatingHeight);
                         break;
                     case RIGHT:
-                        final int length = splitPane.getWidth() - animatingHeight;
-                        splitPane.setDividerLocation(length);
+                        splitPane.setDividerLocation(splitPane.getWidth() - animatingHeight);
                         break;
                     case BOTTOM:
                         splitPane.setDividerLocation(splitPane.getHeight() - animatingHeight);
                         break;
 
                 }
-                return animationPercent;            
+                return animationPercent;
             }
 
             protected void onFinishAnimation() {
@@ -617,36 +639,12 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     setSplitPaneContent(null);
                 } else {
                     if (getAnimationDirection() == Direction.OUTGOING) {
-                        switch (anchor) {
-                            case LEFT:
-                            case TOP:
-                                splitPane.setDividerLocation(0);
-                                break;
-                            case RIGHT:
-                                splitPane.setDividerLocation(splitPane.getWidth());
-                                break;
-                            case BOTTOM:
-                                splitPane.setDividerLocation(splitPane.getHeight());
-                                break;
-                        }
+                        valueAdjusting = true;
+                        setSplitDividerLocation(0);
+                        valueAdjusting = false;
                     } else {
-                        switch (anchor) {
-                            case LEFT:
-                            case TOP:
-                                if (splitPane.getDividerLocation() <= sheetLen) {
-                                    splitPane.setDividerLocation(sheetLen);
-                                    SwingUtil.repaintNow(splitPane);
-                                }
-                                break;
-                            case RIGHT:
-                                splitPane.setDividerLocation(splitPane.getWidth() - sheetLen);
-                                SwingUtil.repaintNow(splitPane);
-                                break;
-                            case BOTTOM:
-                                splitPane.setDividerLocation(splitPane.getHeight() - sheetLen);
-                                SwingUtil.repaintNow(splitPane);
-                                break;
-                        }
+                        setSplitDividerLocation(sheetLen);
+                        SwingUtil.repaintNow(splitPane);
                     }
                 }
             }

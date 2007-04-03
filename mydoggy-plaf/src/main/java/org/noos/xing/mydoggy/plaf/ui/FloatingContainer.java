@@ -226,26 +226,17 @@ public class FloatingContainer extends DockedContainer {
             final int animatingLengthY = (int) (animationPercent * originalBounds.height);
 
             if (getAnimationDirection() == Direction.INCOMING) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        window.setBounds(
-                                window.getX() - (animatingLengthX / 2 - lastLenX / 2),
-                                window.getY() - (animatingLengthY / 2 - lastLenY / 2),
-                                window.getWidth() + (animatingLengthX - lastLenX),
-                                window.getHeight() + (animatingLengthY - lastLenY));
-                    }
-                }
-                );
+                window.setBounds(
+                        window.getX() - (animatingLengthX / 2 - lastLenX / 2),
+                        window.getY() - (animatingLengthY / 2 - lastLenY / 2),
+                        window.getWidth() + (animatingLengthX - lastLenX),
+                        window.getHeight() + (animatingLengthY - lastLenY));
             } else {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        window.setBounds(window.getX() + (animatingLengthX / 2 - lastLenX / 2),
-                                         window.getY() + (animatingLengthY / 2 - lastLenY / 2),
-                                         window.getWidth() - (animatingLengthX - lastLenX),
-                                         window.getHeight() - (animatingLengthY - lastLenY)
-                        );
-                    }
-                });
+                window.setBounds(window.getX() + (animatingLengthX / 2 - lastLenX / 2),
+                                 window.getY() + (animatingLengthY / 2 - lastLenY / 2),
+                                 window.getWidth() - (animatingLengthX - lastLenX),
+                                 window.getHeight() - (animatingLengthY - lastLenY)
+                );
             }
 
             lastLenX = animatingLengthX;

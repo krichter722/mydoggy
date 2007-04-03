@@ -23,21 +23,24 @@
                     </li>
                     <li>
                         <a href="./mydoggy-examples/mydoggysetScreenshots.html#slidingTrasparent">Transparency</a> support for Slidying Mode.
+                        <a href="./mydoggy-examples/mydoggysetScreenshots.html">Screenshots</a>.
                     </li>
                     <li>
-                        New <a href="./mydoggy-examples/mydoggysetScreenshots.html#dragdrap">drag&drop</a> system for the toolwindow representative buttons.
+                        New <a href="./mydoggy-examples/mydoggysetScreenshots.html#dragdrap">drag&drop</a> system for the toolwindow representative buttons. 
+                        <a href="./mydoggy-examples/mydoggysetScreenshots.html">Screenshots</a>.
                     </li>
                     <li>
-                        Support for <a href="./mydoggy-api/toolwindowManager.html">PushAway Mode</a> of the ToolWindowManager
+                        Support for <a href="./mydoggy-api/toolwindowManagerUsing.html#PushAwayMode">PushAway Mode</a> of the ToolWindowManager.
+                        <a href="./mydoggy-examples/mydoggysetScreenshots.html#PushAwayMode">Screenshots</a>.
                     </li>
                     <li>
-                        ToolWindow <a href="./mydoggy-api/toolwindow.html">aliasing</a> support.
+                        ToolWindow <a href="./mydoggy-api/toolwindowManagerUsing.html#aliasing">aliasing</a> support.
                     </li>
                     <li>
-                        New toolwindow's visualization method called aggregate.
+                        New toolwindow's visualization method called <a href="./mydoggy-api/toolwindowUsing.html#aggregate">aggregate</a>.
                     </li>
                     <li>
-                        Now you can disable or enable Slidying and Floating mode for the single toolwindow.
+                        Now you can disable or enable <a href="./mydoggy-api/toolwindowUsing.html#Slidying">Slidying</a> and <a href="./mydoggy-api/toolwindowUsing.html#Floating">Floating</a> mode for the single toolwindow.
                     </li>
                 </ul>
                 ]]>.

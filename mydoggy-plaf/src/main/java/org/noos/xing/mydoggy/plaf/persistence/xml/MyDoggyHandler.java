@@ -10,6 +10,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.awt.*;
+import java.util.Map;
+import java.util.Hashtable;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -28,6 +30,7 @@ public class MyDoggyHandler extends DefaultHandler {
     private PersistedSlidingType slidingType;
     private PersistedFloatingType floatingType;
 
+    private Map<ToolWindow, PersistedToolWindow> map;
 
     public MyDoggyHandler(ToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
@@ -36,6 +39,7 @@ public class MyDoggyHandler extends DefaultHandler {
     public void startDocument() throws SAXException {
         state = State.MYDOGGY;
         subState = State.NOP;
+        this.map = new Hashtable<ToolWindow, PersistedToolWindow>();
     }
 
     public void endDocument() throws SAXException {
@@ -136,15 +140,7 @@ public class MyDoggyHandler extends DefaultHandler {
                         toolWindow.setAutoHide(persistedToolWindow.isAutoHide());
                         toolWindow.setAvailable(persistedToolWindow.isAvailable());
 
-                        if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-                            toolWindow.setVisible(persistedToolWindow.isVisible());
-                        } else {
-                            if (persistedToolWindow.isVisible())
-                                toolWindow.aggregate();
-                            else
-                                toolWindow.setVisible(false);
-                        }
-                        toolWindow.setActive(persistedToolWindow.isActive());
+                        map.put(toolWindow, persistedToolWindow);
                     }
                 }
                 break;
@@ -155,6 +151,63 @@ public class MyDoggyHandler extends DefaultHandler {
                 state = State.MYDOGGY;
                 break;
         }
+        if ("mydoggy".equals(qName)) {
+/*
+            ToolWindowGroup group = toolWindowManager.getToolWindowGroup("aa");
+
+            try {
+                ToolWindow activeTool = null;
+                for (ToolWindow toolWindow : map.keySet()) {
+                    persistedToolWindow = map.get(toolWindow);
+
+                    if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
+                        if (persistedToolWindow.isVisible())
+                            group.addToolWindow(toolWindow);
+                        else
+                            toolWindow.setVisible(false);
+                    } else {
+                        if (persistedToolWindow.isVisible())
+                            group.addToolWindow(toolWindow);
+                        else
+                            toolWindow.setVisible(false);
+                    }
+                    if (persistedToolWindow.isActive())
+                        activeTool = toolWindow;
+                }
+                group.setVisible(true);
+                if (activeTool != null)
+                    activeTool.setActive(true);
+            } finally {
+                toolWindowManager.removeToolWindowGroup("aa");
+            }
+*/
+            load(ToolWindowAnchor.LEFT);
+            load(ToolWindowAnchor.TOP);
+            load(ToolWindowAnchor.RIGHT);
+            load(ToolWindowAnchor.BOTTOM);
+        }
+    }
+
+    protected void load(ToolWindowAnchor anchor) {
+        ToolWindow activeTool = null;
+        for (ToolWindow toolWindow : map.keySet()) {
+            if (toolWindow.getAnchor() != anchor)
+                continue;
+            persistedToolWindow = map.get(toolWindow);
+
+            if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
+                toolWindow.setVisible(persistedToolWindow.isVisible());
+            } else {
+                if (persistedToolWindow.isVisible())
+                    toolWindow.aggregate();
+                else
+                    toolWindow.setVisible(false);
+            }
+            if (persistedToolWindow.isActive())
+                activeTool = toolWindow;
+        }
+        if (activeTool != null)
+            activeTool.setActive(true);
     }
 
 }

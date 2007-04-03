@@ -20,6 +20,7 @@ tool.setVisibile(true); // false to hide
                     <br></br>
                     There is an another way to show a tool. You can use the aggregate methedo
                 </p>
+                <a name="aggregate"/>
                 <source>
 ToolWindow tool = toolWindowManager.getToolWindow(0);
 tool.aggregate();
@@ -117,6 +118,7 @@ desc.setToolWindowActionHandler(new ToolWindowActionHandler(){...});
             </subsection>
         </section>
 
+        <a name="Slidying"/>
         <section name="SlidingTypeDescriptor">
             <subsection name="Enable Transparent Mode">
                 Use the following :
@@ -146,6 +148,7 @@ desc.setEnabled(true); // false to disable
             </subsection>
         </section>
 
+        <a name="Floating"/>
         <section name="FloatingTypeDescriptor">
             <subsection name="Enable Transparent Mode">
                 Use the following :

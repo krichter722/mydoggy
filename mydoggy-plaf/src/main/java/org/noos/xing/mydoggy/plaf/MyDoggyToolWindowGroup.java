@@ -1,9 +1,6 @@
 package org.noos.xing.mydoggy.plaf;
 
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowGroup;
-import org.noos.xing.mydoggy.ToolWindowGroupListener;
-import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowGroupEvent;
 
 import javax.swing.event.EventListenerList;
@@ -80,14 +77,19 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
                     for (ToolWindow tool : manager.getToolWindows())
                         tool.setVisible(false);
 
-                    for (ToolWindow tool : getToolsWindow()) {
-                        if (tool.getType() == ToolWindowType.SLIDING)
-                            tool.setType(ToolWindowType.DOCKED);
+                    if (visible) {
+/*
+                        for (ToolWindow tool : getToolsWindow()) {
+                            if (tool.getType() == ToolWindowType.SLIDING)
+                                tool.setType(ToolWindowType.DOCKED);
 
-                        if (visible) {
                             tool.aggregate();
-                        } else
-                            tool.setVisible(visible);
+                        }
+*/
+                        showTool(ToolWindowAnchor.LEFT);
+                        showTool(ToolWindowAnchor.TOP);
+                        showTool(ToolWindowAnchor.RIGHT);
+                        showTool(ToolWindowAnchor.BOTTOM);
                     }
 
                     if (visible)
@@ -154,6 +156,17 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
         ToolWindowGroupEvent event = new ToolWindowGroupEvent(manager, ToolWindowGroupEvent.ActionId.TOOL_REMOVED, this, toolWindow);
         for (ToolWindowGroupListener listener : listenerList.getListeners(ToolWindowGroupListener.class)) {
             listener.toolRemoved(event);
+        }
+    }
+
+    protected void showTool(ToolWindowAnchor anchor) {
+        for (ToolWindow tool : getToolsWindow()) {
+            if (tool.getAnchor() != anchor)
+                continue;
+            if (tool.getType() == ToolWindowType.SLIDING)
+                tool.setType(ToolWindowType.DOCKED);
+
+            tool.aggregate();
         }
     }
 

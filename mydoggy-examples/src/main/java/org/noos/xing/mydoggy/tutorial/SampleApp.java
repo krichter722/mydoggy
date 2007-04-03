@@ -80,7 +80,7 @@ public class SampleApp {
 
         DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
         dockedTypeDescriptor.setDockLength(200);
-        dockedTypeDescriptor.setPopupMenuEnabled(false);
+        dockedTypeDescriptor.setPopupMenuEnabled(true);
         JMenu toolsMenu = dockedTypeDescriptor.getToolsMenu();
         toolsMenu.add(new AbstractAction("Hello World!!!") {
             public void actionPerformed(ActionEvent e) {

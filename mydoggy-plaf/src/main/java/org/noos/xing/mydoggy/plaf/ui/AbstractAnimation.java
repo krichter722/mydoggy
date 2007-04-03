@@ -41,7 +41,10 @@ public abstract class AbstractAnimation implements ActionListener {
 	}
 
 	public final synchronized void show(Object... params) {
-		if (animating) {
+        if (animating && animationDirection == Direction.INCOMING)
+            return;
+
+        if (animating) {
 			stopAnimation();
 			animationDirection = chooseFinishDirection(Type.SHOW);
 			if (animationDirection != Direction.NONE)
@@ -52,6 +55,9 @@ public abstract class AbstractAnimation implements ActionListener {
 	}
 
 	public final synchronized void hide(Object... params) {
+        if (animating && animationDirection == Direction.OUTGOING)
+            return;
+
 		if (animating) {
 			stopAnimation();
 			animationDirection = chooseFinishDirection(Type.HIDE);

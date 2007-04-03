@@ -72,20 +72,6 @@ public class MyDoggySet {
         // File Menu
         JMenu fileMenu = new JMenu("File");
 
-        JMenuItem store = new JMenuItem("Store Workspace");
-        store.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    FileOutputStream output = new FileOutputStream("workspace.xml");
-                    toolWindowManager.getPersistenceDelegate().save(output);
-                    output.close();
-                } catch (Exception e1) {
-                    e1.printStackTrace(); 
-                }
-            }
-        });
-        fileMenu.add(store);
-
         JMenuItem load = new JMenuItem("Load Workspace");
         load.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -99,6 +85,20 @@ public class MyDoggySet {
             }
         });
         fileMenu.add(load);
+
+        JMenuItem store = new JMenuItem("Store Workspace");
+        store.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    FileOutputStream output = new FileOutputStream("workspace.xml");
+                    toolWindowManager.getPersistenceDelegate().save(output);
+                    output.close();
+                } catch (Exception e1) {
+                    e1.printStackTrace(); 
+                }
+            }
+        });
+        fileMenu.add(store);
 
         JMenuItem exit = new JMenuItem("Exit");
         exit.addActionListener(new ActionListener() {
@@ -150,19 +150,24 @@ public class MyDoggySet {
 
         JMenu contentManagerMenu = new JMenu("Content Manager UI");
 
-        JMenuItem tabUIItem = new JMenuItem("TabbedContentManagerUI");
+        final JMenuItem tabUIItem = new JMenuItem("TabbedContentManagerUI");
+        final JMenuItem desktopUIItem = new JMenuItem("DesktopContentManagerUI");
+
         tabUIItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 toolWindowManager.getContentManager().setContentManagerUI(defaultManagerUI);
+                tabUIItem.setEnabled(false);
+                desktopUIItem.setEnabled(true);
             }
         });
 
-        JMenuItem desktopUIItem = new JMenuItem("DesktopContentManagerUI");
         desktopUIItem.addActionListener(new ActionListener() {
             final MyDoggyDesktopContentManagerUI desktopContentManagerUI = new MyDoggyDesktopContentManagerUI();
 
             public void actionPerformed(ActionEvent e) {
                 toolWindowManager.getContentManager().setContentManagerUI(desktopContentManagerUI);
+                tabUIItem.setEnabled(true);
+                desktopUIItem.setEnabled(false);                
             }
         });
 
@@ -185,21 +190,29 @@ public class MyDoggySet {
 
         // File Menu
         JMenu pushAwayMenu = new JMenu("PushAway Mode");
-        JMenuItem left = new JMenuItem("Horizontal");
-        left.addActionListener(new ActionListener() {
+
+        final JMenuItem paHorizontal = new JMenuItem("Horizontal");
+        final JMenuItem paVertical = new JMenuItem("Vertical");
+
+        paHorizontal.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(PushAwayMode.HORIZONTAL);
+                paHorizontal.setEnabled(false);
+                paVertical.setEnabled(true);
             }
         });
 
-        JMenuItem top = new JMenuItem("Vertical");
-        top.addActionListener(new ActionListener() {
+        paVertical.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(PushAwayMode.VERTICAL);
+                paHorizontal.setEnabled(true);
+                paVertical.setEnabled(false);
             }
         });
-        pushAwayMenu.add(left);
-        pushAwayMenu.add(top);
+        paVertical.setEnabled(false);
+
+        pushAwayMenu.add(paHorizontal);
+        pushAwayMenu.add(paVertical);
 
         menuBar.add(fileMenu);
         menuBar.add(contentMenu);

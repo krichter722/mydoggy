@@ -424,13 +424,22 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
 
     protected JSplitPane renderSplitPane(int orientation) {
+/*
         JSplitPane splitPane = new JSplitPane(orientation) {
+
             public void setUI(SplitPaneUI ui) {
                 super.setUI(ui);
                 setBorder(null);
                 setContinuousLayout(true);
             }
+
+            public void setDividerLocation(int location) {
+                System.out.println("dividerLocation : " + location);
+                super.setDividerLocation(location);  
+            }
         };
+*/
+        JSplitPane splitPane = new JSP(orientation);
         splitPane.setBorder(null);
         splitPane.setContinuousLayout(true);
         splitPane.setDividerSize(0);
@@ -767,5 +776,47 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
+    public class JSP extends JSplitPane {
+        private MyDoggyToolWindowBar toolWindowBar;
+
+        public JSP() {
+        }
+
+        public JSP(int newOrientation) {
+            super(newOrientation);
+        }
+
+        public JSP(int newOrientation, boolean newContinuousLayout) {
+            super(newOrientation, newContinuousLayout);
+        }
+
+        public JSP(int newOrientation, Component newLeftComponent, Component newRightComponent) {
+            super(newOrientation, newLeftComponent, newRightComponent);
+        }
+
+        public JSP(int newOrientation, boolean newContinuousLayout, Component newLeftComponent, Component newRightComponent) {
+            super(newOrientation, newContinuousLayout, newLeftComponent, newRightComponent);
+        }
+
+        public void setUI(SplitPaneUI ui) {
+            super.setUI(ui);
+            setBorder(null);
+            setContinuousLayout(true);
+        }
+
+        public void setDividerLocation(int location) {
+//            if (toolWindowBar != null && toolWindowBar.aa && location == 0)
+//                return;
+
+            String anchor = (toolWindowBar != null) ? toolWindowBar.getAnchor().toString() : "";
+
+            System.out.println("--dividerLocation(" + anchor + ") : " + location);
+            super.setDividerLocation(location);
+        }
+
+        public void setToolWindowBar(MyDoggyToolWindowBar toolWindowBar) {
+            this.toolWindowBar = toolWindowBar;
+        }
+    }
 
 }

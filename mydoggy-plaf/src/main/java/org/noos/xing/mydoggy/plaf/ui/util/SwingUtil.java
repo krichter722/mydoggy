@@ -38,6 +38,8 @@ public class SwingUtil {
     }
 
     public static void repaint(final Component component) {
+        Throwable t = new RuntimeException();
+/*
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 component.invalidate();
@@ -45,7 +47,27 @@ public class SwingUtil {
                 component.repaint();
             }
         });
+
+*/
+        SwingUtilities.invokeLater(new T(t, component));
     }
+
+    private static class T implements Runnable {
+        private Component component;
+        Throwable t;
+
+        public T(Throwable t, Component component) {
+            this.t = t;
+            this.component = component;
+        }
+
+        public void run() {
+            component.invalidate();
+            component.validate();
+            component.repaint();
+        }
+    }
+
 
     public static void repaintNow(Component component) {
         component.invalidate();
