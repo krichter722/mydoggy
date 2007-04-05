@@ -46,7 +46,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         manager.getBar(BOTTOM).getSplitPane().setLeftComponent(null);
         manager.getBar(BOTTOM).getSplitPane().setRightComponent(null);
         
-        SwingUtil.repaint(manager);
+//        SwingUtil.repaint(manager);
 
         switch (pushAwayMode) {
             case HORIZONTAL:
@@ -76,7 +76,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         // Reload workspace
         manager.getPersistenceDelegate().apply(new ByteArrayInputStream(outputStream.toByteArray()));
 
-//        SwingUtil.repaintNow(manager);
+        SwingUtil.repaintNow(manager);
     }
 
     public PushAwayMode getPushAwayMode() {
