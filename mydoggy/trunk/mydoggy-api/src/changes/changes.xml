@@ -90,7 +90,7 @@
 
             <action dev="adecaro" type="update">
                 <![CDATA[
-                <a href="./apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowManager.html">
                     <code>ToolWindowManager</code>
                 </a> ]]>
                 - Added Methods :
@@ -118,6 +118,28 @@
                         <br></br>
                         Returns the toolWindow to which this manager maps the specified alias.  Returns
                         <tt>null</tt> if the manager contains no mapping for this alias.
+                    </li>
+                </ul>
+                ]]>
+            </action>
+
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentManager.html">
+                    <code>ContentManager</code>
+                </a> ]]>
+                - Added Methods :
+                <![CDATA[
+                <ul>
+                    <li>
+                        <code>Content getSelectedContent();</code>
+                        <br></br>
+                        Returns the selected content, or <code>null</code> if the selection is empty.
+                    </li>
+                    <li>
+                        <code>Content getContentByComponent(Component component);</code>
+                        <br></br>
+                        Returns the content that wraps the passed <code>component</code>
                     </li>
                 </ul>
                 ]]>

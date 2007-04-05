@@ -485,7 +485,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 return;
 
             int divederLocation = descriptor.getDividerLocation();
-            System.out.println("divederLocation(" + anchor + ") : " + divederLocation);
+//            System.out.println("divederLocation(" + anchor + ") : " + divederLocation);
 
             Component splitPaneContent = getSplitPaneContent();
             boolean animate = true;

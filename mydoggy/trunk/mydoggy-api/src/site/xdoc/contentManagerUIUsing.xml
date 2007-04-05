@@ -46,7 +46,7 @@ contentManagerUI.addContentManagerUIListener(listener);
 </source>
                 <p>
                     Registers <code>listener</code> so that it will receive events when
-                    contentUIs are removed or detached.
+                    a content is removed or detached using the ui. For the remove action you can apply a veto to the action.
                     If listener <code>listener</code> is <code>null</code>,
                     no exception is thrown and no action is performed.
                 </p>
