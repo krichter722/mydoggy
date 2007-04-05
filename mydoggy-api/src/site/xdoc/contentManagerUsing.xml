@@ -13,16 +13,49 @@
                 Use the following :
                 <source>
 ContentManager contentManager = toolWindowManager.getContentManager();
-contentManager.addContent("Tools"   // Content Key
-                          "Tools",  // Content title
-                          null,     // Content Item
-                          toolsContent, // Content component
-                          "ToolWindows" // Content tooltip text
+Content tools = ContentcontentManager.addContent("Tools"   // Content Key
+                                                 "Tools",  // Content title
+                                                 null,     // Content Item
+                                                 toolsContent, // Content component
+                                                 "ToolWindows" // Content tooltip text
 );
 </source>
                 <p>
                     Adds a <code>component</code> represented by a unique identifier <code>key</code>
                     with a <code>title</code> and/or <code>icon</code>, either of which can be <code>null</code>.
+                </p>
+            </subsection>
+
+            <subsection name="To remove a content">
+                Use the following :
+                <source>
+ContentManager contentManager = toolWindowManager.getContentManager();
+contentManager.removeContent(tools);
+</source>
+                <p>
+                    Removes the content from the manager.
+                </p>
+            </subsection>
+
+            <subsection name="To get the selected content">
+                Use the following :
+                <source>
+ContentManager contentManager = toolWindowManager.getContentManager();
+Content content = contentManager.getSelectedContent();
+</source>
+                <p>
+                    Returns the selected content, or <code>null</code> if the selection is empty.
+                </p>
+            </subsection>
+
+            <subsection name="To change the ContentManagerUI">
+                Use the following :
+                <source>
+ContentManager contentManager = toolWindowManager.getContentManager();
+ContentManagerUI contentManagerUI = new <a href="./../mydoggy-plaf/index.html#ContentManageUI">... TODO</a>
+contentManager.setContentManagerUI(contentManagerUI);</source>
+                <p>
+                    Sets the content manager ui to <code>contentManagerUI</code>.
                 </p>
             </subsection>
         </section>

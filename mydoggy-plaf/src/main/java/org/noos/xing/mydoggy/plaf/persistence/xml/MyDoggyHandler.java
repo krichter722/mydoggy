@@ -152,39 +152,10 @@ public class MyDoggyHandler extends DefaultHandler {
                 break;
         }
         if ("mydoggy".equals(qName)) {
-/*
-            ToolWindowGroup group = toolWindowManager.getToolWindowGroup("aa");
-
-            try {
-                ToolWindow activeTool = null;
-                for (ToolWindow toolWindow : map.keySet()) {
-                    persistedToolWindow = map.get(toolWindow);
-
-                    if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-                        if (persistedToolWindow.isVisible())
-                            group.addToolWindow(toolWindow);
-                        else
-                            toolWindow.setVisible(false);
-                    } else {
-                        if (persistedToolWindow.isVisible())
-                            group.addToolWindow(toolWindow);
-                        else
-                            toolWindow.setVisible(false);
-                    }
-                    if (persistedToolWindow.isActive())
-                        activeTool = toolWindow;
-                }
-                group.setVisible(true);
-                if (activeTool != null)
-                    activeTool.setActive(true);
-            } finally {
-                toolWindowManager.removeToolWindowGroup("aa");
-            }
-*/
             load(ToolWindowAnchor.LEFT);
-            load(ToolWindowAnchor.TOP);
-            load(ToolWindowAnchor.RIGHT);
             load(ToolWindowAnchor.BOTTOM);
+            load(ToolWindowAnchor.RIGHT);
+            load(ToolWindowAnchor.TOP);
         }
     }
 

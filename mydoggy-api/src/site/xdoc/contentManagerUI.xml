@@ -42,7 +42,13 @@ contentManager.setContentManagerUI(contentManagerUI);
         </section>
 
         <section name="ContentUI">
-
+            <p>
+                This interface is used to modify the ui behaviours of a single content. When you define a new
+                ContentManagerUI you can also extend the ContentUI interface. In fact relative to
+                TabbedContentManagerUI and DesktopContentManagerUI you can found TabbedContentUI and DesktopContentUI.
+                Using the default ContentUI interface you can manage transparent support and decide if a content is
+                closeable and/or detachable using the ui.
+            </p>
         </section>
     </body>
 </document>

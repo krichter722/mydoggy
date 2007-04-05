@@ -132,8 +132,21 @@ public interface ContentManager {
      */
     Content getContent(Object key);
 
+    /**
+     * Returns the content that wraps the passed <code>component</code>
+     * @param component the component wrapped by a content.
+     * @return the content that wraps the passed <code>component</code>
+     * @since 1.2.0
+     */
     Content getContentByComponent(Component component);
 
+    /**
+     * Returns the selected content, or <code>null</code> if the
+     * selection is empty.
+     *
+     * @return the selected content.
+     * @since 1.2.0
+     */
     Content getSelectedContent();
 
     /**

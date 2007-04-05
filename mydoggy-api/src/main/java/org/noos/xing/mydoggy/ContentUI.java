@@ -1,8 +1,12 @@
 package org.noos.xing.mydoggy;
 
 /**
+ * This interface is used to modify the ui behaviours of a single content.
+ *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.1.0
+ * @see TabbedContentUI
+ * @see DesktopContentUI
  */
 public interface ContentUI {
 
