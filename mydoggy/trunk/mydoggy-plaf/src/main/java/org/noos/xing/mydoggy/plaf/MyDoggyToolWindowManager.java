@@ -439,13 +439,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             }
         };
 */
-        JSplitPane splitPane = new JSP(orientation);
+        JSplitPane splitPane = new ExtendedJSP(orientation);
         splitPane.setBorder(null);
         splitPane.setContinuousLayout(true);
         splitPane.setDividerSize(0);
         splitPane.setDividerLocation(300);
         splitPane.setLeftComponent(null);
         splitPane.setRightComponent(null);
+        splitPane.setFocusable(false);
         return splitPane;
     }
 
@@ -776,25 +777,25 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    public class JSP extends JSplitPane {
+    public class ExtendedJSP extends JSplitPane {
         private MyDoggyToolWindowBar toolWindowBar;
 
-        public JSP() {
+        public ExtendedJSP() {
         }
 
-        public JSP(int newOrientation) {
+        public ExtendedJSP(int newOrientation) {
             super(newOrientation);
         }
 
-        public JSP(int newOrientation, boolean newContinuousLayout) {
+        public ExtendedJSP(int newOrientation, boolean newContinuousLayout) {
             super(newOrientation, newContinuousLayout);
         }
 
-        public JSP(int newOrientation, Component newLeftComponent, Component newRightComponent) {
+        public ExtendedJSP(int newOrientation, Component newLeftComponent, Component newRightComponent) {
             super(newOrientation, newLeftComponent, newRightComponent);
         }
 
-        public JSP(int newOrientation, boolean newContinuousLayout, Component newLeftComponent, Component newRightComponent) {
+        public ExtendedJSP(int newOrientation, boolean newContinuousLayout, Component newLeftComponent, Component newRightComponent) {
             super(newOrientation, newContinuousLayout, newLeftComponent, newRightComponent);
         }
 

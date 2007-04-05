@@ -258,11 +258,11 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
     class ApplicationBarActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            toolWindow.setActive(true);
-
             String actionCommnad = e.getActionCommand();
+            if (!"visible".equals(actionCommnad))
+                toolWindow.setActive(true);
+            
             if ("visible".equals(actionCommnad)) {
-                toolWindow.setVisible(false);
                 ToolWindowActionHandler toolWindowActionHandler = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowActionHandler();
                 if (toolWindowActionHandler != null)
                     toolWindowActionHandler.onHideButtonClick(toolWindow);
@@ -302,7 +302,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
 			valueAdjusting = true;
 
-//            System.out.println("component = " + component);
+            System.out.println("component = " + component);
 
             if (isInternalComponent(component)) {
                 toolWindow.setActive(true);

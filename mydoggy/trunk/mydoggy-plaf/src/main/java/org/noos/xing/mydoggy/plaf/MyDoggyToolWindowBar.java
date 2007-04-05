@@ -53,7 +53,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     MyDoggyToolWindowBar(MyDoggyToolWindowManager manager, JSplitPane splitPane, ToolWindowAnchor anchor) {
         this.manager = manager;
         this.splitPane = splitPane;
-        ((MyDoggyToolWindowManager.JSP)splitPane).setToolWindowBar(this);
+        ((MyDoggyToolWindowManager.ExtendedJSP)splitPane).setToolWindowBar(this);
         this.anchor = anchor;
         this.availableTools = 0;
 
