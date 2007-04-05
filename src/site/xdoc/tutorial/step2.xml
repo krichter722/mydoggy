@@ -40,8 +40,10 @@ public class SampleApp {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 // Set debug tool active
+                <strong style="color:green">
                 ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
-                debugTool.setActive(true);
+                debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#setActive(boolean)">setActive</a>(true);
+                </strong>
 
                 frame.setVisible(true);
             }

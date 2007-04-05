@@ -38,7 +38,7 @@ public class SampleApp {
             public void run() {
                 // Set debug tool active
                 ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
-                debugTool.setActive(true);
+                debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#setActive(boolean)">setActive</a>(true);
 
                 frame.setVisible(true);
             }
@@ -86,7 +86,7 @@ public class SampleApp {
 
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setDockLength(int)">setDockLength</a>(300);
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPopupMenuEnabled(boolean)">setPopupMenuEnabled</a>(true);
-        JMenu toolsMenu = dockedTypeDescriptor.getToolsMenu();
+        JMenu toolsMenu = dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#getToolsMenu()">getToolsMenu</a>();
         toolsMenu.add(new AbstractAction("Hello World!!!") {
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(frame, "Hello World!!!");
