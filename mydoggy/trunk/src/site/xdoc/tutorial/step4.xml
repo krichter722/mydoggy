@@ -40,7 +40,7 @@ public class SampleApp {
             public void run() {
                 // Set debug tool active
                 ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
-                debugTool.setActive(true);
+                debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#setActive(boolean)">setActive</a>(true);
 
                 frame.setVisible(true);
             }
@@ -91,7 +91,7 @@ public class SampleApp {
 
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setDockLength(int)">setDockLength</a>(300);
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPopupMenuEnabled(boolean)">setPopupMenuEnabled</a>(true);
-        JMenu toolsMenu = dockedTypeDescriptor.getToolsMenu();
+        JMenu toolsMenu = dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#getToolsMenu()">getToolsMenu</a>();
         toolsMenu.add(new AbstractAction("Hello World!!!") {
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(frame, "Hello World!!!");
@@ -125,7 +125,7 @@ public class SampleApp {
          JTree treeContent = new JTree();
 
         <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html">ContentManager</a> contentManager = toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getContentManager()">getContentManager</a>();
-        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/Content.html">Content content</a> = contentManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html#addContent(java.lang.Object, java.lang.String, javax.swing.Icon, java.awt.Component)">addContent</a>("Tree Key",
+        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/Content.html">Content</a> content = contentManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html#addContent(java.lang.Object, java.lang.String, javax.swing.Icon, java.awt.Component)">addContent</a>("Tree Key",
                                                     "Tree Title",
                                                     null,      // An icon
                                                     treeContent);
