@@ -545,7 +545,10 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     }
                 } else {
                     splitPane.setDividerSize(0);
-                    splitAnimation.hide(divederLocation);
+                    valueAdjusting = true;
+                    setSplitDividerLocation(0);
+                    valueAdjusting = false;
+//                    splitAnimation.hide(divederLocation);
                 }
             } else {
                 SwingUtil.repaint(splitPane);
