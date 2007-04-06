@@ -140,7 +140,7 @@ public class SampleApp {
         contentManagerUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html#setTabPlacement(org.noos.xing.mydoggy.TabbedContentManagerUI.TabPlacement.BOTTOM)">setTabPlacement</a>(TabbedContentManagerUI.TabPlacement.BOTTOM);
         contentManagerUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html#addContentManagerUIListener(org.noos.xing.mydoggy.ContentManagerUIListener)">addContentManagerUIListener</a>(new <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManagerUIListener">ContentManagerUIListener</a>() {
             public boolean contentUIRemoving(ContentManagerUIEvent event) {
-                return true;
+                return JOptionPane.showConfirmDialog(frame, "Are you sure?") == JOptionPane.OK_OPTION;
             }
 
             public void contentUIDetached(ContentManagerUIEvent event) {
@@ -150,7 +150,7 @@ public class SampleApp {
 
         <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/TabbedContentUI.html">TabbedContentUI</a> contentUI = contentManagerUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManagerUI.html#getContentUI(org.noos.xing.mydoggy.Content)">getContentUI</a>(toolWindowManager.getContentManager().getContent(0));
 
-        contentUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentUI.html#setCloseable(boolean)">setCloseable</a>(false);
+        contentUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentUI.html#setCloseable(boolean)">setCloseable</a>(true);
         contentUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentUI.html#setDetachable(boolean)">setDetachable</a>(true);
         contentUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentUI.html#setTransparentMode(boolean)">setTransparentMode</a>(true);
         contentUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentUI.html#setTransparentRatio(float)">setTransparentRatio</a>(0.7f);

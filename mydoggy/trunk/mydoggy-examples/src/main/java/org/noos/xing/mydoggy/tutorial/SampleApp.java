@@ -7,7 +7,6 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.io.FileOutputStream;
 
 public class SampleApp {
     private JFrame frame;
@@ -48,21 +47,11 @@ public class SampleApp {
         this.toolWindowManager = myDoggyToolWindowManager;
 
         // Register a Tool.
-        toolWindowManager.registerToolWindow("Debug Tool",       // Id
-                                             "Debug Tool",                 // Title
-                                             null,                          // Icon
-                                             new JButton(new AbstractAction("Stpre") {
-                                                 public void actionPerformed(ActionEvent e) {
-                                                     try {
-                                                         FileOutputStream output = new FileOutputStream("workspace.xml");
-                                                         toolWindowManager.getPersistenceDelegate().save(output);
-                                                         output.close();
-                                                     } catch (Exception e1) {
-                                                         e1.printStackTrace();
-                                                     }
-                                                 }
-                                             }),    // Component
-                                             ToolWindowAnchor.LEFT);        // Anchor
+        toolWindowManager.registerToolWindow("Debug Tool",              // Id
+                                             "Debug Tool",              // Title
+                                             null,                      // Icon
+                                             new JButton("Debug Tool"), // Component
+                                             ToolWindowAnchor.LEFT);    // Anchor
         setupDebugTool();
 
         // Made all tools available
@@ -129,7 +118,7 @@ public class SampleApp {
         contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
         contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
             public boolean contentUIRemoving(ContentManagerUIEvent event) {
-                return true;
+                return JOptionPane.showConfirmDialog(frame, "Are you sure?") == JOptionPane.OK_OPTION;
             }
 
             public void contentUIDetached(ContentManagerUIEvent event) {
@@ -138,7 +127,7 @@ public class SampleApp {
         });
 
         TabbedContentUI contentUI = contentManagerUI.getContentUI(toolWindowManager.getContentManager().getContent(0));
-        contentUI.setCloseable(false);
+        contentUI.setCloseable(true);
         contentUI.setDetachable(true);
         contentUI.setTransparentMode(true);
         contentUI.setTransparentRatio(0.7f);
