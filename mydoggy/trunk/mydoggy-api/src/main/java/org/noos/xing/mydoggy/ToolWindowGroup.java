@@ -7,6 +7,7 @@ package org.noos.xing.mydoggy;
  * After that we can show or hide all tools registered in a group.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @since 1.0.0
  */
 public interface ToolWindowGroup {
 
@@ -14,6 +15,7 @@ public interface ToolWindowGroup {
      * Returns the group's name.
      *
      * @return group's name.
+     * @since 1.0.0
      */
     String getName();
 
@@ -24,6 +26,7 @@ public interface ToolWindowGroup {
      * @param toolWindow tool window to be appended to this group.
      * @throws NullPointerException     if the specified tool window is null.
      * @throws IllegalArgumentException if tool window was already added.
+     * @since 1.0.0
      */
     void addToolWindow(ToolWindow toolWindow);
 
@@ -33,6 +36,7 @@ public interface ToolWindowGroup {
      * @param toolWindow tool window to be removed from this group, if present.
      * @return <tt>true</tt> if this group contained the specified tool window.
      * @throws NullPointerException if the specified element is null.
+     * @since 1.0.0
      */
     boolean removeToolWindow(ToolWindow toolWindow);
 
@@ -41,6 +45,7 @@ public interface ToolWindowGroup {
      * sequence.
      *
      * @return an array containing all of the elements in this group in proper sequence.
+     * @since 1.0.0
      */
     ToolWindow[] getToolsWindow();
 
@@ -50,6 +55,7 @@ public interface ToolWindowGroup {
      * @param toolWindow tool window whose presence in this group is to be tested.
      * @return <tt>true</tt> if this group contains the specified element.
      * @throws NullPointerException if the specified element is null.
+     * @since 1.0.0
      */
     boolean containesToolWindow(ToolWindow toolWindow);
 
@@ -60,6 +66,7 @@ public interface ToolWindowGroup {
      *
      * @param visible true to make the tools, contained in this group, visible, false to hide.
      * @see ToolWindow#setVisible(boolean)
+     * @since 1.0.0
      */
     void setVisible(boolean visible);
 
@@ -72,6 +79,7 @@ public interface ToolWindowGroup {
      *
      * @param listener the <code>ToolWindowGroupListener</code> to register.
      * @see ToolWindowGroupListener
+     * @since 1.0.0
      */
     void addToolWindowGroupListener(ToolWindowGroupListener listener);
 
@@ -84,6 +92,7 @@ public interface ToolWindowGroup {
      *
      * @param listener the <code>ToolWindowGroupListener</code> to be removed
      * @see #addToolWindowGroupListener(ToolWindowGroupListener)
+     * @since 1.0.0
      */
     void removeToolWindowGroupListener(ToolWindowGroupListener listener);
 
@@ -95,6 +104,7 @@ public interface ToolWindowGroup {
      *         or an empty array if no tool window group listeners are currently registered.
      * @see #addToolWindowGroupListener(ToolWindowGroupListener)
      * @see #removeToolWindowGroupListener(ToolWindowGroupListener)
+     * @since 1.0.0
      */
     ToolWindowGroupListener[] getToolWindowGroupListeners();
 

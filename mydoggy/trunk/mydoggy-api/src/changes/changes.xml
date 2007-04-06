@@ -119,6 +119,11 @@
                         Returns the toolWindow to which this manager maps the specified alias.  Returns
                         <tt>null</tt> if the manager contains no mapping for this alias.
                     </li>
+                    <li>
+                        <code>ToolWindowGroup getToolWindowGroup();</code>
+                        <br></br>
+                        Returns a special group that contains all toolwindows registered in this manager.
+                    </li>
                 </ul>
                 ]]>
             </action>
@@ -140,6 +145,28 @@
                         <code>Content getContentByComponent(Component component);</code>
                         <br></br>
                         Returns the content that wraps the passed <code>component</code>
+                    </li>
+                </ul>
+                ]]>
+            </action>
+
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">
+                    <code>DockedTypeDescriptor</code>
+                </a> ]]>
+                - Added Methods :
+                <![CDATA[
+                <ul>
+                    <li>
+                        <code>ToolWindowActionHandler getToolWindowActionHandler();</code>
+                        <br></br>
+                        Returns the ToolWindowActionHandler instance or null if it is not present.
+                    </li>
+                    <li>
+                        <code>void setToolWindowActionHandler(ToolWindowActionHandler toolWindowActionHandler);</code>
+                        <br></br>
+                        Sets the ToolWindowActionHandler to this descriptor.
                     </li>
                 </ul>
                 ]]>

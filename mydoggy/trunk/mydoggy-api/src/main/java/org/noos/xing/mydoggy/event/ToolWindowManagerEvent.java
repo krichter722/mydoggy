@@ -10,6 +10,7 @@ import java.util.EventObject;
  * An event which indicates that an action occurred in the tool window manager.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @since 1.0.0
  */
 public class ToolWindowManagerEvent extends EventObject {
     private static final long serialVersionUID = 1719383277615714309L;

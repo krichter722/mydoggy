@@ -16,6 +16,7 @@ import java.util.EventListener;
  * @see org.noos.xing.mydoggy.ToolWindowGroup
  * @see org.noos.xing.mydoggy.ToolWindowGroup#addToolWindowGroupListener(ToolWindowGroupListener)
  * @see org.noos.xing.mydoggy.event.ToolWindowGroupEvent.ActionId
+ * @since 1.0.0
  */
 public interface ToolWindowGroupListener extends EventListener {
 
@@ -24,6 +25,7 @@ public interface ToolWindowGroupListener extends EventListener {
      *
      * @param event the fired event.
      * @see ToolWindowGroupEvent
+     * @since 1.0.0
      */
     void toolAdded(ToolWindowGroupEvent event);
 
@@ -32,6 +34,7 @@ public interface ToolWindowGroupListener extends EventListener {
      *
      * @param event the fired event.
      * @see ToolWindowGroupEvent
+     * @since 1.0.0
      */
     void toolRemoved(ToolWindowGroupEvent event);
 
@@ -40,6 +43,7 @@ public interface ToolWindowGroupListener extends EventListener {
      *
      * @param event the fired event.
      * @see ToolWindowGroupEvent
+     * @since 1.0.0
      */
     void groupShowed(ToolWindowGroupEvent event);
 
@@ -48,6 +52,7 @@ public interface ToolWindowGroupListener extends EventListener {
      *
      * @param event the fired event.
      * @see ToolWindowGroupEvent
+     * @since 1.0.0
      */
     void groupHided(ToolWindowGroupEvent event);
 

@@ -18,18 +18,18 @@ public interface ContentManager {
     /**
      * Sets the content manager ui to <code>contentManagerUI</code>.
      *
-     * @since 1.1.0
      * @param contentManagerUI the content manager ui.
      * @see #getContentManagerUI()
      * @see org.noos.xing.mydoggy.ContentManagerUI
+     * @since 1.1.0
      */
     void setContentManagerUI(ContentManagerUI contentManagerUI);
 
     /**
      * Returns the content manager ui.
-     * @since 1.1.0
      * @return the content manager ui.
      * @see org.noos.xing.mydoggy.ContentManagerUI
+     * @since 1.1.0
      */
     ContentManagerUI getContentManagerUI();
 

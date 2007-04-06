@@ -8,14 +8,27 @@ package org.noos.xing.mydoggy;
  * button is positioned.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @since 1.0.0
  */
 public enum ToolWindowAnchor {
+    /**
+     * Self explained.
+     */
     TOP,
 
+    /**
+     * Self explained.
+     */
     LEFT,
 
+    /**
+     * Self explained.
+     */
     BOTTOM,
 
+    /**
+     * Self explained.
+     */
     RIGHT;
 
     /**

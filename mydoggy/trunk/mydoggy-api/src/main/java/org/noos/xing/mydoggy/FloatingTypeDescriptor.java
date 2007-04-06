@@ -9,6 +9,7 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @see org.noos.xing.mydoggy.ToolWindowType#FLOATING
  * @see org.noos.xing.mydoggy.ToolWindowType#FLOATING_FREE
+ * @since 1.1.0
  */
 public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
 
@@ -23,6 +24,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * @param y the <i>y</i>-coordinate of the new location's
      *          top-left corner in the system's coordinate space
      * @see #getLocation
+     * @since 1.1.0
      */
     void setLocation(int x, int y);
 
@@ -34,6 +36,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * @return an instance of <code>Point</code> representing the top-left corner of the component's bounds in
      *         the system coordinate space.
      * @see #setLocation
+     * @since 1.1.0
      */
     Point getLocation();
 
@@ -43,6 +46,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * @param width  the new width of this component in pixels
      * @param height the new height of this component in pixels
      * @see #getSize
+     * @since 1.1.0
      */
     void setSize(int width, int height);
 
@@ -57,6 +61,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * @return a <code>Dimension</code> object that indicates the
      *         size of this window.
      * @see #setSize
+     * @since 1.1.0
      */
     Dimension getSize();
 
@@ -66,6 +71,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * @param modal <code>true</code> to make the window modal;
      *              <code>false</code> otherwise.
      * @see #isModal()
+     * @since 1.1.0
      */
     void setModal(boolean modal);
 
@@ -77,6 +83,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * @return <code>true</code> if this window is modal;
      *         <code>false</code> otherwise.
      * @see #setModal(boolean)
+     * @since 1.1.0
      */
     boolean isModal();
 
@@ -89,6 +96,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      *                        <code>false</code> to disable transparent mode.
      * @see #isTransparentMode()
      * @see #setTransparentRatio(float)
+     * @since 1.1.0
      */
     void setTransparentMode(boolean transparentMode);
 
@@ -98,6 +106,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * @return <code>true</code> if the trasparent mode is enabled;
      *         <code>false</code> otherwise.
      * @see #setTransparentMode(boolean)
+     * @since 1.1.0
      */
     boolean isTransparentMode();
 
@@ -105,6 +114,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * Sets the transparent ratio. Valid range is [0.0, 1.0]
      *
      * @param transparentRatio the transparent ratio.
+     * @since 1.1.0
      */
     void setTransparentRatio(float transparentRatio);
 
@@ -112,6 +122,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * Returns the transparent ratio.
      *
      * @return ratio value used to describe the opacity of the window.
+     * @since 1.1.0
      */
     float getTransparentRatio();
 
@@ -120,6 +131,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * transparent.
      *
      * @param transparentDelay the transparent delay
+     * @since 1.1.0
      */
     void setTransparentDelay(int transparentDelay);
 
@@ -127,6 +139,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * Returns the transparent delay.
      *
      * @return delay in milliseconds.
+     * @since 1.1.0
      */
     int getTransparentDelay();
 
@@ -173,6 +186,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * @param listener the PropertyChangeListener to be added
      * @see #getPropertyChangeListeners()
      * @see #removePropertyChangeListener
+     * @since 1.1.0
      */
     void addPropertyChangeListener(PropertyChangeListener listener);
 
@@ -184,6 +198,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * @param listener the PropertyChangeListener to be removed.
      * @see #addPropertyChangeListener
      * @see #getPropertyChangeListeners
+     * @since 1.1.0
      */
     void removePropertyChangeListener(PropertyChangeListener listener);
 
@@ -196,6 +211,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      *         listeners are currently registered.
      * @see #addPropertyChangeListener
      * @see #removePropertyChangeListener
+     * @since 1.0.0
      */
     PropertyChangeListener[] getPropertyChangeListeners();
 

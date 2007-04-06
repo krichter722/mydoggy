@@ -14,6 +14,7 @@ import java.awt.*;
  * @see ContentManager
  * @see ToolWindowTypeDescriptor
  * @see ToolWindowManagerListener
+ * @since 1.0.0
  */
 public interface ToolWindowManager {
 
@@ -22,6 +23,7 @@ public interface ToolWindowManager {
      *
      * @return an instance of <code>ContentManager</code>.
      * @see org.noos.xing.mydoggy.ContentManager
+     * @since 1.0.0
      */
     ContentManager getContentManager();
 
@@ -56,6 +58,7 @@ public interface ToolWindowManager {
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
      * @see org.noos.xing.mydoggy.ToolWindowManager
      * @see #unregisterToolWindow(String)
+     * @since 1.0.0
      */
     ToolWindow registerToolWindow(String id, String title, Icon icon,
                                   Component component, ToolWindowAnchor anchor);
@@ -68,11 +71,13 @@ public interface ToolWindowManager {
      *          - if tool window with specified id isn't registered.
      * @see #registerToolWindow(String,String,javax.swing.Icon,java.awt.Component,ToolWindowAnchor)
      * @see #unregisterAllToolWindow()
+     * @since 1.0.0
      */
     void unregisterToolWindow(String id);
 
     /**
      * Removes all toolwindows from this window manager if there are any.
+     * @since 1.0.0
      */
     void unregisterAllToolWindow();
 
@@ -103,6 +108,7 @@ public interface ToolWindowManager {
      * Returns the id of currently active tool window.
      *
      * @return <tt>ID</tt> of currently active tool window or <tt>null</tt> if there is no active tool window.
+     * @since 1.0.0
      */
     Object getActiveToolWindowId();
 
@@ -113,6 +119,7 @@ public interface ToolWindowManager {
      * @param id id of tool window
      * @return registered tool window with specified id. If there is no registered tool
      *         window with specified id then the method returns <tt>null</tt>.
+     * @since 1.0.0
      */
     ToolWindow getToolWindow(Object id);
 
@@ -121,6 +128,7 @@ public interface ToolWindowManager {
      *
      * @param index tool window index.
      * @return the tool window whose index is <code>index</code>.
+     * @since 1.0.0
      */
     ToolWindow getToolWindow(int index);
 
@@ -129,6 +137,7 @@ public interface ToolWindowManager {
      *
      * @return an array of the toolwindows registered into this manager.
      *         If there is no tool registered then it returns an empty array.
+     * @since 1.0.0
      */
     ToolWindow[] getToolWindows();
 
@@ -141,12 +150,13 @@ public interface ToolWindowManager {
      *         anchored on passed anchor. If there is no registered tool window anchored on that anchor
      *         then it returns an empty array.
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
+     * @since 1.0.0
      */
     ToolWindow[] getToolsByAnchor(ToolWindowAnchor anchor);
 
     /**
-     *
-     * @return
+     * Returns a special group that contains all toolwindows registered in this manager.
+     * @return a group that contains all toolwindows registered in this manager. 
      * @since 1.2.0
      */
     ToolWindowGroup getToolWindowGroup();
@@ -160,6 +170,7 @@ public interface ToolWindowManager {
      * @return the tool window group to which this manager maps the specified name.
      * @see org.noos.xing.mydoggy.ToolWindowGroup
      * @see #getToolWindowGroups()
+     * @since 1.0.0
      */
     ToolWindowGroup getToolWindowGroup(String name);
 
@@ -169,6 +180,7 @@ public interface ToolWindowManager {
      * @return an array of the toolwindows groups registered into this manager.
      *         If there is no group registered then it returns an empty array.
      * @see #getToolWindowGroup(String)
+     * @since 1.0.0
      */
     ToolWindowGroup[] getToolWindowGroups();
 
@@ -178,6 +190,7 @@ public interface ToolWindowManager {
      * @param name name whose group is to be removed from the manager.
      * @return true if there exist a group for this name from this manager, false otherwise.
      * @see #getToolWindowGroup(String)
+     * @since 1.0.0
      */
     boolean removeToolWindowGroup(String name);
 
@@ -186,6 +199,7 @@ public interface ToolWindowManager {
      *
      * @param name name whose presence in this manager is to be tested.
      * @return <tt>true</tt> if this manager contains a group for the specified name.
+     * @since 1.0.0
      */
     boolean containsGroup(String name);
 
@@ -200,6 +214,7 @@ public interface ToolWindowManager {
      *          - if doen't exist a template for <code>type</code>.
      * @see ToolWindowType
      * @see org.noos.xing.mydoggy.ToolWindowTypeDescriptor
+     * @since 1.0.0
      */
     ToolWindowTypeDescriptor getTypeDescriptorTemplate(ToolWindowType type);
 
@@ -212,6 +227,7 @@ public interface ToolWindowManager {
      *
      * @param listener the <code>ToolWindowManagerListener</code> to register.
      * @see ToolWindowManagerListener
+     * @since 1.0.0
      */
     void addToolWindowManagerListener(ToolWindowManagerListener listener);
 
@@ -224,6 +240,7 @@ public interface ToolWindowManager {
      *
      * @param listener the <code>ToolWindowManagerListener</code> to be removed
      * @see #addToolWindowManagerListener(ToolWindowManagerListener)
+     * @since 1.0.0
      */
     void removeToolWindowManagerListener(ToolWindowManagerListener listener);
 
@@ -235,6 +252,7 @@ public interface ToolWindowManager {
      *         or an empty array if no tool window manager listeners are currently registered.
      * @see #addToolWindowManagerListener(ToolWindowManagerListener)
      * @see #removeToolWindowManagerListener(ToolWindowManagerListener)
+     * @since 1.0.0
      */
     ToolWindowManagerListener[] getToolWindowManagerListeners();
 }

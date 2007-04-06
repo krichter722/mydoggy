@@ -10,6 +10,7 @@ import java.util.EventObject;
  * An event which indicates that an action occurred in a tool window group.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @since 1.0.0
  */
 public class ToolWindowGroupEvent extends EventObject {
     private static final long serialVersionUID = -6028203866456501444L;
