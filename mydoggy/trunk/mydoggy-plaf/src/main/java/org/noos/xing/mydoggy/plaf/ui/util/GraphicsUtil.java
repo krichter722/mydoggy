@@ -43,7 +43,7 @@ public class GraphicsUtil {
 
             case FROM_CENTRE_GRADIENT_ON_X:
                 Rectangle tmp = new Rectangle(r);
-                tmp.width = tmp.width >> 1;
+                tmp.width >>= 1;
                 fillRect(g, tmp, r.x, r.y, start, r.x + r.width, r.y, end, clip);
 
                 if (r.width % 2 == 0) {

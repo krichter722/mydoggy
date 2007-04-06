@@ -460,19 +460,14 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             }
 
             if (content == null || descriptor.getDividerLocation() > 0 && splitPane.getDividerSize() != 0) {
+                synchronized (splitAnimation) {
+                    if (splitAnimation.isAnimating())
+                        splitAnimation.stop();
+                }
+
                 if (manager.getShowingGroup() == null) {
-                    synchronized (splitAnimation) {
-                        if (splitAnimation.isAnimating())
-                            splitAnimation.stop();
-                    }
                     descriptor.setDividerLocation(getSplitDividerLocation());
                 } else {
-                    synchronized (splitAnimation) {
-                        if (splitAnimation.isAnimating()) {
-                            splitAnimation.stop();
-                        }
-                    }
-
                     int divederLocation = descriptor.getDividerLocation();
                     for (ToolWindow toolWindow : manager.getToolsByAnchor(anchor)) {
                         if (toolWindow.isVisible())
@@ -511,9 +506,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     }
                 } else if (manager.getShowingGroup() != null && content != null) {
                     MultiSplitContainer container = new MultiSplitContainer(orientation);
-                    if (manager.isShiftShow()) {
+                    if (manager.isShiftShow())
                         container.addContent(splitPaneContent);
-                    }
                     container.addContent(content);
 
                     setSplitPaneContent(container);
@@ -607,7 +601,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             private int sheetLen;
 
             public SplitAnimation() {
-                super(100f);
+                super(60f);
             }
 
             protected float onAnimating(float animationPercent) {
@@ -619,11 +613,13 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 else
                     animatingHeight = (int) ((1.0f - animationPercent) * sheetLen);
 
+//                System.out.println("animatingHeight = " + animatingHeight);
+
                 switch (anchor) {
                     case LEFT:
                     case TOP:
                         if (direction == Direction.INCOMING) {
-                            if (splitPane.getDividerLocation() != animatingHeight)
+                            if (splitPane.getDividerLocation() <= animatingHeight)
                                 splitPane.setDividerLocation(animatingHeight);
                         } else
                             splitPane.setDividerLocation(animatingHeight);

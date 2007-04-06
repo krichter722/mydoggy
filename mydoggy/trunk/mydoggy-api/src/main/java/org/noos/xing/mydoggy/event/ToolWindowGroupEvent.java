@@ -63,6 +63,7 @@ public class ToolWindowGroupEvent extends EventObject {
             throw new IllegalArgumentException("null toolWindowGroup");
 
         this.actionId = actionId;
+        this.toolWindow = null;
         this.toolWindowGroup = toolWindowGroup;
     }
 

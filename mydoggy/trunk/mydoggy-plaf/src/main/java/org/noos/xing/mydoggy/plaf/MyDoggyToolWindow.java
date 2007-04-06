@@ -98,7 +98,7 @@ public class MyDoggyToolWindow implements ToolWindow {
 
         synchronized (getLock()) {
             if (!available) {
-                if (isActive())
+                if (isActive() && publicEvent)
                     setActive(false);
                 if (isVisible())
                     setVisible(false);
@@ -182,19 +182,22 @@ public class MyDoggyToolWindow implements ToolWindow {
 
                 publicEvent = false;
 
-                setAvailable(false);
+                ToolWindowAnchor oldAnchor;
+                try {
+                    setAvailable(false);
 
-                ToolWindowAnchor oldAnchor = this.anchor;
-                this.anchor = anchor;
-                this.lastAnchorIndex = anchor.getIndex();
+                    oldAnchor = this.anchor;
+                    this.anchor = anchor;
+                    this.lastAnchorIndex = anchor.getIndex();
 
-                setAvailable(true);
-                if (tempActive)
-                    setActive(true);
-                else if (tempVisible)
-                    setVisible(true);
-
-                publicEvent = true;
+                    setAvailable(true);
+                    if (tempActive)
+                        setActive(true);
+                    else if (tempVisible)
+                        setVisible(true);
+                } finally {
+                    publicEvent = true;
+                }
 
                 fireAnchorEvent(oldAnchor, anchor);
             } else {
@@ -236,21 +239,24 @@ public class MyDoggyToolWindow implements ToolWindow {
 
             publicEvent = false;
 
-            setVisible(false);
-            if (tempActive)
-                active = false;
+            ToolWindowType oldType;
+            try {
+                setVisible(false);
+                if (tempActive)
+                    active = false;
 
-            publicEvent = true;
+                publicEvent = true;
 
-            ToolWindowType oldType = this.type;
-            this.type = type;
+                oldType = this.type;
+                this.type = type;
 
-            if (tempActive) {
-                setActive(true);
-            } else if (tempVisible)
-                setVisible(true);
-
-            publicEvent = true;
+                if (tempActive) {
+                    setActive(true);
+                } else if (tempVisible)
+                    setVisible(true);
+            } finally {
+                publicEvent = true;
+            }
 
             fireTypeEvent(oldType, type);
         }

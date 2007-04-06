@@ -19,6 +19,11 @@ public class ExtendedTableLayout extends TableLayout {
         super(size);
     }
 
+    public ExtendedTableLayout(double size[][], boolean calcMinimumSize) {
+        super(size);
+        this.calcMinimumSize = calcMinimumSize;
+    }
+
     public ExtendedTableLayout(boolean calcMinimumSize) {
         this.calcMinimumSize = calcMinimumSize;
     }

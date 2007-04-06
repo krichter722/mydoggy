@@ -761,7 +761,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    public class ExtendedJSP extends JSplitPane {
+    public static class ExtendedJSP extends JSplitPane {
         private MyDoggyToolWindowBar toolWindowBar;
 
         public ExtendedJSP() {
@@ -796,8 +796,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 //            String anchor = (toolWindowBar != null) ? toolWindowBar.getAnchor().toString() : "";
 
 //            System.out.println("--dividerLocation(" + anchor + ") : " + location);
-            if (toolWindowBar != null && toolWindowBar.getAnchor() == ToolWindowAnchor.LEFT)
-                System.out.println("--dividerLocation : " + location);
+//            if (toolWindowBar != null && toolWindowBar.getAnchor() == ToolWindowAnchor.LEFT)
+//                System.out.println("--dividerLocation : " + location);
             super.setDividerLocation(location);
         }
 
