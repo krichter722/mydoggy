@@ -190,7 +190,9 @@ public class SampleApp {
                 </table>
                 <p>
                     Good! We are now at the end of this tutorial. I hope this will be useful, if not please
-                    help me to improve mydoggy.
+                    help me to improve mydoggy. See
+                    <a href="./../contact.html">contant</a>
+                    section.
                 </p>
             </subsection>
         </section>

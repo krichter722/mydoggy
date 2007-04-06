@@ -13,6 +13,7 @@
                 This tutorial is based on the <a href="./../mydoggy-plaf/index.html">default implementation</a> of mydoggy.
                 We'll build a simple application based on <a href="./../mydoggy-examples/mydoggyset.html">MyDoggySet.</a>
                 <br></br>
+                For every step, pay attention to code in green that highlights the new code introduced in that step.
             </p>
 
             <ul>
@@ -29,7 +30,7 @@
                     <a href="./step4.html">Step 4</a> : Add first Content.
                 </li>
                 <li>
-                    <a href="./step4.html">Step 5</a> : Configure ContentManagerUI.
+                    <a href="./step5.html">Step 5</a> : Configure ContentManagerUI.
                 </li>
             </ul>
         </section>
