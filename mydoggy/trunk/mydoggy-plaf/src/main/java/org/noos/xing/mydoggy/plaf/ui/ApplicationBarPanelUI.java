@@ -93,7 +93,7 @@ public class ApplicationBarPanelUI extends PanelUI {
 			assert descriptor.getToolWindow().isVisible();
 
 			if ("active".equals(evt.getPropertyName())) {
-				if (evt.getNewValue() == Boolean.FALSE) {
+                if (evt.getNewValue() == Boolean.FALSE) {
 					if (startTemp == null || startTemp.equals(startEnabled))
 						animation.hide();
 				} else {
@@ -111,7 +111,6 @@ public class ApplicationBarPanelUI extends PanelUI {
 		public GradientAnimation() {
 			super(300f);
 		}
-
 
 		protected float onAnimating(float animationPercent) {
 			switch (getAnimationDirection()) {

@@ -136,7 +136,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         synchronized (getLock()) {
             if (visible)
                 setAvailable(visible);
-            else if (active)
+            else if (active && publicEvent)
                 setActive(false);
 
             boolean old = this.visible;
@@ -151,7 +151,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setActive(boolean active) {
-        if (this.active == active)
+        if (this.active == active && publicEvent)
             return;
 
         synchronized (getLock()) {
@@ -236,21 +236,23 @@ public class MyDoggyToolWindow implements ToolWindow {
 
             publicEvent = false;
 
-            setActive(false);
             setVisible(false);
+            if (tempActive)
+                active = false;
 
             publicEvent = true;
 
             ToolWindowType oldType = this.type;
             this.type = type;
 
-
-            fireTypeEvent(oldType, type);
-
             if (tempActive) {
                 setActive(true);
             } else if (tempVisible)
                 setVisible(true);
+
+            publicEvent = true;
+
+            fireTypeEvent(oldType, type);
         }
     }
 

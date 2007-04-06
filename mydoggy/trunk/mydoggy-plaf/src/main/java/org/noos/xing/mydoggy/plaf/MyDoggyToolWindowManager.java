@@ -796,6 +796,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 //            String anchor = (toolWindowBar != null) ? toolWindowBar.getAnchor().toString() : "";
 
 //            System.out.println("--dividerLocation(" + anchor + ") : " + location);
+            if (toolWindowBar != null && toolWindowBar.getAnchor() == ToolWindowAnchor.LEFT)
+                System.out.println("--dividerLocation : " + location);
             super.setDividerLocation(location);
         }
 

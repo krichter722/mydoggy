@@ -623,7 +623,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     case LEFT:
                     case TOP:
                         if (direction == Direction.INCOMING) {
-                            if (splitPane.getDividerLocation() != animatingHeight) 
+                            if (splitPane.getDividerLocation() != animatingHeight)
                                 splitPane.setDividerLocation(animatingHeight);
                         } else
                             splitPane.setDividerLocation(animatingHeight);
@@ -662,7 +662,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 this.dividerLocation = (Integer) params[0];
             }
 
-            protected void onStartAnimation(Direction direction) {
+            protected void onStartAnimation(Direction direction) {                
                 sheetLen = dividerLocation;
             }
 
