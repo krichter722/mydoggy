@@ -10,8 +10,9 @@ import java.io.Serializable;
  * a title, an icon, etc. The visualization of a content depends on specific
  * platform implementation. A platform implementation can use a JTabbedPane
  * or a JDesktopPane for example.
- * 
+ *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @since 1.0.0
  */
 public interface Content extends Serializable {
 
@@ -19,6 +20,7 @@ public interface Content extends Serializable {
       * Return the content unique identifier.
       *
       * @return the content unique identifier.
+     * @since 1.0.0
       */
     Object getKey();
 
@@ -27,6 +29,7 @@ public interface Content extends Serializable {
      *
      * @param title the title to be displayed for the content.
      * @see #getTitle()
+     * @since 1.0.0
      */
     void setTitle(String title);
 
@@ -35,6 +38,7 @@ public interface Content extends Serializable {
      *
      * @return the title.
      * @see #setTitle(String)
+     * @since 1.0.0
      */
     String getTitle();
 
@@ -45,6 +49,7 @@ public interface Content extends Serializable {
      *
      * @param foreground the color to be displayed as the content's foreground
      * @see #getForeground
+     * @since 1.0.0
      */
     public void setForeground(Color foreground);
 
@@ -53,6 +58,7 @@ public interface Content extends Serializable {
      *
      * @return the <code>Color</code> of the content foreground.
      * @see #setForeground
+     * @since 1.0.0
      */
     public Color getForeground();
 
@@ -61,6 +67,7 @@ public interface Content extends Serializable {
      *
      * @param icon the icon to be displayed for the content.
      * @see #getIcon()
+     * @since 1.0.0
      */
     void setIcon(Icon icon);
 
@@ -69,6 +76,7 @@ public interface Content extends Serializable {
      *
      * @return the icon.
      * @see #setIcon(javax.swing.Icon)
+     * @since 1.0.0
      */
     Icon getIcon();
 
@@ -77,6 +85,7 @@ public interface Content extends Serializable {
      *
      * @param disabledIcon the icon to be displayed in the content when disabled.
      * @see #getDisabledIcon()
+     * @since 1.0.0
      */
     void setDisabledIcon(Icon disabledIcon);
 
@@ -85,6 +94,7 @@ public interface Content extends Serializable {
      *
      * @return the disabled icon.
      * @see #setDisabledIcon(javax.swing.Icon)
+     * @since 1.0.0
      */
     Icon getDisabledIcon();
 
@@ -94,6 +104,7 @@ public interface Content extends Serializable {
      *
      * @param toolTipText the tool tip text to be displayed for the content.
      * @see #getToolTipText()
+     * @since 1.0.0
      */
     void setToolTipText(String toolTipText);
 
@@ -102,6 +113,7 @@ public interface Content extends Serializable {
      *
      * @return a string containing the tool tip text.
      * @see #setToolTipText(String)
+     * @since 1.0.0
      */
     String getToolTipText();
 
@@ -110,6 +122,7 @@ public interface Content extends Serializable {
      *
      * @param enabled whether or not the content should be enabled.
      * @see #isEnabled()
+     * @since 1.0.0
      */
     void setEnabled(boolean enabled);
 
@@ -119,6 +132,7 @@ public interface Content extends Serializable {
      * @return true if the content is enabled;
      *         false otherwise
      * @see #setEnabled(boolean)
+     * @since 1.0.0
      */
     boolean isEnabled();
 
@@ -127,6 +141,7 @@ public interface Content extends Serializable {
      *
      * @param selected whether or not the content should be selected.
      * @see #isSelected()
+     * @since 1.0.0
      */
     void setSelected(boolean selected);
 
@@ -136,6 +151,7 @@ public interface Content extends Serializable {
      * @return true if the content is selected;
      *         false otherwise
      * @see #setSelected(boolean)
+     * @since 1.0.0
      */
     boolean isSelected();
 
@@ -144,6 +160,7 @@ public interface Content extends Serializable {
      *
      * @param component the component for the content
      * @see #getComponent()
+     * @since 1.0.0
      */
     void setComponent(Component component);
 
@@ -152,6 +169,7 @@ public interface Content extends Serializable {
      *
      * @return the component.
      * @see #setComponent(java.awt.Component)
+     * @since 1.0.0
      */
     Component getComponent();
 
@@ -160,6 +178,7 @@ public interface Content extends Serializable {
      *
      * @param popupMenu the popup menu for the content.
      * @see #getPopupMenu()
+     * @since 1.0.0
      */
     void setPopupMenu(JPopupMenu popupMenu);
 
@@ -168,6 +187,7 @@ public interface Content extends Serializable {
      *
      * @return the popup menu.
      * @see #setComponent(java.awt.Component)
+     * @since 1.0.0
      */
     JPopupMenu getPopupMenu();
 
@@ -175,6 +195,7 @@ public interface Content extends Serializable {
      * This method is used to detach a content from the main window. When a content is detached
      * it is showed into a separete window.
      * @param detached true to detach the content, false to reattach the content into the main window
+     * @since 1.0.0
      */
     void setDetached(boolean detached);
 
@@ -184,6 +205,7 @@ public interface Content extends Serializable {
      * @return true if the content is detached;
      *         false otherwise
      * @see #setDetached(boolean)
+     * @since 1.0.0
      */
     boolean isDetached();
 
@@ -209,6 +231,7 @@ public interface Content extends Serializable {
      * @param listener the PropertyChangeListener to be added
      * @see #getPropertyChangeListeners()
      * @see #removePropertyChangeListener
+     * @since 1.0.0
      */
     void addPropertyChangeListener(PropertyChangeListener listener);
 
@@ -222,6 +245,7 @@ public interface Content extends Serializable {
      * @param listener the PropertyChangeListener to be removed
      * @see #addPropertyChangeListener
      * @see #getPropertyChangeListeners
+     * @since 1.0.0
      */
     void removePropertyChangeListener(PropertyChangeListener listener);
 
@@ -234,6 +258,7 @@ public interface Content extends Serializable {
      *         listeners are currently registered
      * @see #addPropertyChangeListener
      * @see #removePropertyChangeListener
+     * @since 1.0.0
      */
     PropertyChangeListener[] getPropertyChangeListeners();
 

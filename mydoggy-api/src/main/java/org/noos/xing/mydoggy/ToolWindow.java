@@ -11,6 +11,7 @@ import java.beans.PropertyChangeListener;
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @see org.noos.xing.mydoggy.ToolWindowManager
+ * @since 1.0.0
  */
 public interface ToolWindow {
 
@@ -18,6 +19,7 @@ public interface ToolWindow {
      * Returns the id used to register the tool.
      *
      * @return tool id.
+     * @since 1.0.0
      */
     String getId();
 
@@ -28,6 +30,7 @@ public interface ToolWindow {
      *
      * @param index the new index for the tool.
      * @see #getIcon()
+     * @since 1.0.0
      */
     void setIndex(int index);
 
@@ -36,6 +39,7 @@ public interface ToolWindow {
      *
      * @return tool's index.
      * @see #setIndex(int)
+     * @since 1.0.0
      */
     int getIndex();
 
@@ -48,6 +52,7 @@ public interface ToolWindow {
      * @param available <tt>true</tt> to make the tool available, <tt>false</tt> to make the tool not available.
      * @see #isAvailable()
      * @see #setVisible(boolean)
+     * @since 1.0.0
      */
     void setAvailable(boolean available);
 
@@ -56,6 +61,7 @@ public interface ToolWindow {
      *
      * @return <tt>true</tt> is the tool is available, false otherwise.
      * @see #setAvailable(boolean)
+     * @since 1.0.0
      */
     boolean isAvailable();
 
@@ -68,6 +74,7 @@ public interface ToolWindow {
      *
      * @param visible <tt>true</tt> to make the tool visible, <tt>false</tt> to make the tool not visible.
      * @see #isVisible()
+     * @since 1.0.0
      */
     void setVisible(boolean visible);
 
@@ -76,6 +83,7 @@ public interface ToolWindow {
      *
      * @return <tt>true</tt> is the tool is vixible, false otherwise.
      * @see #setVisible(boolean)
+     * @since 1.0.0
      */
     boolean isVisible();
 
@@ -98,6 +106,7 @@ public interface ToolWindow {
      * @param active <tt>true</tt> to make the tool active, <tt>false</tt> to deactivate the tool.
      * @see #setAvailable(boolean)
      * @see #setVisible(boolean)
+     * @since 1.0.0
      */
     void setActive(boolean active);
 
@@ -106,6 +115,7 @@ public interface ToolWindow {
      *
      * @return <tt>true</tt> is the tool is active, false otherwise.
      * @see #setActive(boolean)
+     * @since 1.0.0
      */
     boolean isActive();
 
@@ -116,6 +126,7 @@ public interface ToolWindow {
      * @param anchor the new anchor.
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
      * @see #getAnchor()
+     * @since 1.0.0
      */
     void setAnchor(ToolWindowAnchor anchor);
 
@@ -125,6 +136,7 @@ public interface ToolWindow {
      * @return the anchor for the tool.
      * @see #setAnchor(ToolWindowAnchor)
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
+     * @since 1.0.0
      */
     ToolWindowAnchor getAnchor();
 
@@ -134,6 +146,7 @@ public interface ToolWindow {
      * @param autoHide <code>true</code> to hide the tool when the tool losts focus;
      *                 <code>false</code> to make inactive the tool when the tool losts focus.
      * @see #isAutoHide() ()
+     * @since 1.0.0
      */
     void setAutoHide(boolean autoHide);
 
@@ -142,6 +155,7 @@ public interface ToolWindow {
      *
      * @return autoHide property value.
      * @see #setAutoHide(boolean)
+     * @since 1.0.0
      */
     boolean isAutoHide();
 
@@ -153,6 +167,7 @@ public interface ToolWindow {
      * @param type the new type.
      * @see ToolWindowType
      * @see #getType()
+     * @since 1.0.0
      */
     void setType(ToolWindowType type);
 
@@ -162,6 +177,7 @@ public interface ToolWindow {
      * @return the type for the tool.
      * @see #setType(ToolWindowType)
      * @see ToolWindowType
+     * @since 1.0.0
      */
     ToolWindowType getType();
 
@@ -170,6 +186,7 @@ public interface ToolWindow {
      *
      * @param icon the new icon.
      * @see #getIcon()
+     * @since 1.0.0
      */
     void setIcon(Icon icon);
 
@@ -178,6 +195,7 @@ public interface ToolWindow {
      *
      * @return the icon for the tool.
      * @see #setIcon(javax.swing.Icon)
+     * @since 1.0.0
      */
     Icon getIcon();
 
@@ -186,6 +204,7 @@ public interface ToolWindow {
      *
      * @param title the new title.
      * @see #getTitle() ()
+     * @since 1.0.0
      */
     void setTitle(String title);
 
@@ -194,6 +213,7 @@ public interface ToolWindow {
      *
      * @return the title for the tool.
      * @see #setTitle(String)
+     * @since 1.0.0
      */
     String getTitle();
 
@@ -203,6 +223,7 @@ public interface ToolWindow {
      *
      * @param type tool window type.
      * @return the type descriptor for <code>type</code>.
+     * @since 1.0.0
      */
     ToolWindowTypeDescriptor getTypeDescriptor(ToolWindowType type);
 
@@ -227,6 +248,7 @@ public interface ToolWindow {
      * @param listener the PropertyChangeListener to be added
      * @see #getPropertyChangeListeners()
      * @see #removePropertyChangeListener
+     * @since 1.0.0
      */
     void addPropertyChangeListener(PropertyChangeListener listener);
 
@@ -238,6 +260,7 @@ public interface ToolWindow {
      * @param listener the PropertyChangeListener to be removed.
      * @see #addPropertyChangeListener
      * @see #getPropertyChangeListeners
+     * @since 1.0.0
      */
     void removePropertyChangeListener(PropertyChangeListener listener);
 
@@ -250,6 +273,7 @@ public interface ToolWindow {
      *         listeners are currently registered.
      * @see #addPropertyChangeListener
      * @see #removePropertyChangeListener
+     * @since 1.0.0
      */
     PropertyChangeListener[] getPropertyChangeListeners();
 

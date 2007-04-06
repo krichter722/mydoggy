@@ -8,6 +8,7 @@ import java.util.EventObject;
  * An event which indicates that an action occurred in the content manager.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @since 1.0.0
  */
 public class ContentManagerEvent extends EventObject {
     private static final long serialVersionUID = -4432400424463237878L;

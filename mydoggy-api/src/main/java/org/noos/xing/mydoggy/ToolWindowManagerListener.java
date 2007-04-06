@@ -15,6 +15,7 @@ import java.util.EventListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @see ToolWindowManager
  * @see ToolWindowManager#addToolWindowManagerListener(ToolWindowManagerListener)
+ * @since 1.0.0
  */
 public interface ToolWindowManagerListener extends EventListener {
 
@@ -23,6 +24,7 @@ public interface ToolWindowManagerListener extends EventListener {
      *
      * @param event the fired event.
      * @see org.noos.xing.mydoggy.event.ToolWindowManagerEvent
+     * @since 1.0.0
      */
     void toolWindowRegistered(ToolWindowManagerEvent event);
 
@@ -31,6 +33,7 @@ public interface ToolWindowManagerListener extends EventListener {
      *
      * @param event the fired event.
      * @see org.noos.xing.mydoggy.event.ToolWindowManagerEvent
+     * @since 1.0.0
      */
     void toolWindowUnregistered(ToolWindowManagerEvent event);
 
@@ -39,6 +42,7 @@ public interface ToolWindowManagerListener extends EventListener {
      *
      * @param event the fired event.
      * @see org.noos.xing.mydoggy.event.ToolWindowManagerEvent
+     * @since 1.0.0
      */
     void toolWindowGroupAdded(ToolWindowManagerEvent event);
 
@@ -47,6 +51,7 @@ public interface ToolWindowManagerListener extends EventListener {
      *
      * @param event the fired event.
      * @see org.noos.xing.mydoggy.event.ToolWindowManagerEvent
+     * @since 1.0.0
      */
     void toolWindowGroupRemoved(ToolWindowManagerEvent event);
 

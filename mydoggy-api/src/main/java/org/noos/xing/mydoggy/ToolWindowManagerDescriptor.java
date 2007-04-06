@@ -9,7 +9,7 @@ package org.noos.xing.mydoggy;
 public interface ToolWindowManagerDescriptor {
 
     /**
-     *
+     * TODO
      * @param pushAwayMode
      * @since 1.2.0
      */

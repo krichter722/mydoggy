@@ -9,6 +9,7 @@ package org.noos.xing.mydoggy;
  * @see org.noos.xing.mydoggy.ToolWindowType
  * @see org.noos.xing.mydoggy.DockedTypeDescriptor
  * @see org.noos.xing.mydoggy.FloatingTypeDescriptor
+ * @since 1.0.0
  */
 public interface ToolWindowTypeDescriptor {
 }

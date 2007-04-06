@@ -8,6 +8,7 @@ import java.beans.PropertyChangeListener;
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @see org.noos.xing.mydoggy.ToolWindowType#DOCKED
+ * @since 1.0.0
  */
 public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
 
@@ -19,6 +20,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * @see org.noos.xing.mydoggy.ToolWindowType
      * @see #isPopupMenuEnabled()
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
+     * @since 1.0.0
      */
     void setPopupMenuEnabled(boolean enabled);
 
@@ -29,6 +31,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      *         <code>false</code> otherwise.
      * @see #setPopupMenuEnabled(boolean)
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
+     * @since 1.0.0
      */
     boolean isPopupMenuEnabled();
 
@@ -38,6 +41,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      *
      * @return the menu where to add new menu items.
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
+     * @since 1.0.0
      */
     JMenu getToolsMenu();
 
@@ -47,6 +51,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      *
      * @param length dock panel length.
      * @see #getDockLength()
+     * @since 1.0.0
      */
     void setDockLength(int length);
 
@@ -55,11 +60,26 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      *
      * @return the dock panel length.
      * @see #setDockLength(int)
+     * @since 1.0.0
      */
     int getDockLength();
 
+    /**
+     * Returns the ToolWindowActionHandler instance or null if it is not present.
+     * @return the ToolWindowActionHandler instance.
+     * @see ToolWindowActionHandler
+     * @see #setToolWindowActionHandler(ToolWindowActionHandler)
+     * @since 1.2.0
+     */
     ToolWindowActionHandler getToolWindowActionHandler();
 
+    /**
+     * Sets the ToolWindowActionHandler to this descriptor.
+     * @param toolWindowActionHandler the handler.
+     * @see ToolWindowActionHandler
+     * @see #getToolWindowActionHandler()
+     * @since 1.2.0
+     */
     void setToolWindowActionHandler(ToolWindowActionHandler toolWindowActionHandler);
 
     /**
@@ -76,6 +96,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * @param listener the PropertyChangeListener to be added
      * @see #getPropertyChangeListeners()
      * @see #removePropertyChangeListener
+     * @since 1.0.0
      */
     void addPropertyChangeListener(PropertyChangeListener listener);
 
@@ -87,6 +108,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * @param listener the PropertyChangeListener to be removed.
      * @see #addPropertyChangeListener
      * @see #getPropertyChangeListeners
+     * @since 1.0.0
      */
     void removePropertyChangeListener(PropertyChangeListener listener);
 
@@ -99,6 +121,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      *         listeners are currently registered.
      * @see #addPropertyChangeListener
      * @see #removePropertyChangeListener
+     * @since 1.0.0
      */
     PropertyChangeListener[] getPropertyChangeListeners();
 

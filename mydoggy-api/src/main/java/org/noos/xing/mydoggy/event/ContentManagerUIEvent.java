@@ -8,6 +8,7 @@ import java.util.EventObject;
  * An event which indicates that an action occurred in the content manager.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @since 1.2.0
  */
 public class ContentManagerUIEvent extends EventObject {
 
