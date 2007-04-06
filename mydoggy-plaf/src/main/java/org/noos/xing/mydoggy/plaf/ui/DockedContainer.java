@@ -3,8 +3,9 @@ package org.noos.xing.mydoggy.plaf.ui;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.icons.IconProvider;
+import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ButtonUI;
@@ -121,12 +122,12 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         ActionListener applicationBarActionListener = new ApplicationBarActionListener();
 
         // Container
-        container = new JPanel(new TableLayout(new double[][]{{TableLayout.FILL}, {16, TableLayout.FILL}}));
+        container = new JPanel(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {16, TableLayout.FILL}}, false));
         container.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
         container.setFocusCycleRoot(false);
 
 		// Application Bar
-        applicationBar = new JPanel(new TableLayout(new double[][]{{3, TableLayout.FILL, 3, 15, 2, 15, 2, 15, 2, 15, 3}, {1, 14, 1}})) {
+        applicationBar = new JPanel(new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 3, 15, 2, 15, 2, 15, 2, 15, 3}, {1, 14, 1}}, false)) {
             public void setUI(PanelUI ui) {
                 if (ui instanceof ApplicationBarPanelUI)
                     super.setUI(ui);

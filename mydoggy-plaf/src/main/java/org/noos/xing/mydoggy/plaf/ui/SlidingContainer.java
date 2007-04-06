@@ -247,7 +247,7 @@ public class SlidingContainer extends FloatingContainer {
         private int lastLen = 0;
 
         public SlidingAnimation() {
-            super(100f);
+            super(60f);
         }
 
         protected void onStartAnimation(Direction direction) {

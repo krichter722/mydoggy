@@ -57,11 +57,11 @@ public class GlassPanel extends JPanel implements ContainerListener {
         if (location == null || oldLocation == null)
             return getBounds();
         
-        int x = (int) (location.getX() - (width / 2));
-        int y = (int) (location.getY() - (height / 2));
+        int x = (int) (location.getX() - (width / 2d));
+        int y = (int) (location.getY() - (height / 2d));
 
-        int x2 = (int) (oldLocation.getX() - (width / 2));
-        int y2 = (int) (oldLocation.getY() - (height / 2));
+        int x2 = (int) (oldLocation.getX() - (width / 2d));
+        int y2 = (int) (oldLocation.getY() - (height / 2d));
 
         int width = this.width;
         int height = this.height;
@@ -79,8 +79,8 @@ public class GlassPanel extends JPanel implements ContainerListener {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                             RenderingHints.VALUE_ANTIALIAS_ON);
 
-        int x = (int) (location.getX() - (width / 2));
-        int y = (int) (location.getY() - (height / 2));
+        int x = (int) (location.getX() - (width / 2d));
+        int y = (int) (location.getY() - (height / 2d));
 
         if (visibleRect != null) {
             g2.setClip(visibleRect);

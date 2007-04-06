@@ -557,7 +557,7 @@ public class MyDoggySet {
     }
 
 
-    class ChangeLookAndFeelAction extends AbstractAction {
+    static class ChangeLookAndFeelAction extends AbstractAction {
         final MyDoggySet myDoggySet;
 
         protected ChangeLookAndFeelAction(MyDoggySet myDoggySet) {

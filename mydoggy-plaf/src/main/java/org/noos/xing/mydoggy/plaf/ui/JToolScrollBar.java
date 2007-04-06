@@ -69,11 +69,11 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
             if (cellBounds != null) {
                 switch(orientation) {
                     case JSplitPane.VERTICAL_SPLIT:
-                        cellBounds.y = cellBounds.y - viewport.getViewPosition().y;
+                        cellBounds.y -= viewport.getViewPosition().y;
                         viewport.scrollRectToVisible(cellBounds);
                         break;
                     case JSplitPane.HORIZONTAL_SPLIT:
-                        cellBounds.x = cellBounds.x - viewport.getViewPosition().x;
+                        cellBounds.x -= viewport.getViewPosition().x;
                         viewport.scrollRectToVisible(cellBounds);
                         break;
 

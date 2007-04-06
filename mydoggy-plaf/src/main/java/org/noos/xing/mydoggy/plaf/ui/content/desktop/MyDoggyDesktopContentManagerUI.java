@@ -232,6 +232,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                         fireContentUIRemoving(getContentUI(content));
                         contentManager.removeContent(content);
                     } catch (Exception ignore) {
+                        ignore.printStackTrace();
                     }
                 }
             });
@@ -324,6 +325,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     class DisabledIconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
+            // TODO: add support for this
         }
     }
 
