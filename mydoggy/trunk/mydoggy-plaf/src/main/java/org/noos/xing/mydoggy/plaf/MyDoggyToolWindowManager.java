@@ -424,21 +424,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
 
     protected JSplitPane renderSplitPane(int orientation) {
-/*
-        JSplitPane splitPane = new JSplitPane(orientation) {
-
-            public void setUI(SplitPaneUI ui) {
-                super.setUI(ui);
-                setBorder(null);
-                setContinuousLayout(true);
-            }
-
-            public void setDividerLocation(int location) {
-                System.out.println("dividerLocation : " + location);
-                super.setDividerLocation(location);  
-            }
-        };
-*/
         JSplitPane splitPane = new ExtendedJSP(orientation);
         splitPane.setBorder(null);
         splitPane.setContinuousLayout(true);
@@ -446,7 +431,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         splitPane.setDividerLocation(300);
         splitPane.setLeftComponent(null);
         splitPane.setRightComponent(null);
-        splitPane.setFocusable(false);
         return splitPane;
     }
 
