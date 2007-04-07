@@ -38,16 +38,16 @@
                 <a name="dragdrap"/>
                 <tr>
                     <td>
+                        <a href="./images/screenshots/mydoggyset/pushAwayAnticlockwise.png">
+                            <img src="./images/screenshots/mydoggyset/thumbs/pushAwayAnticlockwise.png" alt="PushAwayMode.ANTICLOKWISE"/>
+                        </a>
+                        <p align="center">PushAwayMode.ANTICLOKWISE</p>
+                    </td>
+                    <td>
                         <a href="./images/screenshots/mydoggyset/tw_transparency.png">
                             <img src="./images/screenshots/mydoggyset/thumbs/tw_transparency.png" alt="Tool Window Transparent"/>
                         </a>
                         <p align="center">A ToolWindowType.FLOATING ToolWindow transparent.</p>
-                    </td>
-                    <td>
-						<a href="./images/screenshots/mydoggyset/desktopContentManager.png">
-							<img src="./images/screenshots/mydoggyset/thumbs/desktopContentManager.png" alt="DesktopContentManager"/>
-						</a>
-						<p align="center">ContentManager using a DesktopContentManagerUI.</p>
                     </td>
                     <td>
                         <a href="./images/screenshots/mydoggyset/drag_drop.gif">
@@ -57,6 +57,12 @@
                     </td>
                 </tr>
                 <tr>
+                    <td>
+						<a href="./images/screenshots/mydoggyset/desktopContentManager.png">
+							<img src="./images/screenshots/mydoggyset/thumbs/desktopContentManager.png" alt="DesktopContentManager"/>
+						</a>
+						<p align="center">ContentManager using a DesktopContentManagerUI.</p>
+                    </td>
                     <td align="center">
                         <a href="./images/screenshots/mydoggyset/mydoggyset.png">
                             <img src="./images/screenshots/mydoggyset/thumbs/mydoggyset.png" alt="MyDoggySet"/>
@@ -69,14 +75,14 @@
                         </a>
                         <p align="center">A ToolWindow with ToolWindowType.DOCKED type.</p>
                     </td>
+                </tr>
+                <tr>
                     <td>
                         <a href="./images/screenshots/mydoggyset/tw_floating.png">
                             <img src="./images/screenshots/mydoggyset/thumbs/tw_floating.png" alt="Tool Window Floating"/>
                         </a>
                         <p align="center">A ToolWindow with ToolWindowType.FLOATING type.</p>
                     </td>
-                </tr>
-                <tr>
                     <td>
                         <a href="./images/screenshots/mydoggyset/tw_floating_modal.png">
                             <img src="./images/screenshots/mydoggyset/thumbs/tw_floating_modal.png" alt="Tool Window Floating Modal"/>
@@ -89,11 +95,17 @@
                         </a>
                         <p align="center">A ToolWindow with ToolWindowType.SLIDING type.</p>
                     </td>
+                </tr>
+                <tr>
                     <td>
                         <a href="./images/screenshots/mydoggyset/tw_group.png">
                             <img src="./images/screenshots/mydoggyset/thumbs/tw_group.png" alt="Tool Window Group"/>
                         </a>
                         <p align="center">A toolWindow group showed.</p>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
                     </td>
                 </tr>
             </table>
