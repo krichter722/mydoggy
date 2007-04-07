@@ -10,7 +10,9 @@ CONTENTS
 * Usage and Installation
 * Building instructions
 * Contant
+* New in this release
 
+ 
 License
 =======
 

@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # ------------------------------------------------------
-#  SampleApp Startup Script for Unix
+#  MyDoggySet Startup Script for Unix
 # ------------------------------------------------------
 #
 
