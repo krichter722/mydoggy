@@ -71,6 +71,18 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
                 manager.mainSplitPane = manager.getBar(RIGHT).getSplitPane();
                 manager.mainSplitPane.setLeftComponent(manager.mainContainer);
                 break;
+            case ANTICLOCKWISE:
+                manager.getBar(LEFT).getSplitPane().setRightComponent(manager.getBar(BOTTOM).getSplitPane());
+                manager.getBar(BOTTOM).getSplitPane().setTopComponent(manager.getBar(RIGHT).getSplitPane());
+                manager.getBar(RIGHT).getSplitPane().setLeftComponent(manager.getBar(TOP).getSplitPane());
+                manager.getBar(TOP).getSplitPane().setResizeWeight(1);
+
+                manager.add(manager.getBar(LEFT).getSplitPane(), "1,1,FULL,FULL");
+
+                manager.mainSplitPane = manager.getBar(TOP).getSplitPane();
+                manager.mainSplitPane.setBottomComponent(manager.mainContainer);
+
+                break;
         }
 
         // Reload workspace

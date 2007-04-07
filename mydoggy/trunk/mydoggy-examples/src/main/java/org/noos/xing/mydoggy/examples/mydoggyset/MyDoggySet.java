@@ -193,26 +193,41 @@ public class MyDoggySet {
 
         final JMenuItem paHorizontal = new JMenuItem("Horizontal");
         final JMenuItem paVertical = new JMenuItem("Vertical");
+        final JMenuItem paAnticlockwise = new JMenuItem("Anticlockwise");
 
         paHorizontal.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(PushAwayMode.HORIZONTAL);
                 paHorizontal.setEnabled(false);
                 paVertical.setEnabled(true);
+                paAnticlockwise.setEnabled(true);
             }
         });
 
         paVertical.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(PushAwayMode.VERTICAL);
-                paHorizontal.setEnabled(true);
                 paVertical.setEnabled(false);
+                paHorizontal.setEnabled(true);
+                paAnticlockwise.setEnabled(true);
             }
         });
+
+        paAnticlockwise.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(PushAwayMode.ANTICLOCKWISE);
+                paAnticlockwise.setEnabled(false);
+                paHorizontal.setEnabled(true);
+                paVertical.setEnabled(true);
+            }
+        });
+
         paVertical.setEnabled(false);
 
         pushAwayMenu.add(paHorizontal);
         pushAwayMenu.add(paVertical);
+        pushAwayMenu.add(paAnticlockwise);
+
 
         menuBar.add(fileMenu);
         menuBar.add(contentMenu);

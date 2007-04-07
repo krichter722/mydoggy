@@ -38,7 +38,7 @@
                 <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowManagerDescriptor.html">
                     <code>ToolWindowManagerDescriptor</code>
                 </a> ]]>
-                - This interface is used to modify the behaviours of the ToolWindowManager.
+                - This interface is used to modify the behaviours of the ToolWindowManager. Play with new PushWayMode.
             </action>
             <action dev="adecaro" type="add">
                 <![CDATA[
