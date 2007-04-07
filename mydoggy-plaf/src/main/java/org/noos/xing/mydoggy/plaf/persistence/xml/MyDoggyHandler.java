@@ -46,7 +46,7 @@ public class MyDoggyHandler extends DefaultHandler {
     }
 
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        // TODO: check for errors...
+        // TODO: check for errors... 1.3.0
         switch (state) {
             case MYDOGGY:
                 if ("mydoggy".equals(qName)) {

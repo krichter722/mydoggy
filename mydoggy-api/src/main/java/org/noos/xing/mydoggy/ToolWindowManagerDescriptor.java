@@ -9,15 +9,16 @@ package org.noos.xing.mydoggy;
 public interface ToolWindowManagerDescriptor {
 
     /**
-     * TODO
-     * @param pushAwayMode
+     * Sets the push away mode to <code>pushAwayMode</code>
+     * @param pushAwayMode the new push away mode
+     * @see org.noos.xing.mydoggy.PushAwayMode
      * @since 1.2.0
      */
     void setPushAwayMode(PushAwayMode pushAwayMode);
 
     /**
-     *
-     * @return
+     * Returns the current push away mode.
+     * @return the current push away mode. 
      * @since 1.2.0
      */
     PushAwayMode getPushAwayMode();
