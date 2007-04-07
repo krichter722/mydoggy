@@ -88,3 +88,14 @@ Feel free to contact me at adecaro@users.sourceforge.net
 If you need help with something or just want to say hello, you can also
 use the forums or the support section at sourceforge.net.
 
+New in this release
+===================
+
+In this new release you can found :
+- A Persistence Mechanism to load and store the ToolWindowManager's workspace.
+- Transparency support for Slidying Mode.
+- New dragAndDrop system for the toolwindow representative buttons.
+- Support for PushAway Mode of the ToolWindowManager.
+- ToolWindow aliasing support.
+- New toolwindow's visualization method called aggregate.
+- Now you can disable or enable Slidying and Floating mode for the single toolwindow.
