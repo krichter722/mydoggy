@@ -7,7 +7,7 @@
     </properties>
 
     <body>
-        <release version="1.2.0" date="2007-15-03" description="Third release">
+        <release version="1.2.0" date="2007-04-07" description="Third release">
             <action dev="adecaro" type="update">
                 See Changes of :
                 <![CDATA[
