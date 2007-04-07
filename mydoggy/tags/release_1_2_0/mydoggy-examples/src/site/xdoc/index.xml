@@ -1,0 +1,42 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy-Examples : Introduction</title>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="Introduction">
+            <p>
+                MyDoggy-Examples contains some examples to see MyDoggy in action.
+            </p>
+        </section>
+
+        <section name="Examples">
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <img src="./images/mydoggyset.png" alt="MyDoggySet" border="0" hspace="18"/>
+                        </td>
+                        <td>
+                            <p>
+                                <a href="mydoggyset.html">MyDoggySet</a>
+                                is a sample application to see in action many functionalities of MyDoggy.
+                                You can modify tool window properties, show or hide groups and manage main window's contents.
+                                <br></br>
+                                Launch <a href="./jnlp/mydoggyset/mydoggyset.jnlp">MyDoggySet</a> using Java Web Start.
+								<br></br>
+								On Windows Platform to see the transparency in action you have to
+								<a href="./../download.html">download</a>
+								a mydoggy distribution.
+							</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </body>
+</document>

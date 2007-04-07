@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+
+    <properties>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+        <title>MyDoggy - Changes</title>
+    </properties>
+
+    <body>
+        <release version="1.2.0" date="2007-04-07" description="Third release">
+            <action dev="adecaro" type="update">
+                See Changes of :
+                <![CDATA[
+                    <a href="./mydoggy-api/changes-report.html">MyDoggy-Api</a>,
+                    <a href="./mydoggy-plaf/changes-report.html">MyDoggy-Plaf</a>,
+                    <a href="./mydoggy-examples/changes-report.html">MyDoggy-Example</a>
+                ]]>.
+                New Features:
+                <![CDATA[
+                <ul>
+                    <li>
+                        A <a href="./mydoggy-api/persistenceDelegate.html">Persistence Mechanism</a> to load and store the ToolWindowManager's workspace.
+                    </li>
+                    <li>
+                        <a href="./mydoggy-examples/mydoggysetScreenshots.html#slidingTrasparent">Transparency</a> support for Slidying Mode.
+                        <a href="./mydoggy-examples/mydoggysetScreenshots.html">Screenshots</a>.
+                    </li>
+                    <li>
+                        New <a href="./mydoggy-examples/mydoggysetScreenshots.html#dragdrap">drag&drop</a> system for the toolwindow representative buttons. 
+                        <a href="./mydoggy-examples/mydoggysetScreenshots.html">Screenshots</a>.
+                    </li>
+                    <li>
+                        Support for <a href="./mydoggy-api/toolwindowManagerUsing.html#PushAwayMode">PushAway Mode</a> of the ToolWindowManager.
+                        <a href="./mydoggy-examples/mydoggysetScreenshots.html#PushAwayMode">Screenshots</a>.
+                    </li>
+                    <li>
+                        ToolWindow <a href="./mydoggy-api/toolwindowManagerUsing.html#aliasing">aliasing</a> support.
+                    </li>
+                    <li>
+                        New toolwindow's visualization method called <a href="./mydoggy-api/toolwindowUsing.html#aggregate">aggregate</a>.
+                    </li>
+                    <li>
+                        Now you can disable or enable <a href="./mydoggy-api/toolwindowUsing.html#Slidying">Slidying</a> and <a href="./mydoggy-api/toolwindowUsing.html#Floating">Floating</a> mode for the single toolwindow.
+                    </li>
+                </ul>
+                ]]>.
+            </action>
+        </release>
+		<release version="1.1.0" date="2007-01-31" description="Second release">
+			<action dev="adecaro" type="update">
+				See Changes of :
+				<![CDATA[
+					<a href="./mydoggy-api/changes-report.html">MyDoggy-Api</a>,
+					<a href="./mydoggy-plaf/changes-report.html">MyDoggy-Plaf</a>,
+					<a href="./mydoggy-examples/changes-report.html">MyDoggy-Example</a>
+				]]>.
+			</action>
+		</release>
+        <release version="1.0.0" date="2006-10-31" description="First release">
+            <action dev="adecaro" type="add">
+                MyDoggy 1.0.0 released.
+            </action>
+        </release>
+    </body>
+
+</document>
