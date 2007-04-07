@@ -555,8 +555,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         protected void setSplitPaneContent(Component content) {
             vsdValueAdjusting = true;
             try {
-//                if (content != null && splitPane.getDividerLocation() == 0)
-//                    splitPane.setDividerLocation(1);
+                if (content != null && splitPane.getDividerLocation() == 0)
+                    splitPane.setDividerLocation(1);
 
                 switch (anchor) {
                     case LEFT:
