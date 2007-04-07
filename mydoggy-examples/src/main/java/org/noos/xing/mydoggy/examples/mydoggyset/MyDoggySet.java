@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
+import java.io.File;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -76,9 +77,13 @@ public class MyDoggySet {
         load.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    FileInputStream inputStream = new FileInputStream("workspace.xml");
-                    toolWindowManager.getPersistenceDelegate().apply(inputStream);
-                    inputStream.close();
+                    File workspaceFile = new File("workspace.xml");
+                    if (workspaceFile.exists()) {
+                        FileInputStream inputStream = new FileInputStream("workspace.xml");
+                        toolWindowManager.getPersistenceDelegate().apply(inputStream);
+                        inputStream.close();
+                    } else
+                        JOptionPane.showMessageDialog(frame, "You must save the workspace before the load.");
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
@@ -93,6 +98,7 @@ public class MyDoggySet {
                     FileOutputStream output = new FileOutputStream("workspace.xml");
                     toolWindowManager.getPersistenceDelegate().save(output);
                     output.close();
+                    JOptionPane.showMessageDialog(frame, "Workspace saved to 'workspace.xml'.");
                 } catch (Exception e1) {
                     e1.printStackTrace(); 
                 }
