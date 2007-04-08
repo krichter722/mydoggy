@@ -22,5 +22,7 @@ public enum PushAwayMode {
      * Using this mode, left tool pushs away bottom tool, bottom tool pushs away right tool,
      * right tool pushs away top tool.
      */
-    ANTICLOCKWISE
+    ANTICLOCKWISE,
+
+    MOST_RECENT
 }

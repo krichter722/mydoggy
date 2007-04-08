@@ -200,6 +200,7 @@ public class MyDoggySet {
         final JMenuItem paHorizontal = new JMenuItem("Horizontal");
         final JMenuItem paVertical = new JMenuItem("Vertical");
         final JMenuItem paAnticlockwise = new JMenuItem("Anticlockwise");
+        final JMenuItem paMostRecent = new JMenuItem("Most Recent");
 
         paHorizontal.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -228,11 +229,18 @@ public class MyDoggySet {
             }
         });
 
+        paMostRecent.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(PushAwayMode.MOST_RECENT);
+            }
+        });
+
         paVertical.setEnabled(false);
 
         pushAwayMenu.add(paHorizontal);
         pushAwayMenu.add(paVertical);
         pushAwayMenu.add(paAnticlockwise);
+        pushAwayMenu.add(paMostRecent);
 
 
         menuBar.add(fileMenu);
@@ -283,7 +291,7 @@ public class MyDoggySet {
 
         DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
         dockedTypeDescriptor.setPopupMenuEnabled(false);
-        dockedTypeDescriptor.setDockLength(300);
+        dockedTypeDescriptor.setDockLength(100);
 
         mainGroup.addToolWindow(toolWindow);
 
