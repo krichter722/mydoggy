@@ -18,7 +18,7 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
 	public ToolsTableModel(ToolWindowManager windowManager) {
 		this.windowManager = windowManager;
 		setColumnIdentifiers(new Object[]{
-				"Id", "Title", "Type", "Anchor", "Available", "Visible", "Active", "Index"
+				"Id", "Title", "Type", "Anchor", "Available", "Visible", "Active", "Index", "Flashing"
 		});
 		initToolsListeners();
 		updateModel();
@@ -65,10 +65,15 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
 						getValueAt(row, 0)
 				).setIndex((Integer) aValue);
 				break;
-		}
+            case 8:
+                windowManager.getToolWindow(
+                        getValueAt(row, 0)
+                ).setFlashing((Boolean) aValue);
+                break;
+        }
 	}
 
-	public void propertyChange(PropertyChangeEvent evt) {
+    public void propertyChange(PropertyChangeEvent evt) {
 		updateModel();
 	}
 
@@ -87,7 +92,7 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
 			addRow(new Object[]{
 					toolWindow.getId(), toolWindow.getTitle(), toolWindow.getType(), toolWindow.getAnchor(),
 					toolWindow.isAvailable(), toolWindow.isVisible(), toolWindow.isActive(),
-					toolWindow.getIndex()
+					toolWindow.getIndex(), toolWindow.isFlashing()
 			});
 		}
 

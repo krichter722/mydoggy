@@ -39,6 +39,9 @@ public class AnchorLabelUI extends MetalLabelUI {
 
     private AnchorLabelMouseAdapter adapter;
 
+    private Timer flashingTimer;
+    private boolean flashingState;
+  
     public AnchorLabelUI(ToolWindowDescriptor descriptor, ToolWindow toolWindow) {
         this.descriptor = descriptor;
         this.toolWindow = toolWindow;
@@ -66,12 +69,35 @@ public class AnchorLabelUI extends MetalLabelUI {
     }
 
     public void update(Graphics g, JComponent c) {
-        if (c.isOpaque()) {
-            GraphicsUtil.fillRect(g, new Rectangle(0, 0, c.getWidth(), c.getHeight()),
-                                  start, end, null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
+        if (toolWindow.isFlashing()) {
+            if (flashingState) {
+                GraphicsUtil.fillRect(g, new Rectangle(0, 0, c.getWidth(), c.getHeight()),
+                                      start, end, null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
+                flashingState = false;
+            } else {
+                g.setColor(gray);
+                g.fillRect(0, 0, c.getWidth(), c.getHeight());
+                flashingState = true;
+            }
+
+            if (flashingTimer == null) {
+                flashingTimer = new Timer(500, new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        SwingUtil.repaint(component);
+                    }
+                });
+            }
+            if (!flashingTimer.isRunning()) {
+                flashingTimer.start();
+            }
         } else {
-            g.setColor(gray);
-            g.fillRect(0, 0, c.getWidth(), c.getHeight());
+            if (c.isOpaque()) {
+                GraphicsUtil.fillRect(g, new Rectangle(0, 0, c.getWidth(), c.getHeight()),
+                                      start, end, null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
+            } else {
+                g.setColor(gray);
+                g.fillRect(0, 0, c.getWidth(), c.getHeight());
+            }
         }
         paint(g, c);
     }
@@ -87,9 +113,12 @@ public class AnchorLabelUI extends MetalLabelUI {
             } else
                 labelBorder.setLineColor(Color.GRAY);
 
+            toolWindow.setFlashing(false);
             SwingUtil.repaint(component);
         } else if ("UI".equals(e.getPropertyName())) {
             adapter.propertyChange(e);
+        } else if ("flash".equals(e.getPropertyName())) {
+            SwingUtil.repaint(component);
         }
     }
 
@@ -170,6 +199,9 @@ public class AnchorLabelUI extends MetalLabelUI {
         }
 
         public void mouseEntered(MouseEvent e) {
+            if (toolWindow.isFlashing())
+                return;
+
             Component source = e.getComponent();
             if (!source.isOpaque()) {
                 labelBorder.setLineColor(Color.BLACK);
@@ -178,6 +210,9 @@ public class AnchorLabelUI extends MetalLabelUI {
         }
 
         public void mouseExited(MouseEvent e) {
+            if (toolWindow.isFlashing())
+                return;
+
             Component source = e.getComponent();
             if (!source.isOpaque()) {
                 labelBorder.setLineColor(Color.GRAY);

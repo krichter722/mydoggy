@@ -97,6 +97,20 @@ public interface ToolWindow {
     void aggregate();
 
     /**
+     *
+     * @return
+     * @since 1.3.0
+     */
+    boolean isFlashing();
+
+    /**
+     *
+     * @param flash
+     * @since 1.3.0
+     */
+    void setFlashing(boolean flash);
+
+    /**
      * The method is used to set the active property of the tool.
      * If <code>active</code> is <tt>true</tt> then tool becomes available and visibile if not already was.
      * Moreover the tool grabs the focus from focus owner and becomes active.

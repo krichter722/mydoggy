@@ -33,6 +33,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     private boolean available;
     private boolean visible;
     private boolean active;
+    private boolean flash;
 
     private ResourceBundle resourceBoundle;
     private ToolWindowDescriptor descriptor;
@@ -126,6 +127,21 @@ public class MyDoggyToolWindow implements ToolWindow {
             }
         } finally {
             descriptor.getManager().resetShiftShow();
+        }
+    }
+
+    public boolean isFlashing() {
+        return flash;
+    }
+
+    public void setFlashing(boolean flash) {
+        // TODO: add conditions to return
+        synchronized (getLock()) {
+
+            boolean old = this.flash;
+            this.flash = flash;
+
+            firePropertyChangeEvent("flash", old, flash);
         }
     }
 
