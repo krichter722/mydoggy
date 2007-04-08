@@ -52,7 +52,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     JSplitPane mainSplitPane;
     JPanel mainContainer;
 
-    private PropertyChangeSupport propertyChangeSupport;
+    PropertyChangeSupport propertyChangeSupport;
 
     private Object activeToolWindowId;
 
@@ -83,11 +83,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         this.persistenceDelegate = new XmlPersistenceDelegate(this);
         this.allToolWindowGroup = new AllToolWindowGroup();
         this.aliases = new Hashtable<Object, ToolWindow>();
-        this.toolWindowManagerDescriptor = new MyDoggyToolWindowManagerDescriptor(this);
 
         initResourceBoundles(locale);
         initComponents();
         initListeners();
+
+        this.toolWindowManagerDescriptor = new MyDoggyToolWindowManagerDescriptor(this);
     }
 
 
@@ -390,6 +391,20 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         mainSplitPane = getBar(RIGHT).getSplitPane();
         mainSplitPane.addPropertyChangeListener("UI", new UpdateUIChangeListener());
         mainSplitPane.setLeftComponent(mainContainer);
+
+/*
+        getBar(TOP).getSplitPane().setBottomComponent(getBar(RIGHT).getSplitPane());
+        getBar(RIGHT).getSplitPane().setLeftComponent(getBar(BOTTOM).getSplitPane());
+        getBar(BOTTOM).getSplitPane().setTopComponent(getBar(LEFT).getSplitPane());
+        getBar(LEFT).getSplitPane().setResizeWeight(1);
+
+        add(getBar(TOP).getSplitPane(), "1,1,FULL,FULL");
+
+        mainSplitPane = getBar(LEFT).getSplitPane();
+        mainSplitPane.addPropertyChangeListener("UI", new UpdateUIChangeListener());
+        mainSplitPane.setRightComponent(mainContainer);
+*/
+
 
         // Init glass pane used for SLIDING
         initGlassPane();
@@ -796,8 +811,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 //            String anchor = (toolWindowBar != null) ? toolWindowBar.getAnchor().toString() : "";
 
 //            System.out.println("--dividerLocation(" + anchor + ") : " + location);
-//            if (toolWindowBar != null && toolWindowBar.getAnchor() == ToolWindowAnchor.LEFT)
-//                System.out.println("--dividerLocation : " + location);
+            if (toolWindowBar != null && toolWindowBar.getAnchor() == ToolWindowAnchor.BOTTOM)
+                System.out.println("--dividerLocation : " + location);
             super.setDividerLocation(location);
         }
 
