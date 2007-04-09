@@ -208,6 +208,7 @@ public class MyDoggySet {
                 paHorizontal.setEnabled(false);
                 paVertical.setEnabled(true);
                 paAnticlockwise.setEnabled(true);
+                paMostRecent.setEnabled(true);
             }
         });
 
@@ -217,6 +218,7 @@ public class MyDoggySet {
                 paVertical.setEnabled(false);
                 paHorizontal.setEnabled(true);
                 paAnticlockwise.setEnabled(true);
+                paMostRecent.setEnabled(true);
             }
         });
 
@@ -226,12 +228,17 @@ public class MyDoggySet {
                 paAnticlockwise.setEnabled(false);
                 paHorizontal.setEnabled(true);
                 paVertical.setEnabled(true);
+                paMostRecent.setEnabled(true);
             }
         });
 
         paMostRecent.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(PushAwayMode.MOST_RECENT);
+                paMostRecent.setEnabled(false);
+                paAnticlockwise.setEnabled(true);
+                paHorizontal.setEnabled(true);
+                paVertical.setEnabled(true);
             }
         });
 
