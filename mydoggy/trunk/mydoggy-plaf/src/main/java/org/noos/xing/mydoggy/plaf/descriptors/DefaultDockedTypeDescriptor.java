@@ -23,7 +23,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     public DefaultDockedTypeDescriptor() {
         this.toolsMenu = new JMenu(ResourceBoundles.getResourceBundle().getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = true;
-        this.dockLength = 100;
+        this.dockLength = 200;
         this.toolWindowActionHandler = null;
     }
 

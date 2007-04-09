@@ -298,7 +298,7 @@ public class MyDoggySet {
 
         DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
         dockedTypeDescriptor.setPopupMenuEnabled(false);
-        dockedTypeDescriptor.setDockLength(100);
+        dockedTypeDescriptor.setDockLength(200);
 
         mainGroup.addToolWindow(toolWindow);
 
