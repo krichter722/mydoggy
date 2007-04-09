@@ -57,10 +57,10 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
                 manager.getBar(RIGHT).getSplitPane().setLeftComponent(manager.getBar(TOP).getSplitPane());
                 manager.getBar(TOP).getSplitPane().setBottomComponent(manager.getBar(BOTTOM).getSplitPane());
 
-                manager.getBar(LEFT).getSplitPane().setResizeWeight(0);
-                manager.getBar(RIGHT).getSplitPane().setResizeWeight(0);
-                manager.getBar(TOP).getSplitPane().setResizeWeight(0);
-                manager.getBar(BOTTOM).getSplitPane().setResizeWeight(1);
+                manager.getBar(LEFT).getSplitPane().setResizeWeight(0d);
+                manager.getBar(BOTTOM).getSplitPane().setResizeWeight(1d);
+                manager.getBar(TOP).getSplitPane().setResizeWeight(0d);
+                manager.getBar(RIGHT).getSplitPane().setResizeWeight(1d);
 
                 manager.add(manager.getBar(LEFT).getSplitPane(), "1,1,FULL,FULL");
 
@@ -69,23 +69,23 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
 
                 SwingUtil.repaintNow(manager);
                 manager.getBar(LEFT).setSplitDividerLocation(leftSplitLocation);
-                SwingUtil.repaint(manager.getBar(LEFT).getSplitPane());
-                manager.getBar(BOTTOM).setSplitDividerLocation(bottomSplitLocation);
-                SwingUtil.repaint(manager.getBar(BOTTOM).getSplitPane());
+                SwingUtil.repaintNow(manager.getBar(LEFT).getSplitPane());
                 manager.getBar(RIGHT).setSplitDividerLocation(rightSplitLocation);
-                SwingUtil.repaint(manager.getBar(RIGHT).getSplitPane());
+                SwingUtil.repaintNow(manager.getBar(RIGHT).getSplitPane());
                 manager.getBar(TOP).setSplitDividerLocation(topSplitLocation);
-                SwingUtil.repaint(manager.getBar(TOP).getSplitPane());
+                SwingUtil.repaintNow(manager.getBar(TOP).getSplitPane());
+                manager.getBar(BOTTOM).setSplitDividerLocation(bottomSplitLocation);
+                SwingUtil.repaintNow(manager.getBar(BOTTOM).getSplitPane());
                 break;
             case VERTICAL:
                 manager.getBar(BOTTOM).getSplitPane().setTopComponent(manager.getBar(TOP).getSplitPane());
                 manager.getBar(TOP).getSplitPane().setBottomComponent(manager.getBar(LEFT).getSplitPane());
                 manager.getBar(LEFT).getSplitPane().setRightComponent(manager.getBar(RIGHT).getSplitPane());
 
-                manager.getBar(LEFT).getSplitPane().setResizeWeight(0);
-                manager.getBar(BOTTOM).getSplitPane().setResizeWeight(0);
-                manager.getBar(TOP).getSplitPane().setResizeWeight(0);
-                manager.getBar(RIGHT).getSplitPane().setResizeWeight(1);
+                manager.getBar(LEFT).getSplitPane().setResizeWeight(0d);
+                manager.getBar(BOTTOM).getSplitPane().setResizeWeight(1d);
+                manager.getBar(TOP).getSplitPane().setResizeWeight(0d);
+                manager.getBar(RIGHT).getSplitPane().setResizeWeight(1d);
 
                 manager.add(manager.getBar(BOTTOM).getSplitPane(), "1,1,FULL,FULL");
 
@@ -93,24 +93,24 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
                 manager.mainSplitPane.setLeftComponent(manager.mainContainer);
 
                 SwingUtil.repaintNow(manager);
-                manager.getBar(LEFT).setSplitDividerLocation(leftSplitLocation);
-                SwingUtil.repaint(manager.getBar(LEFT).getSplitPane());
                 manager.getBar(BOTTOM).setSplitDividerLocation(bottomSplitLocation);
-                SwingUtil.repaint(manager.getBar(BOTTOM).getSplitPane());
-                manager.getBar(RIGHT).setSplitDividerLocation(rightSplitLocation);
-                SwingUtil.repaint(manager.getBar(RIGHT).getSplitPane());
+                SwingUtil.repaintNow(manager.getBar(BOTTOM).getSplitPane());
                 manager.getBar(TOP).setSplitDividerLocation(topSplitLocation);
-                SwingUtil.repaint(manager.getBar(TOP).getSplitPane());
+                SwingUtil.repaintNow(manager.getBar(TOP).getSplitPane());
+                manager.getBar(LEFT).setSplitDividerLocation(leftSplitLocation);
+                SwingUtil.repaintNow(manager.getBar(LEFT).getSplitPane());
+                manager.getBar(RIGHT).setSplitDividerLocation(rightSplitLocation);
+                SwingUtil.repaintNow(manager.getBar(RIGHT).getSplitPane());
                 break;
             case ANTICLOCKWISE:
                 manager.getBar(LEFT).getSplitPane().setRightComponent(manager.getBar(BOTTOM).getSplitPane());
                 manager.getBar(BOTTOM).getSplitPane().setTopComponent(manager.getBar(RIGHT).getSplitPane());
                 manager.getBar(RIGHT).getSplitPane().setLeftComponent(manager.getBar(TOP).getSplitPane());
 
-                manager.getBar(LEFT).getSplitPane().setResizeWeight(0);
-                manager.getBar(BOTTOM).getSplitPane().setResizeWeight(0);
-                manager.getBar(RIGHT).getSplitPane().setResizeWeight(0);
-                manager.getBar(TOP).getSplitPane().setResizeWeight(1);
+                manager.getBar(RIGHT).getSplitPane().setResizeWeight(1d);
+                manager.getBar(LEFT).getSplitPane().setResizeWeight(0d);
+                manager.getBar(BOTTOM).getSplitPane().setResizeWeight(1d);
+                manager.getBar(TOP).getSplitPane().setResizeWeight(0d);
 
                 manager.add(manager.getBar(LEFT).getSplitPane(), "1,1,FULL,FULL");
 
@@ -119,13 +119,13 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
 
                 SwingUtil.repaintNow(manager);
                 manager.getBar(LEFT).setSplitDividerLocation(leftSplitLocation);
-                SwingUtil.repaint(manager.getBar(LEFT).getSplitPane());
+                SwingUtil.repaintNow(manager.getBar(LEFT).getSplitPane());
                 manager.getBar(BOTTOM).setSplitDividerLocation(bottomSplitLocation);
-                SwingUtil.repaint(manager.getBar(BOTTOM).getSplitPane());
+                SwingUtil.repaintNow(manager.getBar(BOTTOM).getSplitPane());
                 manager.getBar(RIGHT).setSplitDividerLocation(rightSplitLocation);
-                SwingUtil.repaint(manager.getBar(RIGHT).getSplitPane());
+                SwingUtil.repaintNow(manager.getBar(RIGHT).getSplitPane());
                 manager.getBar(TOP).setSplitDividerLocation(topSplitLocation);
-                SwingUtil.repaint(manager.getBar(TOP).getSplitPane());
+                SwingUtil.repaintNow(manager.getBar(TOP).getSplitPane());
                 break;
             case MOST_RECENT:
                 setSplit(mostRecentStack.get(3), mostRecentStack.get(2));
@@ -135,6 +135,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
                 manager.getBar(RIGHT).getSplitPane().setResizeWeight(1d);
                 manager.getBar(LEFT).getSplitPane().setResizeWeight(0d);
                 manager.getBar(BOTTOM).getSplitPane().setResizeWeight(1d);
+                manager.getBar(TOP).getSplitPane().setResizeWeight(0d);
 
                 manager.add(manager.getBar(mostRecentStack.get(3)).getSplitPane(), "1,1,FULL,FULL");
 

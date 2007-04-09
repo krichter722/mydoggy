@@ -392,20 +392,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         mainSplitPane.addPropertyChangeListener("UI", new UpdateUIChangeListener());
         mainSplitPane.setLeftComponent(mainContainer);
 
-/*
-        getBar(TOP).getSplitPane().setBottomComponent(getBar(RIGHT).getSplitPane());
-        getBar(RIGHT).getSplitPane().setLeftComponent(getBar(BOTTOM).getSplitPane());
-        getBar(BOTTOM).getSplitPane().setTopComponent(getBar(LEFT).getSplitPane());
-        getBar(LEFT).getSplitPane().setResizeWeight(1);
-
-        add(getBar(TOP).getSplitPane(), "1,1,FULL,FULL");
-
-        mainSplitPane = getBar(LEFT).getSplitPane();
-        mainSplitPane.addPropertyChangeListener("UI", new UpdateUIChangeListener());
-        mainSplitPane.setRightComponent(mainContainer);
-*/
-
-
         // Init glass pane used for SLIDING
         initGlassPane();
     }
@@ -811,7 +797,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 //            String anchor = (toolWindowBar != null) ? toolWindowBar.getAnchor().toString() : "";
 
 //            System.out.println("--dividerLocation(" + anchor + ") : " + location);
-//            if (toolWindowBar != null && toolWindowBar.getAnchor() == ToolWindowAnchor.LEFT)
+//            if (toolWindowBar != null && toolWindowBar.getAnchor() == ToolWindowAnchor.BOTTOM)
 //                System.out.println("--dividerLocation : " + location);
             super.setDividerLocation(location);
         }
