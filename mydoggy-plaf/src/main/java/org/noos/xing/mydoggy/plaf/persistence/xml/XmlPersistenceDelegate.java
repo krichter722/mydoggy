@@ -7,11 +7,11 @@ import org.xml.sax.helpers.AttributesImpl;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -34,12 +34,16 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
             mydoggyAttributes.addAttribute(null, "pushAwayMode", null, null, 
                                            toolWindowManager.getToolWindowManagerDescriptor().getPushAwayMode().toString());
             writer.startElement("mydoggy", mydoggyAttributes);
-            writer.startElement("tools");
 
+            // Store PushAway Pref
+            ((Persistable) toolWindowManager.getToolWindowManagerDescriptor()).save(writer);
+
+            // Store tools pref.
+            writer.startElement("tools");
             for (ToolWindow toolWindow : toolWindowManager.getToolWindows())
                 saveToolWindow(writer, toolWindow);
-
             writer.endElement("tools");
+
             writer.endElement("mydoggy");
             writer.endDocument();
 

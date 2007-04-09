@@ -22,5 +22,13 @@ public interface ToolWindowManagerDescriptor {
      * @since 1.2.0
      */
     PushAwayMode getPushAwayMode();
+
+    /**
+     *
+     * @param pushAwayMode
+     * @return
+     * @since 1.3.0
+     */
+    PushAwayModeDescriptor getPushAwayModeDescriptor(PushAwayMode pushAwayMode);
         
 }

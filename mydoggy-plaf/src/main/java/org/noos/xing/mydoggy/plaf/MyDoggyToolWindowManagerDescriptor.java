@@ -1,24 +1,26 @@
 package org.noos.xing.mydoggy.plaf;
 
-import org.noos.xing.mydoggy.PushAwayMode;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
-import org.noos.xing.mydoggy.ToolWindowManagerDescriptor;
+import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.plaf.persistence.xml.Persistable;
+import org.noos.xing.mydoggy.plaf.persistence.xml.XMLWriter;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Stack;
-import java.util.Map;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Stack;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDescriptor, PropertyChangeListener {
+public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDescriptor, PropertyChangeListener, Persistable, MostRecentPAMDescriptor {
     private PushAwayMode pushAwayMode;
     private MyDoggyToolWindowManager manager;
 
@@ -54,6 +56,10 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
                 manager.getBar(LEFT).getSplitPane().setRightComponent(manager.getBar(RIGHT).getSplitPane());
                 manager.getBar(RIGHT).getSplitPane().setLeftComponent(manager.getBar(TOP).getSplitPane());
                 manager.getBar(TOP).getSplitPane().setBottomComponent(manager.getBar(BOTTOM).getSplitPane());
+
+                manager.getBar(LEFT).getSplitPane().setResizeWeight(0);
+                manager.getBar(RIGHT).getSplitPane().setResizeWeight(0);
+                manager.getBar(TOP).getSplitPane().setResizeWeight(0);
                 manager.getBar(BOTTOM).getSplitPane().setResizeWeight(1);
 
                 manager.add(manager.getBar(LEFT).getSplitPane(), "1,1,FULL,FULL");
@@ -75,6 +81,10 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
                 manager.getBar(BOTTOM).getSplitPane().setTopComponent(manager.getBar(TOP).getSplitPane());
                 manager.getBar(TOP).getSplitPane().setBottomComponent(manager.getBar(LEFT).getSplitPane());
                 manager.getBar(LEFT).getSplitPane().setRightComponent(manager.getBar(RIGHT).getSplitPane());
+
+                manager.getBar(LEFT).getSplitPane().setResizeWeight(0);
+                manager.getBar(BOTTOM).getSplitPane().setResizeWeight(0);
+                manager.getBar(TOP).getSplitPane().setResizeWeight(0);
                 manager.getBar(RIGHT).getSplitPane().setResizeWeight(1);
 
                 manager.add(manager.getBar(BOTTOM).getSplitPane(), "1,1,FULL,FULL");
@@ -96,6 +106,10 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
                 manager.getBar(LEFT).getSplitPane().setRightComponent(manager.getBar(BOTTOM).getSplitPane());
                 manager.getBar(BOTTOM).getSplitPane().setTopComponent(manager.getBar(RIGHT).getSplitPane());
                 manager.getBar(RIGHT).getSplitPane().setLeftComponent(manager.getBar(TOP).getSplitPane());
+
+                manager.getBar(LEFT).getSplitPane().setResizeWeight(0);
+                manager.getBar(BOTTOM).getSplitPane().setResizeWeight(0);
+                manager.getBar(RIGHT).getSplitPane().setResizeWeight(0);
                 manager.getBar(TOP).getSplitPane().setResizeWeight(1);
 
                 manager.add(manager.getBar(LEFT).getSplitPane(), "1,1,FULL,FULL");
@@ -118,8 +132,9 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
                 setSplit(mostRecentStack.get(2), mostRecentStack.get(1));
                 setSplit(mostRecentStack.get(1), mostRecentStack.get(0));
 
-                manager.getBar(mostRecentStack.get(0)).getSplitPane().setResizeWeight(0d);
-                manager.getBar(ToolWindowAnchor.BOTTOM).getSplitPane().setResizeWeight(1d);
+                manager.getBar(RIGHT).getSplitPane().setResizeWeight(1d);
+                manager.getBar(LEFT).getSplitPane().setResizeWeight(0d);
+                manager.getBar(BOTTOM).getSplitPane().setResizeWeight(1d);
 
                 manager.add(manager.getBar(mostRecentStack.get(3)).getSplitPane(), "1,1,FULL,FULL");
 
@@ -150,44 +165,59 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         return pushAwayMode;
     }
 
+    public PushAwayModeDescriptor getPushAwayModeDescriptor(PushAwayMode pushAwayMode) {
+        switch (pushAwayMode) {
+            case MOST_RECENT:
+                return this;
+            default:
+                throw new IllegalArgumentException("There isn't any descriptor for mode : " + pushAwayMode);
+        }
+    }
+
     public void propertyChange(PropertyChangeEvent evt) {
         if ("visible".equals(evt.getPropertyName())) {
             if (((Boolean) evt.getNewValue())) {
                 ToolWindowAnchor target = ((ToolWindowDescriptor) evt.getSource()).getToolWindow().getAnchor();
-                if (mostRecentStack.peek() == target)
-                    return;
-
-                // remove last
-                mostRecentStack.remove(0);
-
-                // check for target in stack
-                for (Iterator<ToolWindowAnchor> iterator = mostRecentStack.iterator(); iterator.hasNext();) {
-                    ToolWindowAnchor toolWindowAnchor = iterator.next();
-                    if (toolWindowAnchor == target)
-                        iterator.remove();
-                }
-
-                // put target at the head
-                mostRecentStack.push(target);
-
-                // check size
-                if (mostRecentStack.size() < 4) {
-                    addAnchor(LEFT);
-                    addAnchor(RIGHT);
-                    addAnchor(BOTTOM);
-                    addAnchor(TOP);
-                }
-
-                if (pushAwayMode == PushAwayMode.MOST_RECENT) {
-                    checkParam = false;
-                    try {
-                        setPushAwayMode(PushAwayMode.MOST_RECENT);
-                    } finally {
-                        checkParam = true;
-                    }
-                }
+                addMostRecentAnchor(target);
+                
+                if (pushAwayMode == PushAwayMode.MOST_RECENT)
+                    forceChangePushAwayMode(PushAwayMode.MOST_RECENT);
             }
         }
+    }
+
+    public void save(XMLWriter writer) throws SAXException {
+        // Start pushAway
+        writer.startElement("pushAway");
+
+        // start MOST_RECENT policy
+        AttributesImpl policyAttributes = new AttributesImpl();
+        policyAttributes.addAttribute(null, "type", null, null, String.valueOf(PushAwayMode.MOST_RECENT));
+        writer.startElement("policy", policyAttributes);
+
+        for (ToolWindowAnchor toolWindowAnchor : mostRecentStack) {
+            AttributesImpl anchorAttributes = new AttributesImpl();
+            anchorAttributes.addAttribute(null, "type", null, null, String.valueOf(toolWindowAnchor));
+            writer.dataElement("anchor", anchorAttributes);
+        }
+
+        // end MOST_RECENT policy
+        writer.endElement("policy");
+
+        // End pushAway
+        writer.endElement("pushAway");
+    }
+
+    public void replaceStack(ToolWindowAnchor... anchors) {
+        if (anchors == null)
+            throw new NullPointerException("anchors cannot be null");
+
+        for (ToolWindowAnchor anchor : anchors) {
+            addMostRecentAnchor(anchor);
+        }
+        
+        if (pushAwayMode == PushAwayMode.MOST_RECENT)
+            forceChangePushAwayMode(PushAwayMode.MOST_RECENT);
     }
 
 
@@ -199,6 +229,44 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         mostRecentStack.push(LEFT);
 
         manager.propertyChangeSupport.addPropertyChangeListener("visible", this);
+    }
+
+    protected void addMostRecentAnchor(ToolWindowAnchor target) {
+        if (mostRecentStack.peek() == target)
+            return;
+
+        // remove last
+        mostRecentStack.remove(0);
+
+        // check for target in stack
+        for (Iterator<ToolWindowAnchor> iterator = mostRecentStack.iterator(); iterator.hasNext();) {
+            ToolWindowAnchor toolWindowAnchor = iterator.next();
+            if (toolWindowAnchor == target)
+                iterator.remove();
+        }
+
+        // put target at the head
+        mostRecentStack.push(target);
+
+        // check size
+        if (mostRecentStack.size() < 4) {
+            mrCheckForAnchor(LEFT);
+            mrCheckForAnchor(RIGHT);
+            mrCheckForAnchor(BOTTOM);
+            mrCheckForAnchor(TOP);
+        }
+    }
+
+    protected void mrCheckForAnchor(ToolWindowAnchor target) {
+        boolean found = false;
+        for (ToolWindowAnchor toolWindowAnchor : mostRecentStack) {
+            if (toolWindowAnchor == target) {
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+            mostRecentStack.add(0, target);
     }
 
     protected void setSplit(ToolWindowAnchor source, ToolWindowAnchor target) {
@@ -222,16 +290,12 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         }
     }
 
-    protected void addAnchor(ToolWindowAnchor target) {
-        boolean found = false;
-        for (ToolWindowAnchor toolWindowAnchor : mostRecentStack) {
-            if (toolWindowAnchor == target) {
-                found = true;
-                break;
-            }
+    protected void forceChangePushAwayMode(PushAwayMode pushAwayMode) {
+        checkParam = false;
+        try {
+            setPushAwayMode(pushAwayMode);
+        } finally {
+            checkParam = true;
         }
-        if (!found)
-            mostRecentStack.add(0, target);
     }
-
 }

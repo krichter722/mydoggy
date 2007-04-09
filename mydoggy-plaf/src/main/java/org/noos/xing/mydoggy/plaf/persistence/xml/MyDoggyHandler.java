@@ -1,10 +1,7 @@
 package org.noos.xing.mydoggy.plaf.persistence.xml;
 
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.plaf.persistence.PersistedDockedType;
-import org.noos.xing.mydoggy.plaf.persistence.PersistedFloatingType;
-import org.noos.xing.mydoggy.plaf.persistence.PersistedToolWindow;
-import org.noos.xing.mydoggy.plaf.persistence.PersistedSlidingType;
+import org.noos.xing.mydoggy.plaf.persistence.*;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -18,17 +15,27 @@ import java.util.Hashtable;
  */
 public class MyDoggyHandler extends DefaultHandler {
     enum State {
-        NOP, MYDOGGY, TOOLS, TOOL, DESCRIPTOR
+        NOP,
+        MYDOGGY,
+        SUB_SECTION,
+        TOOLS,
+        TOOL,
+        DESCRIPTOR,
+        PUSH_AWAY_POLICY,
+        PUSH_AWAY_MOST_RECENT_POLICY
     }
 
     private ToolWindowManager toolWindowManager;
 
     private State state;
     private State subState;
+
+    private PersistedToolWindowManager persistedToolWindowManager;
     private PersistedToolWindow persistedToolWindow;
     private PersistedDockedType dockedType;
     private PersistedSlidingType slidingType;
     private PersistedFloatingType floatingType;
+    private PersistedPAMostRecenPolicy persistedPAMostRecenPolicy;
 
     private Map<ToolWindow, PersistedToolWindow> map;
 
@@ -52,25 +59,45 @@ public class MyDoggyHandler extends DefaultHandler {
                 if ("mydoggy".equals(qName)) {
                     // Check version
                     if (attributes.getLength() <= 0)
-                        throw new SAXException("Invalid version. Not defined.");
+                        throw new SAXException("Invalid version. Not defined version attribute.");
 
-                    String version = attributes.getValue(0);
-                    if (!"1.2.0".equals(version))
-                        throw new SAXException("Invalid version. " + version);
+                    String version = attributes.getValue("version");
+                    if (!"1.2.0".equals(version) && !"1.3.0".equals(version))
+                        throw new SAXException("Invalid version : " + version);
 
+                    persistedToolWindowManager = new PersistedToolWindowManager();
                     if (attributes.getValue("pushAwayMode") != null)
-                        toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(
-                                PushAwayMode.valueOf(attributes.getValue("pushAwayMode"))
-                        );
+                        persistedToolWindowManager.setPushAwayMode(PushAwayMode.valueOf(attributes.getValue("pushAwayMode")));
 
-                    state = State.TOOLS;
+                    state = State.SUB_SECTION;
                 } else
                     throw new SAXException("Invalid element at this position. Expecting <mydoggy>");
                 break;
-            case TOOLS:
-                if (!"tools".equals(qName))
-                    throw new SAXException("Invalid element at this position. Expecting <tools>");
-                state = State.TOOL;
+            case SUB_SECTION :
+                if ("pushAway".equals(qName)) {
+                    state = State.PUSH_AWAY_POLICY;
+                } else if ("tools".equals(qName)) {
+                    state = State.TOOL;
+                } else
+                    throw new SAXException("Invalid element at this position. Expecting <pushAway> or <tools>");
+                break;
+            case PUSH_AWAY_POLICY:
+                if ("policy".equals(qName)) {
+                    // Load policy
+                    if (!PushAwayMode.MOST_RECENT.toString().equals(attributes.getValue("type")))
+                        throw new SAXException("Invalid PushAwayMode policy. Supported only PushAwayMode.MOST_RECENT");
+
+                    persistedPAMostRecenPolicy = new PersistedPAMostRecenPolicy();
+                    subState = State.PUSH_AWAY_MOST_RECENT_POLICY;
+                } else {
+                    switch (subState) {
+                        case PUSH_AWAY_MOST_RECENT_POLICY:
+                            if (!"anchor".equals(qName))
+                                throw new SAXException("Invalid element at this position. Expecting <anchor>");
+                            persistedPAMostRecenPolicy.push(ToolWindowAnchor.valueOf(attributes.getValue("type")));
+                            break;
+                    }
+                }
                 break;
             case TOOL:
                 if (subState == State.NOP) {
@@ -103,7 +130,6 @@ public class MyDoggyHandler extends DefaultHandler {
 
                     ToolWindow toolWindow = toolWindowManager.getToolWindow(persistedToolWindow.getId());
                     if (toolWindow != null) {
-
                         // Apply descriptors
                         if (dockedType != null) {
                             DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
@@ -150,12 +176,25 @@ public class MyDoggyHandler extends DefaultHandler {
             case MYDOGGY:
                 state = State.MYDOGGY;
                 break;
+            case PUSH_AWAY_POLICY:
+                if ("pushAway".equals(qName)) {
+                    state = State.SUB_SECTION;
+                    subState = State.NOP;
+                }
+                break;
         }
         if ("mydoggy".equals(qName)) {
             load(ToolWindowAnchor.LEFT);
             load(ToolWindowAnchor.BOTTOM);
             load(ToolWindowAnchor.RIGHT);
             load(ToolWindowAnchor.TOP);
+
+            if (persistedPAMostRecenPolicy != null)
+                ((MostRecentPAMDescriptor) toolWindowManager.getToolWindowManagerDescriptor().getPushAwayModeDescriptor(PushAwayMode.MOST_RECENT)).
+                        replaceStack(persistedPAMostRecenPolicy.getStack().toArray(new ToolWindowAnchor[0]));
+
+            if (persistedToolWindowManager.getPushAwayMode() != null)
+                toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(persistedToolWindowManager.getPushAwayMode());
         }
     }
 
