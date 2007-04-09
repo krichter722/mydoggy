@@ -190,8 +190,8 @@ public class MyDoggyHandler extends DefaultHandler {
             load(ToolWindowAnchor.TOP);
 
             if (persistedPAMostRecenPolicy != null)
-                ((MostRecentPAMDescriptor) toolWindowManager.getToolWindowManagerDescriptor().getPushAwayModeDescriptor(PushAwayMode.MOST_RECENT)).
-                        replaceStack(persistedPAMostRecenPolicy.getStack().toArray(new ToolWindowAnchor[0]));
+                ((MostRecentDescriptor) toolWindowManager.getToolWindowManagerDescriptor().getPushAwayModeDescriptor(PushAwayMode.MOST_RECENT)).
+                        append(persistedPAMostRecenPolicy.getStack().toArray(new ToolWindowAnchor[0]));
 
             if (persistedToolWindowManager.getPushAwayMode() != null)
                 toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(persistedToolWindowManager.getPushAwayMode());

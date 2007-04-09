@@ -20,7 +20,7 @@ import java.util.Stack;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDescriptor, PropertyChangeListener, Persistable, MostRecentPAMDescriptor {
+public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDescriptor, PropertyChangeListener, Persistable, MostRecentDescriptor {
     private PushAwayMode pushAwayMode;
     private MyDoggyToolWindowManager manager;
 
@@ -209,7 +209,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         writer.endElement("pushAway");
     }
 
-    public void replaceStack(ToolWindowAnchor... anchors) {
+    public void append(ToolWindowAnchor... anchors) {
         if (anchors == null)
             throw new NullPointerException("anchors cannot be null");
 
