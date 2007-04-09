@@ -135,7 +135,9 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setFlashing(boolean flash) {
-        // TODO: add conditions to return
+        if (flash && isVisible())
+            return;
+
         synchronized (getLock()) {
 
             boolean old = this.flash;
