@@ -34,6 +34,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     private boolean visible;
     private boolean active;
     private boolean flash;
+    private boolean maximized;
 
     private ResourceBundle resourceBoundle;
     private ToolWindowDescriptor descriptor;
@@ -61,8 +62,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         this.type = type;
         setTitle(title);
         this.icon = icon;
-        this.available = this.active = this.visible = false;
-
+        this.available = this.active = this.visible = this.maximized = false;
     }
 
 
@@ -147,6 +147,22 @@ public class MyDoggyToolWindow implements ToolWindow {
             this.flash = flash;
 
             firePropertyChangeEvent("flash", old, flash);
+        }
+    }
+
+    public void setFlashing(int duration) {
+        if (isVisible())
+            return;
+
+        if (this.flash)
+            return;
+
+        synchronized (getLock()) {
+
+            boolean old = this.flash;
+            this.flash = true;
+
+            firePropertyChangeEvent("flash.duration", null, duration);
         }
     }
 
@@ -316,6 +332,22 @@ public class MyDoggyToolWindow implements ToolWindow {
         }
     }
 
+    public boolean isMaximized() {
+        return maximized;
+    }
+
+    public void setMaximized(boolean maximized) {
+        if (this.maximized == maximized)
+            return;
+
+        synchronized (getLock()) {
+            boolean old = this.maximized;
+            this.maximized = maximized;
+
+            firePropertyChangeEvent("maximized", old, maximized);
+        }
+    }
+
     public ToolWindowTypeDescriptor getTypeDescriptor(ToolWindowType type) {
         return descriptor.getTypeDescriptor(type);
     }
@@ -345,6 +377,8 @@ public class MyDoggyToolWindow implements ToolWindow {
                ", title='" + title + '\'' +
                ", descriptor=" + descriptor +
                ", autoHide=" + autoHide +
+               ", flashing=" + flash +
+               ", maximized=" + maximized +
                '}';
     }
 

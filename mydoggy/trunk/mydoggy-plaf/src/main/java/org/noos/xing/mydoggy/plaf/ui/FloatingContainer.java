@@ -159,6 +159,19 @@ public class FloatingContainer extends DockedContainer {
                 }
             }
         });
+        addPropertyChangeListener("maximized", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
+                    if ((Boolean)evt.getNewValue()) {
+                        GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().
+                                setFullScreenWindow(window);
+                    } else
+                        GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().
+                                setFullScreenWindow(null);
+                }
+
+            }
+        });
 
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
         typeDescriptor.addPropertyChangeListener(this);

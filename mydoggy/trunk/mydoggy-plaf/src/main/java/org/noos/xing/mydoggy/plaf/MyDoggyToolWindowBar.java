@@ -53,12 +53,14 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     MyDoggyToolWindowBar(MyDoggyToolWindowManager manager, JSplitPane splitPane, ToolWindowAnchor anchor) {
         this.manager = manager;
         this.splitPane = splitPane;
-        ((MyDoggyToolWindowManager.ExtendedJSP)splitPane).setToolWindowBar(this);
+        ((MyDoggyToolWindowManager.ExtendedJSP) splitPane).setToolWindowBar(this);
         this.anchor = anchor;
         this.availableTools = 0;
 
         initComponents();
         initListeners();
+
+        setSplitDividerLocation(0);
     }
 
 
@@ -116,7 +118,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         splitPane.setName(anchor.toString());
         splitPane.setFocusCycleRoot(true);
 
-        contentPane = new JPanel();        
+        contentPane = new JPanel();
         if (anchor == ToolWindowAnchor.LEFT || anchor == ToolWindowAnchor.RIGHT) {
             horizontal = false;
             contentPane.setLayout(new ExtendedTableLayout(new double[][]{COLUMNS, {0}}));
@@ -165,6 +167,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         DragListener dragListener = new DragListener();
         propertyChangeSupport.addPropertyChangeListener("startDrag", dragListener);
         propertyChangeSupport.addPropertyChangeListener("endDrag", dragListener);
+
+        propertyChangeSupport.addPropertyChangeListener("maximized", new MaximizedListener());
     }
 
 
@@ -481,6 +485,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 return;
 
             int divederLocation = descriptor.getDividerLocation();
+            if (getSplitDividerLocation() != 0)
+                divederLocation = getSplitDividerLocation();
 //            System.out.println("divederLocation(" + anchor + ") : " + divederLocation);
 
             Component splitPaneContent = getSplitPaneContent();
@@ -527,14 +533,13 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             if (animate) {
                 if (content != null) {
                     splitPane.setDividerSize(5);
-                    if (manager.getShowingGroup() == null ) {
+                    if (manager.getShowingGroup() == null) {
                         splitAnimation.show(divederLocation);
                     } else {
                         if (divederLocation != 0) {
                             vsdValueAdjusting = true;
                             setSplitDividerLocation(divederLocation);
                             vsdValueAdjusting = false;
-
                             SwingUtil.repaintNow(splitPane);
                         }
                     }
@@ -659,7 +664,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 this.dividerLocation = (Integer) params[0];
             }
 
-            protected void onStartAnimation(Direction direction) {                
+            protected void onStartAnimation(Direction direction) {
                 sheetLen = dividerLocation;
             }
 
@@ -793,4 +798,25 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 throw new IllegalArgumentException("Invalid Property Name : " + evt.getPropertyName());
         }
     }
+
+    class MaximizedListener implements PropertyChangeListener {
+
+        public MaximizedListener() {
+        }
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
+            if (descriptor.getToolWindow().getType() == ToolWindowType.DOCKED) {
+                if ((Boolean) evt.getNewValue()) {
+                    descriptor.setTempDivederLocation(getSplitDividerLocation());
+                    setSplitDividerLocation(640);
+                } else {
+                    setSplitDividerLocation(descriptor.getTempDivederLocation());
+                }
+            }
+        }
+
+    }
 }
+
+

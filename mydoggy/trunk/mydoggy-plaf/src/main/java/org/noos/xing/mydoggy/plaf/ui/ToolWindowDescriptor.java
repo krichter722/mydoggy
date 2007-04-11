@@ -29,6 +29,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     private JLabel anchorLabel;
 
     private int divederLocation = -1;
+    private int tempDivederLocation;
 
     private FloatingTypeDescriptor floatingTypeDescriptor;
     private DockedTypeDescriptor dockedTypeDescriptor;
@@ -152,6 +153,13 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         }
     }
 
+    public int getTempDivederLocation() {
+        return tempDivederLocation;
+    }
+
+    public void setTempDivederLocation(int tempDivederLocation) {
+        this.tempDivederLocation = tempDivederLocation;
+    }
 
     public JLabel getAnchorLabel(Component container) {
         if (anchorLabel == null) {

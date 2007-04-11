@@ -4,8 +4,8 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.icons.IconProvider;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ButtonUI;
@@ -41,6 +41,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     protected JButton pinButton;
     protected JButton dockButton;
     protected JButton hideButton;
+    protected JButton maximizeButton;
 
     private MouseAdapter applicationBarMouseAdapter;
     private PropertyChangeSupport propertyChangeSupport;
@@ -115,7 +116,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         floatingButton.setToolTipText(ResourceBoundles.getResourceBundle().getString("@@tool.tooltip.float"));
     }
 
-	private void initDockedComponents() {
+    private void initDockedComponents() {
         propertyChangeSupport = new PropertyChangeSupport(this);
 
         applicationBarMouseAdapter = new ApplicationBarMouseAdapter();
@@ -126,8 +127,8 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         container.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
         container.setFocusCycleRoot(false);
 
-		// Application Bar
-        applicationBar = new JPanel(new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 3, 15, 2, 15, 2, 15, 2, 15, 3}, {1, 14, 1}}, false)) {
+        // Application Bar
+        applicationBar = new JPanel(new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 3, 15, 2, 15, 2, 15, 2, 15, 2, 15, 3}, {1, 14, 1}}, false)) {
             public void setUI(PanelUI ui) {
                 if (ui instanceof ApplicationBarPanelUI)
                     super.setUI(ui);
@@ -146,6 +147,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
         // Buttons
         hideButton = renderApplicationButton("hideToolWindow", "visible", applicationBarActionListener, "@@tool.tooltip.hide");
+        maximizeButton = renderApplicationButton("maximize", "maximize", applicationBarActionListener, "@@tool.tooltip.maximize");
         pinButton = renderApplicationButton("autohideOff", "pin", applicationBarActionListener, "@@tool.tooltip.unpin");
         floatingButton = renderApplicationButton("floating", "floating", applicationBarActionListener, "@@tool.tooltip.float");
         dockButton = renderApplicationButton("sliding", "undock", applicationBarActionListener, "@@tool.tooltip.undock");
@@ -155,7 +157,8 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         applicationBar.add(dockButton, "3,1");
         applicationBar.add(floatingButton, "5,1");
         applicationBar.add(pinButton, "7,1");
-        applicationBar.add(hideButton, "9,1");
+        applicationBar.add(maximizeButton, "9,1");
+        applicationBar.add(hideButton, "11,1");
 
         Component toolWindowCmp = descriptor.getComponent();
         toolWindowCmp.addMouseListener(applicationBarMouseAdapter);
@@ -209,7 +212,20 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 }
             }
         });
-        ((SlidingTypeDescriptor)descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).addPropertyChangeListener(
+        addPropertyChangeListener("maximized", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getSource() != descriptor)
+                    return;
+
+                if ((Boolean) evt.getNewValue()) {
+                    maximizeButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/" + "minimize" + ".png"));
+                } else
+                    maximizeButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/" + "maximize" + ".png"));
+
+            }
+        });
+
+        ((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).addPropertyChangeListener(
                 new PropertyChangeListener() {
                     public void propertyChange(PropertyChangeEvent evt) {
                         if ("enabled".equals(evt.getPropertyName())) {
@@ -262,7 +278,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             String actionCommnad = e.getActionCommand();
             if (!"visible".equals(actionCommnad))
                 toolWindow.setActive(true);
-            
+
             if ("visible".equals(actionCommnad)) {
                 ToolWindowActionHandler toolWindowActionHandler = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowActionHandler();
                 if (toolWindowActionHandler != null)
@@ -285,13 +301,15 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 } else if (type == ToolWindowType.SLIDING) {
                     toolWindow.setType(ToolWindowType.DOCKED);
                 }
+            } else if ("maximize".equals(actionCommnad)) {
+                toolWindow.setMaximized(!toolWindow.isMaximized());
             }
         }
 
     }
 
 
-	class FocusOwnerPropertyChangeListener implements PropertyChangeListener {
+    class FocusOwnerPropertyChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             if (!toolWindow.isVisible())
@@ -301,7 +319,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             if (component == null) return;
             if (component instanceof JRootPane) return;
 
-			valueAdjusting = true;
+            valueAdjusting = true;
 
 //            System.out.println("component = " + component);
 

@@ -40,6 +40,7 @@ public class AnchorLabelUI extends MetalLabelUI {
     private AnchorLabelMouseAdapter adapter;
 
     private Timer flashingTimer;
+    private int flasingDuration;
     private boolean flashingState;
   
     public AnchorLabelUI(ToolWindowDescriptor descriptor, ToolWindow toolWindow) {
@@ -82,8 +83,13 @@ public class AnchorLabelUI extends MetalLabelUI {
 
             if (flashingTimer == null) {
                 flashingTimer = new Timer(500, new ActionListener() {
+                    long start = 0;
                     public void actionPerformed(ActionEvent e) {
+                        if (start == 0)
+                            start = System.currentTimeMillis();
                         SwingUtil.repaint(component);
+                        if (flasingDuration != -1 && System.currentTimeMillis() - start > flasingDuration)
+                            toolWindow.setFlashing(false);
                     }
                 });
             }
@@ -91,6 +97,11 @@ public class AnchorLabelUI extends MetalLabelUI {
                 flashingTimer.start();
             }
         } else {
+            if (flashingTimer != null) {
+                flashingTimer.stop();
+                flashingTimer = null;
+            }
+            
             if (c.isOpaque()) {
                 GraphicsUtil.fillRect(g, new Rectangle(0, 0, c.getWidth(), c.getHeight()),
                                       start, end, null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
@@ -118,6 +129,10 @@ public class AnchorLabelUI extends MetalLabelUI {
         } else if ("UI".equals(e.getPropertyName())) {
             adapter.propertyChange(e);
         } else if ("flash".equals(e.getPropertyName())) {
+            flasingDuration = -1;
+            SwingUtil.repaint(component);
+        } else if ("flash.duration".equals(e.getPropertyName())) {
+            flasingDuration = (Integer) e.getNewValue();
             SwingUtil.repaint(component);
         }
     }
