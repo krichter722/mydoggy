@@ -111,6 +111,13 @@ public interface ToolWindow {
     void setFlashing(boolean flash);
 
     /**
+     *
+     * @param duration
+     * @since 1.3.0
+     */
+    void setFlashing(int duration);
+
+    /**
      * The method is used to set the active property of the tool.
      * If <code>active</code> is <tt>true</tt> then tool becomes available and visibile if not already was.
      * Moreover the tool grabs the focus from focus owner and becomes active.
@@ -173,7 +180,6 @@ public interface ToolWindow {
      */
     boolean isAutoHide();
 
-
     /**
      * This method is used to set the type for the tool. The type specifies the way the tool is showed, made available,
      * etc.
@@ -230,6 +236,20 @@ public interface ToolWindow {
      * @since 1.0.0
      */
     String getTitle();
+
+    /**
+     *
+     * @return
+     * @since 1.3.0
+     */
+    boolean isMaximized();
+
+    /**
+     *
+     * @param maximized
+     * @since 1.3.0
+     */
+    void setMaximized(boolean maximized);
 
     /**
      * This method retrieves the TypeDescriptor for <code>type</code> that the tool use to modify the behaviours

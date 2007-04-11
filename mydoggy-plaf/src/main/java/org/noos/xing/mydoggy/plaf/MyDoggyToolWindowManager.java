@@ -1,18 +1,20 @@
 package org.noos.xing.mydoggy.plaf;
 
 import info.clearthought.layout.TableLayout;
-import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 import org.noos.xing.mydoggy.*;
+import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultDockedTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultFloatingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultSlidingTypeDescriptor;
+import org.noos.xing.mydoggy.plaf.persistence.xml.XmlPersistenceDelegate;
 import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
-import org.noos.xing.mydoggy.plaf.ui.*;
+import org.noos.xing.mydoggy.plaf.ui.GlassPanel;
+import org.noos.xing.mydoggy.plaf.ui.ResourceBoundles;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.MyDoggyTabbedContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.plaf.persistence.xml.XmlPersistenceDelegate;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -409,6 +411,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         propertyChangeSupport.addPropertyChangeListener("anchor", new AnchorPropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("type", new TypePropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("autoHide", new AutoHideChangeListener());
+        propertyChangeSupport.addPropertyChangeListener("maximized", new MaximizedChangeListener());
         propertyChangeSupport.addPropertyChangeListener("index", new IndexChangeListener());
         propertyChangeSupport.addPropertyChangeListener("icon", new IconChangeListener());
         propertyChangeSupport.addPropertyChangeListener("title", new TitleChangeListener());
@@ -502,7 +505,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTempShowed() && contentPaneLayout.getColumn(0) != 0) {
                 contentPaneLayout.setColumn(0, 0);
                 revalidate = true;
-            } else if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getColumn(0) == 0) {
+            } else
+            if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getColumn(0) == 0) {
                 contentPaneLayout.setColumn(0, COLUMN_LENGTH);
                 revalidate = true;
             }
@@ -510,7 +514,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTempShowed() && contentPaneLayout.getColumn(2) != 0) {
                 contentPaneLayout.setColumn(2, 0);
                 revalidate = true;
-            } else if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getColumn(2) == 0) {
+            } else
+            if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getColumn(2) == 0) {
                 contentPaneLayout.setColumn(2, COLUMN_LENGTH);
                 revalidate = true;
             }
@@ -518,7 +523,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTempShowed() && contentPaneLayout.getRow(0) != 0) {
                 contentPaneLayout.setRow(0, 0);
                 revalidate = true;
-            } else if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getRow(0) == 0) {
+            } else
+            if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getRow(0) == 0) {
                 contentPaneLayout.setRow(0, ROW_LENGTH);
                 revalidate = true;
             }
@@ -526,7 +532,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTempShowed() && contentPaneLayout.getRow(2) != 0) {
                 contentPaneLayout.setRow(2, 0);
                 revalidate = true;
-            } else if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getRow(2) == 0) {
+            } else
+            if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getRow(2) == 0) {
                 contentPaneLayout.setRow(2, ROW_LENGTH);
                 revalidate = true;
             }
@@ -651,8 +658,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             for (ToolWindowDescriptor tool : tools.values())
                 tool.getToolWindowContainer().propertyChange(evt);
 
-            syncPanel((ToolWindowAnchor)evt.getOldValue());
-            syncPanel((ToolWindowAnchor)evt.getNewValue());
+            syncPanel((ToolWindowAnchor) evt.getOldValue());
+            syncPanel((ToolWindowAnchor) evt.getNewValue());
         }
     }
 
@@ -725,6 +732,19 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
+    class MaximizedChangeListener implements PropertyChangeListener {
+        public void propertyChange(PropertyChangeEvent evt) {
+            ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
+            toolWindowDescriptor.getToolWindowContainer().propertyChange(evt);
+
+            // Notify specific bar
+            getBar(toolWindowDescriptor.getToolWindow().getAnchor()).propertyChange(evt);
+
+            // Syncronize bars panel
+            syncPanel(toolWindowDescriptor.getToolWindow().getAnchor());
+        }
+    }
+
 
     static class DummyPropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
@@ -757,7 +777,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         public String toString() {
             return "MyDoggyToolWindowGroup{" +
                    "name='all'" +
-                   ", tools=" + tools + 
+                   ", tools=" + tools +
                    '}';
         }
     }
@@ -797,7 +817,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 //            String anchor = (toolWindowBar != null) ? toolWindowBar.getAnchor().toString() : "";
 
 //            System.out.println("--dividerLocation(" + anchor + ") : " + location);
-//            if (toolWindowBar != null && toolWindowBar.getAnchor() == ToolWindowAnchor.BOTTOM)
+//            if (toolWindowBar != null && toolWindowBar.getAnchor() == ToolWindowAnchor.LEFT)
 //                System.out.println("--dividerLocation : " + location);
             super.setDividerLocation(location);
         }
