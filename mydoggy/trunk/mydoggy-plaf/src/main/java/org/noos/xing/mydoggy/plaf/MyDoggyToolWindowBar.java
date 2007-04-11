@@ -60,7 +60,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         initComponents();
         initListeners();
 
-        setSplitDividerLocation(0);
+        if (anchor == ToolWindowAnchor.LEFT || anchor == ToolWindowAnchor.TOP)
+            setSplitDividerLocation(0);
     }
 
 
@@ -416,6 +417,10 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                                && toolWindow.getAnchor() == sourceTool.getAnchor()
                                && manager.isShiftShow())
                         toolWindow.setVisible(false);
+
+                    if (toolWindow.isVisible() && toolWindow.isMaximized() &&
+                        !manager.isShiftShow() && toolWindow.getAnchor() != sourceTool.getAnchor())
+                        toolWindow.setMaximized(false);
                 }
             }
         }
@@ -485,8 +490,15 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 return;
 
             int divederLocation = descriptor.getDividerLocation();
-            if (getSplitDividerLocation() != 0)
-                divederLocation = getSplitDividerLocation();
+
+            for (ToolWindow toolWindow : manager.getToolsByAnchor(anchor)) {
+                if (descriptor.getToolWindow()!= toolWindow && toolWindow.isVisible()) {
+                    divederLocation = getSplitDividerLocation();
+                    break;
+                }
+            }
+//            if (getSplitDividerLocation() != 0)
+//                divederLocation = getSplitDividerLocation();
 //            System.out.println("divederLocation(" + anchor + ") : " + divederLocation);
 
             Component splitPaneContent = getSplitPaneContent();
@@ -809,9 +821,31 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             if (descriptor.getToolWindow().getType() == ToolWindowType.DOCKED) {
                 if ((Boolean) evt.getNewValue()) {
                     descriptor.setTempDivederLocation(getSplitDividerLocation());
+
+                    ToolWindowAnchor opposite = null;
+                    switch(descriptor.getToolWindow().getAnchor()) {
+                        case LEFT:
+                            opposite = ToolWindowAnchor.RIGHT;
+                            break;
+                        case RIGHT:
+                            opposite = ToolWindowAnchor.LEFT;
+                            break;
+                        case TOP:
+                            opposite = ToolWindowAnchor.BOTTOM;
+                            break;
+                        case BOTTOM:
+                            opposite = ToolWindowAnchor.TOP;
+                            break;
+                    }
+                    for (ToolWindow tool : descriptor.getManager().getToolsByAnchor(opposite)) {
+                        tool.setVisible(false);
+                    }
+
                     setSplitDividerLocation(640);
+                    SwingUtil.repaintNow(splitPane);
                 } else {
                     setSplitDividerLocation(descriptor.getTempDivederLocation());
+                    SwingUtil.repaintNow(splitPane);
                 }
             }
         }
