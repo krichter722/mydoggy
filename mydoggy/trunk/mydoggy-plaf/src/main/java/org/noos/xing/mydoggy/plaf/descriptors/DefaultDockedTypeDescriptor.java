@@ -15,10 +15,12 @@ import java.beans.PropertyChangeListener;
  */
 public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
     private ToolWindowActionHandler toolWindowActionHandler;
-    private EventListenerList listenerList;
     private boolean popupMenuEnabled;
     private JMenu toolsMenu;
     private int dockLength;
+    private boolean animating;
+
+    private EventListenerList listenerList;
 
     public DefaultDockedTypeDescriptor() {
         this.toolsMenu = new JMenu(ResourceBoundles.getResourceBundle().getString("@@tool.toolsMenu"));
@@ -71,16 +73,8 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.toolWindowActionHandler = toolWindowActionHandler;
     }
 
-    public ToolWindowTypeDescriptor cloneMe() {
-        return new DefaultDockedTypeDescriptor(this, dockLength, popupMenuEnabled, toolWindowActionHandler);
-    }
-
-    public void propertyChange(PropertyChangeEvent evt) {
-        if ("popupMenuEnabled".equals(evt.getPropertyName())) {
-            this.popupMenuEnabled = (Boolean) evt.getNewValue();
-        } else if ("dockLength".equals(evt.getPropertyName())) {
-            this.dockLength = (Integer) evt.getNewValue();
-        }
+    public void setAnimating(boolean animating) {
+        // TODO: to be continued...
     }
 
     public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
@@ -96,6 +90,19 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     public PropertyChangeListener[] getPropertyChangeListeners() {
         return listenerList.getListeners(PropertyChangeListener.class);
     }
+
+    public ToolWindowTypeDescriptor cloneMe() {
+        return new DefaultDockedTypeDescriptor(this, dockLength, popupMenuEnabled, toolWindowActionHandler);
+    }
+
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("popupMenuEnabled".equals(evt.getPropertyName())) {
+            this.popupMenuEnabled = (Boolean) evt.getNewValue();
+        } else if ("dockLength".equals(evt.getPropertyName())) {
+            this.dockLength = (Integer) evt.getNewValue();
+        }
+    }
+
 
     private void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
         if (listenerList != null) {

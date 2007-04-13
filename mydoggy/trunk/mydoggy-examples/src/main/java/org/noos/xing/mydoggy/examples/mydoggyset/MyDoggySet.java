@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.File;
+import java.util.Locale;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -260,7 +261,7 @@ public class MyDoggySet {
     }
 
     protected void initToolWindowManager() {
-        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
+        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame, Locale.US);
         this.toolWindowManager = myDoggyToolWindowManager;
 
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);
