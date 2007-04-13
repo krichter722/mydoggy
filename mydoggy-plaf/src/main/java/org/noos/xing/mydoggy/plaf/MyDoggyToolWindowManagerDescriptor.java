@@ -9,6 +9,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
+import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -24,12 +25,15 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
     private PushAwayMode pushAwayMode;
     private MyDoggyToolWindowManager manager;
 
+    private EventListenerList listenerList;
+
     private boolean checkParam = true;
     private Stack<ToolWindowAnchor> mostRecentStack;
 
     public MyDoggyToolWindowManagerDescriptor(MyDoggyToolWindowManager manager) {
         this.manager = manager;
         this.pushAwayMode = PushAwayMode.VERTICAL;
+        this.listenerList = new EventListenerList();
 
         initMostRecent();
     }
@@ -37,8 +41,6 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
     public void setPushAwayMode(PushAwayMode pushAwayMode) {
         if (this.pushAwayMode == pushAwayMode && checkParam)
             return;
-
-        this.pushAwayMode = pushAwayMode;
 
         // Change mode
         int leftSplitLocation = manager.getBar(LEFT).getSplitDividerLocation();
@@ -160,6 +162,11 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
                 SwingUtil.repaintNow(manager.getBar(mostRecentStack.get(0)).getSplitPane());
                 break;
         }
+
+        // fire changing
+        PushAwayMode old = this.pushAwayMode;
+        this.pushAwayMode = pushAwayMode;
+        firePropertyChange("pushAwayMode", old, this.pushAwayMode);
     }
 
     public PushAwayMode getPushAwayMode() {
@@ -174,6 +181,21 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
                 throw new IllegalArgumentException("There isn't any descriptor for mode : " + pushAwayMode);
         }
     }
+
+    public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
+        if (listenerList == null)
+            listenerList = new EventListenerList();
+        listenerList.add(PropertyChangeListener.class, propertyChangeListener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        listenerList.remove(PropertyChangeListener.class, listener);
+    }
+
+    public PropertyChangeListener[] getPropertyChangeListeners() {
+        return listenerList.getListeners(PropertyChangeListener.class);
+    }
+
 
     public void propertyChange(PropertyChangeEvent evt) {
         if ("visible".equals(evt.getPropertyName())) {
@@ -299,4 +321,14 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
             checkParam = true;
         }
     }
+
+
+    private void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+        PropertyChangeListener[] listeners = listenerList.getListeners(PropertyChangeListener.class);
+        PropertyChangeEvent event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
+        for (PropertyChangeListener listener : listeners) {
+            listener.propertyChange(event);
+        }
+    }
+
 }
