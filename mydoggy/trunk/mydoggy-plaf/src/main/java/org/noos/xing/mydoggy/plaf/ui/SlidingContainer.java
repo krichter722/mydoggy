@@ -32,7 +32,7 @@ public class SlidingContainer extends FloatingContainer {
 
     private SlidingMouseInputHandler slidingMouseInputHandler;
 
-    private JPanel mainPanel = new JPanel();
+    private JPanel mainPanel;
     private TranslucentPanel sheet;
 
     public SlidingContainer(ToolWindowDescriptor descriptor) {
@@ -80,7 +80,8 @@ public class SlidingContainer extends FloatingContainer {
             glassPane.remove(sheet);
             glassPane.add(sheet);
 
-            slidingAnimation.show(sheet.getBounds());
+            if (descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isAnimating())
+                slidingAnimation.show(sheet.getBounds());
         } else {
             // Set Layout
             TableLayout layout = (TableLayout) sheet.getLayout();
@@ -99,7 +100,14 @@ public class SlidingContainer extends FloatingContainer {
                     descriptor.setDividerLocation(sheet.getWidth());
                     break;
             }
-            slidingAnimation.hide(sheet.getBounds());
+
+            if (descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isAnimating())
+                slidingAnimation.hide(sheet.getBounds());
+            else {
+                glassPane.remove(sheet);
+                sheet.setBorder(null);
+                sheet.removeAll();
+            }
         }
     }
 
@@ -183,6 +191,7 @@ public class SlidingContainer extends FloatingContainer {
 
 
     private void initSlidingComponents() {
+        mainPanel = new JPanel();
         sheet = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
         border = new SlidingBorder();
 
@@ -229,6 +238,13 @@ public class SlidingContainer extends FloatingContainer {
             }
         });
         addPropertyChangeListener("active", new ActivePropertyChangeListener());
+        addPropertyChangeListener("maximized", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (toolWindow.getType() == ToolWindowType.SLIDING) {
+                    // TODO: continuare
+                }
+            }
+        });
 
         slidingMouseInputHandler = new SlidingMouseInputHandler(descriptor);
     }

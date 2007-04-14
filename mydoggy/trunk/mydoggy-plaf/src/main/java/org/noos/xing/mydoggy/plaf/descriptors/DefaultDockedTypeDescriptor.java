@@ -27,13 +27,16 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.popupMenuEnabled = true;
         this.dockLength = 200;
         this.toolWindowActionHandler = null;
+        this.animating = true;
     }
 
-    public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled, ToolWindowActionHandler toolWindowActionHandler) {
+    public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled, ToolWindowActionHandler toolWindowActionHandler, boolean animating) {
         this.toolsMenu = new JMenu(ResourceBoundles.getResourceBundle().getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = popupMenuEnabled;
         this.dockLength = dockLength;
         this.toolWindowActionHandler = toolWindowActionHandler;
+        this.animating = animating;
+
         this.listenerList = new EventListenerList();
 
         parent.addPropertyChangeListener(this);
@@ -73,8 +76,17 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.toolWindowActionHandler = toolWindowActionHandler;
     }
 
+    public boolean isAnimating() {
+        return animating;
+    }
+
     public void setAnimating(boolean animating) {
-        // TODO: to be continued...
+        if (this.animating == animating)
+            return;
+        
+        boolean old = this.animating;
+        this.animating = animating;
+        firePropertyChange("animating", old, animating);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
@@ -84,15 +96,19 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     }
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {
+        if (listenerList == null)
+            return;
         listenerList.remove(PropertyChangeListener.class, listener);
     }
 
     public PropertyChangeListener[] getPropertyChangeListeners() {
+        if (listenerList == null)
+            return new PropertyChangeListener[0];
         return listenerList.getListeners(PropertyChangeListener.class);
     }
 
     public ToolWindowTypeDescriptor cloneMe() {
-        return new DefaultDockedTypeDescriptor(this, dockLength, popupMenuEnabled, toolWindowActionHandler);
+        return new DefaultDockedTypeDescriptor(this, dockLength, popupMenuEnabled, toolWindowActionHandler, animating);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

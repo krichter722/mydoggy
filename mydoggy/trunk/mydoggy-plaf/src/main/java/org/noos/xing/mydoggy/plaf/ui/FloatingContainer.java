@@ -78,12 +78,25 @@ public class FloatingContainer extends DockedContainer {
 
             applicationBarTitle.setIcon(toolWindow.getIcon());
 
-            floatingAnimation.show();
+            if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isAnimating())
+                floatingAnimation.show();
+             else {
+                FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
+                window.setModal(typeDescriptor.isModal());
+                window.setVisible(true);
+                window.getContentPane().setVisible(true);
+                SwingUtil.repaint(window);
+            }
         } else {
             lastBounds = window.getBounds();
             applicationBarTitle.setIcon(null);
 
-            floatingAnimation.hide();
+            if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isAnimating())
+                floatingAnimation.hide();
+             else {
+                window.getContentPane().setVisible(true);
+                window.setVisible(false);
+            }
         }
     }
 
