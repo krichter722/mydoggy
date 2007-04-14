@@ -196,7 +196,6 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         return listenerList.getListeners(PropertyChangeListener.class);
     }
 
-
     public void propertyChange(PropertyChangeEvent evt) {
         if ("visible".equals(evt.getPropertyName())) {
             if (((Boolean) evt.getNewValue())) {
@@ -251,7 +250,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         mostRecentStack.push(BOTTOM);
         mostRecentStack.push(LEFT);
 
-        manager.propertyChangeSupport.addPropertyChangeListener("visible", this);
+        manager.addInternalPropertyChangeListener("visible", this);
     }
 
     protected void addMostRecentAnchor(ToolWindowAnchor target) {

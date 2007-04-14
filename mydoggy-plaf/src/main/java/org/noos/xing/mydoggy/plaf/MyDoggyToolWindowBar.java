@@ -111,8 +111,11 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     }
 
     public void setTempShowed(boolean tempShowed) {
+        boolean old = this.tempShowed;
         this.tempShowed = tempShowed;
         manager.syncPanel(anchor);
+
+        manager.propertyChange(new PropertyChangeEvent(this, "tempShowed", old, tempShowed));
     }
 
 
