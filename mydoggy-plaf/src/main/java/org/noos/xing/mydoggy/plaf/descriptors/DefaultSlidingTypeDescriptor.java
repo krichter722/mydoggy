@@ -15,6 +15,7 @@ public class DefaultSlidingTypeDescriptor implements SlidingTypeDescriptor, Prop
     private float transparentRatio;
     private int transparentDelay;
     private boolean enabled;
+    private boolean animating;
 
     private EventListenerList listenerList;
 
@@ -23,13 +24,15 @@ public class DefaultSlidingTypeDescriptor implements SlidingTypeDescriptor, Prop
         transparentRatio = 0.5f;
         transparentDelay = 1000;
         enabled = true;
+        animating = true;
     }
 
-    public DefaultSlidingTypeDescriptor(DefaultSlidingTypeDescriptor parent, int transparentDelay, float transparentRatio, boolean transparentMode, boolean enabled) {
+    public DefaultSlidingTypeDescriptor(DefaultSlidingTypeDescriptor parent, int transparentDelay, float transparentRatio, boolean transparentMode, boolean enabled, boolean animating) {
         this.transparentDelay = transparentDelay;
         this.transparentRatio = transparentRatio;
         this.transparentMode = transparentMode;
         this.enabled = enabled;
+        this.animating = animating;
 
         parent.addPropertyChangeListener(this);
     }
@@ -93,11 +96,24 @@ public class DefaultSlidingTypeDescriptor implements SlidingTypeDescriptor, Prop
         firePropertyChange("transparentDelay", old, transparentDelay);
     }
 
+    public boolean isAnimating() {
+        return animating;
+    }
 
+    public void setAnimating(boolean animating) {
+        if (this.animating == animating)
+            return;
+
+        boolean old = this.animating;
+        this.animating = animating;
+        firePropertyChange("animating", old, animating);
+    }
+
+    
     public ToolWindowTypeDescriptor cloneMe() {
         return new DefaultSlidingTypeDescriptor(this,
                                                 getTransparentDelay(), getTransparentRatio(),
-                                                isTransparentMode(), isEnabled());
+                                                isTransparentMode(), isEnabled(), animating);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

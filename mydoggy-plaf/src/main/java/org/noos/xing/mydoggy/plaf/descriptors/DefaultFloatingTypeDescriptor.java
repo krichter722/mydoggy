@@ -22,6 +22,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
     private int transparentDelay;
 
     private boolean enabled;
+    private boolean animating;
 
     private EventListenerList listenerList;
 
@@ -31,11 +32,12 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         transparentDelay = 1500;
         modal = false;
         enabled = true;
+        animating = true;
     }
 
     public DefaultFloatingTypeDescriptor(DefaultFloatingTypeDescriptor parent, Point location, Dimension size,
                                          int transparentDelay, float transparentRatio, boolean useTransparentMode,
-                                         boolean modal, boolean enabled) {
+                                         boolean modal, boolean enabled, boolean animating) {
         this.location = location;
         this.size = size;
         this.transparentDelay = transparentDelay;
@@ -43,6 +45,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         this.transparentMode = useTransparentMode;
         this.modal = modal;
         this.enabled = enabled;
+        this.animating = animating;
 
         parent.addPropertyChangeListener(this);
     }
@@ -150,9 +153,22 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         firePropertyChange("transparentDelay", old, transparentDelay);
     }
 
+    public boolean isAnimating() {
+        return animating;
+    }
+
+    public void setAnimating(boolean animating) {
+        if (this.animating == animating)
+            return;
+
+        boolean old = this.animating;
+        this.animating = animating;
+        firePropertyChange("animating", old, animating);
+    }
+
 
     public ToolWindowTypeDescriptor cloneMe() {
-        return new DefaultFloatingTypeDescriptor(this, getLocation(), getSize(), getTransparentDelay(), getTransparentRatio(), isTransparentMode(), modal, isEnabled());
+        return new DefaultFloatingTypeDescriptor(this, getLocation(), getSize(), getTransparentDelay(), getTransparentRatio(), isTransparentMode(), modal, isEnabled(), animating);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

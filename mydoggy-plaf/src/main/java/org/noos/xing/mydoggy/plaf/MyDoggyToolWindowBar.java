@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf;
 
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
+import org.noos.xing.mydoggy.DockedTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
@@ -190,18 +191,34 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     }
 
     protected void setSplitDividerLocation(int divederLocation) {
-        switch (anchor) {
-            case LEFT:
-            case TOP:
-                splitPane.setDividerLocation(divederLocation);
-                break;
-            case RIGHT:
-                splitPane.setDividerLocation(splitPane.getWidth() - divederLocation);
-                break;
-            case BOTTOM:
-                splitPane.setDividerLocation(splitPane.getHeight() - divederLocation);
-                break;
-        }
+        if (divederLocation == -1) {
+            switch (anchor) {
+                case LEFT:
+                    splitPane.setDividerLocation(splitPane.getWidth());
+                    break;
+                case TOP:
+                    splitPane.setDividerLocation(splitPane.getHeight());
+                    break;
+                case RIGHT:
+                    splitPane.setDividerLocation(0);
+                    break;
+                case BOTTOM:
+                    splitPane.setDividerLocation(0);
+                    break;
+            }
+        } else
+            switch (anchor) {
+                case LEFT:
+                case TOP:
+                    splitPane.setDividerLocation(divederLocation);
+                    break;
+                case RIGHT:
+                    splitPane.setDividerLocation(splitPane.getWidth() - divederLocation);
+                    break;
+                case BOTTOM:
+                    splitPane.setDividerLocation(splitPane.getHeight() - divederLocation);
+                    break;
+            }
     }
 
 
@@ -492,7 +509,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             int divederLocation = descriptor.getDividerLocation();
 
             for (ToolWindow toolWindow : manager.getToolsByAnchor(anchor)) {
-                if (descriptor.getToolWindow()!= toolWindow && toolWindow.isVisible()) {
+                if (descriptor.getToolWindow() != toolWindow && toolWindow.isVisible()) {
                     divederLocation = getSplitDividerLocation();
                     break;
                 }
@@ -545,7 +562,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             if (animate) {
                 if (content != null) {
                     splitPane.setDividerSize(5);
-                    if (manager.getShowingGroup() == null) {
+                    if (manager.getShowingGroup() == null &&
+                        ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).isAnimating()) {
                         splitAnimation.show(divederLocation);
                     } else {
                         if (divederLocation != 0) {
@@ -561,7 +579,6 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     vsdValueAdjusting = true;
                     setSplitDividerLocation(0);
                     vsdValueAdjusting = false;
-
 //                    splitAnimation.hide(divederLocation);
                 }
             } else {
@@ -823,7 +840,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     descriptor.setTempDivederLocation(getSplitDividerLocation());
 
                     ToolWindowAnchor opposite = null;
-                    switch(descriptor.getToolWindow().getAnchor()) {
+                    switch (descriptor.getToolWindow().getAnchor()) {
                         case LEFT:
                             opposite = ToolWindowAnchor.RIGHT;
                             break;
@@ -837,11 +854,12 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                             opposite = ToolWindowAnchor.TOP;
                             break;
                     }
+                    
                     for (ToolWindow tool : descriptor.getManager().getToolsByAnchor(opposite)) {
                         tool.setVisible(false);
                     }
 
-                    setSplitDividerLocation(640);
+                    setSplitDividerLocation(-1);   // TODO: 640 non va bene
                     SwingUtil.repaintNow(splitPane);
                 } else {
                     setSplitDividerLocation(descriptor.getTempDivederLocation());

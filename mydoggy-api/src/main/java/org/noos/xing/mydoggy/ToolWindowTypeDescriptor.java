@@ -12,4 +12,16 @@ package org.noos.xing.mydoggy;
  * @since 1.0.0
  */
 public interface ToolWindowTypeDescriptor {
+
+    /**
+     * @since 1.3.0
+     */
+    boolean isAnimating();
+
+    /**
+     * @param animating
+     * @since 1.3.0
+     */
+    void setAnimating(boolean animating);
+
 }

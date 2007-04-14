@@ -337,7 +337,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setMaximized(boolean maximized) {
-        if (this.maximized == maximized)
+        if (this.maximized == maximized || !isVisible())
             return;
 
         synchronized (getLock()) {
