@@ -497,7 +497,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                                     glassPane.setImage(GraphicsUtil.rotate(ghostImage, Math.PI));
                                     break;
                                 default:
-                                    glassPane.setImage(GraphicsUtil.rotate(ghostImage, Math.PI));
+                                    glassPane.setImage(GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI));
                                     break;
                             }
                             break;

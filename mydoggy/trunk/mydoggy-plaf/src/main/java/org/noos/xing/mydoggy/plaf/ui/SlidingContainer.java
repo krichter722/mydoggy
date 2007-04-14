@@ -209,7 +209,6 @@ public class SlidingContainer extends FloatingContainer {
     private void initSlidingListeners() {
         addPropertyChangeListener("anchor", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                assert "anchor".equals(evt.getPropertyName());
                 ToolWindow evtToolWindow = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
                 if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible() && !evtToolWindow.isVisible())
                     update();
@@ -308,6 +307,12 @@ public class SlidingContainer extends FloatingContainer {
                 if (descriptor.getToolBar(ToolWindowAnchor.BOTTOM).getAvailableTools() > 0)
                     width -= 23;
                 return width;
+            }
+        });
+        addPropertyChangeListener("tempShowed", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
+                    update();
             }
         });
 

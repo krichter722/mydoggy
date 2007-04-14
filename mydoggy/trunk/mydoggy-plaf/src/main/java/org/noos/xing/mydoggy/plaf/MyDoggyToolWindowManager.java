@@ -51,6 +51,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     private TableLayout contentPaneLayout;
 
+    // TODO: nascandore questi oggetti
     JSplitPane mainSplitPane;
     JPanel mainContainer;
 
@@ -59,6 +60,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     private Object activeToolWindowId;
 
     private Component lastFocusOwner = null;
+
+    private PersistenceDelegate persistenceDelegate;
 
     // Type Descriptors Template.
     private DefaultFloatingTypeDescriptor floatingTypeDescriptor;
@@ -70,7 +73,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     // ToolWindwoManager Listener List
     private EventListenerList twmListeners;
 
-    private PersistenceDelegate persistenceDelegate;
+
 
     public MyDoggyToolWindowManager(Window windowAnchestor) {
         this(windowAnchestor, Locale.getDefault());
@@ -300,11 +303,15 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public synchronized void propertyChange(final PropertyChangeEvent evt) {
-        ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
-
-        if (!tools.containsValue(descriptor)) {
-//            System.out.println("Manager doesn't containe that ToolWindow. [id : " + descriptor.getToolWindow().getId() + "]");
-            new RuntimeException("Manager doesn't containe that ToolWindow. [id : " + descriptor.getToolWindow().getId() + "]").printStackTrace();
+        Object source = evt.getSource();
+        if (source instanceof ToolWindowDescriptor) {
+            ToolWindowDescriptor descriptor = (ToolWindowDescriptor) source;
+            if (!tools.containsValue(descriptor)) {
+                new RuntimeException("Manager doesn't containe that ToolWindow. [id : " + descriptor.getToolWindow().getId() + "]").printStackTrace();
+                return;
+            }
+        } else if (!(source instanceof MyDoggyToolWindowBar)) {
+            new RuntimeException("Illegal Source : "+ source).printStackTrace();
             return;
         }
 
@@ -340,6 +347,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     public MyDoggyToolWindowBar getBar(ToolWindowAnchor anchor) {
         return bars[anchor.ordinal()];
+    }
+
+    public ToolWindowGroup getShowingGroup() {
+        return this.showingGroup;
+    }
+
+    public ToolWindowDescriptor getDescriptor(ToolWindow toolWindow) {
+        return tools.get(toolWindow.getId());
     }
 
 
@@ -415,6 +430,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         propertyChangeSupport.addPropertyChangeListener("index", new IndexChangeListener());
         propertyChangeSupport.addPropertyChangeListener("icon", new IconChangeListener());
         propertyChangeSupport.addPropertyChangeListener("title", new TitleChangeListener());
+        propertyChangeSupport.addPropertyChangeListener("tempShowed", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                for (ToolWindowDescriptor tool : tools.values())
+                    tool.getToolWindowContainer().propertyChange(evt);
+            }
+        });
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(this);
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", new PropertyChangeListener() {
@@ -565,12 +586,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         resetShowingGroup();
     }
 
-    public ToolWindowGroup getShowingGroup() {
-        return this.showingGroup;
-    }
-
-    public ToolWindowDescriptor getDescriptor(ToolWindow toolWindow) {
-        return tools.get(toolWindow.getId());
+    void addInternalPropertyChangeListener(String property, PropertyChangeListener propertyChangeListener) {
+        propertyChangeSupport.addPropertyChangeListener(property, propertyChangeListener);
     }
 
 
