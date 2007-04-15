@@ -284,11 +284,11 @@ public class SlidingContainer extends FloatingContainer {
             }
 
             private int calcFirstX() {
-                return (descriptor.getToolBar(ToolWindowAnchor.LEFT).getAvailableTools() > 0) ? 23 : 0;
+                return descriptor.getManager().getX() + ((descriptor.getToolBar(ToolWindowAnchor.LEFT).getAvailableTools() > 0) ? 23 : 0);
             }
 
             private int calcFirstY() {
-                return (descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0) ? 23 : 0;
+                return descriptor.getManager().getY() + ((descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0) ? 23 : 0);
             }
 
             private int calcMaxWidth() {
