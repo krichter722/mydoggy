@@ -21,8 +21,8 @@ public class MyDoggyHandler extends DefaultHandler {
         TOOLS,
         TOOL,
         DESCRIPTOR,
-        PUSH_AWAY_POLICY,
-        PUSH_AWAY_MOST_RECENT_POLICY
+        PUSH_AWAY_MODE,
+        PUSH_AWAY_MOST_RECENT_MODE
     }
 
     private ToolWindowManager toolWindowManager;
@@ -35,7 +35,7 @@ public class MyDoggyHandler extends DefaultHandler {
     private PersistedDockedType dockedType;
     private PersistedSlidingType slidingType;
     private PersistedFloatingType floatingType;
-    private PersistedPAMostRecenPolicy persistedPAMostRecenPolicy;
+    private PersistedMostRecentDescriptor persistedMostRecentDescriptor;
 
     private Map<ToolWindow, PersistedToolWindow> map;
 
@@ -75,26 +75,26 @@ public class MyDoggyHandler extends DefaultHandler {
                 break;
             case SUB_SECTION :
                 if ("pushAway".equals(qName)) {
-                    state = State.PUSH_AWAY_POLICY;
+                    state = State.PUSH_AWAY_MODE;
                 } else if ("tools".equals(qName)) {
                     state = State.TOOL;
                 } else
                     throw new SAXException("Invalid element at this position. Expecting <pushAway> or <tools>");
                 break;
-            case PUSH_AWAY_POLICY:
-                if ("policy".equals(qName)) {
+            case PUSH_AWAY_MODE:
+                if ("mode".equals(qName)) {
                     // Load policy
                     if (!PushAwayMode.MOST_RECENT.toString().equals(attributes.getValue("type")))
                         throw new SAXException("Invalid PushAwayMode policy. Supported only PushAwayMode.MOST_RECENT");
 
-                    persistedPAMostRecenPolicy = new PersistedPAMostRecenPolicy();
-                    subState = State.PUSH_AWAY_MOST_RECENT_POLICY;
+                    persistedMostRecentDescriptor = new PersistedMostRecentDescriptor();
+                    subState = State.PUSH_AWAY_MOST_RECENT_MODE;
                 } else {
                     switch (subState) {
-                        case PUSH_AWAY_MOST_RECENT_POLICY:
+                        case PUSH_AWAY_MOST_RECENT_MODE:
                             if (!"anchor".equals(qName))
                                 throw new SAXException("Invalid element at this position. Expecting <anchor>");
-                            persistedPAMostRecenPolicy.push(ToolWindowAnchor.valueOf(attributes.getValue("type")));
+                            persistedMostRecentDescriptor.push(ToolWindowAnchor.valueOf(attributes.getValue("type")));
                             break;
                     }
                 }
@@ -176,7 +176,7 @@ public class MyDoggyHandler extends DefaultHandler {
             case MYDOGGY:
                 state = State.MYDOGGY;
                 break;
-            case PUSH_AWAY_POLICY:
+            case PUSH_AWAY_MODE:
                 if ("pushAway".equals(qName)) {
                     state = State.SUB_SECTION;
                     subState = State.NOP;
@@ -189,9 +189,9 @@ public class MyDoggyHandler extends DefaultHandler {
             load(ToolWindowAnchor.RIGHT);
             load(ToolWindowAnchor.TOP);
 
-            if (persistedPAMostRecenPolicy != null)
+            if (persistedMostRecentDescriptor != null)
                 ((MostRecentDescriptor) toolWindowManager.getToolWindowManagerDescriptor().getPushAwayModeDescriptor(PushAwayMode.MOST_RECENT)).
-                        append(persistedPAMostRecenPolicy.getStack().toArray(new ToolWindowAnchor[0]));
+                        append(persistedMostRecentDescriptor.getStack().toArray(new ToolWindowAnchor[0]));
 
             if (persistedToolWindowManager.getPushAwayMode() != null)
                 toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(persistedToolWindowManager.getPushAwayMode());

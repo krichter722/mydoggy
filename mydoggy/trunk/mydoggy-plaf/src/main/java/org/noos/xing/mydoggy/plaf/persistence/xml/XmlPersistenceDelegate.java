@@ -36,7 +36,7 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
             writer.startElement("mydoggy", mydoggyAttributes);
 
             // Store PushAway Pref
-            ((Persistable) toolWindowManager.getToolWindowManagerDescriptor()).save(writer);
+            saveToolWindowManagerDescriptor(writer);
 
             // Store tools pref.
             writer.startElement("tools");
@@ -53,6 +53,30 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void saveToolWindowManagerDescriptor(XMLWriter writer) throws SAXException{
+        // Start pushAway
+        writer.startElement("pushAway");
+
+        // start MOST_RECENT policy
+        AttributesImpl policyAttributes = new AttributesImpl();
+        policyAttributes.addAttribute(null, "type", null, null, String.valueOf(PushAwayMode.MOST_RECENT));
+        writer.startElement("mode", policyAttributes);
+
+        MostRecentDescriptor mostRecentDescriptor = (MostRecentDescriptor) toolWindowManager.getToolWindowManagerDescriptor().getPushAwayModeDescriptor(PushAwayMode.HORIZONTAL);
+
+        for (ToolWindowAnchor toolWindowAnchor : mostRecentDescriptor.getMostRecentAnchors()) {
+            AttributesImpl anchorAttributes = new AttributesImpl();
+            anchorAttributes.addAttribute(null, "type", null, null, String.valueOf(toolWindowAnchor));
+            writer.dataElement("anchor", anchorAttributes);
+        }
+
+        // end MOST_RECENT policy
+        writer.endElement("mode");
+
+        // End pushAway
+        writer.endElement("pushAway");
     }
 
     public void apply(InputStream inputStream) {
