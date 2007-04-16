@@ -3,7 +3,9 @@ package org.noos.xing.mydoggy.plaf.descriptors;
 import org.noos.xing.mydoggy.DockedTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowActionHandler;
+import org.noos.xing.mydoggy.ToolWindowPainter;
 import org.noos.xing.mydoggy.plaf.ui.ResourceBoundles;
+import org.noos.xing.mydoggy.plaf.ui.painter.MyDoggyToolWindowPainter;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -15,6 +17,7 @@ import java.beans.PropertyChangeListener;
  */
 public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
     private ToolWindowActionHandler toolWindowActionHandler;
+    private ToolWindowPainter toolWindowPainter;
     private boolean popupMenuEnabled;
     private JMenu toolsMenu;
     private int dockLength;
@@ -28,13 +31,15 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.dockLength = 200;
         this.toolWindowActionHandler = null;
         this.animating = true;
+        this.toolWindowPainter = new MyDoggyToolWindowPainter();
     }
 
-    public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled, ToolWindowActionHandler toolWindowActionHandler, boolean animating) {
+    public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled, ToolWindowActionHandler toolWindowActionHandler, boolean animating, ToolWindowPainter toolWindowPainter) {
         this.toolsMenu = new JMenu(ResourceBoundles.getResourceBundle().getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = popupMenuEnabled;
         this.dockLength = dockLength;
         this.toolWindowActionHandler = toolWindowActionHandler;
+        this.toolWindowPainter = toolWindowPainter;
         this.animating = animating;
 
         this.listenerList = new EventListenerList();
@@ -89,6 +94,10 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         firePropertyChange("animating", old, animating);
     }
 
+    public ToolWindowPainter getToolWindowPainter() {
+        return toolWindowPainter;
+    }
+
     public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
         if (listenerList == null)
             listenerList = new EventListenerList();
@@ -108,7 +117,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     }
 
     public ToolWindowTypeDescriptor cloneMe() {
-        return new DefaultDockedTypeDescriptor(this, dockLength, popupMenuEnabled, toolWindowActionHandler, animating);
+        return new DefaultDockedTypeDescriptor(this, dockLength, popupMenuEnabled, toolWindowActionHandler, animating, toolWindowPainter);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
