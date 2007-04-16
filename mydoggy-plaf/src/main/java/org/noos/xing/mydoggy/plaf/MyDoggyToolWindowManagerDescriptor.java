@@ -1,13 +1,9 @@
 package org.noos.xing.mydoggy.plaf;
 
-import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.plaf.persistence.xml.Persistable;
-import org.noos.xing.mydoggy.plaf.persistence.xml.XMLWriter;
+import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 import javax.swing.event.EventListenerList;
 import java.awt.*;
@@ -21,7 +17,7 @@ import java.util.Stack;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDescriptor, PropertyChangeListener, Persistable, MostRecentDescriptor {
+public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDescriptor, PropertyChangeListener, MostRecentDescriptor {
     private PushAwayMode pushAwayMode;
     private MyDoggyToolWindowManager manager;
 
@@ -208,28 +204,6 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         }
     }
 
-    public void save(XMLWriter writer) throws SAXException {
-        // Start pushAway
-        writer.startElement("pushAway");
-
-        // start MOST_RECENT policy
-        AttributesImpl policyAttributes = new AttributesImpl();
-        policyAttributes.addAttribute(null, "type", null, null, String.valueOf(PushAwayMode.MOST_RECENT));
-        writer.startElement("policy", policyAttributes);
-
-        for (ToolWindowAnchor toolWindowAnchor : mostRecentStack) {
-            AttributesImpl anchorAttributes = new AttributesImpl();
-            anchorAttributes.addAttribute(null, "type", null, null, String.valueOf(toolWindowAnchor));
-            writer.dataElement("anchor", anchorAttributes);
-        }
-
-        // end MOST_RECENT policy
-        writer.endElement("policy");
-
-        // End pushAway
-        writer.endElement("pushAway");
-    }
-
     public void append(ToolWindowAnchor... anchors) {
         if (anchors == null)
             throw new NullPointerException("anchors cannot be null");
@@ -240,6 +214,10 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         
         if (pushAwayMode == PushAwayMode.MOST_RECENT)
             forceChangePushAwayMode(PushAwayMode.MOST_RECENT);
+    }
+
+    public ToolWindowAnchor[] getMostRecentAnchors() {
+        return mostRecentStack.toArray(new ToolWindowAnchor[0]);
     }
 
 

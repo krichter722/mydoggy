@@ -13,4 +13,6 @@ public interface MostRecentDescriptor extends PushAwayModeDescriptor {
      */
     void append(ToolWindowAnchor... anchors);
 
+    ToolWindowAnchor[] getMostRecentAnchors();
+
 }

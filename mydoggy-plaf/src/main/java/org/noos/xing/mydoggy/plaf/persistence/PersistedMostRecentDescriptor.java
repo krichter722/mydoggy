@@ -7,10 +7,10 @@ import java.util.Stack;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class PersistedPAMostRecenPolicy {
+public class PersistedMostRecentDescriptor {
     private Stack<ToolWindowAnchor> stack;
 
-    public PersistedPAMostRecenPolicy() {
+    public PersistedMostRecentDescriptor() {
         this.stack = new Stack<ToolWindowAnchor>();
     }
 
