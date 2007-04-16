@@ -33,6 +33,8 @@ public interface ToolWindowPainter {
 
     void updateRepresentativeButton(ToolWindow toolWindow, Rectangle bounds, Graphics g, Status status);
 
+    void updateApplicationBar(ToolWindow toolWindow, Rectangle bounds, Graphics g, Object[] params);
+
     Icon getIcon(IconId iconId);
 
 }

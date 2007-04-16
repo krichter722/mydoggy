@@ -1,20 +1,31 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
-import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 
 import javax.swing.*;
+import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.PanelUI;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ResourceBundle;
 
 /**
  * @author Angelo De Caro
  */
 public class ApplicationBarPanelUI extends PanelUI {
+    private static ResourceBundle resourceBundle = ResourceBoundles.getResourceBundle();
 
-	private Color startTemp;
+    private ToolWindowDescriptor descriptor;
+    private ToolWindow toolWindow;
+    private ToolWindowPainter toolWindowPainter;
+
+    private Color startTemp;
 	private Color endTemp;
 
 	private Color startEnabled;
@@ -26,9 +37,12 @@ public class ApplicationBarPanelUI extends PanelUI {
 
 	private GradientAnimation animation;
 
-
 	public ApplicationBarPanelUI(ToolWindowDescriptor descriptor, DockedContainer dockedContainer) {
-		dockedContainer.addPropertyChangeListener("active", new GradientActivationListener(descriptor));
+        this.descriptor = descriptor;
+        this.toolWindow = descriptor.getToolWindow();
+        this.toolWindowPainter = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowPainter();
+        
+        dockedContainer.addPropertyChangeListener("active", new GradientActivationListener(descriptor));
 
 		startEnabled = new Color(145, 181, 255);
 		endEnabled = new Color(96, 123, 183);
@@ -43,7 +57,7 @@ public class ApplicationBarPanelUI extends PanelUI {
 		super.installUI(c);
 		installDefaults(c);
 		this.panel = c;
-	}
+    }
 
 	public void uninstallUI(JComponent c) {
 		super.uninstallUI(c);
@@ -53,11 +67,12 @@ public class ApplicationBarPanelUI extends PanelUI {
 	public void update(Graphics g, JComponent c) {
 		Rectangle r = c.getBounds();
 		r.x = r.y = 0;
-		if (animation.isAnimating()) {
+
+        if (animation.isAnimating()) {
 			GraphicsUtil.fillRect(g, r, startTemp, endTemp,
 								  null, GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
 		} else if (c.isEnabled())
-			GraphicsUtil.fillRect(g, r, startEnabled, endEnabled,
+            GraphicsUtil.fillRect(g, r, startEnabled, endEnabled,
 								  null, GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
 		else
 			GraphicsUtil.fillRect(g, r, startDisabled, endDisabled,
@@ -98,8 +113,6 @@ public class ApplicationBarPanelUI extends PanelUI {
 					if (startTemp == null || startTemp.equals(startEnabled))
 						animation.hide();
 				} else {
-//					System.out.println(descriptor.getToolWindow().getId());
-//					new RuntimeException().printStackTrace();
 					if (startTemp == null || startTemp.equals(startDisabled))
 						animation.show();
 				}

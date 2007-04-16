@@ -38,6 +38,11 @@ public class MyDoggyToolWindowPainter implements ToolWindowPainter {
         }
     }
 
+    public void updateApplicationBar(ToolWindow toolWindow, Rectangle bounds, Graphics g, Object[] params) {
+        GraphicsUtil.fillRect(g, bounds, (Color) params[0], (Color) params[1],
+                              null, GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+    }
+
     public Icon getIcon(IconId iconId) {
         return icons.get(iconId);
     }
