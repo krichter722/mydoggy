@@ -50,15 +50,6 @@ public class ApplicationBarPanelUI extends PanelUI {
 		uninstallDefaults(c);
 	}
 
-	protected void installDefaults(JComponent c) {
-		LookAndFeel.installColorsAndFont(c, "Panel.background", "Panel.foreground", "Panel.font");
-		LookAndFeel.installBorder(c, "Panel.border");
-	}
-
-	protected void uninstallDefaults(JComponent c) {
-		LookAndFeel.uninstallBorder(c);
-	}
-
 	public void update(Graphics g, JComponent c) {
 		Rectangle r = c.getBounds();
 		r.x = r.y = 0;
@@ -72,8 +63,18 @@ public class ApplicationBarPanelUI extends PanelUI {
 			GraphicsUtil.fillRect(g, r, startDisabled, endDisabled,
 								  null, GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
 		paint(g, c);
-//        super.update(g, c);
 	}
+
+
+    protected void installDefaults(JComponent c) {
+        LookAndFeel.installColorsAndFont(c, "Panel.background", "Panel.foreground", "Panel.font");
+        LookAndFeel.installBorder(c, "Panel.border");
+    }
+
+    protected void uninstallDefaults(JComponent c) {
+        LookAndFeel.uninstallBorder(c);
+    }
+
 
 	private class GradientActivationListener implements PropertyChangeListener {
 		public static final float ANIMATION_DURATION = 80f;

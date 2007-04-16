@@ -3,7 +3,6 @@ package org.noos.xing.mydoggy.plaf.ui;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.icons.IconProvider;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -29,6 +28,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
+    protected ToolWindowPainter toolWindowPainter;
 
     private JPanel container;
 
@@ -51,6 +51,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     public DockedContainer(ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
+        this.toolWindowPainter = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowPainter();
 
         initDockedComponents();
         initDockedListeners();
@@ -97,22 +98,22 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
     protected void setSliding() {
-        dockButton.setIcon(IconProvider.docked);
+        dockButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.DOCKED));
         dockButton.setToolTipText(ResourceBoundles.getResourceBundle().getString("@@tool.tooltip.dock"));
     }
 
     protected void setDocked() {
-        dockButton.setIcon(IconProvider.sliding);
+        dockButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.SLIDING));
         dockButton.setToolTipText(ResourceBoundles.getResourceBundle().getString("@@tool.tooltip.undock"));
     }
 
     protected void setFix() {
-        floatingButton.setIcon(IconProvider.fix);
+        floatingButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.FIX));
         floatingButton.setToolTipText(ResourceBoundles.getResourceBundle().getString("@@tool.tooltip.fix"));
     }
 
     protected void setFloating() {
-        floatingButton.setIcon(IconProvider.floating);
+        floatingButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.FLOATING));
         floatingButton.setToolTipText(ResourceBoundles.getResourceBundle().getString("@@tool.tooltip.float"));
     }
 
@@ -146,11 +147,11 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         applicationBarTitle.addMouseListener(applicationBarMouseAdapter);
 
         // Buttons
-        hideButton = renderApplicationButton("hideToolWindow", "visible", applicationBarActionListener, "@@tool.tooltip.hide");
-        maximizeButton = renderApplicationButton("maximize", "maximize", applicationBarActionListener, "@@tool.tooltip.maximize");
-        pinButton = renderApplicationButton("autohideOff", "pin", applicationBarActionListener, "@@tool.tooltip.unpin");
-        floatingButton = renderApplicationButton("floating", "floating", applicationBarActionListener, "@@tool.tooltip.float");
-        dockButton = renderApplicationButton("sliding", "undock", applicationBarActionListener, "@@tool.tooltip.undock");
+        hideButton = renderApplicationButton("visible", applicationBarActionListener, "@@tool.tooltip.hide");
+        maximizeButton = renderApplicationButton("maximize", applicationBarActionListener, "@@tool.tooltip.maximize");
+        pinButton = renderApplicationButton("pin", applicationBarActionListener, "@@tool.tooltip.unpin");
+        floatingButton = renderApplicationButton("floating", applicationBarActionListener, "@@tool.tooltip.float");
+        dockButton = renderApplicationButton("undock", applicationBarActionListener, "@@tool.tooltip.undock");
 
         // Set ApplicationBar content
         applicationBar.add(applicationBarTitle, "1,1");
@@ -194,10 +195,10 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 boolean newValue = ((Boolean) evt.getNewValue());
 
                 if (newValue) {
-                    pinButton.setIcon(IconProvider.autoHideOn);
+                    pinButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.AUTO_HIDE_ON));
                     pinButton.setToolTipText(resourceBundle.getString("@@tool.tooltip.pin"));
                 } else {
-                    pinButton.setIcon(IconProvider.autoHideOff);
+                    pinButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.AUTO_HIDE_OFF));
                     pinButton.setToolTipText(resourceBundle.getString("@@tool.tooltip.unpin"));
                 }
             }
@@ -218,9 +219,9 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                     return;
 
                 if ((Boolean) evt.getNewValue()) {
-                    maximizeButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/" + "minimize" + ".png"));
+                    maximizeButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.MINIMIZE));
                 } else
-                    maximizeButton.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/" + "maximize" + ".png"));
+                    maximizeButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.MAXIMIZE));
 
             }
         });
@@ -239,7 +240,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         );
     }
 
-    private JButton renderApplicationButton(String iconName, String actionCommnad, ActionListener actionListener, String tooltip) {
+    private JButton renderApplicationButton(String actionCommnad, ActionListener actionListener, String tooltip) {
         JButton button = new ApplicationButton();
         button.setUI((ButtonUI) BasicButtonUI.createUI(button));
         button.setName(actionCommnad);
@@ -251,7 +252,6 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         button.setActionCommand(actionCommnad);
         button.addActionListener(actionListener);
         button.setToolTipText(resourceBundle.getString(tooltip));
-        button.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/" + iconName + ".png"));
 
         return button;
     }
@@ -367,39 +367,49 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
             if (active) {
                 if (toolWindow.isAutoHide()) {
-                    pinButton.setIcon(IconProvider.autoHideOn);
+                    pinButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.AUTO_HIDE_ON));
                 } else
-                    pinButton.setIcon(IconProvider.autoHideOff);
+                    pinButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.AUTO_HIDE_OFF));
 
-                hideButton.setIcon(IconProvider.hideToolWindow);
+                hideButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.HIDE_TOOL_WINDOW));
 
                 if (toolWindow.getType() == ToolWindowType.SLIDING) {
-                    dockButton.setIcon(IconProvider.docked);
+                    dockButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.DOCKED));
                 } else
-                    dockButton.setIcon(IconProvider.sliding);
+                    dockButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.SLIDING));
 
                 if (toolWindow.getType() == ToolWindowType.FLOATING) {
-                    floatingButton.setIcon(IconProvider.fix);
+                    floatingButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.FIX));
                 } else
-                    floatingButton.setIcon(IconProvider.floating);
+                    floatingButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.FLOATING));
 
+                if (toolWindow.isMaximized())
+                    maximizeButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.MAXIMIZE));
+                else
+                    maximizeButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.MAXIMIZE));
             } else {
                 if (toolWindow.isAutoHide()) {
-                    pinButton.setIcon(IconProvider.autoHideOnInactive);
+                    pinButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.AUTO_HIDE_ON_INACTIVE));
                 } else
-                    pinButton.setIcon(IconProvider.autoHideOffInactive);
+                    pinButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.AUTO_HIDE_OFF_INACTIVE));
 
-                hideButton.setIcon(IconProvider.hideToolWindowInactive);
+                hideButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.HIDE_TOOL_WINDOW_INACTIVE));
 
                 if (toolWindow.getType() == ToolWindowType.SLIDING) {
-                    dockButton.setIcon(IconProvider.dockedInactive);
+                    dockButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.DOCKED_INACTIVE));
                 } else
-                    dockButton.setIcon(IconProvider.slidingInactive);
+                    dockButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.SLIDING_INACTIVE));
 
                 if (toolWindow.getType() == ToolWindowType.FLOATING) {
-                    floatingButton.setIcon(IconProvider.fixInactive);
+                    floatingButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.FIX_INACTIVE));
                 } else
-                    floatingButton.setIcon(IconProvider.floatingInactive);
+                    floatingButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.FLOATING_INACTIVE));
+
+                // TODO: support for inactive
+                if (toolWindow.isMaximized())
+                    maximizeButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.MAXIMIZE));
+                else
+                    maximizeButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.MAXIMIZE));
             }
 
             if (active && focusRequester != null && !valueAdjusting) {

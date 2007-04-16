@@ -26,16 +26,13 @@ import java.util.ResourceBundle;
 public class AnchorLabelUI extends MetalLabelUI {
     private static ResourceBundle resourceBundle = ResourceBoundles.getResourceBundle();
 
-    static final Color start = new Color(255, 212, 151);
-    static final Color end = new Color(255, 244, 204);
-    static final Color gray = new Color(247, 243, 239);
-
     private JComponent component;
 
     protected LineBorder labelBorder;
 
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
+    protected ToolWindowPainter toolWindowPainter;
 
     private AnchorLabelMouseAdapter adapter;
 
@@ -46,6 +43,7 @@ public class AnchorLabelUI extends MetalLabelUI {
     public AnchorLabelUI(ToolWindowDescriptor descriptor, ToolWindow toolWindow) {
         this.descriptor = descriptor;
         this.toolWindow = toolWindow;
+        this.toolWindowPainter = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowPainter();
     }
 
     public void installUI(JComponent c) {
@@ -72,12 +70,10 @@ public class AnchorLabelUI extends MetalLabelUI {
     public void update(Graphics g, JComponent c) {
         if (toolWindow.isFlashing()) {
             if (flashingState) {
-                GraphicsUtil.fillRect(g, new Rectangle(0, 0, c.getWidth(), c.getHeight()),
-                                      start, end, null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
+                toolWindowPainter.updateRepresentativeButton(toolWindow, c.getBounds(), g, ToolWindowPainter.Status.ACTIVE);
                 flashingState = false;
             } else {
-                g.setColor(gray);
-                g.fillRect(0, 0, c.getWidth(), c.getHeight());
+                toolWindowPainter.updateRepresentativeButton(toolWindow, c.getBounds(), g, ToolWindowPainter.Status.DE_ACTIVE);
                 flashingState = true;
             }
 
@@ -103,11 +99,9 @@ public class AnchorLabelUI extends MetalLabelUI {
             }
             
             if (c.isOpaque()) {
-                GraphicsUtil.fillRect(g, new Rectangle(0, 0, c.getWidth(), c.getHeight()),
-                                      start, end, null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
+                toolWindowPainter.updateRepresentativeButton(toolWindow, c.getBounds(), g, ToolWindowPainter.Status.ACTIVE);
             } else {
-                g.setColor(gray);
-                g.fillRect(0, 0, c.getWidth(), c.getHeight());
+                toolWindowPainter.updateRepresentativeButton(toolWindow, c.getBounds(), g, ToolWindowPainter.Status.DE_ACTIVE);
             }
         }
         paint(g, c);
