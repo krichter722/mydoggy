@@ -1,16 +1,15 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
-import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.DockedTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowPainter;
+import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
-import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.PanelUI;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ResourceBundle;
@@ -37,7 +36,7 @@ public class ApplicationBarPanelUI extends PanelUI {
 
 	private GradientAnimation animation;
 
-	public ApplicationBarPanelUI(ToolWindowDescriptor descriptor, DockedContainer dockedContainer) {
+    public ApplicationBarPanelUI(ToolWindowDescriptor descriptor, DockedContainer dockedContainer) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
         this.toolWindowPainter = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowPainter();
@@ -67,7 +66,6 @@ public class ApplicationBarPanelUI extends PanelUI {
 	public void update(Graphics g, JComponent c) {
 		Rectangle r = c.getBounds();
 		r.x = r.y = 0;
-
         if (animation.isAnimating()) {
 			GraphicsUtil.fillRect(g, r, startTemp, endTemp,
 								  null, GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
@@ -217,9 +215,7 @@ public class ApplicationBarPanelUI extends PanelUI {
 					endTemp = new Color(r, g, b);
 					break;
 			}
-
-			SwingUtil.repaint(panel);
-
+            SwingUtil.repaint(panel);
 			return animationPercent;
 		}
 

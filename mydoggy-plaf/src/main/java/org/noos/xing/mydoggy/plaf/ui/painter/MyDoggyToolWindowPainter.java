@@ -21,7 +21,6 @@ public class MyDoggyToolWindowPainter implements ToolWindowPainter {
     protected Map<IconId, Icon> icons;
 
     public MyDoggyToolWindowPainter() {
-        System.out.printf("pp");
         initIcons();
     }
 
