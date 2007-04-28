@@ -162,7 +162,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         applicationBar.add(hideButton, "11,1");
 
         Component toolWindowCmp = descriptor.getComponent();
-        toolWindowCmp.addMouseListener(applicationBarMouseAdapter);
+        toolWindowCmp.addMouseListener(applicationBarMouseAdapter);  // TODO: separare i due listener
 
         // Set Container content
         container.add(applicationBar, "0,0");
