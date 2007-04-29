@@ -5,6 +5,7 @@ import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @since 1.3.0
  */
 public interface ToolWindowPainter {
     enum Status {
@@ -28,7 +29,9 @@ public interface ToolWindowPainter {
         HIDE_TOOL_WINDOW,
         HIDE_TOOL_WINDOW_INACTIVE,
         MAXIMIZE,
-        MINIMIZE
+        MAXIMIZE_INACTIVE,
+        MINIMIZE,
+        MINIMIZE_INACTIVE
     }
 
     void updateRepresentativeButton(ToolWindow toolWindow, Rectangle bounds, Graphics g, Status status);
