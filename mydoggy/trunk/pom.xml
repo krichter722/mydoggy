@@ -48,20 +48,6 @@
         <url>http://svn.sourceforge.net/viewvc/mydoggy/mydoggy/trunk</url>
     </scm>
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>tablelayout</groupId>
-            <artifactId>TableLayout</artifactId>
-            <version>20020517</version>
-        </dependency>
-    </dependencies>
-
     <profiles>
         <!-- Profile which creates an assembly using mydoggy-distro.xml -->
         <profile>

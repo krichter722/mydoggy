@@ -162,7 +162,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         applicationBar.add(hideButton, "11,1");
 
         Component toolWindowCmp = descriptor.getComponent();
-        toolWindowCmp.addMouseListener(applicationBarMouseAdapter);  // TODO: separare i due listener
+        toolWindowCmp.addMouseListener(applicationBarMouseAdapter);
 
         // Set Container content
         container.add(applicationBar, "0,0");
@@ -232,7 +232,21 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                         if ("enabled".equals(evt.getPropertyName())) {
                             boolean newValue = (Boolean) evt.getNewValue();
                             setDockedVisible(newValue);
+
                             if (!newValue && toolWindow.getType() == ToolWindowType.SLIDING)
+                                toolWindow.setType(ToolWindowType.DOCKED);
+                        }
+                    }
+                }
+        );
+        ((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).addPropertyChangeListener(
+                new PropertyChangeListener() {
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        if ("enabled".equals(evt.getPropertyName())) {
+                            boolean newValue = (Boolean) evt.getNewValue();
+                            setFloatingVisible(newValue);
+
+                            if (!newValue && toolWindow.getType() == ToolWindowType.FLOATING)
                                 toolWindow.setType(ToolWindowType.DOCKED);
                         }
                     }
@@ -294,7 +308,8 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             if (SwingUtilities.isLeftMouseButton(e)) {
                 toolWindow.setActive(true);
             } else if (SwingUtilities.isRightMouseButton(e)) {
-                if (((DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED)).isPopupMenuEnabled()) {
+                if (e.getComponent() == applicationBarTitle && 
+                        ((DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED)).isPopupMenuEnabled()) {
                     enableVisible();
                     enableMoveToItem();
                     enableUserDefined();
@@ -627,11 +642,10 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 } else
                     floatingButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.FLOATING_INACTIVE));
 
-                // TODO: support for inactive
                 if (toolWindow.isMaximized())
-                    maximizeButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.MAXIMIZE));
+                    maximizeButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.MAXIMIZE_INACTIVE));
                 else
-                    maximizeButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.MAXIMIZE));
+                    maximizeButton.setIcon(toolWindowPainter.getIcon(ToolWindowPainter.IconId.MINIMIZE_INACTIVE));
             }
 
             if (active && focusRequester != null && !valueAdjusting) {

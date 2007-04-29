@@ -71,7 +71,10 @@ public class MyDoggyToolWindowPainter implements ToolWindowPainter {
         icons.put(IconId.HIDE_TOOL_WINDOW_INACTIVE, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/hideToolWindowInactive.png"));
 
         icons.put(IconId.MAXIMIZE, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/maximize.png"));
+        icons.put(IconId.MAXIMIZE_INACTIVE, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/maximizeInactive.png"));
+
         icons.put(IconId.MINIMIZE, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/minimize.png"));
+        icons.put(IconId.MINIMIZE_INACTIVE, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/minimizeInactive.png"));        
     }
 
 }
