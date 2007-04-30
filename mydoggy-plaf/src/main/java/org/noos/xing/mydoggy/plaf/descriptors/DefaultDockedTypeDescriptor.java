@@ -3,9 +3,9 @@ package org.noos.xing.mydoggy.plaf.descriptors;
 import org.noos.xing.mydoggy.DockedTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowActionHandler;
-import org.noos.xing.mydoggy.ToolWindowPainter;
+import org.noos.xing.mydoggy.ToolWindowUI;
 import org.noos.xing.mydoggy.plaf.ui.ResourceBoundles;
-import org.noos.xing.mydoggy.plaf.ui.painter.MyDoggyToolWindowPainter;
+import org.noos.xing.mydoggy.plaf.ui.painter.MyDoggyToolWindowUI;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -17,7 +17,7 @@ import java.beans.PropertyChangeListener;
  */
 public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
     private ToolWindowActionHandler toolWindowActionHandler;
-    private ToolWindowPainter toolWindowPainter;
+    private ToolWindowUI toolWindowUI;
     private boolean popupMenuEnabled;
     private JMenu toolsMenu;
     private int dockLength;
@@ -31,15 +31,15 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.dockLength = 200;
         this.toolWindowActionHandler = null;
         this.animating = true;
-        this.toolWindowPainter = new MyDoggyToolWindowPainter();
+        this.toolWindowUI = new MyDoggyToolWindowUI();
     }
 
-    public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled, ToolWindowActionHandler toolWindowActionHandler, boolean animating, ToolWindowPainter toolWindowPainter) {
+    public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled, ToolWindowActionHandler toolWindowActionHandler, boolean animating, ToolWindowUI toolWindowUI) {
         this.toolsMenu = new JMenu(ResourceBoundles.getResourceBundle().getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = popupMenuEnabled;
         this.dockLength = dockLength;
         this.toolWindowActionHandler = toolWindowActionHandler;
-        this.toolWindowPainter = toolWindowPainter;
+        this.toolWindowUI = toolWindowUI;
         this.animating = animating;
 
         this.listenerList = new EventListenerList();
@@ -78,7 +78,10 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     }
 
     public void setToolWindowActionHandler(ToolWindowActionHandler toolWindowActionHandler) {
+        ToolWindowActionHandler old = this.toolWindowActionHandler;
         this.toolWindowActionHandler = toolWindowActionHandler;
+
+        firePropertyChange("toolWindowActionHandler", old, toolWindowActionHandler);
     }
 
     public boolean isAnimating() {
@@ -94,8 +97,8 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         firePropertyChange("animating", old, animating);
     }
 
-    public ToolWindowPainter getToolWindowPainter() {
-        return toolWindowPainter;
+    public ToolWindowUI getToolWindowUI() {
+        return toolWindowUI;
     }
 
     public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
@@ -117,7 +120,9 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     }
 
     public ToolWindowTypeDescriptor cloneMe() {
-        return new DefaultDockedTypeDescriptor(this, dockLength, popupMenuEnabled, toolWindowActionHandler, animating, toolWindowPainter);
+        return new DefaultDockedTypeDescriptor(this, dockLength, popupMenuEnabled,
+                                               toolWindowActionHandler, animating,
+                                               new MyDoggyToolWindowUI());
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
@@ -125,6 +130,10 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
             this.popupMenuEnabled = (Boolean) evt.getNewValue();
         } else if ("dockLength".equals(evt.getPropertyName())) {
             this.dockLength = (Integer) evt.getNewValue();
+        } else if ("animating".equals(evt.getPropertyName())) {
+            this.animating = (Boolean) evt.getNewValue();
+        } else if ("toolWindowActionHandler".equals(evt.getPropertyName())) {
+            this.toolWindowActionHandler = (ToolWindowActionHandler) evt.getNewValue();
         }
     }
 

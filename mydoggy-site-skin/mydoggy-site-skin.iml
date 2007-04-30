@@ -11,6 +11,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntryProperties />
   </component>
-  <component name="POM File Configuration" pomFile="" />
+  <component name="POM File Configuration" pomFile="file://$MODULE_DIR$/pom.xml" />
 </module>
 

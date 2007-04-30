@@ -24,6 +24,10 @@ import java.util.ResourceBundle;
  * @author Angelo De Caro
  */
 public class AnchorLabelUI extends MetalLabelUI {
+    static final Color start = new Color(255, 212, 151);
+    static final Color end = new Color(255, 244, 204);
+    static final Color gray = new Color(247, 243, 239);
+
     private static ResourceBundle resourceBundle = ResourceBoundles.getResourceBundle();
 
     private JComponent component;
@@ -32,7 +36,7 @@ public class AnchorLabelUI extends MetalLabelUI {
 
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
-    protected ToolWindowPainter toolWindowPainter;
+    protected ToolWindowUI toolWindowUI;
 
     private AnchorLabelMouseAdapter adapter;
 
@@ -43,7 +47,7 @@ public class AnchorLabelUI extends MetalLabelUI {
     public AnchorLabelUI(ToolWindowDescriptor descriptor, ToolWindow toolWindow) {
         this.descriptor = descriptor;
         this.toolWindow = toolWindow;
-        this.toolWindowPainter = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowPainter();
+        this.toolWindowUI = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowUI();
     }
 
     public void installUI(JComponent c) {
@@ -68,12 +72,16 @@ public class AnchorLabelUI extends MetalLabelUI {
     }
 
     public void update(Graphics g, JComponent c) {
+        Rectangle bounds = c.getBounds();
         if (toolWindow.isFlashing()) {
+
             if (flashingState) {
-                toolWindowPainter.updateRepresentativeButton(toolWindow, c.getBounds(), g, ToolWindowPainter.Status.ACTIVE);
+                GraphicsUtil.fillRect(g, new Rectangle(0, 0, bounds.width, bounds.height),
+                                      start, end, null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
                 flashingState = false;
             } else {
-                toolWindowPainter.updateRepresentativeButton(toolWindow, c.getBounds(), g, ToolWindowPainter.Status.DE_ACTIVE);
+                g.setColor(gray);
+                g.fillRect(0, 0, bounds.width, bounds.height);
                 flashingState = true;
             }
 
@@ -97,11 +105,13 @@ public class AnchorLabelUI extends MetalLabelUI {
                 flashingTimer.stop();
                 flashingTimer = null;
             }
-            
+
             if (c.isOpaque()) {
-                toolWindowPainter.updateRepresentativeButton(toolWindow, c.getBounds(), g, ToolWindowPainter.Status.ACTIVE);
+                GraphicsUtil.fillRect(g, new Rectangle(0, 0, bounds.width, bounds.height),
+                                      start, end, null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
             } else {
-                toolWindowPainter.updateRepresentativeButton(toolWindow, c.getBounds(), g, ToolWindowPainter.Status.DE_ACTIVE);
+                g.setColor(gray);
+                g.fillRect(0, 0, bounds.width, bounds.height);
             }
         }
         paint(g, c);
@@ -154,6 +164,23 @@ public class AnchorLabelUI extends MetalLabelUI {
         descriptor.getToolWindow().addInternalPropertyChangeListener(this);
     }
 
+
+    protected void updateInternal(Graphics g, JComponent c, boolean active) {
+        Rectangle bounds = c.getBounds();
+
+        ToolWindowUI.Style style = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowUI().getStyle(ToolWindowUI.Target.RAPRESENTATIVE_BUTTON);
+        switch(style) {
+            case BASIC:
+                if (active) {
+                    GraphicsUtil.fillRect(g, new Rectangle(0, 0, bounds.width, bounds.height),
+                                          start, end, null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
+                } else {
+                    g.setColor(gray);
+                    g.fillRect(0, 0, bounds.width, bounds.height);
+                }
+                break;
+        }
+    }
 
     class AnchorLabelMouseAdapter extends MouseInputAdapter implements ActionListener, PropertyChangeListener {
 

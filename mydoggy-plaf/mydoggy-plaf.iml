@@ -12,19 +12,19 @@
     <orderEntry type="jdk" jdkName="1.5" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="mydoggy-api" exported="" />
-    <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: junit:junit:jar:3.8.1:test">
+    <orderEntry type="module-library">
+      <library name="junit junit 3.8.1">
         <CLASSES>
           <root url="jar://C:/Documents and Settings/Angelo/.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://C:/Documents and Settings/angelo/.m2/repository/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
+          <root url="jar://C:/Documents and Settings/Angelo/.m2/repository/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: tablelayout:TableLayout:jar:20020517:compile">
+    <orderEntry type="module-library">
+      <library name="tablelayout TableLayout 20020517">
         <CLASSES>
           <root url="jar://C:/Documents and Settings/Angelo/.m2/repository/tablelayout/TableLayout/20020517/TableLayout-20020517.jar!/" />
         </CLASSES>
@@ -34,6 +34,6 @@
     </orderEntry>
     <orderEntryProperties />
   </component>
-  <component name="POM File Configuration" pomFile="" />
+  <component name="POM File Configuration" pomFile="file://$MODULE_DIR$/pom.xml" />
 </module>
 
