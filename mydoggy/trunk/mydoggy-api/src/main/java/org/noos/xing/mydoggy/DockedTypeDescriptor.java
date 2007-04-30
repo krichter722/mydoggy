@@ -82,7 +82,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      */
     void setToolWindowActionHandler(ToolWindowActionHandler toolWindowActionHandler);
 
-    ToolWindowPainter getToolWindowPainter();
+    ToolWindowUI getToolWindowUI();
 
     /**
      * Adds a PropertyChangeListener to the listener list. The listener is

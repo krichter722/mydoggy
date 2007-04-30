@@ -15,6 +15,7 @@ public interface ToolWindowTypeDescriptor {
 
     /**
      * @since 1.3.0
+     * @return
      */
     boolean isAnimating();
 

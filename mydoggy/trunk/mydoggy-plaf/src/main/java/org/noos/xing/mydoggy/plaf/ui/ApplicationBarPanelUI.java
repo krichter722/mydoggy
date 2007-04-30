@@ -2,7 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui;
 
 import org.noos.xing.mydoggy.DockedTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowPainter;
+import org.noos.xing.mydoggy.ToolWindowUI;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -22,7 +22,7 @@ public class ApplicationBarPanelUI extends PanelUI {
 
     private ToolWindowDescriptor descriptor;
     private ToolWindow toolWindow;
-    private ToolWindowPainter toolWindowPainter;
+    private ToolWindowUI toolWindowUI;
 
     private Color startTemp;
 	private Color endTemp;
@@ -39,7 +39,7 @@ public class ApplicationBarPanelUI extends PanelUI {
     public ApplicationBarPanelUI(ToolWindowDescriptor descriptor, DockedContainer dockedContainer) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
-        this.toolWindowPainter = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowPainter();
+        this.toolWindowUI = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowUI();
         
         dockedContainer.addPropertyChangeListener("active", new GradientActivationListener(descriptor));
 
@@ -88,8 +88,33 @@ public class ApplicationBarPanelUI extends PanelUI {
         LookAndFeel.uninstallBorder(c);
     }
 
+    enum Type {
 
-	private class GradientActivationListener implements PropertyChangeListener {
+    }
+
+    protected void updateInternal(Graphics g, JComponent c, Type type) {
+        Rectangle bounds = c.getBounds();
+
+        ToolWindowUI.Style style = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowUI().getStyle(ToolWindowUI.Target.TW_TITLE_BAR);
+        switch(style) {
+            case BASIC:
+                Rectangle r = c.getBounds();
+                r.x = r.y = 0;
+                if (animation.isAnimating()) {
+                    GraphicsUtil.fillRect(g, r, startTemp, endTemp,
+                                          null, GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+                } else if (c.isEnabled())
+                    GraphicsUtil.fillRect(g, r, startEnabled, endEnabled,
+                                          null, GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+                else
+                    GraphicsUtil.fillRect(g, r, startDisabled, endDisabled,
+                                          null, GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+                break;
+        }
+    }
+
+
+    private class GradientActivationListener implements PropertyChangeListener {
 		public static final float ANIMATION_DURATION = 80f;
 		public static final int ANIMATION_SLEEP = 10;
 
