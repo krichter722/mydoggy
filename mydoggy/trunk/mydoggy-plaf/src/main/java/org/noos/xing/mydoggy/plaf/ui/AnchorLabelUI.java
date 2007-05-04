@@ -1,9 +1,13 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
+import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
+import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTrasferable;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragAndDropLock;
+import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTrasferable;
+import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.translucent.TranslucentPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -30,7 +34,7 @@ public class AnchorLabelUI extends MetalLabelUI {
 
     private static ResourceBundle resourceBundle = ResourceBoundles.getResourceBundle();
 
-    private JComponent component;
+    private JComponent label;
 
     protected LineBorder labelBorder;
 
@@ -43,7 +47,9 @@ public class AnchorLabelUI extends MetalLabelUI {
     private Timer flashingTimer;
     private int flasingDuration;
     private boolean flashingState;
-  
+
+    private TranslucentPanel previewPanel;
+
     public AnchorLabelUI(ToolWindowDescriptor descriptor, ToolWindow toolWindow) {
         this.descriptor = descriptor;
         this.toolWindow = toolWindow;
@@ -53,7 +59,7 @@ public class AnchorLabelUI extends MetalLabelUI {
     public void installUI(JComponent c) {
         super.installUI(c);
 
-        this.component = c;
+        this.label = c;
         labelBorder = new LineBorder(Color.GRAY, 1, true, 3, 3);
         c.setBorder(labelBorder);
 
@@ -88,10 +94,11 @@ public class AnchorLabelUI extends MetalLabelUI {
             if (flashingTimer == null) {
                 flashingTimer = new Timer(500, new ActionListener() {
                     long start = 0;
+
                     public void actionPerformed(ActionEvent e) {
                         if (start == 0)
                             start = System.currentTimeMillis();
-                        SwingUtil.repaint(component);
+                        SwingUtil.repaint(label);
                         if (flasingDuration != -1 && System.currentTimeMillis() - start > flasingDuration)
                             toolWindow.setFlashing(false);
                     }
@@ -120,24 +127,24 @@ public class AnchorLabelUI extends MetalLabelUI {
     public void propertyChange(PropertyChangeEvent e) {
         if ("visible".equals(e.getPropertyName())) {
             boolean visible = (Boolean) e.getNewValue();
-            component.setOpaque(visible);
+            label.setOpaque(visible);
             if (visible) {
                 labelBorder.setLineColor(Color.BLACK);
 
-                descriptor.getToolBar().ensureVisible(component);
+                descriptor.getToolBar().ensureVisible(label);
             } else
                 labelBorder.setLineColor(Color.GRAY);
 
             toolWindow.setFlashing(false);
-            SwingUtil.repaint(component);
+            SwingUtil.repaint(label);
         } else if ("UI".equals(e.getPropertyName())) {
             adapter.propertyChange(e);
         } else if ("flash".equals(e.getPropertyName())) {
             flasingDuration = -1;
-            SwingUtil.repaint(component);
+            SwingUtil.repaint(label);
         } else if ("flash.duration".equals(e.getPropertyName())) {
             flasingDuration = (Integer) e.getNewValue();
-            SwingUtil.repaint(component);
+            SwingUtil.repaint(label);
         }
     }
 
@@ -169,7 +176,7 @@ public class AnchorLabelUI extends MetalLabelUI {
         Rectangle bounds = c.getBounds();
 
         ToolWindowUI.Style style = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowUI().getStyle(ToolWindowUI.Target.RAPRESENTATIVE_BUTTON);
-        switch(style) {
+        switch (style) {
             case BASIC:
                 if (active) {
                     GraphicsUtil.fillRect(g, new Rectangle(0, 0, bounds.width, bounds.height),
@@ -198,14 +205,20 @@ public class AnchorLabelUI extends MetalLabelUI {
         JMenuItem top;
         JMenuItem bottom;
 
+        Timer previewTimer;
+
         public AnchorLabelMouseAdapter() {
             initPopupMenu();
+            previewTimer = new Timer(1000, this);
             descriptor.getToolWindow().addInternalPropertyChangeListener(this);
         }
 
         public void mouseClicked(MouseEvent e) {
             if (!toolWindow.isAvailable())
                 return;
+
+            previewTimer.stop();
+            actionPerformed(new ActionEvent(previewTimer, 0, "stop"));
 
             if (SwingUtilities.isLeftMouseButton(e)) {
                 int onmask = MouseEvent.SHIFT_DOWN_MASK;
@@ -235,6 +248,11 @@ public class AnchorLabelUI extends MetalLabelUI {
         }
 
         public void mouseEntered(MouseEvent e) {
+            if (!toolWindow.isVisible()) {
+                if (previewPanel == null)
+                    previewTimer.start();
+            }
+
             if (toolWindow.isFlashing())
                 return;
 
@@ -246,6 +264,9 @@ public class AnchorLabelUI extends MetalLabelUI {
         }
 
         public void mouseExited(MouseEvent e) {
+            previewTimer.stop();
+            actionPerformed(new ActionEvent(previewTimer, 0, "stop"));
+
             if (toolWindow.isFlashing())
                 return;
 
@@ -257,6 +278,77 @@ public class AnchorLabelUI extends MetalLabelUI {
         }
 
         public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == previewTimer) {
+                if ("stop".equals(e.getActionCommand())) {
+                    if (previewPanel != null) {
+                        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(label);
+
+                        GlassPanel glassPane = (GlassPanel) frame.getRootPane().getGlassPane();
+                        glassPane.remove(previewPanel);
+                        glassPane.setVisible(false);
+
+                        SwingUtil.repaint(frame);
+
+                        previewPanel = null;
+                    }
+                } else {
+                    Container contentContainer = ((DockedContainer) descriptor.getToolWindowContainer()).getContentContainer();
+                    if (contentContainer.getWidth() != 0 && contentContainer.getHeight() != 0) {
+                        BufferedImage image = new BufferedImage(contentContainer.getWidth(), contentContainer.getHeight(), BufferedImage.TYPE_INT_RGB);
+                        contentContainer.print(image.getGraphics());
+                        Image scaled = image.getScaledInstance(176, 132, BufferedImage.SCALE_SMOOTH);
+
+                        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(label);
+
+                        if (frame.getRootPane() != null) {
+                            GlassPanel glassPane = (GlassPanel) frame.getRootPane().getGlassPane();
+
+                            if (previewPanel != null)
+                                glassPane.remove(previewPanel);
+
+                            previewPanel = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
+                            previewPanel.setAlpha(0.8f);
+                            previewPanel.setSize(176 + 4, 132 + 4);
+                            previewPanel.add(new JLabel(new ImageIcon(scaled)), "1,1,FULL,FULL");
+
+                            switch (descriptor.getToolWindow().getAnchor()) {
+                                case LEFT:
+                                    previewPanel.setLocation(
+                                            descriptor.getManager().mainContainer.getX() +
+                                            label.getX() + label.getWidth() + 5,
+
+                                            descriptor.getManager().mainContainer.getY() +
+                                            (descriptor.getToolBar(TOP).getAvailableTools() != 0 ? 19 : 0) +
+                                            (frame.getJMenuBar() != null ? frame.getJMenuBar().getHeight() : 0) +
+                                            label.getY() + 5
+                                    );
+                                    break;
+                                case TOP:
+                                    previewPanel.setLocation(
+                                            descriptor.getManager().mainContainer.getX() +
+                                            (descriptor.getToolBar(LEFT).getAvailableTools() != 0 ? 19 : 0) +
+                                            label.getX() + + 5,
+
+                                            descriptor.getManager().mainContainer.getY() +
+                                            (frame.getJMenuBar() != null ? frame.getJMenuBar().getHeight() : 0) +
+                                            label.getY() + label.getHeight() + 5
+                                    );
+                                    break;
+                                case BOTTOM:
+                                    break;
+                                case RIGHT:
+                                    break;
+                            }
+
+                            glassPane.add(previewPanel);
+
+                            glassPane.setVisible(true);
+                        }
+                    }
+                }
+            }
+
+
             String actionCommand = e.getActionCommand();
             if ("visible".equals(actionCommand)) {
                 if (toolWindow.isActive()) {
@@ -279,9 +371,9 @@ public class AnchorLabelUI extends MetalLabelUI {
             } else if ("move.right".equals(actionCommand)) {
                 toolWindow.setAnchor(ToolWindowAnchor.RIGHT);
             } else if ("move.left".equals(actionCommand)) {
-                toolWindow.setAnchor(ToolWindowAnchor.LEFT);
+                toolWindow.setAnchor(LEFT);
             } else if ("move.top".equals(actionCommand)) {
-                toolWindow.setAnchor(ToolWindowAnchor.TOP);
+                toolWindow.setAnchor(TOP);
             } else if ("move.bottom".equals(actionCommand)) {
                 toolWindow.setAnchor(ToolWindowAnchor.BOTTOM);
             } else if ("floating".equals(actionCommand)) {
@@ -406,7 +498,7 @@ public class AnchorLabelUI extends MetalLabelUI {
 
         protected void enableMoveToItem() {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
-            if (anchor == ToolWindowAnchor.LEFT) {
+            if (anchor == LEFT) {
                 left.setVisible(false);
                 right.setVisible(true);
                 top.setVisible(true);
@@ -421,7 +513,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                 right.setVisible(true);
                 top.setVisible(true);
                 bottom.setVisible(false);
-            } else if (anchor == ToolWindowAnchor.TOP) {
+            } else if (anchor == TOP) {
                 left.setVisible(true);
                 right.setVisible(true);
                 top.setVisible(false);
@@ -474,11 +566,11 @@ public class AnchorLabelUI extends MetalLabelUI {
             ghostImage = new BufferedImage(c.getWidth(), c.getHeight(), BufferedImage.TYPE_INT_RGB);
             descriptor.getAnchorLabel().print(ghostImage.createGraphics());
 
-            descriptor.getToolBar().propertyChange(new PropertyChangeEvent(component, "startDrag", null, dge));
+            descriptor.getToolBar().propertyChange(new PropertyChangeEvent(label, "startDrag", null, dge));
 
             // Setup glasspane
             glassPane.setPoint(p);
-            glassPane.setImage(ghostImage);
+            glassPane.setDraggingImage(ghostImage);
             glassPane.repaint();
 
             lastAnchor = null;
@@ -502,7 +594,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                 Rectangle dirtyRegion = glassPane.getRepaintRect();
 
                 if (newAnchor == null) {
-                    glassPane.setImage(ghostImage);
+                    glassPane.setDraggingImage(ghostImage);
                     descriptor.getToolBar(lastAnchor).setTempShowed(false);
                 } else {
                     if (descriptor.getToolBar(newAnchor).getAvailableTools() == 0)
@@ -512,26 +604,26 @@ public class AnchorLabelUI extends MetalLabelUI {
                         case LEFT:
                             switch (descriptor.getToolWindow().getAnchor()) {
                                 case LEFT:
-                                    glassPane.setImage(ghostImage);
+                                    glassPane.setDraggingImage(ghostImage);
                                     break;
                                 case RIGHT:
-                                    glassPane.setImage(GraphicsUtil.rotate(ghostImage, Math.PI));
+                                    glassPane.setDraggingImage(GraphicsUtil.rotate(ghostImage, Math.PI));
                                     break;
                                 default:
-                                    glassPane.setImage(GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI));
+                                    glassPane.setDraggingImage(GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI));
                                     break;
                             }
                             break;
                         case RIGHT:
                             switch (descriptor.getToolWindow().getAnchor()) {
                                 case LEFT:
-                                    glassPane.setImage(GraphicsUtil.rotate(ghostImage, Math.PI));
+                                    glassPane.setDraggingImage(GraphicsUtil.rotate(ghostImage, Math.PI));
                                     break;
                                 case RIGHT:
-                                    glassPane.setImage(ghostImage);
+                                    glassPane.setDraggingImage(ghostImage);
                                     break;
                                 default:
-                                    glassPane.setImage(GraphicsUtil.rotate(ghostImage, -1.5 * Math.PI));
+                                    glassPane.setDraggingImage(GraphicsUtil.rotate(ghostImage, -1.5 * Math.PI));
                                     break;
                             }
                             break;
@@ -539,13 +631,13 @@ public class AnchorLabelUI extends MetalLabelUI {
                         case BOTTOM:
                             switch (descriptor.getToolWindow().getAnchor()) {
                                 case LEFT:
-                                    glassPane.setImage(GraphicsUtil.rotate(ghostImage, -1.5 * Math.PI));
+                                    glassPane.setDraggingImage(GraphicsUtil.rotate(ghostImage, -1.5 * Math.PI));
                                     break;
                                 case RIGHT:
-                                    glassPane.setImage(GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI));
+                                    glassPane.setDraggingImage(GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI));
                                     break;
                                 default:
-                                    glassPane.setImage(ghostImage);
+                                    glassPane.setDraggingImage(ghostImage);
                                     break;
                             }
                             break;
@@ -579,15 +671,15 @@ public class AnchorLabelUI extends MetalLabelUI {
 
             if (lastAnchor != null)
                 descriptor.getToolBar(lastAnchor).setTempShowed(false);
-            
-            descriptor.getToolBar().propertyChange(new PropertyChangeEvent(component, "endDrag", null, dsde));
+
+            descriptor.getToolBar().propertyChange(new PropertyChangeEvent(label, "endDrag", null, dsde));
 
             GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
 
             Point p = (Point) dsde.getLocation().clone();
             SwingUtilities.convertPointFromScreen(p, glassPane);
 
-            glassPane.setImage(null);
+            glassPane.setDraggingImage(null);
             glassPane.setVisible(false);
 
             ghostImage = null;

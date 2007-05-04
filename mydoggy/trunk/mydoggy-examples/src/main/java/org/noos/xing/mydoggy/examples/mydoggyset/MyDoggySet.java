@@ -1,5 +1,6 @@
 package org.noos.xing.mydoggy.examples.mydoggyset;
 
+import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ContentsTableModel;
@@ -371,7 +372,11 @@ public class MyDoggySet {
                 toolWindowManager.getContentManager().getContent(0)
         ) != null;
 
-//        toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(ToolWindowManagerDescriptor.PushAwayMode.HORIZONTAL);
+        ToolWindowManagerDescriptor managerDescriptor = toolWindowManager.getToolWindowManagerDescriptor();
+        managerDescriptor.setCornerComponent(NORD_WEST, new JLabel("NW"));
+        managerDescriptor.setCornerComponent(SOUTH_WEST, new JLabel("SW"));
+        managerDescriptor.setCornerComponent(NORD_EAST, new JLabel("NE"));
+        managerDescriptor.setCornerComponent(SOUTH_EAST, new JLabel("SE"));
 
         // Add MyDoggyToolWindowManager to frame
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");

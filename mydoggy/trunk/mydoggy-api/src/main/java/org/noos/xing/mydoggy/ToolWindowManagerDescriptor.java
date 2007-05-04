@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy;
 
 import java.beans.PropertyChangeListener;
+import java.awt.*;
 
 /**
  * This interface is used to modify the behaviours of the ToolWindowManager.
@@ -9,6 +10,12 @@ import java.beans.PropertyChangeListener;
  * @since 1.2.0
  */
 public interface ToolWindowManagerDescriptor {
+    enum Corner {
+        NORD_WEST,
+        SOUTH_WEST,
+        NORD_EAST,
+        SOUTH_EAST
+    }
 
     /**
      * Sets the push away mode to <code>pushAwayMode</code>
@@ -32,6 +39,9 @@ public interface ToolWindowManagerDescriptor {
      * @since 1.3.0
      */
     PushAwayModeDescriptor getPushAwayModeDescriptor(PushAwayMode pushAwayMode);
+
+    void setCornerComponent(Corner corner, Component component);
+
 
     /**
      * Adds a PropertyChangeListener to the listener list. The listener is

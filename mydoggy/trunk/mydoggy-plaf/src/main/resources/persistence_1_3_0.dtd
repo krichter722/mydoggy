@@ -1,8 +1,15 @@
 <!DOCTYPE mydoggy [
-        <!ELEMENT mydoggy (tools)*>
+        <!ELEMENT mydoggy (pushAway|tools)*>
         <!ATTLIST mydoggy
                 version CDATA #REQUIRED
                 pushAwayMode CDATA #REQUIRED>
+        <!ELEMENT pushAway (mode)*>
+        <!ELEMENT mode (anchor)*>
+        <!ATTLIST mode
+                type CDATA #REQUIRED>
+        <!ELEMENT anchor (#PCDATA)>
+        <!ATTLIST anchor
+                type CDATA #REQUIRED>
         <!ELEMENT tools (tool)*>
         <!ELEMENT tool (descriptors)*>
         <!ATTLIST tool
