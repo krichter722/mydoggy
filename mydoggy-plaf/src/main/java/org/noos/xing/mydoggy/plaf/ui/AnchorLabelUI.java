@@ -40,7 +40,6 @@ public class AnchorLabelUI extends MetalLabelUI {
 
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
-    protected ToolWindowUI toolWindowUI;
 
     private AnchorLabelMouseAdapter adapter;
 
@@ -53,7 +52,6 @@ public class AnchorLabelUI extends MetalLabelUI {
     public AnchorLabelUI(ToolWindowDescriptor descriptor, ToolWindow toolWindow) {
         this.descriptor = descriptor;
         this.toolWindow = toolWindow;
-        this.toolWindowUI = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowUI();
     }
 
     public void installUI(JComponent c) {
@@ -172,23 +170,6 @@ public class AnchorLabelUI extends MetalLabelUI {
     }
 
 
-    protected void updateInternal(Graphics g, JComponent c, boolean active) {
-        Rectangle bounds = c.getBounds();
-
-        ToolWindowUI.Style style = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowUI().getStyle(ToolWindowUI.Target.RAPRESENTATIVE_BUTTON);
-        switch (style) {
-            case BASIC:
-                if (active) {
-                    GraphicsUtil.fillRect(g, new Rectangle(0, 0, bounds.width, bounds.height),
-                                          start, end, null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
-                } else {
-                    g.setColor(gray);
-                    g.fillRect(0, 0, bounds.width, bounds.height);
-                }
-                break;
-        }
-    }
-
     class AnchorLabelMouseAdapter extends MouseInputAdapter implements ActionListener, PropertyChangeListener {
 
         JPopupMenu popupMenu;
@@ -264,6 +245,8 @@ public class AnchorLabelUI extends MetalLabelUI {
         }
 
         public void mouseExited(MouseEvent e) {
+            // TODO: problem with glasspane...too many mouseExited events
+            System.out.println("exited = " + e);
             previewTimer.stop();
             actionPerformed(new ActionEvent(previewTimer, 0, "stop"));
 

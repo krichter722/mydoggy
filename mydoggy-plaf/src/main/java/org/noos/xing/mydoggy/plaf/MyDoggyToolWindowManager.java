@@ -357,7 +357,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public void setCornerComponent(ToolWindowManagerDescriptor.Corner corner, Component component) {
-        // TODO: SOUTH_WEST non funge...boh!!!
         switch (corner) {
             case NORD_WEST:
                 for (Component cmp : getComponents()) {
@@ -370,17 +369,18 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 break;
             case SOUTH_WEST:
                 for (Component cmp : getComponents()) {
-                    if (contentPaneLayout.getConstraints(cmp).row1 == 0 &&
-                        contentPaneLayout.getConstraints(cmp).col1 == 2)
+                    if (contentPaneLayout.getConstraints(cmp).row1 == 2 &&
+                        contentPaneLayout.getConstraints(cmp).col1 == 0) {
                         remove(cmp);
+                    }
                 }
 
                 add(component, "0,2,c,c");
                 break;
             case NORD_EAST:
                 for (Component cmp : getComponents()) {
-                    if (contentPaneLayout.getConstraints(cmp).row1 == 2 &&
-                        contentPaneLayout.getConstraints(cmp).col1 == 0)
+                    if (contentPaneLayout.getConstraints(cmp).row1 == 0 &&
+                        contentPaneLayout.getConstraints(cmp).col1 == 2)
                         remove(cmp);
                 }
 

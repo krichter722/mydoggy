@@ -3,7 +3,6 @@ package org.noos.xing.mydoggy.plaf.ui.layout;
 import info.clearthought.layout.TableLayout;
 
 import java.awt.*;
-import java.util.ListIterator;
 
 /**
  * @author Angelo De Caro
@@ -30,17 +29,6 @@ public class ExtendedTableLayout extends TableLayout {
 
     public Dimension minimumLayoutSize(Container container) {
         return (calcMinimumSize) ? super.minimumLayoutSize(container) : empty;
-    }
-
-    public void removeLayoutComponent(Component component) {
-        ListIterator iterator = list.listIterator(0);
-        while (iterator.hasNext()) {
-            Entry entry = (Entry) iterator.next();
-            if (entry.equals(component)) {
-                iterator.remove();
-                break;
-            }
-        }
     }
 
     public int[] getRowsInPixel() {

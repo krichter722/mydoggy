@@ -51,7 +51,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     public DockedContainer(ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
-        this.toolWindowUI = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowUI();
+        this.toolWindowUI = descriptor.getToolWindowUI();
 
         initDockedComponents();
         initDockedListeners();
