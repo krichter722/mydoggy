@@ -5,7 +5,7 @@ import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowActionHandler;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
 import org.noos.xing.mydoggy.plaf.ui.ResourceBoundles;
-import org.noos.xing.mydoggy.plaf.ui.painter.MyDoggyToolWindowUI;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyToolWindowUI;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
