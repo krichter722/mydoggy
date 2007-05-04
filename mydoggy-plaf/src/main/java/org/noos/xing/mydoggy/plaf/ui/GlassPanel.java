@@ -11,7 +11,9 @@ import java.awt.image.BufferedImage;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class GlassPanel extends JPanel implements ContainerListener {
-    private Image dragged = null;
+    private Image draggingImage = null;
+    private Image previewImage = null;
+
     private Point location = new Point(0, 0);
     private Point oldLocation = new Point(0, 0);
 
@@ -29,24 +31,41 @@ public class GlassPanel extends JPanel implements ContainerListener {
         addContainerListener(this);
     }
 
-    public void setImage(BufferedImage dragged) {
-        setImage(dragged, dragged == null ? 0 : dragged.getWidth());
+    public void setDraggingImage(BufferedImage draggingImage) {
+        setDraggingImage(draggingImage, draggingImage == null ? 0 : draggingImage.getWidth());
     }
 
-    public void setImage(BufferedImage dragged, int width) {
-        if (dragged != null) {
-            float ratio = (float) dragged.getWidth() / (float) dragged.getHeight();
+    public void setDraggingImage(BufferedImage draggingImage, int width) {
+        if (draggingImage != null) {
+            float ratio = (float) draggingImage.getWidth() / (float) draggingImage.getHeight();
             this.width = width;
             height = (int) (width / ratio);
         }
 
         this.location = null;
-        this.dragged = dragged;
+        this.draggingImage = draggingImage;
     }
 
-    public Image getDragged() {
-        return dragged;
+    public Image getDraggingImage() {
+        return draggingImage;
     }
+
+
+    public void setPreviewImage(Image previewImage) {
+        if (previewImage != null) {
+            float ratio = (float) previewImage.getWidth(this) / (float) previewImage.getHeight(this);
+            this.width = previewImage.getWidth(this);
+            height = (int) (width / ratio);
+        }
+
+        this.location = null;
+        this.previewImage = previewImage;
+    }
+
+    public Image getPreviewImage() {
+        return previewImage;
+    }
+
 
     public void setPoint(Point location) {
         this.oldLocation = this.location;
@@ -71,7 +90,7 @@ public class GlassPanel extends JPanel implements ContainerListener {
 
     @Override
     protected void paintComponent(Graphics g) {
-        if (dragged == null || !isVisible() || location == null)
+        if ((draggingImage == null && previewImage == null) || !isVisible() || location == null)
             return;
 
         Graphics2D g2 = (Graphics2D) g.create();
@@ -79,8 +98,14 @@ public class GlassPanel extends JPanel implements ContainerListener {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                             RenderingHints.VALUE_ANTIALIAS_ON);
 
-        int x = (int) (location.getX() - (width / 2d));
-        int y = (int) (location.getY() - (height / 2d));
+        int x,y;
+        if (draggingImage != null) {
+            x = (int) (location.getX() - (width / 2d));
+            y = (int) (location.getY() - (height / 2d));
+        } else {
+            x = (int) location.getX();
+            y = (int) location.getY();
+        }
 
         if (visibleRect != null) {
             g2.setClip(visibleRect);
@@ -91,7 +116,8 @@ public class GlassPanel extends JPanel implements ContainerListener {
             g2.setClip(clip);
         }
 
-        g2.drawImage(dragged, x, y, width, height, null);
+        Image image = (draggingImage != null) ? draggingImage : previewImage;
+        g2.drawImage(image, x, y, width, height, null);
     }
 
     public void componentAdded(ContainerEvent e) {

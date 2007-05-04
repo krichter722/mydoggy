@@ -53,7 +53,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     // TODO: nascandore questi oggetti
     JSplitPane mainSplitPane;
-    JPanel mainContainer;
+    public JPanel mainContainer;
 
     PropertyChangeSupport propertyChangeSupport;
 
@@ -72,7 +72,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     // ToolWindwoManager Listener List
     private EventListenerList twmListeners;
-
 
 
     public MyDoggyToolWindowManager(Window windowAnchestor) {
@@ -311,7 +310,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 return;
             }
         } else if (!(source instanceof MyDoggyToolWindowBar)) {
-            new RuntimeException("Illegal Source : "+ source).printStackTrace();
+            new RuntimeException("Illegal Source : " + source).printStackTrace();
             return;
         }
 
@@ -355,6 +354,48 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     public ToolWindowDescriptor getDescriptor(ToolWindow toolWindow) {
         return tools.get(toolWindow.getId());
+    }
+
+    public void setCornerComponent(ToolWindowManagerDescriptor.Corner corner, Component component) {
+        // TODO: SOUTH_WEST non funge...boh!!!
+        switch (corner) {
+            case NORD_WEST:
+                for (Component cmp : getComponents()) {
+                    if (contentPaneLayout.getConstraints(cmp).row1 == 0 &&
+                        contentPaneLayout.getConstraints(cmp).col1 == 0)
+                        remove(cmp);
+                }
+
+                add(component, "0,0,c,c");
+                break;
+            case SOUTH_WEST:
+                for (Component cmp : getComponents()) {
+                    if (contentPaneLayout.getConstraints(cmp).row1 == 0 &&
+                        contentPaneLayout.getConstraints(cmp).col1 == 2)
+                        remove(cmp);
+                }
+
+                add(component, "0,2,c,c");
+                break;
+            case NORD_EAST:
+                for (Component cmp : getComponents()) {
+                    if (contentPaneLayout.getConstraints(cmp).row1 == 2 &&
+                        contentPaneLayout.getConstraints(cmp).col1 == 0)
+                        remove(cmp);
+                }
+
+                add(component, "2,0,c,c");
+                break;
+            case SOUTH_EAST:
+                for (Component cmp : getComponents()) {
+                    if (contentPaneLayout.getConstraints(cmp).row1 == 2 &&
+                        contentPaneLayout.getConstraints(cmp).col1 == 2)
+                        remove(cmp);
+                }
+
+                add(component, "2,2,c,c");
+                break;
+        }
     }
 
 
@@ -508,10 +549,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         add(bars[anchor.ordinal()].getToolScrollBar(), barConstraints);
 
         // Add Corner to Container
-//        JLabel groupLabel = new JLabel("G");
-//        groupLabel.addMouseListener(new GroupMouseListener());
-        JPanel groupLabel = new JPanel();
-        add(groupLabel, cornerConstraints);
+        JPanel panel = new JPanel();
+        add(panel, cornerConstraints);
 
         return bars[anchor.ordinal()].getSplitPane();
     }

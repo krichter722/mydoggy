@@ -117,12 +117,12 @@ public class ToolWindowBarDropTarget extends DropTarget {
                     case TOP:
                     case BOTTOM:
                         container.add(new VerticalSeparatorLabel(), i + ",1,c,c");
-                        layout.setColumn(i, glassPanel.getDragged().getWidth(container) + 6);
+                        layout.setColumn(i, glassPanel.getDraggingImage().getWidth(container) + 6);
                         break;
                     case LEFT:
                     case RIGHT:
                         container.add(new HorizontalSeparatorLabel(), "1," + i + ",c,c");
-                        layout.setRow(i, glassPanel.getDragged().getHeight(container) + 6);
+                        layout.setRow(i, glassPanel.getDraggingImage().getHeight(container) + 6);
                         break;
                 }
 

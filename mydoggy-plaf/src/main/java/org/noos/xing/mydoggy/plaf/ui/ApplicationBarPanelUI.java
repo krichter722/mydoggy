@@ -93,8 +93,6 @@ public class ApplicationBarPanelUI extends PanelUI {
     }
 
     protected void updateInternal(Graphics g, JComponent c, Type type) {
-        Rectangle bounds = c.getBounds();
-
         ToolWindowUI.Style style = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowUI().getStyle(ToolWindowUI.Target.TW_TITLE_BAR);
         switch(style) {
             case BASIC:

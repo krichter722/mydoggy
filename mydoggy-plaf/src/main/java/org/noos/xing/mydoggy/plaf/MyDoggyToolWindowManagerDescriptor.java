@@ -178,6 +178,10 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         }
     }
 
+    public void setCornerComponent(Corner corner, Component component) {
+        manager.setCornerComponent(corner, component);
+    }
+
     public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
         if (listenerList == null)
             listenerList = new EventListenerList();
