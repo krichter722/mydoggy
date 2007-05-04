@@ -40,6 +40,12 @@ public interface ToolWindowManagerDescriptor {
      */
     PushAwayModeDescriptor getPushAwayModeDescriptor(PushAwayMode pushAwayMode);
 
+    /**
+     *
+     * @param corner
+     * @param component
+     * @since 1.3.0
+     */
     void setCornerComponent(Corner corner, Component component);
 
 

@@ -1,6 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.painter;
 
-import org.noos.xing.mydoggy.ToolWindowUI;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
