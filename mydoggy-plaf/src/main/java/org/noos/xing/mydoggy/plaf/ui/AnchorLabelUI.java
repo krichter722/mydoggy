@@ -228,6 +228,10 @@ public class AnchorLabelUI extends MetalLabelUI {
                     popupMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
+//            if (label.getBorder() != labelBorder)
+            label.setBorder(labelBorder);
+            labelBorder.setLineColor(Color.BLACK);
+            SwingUtil.repaint(label);
         }
 
         public void mouseEntered(MouseEvent e) {
