@@ -1,8 +1,9 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
-import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
+import static org.noos.xing.mydoggy.ToolWindowAnchor.LEFT;
+import static org.noos.xing.mydoggy.ToolWindowAnchor.TOP;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragAndDropLock;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTrasferable;
@@ -46,8 +47,6 @@ public class AnchorLabelUI extends MetalLabelUI {
     private Timer flashingTimer;
     private int flasingDuration;
     private boolean flashingState;
-
-    private TranslucentPanel previewPanel;
 
     public AnchorLabelUI(ToolWindowDescriptor descriptor, ToolWindow toolWindow) {
         this.descriptor = descriptor;
@@ -187,6 +186,9 @@ public class AnchorLabelUI extends MetalLabelUI {
         JMenuItem bottom;
 
         Timer previewTimer;
+        TranslucentPanel previewPanel;
+        boolean firstPreview = true;
+
 
         public AnchorLabelMouseAdapter() {
             initPopupMenu();
@@ -229,8 +231,6 @@ public class AnchorLabelUI extends MetalLabelUI {
         }
 
         public void mouseEntered(MouseEvent e) {
-            System.out.println("entered = " + e);
-
             if (!toolWindow.isVisible()) {
                 if (previewPanel == null)
                     previewTimer.start();
@@ -247,8 +247,6 @@ public class AnchorLabelUI extends MetalLabelUI {
         }
 
         public void mouseExited(MouseEvent e) {
-            // TODO: problem with glasspane...too many mouseExited events
-            System.out.println("exited = " + e);
             previewTimer.stop();
             actionPerformed(new ActionEvent(previewTimer, 0, "stop"));
 
@@ -265,7 +263,7 @@ public class AnchorLabelUI extends MetalLabelUI {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == previewTimer) {
                 if ("stop".equals(e.getActionCommand())) {
-                    if (previewPanel != null) {
+                    if (previewPanel != null && !firstPreview) {
                         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(label);
 
                         GlassPanel glassPane = (GlassPanel) frame.getRootPane().getGlassPane();
@@ -276,6 +274,7 @@ public class AnchorLabelUI extends MetalLabelUI {
 
                         previewPanel = null;
                     }
+                    firstPreview = false;
                 } else {
                     Container contentContainer = ((DockedContainer) descriptor.getToolWindowContainer()).getContentContainer();
                     if (contentContainer.getWidth() != 0 && contentContainer.getHeight() != 0) {
@@ -286,7 +285,8 @@ public class AnchorLabelUI extends MetalLabelUI {
 
                         // Show Preview
                         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(label);
-                        if (frame.getRootPane() != null) {
+                        if (frame != null) {
+                            firstPreview = true;
                             previewTimer.stop();
 
                             GlassPanel glassPane = (GlassPanel) frame.getRootPane().getGlassPane();
@@ -327,7 +327,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                                     break;
                             }
                             
-//                            previewPanel.add(new JLabel(new ImageIcon(scaled)), "1,1,FULL,FULL");
+                            previewPanel.add(new JLabel(new ImageIcon(scaled)), "1,1,FULL,FULL");
 
                             glassPane.add(previewPanel);
 
