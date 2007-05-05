@@ -1,5 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
+import static org.noos.xing.mydoggy.plaf.ui.ToolWindowUI.IconId.*;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
@@ -98,22 +99,22 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
     protected void setSliding() {
-        dockButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.DOCKED));
+        dockButton.setIcon(toolWindowUI.getIcon(DOCKED));
         dockButton.setToolTipText(ResourceBoundles.getResourceBundle().getString("@@tool.tooltip.dock"));
     }
 
     protected void setDocked() {
-        dockButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.SLIDING));
+        dockButton.setIcon(toolWindowUI.getIcon(SLIDING));
         dockButton.setToolTipText(ResourceBoundles.getResourceBundle().getString("@@tool.tooltip.undock"));
     }
 
     protected void setFix() {
-        floatingButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.FIX));
+        floatingButton.setIcon(toolWindowUI.getIcon(FIX));
         floatingButton.setToolTipText(ResourceBoundles.getResourceBundle().getString("@@tool.tooltip.fix"));
     }
 
     protected void setFloating() {
-        floatingButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.FLOATING));
+        floatingButton.setIcon(toolWindowUI.getIcon(FLOATING));
         floatingButton.setToolTipText(ResourceBoundles.getResourceBundle().getString("@@tool.tooltip.float"));
     }
 
@@ -147,11 +148,11 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         applicationBarTitle.addMouseListener(applicationBarMouseAdapter);
 
         // Buttons
-        hideButton = renderApplicationButton("visible", applicationBarActionListener, "@@tool.tooltip.hide");
-        maximizeButton = renderApplicationButton("maximize", applicationBarActionListener, "@@tool.tooltip.maximize");
-        pinButton = renderApplicationButton("pin", applicationBarActionListener, "@@tool.tooltip.unpin");
-        floatingButton = renderApplicationButton("floating", applicationBarActionListener, "@@tool.tooltip.float");
-        dockButton = renderApplicationButton("undock", applicationBarActionListener, "@@tool.tooltip.undock");
+        hideButton = renderApplicationButton("visible", applicationBarActionListener, "@@tool.tooltip.hide", HIDE_TOOL_WINDOW_INACTIVE);
+        maximizeButton = renderApplicationButton("maximize", applicationBarActionListener, "@@tool.tooltip.maximize", MAXIMIZE_INACTIVE);
+        pinButton = renderApplicationButton("pin", applicationBarActionListener, "@@tool.tooltip.unpin", AUTO_HIDE_OFF_INACTIVE);
+        floatingButton = renderApplicationButton("floating", applicationBarActionListener, "@@tool.tooltip.float", FLOATING_INACTIVE);
+        dockButton = renderApplicationButton("undock", applicationBarActionListener, "@@tool.tooltip.undock", DOCKED_INACTIVE);
 
         // Set ApplicationBar content
         applicationBar.add(applicationBarTitle, "1,1");
@@ -195,10 +196,10 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 boolean newValue = ((Boolean) evt.getNewValue());
 
                 if (newValue) {
-                    pinButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.AUTO_HIDE_ON));
+                    pinButton.setIcon(toolWindowUI.getIcon(AUTO_HIDE_ON));
                     pinButton.setToolTipText(resourceBundle.getString("@@tool.tooltip.pin"));
                 } else {
-                    pinButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.AUTO_HIDE_OFF));
+                    pinButton.setIcon(toolWindowUI.getIcon(AUTO_HIDE_OFF));
                     pinButton.setToolTipText(resourceBundle.getString("@@tool.tooltip.unpin"));
                 }
             }
@@ -219,9 +220,9 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                     return;
 
                 if ((Boolean) evt.getNewValue()) {
-                    maximizeButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.MINIMIZE));
+                    maximizeButton.setIcon(toolWindowUI.getIcon(MINIMIZE));
                 } else
-                    maximizeButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.MAXIMIZE));
+                    maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE));
 
             }
         });
@@ -254,7 +255,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         );
     }
 
-    private JButton renderApplicationButton(String actionCommnad, ActionListener actionListener, String tooltip) {
+    private JButton renderApplicationButton(String actionCommnad, ActionListener actionListener, String tooltip, ToolWindowUI.IconId iconId) {
         JButton button = new ApplicationButton();
         button.setUI((ButtonUI) BasicButtonUI.createUI(button));
         button.setName(actionCommnad);
@@ -266,6 +267,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         button.setActionCommand(actionCommnad);
         button.addActionListener(actionListener);
         button.setToolTipText(resourceBundle.getString(tooltip));
+        button.setIcon(toolWindowUI.getIcon(iconId));
 
         return button;
     }
@@ -604,48 +606,48 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
             if (active) {
                 if (toolWindow.isAutoHide()) {
-                    pinButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.AUTO_HIDE_ON));
+                    pinButton.setIcon(toolWindowUI.getIcon(AUTO_HIDE_ON));
                 } else
-                    pinButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.AUTO_HIDE_OFF));
+                    pinButton.setIcon(toolWindowUI.getIcon(AUTO_HIDE_OFF));
 
-                hideButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.HIDE_TOOL_WINDOW));
+                hideButton.setIcon(toolWindowUI.getIcon(HIDE_TOOL_WINDOW));
 
                 if (toolWindow.getType() == ToolWindowType.SLIDING) {
-                    dockButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.DOCKED));
+                    dockButton.setIcon(toolWindowUI.getIcon(DOCKED));
                 } else
-                    dockButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.SLIDING));
+                    dockButton.setIcon(toolWindowUI.getIcon(SLIDING));
 
-                if (toolWindow.getType() == ToolWindowType.FLOATING) {
-                    floatingButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.FIX));
+                if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
+                    floatingButton.setIcon(toolWindowUI.getIcon(FIX));
                 } else
-                    floatingButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.FLOATING));
+                    floatingButton.setIcon(toolWindowUI.getIcon(FLOATING));
 
                 if (toolWindow.isMaximized())
-                    maximizeButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.MAXIMIZE));
+                    maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE));
                 else
-                    maximizeButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.MAXIMIZE));
+                    maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE));
             } else {
                 if (toolWindow.isAutoHide()) {
-                    pinButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.AUTO_HIDE_ON_INACTIVE));
+                    pinButton.setIcon(toolWindowUI.getIcon(AUTO_HIDE_ON_INACTIVE));
                 } else
-                    pinButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.AUTO_HIDE_OFF_INACTIVE));
+                    pinButton.setIcon(toolWindowUI.getIcon(AUTO_HIDE_OFF_INACTIVE));
 
-                hideButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.HIDE_TOOL_WINDOW_INACTIVE));
+                hideButton.setIcon(toolWindowUI.getIcon(HIDE_TOOL_WINDOW_INACTIVE));
 
                 if (toolWindow.getType() == ToolWindowType.SLIDING) {
-                    dockButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.DOCKED_INACTIVE));
+                    dockButton.setIcon(toolWindowUI.getIcon(DOCKED_INACTIVE));
                 } else
-                    dockButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.SLIDING_INACTIVE));
+                    dockButton.setIcon(toolWindowUI.getIcon(SLIDING_INACTIVE));
 
-                if (toolWindow.getType() == ToolWindowType.FLOATING) {
-                    floatingButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.FIX_INACTIVE));
+                if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
+                    floatingButton.setIcon(toolWindowUI.getIcon(FIX_INACTIVE));
                 } else
-                    floatingButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.FLOATING_INACTIVE));
+                    floatingButton.setIcon(toolWindowUI.getIcon(FLOATING_INACTIVE));
 
                 if (toolWindow.isMaximized())
-                    maximizeButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.MAXIMIZE_INACTIVE));
+                    maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE_INACTIVE));
                 else
-                    maximizeButton.setIcon(toolWindowUI.getIcon(ToolWindowUI.IconId.MINIMIZE_INACTIVE));
+                    maximizeButton.setIcon(toolWindowUI.getIcon(MINIMIZE_INACTIVE));
             }
 
             if (active && focusRequester != null && !valueAdjusting) {
