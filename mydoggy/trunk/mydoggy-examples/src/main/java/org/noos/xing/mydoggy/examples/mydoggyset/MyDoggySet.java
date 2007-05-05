@@ -7,6 +7,8 @@ import org.noos.xing.mydoggy.examples.mydoggyset.model.ContentsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ToolGroupsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ToolsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.CheckBoxCellRenderer;
+import org.noos.xing.mydoggy.examples.mydoggyset.ui.MonitorPanel;
+import org.noos.xing.mydoggy.examples.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.content.desktop.MyDoggyDesktopContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
@@ -280,7 +282,11 @@ public class MyDoggySet {
         toolWindowManager.registerToolWindow("4", "Title 4", null, new JButton("Hello World 4"), ToolWindowAnchor.TOP);
         toolWindowManager.registerToolWindow("5", "Title 5", null, new JButton("Hello World 5"), ToolWindowAnchor.TOP);
         toolWindowManager.registerToolWindow("6", "Title 6", null, new JButton("Hello World 6"), ToolWindowAnchor.BOTTOM);
-        toolWindowManager.registerToolWindow("7", "Title 7", null, new JButton("Hello World 7"), ToolWindowAnchor.TOP);
+        MonitorPanel monitorPanel = new MonitorPanel(new RuntimeMemoryMonitorSource());
+        monitorPanel.start();
+        toolWindowManager.registerToolWindow("7", "Title 7", null,
+                                             /*new JButton("Hello World 7")*/ monitorPanel, 
+                                             ToolWindowAnchor.TOP);
         toolWindowManager.registerToolWindow("8", "Title 8", null, new JButton("Hello World 8"), ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("9", "Title 9", null, new JButton("Hello World 9"), ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("10", "Title 10", null, new JButton("Hello World 10"), ToolWindowAnchor.RIGHT);
