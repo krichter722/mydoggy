@@ -229,6 +229,8 @@ public class AnchorLabelUI extends MetalLabelUI {
         }
 
         public void mouseEntered(MouseEvent e) {
+            System.out.println("entered = " + e);
+
             if (!toolWindow.isVisible()) {
                 if (previewPanel == null)
                     previewTimer.start();
@@ -277,13 +279,16 @@ public class AnchorLabelUI extends MetalLabelUI {
                 } else {
                     Container contentContainer = ((DockedContainer) descriptor.getToolWindowContainer()).getContentContainer();
                     if (contentContainer.getWidth() != 0 && contentContainer.getHeight() != 0) {
+                        // Print Image
                         BufferedImage image = new BufferedImage(contentContainer.getWidth(), contentContainer.getHeight(), BufferedImage.TYPE_INT_RGB);
                         contentContainer.print(image.getGraphics());
                         Image scaled = image.getScaledInstance(176, 132, BufferedImage.SCALE_SMOOTH);
 
+                        // Show Preview
                         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(label);
-
                         if (frame.getRootPane() != null) {
+                            previewTimer.stop();
+
                             GlassPanel glassPane = (GlassPanel) frame.getRootPane().getGlassPane();
 
                             if (previewPanel != null)
@@ -292,7 +297,6 @@ public class AnchorLabelUI extends MetalLabelUI {
                             previewPanel = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
                             previewPanel.setAlpha(0.8f);
                             previewPanel.setSize(176 + 4, 132 + 4);
-                            previewPanel.add(new JLabel(new ImageIcon(scaled)), "1,1,FULL,FULL");
 
                             switch (descriptor.getToolWindow().getAnchor()) {
                                 case LEFT:
@@ -322,9 +326,12 @@ public class AnchorLabelUI extends MetalLabelUI {
                                 case RIGHT:
                                     break;
                             }
+                            
+//                            previewPanel.add(new JLabel(new ImageIcon(scaled)), "1,1,FULL,FULL");
 
                             glassPane.add(previewPanel);
 
+                            System.out.println("showing");
                             glassPane.setVisible(true);
                         }
                     }
