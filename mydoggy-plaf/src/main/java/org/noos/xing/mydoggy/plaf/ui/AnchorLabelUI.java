@@ -278,10 +278,8 @@ public class AnchorLabelUI extends MetalLabelUI {
                 } else {
                     Container contentContainer = ((DockedContainer) descriptor.getToolWindowContainer()).getContentContainer();
                     if (contentContainer.getWidth() != 0 && contentContainer.getHeight() != 0) {
-                        // Print Image
-                        BufferedImage image = new BufferedImage(contentContainer.getWidth(), contentContainer.getHeight(), BufferedImage.TYPE_INT_RGB);
-                        contentContainer.print(image.getGraphics());
-                        Image scaled = image.getScaledInstance(176, 132, BufferedImage.SCALE_SMOOTH);
+                        int width = 176;
+                        int height = 132;
 
                         // Show Preview
                         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(label);
@@ -295,8 +293,8 @@ public class AnchorLabelUI extends MetalLabelUI {
                                 glassPane.remove(previewPanel);
 
                             previewPanel = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
-                            previewPanel.setAlpha(0.8f);
-                            previewPanel.setSize(176 + 4, 132 + 4);
+                            previewPanel.setAlpha(0.75f);
+                            previewPanel.setSize(width + 4, height + 4);
 
                             switch (descriptor.getToolWindow().getAnchor()) {
                                 case LEFT:
@@ -314,7 +312,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                                     previewPanel.setLocation(
                                             descriptor.getManager().mainContainer.getX() +
                                             (descriptor.getToolBar(LEFT).getAvailableTools() != 0 ? 19 : 0) +
-                                            label.getX() + + 5,
+                                            label.getX() + +5,
 
                                             descriptor.getManager().mainContainer.getY() +
                                             (frame.getJMenuBar() != null ? frame.getJMenuBar().getHeight() : 0) +
@@ -326,12 +324,9 @@ public class AnchorLabelUI extends MetalLabelUI {
                                 case RIGHT:
                                     break;
                             }
-                            
-                            previewPanel.add(new JLabel(new ImageIcon(scaled)), "1,1,FULL,FULL");
+                            previewPanel.add(contentContainer, "1,1,FULL,FULL");
 
                             glassPane.add(previewPanel);
-
-                            System.out.println("showing");
                             glassPane.setVisible(true);
                         }
                     }
