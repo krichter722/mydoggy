@@ -325,7 +325,6 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     class DisabledIconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
-            // TODO: add support for this. For version 1.3.0
         }
     }
 

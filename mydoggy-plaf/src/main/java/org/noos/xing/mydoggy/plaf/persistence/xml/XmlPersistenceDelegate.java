@@ -30,7 +30,7 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
             writer.startDocument();
 
             AttributesImpl mydoggyAttributes = new AttributesImpl();
-            mydoggyAttributes.addAttribute(null, "version", null, null, "1.2.0");
+            mydoggyAttributes.addAttribute(null, "version", null, null, "1.3.0");
             mydoggyAttributes.addAttribute(null, "pushAwayMode", null, null, 
                                            toolWindowManager.getToolWindowManagerDescriptor().getPushAwayMode().toString());
             writer.startElement("mydoggy", mydoggyAttributes);
@@ -64,7 +64,7 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
         policyAttributes.addAttribute(null, "type", null, null, String.valueOf(PushAwayMode.MOST_RECENT));
         writer.startElement("mode", policyAttributes);
 
-        MostRecentDescriptor mostRecentDescriptor = (MostRecentDescriptor) toolWindowManager.getToolWindowManagerDescriptor().getPushAwayModeDescriptor(PushAwayMode.HORIZONTAL);
+        MostRecentDescriptor mostRecentDescriptor = (MostRecentDescriptor) toolWindowManager.getToolWindowManagerDescriptor().getPushAwayModeDescriptor(PushAwayMode.MOST_RECENT);
 
         for (ToolWindowAnchor toolWindowAnchor : mostRecentDescriptor.getMostRecentAnchors()) {
             AttributesImpl anchorAttributes = new AttributesImpl();

@@ -181,8 +181,7 @@ public class MonitorPanel extends JPanel {
         }
 
         public void run() {
-            // TODO: add closing
-            while (true) {
+            while (thread != null) {
                 float totalMemory = monitorSource.getTotal();
                 float usedMemory = monitorSource.getUsed();
                 float freeMemory = totalMemory - usedMemory;

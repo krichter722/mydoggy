@@ -62,8 +62,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
 
                 manager.add(manager.getBar(LEFT).getSplitPane(), "1,1,FULL,FULL");
 
-                manager.mainSplitPane = manager.getBar(BOTTOM).getSplitPane();
-                manager.mainSplitPane.setTopComponent(manager.mainContainer);
+                manager.setMainSplitPane(BOTTOM);
 
                 SwingUtil.repaintNow(manager);
                 manager.getBar(LEFT).setSplitDividerLocation(leftSplitLocation);
@@ -87,8 +86,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
 
                 manager.add(manager.getBar(BOTTOM).getSplitPane(), "1,1,FULL,FULL");
 
-                manager.mainSplitPane = manager.getBar(RIGHT).getSplitPane();
-                manager.mainSplitPane.setLeftComponent(manager.mainContainer);
+                manager.setMainSplitPane(RIGHT);
 
                 SwingUtil.repaintNow(manager);
                 manager.getBar(BOTTOM).setSplitDividerLocation(bottomSplitLocation);
@@ -112,8 +110,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
 
                 manager.add(manager.getBar(LEFT).getSplitPane(), "1,1,FULL,FULL");
 
-                manager.mainSplitPane = manager.getBar(TOP).getSplitPane();
-                manager.mainSplitPane.setBottomComponent(manager.mainContainer);
+                manager.setMainSplitPane(TOP);
 
                 SwingUtil.repaintNow(manager);
                 manager.getBar(LEFT).setSplitDividerLocation(leftSplitLocation);
@@ -137,8 +134,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
 
                 manager.add(manager.getBar(mostRecentStack.get(3)).getSplitPane(), "1,1,FULL,FULL");
 
-                manager.mainSplitPane = manager.getBar(mostRecentStack.get(0)).getSplitPane();
-                setSplitCmp(mostRecentStack.get(0), manager.mainContainer);
+                manager.setMainSplitPane(mostRecentStack.get(0));
 
                 Map<ToolWindowAnchor, Integer> tmp = new Hashtable<ToolWindowAnchor, Integer>();
                 tmp.put(LEFT, leftSplitLocation);

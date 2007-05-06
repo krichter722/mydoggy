@@ -51,11 +51,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     private TableLayout contentPaneLayout;
 
-    // TODO: nascandore questi oggetti
-    JSplitPane mainSplitPane;
-    public JPanel mainContainer;
+    private JSplitPane mainSplitPane;
+    private JPanel mainContainer;
 
-    PropertyChangeSupport propertyChangeSupport;
+    private PropertyChangeSupport propertyChangeSupport;
 
     private Object activeToolWindowId;
 
@@ -340,8 +339,33 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         mainContainer.setOpaque(true);
     }
 
+    public Container getMainContainer() {
+        return mainContainer;
+    }
+
     public Component getMainContent() {
         return (mainContainer.getComponentCount() == 0) ? null : mainContainer.getComponent(0);
+    }
+
+    public void setMainSplitPane(ToolWindowAnchor anchor) {
+        switch(anchor) {
+            case LEFT :
+                mainSplitPane = getBar(anchor).getSplitPane();
+                mainSplitPane.setRightComponent(mainContainer);
+                break;
+            case RIGHT :
+                mainSplitPane = getBar(anchor).getSplitPane();
+                mainSplitPane.setLeftComponent(mainContainer);
+                break;
+            case TOP :
+                mainSplitPane = getBar(anchor).getSplitPane();
+                mainSplitPane.setBottomComponent(mainContainer);
+                break;
+            case BOTTOM :
+                mainSplitPane = getBar(anchor).getSplitPane();
+                mainSplitPane.setTopComponent(mainContainer);
+                break;
+        }
     }
 
     public MyDoggyToolWindowBar getBar(ToolWindowAnchor anchor) {
