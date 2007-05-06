@@ -1,4 +1,3 @@
-<!DOCTYPE mydoggy [
         <!ELEMENT mydoggy (tools)*>
         <!ATTLIST mydoggy
                 version CDATA #REQUIRED
@@ -35,4 +34,3 @@
                 width CDATA #IMPLIED
                 x CDATA #IMPLIED
                 y CDATA #IMPLIED>
-        ]>
