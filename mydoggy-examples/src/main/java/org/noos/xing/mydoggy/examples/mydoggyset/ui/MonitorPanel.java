@@ -164,14 +164,14 @@ public class MonitorPanel extends JPanel {
             } else {
                 backImageGrfx.setColor(Color.yellow);
                 int x = w - 5;
-                int sum = graphY + graphH;
+                int sum = graphH - (ascent + descent);
 
                 for (int j = x - validPoints, k = 0; k < validPoints; k++, j++) {
                     if (k != 0) {
                         if (points[k] != points[k - 1]) {
-                            backImageGrfx.drawLine(j - 1, (int) (sum * points[k - 1]), j, (int) (sum * points[k]));
+                            backImageGrfx.drawLine(j - 1, graphY + (int) (sum * points[k - 1]), j, graphY + (int) (sum * points[k]));
                         } else {
-                            backImageGrfx.fillRect(j, (int) (sum * points[k]), 1, 1);
+                            backImageGrfx.fillRect(j, graphY + (int) (sum * points[k]), 1, 1);
                         }
                     }
                 }
@@ -192,6 +192,7 @@ public class MonitorPanel extends JPanel {
                     validPoints = 0;
                 } else if (points.length < validPoints + 1) {
                     double[] tmp;
+
                     int graphW = validPoints +1;
                     if (validPoints < graphW) {
                         tmp = new double[validPoints];
