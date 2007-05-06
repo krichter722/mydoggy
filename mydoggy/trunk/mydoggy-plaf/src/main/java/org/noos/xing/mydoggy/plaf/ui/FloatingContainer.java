@@ -246,7 +246,6 @@ public class FloatingContainer extends DockedContainer {
             super(80f);
         }
 
-
         protected float onAnimating(float animationPercent) {
             final int animatingLengthX = (int) (animationPercent * originalBounds.width);
             final int animatingLengthY = (int) (animationPercent * originalBounds.height);
@@ -274,6 +273,7 @@ public class FloatingContainer extends DockedContainer {
         protected void onFinishAnimation() {
             switch (getAnimationDirection()) {
                 case INCOMING:
+                    window.getContentPane().setVisible(true);
                     window.setBounds(originalBounds);
                     SwingUtil.repaint(window);
                     break;
@@ -292,6 +292,7 @@ public class FloatingContainer extends DockedContainer {
 
         protected void onShow(Object... params) {
             this.originalBounds = window.getBounds();
+            window.getContentPane().setVisible(false);
             window.setBounds(new Rectangle(originalBounds.x + (originalBounds.width / 2),
                                            originalBounds.y + (originalBounds.height / 2),
                                            0, 0));
@@ -299,7 +300,6 @@ public class FloatingContainer extends DockedContainer {
             FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
             window.setModal(typeDescriptor.isModal());
             window.setVisible(true);
-            window.getContentPane().setVisible(true);
         }
 
         protected void onStartAnimation(Direction direction) {
