@@ -101,8 +101,12 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     }
 
     public void setPreviewEnabled(boolean previewEnabled) {
-// TODO: implements firing...       
+        if (this.previewEnabled == previewEnabled)
+            return;
+
+        boolean old = this.previewEnabled;
         this.previewEnabled = previewEnabled;
+        firePropertyChange("previewEnabled", old, previewEnabled);
     }
 
     public int getPreviewDelay() {
@@ -110,7 +114,12 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     }
 
     public void setPreviewDelay(int previewDelay) {
+        if (this.previewDelay == previewDelay)
+            return;
+
+        int old = this.previewDelay;
         this.previewDelay = previewDelay;
+        firePropertyChange("previewDelay", old, previewDelay);
     }
 
     public float getPreviewTransparentRatio() {
@@ -118,7 +127,12 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     }
 
     public void setPreviewTransparentRatio(float previewTransparentRatio) {
+        if (this.previewTransparentRatio == previewTransparentRatio)
+            return;
+
+        float old = this.previewTransparentRatio;
         this.previewTransparentRatio = previewTransparentRatio;
+        firePropertyChange("previewTransparentRatio", old, previewTransparentRatio);
     }
 
     public boolean isAnimating() {
