@@ -83,6 +83,51 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
     void setToolWindowActionHandler(ToolWindowActionHandler toolWindowActionHandler);
 
     /**
+     * TODO
+     *
+     * @param enabled
+     * @since 1.3.0
+     */
+    void setPreviewEnabled(boolean enabled);
+
+    /**
+     *
+     * @return
+     * @since 1.3.0
+     */
+    boolean isPreviewEnabled();
+
+    /**
+     * TODO
+     *
+     * @param delay
+     * @since 1.3.0
+     */
+    void setPreviewDelay(int delay);
+
+    /**
+     *
+     * @return
+     * @since 1.3.0
+     */
+    int getPreviewDelay();
+
+    /**
+     * TODO
+     *
+     * @param transparentRatio
+     * @since 1.3.0
+     */
+    void setPreviewTransparentRatio(float transparentRatio);
+
+    /**
+     *
+     * @return
+     * @since 1.3.0
+     */
+    float getPreviewTransparentRatio();
+
+    /**
      * Adds a PropertyChangeListener to the listener list. The listener is
      * registered for all bound properties of this class, including the
      * following:

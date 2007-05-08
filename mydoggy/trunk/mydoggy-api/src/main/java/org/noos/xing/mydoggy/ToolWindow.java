@@ -91,27 +91,28 @@ public interface ToolWindow {
      * The method is used to set to the true value the visible property of the tool.
      * The tool becomes visible in a special way. In fact, if there is another tool visible
      * with the same anchor than these two tools will be aggregate to be visible both.
-     *  
+     *
      * @since 1.2.0
      */
     void aggregate();
 
     /**
+     * Returns whether the representative button is currently flashing.
      *
-     * @return
+     * @return <code>true</code> if this the representative button is flashing, <code>false</code> otherwise.
      * @since 1.3.0
      */
     boolean isFlashing();
 
     /**
-     *
+     * TODO
      * @param flash
      * @since 1.3.0
      */
     void setFlashing(boolean flash);
 
     /**
-     *
+     * TODO
      * @param duration
      * @since 1.3.0
      */
@@ -238,15 +239,19 @@ public interface ToolWindow {
     String getTitle();
 
     /**
+     * Returns whether the toolwindow is currently maximized.
      *
-     * @return
+     * @return <code>true</code> if this toolwindow is maximized, <code>false</code> otherwise.
      * @since 1.3.0
      */
     boolean isMaximized();
 
     /**
+     * Maximizes this toolwindow. A maximized toolwindow is resized to
+     * fully fit the main content area.
      *
-     * @param maximized
+     * @param maximized a boolean, where <code>true</code> maximizes this toolwindow and <code>false</code>
+     *                  restores it.
      * @since 1.3.0
      */
     void setMaximized(boolean maximized);

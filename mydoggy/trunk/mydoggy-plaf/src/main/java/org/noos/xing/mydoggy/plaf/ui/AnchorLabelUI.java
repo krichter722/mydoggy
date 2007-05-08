@@ -285,82 +285,80 @@ public class AnchorLabelUI extends MetalLabelUI {
                     firstPreview = false;
                 } else {
                     Container contentContainer = ((DockedContainer) descriptor.getToolWindowContainer()).getContentContainer();
-                    if (contentContainer.getWidth() != 0 && contentContainer.getHeight() != 0) {
-                        int width = 176;
-                        int height = 132;
+                    int width = 176;
+                    int height = 132;
 
-                        // Show Preview
-                        RootPaneContainer rootPaneContainer = (RootPaneContainer) SwingUtilities.getWindowAncestor(label);
-                        if (rootPaneContainer != null) {
-                            JMenuBar jMenuBar = rootPaneContainer instanceof JFrame ?
-                                                 ((JFrame)rootPaneContainer).getJMenuBar() : null;
+                    // Show Preview
+                    RootPaneContainer rootPaneContainer = (RootPaneContainer) SwingUtilities.getWindowAncestor(label);
+                    if (rootPaneContainer != null) {
+                        JMenuBar jMenuBar = rootPaneContainer instanceof JFrame ?
+                                             ((JFrame)rootPaneContainer).getJMenuBar() : null;
 
-                            firstPreview = true;
-                            previewTimer.stop();
+                        firstPreview = true;
+                        previewTimer.stop();
 
-                            GlassPanel glassPane = (GlassPanel) rootPaneContainer.getGlassPane();
+                        GlassPanel glassPane = (GlassPanel) rootPaneContainer.getGlassPane();
 
-                            if (previewPanel != null)
-                                glassPane.remove(previewPanel);
+                        if (previewPanel != null)
+                            glassPane.remove(previewPanel);
 
-                            previewPanel = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
-                            previewPanel.setAlpha(0.75f);
-                            previewPanel.setSize(width + 4, height + 4);
+                        previewPanel = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
+                        previewPanel.setAlpha(0.75f);
+                        previewPanel.setSize(width + 4, height + 4);
 
-                            Container mainContainer = descriptor.getManager().getMainContainer();
-                            switch (descriptor.getToolWindow().getAnchor()) {
-                                case LEFT:
-                                    previewPanel.setLocation(
-                                            mainContainer.getX() +
-                                            label.getX() + label.getWidth() + 3,
+                        Container mainContainer = descriptor.getManager().getMainContainer();
+                        switch (descriptor.getToolWindow().getAnchor()) {
+                            case LEFT:
+                                previewPanel.setLocation(
+                                        mainContainer.getX() +
+                                        label.getX() + label.getWidth() + 3,
 
-                                            mainContainer.getY() +
-                                            (descriptor.getToolBar(TOP).getAvailableTools() != 0 ? 19 : 0) +
-                                            (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                                            label.getY() + 5
-                                    );
-                                    break;
-                                case TOP:
-                                    previewPanel.setLocation(
-                                            mainContainer.getX() +
-                                            (descriptor.getToolBar(LEFT).getAvailableTools() != 0 ? 19 : 0) +
-                                            label.getX() + 5,
+                                        mainContainer.getY() +
+                                        (descriptor.getToolBar(TOP).getAvailableTools() != 0 ? 19 : 0) +
+                                        (jMenuBar != null ? jMenuBar.getHeight() : 0) +
+                                        label.getY() + 5
+                                );
+                                break;
+                            case TOP:
+                                previewPanel.setLocation(
+                                        mainContainer.getX() +
+                                        (descriptor.getToolBar(LEFT).getAvailableTools() != 0 ? 19 : 0) +
+                                        label.getX() + 5,
 
-                                            mainContainer.getY() +
-                                            (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                                            label.getY() + label.getHeight() + 3
-                                    );
-                                    break;
-                                case BOTTOM:
-                                    previewPanel.setLocation(
-                                            mainContainer.getX() +
-                                            (descriptor.getToolBar(LEFT).getAvailableTools() != 0 ? 19 : 0) +
-                                            label.getX() + 5,
+                                        mainContainer.getY() +
+                                        (jMenuBar != null ? jMenuBar.getHeight() : 0) +
+                                        label.getY() + label.getHeight() + 3
+                                );
+                                break;
+                            case BOTTOM:
+                                previewPanel.setLocation(
+                                        mainContainer.getX() +
+                                        (descriptor.getToolBar(LEFT).getAvailableTools() != 0 ? 19 : 0) +
+                                        label.getX() + 5,
 
-                                            mainContainer.getY() +
-                                            (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                                            mainContainer.getHeight() -
-                                            height + 17
-                                    );
-                                    break;
-                                case RIGHT:
-                                    previewPanel.setLocation(
-                                            mainContainer.getX() +
-                                            mainContainer.getWidth() -
-                                            width + 17,
+                                        mainContainer.getY() +
+                                        (jMenuBar != null ? jMenuBar.getHeight() : 0) +
+                                        mainContainer.getHeight() -
+                                        height + 17
+                                );
+                                break;
+                            case RIGHT:
+                                previewPanel.setLocation(
+                                        mainContainer.getX() +
+                                        mainContainer.getWidth() -
+                                        width + 17,
 
-                                            mainContainer.getY() +
-                                            (descriptor.getToolBar(TOP).getAvailableTools() != 0 ? 19 : 0) +
-                                            (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                                            label.getY() + 5
-                                    );
-                                    break;
-                            }
-                            previewPanel.add(contentContainer, "1,1,FULL,FULL");
-
-                            glassPane.add(previewPanel);
-                            glassPane.setVisible(true);
+                                        mainContainer.getY() +
+                                        (descriptor.getToolBar(TOP).getAvailableTools() != 0 ? 19 : 0) +
+                                        (jMenuBar != null ? jMenuBar.getHeight() : 0) +
+                                        label.getY() + 5
+                                );
+                                break;
                         }
+                        previewPanel.add(contentContainer, "1,1,FULL,FULL");
+
+                        glassPane.add(previewPanel);
+                        glassPane.setVisible(true);
                     }
                 }
             }

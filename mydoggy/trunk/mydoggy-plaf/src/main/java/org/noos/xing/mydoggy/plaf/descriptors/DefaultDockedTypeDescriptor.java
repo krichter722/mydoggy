@@ -23,6 +23,10 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     private int dockLength;
     private boolean animating;
 
+    private boolean previewEnabled;
+    private int previewDelay;
+    private float previewTransparentRatio;
+
     private EventListenerList listenerList;
 
     public DefaultDockedTypeDescriptor() {
@@ -32,15 +36,23 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.toolWindowActionHandler = null;
         this.animating = true;
         this.toolWindowUI = new MyDoggyToolWindowUI();
+        this.previewEnabled = true;
+        this.previewDelay = 3000;
+        this.previewTransparentRatio = 0.75f;
     }
 
-    public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled, ToolWindowActionHandler toolWindowActionHandler, boolean animating, ToolWindowUI toolWindowUI) {
+    public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled,
+                                       ToolWindowActionHandler toolWindowActionHandler, boolean animating, ToolWindowUI toolWindowUI,
+                                       boolean previewEnabled, int previewDelay, float previewTransparentRatio) {
         this.toolsMenu = new JMenu(ResourceBoundles.getResourceBundle().getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = popupMenuEnabled;
         this.dockLength = dockLength;
         this.toolWindowActionHandler = toolWindowActionHandler;
         this.toolWindowUI = toolWindowUI;
         this.animating = animating;
+        this.previewEnabled = previewEnabled;
+        this.previewDelay = previewDelay;
+        this.previewTransparentRatio = previewTransparentRatio;
 
         this.listenerList = new EventListenerList();
 
@@ -84,6 +96,31 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         firePropertyChange("toolWindowActionHandler", old, toolWindowActionHandler);
     }
 
+    public boolean isPreviewEnabled() {
+        return previewEnabled;
+    }
+
+    public void setPreviewEnabled(boolean previewEnabled) {
+// TODO: implements firing...       
+        this.previewEnabled = previewEnabled;
+    }
+
+    public int getPreviewDelay() {
+        return previewDelay;
+    }
+
+    public void setPreviewDelay(int previewDelay) {
+        this.previewDelay = previewDelay;
+    }
+
+    public float getPreviewTransparentRatio() {
+        return previewTransparentRatio;
+    }
+
+    public void setPreviewTransparentRatio(float previewTransparentRatio) {
+        this.previewTransparentRatio = previewTransparentRatio;
+    }
+
     public boolean isAnimating() {
         return animating;
     }
@@ -122,7 +159,8 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     public ToolWindowTypeDescriptor cloneMe() {
         return new DefaultDockedTypeDescriptor(this, dockLength, popupMenuEnabled,
                                                toolWindowActionHandler, animating,
-                                               new MyDoggyToolWindowUI());
+                                               new MyDoggyToolWindowUI(),
+                                               previewEnabled, previewDelay, previewTransparentRatio);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
@@ -134,6 +172,12 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
             this.animating = (Boolean) evt.getNewValue();
         } else if ("toolWindowActionHandler".equals(evt.getPropertyName())) {
             this.toolWindowActionHandler = (ToolWindowActionHandler) evt.getNewValue();
+        } else if ("previewEnabled".equals(evt.getPropertyName())) {
+            this.previewEnabled = (Boolean) evt.getNewValue();
+        } else if ("previewDelay".equals(evt.getPropertyName())) {
+            this.previewDelay = (Integer) evt.getNewValue();
+        } else if ("previewTransparentRatio".equals(evt.getPropertyName())) {
+            this.previewTransparentRatio = (Float) evt.getNewValue();
         }
     }
 

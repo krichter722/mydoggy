@@ -33,6 +33,7 @@ public interface ToolWindowManagerDescriptor {
     PushAwayMode getPushAwayMode();
 
     /**
+     * TODO
      *
      * @param pushAwayMode
      * @return
@@ -41,6 +42,7 @@ public interface ToolWindowManagerDescriptor {
     PushAwayModeDescriptor getPushAwayModeDescriptor(PushAwayMode pushAwayMode);
 
     /**
+     * TODO
      *
      * @param corner
      * @param component
@@ -54,8 +56,7 @@ public interface ToolWindowManagerDescriptor {
      * registered for all bound properties of this class, including the
      * following:
      * <ul>
-     * <li>this type's dockLength ("dockLength")</li>
-     * <li>this type's popupMenuEnabled property ("popupMenuEnabled")</li>
+     * <li>this type's pushAwayMode ("pushAwayMode")</li>
      * </ul>
      * <p/>
      * If listener is null, no exception is thrown and no action is performed.
