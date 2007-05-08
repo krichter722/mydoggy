@@ -7,6 +7,36 @@
     </properties>
 
     <body>
+        <release version="1.3.0" date="2007-05-26" description="Fourth release">
+            <action dev="adecaro" type="update">
+                See Changes of :
+                <![CDATA[
+                    <a href="./mydoggy-api/changes-report.html">MyDoggy-Api</a>,
+                    <a href="./mydoggy-plaf/changes-report.html">MyDoggy-Plaf</a>,
+                    <a href="./mydoggy-examples/changes-report.html">MyDoggy-Example</a>
+                ]]>.
+                New Features:
+                <![CDATA[
+                <ul>
+                    <li>
+                        Preview
+                    </li>
+                    <li>
+                        ToolWindow Flashing
+                    </li>
+                    <li>
+                        ToolWindow Maximization
+                    </li>
+                    <li>
+                        Corner Compoenents
+                    </li>
+                    <li>
+                        Most Rected PushAwayMode
+                    </li>
+                </ul>
+                ]]>.
+            </action>
+        </release>
         <release version="1.2.0" date="2007-04-07" description="Third release">
             <action dev="adecaro" type="update">
                 See Changes of :

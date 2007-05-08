@@ -7,6 +7,16 @@
     </properties>
 
     <body>
+        <release version="1.3.0" date="2007-05-26" description="Fourth release">
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">
+                    <code>DockedTypeDescriptor</code>
+                </a> - Added support for Tool Window Preview :
+                ]]>
+            </action>
+            
+        </release>
         <release version="1.2.0" date="2007-04-07" description="Third release">
             <action dev="adecaro" type="add">
                 <![CDATA[
