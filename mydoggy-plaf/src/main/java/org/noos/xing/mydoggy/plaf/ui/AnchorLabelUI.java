@@ -41,6 +41,7 @@ public class AnchorLabelUI extends MetalLabelUI {
 
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
+    protected DockedTypeDescriptor dockedTypeDescriptor;
 
     private AnchorLabelMouseAdapter adapter;
 
@@ -51,6 +52,8 @@ public class AnchorLabelUI extends MetalLabelUI {
     public AnchorLabelUI(ToolWindowDescriptor descriptor, ToolWindow toolWindow) {
         this.descriptor = descriptor;
         this.toolWindow = toolWindow;
+        this.dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+        this.dockedTypeDescriptor.addPropertyChangeListener(this);
     }
 
     public void installUI(JComponent c) {
@@ -122,7 +125,9 @@ public class AnchorLabelUI extends MetalLabelUI {
     }
 
     public void propertyChange(PropertyChangeEvent e) {
-        if ("visible".equals(e.getPropertyName())) {
+        String propertyName = e.getPropertyName();
+
+        if ("visible".equals(propertyName)) {
             boolean visible = (Boolean) e.getNewValue();
             label.setOpaque(visible);
             if (visible) {
@@ -134,14 +139,16 @@ public class AnchorLabelUI extends MetalLabelUI {
 
             toolWindow.setFlashing(false);
             SwingUtil.repaint(label);
-        } else if ("UI".equals(e.getPropertyName())) {
+        } else if ("UI".equals(propertyName)) {
             adapter.propertyChange(e);
-        } else if ("flash".equals(e.getPropertyName())) {
+        } else if ("flash".equals(propertyName)) {
             flasingDuration = -1;
             SwingUtil.repaint(label);
-        } else if ("flash.duration".equals(e.getPropertyName())) {
+        } else if ("flash.duration".equals(propertyName)) {
             flasingDuration = (Integer) e.getNewValue();
             SwingUtil.repaint(label);
+        } else if ("previewDelay".equals(propertyName)) {
+            adapter.setPreviewDelay((Integer)e.getNewValue());
         }
     }
 
@@ -192,7 +199,7 @@ public class AnchorLabelUI extends MetalLabelUI {
 
         public AnchorLabelMouseAdapter() {
             initPopupMenu();
-            previewTimer = new Timer(1000, this);
+            previewTimer = new Timer(dockedTypeDescriptor.getPreviewDelay(), this);
             descriptor.getToolWindow().addInternalPropertyChangeListener(this);
         }
 
@@ -283,7 +290,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                         previewPanel = null;
                     }
                     firstPreview = false;
-                } else {
+                } else if (dockedTypeDescriptor.isPreviewEnabled()) {
                     Container contentContainer = ((DockedContainer) descriptor.getToolWindowContainer()).getContentContainer();
                     int width = 176;
                     int height = 132;
@@ -303,7 +310,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                             glassPane.remove(previewPanel);
 
                         previewPanel = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
-                        previewPanel.setAlpha(0.75f);
+                        previewPanel.setAlpha(dockedTypeDescriptor.getPreviewTransparentRatio());
                         previewPanel.setSize(width + 4, height + 4);
 
                         Container mainContainer = descriptor.getManager().getMainContainer();
@@ -551,6 +558,10 @@ public class AnchorLabelUI extends MetalLabelUI {
             }
         }
 
+        public void setPreviewDelay(int previewDelay) {
+            previewTimer.setDelay(previewDelay);
+        }
+        
     }
 
     class DragGesture implements DragGestureListener, DragSourceMotionListener, DragSourceListener {
