@@ -49,6 +49,8 @@ public class AnchorLabelUI extends MetalLabelUI {
     private int flasingDuration;
     private boolean flashingState;
 
+    private TranslucentPanel previewPanel;
+
     public AnchorLabelUI(ToolWindowDescriptor descriptor, ToolWindow toolWindow) {
         this.descriptor = descriptor;
         this.toolWindow = toolWindow;
@@ -193,7 +195,6 @@ public class AnchorLabelUI extends MetalLabelUI {
         JMenuItem bottom;
 
         Timer previewTimer;
-        TranslucentPanel previewPanel;
         boolean firstPreview = true;
 
 
@@ -275,19 +276,26 @@ public class AnchorLabelUI extends MetalLabelUI {
             }
         }
 
+        public void mouseDragged(MouseEvent e) {
+            previewTimer.stop();
+        }
+
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == previewTimer) {
                 if ("stop".equals(e.getActionCommand())) {
                     if (previewPanel != null && !firstPreview) {
                         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(label);
 
-                        GlassPanel glassPane = (GlassPanel) frame.getRootPane().getGlassPane();
-                        glassPane.remove(previewPanel);
-                        glassPane.setVisible(false);
+                        if (frame != null) {
+                            GlassPanel glassPane = (GlassPanel) frame.getRootPane().getGlassPane();
+                            glassPane.remove(previewPanel);
+                            SwingUtil.repaint(glassPane);
+                            glassPane.setVisible(false);
 
-                        SwingUtil.repaint(frame);
+                            SwingUtil.repaint(frame);
 
-                        previewPanel = null;
+                            previewPanel = null;
+                        }
                     }
                     firstPreview = false;
                 } else if (dockedTypeDescriptor.isPreviewEnabled()) {
@@ -366,6 +374,7 @@ public class AnchorLabelUI extends MetalLabelUI {
 
                         glassPane.add(previewPanel);
                         glassPane.setVisible(true);
+                        SwingUtil.repaint(glassPane);
                     }
                 }
             }
@@ -581,6 +590,11 @@ public class AnchorLabelUI extends MetalLabelUI {
 
             // Prepare glassPane for ghost image
             GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
+
+            // TODO: è la cosa migliore??
+            if (previewPanel != null)
+                glassPane.remove(previewPanel);
+
             glassPane.setVisible(true);
 
             Point p = (Point) dge.getDragOrigin().clone();
@@ -712,6 +726,9 @@ public class AnchorLabelUI extends MetalLabelUI {
             lastAnchor = null;
 
             DragAndDropLock.setLocked(false);
+
+            SwingUtilities.getWindowAncestor(descriptor.getManager()).repaint();
+
         }
 
     }
