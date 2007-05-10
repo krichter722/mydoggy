@@ -277,6 +277,7 @@ public class AnchorLabelUI extends MetalLabelUI {
         }
 
         public void mouseDragged(MouseEvent e) {
+            firstPreview = false;
             previewTimer.stop();
         }
 
