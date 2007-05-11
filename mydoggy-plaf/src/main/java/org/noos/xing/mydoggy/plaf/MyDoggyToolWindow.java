@@ -1,9 +1,7 @@
 package org.noos.xing.mydoggy.plaf;
 
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowType;
-import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
+import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
 import javax.swing.*;
@@ -12,6 +10,7 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ResourceBundle;
+import java.util.ArrayList;
 
 /**
  * @author Angelo De Caro
@@ -36,6 +35,8 @@ public class MyDoggyToolWindow implements ToolWindow {
     private boolean flash;
     private boolean maximized;
 
+    private java.util.List<ToolWindowTab> toolWindowTabs;
+
     private ResourceBundle resourceBoundle;
     private ToolWindowDescriptor descriptor;
 
@@ -55,6 +56,7 @@ public class MyDoggyToolWindow implements ToolWindow {
 
         this.descriptor = new ToolWindowDescriptor(manager, this, anchestor, component);
         this.resourceBoundle = resourceBundle;
+        this.toolWindowTabs = new ArrayList<ToolWindowTab>();
 
         this.id = id;
         this.index = index;
@@ -348,6 +350,22 @@ public class MyDoggyToolWindow implements ToolWindow {
         }
     }
 
+    public ToolWindowTab addToolWindowTab(String title, Component component) {
+        ToolWindowTab tab = new MyDoggyToolWindowTab(title, null, component);
+        toolWindowTabs.add(tab);
+
+        fireToolWindowTabEvent(new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_ADDED, this, tab));
+        return tab;
+    }
+
+    public ToolWindowTab[] getToolWindowTab() {
+        return toolWindowTabs.toArray(new ToolWindowTab[0]);
+    }
+
+    public void addToolWindowListener(ToolWindowListener listener) {
+        listenerList.add(ToolWindowListener.class, listener);
+    }
+
     public ToolWindowTypeDescriptor getTypeDescriptor(ToolWindowType type) {
         return descriptor.getTypeDescriptor(type);
     }
@@ -434,6 +452,34 @@ public class MyDoggyToolWindow implements ToolWindow {
             listeners = listenerList.getListeners(PropertyChangeListener.class);
             for (PropertyChangeListener listener : listeners) {
                 listener.propertyChange(event);
+            }
+        }
+    }
+
+    protected void fireToolWindowTabEvent(ToolWindowTabEvent event) {
+        ToolWindowListener[] listeners = internalListenerList.getListeners(ToolWindowListener.class);
+        for (ToolWindowListener listener : listeners) {
+            switch(event.getActionId()) {
+                case TAB_ADDED:
+                    listener.toolWindowTabAdded(event);
+                    break;
+                case TAB_REMOVED:
+                    listener.toolWindowTabRemoved(event);
+                    break;
+            }
+        }
+
+        if (publicEvent) {
+            listeners = listenerList.getListeners(ToolWindowListener.class);
+            for (ToolWindowListener listener : listeners) {
+                switch(event.getActionId()) {
+                    case TAB_ADDED:
+                        listener.toolWindowTabAdded(event);
+                        break;
+                    case TAB_REMOVED:
+                        listener.toolWindowTabRemoved(event);
+                        break;
+                }
             }
         }
     }
