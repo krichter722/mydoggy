@@ -8,7 +8,6 @@ import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.icons.CompositeIcon;
 import org.noos.xing.mydoggy.plaf.ui.icons.TextIcon;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
-import org.noos.xing.mydoggy.plaf.ui.MyDoggyToolWindowUI;
 
 import javax.swing.*;
 import javax.swing.plaf.LabelUI;
@@ -167,8 +166,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         if (anchorLabel == null) {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
-            String toolAnchorLabelName = (toolWindow.getIndex() > 0) ? toolWindow.getIndex() + " : " + toolWindow.getTitle()
-                                         : toolWindow.getTitle();
+            String toolAnchorLabelName = (toolWindow.getIndex() > 0) ? toolWindow.getIndex() + " : " + toolWindow.getId()
+                                         : toolWindow.getId();
 
             if (anchor == ToolWindowAnchor.BOTTOM || anchor == ToolWindowAnchor.TOP) {
                 anchorLabel = new AnchorLabel(toolAnchorLabelName, toolWindow.getIcon(), JLabel.CENTER);
@@ -226,8 +225,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         if (anchorLabel != null) {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
-            String toolAnchorLabelName = (toolWindow.getIndex() > 0) ? toolWindow.getIndex() + " : " + toolWindow.getTitle()
-                                         : toolWindow.getTitle();
+            String toolAnchorLabelName = (toolWindow.getIndex() > 0) ? toolWindow.getIndex() + " : " + toolWindow.getId()
+                                         : toolWindow.getId();
 
 
             if (anchor == ToolWindowAnchor.BOTTOM || anchor == ToolWindowAnchor.TOP) {

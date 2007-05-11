@@ -141,7 +141,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         applicationBar.setUI(new ApplicationBarPanelUI(descriptor, this));
 
         // Title
-        applicationBarTitle = new JLabel(toolWindow.getTitle(), JLabel.LEFT);
+        applicationBarTitle = new JLabel(""/*toolWindow.getTitle()*/, JLabel.LEFT);
         applicationBarTitle.setForeground(Color.WHITE);
         applicationBarTitle.setBackground(Color.LIGHT_GRAY);
         applicationBarTitle.setOpaque(false);
@@ -623,7 +623,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                     floatingButton.setIcon(toolWindowUI.getIcon(FLOATING));
 
                 if (toolWindow.isMaximized())
-                    maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE));
+                    maximizeButton.setIcon(toolWindowUI.getIcon(MINIMIZE));
                 else
                     maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE));
             } else {
@@ -645,9 +645,9 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                     floatingButton.setIcon(toolWindowUI.getIcon(FLOATING_INACTIVE));
 
                 if (toolWindow.isMaximized())
-                    maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE_INACTIVE));
-                else
                     maximizeButton.setIcon(toolWindowUI.getIcon(MINIMIZE_INACTIVE));
+                else
+                    maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE_INACTIVE));
             }
 
             if (active && focusRequester != null && !valueAdjusting) {

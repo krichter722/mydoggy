@@ -274,7 +274,7 @@ public class MyDoggySet {
         JPanel panel = new JPanel(new TableLayout(new double[][]{{20, -1, 20}, {20, -1, 20}}));
         panel.add(new JButton("Hello World 2"), "1,1,FULL,FULL");
 
-		toolWindowManager.registerToolWindow("1", "Title 1", null, new JButton("Hello World 1"), ToolWindowAnchor.LEFT);
+		toolWindowManager.registerToolWindow("Title 1", "Title 1", null, new JButton("Hello World 1"), ToolWindowAnchor.LEFT);
         toolWindowManager.registerToolWindow("2", "Title 2", null, panel, ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("3", "Title 3",
                                              SwingUtil.loadIcon("org/noos/xing/mydoggy/examples/mydoggyset/icons/save.png"),
@@ -302,7 +302,7 @@ public class MyDoggySet {
         ToolWindowGroup submainGroup = toolWindowManager.getToolWindowGroup("SubMain");
 
         // Set TypeDescriptor properties for tool window 1
-        ToolWindow toolWindow = toolWindowManager.getToolWindow("1");
+        ToolWindow toolWindow = toolWindowManager.getToolWindow("Title 1");
 
         DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
         dockedTypeDescriptor.setPopupMenuEnabled(false);
