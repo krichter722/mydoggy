@@ -97,6 +97,9 @@ public class SampleApp {
         floatingTypeDescriptor.setTransparentMode(true);
         floatingTypeDescriptor.setTransparentRatio(0.2f);
         floatingTypeDescriptor.setTransparentDelay(1000);
+
+        debugTool.addToolWindowTab("Hi", new JButton("Hello"));
+        debugTool.addToolWindowTab("Hello", new JButton("Hello"));
     }
 
     protected void initContentManager() {

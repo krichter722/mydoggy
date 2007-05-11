@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy;
 
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
+import java.awt.*;
 
 /**
  * Tool Windows are secondary windows within the main window that provide access to and/or
@@ -258,15 +259,15 @@ public interface ToolWindow {
 
 
     // TODO: add javadocs
-/*
     ToolWindowTab addToolWindowTab(String title, Component component);
 
-    ToolWindowTab getToolWindowTab(String title);
-
-    ToolWindowTab getToolWindowTab(Component component);
+//    ToolWindowTab getToolWindowTab(String title);
+//
+//    ToolWindowTab getToolWindowTab(Component component);
 
     ToolWindowTab[] getToolWindowTab();
-  */
+
+    void addToolWindowListener(ToolWindowListener listener);
 
 
     /**

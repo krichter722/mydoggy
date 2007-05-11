@@ -1,8 +1,9 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
-import static org.noos.xing.mydoggy.plaf.ui.ToolWindowUI.IconId.*;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
+import static org.noos.xing.mydoggy.plaf.ui.ToolWindowUI.IconId.*;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -35,6 +36,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
     protected JPanel applicationBar;
     protected JLabel applicationBarTitle;
+    protected ToolWindowTabPanel applicationBarTabs;
 
     private Component focusRequester;
 
@@ -129,8 +131,11 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         container.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
         container.setFocusCycleRoot(false);
 
+        String id = toolWindow.getId();
+
         // Application Bar
-        applicationBar = new JPanel(new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 3, 15, 2, 15, 2, 15, 2, 15, 2, 15, 3}, {1, 14, 1}}, false)) {
+        ExtendedTableLayout applicationBarLayout = new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 3, 15, 2, 15, 2, 15, 2, 15, 2, 15, 3}, {1, 14, 1}}, false);
+        applicationBar = new JPanel(applicationBarLayout) {
             public void setUI(PanelUI ui) {
                 if (ui instanceof ApplicationBarPanelUI)
                     super.setUI(ui);
@@ -141,11 +146,17 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         applicationBar.setUI(new ApplicationBarPanelUI(descriptor, this));
 
         // Title
-        applicationBarTitle = new JLabel(""/*toolWindow.getTitle()*/, JLabel.LEFT);
+        applicationBarTitle = new JLabel(toolWindow.getTitle(), JLabel.LEFT);
         applicationBarTitle.setForeground(Color.WHITE);
         applicationBarTitle.setBackground(Color.LIGHT_GRAY);
         applicationBarTitle.setOpaque(false);
         applicationBarTitle.addMouseListener(applicationBarMouseAdapter);
+
+        applicationBarLayout.setColumn(0, applicationBarTitle.getFontMetrics(
+                applicationBarTitle.getFont()
+        ).stringWidth(id) + 10);
+
+        applicationBarTabs = new ToolWindowTabPanel(toolWindow);
 
         // Buttons
         hideButton = renderApplicationButton("visible", applicationBarActionListener, "@@tool.tooltip.hide", HIDE_TOOL_WINDOW_INACTIVE);
@@ -155,7 +166,11 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         dockButton = renderApplicationButton("undock", applicationBarActionListener, "@@tool.tooltip.undock", DOCKED_INACTIVE);
 
         // Set ApplicationBar content
-        applicationBar.add(applicationBarTitle, "1,1");
+        if (toolWindow.getToolWindowTab().length == 0)
+            applicationBar.add(applicationBarTitle, "1,1");
+        else {
+            applicationBar.add(applicationBarTabs, "1,1");
+        }
         applicationBar.add(dockButton, "3,1");
         applicationBar.add(floatingButton, "5,1");
         applicationBar.add(pinButton, "7,1");
@@ -253,6 +268,18 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                     }
                 }
         );
+        toolWindow.addToolWindowListener(new ToolWindowListener() {
+            public void toolWindowTabAdded(ToolWindowTabEvent event) {
+                if (applicationBarTitle.getParent() == null) {
+                    applicationBar.remove(applicationBarTabs);
+                    applicationBar.add(applicationBarTitle, "1,1");
+                }
+            }
+
+            public void toolWindowTabRemoved(ToolWindowTabEvent event) {
+                // TODO: se non ci sono più tabs rimuove il tool...
+            }
+        });
     }
 
     private JButton renderApplicationButton(String actionCommnad, ActionListener actionListener, String tooltip, ToolWindowUI.IconId iconId) {
@@ -310,8 +337,8 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             if (SwingUtilities.isLeftMouseButton(e)) {
                 toolWindow.setActive(true);
             } else if (SwingUtilities.isRightMouseButton(e)) {
-                if (e.getComponent() == applicationBarTitle && 
-                        ((DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED)).isPopupMenuEnabled()) {
+                if (e.getComponent() == applicationBarTitle &&
+                    ((DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED)).isPopupMenuEnabled()) {
                     enableVisible();
                     enableMoveToItem();
                     enableUserDefined();

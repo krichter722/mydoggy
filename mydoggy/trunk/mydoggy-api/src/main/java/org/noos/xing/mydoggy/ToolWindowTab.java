@@ -15,4 +15,8 @@ public interface ToolWindowTab {
 
     void setComponent(Component component);
 
+    boolean isSelected();
+
+    void setSelected(boolean selected);
+
 }
