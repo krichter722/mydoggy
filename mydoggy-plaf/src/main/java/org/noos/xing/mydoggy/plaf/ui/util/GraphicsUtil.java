@@ -88,6 +88,9 @@ public class GraphicsUtil {
 
             Paint oldPaint = g2D.getPaint();
 
+            g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
             if (g2D.getComposite() == null)
                 g2D.setComposite(AlphaComposite.SrcAtop);
 
@@ -95,6 +98,7 @@ public class GraphicsUtil {
             g2D.fillRect(r.x, r.y, r.width, r.height);
             g2D.setPaint(oldPaint);
         }
+
         if (clip != null)
             g.setClip(oldClip);
     }
@@ -160,6 +164,29 @@ public class GraphicsUtil {
         return new Color(normalizeColor(color.getRed() + distance),
                          normalizeColor(color.getGreen() + distance),
                          normalizeColor(color.getBlue() + distance));
+    }
+
+    public static Color getInterpolatedColor(Color from, Color to, float percent) {
+        int newRed = (int) (percent * Math.abs((from.getRed() - to.getRed())));
+
+        if (from.getRed() < to.getRed()) {
+            newRed = to.getRed() - newRed;
+        } else
+            newRed = to.getRed() + newRed;
+
+        int newGreen = (int) (percent * Math.abs((from.getGreen() - to.getGreen())));
+        if (from.getGreen() < to.getGreen()) {
+            newGreen = to.getGreen() - newGreen;
+        } else
+            newGreen = to.getGreen() + newGreen;
+
+
+        int newBly = (int) (percent * Math.abs((from.getBlue() - to.getBlue())));
+        if (from.getBlue() < to.getBlue()) {
+            newBly = to.getBlue() - newBly;
+        } else
+            newBly = to.getBlue() + newBly;
+        return new Color(newRed, newGreen, newBly);
     }
 
 

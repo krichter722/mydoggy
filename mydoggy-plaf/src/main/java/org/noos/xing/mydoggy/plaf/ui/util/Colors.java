@@ -7,7 +7,7 @@ public class Colors {
 
     public static final Color winGray = new ColorUIResource(212, 208, 200);
     public static final Color lightGray = new ColorUIResource(247, 243, 239);
-    public static final Color lightBlu = new ColorUIResource(166, 202, 240);
+    public static final Color lightBlu = new ColorUIResource(183,200,232);
     public static final Color orange = new ColorUIResource(246, 169, 96);
     public static final Color lightOrange = new ColorUIResource(255, 212, 151);
     public static final Color blu = new ColorUIResource(65, 90, 115);
