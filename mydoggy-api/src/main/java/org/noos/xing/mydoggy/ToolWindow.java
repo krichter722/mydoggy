@@ -256,6 +256,19 @@ public interface ToolWindow {
      */
     void setMaximized(boolean maximized);
 
+
+    // TODO: add javadocs
+/*
+    ToolWindowTab addToolWindowTab(String title, Component component);
+
+    ToolWindowTab getToolWindowTab(String title);
+
+    ToolWindowTab getToolWindowTab(Component component);
+
+    ToolWindowTab[] getToolWindowTab();
+  */
+
+
     /**
      * This method retrieves the TypeDescriptor for <code>type</code> that the tool use to modify the behaviours
      * of the that type. The modifications are visible only for this tool.
