@@ -12,8 +12,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -49,7 +47,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     }
 
     protected void initComponents() {
-        setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL, 1, 14}, {0, TableLayout.FILL, 0}}));
+        setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL, 1, 14}, {0, TableLayout.FILL, 0}}, false));
 
         tabContainer = new JPanel(containerLayout = new TableLayout(new double[][]{{0}, {14}}));
         tabContainer.setOpaque(false);
@@ -105,7 +103,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     }
 
 
-    private class TabLabel extends JLabel implements PropertyChangeListener {
+    private class TabLabel extends ToolWindowActiveButton implements PropertyChangeListener {
         private ToolWindowTab tab;
 
         public TabLabel(ToolWindowTab tab) {
@@ -118,10 +116,9 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             setOpaque(false);
             setFocusable(false);
 
-            addMouseListener(new MouseAdapter() {
-                public void mouseClicked(MouseEvent e) {
+            addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
                     toolWindow.setActive(true);
-
                     TabLabel.this.tab.setSelected(true);
                 }
             });
@@ -163,7 +160,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
         private void initPopup() {
             if (popupMenu == null) {
-                popupMenu = new JPopupMenu("POpup");    // TODO: change name
+                popupMenu = new JPopupMenu("Popup");    // TODO: change name
             }
             popupMenu.removeAll();
             popupMenu.add(new JMenuItem("Next Tab"));
