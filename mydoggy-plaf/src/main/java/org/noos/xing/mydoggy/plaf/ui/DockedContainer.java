@@ -602,13 +602,17 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
+            ToolWindowTab tab = (ToolWindowTab) evt.getSource();
             String property = evt.getPropertyName();
+
             if ("selected".equals(property)) {
-                if (evt.getNewValue() == Boolean.TRUE) {
-                    ToolWindowTab tab = (ToolWindowTab) evt.getSource();
+                if (evt.getNewValue() == Boolean.TRUE)
                     setMainComponent(tab.getComponent());
-                }
+            } else if ("component".equals(property)) {
+                if (descriptor.getComponent() == evt.getOldValue())
+                    setMainComponent(tab.getComponent());
             }
+
         }
     }
 

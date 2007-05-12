@@ -115,7 +115,11 @@ public class ToolWindowTabPanel extends JPanel implements PropertyChangeListener
                     TabLabel.this.setForeground(Color.LIGHT_GRAY);
                 } else
                     TabLabel.this.setForeground(Color.WHITE);
-            }
+            } else if ("title".equals(property)) {
+                setText((String) evt.getNewValue());
+            } else if ("icon".equals(property)) {
+                setIcon((Icon) evt.getNewValue());
+            } 
         }
     }
 
