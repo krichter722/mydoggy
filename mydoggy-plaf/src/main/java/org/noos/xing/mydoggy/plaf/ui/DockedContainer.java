@@ -81,6 +81,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         container.remove(descriptor.getComponent());
         descriptor.setComponent(component);
         container.add(component, "0,1");
+
         SwingUtil.repaint(container);
     }
 
@@ -95,17 +96,23 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
     protected void setPinVisible(boolean visible) {
         pinButton.setVisible(visible);
-        ((TableLayout) applicationBar.getLayout()).setColumn(7, (visible) ? 17 : 0);
+        TableLayout tableLayout = (TableLayout) applicationBar.getLayout();
+        tableLayout.setColumn(7, (visible) ? 17 : 0);
+        tableLayout.setColumn(8, (visible) ? 2 : 0);
     }
 
     protected void setFloatingVisible(boolean visible) {
         floatingButton.setVisible(visible);
-        ((TableLayout) applicationBar.getLayout()).setColumn(5, (visible) ? 17 : 0);
+        TableLayout tableLayout = (TableLayout) applicationBar.getLayout();
+        tableLayout.setColumn(5, (visible) ? 17 : 0);
+        tableLayout.setColumn(6, (visible) ? 2 : 0);
     }
 
     protected void setDockedVisible(boolean visible) {
         dockButton.setVisible(visible);
-        ((TableLayout) applicationBar.getLayout()).setColumn(3, (visible) ? 17 : 0);
+        TableLayout tableLayout = (TableLayout) applicationBar.getLayout();
+        tableLayout.setColumn(3, (visible) ? 17 : 0);
+        tableLayout.setColumn(4, (visible) ? 2 : 0);
     }
 
     protected void setSliding() {
@@ -143,7 +150,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         String id = toolWindow.getId();
 
         // Application Bar
-        ExtendedTableLayout applicationBarLayout = new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 3, 15, 2, 15, 2, 15, 2, 15, 2, 15, 3}, {1, 14, 1}}, false);
+        ExtendedTableLayout applicationBarLayout = new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 2, 15, 2, 15, 2, 15, 2, 15, 2, 15, 3}, {1, 14, 1}}, false);
         applicationBar = new JPanel(applicationBarLayout) {
             public void setUI(PanelUI ui) {
                 if (ui instanceof ApplicationBarPanelUI)
@@ -289,7 +296,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
     private JButton renderApplicationButton(String actionCommnad, ActionListener actionListener, String tooltip, ToolWindowUI.IconId iconId) {
-        JButton button = new ApplicationButton();
+        JButton button = new ToolWindowActiveButton();
         button.setUI((ButtonUI) BasicButtonUI.createUI(button));
         button.setName(actionCommnad);
         button.setRolloverEnabled(true);
@@ -594,10 +601,12 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 applicationBar.add(applicationBarTitle, "1,1");
             }
 
+            event.getToolWindowTab().getComponent().addMouseListener(applicationBarMouseAdapter);
             event.getToolWindowTab().addPropertyChangeListener(this);
         }
 
         public void toolWindowTabRemoved(ToolWindowTabEvent event) {
+            event.getToolWindowTab().getComponent().removeMouseListener(applicationBarMouseAdapter);
             event.getToolWindowTab().removePropertyChangeListener(this);
         }
 
@@ -635,7 +644,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 if (focusRequester == null)
                     focusRequester = component;
                 else {
-                    if (!(focusRequester instanceof ApplicationButton))
+                    if (!(focusRequester instanceof ToolWindowActiveButton))
                         focusRequester = component;
                     else
                         focusRequester.requestFocusInWindow();
@@ -721,17 +730,6 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             if (active && focusRequester != null && !valueAdjusting) {
                 SwingUtil.requestFocus(focusRequester);
             }
-        }
-    }
-
-    static class ApplicationButton extends JButton {
-        public void setUI(ButtonUI ui) {
-            super.setUI((ButtonUI) BasicButtonUI.createUI(this));
-            setRolloverEnabled(true);
-            setOpaque(false);
-            setFocusPainted(false);
-            setFocusable(false);
-            setBorderPainted(false);
         }
     }
 
