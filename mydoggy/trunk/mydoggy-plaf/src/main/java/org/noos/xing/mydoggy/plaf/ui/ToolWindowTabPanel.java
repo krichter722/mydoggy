@@ -9,8 +9,6 @@ import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
-import javax.swing.plaf.ButtonUI;
-import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,8 +40,10 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         String property = evt.getPropertyName();
         if ("selected".equals(property)) {
             ToolWindowTab tab = (ToolWindowTab) evt.getSource();
-            if (evt.getNewValue() == Boolean.FALSE) {
-
+            if (evt.getNewValue() == Boolean.TRUE) {
+                if (selectedTab != null)
+                    selectedTab.setSelected(false);
+                selectedTab = tab;
             }
         }
     }
@@ -64,8 +64,6 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
         add(viewport, "0,1,FULL,FULL");
         add(new PopupButton(), "2,1,FULL,FULL");
-
-        this.selectedTab = toolWindow.getToolWindowTab()[0];
 
         initTabs();
     }
@@ -124,10 +122,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 public void mouseClicked(MouseEvent e) {
                     toolWindow.setActive(true);
 
-                    // TODO: attensionze
-                    selectedTab.setSelected(false);
                     TabLabel.this.tab.setSelected(true);
-                    selectedTab = TabLabel.this.tab;
                 }
             });
         }
@@ -137,8 +132,14 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             if ("selected".equals(property)) {
                 if (evt.getNewValue() == Boolean.FALSE) {
                     TabLabel.this.setForeground(Color.LIGHT_GRAY);
-                } else
+                } else {
+                    // Ensure position
+                    Rectangle cellBounds = getBounds();
+                    cellBounds.x -= viewport.getViewPosition().x;
+                    viewport.scrollRectToVisible(cellBounds);
+                    
                     TabLabel.this.setForeground(Color.WHITE);
+                }
             } else if ("title".equals(property)) {
                 setText((String) evt.getNewValue());
             } else if ("icon".equals(property)) {
@@ -147,25 +148,17 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         }
     }
 
-    class PopupButton extends JButton implements ActionListener {
+    class PopupButton extends ToolWindowActiveButton implements ActionListener {
         private JPopupMenu popupMenu;
 
-        public void setUI(ButtonUI ui) {
-            super.setUI((ButtonUI) BasicButtonUI.createUI(this));
-
+        public PopupButton() {
             setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/down.png"));
-            setRolloverEnabled(true);
-            setOpaque(false);
-            setFocusPainted(false);
-            setFocusable(false);
-            setBorderPainted(false);
             addActionListener(this);
         }
 
         public void actionPerformed(ActionEvent e) {
             initPopup();
             popupMenu.show(this, 10, 10);
-
         }
 
         private void initPopup() {
@@ -178,7 +171,21 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             popupMenu.addSeparator();
 
             for (ToolWindowTab tab : toolWindow.getToolWindowTab()) {
-                popupMenu.add(new JMenuItem(tab.getTitle()));
+                popupMenu.add(new SelectTabAction(tab));
+            }
+        }
+
+
+        private class SelectTabAction extends AbstractAction {
+            private ToolWindowTab tab;
+
+            public SelectTabAction(ToolWindowTab tab) {
+                super(tab.getTitle());
+                this.tab = tab;
+            }
+
+            public void actionPerformed(ActionEvent e) {
+                tab.setSelected(true);
             }
         }
     }
