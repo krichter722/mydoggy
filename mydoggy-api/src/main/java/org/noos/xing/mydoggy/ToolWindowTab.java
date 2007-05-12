@@ -1,28 +1,70 @@
 package org.noos.xing.mydoggy;
 
 import javax.swing.*;
-import java.awt.*;
 import java.beans.PropertyChangeListener;
+import java.awt.*;
 
 /**
+ * TODO: javadocs
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @since 1.3.0
  */
 public interface ToolWindowTab {
 
+    /**
+     *
+     * @return
+     * @since 1.3.0
+     */
     String getTitle();
 
+    /**
+     *
+     * @param title
+     * @since 1.3.0
+     */
     void setTitle(String title);
 
+    /**
+     *
+     * @return
+     * @since 1.3.0
+     */
     Icon getIcon();
 
+    /**
+     *
+     * @param icon
+     * @since 1.3.0
+     */
     void setIcon(Icon icon);
 
+    /**
+     *
+     * @return
+     * @since 1.3.0
+     */
     Component getComponent();
 
+    /**
+     *
+     * @param component
+     * @since 1.3.0
+     */
     void setComponent(Component component);
 
+    /**
+     *
+     * @return
+     * @since 1.3.0
+     */
     boolean isSelected();
 
+    /**
+     *
+     * @param selected
+     * @since 1.3.0
+     */
     void setSelected(boolean selected);
 
     /**

@@ -257,18 +257,46 @@ public interface ToolWindow {
      */
     void setMaximized(boolean maximized);
 
-
-    // TODO: add javadocs
+    /**
+     * TODO:
+     * @param title
+     * @param component
+     * @return
+     * @since 1.3.0
+     */
     ToolWindowTab addToolWindowTab(String title, Component component);
 
 //    ToolWindowTab getToolWindowTab(String title);
 //
 //    ToolWindowTab getToolWindowTab(Component component);
 
+    /**
+     *
+     * @return
+     * @since 1.3.0
+     */
     ToolWindowTab[] getToolWindowTab();
 
+    /**
+     *
+     * @param listener
+     * @since 1.3.0
+     */
     void addToolWindowListener(ToolWindowListener listener);
 
+    /**
+     *
+     * @param listener
+     * @since 1.3.0
+     */
+    void removeToolWindowListener(ToolWindowListener listener);
+
+    /**
+     *
+     * @return
+     * @since 1.3.0
+     */
+    ToolWindowListener[] getToolWindowListeners();
 
     /**
      * This method retrieves the TypeDescriptor for <code>type</code> that the tool use to modify the behaviours
