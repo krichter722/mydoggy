@@ -32,7 +32,10 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
     }
 
     public void setTitle(String title) {
+        String old = this.title;
         this.title = title;
+
+        firePropertyChangeEvent("title", old, title);
     }
 
     public Icon getIcon() {
@@ -40,7 +43,10 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
     }
 
     public void setIcon(Icon icon) {
+        Icon old = this.icon;
         this.icon = icon;
+        
+        firePropertyChangeEvent("icon", old, icon);
     }
 
     public Component getComponent() {
@@ -48,7 +54,10 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
     }
 
     public void setComponent(Component component) {
+        Component old = this.component;
         this.component = component;
+
+        firePropertyChangeEvent("component", old, component);
     }
 
     public boolean isSelected() {

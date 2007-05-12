@@ -4,9 +4,11 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class SampleApp {
     private JFrame frame;
@@ -65,7 +67,7 @@ public class SampleApp {
     }
 
     protected void setupDebugTool() {
-        ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
+        final ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
 
         DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
         dockedTypeDescriptor.setDockLength(200);
@@ -98,7 +100,16 @@ public class SampleApp {
         floatingTypeDescriptor.setTransparentRatio(0.2f);
         floatingTypeDescriptor.setTransparentDelay(1000);
 
-        debugTool.addToolWindowTab("Profiling", new JButton("Profiling"));
+        JButton button = new JButton("Profiling");
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                debugTool.getToolWindowTab()[1].setTitle("New Titledj fsdvsdv");
+                debugTool.getToolWindowTab()[1].setIcon(
+                        SwingUtil.loadIcon("org/noos/xing/mydoggy/examples/mydoggyset/icons/save.png")
+                );
+            }
+        });
+        debugTool.addToolWindowTab("Profiling", button);
         debugTool.addToolWindowTab("Running", new JButton("Running"));
     }
 

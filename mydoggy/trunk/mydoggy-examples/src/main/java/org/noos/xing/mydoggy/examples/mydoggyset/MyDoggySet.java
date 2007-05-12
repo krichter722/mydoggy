@@ -338,7 +338,7 @@ public class MyDoggySet {
         slidingTypeDescriptor.setEnabled(false);
 
         FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
-        floatingTypeDescriptor.setEnabled(false);
+//        floatingTypeDescriptor.setEnabled(false);
 
         mainGroup.addToolWindow(toolWindow);
 
