@@ -25,8 +25,6 @@ public class MyDoggyToolWindow implements ToolWindow {
     private int index;
     private ToolWindowAnchor anchor;
     private ToolWindowType type;
-    private String title;
-    private Icon icon;
 
     private boolean autoHide;
     private boolean available;
@@ -36,6 +34,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     private boolean maximized;
 
     private java.util.List<ToolWindowTab> toolWindowTabs;
+    private ToolWindowTab defaultToolWindowTab;
 
     private ResourceBundle resourceBoundle;
     private ToolWindowDescriptor descriptor;
@@ -58,12 +57,15 @@ public class MyDoggyToolWindow implements ToolWindow {
         this.resourceBoundle = resourceBundle;
         this.toolWindowTabs = new ArrayList<ToolWindowTab>();
 
+        defaultToolWindowTab = addToolWindowTab(title, component);
+        defaultToolWindowTab.setIcon(icon);
+
         this.id = id;
         this.index = index;
         this.anchor = anchor;
         this.type = type;
         setTitle(title);
-        this.icon = icon;
+        setIcon(icon);
         this.available = this.active = this.visible = this.maximized = false;
     }
 
@@ -302,33 +304,33 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public Icon getIcon() {
-        return icon;
+        return defaultToolWindowTab.getIcon();
     }
 
     public void setIcon(Icon icon) {
         synchronized (getLock()) {
-            if (this.icon == icon)
+            if (getIcon() == icon)
                 return;
 
-            Icon old = this.icon;
-            this.icon = icon;
+            Icon old = this.getIcon();
+            defaultToolWindowTab.setIcon(icon);
 
             fireIconEvent(old, icon);
         }
     }
 
     public String getTitle() {
-        return title;
+        return defaultToolWindowTab.getTitle();
     }
 
     public void setTitle(String title) {
         synchronized (getLock()) {
             String newTitle = (resourceBoundle != null) ? resourceBoundle.getString(title) : title;
-            if (newTitle != null && newTitle.equals(this.title))
+            if (newTitle != null && newTitle.equals(getTitle()))
                 return;
 
-            String old = this.title;
-            this.title = newTitle;
+            String old = this.getTitle();
+            defaultToolWindowTab.setTitle(newTitle);
 
             fireTitleEvent(old, newTitle);
         }
@@ -392,7 +394,7 @@ public class MyDoggyToolWindow implements ToolWindow {
                ", active=" + active +
                ", anchor=" + anchor +
                ", type=" + type +
-               ", title='" + title + '\'' +
+               ", title='" + getTitle() + '\'' +
                ", descriptor=" + descriptor +
                ", autoHide=" + autoHide +
                ", flashing=" + flash +

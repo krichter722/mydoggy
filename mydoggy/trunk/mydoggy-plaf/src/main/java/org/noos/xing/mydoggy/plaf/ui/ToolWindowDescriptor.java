@@ -43,7 +43,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
                                 Window windowAnchestor, Component component) {
         this.manager = manager;
         this.windowAnchestor = windowAnchestor;
-        this.component = component;
         this.toolWindow = toolWindow;
 
         toolWindow.addInternalPropertyChangeListener(this);
@@ -110,7 +109,13 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     }
 
     public Component getComponent() {
+        if (component == null)
+            component = toolWindow.getToolWindowTab()[0].getComponent();
         return component;
+    }
+
+    public void setComponent(Component component) {
+        this.component = component;
     }
 
     public ToolWindowContainer getToolWindowContainer() {
@@ -131,7 +136,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         }
         throw new IllegalStateException("Doen't exist a TypeDescriptor for : " + type);
     }
-
 
     public int getDividerLocation() {
         if (divederLocation == -1)
@@ -270,6 +274,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     public ToolWindowUI getToolWindowUI() {
         return toolWindowUI;
     }
+
 
 
     private class AnchorLabel extends JLabel {
