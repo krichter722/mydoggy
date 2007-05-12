@@ -368,6 +368,14 @@ public class MyDoggyToolWindow implements ToolWindow {
         listenerList.add(ToolWindowListener.class, listener);
     }
 
+    public void removeToolWindowListener(ToolWindowListener listener) {
+        listenerList.remove(ToolWindowListener.class, listener);
+    }
+
+    public ToolWindowListener[] getToolWindowListeners() {
+        return listenerList.getListeners(ToolWindowListener.class);
+    }
+
     public ToolWindowTypeDescriptor getTypeDescriptor(ToolWindowType type) {
         return descriptor.getTypeDescriptor(type);
     }
