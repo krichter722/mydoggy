@@ -5,20 +5,29 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowListener;
 import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
+import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
+import javax.swing.plaf.ButtonUI;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolWindowTabPanel extends JPanel implements PropertyChangeListener {
+public class ToolWindowTabPanel extends JComponent implements PropertyChangeListener {
     private ToolWindow toolWindow;
-    private TableLayout layout;
+
+    private JViewport viewport;
+    private JPanel tabContainer;
+    private TableLayout containerLayout;
 
     private ToolWindowTab selectedTab;
 
@@ -40,9 +49,21 @@ public class ToolWindowTabPanel extends JPanel implements PropertyChangeListener
     }
 
     protected void initComponents() {
-        setOpaque(false);
-        setBorder(null);
-        setLayout(layout = new TableLayout(new double[][]{{0},{14}}));
+        setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL, 1, 14}, {0, TableLayout.FILL, 0}}));
+
+        tabContainer = new JPanel(containerLayout = new TableLayout(new double[][]{{0}, {14}}));
+        tabContainer.setOpaque(false);
+        tabContainer.setBorder(null);
+        tabContainer.setFocusable(false);
+
+        viewport = new JViewport();
+        viewport.setBorder(null);
+        viewport.setOpaque(false);
+        viewport.setFocusable(false);
+        viewport.setView(tabContainer);
+
+        add(viewport, "0,1,FULL,FULL");
+        add(new PopupButton(), "2,1,FULL,FULL");
 
         this.selectedTab = toolWindow.getToolWindowTab()[0];
 
@@ -51,17 +72,17 @@ public class ToolWindowTabPanel extends JPanel implements PropertyChangeListener
 
     protected void initTabs() {
         for (ToolWindowTab tab : toolWindow.getToolWindowTab()) {
-            addTab(tab);    
+            addTab(tab);
         }
     }
 
     protected void addTab(ToolWindowTab tab) {
-        int column = layout.getNumColumn();
-        layout.insertColumn(column, 5);
-        layout.insertColumn(column + 1, -2);
-        layout.insertColumn(column + 2, 5);
+        int column = containerLayout.getNumColumn();
+        containerLayout.insertColumn(column, 5);
+        containerLayout.insertColumn(column + 1, -2);
+        containerLayout.insertColumn(column + 2, 5);
 
-        add(new TabLabel(tab), (column + 1) + ",0" + ",c,c");
+        tabContainer.add(new TabLabel(tab), (column + 1) + ",0" + ",c,c");
 
         tab.removePropertyChangeListener(this);
         tab.addPropertyChangeListener(this);
@@ -85,7 +106,8 @@ public class ToolWindowTabPanel extends JPanel implements PropertyChangeListener
         });
     }
 
-    private class TabLabel extends JLabel implements PropertyChangeListener{
+
+    private class TabLabel extends JLabel implements PropertyChangeListener {
         private ToolWindowTab tab;
 
         public TabLabel(ToolWindowTab tab) {
@@ -93,13 +115,15 @@ public class ToolWindowTabPanel extends JPanel implements PropertyChangeListener
 
             this.tab = tab;
             this.tab.addPropertyChangeListener(this);
-            
-            this.setForeground(Color.LIGHT_GRAY);
-            this.setOpaque(false);
-            this.setFocusable(false);
+
+            setForeground(Color.LIGHT_GRAY);
+            setOpaque(false);
+            setFocusable(false);
 
             addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
+                    toolWindow.setActive(true);
+
                     // TODO: attensionze
                     selectedTab.setSelected(false);
                     TabLabel.this.tab.setSelected(true);
@@ -119,7 +143,43 @@ public class ToolWindowTabPanel extends JPanel implements PropertyChangeListener
                 setText((String) evt.getNewValue());
             } else if ("icon".equals(property)) {
                 setIcon((Icon) evt.getNewValue());
-            } 
+            }
+        }
+    }
+
+    class PopupButton extends JButton implements ActionListener {
+        private JPopupMenu popupMenu;
+
+        public void setUI(ButtonUI ui) {
+            super.setUI((ButtonUI) BasicButtonUI.createUI(this));
+
+            setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/down.png"));
+            setRolloverEnabled(true);
+            setOpaque(false);
+            setFocusPainted(false);
+            setFocusable(false);
+            setBorderPainted(false);
+            addActionListener(this);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            initPopup();
+            popupMenu.show(this, 10, 10);
+
+        }
+
+        private void initPopup() {
+            if (popupMenu == null) {
+                popupMenu = new JPopupMenu("POpup");    // TODO: change name
+            }
+            popupMenu.removeAll();
+            popupMenu.add(new JMenuItem("Next Tab"));
+            popupMenu.add(new JMenuItem("Previous Tab"));
+            popupMenu.addSeparator();
+
+            for (ToolWindowTab tab : toolWindow.getToolWindowTab()) {
+                popupMenu.add(new JMenuItem(tab.getTitle()));
+            }
         }
     }
 
