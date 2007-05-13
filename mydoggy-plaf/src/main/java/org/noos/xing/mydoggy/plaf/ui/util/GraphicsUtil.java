@@ -79,28 +79,29 @@ public class GraphicsUtil {
     }
 
     public static void fillRect(Graphics g, Rectangle r, float x1, float y1, Color color1, float x2, float y2, Color color2, Shape clip) {
-        Shape oldClip = g.getClip();
-        if (clip != null)
-            g.setClip(clip);
+        if (clip != null) {
+            if (g instanceof Graphics2D) {
+                Graphics2D g2D = (Graphics2D) g;
+                g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        if (g instanceof Graphics2D) {
-            Graphics2D g2D = (Graphics2D) g;
+                Paint oldPaint = g2D.getPaint();
+                g2D.setPaint(new GradientPaint(x1, y1, color1, x2, y2, color2));
+                g2D.fill(clip);
+                g2D.setPaint(oldPaint);
+            }
 
-            Paint oldPaint = g2D.getPaint();
+        } else {
+            if (g instanceof Graphics2D) {
+                Graphics2D g2D = (Graphics2D) g;
+                g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+                Paint oldPaint = g2D.getPaint();
 
-//            if (g2D.getComposite() == null)
-//                g2D.setComposite(AlphaComposite.SrcAtop);
-
-            g2D.setPaint(new GradientPaint(x1, y1, color1, x2, y2, color2));
-            g2D.fillRect(r.x, r.y, r.width, r.height);
-            g2D.setPaint(oldPaint);
+                g2D.setPaint(new GradientPaint(x1, y1, color1, x2, y2, color2));
+                g2D.fillRect(r.x, r.y, r.width, r.height);
+                g2D.setPaint(oldPaint);
+            }
         }
-
-        if (clip != null)
-            g.setClip(oldClip);
     }
 
     public static void fillRectTransparently(Graphics g, Rectangle r, Shape clip, int rule, float alpha) {
@@ -110,6 +111,8 @@ public class GraphicsUtil {
 
         if (g instanceof Graphics2D) {
             Graphics2D g2D = (Graphics2D) g;
+            g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
             Composite oldComposite = g2D.getComposite();
             g2D.setComposite(AlphaComposite.getInstance(rule, alpha));
 
@@ -125,6 +128,7 @@ public class GraphicsUtil {
     public static void fillRect(Graphics g, Rectangle r, BufferedImage image) {
         if (g instanceof Graphics2D) {
             Graphics2D g2D = (Graphics2D) g;
+            g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             Paint oldPaint = g2D.getPaint();
 
