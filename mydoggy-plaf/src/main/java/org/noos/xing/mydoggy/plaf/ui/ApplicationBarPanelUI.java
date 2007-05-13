@@ -7,6 +7,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import javax.swing.*;
 import javax.swing.plaf.PanelUI;
 import java.awt.*;
+import java.awt.geom.Arc2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -64,10 +65,16 @@ public class ApplicationBarPanelUI extends PanelUI {
             String id = descriptor.getToolWindow().getId();
             r.width = g.getFontMetrics().stringWidth(id) + 8;
 
+            int halHeigh = (r.height / 2);
             GraphicsUtil.fillRect(g, r, Color.WHITE, Color.LIGHT_GRAY,
-                                  new Polygon(new int[]{r.x, r.x + r.width - 6, r.x + r.width, r.x},
+                                  new Polygon(new int[]{r.x, r.x + r.width - halHeigh, r.x + r.width - halHeigh, r.x},
                                               new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
                                               4),
+                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+
+            GraphicsUtil.fillRect(g, r, Color.WHITE, Colors.lightBlu,
+                                  new Arc2D.Double(r.x + r.width - r.height,
+                                                   r.y, r.height, r.height, -90.0d, 180.0d, Arc2D.CHORD),
                                   GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
 
             g.setColor(animTextColor);
@@ -79,10 +86,16 @@ public class ApplicationBarPanelUI extends PanelUI {
             String id = descriptor.getToolWindow().getId();
             r.width = g.getFontMetrics().stringWidth(id) + 8;
 
+            int halHeigh = (r.height / 2);
             GraphicsUtil.fillRect(g, r, Color.WHITE, Colors.lightBlu,
-                                  new Polygon(new int[]{r.x, r.x + r.width - 6, r.x + r.width, r.x},
+                                  new Polygon(new int[]{r.x, r.x + r.width - halHeigh, r.x + r.width - halHeigh, r.x},
                                               new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
                                               4),
+                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+
+            GraphicsUtil.fillRect(g, r, Color.WHITE, Colors.lightBlu,
+                                  new Arc2D.Double(r.x + r.width - r.height,
+                                                   r.y, r.height, r.height, -90.0, 180.0, Arc2D.CHORD),
                                   GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
 
             g.setColor(Color.BLACK);
@@ -94,11 +107,18 @@ public class ApplicationBarPanelUI extends PanelUI {
             String id = descriptor.getToolWindow().getId();
             r.width = g.getFontMetrics().stringWidth(id) + 8;
 
+            int halHeigh = (r.height / 2);
             GraphicsUtil.fillRect(g, r, Color.WHITE, Color.LIGHT_GRAY,
-                                  new Polygon(new int[]{r.x, r.x + r.width - 6, r.x + r.width, r.x},
+                                  new Polygon(new int[]{r.x, r.x + r.width - halHeigh, r.x + r.width - halHeigh, r.x},
                                               new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
                                               4),
                                   GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+
+            GraphicsUtil.fillRect(g, r, Color.WHITE, Color.LIGHT_GRAY,
+                                  new Arc2D.Double(r.x + r.width - r.height,
+                                                   r.y, r.height, r.height, -90.0d, 180.0d, Arc2D.CHORD),
+                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+
 
             g.setColor(Color.GRAY);
             g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
