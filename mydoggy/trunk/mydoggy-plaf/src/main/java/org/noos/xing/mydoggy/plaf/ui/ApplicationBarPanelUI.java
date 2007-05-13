@@ -123,6 +123,7 @@ public class ApplicationBarPanelUI extends PanelUI {
             g.setColor(Color.GRAY);
             g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
         }
+        
         paint(g, c);
     }
 
