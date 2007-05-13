@@ -91,8 +91,8 @@ public class GraphicsUtil {
             g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-            if (g2D.getComposite() == null)
-                g2D.setComposite(AlphaComposite.SrcAtop);
+//            if (g2D.getComposite() == null)
+//                g2D.setComposite(AlphaComposite.SrcAtop);
 
             g2D.setPaint(new GradientPaint(x1, y1, color1, x2, y2, color2));
             g2D.fillRect(r.x, r.y, r.width, r.height);
