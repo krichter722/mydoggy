@@ -190,9 +190,34 @@ public class GraphicsUtil {
             newBly = to.getBlue() - newBly;
         } else
             newBly = to.getBlue() + newBly;
+
         return new Color(newRed, newGreen, newBly);
     }
 
+    public static MutableColor getInterpolatedColor(MutableColor mutableColor, Color from, Color to, float percent) {
+        int newRed = (int) (percent * Math.abs((from.getRed() - to.getRed())));
+
+        if (from.getRed() < to.getRed()) {
+            newRed = to.getRed() - newRed;
+        } else
+            newRed = to.getRed() + newRed;
+
+        int newGreen = (int) (percent * Math.abs((from.getGreen() - to.getGreen())));
+        if (from.getGreen() < to.getGreen()) {
+            newGreen = to.getGreen() - newGreen;
+        } else
+            newGreen = to.getGreen() + newGreen;
+
+
+        int newBlu = (int) (percent * Math.abs((from.getBlue() - to.getBlue())));
+        if (from.getBlue() < to.getBlue()) {
+            newBlu = to.getBlue() - newBlu;
+        } else
+            newBlu = to.getBlue() + newBlu;
+
+        mutableColor.setRGB(newRed, newGreen, newBlu);
+        return mutableColor;
+    }
 
     public static BufferedImage rotate(BufferedImage image, double angle) {
         double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));

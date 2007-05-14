@@ -146,6 +146,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         container = new JPanel(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {16, TableLayout.FILL}}, false));
         container.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
         container.setFocusCycleRoot(false);
+        container.addMouseListener(applicationBarMouseAdapter);
 
         String id = toolWindow.getId();
 
@@ -160,6 +161,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         applicationBar.setBorder(null);
         applicationBar.setEnabled(false);
         applicationBar.setUI(new ApplicationBarPanelUI(descriptor, this));
+        applicationBar.addMouseListener(applicationBarMouseAdapter);
 
         // Title
         applicationBarTitle = new JLabel(toolWindow.getTitle(), JLabel.LEFT);
@@ -350,7 +352,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             if (SwingUtilities.isLeftMouseButton(e)) {
                 toolWindow.setActive(true);
             } else if (SwingUtilities.isRightMouseButton(e)) {
-                if (e.getComponent() == applicationBarTitle &&
+                if (e.getComponent() == applicationBarTitle && // TODO: change this
                     ((DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED)).isPopupMenuEnabled()) {
                     enableVisible();
                     enableMoveToItem();
