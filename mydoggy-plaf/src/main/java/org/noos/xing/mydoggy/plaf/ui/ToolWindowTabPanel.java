@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
 import info.clearthought.layout.TableLayout;
+import info.clearthought.layout.TableLayoutConstraints;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowListener;
 import org.noos.xing.mydoggy.ToolWindowTab;
@@ -78,13 +79,28 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         containerLayout.insertColumn(column + 1, -2);
         containerLayout.insertColumn(column + 2, 5);
 
-        tabContainer.add(new TabLabel(tab), (column + 1) + ",0" + ",c,c");
+        tabContainer.add(new TabButton(tab), (column + 1) + ",0" + ",c,c");
 
         tab.removePropertyChangeListener(this);
         tab.addPropertyChangeListener(this);
     }
 
     protected void removeTab(ToolWindowTab toolWindowTab) {
+        for (Component component : tabContainer.getComponents()) {
+            if (component instanceof TabButton) {
+                TabButton tabButton = (TabButton) component;
+                if (tabButton.tab == toolWindowTab) {
+                    TableLayoutConstraints constraints = containerLayout.getConstraints(tabButton);
+                    tabContainer.remove(tabButton);
+
+                    int col = constraints.col1 - 1;
+                    containerLayout.deleteColumn(col);
+                    containerLayout.deleteColumn(col);
+                    containerLayout.deleteColumn(col);
+                    break;
+                }
+            }
+        }
     }
 
     protected void initListeners() {
@@ -98,15 +114,23 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
             public void toolWindowTabRemoved(ToolWindowTabEvent event) {
                 removeTab(event.getToolWindowTab());
+                if (event.getToolWindowTab().isSelected()) {
+                    ToolWindowTab[] tabs = toolWindow.getToolWindowTab();
+                    if (tabs.length > 0) {
+                        // TODO: selezionare il successivo
+                        tabs[0].setSelected(true);
+                    }
+                }
+
             }
         });
     }
 
 
-    private class TabLabel extends ToolWindowActiveButton implements PropertyChangeListener {
-        private ToolWindowTab tab;
+    class TabButton extends ToolWindowActiveButton implements PropertyChangeListener {
+        ToolWindowTab tab;
 
-        public TabLabel(ToolWindowTab tab) {
+        public TabButton(ToolWindowTab tab) {
             super(tab.getTitle());
 
             this.tab = tab;
@@ -119,7 +143,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     toolWindow.setActive(true);
-                    TabLabel.this.tab.setSelected(true);
+                    TabButton.this.tab.setSelected(true);
                 }
             });
         }
@@ -128,14 +152,14 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             String property = evt.getPropertyName();
             if ("selected".equals(property)) {
                 if (evt.getNewValue() == Boolean.FALSE) {
-                    TabLabel.this.setForeground(Color.LIGHT_GRAY);
+                    TabButton.this.setForeground(Color.LIGHT_GRAY);
                 } else {
                     // Ensure position
                     Rectangle cellBounds = getBounds();
                     cellBounds.x -= viewport.getViewPosition().x;
                     viewport.scrollRectToVisible(cellBounds);
                     
-                    TabLabel.this.setForeground(Color.WHITE);
+                    TabButton.this.setForeground(Color.WHITE);
                 }
             } else if ("title".equals(property)) {
                 setText((String) evt.getNewValue());
