@@ -133,7 +133,11 @@ public class SampleApp {
                 JButton button = new JButton("Remove");
                 RemoveTabAction removeTabAction = new RemoveTabAction();
                 button.addActionListener(removeTabAction);
-                removeTabAction.tab = debugTool.addToolWindowTab("Tab", button);
+                JPanel p = new JPanel();
+                p.add(button);
+                p.add(new JButton("OK"));
+
+                removeTabAction.tab = debugTool.addToolWindowTab("Tab_" + System.identityHashCode(button), p);
             }
         });
 

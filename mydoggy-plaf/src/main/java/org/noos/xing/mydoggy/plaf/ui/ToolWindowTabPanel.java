@@ -26,7 +26,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     private JPanel tabContainer;
     private TableLayout containerLayout;
 
-    private ToolWindowTab selectedTab;
+    ToolWindowTab selectedTab;
 
     public ToolWindowTabPanel(ToolWindow toolWindow) {
         this.toolWindow = toolWindow;
@@ -110,12 +110,14 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             public void toolWindowTabAdded(ToolWindowTabEvent event) {
                 if (getComponentCount() == 0)
                     initTabs();
-                else
+                else {
                     addTab(event.getToolWindowTab());
+                }
             }
 
             public void toolWindowTabRemoved(ToolWindowTabEvent event) {
                 removeTab(event.getToolWindowTab());
+
                 if (event.getToolWindowTab().isSelected()) {
                     ToolWindowTab[] tabs = toolWindow.getToolWindowTabs();
                     if (tabs.length > 0) {
