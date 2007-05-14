@@ -83,6 +83,8 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
         tab.removePropertyChangeListener(this);
         tab.addPropertyChangeListener(this);
+
+        SwingUtil.repaint(tabContainer);
     }
 
     protected void removeTab(ToolWindowTab toolWindowTab) {

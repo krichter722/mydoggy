@@ -602,12 +602,15 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 if (toolWindow.getToolWindowTabs().length > 1) {
                     applicationBar.remove(applicationBarTitle);
                     applicationBar.add(applicationBarTabs, "1,1");
+                    SwingUtil.repaint(applicationBar);
                 } else {
                     // TODO: controolora bene sto comportamento
                     applicationBarTitle.setText(tab.getTitle());
                     applicationBarTitle.setIcon(tab.getIcon());
+                    SwingUtil.repaint(applicationBar);
+                    if (toolWindow.getToolWindowTabs().length == 1)
+                        setMainComponent(tab.getComponent());
                 }
-
             }
 
             tab.getComponent().addMouseListener(applicationBarMouseAdapter);
