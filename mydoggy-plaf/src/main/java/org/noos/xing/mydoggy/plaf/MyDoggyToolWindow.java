@@ -34,6 +34,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     private boolean maximized;
 
     private java.util.List<ToolWindowTab> toolWindowTabs;
+    private ToolWindowTab originalToolWindowTab;
     private ToolWindowTab defaultToolWindowTab;
 
     private ResourceBundle resourceBoundle;
@@ -367,6 +368,17 @@ public class MyDoggyToolWindow implements ToolWindow {
         boolean result = toolWindowTabs.remove(toolWindowTab);
         if (result)
             fireToolWindowTabEvent(new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_REMOVED, this, toolWindowTab));
+
+        if (defaultToolWindowTab == toolWindowTab) {
+            if (toolWindowTabs.size() > 0)
+                defaultToolWindowTab = toolWindowTabs.get(0);
+        }
+
+        if (toolWindowTabs.size() == 0) {
+            // TODO: implement
+        }
+
+
         return result;
     }
 
