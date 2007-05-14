@@ -4,7 +4,6 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -100,17 +99,29 @@ public class SampleApp {
         floatingTypeDescriptor.setTransparentRatio(0.2f);
         floatingTypeDescriptor.setTransparentDelay(1000);
 
+
         JButton button = new JButton("Profiling");
-        button.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                debugTool.getToolWindowTab()[1].setTitle("New Titledj fsdvsdv");
-                debugTool.getToolWindowTab()[1].setIcon(
-                        SwingUtil.loadIcon("org/noos/xing/mydoggy/examples/mydoggyset/icons/save.png")
-                );
-            }
-        });
-        debugTool.addToolWindowTab("Profiling", button);
-        debugTool.addToolWindowTab("Running", new JButton("Running"));
+        RemoveTabAction removeTabAction = new RemoveTabAction();
+        button.addActionListener(removeTabAction);
+        removeTabAction.tab = debugTool.addToolWindowTab("Profiling", button);
+
+        button = new JButton("Running");
+        removeTabAction = new RemoveTabAction();
+        button.addActionListener(removeTabAction);
+        removeTabAction.tab = debugTool.addToolWindowTab("Running", button);
+
+        removeTabAction = new RemoveTabAction();
+        ((JButton) debugTool.getToolWindowTab()[0].getComponent()).addActionListener(removeTabAction);
+        removeTabAction.tab = debugTool.getToolWindowTab()[0];
+    }
+
+    class RemoveTabAction implements ActionListener {
+        ToolWindowTab tab;
+
+        public void actionPerformed(ActionEvent e) {
+            ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
+            debugTool.removeToolWindowTab(tab);
+        }
     }
 
     protected void initContentManager() {

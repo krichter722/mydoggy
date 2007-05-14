@@ -597,8 +597,8 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
         public void toolWindowTabAdded(ToolWindowTabEvent event) {
             if (applicationBarTitle.getParent() == null) {
-                applicationBar.remove(applicationBarTabs);
-                applicationBar.add(applicationBarTitle, "1,1");
+                applicationBar.remove(applicationBarTitle);
+                applicationBar.add(applicationBarTabs, "1,1");
             }
 
             event.getToolWindowTab().getComponent().addMouseListener(applicationBarMouseAdapter);

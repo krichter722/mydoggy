@@ -266,6 +266,8 @@ public interface ToolWindow {
      */
     ToolWindowTab addToolWindowTab(String title, Component component);
 
+    boolean removeToolWindowTab(ToolWindowTab toolWindowTab);
+
 //    ToolWindowTab getToolWindowTab(String title);
 //
 //    ToolWindowTab getToolWindowTab(Component component);

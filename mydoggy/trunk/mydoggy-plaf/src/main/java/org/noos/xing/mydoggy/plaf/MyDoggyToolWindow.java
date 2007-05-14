@@ -360,6 +360,16 @@ public class MyDoggyToolWindow implements ToolWindow {
         return tab;
     }
 
+    public boolean removeToolWindowTab(ToolWindowTab toolWindowTab) {
+        if (toolWindowTab == null)
+            throw new IllegalArgumentException("ToolWindowTab cannot be null.");
+
+        boolean result = toolWindowTabs.remove(toolWindowTab);
+        if (result)
+            fireToolWindowTabEvent(new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_REMOVED, this, toolWindowTab));
+        return result;
+    }
+
     public ToolWindowTab[] getToolWindowTab() {
         return toolWindowTabs.toArray(new ToolWindowTab[0]);
     }
