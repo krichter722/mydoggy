@@ -713,6 +713,17 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             boolean active = (Boolean) evt.getNewValue();
             applicationBar.setEnabled(active);
 
+            boolean found = false;
+            for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+                if (tab.isSelected()) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found && toolWindow.getToolWindowTabs().length > 0)
+                toolWindow.getToolWindowTabs()[0].setSelected(true);
+
             if (active) {
                 if (toolWindow.isAutoHide()) {
                     pinButton.setIcon(toolWindowUI.getIcon(AUTO_HIDE_ON));
