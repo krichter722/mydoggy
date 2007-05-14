@@ -58,9 +58,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         this.resourceBoundle = resourceBundle;
         this.toolWindowTabs = new ArrayList<ToolWindowTab>();
 
-//        defaultToolWindowTab = addToolWindowTab(title, component); TODO:
-        defaultToolWindowTab = new MyDoggyToolWindowTab(title, null, component);
-        toolWindowTabs.add(defaultToolWindowTab);
+        defaultToolWindowTab = addToolWindowTab(title, component);
 
         defaultToolWindowTab.setIcon(icon);
 
@@ -362,10 +360,8 @@ public class MyDoggyToolWindow implements ToolWindow {
 
         fireToolWindowTabEvent(new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_ADDED, this, tab));
 
-        if (toolWindowTabs.size() == 1) {
+        if (toolWindowTabs.size() == 1)
             defaultToolWindowTab = tab;
-            tab.setSelected(true);
-        }
 
         return tab;
     }
