@@ -110,7 +110,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
     public Component getComponent() {
         if (component == null)
-            component = toolWindow.getToolWindowTab()[0].getComponent();
+            component = toolWindow.getToolWindowTabs()[0].getComponent();
         return component;
     }
 

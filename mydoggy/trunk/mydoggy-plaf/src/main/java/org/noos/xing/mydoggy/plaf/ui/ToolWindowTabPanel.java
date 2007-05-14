@@ -68,7 +68,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     }
 
     protected void initTabs() {
-        for (ToolWindowTab tab : toolWindow.getToolWindowTab()) {
+        for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
             addTab(tab);
         }
     }
@@ -115,7 +115,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             public void toolWindowTabRemoved(ToolWindowTabEvent event) {
                 removeTab(event.getToolWindowTab());
                 if (event.getToolWindowTab().isSelected()) {
-                    ToolWindowTab[] tabs = toolWindow.getToolWindowTab();
+                    ToolWindowTab[] tabs = toolWindow.getToolWindowTabs();
                     if (tabs.length > 0) {
                         // TODO: selezionare il successivo
                         tabs[0].setSelected(true);
@@ -191,7 +191,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             popupMenu.add(new JMenuItem("Previous Tab"));
             popupMenu.addSeparator();
 
-            for (ToolWindowTab tab : toolWindow.getToolWindowTab()) {
+            for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
                 popupMenu.add(new SelectTabAction(tab));
             }
         }

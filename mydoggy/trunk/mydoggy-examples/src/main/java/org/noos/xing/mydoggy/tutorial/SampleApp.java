@@ -111,8 +111,8 @@ public class SampleApp {
         removeTabAction.tab = debugTool.addToolWindowTab("Running", button);
 
         removeTabAction = new RemoveTabAction();
-        ((JButton) debugTool.getToolWindowTab()[0].getComponent()).addActionListener(removeTabAction);
-        removeTabAction.tab = debugTool.getToolWindowTab()[0];
+        ((JButton) debugTool.getToolWindowTabs()[0].getComponent()).addActionListener(removeTabAction);
+        removeTabAction.tab = debugTool.getToolWindowTabs()[0];
     }
 
     class RemoveTabAction implements ActionListener {
@@ -125,7 +125,17 @@ public class SampleApp {
     }
 
     protected void initContentManager() {
-        JTree treeContent = new JTree();
+        JButton treeContent = new JButton("Add Tab");
+        treeContent.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                final ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
+
+                JButton button = new JButton("Remove");
+                RemoveTabAction removeTabAction = new RemoveTabAction();
+                button.addActionListener(removeTabAction);
+                removeTabAction.tab = debugTool.addToolWindowTab("Tab", button);
+            }
+        });
 
         ContentManager contentManager = toolWindowManager.getContentManager();
         Content content = contentManager.addContent("Tree Key",

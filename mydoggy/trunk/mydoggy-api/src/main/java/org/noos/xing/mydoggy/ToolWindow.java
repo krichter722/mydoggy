@@ -277,7 +277,7 @@ public interface ToolWindow {
      * @return
      * @since 1.3.0
      */
-    ToolWindowTab[] getToolWindowTab();
+    ToolWindowTab[] getToolWindowTabs();
 
     /**
      *
