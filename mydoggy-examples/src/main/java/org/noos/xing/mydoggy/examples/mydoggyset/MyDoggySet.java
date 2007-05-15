@@ -49,12 +49,21 @@ public class MyDoggySet {
 
     private ContentManagerUI defaultManagerUI;
 
-    public void setUp() {
+
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    public ToolWindowManager getToolWindowManager() {
+        return toolWindowManager;
+    }
+
+    protected void setUp() {
         initComponents();
         initToolWindowManager();
     }
 
-    public void start() {
+    protected void start() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 frame.setVisible(true);

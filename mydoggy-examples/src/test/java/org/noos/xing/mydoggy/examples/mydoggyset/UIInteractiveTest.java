@@ -9,11 +9,12 @@ import java.awt.event.InputEvent;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class UITestCase {
+public class UIInteractiveTest {
     private Container rootContainer;
     private Robot robot;
 
-    public UITestCase() {
+    public UIInteractiveTest(Container rootContainer) {
+        this.rootContainer = rootContainer;
         try {
             this.robot = new Robot();
         } catch (AWTException e) {
@@ -92,4 +93,8 @@ public class UITestCase {
         robot.mouseMove(to.x, to.y);
     }
 
+    public void assertTrue(String s, boolean b) {
+        if (!b)
+            throw new IllegalStateException(s);
+    }
 }
