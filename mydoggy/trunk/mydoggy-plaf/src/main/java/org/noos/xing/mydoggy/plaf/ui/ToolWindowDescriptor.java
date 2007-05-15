@@ -170,20 +170,21 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         if (anchorLabel == null) {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
-            String toolAnchorLabelName = (toolWindow.getIndex() > 0) ? toolWindow.getIndex() + " : " + toolWindow.getId()
+            String toolAnchorLabelText = (toolWindow.getIndex() > 0) ? toolWindow.getIndex() + " : " + toolWindow.getId()
                                          : toolWindow.getId();
 
             if (anchor == ToolWindowAnchor.BOTTOM || anchor == ToolWindowAnchor.TOP) {
-                anchorLabel = new AnchorLabel(toolAnchorLabelName, toolWindow.getIcon(), JLabel.CENTER);
+                anchorLabel = new AnchorLabel(toolAnchorLabelText, toolWindow.getIcon(), JLabel.CENTER);
+                anchorLabel.setName("toolWindow.rb." + toolWindow.getId());
             } else {
-                TextIcon textIcon = new TextIcon(container, toolAnchorLabelName, anchor == ToolWindowAnchor.LEFT ? TextIcon.ROTATE_LEFT : TextIcon.ROTATE_RIGHT);
+                TextIcon textIcon = new TextIcon(container, toolAnchorLabelText, anchor == ToolWindowAnchor.LEFT ? TextIcon.ROTATE_LEFT : TextIcon.ROTATE_RIGHT);
                 CompositeIcon compositeIcon = new CompositeIcon(textIcon, toolWindow.getIcon(),
                                                                 (anchor == ToolWindowAnchor.LEFT) ? SwingConstants.TOP
                                                                 : SwingConstants.BOTTOM);
                 anchorLabel = new AnchorLabel(compositeIcon, JLabel.CENTER);
+                anchorLabel.setName("toolWindow.rb." + toolWindow.getId());
             }
 
-            anchorLabel.setName(toolAnchorLabelName);
             anchorLabel.setUI(createLabelUI());
             anchorLabel.setOpaque(false);
             anchorLabel.setFocusable(false);

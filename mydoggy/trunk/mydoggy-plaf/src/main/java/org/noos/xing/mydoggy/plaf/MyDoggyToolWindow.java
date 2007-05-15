@@ -164,8 +164,6 @@ public class MyDoggyToolWindow implements ToolWindow {
             return;
 
         synchronized (getLock()) {
-
-            boolean old = this.flash;
             this.flash = true;
 
             firePropertyChangeEvent("flash.duration", null, duration);
