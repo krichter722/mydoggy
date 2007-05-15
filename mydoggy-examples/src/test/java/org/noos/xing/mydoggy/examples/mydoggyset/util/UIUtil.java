@@ -1,4 +1,4 @@
-package org.noos.xing.test.util;
+package org.noos.xing.mydoggy.examples.mydoggyset.util;
 
 import java.awt.*;
 

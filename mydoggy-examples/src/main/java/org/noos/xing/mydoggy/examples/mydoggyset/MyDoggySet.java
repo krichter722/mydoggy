@@ -35,7 +35,7 @@ public class MyDoggySet {
     // Possible Look & Feels
     private String currentLookAndFeel;
 
-    private JFrame frame;
+    public JFrame frame;
     private ToolWindowManager toolWindowManager;
 
     private Component toolsContent;
@@ -49,12 +49,12 @@ public class MyDoggySet {
 
     private ContentManagerUI defaultManagerUI;
 
-    protected void setUp() {
+    public void setUp() {
         initComponents();
         initToolWindowManager();
     }
 
-    protected void start() {
+    public void start() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 frame.setVisible(true);

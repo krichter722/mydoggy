@@ -124,6 +124,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         splitPane.setFocusCycleRoot(true);
 
         contentPane = new JPanel();
+        contentPane.setName("toolWindowManager.bar." + anchor.toString());
+        
         if (anchor == ToolWindowAnchor.LEFT || anchor == ToolWindowAnchor.RIGHT) {
             horizontal = false;
             contentPane.setLayout(new ExtendedTableLayout(new double[][]{COLUMNS, {0}}));
