@@ -353,14 +353,16 @@ public class AnchorLabelUI extends MetalLabelUI {
                                         label.getX() + 5,
 
                                         mainContainer.getY() +
-                                        (jMenuBar != null ? jMenuBar.getHeight() : 0) +
+                                        (jMenuBar != null ? jMenuBar.getHeight() : 0) -
+                                        (descriptor.getToolBar(TOP).getAvailableTools() != 0 ? 0 : 23) +
                                         mainContainer.getHeight() -
                                         height + 17
                                 );
                                 break;
                             case RIGHT:
                                 previewPanel.setLocation(
-                                        mainContainer.getX() +
+                                        mainContainer.getX() -
+                                        (descriptor.getToolBar(LEFT).getAvailableTools() != 0 ? 0 : 23) +
                                         mainContainer.getWidth() -
                                         width + 17,
 
