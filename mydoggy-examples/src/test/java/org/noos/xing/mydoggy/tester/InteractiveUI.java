@@ -6,6 +6,7 @@ import java.awt.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public interface InteractiveUI {
+
     void moveMouseTo(String componentName);
 
     void moveMouseTo(String componentName, int offsetX, int offsetY);
@@ -23,4 +24,6 @@ public interface InteractiveUI {
     void moveMouse(Point to);
 
     void assertTrue(String s, boolean b);
+
+    void mouseLeftClick();
 }

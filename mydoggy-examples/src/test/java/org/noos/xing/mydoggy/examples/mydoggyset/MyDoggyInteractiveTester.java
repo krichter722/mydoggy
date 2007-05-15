@@ -16,7 +16,9 @@ public class MyDoggyInteractiveTester {
 
     public static void main(String[] args) {
         InteractiveTestRunner runner = new InteractiveTestRunner();
-        runner.addInteractiveTest(new PreviewInteractiveTest());
+//        runner.addInteractiveTest(new ToolVisisbleInteractiveTest());
+//        runner.addInteractiveTest(new PreviewInteractiveTest());
+        runner.addInteractiveTest(new DragInteractiveTest());
         runner.run();
     }
 
@@ -55,7 +57,67 @@ public class MyDoggyInteractiveTester {
         }
     }
 
+    static class ToolVisisbleInteractiveTest implements InteractiveTest {
+        MyDoggySet myDoggySet;
 
+        public Container getRootContainer() {
+            myDoggySet = new MyDoggySet();
+            myDoggySet.setUp();
+            myDoggySet.start();
 
+            return myDoggySet.getFrame();
+        }
 
+        public void interactiveText(InteractiveUI interactiveUI) {
+            interactiveUI.moveMouseTo("toolWindow.rb.Title 1");
+            interactiveUI.mouseLeftClick();
+            interactiveUI.delay(1000);
+
+            interactiveUI.moveMouseTo("toolWindow.rb.3");
+            interactiveUI.mouseLeftClick();
+            interactiveUI.delay(1000);
+
+            interactiveUI.assertTrue("Invalid Behaviour", interactiveUI.ask("Is behaviuor correct?"));
+        }
+
+        public void dispose() {
+            myDoggySet.dispose();
+        }
+    }
+
+    static class DragInteractiveTest implements InteractiveTest {
+        MyDoggySet myDoggySet;
+
+        public Container getRootContainer() {
+            myDoggySet = new MyDoggySet();
+            myDoggySet.setUp();
+            myDoggySet.start();
+
+            return myDoggySet.getFrame();
+        }
+
+        public void interactiveText(InteractiveUI interactiveUI) {
+            interactiveUI.moveMouseTo("toolWindow.rb.Title 1");
+            interactiveUI.pressMouseLeftButton();
+
+            interactiveUI.moveMouseTo("toolWindowManager.bar.RIGHT", 10, 80);
+            interactiveUI.delay(500);
+            interactiveUI.releaseMouseLeftButton();
+
+            interactiveUI.delay(500);
+
+            interactiveUI.moveMouseTo("toolWindow.rb.Title 1");
+            interactiveUI.pressMouseLeftButton();
+
+            interactiveUI.moveMouseTo("toolWindowManager.bar.LEFT", 10, 80);
+            interactiveUI.delay(500);
+            interactiveUI.releaseMouseLeftButton();
+
+            interactiveUI.assertTrue("Invalid Behaviour", interactiveUI.ask("Is behaviuor correct?"));
+        }
+
+        public void dispose() {
+            myDoggySet.dispose();
+        }
+    }
 }
