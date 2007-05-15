@@ -459,6 +459,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         addBar(BOTTOM, JSplitPane.VERTICAL_SPLIT, "1,2", "0,2,c,c");
 
         mainContainer = new JPanel();
+        mainContainer.setName("toolWindowManager.mainContainer");
         mainContainer.setBackground(Color.GRAY);
         mainContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         mainContainer.setFocusCycleRoot(true);

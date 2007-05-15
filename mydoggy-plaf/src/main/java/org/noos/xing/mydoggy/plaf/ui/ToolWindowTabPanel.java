@@ -188,16 +188,18 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
         private void initPopup() {
             if (popupMenu == null) {
-                popupMenu = new JPopupMenu("Popup");    // TODO: change name
+                popupMenu = new JPopupMenu("TabPopup");
+                // TODO: implements actions..
+                popupMenu.add(new JMenuItem("Next Tab"));
+                popupMenu.add(new JMenuItem("Previous Tab"));
+                popupMenu.addSeparator();
             }
-            popupMenu.removeAll();
-            popupMenu.add(new JMenuItem("Next Tab"));
-            popupMenu.add(new JMenuItem("Previous Tab"));
-            popupMenu.addSeparator();
 
-            for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+            for (int i = 3, size = popupMenu.getComponentCount(); i < size; i++)
+                popupMenu.remove(3);
+
+            for (ToolWindowTab tab : toolWindow.getToolWindowTabs())
                 popupMenu.add(new SelectTabAction(tab));
-            }
         }
 
 
