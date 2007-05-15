@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy.tester.impl;
 
-import org.noos.xing.mydoggy.tester.impl.UIUtil;
 import org.noos.xing.mydoggy.tester.InteractiveUI;
 
 import javax.swing.*;
@@ -29,7 +28,7 @@ public class RobotInteractiveUI implements InteractiveUI {
 
     public void moveMouseTo(String componentName, int offsetX, int offsetY) {
         Component target = UIUtil.findComponentByName(rootContainer, componentName);
-//        Assert.assertNotNull(componentName + " not found.", target);
+        assert target != null;
 
         Point targetPoint = new Point();
         SwingUtilities.convertPointToScreen(targetPoint, target);
@@ -96,6 +95,11 @@ public class RobotInteractiveUI implements InteractiveUI {
     public void assertTrue(String s, boolean b) {
         if (!b)
             throw new IllegalStateException(s);
+    }
+
+    public void mouseLeftClick() {
+        robot.mousePress(InputEvent.BUTTON1_MASK);
+        robot.mouseRelease(InputEvent.BUTTON1_MASK);
     }
 
 }
