@@ -27,6 +27,11 @@ public class InteractiveTestRunner {
             } finally {
                 interactiveTest.dispose();
             }
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         
     }
