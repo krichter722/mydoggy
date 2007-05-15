@@ -1,6 +1,7 @@
-package org.noos.xing.mydoggy.examples.mydoggyset;
+package org.noos.xing.mydoggy.tester.impl;
 
-import org.noos.xing.mydoggy.examples.mydoggyset.util.UIUtil;
+import org.noos.xing.mydoggy.tester.impl.UIUtil;
+import org.noos.xing.mydoggy.tester.InteractiveUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,11 +10,11 @@ import java.awt.event.InputEvent;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class UIInteractiveTest {
+public class RobotInteractiveUI implements InteractiveUI {
     private Container rootContainer;
     private Robot robot;
 
-    public UIInteractiveTest(Container rootContainer) {
+    public RobotInteractiveUI(Container rootContainer) {
         this.rootContainer = rootContainer;
         try {
             this.robot = new Robot();
@@ -33,11 +34,10 @@ public class UIInteractiveTest {
         Point targetPoint = new Point();
         SwingUtilities.convertPointToScreen(targetPoint, target);
         targetPoint.x += offsetX;
-        targetPoint.y += offsetY; 
+        targetPoint.y += offsetY;
 
         moveMouse(targetPoint);
     }
-
 
     public void pressMouseLeftButton() {
         robot.mousePress(InputEvent.BUTTON1_MASK);
@@ -97,4 +97,5 @@ public class UIInteractiveTest {
         if (!b)
             throw new IllegalStateException(s);
     }
+
 }
