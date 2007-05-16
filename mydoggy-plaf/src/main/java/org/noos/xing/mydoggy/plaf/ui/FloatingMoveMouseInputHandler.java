@@ -1,7 +1,5 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
-import org.noos.xing.mydoggy.FloatingTypeDescriptor;
-
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
@@ -29,11 +27,9 @@ public class FloatingMoveMouseInputHandler implements MouseInputListener {
     private int dragOffsetY;
 
     private Window window;
-    private JComponent titlePane;
 
-    public FloatingMoveMouseInputHandler(Window window, JComponent titlePane) {
+    public FloatingMoveMouseInputHandler(Window window) {
         this.window = window;
-        this.titlePane = titlePane;
     }
 
     public void mousePressed(MouseEvent ev) {
@@ -42,9 +38,11 @@ public class FloatingMoveMouseInputHandler implements MouseInputListener {
             window.toFront();
 
             Point dragWindowOffset = ev.getPoint();
-            Point convertedDragWindowOffset = SwingUtilities.convertPoint(w, dragWindowOffset, titlePane);
+            Point convertedDragWindowOffset = SwingUtilities.convertPoint(w,
+                                                                          dragWindowOffset,
+                                                                          ev.getComponent());
 
-            if (titlePane != null && titlePane.contains(convertedDragWindowOffset)) {
+            if (ev.getComponent() != null && ev.getComponent().contains(convertedDragWindowOffset)) {
                 if (dragWindowOffset.y >= BORDER_DRAG_THICKNESS
                     && dragWindowOffset.x >= BORDER_DRAG_THICKNESS
                     && dragWindowOffset.x < w.getWidth() - BORDER_DRAG_THICKNESS) {

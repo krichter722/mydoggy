@@ -157,6 +157,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                     super.setUI(ui);
             }
         };
+        applicationBar.setName("toolWindow.bar." + toolWindow.getId());
         applicationBar.setBorder(null);
         applicationBar.setEnabled(false);
         applicationBar.setUI(new ApplicationBarPanelUI(descriptor, this));
@@ -177,11 +178,17 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         toolWindow.getToolWindowTabs()[0].setSelected(true);
 
         // Buttons
-        hideButton = renderApplicationButton("visible", applicationBarActionListener, "@@tool.tooltip.hide", HIDE_TOOL_WINDOW_INACTIVE);
-        maximizeButton = renderApplicationButton("maximize", applicationBarActionListener, "@@tool.tooltip.maximize", MAXIMIZE_INACTIVE);
-        pinButton = renderApplicationButton("pin", applicationBarActionListener, "@@tool.tooltip.unpin", AUTO_HIDE_OFF_INACTIVE);
-        floatingButton = renderApplicationButton("floating", applicationBarActionListener, "@@tool.tooltip.float", FLOATING_INACTIVE);
-        dockButton = renderApplicationButton("undock", applicationBarActionListener, "@@tool.tooltip.undock", DOCKED_INACTIVE);
+        hideButton = renderApplicationButton("visible", applicationBarActionListener,
+                                             "@@tool.tooltip.hide", HIDE_TOOL_WINDOW_INACTIVE,
+                                             null);
+        maximizeButton = renderApplicationButton("maximize", applicationBarActionListener, "@@tool.tooltip.maximize", MAXIMIZE_INACTIVE, null);
+        pinButton = renderApplicationButton("pin", applicationBarActionListener, "@@tool.tooltip.unpin", AUTO_HIDE_OFF_INACTIVE, null);
+        floatingButton = renderApplicationButton("floating", applicationBarActionListener,
+                                                 "@@tool.tooltip.float", FLOATING_INACTIVE,
+                                                 "toolWindow.floatingButton." + toolWindow.getId());
+        dockButton = renderApplicationButton("undock", applicationBarActionListener,
+                                             "@@tool.tooltip.undock", DOCKED_INACTIVE,
+                                             "toolWindow.dockButton." + toolWindow.getId());
 
         // Set ApplicationBar content
         if (toolWindow.getToolWindowTabs().length > 1)
@@ -296,10 +303,10 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         toolWindow.addToolWindowListener(new DockedToolWindowListener());
     }
 
-    private JButton renderApplicationButton(String actionCommnad, ActionListener actionListener, String tooltip, ToolWindowUI.IconId iconId) {
+    private JButton renderApplicationButton(String actionCommnad, ActionListener actionListener, String tooltip, ToolWindowUI.IconId iconId, String name) {
         JButton button = new ToolWindowActiveButton();
         button.setUI((ButtonUI) BasicButtonUI.createUI(button));
-        button.setName(actionCommnad);
+        button.setName(name);
         button.setRolloverEnabled(true);
         button.setOpaque(false);
         button.setFocusPainted(false);

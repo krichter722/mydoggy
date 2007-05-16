@@ -102,4 +102,12 @@ public class RobotInteractiveUI implements InteractiveUI {
         robot.mouseRelease(InputEvent.BUTTON1_MASK);
     }
 
+    public Frame getFrame(String name) {
+        for (Frame frame : JFrame.getFrames()) {
+            if (name.equals(frame.getName()))
+                return frame;
+        }
+        return null;
+    }
+
 }
