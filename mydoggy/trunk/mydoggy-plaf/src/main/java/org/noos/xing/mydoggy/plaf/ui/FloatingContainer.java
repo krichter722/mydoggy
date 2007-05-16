@@ -103,6 +103,7 @@ public class FloatingContainer extends DockedContainer {
 
     private void initFloatingComponents() {
         window = new JModalWindow(descriptor.getWindowAnchestor(), null, false);
+        window.setName("toolWindow.floating.window." + toolWindow.getId());
 
         JPanel contentPane = new JPanel(new ExtendedTableLayout(new double[][]{{1, TableLayout.FILL, 1}, {1, TableLayout.FILL, 1}}));
         contentPane.setBorder(BorderFactory.createLineBorder(Color.GRAY));
@@ -123,11 +124,18 @@ public class FloatingContainer extends DockedContainer {
                     applicationBarTitle.removeMouseMotionListener(moveMouseInputHandler);
                     applicationBarTitle.removeMouseListener(moveMouseInputHandler);
 
+                    applicationBar.removeMouseMotionListener(moveMouseInputHandler);
+                    applicationBar.removeMouseListener(moveMouseInputHandler);
+
                     window.addMouseMotionListener(resizeMouseInputHandler);
                     window.addMouseListener(resizeMouseInputHandler);
 
                     applicationBarTitle.addMouseMotionListener(moveMouseInputHandler);
                     applicationBarTitle.addMouseListener(moveMouseInputHandler);
+
+                    applicationBar.addMouseMotionListener(moveMouseInputHandler);
+                    applicationBar.addMouseListener(moveMouseInputHandler);
+
                     settedListener = true;
                 } else {
                     if (settedListener)
@@ -137,6 +145,10 @@ public class FloatingContainer extends DockedContainer {
 
                     applicationBarTitle.removeMouseMotionListener(moveMouseInputHandler);
                     applicationBarTitle.removeMouseListener(moveMouseInputHandler);
+
+                    applicationBar.removeMouseMotionListener(moveMouseInputHandler);
+                    applicationBar.removeMouseListener(moveMouseInputHandler);
+
                     settedListener = false;
                 }
             }
@@ -191,7 +203,7 @@ public class FloatingContainer extends DockedContainer {
 
         new FloatingToolTransparencyListener(this, descriptor, window);
         resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window);
-        moveMouseInputHandler = new FloatingMoveMouseInputHandler(window, applicationBarTitle);
+        moveMouseInputHandler = new FloatingMoveMouseInputHandler(window);
 
         window.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {

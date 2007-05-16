@@ -26,4 +26,6 @@ public interface InteractiveUI {
     void assertTrue(String s, boolean b);
 
     void mouseLeftClick();
+
+    Frame getFrame(String name);
 }
