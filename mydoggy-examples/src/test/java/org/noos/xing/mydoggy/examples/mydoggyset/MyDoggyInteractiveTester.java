@@ -18,10 +18,10 @@ public class MyDoggyInteractiveTester {
     public static void main(String[] args) {
         InteractiveTestRunner runner = new InteractiveTestRunner();
 //        runner.addInteractiveTest(new ToolVisisbleInteractiveTest());
-//        runner.addInteractiveTest(new PreviewInteractiveTest());
+        runner.addInteractiveTest(new PreviewInteractiveTest());
 //        runner.addInteractiveTest(new DragInteractiveTest());
 //        runner.addInteractiveTest(new SlidingTypeInteractiveTest());
-        runner.addInteractiveTest(new FloatingMoveInteractiveTest());
+//        runner.addInteractiveTest(new FloatingMoveInteractiveTest());
         runner.run();
     }
 
