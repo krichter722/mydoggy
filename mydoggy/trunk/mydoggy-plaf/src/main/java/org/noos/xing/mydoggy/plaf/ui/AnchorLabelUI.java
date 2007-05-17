@@ -2,8 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
-import static org.noos.xing.mydoggy.ToolWindowAnchor.LEFT;
-import static org.noos.xing.mydoggy.ToolWindowAnchor.TOP;
+import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragAndDropLock;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTrasferable;
@@ -373,6 +372,29 @@ public class AnchorLabelUI extends MetalLabelUI {
                                 );
                                 break;
                         }
+
+                        if (previewPanel.getY() + previewPanel.getHeight() >
+                                mainContainer.getY() + mainContainer.getHeight()) {
+                            previewPanel.setLocation(
+                                    previewPanel.getX(),
+                                    mainContainer.getY() + mainContainer.getHeight() +
+                                    (descriptor.getToolBar(TOP).getAvailableTools() != 0 ? 19 : 0) +
+                                    (descriptor.getToolBar(BOTTOM).getAvailableTools() != 0 ? 19 : 0)
+                                    - previewPanel.getHeight()
+                            );
+                        }
+                        
+                        if (previewPanel.getX() + previewPanel.getWidth() >
+                                mainContainer.getX() + mainContainer.getWidth()) {
+                            previewPanel.setLocation(
+                                    mainContainer.getX() + mainContainer.getWidth() +
+                                    (descriptor.getToolBar(LEFT).getAvailableTools() != 0 ? 19 : 0) +
+                                    (descriptor.getToolBar(RIGHT).getAvailableTools() != 0 ? 19 : 0)
+                                    - previewPanel.getWidth(),
+                                    previewPanel.getY()
+                            );
+                        }
+
                         previewPanel.add(contentContainer, "1,1,FULL,FULL");
 
                         glassPane.add(previewPanel);
