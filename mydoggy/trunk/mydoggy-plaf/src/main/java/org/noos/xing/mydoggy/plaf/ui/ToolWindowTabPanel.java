@@ -75,9 +75,9 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
     protected void addTab(ToolWindowTab tab) {
         int column = containerLayout.getNumColumn();
-        containerLayout.insertColumn(column, 5);
+        containerLayout.insertColumn(column, 0);
         containerLayout.insertColumn(column + 1, -2);
-        containerLayout.insertColumn(column + 2, 5);
+        containerLayout.insertColumn(column + 2, 10);
 
         tabContainer.add(new TabButton(tab), (column + 1) + ",0" + ",c,c");
 
@@ -143,6 +143,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             setForeground(Color.LIGHT_GRAY);
             setOpaque(false);
             setFocusable(false);
+            setIcon(tab.getIcon());
 
             addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {

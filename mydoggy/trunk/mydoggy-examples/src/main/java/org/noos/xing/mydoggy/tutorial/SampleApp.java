@@ -4,6 +4,7 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -24,7 +25,7 @@ public class SampleApp {
                 // Set debug tool active
                 ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
                 debugTool.setActive(true);
-                
+
                 frame.setVisible(true);
             }
         });
@@ -50,7 +51,7 @@ public class SampleApp {
         // Register a Tool.
         toolWindowManager.registerToolWindow("Debug Tool",              // Id
                                              "Debug Tool",              // Title
-                                             null,                      // Icon
+                                             SwingUtil.loadIcon("org/noos/xing/mydoggy/examples/mydoggyset/icons/save.png"),                      // Icon
                                              new JButton("Debug Tool"), // Component
                                              ToolWindowAnchor.LEFT);    // Anchor
         setupDebugTool();
@@ -98,7 +99,6 @@ public class SampleApp {
         floatingTypeDescriptor.setTransparentMode(true);
         floatingTypeDescriptor.setTransparentRatio(0.2f);
         floatingTypeDescriptor.setTransparentDelay(1000);
-
 
         JButton button = new JButton("Profiling");
         RemoveTabAction removeTabAction = new RemoveTabAction();

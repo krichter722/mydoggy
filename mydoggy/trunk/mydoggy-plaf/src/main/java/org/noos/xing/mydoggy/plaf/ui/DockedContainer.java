@@ -172,7 +172,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
         applicationBarLayout.setColumn(0, applicationBarTitle.getFontMetrics(
                 applicationBarTitle.getFont()
-        ).stringWidth(id) + 10);
+        ).stringWidth(id) + 12);
 
         applicationBarTabs = new ToolWindowTabPanel(toolWindow);
         toolWindow.getToolWindowTabs()[0].setSelected(true);
@@ -609,14 +609,19 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 if (toolWindow.getToolWindowTabs().length > 1) {
                     applicationBar.remove(applicationBarTitle);
                     applicationBar.add(applicationBarTabs, "1,1");
+
                     SwingUtil.repaint(applicationBar);
                 } else {
-                    // TODO: controolora bene sto comportamento
                     applicationBarTitle.setText(tab.getTitle());
-                    applicationBarTitle.setIcon(tab.getIcon());
+                    if (toolWindow.getType() ==  ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE)
+                        applicationBarTitle.setIcon(tab.getIcon());
+
                     SwingUtil.repaint(applicationBar);
+
                     if (toolWindow.getToolWindowTabs().length == 1)
                         setMainComponent(tab.getComponent());
+                    else
+                        setMainComponent(new JPanel());
                 }
             }
 
@@ -630,7 +635,15 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             event.getToolWindowTab().getComponent().removeMouseListener(applicationBarMouseAdapter);
             event.getToolWindowTab().removePropertyChangeListener(this);
 
-            if (toolWindow.getToolWindowTabs().length == 0) {
+            if (toolWindow.getToolWindowTabs().length == 1) {
+                applicationBar.remove(applicationBarTabs);
+                ToolWindowTab tab = toolWindow.getToolWindowTabs()[0];
+                applicationBarTitle.setText(tab.getTitle());
+                applicationBarTitle.setIcon(null);
+
+                applicationBar.add(applicationBarTitle, "1,1");
+                SwingUtil.repaint(applicationBar);
+            } else  if (toolWindow.getToolWindowTabs().length == 0) {
                 applicationBar.remove(applicationBarTabs);
                 applicationBarTitle.setText(null);
                 applicationBarTitle.setIcon(null);
