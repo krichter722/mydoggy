@@ -661,11 +661,13 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 if (evt.getNewValue() == Boolean.TRUE) {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
-                            hideButton.grabFocus();
                             setMainComponent(tab.getComponent());
+
                             Component focusable = SwingUtil.findFocusable(tab.getComponent());
                             if (focusable!= null)
-                                focusable.requestFocus();
+                                focusable.requestFocusInWindow();
+                            else
+                                hideButton.requestFocusInWindow();
                         }
                     });
                 }
