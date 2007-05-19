@@ -373,32 +373,33 @@ public class AnchorLabelUI extends MetalLabelUI {
                                 break;
                         }
 
-/* TODO
                         if (previewPanel.getY() + previewPanel.getHeight() >
-                                mainContainer.getY() + mainContainer.getHeight()) {
+                                mainContainer.getY() + mainContainer.getHeight() + 23) {
+
                             previewPanel.setLocation(
                                     previewPanel.getX(),
-                                    mainContainer.getY() + mainContainer.getHeight() +
-                                    (descriptor.getToolBar(TOP).getAvailableTools() != 0 ? 19 : 0) +
-                                    (descriptor.getToolBar(BOTTOM).getAvailableTools() != 0 ? 19 : 0)
-                                    - previewPanel.getHeight()
+
+                                    (jMenuBar != null ? jMenuBar.getHeight() : 0) +
+                                    mainContainer.getY() +
+                                    mainContainer.getHeight() +
+                                    (descriptor.getToolBar(TOP).getAvailableTools() != 0 ? 19 : 0) 
+                                    - previewPanel.getHeight() - 3
                             );
                         }
 
                         if (previewPanel.getX() + previewPanel.getWidth() >
-                                mainContainer.getX() + mainContainer.getWidth()) {
+                                mainContainer.getX() + mainContainer.getWidth() + 23) {
 
                             previewPanel.setLocation(
-                                    mainContainer.getX() + mainContainer.getWidth() +
-                                    (descriptor.getToolBar(LEFT).getAvailableTools() != 0 ? 23 : 0) +
-                                    (descriptor.getToolBar(RIGHT).getAvailableTools() != 0 ? 23 : 0)
-                                    - previewPanel.getWidth(),
+                                    mainContainer.getX() +
+                                    mainContainer.getWidth() +
+                                    (descriptor.getToolBar(LEFT).getAvailableTools() != 0 ? 23 : 0) -
+                                    previewPanel.getWidth() - 3,
                                     
                                     previewPanel.getY()
                             );
                         }
 
-*/
 
                         previewPanel.add(contentContainer, "1,1,FULL,FULL");
 
