@@ -9,6 +9,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.*;
 
 public class SampleApp {
     private JFrame frame;
@@ -70,7 +71,7 @@ public class SampleApp {
         final ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
 
         DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
-        dockedTypeDescriptor.setDockLength(200);
+        dockedTypeDescriptor.setDockLength(350);
         dockedTypeDescriptor.setPopupMenuEnabled(true);
         JMenu toolsMenu = dockedTypeDescriptor.getToolsMenu();
         toolsMenu.add(new AbstractAction("Hello World!!!") {
@@ -115,6 +116,15 @@ public class SampleApp {
         removeTabAction.tab = debugTool.getToolWindowTabs()[0];
     }
 
+    public Container getFrame() {
+        return frame;
+    }
+
+    public void dispose() {
+        frame.setVisible(false);
+        frame.dispose();
+    }
+
     class RemoveTabAction implements ActionListener {
         ToolWindowTab tab;
 
@@ -143,7 +153,9 @@ public class SampleApp {
 
         JPanel panel = new JPanel();
         panel.add(treeContent);
-        panel.add(new JButton("OK"));
+        JButton ok  = new JButton("OK");
+        ok.setName("ok");
+        panel.add(ok);
 
         ContentManager contentManager = toolWindowManager.getContentManager();
         Content content = contentManager.addContent("Tree Key",

@@ -30,6 +30,11 @@ public class RobotInteractiveUI implements InteractiveUI {
         Component target = UIUtil.findComponentByName(rootContainer, componentName);
         assert target != null;
 
+        if (!target.isValid()) {
+            target.validate();
+            delay(100);
+        }
+
         Point targetPoint = new Point();
         SwingUtilities.convertPointToScreen(targetPoint, target);
         targetPoint.x += offsetX;
