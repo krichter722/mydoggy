@@ -6,6 +6,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.Colors;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
+import javax.swing.plaf.LabelUI;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -156,7 +157,12 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
     }
 
     protected Component renderArrow(String name, String iconName) {
-        JLabel label = new JLabel();
+        JLabel label = new JLabel() {
+            public void setUI(LabelUI ui) {
+                if (ui instanceof ScrollToolBarArrowUI)
+                    super.setUI(ui);
+            }
+        };
         label.setUI(new ScrollToolBarArrowUI());
         label.setPreferredSize(new Dimension(16, 16));
         label.setHorizontalAlignment(SwingConstants.CENTER);
