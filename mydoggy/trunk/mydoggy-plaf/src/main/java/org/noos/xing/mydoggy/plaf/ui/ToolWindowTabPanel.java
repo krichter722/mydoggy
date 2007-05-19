@@ -11,10 +11,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -68,6 +65,8 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         add(viewport, "0,1,FULL,FULL");
         add(new PopupButton(), "2,1,FULL,FULL");
 
+        viewport.addMouseWheelListener(new WheelScroller());
+
         initTabs();
     }
 
@@ -101,6 +100,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 if (tabButton.tab == toolWindowTab) {
                     TableLayoutConstraints constraints = containerLayout.getConstraints(tabButton);
                     tabContainer.remove(tabButton);
+                    tabButton.removePropertyChangeListener(this);
 
                     nextTabCol = constraints.col1;
                     int col = constraints.col1 - 1;
@@ -313,6 +313,31 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             }
         }
 
+    }
+
+    class WheelScroller implements MouseWheelListener {
+        public void mouseWheelMoved(MouseWheelEvent e) {
+            switch (e.getWheelRotation()) {
+                case 1:
+                    Rectangle visRect = viewport.getViewRect();
+                    Rectangle bounds = tabContainer.getBounds();
+
+                    visRect.x += e.getUnitsToScroll() * 2;
+                    if (visRect.x + visRect.width >= bounds.width)
+                        visRect.x = bounds.width - visRect.width;
+
+                    viewport.setViewPosition(new Point(visRect.x, visRect.y));
+                    break;
+                case -1:
+                    visRect = viewport.getViewRect();
+
+                    visRect.x += e.getUnitsToScroll() * 2;
+                    if (visRect.x < 0)
+                        visRect.x = 0;
+                    viewport.setViewPosition(new Point(visRect.x, visRect.y));
+                    break;
+            }
+        }
     }
 
 }
