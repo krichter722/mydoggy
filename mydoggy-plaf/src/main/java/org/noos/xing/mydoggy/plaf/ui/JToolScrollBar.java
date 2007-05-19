@@ -10,10 +10,7 @@ import javax.swing.plaf.LabelUI;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -22,10 +19,13 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
     private int orientation;
     private JViewport viewport;
     private Container container;
+    private boolean scrollEnabled;
 
     public JToolScrollBar(int orientation, Container container) {
         this.orientation = orientation;
         this.container = container;
+        this.scrollEnabled = false;
+
         initComponents();
     }
 
@@ -36,10 +36,12 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
                     TableLayout layout = (TableLayout) getLayout();
                     layout.setRow(0, 14);
                     layout.setRow(2, 14);
+                    scrollEnabled = true;
                 } else {
                     TableLayout layout = (TableLayout) getLayout();
                     layout.setRow(0, 0);
                     layout.setRow(2, 0);
+                    scrollEnabled = false;
                 }
                 break;
             case JSplitPane.HORIZONTAL_SPLIT:
@@ -47,10 +49,12 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
                     TableLayout layout = (TableLayout) getLayout();
                     layout.setColumn(0, 14);
                     layout.setColumn(2, 14);
+                    scrollEnabled = true;
                 } else {
                     TableLayout layout = (TableLayout) getLayout();
                     layout.setColumn(0, 0);
                     layout.setColumn(2, 0);
+                    scrollEnabled = false;
                 }
                 break;
         }
@@ -87,6 +91,8 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
     protected void initComponents() {
         viewport = new JViewport();
         viewport.setView(container);
+        // TODO: continuare con lo scroller...la preview quando lo scroll è attivo schiatta.
+        viewport.addMouseWheelListener(new WheelScroller());
 
         switch (orientation) {
             case JSplitPane.VERTICAL_SPLIT:
@@ -178,7 +184,7 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
     }
 
 
-    protected class ArrowListener extends MouseAdapter implements ActionListener {
+    class ArrowListener extends MouseAdapter implements ActionListener {
         private Timer scrollTimer;
 
         private int direction;
@@ -214,6 +220,13 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
 
         public void actionPerformed(ActionEvent e) {
             scrollBy(direction, 15);
+        }
+    }
+
+    class WheelScroller implements MouseWheelListener {
+        public void mouseWheelMoved(MouseWheelEvent e) {
+            if (scrollEnabled)
+                scrollBy(e.getWheelRotation() == 1 ? 0 : 1, e.getScrollAmount() * 3);
         }
     }
 
