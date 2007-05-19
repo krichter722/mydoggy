@@ -141,11 +141,15 @@ public class SampleApp {
             }
         });
 
+        JPanel panel = new JPanel();
+        panel.add(treeContent);
+        panel.add(new JButton("OK"));
+
         ContentManager contentManager = toolWindowManager.getContentManager();
         Content content = contentManager.addContent("Tree Key",
                                                     "Tree Title",
                                                     null,      // An icon
-                                                    treeContent);
+                                                    panel);
         content.setToolTipText("Tree tip");
 
         setupContentManagerUI();
