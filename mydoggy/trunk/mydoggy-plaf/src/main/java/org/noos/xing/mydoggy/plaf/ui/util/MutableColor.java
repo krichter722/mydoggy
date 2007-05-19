@@ -32,6 +32,10 @@ public class MutableColor extends Color {
         testColorValueRange(r, g, b, 255);
     }
 
+    public MutableColor(Color c) {
+        this(c.getRed(), c.getGreen(), c.getBlue());
+    }
+
     public int getRed() {
         return (getRGB() >> 16) & 0xFF;
     }
