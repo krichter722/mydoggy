@@ -28,7 +28,9 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     private JPanel tabContainer;
     private TableLayout containerLayout;
 
-    ToolWindowTab selectedTab;
+    private ToolWindowTab selectedTab;
+    private TabButton selecTabButton;
+
 
     public ToolWindowTabPanel(ToolWindow toolWindow) {
         this.toolWindow = toolWindow;
@@ -187,8 +189,10 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             String property = evt.getPropertyName();
             if ("selected".equals(property)) {
                 if (evt.getNewValue() == Boolean.FALSE) {
+                    selecTabButton = null;
                     TabButton.this.setForeground(Color.LIGHT_GRAY);
                 } else {
+                    selecTabButton = this;
                     // Ensure position
                     Rectangle cellBounds = getBounds();
                     cellBounds.x -= viewport.getViewPosition().x;
@@ -241,28 +245,58 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         private class SelectNextTabAction extends AbstractAction {
 
             public SelectNextTabAction() {
-                super("Next Tab");  // TODO: use resource boundle.
+                super(ResourceBoundles.getResourceBundle().getString("@@tool.tab.selectNext"));
             }
 
             public void actionPerformed(ActionEvent e) {
-                if (selectedTab != null) {
-                    ToolWindowTab[] tabs = toolWindow.getToolWindowTabs();
+                ToolWindowTab[] tabs = toolWindow.getToolWindowTabs();
+                if (selectedTab != null && selecTabButton != null) {
+                    int nextTabCol = containerLayout.getConstraints(selecTabButton).col1 + 3;
 
-                }
+                    for (Component component : tabContainer.getComponents()) {
+                        if (component instanceof TabButton) {
+                            TabButton tabButton = (TabButton) component;
+                            TableLayoutConstraints constraints = containerLayout.getConstraints(tabButton);
+
+                            if (constraints.col1 == nextTabCol) {
+                                tabButton.tab.setSelected(true);
+                                return;
+                            }
+                        }
+                    }
+                    if (tabs.length > 0)
+                        tabs[0].setSelected(true);
+                } else if (tabs.length > 0)
+                    tabs[0].setSelected(true);
             }
         }
 
         private class SelectPreviousTabAction extends AbstractAction {
 
             public SelectPreviousTabAction() {
-                super("Previous Tab");  // TODO: use resource boundle.
+                super(ResourceBoundles.getResourceBundle().getString("@@tool.tab.selectPreviuos")); 
             }
 
             public void actionPerformed(ActionEvent e) {
-                if (selectedTab != null) {
-                    ToolWindowTab[] tabs = toolWindow.getToolWindowTabs();
+                ToolWindowTab[] tabs = toolWindow.getToolWindowTabs();
+                if (selectedTab != null && selecTabButton != null) {
+                    int nextTabCol = containerLayout.getConstraints(selecTabButton).col1 - 3;
 
-                }
+                    for (Component component : tabContainer.getComponents()) {
+                        if (component instanceof TabButton) {
+                            TabButton tabButton = (TabButton) component;
+                            TableLayoutConstraints constraints = containerLayout.getConstraints(tabButton);
+
+                            if (constraints.col1 == nextTabCol) {
+                                tabButton.tab.setSelected(true);
+                                return;
+                            }
+                        }
+                    }
+                    if (tabs.length > 0)
+                        tabs[tabs.length - 1].setSelected(true);
+                } else if (tabs.length > 0)
+                    tabs[tabs.length - 1].setSelected(true);
             }
         }
 
