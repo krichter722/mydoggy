@@ -27,6 +27,10 @@ import java.beans.PropertyChangeSupport;
 import java.util.*;
 
 /**
+ * @beaninfo
+ *   attribute: isContainer true
+ * description: MyDoggyToolWindowManager 
+ *
  * @author Angelo De Caro
  */
 public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener, KeyEventPostProcessor {
