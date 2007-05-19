@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui;
 
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -22,9 +23,9 @@ public class ApplicationBarPanelUI extends PanelUI {
     private Color backStartDisabled;
     private Color backEndDisabled;
 
-    private Color animBackStart;
-    private Color animBackEnd;
-    private Color animTextColor;
+    private MutableColor animBackStart;
+    private MutableColor animBackEnd;
+    private MutableColor animTextColor;
 
     private JComponent panel;
 
@@ -40,6 +41,10 @@ public class ApplicationBarPanelUI extends PanelUI {
 
         backStartDisabled = new Color(193, 189, 182);
         backEndDisabled = new Color(167, 164, 157);
+
+        animBackStart = new MutableColor(backStartDisabled);
+        animBackEnd = new MutableColor(0,0,0);
+        animTextColor = new MutableColor(0,0,0);
 
         animation = new GradientAnimation();
     }
@@ -65,9 +70,9 @@ public class ApplicationBarPanelUI extends PanelUI {
             String id = descriptor.getToolWindow().getId();
             r.width = g.getFontMetrics().stringWidth(id) + 8;
 
-            int halHeigh = (r.height / 2);
+            int halfHeigh = (r.height / 2);
             GraphicsUtil.fillRect(g, r, Color.WHITE, Color.LIGHT_GRAY,
-                                  new Polygon(new int[]{r.x, r.x + r.width - halHeigh, r.x + r.width - halHeigh, r.x},
+                                  new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
                                               new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
                                               4),
                                   GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
@@ -86,9 +91,9 @@ public class ApplicationBarPanelUI extends PanelUI {
             String id = descriptor.getToolWindow().getId();
             r.width = g.getFontMetrics().stringWidth(id) + 8;
 
-            int halHeigh = (r.height / 2);
+            int halfHeigh = (r.height / 2);
             GraphicsUtil.fillRect(g, r, Color.WHITE, Colors.lightBlu,
-                                  new Polygon(new int[]{r.x, r.x + r.width - halHeigh, r.x + r.width - halHeigh, r.x},
+                                  new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
                                               new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
                                               4),
                                   GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
@@ -107,9 +112,9 @@ public class ApplicationBarPanelUI extends PanelUI {
             String id = descriptor.getToolWindow().getId();
             r.width = g.getFontMetrics().stringWidth(id) + 8;
 
-            int halHeigh = (r.height / 2);
+            int halfHeigh = (r.height / 2);
             GraphicsUtil.fillRect(g, r, Color.WHITE, Color.LIGHT_GRAY,
-                                  new Polygon(new int[]{r.x, r.x + r.width - halHeigh, r.x + r.width - halHeigh, r.x},
+                                  new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
                                               new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
                                               4),
                                   GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
@@ -156,10 +161,10 @@ public class ApplicationBarPanelUI extends PanelUI {
 
             if ("active".equals(evt.getPropertyName())) {
                 if (evt.getNewValue() == Boolean.FALSE) {
-                    if (animBackStart == null || animBackStart.equals(backStartEnabled))
+                    if (animBackStart.equals(backStartEnabled))
                         animation.hide();
                 } else {
-                    if (animBackStart == null || animBackStart.equals(backStartDisabled))
+                    if (animBackStart.equals(backStartDisabled))
                         animation.show();
                 }
             }
@@ -175,15 +180,15 @@ public class ApplicationBarPanelUI extends PanelUI {
         protected float onAnimating(float animationPercent) {
             switch (getAnimationDirection()) {
                 case INCOMING:
-                    animBackStart = GraphicsUtil.getInterpolatedColor(backStartEnabled, backStartDisabled, animationPercent);
-                    animBackEnd = GraphicsUtil.getInterpolatedColor(backEndEnabled, backEndDisabled, animationPercent);
-                    animTextColor = GraphicsUtil.getInterpolatedColor(Color.BLACK, Color.GRAY, animationPercent);
+                    GraphicsUtil.getInterpolatedColor(animBackStart, backStartEnabled, backStartDisabled, animationPercent);
+                    GraphicsUtil.getInterpolatedColor(animBackEnd, backEndEnabled, backEndDisabled, animationPercent);
+                    GraphicsUtil.getInterpolatedColor(animTextColor, Color.BLACK, Color.GRAY, animationPercent);
                     break;
 
                 case OUTGOING:
-                    animBackStart = GraphicsUtil.getInterpolatedColor(backStartDisabled, backStartEnabled, animationPercent);
-                    animBackEnd = GraphicsUtil.getInterpolatedColor(backEndDisabled, backEndEnabled, animationPercent);
-                    animTextColor = GraphicsUtil.getInterpolatedColor(Color.GRAY, Color.BLACK, animationPercent);
+                    GraphicsUtil.getInterpolatedColor(animBackStart, backStartDisabled, backStartEnabled, animationPercent);
+                    GraphicsUtil.getInterpolatedColor(animBackEnd, backEndDisabled, backEndEnabled, animationPercent);
+                    GraphicsUtil.getInterpolatedColor(animTextColor, Color.GRAY, Color.BLACK, animationPercent);
                     break;
             }
             SwingUtil.repaint(panel);
@@ -193,23 +198,23 @@ public class ApplicationBarPanelUI extends PanelUI {
         protected void onFinishAnimation() {
             switch (getAnimationDirection()) {
                 case INCOMING:
-                    animBackStart = backStartEnabled;
+                    animBackStart.setRGB(backStartEnabled);
                     break;
                 case OUTGOING:
-                    animBackStart = backStartDisabled;
+                    animBackStart.setRGB(backStartDisabled);
                     break;
             }
             SwingUtil.repaint(panel);
         }
 
         protected void onHide(Object... params) {
-            animBackStart = backStartEnabled;
-            animBackEnd = backEndEnabled;
+            animBackStart.setRGB(backStartEnabled);
+            animBackEnd.setRGB(backEndEnabled);
         }
 
         protected void onShow(Object... params) {
-            animBackStart = backStartDisabled;
-            animBackEnd = backEndDisabled;
+            animBackStart.setRGB(backStartDisabled);
+            animBackEnd.setRGB(backEndDisabled);
         }
 
         protected void onStartAnimation(Direction direction) {

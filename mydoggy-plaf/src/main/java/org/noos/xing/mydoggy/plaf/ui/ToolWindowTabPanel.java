@@ -178,7 +178,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             });
             addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent e) {
-//                    toolWindow.setActive(true);
+                    toolWindow.setActive(true);
                 }
             });
         }
@@ -211,6 +211,11 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         public PopupButton() {
             setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/down.png"));
             addActionListener(this);
+            addMouseListener(new MouseAdapter() {
+                public void mousePressed(MouseEvent e) {
+                    toolWindow.setActive(true);
+                }
+            });
         }
 
         public void actionPerformed(ActionEvent e) {
@@ -221,9 +226,8 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         private void initPopup() {
             if (popupMenu == null) {
                 popupMenu = new JPopupMenu("TabPopup");
-                // TODO: implements actions..
                 popupMenu.add(new SelectNextTabAction());
-                popupMenu.add(new JMenuItem("Previous Tab"));
+                popupMenu.add(new SelectPreviousTabAction());
                 popupMenu.addSeparator();
             }
 
@@ -238,6 +242,20 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
             public SelectNextTabAction() {
                 super("Next Tab");  // TODO: use resource boundle.
+            }
+
+            public void actionPerformed(ActionEvent e) {
+                if (selectedTab != null) {
+                    ToolWindowTab[] tabs = toolWindow.getToolWindowTabs();
+
+                }
+            }
+        }
+
+        private class SelectPreviousTabAction extends AbstractAction {
+
+            public SelectPreviousTabAction() {
+                super("Previous Tab");  // TODO: use resource boundle.
             }
 
             public void actionPerformed(ActionEvent e) {
