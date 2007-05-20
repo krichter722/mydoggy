@@ -1,5 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
+import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
@@ -8,6 +9,8 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import javax.swing.*;
 import javax.swing.plaf.PanelUI;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Arc2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -16,6 +19,7 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro
  */
 public class ApplicationBarPanelUI extends PanelUI {
+    private ToolWindow toolWindow;
     private ToolWindowDescriptor descriptor;
 
     private Color backStartEnabled;
@@ -31,8 +35,13 @@ public class ApplicationBarPanelUI extends PanelUI {
 
     private GradientAnimation animation;
 
+    private Timer flashingTimer;
+    private int flasingDuration;
+    private boolean flashingState;
+
     public ApplicationBarPanelUI(ToolWindowDescriptor descriptor, DockedContainer dockedContainer) {
         this.descriptor = descriptor;
+        this.toolWindow = descriptor.getToolWindow();
 
         dockedContainer.addPropertyChangeListener("active", new GradientActivationListener(descriptor));
 
@@ -43,10 +52,29 @@ public class ApplicationBarPanelUI extends PanelUI {
         backEndDisabled = new Color(167, 164, 157);
 
         animBackStart = new MutableColor(backStartDisabled);
-        animBackEnd = new MutableColor(0,0,0);
-        animTextColor = new MutableColor(0,0,0);
+        animBackEnd = new MutableColor(0, 0, 0);
+        animTextColor = new MutableColor(0, 0, 0);
 
         animation = new GradientAnimation();
+
+        descriptor.getToolWindow().addInternalPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                String propertyName = evt.getPropertyName();
+                if ("flash".equals(propertyName)) {
+                    if (toolWindow.isVisible()) {
+                        flasingDuration = -1;
+                        SwingUtil.repaint(panel);
+                    }
+                } else if ("flash.duration".equals(propertyName)) {
+                    if (toolWindow.isVisible()) {
+                        flasingDuration = (Integer) evt.getNewValue();
+                        SwingUtil.repaint(panel);
+                    }
+                } else if ("active".endsWith(propertyName)) {
+                    toolWindow.setFlashing(false);
+                }
+            }
+        });
     }
 
     public void installUI(JComponent c) {
@@ -63,72 +91,42 @@ public class ApplicationBarPanelUI extends PanelUI {
     public void update(Graphics g, JComponent c) {
         Rectangle r = c.getBounds();
         r.x = r.y = 0;
-        if (animation.isAnimating()) {
-            GraphicsUtil.fillRect(g, r, animBackStart, animBackEnd,
-                                  null, GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+        if (toolWindow.isFlashing()) {
 
-            String id = descriptor.getToolWindow().getId();
-            r.width = g.getFontMetrics().stringWidth(id) + 8;
+            if (flashingState) {
+                updateInternal(g, c, backStartEnabled, backEndEnabled, Colors.lightBlu, Color.BLACK);
+                flashingState = false;
+            } else {
+                updateInternal(g, c, backStartDisabled, backEndDisabled, Color.LIGHT_GRAY, Color.GRAY);
+                flashingState = true;
+            }
 
-            int halfHeigh = (r.height / 2);
-            GraphicsUtil.fillRect(g, r, Color.WHITE, Color.LIGHT_GRAY,
-                                  new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
-                                              new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
-                                              4),
-                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+            if (flashingTimer == null) {
+                flashingTimer = new Timer(500, new ActionListener() {
+                    long start = 0;
 
-            GraphicsUtil.fillRect(g, r, Color.WHITE, Colors.lightBlu,
-                                  new Arc2D.Double(r.x + r.width - r.height,
-                                                   r.y, r.height, r.height, -90.0d, 180.0d, Arc2D.CHORD),
-                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-
-            g.setColor(animTextColor);
-            g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
-        } else if (c.isEnabled()) {
-            GraphicsUtil.fillRect(g, r, backStartEnabled, backEndEnabled,
-                                  null, GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-
-            String id = descriptor.getToolWindow().getId();
-            r.width = g.getFontMetrics().stringWidth(id) + 8;
-
-            int halfHeigh = (r.height / 2);
-            GraphicsUtil.fillRect(g, r, Color.WHITE, Colors.lightBlu,
-                                  new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
-                                              new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
-                                              4),
-                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-
-            GraphicsUtil.fillRect(g, r, Color.WHITE, Colors.lightBlu,
-                                  new Arc2D.Double(r.x + r.width - r.height,
-                                                   r.y, r.height, r.height, -90.0, 180.0, Arc2D.CHORD),
-                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-
-            g.setColor(Color.BLACK);
-            g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
+                    public void actionPerformed(ActionEvent e) {
+                        if (start == 0)
+                            start = System.currentTimeMillis();
+                        SwingUtil.repaint(panel);
+                        if (flasingDuration != -1 && System.currentTimeMillis() - start > flasingDuration)
+                            toolWindow.setFlashing(false);
+                    }
+                });
+            }
+            if (!flashingTimer.isRunning()) {
+                flashingTimer.start();
+            }
         } else {
-            GraphicsUtil.fillRect(g, r, backStartDisabled, backEndDisabled,
-                                  null, GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-
-            String id = descriptor.getToolWindow().getId();
-            r.width = g.getFontMetrics().stringWidth(id) + 8;
-
-            int halfHeigh = (r.height / 2);
-            GraphicsUtil.fillRect(g, r, Color.WHITE, Color.LIGHT_GRAY,
-                                  new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
-                                              new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
-                                              4),
-                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-
-            GraphicsUtil.fillRect(g, r, Color.WHITE, Color.LIGHT_GRAY,
-                                  new Arc2D.Double(r.x + r.width - r.height,
-                                                   r.y, r.height, r.height, -90.0d, 180.0d, Arc2D.CHORD),
-                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-
-
-            g.setColor(Color.GRAY);
-            g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
+            if (animation.isAnimating()) {
+                updateInternal(g, c, animBackStart, animBackEnd, Color.LIGHT_GRAY, animTextColor);
+            } else if (c.isEnabled()) {
+                updateInternal(g, c, backStartEnabled, backEndEnabled,Colors.lightBlu, Color.BLACK);
+            } else {
+                updateInternal(g, c, backStartDisabled, backEndDisabled, Color.LIGHT_GRAY, Color.GRAY);
+            }
         }
-        
+
         paint(g, c);
     }
 
@@ -141,6 +139,34 @@ public class ApplicationBarPanelUI extends PanelUI {
     protected void uninstallDefaults(JComponent c) {
         LookAndFeel.uninstallBorder(c);
     }
+
+    protected void updateInternal(Graphics g, JComponent c, Color c1, Color c2, Color c3, Color c4) {
+        Rectangle r = c.getBounds();
+        r.x = r.y = 0;
+
+        GraphicsUtil.fillRect(g, r, c1, c2,
+                              null, GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+
+        String id = descriptor.getToolWindow().getId();
+        r.width = g.getFontMetrics().stringWidth(id) + 8;
+
+        int halfHeigh = (r.height / 2);
+        GraphicsUtil.fillRect(g, r, Color.WHITE, c3,
+                              new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
+                                          new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
+                                          4),
+                              GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+
+        GraphicsUtil.fillRect(g, r, Color.WHITE, c3,
+                              new Arc2D.Double(r.x + r.width - r.height,
+                                               r.y, r.height, r.height, -90.0d, 180.0d, Arc2D.CHORD),
+                              GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+
+
+        g.setColor(c4);
+        g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
+    }
+
 
     private class GradientActivationListener implements PropertyChangeListener {
         public static final float ANIMATION_DURATION = 80f;

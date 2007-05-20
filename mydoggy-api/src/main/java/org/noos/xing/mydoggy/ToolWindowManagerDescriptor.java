@@ -10,6 +10,10 @@ import java.awt.*;
  * @since 1.2.0
  */
 public interface ToolWindowManagerDescriptor {
+
+    /**
+     * @since 1.3.0
+     */
     enum Corner {
         NORD_WEST,
         SOUTH_WEST,
@@ -27,17 +31,23 @@ public interface ToolWindowManagerDescriptor {
 
     /**
      * Returns the current push away mode.
+     * 
      * @return the current push away mode. 
      * @since 1.2.0
      */
     PushAwayMode getPushAwayMode();
 
     /**
-     * TODO
+     * Returns the PushAwayModeDescriptor for the passed push away mode if
+     * it is supported, null otherwise.
      *
-     * @param pushAwayMode
-     * @return
+     * @param pushAwayMode mode whose descriptor is to be returned.
+     * @return the PushAwayModeDescriptor for the passed push away mode if
+     * it is supported, null otherwise.
+     *
      * @since 1.3.0
+     * @see PushAwayModeDescriptor
+     * @see PushAwayMode
      */
     PushAwayModeDescriptor getPushAwayModeDescriptor(PushAwayMode pushAwayMode);
 

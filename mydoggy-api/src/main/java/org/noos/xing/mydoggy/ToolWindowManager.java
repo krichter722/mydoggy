@@ -206,7 +206,7 @@ public interface ToolWindowManager {
 
     /**
      * Returns the template type descrptor for <code>type</code>.
-     * Any modifications to those templates will be reflected on registered tool windows.
+     * Any modifications to those templates will be reflected on all registered tool windows.
      *
      * @param type type whose template is to be returned from the manager.
      * @return the type descrptor for <code>type</code>.

@@ -66,6 +66,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
 
     /**
      * Returns the ToolWindowActionHandler instance or null if it is not present.
+     *
      * @return the ToolWindowActionHandler instance.
      * @see ToolWindowActionHandler
      * @see #setToolWindowActionHandler(ToolWindowActionHandler)
@@ -75,55 +76,70 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
 
     /**
      * Sets the ToolWindowActionHandler to this descriptor.
+     *
      * @param toolWindowActionHandler the handler.
      * @see ToolWindowActionHandler
      * @see #getToolWindowActionHandler()
      * @since 1.2.0
+     * @see #getToolWindowActionHandler()
      */
     void setToolWindowActionHandler(ToolWindowActionHandler toolWindowActionHandler);
 
     /**
-     * TODO
+     * Sets the preview mode. If the preview mode is enabled then when the mouse waits
+     * on the toolwindow representative button after a delay time the preview will become visible.
      *
-     * @param enabled
+     * @param enabled <code>true</code> to enable preview mode;
+     *                <code>false</code> to disable preview mode.
      * @since 1.3.0
+     * @see #isPreviewEnabled()
      */
     void setPreviewEnabled(boolean enabled);
 
     /**
+     * Returns the preview mode status.
      *
-     * @return
+     * @return <code>true</code> if the preview mode is enabled;
+     *         <code>false</code> otherwise.
      * @since 1.3.0
+     * @see #setPreviewEnabled(boolean)
      */
     boolean isPreviewEnabled();
 
     /**
-     * TODO
+     * Sets the preview delay. When the mouse waits on the toolwindow representative button
+     * after a delay time the preview will become visible if the preview mode is enabled.
      *
-     * @param delay
+     * @param delay the preview delay
      * @since 1.3.0
+     * @see #getPreviewDelay()
      */
     void setPreviewDelay(int delay);
 
     /**
+     * Returns the preview delay.
      *
-     * @return
+     * @return preview delay in milliseconds.
      * @since 1.3.0
+     * @see #setPreviewDelay(int)
      */
     int getPreviewDelay();
 
     /**
-     * TODO
+     * Sets the transparent ratio of the preview. Valid range is [0.0, 1.0]
      *
-     * @param transparentRatio
+     * @param transparentRatio the transparent ratio.
      * @since 1.3.0
+     * @see #getPreviewTransparentRatio()
      */
     void setPreviewTransparentRatio(float transparentRatio);
 
     /**
+     * Returns the transparent ratio.
      *
-     * @return
+     * @return ratio value used to describe the opacity of the preview.
      * @since 1.3.0
+     * @see #setPreviewTransparentRatio(float)  
      */
     float getPreviewTransparentRatio();
 
