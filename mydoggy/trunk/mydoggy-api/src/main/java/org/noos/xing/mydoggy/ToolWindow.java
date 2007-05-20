@@ -106,16 +106,23 @@ public interface ToolWindow {
     boolean isFlashing();
 
     /**
-     * TODO
-     * @param flash
+     * Sets the flashing mode. If the flashing mode is enabled then the toolwindow representative button
+     * will be flashing until the tool will be made visible.
+     *
+     * @param flash <code>true</code> to enable flashing mode;
+ *                  <code>false</code> to disable flashing mode.
      * @since 1.3.0
+     * @see #isFlashing()
+     * @see #setFlashing(int) 
      */
     void setFlashing(boolean flash);
 
     /**
-     * TODO
+     * This method is used to enable flasing for a specific duration.
+     *
      * @param duration
      * @since 1.3.0
+     * @see #setFlashing(boolean)
      */
     void setFlashing(int duration);
 
@@ -258,7 +265,7 @@ public interface ToolWindow {
     void setMaximized(boolean maximized);
 
     /**
-     * TODO:
+     * TODO: ToolWindowTab javadocs
      * @param title
      * @param component
      * @return
@@ -280,23 +287,40 @@ public interface ToolWindow {
     ToolWindowTab[] getToolWindowTabs();
 
     /**
+     * Adds the specified toolwindow listener to receive toolwindow events from
+     * this tool.
+     * If listener <code>l</code> is <code>null</code>,
+     * no exception is thrown and no action is performed.
      *
-     * @param listener
+     * @param listener the toolwindow listener
      * @since 1.3.0
+     * @see ToolWindowListener
+     * @see #removeToolWindowListener(ToolWindowListener)
+     * @see #getToolWindowListeners()
      */
     void addToolWindowListener(ToolWindowListener listener);
 
     /**
+     * Removes the specified toolwindow listener so that it no longer
+     * receives toolwindow events from this tool. This method performs
+     * no function, nor does it throw an exception, if the listener
+     * specified by the argument was not previously added to this tool.
+     * If listener <code>listener</code> is <code>null</code>,
+     * no exception is thrown and no action is performed.
      *
-     * @param listener
+     * @param listener the toolwindow listener
      * @since 1.3.0
+     * @see #addToolWindowListener(ToolWindowListener)
      */
     void removeToolWindowListener(ToolWindowListener listener);
 
     /**
+     * Returns an array of all the toolwindow listeners registered on this tool.
      *
-     * @return
+     * @return all of this toolwindowt's <code>ToolWindowListener</code>s
+     *         or an empty array if no toolwindow listeners are currently registered
      * @since 1.3.0
+     * @see #addToolWindowListener(ToolWindowListener) 
      */
     ToolWindowListener[] getToolWindowListeners();
 

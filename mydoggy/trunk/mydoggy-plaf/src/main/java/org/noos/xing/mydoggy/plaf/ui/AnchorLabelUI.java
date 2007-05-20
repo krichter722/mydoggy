@@ -53,6 +53,7 @@ public class AnchorLabelUI extends MetalLabelUI {
     public AnchorLabelUI(ToolWindowDescriptor descriptor, ToolWindow toolWindow) {
         this.descriptor = descriptor;
         this.toolWindow = toolWindow;
+        
         this.dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
         this.dockedTypeDescriptor.addPropertyChangeListener(this);
     }
@@ -76,6 +77,29 @@ public class AnchorLabelUI extends MetalLabelUI {
         toolWindow.removePropertyChangeListener(this);
         c.removeMouseListener(adapter);
         c.removeMouseMotionListener(adapter);
+    }
+
+    protected void installListeners(JLabel c) {
+        super.installListeners(c);
+
+        // Forse PropertyChangeListener
+        String oldText = c.getText();
+        if (oldText != null) {
+            c.setText(null);
+            c.setText(oldText);
+        }
+
+        oldText = c.getToolTipText();
+        if (oldText != null) {
+            c.setToolTipText(null);
+            c.setToolTipText(oldText);
+        }
+
+        adapter = new AnchorLabelMouseAdapter();
+        c.addMouseListener(adapter);
+        c.addMouseMotionListener(adapter);
+
+        descriptor.getToolWindow().addInternalPropertyChangeListener(this);
     }
 
     public void update(Graphics g, JComponent c) {
@@ -143,38 +167,20 @@ public class AnchorLabelUI extends MetalLabelUI {
         } else if ("UI".equals(propertyName)) {
             adapter.propertyChange(e);
         } else if ("flash".equals(propertyName)) {
-            flasingDuration = -1;
-            SwingUtil.repaint(label);
+            if (!toolWindow.isVisible()) {
+                flasingDuration = -1;
+                SwingUtil.repaint(label);
+            }
         } else if ("flash.duration".equals(propertyName)) {
-            flasingDuration = (Integer) e.getNewValue();
-            SwingUtil.repaint(label);
+            if (!toolWindow.isVisible()) {
+                flasingDuration = (Integer) e.getNewValue();
+                SwingUtil.repaint(label);
+            }
         } else if ("previewDelay".equals(propertyName)) {
             adapter.setPreviewDelay((Integer)e.getNewValue());
         }
     }
 
-    protected void installListeners(JLabel c) {
-        super.installListeners(c);
-
-        // Forse PropertyChangeListener
-        String oldText = c.getText();
-        if (oldText != null) {
-            c.setText(null);
-            c.setText(oldText);
-        }
-
-        oldText = c.getToolTipText();
-        if (oldText != null) {
-            c.setToolTipText(null);
-            c.setToolTipText(oldText);
-        }
-
-        adapter = new AnchorLabelMouseAdapter();
-        c.addMouseListener(adapter);
-        c.addMouseMotionListener(adapter);
-
-        descriptor.getToolWindow().addInternalPropertyChangeListener(this);
-    }
 
 
     class AnchorLabelMouseAdapter extends MouseInputAdapter implements ActionListener, PropertyChangeListener {

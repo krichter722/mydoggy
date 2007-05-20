@@ -14,17 +14,21 @@ package org.noos.xing.mydoggy;
 public interface ToolWindowTypeDescriptor {
 
     /**
-     * TODO
-     * @since 1.3.0
-     * @return
-     */
-    boolean isAnimating();
-
-    /**
-     * TODO
-     * @param animating
+     * Enables or disables animations, depending on the value of the
+     * parameter <code>animating</code>.
+     *
+     * @param animating If <code>true</code>, animations are
+     *                  enabled; otherwise animations are disabled.
      * @since 1.3.0
      */
     void setAnimating(boolean animating);
+
+    /**
+     * Returns whether the animations are enabled.
+     *
+     * @return true is the animations are enabled, false otherwise.
+     * @since 1.3.0
+     */
+    boolean isAnimating();
 
 }

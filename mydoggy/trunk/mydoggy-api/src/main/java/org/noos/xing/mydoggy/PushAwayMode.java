@@ -28,7 +28,9 @@ public enum PushAwayMode {
     ANTICLOCKWISE,
 
     /**
-     * TODO
+     * Whoever is pressed last toolwindow push away the previous toolwindows. This way the order
+     * of opening the toolwindows determine who push who (and you can achieve any "priority" mode
+     * by selecting the order of clicks)      
      *
      * @since 1.3.0
      */

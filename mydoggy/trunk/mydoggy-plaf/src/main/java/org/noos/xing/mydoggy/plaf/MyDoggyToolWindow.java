@@ -141,7 +141,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setFlashing(boolean flash) {
-        if (flash && isVisible())
+        if (flash && isActive())
             return;
 
         if (this.flash == flash)
