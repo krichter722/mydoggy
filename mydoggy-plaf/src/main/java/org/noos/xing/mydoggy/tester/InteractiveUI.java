@@ -19,13 +19,11 @@ public interface InteractiveUI {
 
     void delay(int millis);
 
-    void setRootContainer(Container rootContainer);
-
     void moveMouse(Point to);
 
     void assertTrue(String s, boolean b);
 
     void mouseLeftClick();
 
-    Frame getFrame(String name);
+    void importRoot(String rootName);
 }

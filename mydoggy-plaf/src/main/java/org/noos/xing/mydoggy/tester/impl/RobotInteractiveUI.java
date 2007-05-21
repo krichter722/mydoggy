@@ -1,20 +1,24 @@
 package org.noos.xing.mydoggy.tester.impl;
 
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.tester.InteractiveUI;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.util.ArrayList;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class RobotInteractiveUI implements InteractiveUI {
-    private Container rootContainer;
+    private java.util.List<Container> roots;
+
     private Robot robot;
 
     public RobotInteractiveUI(Container rootContainer) {
-        this.rootContainer = rootContainer;
+        this.roots = new ArrayList<Container>();
+        roots.add(rootContainer);
         try {
             this.robot = new Robot();
         } catch (AWTException e) {
@@ -27,7 +31,7 @@ public class RobotInteractiveUI implements InteractiveUI {
     }
 
     public void moveMouseTo(String componentName, int offsetX, int offsetY) {
-        Component target = UIUtil.findComponentByName(rootContainer, componentName);
+        Component target = findComponentInRoots(componentName);
         assert target != null;
 
         if (!target.isValid()) {
@@ -52,15 +56,11 @@ public class RobotInteractiveUI implements InteractiveUI {
     }
 
     public boolean ask(String message) {
-        return JOptionPane.showConfirmDialog(rootContainer, message) == JOptionPane.OK_OPTION;
+        return JOptionPane.showConfirmDialog(roots.get(0), message) == JOptionPane.OK_OPTION;
     }
 
     public void delay(int millis) {
         robot.delay(millis);
-    }
-
-    public void setRootContainer(Container rootContainer) {
-        this.rootContainer = rootContainer;
     }
 
     public void moveMouse(Point to) {
@@ -107,12 +107,20 @@ public class RobotInteractiveUI implements InteractiveUI {
         robot.mouseRelease(InputEvent.BUTTON1_MASK);
     }
 
-    public Frame getFrame(String name) {
-        for (Frame frame : JFrame.getFrames()) {
-            if (name.equals(frame.getName()))
-                return frame;
+    public void importRoot(String rootName) {
+        for (Object o : SwingUtil.getTopContainers(rootName))
+            roots.add((Container) o);
+    }
+
+
+    protected Component findComponentInRoots(String componentName) {
+        for (Container root : roots) {
+            Component result = UIUtil.findComponentByName(root, componentName);
+            if (result != null)
+                return result;
         }
         return null;
     }
+
 
 }

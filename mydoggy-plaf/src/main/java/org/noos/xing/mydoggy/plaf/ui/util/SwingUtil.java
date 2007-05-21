@@ -1,10 +1,11 @@
 package org.noos.xing.mydoggy.plaf.ui.util;
 
-import javax.swing.*;
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Vector;
 
 /**
  * @author Angelo De Caro
@@ -186,45 +187,64 @@ public class SwingUtil {
     }
 
     public static Icon loadIcon(String url) {
-		try {
-			return new ImageIcon(Toolkit.getDefaultToolkit().getImage(SwingUtil.class.getClassLoader().getResource(url)));
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+        try {
+            return new ImageIcon(Toolkit.getDefaultToolkit().getImage(SwingUtil.class.getClassLoader().getResource(url)));
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static Image loadImage(String url) {
-		try {
-			return Toolkit.getDefaultToolkit().getImage(SwingUtil.class.getClassLoader().getResource(url));
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+        try {
+            return Toolkit.getDefaultToolkit().getImage(SwingUtil.class.getClassLoader().getResource(url));
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static BufferedImage loadImageIO(String url) {
-		try {
-			return ImageIO.read(SwingUtil.class.getClassLoader().getResource(url));
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+        try {
+            return ImageIO.read(SwingUtil.class.getClassLoader().getResource(url));
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-	public static Component findFocusable(Component cmp) {
-		if (cmp.isFocusable())
-			return cmp;
+    public static Component findFocusable(Component cmp) {
+        if (cmp.isFocusable())
+            return cmp;
 
-		if (cmp instanceof Container) {
-			Container container = (Container) cmp;
-			for (int i = 0, size = container.getComponentCount(); i < size; i++) {
-				Component finded = findFocusable(container.getComponent(i));
-				if (finded != null)
-					return finded;
-			}
-		}
-		return null;
-	}
+        if (cmp instanceof Container) {
+            Container container = (Container) cmp;
+            for (int i = 0, size = container.getComponentCount(); i < size; i++) {
+                Component finded = findFocusable(container.getComponent(i));
+                if (finded != null)
+                    return finded;
+            }
+        }
+        return null;
+    }
+
+    public static Vector getTopContainers(String name) {
+        Vector containers = new Vector();
+
+        Frame frames[] = Frame.getFrames();
+        for (int i = 0; i < frames.length; i++) {
+            Window[] windows = frames[i].getOwnedWindows();
+
+            for (int j = 0; j < windows.length; j++) {
+                if (windows[j].getName() != null && windows[j].getName().equals(name))
+                    containers.add(windows[j]);
+            }
+
+            if (!containers.contains(frames[i])) {
+                containers.add(frames[i]);
+            }
+        }
+        return containers;
+    }
 
 }
