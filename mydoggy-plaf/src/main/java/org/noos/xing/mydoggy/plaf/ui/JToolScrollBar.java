@@ -91,7 +91,6 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
     protected void initComponents() {
         viewport = new JViewport();
         viewport.setView(container);
-        // TODO: continuare con lo scroller...la preview quando lo scroll è attivo schiatta.
         viewport.addMouseWheelListener(new WheelScroller());
 
         switch (orientation) {
