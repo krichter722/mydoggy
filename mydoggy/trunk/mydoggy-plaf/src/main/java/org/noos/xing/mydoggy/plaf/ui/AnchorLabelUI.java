@@ -327,7 +327,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                         previewPanel.setAlpha(dockedTypeDescriptor.getPreviewTransparentRatio());
                         previewPanel.setSize(width + 4, height + 4);
 
-                        Container mainContainer = descriptor.getManager().getMainContainer();
+                        Container mainContainer = descriptor.getManager();
                         switch (descriptor.getToolWindow().getAnchor()) {
                             case LEFT:
                                 previewPanel.setLocation(
@@ -361,7 +361,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                                         mainContainer.getY() +
                                         mainContainer.getHeight() -
                                         (descriptor.getToolBar(TOP).getAvailableTools() != 0 ? 0 : 23) -
-                                        previewPanel.getHeight() + 20
+                                        previewPanel.getHeight() - 26
                                 );
                                 break;
                             case RIGHT:
@@ -369,7 +369,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                                         mainContainer.getX() +
                                         mainContainer.getWidth() -
                                         (descriptor.getToolBar(LEFT).getAvailableTools() != 0 ? 0 : 23) -
-                                        previewPanel.getWidth() + 20,
+                                        previewPanel.getWidth() - 26,
 
                                         (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                                         mainContainer.getY() +
@@ -380,27 +380,29 @@ public class AnchorLabelUI extends MetalLabelUI {
                         }
 
                         if (previewPanel.getY() + previewPanel.getHeight() >
-                                mainContainer.getY() + mainContainer.getHeight() + 23) {
+                                mainContainer.getY() + mainContainer.getHeight() - 26) {
 
+                            // TODO: aggiustare
                             previewPanel.setLocation(
                                     previewPanel.getX(),
 
                                     (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                                     mainContainer.getY() +
-                                    mainContainer.getHeight() +
-                                    (descriptor.getToolBar(TOP).getAvailableTools() != 0 ? 19 : 0) 
-                                    - previewPanel.getHeight() - 3
+                                    mainContainer.getHeight() -
+                                    (descriptor.getToolBar(TOP).getAvailableTools() != 0 ||
+                                     descriptor.getToolBar(BOTTOM).getAvailableTools() != 0 ? 23 : 0) -
+                                    previewPanel.getHeight() - 3
                             );
                         }
 
                         if (previewPanel.getX() + previewPanel.getWidth() >
-                                mainContainer.getX() + mainContainer.getWidth() + 23) {
+                                mainContainer.getX() + mainContainer.getWidth() - 26) {
 
                             previewPanel.setLocation(
                                     mainContainer.getX() +
                                     mainContainer.getWidth() +
                                     (descriptor.getToolBar(LEFT).getAvailableTools() != 0 ? 23 : 0) -
-                                    previewPanel.getWidth() - 3,
+                                    previewPanel.getWidth() - 26,
                                     
                                     previewPanel.getY()
                             );
