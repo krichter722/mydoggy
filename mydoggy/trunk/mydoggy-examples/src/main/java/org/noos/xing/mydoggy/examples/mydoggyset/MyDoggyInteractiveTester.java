@@ -1,9 +1,6 @@
 package org.noos.xing.mydoggy.examples.mydoggyset;
 
-import org.noos.xing.mydoggy.DockedTypeDescriptor;
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.tester.InteractiveTest;
 import org.noos.xing.mydoggy.tester.InteractiveTestRunner;
 import org.noos.xing.mydoggy.tester.InteractiveUI;
@@ -18,10 +15,10 @@ public class MyDoggyInteractiveTester {
     public static void main(String[] args) {
         InteractiveTestRunner runner = new InteractiveTestRunner();
 //        runner.addInteractiveTest(new ToolVisisbleInteractiveTest());
-        runner.addInteractiveTest(new PreviewInteractiveTest());
+//        runner.addInteractiveTest(new PreviewInteractiveTest());
 //        runner.addInteractiveTest(new DragInteractiveTest());
-//        runner.addInteractiveTest(new SlidingTypeInteractiveTest());
-//        runner.addInteractiveTest(new FloatingMoveInteractiveTest());
+        runner.addInteractiveTest(new SlidingTypeInteractiveTest());
+        runner.addInteractiveTest(new FloatingMoveInteractiveTest());
         runner.run();
     }
 
@@ -157,21 +154,21 @@ public class MyDoggyInteractiveTester {
             interactiveUI.mouseLeftClick();
             interactiveUI.delay(1000);
 
-/*          TODO:
-            JFrame frame = interactiveUI.getFrame("toolWindow.floating.window.Title 1");
+            interactiveUI.importRoot("toolWindow.floating.window.Title 1");
 
-            InteractiveUI frameIUI = interactiveUI.getInteractiveUI(frame);
+            interactiveUI.moveMouseTo("toolWindow.bar.Title 1");
+            interactiveUI.pressMouseLeftButton();
+            interactiveUI.delay(1000);
 
-            frameIUI.moveMouseTo("toolWindow.bar.Title 1");
-            frameIUI.pressMouseLeftButton();
-            frameIUI.delay(100);
-
-            Point wLocation = ((FloatingTypeDescriptor)myDoggySet.getToolWindowManager().getToolWindow("Title 1").getTypeDescriptor(ToolWindowType.FLOATING)).getLocation();
+            Point wLocation = ((FloatingTypeDescriptor) myDoggySet.getToolWindowManager().getToolWindow("Title 1").getTypeDescriptor(ToolWindowType.FLOATING)).getLocation();
             wLocation.x -= 50;
             wLocation.y -= 50;
 
-            frameIUI.moveMouse(wLocation);
-*/
+            interactiveUI.moveMouse(wLocation);
+            interactiveUI.releaseMouseLeftButton();
+            interactiveUI.delay(1000);
+
+            interactiveUI.assertTrue("Invalid Behaviour", interactiveUI.ask("Is behaviuor correct?"));
         }
 
     }

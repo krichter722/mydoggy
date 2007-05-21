@@ -112,6 +112,7 @@ public class AnchorLabelUI extends MetalLabelUI {
             } else {
                 g.setColor(gray);
                 g.fillRect(0, 0, bounds.width, bounds.height);
+                flashingState = true;
             }
 
             if (flashingTimer == null) {
@@ -359,7 +360,6 @@ public class AnchorLabelUI extends MetalLabelUI {
                                         (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                                         mainContainer.getY() +
                                         mainContainer.getHeight() -
-                                        (descriptor.getToolBar(TOP).getAvailableTools() != 0 ? 0 : 23) -
                                         previewPanel.getHeight() - 26
                                 );
                                 break;
@@ -367,7 +367,6 @@ public class AnchorLabelUI extends MetalLabelUI {
                                 previewPanel.setLocation(
                                         mainContainer.getX() +
                                         mainContainer.getWidth() -
-                                        (descriptor.getToolBar(LEFT).getAvailableTools() != 0 ? 0 : 23) -
                                         previewPanel.getWidth() - 26,
 
                                         (jMenuBar != null ? jMenuBar.getHeight() : 0) +
