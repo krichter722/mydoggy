@@ -92,14 +92,10 @@ public class ApplicationBarPanelUI extends PanelUI {
         Rectangle r = c.getBounds();
         r.x = r.y = 0;
         if (toolWindow.isFlashing()) {
-
-            if (flashingState) {
+            if (flashingState)
                 updateInternal(g, c, backStartEnabled, backEndEnabled, Colors.lightBlu, Color.BLACK);
-                flashingState = false;
-            } else {
+            else
                 updateInternal(g, c, backStartDisabled, backEndDisabled, Color.LIGHT_GRAY, Color.GRAY);
-                flashingState = true;
-            }
 
             if (flashingTimer == null) {
                 flashingTimer = new Timer(500, new ActionListener() {
@@ -108,7 +104,10 @@ public class ApplicationBarPanelUI extends PanelUI {
                     public void actionPerformed(ActionEvent e) {
                         if (start == 0)
                             start = System.currentTimeMillis();
+
+                        flashingState = !flashingState;
                         SwingUtil.repaint(panel);
+                        
                         if (flasingDuration != -1 && System.currentTimeMillis() - start > flasingDuration)
                             toolWindow.setFlashing(false);
                     }

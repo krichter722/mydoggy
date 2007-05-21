@@ -109,11 +109,9 @@ public class AnchorLabelUI extends MetalLabelUI {
             if (flashingState) {
                 GraphicsUtil.fillRect(g, new Rectangle(0, 0, bounds.width, bounds.height),
                                       start, end, null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
-                flashingState = false;
             } else {
                 g.setColor(gray);
                 g.fillRect(0, 0, bounds.width, bounds.height);
-                flashingState = true;
             }
 
             if (flashingTimer == null) {
@@ -123,6 +121,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                     public void actionPerformed(ActionEvent e) {
                         if (start == 0)
                             start = System.currentTimeMillis();
+                        flashingState = !flashingState;
                         SwingUtil.repaint(label);
                         if (flasingDuration != -1 && System.currentTimeMillis() - start > flasingDuration)
                             toolWindow.setFlashing(false);
@@ -382,15 +381,13 @@ public class AnchorLabelUI extends MetalLabelUI {
                         if (previewPanel.getY() + previewPanel.getHeight() >
                                 mainContainer.getY() + mainContainer.getHeight() - 26) {
 
-                            // TODO: aggiustare
                             previewPanel.setLocation(
                                     previewPanel.getX(),
 
                                     (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                                     mainContainer.getY() +
                                     mainContainer.getHeight() -
-                                    (descriptor.getToolBar(TOP).getAvailableTools() != 0 ||
-                                     descriptor.getToolBar(BOTTOM).getAvailableTools() != 0 ? 23 : 0) -
+                                    (descriptor.getToolBar(BOTTOM).getAvailableTools() != 0 ? 23 : 0) -
                                     previewPanel.getHeight() - 3
                             );
                         }
@@ -400,9 +397,9 @@ public class AnchorLabelUI extends MetalLabelUI {
 
                             previewPanel.setLocation(
                                     mainContainer.getX() +
-                                    mainContainer.getWidth() +
-                                    (descriptor.getToolBar(LEFT).getAvailableTools() != 0 ? 23 : 0) -
-                                    previewPanel.getWidth() - 26,
+                                    mainContainer.getWidth() -
+                                    (descriptor.getToolBar(RIGHT).getAvailableTools() != 0 ? 23 : 0) -
+                                    previewPanel.getWidth() - 3,
                                     
                                     previewPanel.getY()
                             );
