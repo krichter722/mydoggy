@@ -845,24 +845,10 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 if ((Boolean) evt.getNewValue()) {
                     descriptor.setTempDivederLocation(getSplitDividerLocation());
 
-                    ToolWindowAnchor opposite = null;
-                    switch (descriptor.getToolWindow().getAnchor()) {
-                        case LEFT:
-                            opposite = ToolWindowAnchor.RIGHT;
-                            break;
-                        case RIGHT:
-                            opposite = ToolWindowAnchor.LEFT;
-                            break;
-                        case TOP:
-                            opposite = ToolWindowAnchor.BOTTOM;
-                            break;
-                        case BOTTOM:
-                            opposite = ToolWindowAnchor.TOP;
-                            break;
-                    }
-                    
-                    for (ToolWindow tool : descriptor.getManager().getToolsByAnchor(opposite)) 
-                        tool.setVisible(false);
+                    ToolWindow maximizedTool = descriptor.getToolWindow();
+                    for (ToolWindow tool : descriptor.getManager().getToolWindows())
+                        if (tool != maximizedTool)
+                            tool.setVisible(false);
 
                     setSplitDividerLocation(-1);
                     SwingUtil.repaintNow(splitPane);
