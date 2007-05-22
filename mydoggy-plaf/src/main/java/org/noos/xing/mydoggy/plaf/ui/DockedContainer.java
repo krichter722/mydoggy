@@ -357,6 +357,9 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
             if (SwingUtilities.isLeftMouseButton(e)) {
                 toolWindow.setActive(true);
+
+                if (e.getClickCount() == 2)
+                    toolWindow.setMaximized(!toolWindow.isMaximized());
             } else if (SwingUtilities.isRightMouseButton(e)) {
                 if ((e.getComponent() == applicationBar || SwingUtil.hasParent(e.getComponent(), applicationBar)) &&
                     ((DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED)).isPopupMenuEnabled()) {
