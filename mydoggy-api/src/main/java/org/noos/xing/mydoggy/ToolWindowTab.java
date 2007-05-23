@@ -67,6 +67,10 @@ public interface ToolWindowTab {
      */
     void setSelected(boolean selected);
 
+    boolean isCloseable();
+
+    void setCloseable(boolean closeable);
+
     /**
      * Adds a PropertyChangeListener to the listener list. The listener is
      * registered for all bound properties of this class, including the
