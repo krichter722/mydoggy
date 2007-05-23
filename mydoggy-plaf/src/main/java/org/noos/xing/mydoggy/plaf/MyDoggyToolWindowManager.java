@@ -243,9 +243,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public boolean containsGroup(String name) {
-        if (allToolWindowGroup.getName().equals(name))
-            return true;
-        return toolWindowGroups.containsKey(name);
+        return allToolWindowGroup.getName().equals(name) || toolWindowGroups.containsKey(name);
     }
 
     public ToolWindowTypeDescriptor getTypeDescriptorTemplate(ToolWindowType type) {
@@ -466,7 +464,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         mainContainer.setName("toolWindowManager.mainContainer");
         mainContainer.setBackground(Color.GRAY);
         mainContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
-        mainContainer.setFocusCycleRoot(true);
+        mainContainer.setFocusCycleRoot(false);  // TODO: tenere sott'occhio...
 
         getBar(BOTTOM).getSplitPane().setTopComponent(getBar(TOP).getSplitPane());
         getBar(TOP).getSplitPane().setBottomComponent(getBar(LEFT).getSplitPane());
@@ -672,16 +670,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     class VisiblePropertyChangeListener implements PropertyChangeListener {
+        boolean showingGroupValueAdj = false;
         public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowDescriptor window = (ToolWindowDescriptor) evt.getSource();
-
-            if (showingGroup == null)
-                for (ToolWindowGroup group : getToolWindowGroups()) {
-                    if (group.isImplicit() && group.containesToolWindow(window.getToolWindow())) {
-                        group.setVisible((Boolean) evt.getNewValue());
-                        return;
-                    }
-                }
+            ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
 
             // Fire "visible.before" to all bars
             PropertyChangeEvent event = new PropertyChangeEvent(evt.getSource(), "visible.before",
@@ -690,10 +681,30 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 bar.propertyChange(event);
 
             // Fire "visible" to specific bar
-            getBar(window.getToolWindow().getAnchor()).propertyChange(evt);
+            getBar(descriptor.getToolWindow().getAnchor()).propertyChange(evt);
 
             // Syncronize bars panel
-            syncPanel(window.getToolWindow().getAnchor());
+            syncPanel(descriptor.getToolWindow().getAnchor());
+
+            // Support for implicit group...
+            if (showingGroup == null && Boolean.TRUE.equals(evt.getNewValue()) && !showingGroupValueAdj) {
+                synchronized(this) {
+                    showingGroupValueAdj = true;
+                    try {
+                        for (ToolWindowGroup group : getToolWindowGroups()) {
+                            if (group.isImplicit() && group.containesToolWindow(descriptor.getToolWindow())) {
+                                for (ToolWindow tool : group.getToolsWindow()) {
+                                    if (tool != descriptor.getToolWindow())
+                                        tool.aggregate();
+                                }
+                                break;
+                            }
+                        }
+                    } finally {
+                        showingGroupValueAdj = false;
+                    }
+                }
+            }
         }
     }
 
