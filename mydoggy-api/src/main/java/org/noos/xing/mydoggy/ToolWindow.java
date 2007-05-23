@@ -97,6 +97,10 @@ public interface ToolWindow {
      */
     void aggregate();
 
+    void setDefaultAggregate(boolean defaultAggregate);
+
+    boolean isDefaultAggregate();
+
     /**
      * Returns whether the representative button is currently flashing.
      *

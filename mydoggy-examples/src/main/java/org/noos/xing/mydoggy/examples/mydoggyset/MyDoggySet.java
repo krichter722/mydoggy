@@ -486,6 +486,10 @@ public class MyDoggySet {
         toolGroupsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane toolGroupsTableScroll = new JScrollPane(toolGroupsTable);
 
+        JCheckBox booleanEditor = new JCheckBox();
+        booleanEditor.setHorizontalAlignment(SwingConstants.CENTER);
+        toolGroupsTable.getColumnModel().getColumn(2).setCellRenderer(new CheckBoxCellRenderer());
+        toolGroupsTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(booleanEditor));
 
         JButton showGroup = new JButton("Show Group");
         showGroup.addActionListener(new ActionListener() {
