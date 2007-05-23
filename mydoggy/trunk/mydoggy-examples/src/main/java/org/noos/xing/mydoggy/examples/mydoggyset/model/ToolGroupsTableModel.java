@@ -14,13 +14,23 @@ public final class ToolGroupsTableModel extends DefaultTableModel {
     public ToolGroupsTableModel(ToolWindowManager windowManager) {
         this.windowManager = windowManager;
         setColumnIdentifiers(new Object[]{
-                "Name", "#Tools"
+                "Name", "#Tools", "Implicit"
         });
         updateModel();
     }
 
     public boolean isCellEditable(int row, int column) {
-        return false;
+        return (column == 2);
+    }
+
+    public void setValueAt(Object aValue, int row, int column) {
+        super.setValueAt(aValue, row, column);
+        if (column == 2) {
+            windowManager.getToolWindowGroups()[row].setImplicit(
+                    (Boolean) aValue 
+            );
+        }
+        updateModel();
     }
 
     protected void updateModel() {
@@ -29,7 +39,9 @@ public final class ToolGroupsTableModel extends DefaultTableModel {
         ToolWindowGroup[] toolWindowsGroups = windowManager.getToolWindowGroups();
         for (ToolWindowGroup toolWindowGroup : toolWindowsGroups) {
             addRow(new Object[]{
-                    toolWindowGroup.getName(), toolWindowGroup.getToolsWindow().length
+                    toolWindowGroup.getName(),
+                    toolWindowGroup.getToolsWindow().length,
+                    toolWindowGroup.isImplicit(),
             });
         }
 

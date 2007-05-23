@@ -16,12 +16,14 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
     private String name;
     private List<ToolWindow> tools;
     private EventListenerList listenerList;
+    private boolean implicit;
 
     MyDoggyToolWindowGroup(MyDoggyToolWindowManager manager, String name) {
         this.manager = manager;
         this.name = name;
         this.tools = new ArrayList<ToolWindow>();
         this.listenerList = new EventListenerList();
+        this.implicit = false;
     }
 
 
@@ -59,6 +61,14 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
         return tools.contains(toolWindow);
     }
 
+    public void setImplicit(boolean implicit) {
+        this.implicit = implicit;
+        // TODO: fire?? 
+    }
+
+    public boolean isImplicit() {
+        return implicit;
+    }
 
     public void setVisible(final boolean visible) {
         if (manager.containsGroup(name)) {
@@ -103,7 +113,6 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
             }
         }
     }
-
 
     public void addToolWindowGroupListener(ToolWindowGroupListener listener) {
         if (listener == null)

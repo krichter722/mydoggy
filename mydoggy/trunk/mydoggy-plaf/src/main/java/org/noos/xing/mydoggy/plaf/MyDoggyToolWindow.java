@@ -32,6 +32,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     private boolean active;
     private boolean flash;
     private boolean maximized;
+    private boolean defaultAggregate;
 
     private java.util.List<ToolWindowTab> toolWindowTabs;
     private ToolWindowTab originalToolWindowTab;
@@ -68,7 +69,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         this.type = type;
         setTitle(title);
         setIcon(icon);
-        this.available = this.active = this.visible = this.maximized = false;
+        this.available = this.active = this.visible = this.maximized = this.defaultAggregate = false;
     }
 
 
@@ -136,6 +137,22 @@ public class MyDoggyToolWindow implements ToolWindow {
         }
     }
 
+    public void setDefaultAggregate(boolean defaultAggregate) {
+        if (this.defaultAggregate == defaultAggregate)
+            return;
+
+        synchronized (getLock()) {
+            boolean old = this.defaultAggregate;
+            this.defaultAggregate = defaultAggregate;
+
+            firePropertyChangeEvent("defaultAggregate", old, defaultAggregate);
+        }
+    }
+
+    public boolean isDefaultAggregate() {
+        return defaultAggregate;
+    }
+
     public boolean isFlashing() {
         return flash;
     }
@@ -171,6 +188,9 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setVisible(boolean visible) {
+        if (defaultAggregate && visible && getType() == ToolWindowType.DOCKED)
+            aggregate();
+
         if (this.visible == visible)
             return;
 

@@ -59,6 +59,7 @@ public interface ToolWindowGroup {
      */
     boolean containesToolWindow(ToolWindow toolWindow);
 
+    void setImplicit(boolean implicit);
 
     /**
      * Invokes <code>setVisible(visible)</code> on all toolwindows contained in this group
@@ -70,6 +71,7 @@ public interface ToolWindowGroup {
      */
     void setVisible(boolean visible);
 
+    boolean isImplicit();
 
     /**
      * Registers <code>listener</code> so that it will receive events when

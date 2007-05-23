@@ -675,6 +675,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor window = (ToolWindowDescriptor) evt.getSource();
 
+            if (showingGroup == null)
+                for (ToolWindowGroup group : getToolWindowGroups()) {
+                    if (group.isImplicit() && group.containesToolWindow(window.getToolWindow())) {
+                        group.setVisible((Boolean) evt.getNewValue());
+                        return;
+                    }
+                }
+
             // Fire "visible.before" to all bars
             PropertyChangeEvent event = new PropertyChangeEvent(evt.getSource(), "visible.before",
                                                                 evt.getOldValue(), evt.getNewValue());
@@ -857,6 +865,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         public boolean containesToolWindow(ToolWindow toolWindow) {
             return true;
+        }
+
+        public void setImplicit(boolean implicit) {
+            throw new IllegalStateException("Cannot call this method on this instance.");
+        }
+
+        public boolean isImplicit() {
+            return false;
         }
 
         public String toString() {
