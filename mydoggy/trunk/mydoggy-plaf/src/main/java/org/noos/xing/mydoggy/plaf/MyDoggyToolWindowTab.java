@@ -16,6 +16,7 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
     private Icon icon;
     private Component component;
     private boolean selected;
+    private boolean closeable;
 
     private EventListenerList listenerList;
 
@@ -25,6 +26,7 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         this.component = component;
         this.selected = false;
         this.listenerList = new EventListenerList();
+        this.closeable = false;
     }
 
     public String getTitle() {
@@ -72,6 +74,14 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         this.selected = selected;
         
         firePropertyChangeEvent("selected", old, selected);
+    }
+
+    public boolean isCloseable() {
+        return closeable;
+    }
+
+    public void setCloseable(boolean closeable) {
+        this.closeable = closeable;
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
