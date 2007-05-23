@@ -222,8 +222,12 @@ public class AnchorLabelUI extends MetalLabelUI {
                     if (toolWindow.isVisible()) {
                         toolWindow.setVisible(false);
                     } else {
-                        toolWindow.aggregate();
-                        toolWindow.setActive(true);
+                        if (toolWindow.isDefaultAggregate()) {
+                            // TODO: can disable temporaneamente default aggregate???
+                        } else {
+                            toolWindow.aggregate();
+                            toolWindow.setActive(true);
+                        }
                     }
                 } else {
                     if (toolWindow.isVisible()) {
