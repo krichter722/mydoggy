@@ -70,6 +70,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         setTitle(title);
         setIcon(icon);
         this.available = this.active = this.visible = this.maximized = this.defaultAggregate = false;
+        defaultAggregate = true;
     }
 
 
@@ -187,8 +188,10 @@ public class MyDoggyToolWindow implements ToolWindow {
         }
     }
 
+    public boolean marker = true;
     public void setVisible(boolean visible) {
-        if (defaultAggregate && visible && !descriptor.getManager().isShiftShow() && getType() == ToolWindowType.DOCKED)
+        if (defaultAggregate && visible && !descriptor.getManager().isShiftShow() &&
+            getType() == ToolWindowType.DOCKED && marker)
             aggregate();
 
         if (this.visible == visible)
