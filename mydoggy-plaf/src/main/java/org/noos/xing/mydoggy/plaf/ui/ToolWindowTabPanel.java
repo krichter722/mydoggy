@@ -10,6 +10,8 @@ import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.event.PopupMenuEvent;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -19,6 +21,7 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ToolWindowTabPanel extends JComponent implements PropertyChangeListener {
+    private DockedContainer dockedContainer;
     private ToolWindow toolWindow;
 
     private JViewport viewport;
@@ -28,9 +31,9 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     private ToolWindowTab selectedTab;
     private TabButton selecTabButton;
 
-
-    public ToolWindowTabPanel(ToolWindow toolWindow) {
+    public ToolWindowTabPanel(DockedContainer dockedContainer, ToolWindow toolWindow) {
         this.toolWindow = toolWindow;
+        this.dockedContainer = dockedContainer;
 
         initComponents();
         initListeners();
@@ -184,9 +187,8 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 }
 
                 public void mouseClicked(MouseEvent e) {
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        
-                    }
+                    if (SwingUtilities.isRightMouseButton(e))
+                        dockedContainer.showPopupMenu(e);
                 }
             });
         }
@@ -224,6 +226,23 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent e) {
                     toolWindow.setActive(true);
+                }
+            });
+            dockedContainer.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
+                public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                    JPopupMenu menu = (JPopupMenu) e.getSource();
+                    menu.add(new JMenuItem(new SelectNextTabAction()), 0);
+                    menu.add(new JMenuItem(new SelectPreviousTabAction()), 1);
+                    menu.add(new JSeparator(), 2);
+                    // TODO: continue..
+                }
+
+                public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+
+                }
+
+                public void popupMenuCanceled(PopupMenuEvent e) {
+
                 }
             });
         }
