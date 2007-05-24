@@ -226,7 +226,21 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             }
     }
 
+    protected Component getSplitPaneContent() {
+        switch (anchor) {
+            case LEFT:
+                return splitPane.getLeftComponent();
+            case RIGHT:
+                return splitPane.getRightComponent();
+            case BOTTOM:
+                return splitPane.getBottomComponent();
+            case TOP:
+                return splitPane.getTopComponent();
+        }
+        throw new IllegalStateException();
+    }
 
+    
     class AvailableListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
@@ -621,20 +635,6 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             } finally {
                 vsdValueAdjusting = false;
             }
-        }
-
-        protected Component getSplitPaneContent() {
-            switch (anchor) {
-                case LEFT:
-                    return splitPane.getLeftComponent();
-                case RIGHT:
-                    return splitPane.getRightComponent();
-                case BOTTOM:
-                    return splitPane.getBottomComponent();
-                case TOP:
-                    return splitPane.getTopComponent();
-            }
-            throw new IllegalStateException();
         }
 
         private class SplitAnimation extends AbstractAnimation {

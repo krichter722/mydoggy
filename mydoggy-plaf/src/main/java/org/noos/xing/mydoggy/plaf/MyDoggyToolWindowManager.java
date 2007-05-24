@@ -10,6 +10,7 @@ import org.noos.xing.mydoggy.plaf.descriptors.DefaultSlidingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.persistence.xml.XmlPersistenceDelegate;
 import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
 import org.noos.xing.mydoggy.plaf.ui.GlassPanel;
+import org.noos.xing.mydoggy.plaf.ui.MultiSplitContainer;
 import org.noos.xing.mydoggy.plaf.ui.ResourceBoundles;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.MyDoggyTabbedContentManagerUI;
@@ -743,10 +744,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     class AnchorPropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowDescriptor window = (ToolWindowDescriptor) evt.getSource();
+            ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
 
-            ToolWindowType windowType = window.getToolWindow().getType();
-            if (windowType == ToolWindowType.FLOATING || windowType == ToolWindowType.FLOATING_FREE) {
+            ToolWindowType toolType = descriptor.getToolWindow().getType();
+            if (toolType == ToolWindowType.FLOATING || toolType == ToolWindowType.FLOATING_FREE) {
                 ToolWindowAnchor oldAnchor = (ToolWindowAnchor) evt.getOldValue();
                 ToolWindowAnchor newAnchor = (ToolWindowAnchor) evt.getNewValue();
 
@@ -764,6 +765,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
             syncPanel((ToolWindowAnchor) evt.getOldValue());
             syncPanel((ToolWindowAnchor) evt.getNewValue());
+
+            if (descriptor.getToolWindow().getType() == ToolWindowType.DOCKED) {
+                MyDoggyToolWindowBar bar = getBar((ToolWindowAnchor) evt.getNewValue());
+// TODO : implemente reorder on anchor change...
+//                bar.reorderTools();
+            }
         }
     }
 

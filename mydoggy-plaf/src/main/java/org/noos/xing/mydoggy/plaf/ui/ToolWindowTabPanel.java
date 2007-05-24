@@ -182,6 +182,12 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 public void mousePressed(MouseEvent e) {
                     toolWindow.setActive(true);
                 }
+
+                public void mouseClicked(MouseEvent e) {
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        
+                    }
+                }
             });
         }
 

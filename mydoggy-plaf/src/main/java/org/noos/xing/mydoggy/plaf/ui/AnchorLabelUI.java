@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragAndDropLock;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTrasferable;
@@ -224,10 +225,14 @@ public class AnchorLabelUI extends MetalLabelUI {
                     } else {
                         if (toolWindow.isDefaultAggregate()) {
                             // TODO: can disable temporaneamente default aggregate???
+                            // TODO: sto marker è una porcata...
+                            ((MyDoggyToolWindow)toolWindow).marker = false;
+                            toolWindow.setVisible(true);
+                            ((MyDoggyToolWindow)toolWindow).marker = true;
                         } else {
                             toolWindow.aggregate();
-                            toolWindow.setActive(true);
                         }
+                        toolWindow.setActive(true);
                     }
                 } else {
                     if (toolWindow.isVisible()) {
