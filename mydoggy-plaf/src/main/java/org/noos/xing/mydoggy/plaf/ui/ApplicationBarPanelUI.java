@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui;
 
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragAndDropLock;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTrasferable;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
@@ -15,6 +16,8 @@ import java.awt.*;
 import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ContainerListener;
+import java.awt.event.ContainerEvent;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
@@ -87,10 +90,25 @@ public class ApplicationBarPanelUI extends PanelUI {
         installDefaults(c);
         this.panel = c;
 
-        DragGesture dragGesture = new DragGesture();
+        final DragGesture dragGesture = new DragGesture();
         DragSource dragSource = DragSource.getDefaultDragSource();
         dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, dragGesture);
         dragSource.addDragSourceMotionListener(dragGesture);
+
+        panel.addContainerListener(new ContainerListener() {
+            public void componentAdded(ContainerEvent e) {
+                DragSource dragSource = DragSource.getDefaultDragSource();
+                dragSource.createDefaultDragGestureRecognizer(e.getChild(), DnDConstants.ACTION_MOVE, dragGesture);
+                dragSource.addDragSourceMotionListener(dragGesture);
+            }
+
+            public void componentRemoved(ContainerEvent e) {
+//                DragSource dragSource = DragSource.getDefaultDragSource();
+//                dragSource.createDefaultDragGestureRecognizer(e.getChild(), DnDConstants.ACTION_MOVE, dragGesture);
+//                dragSource.removeDragSourceMotionListener(dragGesture);
+            }
+        });
+
     }
 
     public void uninstallUI(JComponent c) {
@@ -263,9 +281,11 @@ public class ApplicationBarPanelUI extends PanelUI {
 
     class DragGesture implements DragGestureListener, DragSourceMotionListener, DragSourceListener {
         private BufferedImage ghostImage;
-        private ToolWindowAnchor lastAnchor;
 
         public void dragGestureRecognized(DragGestureEvent dge) {
+            if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE)
+                return;
+
             if (DragAndDropLock.isLocked()) {
                 DragAndDropLock.setDragAndDropStarted(false);
                 return;
@@ -296,8 +316,6 @@ public class ApplicationBarPanelUI extends PanelUI {
             glassPane.setDraggingImage(ghostImage.getScaledInstance(contentContainer.getWidth() / 3,
                                                                     contentContainer.getHeight() / 3, BufferedImage.SCALE_SMOOTH));
             glassPane.repaint();
-
-            lastAnchor = null;
         }
 
         public void dragMouseMoved(DragSourceDragEvent dsde) {
@@ -342,8 +360,7 @@ public class ApplicationBarPanelUI extends PanelUI {
             glassPane.setVisible(false);
 
             ghostImage = null;
-            lastAnchor = null;
-
+            
             DragAndDropLock.setLocked(false);
             SwingUtilities.getWindowAncestor(descriptor.getManager()).repaint();
         }
