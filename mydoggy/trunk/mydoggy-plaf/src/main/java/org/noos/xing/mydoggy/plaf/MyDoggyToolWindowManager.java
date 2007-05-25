@@ -465,7 +465,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         mainContainer.setName("toolWindowManager.mainContainer");
         mainContainer.setBackground(Color.GRAY);
         mainContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
-        mainContainer.setFocusCycleRoot(false);  // TODO: tenere sott'occhio...
+        mainContainer.setFocusCycleRoot(true);
 
         getBar(BOTTOM).getSplitPane().setTopComponent(getBar(TOP).getSplitPane());
         getBar(TOP).getSplitPane().setBottomComponent(getBar(LEFT).getSplitPane());
@@ -503,6 +503,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             public void propertyChange(PropertyChangeEvent evt) {
                 for (ToolWindowDescriptor tool : tools.values())
                     tool.getToolWindowContainer().propertyChange(evt);
+            }
+        });
+        propertyChangeSupport.addPropertyChangeListener("anchor.index", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
+
+                if (descriptor.getToolWindow().getType() == ToolWindowType.DOCKED)
+                    getBar(descriptor.getToolWindow().getAnchor()).propertyChange(evt);
             }
         });
 
@@ -765,12 +773,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
             syncPanel((ToolWindowAnchor) evt.getOldValue());
             syncPanel((ToolWindowAnchor) evt.getNewValue());
-
-            if (descriptor.getToolWindow().getType() == ToolWindowType.DOCKED) {
-                MyDoggyToolWindowBar bar = getBar((ToolWindowAnchor) evt.getNewValue());
-// TODO : implemente reorder on anchor change...
-//                bar.reorderTools();
-            }
         }
     }
 

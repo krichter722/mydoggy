@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 import java.awt.geom.Area;
-import java.awt.image.BufferedImage;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -30,13 +29,13 @@ public class GlassPanel extends JPanel implements ContainerListener {
         addContainerListener(this);
     }
 
-    public void setDraggingImage(BufferedImage draggingImage) {
-        setDraggingImage(draggingImage, draggingImage == null ? 0 : draggingImage.getWidth());
+    public void setDraggingImage(Image draggingImage) {
+        setDraggingImage(draggingImage, draggingImage == null ? 0 : draggingImage.getWidth(this));
     }
 
-    public void setDraggingImage(BufferedImage draggingImage, int width) {
+    public void setDraggingImage(Image draggingImage, int width) {
         if (draggingImage != null) {
-            float ratio = (float) draggingImage.getWidth() / (float) draggingImage.getHeight();
+            float ratio = (float) draggingImage.getWidth(this) / (float) draggingImage.getHeight(this);
             this.width = width;
             height = (int) (width / ratio);
         }

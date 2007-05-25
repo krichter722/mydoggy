@@ -646,9 +646,9 @@ public class AnchorLabelUI extends MetalLabelUI {
             SwingUtilities.convertPointFromScreen(p, glassPane);
 
             // Build orginalDragImage            
-            JComponent c = descriptor.getAnchorLabel();
-            ghostImage = new BufferedImage(c.getWidth(), c.getHeight(), BufferedImage.TYPE_INT_RGB);
-            descriptor.getAnchorLabel().print(ghostImage.createGraphics());
+            JComponent anchorLabel = descriptor.getAnchorLabel();
+            ghostImage = new BufferedImage(anchorLabel.getWidth(), anchorLabel.getHeight(), BufferedImage.TYPE_INT_RGB);
+            anchorLabel.print(ghostImage.createGraphics());
 
             descriptor.getToolBar().propertyChange(new PropertyChangeEvent(label, "startDrag", null, dge));
 
@@ -772,7 +772,6 @@ public class AnchorLabelUI extends MetalLabelUI {
             DragAndDropLock.setLocked(false);
 
             SwingUtilities.getWindowAncestor(descriptor.getManager()).repaint();
-
         }
 
     }

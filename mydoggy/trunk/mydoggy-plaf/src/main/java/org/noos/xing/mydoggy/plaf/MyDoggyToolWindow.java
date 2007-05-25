@@ -247,11 +247,14 @@ public class MyDoggyToolWindow implements ToolWindow {
                 publicEvent = false;
 
                 ToolWindowAnchor oldAnchor;
+                int oldLastAnchorIndex;
                 try {
                     setAvailable(false);
 
                     oldAnchor = this.anchor;
                     this.anchor = anchor;
+
+                    oldLastAnchorIndex = this.lastAnchorIndex;
                     this.lastAnchorIndex = anchor.getIndex();
 
                     setAvailable(true);
@@ -264,6 +267,15 @@ public class MyDoggyToolWindow implements ToolWindow {
                 }
 
                 fireAnchorEvent(oldAnchor, anchor);
+
+                if (oldAnchor == anchor) {
+                    publicEvent = false;
+                    try {
+                        fireEvent(new PropertyChangeEvent(descriptor, "anchor.index", oldLastAnchorIndex, this.lastAnchorIndex));
+                    } finally {
+                        publicEvent = true;
+                    }
+                }
             } else {
                 ToolWindowAnchor oldAnchor = this.anchor;
                 this.anchor = anchor;
