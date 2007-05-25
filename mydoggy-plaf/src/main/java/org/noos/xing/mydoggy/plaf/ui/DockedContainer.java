@@ -73,8 +73,8 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
     public void uninstall() {
-        Component toolWindowCmp = descriptor.getComponent();
-        toolWindowCmp.removeMouseListener(applicationBarMouseAdapter);
+        Component cmp = descriptor.getComponent();
+        cmp.removeMouseListener(applicationBarMouseAdapter);
     }
 
     public void setMainComponent(Component component) {
@@ -204,7 +204,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         applicationBar.add(hideButton, "11,1");
 
         Component toolWindowCmp = descriptor.getComponent();
-        toolWindowCmp.addMouseListener(applicationBarMouseAdapter);
+//        toolWindowCmp.addMouseListener(applicationBarMouseAdapter);
 
         // Set Container content
         container.add(applicationBar, "0,0");
