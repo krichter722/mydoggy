@@ -334,8 +334,14 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         return applicationBarMouseAdapter.popupMenu;
     }
 
-    public void showPopupMenu(MouseEvent e) {
-        applicationBarMouseAdapter.showPopupMenu(e);
+    public void showPopupMenu(MouseEvent e, PopupUpdater popupUpdater) {
+        applicationBarMouseAdapter.showPopupMenu(e, popupUpdater);
+    }
+
+    public interface PopupUpdater {
+
+        void update(JPopupMenu popupMenu);
+
     }
 
 
@@ -370,7 +376,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 if (e.getClickCount() == 2)
                     toolWindow.setMaximized(!toolWindow.isMaximized());
             } else if (SwingUtilities.isRightMouseButton(e)) {
-                showPopupMenu(e);
+                showPopupMenu(e, null);
             }
         }
 
@@ -563,9 +569,10 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         }
 
 
-        public void showPopupMenu(MouseEvent e) {
+        public void showPopupMenu(MouseEvent e, PopupUpdater popupUpdater) {
             if ((e.getComponent() == applicationBar || SwingUtil.hasParent(e.getComponent(), applicationBar)) &&
                 ((DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED)).isPopupMenuEnabled()) {
+
                 popupMenu.removeAll();
                 popupMenu.add(pinnedMode);
                 popupMenu.add(dockedMode);
@@ -578,6 +585,9 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 enableVisible();
                 enableMoveToItem();
                 enableUserDefined();
+
+                if (popupUpdater != null)
+                    popupUpdater.update(popupMenu);
 
                 popupMenu.show(e.getComponent(), e.getX(), e.getY());
             }
