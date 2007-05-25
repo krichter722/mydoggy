@@ -186,7 +186,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
             }
 
             anchorLabel.setUI(createLabelUI());
-            anchorLabel.setOpaque(false);
+            anchorLabel.setOpaque(toolWindow.isActive());
             anchorLabel.setFocusable(false);
             anchorLabel.setBackground(Colors.skin);
         }

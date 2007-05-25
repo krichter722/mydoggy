@@ -1,6 +1,9 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
 import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragAndDropLock;
+import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTrasferable;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
@@ -9,9 +12,11 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import javax.swing.*;
 import javax.swing.plaf.PanelUI;
 import java.awt.*;
+import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Arc2D;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -81,6 +86,11 @@ public class ApplicationBarPanelUI extends PanelUI {
         super.installUI(c);
         installDefaults(c);
         this.panel = c;
+
+        DragGesture dragGesture = new DragGesture();
+        DragSource dragSource = DragSource.getDefaultDragSource();
+        dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, dragGesture);
+        dragSource.addDragSourceMotionListener(dragGesture);
     }
 
     public void uninstallUI(JComponent c) {
@@ -107,7 +117,7 @@ public class ApplicationBarPanelUI extends PanelUI {
 
                         flashingState = !flashingState;
                         SwingUtil.repaint(panel);
-                        
+
                         if (flasingDuration != -1 && System.currentTimeMillis() - start > flasingDuration)
                             toolWindow.setFlashing(false);
                     }
@@ -120,7 +130,7 @@ public class ApplicationBarPanelUI extends PanelUI {
             if (animation.isAnimating()) {
                 updateInternal(g, c, animBackStart, animBackEnd, Color.LIGHT_GRAY, animTextColor);
             } else if (c.isEnabled()) {
-                updateInternal(g, c, backStartEnabled, backEndEnabled,Colors.lightBlu, Color.BLACK);
+                updateInternal(g, c, backStartEnabled, backEndEnabled, Colors.lightBlu, Color.BLACK);
             } else {
                 updateInternal(g, c, backStartDisabled, backEndDisabled, Color.LIGHT_GRAY, Color.GRAY);
             }
@@ -250,4 +260,94 @@ public class ApplicationBarPanelUI extends PanelUI {
         }
 
     }
+
+    class DragGesture implements DragGestureListener, DragSourceMotionListener, DragSourceListener {
+        private BufferedImage ghostImage;
+        private ToolWindowAnchor lastAnchor;
+
+        public void dragGestureRecognized(DragGestureEvent dge) {
+            if (DragAndDropLock.isLocked()) {
+                DragAndDropLock.setDragAndDropStarted(false);
+                return;
+            }
+            DragAndDropLock.setLocked(true);
+            DragAndDropLock.setDragAndDropStarted(true);
+
+            // Start Drag
+            dge.startDrag(Cursor.getDefaultCursor(), new ToolWindowTrasferable(toolWindow), this);
+
+            // Prepare glassPane for ghost image
+            GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
+
+            glassPane.setVisible(true);
+
+            Point p = (Point) dge.getDragOrigin().clone();
+            SwingUtilities.convertPointToScreen(p, descriptor.getManager());
+            SwingUtilities.convertPointFromScreen(p, glassPane);
+
+            // Build orginalDragImage
+            Component contentContainer = ((DockedContainer) descriptor.getToolWindowContainer()).getContentContainer();
+            ghostImage = new BufferedImage(contentContainer.getWidth(),
+                                           contentContainer.getHeight(), BufferedImage.TYPE_INT_RGB);
+            contentContainer.print(ghostImage.getGraphics());
+
+            // Setup glasspane
+            glassPane.setPoint(p);
+            glassPane.setDraggingImage(ghostImage.getScaledInstance(contentContainer.getWidth() / 3,
+                                                                    contentContainer.getHeight() / 3, BufferedImage.SCALE_SMOOTH));
+            glassPane.repaint();
+
+            lastAnchor = null;
+        }
+
+        public void dragMouseMoved(DragSourceDragEvent dsde) {
+            if (!DragAndDropLock.isDragAndDropStarted() || ghostImage == null)
+                return;
+
+            GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
+
+            Point p = (Point) dsde.getLocation().clone();
+            SwingUtilities.convertPointFromScreen(p, glassPane);
+            glassPane.setPoint(p);
+
+            glassPane.repaint(glassPane.getRepaintRect());
+        }
+
+        public void dragEnter(DragSourceDragEvent dsde) {
+        }
+
+        public void dragOver(DragSourceDragEvent dsde) {
+        }
+
+        public void dropActionChanged(DragSourceDragEvent dsde) {
+        }
+
+        public void dragExit(DragSourceEvent dse) {
+        }
+
+        public void dragDropEnd(DragSourceDropEvent dsde) {
+            if (!DragAndDropLock.isDragAndDropStarted() || ghostImage == null)
+                return;
+
+            DragAndDropLock.setDragAndDropStarted(false);
+
+            // TODO: add code here
+
+            GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
+
+            Point p = (Point) dsde.getLocation().clone();
+            SwingUtilities.convertPointFromScreen(p, glassPane);
+
+            glassPane.setDraggingImage(null);
+            glassPane.setVisible(false);
+
+            ghostImage = null;
+            lastAnchor = null;
+
+            DragAndDropLock.setLocked(false);
+            SwingUtilities.getWindowAncestor(descriptor.getManager()).repaint();
+        }
+
+    }
+
 }
