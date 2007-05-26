@@ -17,8 +17,7 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Angelo De Caro
@@ -158,15 +157,44 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             public void propertyChange(PropertyChangeEvent evt) {
                 ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
                 if (sourceTool.getType() != ToolWindowType.DOCKED ||
-                    sourceTool.getAnchor() != anchor)
+                    sourceTool.getAnchor() != anchor ||
+                    !(getSplitPaneContent() instanceof MultiSplitContainer))
                     return;
 
-                System.out.println("READER");
-                // reorder
+                MultiSplitContainer multiSplitContainer = (MultiSplitContainer) getSplitPaneContent();
+                if (multiSplitContainer.getContentCount() <= 1)
+                    return;
+
+                // TODO : reorder
                 switch(anchor) {
                     case LEFT:
                     case RIGHT:
+                        java.util.List<Component> components = Arrays.asList(contentPane.getComponents());
+                        Collections.sort(components, new Comparator<Component>() {
+                            public int compare(Component o1, Component o2) {
+                                TableLayoutConstraints c1 = contentPaneLayout.getConstraints(o1);
+                                TableLayoutConstraints c2 = contentPaneLayout.getConstraints(o2);
+                                if (c1.row1 < c2.row1)
+                                    return -1;
+                                else if (c1.row1 == c2.row1)
+                                    return 0;
+                                return 1;
+                            }
+                        });
 
+                        int i = 0;
+                        for (Component component : components) {
+                            if (component instanceof JLabel) {
+                                JLabel anchorLabel = (JLabel) component;
+                                ToolWindowDescriptor d = ((AnchorLabelUI)anchorLabel.getUI()).getDescriptor();
+
+                                if (d.getToolWindow().isVisible()) {
+                                    Component content = ((DockedContainer)d.getToolWindowContainer()).getContentContainer();
+                                    multiSplitContainer.setComponentAt(content, i++);
+                                }
+                            }
+
+                        }
                         break;
                 }
             }

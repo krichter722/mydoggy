@@ -11,18 +11,18 @@ import java.util.List;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MultiSplitContainer extends JPanel {
-    private List<Component> components;
+    private List<Component> contents;
     private int orientation;
 
     public MultiSplitContainer(int orientation) {
         this.orientation = orientation;
-        this.components = new ArrayList<Component>();
+        this.contents = new ArrayList<Component>();
 
         setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
     }
 
     public void addContent(Component content) {
-        if (components.size() == 0) {
+        if (contents.size() == 0) {
             removeAll();
             add(content, "0,0");
         } else {
@@ -48,17 +48,17 @@ public class MultiSplitContainer extends JPanel {
             split.setFocusable(false);
             add(split, "0,0");
         }
-        components.add(content);
+        contents.add(content);
     }
 
     public void removeContent(Component content) {
-        if (!components.remove(content))
+        if (!contents.remove(content))
             return;
 
-        if (components.size() == 0)
+        if (contents.size() == 0)
             return;
 
-        if (components.size() == 1) {
+        if (contents.size() == 1) {
             JSplitPane splitPane = (JSplitPane) getComponent(0);
             removeAll();
             if (getRightCmp(splitPane) == content)
@@ -92,29 +92,42 @@ public class MultiSplitContainer extends JPanel {
     }
 
     public void setComponentAt(Component content, int index) {
-        if (index >= components.size())
+        if (index >= contents.size())
             throw new IllegalArgumentException("Illegal index.");
 
-        if (components.size() == 0)
+        if (contents.size() == 0)
             addContent(content);
-        else if (components.size() == 1) {
+        else if (contents.size() == 1) {
             removeAll();
-            if (components.contains(content))
+            if (contents.contains(content))
                 return;
             
             add(content, "0,0");
         } else {
             JSplitPane splitPane = (JSplitPane) getComponent(0);
             int i = 0;
+            int pos = 0;
             for (; i < index; i++) {
-                splitPane = (JSplitPane) getRightCmp(splitPane);
+                Container right = (Container) splitPane.getRightComponent();
+                if (right.getComponentCount() == 0) {
+                    pos = 1;
+                    break;
+                }
+
+                Component cmp = right.getComponent(0);
+                if (cmp instanceof JSplitPane) {
+                    splitPane = (JSplitPane) right;
+                } else {
+                    pos = 1;
+                    break;
+                }
             }
 
             JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
             panel.setFocusCycleRoot(true);
             panel.add(content, "0,0,FULL,FULL");
 
-            if (i % 2 == 0) {
+            if (pos == 0) {
                 splitPane.setLeftComponent(panel);
             } else {
                 splitPane.setRightComponent(panel);
@@ -123,7 +136,11 @@ public class MultiSplitContainer extends JPanel {
     }
 
     public boolean isEmpty() {
-        return components.size() == 0;
+        return contents.size() == 0;
+    }
+
+    public int getContentCount() {
+        return contents.size();
     }
 
     protected Component getRightCmp(JSplitPane pane) {

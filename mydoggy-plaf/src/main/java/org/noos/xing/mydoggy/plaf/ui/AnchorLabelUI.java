@@ -182,7 +182,9 @@ public class AnchorLabelUI extends MetalLabelUI {
         }
     }
 
-
+    public ToolWindowDescriptor getDescriptor() {
+        return descriptor;
+    }
 
     class AnchorLabelMouseAdapter extends MouseInputAdapter implements ActionListener, PropertyChangeListener {
 
