@@ -91,6 +91,10 @@ public class MultiSplitContainer extends JPanel {
         }
     }
 
+    public void moveTo(Component c, int index) {
+
+    }
+
     public boolean isEmpty() {
         return components.size() == 0;
     }

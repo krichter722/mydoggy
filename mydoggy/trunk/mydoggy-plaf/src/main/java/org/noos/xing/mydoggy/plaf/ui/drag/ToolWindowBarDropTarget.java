@@ -33,8 +33,8 @@ public class ToolWindowBarDropTarget extends DropTarget {
 
 
     private int showPosition(DropTargetDragEvent dtde, int lastIndex) {
-        Point dtdeLocation = dtde.getLocation();
-        if (lastPosition != null && lastPosition.equals(dtdeLocation))
+        Point dtdeLoc = dtde.getLocation();
+        if (lastPosition != null && lastPosition.equals(dtdeLoc))
             return lastIndex;
 
         int index = -1;
@@ -47,12 +47,12 @@ public class ToolWindowBarDropTarget extends DropTarget {
         switch (anchor) {
             case TOP:
             case BOTTOM:
-                position = dtdeLocation.x;
+                position = dtdeLoc.x;
                 intervals = tableLayout.getColsInPixel();
                 break;
             case LEFT:
             case RIGHT:
-                position = dtdeLocation.y;
+                position = dtdeLoc.y;
                 intervals = tableLayout.getRowsInPixel();
                 break;
             default:
@@ -62,9 +62,9 @@ public class ToolWindowBarDropTarget extends DropTarget {
         for (int i = 0; i < intervals.length; i++) {
             double interval = intervals[i];
 
-            if (position >= sum + 5 && position <= sum + interval - 5) {
-                if (i % 2 == 0 && i != 0) {
+            if (position >= sum && position <= sum + interval ) {
 
+                if (i % 2 == 0 && i != 0) {
                     int diff = -1;
                     for (Component component : container.getComponents()) {
                         if (component instanceof SeparatorLabel) {
@@ -134,7 +134,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
 
         SwingUtil.repaint(container);
 
-        lastPosition = dtdeLocation;
+        lastPosition = dtdeLoc;
 
         return index;
     }
@@ -170,6 +170,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
                 try {
                     ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
 
+                    System.out.println("index = " + index);
                     anchor.setIndex(index);
                     ((ToolWindow) dtde.getTransferable().getTransferData(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR))
                             .setAnchor(anchor);
