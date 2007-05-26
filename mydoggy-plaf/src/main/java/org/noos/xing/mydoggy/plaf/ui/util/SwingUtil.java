@@ -247,4 +247,17 @@ public class SwingUtil {
         return containers;
     }
 
+    public static Component getParent(Component c, String parentName) {
+        if (c == null || parentName == null)
+            return null;
+
+        if (c.getName() != null && c.getName().startsWith(parentName))
+            return c;
+
+        for( ; c != null; c = c.getParent()) {
+            if (c.getName() != null && c.getName().startsWith(parentName))
+                return c;
+        }
+        return null;
+    }
 }
