@@ -222,14 +222,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
     private void initDockedListeners() {
-//        addPropertyChangeListener("focusOwner", new FocusOwnerPropertyChangeListener());
         addPropertyChangeListener("active", new ActivePropertyChangeListener());
-        addPropertyChangeListener("anchor", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-//                if (evt.getSource() == descriptor)
-//                    descriptor.setDividerLocation(-1);
-            }
-        });
         addPropertyChangeListener("autoHide", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getSource() != descriptor)

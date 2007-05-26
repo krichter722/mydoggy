@@ -276,6 +276,11 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         return toolWindowUI;
     }
 
+    public int getLabelIndex() {
+        if (anchorLabel == null)
+            return -1;
+        return getToolBar().getLabelIndex(anchorLabel);
+    }
 
 
     private class AnchorLabel extends JLabel {

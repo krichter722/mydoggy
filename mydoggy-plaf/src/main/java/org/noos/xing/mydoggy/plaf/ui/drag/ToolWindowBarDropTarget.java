@@ -3,9 +3,9 @@ package org.noos.xing.mydoggy.plaf.ui.drag;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.plaf.ui.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.plaf.ui.GlassPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,7 +62,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
         for (int i = 0; i < intervals.length; i++) {
             double interval = intervals[i];
 
-            if (position >= sum && position <= sum + interval ) {
+            if (position >= sum && position <= sum + interval) {
 
                 if (i % 2 == 0 && i != 0) {
                     int diff = -1;
@@ -170,10 +170,8 @@ public class ToolWindowBarDropTarget extends DropTarget {
                 try {
                     ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
 
-                    System.out.println("index = " + index);
-                    anchor.setIndex(index);
                     ((ToolWindow) dtde.getTransferable().getTransferData(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR))
-                            .setAnchor(anchor);
+                            .setAnchor(anchor, index);
 
                     dtde.dropComplete(true);
                 } catch (UnsupportedFlavorException e) {
@@ -182,8 +180,6 @@ public class ToolWindowBarDropTarget extends DropTarget {
                 } catch (IOException e) {
                     e.printStackTrace();
                     dtde.rejectDrop();
-                } finally {
-                    anchor.setIndex(-1);
                 }
             } else
                 dtde.rejectDrop();

@@ -2,10 +2,10 @@ package org.noos.xing.mydoggy.plaf;
 
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
-import org.noos.xing.mydoggy.DockedTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowBarDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.icons.TextIcon;
@@ -117,6 +117,14 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         manager.propertyChange(new PropertyChangeEvent(this, "tempShowed", old, tempShowed));
     }
 
+    public int getLabelIndex(JLabel anchorLabel) {
+        TableLayoutConstraints constraints = contentPaneLayout.getConstraints(anchorLabel);
+        if (horizontal)
+            return constraints.col1 / 2;
+        else
+            return constraints.row1 / 2;
+    }
+
 
     protected void initComponents() {
         splitPane.setName(anchor.toString());
@@ -126,7 +134,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         contentPane.setName("toolWindowManager.bar." + anchor.toString());
         contentPane.setFocusable(false);
         contentPane.setFocusCycleRoot(true);
-        
+
         if (anchor == ToolWindowAnchor.LEFT || anchor == ToolWindowAnchor.RIGHT) {
             horizontal = false;
             contentPane.setLayout(new ExtendedTableLayout(new double[][]{COLUMNS, {0}}));
@@ -165,37 +173,38 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 if (multiSplitContainer.getContentCount() <= 1)
                     return;
 
-                // TODO : reorder
-                switch(anchor) {
-                    case LEFT:
-                    case RIGHT:
-                        java.util.List<Component> components = Arrays.asList(contentPane.getComponents());
-                        Collections.sort(components, new Comparator<Component>() {
-                            public int compare(Component o1, Component o2) {
-                                TableLayoutConstraints c1 = contentPaneLayout.getConstraints(o1);
-                                TableLayoutConstraints c2 = contentPaneLayout.getConstraints(o2);
-                                if (c1.row1 < c2.row1)
-                                    return -1;
-                                else if (c1.row1 == c2.row1)
-                                    return 0;
-                                return 1;
-                            }
-                        });
-
-                        int i = 0;
-                        for (Component component : components) {
-                            if (component instanceof JLabel) {
-                                JLabel anchorLabel = (JLabel) component;
-                                ToolWindowDescriptor d = ((AnchorLabelUI)anchorLabel.getUI()).getDescriptor();
-
-                                if (d.getToolWindow().isVisible()) {
-                                    Component content = ((DockedContainer)d.getToolWindowContainer()).getContentContainer();
-                                    multiSplitContainer.setComponentAt(content, i++);
-                                }
-                            }
-
+                java.util.List<Component> components = Arrays.asList(contentPane.getComponents());
+                Collections.sort(components, new Comparator<Component>() {
+                    public int compare(Component o1, Component o2) {
+                        TableLayoutConstraints c1 = contentPaneLayout.getConstraints(o1);
+                        TableLayoutConstraints c2 = contentPaneLayout.getConstraints(o2);
+                        if (horizontal) {
+                            if (c1.col1 < c2.col1)
+                                return -1;
+                            else if (c1.col1 == c2.col1)
+                                return 0;
+                        } else {
+                            if (c1.row1 < c2.row1)
+                                return -1;
+                            else if (c1.row1 == c2.row1)
+                                return 0;
                         }
-                        break;
+                        return 1;
+                    }
+                });
+
+                int i = 0;
+                for (Component component : components) {
+                    if (component instanceof JLabel) {
+                        JLabel anchorLabel = (JLabel) component;
+                        ToolWindowDescriptor d = ((AnchorLabelUI) anchorLabel.getUI()).getDescriptor();
+
+                        if (d.getToolWindow().isVisible()) {
+                            Component content = ((DockedContainer) d.getToolWindowContainer()).getContentContainer();
+                            multiSplitContainer.setComponentAt(content, i++);
+                        }
+                    }
+
                 }
             }
         });
@@ -287,7 +296,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         throw new IllegalStateException();
     }
 
-    
+
     class AvailableListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
@@ -306,7 +315,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     repaint = true;
                 } else if (!oldAvailable && newAvailable) {
                     // false -> true
-                    addAnchorLabel(anchorLabel);
+                    addAnchorLabel(anchorLabel, (Integer) ((UserPropertyChangeEvent) evt).getUserObject());
                     repaint = true;
                 }
 
@@ -317,83 +326,79 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             }
         }
 
-        protected void addAnchorLabel(JLabel anchorLabel) {
-            try {
-                availableTools++;
-                if (horizontal) {
-                    int width = anchorLabel.getPreferredSize().width + 6;
+        protected void addAnchorLabel(JLabel anchorLabel, int index) {
+            availableTools++;
+            if (horizontal) {
+                int width = anchorLabel.getPreferredSize().width + 6;
 
-                    contentPaneLayout.insertColumn(contentPaneLayout.getNumColumn(), contentPaneLayout.getNumColumn() > 0 ? 5 : 1);
-                    contentPaneLayout.insertColumn(contentPaneLayout.getNumColumn(), width);
+                contentPaneLayout.insertColumn(contentPaneLayout.getNumColumn(), contentPaneLayout.getNumColumn() > 0 ? 5 : 1);
+                contentPaneLayout.insertColumn(contentPaneLayout.getNumColumn(), width);
 
-                    if (anchor.getIndex() >= 0) {
-                        Component[] components = contentPane.getComponents();
-                        int finalCol = (anchor.getIndex() * 2 + 2);
+                if (index >= 0) {
+                    Component[] components = contentPane.getComponents();
+                    int finalCol = (index * 2 + 2);
 
-                        Map<Integer, Double> olds = new Hashtable<Integer, Double>();
-                        for (Component component : components) {
-                            TableLayoutConstraints constraints = contentPaneLayout.getConstraints(component);
-                            if (constraints.col1 >= finalCol) {
-                                int newCol1 = constraints.col1 + 2;
-                                contentPaneLayout.setConstraints(component,
-                                                                 new TableLayoutConstraints(
-                                                                         newCol1 + ",1,"
-                                                                 ));
+                    Map<Integer, Double> olds = new Hashtable<Integer, Double>();
+                    for (Component component : components) {
+                        TableLayoutConstraints constraints = contentPaneLayout.getConstraints(component);
+                        if (constraints.col1 >= finalCol) {
+                            int newCol1 = constraints.col1 + 2;
+                            contentPaneLayout.setConstraints(component,
+                                                             new TableLayoutConstraints(
+                                                                     newCol1 + ",1,"
+                                                             ));
 
-                                olds.put(newCol1, contentPaneLayout.getColumn(newCol1));
-                                Double colSize = olds.get(constraints.col1);
-                                if (colSize == null)
-                                    colSize = contentPaneLayout.getColumn(constraints.col1);
+                            olds.put(newCol1, contentPaneLayout.getColumn(newCol1));
+                            Double colSize = olds.get(constraints.col1);
+                            if (colSize == null)
+                                colSize = contentPaneLayout.getColumn(constraints.col1);
 
-                                contentPaneLayout.setColumn(newCol1, colSize);
-                            }
+                            contentPaneLayout.setColumn(newCol1, colSize);
                         }
-                        contentPaneLayout.setColumn(finalCol, width);
-                        contentPane.add(anchorLabel, (anchor.getIndex() * 2 + 2) + ",1,");
-                    } else
-                        contentPane.add(anchorLabel, (contentPaneLayout.getNumColumn() - 1) + ",1,");
-                } else {
-                    int height = Math.max(anchorLabel.getHeight(),
-                                          Math.max(anchorLabel.getPreferredSize().height,
-                                                   anchorLabel.getSize().height)) + 12;
+                    }
+                    contentPaneLayout.setColumn(finalCol, width);
+                    contentPane.add(anchorLabel, (index * 2 + 2) + ",1,");
+                } else
+                    contentPane.add(anchorLabel, (contentPaneLayout.getNumColumn() - 1) + ",1,");
+            } else {
+                int height = Math.max(anchorLabel.getHeight(),
+                                      Math.max(anchorLabel.getPreferredSize().height,
+                                               anchorLabel.getSize().height)) + 12;
 
-                    contentPaneLayout.insertRow(contentPaneLayout.getNumRow(), contentPaneLayout.getNumRow() > 0 ? 5 : 1);
-                    contentPaneLayout.insertRow(contentPaneLayout.getNumRow(), height);
+                contentPaneLayout.insertRow(contentPaneLayout.getNumRow(), contentPaneLayout.getNumRow() > 0 ? 5 : 1);
+                contentPaneLayout.insertRow(contentPaneLayout.getNumRow(), height);
 
-                    if (anchor.getIndex() >= 0) {
-                        Component[] components = contentPane.getComponents();
-                        int finalRow = (anchor.getIndex() * 2 + 2);
+                if (index >= 0) {
+                    Component[] components = contentPane.getComponents();
+                    int finalRow = (index * 2 + 2);
 
 
-                        Map<Integer, Double> olds = new Hashtable<Integer, Double>();
-                        for (Component component : components) {
-                            TableLayoutConstraints constraints = contentPaneLayout.getConstraints(component);
+                    Map<Integer, Double> olds = new Hashtable<Integer, Double>();
+                    for (Component component : components) {
+                        TableLayoutConstraints constraints = contentPaneLayout.getConstraints(component);
 
-                            if (constraints.row1 >= finalRow) {
-                                int newRow1 = constraints.row1 + 2;
-                                contentPaneLayout.setConstraints(component,
-                                                                 new TableLayoutConstraints(
-                                                                         "1," + newRow1
-                                                                 ));
+                        if (constraints.row1 >= finalRow) {
+                            int newRow1 = constraints.row1 + 2;
+                            contentPaneLayout.setConstraints(component,
+                                                             new TableLayoutConstraints(
+                                                                     "1," + newRow1
+                                                             ));
 
-                                olds.put(newRow1, contentPaneLayout.getRow(newRow1));
-                                Double rowSize = olds.get(constraints.row1);
-                                if (rowSize == null)
-                                    rowSize = contentPaneLayout.getRow(constraints.row1);
+                            olds.put(newRow1, contentPaneLayout.getRow(newRow1));
+                            Double rowSize = olds.get(constraints.row1);
+                            if (rowSize == null)
+                                rowSize = contentPaneLayout.getRow(constraints.row1);
 
-                                contentPaneLayout.setRow(newRow1, rowSize);
-                            }
+                            contentPaneLayout.setRow(newRow1, rowSize);
                         }
-                        contentPaneLayout.setRow(finalRow, height);
+                    }
+                    contentPaneLayout.setRow(finalRow, height);
 
-                        contentPane.add(anchorLabel, "1," + (anchor.getIndex() * 2 + 2));
-                    } else
-                        contentPane.add(anchorLabel, "1," + (contentPaneLayout.getNumRow() - 1));
-                }
-                SwingUtil.repaint(toolScrollBar);
-            } finally {
-                anchor.setIndex(-1);
+                    contentPane.add(anchorLabel, "1," + (index * 2 + 2));
+                } else
+                    contentPane.add(anchorLabel, "1," + (contentPaneLayout.getNumRow() - 1));
             }
+            SwingUtil.repaint(toolScrollBar);
         }
 
         protected void removeAnchorLabel(JLabel anchorLabel, ToolWindowDescriptor descriptor) {
@@ -456,7 +461,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
 
             if (evt.getOldValue() == ToolWindowType.FLOATING_FREE) {
-                addAnchorLabel(toolWindowDescriptor.getAnchorLabel(contentPane));
+                addAnchorLabel(toolWindowDescriptor.getAnchorLabel(contentPane), -1);
                 ensureVisible(toolWindowDescriptor.getAnchorLabel());
 
                 SwingUtil.repaint(contentPane);
@@ -629,7 +634,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 if (content != null) {
                     splitPane.setDividerSize(5);
                     if (manager.getShowingGroup() == null &&
-                        ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).isAnimating()) {
+                        descriptor.getTypeDescriptor(ToolWindowType.DOCKED).isAnimating()) {
                         splitAnimation.show(divederLocation);
                     } else {
                         if (divederLocation != 0) {

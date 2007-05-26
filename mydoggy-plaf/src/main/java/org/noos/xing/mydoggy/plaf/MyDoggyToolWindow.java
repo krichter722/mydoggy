@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
+import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
 import javax.swing.*;
@@ -9,8 +10,8 @@ import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ResourceBundle;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 /**
  * @author Angelo De Caro
@@ -32,7 +33,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     private boolean active;
     private boolean flash;
     private boolean maximized;
-    private boolean defaultAggregate;
+    private boolean aggregateEnabled;
 
     private java.util.List<ToolWindowTab> toolWindowTabs;
     private ToolWindowTab originalToolWindowTab;
@@ -44,9 +45,9 @@ public class MyDoggyToolWindow implements ToolWindow {
     private EventListenerList internalListenerList;
     private EventListenerList listenerList;
 
-    private int lastAnchorIndex = -1;
-
     private boolean publicEvent = true;
+
+    private int availablePosition;
 
     MyDoggyToolWindow(MyDoggyToolWindowManager manager, Window anchestor, String id, int index,
                       ToolWindowAnchor anchor, ToolWindowType type,
@@ -69,8 +70,8 @@ public class MyDoggyToolWindow implements ToolWindow {
         this.type = type;
         setTitle(title);
         setIcon(icon);
-        this.available = this.active = this.visible = this.maximized = this.defaultAggregate = false;
-        defaultAggregate = true;
+        this.available = this.active = this.visible = this.maximized = this.aggregateEnabled = false;
+        aggregateEnabled = true;
     }
 
 
@@ -116,7 +117,7 @@ public class MyDoggyToolWindow implements ToolWindow {
             boolean old = this.available;
             this.available = available;
 
-            firePropertyChangeEvent("available", old, available);
+            firePropertyChangeEvent("available", old, available, availablePosition);
         }
     }
 
@@ -138,20 +139,20 @@ public class MyDoggyToolWindow implements ToolWindow {
         }
     }
 
-    public void setDefaultAggregate(boolean defaultAggregate) {
-        if (this.defaultAggregate == defaultAggregate)
+    public void setAggregateMode(boolean aggregateEnabled) {
+        if (this.aggregateEnabled == aggregateEnabled)
             return;
 
         synchronized (getLock()) {
-            boolean old = this.defaultAggregate;
-            this.defaultAggregate = defaultAggregate;
+            boolean old = this.aggregateEnabled;
+            this.aggregateEnabled = aggregateEnabled;
 
-            firePropertyChangeEvent("defaultAggregate", old, defaultAggregate);
+            firePropertyChangeEvent("aggregateEnabled", old, this.aggregateEnabled);
         }
     }
 
-    public boolean isDefaultAggregate() {
-        return defaultAggregate;
+    public boolean isAggregateMode() {
+        return aggregateEnabled;
     }
 
     public boolean isFlashing() {
@@ -190,7 +191,7 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     public boolean marker = true;
     public void setVisible(boolean visible) {
-        if (defaultAggregate && visible && !descriptor.getManager().isShiftShow() &&
+        if (aggregateEnabled && visible && !descriptor.getManager().isShiftShow() &&
             getType() == ToolWindowType.DOCKED && marker)
             aggregate();
 
@@ -236,8 +237,12 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setAnchor(ToolWindowAnchor anchor) {
+        setAnchor(anchor, -1);
+    }
+
+    public void setAnchor(ToolWindowAnchor anchor, int index) {
         synchronized (getLock()) {
-            if (this.anchor == anchor && anchor.getIndex() == lastAnchorIndex)
+            if (this.anchor == anchor && index == getDescriptor().getLabelIndex())
                 return;
 
             if (getType() == ToolWindowType.DOCKED || getType() == ToolWindowType.SLIDING) {
@@ -247,16 +252,13 @@ public class MyDoggyToolWindow implements ToolWindow {
                 publicEvent = false;
 
                 ToolWindowAnchor oldAnchor;
-                int oldLastAnchorIndex;
                 try {
                     setAvailable(false);
 
                     oldAnchor = this.anchor;
                     this.anchor = anchor;
 
-                    oldLastAnchorIndex = this.lastAnchorIndex;
-                    this.lastAnchorIndex = anchor.getIndex();
-
+                    availablePosition = index;
                     setAvailable(true);
                     if (tempActive)
                         setActive(true);
@@ -266,22 +268,12 @@ public class MyDoggyToolWindow implements ToolWindow {
                     publicEvent = true;
                 }
 
-                fireAnchorEvent(oldAnchor, anchor);
-
-                if (oldAnchor == anchor) {
-                    publicEvent = false;
-                    try {
-                        fireEvent(new PropertyChangeEvent(descriptor, "anchor.index", oldLastAnchorIndex, this.lastAnchorIndex));
-                    } finally {
-                        publicEvent = true;
-                    }
-                }
+                fireAnchorEvent(oldAnchor, anchor, index);
             } else {
                 ToolWindowAnchor oldAnchor = this.anchor;
                 this.anchor = anchor;
-                this.lastAnchorIndex = anchor.getIndex();
 
-                fireAnchorEvent(oldAnchor, anchor);
+                fireAnchorEvent(oldAnchor, anchor, index);
             }
         }
     }
@@ -492,8 +484,13 @@ public class MyDoggyToolWindow implements ToolWindow {
         fireEvent(event);
     }
 
-    protected void fireAnchorEvent(ToolWindowAnchor oldValue, ToolWindowAnchor newValue) {
-        PropertyChangeEvent event = new PropertyChangeEvent(descriptor, "anchor", oldValue, newValue);
+    protected void firePropertyChangeEvent(String property, Object oldValue, Object newValue, Object userObject) {
+        PropertyChangeEvent event = new UserPropertyChangeEvent(descriptor, property, oldValue, newValue, userObject);
+        fireEvent(event);
+    }
+
+    protected void fireAnchorEvent(ToolWindowAnchor oldValue, ToolWindowAnchor newValue, Object userObject) {
+        PropertyChangeEvent event = new UserPropertyChangeEvent(descriptor, "anchor", oldValue, newValue, userObject);
         fireEvent(event);
     }
 
