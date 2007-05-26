@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
 import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragAndDropLock;
@@ -368,8 +369,17 @@ public class ApplicationBarPanelUI extends PanelUI {
             DragAndDropLock.setDragAndDropStarted(false);
 
             // TODO: add code here
-            if (lastToolWindowContainer != null)
+            if (lastToolWindowContainer != null) {
                 lastToolWindowContainer.setBorder(oldBorder);
+
+                String toolId = lastToolWindowContainer.getName().substring(21);
+                ToolWindow destToolWindow = descriptor.getManager().getToolWindow(toolId);
+                assert destToolWindow != null;
+
+                ToolWindowAnchor anchor = destToolWindow.getAnchor();
+
+                toolWindow.setAnchor(anchor);
+            }
 
             GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
 
