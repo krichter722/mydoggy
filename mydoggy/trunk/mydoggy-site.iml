@@ -3,16 +3,10 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/mydoggy-api/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/mydoggy-examples/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/mydoggy-examples/src/main/resources" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/mydoggy-plaf/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/mydoggy-plaf/src/main/resources" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/mydoggy-site-skin/src/main/resources" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/lib" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry type="jdk" jdkName="1.5" jdkType="JavaSDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntryProperties />
   </component>

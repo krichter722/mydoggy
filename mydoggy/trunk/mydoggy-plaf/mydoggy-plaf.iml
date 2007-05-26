@@ -7,12 +7,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/target/classes" />
+      <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
     </content>
-    <orderEntry type="jdk" jdkName="1.5" jdkType="JavaSDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="mydoggy-api" exported="" />
-    <orderEntry type="module-library">
-      <library name="junit junit 3.8.1">
+    <orderEntry type="module-library" exported="">
+      <library name="junit:junit:3.8.1">
         <CLASSES>
           <root url="jar://C:/Documents and Settings/Angelo/.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar!/" />
         </CLASSES>
@@ -22,8 +23,9 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
-      <library name="tablelayout TableLayout 20020517">
+    <orderEntry type="module" module-name="mydoggy-api" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library name="tablelayout:TableLayout:20020517">
         <CLASSES>
           <root url="jar://C:/Documents and Settings/Angelo/.m2/repository/tablelayout/TableLayout/20020517/TableLayout-20020517.jar!/" />
         </CLASSES>
