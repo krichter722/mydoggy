@@ -1,8 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
 import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragAndDropLock;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTrasferable;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
@@ -11,13 +11,14 @@ import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.plaf.PanelUI;
 import java.awt.*;
 import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ContainerListener;
 import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
@@ -281,6 +282,10 @@ public class ApplicationBarPanelUI extends PanelUI {
 
     class DragGesture implements DragGestureListener, DragSourceMotionListener, DragSourceListener {
         private BufferedImage ghostImage;
+        private JPanel lastToolWindowContainer = null;
+        private Border oldBorder = null;
+
+        private LineBorder highligthBorder = new LineBorder(Color.BLUE, 3);
 
         public void dragGestureRecognized(DragGestureEvent dge) {
             if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE)
@@ -322,11 +327,24 @@ public class ApplicationBarPanelUI extends PanelUI {
             if (!DragAndDropLock.isDragAndDropStarted() || ghostImage == null)
                 return;
 
-            GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
+            GlassPanel glassPane = (GlassPanel) descriptor.getManager().getRootPane().getGlassPane();
 
             Point p = (Point) dsde.getLocation().clone();
             SwingUtilities.convertPointFromScreen(p, glassPane);
             glassPane.setPoint(p);
+
+            Container contentPane = descriptor.getManager().getRootPane().getContentPane();
+            Component component = SwingUtilities.getDeepestComponentAt(contentPane, p.x, p.y);
+            if (component != null) {
+                if (lastToolWindowContainer != null)
+                    lastToolWindowContainer.setBorder(oldBorder);
+
+                lastToolWindowContainer = (JPanel) SwingUtil.getParent(component, "toolWindow.container");
+                if (lastToolWindowContainer != null) {
+                    oldBorder = lastToolWindowContainer.getBorder();
+                    lastToolWindowContainer.setBorder(highligthBorder);
+                }
+            }
 
             glassPane.repaint(glassPane.getRepaintRect());
         }
@@ -350,6 +368,8 @@ public class ApplicationBarPanelUI extends PanelUI {
             DragAndDropLock.setDragAndDropStarted(false);
 
             // TODO: add code here
+            if (lastToolWindowContainer != null)
+                lastToolWindowContainer.setBorder(oldBorder);
 
             GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
 

@@ -144,6 +144,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
         // Container
         container = new JPanel(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {16, TableLayout.FILL}}, false));
+        container.setName("toolWindow.container." + toolWindow.getId());
         container.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
         container.setFocusCycleRoot(false);
 
