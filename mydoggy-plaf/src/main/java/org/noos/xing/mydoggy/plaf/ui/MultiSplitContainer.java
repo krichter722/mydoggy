@@ -91,8 +91,35 @@ public class MultiSplitContainer extends JPanel {
         }
     }
 
-    public void moveTo(Component c, int index) {
+    public void setComponentAt(Component content, int index) {
+        if (index >= components.size())
+            throw new IllegalArgumentException("Illegal index.");
 
+        if (components.size() == 0)
+            addContent(content);
+        else if (components.size() == 1) {
+            removeAll();
+            if (components.contains(content))
+                return;
+            
+            add(content, "0,0");
+        } else {
+            JSplitPane splitPane = (JSplitPane) getComponent(0);
+            int i = 0;
+            for (; i < index; i++) {
+                splitPane = (JSplitPane) getRightCmp(splitPane);
+            }
+
+            JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
+            panel.setFocusCycleRoot(true);
+            panel.add(content, "0,0,FULL,FULL");
+
+            if (i % 2 == 0) {
+                splitPane.setLeftComponent(panel);
+            } else {
+                splitPane.setRightComponent(panel);
+            }
+        }
     }
 
     public boolean isEmpty() {

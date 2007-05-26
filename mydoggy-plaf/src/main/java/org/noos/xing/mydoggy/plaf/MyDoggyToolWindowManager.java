@@ -714,6 +714,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                     }
                 }
             }
+
+            event = new PropertyChangeEvent(evt.getSource(), "visible.after",
+                                            evt.getOldValue(), evt.getNewValue());
+
+            for (MyDoggyToolWindowBar bar : bars)
+                bar.propertyChange(event);
         }
     }
 
