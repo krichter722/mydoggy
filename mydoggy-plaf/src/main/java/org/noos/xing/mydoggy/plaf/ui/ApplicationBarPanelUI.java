@@ -369,7 +369,6 @@ public class ApplicationBarPanelUI extends PanelUI {
 
             DragAndDropLock.setDragAndDropStarted(false);
 
-            // TODO: add code here
             if (lastToolWindowContainer != null) {
                 lastToolWindowContainer.setBorder(oldBorder);
 
