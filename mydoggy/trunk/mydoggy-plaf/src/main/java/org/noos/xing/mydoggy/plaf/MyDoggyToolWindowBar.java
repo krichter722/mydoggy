@@ -154,23 +154,27 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         propertyChangeSupport.addPropertyChangeListener("visible.FLOATING", new VisibleFloatingListener());
         propertyChangeSupport.addPropertyChangeListener("visible.FLOATING_FREE", new VisibleFloatingWindowListener());
         propertyChangeSupport.addPropertyChangeListener("visible.SLIDING", new VisibleSlidingListener());
+        propertyChangeSupport.addPropertyChangeListener("visible.after", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
+                if (sourceTool.getType() != ToolWindowType.DOCKED ||
+                    sourceTool.getAnchor() != anchor)
+                    return;
+
+                System.out.println("READER");
+                // reorder
+                switch(anchor) {
+                    case LEFT:
+                    case RIGHT:
+
+                        break;
+                }
+            }
+        });
         propertyChangeSupport.addPropertyChangeListener("visible", new VisibleListener());
         propertyChangeSupport.addPropertyChangeListener("active.before", new ActiveBeforeListener());
         propertyChangeSupport.addPropertyChangeListener("active", new ActiveListener());
         propertyChangeSupport.addPropertyChangeListener("type", new TypeListener());
-        propertyChangeSupport.addPropertyChangeListener("anchor", new PropertyChangeListener() {
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                System.out.println("HERE");
-                ToolWindowAnchor oldAnchor = (ToolWindowAnchor) evt.getOldValue();
-                ToolWindowAnchor newAnchor = (ToolWindowAnchor) evt.getNewValue();
-
-                if (newAnchor == oldAnchor) {
-                    System.out.println("ok");
-                }
-
-            }
-        });
 
         propertyChangeSupport.addPropertyChangeListener("index", new IndexListener());
         propertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
