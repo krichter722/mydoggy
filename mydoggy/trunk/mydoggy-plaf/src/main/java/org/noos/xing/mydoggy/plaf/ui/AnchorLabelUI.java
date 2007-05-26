@@ -225,7 +225,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                     if (toolWindow.isVisible()) {
                         toolWindow.setVisible(false);
                     } else {
-                        if (toolWindow.isDefaultAggregate()) {
+                        if (toolWindow.isAggregateMode()) {
                             // TODO: can disable temporaneamente default aggregate???
                             // TODO: sto marker è una porcata...
                             ((MyDoggyToolWindow)toolWindow).marker = false;

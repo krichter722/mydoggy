@@ -97,9 +97,9 @@ public interface ToolWindow {
      */
     void aggregate();
 
-    void setDefaultAggregate(boolean defaultAggregate);
+    void setAggregateMode(boolean aggregateEnabled);
 
-    boolean isDefaultAggregate();
+    boolean isAggregateMode();
 
     /**
      * Returns whether the representative button is currently flashing.
@@ -163,6 +163,8 @@ public interface ToolWindow {
      * @since 1.0.0
      */
     void setAnchor(ToolWindowAnchor anchor);
+
+    void setAnchor(ToolWindowAnchor anchor, int index);
 
     /**
      * Returns the anchor which the tool is anchored.

@@ -9,8 +9,8 @@ import org.noos.xing.mydoggy.plaf.descriptors.DefaultFloatingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultSlidingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.persistence.xml.XmlPersistenceDelegate;
 import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
+import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.GlassPanel;
-import org.noos.xing.mydoggy.plaf.ui.MultiSplitContainer;
 import org.noos.xing.mydoggy.plaf.ui.ResourceBoundles;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.MyDoggyTabbedContentManagerUI;
@@ -765,11 +765,11 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 ToolWindowAnchor oldAnchor = (ToolWindowAnchor) evt.getOldValue();
                 ToolWindowAnchor newAnchor = (ToolWindowAnchor) evt.getNewValue();
 
-                PropertyChangeEvent avEvent = new PropertyChangeEvent(evt.getSource(), "available", true, false);
+                PropertyChangeEvent avEvent = new UserPropertyChangeEvent(evt.getSource(), "available", true, false, -1);
                 getBar(oldAnchor).propertyChange(avEvent);
                 syncPanel(oldAnchor);
 
-                avEvent = new PropertyChangeEvent(evt.getSource(), "available", false, true);
+                avEvent = new UserPropertyChangeEvent(evt.getSource(), "available", false, true, -1);
                 getBar(newAnchor).propertyChange(avEvent);
                 syncPanel(newAnchor);
             }

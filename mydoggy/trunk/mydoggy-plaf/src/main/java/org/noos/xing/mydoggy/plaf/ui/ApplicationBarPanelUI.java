@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragAndDropLock;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTrasferable;
@@ -377,8 +378,8 @@ public class ApplicationBarPanelUI extends PanelUI {
                 assert destToolWindow != null;
 
                 ToolWindowAnchor anchor = destToolWindow.getAnchor();
-
-                toolWindow.setAnchor(anchor);
+                toolWindow.setAnchor(anchor,
+                                     ((MyDoggyToolWindow) destToolWindow).getDescriptor().getLabelIndex() - 1);
             }
 
             GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
@@ -390,7 +391,7 @@ public class ApplicationBarPanelUI extends PanelUI {
             glassPane.setVisible(false);
 
             ghostImage = null;
-            
+
             DragAndDropLock.setLocked(false);
             SwingUtilities.getWindowAncestor(descriptor.getManager()).repaint();
         }

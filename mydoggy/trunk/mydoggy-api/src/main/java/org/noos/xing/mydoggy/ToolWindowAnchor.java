@@ -11,6 +11,7 @@ package org.noos.xing.mydoggy;
  * @since 1.0.0
  */
 public enum ToolWindowAnchor {
+    
     /**
      * Self explained.
      */
@@ -29,19 +30,6 @@ public enum ToolWindowAnchor {
     /**
      * Self explained.
      */
-    RIGHT;
+    RIGHT
 
-    /**
-     * The index position relative to the other tools attached to same anchor.
-     * The -1 value means last position.
-     */
-    private int index = -1;
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
 }
