@@ -9,14 +9,17 @@ import java.util.List;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @todo optimize
  */
 public class MultiSplitContainer extends JPanel {
     private List<Component> contents;
+    private List<JPanel> panels;
     private int orientation;
 
     public MultiSplitContainer(int orientation) {
         this.orientation = orientation;
         this.contents = new ArrayList<Component>();
+        this.panels = new ArrayList<JPanel>();
 
         setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
     }
@@ -32,20 +35,23 @@ public class MultiSplitContainer extends JPanel {
             JSplitPane split = new JSplitPane(orientation);
             split.setResizeWeight(0.5d);
             split.setContinuousLayout(true);
+            split.setFocusable(false);
             split.setBorder(null);
 
             JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
             panel.setFocusCycleRoot(true);
             panel.add(root, "0,0,FULL,FULL");
-
             split.setLeftComponent(panel);
+
+            if (!(root instanceof JSplitPane))
+                panels.add(panel);
 
             panel = new JPanel(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
             panel.setFocusCycleRoot(true);
             panel.add(content, "0,0,FULL,FULL");
-
             split.setRightComponent(panel);
-            split.setFocusable(false);
+            panels.add(panel);
+
             add(split, "0,0");
         }
         contents.add(content);
@@ -61,15 +67,21 @@ public class MultiSplitContainer extends JPanel {
         if (contents.size() == 1) {
             JSplitPane splitPane = (JSplitPane) getComponent(0);
             removeAll();
-            if (getRightCmp(splitPane) == content)
+
+            if (getRightCmp(splitPane) == content) {
+                panels.remove(0);
                 add(getLeftCmp(splitPane), "0,0");
-            else
+            } else {
+                panels.remove(1);
                 add(getRightCmp(splitPane), "0,0");
+            }
         } else {
             JSplitPane splitPane = (JSplitPane) getComponent(0);
             JSplitPane previous = null;
+
             while (splitPane != null) {
                 if (getRightCmp(splitPane) == content) {
+                    System.out.println("R : " + panels.remove(splitPane.getRightComponent()));
                     if (previous == null) {
                         removeAll();
                         add(getLeftCmp(splitPane), "0,0");
@@ -80,6 +92,8 @@ public class MultiSplitContainer extends JPanel {
                     }
                 } else if (getLeftCmp(splitPane) == content) {
                     assert previous != null;
+                    System.out.println("L : " + panels.remove(splitPane.getLeftComponent()));
+
                     previous.setLeftComponent(splitPane.getRightComponent());
                     break;
                 } else if (getLeftCmp(splitPane) instanceof JSplitPane) {
@@ -104,34 +118,9 @@ public class MultiSplitContainer extends JPanel {
             
             add(content, "0,0");
         } else {
-            JSplitPane splitPane = (JSplitPane) getComponent(0);
-            int i = 0;
-            int pos = 0;
-            for (; i < index; i++) {
-                Container right = (Container) splitPane.getRightComponent();
-                if (right.getComponentCount() == 0) {
-                    pos = 1;
-                    break;
-                }
-
-                Component cmp = right.getComponent(0);
-                if (cmp instanceof JSplitPane) {
-                    splitPane = (JSplitPane) right;
-                } else {
-                    pos = 1;
-                    break;
-                }
-            }
-
-            JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
-            panel.setFocusCycleRoot(true);
+            JPanel panel = panels.get(index);
+            panel.removeAll();
             panel.add(content, "0,0,FULL,FULL");
-
-            if (pos == 0) {
-                splitPane.setLeftComponent(panel);
-            } else {
-                splitPane.setRightComponent(panel);
-            }
         }
     }
 
