@@ -18,6 +18,9 @@ public interface ToolWindowListener extends EventListener {
      */
     void toolWindowTabAdded(ToolWindowTabEvent event);
 
+
+    boolean toolWindowTabRemoving(ToolWindowTabEvent event);
+
     /**
      *
      * @param event
