@@ -46,9 +46,9 @@ public class ToolWindowGroupEvent extends EventObject {
      * Constructs a <code>ToolWindowGroupEvent</code> object with the
      * specified source tool window manager, actionId, toolWindowGroup.
      * <p/>
-     * This method throws an
-     * <code>IllegalArgumentException</code> if <code>source</code> or <code>toolWindowGroup</code>
-     * is <code>null</code>.
+     * This constructor throws an
+     * <code>IllegalArgumentException</code> if the <code>source</code> or the <code>toolWindowGroup</code>
+     * or the <code>actionId</code> is <code>null</code>.
      *
      * @param source          the tool window manager where the action has occured.
      * @param actionId        the action identifier
@@ -59,6 +59,8 @@ public class ToolWindowGroupEvent extends EventObject {
      */
     public ToolWindowGroupEvent(ToolWindowManager source, ActionId actionId, ToolWindowGroup toolWindowGroup) {
         super(source);
+        if (actionId == null)
+            throw new IllegalArgumentException("null actionId");
         if (toolWindowGroup == null)
             throw new IllegalArgumentException("null toolWindowGroup");
 
@@ -71,9 +73,9 @@ public class ToolWindowGroupEvent extends EventObject {
      * Constructs a <code>ToolWindowGroupEvent</code> object with the
      * specified source tool window manager, actionId, toolWindowGroup, toolWindow.
      * <p/>
-     * This method throws an
-     * <code>IllegalArgumentException</code> if <code>source</code> or <code>toolWindowGroup</code>
-     * is <code>null</code>.
+     * This constructor throws an
+     * <code>IllegalArgumentException</code> if the <code>source</code> or the <code>toolWindowGroup</code>
+     * or the <code>actionId</code> is <code>null</code>.
      *
      * @param source          the tool window manager where the action has occured.
      * @param actionId        the action identifier
@@ -86,6 +88,8 @@ public class ToolWindowGroupEvent extends EventObject {
      */
     public ToolWindowGroupEvent(ToolWindowManager source, ActionId actionId, ToolWindowGroup toolWindowGroup, ToolWindow toolWindow) {
         super(source);
+        if (actionId == null)
+            throw new IllegalArgumentException("null actionId");
         if (toolWindowGroup == null)
             throw new IllegalArgumentException("null toolWindowGroup");
 
@@ -113,7 +117,7 @@ public class ToolWindowGroupEvent extends EventObject {
     }
 
     /**
-     * Returns the tool window involved it the action.
+     * Returns the tool window involved in the action.
      *
      * @return the tool window.
      */

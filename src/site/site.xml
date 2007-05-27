@@ -28,6 +28,12 @@
             <item name="Using" href="/mydoggy-examples/mydoggysetUsing.html"/>
         </menu>
 
+        <menu name="Core Interfaces">
+            <item name="ToolWindowManager" href="/mydoggy-api/toolwindowManager.html"/>
+            <item name="ToolWindow" href="/mydoggy-api/toolwindow.html"/>
+            <item name="ToolWindowGroup" href="/mydoggy-api/toolwindowGroups.html"/>
+        </menu>
+
         <menu name="Modules">
             <item name="MyDoggy - Api" href="/mydoggy-api/index.html"/>
             <item name="MyDoggy - Plaf" href="/mydoggy-plaf/index.html"/>

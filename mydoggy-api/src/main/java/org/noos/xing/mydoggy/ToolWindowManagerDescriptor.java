@@ -52,14 +52,14 @@ public interface ToolWindowManagerDescriptor {
     PushAwayModeDescriptor getPushAwayModeDescriptor(PushAwayMode pushAwayMode);
 
     /**
-     * TODO
+     * Adds the specified component at the given corner.
      *
-     * @param corner
-     * @param component
+     * @param corner the corner at which to insert the component.
+     * @param component the component to be added.
+     * @see Corner
      * @since 1.3.0
      */
     void setCornerComponent(Corner corner, Component component);
-
 
     /**
      * Adds a PropertyChangeListener to the listener list. The listener is

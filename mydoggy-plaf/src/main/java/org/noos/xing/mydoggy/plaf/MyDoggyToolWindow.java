@@ -408,7 +408,6 @@ public class MyDoggyToolWindow implements ToolWindow {
             // TODO: implement
         }
 
-
         return result;
     }
 

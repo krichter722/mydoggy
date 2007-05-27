@@ -132,13 +132,13 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
         return listenerList.getListeners(ToolWindowGroupListener.class);
     }
 
-
     public String toString() {
         return "MyDoggyToolWindowGroup{" +
                "name='" + name + '\'' +
                ", tools=" + tools +
                '}';
     }
+
 
     protected void fireGroupShowed() {
         ToolWindowGroupEvent event = new ToolWindowGroupEvent(manager, ToolWindowGroupEvent.ActionId.GROUP_SHOWED, this);

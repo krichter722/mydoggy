@@ -156,6 +156,7 @@ public interface ToolWindow {
     /**
      * This method is used to set the anchor for the tool. The anchor specifies the position of the tool when
      * it is anchored to the docking system.
+     * The behaviour is equivalent to a call of the method <code>setAnchor(anchor, -1)</code>.
      *
      * @param anchor the new anchor.
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
@@ -164,13 +165,25 @@ public interface ToolWindow {
      */
     void setAnchor(ToolWindowAnchor anchor);
 
+    /**
+     * This method is used to set the anchor for the tool. The anchor specifies the position of the tool when
+     * it is anchored to the docking system. The index specifies the position relative to the other tools on
+     * the same anchor.
+     *
+     * @param anchor the new anchor.
+     * @param index the position relative to the other tools on the same anchor.
+     *              Use 0 for the first position, -1 for the last position.
+     * @see org.noos.xing.mydoggy.ToolWindowAnchor
+     * @see #getAnchor()
+     * @since 1.3.0
+     */
     void setAnchor(ToolWindowAnchor anchor, int index);
 
     /**
      * Returns the anchor which the tool is anchored.
      *
      * @return the anchor for the tool.
-     * @see #setAnchor(ToolWindowAnchor)
+     * @see #setAnchor(ToolWindowAnchor)                                               s
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
      * @since 1.0.0
      */
@@ -238,7 +251,7 @@ public interface ToolWindow {
      * This method is used to set the title for the tool.
      *
      * @param title the new title.
-     * @see #getTitle() ()
+     * @see #getTitle()
      * @since 1.0.0
      */
     void setTitle(String title);
@@ -279,15 +292,19 @@ public interface ToolWindow {
      */
     ToolWindowTab addToolWindowTab(String title, Component component);
 
+    /**
+     * Removes the specified tab from this toolwindow.
+     *
+     * @param toolWindowTab the tab to be removed
+     * @see #addToolWindowTab(String, java.awt.Component)
+     * @return <tt>true</tt> if this toolwindow contained the specified tab.
+     */
     boolean removeToolWindowTab(ToolWindowTab toolWindowTab);
 
-//    ToolWindowTab getToolWindowTab(String title);
-//
-//    ToolWindowTab getToolWindowTab(Component component);
-
     /**
-     *
-     * @return
+     * Gets all the tabs in this toolwindow.
+     * 
+     * @return    an array of all the tabs in this toolwindow.
      * @since 1.3.0
      */
     ToolWindowTab[] getToolWindowTabs();
