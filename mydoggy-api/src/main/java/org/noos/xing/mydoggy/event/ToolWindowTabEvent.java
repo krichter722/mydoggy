@@ -14,8 +14,9 @@ import java.util.EventObject;
 public class ToolWindowTabEvent extends EventObject {
 
     public enum ActionId {
-        TAB_ADDED,        // When a tab is added.
-        TAB_REMOVED       // When a tab is removed.
+        TAB_ADDED,         // When a tab is added.
+        TAB_REMOVED,       // When a tab is removed.
+        TAB_REMOVING       // When a tab is removing.
     }
 
     /**

@@ -76,8 +76,6 @@ public class FloatingContainer extends DockedContainer {
                 lastBounds = null;
             }
 
-            applicationBarTitle.setIcon(toolWindow.getIcon());
-
             if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isAnimating())
                 floatingAnimation.show();
              else {
@@ -89,7 +87,6 @@ public class FloatingContainer extends DockedContainer {
             }
         } else {
             lastBounds = window.getBounds();
-            applicationBarTitle.setIcon(null);
 
             if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isAnimating())
                 floatingAnimation.hide();
@@ -121,8 +118,8 @@ public class FloatingContainer extends DockedContainer {
                     window.removeMouseMotionListener(resizeMouseInputHandler);
                     window.removeMouseListener(resizeMouseInputHandler);
 
-                    applicationBarTitle.removeMouseMotionListener(moveMouseInputHandler);
-                    applicationBarTitle.removeMouseListener(moveMouseInputHandler);
+                    applicationBarTabs.getViewport().removeMouseMotionListener(moveMouseInputHandler);
+                    applicationBarTabs.getViewport().removeMouseListener(moveMouseInputHandler);
 
                     applicationBar.removeMouseMotionListener(moveMouseInputHandler);
                     applicationBar.removeMouseListener(moveMouseInputHandler);
@@ -130,8 +127,8 @@ public class FloatingContainer extends DockedContainer {
                     window.addMouseMotionListener(resizeMouseInputHandler);
                     window.addMouseListener(resizeMouseInputHandler);
 
-                    applicationBarTitle.addMouseMotionListener(moveMouseInputHandler);
-                    applicationBarTitle.addMouseListener(moveMouseInputHandler);
+                    applicationBarTabs.getViewport().addMouseMotionListener(moveMouseInputHandler);
+                    applicationBarTabs.getViewport().addMouseListener(moveMouseInputHandler);
 
                     applicationBar.addMouseMotionListener(moveMouseInputHandler);
                     applicationBar.addMouseListener(moveMouseInputHandler);
@@ -143,8 +140,8 @@ public class FloatingContainer extends DockedContainer {
                     window.removeMouseMotionListener(resizeMouseInputHandler);
                     window.removeMouseListener(resizeMouseInputHandler);
 
-                    applicationBarTitle.removeMouseMotionListener(moveMouseInputHandler);
-                    applicationBarTitle.removeMouseListener(moveMouseInputHandler);
+                    applicationBarTabs.getViewport().removeMouseMotionListener(moveMouseInputHandler);
+                    applicationBarTabs.getViewport().removeMouseListener(moveMouseInputHandler);
 
                     applicationBar.removeMouseMotionListener(moveMouseInputHandler);
                     applicationBar.removeMouseListener(moveMouseInputHandler);

@@ -35,7 +35,6 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     private JPanel container;
 
     protected JPanel applicationBar;
-    protected JLabel applicationBarTitle;
     protected ToolWindowTabPanel applicationBarTabs;
 
     private Component focusRequester;
@@ -46,7 +45,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     protected JButton hideButton;
     protected JButton maximizeButton;
 
-    private ApplicationBarMouseAdapter applicationBarMouseAdapter;
+    ApplicationBarMouseAdapter applicationBarMouseAdapter;
     private PropertyChangeSupport propertyChangeSupport;
 
     boolean valueAdjusting;
@@ -164,17 +163,11 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         applicationBar.setUI(new ApplicationBarPanelUI(descriptor, this));
         applicationBar.addMouseListener(applicationBarMouseAdapter);
 
-        // Title
-        applicationBarTitle = new JLabel(toolWindow.getTitle(), JLabel.LEFT);
-        applicationBarTitle.setForeground(Color.WHITE);
-        applicationBarTitle.setBackground(Color.LIGHT_GRAY);
-        applicationBarTitle.setOpaque(false);
-        applicationBarTitle.addMouseListener(applicationBarMouseAdapter);
-
-        applicationBarLayout.setColumn(0, applicationBarTitle.getFontMetrics(
-                applicationBarTitle.getFont()
+        applicationBarLayout.setColumn(0, applicationBar.getFontMetrics(
+                applicationBar.getFont()
         ).stringWidth(id) + 12);
 
+        // Tabs
         applicationBarTabs = new ToolWindowTabPanel(this, toolWindow);
         toolWindow.getToolWindowTabs()[0].setSelected(true);
 
@@ -192,11 +185,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                                              "toolWindow.dockButton." + toolWindow.getId());
 
         // Set ApplicationBar content
-        if (toolWindow.getToolWindowTabs().length > 1)
-            applicationBar.add(applicationBarTabs, "1,1");
-        else {
-            applicationBar.add(applicationBarTitle, "1,1");
-        }
+        applicationBar.add(applicationBarTabs, "1,1");
 
         applicationBar.add(dockButton, "3,1");
         applicationBar.add(floatingButton, "5,1");
@@ -259,11 +248,6 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 } else
                     maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE));
 
-            }
-        });
-        addPropertyChangeListener("title", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                applicationBarTitle.setText((String) evt.getNewValue());
             }
         });
 
@@ -632,54 +616,23 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 tab.addPropertyChangeListener(this);
         }
 
+        public boolean toolWindowTabRemoving(ToolWindowTabEvent event) {
+            return true;
+        }
+
         public void toolWindowTabAdded(ToolWindowTabEvent event) {
             ToolWindowTab tab = event.getToolWindowTab();
-            if (applicationBarTitle.getParent() != null) {
-                if (toolWindow.getToolWindowTabs().length > 1) {
-                    applicationBar.remove(applicationBarTitle);
-                    applicationBar.add(applicationBarTabs, "1,1");
-
-                    SwingUtil.repaint(applicationBar);
-                } else {
-                    applicationBarTitle.setText(tab.getTitle());
-                    if (toolWindow.getType() ==  ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE)
-                        applicationBarTitle.setIcon(tab.getIcon());
-
-                    SwingUtil.repaint(applicationBar);
-
-                    if (toolWindow.getToolWindowTabs().length == 1)
-                        setMainComponent(tab.getComponent());
-                    else
-                        setMainComponent(new JPanel());
-                }
-            }
-
             tab.getComponent().addMouseListener(applicationBarMouseAdapter);
             tab.addPropertyChangeListener(this);
         }
 
         public void toolWindowTabRemoved(ToolWindowTabEvent event) {
-            container.remove(event.getToolWindowTab().getComponent());
-            SwingUtil.repaint(container);
+            if (toolWindow.getToolWindowTabs().length == 0) {
+                container.remove(event.getToolWindowTab().getComponent());
+                SwingUtil.repaint(container);
+            }
             event.getToolWindowTab().getComponent().removeMouseListener(applicationBarMouseAdapter);
             event.getToolWindowTab().removePropertyChangeListener(this);
-
-            if (toolWindow.getToolWindowTabs().length == 1) {
-                applicationBar.remove(applicationBarTabs);
-                ToolWindowTab tab = toolWindow.getToolWindowTabs()[0];
-                applicationBarTitle.setText(tab.getTitle());
-                applicationBarTitle.setIcon(null);
-
-                applicationBar.add(applicationBarTitle, "1,1");
-                SwingUtil.repaint(applicationBar);
-            } else  if (toolWindow.getToolWindowTabs().length == 0) {
-                applicationBar.remove(applicationBarTabs);
-                applicationBarTitle.setText(null);
-                applicationBarTitle.setIcon(null);
-
-                applicationBar.add(applicationBarTitle, "1,1");
-                SwingUtil.repaint(applicationBar);
-            }
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
