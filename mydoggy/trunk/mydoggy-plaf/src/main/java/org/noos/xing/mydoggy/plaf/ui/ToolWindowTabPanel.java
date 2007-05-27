@@ -137,6 +137,10 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 }
             }
 
+            public boolean toolWindowTabRemoving(ToolWindowTabEvent event) {
+                return true;
+            }
+
             public void toolWindowTabRemoved(ToolWindowTabEvent event) {
                 ToolWindowTab nextTab = removeTab(event.getToolWindowTab());
 
@@ -180,6 +184,12 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 }
             });
             addMouseListener(new MouseAdapter() {
+                final JMenuItem nextTabItem = new JMenuItem(new SelectNextTabAction());
+                final JMenuItem previousTabItem = new JMenuItem(new SelectPreviousTabAction());
+                final JSeparator separator = new JSeparator();
+                final JMenuItem closeItem = new JMenuItem("Close");
+                final JMenuItem closeAllItem = new JMenuItem("Close ALL");
+
                 public void mousePressed(MouseEvent e) {
                     toolWindow.setActive(true);
                 }
@@ -190,13 +200,13 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                             public void update(JPopupMenu popupMenu) {
                                 int index = 0;
                                 if (TabButton.this.tab.isCloseable()) {
-                                    popupMenu.add(new JMenuItem("Close"), index++);
-                                    popupMenu.add(new JMenuItem("Close ALL"), index++);
-                                    popupMenu.add(new JSeparator(), index++);
+                                    popupMenu.add(closeItem, index++);
+                                    popupMenu.add(closeAllItem, index++);
+                                    popupMenu.add(separator, index++);
                                 }
-                                popupMenu.add(new JMenuItem(new SelectNextTabAction()), index++);
-                                popupMenu.add(new JMenuItem(new SelectPreviousTabAction()), index++);
-                                popupMenu.add(new JSeparator(), index);
+                                popupMenu.add(nextTabItem, index++);
+                                popupMenu.add(previousTabItem, index++);
+                                popupMenu.add(separator, index);
                             }
                         });
                 }
