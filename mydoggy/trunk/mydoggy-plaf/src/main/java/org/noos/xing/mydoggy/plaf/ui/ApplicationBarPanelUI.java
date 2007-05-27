@@ -100,15 +100,15 @@ public class ApplicationBarPanelUI extends PanelUI {
 
         panel.addContainerListener(new ContainerListener() {
             public void componentAdded(ContainerEvent e) {
-                DragSource dragSource = DragSource.getDefaultDragSource();
-                dragSource.createDefaultDragGestureRecognizer(e.getChild(), DnDConstants.ACTION_MOVE, dragGesture);
-                dragSource.addDragSourceMotionListener(dragGesture);
+                if (e.getChild() instanceof ToolWindowTabPanel) {
+                    ToolWindowTabPanel panel = (ToolWindowTabPanel) e.getChild();
+                    DragSource dragSource = DragSource.getDefaultDragSource();
+                    dragSource.createDefaultDragGestureRecognizer(panel.getViewport(), DnDConstants.ACTION_MOVE, dragGesture);
+                    dragSource.addDragSourceMotionListener(dragGesture);
+                }
             }
 
             public void componentRemoved(ContainerEvent e) {
-//                DragSource dragSource = DragSource.getDefaultDragSource();
-//                dragSource.createDefaultDragGestureRecognizer(e.getChild(), DnDConstants.ACTION_MOVE, dragGesture);
-//                dragSource.removeDragSourceMotionListener(dragGesture);
             }
         });
 

@@ -28,6 +28,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
     private ToolWindowTab selectedTab;
     private TabButton selecTabButton;
+    private PopupButton popupButton;
 
     public ToolWindowTabPanel(DockedContainer dockedContainer, ToolWindow toolWindow) {
         this.toolWindow = toolWindow;
@@ -60,15 +61,49 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         viewport = new JViewport();
         viewport.setBorder(null);
         viewport.setOpaque(false);
-        viewport.setFocusable(false);
+        viewport.setFocusable(true);
         viewport.setView(tabContainer);
 
         add(viewport, "0,1,FULL,FULL");
-        add(new PopupButton(), "2,1,FULL,FULL");
+        add(popupButton = new PopupButton(), "2,1,FULL,FULL");
 
         viewport.addMouseWheelListener(new WheelScroller());
 
         initTabs();
+    }
+
+    protected void initListeners() {
+        toolWindow.addToolWindowListener(new ToolWindowListener() {
+            public void toolWindowTabAdded(ToolWindowTabEvent event) {
+                if (getComponentCount() == 0)
+                    initTabs();
+                else {
+                    addTab(event.getToolWindowTab());
+                }
+                popupButton.setVisible(toolWindow.getToolWindowTabs().length > 1);
+            }
+
+            public boolean toolWindowTabRemoving(ToolWindowTabEvent event) {
+                return true;
+            }
+
+            public void toolWindowTabRemoved(ToolWindowTabEvent event) {
+                ToolWindowTab nextTab = removeTab(event.getToolWindowTab());
+
+                if (event.getToolWindowTab().isSelected()) {
+                    ToolWindowTab[] tabs = toolWindow.getToolWindowTabs();
+                    if (tabs.length > 0) {
+                        if (nextTab != null)
+                            nextTab.setSelected(true);
+                        else
+                            tabs[0].setSelected(true);
+                    }
+                }
+
+                popupButton.setVisible(toolWindow.getToolWindowTabs().length > 1);
+            }
+        });
+        viewport.addMouseListener(dockedContainer.applicationBarMouseAdapter);
     }
 
     protected void initTabs() {
@@ -127,35 +162,8 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         return null;
     }
 
-    protected void initListeners() {
-        toolWindow.addToolWindowListener(new ToolWindowListener() {
-            public void toolWindowTabAdded(ToolWindowTabEvent event) {
-                if (getComponentCount() == 0)
-                    initTabs();
-                else {
-                    addTab(event.getToolWindowTab());
-                }
-            }
-
-            public boolean toolWindowTabRemoving(ToolWindowTabEvent event) {
-                return true;
-            }
-
-            public void toolWindowTabRemoved(ToolWindowTabEvent event) {
-                ToolWindowTab nextTab = removeTab(event.getToolWindowTab());
-
-                if (event.getToolWindowTab().isSelected()) {
-                    ToolWindowTab[] tabs = toolWindow.getToolWindowTabs();
-                    if (tabs.length > 0) {
-                        if (nextTab != null)
-                            nextTab.setSelected(true);
-                        else
-                            tabs[0].setSelected(true);
-                    }
-                }
-
-            }
-        });
+    public JViewport getViewport() {
+        return viewport;
     }
 
 
@@ -186,9 +194,8 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             addMouseListener(new MouseAdapter() {
                 final JMenuItem nextTabItem = new JMenuItem(new SelectNextTabAction());
                 final JMenuItem previousTabItem = new JMenuItem(new SelectPreviousTabAction());
-                final JSeparator separator = new JSeparator();
-                final JMenuItem closeItem = new JMenuItem("Close");
-                final JMenuItem closeAllItem = new JMenuItem("Close ALL");
+                final JMenuItem closeItem = new JMenuItem(new CloseTabAction());
+                final JMenuItem closeAllItem = new JMenuItem(new CloseAllTabAction());
 
                 public void mousePressed(MouseEvent e) {
                     toolWindow.setActive(true);
@@ -202,11 +209,11 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                                 if (TabButton.this.tab.isCloseable()) {
                                     popupMenu.add(closeItem, index++);
                                     popupMenu.add(closeAllItem, index++);
-                                    popupMenu.add(separator, index++);
+                                    popupMenu.add(new JSeparator(), index++);
                                 }
                                 popupMenu.add(nextTabItem, index++);
                                 popupMenu.add(previousTabItem, index++);
-                                popupMenu.add(separator, index);
+                                popupMenu.add(new JSeparator(), index);
                             }
                         });
                 }
@@ -235,6 +242,52 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 setIcon((Icon) evt.getNewValue());
             }
         }
+
+        class CloseTabAction extends AbstractAction {
+
+            public CloseTabAction() {
+                super(ResourceBoundles.getResourceBundle().getString("@@tool.tab.close"));
+            }
+
+            public void actionPerformed(ActionEvent e) {
+                if (tab.isCloseable()) {
+                    ToolWindowTabEvent event = new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_REMOVING,
+                                                                      toolWindow, tab);
+                    for (ToolWindowListener listener : toolWindow.getToolWindowListeners()) {
+                        boolean result = listener.toolWindowTabRemoving(event);
+                        if (!result)
+                            break;
+                    }
+
+                    toolWindow.removeToolWindowTab(tab);
+                }
+            }
+        }
+
+        class CloseAllTabAction extends AbstractAction {
+
+            public CloseAllTabAction() {
+                super(ResourceBoundles.getResourceBundle().getString("@@tool.tab.closeAll"));
+            }
+
+            public void actionPerformed(ActionEvent e) {
+                for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+                    if (tab.isCloseable()) {
+                        ToolWindowTabEvent event = new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_REMOVING,
+                                                                          toolWindow, tab);
+
+                        for (ToolWindowListener listener : toolWindow.getToolWindowListeners()) {
+                            boolean result = listener.toolWindowTabRemoving(event);
+                            if (!result)
+                                break;
+                        }
+
+                        toolWindow.removeToolWindowTab(tab);
+                    }
+                }
+            }
+        }
+
     }
 
     class PopupButton extends ToolWindowActiveButton implements ActionListener {
