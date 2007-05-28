@@ -34,6 +34,9 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
     }
 
     public void setTitle(String title) {
+        if (title != null && title.equals(getTitle()))
+            return;
+
         String old = this.title;
         this.title = title;
 
@@ -45,6 +48,9 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
     }
 
     public void setIcon(Icon icon) {
+        if (this.icon == icon)
+            return;
+
         Icon old = this.icon;
         this.icon = icon;
         
@@ -56,6 +62,9 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
     }
 
     public void setComponent(Component component) {
+        if (this.component == component)
+            return;
+
         Component old = this.component;
         this.component = component;
 
@@ -81,7 +90,13 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
     }
 
     public void setCloseable(boolean closeable) {
+        if (this.closeable == closeable)
+            return;
+
+        boolean old = this.closeable;
         this.closeable = closeable;
+
+        firePropertyChangeEvent("closeable", old, closeable);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {

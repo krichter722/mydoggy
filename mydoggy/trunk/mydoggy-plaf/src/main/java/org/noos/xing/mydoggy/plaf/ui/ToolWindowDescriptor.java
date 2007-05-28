@@ -66,8 +66,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
             updateAnchorLabel();
         } else if ("icon".equals(evt.getPropertyName())) {
             updateAnchorLabel();
-        } else if ("title".equals(evt.getPropertyName())) {
-            updateAnchorLabel();
         } else if ("dockLength".equals(evt.getPropertyName())) {
             if (!valueAdj) {
                 this.divederLocation = (Integer) evt.getNewValue();
