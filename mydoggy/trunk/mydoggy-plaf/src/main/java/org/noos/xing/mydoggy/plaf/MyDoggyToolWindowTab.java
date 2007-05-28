@@ -26,7 +26,7 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         this.component = component;
         this.selected = false;
         this.listenerList = new EventListenerList();
-        this.closeable = true;  // TODO: false will be the default
+        this.closeable = true;
     }
 
     public String getTitle() {

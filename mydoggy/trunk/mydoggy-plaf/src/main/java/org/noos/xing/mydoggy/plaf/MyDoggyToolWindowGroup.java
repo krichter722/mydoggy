@@ -63,7 +63,6 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
 
     public void setImplicit(boolean implicit) {
         this.implicit = implicit;
-        // TODO: fire?? 
     }
 
     public boolean isImplicit() {

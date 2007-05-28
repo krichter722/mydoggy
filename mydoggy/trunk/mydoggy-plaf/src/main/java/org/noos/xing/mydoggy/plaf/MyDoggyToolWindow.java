@@ -404,10 +404,6 @@ public class MyDoggyToolWindow implements ToolWindow {
                 defaultToolWindowTab = toolWindowTabs.get(0);
         }
 
-        if (toolWindowTabs.size() == 0) {
-            // TODO: implement
-        }
-
         return result;
     }
 
