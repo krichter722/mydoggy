@@ -6,6 +6,7 @@ import java.awt.*;
 
 /**
  * TODO: javadocs
+ * 
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.3.0
  */

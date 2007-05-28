@@ -75,12 +75,16 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     protected void initListeners() {
         toolWindow.addToolWindowListener(new ToolWindowListener() {
             public void toolWindowTabAdded(ToolWindowTabEvent event) {
-                if (getComponentCount() == 0)
+                if (tabContainer.getComponentCount() == 0)
                     initTabs();
-                else {
+                else
                     addTab(event.getToolWindowTab());
+
+                boolean enabled = toolWindow.getToolWindowTabs().length > 1;
+                for (Component component : tabContainer.getComponents()) {
+                    component.setEnabled(enabled);
                 }
-                popupButton.setVisible(toolWindow.getToolWindowTabs().length > 1);
+                popupButton.setVisible(enabled);
             }
 
             public boolean toolWindowTabRemoving(ToolWindowTabEvent event) {
@@ -100,7 +104,11 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                     }
                 }
 
-                popupButton.setVisible(toolWindow.getToolWindowTabs().length > 1);
+                boolean enabled = toolWindow.getToolWindowTabs().length > 1;
+                for (Component component : tabContainer.getComponents()) {
+                    component.setEnabled(enabled);
+                }
+                popupButton.setVisible(enabled);
             }
         });
         viewport.addMouseListener(dockedContainer.applicationBarMouseAdapter);
@@ -110,6 +118,8 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
             addTab(tab);
         }
+
+        popupButton.setVisible(toolWindow.getToolWindowTabs().length > 1);
     }
 
     protected void addTab(ToolWindowTab tab) {
@@ -180,6 +190,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             setOpaque(false);
             setFocusable(false);
             setIcon(tab.getIcon());
+            setEnabled(toolWindow.getToolWindowTabs().length > 1);
 
             addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -301,6 +312,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                     toolWindow.setActive(true);
                 }
             });
+            setVisible(false);
         }
 
         public void actionPerformed(ActionEvent e) {

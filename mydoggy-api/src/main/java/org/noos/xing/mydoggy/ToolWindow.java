@@ -284,10 +284,11 @@ public interface ToolWindow {
     void setMaximized(boolean maximized);
 
     /**
-     * TODO: ToolWindowTab javadocs
-     * @param title
-     * @param component
-     * @return
+     * Adds a <code>component</code> represented by a <code>title</code> and no icon.
+     *
+     * @param title the title to be displayed in this tab
+     * @param component the component to be displayed when this tab is clicked
+     * @return a ToolWindowTab instance  
      * @since 1.3.0
      */
     ToolWindowTab addToolWindowTab(String title, Component component);
