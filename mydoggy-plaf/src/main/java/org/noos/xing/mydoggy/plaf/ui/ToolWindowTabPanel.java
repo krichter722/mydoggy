@@ -302,6 +302,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     }
 
     class PopupButton extends ToolWindowActiveButton implements ActionListener {
+        // TODO: move to JLabel
         private JPopupMenu popupMenu;
 
         public PopupButton() {

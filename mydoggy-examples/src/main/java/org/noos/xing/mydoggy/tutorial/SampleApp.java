@@ -4,12 +4,11 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.*;
 
 public class SampleApp {
     private JFrame frame;
@@ -24,7 +23,7 @@ public class SampleApp {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 // Set debug tool active
-                ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
+                ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
                 debugTool.setActive(true);
 
                 frame.setVisible(true);
@@ -50,10 +49,10 @@ public class SampleApp {
         this.toolWindowManager = myDoggyToolWindowManager;
 
         // Register a Tool.
-        toolWindowManager.registerToolWindow("Debug Tool",              // Id
-                                             "Debug Tool",              // Title
-                                             SwingUtil.loadIcon("org/noos/xing/mydoggy/examples/mydoggyset/icons/save.png"),                      // Icon
-                                             new JButton("Debug Tool"), // Component
+        toolWindowManager.registerToolWindow("Debug",                   // Id
+                                             "Debugging" ,              // Title
+                                             null,                      // Icon
+                                             new JButton("Debugging"),  // Component
                                              ToolWindowAnchor.LEFT);    // Anchor
         setupDebugTool();
 
@@ -68,8 +67,9 @@ public class SampleApp {
     }
 
     protected void setupDebugTool() {
-        final ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
+        final ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
 
+        // Setup descriptors
         DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
         dockedTypeDescriptor.setDockLength(350);
         dockedTypeDescriptor.setPopupMenuEnabled(true);
@@ -101,19 +101,11 @@ public class SampleApp {
         floatingTypeDescriptor.setTransparentRatio(0.2f);
         floatingTypeDescriptor.setTransparentDelay(1000);
 
+        // Setup Tabs
         JButton button = new JButton("Profiling");
         RemoveTabAction removeTabAction = new RemoveTabAction();
         button.addActionListener(removeTabAction);
         removeTabAction.tab = debugTool.addToolWindowTab("Profiling", button);
-
-        button = new JButton("Running");
-        removeTabAction = new RemoveTabAction();
-        button.addActionListener(removeTabAction);
-        removeTabAction.tab = debugTool.addToolWindowTab("Running", button);
-
-        removeTabAction = new RemoveTabAction();
-        ((JButton) debugTool.getToolWindowTabs()[0].getComponent()).addActionListener(removeTabAction);
-        removeTabAction.tab = debugTool.getToolWindowTabs()[0];
     }
 
     public Container getFrame() {
