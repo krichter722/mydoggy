@@ -121,7 +121,7 @@ public class SampleApp {
         ToolWindowTab tab;
 
         public void actionPerformed(ActionEvent e) {
-            ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
+            ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
             debugTool.removeToolWindowTab(tab);
         }
     }
@@ -130,7 +130,7 @@ public class SampleApp {
         JButton treeContent = new JButton("Add Tab");
         treeContent.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                final ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
+                final ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
 
                 JButton button = new JButton("Remove");
                 RemoveTabAction removeTabAction = new RemoveTabAction();
