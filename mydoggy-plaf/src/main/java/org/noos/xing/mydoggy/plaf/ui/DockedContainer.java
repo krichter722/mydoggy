@@ -13,10 +13,7 @@ import javax.swing.plaf.ButtonUI;
 import javax.swing.plaf.PanelUI;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -45,10 +42,13 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     protected JButton hideButton;
     protected JButton maximizeButton;
 
-    ApplicationBarMouseAdapter applicationBarMouseAdapter;
+    private ApplicationBarMouseAdapter applicationBarMouseAdapter;
     private PropertyChangeSupport propertyChangeSupport;
 
+    private PopupUpdater popupUpdater;
+
     boolean valueAdjusting;
+
 
     public DockedContainer(ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
@@ -59,6 +59,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         initDockedListeners();
     }
 
+    
     public void propertyChange(PropertyChangeEvent evt) {
         propertyChangeSupport.firePropertyChange(evt);
     }
@@ -82,6 +83,14 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         container.add(component, "0,1");
 
         SwingUtil.repaint(container);
+    }
+
+    public MouseListener getApplicationBarMouseAdapter() {
+        return applicationBarMouseAdapter;
+    }
+
+    public void setPopupUpdater(PopupUpdater popupUpdater) {
+        this.popupUpdater = popupUpdater;
     }
 
 
@@ -308,17 +317,10 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         setDocked();
     }
 
-    public JPopupMenu getPopupMenu() {
-        return applicationBarMouseAdapter.popupMenu;
-    }
-
-    public void showPopupMenu(MouseEvent e, PopupUpdater popupUpdater) {
-        applicationBarMouseAdapter.showPopupMenu(e, popupUpdater);
-    }
 
     public interface PopupUpdater {
 
-        void update(JPopupMenu popupMenu);
+        void update(MouseEvent e, JPopupMenu popupMenu);
 
     }
 
@@ -354,7 +356,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 if (e.getClickCount() == 2)
                     toolWindow.setMaximized(!toolWindow.isMaximized());
             } else if (SwingUtilities.isRightMouseButton(e)) {
-                showPopupMenu(e, null);
+                showPopupMenu(e);
             }
         }
 
@@ -547,7 +549,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         }
 
 
-        public void showPopupMenu(MouseEvent e, PopupUpdater popupUpdater) {
+        public void showPopupMenu(MouseEvent e) {
             if ((e.getComponent() == applicationBar || SwingUtil.hasParent(e.getComponent(), applicationBar)) &&
                 ((DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED)).isPopupMenuEnabled()) {
 
@@ -565,7 +567,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 enableUserDefined();
 
                 if (popupUpdater != null)
-                    popupUpdater.update(popupMenu);
+                    popupUpdater.update(e, popupMenu);
 
                 popupMenu.show(e.getComponent(), e.getX(), e.getY());
             }
