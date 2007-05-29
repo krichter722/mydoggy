@@ -289,6 +289,8 @@ public class ApplicationBarPanelUI extends PanelUI {
 
         private LineBorder highligthBorder = new LineBorder(Color.BLUE, 3);
 
+        private ToolWindowAnchor lastAnchor;
+
         public void dragGestureRecognized(DragGestureEvent dge) {
             if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE)
                 return;
@@ -323,6 +325,8 @@ public class ApplicationBarPanelUI extends PanelUI {
             glassPane.setDraggingImage(ghostImage.getScaledInstance(contentContainer.getWidth() / 3,
                                                                     contentContainer.getHeight() / 3, BufferedImage.SCALE_SMOOTH));
             glassPane.repaint();
+
+            lastAnchor = null;
         }
 
         public void dragMouseMoved(DragSourceDragEvent dsde) {
@@ -346,6 +350,24 @@ public class ApplicationBarPanelUI extends PanelUI {
                     oldBorder = lastToolWindowContainer.getBorder();
                     lastToolWindowContainer.setBorder(highligthBorder);
                 }
+            }
+
+            p = (Point) dsde.getLocation().clone();
+            SwingUtilities.convertPointFromScreen(p, descriptor.getManager());
+            ToolWindowAnchor newAnchor = descriptor.getToolWindowAnchor(p);
+
+            if (newAnchor != lastAnchor) {
+                Rectangle dirtyRegion = glassPane.getRepaintRect();
+
+                if (newAnchor == null) {
+                    descriptor.getToolBar(lastAnchor).setTempShowed(false);
+                } else {
+                    if (descriptor.getToolBar(newAnchor).getAvailableTools() == 0)
+                        descriptor.getToolBar(newAnchor).setTempShowed(true);
+                }
+
+                lastAnchor = newAnchor;
+                glassPane.repaint(dirtyRegion);
             }
 
             glassPane.repaint(glassPane.getRepaintRect());
