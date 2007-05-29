@@ -10,6 +10,7 @@ import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicLabelUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -80,11 +81,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 else
                     addTab(event.getToolWindowTab());
 
-                boolean enabled = toolWindow.getToolWindowTabs().length > 1;
-                for (Component component : tabContainer.getComponents()) {
-                    component.setEnabled(enabled);
-                }
-                popupButton.setVisible(enabled);
+                popupButton.setVisible(toolWindow.getToolWindowTabs().length > 1);
             }
 
             public boolean toolWindowTabRemoving(ToolWindowTabEvent event) {
@@ -104,11 +101,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                     }
                 }
 
-                boolean enabled = toolWindow.getToolWindowTabs().length > 1;
-                for (Component component : tabContainer.getComponents()) {
-                    component.setEnabled(enabled);
-                }
-                popupButton.setVisible(enabled);
+                popupButton.setVisible(toolWindow.getToolWindowTabs().length > 1);
             }
         });
         viewport.addMouseListener(dockedContainer.applicationBarMouseAdapter);
@@ -177,8 +170,10 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     }
 
 
-    class TabButton extends ToolWindowActiveButton implements PropertyChangeListener {
+    class TabButton extends JLabel implements PropertyChangeListener {
         ToolWindowTab tab;
+        boolean pressed = false;
+        boolean inside = false;
 
         public TabButton(ToolWindowTab tab) {
             super(tab.getTitle());
@@ -190,18 +185,15 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             setOpaque(false);
             setFocusable(false);
             setIcon(tab.getIcon());
-            setEnabled(toolWindow.getToolWindowTabs().length > 1);
-
-            addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            toolWindow.setActive(true);
-                            TabButton.this.tab.setSelected(true);
-                        }
-                    });
+            setUI(new BasicLabelUI(){
+                protected void paintEnabledText(JLabel l, Graphics g, String s, int textX, int textY) {
+                    if (pressed && inside)
+                        super.paintEnabledText(l, g, s, textX + 1, textY + 1);
+                    else
+                        super.paintEnabledText(l, g, s, textX, textY);
                 }
             });
+
             addMouseListener(new MouseAdapter() {
                 final JMenuItem nextTabItem = new JMenuItem(new SelectNextTabAction());
                 final JMenuItem previousTabItem = new JMenuItem(new SelectPreviousTabAction());
@@ -210,10 +202,41 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
                 public void mousePressed(MouseEvent e) {
                     toolWindow.setActive(true);
+
+                    if (getForeground() != Color.WHITE) {
+                        pressed = true;
+                        repaint();
+                    } else {
+                        pressed = false;
+                        repaint();
+                    }
+                }
+
+                public void mouseReleased(MouseEvent e) {
+                    pressed = false;
+                    repaint();
+                }
+
+                public void mouseEntered(MouseEvent e) {
+                    inside = true;
+                    repaint();
+                }
+
+                public void mouseExited(MouseEvent e) {
+                    inside = false;
+                    repaint();
                 }
 
                 public void mouseClicked(MouseEvent e) {
-                    if (SwingUtilities.isRightMouseButton(e))
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            toolWindow.setActive(true);
+                            TabButton.this.tab.setSelected(true);
+                        }
+                    });
+
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        // TODO: conviene usare il listener di dockedContainer???
                         dockedContainer.showPopupMenu(e, new DockedContainer.PopupUpdater() {
                             public void update(JPopupMenu popupMenu) {
                                 int index = 0;
@@ -227,6 +250,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                                 popupMenu.add(new JSeparator(), index);
                             }
                         });
+                    }
                 }
             });
         }
@@ -302,7 +326,6 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     }
 
     class PopupButton extends ToolWindowActiveButton implements ActionListener {
-        // TODO: move to JLabel
         private JPopupMenu popupMenu;
 
         public PopupButton() {
