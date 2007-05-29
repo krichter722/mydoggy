@@ -17,7 +17,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <img src="./images/toolwindow.png" alt="ToolWindow" border="0" hspace="18"/>
+                            <img src="./images/toolwindow.png" alt="ToolWindow" border="0" />
                         </td>
                         <td>
                             <p>
@@ -25,10 +25,10 @@
                             </p>
                             <source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">...</a>;
 ToolWindow toolwindow = toolWindowManager.
-    registerToolWindow("Title 1",  // Tool Window identifier
-                       "Title 1",  // Tool Window Title
-                       icon,       // Tool Window Icon
-                       component,  // Tool Window component
+    registerToolWindow("Debug",      // Tool Window identifier
+                       "Debugging",  // Tool Window Title
+                       icon,         // Tool Window Icon
+                       component,    // Tool Window component
                        ToolWindowAnchor.LEFT)  // Tool Window anchor
                             </source>
                             <p>
