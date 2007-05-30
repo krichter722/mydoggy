@@ -102,6 +102,7 @@ public class ApplicationBarPanelUI extends PanelUI {
             public void componentAdded(ContainerEvent e) {
                 if (e.getChild() instanceof ToolWindowTabPanel) {
                     ToolWindowTabPanel panel = (ToolWindowTabPanel) e.getChild();
+
                     DragSource dragSource = DragSource.getDefaultDragSource();
                     dragSource.createDefaultDragGestureRecognizer(panel.getViewport(), DnDConstants.ACTION_MOVE, dragGesture);
                     dragSource.addDragSourceMotionListener(dragGesture);
