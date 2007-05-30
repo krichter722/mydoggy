@@ -120,9 +120,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     public int getLabelIndex(JLabel anchorLabel) {
         TableLayoutConstraints constraints = contentPaneLayout.getConstraints(anchorLabel);
         if (horizontal)
-            return constraints.col1 / 2;
+            return (constraints.col1 / 2) -1;
         else
-            return constraints.row1 / 2;
+            return (constraints.row1 / 2) -1;
     }
 
 
