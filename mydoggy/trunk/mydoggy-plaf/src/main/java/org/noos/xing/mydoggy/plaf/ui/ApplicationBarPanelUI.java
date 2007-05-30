@@ -400,7 +400,7 @@ public class ApplicationBarPanelUI extends PanelUI {
 
                 ToolWindowAnchor anchor = destToolWindow.getAnchor();
                 toolWindow.setAnchor(anchor,
-                                     ((MyDoggyToolWindow) destToolWindow).getDescriptor().getLabelIndex() - 1);
+                                     ((MyDoggyToolWindow) destToolWindow).getDescriptor().getLabelIndex());
             }
 
             GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
