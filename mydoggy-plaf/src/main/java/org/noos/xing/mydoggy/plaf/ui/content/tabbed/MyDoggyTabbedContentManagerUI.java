@@ -127,6 +127,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
     public void install(ToolWindowManager manager) {
         this.toolWindowManager = (MyDoggyToolWindowManager) manager;
         this.contentManager = manager.getContentManager();
+        tabbedContentManager.setToolWindowManager(toolWindowManager);
         initListeners();
 
         setPopupMenu(contentManager.getPopupMenu());

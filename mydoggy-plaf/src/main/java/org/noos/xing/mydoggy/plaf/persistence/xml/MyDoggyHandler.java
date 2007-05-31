@@ -2,6 +2,8 @@ package org.noos.xing.mydoggy.plaf.persistence.xml;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.persistence.*;
+import org.noos.xing.mydoggy.plaf.persistence.merge.MergePolicyApplier;
+import org.noos.xing.mydoggy.plaf.persistence.merge.MergePolicyProvider;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -203,21 +205,14 @@ public class MyDoggyHandler extends DefaultHandler {
 
     protected void load(ToolWindowAnchor anchor) {
         ToolWindow activeTool = null;
+
+        MergePolicyApplier mergePolicyApplier = MergePolicyProvider.getMergePolicyApplier(mergePolicy);
         for (ToolWindow toolWindow : map.keySet()) {
             if (toolWindow.getAnchor() != anchor)
                 continue;
             persistedToolWindow = map.get(toolWindow);
 
-            // TODO: apply policy
-
-            if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-                toolWindow.setVisible(persistedToolWindow.isVisible());
-            } else {
-                if (persistedToolWindow.isVisible())
-                    toolWindow.aggregate();
-                else
-                    toolWindow.setVisible(false);
-            }
+            mergePolicyApplier.applyToolWindow(toolWindow, persistedToolWindow);
 
             if (persistedToolWindow.isActive())
                 activeTool = toolWindow;
