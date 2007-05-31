@@ -580,7 +580,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             int divederLocation = descriptor.getDividerLocation();
 
             for (ToolWindow toolWindow : manager.getToolsByAnchor(anchor)) {
-                if (descriptor.getToolWindow() != toolWindow && toolWindow.isVisible()) {
+                if (descriptor.getToolWindow() != toolWindow && toolWindow.isVisible() &&
+                    toolWindow.getType() == ToolWindowType.DOCKED) {
                     divederLocation = getSplitDividerLocation();
                     break;
                 }
@@ -899,7 +900,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
                     ToolWindow maximizedTool = descriptor.getToolWindow();
                     for (ToolWindow tool : descriptor.getManager().getToolWindows())
-                        if (tool != maximizedTool)
+                        if (tool != maximizedTool &&
+                            tool.getType() != ToolWindowType.FLOATING && tool.getType() != ToolWindowType.FLOATING_FREE)
                             tool.setVisible(false);
 
                     setSplitDividerLocation(-1);

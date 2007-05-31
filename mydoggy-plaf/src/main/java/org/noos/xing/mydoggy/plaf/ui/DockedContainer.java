@@ -17,6 +17,8 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.util.ResourceBundle;
 
 /**
@@ -248,15 +250,22 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             }
         });
         addPropertyChangeListener("maximized", new PropertyChangeListener() {
+            ByteArrayOutputStream workspace;
+
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getSource() != descriptor)
                     return;
 
                 if ((Boolean) evt.getNewValue()) {
-                    maximizeButton.setIcon(toolWindowUI.getIcon(MINIMIZE));
-                } else
-                    maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE));
+                    descriptor.getManager().getPersistenceDelegate().save(workspace = new ByteArrayOutputStream());
 
+                    maximizeButton.setIcon(toolWindowUI.getIcon(MINIMIZE));
+                } else {
+                    maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE));
+                    descriptor.getManager().getPersistenceDelegate().merge(new ByteArrayInputStream(workspace.toByteArray()),
+                                                                     PersistenceDelegate.MergePolicy.UNION);
+                    workspace = null;
+                }
             }
         });
 

@@ -111,7 +111,6 @@ public class ContentPage implements TabbedContentUI {
         this.transparentDelay = transparentDelay;
     }
 
-
     public JPopupMenu getPopupMenu() {
         return popupMenu;
     }
