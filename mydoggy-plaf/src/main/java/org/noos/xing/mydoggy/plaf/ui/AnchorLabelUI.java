@@ -679,7 +679,6 @@ public class AnchorLabelUI extends MetalLabelUI {
                 Rectangle dirtyRegion = glassPane.getRepaintRect();
 
                 if (newAnchor == null) {
-                    glassPane.setDraggingImage(ghostImage);
                     descriptor.getToolBar(lastAnchor).setTempShowed(false);
                 } else {
                     if (descriptor.getToolBar(newAnchor).getAvailableTools() == 0)

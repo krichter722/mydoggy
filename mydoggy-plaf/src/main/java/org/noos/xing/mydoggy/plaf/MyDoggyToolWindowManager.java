@@ -34,7 +34,7 @@ import java.util.*;
  *
  * @author Angelo De Caro
  */
-public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener, KeyEventPostProcessor {
+public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener {
     private static final int COLUMN_LENGTH = 23;
     private static final int ROW_LENGTH = 23;
 
@@ -279,30 +279,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return twmListeners.getListeners(ToolWindowManagerListener.class);
     }
 
-
-    public boolean postProcessKeyEvent(KeyEvent e) {
-        if (e.getID() == KeyEvent.KEY_TYPED) {
-            if (e.isAltDown()) {
-                if (Character.isDigit(e.getKeyChar())) {
-                    int index = Character.getNumericValue(e.getKeyChar());
-
-                    for (ToolWindow toolWindow : getToolWindows()) {
-                        if (toolWindow.getIndex() == index) {
-                            if (toolWindow.isAvailable()) {
-                                if (toolWindow.isActive())
-                                    toolWindow.setVisible(false);
-                                else
-                                    toolWindow.setActive(true);
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
     public synchronized void propertyChange(final PropertyChangeEvent evt) {
         Object source = evt.getSource();
         if (source instanceof ToolWindowDescriptor) {
@@ -514,7 +490,30 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             }
         });
 
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(this);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(new KeyEventPostProcessor() {
+            public boolean postProcessKeyEvent(KeyEvent e) {
+                if (e.getID() == KeyEvent.KEY_TYPED) {
+                    if (e.isAltDown()) {
+                        if (Character.isDigit(e.getKeyChar())) {
+                            int index = Character.getNumericValue(e.getKeyChar());
+
+                            for (ToolWindow toolWindow : getToolWindows()) {
+                                if (toolWindow.getIndex() == index) {
+                                    if (toolWindow.isAvailable()) {
+                                        if (toolWindow.isActive())
+                                            toolWindow.setVisible(false);
+                                        else
+                                            toolWindow.setActive(true);
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
+        });
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 Component newFocusOwner = (Component) evt.getNewValue();
@@ -760,16 +759,19 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
 
+            ToolWindowAnchor oldAnchor = (ToolWindowAnchor) evt.getOldValue();
+            ToolWindowAnchor newAnchor = (ToolWindowAnchor) evt.getNewValue();
+            if (oldAnchor == null)
+                oldAnchor = newAnchor;
+            
             ToolWindowType toolType = descriptor.getToolWindow().getType();
             if (toolType == ToolWindowType.FLOATING || toolType == ToolWindowType.FLOATING_FREE) {
-                ToolWindowAnchor oldAnchor = (ToolWindowAnchor) evt.getOldValue();
-                ToolWindowAnchor newAnchor = (ToolWindowAnchor) evt.getNewValue();
-
                 PropertyChangeEvent avEvent = new UserPropertyChangeEvent(evt.getSource(), "available", true, false, -1);
                 getBar(oldAnchor).propertyChange(avEvent);
                 syncPanel(oldAnchor);
 
-                avEvent = new UserPropertyChangeEvent(evt.getSource(), "available", false, true, -1);
+                avEvent = new UserPropertyChangeEvent(evt.getSource(), "available", false, true,
+                                                      ((UserPropertyChangeEvent)evt).getUserObject());
                 getBar(newAnchor).propertyChange(avEvent);
                 syncPanel(newAnchor);
             }
@@ -777,8 +779,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             for (ToolWindowDescriptor tool : tools.values())
                 tool.getToolWindowContainer().propertyChange(evt);
 
-            syncPanel((ToolWindowAnchor) evt.getOldValue());
-            syncPanel((ToolWindowAnchor) evt.getNewValue());
+            syncPanel(oldAnchor);
+            syncPanel(newAnchor);
         }
     }
 
