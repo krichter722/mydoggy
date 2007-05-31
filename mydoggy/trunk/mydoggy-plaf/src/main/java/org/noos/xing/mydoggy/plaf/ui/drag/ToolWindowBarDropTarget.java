@@ -33,7 +33,6 @@ public class ToolWindowBarDropTarget extends DropTarget {
 
 
     private int showPosition(DropTargetDragEvent dtde, int lastIndex) {
-        // TODO: reimplement...it's orrible
         Point dtdeLoc = dtde.getLocation();
         if (lastPosition != null && lastPosition.equals(dtdeLoc))
             return lastIndex;
@@ -108,26 +107,28 @@ public class ToolWindowBarDropTarget extends DropTarget {
                     }
                 }
 
-                if (i / 2 == lastIndex)
-                    return lastIndex;
+                if (i / 2 == lastIndex) {
+                    index = lastIndex;
+                } else {
+                    hidePosition(false);
 
-                hidePosition(false);
+                    // Insert space for dragging image at specific index.
+                    GlassPanel glassPanel = (GlassPanel) SwingUtilities.getRootPane(container).getGlassPane();
+                    switch (anchor) {
+                        case TOP:
+                        case BOTTOM:
+                            container.add(new VerticalSeparatorLabel(), i + ",1,c,c");
+                            layout.setColumn(i, glassPanel.getDraggingImage().getWidth(container) + 6);
+                            break;
+                        case LEFT:
+                        case RIGHT:
+                            container.add(new HorizontalSeparatorLabel(), "1," + i + ",c,c");
+                            layout.setRow(i, glassPanel.getDraggingImage().getHeight(container) + 6);
+                            break;
+                    }
 
-                GlassPanel glassPanel = (GlassPanel) SwingUtilities.getRootPane(container).getGlassPane();
-                switch (anchor) {
-                    case TOP:
-                    case BOTTOM:
-                        container.add(new VerticalSeparatorLabel(), i + ",1,c,c");
-                        layout.setColumn(i, glassPanel.getDraggingImage().getWidth(container) + 6);
-                        break;
-                    case LEFT:
-                    case RIGHT:
-                        container.add(new HorizontalSeparatorLabel(), "1," + i + ",c,c");
-                        layout.setRow(i, glassPanel.getDraggingImage().getHeight(container) + 6);
-                        break;
+                    index = i / 2;
                 }
-
-                index = i / 2;
                 break;
             } else
                 sum += interval;

@@ -273,7 +273,10 @@ public class MyDoggyToolWindow implements ToolWindow {
                 ToolWindowAnchor oldAnchor = this.anchor;
                 this.anchor = anchor;
 
-                fireAnchorEvent(oldAnchor, anchor, index);
+                if (oldAnchor == anchor)
+                    fireAnchorEvent(null, anchor, index);
+                else
+                    fireAnchorEvent(oldAnchor, anchor, index);
             }
         }
     }
