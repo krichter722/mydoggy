@@ -1,6 +1,9 @@
 package org.noos.xing.mydoggy.plaf.ui.content.tabbed.component;
 
 import org.noos.xing.mydoggy.TabbedContentUI;
+import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.PersistenceDelegate;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -10,10 +13,14 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Hashtable;
 import java.util.Map;
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 
 public class JTabbedContentManager extends JTabbedPane {
     static final int BUTTONSIZE = 15;
     static final int WIDTHDELTA = 5;
+
+    private ToolWindowManager toolWindowManager;
 
     private JPopupMenu defaultContentPopupMenu;
 
@@ -173,9 +180,14 @@ public class JTabbedContentManager extends JTabbedPane {
             tabListener.tabEventFired(event);
     }
 
+    public void setToolWindowManager(MyDoggyToolWindowManager toolWindowManager) {
+        this.toolWindowManager = toolWindowManager;
+    }
+
 
     class MouseOverTabListener extends MouseInputAdapter {
         private int mouseOverTab = -1;
+        private ByteArrayOutputStream workspace;
 
         public void mouseClicked(MouseEvent e) {
             if (mouseOverTab >= 0 && mouseOverTab < getTabCount()) {
@@ -191,18 +203,29 @@ public class JTabbedContentManager extends JTabbedPane {
                     return;
                 }
 
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    JPopupMenu popupMenu = getPopupMenuAt(mouseOverTab);
-                    if (popupMenu == null)
-                        popupMenu = defaultContentPopupMenu;
-
-                    if (popupMenu != null) {
-                        popupMenu.show(JTabbedContentManager.this, e.getX(), e.getY());
+                if (e.getClickCount() == 2) {
+                    // Maximization
+                    if (workspace == null) {
+                        toolWindowManager.getPersistenceDelegate().save(workspace = new ByteArrayOutputStream());
+                        toolWindowManager.getToolWindowGroup().setVisible(false);
+                    } else {
+                        toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(workspace.toByteArray()),
+                                                                         PersistenceDelegate.MergePolicy.UNION);
+                        workspace = null;
                     }
+                } else {
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        JPopupMenu popupMenu = getPopupMenuAt(mouseOverTab);
+                        if (popupMenu == null)
+                            popupMenu = defaultContentPopupMenu;
 
+                        if (popupMenu != null) {
+                            popupMenu.show(JTabbedContentManager.this, e.getX(), e.getY());
+                        }
+                    }
                 }
             } else if (SwingUtilities.isRightMouseButton(e)) {
-//                tabbedContentManager.firePopupOutsideTabEvent(e);
+//               TODO: what should i do tabbedContentManager.firePopupOutsideTabEvent(e);
             }
         }
 
