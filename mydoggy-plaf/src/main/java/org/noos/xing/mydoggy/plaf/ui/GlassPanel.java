@@ -40,8 +40,8 @@ public class GlassPanel extends JPanel implements ContainerListener {
             height = (int) (width / ratio);
         }
 
-        this.location = null;
         this.draggingImage = draggingImage;
+//        this.location = null;
     }
 
     public Image getDraggingImage() {

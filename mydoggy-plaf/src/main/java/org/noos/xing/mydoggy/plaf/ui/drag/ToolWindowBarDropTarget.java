@@ -62,10 +62,11 @@ public class ToolWindowBarDropTarget extends DropTarget {
         for (int i = 0; i < intervals.length; i++) {
             double interval = intervals[i];
 
-            if (position >= sum && position <= sum + interval) {
+            if (position >= sum  && position <= sum + interval) {
 
                 if (i % 2 == 0 && i != 0) {
                     int diff = -1;
+                    
                     for (Component component : container.getComponents()) {
                         if (component instanceof SeparatorLabel) {
                             switch (anchor) {
