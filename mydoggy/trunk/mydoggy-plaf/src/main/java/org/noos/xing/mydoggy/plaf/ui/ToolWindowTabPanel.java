@@ -240,6 +240,9 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         return viewport;
     }
 
+    public JPanel getTabContainer() {
+        return tabContainer;
+    }
 
     class TabButton extends JLabel implements PropertyChangeListener {
         ToolWindowTab tab;
