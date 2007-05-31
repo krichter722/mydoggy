@@ -16,6 +16,11 @@ import java.io.OutputStream;
  */
 public interface PersistenceDelegate {
 
+    enum MergePolicy {
+        RESET,
+        UNION
+    }
+
     /**
      * Writes all settings of ToolWindows with relative descriptors to the output stream in a format suitable
      * for loading using the {@link #apply(java.io.InputStream)} method.
@@ -44,4 +49,12 @@ public interface PersistenceDelegate {
      */
     void apply(InputStream inputStream);
 
+    /**
+     * TODO: javadocs
+     * 
+     * @param inputStream
+     * @param mergePolicy
+     * @since 1.3.0
+     */
+    void merge(InputStream inputStream, MergePolicy mergePolicy);
 }

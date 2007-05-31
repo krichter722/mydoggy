@@ -7,8 +7,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.awt.*;
-import java.util.Map;
 import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -26,6 +26,7 @@ public class MyDoggyHandler extends DefaultHandler {
     }
 
     private ToolWindowManager toolWindowManager;
+    private PersistenceDelegate.MergePolicy mergePolicy;
 
     private State state;
     private State subState;
@@ -39,8 +40,10 @@ public class MyDoggyHandler extends DefaultHandler {
 
     private Map<ToolWindow, PersistedToolWindow> map;
 
-    public MyDoggyHandler(ToolWindowManager toolWindowManager) {
+
+    public MyDoggyHandler(ToolWindowManager toolWindowManager, PersistenceDelegate.MergePolicy mergePolicy) {
         this.toolWindowManager = toolWindowManager;
+        this.mergePolicy = mergePolicy;
     }
 
     public void startDocument() throws SAXException {
@@ -205,6 +208,8 @@ public class MyDoggyHandler extends DefaultHandler {
                 continue;
             persistedToolWindow = map.get(toolWindow);
 
+            // TODO: apply policy
+
             if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
                 toolWindow.setVisible(persistedToolWindow.isVisible());
             } else {
@@ -213,6 +218,7 @@ public class MyDoggyHandler extends DefaultHandler {
                 else
                     toolWindow.setVisible(false);
             }
+
             if (persistedToolWindow.isActive())
                 activeTool = toolWindow;
         }
