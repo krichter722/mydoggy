@@ -136,7 +136,6 @@ public class ToolWindowBarDropTarget extends DropTarget {
         SwingUtil.repaint(container);
 
         lastPosition = dtdeLoc;
-
         return index;
     }
 

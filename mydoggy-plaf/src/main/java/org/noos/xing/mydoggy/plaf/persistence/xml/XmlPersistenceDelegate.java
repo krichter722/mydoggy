@@ -4,9 +4,9 @@ import org.noos.xing.mydoggy.*;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,10 +80,14 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
     }
 
     public void apply(InputStream inputStream) {
+        merge(inputStream, MergePolicy.RESET);
+    }
+
+    public void merge(InputStream inputStream, MergePolicy mergePolicy) {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
             SAXParser saxParser = factory.newSAXParser();
-            saxParser.parse(inputStream, new MyDoggyHandler(toolWindowManager));
+            saxParser.parse(inputStream, new MyDoggyHandler(toolWindowManager, mergePolicy));
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (SAXException se) {

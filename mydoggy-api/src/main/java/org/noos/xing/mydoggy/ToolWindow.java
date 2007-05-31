@@ -97,6 +97,10 @@ public interface ToolWindow {
      */
     void aggregate();
 
+    /**
+     * TODO: add javadocs
+     * @param aggregateEnabled
+     */
     void setAggregateMode(boolean aggregateEnabled);
 
     boolean isAggregateMode();
