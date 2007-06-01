@@ -889,11 +889,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
     class MaximizedListener implements PropertyChangeListener {
 
-        public MaximizedListener() {
-        }
-
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
+
             if (descriptor.getToolWindow().getType() == ToolWindowType.DOCKED) {
                 if ((Boolean) evt.getNewValue()) {
                     descriptor.setTempDivederLocation(getSplitDividerLocation());

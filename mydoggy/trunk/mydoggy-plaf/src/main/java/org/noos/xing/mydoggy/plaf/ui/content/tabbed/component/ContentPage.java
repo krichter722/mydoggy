@@ -1,18 +1,16 @@
 package org.noos.xing.mydoggy.plaf.ui.content.tabbed.component;
 
-import org.noos.xing.mydoggy.TabbedContentUI;
 import org.noos.xing.mydoggy.Content;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.TabbedContentUI;
+import org.noos.xing.mydoggy.plaf.ui.ResourceBoundles;
 import org.noos.xing.mydoggy.plaf.ui.icons.CompositeIcon;
 import org.noos.xing.mydoggy.plaf.ui.icons.TextIcon;
-import org.noos.xing.mydoggy.plaf.ui.ResourceBoundles;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
-import javax.swing.*;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.event.PopupMenuEvent;
 import javax.accessibility.AccessibleContext;
-import java.awt.event.MouseEvent;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -40,6 +38,7 @@ public class ContentPage implements TabbedContentUI {
     private String title;
     private Icon icon;
     private JPopupMenu popupMenu;
+    private JPopupMenu stdPopupMenu;
 
     private boolean closable;
     private boolean detachable;
@@ -225,28 +224,27 @@ public class ContentPage implements TabbedContentUI {
     }
 
     public void showPopupMenu(Component source, int x, int y, JPopupMenu defaultContentPopupMenu) {
-        // TODO: add actions...
-
-        JPopupMenu popupMenu = this.popupMenu;
+        JPopupMenu popupMenu = getPopupMenu();
         if (popupMenu == null)
             popupMenu = defaultContentPopupMenu;
 
-        if (popupMenu != null) {
-            final JPopupMenu popupMenu1 = popupMenu;
-            // TODO: non funziona...lifo 
-            popupMenu.addPopupMenuListener(new PopupMenuListener() {
-                public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                    System.out.println(popupMenu1.getComponentCount());
-                }
-
-                public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                }
-
-                public void popupMenuCanceled(PopupMenuEvent e) {
-                }
-            });
-            popupMenu.show(source, x, y);
+        if (popupMenu == null) {
+            if (stdPopupMenu == null) {
+                // TODO: add actions...
+                // Init stdPopupMenu
+                stdPopupMenu = new JPopupMenu("CPP");
+                stdPopupMenu.add(new JMenuItem("Close"));
+                stdPopupMenu.add(new JMenuItem("Close All"));
+                stdPopupMenu.add(new JMenuItem("Close All But This"));
+                stdPopupMenu.addSeparator();
+                stdPopupMenu.add(new JMenuItem("Detach"));
+                stdPopupMenu.add(new JMenuItem("Maximize"));
+            }
+            popupMenu = stdPopupMenu;
         }
+
+        if (popupMenu != null)
+            popupMenu.show(source, x, y);
     }
 
 
