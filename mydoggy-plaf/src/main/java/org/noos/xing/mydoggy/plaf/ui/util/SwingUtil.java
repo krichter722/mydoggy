@@ -33,7 +33,7 @@ public class SwingUtil {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
 //                                System.out.println("IN RUN - requestFocus for : " + component.isFocusable() + " - " + component);
-                System.out.println("false = " + SwingUtilities.getWindowAncestor(component).isFocusableWindow());
+//                System.out.println("false = " + SwingUtilities.getWindowAncestor(component).isFocusableWindow());
                 component.requestFocus();
             }
         });

@@ -66,13 +66,6 @@ public class MyDoggySet {
     }
 
     protected void start() {
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", new PropertyChangeListener() {
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                System.out.println("evt.getNewValue() = " + evt.getNewValue());
-
-            }
-        });
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 frame.setVisible(true);
