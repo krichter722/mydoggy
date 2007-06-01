@@ -69,7 +69,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         Dimension old = this.size;
         this.size = newSize;
 
-        firePropertyChange("location", old, size);
+        firePropertyChange("size", old, size);
     }
 
     public Point getLocation() {

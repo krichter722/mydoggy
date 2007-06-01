@@ -307,6 +307,9 @@ public class MyDoggyToolWindow implements ToolWindow {
             if (this.type == type)
                 return;
 
+            if (isMaximized())
+                setMaximized(false);
+            
             boolean tempVisible = isVisible();
             boolean tempActive = isActive();
 
