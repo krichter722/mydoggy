@@ -120,6 +120,7 @@ public class FloatingContainer extends DockedContainer {
                     window.removeMouseMotionListener(resizeMouseInputHandler);
                     window.removeMouseListener(resizeMouseInputHandler);
 
+                    // TODO: we must include all TabButtons...
                     applicationBarTabs.getViewport().removeMouseMotionListener(moveMouseInputHandler);
                     applicationBarTabs.getViewport().removeMouseListener(moveMouseInputHandler);
 

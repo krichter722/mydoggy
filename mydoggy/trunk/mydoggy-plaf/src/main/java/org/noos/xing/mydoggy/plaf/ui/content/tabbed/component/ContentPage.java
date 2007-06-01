@@ -233,6 +233,7 @@ public class ContentPage implements TabbedContentUI {
 
         if (popupMenu != null) {
             final JPopupMenu popupMenu1 = popupMenu;
+            // TODO: non funziona...lifo 
             popupMenu.addPopupMenuListener(new PopupMenuListener() {
                 public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                     System.out.println(popupMenu1.getComponentCount());

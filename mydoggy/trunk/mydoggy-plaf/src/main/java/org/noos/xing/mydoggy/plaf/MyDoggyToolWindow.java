@@ -237,12 +237,13 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setAnchor(ToolWindowAnchor anchor) {
-        setAnchor(anchor, -1);
+        setAnchor(anchor, -2);
     }
 
     public void setAnchor(ToolWindowAnchor anchor, int index) {
         synchronized (getLock()) {
-            if (this.anchor == anchor && index == getDescriptor().getLabelIndex())
+            if (this.anchor == anchor &&
+                (index == getDescriptor().getLabelIndex() || index == -2))
                 return;
 
             if (getType() == ToolWindowType.DOCKED || getType() == ToolWindowType.SLIDING) {
@@ -273,9 +274,10 @@ public class MyDoggyToolWindow implements ToolWindow {
                 ToolWindowAnchor oldAnchor = this.anchor;
                 this.anchor = anchor;
 
-                if (oldAnchor == anchor)
-                    fireAnchorEvent(null, anchor, index);
-                else
+                if (oldAnchor == anchor) {
+                    if (index != -2)
+                        fireAnchorEvent(null, anchor, index);
+                } else
                     fireAnchorEvent(oldAnchor, anchor, index);
             }
         }
