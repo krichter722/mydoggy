@@ -27,6 +27,8 @@ import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.File;
 import java.util.Locale;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -64,6 +66,13 @@ public class MyDoggySet {
     }
 
     protected void start() {
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", new PropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                System.out.println("evt.getNewValue() = " + evt.getNewValue());
+
+            }
+        });
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 frame.setVisible(true);

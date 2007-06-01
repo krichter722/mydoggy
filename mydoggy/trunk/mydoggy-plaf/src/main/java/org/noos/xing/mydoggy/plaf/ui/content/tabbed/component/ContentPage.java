@@ -8,6 +8,8 @@ import org.noos.xing.mydoggy.plaf.ui.icons.TextIcon;
 import org.noos.xing.mydoggy.plaf.ui.ResourceBoundles;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.event.PopupMenuEvent;
 import javax.accessibility.AccessibleContext;
 import java.awt.event.MouseEvent;
 import java.awt.*;
@@ -220,6 +222,30 @@ public class ContentPage implements TabbedContentUI {
 
     private CompositeIcon getUICompositeIcon() {
         return (CompositeIcon) ((CompositeIcon) getContentIcon()).getRightIcon();
+    }
+
+    public void showPopupMenu(Component source, int x, int y, JPopupMenu defaultContentPopupMenu) {
+        // TODO: add actions...
+
+        JPopupMenu popupMenu = this.popupMenu;
+        if (popupMenu == null)
+            popupMenu = defaultContentPopupMenu;
+
+        if (popupMenu != null) {
+            final JPopupMenu popupMenu1 = popupMenu;
+            popupMenu.addPopupMenuListener(new PopupMenuListener() {
+                public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                    System.out.println(popupMenu1.getComponentCount());
+                }
+
+                public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                }
+
+                public void popupMenuCanceled(PopupMenuEvent e) {
+                }
+            });
+            popupMenu.show(source, x, y);
+        }
     }
 
 
