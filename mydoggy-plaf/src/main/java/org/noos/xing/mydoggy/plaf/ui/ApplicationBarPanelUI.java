@@ -100,7 +100,6 @@ public class ApplicationBarPanelUI extends PanelUI {
 
         panel.addContainerListener(new ContainerListener() {
             public void componentAdded(ContainerEvent e) {
-                // TODO: not too simple this gesture...
                 if (e.getChild() instanceof ToolWindowTabPanel) {
                     ToolWindowTabPanel panel = (ToolWindowTabPanel) e.getChild();
 

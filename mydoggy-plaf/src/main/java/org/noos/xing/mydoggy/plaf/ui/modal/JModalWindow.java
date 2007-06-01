@@ -12,6 +12,7 @@ public class JModalWindow extends JWindow {
 
     public JModalWindow(Window owner, Component returnFocus, boolean modal) {
         super(owner);
+        setFocusableWindowState(true);
         this.returnFocus = returnFocus;
         if (modal)
             modalToWindow = owner;

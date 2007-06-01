@@ -33,6 +33,7 @@ public class SwingUtil {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
 //                                System.out.println("IN RUN - requestFocus for : " + component.isFocusable() + " - " + component);
+                System.out.println("false = " + SwingUtilities.getWindowAncestor(component).isFocusableWindow());
                 component.requestFocus();
             }
         });
@@ -214,7 +215,7 @@ public class SwingUtil {
     }
 
     public static Component findFocusable(Component cmp) {
-        if (cmp.isFocusable())
+        if (cmp.isFocusable() && !(cmp instanceof JPanel))
             return cmp;
 
         if (cmp instanceof Container) {

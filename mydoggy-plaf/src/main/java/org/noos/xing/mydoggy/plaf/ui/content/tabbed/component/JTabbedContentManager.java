@@ -80,7 +80,6 @@ public class JTabbedContentManager extends JTabbedPane {
         insertTab(title, icon, component, tip, getTabCount(), tabbedContentUI);
     }
 
-
     public void setPopupMenuAt(int index, JPopupMenu popupMenu) {
         checkIndex(index);
         getContentPage(index).setPopupMenu(popupMenu);
@@ -125,6 +124,9 @@ public class JTabbedContentManager extends JTabbedPane {
         return getContentPage(index, null);
     }
 
+    public void setToolWindowManager(MyDoggyToolWindowManager toolWindowManager) {
+        this.toolWindowManager = toolWindowManager;
+    }
 
     public void addTabListener(TabListener l) {
         listenerList.add(TabListener.class, l);
@@ -180,10 +182,6 @@ public class JTabbedContentManager extends JTabbedPane {
             tabListener.tabEventFired(event);
     }
 
-    public void setToolWindowManager(MyDoggyToolWindowManager toolWindowManager) {
-        this.toolWindowManager = toolWindowManager;
-    }
-
 
     class MouseOverTabListener extends MouseInputAdapter {
         private int mouseOverTab = -1;
@@ -215,13 +213,9 @@ public class JTabbedContentManager extends JTabbedPane {
                     }
                 } else {
                     if (SwingUtilities.isRightMouseButton(e)) {
-                        JPopupMenu popupMenu = getPopupMenuAt(mouseOverTab);
-                        if (popupMenu == null)
-                            popupMenu = defaultContentPopupMenu;
-
-                        if (popupMenu != null) {
-                            popupMenu.show(JTabbedContentManager.this, e.getX(), e.getY());
-                        }
+                        getContentPage(mouseOverTab).showPopupMenu(
+                                JTabbedContentManager.this, e.getX(), e.getY(), defaultContentPopupMenu
+                        );
                     }
                 }
             } else if (SwingUtilities.isRightMouseButton(e)) {

@@ -45,12 +45,14 @@ public class FloatingContainer extends DockedContainer {
             }
         }
 
+        Container content = getContentContainer();
+        content.setFocusCycleRoot(!visible);
+
         if (visible) {
             configureFloatingIcons();
 
             window.getContentPane().removeAll();
 
-            Component content = getContentContainer();
             content.setVisible(true);
             window.getContentPane().add(content, "1,1,FULL,FULL");
 
@@ -301,7 +303,7 @@ public class FloatingContainer extends DockedContainer {
 
         protected void onShow(Object... params) {
             this.originalBounds = window.getBounds();
-            window.getContentPane().setVisible(false);
+//            window.getContentPane().setVisible(false);
             window.setBounds(new Rectangle(originalBounds.x + (originalBounds.width / 2),
                                            originalBounds.y + (originalBounds.height / 2),
                                            0, 0));

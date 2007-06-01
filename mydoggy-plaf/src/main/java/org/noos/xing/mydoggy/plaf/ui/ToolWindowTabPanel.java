@@ -53,6 +53,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
     protected void initComponents() {
         setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL, 1, 14}, {0, TableLayout.FILL, 0}}, false));
+        setFocusable(false);
 
         tabContainer = new JPanel(containerLayout = new TableLayout(new double[][]{{0}, {14}}));
         tabContainer.setOpaque(false);
@@ -62,7 +63,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         viewport = new JViewport();
         viewport.setBorder(null);
         viewport.setOpaque(false);
-        viewport.setFocusable(true);
+        viewport.setFocusable(false);
         viewport.setView(tabContainer);
 
         add(viewport, "0,1,FULL,FULL");

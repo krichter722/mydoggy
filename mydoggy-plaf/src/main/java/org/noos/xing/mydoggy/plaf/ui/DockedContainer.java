@@ -156,7 +156,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         container = new JPanel(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {16, TableLayout.FILL}}, false));
         container.setName("toolWindow.container." + toolWindow.getId());
         container.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
-        container.setFocusCycleRoot(false);
+        container.setFocusCycleRoot(true);
 
         String id = toolWindow.getId();
 
@@ -684,7 +684,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
             valueAdjusting = true;
 
-//            System.out.println("cmp = " + component);
+            System.out.println("cmp = " + component);
 
             if (isInternalComponent(component)) {
                 toolWindow.setActive(true);
@@ -786,6 +786,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             }
 
             if (active && focusRequester != null && !valueAdjusting) {
+                System.out.println("focusRequester = " + focusRequester);
                 SwingUtil.requestFocus(focusRequester);
             }
         }
