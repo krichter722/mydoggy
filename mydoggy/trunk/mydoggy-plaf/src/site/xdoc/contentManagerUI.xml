@@ -12,7 +12,7 @@
             <p>
                 Exists an implementation for the <code>TabbedContentManagerUI</code>
                 and for the <code>DesktopContentManagerUI</code>.
-                <br></br>
+                <br/>
                 To obtain a specific instance use the following (for example):
             </p>
             <source>import org.noos.xing.mydoggy.plaf.ui.content.desktop;
@@ -29,7 +29,7 @@ contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
                 If you want to implement your own <code>ContentManageUI,</code> your class must implement non only the
                 <code>ContentManageUI</code> interface but also the <code>BackContentManagerUI</code> interface in the
                 package <code>org.noos.xing.mydoggy.plaf.ui.content</code>.
-                <br></br>
+                <br/>
                 This is to provide all neccesary methods to use the manager.
             </p>
         </section>

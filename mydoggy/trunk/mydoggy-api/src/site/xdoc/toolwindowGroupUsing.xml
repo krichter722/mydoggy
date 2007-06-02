@@ -17,7 +17,7 @@ tool.setVisibile(true); // false to hide
 </source>
                 <p>
                     The tool shows or hides the component in a way that depends on tool window type.
-                    <br></br>
+                    <br/>
                     There is an another way to show a tool. You can use the aggregate methedo
                 </p>
                 <source>

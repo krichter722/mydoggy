@@ -17,7 +17,7 @@ tool.setVisibile(true); // false to hide
 </source>
                 <p>
                     The tool shows or hides the component in a way that depends on tool window type.
-                    <br></br>
+                    <br/>
                     There is an another way to show a tool. You can use the aggregate methedo
                 </p>
                 <a name="aggregate"/>
@@ -129,7 +129,7 @@ desc.setTransparentMode(true); // false to disable
                 <p>
                     Sets the transparent mode. If the transparent mode is enabled then when the toolwindow's content
                     losts the focus it becomes transparent. This facility is os-independent.
-                    <br></br>
+                    <br/>
                     You can use use <code>setTransparentRatio</code> and <code>setTransparentDelay</code> methods
                     to set transparency paramenters.
                 </p>
@@ -160,7 +160,7 @@ desc.setTransparentMode(true); // false to disable
                     Sets the transparent mode. If the transparent mode is enabled then when
                     the window used by <code>FLOATING</code> and <code>FLOATING_FREE</code> type losts
                     the focus it becomes transparent. This facility is os-dependent.
-                    <br></br>
+                    <br/>
                     You can use use <code>setTransparentRatio</code> and <code>setTransparentDelay</code> methods
                     to set transparency paramenters.
                 </p>

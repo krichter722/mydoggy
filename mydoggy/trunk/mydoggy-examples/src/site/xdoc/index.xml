@@ -26,9 +26,9 @@
                                 <a href="mydoggyset.html">MyDoggySet</a>
                                 is a sample application to see in action many functionalities of MyDoggy.
                                 You can modify tool window properties, show or hide groups and manage main window's contents.
-                                <br></br>
+                                <br/>
                                 Launch <a href="./jnlp/mydoggyset/mydoggyset.jnlp">MyDoggySet</a> using Java Web Start.
-								<br></br>
+								<br/>
 								On Windows Platform to see the transparency in action you have to
 								<a href="./../download.html">download</a>
 								a mydoggy distribution.

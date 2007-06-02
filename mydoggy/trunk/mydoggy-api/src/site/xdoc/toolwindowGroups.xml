@@ -36,7 +36,7 @@ ToolWindowGroup group = toolWindowManager
                                 method then
                                 the manager create a new instance of ToolWindowGroup and associate the group created
                                 with the specified name in the manager.
-                                <br></br>
+                                <br/>
                                 After that, you can populate the group.
                             </p>
                             <source>mainGroup.addToolWindow(

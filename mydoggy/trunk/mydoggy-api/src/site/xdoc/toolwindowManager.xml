@@ -13,7 +13,7 @@
                 This interface is the main entry point to manage MyDoggy. Using this interface
                 the user can register/unregister toolwindows, groups. The user can get the
                 content manager instance and type descriptor templates.
-                <br></br>
+                <br/>
                 To obtain an instance of ToolWindowManager interface see
                 <a href="./../mydoggy-plaf/index.html">mydoggy-plaf</a>
             </p>
@@ -21,7 +21,7 @@
             <subsection name="ToolWindowManagerDescriptor">
                 <p>
                     This interface is used to modify the behaviours of the ToolWindowManager.
-                    <br></br>
+                    <br/>
                     You can now change the push-away mode of toolwindows. See Using page for how to.
                 </p>
             </subsection>

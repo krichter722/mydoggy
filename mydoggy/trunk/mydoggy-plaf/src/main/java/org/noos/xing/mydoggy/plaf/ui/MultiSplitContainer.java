@@ -120,6 +120,8 @@ public class MultiSplitContainer extends JPanel {
                 }
             }
 
+            assert splitPane != null : "It's impossibile!!! Contact software developers.";
+            
             Container container;
             if (left) {
                 container = (Container) splitPane.getLeftComponent();

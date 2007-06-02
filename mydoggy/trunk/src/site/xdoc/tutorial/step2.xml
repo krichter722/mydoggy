@@ -109,7 +109,7 @@ public class SampleApp {
                                     <p>
                                         This is the effect. For example try to drag the tool to other position or right click
                                         on the toolwindow's representative button.
-                                        <br></br>
+                                        <br/>
                                         See the using for
                                         <a href="./../mydoggy-examples/mydoggysetUsing.html">MyDoggySet.</a>
                                     </p>

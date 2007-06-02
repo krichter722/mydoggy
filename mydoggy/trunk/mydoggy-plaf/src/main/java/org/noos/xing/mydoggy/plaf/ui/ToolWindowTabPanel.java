@@ -370,19 +370,19 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 popupMenu.add(new SelectTabAction(tab));
         }
 
-        private class SelectTabAction extends AbstractAction {
-            private ToolWindowTab tab;
+    }
 
-            public SelectTabAction(ToolWindowTab tab) {
-                super(tab.getTitle());
-                this.tab = tab;
-            }
+    private static class SelectTabAction extends AbstractAction {
+        private ToolWindowTab tab;
 
-            public void actionPerformed(ActionEvent e) {
-                tab.setSelected(true);
-            }
+        public SelectTabAction(ToolWindowTab tab) {
+            super(tab.getTitle());
+            this.tab = tab;
         }
 
+        public void actionPerformed(ActionEvent e) {
+            tab.setSelected(true);
+        }
     }
 
     class WheelScroller implements MouseWheelListener {
