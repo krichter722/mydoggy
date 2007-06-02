@@ -34,8 +34,8 @@ public class ToolWindowBarDropTarget extends DropTarget {
 
     private int showPosition(DropTargetDragEvent dtde, int lastIndex) {
         // TODO: reimplement
-        Point dtdeLoc = dtde.getLocation();
-        if (lastPosition != null && lastPosition.equals(dtdeLoc))
+        Point newPosition = dtde.getLocation();
+        if (lastPosition != null && lastPosition.equals(newPosition))
             return lastIndex;
 
         int index = -1;
@@ -44,17 +44,33 @@ public class ToolWindowBarDropTarget extends DropTarget {
         double sum = 0;
         int position;
         int[] intervals;
+        int direction;
 
         switch (anchor) {
             case TOP:
             case BOTTOM:
-                position = dtdeLoc.x;
+                position = newPosition.x;
                 intervals = tableLayout.getColsInPixel();
+
+                if (lastPosition == null)
+                    direction = 1;
+                else if (newPosition.x > lastPosition.x)
+                    direction = 1;
+                else
+                    direction = -1;
                 break;
             case LEFT:
             case RIGHT:
-                position = dtdeLoc.y;
+                position = newPosition.y;
                 intervals = tableLayout.getRowsInPixel();
+
+                if (lastPosition == null)
+                    direction = 1;
+                else if (newPosition.y > lastPosition.y)
+                    direction = 1;
+                else
+                    direction = -1;
+
                 break;
             default:
                 throw new IllegalStateException("Invalid anchor.");
@@ -63,31 +79,9 @@ public class ToolWindowBarDropTarget extends DropTarget {
         for (int i = 0; i < intervals.length; i++) {
             double interval = intervals[i];
 
-            if (position >= sum  && position <= sum + interval) {
-
+            if (position >= sum && position <= sum + interval) {
                 if (i % 2 == 0 && i != 0) {
-                    int diff = -1;
-                    
-                    for (Component component : container.getComponents()) {
-                        if (component instanceof SeparatorLabel) {
-                            switch (anchor) {
-                                case TOP:
-                                case BOTTOM:
-                                    if (layout.getConstraints(component).col1 == i - 1)
-                                        diff = 1;
-                                    break;
-                                case LEFT:
-                                case RIGHT:
-                                    if (layout.getConstraints(component).row1 == i - 1)
-                                        diff = 1;
-                                    break;
-                            }
-                            if (diff == 1)
-                                break;
-                        }
-                    }
-
-                    i += diff;
+                    i += direction;
 
                     switch (anchor) {
                         case TOP:
@@ -138,7 +132,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
 
         SwingUtil.repaint(container);
 
-        lastPosition = dtdeLoc;
+        lastPosition = newPosition;
         return index;
     }
 
@@ -172,6 +166,8 @@ public class ToolWindowBarDropTarget extends DropTarget {
                 dtde.acceptDrop(DnDConstants.ACTION_MOVE);
                 try {
                     ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
+
+                    System.out.println("index = " + index);
 
                     ((ToolWindow) dtde.getTransferable().getTransferData(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR))
                             .setAnchor(anchor, index);
