@@ -28,7 +28,7 @@ ToolWindow debugTool = toolWindowManager.registerToolWindow(
             <subsection name="To unregister a ToolWindow">
                 Use the following :
                 <source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">MyDoggyToolWindowManager(...)</a>;
-toolWindowManager.unregisterToolWindow("Debug Tool");
+toolWindowManager.unregisterToolWindow("Debug");
 </source>
             </subsection>
             <a name="aliasing"/>

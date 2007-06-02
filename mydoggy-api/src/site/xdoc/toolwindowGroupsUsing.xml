@@ -42,7 +42,7 @@ boolean contains = toolWindowManager.containsGroup("group_name");
                 Use the following :
                 <source>
 ToolWindowGroup group = toolWindowManager.getToolWindowGroup("group_name");
-ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
+ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
 group.addToolWindow(debugTool);
 </source>
                 <p>
@@ -53,7 +53,7 @@ group.addToolWindow(debugTool);
                 Use the following :
                 <source>
 ToolWindowGroup group = toolWindowManager.getToolWindowGroup("group_name");
-ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
+ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
 group.removeToolWindow(debugTool);
 </source>
                 <p>

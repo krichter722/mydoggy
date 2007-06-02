@@ -41,7 +41,7 @@ public class SampleApp {
             public void run() {
                 // Set debug tool active
                 <strong style="color:green">
-                ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
+                ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
                 debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#setActive(boolean)">setActive</a>(true);
                 </strong>
 
@@ -70,11 +70,11 @@ public class SampleApp {
         this.toolWindowManager = myDoggyToolWindowManager;
 
         // Register a Tool.
-        toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#registerToolWindow(java.lang.String, java.lang.String, javax.swing.Icon, java.awt.Component, org.noos.xing.mydoggy.ToolWindowAnchor)">registerToolWindow</a>("Debug Tool",       // Id
+        toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#registerToolWindow(java.lang.String, java.lang.String, javax.swing.Icon, java.awt.Component, org.noos.xing.mydoggy.ToolWindowAnchor)">registerToolWindow</a>("Debug",       // Id
                                              "Debug Tool",                 // Title
-                                             null,                          // Icon
+                                             null,                         // Icon
                                              new JButton("Debug Tool"),    // Component
-                                             ToolWindowAnchor.LEFT);        // Anchor
+                                             ToolWindowAnchor.LEFT);       // Anchor
 
         // Made all tools available
         for (<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html">ToolWindow</a> window : toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getToolWindows()">getToolWindows</a>())
