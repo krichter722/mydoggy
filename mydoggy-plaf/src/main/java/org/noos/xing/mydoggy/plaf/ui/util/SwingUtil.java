@@ -229,20 +229,20 @@ public class SwingUtil {
         return null;
     }
 
-    public static Vector getTopContainers(String name) {
-        Vector containers = new Vector();
+    public static Vector<Window> getTopContainers(String name) {
+        Vector<Window> containers = new Vector<Window>();
 
         Frame frames[] = Frame.getFrames();
-        for (int i = 0; i < frames.length; i++) {
-            Window[] windows = frames[i].getOwnedWindows();
+        for (Frame frame : frames) {
+            Window[] windows = frame.getOwnedWindows();
 
-            for (int j = 0; j < windows.length; j++) {
-                if (windows[j].getName() != null && windows[j].getName().equals(name))
-                    containers.add(windows[j]);
+            for (Window window : windows) {
+                if (window.getName() != null && window.getName().equals(name))
+                    containers.add(window);
             }
 
-            if (!containers.contains(frames[i])) {
-                containers.add(frames[i]);
+            if (!containers.contains(frame)) {
+                containers.add(frame);
             }
         }
         return containers;

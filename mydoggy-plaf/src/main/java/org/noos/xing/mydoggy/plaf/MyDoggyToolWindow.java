@@ -36,7 +36,6 @@ public class MyDoggyToolWindow implements ToolWindow {
     private boolean aggregateEnabled;
 
     private java.util.List<ToolWindowTab> toolWindowTabs;
-    private ToolWindowTab originalToolWindowTab;
     private ToolWindowTab defaultToolWindowTab;
 
     private ResourceBundle resourceBoundle;

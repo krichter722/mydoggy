@@ -12,7 +12,7 @@
             <p>
                 To obtain an instance of <code>ToolWindowManager</code> interface you have to instantiate the
                 <code>MyDoggyToolWindowManager</code> class. This is the default implementation.
-                <br></br>
+                <br/>
                 To obtain an instance use the following (for example):
             </p>
             <source>ToolWindowManager toolWindowManager = new MyDoggyToolWindowManager(
@@ -26,7 +26,7 @@
             </p>
             <p>
                 MyDoggyToolWindowManager is implemented like a JPanel so you can use it like any other component.
-                <br></br>
+                <br/>
                 For example:
             </p>
             <source>JFrame frame = new JFrame("MyDoggy-Set...");

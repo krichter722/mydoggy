@@ -33,6 +33,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
 
 
     private int showPosition(DropTargetDragEvent dtde, int lastIndex) {
+        // TODO: reimplement
         Point dtdeLoc = dtde.getLocation();
         if (lastPosition != null && lastPosition.equals(dtdeLoc))
             return lastIndex;

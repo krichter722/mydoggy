@@ -8,9 +8,9 @@ import java.beans.PropertyVetoException;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ContentDesktopManager implements DesktopManager, java.io.Serializable {
-	private static final long serialVersionUID = -2247702899708786437L;
+    private static final long serialVersionUID = -2247702899708786437L;
 
-	final static String HAS_BEEN_ICONIFIED_PROPERTY = "wasIconOnce";
+    final static String HAS_BEEN_ICONIFIED_PROPERTY = "wasIconOnce";
 
     final static int DEFAULT_DRAG_MODE = 0;
     final static int OUTLINE_DRAG_MODE = 1;
@@ -20,7 +20,7 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
     private transient Rectangle currentBounds = null;
     private transient Point currentLoc = null;
 
-    
+
     public void openFrame(JInternalFrame f) {
         if (f.getDesktopIcon().getParent() != null) {
             f.getDesktopIcon().getParent().add(f);
@@ -161,7 +161,7 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
         JDesktopPane d = f.getDesktopPane();
         JInternalFrame currentlyActiveFrame = (d == null) ? null : d.getSelectedFrame();
 
-		// fix for bug: 4162443
+        // fix for bug: 4162443
         if (p == null) {
             // If the frame is not in parent, its icon maybe, check it
             p = f.getDesktopIcon().getParent();
@@ -306,7 +306,8 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
                            && f instanceof JInternalFrame
                            && f.isOpaque()) {
                     dragMode = DEFAULT_DRAG_MODE;
-                } */ else {
+                } */
+                else {
                     dragMode = DEFAULT_DRAG_MODE;
                 }
             }
@@ -367,32 +368,32 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
 
             found = true;
 
-			for (Component component : components) {
-				if (component instanceof JInternalFrame) {
-					currentIcon = ((JInternalFrame) component).getDesktopIcon();
-				} else if (component instanceof JInternalFrame.JDesktopIcon) {
-					currentIcon = (JInternalFrame.JDesktopIcon) component;
-				} else
-					/* found a child that's neither an internal frame nor
-									an icon. I don't believe this should happen, but at
-									present it does and causes a null pointer exception.
-									Even when that gets fixed, this code protects against
-									the npe. hania */
-					continue;
+            for (Component component : components) {
+                if (component instanceof JInternalFrame) {
+                    currentIcon = ((JInternalFrame) component).getDesktopIcon();
+                } else if (component instanceof JInternalFrame.JDesktopIcon) {
+                    currentIcon = (JInternalFrame.JDesktopIcon) component;
+                } else
+                    /* found a child that's neither an internal frame nor
+                                         an icon. I don't believe this should happen, but at
+                                         present it does and causes a null pointer exception.
+                                         Even when that gets fixed, this code protects against
+                                         the npe. hania */
+                    continue;
 
-				//
-				// If this icon intersects the current location, get next location.
-				//
+                //
+                // If this icon intersects the current location, get next location.
+                //
 
-				if (!currentIcon.equals(icon)) {
-					if (availableRectangle.intersects(currentIcon.getBounds())) {
-						found = false;
-						break;
-					}
-				}
-			}
+                if (!currentIcon.equals(icon)) {
+                    if (availableRectangle.intersects(currentIcon.getBounds())) {
+                        found = false;
+                        break;
+                    }
+                }
+            }
 
-			if (currentIcon == null)
+            if (currentIcon == null)
                 /* didn't find any useful children above. This probably shouldn't
            happen, but this check protects against an npe if it ever does
            (and it's happening now) */

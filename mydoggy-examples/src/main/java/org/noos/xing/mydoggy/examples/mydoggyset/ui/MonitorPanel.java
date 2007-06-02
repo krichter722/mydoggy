@@ -101,7 +101,6 @@ public class MonitorPanel extends JPanel {
             float remainingHeight = (h - ssH * 2 - 0.5f);
             float blockHeight = remainingHeight / 10;
             float blockWidth = 20.0f;
-            float remainingWidth = (w - blockWidth - 10);
 
             // .. Memory Free ..
             backImageGrfx.setColor(mfColor);

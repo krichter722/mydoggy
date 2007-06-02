@@ -12,7 +12,7 @@ public class TranslucentRepaintManager extends javax.swing.RepaintManager {
             int lastDeltaY = c.getY();
             Container parent = c.getParent();
             while (parent instanceof JComponent) {
-                if (!parent.isVisible() || (parent.getPeer() == null)) {
+                if (!parent.isVisible() || !parent.isDisplayable()) {
                     return;
                 }
                 if (parent instanceof TranslucentPanel && (((TranslucentPanel) parent).getAlpha() < 1f ||

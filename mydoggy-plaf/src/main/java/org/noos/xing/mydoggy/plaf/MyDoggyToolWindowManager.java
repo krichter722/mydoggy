@@ -679,6 +679,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     class VisiblePropertyChangeListener implements PropertyChangeListener {
         boolean showingGroupValueAdj = false;
+
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
 
@@ -695,22 +696,22 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             syncPanel(descriptor.getToolWindow().getAnchor());
 
             // Support for implicit group...
-            if (showingGroup == null && Boolean.TRUE.equals(evt.getNewValue()) && !showingGroupValueAdj) {
-                synchronized(this) {
-                    showingGroupValueAdj = true;
-                    try {
-                        for (ToolWindowGroup group : getToolWindowGroups()) {
-                            if (group.isImplicit() && group.containesToolWindow(descriptor.getToolWindow())) {
-                                for (ToolWindow tool : group.getToolsWindow()) {
-                                    if (tool != descriptor.getToolWindow())
-                                        tool.aggregate();
+            synchronized (sync) {
+                if (showingGroup == null && Boolean.TRUE.equals(evt.getNewValue()) && !showingGroupValueAdj) {
+                        showingGroupValueAdj = true;
+                        try {
+                            for (ToolWindowGroup group : getToolWindowGroups()) {
+                                if (group.isImplicit() && group.containesToolWindow(descriptor.getToolWindow())) {
+                                    for (ToolWindow tool : group.getToolsWindow()) {
+                                        if (tool != descriptor.getToolWindow())
+                                            tool.aggregate();
+                                    }
+                                    break;
                                 }
-                                break;
                             }
+                        } finally {
+                            showingGroupValueAdj = false;
                         }
-                    } finally {
-                        showingGroupValueAdj = false;
-                    }
                 }
             }
 

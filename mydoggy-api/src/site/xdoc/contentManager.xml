@@ -47,7 +47,7 @@ contentManager.addContent("Tools"   // Content Key
             <p>
                 When you add a new content using the ContentManager you obtain an instance of Content interface.
                 This instance is used to modify content's properties.
-                <br></br>
+                <br/>
                 To retrieve a content previously added use the following :
             </p>
             <source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">...</a>;

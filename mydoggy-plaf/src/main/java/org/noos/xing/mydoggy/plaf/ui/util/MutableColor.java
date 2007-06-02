@@ -15,6 +15,7 @@ import java.util.Arrays;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MutableColor extends Color {
+    
     private static final double FACTOR = 0.7;
 
     private int value;
@@ -154,9 +155,7 @@ public class MutableColor extends Color {
         } else {
             f = compArray;
         }
-        for (int i = 0; i < n; i++) {
-            f[i] = fvalue[i];
-        }
+        System.arraycopy(fvalue, 0, f, 0, n);
         f[n] = falpha;
         return f;
     }
@@ -171,9 +170,7 @@ public class MutableColor extends Color {
         } else {
             f = compArray;
         }
-        for (int i = 0; i < n; i++) {
-            f[i] = fvalue[i];
-        }
+        System.arraycopy(fvalue, 0, f, 0, n);
         return f;
     }
 
@@ -195,9 +192,7 @@ public class MutableColor extends Color {
         if (compArray == null) {
             compArray = new float[tmpout.length + 1];
         }
-        for (int i = 0; i < tmpout.length; i++) {
-            compArray[i] = tmpout[i];
-        }
+        System.arraycopy(tmpout, 0, compArray, 0, tmpout.length);
         if (fvalue == null) {
             compArray[tmpout.length] = ((float) getAlpha()) / 255f;
         } else {
@@ -224,9 +219,7 @@ public class MutableColor extends Color {
         if (compArray == null) {
             return tmpout;
         }
-        for (int i = 0; i < tmpout.length; i++) {
-            compArray[i] = tmpout[i];
-        }
+        System.arraycopy(tmpout, 0, compArray, 0, tmpout.length);
         return compArray;
     }
 
@@ -312,13 +305,13 @@ public class MutableColor extends Color {
             rangeError = true;
             badComponentString = badComponentString + " Blue";
         }
-        if (rangeError == true) {
+        if (rangeError) {
             throw new IllegalArgumentException("Color parameter outside of expected range:"
                                                + badComponentString);
         }
     }
 
-    class ColorPaintContext implements PaintContext {
+    static class ColorPaintContext implements PaintContext {
         int color;
         WritableRaster savedTile;
 
@@ -339,7 +332,6 @@ public class MutableColor extends Color {
             if (t == null || w > t.getWidth() || h > t.getHeight()) {
                 t = getColorModel().createCompatibleWritableRaster(w, h);
                 IntegerComponentRaster icr = (IntegerComponentRaster) t;
-                int[] array = icr.getDataStorage();
                 Arrays.fill(icr.getDataStorage(), color);
                 if (w <= 64 && h <= 64) {
                     savedTile = t;
