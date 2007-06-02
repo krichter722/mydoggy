@@ -11,6 +11,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ContainerListener;
+import java.awt.event.ContainerEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -111,27 +113,50 @@ public class FloatingContainer extends DockedContainer {
 
     private void initFloatingListeners() {
         addPropertyChangeListener("type", new PropertyChangeListener() {
+            ContainerListener listener = new ContainerListener() {
+                public void componentAdded(ContainerEvent e) {
+                    e.getChild().addMouseMotionListener(resizeMouseInputHandler);
+                    e.getChild().addMouseListener(resizeMouseInputHandler);
+                }
+
+                public void componentRemoved(ContainerEvent e) {
+                    e.getChild().removeMouseMotionListener(resizeMouseInputHandler);
+                    e.getChild().removeMouseListener(resizeMouseInputHandler);
+                }
+            };
+
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getSource() != descriptor)
                     return;
 
                 assert "type".equals(evt.getPropertyName());
                 if (evt.getNewValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING_FREE) {
+                    // Remove
                     window.removeMouseMotionListener(resizeMouseInputHandler);
                     window.removeMouseListener(resizeMouseInputHandler);
 
-                    // TODO: we must include all TabButtons...
                     applicationBarTabs.getViewport().removeMouseMotionListener(moveMouseInputHandler);
                     applicationBarTabs.getViewport().removeMouseListener(moveMouseInputHandler);
+                    for (Component cmp : applicationBarTabs.getTabContainer().getComponents()) {
+                        cmp.removeMouseMotionListener(moveMouseInputHandler);
+                        cmp.removeMouseListener(moveMouseInputHandler);
+                    }
+                    applicationBarTabs.getTabContainer().removeContainerListener(listener);
 
                     applicationBar.removeMouseMotionListener(moveMouseInputHandler);
                     applicationBar.removeMouseListener(moveMouseInputHandler);
 
+                    // Add
                     window.addMouseMotionListener(resizeMouseInputHandler);
                     window.addMouseListener(resizeMouseInputHandler);
 
                     applicationBarTabs.getViewport().addMouseMotionListener(moveMouseInputHandler);
                     applicationBarTabs.getViewport().addMouseListener(moveMouseInputHandler);
+                    for (Component cmp : applicationBarTabs.getTabContainer().getComponents()) {
+                        cmp.addMouseMotionListener(moveMouseInputHandler);
+                        cmp.addMouseListener(moveMouseInputHandler);
+                    }
+                    applicationBarTabs.getTabContainer().addContainerListener(listener);
 
                     applicationBar.addMouseMotionListener(moveMouseInputHandler);
                     applicationBar.addMouseListener(moveMouseInputHandler);
@@ -140,11 +165,18 @@ public class FloatingContainer extends DockedContainer {
                 } else {
                     if (settedListener)
                         lastBounds = window.getBounds();
+
+                    // Remove listeners
                     window.removeMouseMotionListener(resizeMouseInputHandler);
                     window.removeMouseListener(resizeMouseInputHandler);
 
                     applicationBarTabs.getViewport().removeMouseMotionListener(moveMouseInputHandler);
                     applicationBarTabs.getViewport().removeMouseListener(moveMouseInputHandler);
+                    for (Component cmp : applicationBarTabs.getTabContainer().getComponents()) {
+                        cmp.removeMouseMotionListener(moveMouseInputHandler);
+                        cmp.removeMouseListener(moveMouseInputHandler);
+                    }
+                    applicationBarTabs.getTabContainer().removeContainerListener(listener);
 
                     applicationBar.removeMouseMotionListener(moveMouseInputHandler);
                     applicationBar.removeMouseListener(moveMouseInputHandler);

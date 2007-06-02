@@ -11,6 +11,7 @@ import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -223,7 +224,7 @@ public class ContentPage implements TabbedContentUI {
         return (CompositeIcon) ((CompositeIcon) getContentIcon()).getRightIcon();
     }
 
-    public void showPopupMenu(Component source, int x, int y, JPopupMenu defaultContentPopupMenu) {
+    public void showPopupMenu(Component source, final MouseEvent mouseEvent, final int mouseOverTab, JPopupMenu defaultContentPopupMenu) {
         JPopupMenu popupMenu = getPopupMenu();
         if (popupMenu == null)
             popupMenu = defaultContentPopupMenu;
@@ -233,18 +234,41 @@ public class ContentPage implements TabbedContentUI {
                 // TODO: add actions...
                 // Init stdPopupMenu
                 stdPopupMenu = new JPopupMenu("CPP");
-                stdPopupMenu.add(new JMenuItem("Close"));
-                stdPopupMenu.add(new JMenuItem("Close All"));
-                stdPopupMenu.add(new JMenuItem("Close All But This"));
+                stdPopupMenu.add(new JMenuItem(new AbstractAction("@@tabbed.page.close") {
+                    public void actionPerformed(ActionEvent e) {
+                        tabbedPane.fireCloseTabEvent(mouseEvent, mouseOverTab);
+                    }
+                }));
+                stdPopupMenu.add(new JMenuItem(new AbstractAction("@@tabbed.page.closeAll") {
+                    public void actionPerformed(ActionEvent e) {
+                        for (int i = 0, size = tabbedPane.getTabCount(); i < size; i++)
+                            tabbedPane.fireCloseTabEvent(mouseEvent, i);
+                    }
+                }));
+                stdPopupMenu.add(new JMenuItem(new AbstractAction("@@tabbed.page.closeAllButThis") {
+                    public void actionPerformed(ActionEvent e) {
+                        for (int i = 0, size = tabbedPane.getTabCount(); i < size; i++)
+                            if (i != mouseOverTab)
+                                tabbedPane.fireCloseTabEvent(mouseEvent, i);
+                    }
+                }));
                 stdPopupMenu.addSeparator();
-                stdPopupMenu.add(new JMenuItem("Detach"));
-                stdPopupMenu.add(new JMenuItem("Maximize"));
+                stdPopupMenu.add(new JMenuItem(new AbstractAction("@@tabbed.page.detach") {
+                    public void actionPerformed(ActionEvent e) {
+                        tabbedPane.fireDetachTabEvent(mouseEvent, mouseOverTab);
+                    }
+                }));
+                stdPopupMenu.add(new JMenuItem(new AbstractAction("@@tabbed.page.maximize") {
+                    public void actionPerformed(ActionEvent e) {
+                        tabbedPane.setMaximized();
+                    }
+                }));
             }
             popupMenu = stdPopupMenu;
         }
 
         if (popupMenu != null)
-            popupMenu.show(source, x, y);
+            popupMenu.show(source, mouseEvent.getX(), mouseEvent.getY());
     }
 
 

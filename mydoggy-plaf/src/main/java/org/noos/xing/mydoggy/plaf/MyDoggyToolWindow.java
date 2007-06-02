@@ -246,6 +246,9 @@ public class MyDoggyToolWindow implements ToolWindow {
                 (index == getDescriptor().getLabelIndex() || index == -2))
                 return;
 
+            if (isMaximized())
+                setMaximized(false);
+
             if (getType() == ToolWindowType.DOCKED || getType() == ToolWindowType.SLIDING) {
                 boolean tempVisible = isVisible();
                 boolean tempActive = isActive();

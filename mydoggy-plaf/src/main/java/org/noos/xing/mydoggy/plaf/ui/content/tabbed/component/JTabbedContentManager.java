@@ -22,10 +22,9 @@ public class JTabbedContentManager extends JTabbedPane {
 
     private ToolWindowManager toolWindowManager;
 
-    private JPopupMenu defaultContentPopupMenu;
-
     private Map<Accessible, ContentPage> contentPages;
 
+    private JPopupMenu popupMenu;
     private boolean closeable;
     private boolean detachable;
 
@@ -91,11 +90,11 @@ public class JTabbedContentManager extends JTabbedPane {
     }
 
     public void setPopupMenu(JPopupMenu popupMenu) {
-        this.defaultContentPopupMenu = popupMenu;
+        this.popupMenu = popupMenu;
     }
 
     public JPopupMenu getPopupMenu() {
-        return defaultContentPopupMenu;
+        return popupMenu;
     }
 
     public void setCloseable(boolean closeable) {
@@ -182,10 +181,20 @@ public class JTabbedContentManager extends JTabbedPane {
             tabListener.tabEventFired(event);
     }
 
+    private ByteArrayOutputStream workspace;
+    protected void setMaximized() {
+        if (workspace == null) {
+            toolWindowManager.getPersistenceDelegate().save(workspace = new ByteArrayOutputStream());
+            toolWindowManager.getToolWindowGroup().setVisible(false);
+        } else {
+            toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(workspace.toByteArray()),
+                                                             PersistenceDelegate.MergePolicy.UNION);
+            workspace = null;
+        }
+    }
 
     class MouseOverTabListener extends MouseInputAdapter {
         private int mouseOverTab = -1;
-        private ByteArrayOutputStream workspace;
 
         public void mouseClicked(MouseEvent e) {
             if (mouseOverTab >= 0 && mouseOverTab < getTabCount()) {
@@ -203,23 +212,17 @@ public class JTabbedContentManager extends JTabbedPane {
 
                 if (e.getClickCount() == 2) {
                     // Maximization
-                    if (workspace == null) {
-                        toolWindowManager.getPersistenceDelegate().save(workspace = new ByteArrayOutputStream());
-                        toolWindowManager.getToolWindowGroup().setVisible(false);
-                    } else {
-                        toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(workspace.toByteArray()),
-                                                                         PersistenceDelegate.MergePolicy.UNION);
-                        workspace = null;
-                    }
+                    setMaximized();
                 } else {
                     if (SwingUtilities.isRightMouseButton(e)) {
                         getContentPage(mouseOverTab).showPopupMenu(
-                                JTabbedContentManager.this, e.getX(), e.getY(), defaultContentPopupMenu
+                                JTabbedContentManager.this, e, mouseOverTab, popupMenu
                         );
                     }
                 }
             } else if (SwingUtilities.isRightMouseButton(e)) {
-//               TODO: what should i do tabbedContentManager.firePopupOutsideTabEvent(e);
+                if (popupMenu != null)
+                    popupMenu.show(JTabbedContentManager.this, e.getX(), e.getY());
             }
         }
 
