@@ -37,7 +37,7 @@ public class SampleApp {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 // Set debug tool active
-                ToolWindow debugTool = toolWindowManager.getToolWindow("Debug Tool");
+                ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
                 debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#setActive(boolean)">setActive</a>(true);
 
                 frame.setVisible(true);
@@ -63,7 +63,7 @@ public class SampleApp {
         this.toolWindowManager = myDoggyToolWindowManager;
 
         // Register a Tool.
-        toolWindowManager.registerToolWindow("Debug Tool",                 // Id
+        toolWindowManager.registerToolWindow("Debug",                      // Id
                                              "Debug Tool",                 // Title
                                              null,                         // Icon
                                              new JButton("Debug Tool"),    // Component

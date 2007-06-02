@@ -20,7 +20,7 @@
                             <img src="./images/toolwindow.png" alt="ToolWindow" border="0" />
                         </td>
                         <td>
-                            <p>
+                            <p align="center">
                                 To register a tool window use the following:
                             </p>
                             <source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">...</a>;
@@ -46,8 +46,8 @@ ToolWindow toolwindow = toolWindowManager.
             </p>
             <source>ToolWindowTab profilingTab = toolwindow.
 addToolWindowTab("Profiling",    // Tab Title
-     profilingCmp,   // Tab Component
-    )
+                 profilingCmp,   // Tab Component
+                )
             </source>
         </section>
     </body>

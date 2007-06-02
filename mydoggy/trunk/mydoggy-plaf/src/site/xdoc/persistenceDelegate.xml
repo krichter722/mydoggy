@@ -36,7 +36,7 @@
 &lt;?xml version="1.0" standalone="yes"?&gt;
 &lt;mydoggy version="1.2.0" pushAwayMode="VERTICAL"&gt;
     &lt;tools&gt;
-        &lt;tool id="Debug Tool" available="true" visible="true" active="true" autoHide="false" anchor="LEFT" type="DOCKED"&gt;
+        &lt;tool id="Debug" available="true" visible="true" active="true" autoHide="false" anchor="LEFT" type="DOCKED"&gt;
             &lt;descriptors&gt;
                 &lt;docked dockLength="1" popupMenuEnabled="false"/&gt;
                 &lt;sliding transparentMode="true" transparentDelay="0" transparentRatio="0.8" enabled="false"/&gt;

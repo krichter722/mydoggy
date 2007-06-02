@@ -28,7 +28,7 @@
                         <br></br>To set
                         <code>ToolWindowType.DOCKED</code>
                         type use the following:
-                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug Tool");
+                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
 toolWindow.setType(ToolWindowType.DOCKED);</source>
                     </li>
                     <li>
@@ -39,7 +39,7 @@ toolWindow.setType(ToolWindowType.DOCKED);</source>
                         When it loses focus, the tool window hides itself.
 
                         <br></br>To set ToolWindowType.SLIDING type use the following:
-                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug Tool");
+                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
 toolWindow.setType(ToolWindowType.SLIDING);</source>
                     </li>
                     <li>
@@ -55,7 +55,7 @@ toolWindow.setType(ToolWindowType.SLIDING);</source>
                         , if never before floated)
 
                         <br></br>To set <code>ToolWindowType.FLOATING</code> type use the following:
-                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug Tool");
+                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
 toolWindow.setType(ToolWindowType.FLOATING);</source>
                     </li>
                     <li>
@@ -66,7 +66,7 @@ toolWindow.setType(ToolWindowType.FLOATING);</source>
                         on the tool window bar.
 
                         <br></br>To set <code>ToolWindowType.FLOATING_FREE</code> type use the following:
-                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug Tool");
+                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
 toolWindow.setType(ToolWindowType.FLOATING_FREE);</source>
                     </li>
                 </ul>
@@ -90,7 +90,7 @@ toolWindow.setType(ToolWindowType.FLOATING_FREE);</source>
                         This interface is used to modify the behaviours of <code>DOCKED</code> type.
 
                         <br></br>To get a <code>DockedTypeDescriptor</code> instance use the following:
-                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug Tool");
+                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
 DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);</source>
                     </li>
                     <li>
@@ -100,7 +100,7 @@ DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.ge
                         This interface is used to modify the behaviours of <code>SLIDING</code> type.
 
                         <br></br>To get a <code>DockedTypeDescriptor</code> instance use the following:
-                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug Tool");
+                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
 SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);</source>
                     </li>
                     <li>
@@ -110,7 +110,7 @@ SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow
                         This interface is used to modify the behaviours of <code>FLOATING</code> and <code>FLOATING_FREE</code> type.
 
                         <br></br>To get a <code>DockedTypeDescriptor</code> instance use the following:
-                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug Tool");
+                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
 FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);</source>
                     </li>
                 </ul>
