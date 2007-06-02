@@ -28,18 +28,27 @@ ToolWindow toolwindow = toolWindowManager.
     registerToolWindow("Debug",      // Tool Window identifier
                        "Debugging",  // Tool Window Title
                        icon,         // Tool Window Icon
-                       component,    // Tool Window component
-                       ToolWindowAnchor.LEFT)  // Tool Window anchor
+                       component,    // Tool Window Component
+                       ToolWindowAnchor.LEFT  // Tool Window Anchor
+                      )
                             </source>
-                            <p>
-                                When you register a tool window you obtain an instance of ToolWindow interface.
-                                This interface is the main entry point to modify tool window properties.
-                                Moreover there are methods to make the tool available, visible and active.
-                            </p>
                         </td>
                     </tr>
                 </tbody>
             </table>
+            <p>
+                When you register a toolwindow you obtain an instance of ToolWindow interface.
+                This interface is the main entry point to modify toolwindow's properties.
+                Moreover there are methods to make the tool available, visible and active.
+                <br/>
+                The image on left show two tabs for the toolswindow. The first is declared when the tool
+                is registered, for the second use the following:
+            </p>
+            <source>ToolWindowTab profilingTab = toolwindow.
+addToolWindowTab("Profiling",    // Tab Title
+     profilingCmp,   // Tab Component
+    )
+            </source>
         </section>
     </body>
 </document>
