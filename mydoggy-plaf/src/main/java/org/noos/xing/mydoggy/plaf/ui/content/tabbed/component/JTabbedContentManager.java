@@ -181,9 +181,9 @@ public class JTabbedContentManager extends JTabbedPane {
             tabListener.tabEventFired(event);
     }
 
-    private ByteArrayOutputStream workspace;
-    protected void setMaximized() {
-        if (workspace == null) {
+    private ByteArrayOutputStream workspace = null;
+    protected void setMaximized(boolean maximize) {        
+        if (maximize) {
             toolWindowManager.getPersistenceDelegate().save(workspace = new ByteArrayOutputStream());
             toolWindowManager.getToolWindowGroup().setVisible(false);
         } else {
@@ -191,6 +191,10 @@ public class JTabbedContentManager extends JTabbedPane {
                                                              PersistenceDelegate.MergePolicy.UNION);
             workspace = null;
         }
+    }
+
+    protected boolean isMaximized() {
+        return workspace != null;
     }
 
     class MouseOverTabListener extends MouseInputAdapter {
@@ -212,7 +216,7 @@ public class JTabbedContentManager extends JTabbedPane {
 
                 if (e.getClickCount() == 2) {
                     // Maximization
-                    setMaximized();
+                    setMaximized(!isMaximized());
                 } else {
                     if (SwingUtilities.isRightMouseButton(e)) {
                         getContentPage(mouseOverTab).showPopupMenu(
