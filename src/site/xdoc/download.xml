@@ -33,7 +33,7 @@
                             <td>
                                 <strong>Category</strong>
                             </td>
-                            <td></td>
+                            <td/>
                         </tr>
 
                         <tr valign="top">
@@ -177,9 +177,22 @@
 							<td>
 								<strong>Category</strong>
 							</td>
-							<td></td>
+							<td/>
 						</tr>
 
+                        <tr valign="top">
+                            <td>MyDoggy</td>
+                            <td>1.2.0</td>
+                            <td>2007-04-07</td>
+                            <td>Stable</td>
+                            <td>
+                                <em>
+                                    <a href="http://sourceforge.net/project/showfiles.php?group_id=178005&amp;package_id=205132&amp;release_id=499269">
+                                        Download
+                                    </a>
+                                </em>
+                            </td>
+                        </tr>
                         <tr valign="top">
                             <td>MyDoggy</td>
                             <td>1.1.0</td>
@@ -193,23 +206,23 @@
                                 </em>
                             </td>
                         </tr>
-						<tr valign="top">
-							<td>MyDoggy</td>
-							<td>1.0.0</td>
-							<td>2006-11-07</td>
-							<td>Stable</td>
-							<td>
-								<em>
-									<a href="http://sourceforge.net/project/showfiles.php?group_id=178005&amp;package_id=205132&amp;release_id=461605">
-										Download
-									</a>
-								</em>
-							</td>
-						</tr>
+                        <tr valign="top">
+                            <td>MyDoggy</td>
+                            <td>1.0.0</td>
+                            <td>2006-11-07</td>
+                            <td>Stable</td>
+                            <td>
+                                <em>
+                                    <a href="http://sourceforge.net/project/showfiles.php?group_id=178005&amp;package_id=205132&amp;release_id=461605">
+                                        Download
+                                    </a>
+                                </em>
+                            </td>
+                        </tr>
 					</tbody>
 				</table>
 
-				<br></br>
+				<br/>
 				<strong>
 					<a href="http://prdownloads.sourceforge.net/mydoggy/?sort_by=date&amp;sort=desc">Browse all MyDoggy
 						downloads
