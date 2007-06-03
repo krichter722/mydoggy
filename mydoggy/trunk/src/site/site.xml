@@ -32,6 +32,7 @@
             <item name="ToolWindowManager" href="/mydoggy-api/toolwindowManager.html"/>
             <item name="ToolWindow" href="/mydoggy-api/toolwindow.html"/>
             <item name="ToolWindowGroup" href="/mydoggy-api/toolwindowGroups.html"/>
+            <item name="ContentManager" href="/mydoggy-api/contentManager.html"/>
         </menu>
 
         <menu name="Modules">
