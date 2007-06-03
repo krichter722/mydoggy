@@ -65,6 +65,16 @@ toolWindowManagerDescriptor.setPushAwayMode(PushAwayMode.MOST_RECENT);</source>
 ToolWindowManagerDescriptor toolWindowManagerDescriptor = toolWindowManager.getToolWindowManagerDescriptor();
 PushAwayMode pushAwayMode = toolWindowManagerDescriptor.getPushAwayMode();</source>
             </subsection>
+            <a name="CornerComponent"/>
+            <subsection name="ToolWindowManagerDescriptor - Corner Component">
+                <p>
+                    After you have obtained an instance of the ToolWindowManagerDescriptor for a specific ToolWindowManager use
+                    the following to set a corner component:
+                </p>
+                <source>
+ToolWindowManagerDescriptor toolWindowManagerDescriptor = toolWindowManager.getToolWindowManagerDescriptor();
+toolWindowManagerDescriptor.setCornerComponent(ToolWindowManagerDescriptor.Corner.NORD_WEST, new JLabel("NW"));</source>
+            </subsection>
         </section>
 
         <a name="PersistenceDelegate"/>
