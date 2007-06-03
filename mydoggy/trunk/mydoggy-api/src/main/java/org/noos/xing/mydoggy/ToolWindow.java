@@ -118,7 +118,7 @@ public interface ToolWindow {
      * will be flashing until the tool will be made visible.
      *
      * @param flash <code>true</code> to enable flashing mode;
- *                  <code>false</code> to disable flashing mode.
+     *              <code>false</code> to disable flashing mode.
      * @since 1.3.0
      * @see #isFlashing()
      * @see #setFlashing(int) 
@@ -126,7 +126,7 @@ public interface ToolWindow {
     void setFlashing(boolean flash);
 
     /**
-     * This method is used to enable flasing for a specific duration.
+     * This method is used to enable flashing for a specific duration.
      *
      * @param duration
      * @since 1.3.0
