@@ -13,6 +13,9 @@ public class PersistedToolWindow {
     private boolean visible;
     private boolean active;
     private boolean autoHide;
+    private boolean aggregateMode;
+    private boolean maximized;
+    private int index;
     private ToolWindowAnchor anchor;
     private ToolWindowType type;
 
@@ -24,6 +27,9 @@ public class PersistedToolWindow {
         this.autoHide = Boolean.parseBoolean(attributes.getValue("autoHide")); 
         this.anchor = ToolWindowAnchor.valueOf(attributes.getValue("anchor"));
         this.type = ToolWindowType.valueOf(attributes.getValue("type"));
+        this.aggregateMode = Boolean.parseBoolean(attributes.getValue("aggregateMode"));
+        this.maximized = Boolean.parseBoolean(attributes.getValue("maximized"));
+        this.index = Integer.parseInt(attributes.getValue("index")); 
     }
 
 
@@ -53,5 +59,17 @@ public class PersistedToolWindow {
 
     public ToolWindowType getType() {
         return type;
+    }
+
+    public boolean isAggregateMode() {
+        return aggregateMode;
+    }
+
+    public boolean isMaximized() {
+        return maximized;
+    }
+
+    public int getIndex() {
+        return index;
     }
 }

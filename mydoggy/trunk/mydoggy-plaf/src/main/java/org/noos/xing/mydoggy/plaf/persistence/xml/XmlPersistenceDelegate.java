@@ -106,6 +106,9 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
         toolAttributes.addAttribute(null, "autoHide", null, null, String.valueOf(toolWindow.isAutoHide()));
         toolAttributes.addAttribute(null, "anchor", null, null, String.valueOf(toolWindow.getAnchor()));
         toolAttributes.addAttribute(null, "type", null, null, String.valueOf(toolWindow.getType()));
+        toolAttributes.addAttribute(null, "aggregateMode", null, null, String.valueOf(toolWindow.isAggregateMode()));
+        toolAttributes.addAttribute(null, "maximized", null, null, String.valueOf(toolWindow.isMaximized()));
+        toolAttributes.addAttribute(null, "index", null, null, String.valueOf(toolWindow.getIndex()));
         writer.startElement("tool", toolAttributes);
 
         writer.startElement("descriptors");
@@ -115,6 +118,10 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
         AttributesImpl dockedDescriptorAttributes = new AttributesImpl();
         dockedDescriptorAttributes.addAttribute(null, "dockLength", null, null, String.valueOf(dockedTypeDescriptor.getDockLength()));
         dockedDescriptorAttributes.addAttribute(null, "popupMenuEnabled", null, null, String.valueOf(dockedTypeDescriptor.isPopupMenuEnabled()));
+        dockedDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(dockedTypeDescriptor.isAnimating()));
+        dockedDescriptorAttributes.addAttribute(null, "previewEnabled", null, null, String.valueOf(dockedTypeDescriptor.isPreviewEnabled()));
+        dockedDescriptorAttributes.addAttribute(null, "previewDelay", null, null, String.valueOf(dockedTypeDescriptor.getPreviewDelay()));
+        dockedDescriptorAttributes.addAttribute(null, "previewTransparentRatio", null, null, String.valueOf(dockedTypeDescriptor.getPreviewTransparentRatio()));
         writer.dataElement("docked", dockedDescriptorAttributes);
 
         // DockedTypeDescriptor
@@ -124,6 +131,7 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
         slidingDescriptorAttributes.addAttribute(null, "transparentDelay", null, null, String.valueOf(slidingTypeDescriptor.getTransparentDelay()));
         slidingDescriptorAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(slidingTypeDescriptor.getTransparentRatio()));
         slidingDescriptorAttributes.addAttribute(null, "enabled", null, null, String.valueOf(slidingTypeDescriptor.isEnabled()));
+        slidingDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(slidingTypeDescriptor.isAnimating()));
         writer.dataElement("sliding", slidingDescriptorAttributes);
 
         // FloatingTypeDescriptor
@@ -134,6 +142,7 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
         floatingDescriptorAttributes.addAttribute(null, "transparentDelay", null, null, String.valueOf(floatingTypeDescriptor.getTransparentDelay()));
         floatingDescriptorAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(floatingTypeDescriptor.getTransparentRatio()));
         floatingDescriptorAttributes.addAttribute(null, "enabled", null, null, String.valueOf(floatingTypeDescriptor.isEnabled()));
+        floatingDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(floatingTypeDescriptor.isAnimating()));
 
         Point point = floatingTypeDescriptor.getLocation();
         if (point != null) {
