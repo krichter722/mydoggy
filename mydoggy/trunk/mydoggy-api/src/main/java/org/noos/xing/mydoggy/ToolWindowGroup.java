@@ -59,7 +59,19 @@ public interface ToolWindowGroup {
      */
     boolean containesToolWindow(ToolWindow toolWindow);
 
+    /**
+     * TODO: add javadoc
+     * @param implicit
+     * @since 1.3.0
+     */
     void setImplicit(boolean implicit);
+
+    /**
+     *
+     * @return
+     * @since 1.3.0
+     */
+    boolean isImplicit();
 
     /**
      * Invokes <code>setVisible(visible)</code> on all toolwindows contained in this group
@@ -71,7 +83,6 @@ public interface ToolWindowGroup {
      */
     void setVisible(boolean visible);
 
-    boolean isImplicit();
 
     /**
      * Registers <code>listener</code> so that it will receive events when

@@ -8,7 +8,7 @@
     </properties>
 
     <body>
-        <section name="Groups - ToolWindowGroup">
+        <section name="ToolWindowGroup">
             <p>
                 The idea is to provide the same mechanism of prospectives of eclipse ide for toolwindows.
                 The typical usage is to retrieve a group from the tool window manager and to add any toolwindows.

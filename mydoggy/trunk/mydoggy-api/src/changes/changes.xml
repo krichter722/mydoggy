@@ -209,6 +209,23 @@
                 </a> - 
                 ]]>
             </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowGroup.html">
+                    <code>ToolWindowGroup</code>
+                </a> - Added methods :
+                <ul>
+                    <li>
+                        <code>void setImplicit(boolean implicit);</code>
+                        <br></br>
+                    </li>
+                    <li>
+                        <code>boolean isImplicit();</code>
+                        <br></br>
+                    </li>
+                </ul>
+                ]]>
+            </action>
         </release>
         <release version="1.2.0" date="2007-04-07" description="Third release">
             <action dev="adecaro" type="add">

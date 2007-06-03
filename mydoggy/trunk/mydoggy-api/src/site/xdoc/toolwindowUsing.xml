@@ -87,7 +87,21 @@ tool.setAnchor(ToolWindowAnchor.TOP);
 
         </section>
 
-        <section name="DockedTypeDescriptor">
+        <a name="ToolWindowTab"/>
+        <section name="Using ToolWindowTab">
+            <subsection name="To add">
+                Use the following :
+                <source>
+ToolWindow tool = toolWindowManager.getToolWindow(0);
+tool.addToolWindowTab("Title", component);
+</source>
+                <p>
+                    Adds a <code>component</code> represented by a <code>title</code> and no icon.
+                </p>
+            </subsection>
+        </section>
+
+        <section name="Using DockedTypeDescriptor">
             <subsection name="Enable/Disable PopupMenu">
                 Use the following :
                 <source>
@@ -149,7 +163,7 @@ desc.setPreviewEnabled(true); // false to disable
         </section>
 
         <a name="Slidying"/>
-        <section name="SlidingTypeDescriptor">
+        <section name="Using SlidingTypeDescriptor">
             <subsection name="Enable Transparent Mode">
                 Use the following :
                 <source>
@@ -179,7 +193,7 @@ desc.setEnabled(true); // false to disable
         </section>
 
         <a name="Floating"/>
-        <section name="FloatingTypeDescriptor">
+        <section name="Using FloatingTypeDescriptor">
             <subsection name="Enable Transparent Mode">
                 Use the following :
                 <source>
