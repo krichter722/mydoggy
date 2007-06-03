@@ -19,7 +19,7 @@
                 <![CDATA[
                 <ul>
                     <li>
-                        <a href="./mydoggy-api/toolwindow.html#PreviewMode">ToolWindow Preview</a>: if you wait on the representative button of a tool not visible you'll see a transparent preview of the tool of size 151x75. If you move the mouse outside the representative button the preview will become invisible;
+                        <a href="./mydoggy-api/toolwindowUsing.html#PreviewMode">ToolWindow Preview</a>: if you wait on the representative button of a tool not visible you'll see a transparent preview of the tool of size 151x75. If you move the mouse outside the representative button the preview will become invisible;
                     </li>
                     <li>
                         PushAwayMode.MOST_RECENT : whoever is pressed last toolwindow push away the previous toolwindows. This way the order of opening the toolwindows determine who push who (and you can achieve any "priority" mode by selecting the order of clicks);
