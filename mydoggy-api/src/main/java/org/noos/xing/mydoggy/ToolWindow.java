@@ -100,18 +100,16 @@ public interface ToolWindow {
     /**
      * TODO: add javadocs
      * @param aggregateEnabled
+     * @since 1.3.0
      */
     void setAggregateMode(boolean aggregateEnabled);
 
-    boolean isAggregateMode();
-
     /**
-     * Returns whether the representative button is currently flashing.
-     *
-     * @return <code>true</code> if this the representative button is flashing, <code>false</code> otherwise.
+     * 
+     * @return
      * @since 1.3.0
      */
-    boolean isFlashing();
+    boolean isAggregateMode();
 
     /**
      * Sets the flashing mode. If the flashing mode is enabled then the toolwindow representative button
@@ -133,6 +131,14 @@ public interface ToolWindow {
      * @see #setFlashing(boolean)
      */
     void setFlashing(int duration);
+
+    /**
+     * Returns whether the representative button is currently flashing.
+     *
+     * @return <code>true</code> if this the representative button is flashing, <code>false</code> otherwise.
+     * @since 1.3.0
+     */
+    boolean isFlashing();
 
     /**
      * The method is used to set the active property of the tool.
@@ -270,14 +276,6 @@ public interface ToolWindow {
     String getTitle();
 
     /**
-     * Returns whether the toolwindow is currently maximized.
-     *
-     * @return <code>true</code> if this toolwindow is maximized, <code>false</code> otherwise.
-     * @since 1.3.0
-     */
-    boolean isMaximized();
-
-    /**
      * Maximizes this toolwindow. A maximized toolwindow is resized to
      * fully fit the main content area.
      *
@@ -286,6 +284,14 @@ public interface ToolWindow {
      * @since 1.3.0
      */
     void setMaximized(boolean maximized);
+
+    /**
+     * Returns whether the toolwindow is currently maximized.
+     *
+     * @return <code>true</code> if this toolwindow is maximized, <code>false</code> otherwise.
+     * @since 1.3.0
+     */
+    boolean isMaximized();
 
     /**
      * Adds a <code>component</code> represented by a <code>title</code> and no icon.
@@ -303,6 +309,7 @@ public interface ToolWindow {
      * @param toolWindowTab the tab to be removed
      * @see #addToolWindowTab(String, java.awt.Component)
      * @return <tt>true</tt> if this toolwindow contained the specified tab.
+     * @since 1.3.0
      */
     boolean removeToolWindowTab(ToolWindowTab toolWindowTab);
 

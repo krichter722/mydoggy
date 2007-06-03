@@ -12,10 +12,203 @@
                 <![CDATA[
                 <a href="./apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">
                     <code>DockedTypeDescriptor</code>
-                </a> - Added support for Tool Window Preview :
+                </a> - Added support for toolwindow Preview Mode. Added methods:
+                <ul>
+                    <li>
+                        <code>void setPreviewEnabled(boolean enabled);</code>
+                        <br></br>
+                        Sets the preview mode. If the preview mode is enabled then when the mouse waits
+                        on the toolwindow representative button after a delay time the preview will become visible.
+                    </li>
+                    <li>
+                        <code>boolean isPreviewEnabled();</code>
+                        <br></br>
+                        Returns the preview mode status.
+                    </li>
+                    <li>
+                        <code>void setPreviewDelay(int delay);</code>
+                        <br></br>
+                        Sets the preview delay. When the mouse waits on the toolwindow representative button
+                        after a delay time the preview will become visible if the preview mode is enabled.
+                    </li>
+                    <li>
+                        <code>int getPreviewDelay();</code>
+                        <br></br>
+                        Returns the preview delay.
+                    </li>
+                    <li>
+                        <code>void setPreviewTransparentRatio(float transparentRatio);</code>
+                        <br></br>
+                        Sets the transparent ratio of the preview. Valid range is [0.0, 1.0]
+                    </li>
+                    <li>
+                        <code>float getPreviewTransparentRatio();</code>
+                        <br></br>
+                        Returns the transparent ratio.
+                    </li>
+                </ul>
                 ]]>
             </action>
-            
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/PersistenceDelegate.html">
+                    <code>PersistenceDelegate</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code>void merge(InputStream inputStream, MergePolicy mergePolicy)</code>
+                        <br></br>
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/PushAwayMode.html">
+                    <code>PushAwayMode</code>
+                </a> - Added enum item:
+                <ul>
+                    <li>
+                        <code>MOST_RECENT</code>
+                        <br></br>
+                        Whoever is pressed last toolwindow push away the previous toolwindows. This way the order
+                        of opening the toolwindows determine who push who (and you can achieve any "priority" mode
+                        by selecting the order of clicks)
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/PushAwayModeDescriptor.html">
+                    <code>PushAwayModeDescriptor</code>
+                </a> - This is a marker for all interfaces that provides methods to modify push away mode behaviours.
+                ]]>
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/MostRecentDescriptor.html">
+                    <code>MostRecentDescriptor</code>
+                </a> - This interface is used to modify the behaviour of PushAwayMode.MOST_RECENT mode.
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindow.html">
+                    <code>ToolWindow</code>
+                </a> - Added enum item:
+                <ul>
+                    <li>
+                        <code>void setAggregateMode(boolean aggregateEnabled);</code>
+                        <br></br>
+                    </li>
+                    <li>
+                        <code>boolean isAggregateMode();</code>
+                        <br></br>
+                    </li>
+                    <li>
+                        <code>void setFlashing(boolean flash);</code>
+                        <br></br>
+                        Sets the flashing mode. If the flashing mode is enabled then the toolwindow representative button
+                        will be flashing until the tool will be made visible.
+                    </li>
+                    <li>
+                        <code>boolean isFlashing();</code>
+                        <br></br>
+                        Returns whether the representative button is currently flashing.
+                    </li>
+                    <li>
+                        <code>void setFlashing(int duration);</code>
+                        <br></br>
+                        This method is used to enable flashing for a specific duration.
+                    </li>
+                    <li>
+                        <code>void setAnchor(ToolWindowAnchor anchor, int index);</code>
+                        <br></br>
+                        This method is used to set the anchor for the tool. The anchor specifies the position of the tool when
+                        it is anchored to the docking system. The index specifies the position relative to the other tools on
+                        the same anchor.
+                    </li>
+                    <li>
+                        <code>void setMaximized(boolean maximized);</code>
+                        <br></br>
+                        Maximizes this toolwindow. A maximized toolwindow is resized to
+                        fully fit the main content area.
+                    </li>
+                    <li>
+                        <code>boolean isMaximized();</code>
+                        <br></br>
+                        Returns whether the toolwindow is currently maximized.
+                    </li>
+                    <li>
+                        <code>ToolWindowTab addToolWindowTab(String title, Component component);</code>
+                        <br></br>
+                        Adds a <code>component</code> represented by a <code>title</code> and no icon.
+                    </li>
+                    <li>
+                        <code>boolean removeToolWindowTab(ToolWindowTab toolWindowTab);</code>
+                        <br></br>
+                        Removes the specified tab from this toolwindow.
+                    </li>
+                    <li>
+                        <code>ToolWindowTab[] getToolWindowTabs();</code>
+                        <br></br>
+                        Gets all the tabs in this toolwindow.
+                    </li>
+                    <li>
+                        <code>void addToolWindowListener(ToolWindowListener listener);</code>
+                        <br></br>
+                        Adds the specified toolwindow listener to receive toolwindow events from
+                        this tool.                        
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowListener.html">
+                    <code>ToolWindowListener</code>
+                </a> - The listener interface for receiving "interesting" events (tab added, removed and removing).
+                The listener object created is then registered with a tool window using the <code>addToolWindowListener</code> method.
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowManagerDescriptor.html">
+                    <code>ToolWindowManagerDescriptor</code>
+                </a> - Added methods and enum :
+                <ul>
+                    <li>
+                        <code>enum Corner</code>
+                        <br></br>
+                    </li>
+                    <li>
+                        <code>PushAwayModeDescriptor getPushAwayModeDescriptor(PushAwayMode pushAwayMode);</code>
+                        <br></br>
+                        Returns the PushAwayModeDescriptor for the passed push away mode if
+                        it is supported, null otherwise.                        
+                    </li>
+                    <li>
+                        <code>void setCornerComponent(Corner corner, Component component);</code>
+                        <br></br>
+                        Adds the specified component at the given corner.
+                    </li>
+                    <li>
+                        <code>void addPropertyChangeListener(PropertyChangeListener listener);</code>
+                        <br></br>
+                        Adds a PropertyChangeListener to the listener list. The listener is
+                        registered for all bound properties of this class.
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowTab.html">
+                    <code>ToolWindowTab</code>
+                </a> - 
+                ]]>
+            </action>
         </release>
         <release version="1.2.0" date="2007-04-07" description="Third release">
             <action dev="adecaro" type="add">
