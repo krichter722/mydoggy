@@ -10,12 +10,14 @@ public class PersistedSlidingType {
     private float transparentRatio;
     private int transparentDelay;
     private boolean enabled;
+    private boolean animating;
 
     public PersistedSlidingType(Attributes attributes) {
         this.transparentMode = Boolean.parseBoolean(attributes.getValue("transparentMode"));
         this.transparentDelay = Integer.parseInt(attributes.getValue("transparentDelay"));
         this.transparentRatio = Float.parseFloat(attributes.getValue("transparentRatio"));
         this.enabled = Boolean.parseBoolean(attributes.getValue("enabled"));
+        this.animating = Boolean.parseBoolean(attributes.getValue("animating"));
     }
 
 
@@ -33,5 +35,9 @@ public class PersistedSlidingType {
 
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public boolean isAnimating() {
+        return animating;
     }
 }

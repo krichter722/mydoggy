@@ -140,6 +140,10 @@ public class MyDoggyHandler extends DefaultHandler {
                             DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
                             descriptor.setDockLength(dockedType.getDockLength());
                             descriptor.setPopupMenuEnabled(dockedType.isPopupMenuEnabled());
+                            descriptor.setAnimating(dockedType.isAnimating());
+                            descriptor.setPreviewEnabled(dockedType.isPreviewEnabled());
+                            descriptor.setPreviewDelay(dockedType.getPreviewDelay());
+                            descriptor.setPreviewTransparentRatio(dockedType.getPreviewTransparentRatio());
                         }
 
                         if (slidingType != null) {
@@ -148,6 +152,7 @@ public class MyDoggyHandler extends DefaultHandler {
                             descriptor.setTransparentDelay(slidingType.getTransparentDelay());
                             descriptor.setTransparentMode(slidingType.isTransparentMode());
                             descriptor.setTransparentRatio(slidingType.getTransparentRatio());
+                            descriptor.setAnimating(slidingType.isAnimating());
                         }
 
                         if (floatingType != null) {
@@ -157,6 +162,7 @@ public class MyDoggyHandler extends DefaultHandler {
                             descriptor.setTransparentMode(floatingType.isTransparentMode());
                             descriptor.setTransparentRatio(floatingType.getTransparentRatio());
                             descriptor.setModal(floatingType.isModal());
+                            descriptor.setAnimating(floatingType.isAnimating());
 
                             Point point = floatingType.getLocation();
                             if (point != null)
@@ -170,6 +176,8 @@ public class MyDoggyHandler extends DefaultHandler {
                         toolWindow.setType(persistedToolWindow.getType());
                         toolWindow.setAutoHide(persistedToolWindow.isAutoHide());
                         toolWindow.setAvailable(persistedToolWindow.isAvailable());
+                        toolWindow.setIndex(persistedToolWindow.getIndex());
+                        toolWindow.setAggregateMode(persistedToolWindow.isAggregateMode());
 
                         map.put(toolWindow, persistedToolWindow);
                     }
@@ -205,6 +213,8 @@ public class MyDoggyHandler extends DefaultHandler {
 
     protected void load(ToolWindowAnchor anchor) {
         ToolWindow activeTool = null;
+
+        // TODO: implement miximezied...
 
         MergePolicyApplier mergePolicyApplier = MergePolicyProvider.getMergePolicyApplier(mergePolicy);
         for (ToolWindow toolWindow : map.keySet()) {

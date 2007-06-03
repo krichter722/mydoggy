@@ -15,6 +15,7 @@ public class PersistedFloatingType {
     private boolean modal;
     private Point location;
     private Dimension size;
+    private boolean animating;
 
     public PersistedFloatingType(Attributes attributes) {
         this.transparentMode = Boolean.parseBoolean(attributes.getValue("transparentMode"));
@@ -22,6 +23,7 @@ public class PersistedFloatingType {
         this.transparentRatio = Float.parseFloat(attributes.getValue("transparentRatio"));
         this.enabled = Boolean.parseBoolean(attributes.getValue("enabled"));
         this.modal = Boolean.parseBoolean(attributes.getValue("modal"));
+        this.animating = Boolean.parseBoolean(attributes.getValue("animating"));
 
         if (attributes.getValue("x") != null)
             this.location = new Point(
@@ -70,5 +72,9 @@ public class PersistedFloatingType {
 
     public void setSize(Dimension size) {
         this.size = size;
+    }
+
+    public boolean isAnimating() {
+        return animating;
     }
 }
