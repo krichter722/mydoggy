@@ -1,0 +1,36 @@
+        <!ELEMENT mydoggy (tools)*>
+        <!ATTLIST mydoggy
+                version CDATA #REQUIRED
+                pushAwayMode CDATA #REQUIRED>
+        <!ELEMENT tools (tool)*>
+        <!ELEMENT tool (descriptors)*>
+        <!ATTLIST tool
+                active CDATA #REQUIRED
+                anchor CDATA #REQUIRED
+                autoHide CDATA #REQUIRED
+                available CDATA #REQUIRED
+                id CDATA #REQUIRED
+                type CDATA #REQUIRED
+                visible CDATA #REQUIRED>
+        <!ELEMENT descriptors (docked|sliding|floating)*>
+        <!ELEMENT docked (#PCDATA)>
+        <!ATTLIST docked
+                dockLength CDATA #REQUIRED
+                popupMenuEnabled CDATA #REQUIRED>
+        <!ELEMENT sliding (#PCDATA)>
+        <!ATTLIST sliding
+                enabled CDATA #REQUIRED
+                transparentDelay CDATA #REQUIRED
+                transparentMode CDATA #REQUIRED
+                transparentRatio CDATA #REQUIRED>
+        <!ELEMENT floating (#PCDATA)>
+        <!ATTLIST floating
+                enabled CDATA #REQUIRED
+                height CDATA #IMPLIED
+                modal CDATA #REQUIRED
+                transparentDelay CDATA #REQUIRED
+                transparentMode CDATA #REQUIRED
+                transparentRatio CDATA #REQUIRED
+                width CDATA #IMPLIED
+                x CDATA #IMPLIED
+                y CDATA #IMPLIED>
