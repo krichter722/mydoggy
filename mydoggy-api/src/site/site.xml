@@ -17,7 +17,6 @@
         <menu name="MyDoggy - Api">
             <item name="Introduction" href="index.html"/>
             <item name="ToolWindowManager" href="toolwindowManager.html">
-                <item name="PersistenceDelegate" href="persistenceDelegate.html"/>
                 <item name="Using" href="toolwindowManagerUsing.html"/>
             </item>
             <item name="ToolWindow" href="toolwindow.html">
