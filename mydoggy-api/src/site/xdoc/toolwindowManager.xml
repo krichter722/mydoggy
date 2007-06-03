@@ -22,7 +22,8 @@
                 <p>
                     This interface is used to modify the behaviours of the ToolWindowManager.
                     <br/>
-                    You can now change the push-away mode of toolwindows. See Using page for how to.
+                    You can now change the push-away mode of toolwindows and set corner components.
+                    See Using page for how to.
                 </p>
             </subsection>
 
