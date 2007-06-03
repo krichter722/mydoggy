@@ -623,6 +623,11 @@ public class AnchorLabelUI extends MetalLabelUI {
         private ToolWindowAnchor lastAnchor;
 
         public void dragGestureRecognized(DragGestureEvent dge) {
+            // TODO: è la cosa migliore??
+            GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
+            if (previewPanel != null)
+                glassPane.remove(previewPanel);
+
             if (DragAndDropLock.isLocked()) {
                 DragAndDropLock.setDragAndDropStarted(false);
                 return;
@@ -634,12 +639,6 @@ public class AnchorLabelUI extends MetalLabelUI {
             dge.startDrag(Cursor.getDefaultCursor(), new ToolWindowTrasferable(toolWindow), this);
 
             // Prepare glassPane for ghost image
-            GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
-
-            // TODO: è la cosa migliore??
-            if (previewPanel != null)
-                glassPane.remove(previewPanel);
-
             glassPane.setVisible(true);
 
             Point p = (Point) dge.getDragOrigin().clone();

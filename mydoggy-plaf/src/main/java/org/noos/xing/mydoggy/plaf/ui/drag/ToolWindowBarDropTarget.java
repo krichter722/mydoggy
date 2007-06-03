@@ -33,7 +33,6 @@ public class ToolWindowBarDropTarget extends DropTarget {
 
 
     private int showPosition(DropTargetDragEvent dtde, int lastIndex) {
-        // TODO: reimplement
         Point newPosition = dtde.getLocation();
         if (lastPosition != null && lastPosition.equals(newPosition))
             return lastIndex;
@@ -76,8 +75,11 @@ public class ToolWindowBarDropTarget extends DropTarget {
                 throw new IllegalStateException("Invalid anchor.");
         }
 
+        boolean fromUp = false;
         for (int i = 0; i < intervals.length; i++) {
             double interval = intervals[i];
+            if (interval == 0 && i != 0)
+                fromUp = true;
 
             if (position >= sum && position <= sum + interval) {
                 if (i % 2 == 0 && i != 0) {
@@ -103,28 +105,26 @@ public class ToolWindowBarDropTarget extends DropTarget {
                     }
                 }
 
-                if (i / 2 == lastIndex) {
-                    index = lastIndex;
-                } else {
-                    hidePosition(false);
+                hidePosition(false);
 
-                    // Insert space for dragging image at specific index.
-                    GlassPanel glassPanel = (GlassPanel) SwingUtilities.getRootPane(container).getGlassPane();
-                    switch (anchor) {
-                        case TOP:
-                        case BOTTOM:
-                            container.add(new VerticalSeparatorLabel(), i + ",1,c,c");
-                            layout.setColumn(i, glassPanel.getDraggingImage().getWidth(container) + 6);
-                            break;
-                        case LEFT:
-                        case RIGHT:
-                            container.add(new HorizontalSeparatorLabel(), "1," + i + ",c,c");
-                            layout.setRow(i, glassPanel.getDraggingImage().getHeight(container) + 6);
-                            break;
-                    }
-
-                    index = i / 2;
+                // Insert space for dragging image at specific index.
+                GlassPanel glassPanel = (GlassPanel) SwingUtilities.getRootPane(container).getGlassPane();
+                switch (anchor) {
+                    case TOP:
+                    case BOTTOM:
+                        container.add(new VerticalSeparatorLabel(), i + ",1,c,c");
+                        layout.setColumn(i, glassPanel.getDraggingImage().getWidth(container) + 6);
+                        break;
+                    case LEFT:
+                    case RIGHT:
+                        container.add(new HorizontalSeparatorLabel(), "1," + i + ",c,c");
+                        layout.setRow(i, glassPanel.getDraggingImage().getHeight(container) + 6);
+                        break;
                 }
+
+                index = i / 2;
+                if (fromUp)
+                    index--;
                 break;
             } else
                 sum += interval;
