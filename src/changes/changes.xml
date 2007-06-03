@@ -34,7 +34,7 @@
                         Rearrange Windows : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1722871&amp;group_id=178005&amp;atid=883498">Request ID 1725144</a>
                     </li>
                     <li>
-                        ToolWindowTab : every toolwindow can be considered as a special JTabbedPane and so it can contain more than one component. Every tab is described by a title, an icon and a component. A tab can be selected or not.
+                        <a href="./mydoggy-api/toolwindow.html#ToolWindowTab">ToolWindowTab</a> : every toolwindow can be considered as a special JTabbedPane and so it can contain more than one component. Every tab is described by a title, an icon and a component. A tab can be selected or not.
                     </li>
                     <li>
                         Corner Component : you can add a specified component at the given corner of the toolwindow manager.

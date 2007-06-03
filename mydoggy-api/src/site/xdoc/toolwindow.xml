@@ -41,6 +41,7 @@ ToolWindow toolwindow = toolWindowManager.
                     </tr>
                 </tbody>
             </table>
+            <a name="ToolWindowTab"/>
             <subsection name="ToolWindowTab">
                 <p>
                     Every toolwindow can be considered as a special JTabbedPane and so it can contain more than one component.

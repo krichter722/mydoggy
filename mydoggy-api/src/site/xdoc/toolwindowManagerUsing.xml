@@ -120,7 +120,9 @@ try {
                 <source>PersistenceDelegate persistenceDelegate = toolWindowManager.getPersistenceDelegate();
 try {
     FileInputStream inputStream = new FileInputStream("workspace.xml");
-    toolWindowManager.getPersistenceDelegate().merge(inputStream, PersistenceDelegate.MergePolicy.RESET);
+    toolWindowManager.getPersistenceDelegate().merge(
+                    inputStream,
+                    PersistenceDelegate.MergePolicy.RESET);
     inputStream.close();
 } catch (Exception e1) {
     e1.printStackTrace();
