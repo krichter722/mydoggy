@@ -47,6 +47,20 @@ tool.setAnchor(ToolWindowAnchor.TOP);
 </source>
                 <p>The anchor specifies the position of the tool when it is anchored to the docking system.</p>
             </subsection>
+            <a name="Flasing"/>
+            <subsection name="Flashing">
+                Use the following :
+                <source>
+ToolWindow tool = toolWindowManager.getToolWindow(0);
+tool.setFlashing(true); // false to disable
+</source>
+                <p>
+                    Sets the flashing mode. If the flashing mode is enabled then the toolwindow representative button
+                    will be flashing until the tool will be made visible.
+                    <br/>
+                    You can use <code>setFlashing(int)</code> to enable flashing for a specific duration.
+                </p>
+            </subsection>
             <subsection name="Add PropertyChangeListener">
                 Use the following :
                 <source>
@@ -116,6 +130,22 @@ desc.setToolWindowActionHandler(new ToolWindowActionHandler(){...});
                 <p>
                 </p>
             </subsection>
+
+            <a name="PreviewMode"/>
+            <subsection name="Enable Preview Mode">
+                Use the following :
+                <source>
+DockedTypeDescriptor desc = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
+desc.setPreviewEnabled(true); // false to disable
+</source>
+                <p>
+                    Sets the preview mode. If the preview mode is enabled then when the mouse waits
+                    on the toolwindow representative button after a delay time the preview will become visible.
+                    <br/>
+                    You can use <code>setPreviewTransparentRatio</code> and <code>setPreviewDelay</code> methods
+                    to set transparency paramenters and delay.
+                </p>
+            </subsection>
         </section>
 
         <a name="Slidying"/>
@@ -130,8 +160,8 @@ desc.setTransparentMode(true); // false to disable
                     Sets the transparent mode. If the transparent mode is enabled then when the toolwindow's content
                     losts the focus it becomes transparent. This facility is os-independent.
                     <br/>
-                    You can use use <code>setTransparentRatio</code> and <code>setTransparentDelay</code> methods
-                    to set transparency paramenters.
+                    You can use <code>setTransparentRatio</code> and <code>setTransparentDelay</code> methods
+                    to set transparency paramenters and delay.
                 </p>
             </subsection>
             <subsection name="Enable/Disable">
@@ -161,8 +191,8 @@ desc.setTransparentMode(true); // false to disable
                     the window used by <code>FLOATING</code> and <code>FLOATING_FREE</code> type losts
                     the focus it becomes transparent. This facility is os-dependent.
                     <br/>
-                    You can use use <code>setTransparentRatio</code> and <code>setTransparentDelay</code> methods
-                    to set transparency paramenters.
+                    You can use <code>setTransparentRatio</code> and <code>setTransparentDelay</code> methods
+                    to set transparency paramenters and delay.
                 </p>
             </subsection>
             <subsection name="Enable/Disable">

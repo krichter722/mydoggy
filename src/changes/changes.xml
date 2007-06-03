@@ -19,13 +19,13 @@
                 <![CDATA[
                 <ul>
                     <li>
-                        ToolWindow Preview: if you wait on the representative button of a tool not visible you'll see a transparent preview of the tool of size 151x75. If you move the mouse outside the representative button the preview will become invisible;
+                        <a href="./mydoggy-api/toolwindow.html#PreviewMode">ToolWindow Preview</a>: if you wait on the representative button of a tool not visible you'll see a transparent preview of the tool of size 151x75. If you move the mouse outside the representative button the preview will become invisible;
                     </li>
                     <li>
                         PushAwayMode.MOST_RECENT : whoever is pressed last toolwindow push away the previous toolwindows. This way the order of opening the toolwindows determine who push who (and you can achieve any "priority" mode by selecting the order of clicks);
                     </li>
                     <li>
-                        ToolWindow Flashing : Sets the flashing mode. If the flashing mode is enabled then the toolwindow representative button will be flashing until the tool will be made visible. Of if the tool is already visible but not active then the tool's title bar will be flashing until the tool will be made active.
+                        <a href="./mydoggy-api/toolwindowUsing.html#Flashing">ToolWindow Flashing</a> : Sets the flashing mode. If the flashing mode is enabled then the toolwindow representative button will be flashing until the tool will be made visible. Of if the tool is already visible but not active then the tool's title bar will be flashing until the tool will be made active.
                     </li>
                     <li>
                         Maximize windows : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1725144&amp;group_id=178005&amp;atid=883498">Request ID 1722871</a>
@@ -37,7 +37,7 @@
                         <a href="./mydoggy-api/toolwindow.html#ToolWindowTab">ToolWindowTab</a> : every toolwindow can be considered as a special JTabbedPane and so it can contain more than one component. Every tab is described by a title, an icon and a component. A tab can be selected or not.
                     </li>
                     <li>
-                        Corner Component : you can add a specified component at the given corner of the toolwindow manager.
+                        <a href="./mydoggy-api/toolwindowManagerUsing.html#CornerComponent">Corner Component</a> : you can add a specified component at the given corner of the toolwindow manager.
                     </li>
                 </ul>
                 ]]>.
