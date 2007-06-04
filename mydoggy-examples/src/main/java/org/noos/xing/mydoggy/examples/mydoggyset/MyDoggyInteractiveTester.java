@@ -155,6 +155,7 @@ public class MyDoggyInteractiveTester {
             interactiveUI.delay(1000);
 
             interactiveUI.importRoot("toolWindow.floating.window.Title 1");
+            interactiveUI.delay(1000);
 
             interactiveUI.moveMouseTo("toolWindow.bar.Title 1");
             interactiveUI.pressMouseLeftButton();
