@@ -33,6 +33,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="mydoggy-res" />
     <orderEntryProperties />
   </component>
   <component name="POM File Configuration" pomFile="file://$MODULE_DIR$/pom.xml" />
