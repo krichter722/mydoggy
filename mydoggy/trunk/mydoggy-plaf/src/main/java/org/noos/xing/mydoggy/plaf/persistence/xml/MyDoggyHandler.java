@@ -227,6 +227,7 @@ public class MyDoggyHandler extends DefaultHandler {
             if (persistedToolWindow.isActive())
                 activeTool = toolWindow;
         }
+        
         if (activeTool != null)
             activeTool.setActive(true);
     }

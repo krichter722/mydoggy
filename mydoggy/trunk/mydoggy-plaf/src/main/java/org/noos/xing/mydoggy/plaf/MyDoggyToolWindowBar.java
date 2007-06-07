@@ -506,8 +506,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                                && manager.isShiftShow()*/)
                         toolWindow.setVisible(false);
 
-                    if (toolWindow.isVisible() && toolWindow.isMaximized() &&
-                        !manager.isShiftShow() && toolWindow.getAnchor() != sourceTool.getAnchor())
+                    if (toolWindow.isVisible() && toolWindow.isMaximized()
+                        /*&& TODO: controllare rispetto a setDefaultAggregate
+                        !manager.isShiftShow() && toolWindow.getAnchor() != sourceTool.getAnchor()*/)
                         toolWindow.setMaximized(false);
                 }
             }
