@@ -97,6 +97,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         initListeners();
 
         this.toolWindowManagerDescriptor = new MyDoggyToolWindowManagerDescriptor(this);
+        this.toolWindowManagerDescriptor.addPropertyChangeListener(this);
     }
 
 
@@ -487,6 +488,11 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
                 if (descriptor.getToolWindow().getType() == ToolWindowType.DOCKED)
                     getBar(descriptor.getToolWindow().getAnchor()).propertyChange(evt);
+            }
+        });
+        propertyChangeSupport.addPropertyChangeListener("showDisableTools", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                // TODO:....
             }
         });
 
