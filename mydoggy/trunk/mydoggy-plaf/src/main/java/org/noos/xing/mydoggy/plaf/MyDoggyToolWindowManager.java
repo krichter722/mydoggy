@@ -28,11 +28,9 @@ import java.beans.PropertyChangeSupport;
 import java.util.*;
 
 /**
- * @beaninfo
- *   attribute: isContainer true
- * description: MyDoggyToolWindowManager 
- *
  * @author Angelo De Caro
+ * @beaninfo attribute: isContainer true
+ * description: MyDoggyToolWindowManager
  */
 public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener {
     private static final int COLUMN_LENGTH = 23;
@@ -288,7 +286,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 new RuntimeException("Manager doesn't containe that ToolWindow. [id : " + descriptor.getToolWindow().getId() + "]").printStackTrace();
                 return;
             }
-        } else if (!(source instanceof MyDoggyToolWindowBar)) {
+        } else
+        if (!(source instanceof MyDoggyToolWindowBar) && !(source instanceof MyDoggyToolWindowManagerDescriptor)) {
             new RuntimeException("Illegal Source : " + source).printStackTrace();
             return;
         }
@@ -328,20 +327,20 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public void setMainSplitPane(ToolWindowAnchor anchor) {
-        switch(anchor) {
-            case LEFT :
+        switch (anchor) {
+            case LEFT:
                 mainSplitPane = getBar(anchor).getSplitPane();
                 mainSplitPane.setRightComponent(mainContainer);
                 break;
-            case RIGHT :
+            case RIGHT:
                 mainSplitPane = getBar(anchor).getSplitPane();
                 mainSplitPane.setLeftComponent(mainContainer);
                 break;
-            case TOP :
+            case TOP:
                 mainSplitPane = getBar(anchor).getSplitPane();
                 mainSplitPane.setBottomComponent(mainContainer);
                 break;
-            case BOTTOM :
+            case BOTTOM:
                 mainSplitPane = getBar(anchor).getSplitPane();
                 mainSplitPane.setTopComponent(mainContainer);
                 break;
@@ -492,7 +491,17 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         });
         propertyChangeSupport.addPropertyChangeListener("showDisableTools", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                // TODO:....
+                boolean showDisableTools = (Boolean) evt.getNewValue();
+                for (ToolWindow toolWindow : getToolWindows()) {
+                    if (!toolWindow.isAvailable() && toolWindow.getType() != ToolWindowType.FLOATING_FREE) {
+
+                        MyDoggyToolWindowManager.this.propertyChange(
+                                new UserPropertyChangeEvent(((MyDoggyToolWindow) toolWindow).getDescriptor(),
+                                                            "available", !showDisableTools, showDisableTools,
+                                                            -2
+                        ));
+                    }
+                }
             }
         });
 
@@ -704,20 +713,20 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             // Support for implicit group...
             synchronized (sync) {
                 if (showingGroup == null && Boolean.TRUE.equals(evt.getNewValue()) && !showingGroupValueAdj) {
-                        showingGroupValueAdj = true;
-                        try {
-                            for (ToolWindowGroup group : getToolWindowGroups()) {
-                                if (group.isImplicit() && group.containesToolWindow(descriptor.getToolWindow())) {
-                                    for (ToolWindow tool : group.getToolsWindow()) {
-                                        if (tool != descriptor.getToolWindow())
-                                            tool.aggregate();
-                                    }
-                                    break;
+                    showingGroupValueAdj = true;
+                    try {
+                        for (ToolWindowGroup group : getToolWindowGroups()) {
+                            if (group.isImplicit() && group.containesToolWindow(descriptor.getToolWindow())) {
+                                for (ToolWindow tool : group.getToolsWindow()) {
+                                    if (tool != descriptor.getToolWindow())
+                                        tool.aggregate();
                                 }
+                                break;
                             }
-                        } finally {
-                            showingGroupValueAdj = false;
                         }
+                    } finally {
+                        showingGroupValueAdj = false;
+                    }
                 }
             }
 
@@ -770,7 +779,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             ToolWindowAnchor newAnchor = (ToolWindowAnchor) evt.getNewValue();
             if (oldAnchor == null)
                 oldAnchor = newAnchor;
-            
+
             ToolWindowType toolType = descriptor.getToolWindow().getType();
             if (toolType == ToolWindowType.FLOATING || toolType == ToolWindowType.FLOATING_FREE) {
                 PropertyChangeEvent avEvent = new UserPropertyChangeEvent(evt.getSource(), "available", true, false, -1);
@@ -778,7 +787,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 syncPanel(oldAnchor);
 
                 avEvent = new UserPropertyChangeEvent(evt.getSource(), "available", false, true,
-                                                      ((UserPropertyChangeEvent)evt).getUserObject());
+                                                      ((UserPropertyChangeEvent) evt).getUserObject());
                 getBar(newAnchor).propertyChange(avEvent);
                 syncPanel(newAnchor);
             }
