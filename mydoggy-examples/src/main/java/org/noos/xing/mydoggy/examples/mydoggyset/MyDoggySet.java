@@ -1,8 +1,8 @@
 package org.noos.xing.mydoggy.examples.mydoggyset;
 
-import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
+import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ContentsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ToolGroupsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ToolsTableModel;
@@ -23,12 +23,10 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.Locale;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -305,8 +303,9 @@ public class MyDoggySet {
         toolWindowManager.registerToolWindow("12", "Title 12", null, new JButton("Hello World 12"), ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("13", "Title 13", null, new JButton("Hello World 13"), ToolWindowAnchor.RIGHT);
 
-        for (ToolWindow window : toolWindowManager.getToolWindows())
+        for (ToolWindow window : toolWindowManager.getToolWindows()) {
             window.setAvailable(true);
+        }
 
         // Create two groups
         ToolWindowGroup mainGroup = toolWindowManager.getToolWindowGroup("Main");

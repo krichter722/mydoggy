@@ -101,10 +101,6 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         toolScrollBar.ensureVisible(component);
     }
 
-    public boolean isPointOnBar(Point point) {
-        return false;
-    }
-
     public boolean isTempShowed() {
         return tempShowed;
     }
