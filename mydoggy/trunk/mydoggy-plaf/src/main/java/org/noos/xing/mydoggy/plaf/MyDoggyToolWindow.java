@@ -22,8 +22,8 @@ public class MyDoggyToolWindow implements ToolWindow {
     static class ToolWindowLock {
     }
 
-    private String id;
     private int index;
+    private String id;
     private ToolWindowAnchor anchor;
     private ToolWindowType type;
 
@@ -198,6 +198,9 @@ public class MyDoggyToolWindow implements ToolWindow {
             return;
 
         synchronized (getLock()) {
+            if (!visible && isMaximized())
+                setMaximized(false);
+
             if (visible)
                 setAvailable(visible);
             else if (active && publicEvent)
@@ -483,6 +486,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     public void removeInternalPropertyChangeListener(PropertyChangeListener listener) {
         internalListenerList.remove(PropertyChangeListener.class, listener);
     }
+
 
     protected void firePropertyChangeEvent(String property, Object oldValue, Object newValue) {
         PropertyChangeEvent event = new PropertyChangeEvent(descriptor, property, oldValue, newValue);

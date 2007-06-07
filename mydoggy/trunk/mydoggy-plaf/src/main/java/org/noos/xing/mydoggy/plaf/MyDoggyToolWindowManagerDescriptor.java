@@ -20,6 +20,7 @@ import java.util.Stack;
 public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDescriptor, PropertyChangeListener, MostRecentDescriptor {
     private PushAwayMode pushAwayMode;
     private MyDoggyToolWindowManager manager;
+    private boolean showDisableTools;
 
     private EventListenerList listenerList;
 
@@ -176,6 +177,16 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
 
     public void setCornerComponent(Corner corner, Component component) {
         manager.setCornerComponent(corner, component);
+    }
+
+    public void setShowDisableTools(boolean showDisableTools) {
+        boolean old = this.showDisableTools;
+        this.showDisableTools = showDisableTools;
+        firePropertyChange("showDisableTools", old, showDisableTools);
+    }
+
+    public boolean isShowDisableTools() {
+        return showDisableTools;
     }
 
     public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {

@@ -61,6 +61,10 @@ public interface ToolWindowManagerDescriptor {
      */
     void setCornerComponent(Corner corner, Component component);
 
+    void setShowDisableTools(boolean showDisableTools);
+
+    boolean isShowDisableTools();
+
     /**
      * Adds a PropertyChangeListener to the listener list. The listener is
      * registered for all bound properties of this class, including the
