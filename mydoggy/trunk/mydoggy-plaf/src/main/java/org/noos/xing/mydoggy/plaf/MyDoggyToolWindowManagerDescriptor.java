@@ -180,8 +180,12 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
     }
 
     public void setShowDisableTools(boolean showDisableTools) {
+        if (this.showDisableTools == showDisableTools)
+            return;
+
         boolean old = this.showDisableTools;
         this.showDisableTools = showDisableTools;
+        
         firePropertyChange("showDisableTools", old, showDisableTools);
     }
 
