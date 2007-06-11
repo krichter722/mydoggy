@@ -279,29 +279,27 @@ public class MyDoggySet {
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);
         typeDescriptor.setTransparentDelay(0);
 
-
         JPanel panel = new JPanel(new TableLayout(new double[][]{{20, -1, 20}, {20, -1, 20}}));
         panel.add(new JButton("Hello World 2"), "1,1,FULL,FULL");
 
-		toolWindowManager.registerToolWindow("Title 1", "Title 1", null, new JButton("Hello World 1"), ToolWindowAnchor.LEFT);
-        toolWindowManager.registerToolWindow("2", "Title 2", null, panel, ToolWindowAnchor.RIGHT);
-        toolWindowManager.registerToolWindow("3", "Title 3",
+		toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, new JButton("Hello World 1"), ToolWindowAnchor.LEFT);
+        toolWindowManager.registerToolWindow("Tool 2", "Title 2", null, panel, ToolWindowAnchor.RIGHT);
+        toolWindowManager.registerToolWindow("Tool 3", "Title 3",
                                              SwingUtil.loadIcon("org/noos/xing/mydoggy/examples/mydoggyset/icons/save.png"),
                                              new JButton("Hello World 3"), ToolWindowAnchor.LEFT);
-        toolWindowManager.registerToolWindow("4", "Title 4", null, new JButton("Hello World 4"), ToolWindowAnchor.TOP);
-        toolWindowManager.registerToolWindow("5", "Title 5", null, new JButton("Hello World 5"), ToolWindowAnchor.TOP);
-        toolWindowManager.registerToolWindow("6", "Title 6", null, new JButton("Hello World 6"), ToolWindowAnchor.BOTTOM);
+        toolWindowManager.registerToolWindow("Tool 4", "Title 4", null, new JButton("Hello World 4"), ToolWindowAnchor.TOP);
+        toolWindowManager.registerToolWindow("Tool 5", "Title 5", null, new JButton("Hello World 5"), ToolWindowAnchor.TOP);
+        toolWindowManager.registerToolWindow("Tool 6", "Title 6", null, new JButton("Hello World 6"), ToolWindowAnchor.BOTTOM);
+
         MonitorPanel monitorPanel = new MonitorPanel(new RuntimeMemoryMonitorSource());
         monitorPanel.start();
-        toolWindowManager.registerToolWindow("7", "Title 7", null,
-                                             /*new JButton("Hello World 7")*/ monitorPanel, 
-                                             ToolWindowAnchor.TOP);
-        toolWindowManager.registerToolWindow("8", "Title 8", null, new JButton("Hello World 8"), ToolWindowAnchor.RIGHT);
-        toolWindowManager.registerToolWindow("9", "Title 9", null, new JButton("Hello World 9"), ToolWindowAnchor.RIGHT);
-        toolWindowManager.registerToolWindow("10", "Title 10", null, new JButton("Hello World 10"), ToolWindowAnchor.RIGHT);
-        toolWindowManager.registerToolWindow("11", "Title 11", null, new JButton("Hello World 11"), ToolWindowAnchor.RIGHT);
-        toolWindowManager.registerToolWindow("12", "Title 12", null, new JButton("Hello World 12"), ToolWindowAnchor.RIGHT);
-        toolWindowManager.registerToolWindow("13", "Title 13", null, new JButton("Hello World 13"), ToolWindowAnchor.RIGHT);
+        toolWindowManager.registerToolWindow("Tool 7", "Title 7", null, monitorPanel, ToolWindowAnchor.TOP);
+        toolWindowManager.registerToolWindow("Tool 8", "Title 8", null, new JButton("Hello World 8"), ToolWindowAnchor.RIGHT);
+        toolWindowManager.registerToolWindow("Tool 9", "Title 9", null, new JButton("Hello World 9"), ToolWindowAnchor.RIGHT);
+        toolWindowManager.registerToolWindow("Tool 10", "Title 10", null, new JButton("Hello World 10"), ToolWindowAnchor.RIGHT);
+        toolWindowManager.registerToolWindow("Tool 11", "Title 11", null, new JButton("Hello World 11"), ToolWindowAnchor.RIGHT);
+        toolWindowManager.registerToolWindow("Tool 12", "Title 12", null, new JButton("Hello World 12"), ToolWindowAnchor.RIGHT);
+        toolWindowManager.registerToolWindow("Tool 13", "Title 13", null, new JButton("Hello World 13"), ToolWindowAnchor.RIGHT);
 
         for (ToolWindow window : toolWindowManager.getToolWindows()) {
             window.setAvailable(true);
@@ -312,7 +310,7 @@ public class MyDoggySet {
         ToolWindowGroup submainGroup = toolWindowManager.getToolWindowGroup("SubMain");
 
         // Set TypeDescriptor properties for tool window 1
-        ToolWindow toolWindow = toolWindowManager.getToolWindow("Title 1");
+        ToolWindow toolWindow = toolWindowManager.getToolWindow("Tool 1");
 
         DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
         dockedTypeDescriptor.setPopupMenuEnabled(false);
@@ -321,7 +319,7 @@ public class MyDoggySet {
         mainGroup.addToolWindow(toolWindow);
 
         // Set properties for tool window 2
-        toolWindow = toolWindowManager.getToolWindow("2");
+        toolWindow = toolWindowManager.getToolWindow("Tool 2");
         dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
         dockedTypeDescriptor.getToolsMenu().add(new JMenuItem("Prova"));
 
@@ -333,7 +331,7 @@ public class MyDoggySet {
 
         submainGroup.addToolWindow(toolWindow);
 
-        toolWindow = toolWindowManager.getToolWindow("3");
+        toolWindow = toolWindowManager.getToolWindow("Tool 3");
         dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
 
         JMenuItem menuItem = new JMenuItem("Hello World!!!");
@@ -353,18 +351,18 @@ public class MyDoggySet {
         mainGroup.addToolWindow(toolWindow);
 
         // Set properties for tool window 4
-        toolWindow = toolWindowManager.getToolWindow("4");
+        toolWindow = toolWindowManager.getToolWindow("Tool 4");
         toolWindow.setType(ToolWindowType.FLOATING_FREE);
         submainGroup.addToolWindow(toolWindow);
 
         // Set properties for tool window 5
-        toolWindow = toolWindowManager.getToolWindow("5");
+        toolWindow = toolWindowManager.getToolWindow("Tool 5");
         toolWindow.setType(ToolWindowType.FLOATING_FREE);
 
-        submainGroup.addToolWindow(toolWindowManager.getToolWindow("6"));
+        submainGroup.addToolWindow(toolWindowManager.getToolWindow("Tool 6"));
 
         // Set properties for tool window 7
-        toolWindow = toolWindowManager.getToolWindow("7");
+        toolWindow = toolWindowManager.getToolWindow("Tool 7");
         toolWindow.setType(ToolWindowType.FLOATING);
 
         floatingTypeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
