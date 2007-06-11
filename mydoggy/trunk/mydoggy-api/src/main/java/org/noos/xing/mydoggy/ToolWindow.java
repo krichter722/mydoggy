@@ -123,7 +123,8 @@ public interface ToolWindow {
 
     /**
      * Sets the flashing mode. If the flashing mode is enabled then the toolwindow representative button
-     * will be flashing until the tool will be made visible.
+     * will be flashing until the tool will be made visible. If the tool is visible but not active then
+     * the toolwindow title bar will be flashing until the tool will be made visible.
      *
      * @param flash <code>true</code> to enable flashing mode;
      *              <code>false</code> to disable flashing mode.
