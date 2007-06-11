@@ -8,7 +8,6 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class SampleApp {
     private JFrame frame;
@@ -102,10 +101,7 @@ public class SampleApp {
         floatingTypeDescriptor.setTransparentDelay(1000);
 
         // Setup Tabs
-        JButton button = new JButton("Profiling");
-        RemoveTabAction removeTabAction = new RemoveTabAction();
-        button.addActionListener(removeTabAction);
-        removeTabAction.tab = debugTool.addToolWindowTab("Profiling", button);
+        debugTool.addToolWindowTab("Profiling", new JButton("Profiling"));
     }
 
     public Container getFrame() {
@@ -117,43 +113,14 @@ public class SampleApp {
         frame.dispose();
     }
 
-    class RemoveTabAction implements ActionListener {
-        ToolWindowTab tab;
-
-        public void actionPerformed(ActionEvent e) {
-            ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
-            debugTool.removeToolWindowTab(tab);
-        }
-    }
-
     protected void initContentManager() {
-        JButton treeContent = new JButton("Add Tab");
-        treeContent.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                final ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
-
-                JButton button = new JButton("Remove");
-                RemoveTabAction removeTabAction = new RemoveTabAction();
-                button.addActionListener(removeTabAction);
-                JPanel p = new JPanel();
-                p.add(button);
-                p.add(new JButton("OK"));
-
-                removeTabAction.tab = debugTool.addToolWindowTab("Tab_" + System.identityHashCode(button), p);
-            }
-        });
-
-        JPanel panel = new JPanel();
-        panel.add(treeContent);
-        JButton ok  = new JButton("OK");
-        ok.setName("ok");
-        panel.add(ok);
+        JTree treeContent = new JTree();
 
         ContentManager contentManager = toolWindowManager.getContentManager();
         Content content = contentManager.addContent("Tree Key",
                                                     "Tree Title",
                                                     null,      // An icon
-                                                    panel);
+                                                    treeContent);
         content.setToolTipText("Tree tip");
 
         setupContentManagerUI();
