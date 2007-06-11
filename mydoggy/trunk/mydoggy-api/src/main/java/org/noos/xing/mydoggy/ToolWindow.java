@@ -98,16 +98,26 @@ public interface ToolWindow {
     void aggregate();
 
     /**
-     * TODO: add javadocs
-     * @param aggregateEnabled
+     * The method is used to set the aggregateEnabled property of the tool.
+     * If <code>aggregateEnabled</code> is <tt>true</tt> then every call to
+     * <code>setVisible(true)</code> will have the same behaviout of a call to <code>aggregate()</code>
+     * method.
+     * <br>
+     * Default value is false.
+     *
+     * @param aggregateEnabled <tt>true</tt> to translate every call to <code>setVisible(true)</code>
+     *                         to a call to <code>aggregate()</code> method, <tt>false</tt> to disable the translation. 
      * @since 1.3.0
+     * @see #isAggregateMode() 
      */
     void setAggregateMode(boolean aggregateEnabled);
 
     /**
-     * 
-     * @return
+     * Returns aggregateEnabled property value.
+     *
+     * @return the value of aggregateEnabled property.
      * @since 1.3.0
+     * @see #setAggregateMode(boolean)
      */
     boolean isAggregateMode();
 
