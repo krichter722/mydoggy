@@ -16,6 +16,9 @@ import java.io.OutputStream;
  */
 public interface PersistenceDelegate {
 
+    /**
+     * TODO:
+     */
     enum MergePolicy {
         RESET,
         UNION
@@ -50,10 +53,14 @@ public interface PersistenceDelegate {
     void apply(InputStream inputStream);
 
     /**
-     * TODO: javadocs
-     * 
-     * @param inputStream
-     * @param mergePolicy
+     * Reads the settings for the ToolWindows, already registered into the manager, from the input
+     * stream applying the passed merge policy
+     *
+     * @param inputStream the input stream.
+     * @param mergePolicy the merget policy used to apply settings.
+     * @exception RuntimeException  if an error occurred when reading from the
+     *               input stream.
+     * @see org.noos.xing.mydoggy.PersistenceDelegate.MergePolicy
      * @since 1.3.0
      */
     void merge(InputStream inputStream, MergePolicy mergePolicy);

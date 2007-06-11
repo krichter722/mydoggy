@@ -885,7 +885,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     static class DummyPropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
-            System.out.println("NTW - DUMMY : " + evt);
+//            System.out.println("NTW - DUMMY : " + evt);
         }
     }
 

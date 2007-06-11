@@ -5,7 +5,9 @@ import java.beans.PropertyChangeListener;
 import java.awt.*;
 
 /**
- * TODO: javadocs
+ * Every toolwindow can be considered as a special JTabbedPane and so it can contain more than one component.
+ * A ToolWindowTab represents a tab in this special JTabbedPane. Is is described by a title, an icon and a component.
+ * A tab can be selected or not.
  * 
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.3.0

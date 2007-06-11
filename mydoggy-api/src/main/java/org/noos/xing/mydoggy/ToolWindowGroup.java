@@ -60,8 +60,13 @@ public interface ToolWindowGroup {
     boolean containesToolWindow(ToolWindow toolWindow);
 
     /**
-     * TODO: add javadoc
-     * @param implicit
+     * The method is used to set the implicit property of the group.
+     * If <code>implicit</code> is <tt>true</tt> then if a tool in this group is made visible then
+     * all tools in this group will be make visible.
+     * <br>
+     * Default value is false.
+     *
+     * @param implicit <tt>true</tt> to enable, <tt>false</tt> otherwise.
      * @since 1.3.0
      */
     void setImplicit(boolean implicit);

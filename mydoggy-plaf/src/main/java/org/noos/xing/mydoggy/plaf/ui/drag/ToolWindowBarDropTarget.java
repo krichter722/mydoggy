@@ -167,7 +167,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
                 try {
                     ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
 
-                    System.out.println("index = " + index);
+//                    System.out.println("index = " + index);
 
                     ((ToolWindow) dtde.getTransferable().getTransferData(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR))
                             .setAnchor(anchor, index);

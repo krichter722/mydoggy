@@ -58,7 +58,6 @@ public class MyDoggyHandler extends DefaultHandler {
     }
 
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        // TODO: check for errors... 1.3.0
         switch (state) {
             case MYDOGGY:
                 if ("mydoggy".equals(qName)) {
@@ -67,7 +66,7 @@ public class MyDoggyHandler extends DefaultHandler {
                         throw new SAXException("Invalid version. Not defined version attribute.");
 
                     String version = attributes.getValue("version");
-                    if (!"1.2.0".equals(version) && !"1.3.0".equals(version))
+                    if ("1.3.0".equals(version))
                         throw new SAXException("Invalid version : " + version);
 
                     persistedToolWindowManager = new PersistedToolWindowManager();
@@ -213,8 +212,7 @@ public class MyDoggyHandler extends DefaultHandler {
 
     protected void load(ToolWindowAnchor anchor) {
         ToolWindow activeTool = null;
-
-        // TODO: implement miximezied...
+        ToolWindow maximizedTool = null;
 
         MergePolicyApplier mergePolicyApplier = MergePolicyProvider.getMergePolicyApplier(mergePolicy);
         for (ToolWindow toolWindow : map.keySet()) {
@@ -226,10 +224,16 @@ public class MyDoggyHandler extends DefaultHandler {
 
             if (persistedToolWindow.isActive())
                 activeTool = toolWindow;
+
+            if (persistedToolWindow.isMaximized())
+                maximizedTool = toolWindow;
         }
         
         if (activeTool != null)
             activeTool.setActive(true);
+        
+        if (maximizedTool != null)
+            maximizedTool.setMaximized(true);
     }
 
 }
