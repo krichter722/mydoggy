@@ -489,21 +489,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                     getBar(descriptor.getToolWindow().getAnchor()).propertyChange(evt);
             }
         });
-        propertyChangeSupport.addPropertyChangeListener("showDisableTools", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                boolean showDisableTools = (Boolean) evt.getNewValue();
-                for (ToolWindow toolWindow : getToolWindows()) {
-                    if (!toolWindow.isAvailable() && toolWindow.getType() != ToolWindowType.FLOATING_FREE) {
-
-                        MyDoggyToolWindowManager.this.propertyChange(
-                                new UserPropertyChangeEvent(((MyDoggyToolWindow) toolWindow).getDescriptor(),
-                                                            "available", !showDisableTools, showDisableTools,
-                                                            -2
-                        ));
-                    }
-                }
-            }
-        });
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(new KeyEventPostProcessor() {
             public boolean postProcessKeyEvent(KeyEvent e) {

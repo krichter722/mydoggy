@@ -642,6 +642,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 container.remove(event.getToolWindowTab().getComponent());
                 SwingUtil.repaint(container);
             }
+
             event.getToolWindowTab().getComponent().removeMouseListener(applicationBarMouseAdapter);
             event.getToolWindowTab().removePropertyChangeListener(this);
         }
