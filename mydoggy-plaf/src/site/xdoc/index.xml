@@ -3,15 +3,11 @@
         "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
     <properties>
-        <title>MyDoggy-Plaf : Introduction</title>
+        <title>MyDoggy-Plaf : ToolWindowManager</title>
         <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
     </properties>
 
     <body>
-        <section name="Introduction">
-            MyDoggy-Plaf is the default implementation of mydoggy-api.
-        </section>
-
         <section name="MyDoggyToolWindowManager">
             <p>
                 To obtain an instance of <code>ToolWindowManager</code> interface you have to instantiate the
