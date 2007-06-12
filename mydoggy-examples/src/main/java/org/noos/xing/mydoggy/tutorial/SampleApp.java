@@ -6,7 +6,6 @@ import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class SampleApp {
@@ -48,11 +47,12 @@ public class SampleApp {
         this.toolWindowManager = myDoggyToolWindowManager;
 
         // Register a Tool.
-        toolWindowManager.registerToolWindow("Debug",                   // Id
-                                             "Debugging" ,              // Title
-                                             null,                      // Icon
-                                             new JButton("Debugging"),  // Component
-                                             ToolWindowAnchor.LEFT);    // Anchor
+        toolWindowManager.registerToolWindow("Debug",                      // Id
+                                             "Debug Tool",                 // Title
+                                             null,                         // Icon
+                                             new JButton("Debug Tool"),    // Component
+                                             ToolWindowAnchor.LEFT);       // Anchor
+
         setupDebugTool();
 
         // Made all tools available
@@ -65,12 +65,13 @@ public class SampleApp {
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
     }
 
-    protected void setupDebugTool() {
-        final ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
 
-        // Setup descriptors
+    protected void setupDebugTool() {
+        ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
+
         DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
-        dockedTypeDescriptor.setDockLength(350);
+
+        dockedTypeDescriptor.setDockLength(300);
         dockedTypeDescriptor.setPopupMenuEnabled(true);
         JMenu toolsMenu = dockedTypeDescriptor.getToolsMenu();
         toolsMenu.add(new AbstractAction("Hello World!!!") {
@@ -98,8 +99,8 @@ public class SampleApp {
 
         FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.FLOATING);
         floatingTypeDescriptor.setEnabled(true);
-        floatingTypeDescriptor.setLocation(150, 200);
-        floatingTypeDescriptor.setSize(320, 200);
+        floatingTypeDescriptor.setLocation(150,200);
+        floatingTypeDescriptor.setSize(320,200);
         floatingTypeDescriptor.setModal(false);
         floatingTypeDescriptor.setTransparentMode(true);
         floatingTypeDescriptor.setTransparentRatio(0.2f);
@@ -116,17 +117,9 @@ public class SampleApp {
         profilingTab.setCloseable(true);
     }
 
-    public Container getFrame() {
-        return frame;
-    }
-
-    public void dispose() {
-        frame.setVisible(false);
-        frame.dispose();
-    }
 
     protected void initContentManager() {
-        JTree treeContent = new JTree();
+         JTree treeContent = new JTree();
 
         ContentManager contentManager = toolWindowManager.getContentManager();
         Content content = contentManager.addContent("Tree Key",
@@ -136,7 +129,8 @@ public class SampleApp {
         content.setToolTipText("Tree tip");
 
         setupContentManagerUI();
-    }
+     }
+
 
     protected void setupContentManagerUI() {
         TabbedContentManagerUI contentManagerUI = (TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
@@ -153,6 +147,7 @@ public class SampleApp {
         });
 
         TabbedContentUI contentUI = contentManagerUI.getContentUI(toolWindowManager.getContentManager().getContent(0));
+
         contentUI.setCloseable(true);
         contentUI.setDetachable(true);
         contentUI.setTransparentMode(true);

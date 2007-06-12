@@ -19,7 +19,7 @@ package org.noos.xing.mydoggy.tutorial;
 import info.clearthought.layout.TableLayout;
 import javax.swing.*;
 
-public class org.noos.xing.mydoggy.tutorial.SampleApp {
+public class SampleApp {
     private JFrame frame;
 
     protected void setUp() {
