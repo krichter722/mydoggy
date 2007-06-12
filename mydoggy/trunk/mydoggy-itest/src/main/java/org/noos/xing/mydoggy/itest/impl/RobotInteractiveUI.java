@@ -1,7 +1,6 @@
-package org.noos.xing.mydoggy.tester.impl;
+package org.noos.xing.mydoggy.itest.impl;
 
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.tester.InteractiveUI;
+import org.noos.xing.mydoggy.itest.InteractiveUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -122,7 +121,7 @@ public class RobotInteractiveUI implements InteractiveUI {
     }
 
     public void importRoot(String rootName) {
-        for (Object o : SwingUtil.getTopContainers(rootName))
+        for (Object o : UIUtil.getTopContainers(rootName))
             roots.add((Container) o);
     }
 

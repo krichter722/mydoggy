@@ -1,6 +1,6 @@
-package org.noos.xing.mydoggy.tester;
+package org.noos.xing.mydoggy.itest;
 
-import org.noos.xing.mydoggy.tester.impl.RobotInteractiveUI;
+import org.noos.xing.mydoggy.itest.impl.RobotInteractiveUI;
 
 import java.util.List;
 import java.util.ArrayList;
