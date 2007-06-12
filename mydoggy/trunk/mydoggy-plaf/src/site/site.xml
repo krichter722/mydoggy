@@ -15,7 +15,6 @@
         </links>
 
         <menu name="MyDoggy">
-            <item name="Introduction" href="index.html"/>
             <item name="ToolWindowManager" href="toolwindowManager.html"/>
             <item name="PersistenceDelgate" href="persistenceDelegate.html"/>
             <item name="ContentManageUI" href="contentManagerUI.html"/>
