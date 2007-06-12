@@ -103,12 +103,17 @@ public class SampleApp {
                 toolWindow.setVisible(false);
             }
         });
+        dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTypeDescriptor.html#setAnimating(boolean)">setAnimating(true)</a>;
+        dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPreviewEnabled(boolean)">setPreviewEnabled</a>(true);
+        dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPreviewDelay(int)">setPreviewDelay</a>(1500);
+        dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPreviewTransparentRatio(float)">setPreviewTransparentRatio</a>(0.4f);
 
         <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">SlidingTypeDescriptor</a> slidingTypeDescriptor = (DockedTypeDescriptor) debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#getTypeDescriptor(org.noos.xing.mydoggy.ToolWindowType)">getTypeDescriptor</a>(<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html#SLIDING">ToolWindowType.SLIDING</a>);
         slidingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html#setEnabled(boolean)">setEnabled(false)</a>;
         slidingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html#setTransparentMode(boolean)">setTransparentMode(true)</a>;
         slidingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html#setTransparentRatio(float)">setTransparentRatio(0.8f)</a>;
         slidingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html#setTransparentDelay(int)">setTransparentDelay(0)</a>;
+        slidingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTypeDescriptor.html#setAnimating(boolean)">setAnimating(true)</a>;
 
         <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">FloatingTypeDescriptor</a> floatingTypeDescriptor = (FloatingTypeDescriptor) debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#getTypeDescriptor(org.noos.xing.mydoggy.ToolWindowType)">getTypeDescriptor</a>(<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html#FLOATING">ToolWindowType.FLOATING</a>);
         floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setEnabled(boolean)">setEnabled(true)</a>;
@@ -118,6 +123,7 @@ public class SampleApp {
         floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setTransparentMode(boolean)">setTransparentMode(true)</a>;
         floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setTransparentRatio(float)">setTransparentRatio(0.2f)</a>;
         floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setTransparentDelay(int)">setTransparentDelay(1000)</a>;
+        floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTypeDescriptor.html#setAnimating(boolean)">setAnimating(true)</a>;
     }
 
     <strong style="color:green"><a name="initContentManager"/>
@@ -163,7 +169,7 @@ public class SampleApp {
                     </tbody>
                 </table>
                 <p>
-                    Good! Final step. <a href="./step5.html">Step 5</a> - Configure ContentManagerUI.
+                    Good! Next Step. <a href="./step5.html">Step 5</a> - Configure ContentManagerUI.
                 </p>
             </subsection>
         </section>

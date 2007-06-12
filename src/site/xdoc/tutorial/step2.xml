@@ -44,7 +44,6 @@ public class SampleApp {
                 ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
                 debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#setActive(boolean)">setActive</a>(true);
                 </strong>
-
                 frame.setVisible(true);
             }
         });

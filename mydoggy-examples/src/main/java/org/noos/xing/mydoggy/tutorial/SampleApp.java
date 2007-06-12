@@ -84,12 +84,17 @@ public class SampleApp {
                 toolWindow.setVisible(false);
             }
         });
+        dockedTypeDescriptor.setAnimating(true);
+        dockedTypeDescriptor.setPreviewEnabled(true);
+        dockedTypeDescriptor.setPreviewDelay(1500);
+        dockedTypeDescriptor.setPreviewTransparentRatio(0.4f);
 
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
         slidingTypeDescriptor.setEnabled(false);
         slidingTypeDescriptor.setTransparentMode(true);
         slidingTypeDescriptor.setTransparentRatio(0.8f);
         slidingTypeDescriptor.setTransparentDelay(0);
+        slidingTypeDescriptor.setAnimating(true);
 
         FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.FLOATING);
         floatingTypeDescriptor.setEnabled(true);
@@ -99,8 +104,14 @@ public class SampleApp {
         floatingTypeDescriptor.setTransparentMode(true);
         floatingTypeDescriptor.setTransparentRatio(0.2f);
         floatingTypeDescriptor.setTransparentDelay(1000);
+        floatingTypeDescriptor.setAnimating(true);
 
         // Setup Tabs
+        initTabs();
+    }
+
+    protected void initTabs() {
+        ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
         debugTool.addToolWindowTab("Profiling", new JButton("Profiling"));
     }
 
