@@ -90,7 +90,7 @@ public class MonitorPanel extends JPanel {
             float usedMemory = monitorSource.getUsed();
             float freeMemory = totalMemory - usedMemory;
 
-            // .. Draw allocated and used strings ..
+            // Draw allocated and used strings
             backImageGrfx.setColor(Color.green);
             backImageGrfx.drawString(String.valueOf((int) totalMemory >> 10) + "K allocated", 4.0f, (float) ascent + 0.5f);
             String usedStr = String.valueOf(((int) usedMemory) >> 10) + "K used";
@@ -102,7 +102,7 @@ public class MonitorPanel extends JPanel {
             float blockHeight = remainingHeight / 10;
             float blockWidth = 20.0f;
 
-            // .. Memory Free ..
+            // Memory Free
             backImageGrfx.setColor(mfColor);
             int MemUsage = (int) (freeMemory / totalMemory * 10);
             int i = 0;
@@ -111,14 +111,14 @@ public class MonitorPanel extends JPanel {
                 backImageGrfx.fill(mfRect);
             }
 
-            // .. Memory Used ..
+            // Memory Used
             backImageGrfx.setColor(Color.green);
             for (; i < 10; i++) {
                 muRect.setRect(5, ssH + i * blockHeight, blockWidth, blockHeight - 1);
                 backImageGrfx.fill(muRect);
             }
 
-            // .. Draw History Graph ..
+            // Draw History Graph
             backImageGrfx.setColor(graphColor);
             int graphX = 30;
             int graphY = (int) ssH;
@@ -131,7 +131,7 @@ public class MonitorPanel extends JPanel {
                 backImageGrfx.draw(muRect);
             }
 
-            // .. Draw animated column movement ..
+            // Draw animated column movement
             int graphColumn = graphW / 15;
 
             if (columnInc == 0) {

@@ -5,14 +5,14 @@ package org.noos.xing.mydoggy.examples.mydoggyset.ui;
  */
 public class RuntimeMemoryMonitorSource implements MonitorSource {
 
-    private Runtime r = Runtime.getRuntime();
+    private Runtime runtime = Runtime.getRuntime();
 
     public float getTotal() {
-        return r.totalMemory();
+        return runtime.totalMemory();
     }
 
     public float getUsed() {
-        return r.totalMemory() - r.freeMemory();
+        return runtime.totalMemory() - runtime.freeMemory();
     }
 
 }

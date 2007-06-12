@@ -8,7 +8,7 @@
 	</properties>
 
     <body>
-		<section name="Tutorial - Step 5">
+		<section name="Tutorial - Step 6">
             <p>
                 Now we'll play with <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTab.html">ToolWindowTab</a> class.
             </p>
@@ -20,10 +20,22 @@ import info.clearthought.layout.TableLayout;
 <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html">import org.noos.xing.mydoggy.ToolWindow;</a>
 <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowAnchor.html">import org.noos.xing.mydoggy.ToolWindowAnchor;</a>
 <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html">import org.noos.xing.mydoggy.ToolWindowManager;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">import org.noos.xing.mydoggy.DockedTypeDescriptor;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">import org.noos.xing.mydoggy.SlidingTypeDescriptor;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">import org.noos.xing.mydoggy.FloatingTypeDescriptor;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html">import org.noos.xing.mydoggy.ToolWindowType;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowActionHandler.html">import org.noos.xing.mydoggy.ToolWindowActionHandler;</a>                
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html">import org.noos.xing.mydoggy.ContentManager;</a>
 <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/Content.html">import org.noos.xing.mydoggy.Content;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html">import org.noos.xing.mydoggy.TabbedContentManagerUI;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/TabbedContentUI.html">import org.noos.xing.mydoggy.TabbedContentUI;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManagerUIListener.html">import org.noos.xing.mydoggy.ContentManagerUIListener;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/event/ContentManagerUIEvent.html">import org.noos.xing.mydoggy.event.ContentManagerUIEvent;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTab.html">import org.noos.xing.mydoggy.ToolWindowTab;</a>
 <a href="./../mydoggy-plaf/toolwindowManager.html">import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;</a>
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 public class SampleApp {
     private JFrame frame;
@@ -84,7 +96,7 @@ public class SampleApp {
 
     <a name="setupDebugTool"/>
     protected void setupDebugTool() {
-        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html">ToolWindow</a> debugTool = toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getToolWindow(java.lang.Object)">getToolWindow</a>("Debug Tool");
+        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html">ToolWindow</a> debugTool = toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getToolWindow(java.lang.Object)">getToolWindow</a>("Debug");
 
         <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">DockedTypeDescriptor</a> dockedTypeDescriptor = (DockedTypeDescriptor) debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#getTypeDescriptor(org.noos.xing.mydoggy.ToolWindowType)">getTypeDescriptor</a>(<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html#DOCKED">ToolWindowType.DOCKED</a>);
 
@@ -107,7 +119,7 @@ public class SampleApp {
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPreviewDelay(int)">setPreviewDelay</a>(1500);
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPreviewTransparentRatio(float)">setPreviewTransparentRatio</a>(0.4f);
 
-        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">SlidingTypeDescriptor</a> slidingTypeDescriptor = (DockedTypeDescriptor) debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#getTypeDescriptor(org.noos.xing.mydoggy.ToolWindowType)">getTypeDescriptor</a>(<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html#SLIDING">ToolWindowType.SLIDING</a>);
+        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">SlidingTypeDescriptor</a> slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#getTypeDescriptor(org.noos.xing.mydoggy.ToolWindowType)">getTypeDescriptor</a>(<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html#SLIDING">ToolWindowType.SLIDING</a>);
         slidingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html#setEnabled(boolean)">setEnabled(false)</a>;
         slidingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html#setTransparentMode(boolean)">setTransparentMode(true)</a>;
         slidingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html#setTransparentRatio(float)">setTransparentRatio(0.8f)</a>;
@@ -189,7 +201,7 @@ public class SampleApp {
                         <tr>
                             <td>
                                 <div align="center">
-                                    <img align="middle" src="./../images/tutorial/step5.png" alt="ContentManager" border="0" hspace="18"/>
+                                    <img align="middle" src="./../images/tutorial/step6.png" alt="ToolWindowTab" border="0" hspace="18"/>
                                 </div>
                             </td>
                             <td>
@@ -205,7 +217,7 @@ public class SampleApp {
                 </table>
                 <p>
                     Good! We are now at the end of this tutorial. I hope this will be useful, if not please
-                    help me to improve mydoggy. See
+                    help me to improve this tutorial and mydoggy. See
                     <a href="./../contact.html">contant</a>
                     section.
                 </p>

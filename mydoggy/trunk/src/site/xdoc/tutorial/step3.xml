@@ -20,9 +20,15 @@ import info.clearthought.layout.TableLayout;
 <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html">import org.noos.xing.mydoggy.ToolWindow;</a>
 <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowAnchor.html">import org.noos.xing.mydoggy.ToolWindowAnchor;</a>
 <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html">import org.noos.xing.mydoggy.ToolWindowManager;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">import org.noos.xing.mydoggy.DockedTypeDescriptor;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">import org.noos.xing.mydoggy.SlidingTypeDescriptor;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">import org.noos.xing.mydoggy.FloatingTypeDescriptor;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html">import org.noos.xing.mydoggy.ToolWindowType;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowActionHandler.html">import org.noos.xing.mydoggy.ToolWindowActionHandler;</a>                
 <a href="./../mydoggy-plaf/toolwindowManager.html">import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;</a>
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 public class SampleApp {
     private JFrame frame;
@@ -80,7 +86,7 @@ public class SampleApp {
 
     <strong style="color:green"><a name="setupDebugTool"/>
     protected void setupDebugTool() {
-        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html">ToolWindow</a> debugTool = toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getToolWindow(java.lang.Object)">getToolWindow</a>("Debug Tool");
+        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html">ToolWindow</a> debugTool = toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getToolWindow(java.lang.Object)">getToolWindow</a>("Debug");
 
         <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">DockedTypeDescriptor</a> dockedTypeDescriptor = (DockedTypeDescriptor) debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#getTypeDescriptor(org.noos.xing.mydoggy.ToolWindowType)">getTypeDescriptor</a>(<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html#DOCKED">ToolWindowType.DOCKED</a>);
 
@@ -103,7 +109,7 @@ public class SampleApp {
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPreviewDelay(int)">setPreviewDelay</a>(1500);
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPreviewTransparentRatio(float)">setPreviewTransparentRatio</a>(0.4f);
 
-        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">SlidingTypeDescriptor</a> slidingTypeDescriptor = (DockedTypeDescriptor) debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#getTypeDescriptor(org.noos.xing.mydoggy.ToolWindowType)">getTypeDescriptor</a>(<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html#SLIDING">ToolWindowType.SLIDING</a>);
+        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">SlidingTypeDescriptor</a> slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#getTypeDescriptor(org.noos.xing.mydoggy.ToolWindowType)">getTypeDescriptor</a>(<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html#SLIDING">ToolWindowType.SLIDING</a>);
         slidingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html#setEnabled(boolean)">setEnabled(false)</a>;
         slidingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html#setTransparentMode(boolean)">setTransparentMode(true)</a>;
         slidingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html#setTransparentRatio(float)">setTransparentRatio(0.8f)</a>;
