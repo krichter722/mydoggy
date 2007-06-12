@@ -112,7 +112,8 @@ public class SampleApp {
 
     protected void initTabs() {
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
-        debugTool.addToolWindowTab("Profiling", new JButton("Profiling"));
+        ToolWindowTab profilingTab = debugTool.addToolWindowTab("Profiling", new JButton("Profiling"));
+        profilingTab.setCloseable(true);
     }
 
     public Container getFrame() {

@@ -125,16 +125,15 @@ public class SampleApp {
         floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTypeDescriptor.html#setAnimating(boolean)">setAnimating(true)</a>;
 
         // Setup Tabs
-        <strong style="color:green">initTabs();</strong>
+        <strong style="color:green"><a href="#initTabs">initTabs();</a></strong>
     }
-
-    <strong style="color:green">
+    <strong style="color:green"><a name="initTabs"/>
     protected void initTabs() {
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
-        debugTool.addToolWindowTab("Profiling", new JButton("Profiling"));
+        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTab.html">ToolWindowTab</a> profilingTab = debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#addToolWindowTab(java.lang.String, java.awt.Component)">addToolWindowTab</a>("Profiling", new JButton("Profiling"));
+        profilingTab.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTab.html#setCloseable(boolean)">setCloseable</a>(true);
     }
     </strong>
-
     <a name="initContentManager"/>
     protected void initContentManager() {
          JTree treeContent = new JTree();
