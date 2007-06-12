@@ -613,6 +613,7 @@ public class MyDoggySet {
         this.frame.dispose();
     }
 
+
     public static void main(String[] args) {
         MyDoggySet test = new MyDoggySet();
         try {
@@ -622,6 +623,7 @@ public class MyDoggySet {
             e.printStackTrace();
         }
     }
+
 
     static class ChangeLookAndFeelAction extends AbstractAction {
         final MyDoggySet myDoggySet;

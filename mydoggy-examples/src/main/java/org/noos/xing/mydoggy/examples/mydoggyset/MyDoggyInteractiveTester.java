@@ -1,9 +1,9 @@
 package org.noos.xing.mydoggy.examples.mydoggyset;
 
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.tester.InteractiveTest;
-import org.noos.xing.mydoggy.tester.InteractiveTestRunner;
-import org.noos.xing.mydoggy.tester.InteractiveUI;
+import org.noos.xing.mydoggy.itest.InteractiveTest;
+import org.noos.xing.mydoggy.itest.InteractiveTestRunner;
+import org.noos.xing.mydoggy.itest.InteractiveUI;
 
 import java.awt.*;
 
