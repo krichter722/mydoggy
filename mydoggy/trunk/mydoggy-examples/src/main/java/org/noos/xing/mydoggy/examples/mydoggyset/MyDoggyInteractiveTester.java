@@ -14,9 +14,9 @@ public class MyDoggyInteractiveTester {
 
     public static void main(String[] args) {
         InteractiveTestRunner runner = new InteractiveTestRunner();
-//        runner.addInteractiveTest(new ToolVisisbleInteractiveTest());
-//        runner.addInteractiveTest(new PreviewInteractiveTest());
-//        runner.addInteractiveTest(new DragInteractiveTest());
+        runner.addInteractiveTest(new ToolVisisbleInteractiveTest());
+        runner.addInteractiveTest(new PreviewInteractiveTest());
+        runner.addInteractiveTest(new DragInteractiveTest());
         runner.addInteractiveTest(new SlidingTypeInteractiveTest());
         runner.addInteractiveTest(new FloatingMoveInteractiveTest());
         runner.run();
@@ -52,23 +52,23 @@ public class MyDoggyInteractiveTester {
     static class PreviewInteractiveTest extends MyDoggyInteractiveTest {
 
         public void interactiveText(InteractiveUI interactiveUI) {
-            ToolWindow toolWindow = myDoggySet.getToolWindowManager().getToolWindow("Title 1");
+            ToolWindow toolWindow = myDoggySet.getToolWindowManager().getToolWindow("Tool 1");
 
-            moveToolTo(interactiveUI, "7", ToolWindowAnchor.BOTTOM);
+            moveToolTo(interactiveUI, "Tool 7", ToolWindowAnchor.BOTTOM);
 
             DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
             descriptor.setPreviewEnabled(true);
             descriptor.setPreviewDelay(1000);
 
-            interactiveUI.moveMouseTo("toolWindow.rb.6");
+            interactiveUI.moveMouseTo("toolWindow.rb.Tool 6");
             interactiveUI.delay(1100);
 
             interactiveUI.assertTrue("Preview not visible", interactiveUI.ask("Is preview visible?"));
 
-            moveToolTo(interactiveUI, "Title 1", ToolWindowAnchor.RIGHT);
-            moveToolTo(interactiveUI, "3", ToolWindowAnchor.RIGHT);
+            moveToolTo(interactiveUI, "Tool 1", ToolWindowAnchor.RIGHT);
+            moveToolTo(interactiveUI, "Tool 3", ToolWindowAnchor.RIGHT);
 
-            interactiveUI.moveMouseTo("toolWindow.rb.Title 1");
+            interactiveUI.moveMouseTo("toolWindow.rb.Tool 1");
             interactiveUI.delay(1100);
 
             interactiveUI.assertTrue("Preview not visible", interactiveUI.ask("Is preview visible?"));
@@ -84,11 +84,11 @@ public class MyDoggyInteractiveTester {
     static class ToolVisisbleInteractiveTest extends MyDoggyInteractiveTest {
 
         public void interactiveText(InteractiveUI interactiveUI) {
-            interactiveUI.moveMouseTo("toolWindow.rb.Title 1");
+            interactiveUI.moveMouseTo("toolWindow.rb.Tool 1");
             interactiveUI.mouseLeftClick();
             interactiveUI.delay(1000);
 
-            interactiveUI.moveMouseTo("toolWindow.rb.3");
+            interactiveUI.moveMouseTo("toolWindow.rb.Tool 3");
             interactiveUI.mouseLeftClick();
             interactiveUI.delay(1000);
 
@@ -99,7 +99,7 @@ public class MyDoggyInteractiveTester {
     static class DragInteractiveTest extends MyDoggyInteractiveTest {
 
         public void interactiveText(InteractiveUI interactiveUI) {
-            interactiveUI.moveMouseTo("toolWindow.rb.Title 1");
+            interactiveUI.moveMouseTo("toolWindow.rb.Tool 1");
             interactiveUI.delay(500);
             interactiveUI.pressMouseLeftButton();
 
@@ -109,7 +109,7 @@ public class MyDoggyInteractiveTester {
 
             interactiveUI.delay(500);
 
-            interactiveUI.moveMouseTo("toolWindow.rb.Title 1");
+            interactiveUI.moveMouseTo("toolWindow.rb.Tool 1");
             interactiveUI.pressMouseLeftButton();
 
             interactiveUI.moveMouseTo("toolWindowManager.bar.LEFT", 10, 80);
@@ -126,18 +126,18 @@ public class MyDoggyInteractiveTester {
         public void interactiveText(InteractiveUI interactiveUI) {
             // Validate initiale state...
             interactiveUI.assertTrue("Invalid state",
-                                     myDoggySet.getToolWindowManager().getToolWindow("Title 1").getType() != ToolWindowType.SLIDING);
+                                     myDoggySet.getToolWindowManager().getToolWindow("Tool 1").getType() != ToolWindowType.SLIDING);
 
-            interactiveUI.moveMouseTo("toolWindow.rb.Title 1");
+            interactiveUI.moveMouseTo("toolWindow.rb.Tool 1");
             interactiveUI.mouseLeftClick();
             interactiveUI.delay(1000);
 
-            interactiveUI.moveMouseTo("toolWindow.dockButton.Title 1");
+            interactiveUI.moveMouseTo("toolWindow.dockButton.Tool 1");
             interactiveUI.mouseLeftClick();
             interactiveUI.delay(1000);
 
             interactiveUI.assertTrue("Invalid state",
-                                     myDoggySet.getToolWindowManager().getToolWindow("Title 1").getType() == ToolWindowType.SLIDING);
+                                     myDoggySet.getToolWindowManager().getToolWindow("Tool 1").getType() == ToolWindowType.SLIDING);
         }
 
     }
@@ -146,21 +146,22 @@ public class MyDoggyInteractiveTester {
 
         public void interactiveText(InteractiveUI interactiveUI) {
             // Validate initiale state...
-            interactiveUI.moveMouseTo("toolWindow.rb.Title 1");
+            interactiveUI.moveMouseTo("toolWindow.rb.Tool 1");
             interactiveUI.mouseLeftClick();
             interactiveUI.delay(1000);
 
-            interactiveUI.moveMouseTo("toolWindow.floatingButton.Title 1");
+            interactiveUI.moveMouseTo("toolWindow.floatingButton.Tool 1");
             interactiveUI.mouseLeftClick();
             interactiveUI.delay(1000);
 
-            interactiveUI.importRoot("toolWindow.floating.window.Title 1");
+            interactiveUI.importRoot("toolWindow.floating.window.Tool 1");
 
-            interactiveUI.moveMouseTo("toolWindow.bar.Title 1");
+/*
+            interactiveUI.moveMouseTo("toolWindow.bar.Tool 1");
             interactiveUI.pressMouseLeftButton();
             interactiveUI.delay(1000);
 
-            Point wLocation = ((FloatingTypeDescriptor) myDoggySet.getToolWindowManager().getToolWindow("Title 1").getTypeDescriptor(ToolWindowType.FLOATING)).getLocation();
+            Point wLocation = ((FloatingTypeDescriptor) myDoggySet.getToolWindowManager().getToolWindow("Tool 1").getTypeDescriptor(ToolWindowType.FLOATING)).getLocation();
             wLocation.x -= 50;
             wLocation.y -= 50;
 
@@ -169,6 +170,7 @@ public class MyDoggyInteractiveTester {
             interactiveUI.delay(1000);
 
             interactiveUI.assertTrue("Invalid Behaviour", interactiveUI.ask("Is behaviuor correct?"));
+*/
         }
 
     }
