@@ -9,6 +9,7 @@
 
 	<body>
 		<section name="Tutorial">
+            <!-- TODO: change step images...-->
             <p>
                 This tutorial is based on the <a href="./../mydoggy-plaf/index.html">default implementation</a> of mydoggy.
                 We'll build a simple application based on <a href="./../mydoggy-examples/mydoggyset.html">MyDoggySet.</a>
