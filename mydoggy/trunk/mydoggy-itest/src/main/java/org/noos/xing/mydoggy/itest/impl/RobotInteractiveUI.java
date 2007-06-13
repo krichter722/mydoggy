@@ -39,10 +39,7 @@ public class RobotInteractiveUI implements InteractiveUI {
         }
         System.out.println(target.isShowing());
 
-
-
         Point targetPoint = target.getLocationOnScreen();
-//        SwingUtilities.convertPointToScreen(targetPoint, target);
         targetPoint.x += offsetX;
         targetPoint.y += offsetY;
 
@@ -78,10 +75,6 @@ public class RobotInteractiveUI implements InteractiveUI {
         int deltaY = Math.abs(to.y - from.y);
 
         if (deltaX > deltaY) {
-            System.out.println("A----------------------------------");
-            System.out.println(deltaX);
-            System.out.println(deltaY);
-            System.out.println("----------------------------------");
             long step = Math.round((double)deltaX / (double)deltaY);
             for (int i = 0; i < deltaX; i++) {
                 from.x += signX;
@@ -92,10 +85,6 @@ public class RobotInteractiveUI implements InteractiveUI {
                 delay(1);
             }
         } else {
-            System.out.println("B----------------------------------");
-            System.out.println(deltaX);
-            System.out.println(deltaY);
-            System.out.println("----------------------------------");
             long step = Math.round((double)deltaY / (double)deltaX);
             for (int i = 0; i < deltaY; i++) {
                 from.y += signY;
