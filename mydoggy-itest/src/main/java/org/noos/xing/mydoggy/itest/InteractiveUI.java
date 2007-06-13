@@ -7,23 +7,16 @@ import java.awt.*;
  */
 public interface InteractiveUI {
 
-    void moveMouseTo(String componentName);
+    InteractiveMouse getInteractiveMouse();
 
-    void moveMouseTo(String componentName, int offsetX, int offsetY);
+    InteractiveKeyboard getInteractiveKeyboard();
 
-    void pressMouseLeftButton();
+    InteractiveAssertor getInteractiveAssertor();
 
-    void releaseMouseLeftButton();
-
-    boolean ask(String message);
 
     void delay(int millis);
 
-    void moveMouse(Point to);
-
-    void assertTrue(String s, boolean b);
-
-    void mouseLeftClick();
-
     void importRoot(String rootName);
+
+    Container[] getRoots();
 }

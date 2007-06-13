@@ -1,9 +1,14 @@
 package org.noos.xing.mydoggy.examples.mydoggyset;
 
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.DockedTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.itest.InteractiveMouse;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
-import org.noos.xing.mydoggy.itest.InteractiveTestRunner;
 import org.noos.xing.mydoggy.itest.InteractiveUI;
+import org.noos.xing.mydoggy.itest.InteractiveAssertor;
+import org.noos.xing.mydoggy.itest.impl.InteractiveTestRunner;
 
 import java.awt.*;
 
@@ -25,7 +30,7 @@ public class MyDoggyInteractiveTester {
     static abstract class MyDoggyInteractiveTest implements InteractiveTest {
         MyDoggySet myDoggySet;
 
-        public Container getRootContainer() {
+        public Container setup() {
             myDoggySet = new MyDoggySet();
             myDoggySet.setUp();
             myDoggySet.start();
@@ -38,20 +43,25 @@ public class MyDoggyInteractiveTester {
         }
 
         protected void moveToolTo(InteractiveUI interactiveUI, String toolId, ToolWindowAnchor anchor) {
-            interactiveUI.moveMouseTo("toolWindow.rb." + toolId);
-            interactiveUI.delay(500);
-            interactiveUI.pressMouseLeftButton();
+            InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
 
-            interactiveUI.moveMouseTo("toolWindowManager.bar." + anchor.toString(), 10, 15);
+            mouse.moveTo("toolWindow.rb." + toolId);
             interactiveUI.delay(500);
-            interactiveUI.releaseMouseLeftButton();
+            mouse.press(InteractiveMouse.Type.LEFT);
+
+            mouse.moveTo("toolWindowManager.bar." + anchor.toString(), 10, 15);
+            interactiveUI.delay(500);
+            mouse.release();
             interactiveUI.delay(500);
         }
     }
 
     static class PreviewInteractiveTest extends MyDoggyInteractiveTest {
 
-        public void interactiveText(InteractiveUI interactiveUI) {
+        public void interactiveTest(InteractiveUI interactiveUI) {
+            InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
+            InteractiveAssertor assertor = interactiveUI.getInteractiveAssertor();
+
             ToolWindow toolWindow = myDoggySet.getToolWindowManager().getToolWindow("Tool 1");
 
             moveToolTo(interactiveUI, "Tool 7", ToolWindowAnchor.BOTTOM);
@@ -60,83 +70,92 @@ public class MyDoggyInteractiveTester {
             descriptor.setPreviewEnabled(true);
             descriptor.setPreviewDelay(1000);
 
-            interactiveUI.moveMouseTo("toolWindow.rb.Tool 6");
+            mouse.moveTo("toolWindow.rb.Tool 6");
             interactiveUI.delay(1100);
 
-            interactiveUI.assertTrue("Preview not visible", interactiveUI.ask("Is preview visible?"));
+            assertor.askForTrue("Is preview visible?");
 
             moveToolTo(interactiveUI, "Tool 1", ToolWindowAnchor.RIGHT);
             moveToolTo(interactiveUI, "Tool 3", ToolWindowAnchor.RIGHT);
 
-            interactiveUI.moveMouseTo("toolWindow.rb.Tool 1");
+            mouse.moveTo("toolWindow.rb.Tool 1");
             interactiveUI.delay(1100);
 
-            interactiveUI.assertTrue("Preview not visible", interactiveUI.ask("Is preview visible?"));
+            assertor.askForTrue("Is preview visible?");
 
-            interactiveUI.moveMouseTo("toolWindowManager.mainContainer");
+            mouse.moveTo("toolWindowManager.mainContainer");
 
             interactiveUI.delay(1000);
 
-            interactiveUI.assertTrue("Preview is still visible", interactiveUI.ask("Is preview not visible?"));
+            assertor.askForTrue("Is preview not visible?");
         }
     }
 
     static class ToolVisisbleInteractiveTest extends MyDoggyInteractiveTest {
 
-        public void interactiveText(InteractiveUI interactiveUI) {
-            interactiveUI.moveMouseTo("toolWindow.rb.Tool 1");
-            interactiveUI.mouseLeftClick();
+        public void interactiveTest(InteractiveUI interactiveUI) {
+            InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
+            InteractiveAssertor assertor = interactiveUI.getInteractiveAssertor();
+
+            mouse.moveTo("toolWindow.rb.Tool 1");
+            mouse.click(InteractiveMouse.Type.LEFT);
             interactiveUI.delay(1000);
 
-            interactiveUI.moveMouseTo("toolWindow.rb.Tool 3");
-            interactiveUI.mouseLeftClick();
+            mouse.moveTo("toolWindow.rb.Tool 3");
+            mouse.click(InteractiveMouse.Type.LEFT);
             interactiveUI.delay(1000);
 
-            interactiveUI.assertTrue("Invalid Behaviour", interactiveUI.ask("Is behaviuor correct?"));
+            assertor.askForTrue("Is behaviuor correct?");
         }
     }
 
     static class DragInteractiveTest extends MyDoggyInteractiveTest {
 
-        public void interactiveText(InteractiveUI interactiveUI) {
-            interactiveUI.moveMouseTo("toolWindow.rb.Tool 1");
+        public void interactiveTest(InteractiveUI interactiveUI) {
+            InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
+            InteractiveAssertor assertor = interactiveUI.getInteractiveAssertor();
+
+            mouse.moveTo("toolWindow.rb.Tool 1");
             interactiveUI.delay(500);
-            interactiveUI.pressMouseLeftButton();
+            mouse.press(InteractiveMouse.Type.LEFT);
 
-            interactiveUI.moveMouseTo("toolWindowManager.bar.RIGHT", 10, 80);
+            mouse.moveTo("toolWindowManager.bar.RIGHT", 10, 80);
             interactiveUI.delay(500);
-            interactiveUI.releaseMouseLeftButton();
+            mouse.release();
 
             interactiveUI.delay(500);
 
-            interactiveUI.moveMouseTo("toolWindow.rb.Tool 1");
-            interactiveUI.pressMouseLeftButton();
+            mouse.moveTo("toolWindow.rb.Tool 1");
+            mouse.press(InteractiveMouse.Type.LEFT);
 
-            interactiveUI.moveMouseTo("toolWindowManager.bar.LEFT", 10, 80);
+            mouse.moveTo("toolWindowManager.bar.LEFT", 10, 80);
             interactiveUI.delay(500);
-            interactiveUI.releaseMouseLeftButton();
+            mouse.release();
 
-            interactiveUI.assertTrue("Invalid Behaviour", interactiveUI.ask("Is behaviuor correct?"));
+            assertor.askForTrue("Is behaviuor correct?");
         }
 
     }
 
     static class SlidingTypeInteractiveTest extends MyDoggyInteractiveTest {
 
-        public void interactiveText(InteractiveUI interactiveUI) {
+        public void interactiveTest(InteractiveUI interactiveUI) {
+            InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
+            InteractiveAssertor assertor = interactiveUI.getInteractiveAssertor();
+
             // Validate initiale state...
-            interactiveUI.assertTrue("Invalid state",
+            assertor.assertTrue("Invalid state",
                                      myDoggySet.getToolWindowManager().getToolWindow("Tool 1").getType() != ToolWindowType.SLIDING);
 
-            interactiveUI.moveMouseTo("toolWindow.rb.Tool 1");
-            interactiveUI.mouseLeftClick();
+            mouse.moveTo("toolWindow.rb.Tool 1");
+            mouse.click(InteractiveMouse.Type.LEFT);
             interactiveUI.delay(1000);
 
-            interactiveUI.moveMouseTo("toolWindow.dockButton.Tool 1");
-            interactiveUI.mouseLeftClick();
+            mouse.moveTo("toolWindow.dockButton.Tool 1");
+            mouse.click(InteractiveMouse.Type.LEFT);
             interactiveUI.delay(1000);
 
-            interactiveUI.assertTrue("Invalid state",
+            assertor.assertTrue("Invalid state",
                                      myDoggySet.getToolWindowManager().getToolWindow("Tool 1").getType() == ToolWindowType.SLIDING);
         }
 
@@ -144,21 +163,23 @@ public class MyDoggyInteractiveTester {
 
     static class FloatingMoveInteractiveTest extends MyDoggyInteractiveTest {
 
-        public void interactiveText(InteractiveUI interactiveUI) {
+        public void interactiveTest(InteractiveUI interactiveUI) {
+            InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
+
             // Validate initiale state...
-            interactiveUI.moveMouseTo("toolWindow.rb.Tool 1");
-            interactiveUI.mouseLeftClick();
+            mouse.moveTo("toolWindow.rb.Tool 1");
+            mouse.click(InteractiveMouse.Type.LEFT);
             interactiveUI.delay(1000);
 
-            interactiveUI.moveMouseTo("toolWindow.floatingButton.Tool 1");
-            interactiveUI.mouseLeftClick();
+            mouse.moveTo("toolWindow.floatingButton.Tool 1");
+            mouse.click(InteractiveMouse.Type.LEFT);
             interactiveUI.delay(1000);
 
             interactiveUI.importRoot("toolWindow.floating.window.Tool 1");
 
 /*
-            interactiveUI.moveMouseTo("toolWindow.bar.Tool 1");
-            interactiveUI.pressMouseLeftButton();
+            mouse.moveTo("toolWindow.bar.Tool 1");
+            mouse.press(InteractiveMouse.Type.LEFT);
             interactiveUI.delay(1000);
 
             Point wLocation = ((FloatingTypeDescriptor) myDoggySet.getToolWindowManager().getToolWindow("Tool 1").getTypeDescriptor(ToolWindowType.FLOATING)).getLocation();
@@ -166,7 +187,7 @@ public class MyDoggyInteractiveTester {
             wLocation.y -= 50;
 
             interactiveUI.moveMouse(wLocation);
-            interactiveUI.releaseMouseLeftButton();
+            mouse.release();
             interactiveUI.delay(1000);
 
             interactiveUI.assertTrue("Invalid Behaviour", interactiveUI.ask("Is behaviuor correct?"));
