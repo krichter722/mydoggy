@@ -72,7 +72,7 @@ public interface ToolWindowGroup {
     void setImplicit(boolean implicit);
 
     /**
-     *
+     * TODO: java docs
      * @return
      * @since 1.3.0
      */

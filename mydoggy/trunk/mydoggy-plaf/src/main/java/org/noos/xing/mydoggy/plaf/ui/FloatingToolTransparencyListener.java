@@ -2,12 +2,13 @@ package org.noos.xing.mydoggy.plaf.ui;
 
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowType;
-import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
+import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -17,7 +18,7 @@ import java.beans.PropertyChangeListener;
 public class FloatingToolTransparencyListener implements PropertyChangeListener, ActionListener {
     private ToolWindowDescriptor descriptor;
     private Window window;
-    
+
     private final TransparencyManager<Window> transparencyManager = WindowTransparencyManager.getInstance();
     private TransparencyAnimation transparencyAnimation;
 
@@ -44,8 +45,8 @@ public class FloatingToolTransparencyListener implements PropertyChangeListener,
 
         assert evt.getPropertyName() != null;
 //        assert descriptor.getToolWindow().isVisible();
-        assert(descriptor.getToolWindow().getType() == ToolWindowType.FLOATING ||
-               descriptor.getToolWindow().getType() == ToolWindowType.FLOATING_FREE);
+        assert (descriptor.getToolWindow().getType() == ToolWindowType.FLOATING ||
+                descriptor.getToolWindow().getType() == ToolWindowType.FLOATING_FREE);
 
         if ("active".equals(evt.getPropertyName())) {
             FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
@@ -54,41 +55,42 @@ public class FloatingToolTransparencyListener implements PropertyChangeListener,
                     timer = new Timer(typeDescriptor.getTransparentDelay(), this);
                     timer.start();
                 } else {
-                    if (transparencyManager.isAlphaModeEnabled(window)) {
-                        synchronized (transparencyManager) {
-                            transparencyAnimation.hide();
+                    if (timer != null)
+                        timer.stop();
+
+                    synchronized (transparencyManager) {
+                        if (transparencyManager.isAlphaModeEnabled(window)) {
+                            transparencyAnimation.stop();
                             transparencyManager.setAlphaModeRatio(window, 0.0f);
                         }
                     }
-                    if (timer != null)
-                        timer.stop();
                 }
             }
         } else if (evt.getPropertyName().startsWith("visible.")) {
-            if (evt.getNewValue() == Boolean.FALSE && transparencyManager.isAlphaModeEnabled(window)) {
-                if (timer != null)
-                    timer.stop();
+            synchronized (transparencyManager) {
+                if (evt.getNewValue() == Boolean.FALSE && transparencyManager.isAlphaModeEnabled(window)) {
+                    if (timer != null)
+                        timer.stop();
 
-                synchronized (transparencyManager) {
-//                    transparencyAnimation.hide();
-                    transparencyManager.setAlphaModeRatio(window, 0.0f);
+                    if (transparencyManager.isAlphaModeEnabled(window)) {
+                        transparencyAnimation.stop();
+                        transparencyManager.setAlphaModeRatio(window, 0.0f);
+                    }
                 }
             }
 
             if (evt.getNewValue() == Boolean.TRUE) {
-               FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
+                FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
                 if (typeDescriptor.isTransparentMode()) {
-                    timer = new Timer(2000 + typeDescriptor.getTransparentDelay(), this);
+                    timer = new Timer(1000 + typeDescriptor.getTransparentDelay(), this);
                     timer.start();
                 }
             }
-
         }
-
     }
 
     public synchronized void actionPerformed(ActionEvent e) {
-        if (timer.isRunning()) {
+        if (timer != null && timer.isRunning()) {
             timer.stop();
             if (!descriptor.getToolWindow().isVisible()
                 || (descriptor.getToolWindow().getType() != ToolWindowType.FLOATING &&

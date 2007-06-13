@@ -643,7 +643,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     void resetShowingGroup() {
-        this.showingGroup = null;
+        if (showingGroup == getToolWindowGroup())
+            this.showingGroup = null;
         this.shiftShow = false;
     }
 
@@ -652,7 +653,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     void enableShiftShow() {
-        setShowingGroup(allToolWindowGroup);
+        if (showingGroup == null)
+            setShowingGroup(allToolWindowGroup);
         this.shiftShow = true;
     }
 
@@ -697,7 +699,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
             // Support for implicit group...
             synchronized (sync) {
-                if (showingGroup == null && Boolean.TRUE.equals(evt.getNewValue()) && !showingGroupValueAdj) {
+                if ((showingGroup == null || showingGroup == getToolWindowGroup()) && Boolean.TRUE.equals(evt.getNewValue()) && !showingGroupValueAdj) {
                     showingGroupValueAdj = true;
                     try {
                         for (ToolWindowGroup group : getToolWindowGroups()) {

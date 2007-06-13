@@ -9,7 +9,7 @@ import java.awt.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class TransparencyAnimation extends AbstractAnimation {
-    private TransparencyManager transparencyManager;
+    private final TransparencyManager transparencyManager;
     private Component component;
     private float alpha;
 
@@ -26,22 +26,26 @@ public class TransparencyAnimation extends AbstractAnimation {
 
     protected float onAnimating(float animationPercent) {
         if (getAnimationDirection() == Direction.INCOMING) {
-            float animatingLengthX = (animationPercent * (1f - alpha));
-            transparencyManager.setAlphaModeRatio(component, 1f - animatingLengthX);
+            float animatingLengthX = (animationPercent * (1.0f - alpha));
+            synchronized(transparencyManager) {
+                transparencyManager.setAlphaModeRatio(component, 1.0f - animatingLengthX);
+            }
         }
         return animationPercent;
 	}
 
 	protected void onFinishAnimation() {
-		switch (getAnimationDirection()) {
-			case INCOMING:
-				transparencyManager.setAlphaModeRatio(component, alpha);
-				break;
-			case OUTGOING:
-				transparencyManager.setAlphaModeRatio(component, 0.0f);
-				break;
-		}
-	}
+        synchronized(transparencyManager) {
+            switch (getAnimationDirection()) {
+                case INCOMING:
+                    transparencyManager.setAlphaModeRatio(component, alpha);
+                    break;
+                case OUTGOING:
+                    transparencyManager.setAlphaModeRatio(component, 0.0f);
+                    break;
+            }
+        }
+    }
 
 	protected void onHide(Object... params) {
 	}
