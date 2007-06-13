@@ -9,8 +9,6 @@ public interface InteractiveUI {
 
     InteractiveMouse getInteractiveMouse();
 
-    InteractiveKeyboard getInteractiveKeyboard();
-
     InteractiveAssertor getInteractiveAssertor();
 
 
