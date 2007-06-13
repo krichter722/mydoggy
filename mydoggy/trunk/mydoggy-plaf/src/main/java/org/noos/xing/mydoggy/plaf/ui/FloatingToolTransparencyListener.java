@@ -54,25 +54,37 @@ public class FloatingToolTransparencyListener implements PropertyChangeListener,
                     timer = new Timer(typeDescriptor.getTransparentDelay(), this);
                     timer.start();
                 } else {
-                    synchronized (transparencyManager) {
-                        transparencyAnimation.hide();
-                        transparencyManager.setAlphaModeRatio(window, 0.0f);
+                    if (transparencyManager.isAlphaModeEnabled(window)) {
+                        synchronized (transparencyManager) {
+                            transparencyAnimation.hide();
+                            transparencyManager.setAlphaModeRatio(window, 0.0f);
+                        }
                     }
                     if (timer != null)
                         timer.stop();
                 }
             }
-        } else if (evt.getPropertyName().startsWith("visible")) {
+        } else if (evt.getPropertyName().startsWith("visible.")) {
             if (evt.getNewValue() == Boolean.FALSE && transparencyManager.isAlphaModeEnabled(window)) {
                 if (timer != null)
                     timer.stop();
 
                 synchronized (transparencyManager) {
-                    transparencyAnimation.hide();
+//                    transparencyAnimation.hide();
                     transparencyManager.setAlphaModeRatio(window, 0.0f);
                 }
             }
+
+            if (evt.getNewValue() == Boolean.TRUE) {
+               FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
+                if (typeDescriptor.isTransparentMode()) {
+                    timer = new Timer(2000 + typeDescriptor.getTransparentDelay(), this);
+                    timer.start();
+                }
+            }
+
         }
+
     }
 
     public synchronized void actionPerformed(ActionEvent e) {
