@@ -87,18 +87,15 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
                         tool.setVisible(false);
 
                     if (visible) {
-/*
-                        for (ToolWindow tool : getToolsWindow()) {
-                            if (tool.getType() == ToolWindowType.SLIDING)
-                                tool.setType(ToolWindowType.DOCKED);
-
-                            tool.aggregate();
+                        manager.setShowingGroup(this);
+                        try {
+                            showTool(ToolWindowAnchor.LEFT);
+                            showTool(ToolWindowAnchor.TOP);
+                            showTool(ToolWindowAnchor.RIGHT);
+                            showTool(ToolWindowAnchor.BOTTOM);
+                        } finally {
+                            manager.setShowingGroup(null);
                         }
-*/
-                        showTool(ToolWindowAnchor.LEFT);
-                        showTool(ToolWindowAnchor.TOP);
-                        showTool(ToolWindowAnchor.RIGHT);
-                        showTool(ToolWindowAnchor.BOTTOM);
                     }
 
                     if (visible)

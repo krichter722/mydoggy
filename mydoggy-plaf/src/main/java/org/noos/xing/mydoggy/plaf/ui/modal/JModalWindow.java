@@ -1,5 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui.modal;
 
+import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
+import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
@@ -25,9 +28,13 @@ public class JModalWindow extends JWindow {
     }
 
     public void setVisible(boolean visible) {
-        if (!visible)
+        if (!visible) {
+            TransparencyManager<Window> transparencyManager = WindowTransparencyManager.getInstance();
+            if (transparencyManager.isAlphaModeEnabled(this)) 
+                transparencyManager.setAlphaModeRatio(this, 0.0f);
+
             restoreOwner();
-        else {
+        } else {
             if (!isVisible()) {
                 synchronized (JModalWindow.this) {
                     if ((modalToWindow != null) && notifiedModalToWindow) {
