@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy.itest.impl;
 
 import org.noos.xing.mydoggy.itest.InteractiveAssertor;
-import org.noos.xing.mydoggy.itest.InteractiveKeyboard;
 import org.noos.xing.mydoggy.itest.InteractiveMouse;
 import org.noos.xing.mydoggy.itest.InteractiveUI;
 
@@ -16,7 +15,6 @@ public class RobotInteractiveUI implements InteractiveUI {
 
     private Robot robot;
     private InteractiveMouse interactiveMouse;
-    private InteractiveKeyboard interactiveKeyboard;
     private InteractiveAssertor interactiveAssertor;
 
     public RobotInteractiveUI(Container rootContainer) {
@@ -28,16 +26,11 @@ public class RobotInteractiveUI implements InteractiveUI {
             e.printStackTrace();
         }
         interactiveMouse = new RobotInteractiveMouse(this, robot);
-        interactiveKeyboard = new RobotInteractiveKeyboard(robot);
         interactiveAssertor = new SwingInteractiveAssertor(rootContainer);
     }
 
     public InteractiveMouse getInteractiveMouse() {
         return interactiveMouse;
-    }
-
-    public InteractiveKeyboard getInteractiveKeyboard() {
-        return interactiveKeyboard;
     }
 
     public InteractiveAssertor getInteractiveAssertor() {
