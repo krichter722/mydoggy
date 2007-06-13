@@ -7,10 +7,10 @@ import java.awt.*;
  */
 public interface InteractiveTest {
 
-    Container getRootContainer();
-
-    void interactiveText(InteractiveUI interactiveUI);
+    Container setup();
 
     void dispose();
+
+    void interactiveTest(InteractiveUI interactiveUI);
 
 }
