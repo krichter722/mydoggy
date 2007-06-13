@@ -17,8 +17,8 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ResourceBundle;
 
 /**
@@ -61,7 +61,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         initDockedListeners();
     }
 
-    
+
     public void propertyChange(PropertyChangeEvent evt) {
         propertyChangeSupport.firePropertyChange(evt);
     }
@@ -263,7 +263,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 } else {
                     maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE));
                     descriptor.getManager().getPersistenceDelegate().merge(new ByteArrayInputStream(workspace.toByteArray()),
-                                                                     PersistenceDelegate.MergePolicy.UNION);
+                                                                           PersistenceDelegate.MergePolicy.UNION);
                     workspace = null;
                 }
             }
@@ -658,7 +658,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                             setMainComponent(tab.getComponent());
 
                             Component focusable = SwingUtil.findFocusable(tab.getComponent());
-                            if (focusable!= null)
+                            if (focusable != null)
                                 focusable.requestFocus();
                             else
                                 hideButton.requestFocus();
