@@ -15,7 +15,7 @@ public class SwingInteractiveAssertor implements InteractiveAssertor {
         this.root = root;
     }
 
-    public void askForTrue(String message) {
+    public void askForConfirm(String message) {
         assertTrue(message, ask(message));
     }
 

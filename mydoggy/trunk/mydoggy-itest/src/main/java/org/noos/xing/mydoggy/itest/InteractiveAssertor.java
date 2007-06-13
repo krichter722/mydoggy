@@ -5,7 +5,7 @@ package org.noos.xing.mydoggy.itest;
  */
 public interface InteractiveAssertor {
 
-    void askForTrue(String message);
+    void askForConfirm(String message);
 
     void assertTrue(String message, boolean expression);
 }
