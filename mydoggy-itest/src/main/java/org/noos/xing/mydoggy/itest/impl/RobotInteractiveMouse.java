@@ -20,11 +20,11 @@ public class RobotInteractiveMouse implements InteractiveMouse {
     }
 
     public void moveTo(int x, int y) {
-        robot.mouseMove(x, y);
+        moveMouse(new Point(x, y));
     }
 
     public void moveTo(String componentName) {
-        moveTo(componentName, 5 ,5);
+        moveTo(componentName, 5, 5);
     }
 
     public void moveTo(String componentName, int offsetX, int offsetY) {
@@ -46,7 +46,7 @@ public class RobotInteractiveMouse implements InteractiveMouse {
 
     public void press(Type type) {
         lastPressType = type;
-        switch(type) {
+        switch (type) {
             case LEFT:
                 robot.mousePress(InputEvent.BUTTON1_MASK);
                 break;
@@ -70,7 +70,7 @@ public class RobotInteractiveMouse implements InteractiveMouse {
     }
 
     public void release(Type type) {
-        switch(type) {
+        switch (type) {
             case LEFT:
                 robot.mouseRelease(InputEvent.BUTTON1_MASK);
                 break;
@@ -95,37 +95,35 @@ public class RobotInteractiveMouse implements InteractiveMouse {
     public void moveMouse(Point to) {
         Point from = MouseInfo.getPointerInfo().getLocation();
 
-        System.out.println("from = " + from);
-        System.out.println("to = " + to);
+        int x0 = from.x;
+        int y0 = from.y;
 
-        int signX = to.x - from.x < 0 ? -1 : 1;
-        int signY = to.y - from.y < 0 ? -1 : 1;
+        int x1 = to.x;
+        int y1 = to.y;
 
-        int deltaX = Math.abs(to.x - from.x);
-        int deltaY = Math.abs(to.y - from.y);
+        int dx = x1 - x0;
+        int dy = y1 - y0;
 
-        if (deltaX > deltaY) {
-            long step = Math.round((double)deltaX / (double)deltaY);
-            for (int i = 0; i < deltaX; i++) {
-                from.x += signX;
-                if (i % step == 0)
-                    from.y += signY;
-
-                robot.mouseMove(from.x, from.y);
+        robot.mouseMove(x0, y0);
+        if (Math.abs(dx) > Math.abs(dy)) {          // slope < 1
+            float m = (float) dy / (float) dx;      // compute slope
+            float b = y0 - m * x0;
+            dx = (dx < 0) ? -1 : 1;
+            while (x0 != x1) {
+                x0 += dx;
+                robot.mouseMove(x0, Math.round(m * x0 + b));
                 interactiveUI.delay(1);
             }
-        } else {
-            long step = Math.round((double)deltaY / (double)deltaX);
-            for (int i = 0; i < deltaY; i++) {
-                from.y += signY;
-                if (i % step == 0)
-                    from.x += signX;
-
-                robot.mouseMove(from.x, from.y);
+        } else if (dy != 0) {                        // slope >= 1
+            float m = (float) dx / (float) dy;      // compute slope
+            float b = x0 - m * y0;
+            dy = (dy < 0) ? -1 : 1;
+            while (y0 != y1) {
+                y0 += dy;
+                robot.mouseMove(Math.round(m * y0 + b), y0);
                 interactiveUI.delay(1);
             }
         }
-
         robot.mouseMove(to.x, to.y);
     }
 

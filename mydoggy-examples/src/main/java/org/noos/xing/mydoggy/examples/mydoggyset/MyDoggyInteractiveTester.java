@@ -1,13 +1,10 @@
 package org.noos.xing.mydoggy.examples.mydoggyset;
 
-import org.noos.xing.mydoggy.DockedTypeDescriptor;
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.itest.InteractiveAssertor;
 import org.noos.xing.mydoggy.itest.InteractiveMouse;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.itest.InteractiveUI;
-import org.noos.xing.mydoggy.itest.InteractiveAssertor;
 import org.noos.xing.mydoggy.itest.impl.InteractiveTestRunner;
 
 import java.awt.*;
@@ -19,10 +16,10 @@ public class MyDoggyInteractiveTester {
 
     public static void main(String[] args) {
         InteractiveTestRunner runner = new InteractiveTestRunner();
-        runner.addInteractiveTest(new ToolVisisbleInteractiveTest());
-        runner.addInteractiveTest(new PreviewInteractiveTest());
-        runner.addInteractiveTest(new DragInteractiveTest());
-        runner.addInteractiveTest(new SlidingTypeInteractiveTest());
+//        runner.addInteractiveTest(new ToolVisisbleInteractiveTest());
+//        runner.addInteractiveTest(new PreviewInteractiveTest());
+//        runner.addInteractiveTest(new DragInteractiveTest());
+//        runner.addInteractiveTest(new SlidingTypeInteractiveTest());
         runner.addInteractiveTest(new FloatingMoveInteractiveTest());
         runner.run();
     }
@@ -73,7 +70,7 @@ public class MyDoggyInteractiveTester {
             mouse.moveTo("toolWindow.rb.Tool 6");
             interactiveUI.delay(1100);
 
-            assertor.askForTrue("Is preview visible?");
+            assertor.askForConfirm("Is preview visible?");
 
             moveToolTo(interactiveUI, "Tool 1", ToolWindowAnchor.RIGHT);
             moveToolTo(interactiveUI, "Tool 3", ToolWindowAnchor.RIGHT);
@@ -81,13 +78,13 @@ public class MyDoggyInteractiveTester {
             mouse.moveTo("toolWindow.rb.Tool 1");
             interactiveUI.delay(1100);
 
-            assertor.askForTrue("Is preview visible?");
+            assertor.askForConfirm("Is preview visible?");
 
             mouse.moveTo("toolWindowManager.mainContainer");
 
             interactiveUI.delay(1000);
 
-            assertor.askForTrue("Is preview not visible?");
+            assertor.askForConfirm("Is preview not visible?");
         }
     }
 
@@ -105,7 +102,7 @@ public class MyDoggyInteractiveTester {
             mouse.click(InteractiveMouse.Type.LEFT);
             interactiveUI.delay(1000);
 
-            assertor.askForTrue("Is behaviuor correct?");
+            assertor.askForConfirm("Is behaviuor correct?");
         }
     }
 
@@ -132,7 +129,7 @@ public class MyDoggyInteractiveTester {
             interactiveUI.delay(500);
             mouse.release();
 
-            assertor.askForTrue("Is behaviuor correct?");
+            assertor.askForConfirm("Is behaviuor correct?");
         }
 
     }
@@ -165,6 +162,7 @@ public class MyDoggyInteractiveTester {
 
         public void interactiveTest(InteractiveUI interactiveUI) {
             InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
+            InteractiveAssertor assertor = interactiveUI.getInteractiveAssertor();
 
             // Validate initiale state...
             mouse.moveTo("toolWindow.rb.Tool 1");
@@ -177,7 +175,6 @@ public class MyDoggyInteractiveTester {
 
             interactiveUI.importRoot("toolWindow.floating.window.Tool 1");
 
-/*
             mouse.moveTo("toolWindow.bar.Tool 1");
             mouse.press(InteractiveMouse.Type.LEFT);
             interactiveUI.delay(1000);
@@ -186,12 +183,11 @@ public class MyDoggyInteractiveTester {
             wLocation.x -= 50;
             wLocation.y -= 50;
 
-            interactiveUI.moveMouse(wLocation);
+            mouse.moveTo(wLocation.x, wLocation.y);
             mouse.release();
             interactiveUI.delay(1000);
 
-            interactiveUI.assertTrue("Invalid Behaviour", interactiveUI.ask("Is behaviuor correct?"));
-*/
+            assertor.askForConfirm("Is behaviuor correct?");
         }
 
     }
