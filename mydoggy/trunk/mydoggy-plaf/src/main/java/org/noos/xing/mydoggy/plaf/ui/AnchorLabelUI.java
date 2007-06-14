@@ -113,7 +113,6 @@ public class AnchorLabelUI extends MetalLabelUI {
             } else {
                 g.setColor(gray);
                 g.fillRect(0, 0, bounds.width, bounds.height);
-                flashingState = true;
             }
 
             if (flashingTimer == null) {
@@ -123,8 +122,10 @@ public class AnchorLabelUI extends MetalLabelUI {
                     public void actionPerformed(ActionEvent e) {
                         if (start == 0)
                             start = System.currentTimeMillis();
+
                         flashingState = !flashingState;
                         SwingUtil.repaint(label);
+
                         if (flasingDuration != -1 && System.currentTimeMillis() - start > flasingDuration)
                             toolWindow.setFlashing(false);
                     }

@@ -249,7 +249,6 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
                 }
             }
         });
-
         tabbedContentManager.addChangeListener(new ChangeListener() {
 
             public void stateChanged(ChangeEvent e) {
