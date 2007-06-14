@@ -685,7 +685,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
             valueAdjusting = true;
 
-//            System.out.println("cmp = " + component);
+            System.out.println("cmp = " + component);
 
             if (isInternalComponent(component)) {
                 toolWindow.setActive(true);

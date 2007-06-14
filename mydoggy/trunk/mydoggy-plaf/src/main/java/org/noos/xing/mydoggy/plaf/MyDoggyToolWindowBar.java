@@ -124,7 +124,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
     protected void initComponents() {
         splitPane.setName(anchor.toString());
-        splitPane.setFocusCycleRoot(false);
+        splitPane.setFocusCycleRoot(true);
 
         contentPane = new JPanel();
         contentPane.setName("toolWindowManager.bar." + anchor.toString());
