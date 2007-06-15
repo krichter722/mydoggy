@@ -88,6 +88,11 @@ public class RobotInteractiveMouse implements InteractiveMouse {
         release(type);
     }
 
+    public void click(String componentName, Type type) {
+        moveTo(componentName);
+        click(type);
+    }
+
     public void wheel(int amount) {
         robot.mouseWheel(amount);
     }

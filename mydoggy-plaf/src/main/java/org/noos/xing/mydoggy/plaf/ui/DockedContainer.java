@@ -260,7 +260,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                     descriptor.getManager().getPersistenceDelegate().save(workspace = new ByteArrayOutputStream());
 
                     maximizeButton.setIcon(toolWindowUI.getIcon(MINIMIZE));
-                } else {
+                } else if (workspace != null) {
                     maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE));
                     descriptor.getManager().getPersistenceDelegate().merge(new ByteArrayInputStream(workspace.toByteArray()),
                                                                            PersistenceDelegate.MergePolicy.UNION);

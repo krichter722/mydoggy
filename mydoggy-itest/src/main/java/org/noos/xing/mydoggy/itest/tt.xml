@@ -1,0 +1,7 @@
+<itests>
+    <itest name="ToolVisisbleInteractiveTest">
+        <click cmp="toolWindow.rb.Tool 1" type="left"/>
+        <delay millis="1000"/>
+        <click cmp="toolWindow.rb.Tool 3" type="left"/>
+    </itest>
+</itests>

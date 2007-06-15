@@ -5,7 +5,7 @@ import org.noos.xing.mydoggy.itest.InteractiveAssertor;
 import org.noos.xing.mydoggy.itest.InteractiveMouse;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.itest.InteractiveUI;
-import org.noos.xing.mydoggy.itest.impl.InteractiveTestRunner;
+import org.noos.xing.mydoggy.itest.impl.ListInteractiveTestRunner;
 
 import java.awt.*;
 
@@ -15,7 +15,7 @@ import java.awt.*;
 public class MyDoggyInteractiveTester {
 
     public static void main(String[] args) {
-        InteractiveTestRunner runner = new InteractiveTestRunner();
+        ListInteractiveTestRunner runner = new ListInteractiveTestRunner();
         runner.addInteractiveTest(new ToolVisisbleInteractiveTest());
         runner.addInteractiveTest(new PreviewInteractiveTest());
         runner.addInteractiveTest(new DragInteractiveTest());
@@ -94,12 +94,10 @@ public class MyDoggyInteractiveTester {
             InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
             InteractiveAssertor assertor = interactiveUI.getInteractiveAssertor();
 
-            mouse.moveTo("toolWindow.rb.Tool 1");
-            mouse.click(InteractiveMouse.Type.LEFT);
+            mouse.click("toolWindow.rb.Tool 1", InteractiveMouse.Type.LEFT);
             interactiveUI.delay(1000);
 
-            mouse.moveTo("toolWindow.rb.Tool 3");
-            mouse.click(InteractiveMouse.Type.LEFT);
+            mouse.click("toolWindow.rb.Tool 3", InteractiveMouse.Type.LEFT);
             interactiveUI.delay(1000);
 
             assertor.askForConfirm("Is behaviuor correct?");
