@@ -14,7 +14,7 @@
                     <a href="./mydoggy-api/changes-report.html">MyDoggy-Api</a>,
                     <a href="./mydoggy-plaf/changes-report.html">MyDoggy-Plaf</a>,
                     <a href="./mydoggy-examples/changes-report.html">MyDoggy-Example</a>.
-                    </br>
+                    <br/>
                     New Features:
                     <ul>
                         <li>
@@ -39,7 +39,7 @@
                             <a href="./mydoggy-api/toolwindowManagerUsing.html#CornerComponent">Corner Component</a> : you can add a specified component at the given corner of the toolwindow manager.
                         </li>
                     </ul>
-                    </br>
+                    <br/>
                     Bug Resolved:
                     <ul>
                         <li>

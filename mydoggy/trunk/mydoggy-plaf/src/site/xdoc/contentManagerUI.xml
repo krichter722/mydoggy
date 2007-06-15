@@ -9,22 +9,42 @@
 
     <body>
         <section name="ContentManageUI">
-            <p>
-                Exists an implementation for the <code>TabbedContentManagerUI</code>
-                and for the <code>DesktopContentManagerUI</code>.
-                <br/>
-                To obtain a specific instance use the following (for example):
-            </p>
-            <source>import org.noos.xing.mydoggy.plaf.ui.content.desktop;
-...
-contentManager.setContentManagerUI(new MyDoggyDesktopContentManagerUI());
-            </source>
-            or
-            <source>import org.noos.xing.mydoggy.plaf.ui.content.tabbed;
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <img src="./images/tabbedContentManagerUI.png" alt="Tabbed ContentManagerUI" border="0" hspace="18"/>
+                        </td>
+                        <td>
+                            <p>
+                                This interface represents a ui that use a component that lets the user switch between
+                                a group of components by clicking on a tab with a given title and/or icon (i.e. JTabbedPane).
+                                <br/>To obtain and set a specific instance use the following (for example):
+                            </p>
+                        <source>import org.noos.xing.mydoggy.plaf.ui.content.desktop;
 ...
 contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
-            </source>
-
+                        </source>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="./images/desktopContentManagerUI.png" alt="Desktop ContentManagerUI" border="0" hspace="18"/>
+                        </td>
+                        <td>
+                            <p>
+                                This interface represents a ui that use a container to create a multiple-document interface
+                                or a virtual desktop.
+                                <br/>To obtain and set a specific instance use the following (for example):
+                            </p>
+                        <source>import org.noos.xing.mydoggy.plaf.ui.content.desktop;
+...
+contentManager.setContentManagerUI(new MyDoggyDesktopContentManagerUI());
+                        </source>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <p>
                 If you want to implement your own <code>ContentManageUI,</code> your class must implement non only the
                 <code>ContentManageUI</code> interface but also the <code>BackContentManagerUI</code> interface in the
