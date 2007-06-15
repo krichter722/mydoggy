@@ -121,7 +121,13 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             return (constraints.row1 / 2) -1;
     }
 
+    public void deactiveTool(ToolWindow toolWindow) {
+        valueAdjusting = true;
+        toolWindow.setActive(false);
+        valueAdjusting = false;
+    }
 
+    
     protected void initComponents() {
         splitPane.setName(anchor.toString());
         splitPane.setFocusCycleRoot(true);
@@ -435,9 +441,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     if (toolWindow == sourceTool)
                         continue;
 
-                    valueAdjusting = true;
-                    toolWindow.setActive(false);
-                    valueAdjusting = false;
+                    deactiveTool(toolWindow);
                 }
             }
         }
