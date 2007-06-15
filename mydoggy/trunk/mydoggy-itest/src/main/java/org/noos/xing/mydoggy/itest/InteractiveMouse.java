@@ -25,6 +25,8 @@ public interface InteractiveMouse {
 
     void click(Type type);
 
+    void click(String componentName, Type type);
+
     void wheel(int amount);
 
 }

@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.itest.impl;
 
 import org.noos.xing.mydoggy.itest.InteractiveTest;
+import org.noos.xing.mydoggy.itest.InteractiveTestRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +9,10 @@ import java.util.List;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class InteractiveTestRunner {
+public class ListInteractiveTestRunner implements InteractiveTestRunner {
     private List<InteractiveTest> interactiveTests;
 
-    public InteractiveTestRunner() {
+    public ListInteractiveTestRunner() {
         this.interactiveTests = new ArrayList<InteractiveTest>();
     }
 
