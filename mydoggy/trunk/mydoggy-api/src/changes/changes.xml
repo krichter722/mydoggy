@@ -15,35 +15,35 @@
                 </a> - Added support for toolwindow Preview Mode. Added methods:
                 <ul>
                     <li>
-                        <code>void setPreviewEnabled(boolean enabled);</code>
-                        <br></br>
+                        <code style="color:green">void setPreviewEnabled(boolean enabled);</code>
+                        </br>
                         Sets the preview mode. If the preview mode is enabled then when the mouse waits
                         on the toolwindow representative button after a delay time the preview will become visible.
                     </li>
                     <li>
-                        <code>boolean isPreviewEnabled();</code>
-                        <br></br>
+                        <code style="color:green">boolean isPreviewEnabled();</code>
+                        </br>
                         Returns the preview mode status.
                     </li>
                     <li>
-                        <code>void setPreviewDelay(int delay);</code>
-                        <br></br>
+                        <code style="color:green">void setPreviewDelay(int delay);</code>
+                        </br>
                         Sets the preview delay. When the mouse waits on the toolwindow representative button
                         after a delay time the preview will become visible if the preview mode is enabled.
                     </li>
                     <li>
-                        <code>int getPreviewDelay();</code>
-                        <br></br>
+                        <code style="color:green">int getPreviewDelay();</code>
+                        </br>
                         Returns the preview delay.
                     </li>
                     <li>
-                        <code>void setPreviewTransparentRatio(float transparentRatio);</code>
-                        <br></br>
+                        <code style="color:green">void setPreviewTransparentRatio(float transparentRatio);</code>
+                        </br>
                         Sets the transparent ratio of the preview. Valid range is [0.0, 1.0]
                     </li>
                     <li>
-                        <code>float getPreviewTransparentRatio();</code>
-                        <br></br>
+                        <code style="color:green">float getPreviewTransparentRatio();</code>
+                        </br>
                         Returns the transparent ratio.
                     </li>
                 </ul>
@@ -53,11 +53,17 @@
                 <![CDATA[
                 <a href="./apidocs/org/noos/xing/mydoggy/PersistenceDelegate.html">
                     <code>PersistenceDelegate</code>
-                </a> - Added methods:
+                </a> - Added methods and enums :
                 <ul>
                     <li>
-                        <code>void merge(InputStream inputStream, MergePolicy mergePolicy)</code>
-                        <br></br>
+                        <code style="color:green">enum MergePolicy</code>
+                        </br>
+                    </li>
+                    <li>
+                        <code style="color:green">void merge(InputStream inputStream, MergePolicy mergePolicy)</code>
+                         Reads the settings for the ToolWindows, already registered into the manager, from the input
+                         stream applying the passed merge policy
+                        </br>
                     </li>
                 </ul>
                 ]]>
@@ -69,8 +75,8 @@
                 </a> - Added enum item:
                 <ul>
                     <li>
-                        <code>MOST_RECENT</code>
-                        <br></br>
+                        <code style="color:green">MOST_RECENT</code>
+                        </br>
                         Whoever is pressed last toolwindow push away the previous toolwindows. This way the order
                         of opening the toolwindows determine who push who (and you can achieve any "priority" mode
                         by selecting the order of clicks)
@@ -96,68 +102,73 @@
                 <![CDATA[
                 <a href="./apidocs/org/noos/xing/mydoggy/ToolWindow.html">
                     <code>ToolWindow</code>
-                </a> - Added enum item:
+                </a> - Added methods:
                 <ul>
                     <li>
-                        <code>void setAggregateMode(boolean aggregateEnabled);</code>
-                        <br></br>
+                        <code style="color:green">void setAggregateMode(boolean aggregateEnabled);</code>
+                        The method is used to set the aggregateEnabled property of the tool.
+                        If <code>aggregateEnabled</code> is <tt>true</tt> then every call to
+                        <code>setVisible(true)</code> will have the same behaviout of a call to <code>aggregate()</code>
+                        method. Default value is false.
+                        </br>
                     </li>
                     <li>
-                        <code>boolean isAggregateMode();</code>
-                        <br></br>
+                        <code style="color:green">boolean isAggregateMode();</code></br>
+                        Returns aggregateEnabled property value.
+                        </br>
                     </li>
                     <li>
-                        <code>void setFlashing(boolean flash);</code>
-                        <br></br>
+                        <code style="color:green">void setFlashing(boolean flash);</code>
+                        </br>
                         Sets the flashing mode. If the flashing mode is enabled then the toolwindow representative button
                         will be flashing until the tool will be made visible.
                     </li>
                     <li>
-                        <code>boolean isFlashing();</code>
-                        <br></br>
+                        <code style="color:green">boolean isFlashing();</code>
+                        </br>
                         Returns whether the representative button is currently flashing.
                     </li>
                     <li>
-                        <code>void setFlashing(int duration);</code>
-                        <br></br>
+                        <code style="color:green">void setFlashing(int duration);</code>
+                        </br>
                         This method is used to enable flashing for a specific duration.
                     </li>
                     <li>
-                        <code>void setAnchor(ToolWindowAnchor anchor, int index);</code>
-                        <br></br>
+                        <code style="color:green">void setAnchor(ToolWindowAnchor anchor, int index);</code>
+                        </br>
                         This method is used to set the anchor for the tool. The anchor specifies the position of the tool when
                         it is anchored to the docking system. The index specifies the position relative to the other tools on
                         the same anchor.
                     </li>
                     <li>
-                        <code>void setMaximized(boolean maximized);</code>
-                        <br></br>
+                        <code style="color:green">void setMaximized(boolean maximized);</code>
+                        </br>
                         Maximizes this toolwindow. A maximized toolwindow is resized to
                         fully fit the main content area.
                     </li>
                     <li>
-                        <code>boolean isMaximized();</code>
-                        <br></br>
+                        <code style="color:green">boolean isMaximized();</code>
+                        </br>
                         Returns whether the toolwindow is currently maximized.
                     </li>
                     <li>
-                        <code>ToolWindowTab addToolWindowTab(String title, Component component);</code>
-                        <br></br>
+                        <code style="color:green">ToolWindowTab addToolWindowTab(String title, Component component);</code>
+                        </br>
                         Adds a <code>component</code> represented by a <code>title</code> and no icon.
                     </li>
                     <li>
-                        <code>boolean removeToolWindowTab(ToolWindowTab toolWindowTab);</code>
-                        <br></br>
+                        <code style="color:green">boolean removeToolWindowTab(ToolWindowTab toolWindowTab);</code>
+                        </br>
                         Removes the specified tab from this toolwindow.
                     </li>
                     <li>
-                        <code>ToolWindowTab[] getToolWindowTabs();</code>
-                        <br></br>
+                        <code style="color:green">ToolWindowTab[] getToolWindowTabs();</code>
+                        </br>
                         Gets all the tabs in this toolwindow.
                     </li>
                     <li>
-                        <code>void addToolWindowListener(ToolWindowListener listener);</code>
-                        <br></br>
+                        <code style="color:green">void addToolWindowListener(ToolWindowListener listener);</code>
+                        </br>
                         Adds the specified toolwindow listener to receive toolwindow events from
                         this tool.                        
                     </li>
@@ -179,23 +190,23 @@
                 </a> - Added methods and enum :
                 <ul>
                     <li>
-                        <code>enum Corner</code>
-                        <br></br>
+                        <code style="color:green">enum Corner</code>
+                        </br>
                     </li>
                     <li>
-                        <code>PushAwayModeDescriptor getPushAwayModeDescriptor(PushAwayMode pushAwayMode);</code>
-                        <br></br>
+                        <code style="color:green">PushAwayModeDescriptor getPushAwayModeDescriptor(PushAwayMode pushAwayMode);</code>
+                        </br>
                         Returns the PushAwayModeDescriptor for the passed push away mode if
                         it is supported, null otherwise.                        
                     </li>
                     <li>
-                        <code>void setCornerComponent(Corner corner, Component component);</code>
-                        <br></br>
+                        <code style="color:green">void setCornerComponent(Corner corner, Component component);</code>
+                        </br>
                         Adds the specified component at the given corner.
                     </li>
                     <li>
-                        <code>void addPropertyChangeListener(PropertyChangeListener listener);</code>
-                        <br></br>
+                        <code style="color:green">void addPropertyChangeListener(PropertyChangeListener listener);</code>
+                        </br>
                         Adds a PropertyChangeListener to the listener list. The listener is
                         registered for all bound properties of this class.
                     </li>
@@ -206,7 +217,9 @@
                 <![CDATA[
                 <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowTab.html">
                     <code>ToolWindowTab</code>
-                </a> - 
+                </a> - Every toolwindow can be considered as a special JTabbedPane and so it can contain more than one component.
+                A ToolWindowTab represents a tab in this special JTabbedPane. Is is described by a title, an icon and a component.
+                A tab can be selected or not.
                 ]]>
             </action>
             <action dev="adecaro" type="update">
@@ -216,12 +229,16 @@
                 </a> - Added methods :
                 <ul>
                     <li>
-                        <code>void setImplicit(boolean implicit);</code>
-                        <br></br>
+                        <code style="color:green">void setImplicit(boolean implicit);</code>
+                         The method is used to set the implicit property of the group.
+                         If <code>implicit</code> is <tt>true</tt> then if a tool in this group is made visible then
+                         all tools in this group will be make visible.<br> Default value is false.
+                        </br>
                     </li>
                     <li>
-                        <code>boolean isImplicit();</code>
-                        <br></br>
+                        <code style="color:green">boolean isImplicit();</code>
+                        Returns <tt>true</tt> if this is an implicit group, <tt>false</tt> otherwise.
+                        </br>
                     </li>
                 </ul>
                 ]]>
@@ -290,15 +307,15 @@
                 </a> - Added Methods :
                 <ul>
                     <li>
-                        <code>void setEnabled(boolean enabled);</code>
-                        <br></br>
+                        <code style="color:green">void setEnabled(boolean enabled);</code>
+                        </br>
                         Enables or disables this mode, depending on the value of the
                         parameter <code>enabled</code>. An enabled mode can used by user.
                         This Mode is enabled initially by default.
                     </li>
                     <li>
-                        <code>void isEnabled();</code>
-                        <br></br>
+                        <code style="color:green">void isEnabled();</code>
+                        </br>
                         Determines whether this mode is enabled. An enabled mode
                         can used by user. This Mode is enabled initially by default.
                         This mode may be enabled or disabled by
@@ -317,31 +334,31 @@
                 <![CDATA[
                 <ul>
                     <li>
-                        <code>ToolWindowManagerDescriptor getToolWindowManagerDescriptor();</code>
-                        <br></br>
+                        <code style="color:green">ToolWindowManagerDescriptor getToolWindowManagerDescriptor();</code>
+                        </br>
                         Returns the type descriptor for this manager.
                     </li>
                     <li>
-                        <code>PersistenceDelegate getPersistenceDelegate();</code>
-                        <br></br>
+                        <code style="color:green">PersistenceDelegate getPersistenceDelegate();</code>
+                        </br>
                         Returns an instance of <code>PersistenceDelegate</code> relative to this manager.
                     </li>
                     <li>
-                        <code>void addAlias(ToolWindow toolWindow, Object alias);</code>
-                        <br></br>
+                        <code style="color:green">void addAlias(ToolWindow toolWindow, Object alias);</code>
+                        </br>
                         Associates the specified toolWindow with the specified alias in this manager.
                         If the manager previously contained a mapping for this alias, the old toolWindow is replaced
                         by the specified toolWindow.
                     </li>
                     <li>
-                        <code>ToolWindow getToolWindowByAlias(Object alias);</code>
-                        <br></br>
+                        <code style="color:green">ToolWindow getToolWindowByAlias(Object alias);</code>
+                        </br>
                         Returns the toolWindow to which this manager maps the specified alias.  Returns
                         <tt>null</tt> if the manager contains no mapping for this alias.
                     </li>
                     <li>
-                        <code>ToolWindowGroup getToolWindowGroup();</code>
-                        <br></br>
+                        <code style="color:green">ToolWindowGroup getToolWindowGroup();</code>
+                        </br>
                         Returns a special group that contains all toolwindows registered in this manager.
                     </li>
                 </ul>
@@ -357,13 +374,13 @@
                 <![CDATA[
                 <ul>
                     <li>
-                        <code>Content getSelectedContent();</code>
-                        <br></br>
+                        <code style="color:green">Content getSelectedContent();</code>
+                        </br>
                         Returns the selected content, or <code>null</code> if the selection is empty.
                     </li>
                     <li>
-                        <code>Content getContentByComponent(Component component);</code>
-                        <br></br>
+                        <code style="color:green">Content getContentByComponent(Component component);</code>
+                        </br>
                         Returns the content that wraps the passed <code>component</code>
                     </li>
                 </ul>
@@ -379,13 +396,13 @@
                 <![CDATA[
                 <ul>
                     <li>
-                        <code>ToolWindowActionHandler getToolWindowActionHandler();</code>
-                        <br></br>
+                        <code style="color:green">ToolWindowActionHandler getToolWindowActionHandler();</code>
+                        </br>
                         Returns the ToolWindowActionHandler instance or null if it is not present.
                     </li>
                     <li>
-                        <code>void setToolWindowActionHandler(ToolWindowActionHandler toolWindowActionHandler);</code>
-                        <br></br>
+                        <code style="color:green">void setToolWindowActionHandler(ToolWindowActionHandler toolWindowActionHandler);</code>
+                        </br>
                         Sets the ToolWindowActionHandler to this descriptor.
                     </li>
                 </ul>
@@ -452,18 +469,18 @@
                 <![CDATA[
 				<ul>
 					<li>
-						<code>void setContentManagerUI(ContentManagerUI contentManagerUI);</code>
-						<br></br>
+						<code style="color:green">void setContentManagerUI(ContentManagerUI contentManagerUI);</code>
+						</br>
 						Sets the content manager ui to <code>contentManagerUI</code>.
 					</li>
 					<li>
-						<code>ContentManagerUI getContentManagerUI();</code>
-						<br></br>
+						<code style="color:green">ContentManagerUI getContentManagerUI();</code>
+						</br>
 						Returns the content manager ui.
 					</li>
 					<li>
-						<code>void removeAllContents();</code>
-						<br></br>
+						<code style="color:green">void removeAllContents();</code>
+						</br>
 						Removes all of the contents from this manager.
 					</li>
 				</ul>
