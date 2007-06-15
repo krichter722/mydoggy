@@ -22,8 +22,9 @@
             </p>
             <p>
                 MyDoggy arrives with a default implementation provided by
-                <code>org.noos.xing.mydoggy.plaf.persistence.xml.XmlPersistenceDelegate</code>
-                This implementation use the xml format to store all necessary data.
+                <br/><code>org.noos.xing.mydoggy.plaf.persistence.xml.XmlPersistenceDelegate</code>
+                <br/>This implementation use the xml format to store all necessary data.
+                <br/>
                 <br/>
                 You can found the relative DTD
             </p>
