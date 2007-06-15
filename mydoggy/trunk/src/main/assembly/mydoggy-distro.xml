@@ -4,7 +4,7 @@
         <format>zip</format>
         <format>tar.gz</format>
     </formats>
-    
+
     <includeBaseDirectory>false</includeBaseDirectory>
 
     <moduleSets>
@@ -30,6 +30,9 @@
             </includes>
             <sources>
                 <outputDirectory>${artifactId}</outputDirectory>
+                <excludes>
+                    <exclude>**/target/**</exclude>
+                </excludes>
             </sources>
         </moduleSet>
     </moduleSets>
@@ -71,10 +74,10 @@
             <source>README.txt</source>
             <outputDirectory>.</outputDirectory>
         </file>
-		<file>
-			<source>makefile</source>
-			<outputDirectory>.</outputDirectory>
-		</file>
+        <file>
+            <source>makefile</source>
+            <outputDirectory>.</outputDirectory>
+        </file>
     </files>
 
 </assembly>
