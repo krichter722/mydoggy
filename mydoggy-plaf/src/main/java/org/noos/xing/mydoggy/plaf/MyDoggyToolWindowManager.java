@@ -751,10 +751,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                         }
                     }
                     if (shouldRequest) {
-                        lastFocusOwner.requestFocusInWindow();
+                        SwingUtil.requestFocus(lastFocusOwner);
+//                        lastFocusOwner.requestFocusInWindow();
                     }
                 }
-            } else activeToolWindowId = descriptor.getToolWindow().getId();
+            } else
+                activeToolWindowId = descriptor.getToolWindow().getId();
         }
     }
 

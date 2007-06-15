@@ -685,7 +685,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
             valueAdjusting = true;
 
-            System.out.println("cmp = " + component);
+            System.out.println(toolWindow.getId() + " - cmp = " + component);
 
             if (isInternalComponent(component)) {
                 toolWindow.setActive(true);
@@ -698,7 +698,8 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                         focusRequester.requestFocusInWindow();
                 }
             } else {
-                toolWindow.setActive(false);
+                descriptor.getToolBar().deactiveTool(toolWindow); 
+
                 if (toolWindow.isAutoHide())
                     toolWindow.setVisible(false);
             }

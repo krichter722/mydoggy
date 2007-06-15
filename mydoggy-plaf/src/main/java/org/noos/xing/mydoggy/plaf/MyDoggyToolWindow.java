@@ -475,6 +475,15 @@ public class MyDoggyToolWindow implements ToolWindow {
         return LOCK;
     }
 
+    public void forceVisible() {
+        marker = false;
+        try {
+            setVisible(true);
+        } finally {
+            marker = true;
+        }
+    }
+
     public ToolWindowDescriptor getDescriptor() {
         return descriptor;
     }
