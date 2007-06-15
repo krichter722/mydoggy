@@ -70,7 +70,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         setTitle(title);
         setIcon(icon);
         this.available = this.active = this.visible = this.maximized = this.aggregateEnabled = false;
-        aggregateEnabled = true;
+        aggregateEnabled = true;    // TODO: remove before release
     }
 
 

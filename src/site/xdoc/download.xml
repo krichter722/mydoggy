@@ -102,6 +102,7 @@
                     <li>To use mydoggy add to your classpath
                         <tt>mydoggy_1.3.0-api.jar</tt> and
                         <tt>mydoggy_1.3.0-plaf.jar</tt> and
+                        <tt>mydoggy_1.3.0-res.jar</tt> and
 						<tt>TableLayout-20020517.jar</tt>
 					</li>
                 </ol>

@@ -157,10 +157,9 @@ public class SampleApp {
                                                     treeContent);
         content.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/Content.html#setToolTipText(java.lang.String)">setToolTipText</a>("Tree tip");
 
-        <strong style="color:green"><a href="setupContentManagerUI">setupContentManagerUI</a>();</strong>
-     }
-
-    <strong style="color:green"><a name="setupContentManagerUI"/>
+        <a href="setupContentManagerUI">setupContentManagerUI</a>();
+    }
+    <a name="setupContentManagerUI"/>
     protected void setupContentManagerUI() {
         <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html">TabbedContentManagerUI</a> contentManagerUI = (TabbedContentManagerUI) toolWindowManager.getContentManager().<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html#getContentManagerUI()">getContentManagerUI</a>();
         contentManagerUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html#setShowAlwaysTab(boolean)">setShowAlwaysTab</a>(true);
@@ -183,8 +182,7 @@ public class SampleApp {
         contentUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentUI.html#setTransparentRatio(float)">setTransparentRatio</a>(0.7f);
         contentUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentUI.html#setTransparentDelay(int)">setTransparentDelay</a>(1000);
     }
-    </strong>
-
+    
     public static void main(String[] args) {
         SampleApp test = new SampleApp();
         try {
