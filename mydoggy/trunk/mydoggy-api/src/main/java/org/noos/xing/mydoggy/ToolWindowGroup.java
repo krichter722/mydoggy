@@ -72,8 +72,9 @@ public interface ToolWindowGroup {
     void setImplicit(boolean implicit);
 
     /**
-     * TODO: java docs
-     * @return
+     * Returns <tt>true</tt> if this is an implicit group, <tt>false</tt> otherwise.
+     *
+     * @return <tt>true</tt> if this is an implicit group, <tt>false</tt> otherwise.
      * @since 1.3.0
      */
     boolean isImplicit();
