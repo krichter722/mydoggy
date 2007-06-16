@@ -471,7 +471,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         propertyChangeSupport.addPropertyChangeListener("anchor", new AnchorPropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("type", new TypePropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("autoHide", new AutoHideChangeListener());
-        propertyChangeSupport.addPropertyChangeListener("maximized", new MaximizedChangeListener());
+
+        MaximizedChangeListener maximizedChangeListener = new MaximizedChangeListener();
+        propertyChangeSupport.addPropertyChangeListener("maximized", maximizedChangeListener);
+        propertyChangeSupport.addPropertyChangeListener("maximized.before", maximizedChangeListener);
         propertyChangeSupport.addPropertyChangeListener("index", new IndexChangeListener());
         propertyChangeSupport.addPropertyChangeListener("icon", new IconChangeListener());
         propertyChangeSupport.addPropertyChangeListener("title", new TitleChangeListener());

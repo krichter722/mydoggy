@@ -249,7 +249,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 }
             }
         });
-        addPropertyChangeListener("maximized", new PropertyChangeListener() {
+        addPropertyChangeListener("maximized.before", new PropertyChangeListener() {
             ByteArrayOutputStream workspace;
 
             public void propertyChange(PropertyChangeEvent evt) {
