@@ -643,11 +643,7 @@ public class AnchorLabelUI extends MetalLabelUI {
             // Prepare glassPane for ghost image
             glassPane.setVisible(true);
 
-            Point p = (Point) dge.getDragOrigin().clone();
-            SwingUtilities.convertPointToScreen(p, descriptor.getManager());
-            SwingUtilities.convertPointFromScreen(p, glassPane);
-
-            // Build orginalDragImage            
+            // Build orginalDragImage
             JComponent anchorLabel = descriptor.getAnchorLabel();
             ghostImage = new BufferedImage(anchorLabel.getWidth(), anchorLabel.getHeight(), BufferedImage.TYPE_INT_RGB);
             anchorLabel.print(ghostImage.createGraphics());
@@ -655,6 +651,8 @@ public class AnchorLabelUI extends MetalLabelUI {
             descriptor.getToolBar().propertyChange(new PropertyChangeEvent(label, "startDrag", null, dge));
 
             // Setup glasspane
+            Point p = (Point) dge.getDragOrigin().clone();
+            SwingUtilities.convertPointFromScreen(p, glassPane);
             glassPane.setPoint(p);
             glassPane.setDraggingImage(ghostImage);
             glassPane.repaint();

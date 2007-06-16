@@ -19,7 +19,7 @@
                             <td>
                                 <ul>
                                     <li>
-                                        Right-click on the representative toolwindow button. Now you can choose :
+                                        <strong style="color:green">Right-click</strong> on the representative toolwindow button. Now you can choose :
                                         <ul>
                                            <li>
                                                <strong style="color:green">Show</strong><br/>
@@ -32,6 +32,13 @@
                                                 with the same anchor then these two tools will be aggregate to be visible both.
                                             </li>
                                         </ul>
+                                    </li>
+                                    <li>
+                                        <strong style="color:green">Left-click</strong> on the representative toolwindow button.
+                                        If you press <strong style="color:green">SHIFT</strong> during the click then
+                                        if aggregateMode is disabled, aggregate method is used to show the tool else
+                                        if aggregateMode is enabled then the aggregateMode is temporarily disabled just to make
+                                        the tool visible without aggregation.
                                     </li>
                                 </ul>
                             </td>

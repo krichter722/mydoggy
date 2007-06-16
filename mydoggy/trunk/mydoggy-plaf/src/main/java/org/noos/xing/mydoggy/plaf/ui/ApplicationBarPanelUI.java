@@ -329,10 +329,6 @@ public class ApplicationBarPanelUI extends PanelUI {
 
             glassPane.setVisible(true);
 
-            Point p = (Point) dge.getDragOrigin().clone();
-            SwingUtilities.convertPointToScreen(p, descriptor.getManager());
-            SwingUtilities.convertPointFromScreen(p, glassPane);
-
             // Build orginalDragImage
             Component contentContainer = ((DockedContainer) descriptor.getToolWindowContainer()).getContentContainer();
             ghostImage = new BufferedImage(contentContainer.getWidth(),
@@ -340,6 +336,8 @@ public class ApplicationBarPanelUI extends PanelUI {
             contentContainer.print(ghostImage.getGraphics());
 
             // Setup glasspane
+            Point p = (Point) dge.getDragOrigin().clone();
+            SwingUtilities.convertPointFromScreen(p, glassPane);
             glassPane.setPoint(p);
             glassPane.setDraggingImage(ghostImage.getScaledInstance(contentContainer.getWidth() / 3,
                                                                     contentContainer.getHeight() / 3, BufferedImage.SCALE_SMOOTH));
