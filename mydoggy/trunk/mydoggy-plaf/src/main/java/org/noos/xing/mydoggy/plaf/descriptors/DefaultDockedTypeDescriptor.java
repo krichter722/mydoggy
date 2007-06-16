@@ -38,7 +38,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.toolWindowUI = new MyDoggyToolWindowUI();
         this.previewEnabled = true;
         this.previewDelay = 1000;
-        this.previewTransparentRatio = 0.75f;
+        this.previewTransparentRatio = 0.65f;
     }
 
     public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled,

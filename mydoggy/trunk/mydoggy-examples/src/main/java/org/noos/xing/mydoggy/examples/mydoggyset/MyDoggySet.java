@@ -9,8 +9,6 @@ import org.noos.xing.mydoggy.examples.mydoggyset.model.ToolsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.CheckBoxCellRenderer;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.MonitorPanel;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.RuntimeMemoryMonitorSource;
-import org.noos.xing.mydoggy.itest.Tracer;
-import org.noos.xing.mydoggy.itest.impl.tracer.ToolkitTracer;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.content.desktop.MyDoggyDesktopContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
@@ -61,9 +59,6 @@ public class MyDoggySet {
     }
 
     protected void setUp() {
-        Tracer tracer = new ToolkitTracer();
-        tracer.start();
-
         initComponents();
         initToolWindowManager();
     }
