@@ -14,6 +14,7 @@
                 a content manager. For example this is used to modify the way a content
                 is showed. 
             </p>
+            <a name="MyDoggyTabbedContentManagerUI"/>
             <subsection name="MyDoggyTabbedContentManagerUI">
                 <table>
                     <tbody>
@@ -36,6 +37,7 @@ contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
                     </tbody>
                 </table>
             </subsection>
+            <a name="MyDoggyDesktopContentManagerUI"/>
             <subsection name="MyDoggyDesktopContentManagerUI">
                 <table>
                     <tbody>

@@ -110,7 +110,7 @@ Changes
 
     Bug Resolved:
 
-    -- Alignment of dragged Button wrong : <a href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1734976&amp;group_id=178005&amp;atid=883495">Request ID 1734976</a>
+    -- Alignment of dragged Button wrong : Request ID 1734976
 
 - For 1.2.0
 
