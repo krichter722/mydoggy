@@ -187,10 +187,9 @@ public class MyDoggyToolWindow implements ToolWindow {
         }
     }
 
-    public boolean marker = true;
     public void setVisible(boolean visible) {
         if (aggregateEnabled && visible && !descriptor.getManager().isShiftShow() &&
-            getType() == ToolWindowType.DOCKED && marker)
+            getType() == ToolWindowType.DOCKED)
             aggregate();
 
         if (this.visible == visible)
@@ -472,15 +471,6 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     public final Object getLock() {
         return LOCK;
-    }
-
-    public void forceVisible() {
-        marker = false;
-        try {
-            setVisible(true);
-        } finally {
-            marker = true;
-        }
     }
 
     public ToolWindowDescriptor getDescriptor() {

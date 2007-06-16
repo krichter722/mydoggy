@@ -418,8 +418,15 @@ public class ApplicationBarPanelUI extends PanelUI {
                 assert destToolWindow != null;
 
                 ToolWindowAnchor anchor = destToolWindow.getAnchor();
-                toolWindow.setAnchor(anchor,
+
+                boolean oldAM = toolWindow.isAggregateMode();
+                try {
+                    toolWindow.setAggregateMode(true);
+                    toolWindow.setAnchor(anchor,
                                      ((MyDoggyToolWindow) destToolWindow).getDescriptor().getLabelIndex());
+                } finally {
+                    toolWindow.setAggregateMode(oldAM);
+                }
             }
 
             GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
