@@ -8,32 +8,43 @@
     </properties>
 
     <body>
-        <section name="MyDoggyToolWindowManager">
+        <section name="Introduction">
             <p>
-                To obtain an instance of <code>ToolWindowManager</code> interface you have to instantiate the
-                <code>MyDoggyToolWindowManager</code> class. This is the default implementation.
-                <br/>
-                To obtain an instance use the following (for example):
+                MyDoggy-Plaf contains the default implementation of mydoggy-api.<br/>
+                Here you can found information about :
             </p>
-            <source>ToolWindowManager toolWindowManager = new MyDoggyToolWindowManager(
-              frame,      // A window implementing the RootPaneContainer interface
-              Locale.getDefault() // A Locale instance
-);
-            </source>
-            <p>
-                A window implementing the <code>RootPaneContainer</code> interface is required because
-				<code>MyDoggyToolWindowManager</code> uses the glass pane for the <code>ToolWindowType.SLIDING</code> type.
-            </p>
-            <p>
-                MyDoggyToolWindowManager is implemented like a JPanel so you can use it like any other component.
-                <br/>
-                For example:
-            </p>
-            <source>JFrame frame = new JFrame("MyDoggy-Set...");
-...
-MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
-...
-frame.getContentPane().add(myDoggyToolWindowManager);</source>
+            <ul>
+                <li>
+                    <a href="./toolwindowManager.html">MyDoggyToolWindowManager</a> : the implementation of the ToolWindowManager interface.
+                    That interface is the main entry point to manager MyDoggy. Using this interface
+                    the user can register/unregister tool windows, groups. The user can get the
+                    content manager instance and type descriptor templates.
+                </li>
+                <li>
+                    <a href="./persistenceDelegate.html">XmlPersistenceDelegate</a> : the implementation of the PersistenceDelegate interface.
+                    That interface provides useful methods to save and load the tool window manager's workspace.
+                    When you request to save the workspace, all settings of ToolWindows with relative descriptors are saved.
+                    To obtain an instance of PersistenceDelegate you have to invoke the method <code>getPersistenceDelegate</code>
+                    of <code>ToolWindowManager</code> interface. So you can obtain a persistence delegate specific to a
+                    particular tool window manager.
+                </li>
+                <li>
+                    <a href="./contentManagerUI.html#MyDoggyTabbedContentManagerUI">MyDoggyTabbedContentManagerUI</a> :
+                    the implementation of the TabbedContentManagerUI interface.
+                    That interface represents a ui that use a component that lets the user switch between
+                    a group of components by clicking on a tab with a given title and/or icon (i.e. JTabbedPane).
+                </li>
+                <li>
+                    <a href="./contentManagerUI.html#MyDoggyDesktopContentManagerUI">MyDoggyDesktopContentManagerUI</a> :
+                    the implementation of the DesktopContentManagerUI interface.
+                    That interface represents a ui that use a container to create a multiple-document interface
+                    or a virtual desktop.
+                </li>
+                <li>
+                    <a href="./transparency.html">Transparency</a> : On Windows platform, starting from Windows 2000,
+                    you can see the transparency in action for floating tool window and for detached contents.
+                </li>
+            </ul>
         </section>
 
     </body>
