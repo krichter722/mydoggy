@@ -625,11 +625,13 @@ public class AnchorLabelUI extends MetalLabelUI {
         private ToolWindowAnchor lastAnchor;
 
         public void dragGestureRecognized(DragGestureEvent dge) {
-            // TODO: è la cosa migliore??
+            // TODO: is there a better way to do this?
+            // Check if a preview is still visible.
             GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
             if (previewPanel != null)
                 glassPane.remove(previewPanel);
 
+            // Start GestureRecognized
             if (DragAndDropLock.isLocked()) {
                 DragAndDropLock.setDragAndDropStarted(false);
                 return;
