@@ -3,7 +3,6 @@ package org.noos.xing.mydoggy.plaf.ui;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragAndDropLock;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTrasferable;
@@ -227,7 +226,12 @@ public class AnchorLabelUI extends MetalLabelUI {
                         toolWindow.setVisible(false);
                     } else {
                         if (toolWindow.isAggregateMode()) {
-                            ((MyDoggyToolWindow)toolWindow).forceVisible();
+                            toolWindow.setAggregateMode(false);
+                            try {
+                                toolWindow.setVisible(true);
+                            } finally {
+                                toolWindow.setAggregateMode(true);
+                            }
                         } else {
                             toolWindow.aggregate();
                         }

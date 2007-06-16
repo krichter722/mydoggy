@@ -9,22 +9,52 @@
 
     <body>
         <section name="MyDoggySet Using">
-            <subsection name="To show or hide a tool window">
+            <subsection name="To show tool window">
                 <table>
                     <tbody>
                         <tr>
                             <td>
-                                <img src="./images/toolwindowShowOrHide.png" alt="To show or hide a tool window" border="0" hspace="18"/>
+                                <img src="./images/toolwindowShow.png" alt="To show tool window" border="0" hspace="18"/>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li>
+                                        Right-click on the representative toolwindow button. Now you can choose :
+                                        <ul>
+                                           <li>
+                                               <strong style="color:green">Show</strong><br/>
+                                               The tool shows the component in a way that depends on tool window type and becomes visible.
+                                           </li>
+                                            <li>
+                                                <strong style="color:green">Aggregate</strong><br/>
+                                                Used to set to the true value the visible property of the tool.
+                                                The tool becomes visible in a special way. In fact, if there is another tool visible
+                                                with the same anchor then these two tools will be aggregate to be visible both.
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
+            <subsection name="To hide a tool window">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./images/toolwindowHide.png" alt="To hide a tool window" border="0" hspace="18"/>
                             </td>
                             <td>
                                 <ul>
                                     <li>
                                         Click
                                         <img src="./images/toolwindowHideButton.png" alt="Hide Button"/>
-                                        button on the titlebar of the tool window to hide.
+                                        button on the titlebar of the toolwindow to hide.
                                     </li>
                                     <li>
-                                        Right-click Tool Window button in the Tool Window Bar and choose Show/Hide on the context menu.
+                                        Right-click on the representative toolwindow button and choose <strong style="color:green">Hide</strong> on the context menu.
                                     </li>
                                 </ul>
                             </td>
@@ -42,11 +72,11 @@
                             <td>
                                 <ul>
                                     <li>
-                                        Right-click Tool Window button in the Tool Window Bar and choose Move on the context menu.
-                                        On the submenu, choose the destination Tool Window Bar.
+                                        Right-click on the representative toolwindow button and choose <strong style="color:green">Move</strong> on the context menu.
+                                        On the submenu, choose the destination anchor.
                                     </li>
                                     <li>
-                                        Drag the Tool Window button in the Tool Window Bar to the new position. 
+                                        Drag the representative toolwindow button or the titlebar to the new position. 
                                     </li>
                                 </ul>
                             </td>
@@ -65,16 +95,16 @@
                                 <ul>
                                     <li>
                                         Click
-                                        <img src="./images/toolwindowFloatingButton.png" alt="Hide Button"/>
-                                        button on the titlebar of the tool window to set <code>ToolWindowType.FLOATING</code> type.
+                                        <img src="./images/toolwindowFloatingButton.png" alt="Floating Button"/>
+                                        button on the titlebar of the toolwindow to set <code>ToolWindowType.FLOATING</code> type.
                                     </li>
                                     <li>
                                         Click
-                                        <img src="./images/toolwindowSlidingButton.png" alt="Hide Button"/>
-                                        button on the titlebar of the tool window to set <code>ToolWindowType.SLIDING</code> type.
+                                        <img src="./images/toolwindowSlidingButton.png" alt="Sliding Button"/>
+                                        button on the titlebar of the toolwindow to set <code>ToolWindowType.SLIDING</code> type.
                                     </li>
                                     <li>
-                                        Right-click Tool Window button in the Tool Window Bar and choose the mode.
+                                        Right-click on the representative toolwindow button and choose the mode.
                                     </li>
                                 </ul>
                             </td>

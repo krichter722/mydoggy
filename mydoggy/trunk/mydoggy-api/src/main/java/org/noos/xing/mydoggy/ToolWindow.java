@@ -91,7 +91,7 @@ public interface ToolWindow {
     /**
      * The method is used to set to the true value the visible property of the tool.
      * The tool becomes visible in a special way. In fact, if there is another tool visible
-     * with the same anchor than these two tools will be aggregate to be visible both.
+     * with the same anchor then these two tools will be aggregate to be visible both.
      *
      * @since 1.2.0
      */

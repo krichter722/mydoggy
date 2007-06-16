@@ -38,5 +38,23 @@
                 </tbody>
             </table>
         </section>
+
+        <section name="SampleApp">
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <img src="./images/sampleApp.png" alt="SampleApp" border="0" hspace="18"/>
+                        </td>
+                        <td>
+                            <p>
+                                SampleApp is the result of the <a href="./../tutorial/tutorial.html">tutorial</a>
+                                based on the <a href="./../mydoggy-plaf/index.html">default implementation</a> of mydoggy.
+							</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
     </body>
 </document>
