@@ -16,11 +16,16 @@ import java.io.OutputStream;
  */
 public interface PersistenceDelegate {
 
-    /**
-     * TODO:
-     */
     enum MergePolicy {
+        /**
+         * All settings suggested by the stream will be applied.
+         */
         RESET,
+
+        /**
+         * if a toolwindow is already visible but the stream suggests to hide it then no action will be taken.
+         * The toolwindow will remain visible
+         */
         UNION
     }
 
