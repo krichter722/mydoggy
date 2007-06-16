@@ -51,6 +51,15 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         }
     }
 
+    public JViewport getViewport() {
+        return viewport;
+    }
+
+    public JPanel getTabContainer() {
+        return tabContainer;
+    }
+
+
     protected void initComponents() {
         setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL, 1, 14}, {0, TableLayout.FILL, 0}}, false));
         setFocusable(false);
@@ -163,7 +172,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 else
                     addTab(event.getToolWindowTab());
 
-                popupButton.setVisible(toolWindow.getToolWindowTabs().length > 1);
+                setPopupButtonVisibility();
             }
 
             public boolean toolWindowTabRemoving(ToolWindowTabEvent event) {
@@ -183,7 +192,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                     }
                 }
 
-                popupButton.setVisible(toolWindow.getToolWindowTabs().length > 1);
+                setPopupButtonVisibility();
             }
         });
         viewport.addMouseListener(dockedContainer.getApplicationBarMouseAdapter());
@@ -194,7 +203,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             addTab(tab);
         }
 
-        popupButton.setVisible(toolWindow.getToolWindowTabs().length > 1);
+        setPopupButtonVisibility();
     }
 
     protected void addTab(ToolWindowTab tab) {
@@ -249,14 +258,13 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         return null;
     }
 
-    public JViewport getViewport() {
-        return viewport;
-    }
+    protected void setPopupButtonVisibility() {
+        boolean visible = toolWindow.getToolWindowTabs().length > 1;
+        popupButton.setVisible(visible);
 
-    public JPanel getTabContainer() {
-        return tabContainer;
+        ((TableLayout)getLayout()).setColumn(2, visible ? 14 : 0);
     }
-
+    
 
     class TabButton extends JLabel implements PropertyChangeListener {
         ToolWindowTab tab;
