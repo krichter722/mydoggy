@@ -73,7 +73,7 @@ public class MyDoggySet {
 
 
     protected void initComponents() {
-        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+        JPopupMenu.setDefaultLightWeightPopupEnabled(true);
 
         this.frame = new JFrame("MyDoggy-Set...");
         this.frame.setSize(640, 480);

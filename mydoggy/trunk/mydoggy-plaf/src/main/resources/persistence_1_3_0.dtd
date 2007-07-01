@@ -13,25 +13,34 @@
         <!ELEMENT tool (descriptors)*>
         <!ATTLIST tool
                 active CDATA #REQUIRED
+                aggregateMode CDATA #REQUIRED
                 anchor CDATA #REQUIRED
                 autoHide CDATA #REQUIRED
                 available CDATA #REQUIRED
                 id CDATA #REQUIRED
+                index CDATA #REQUIRED
+                maximized CDATA #REQUIRED
                 type CDATA #REQUIRED
                 visible CDATA #REQUIRED>
         <!ELEMENT descriptors (docked|sliding|floating)*>
         <!ELEMENT docked (#PCDATA)>
         <!ATTLIST docked
+                animating CDATA #REQUIRED
                 dockLength CDATA #REQUIRED
-                popupMenuEnabled CDATA #REQUIRED>
+                popupMenuEnabled CDATA #REQUIRED
+                previewDelay CDATA #REQUIRED
+                previewEnabled CDATA #REQUIRED
+                previewTransparentRatio CDATA #REQUIRED>
         <!ELEMENT sliding (#PCDATA)>
         <!ATTLIST sliding
+                animating CDATA #REQUIRED
                 enabled CDATA #REQUIRED
                 transparentDelay CDATA #REQUIRED
                 transparentMode CDATA #REQUIRED
                 transparentRatio CDATA #REQUIRED>
         <!ELEMENT floating (#PCDATA)>
         <!ATTLIST floating
+                animating CDATA #REQUIRED
                 enabled CDATA #REQUIRED
                 height CDATA #IMPLIED
                 modal CDATA #REQUIRED
@@ -41,4 +50,3 @@
                 width CDATA #IMPLIED
                 x CDATA #IMPLIED
                 y CDATA #IMPLIED>
-

@@ -102,18 +102,18 @@ public class GlassPanel extends JPanel implements ContainerListener {
     public void componentAdded(ContainerEvent e) {
         setVisible(true);
         if (getComponentCount() == 1) {
-            addMouseListener(adapter);
-            addMouseMotionListener(adapter);
-            addMouseWheelListener(adapter);
+//            addMouseListener(adapter);
+//            addMouseMotionListener(adapter);
+//            addMouseWheelListener(adapter);
         }
     }
 
     public void componentRemoved(ContainerEvent e) {
         if (getComponentCount() == 0) {
             setVisible(false);
-            removeMouseListener(adapter);
-            removeMouseMotionListener(adapter);
-            removeMouseWheelListener(adapter);
+//            removeMouseListener(adapter);
+//            removeMouseMotionListener(adapter);
+//            removeMouseWheelListener(adapter);
         }
     }
 
