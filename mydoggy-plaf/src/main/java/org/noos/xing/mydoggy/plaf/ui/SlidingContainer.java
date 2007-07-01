@@ -25,7 +25,7 @@ public class SlidingContainer extends FloatingContainer {
     private SlidingBorder border;
     private Container barContainer;
 
-    private JLayeredPane glassPane;
+    private JLayeredPane layeredPane;
 
     private SlidingMouseInputHandler slidingMouseInputHandler;
 
@@ -71,13 +71,13 @@ public class SlidingContainer extends FloatingContainer {
             sheet.setBorder(border);
 
             int height = mainPanel.getHeight();
-            Point point = SwingUtilities.convertPoint(mainPanel, 0, 0, glassPane);
+            Point point = SwingUtilities.convertPoint(mainPanel, 0, 0, layeredPane);
 
             sheet.setBounds(point.x, point.y, mainPanel.getWidth(), height);
 
-            glassPane.remove(sheet);
-            glassPane.setLayer(sheet,1);
-            glassPane.add(sheet);
+            layeredPane.remove(sheet);
+            layeredPane.setLayer(sheet,1);
+            layeredPane.add(sheet);
 
             if (descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isAnimating())
                 slidingAnimation.show(sheet.getBounds());
@@ -103,7 +103,7 @@ public class SlidingContainer extends FloatingContainer {
             if (descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isAnimating())
                 slidingAnimation.hide(sheet.getBounds());
             else {
-                glassPane.remove(sheet);
+                layeredPane.remove(sheet);
                 sheet.setBorder(null);
                 sheet.removeAll();
             }
@@ -134,14 +134,14 @@ public class SlidingContainer extends FloatingContainer {
         sheet.setBorder(border);
 
         int height = mainPanel.getHeight();
-        Point point = SwingUtilities.convertPoint(mainPanel, 0, 0, glassPane);
+        Point point = SwingUtilities.convertPoint(mainPanel, 0, 0, layeredPane);
 
         sheet.setBounds(point.x, point.y, mainPanel.getWidth(), height);
 
-        glassPane.remove(sheet);
-        glassPane.setLayer(sheet, 1);
-        glassPane.add(sheet);
-        glassPane.validate();
+        layeredPane.remove(sheet);
+        layeredPane.setLayer(sheet, 1);
+        layeredPane.add(sheet);
+        layeredPane.validate();
     }
 
     protected void resize() {
@@ -197,7 +197,7 @@ public class SlidingContainer extends FloatingContainer {
 
         Window anchestor = descriptor.getWindowAnchestor();
         if (anchestor instanceof RootPaneContainer) {
-            glassPane = ((RootPaneContainer) anchestor).getLayeredPane();
+            layeredPane = ((RootPaneContainer) anchestor).getLayeredPane();
 
             anchestor.addComponentListener(new ComponentAdapter() {
                 public void componentResized(ComponentEvent e) {
@@ -224,12 +224,12 @@ public class SlidingContainer extends FloatingContainer {
 
                 assert "type".equals(evt.getPropertyName());
                 if (evt.getNewValue() == ToolWindowType.SLIDING) {
-                    if (glassPane != null) {
+                    if (layeredPane != null) {
                         sheet.addMouseMotionListener(slidingMouseInputHandler);
                         sheet.addMouseListener(slidingMouseInputHandler);
                     }
                 } else {
-                    if (glassPane != null) {
+                    if (layeredPane != null) {
                         sheet.removeMouseMotionListener(slidingMouseInputHandler);
                         sheet.removeMouseListener(slidingMouseInputHandler);
                     }
@@ -359,7 +359,7 @@ public class SlidingContainer extends FloatingContainer {
                     sheet.setBounds(bounds);
                     break;
                 case OUTGOING:
-                    glassPane.remove(sheet);
+                    layeredPane.remove(sheet);
                     sheet.setBorder(null);
                     sheet.removeAll();
                     break;
@@ -471,7 +471,7 @@ public class SlidingContainer extends FloatingContainer {
                         timer.start();
                     }
                 }
-                SwingUtil.repaint(glassPane);
+                SwingUtil.repaint(layeredPane);
             }
         }
 
