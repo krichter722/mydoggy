@@ -310,6 +310,18 @@ public class MyDoggyToolWindow implements ToolWindow {
             if (this.type == type)
                 return;
 
+            switch (type) {
+                case SLIDING:
+                    if (!((SlidingTypeDescriptor) getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled())
+                        return;
+                    break;
+                case FLOATING:
+                case FLOATING_FREE:
+                    if (!((FloatingTypeDescriptor) getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled())
+                        return;
+                    break;
+            }
+
             if (isMaximized())
                 setMaximized(false);
             

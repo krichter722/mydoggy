@@ -183,7 +183,8 @@ public class ContentPage implements TabbedContentUI {
                 titleIcon = new DynamicTextIcon();
 
             // Right Part
-            contentIcon = new CompositeIcon(new CompositeIcon(icon, titleIcon, SwingConstants.LEFT),
+            // TODO: Controllare allineamento... 
+            contentIcon = new CompositeIcon(new CompositeIcon(icon, titleIcon, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.TOP),
                                             new DoubleIcon(), SwingConstants.LEFT,
                                             SwingConstants.LEFT, SwingConstants.TOP);
         }
@@ -233,7 +234,7 @@ public class ContentPage implements TabbedContentUI {
         if (popupMenu == null) {
             if (stdPopupMenu == null) {
                 // Init stdPopupMenu
-                stdPopupMenu = new JPopupMenu("CPP");
+                stdPopupMenu = new JPopupMenu("Content Page Popup");
                 stdPopupMenu.add(new JMenuItem(new AbstractAction(ResourceBoundles.getResourceBundle().getString("@@tabbed.page.close")) {
                     public void actionPerformed(ActionEvent e) {
                         tabbedPane.fireCloseTabEvent(mouseEvent, mouseOverTab);

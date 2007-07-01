@@ -25,7 +25,7 @@ public class SlidingContainer extends FloatingContainer {
     private SlidingBorder border;
     private Container barContainer;
 
-    private Container glassPane;
+    private JLayeredPane glassPane;
 
     private SlidingMouseInputHandler slidingMouseInputHandler;
 
@@ -41,6 +41,7 @@ public class SlidingContainer extends FloatingContainer {
 
     public void setVisible(boolean visible, Container barContainer) {
         this.barContainer = barContainer;
+
         Component content = getContentContainer();
         sheet.remove(content);
 
@@ -75,6 +76,7 @@ public class SlidingContainer extends FloatingContainer {
             sheet.setBounds(point.x, point.y, mainPanel.getWidth(), height);
 
             glassPane.remove(sheet);
+            glassPane.setLayer(sheet,1);
             glassPane.add(sheet);
 
             if (descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isAnimating())
@@ -137,6 +139,7 @@ public class SlidingContainer extends FloatingContainer {
         sheet.setBounds(point.x, point.y, mainPanel.getWidth(), height);
 
         glassPane.remove(sheet);
+        glassPane.setLayer(sheet, 1);
         glassPane.add(sheet);
         glassPane.validate();
     }
@@ -194,7 +197,7 @@ public class SlidingContainer extends FloatingContainer {
 
         Window anchestor = descriptor.getWindowAnchestor();
         if (anchestor instanceof RootPaneContainer) {
-            glassPane = (Container) ((RootPaneContainer) anchestor).getGlassPane();
+            glassPane = ((RootPaneContainer) anchestor).getLayeredPane();
 
             anchestor.addComponentListener(new ComponentAdapter() {
                 public void componentResized(ComponentEvent e) {
@@ -468,8 +471,7 @@ public class SlidingContainer extends FloatingContainer {
                         timer.start();
                     }
                 }
-                JFrame frame = (JFrame) descriptor.getWindowAnchestor();
-                SwingUtil.repaint(frame.getRootPane().getGlassPane());
+                SwingUtil.repaint(glassPane);
             }
         }
 

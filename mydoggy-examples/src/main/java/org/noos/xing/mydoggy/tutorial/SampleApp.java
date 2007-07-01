@@ -4,8 +4,10 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class SampleApp {
@@ -20,10 +22,6 @@ public class SampleApp {
     protected void start() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                // Set debug tool active
-                ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
-                debugTool.setActive(true);
-
                 frame.setVisible(true);
             }
         });
@@ -46,12 +44,19 @@ public class SampleApp {
         MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
         this.toolWindowManager = myDoggyToolWindowManager;
 
+
+        JPanel panel = new JPanel(new TableLayout(new double[][]{{-1,50,-1},{-1,20,-1}}));
+        JComboBox box = new JComboBox(new Object[]{
+                "1","1","1","1","1","1","1","1","1","1","1","1","1","1","1",
+        });
+        panel.add(box,"1,1,FULL,FULL");
+
         // Register a Tool.
         toolWindowManager.registerToolWindow("Debug",                      // Id
                                              "Debug Tool",                 // Title
                                              null,                         // Icon
-                                             new JButton("Debug Tool"),    // Component
-                                             ToolWindowAnchor.LEFT);       // Anchor
+                                             panel,    // Component
+                                             ToolWindowAnchor.LEFT).setType(ToolWindowType.SLIDING);       // Anchor
 
         setupDebugTool();
 
@@ -91,7 +96,7 @@ public class SampleApp {
         dockedTypeDescriptor.setPreviewTransparentRatio(0.4f);
 
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
-        slidingTypeDescriptor.setEnabled(false);
+        slidingTypeDescriptor.setEnabled(true);
         slidingTypeDescriptor.setTransparentMode(true);
         slidingTypeDescriptor.setTransparentRatio(0.8f);
         slidingTypeDescriptor.setTransparentDelay(0);
@@ -127,6 +132,7 @@ public class SampleApp {
                                                     null,      // An icon
                                                     treeContent);
         content.setToolTipText("Tree tip");
+        content.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/examples/mydoggyset/icons/save.png"));
 
         setupContentManagerUI();
      }
