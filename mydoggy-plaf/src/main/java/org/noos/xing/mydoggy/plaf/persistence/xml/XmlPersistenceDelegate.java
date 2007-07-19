@@ -44,6 +44,8 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
                 saveToolWindow(writer, toolWindow);
             writer.endElement("tools");
 
+            saveContentManager(writer);
+
             writer.endElement("mydoggy");
             writer.endDocument();
 
@@ -53,30 +55,6 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void saveToolWindowManagerDescriptor(XMLWriter writer) throws SAXException{
-        // Start pushAway
-        writer.startElement("pushAway");
-
-        // start MOST_RECENT policy
-        AttributesImpl policyAttributes = new AttributesImpl();
-        policyAttributes.addAttribute(null, "type", null, null, String.valueOf(PushAwayMode.MOST_RECENT));
-        writer.startElement("mode", policyAttributes);
-
-        MostRecentDescriptor mostRecentDescriptor = (MostRecentDescriptor) toolWindowManager.getToolWindowManagerDescriptor().getPushAwayModeDescriptor(PushAwayMode.MOST_RECENT);
-
-        for (ToolWindowAnchor toolWindowAnchor : mostRecentDescriptor.getMostRecentAnchors()) {
-            AttributesImpl anchorAttributes = new AttributesImpl();
-            anchorAttributes.addAttribute(null, "type", null, null, String.valueOf(toolWindowAnchor));
-            writer.dataElement("anchor", anchorAttributes);
-        }
-
-        // end MOST_RECENT policy
-        writer.endElement("mode");
-
-        // End pushAway
-        writer.endElement("pushAway");
     }
 
     public void apply(InputStream inputStream) {
@@ -96,6 +74,7 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
             ioe.printStackTrace();
         }
     }
+
 
     protected void saveToolWindow(XMLWriter writer, ToolWindow toolWindow) throws SAXException {
         AttributesImpl toolAttributes = new AttributesImpl();
@@ -160,5 +139,49 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
 
         writer.endElement("descriptors");
         writer.endElement("tool");
+    }
+
+    protected void saveToolWindowManagerDescriptor(XMLWriter writer) throws SAXException{
+        // Start pushAway
+        writer.startElement("pushAway");
+
+        // start MOST_RECENT policy
+        AttributesImpl policyAttributes = new AttributesImpl();
+        policyAttributes.addAttribute(null, "type", null, null, String.valueOf(PushAwayMode.MOST_RECENT));
+        writer.startElement("mode", policyAttributes);
+
+        MostRecentDescriptor mostRecentDescriptor = (MostRecentDescriptor) toolWindowManager.getToolWindowManagerDescriptor().getPushAwayModeDescriptor(PushAwayMode.MOST_RECENT);
+
+        for (ToolWindowAnchor toolWindowAnchor : mostRecentDescriptor.getMostRecentAnchors()) {
+            AttributesImpl anchorAttributes = new AttributesImpl();
+            anchorAttributes.addAttribute(null, "type", null, null, String.valueOf(toolWindowAnchor));
+            writer.dataElement("anchor", anchorAttributes);
+        }
+
+        // end MOST_RECENT policy
+        writer.endElement("mode");
+
+        // End pushAway
+        writer.endElement("pushAway");
+    }
+
+    protected void saveContentManager(XMLWriter writer) throws SAXException {
+        // Start contentManager
+        writer.startElement("contentManager");
+
+        for (Content content : toolWindowManager.getContentManager().getContents()) {
+
+            AttributesImpl contentAttributes = new AttributesImpl();
+            contentAttributes.addAttribute(null, "key", null, null, String.valueOf(content.getKey()));
+            contentAttributes.addAttribute(null, "detached", null, null, String.valueOf(content.isDetached()));
+            contentAttributes.addAttribute(null, "enabled", null, null, String.valueOf(content.isEnabled()));
+            contentAttributes.addAttribute(null, "selected", null, null, String.valueOf(content.isSelected()));
+
+            writer.dataElement("content", contentAttributes);
+        }
+
+        // End contentManager
+        writer.endElement("contentManager");
+
     }
 }
