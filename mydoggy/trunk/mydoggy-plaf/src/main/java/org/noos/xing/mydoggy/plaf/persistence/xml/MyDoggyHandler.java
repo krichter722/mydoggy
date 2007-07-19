@@ -20,11 +20,11 @@ public class MyDoggyHandler extends DefaultHandler {
         NOP,
         MYDOGGY,
         SUB_SECTION,
-        TOOLS,
         TOOL,
-        DESCRIPTOR,
+        DESCRIPTORS,
         PUSH_AWAY_MODE,
-        PUSH_AWAY_MOST_RECENT_MODE
+        PUSH_AWAY_MOST_RECENT_MODE,
+        CONTENT_MANAGER
     }
 
     private ToolWindowManager toolWindowManager;
@@ -39,6 +39,7 @@ public class MyDoggyHandler extends DefaultHandler {
     private PersistedSlidingType slidingType;
     private PersistedFloatingType floatingType;
     private PersistedMostRecentDescriptor persistedMostRecentDescriptor;
+    private PersistedContentManager persistedContentManager;
 
     private Map<ToolWindow, PersistedToolWindow> map;
 
@@ -82,8 +83,11 @@ public class MyDoggyHandler extends DefaultHandler {
                     state = State.PUSH_AWAY_MODE;
                 } else if ("tools".equals(qName)) {
                     state = State.TOOL;
+                } else if ("contentManager".equals(qName)) {
+                    state = State.CONTENT_MANAGER;
+                    persistedContentManager = new PersistedContentManager();
                 } else
-                    throw new SAXException("Invalid element at this position. Expecting <pushAway> or <tools>");
+                    throw new SAXException("Invalid element at this position. Expecting <pushAway> or <tools> or <contentManager>");
                 break;
             case PUSH_AWAY_MODE:
                 if ("mode".equals(qName)) {
@@ -112,7 +116,7 @@ public class MyDoggyHandler extends DefaultHandler {
                     dockedType = null;
                     slidingType = null;
                     floatingType = null;
-                    subState = State.DESCRIPTOR;
+                    subState = State.DESCRIPTORS;
                 } else {
                     if ("docked".equals(qName)) {
                         dockedType = new PersistedDockedType(attributes);
@@ -122,6 +126,13 @@ public class MyDoggyHandler extends DefaultHandler {
                         floatingType = new PersistedFloatingType(attributes);
                     }
                 }
+                break;
+            case CONTENT_MANAGER:
+                if ("content".equals(qName)) {
+                    persistedContentManager.getContents().add(new PersistedContent(attributes));
+                } else
+                    throw new SAXException("Invalid element at this position. Expecting <content>");
+
                 break;
         }
     }
@@ -180,10 +191,10 @@ public class MyDoggyHandler extends DefaultHandler {
 
                         map.put(toolWindow, persistedToolWindow);
                     }
+                } else if ("tools".equals(qName)) {
+                    state = State.SUB_SECTION;
+                    subState = State.NOP;
                 }
-                break;
-            case TOOLS:
-                state = State.TOOLS;
                 break;
             case MYDOGGY:
                 state = State.MYDOGGY;
@@ -196,21 +207,39 @@ public class MyDoggyHandler extends DefaultHandler {
                 break;
         }
         if ("mydoggy".equals(qName)) {
-            load(ToolWindowAnchor.LEFT);
-            load(ToolWindowAnchor.BOTTOM);
-            load(ToolWindowAnchor.RIGHT);
-            load(ToolWindowAnchor.TOP);
+            applyTo(ToolWindowAnchor.LEFT);
+            applyTo(ToolWindowAnchor.BOTTOM);
+            applyTo(ToolWindowAnchor.RIGHT);
+            applyTo(ToolWindowAnchor.TOP);
 
+            // PushAwayModeDescriptors
             if (persistedMostRecentDescriptor != null)
                 ((MostRecentDescriptor) toolWindowManager.getToolWindowManagerDescriptor().getPushAwayModeDescriptor(PushAwayMode.MOST_RECENT)).
                         append(persistedMostRecentDescriptor.getStack().toArray(new ToolWindowAnchor[0]));
 
             if (persistedToolWindowManager.getPushAwayMode() != null)
                 toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(persistedToolWindowManager.getPushAwayMode());
+
+            // ContentManager
+            Content selectedContent = null;
+            for (PersistedContent persistedContent : persistedContentManager.getContents()) {
+                Content content = toolWindowManager.getContentManager().getContent(persistedContent.getKey());
+
+                if (content != null) {
+                    if (persistedContent.isSelected())
+                        selectedContent = content;
+
+                    content.setEnabled(persistedContent.isEnabled());
+                    content.setDetached(persistedContent.isDetached());
+                }
+            }
+
+            if (selectedContent != null)
+                selectedContent.setSelected(true);
         }
     }
 
-    protected void load(ToolWindowAnchor anchor) {
+    protected void applyTo(ToolWindowAnchor anchor) {
         ToolWindow activeTool = null;
         ToolWindow maximizedTool = null;
 
