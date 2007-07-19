@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.examples.mydoggyset;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ContentsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ToolGroupsTableModel;
@@ -59,6 +60,14 @@ public class MyDoggySet {
     }
 
     protected void setUp() {
+/*
+        try {
+            UIManager.setLookAndFeel(new SubstanceBusinessLookAndFeel());
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+*/
+
         initComponents();
         initToolWindowManager();
     }
@@ -380,11 +389,23 @@ public class MyDoggySet {
 //        tabbedContentManagerUI.setCloseable(false);
 //        tabbedContentManagerUI.setDetachable(false);
 
+        defaultManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
+            public boolean contentUIRemoving(ContentManagerUIEvent event) {
+                return JOptionPane.showConfirmDialog(frame, "Are you sure?") == JOptionPane.OK_OPTION;
+            }
+
+            public void contentUIDetached(ContentManagerUIEvent event) {
+                JOptionPane.showMessageDialog(frame, "Hello World!!!");
+            }
+        });
+
+
         toolWindowManager.getContentManager().addContent("Tools", "Tools", null, toolsContent, "ToolWindows")
                 .setPopupMenu(toolsPopupMenu);
         assert toolWindowManager.getContentManager().getContentManagerUI().getContentUI(
                 toolWindowManager.getContentManager().getContent(0)
         ) != null;
+        toolWindowManager.getContentManager().addContent("Group Editor", "Group Editor", null, groupEditorContent, "ToolWindowGroup").setPopupMenu(groupsPopupMenu);
 
         ToolWindowManagerDescriptor managerDescriptor = toolWindowManager.getToolWindowManagerDescriptor();
         managerDescriptor.setCornerComponent(NORD_WEST, new JLabel("NW"));

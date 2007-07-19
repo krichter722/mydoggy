@@ -7,7 +7,6 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class SampleApp {
@@ -151,6 +150,7 @@ public class SampleApp {
                 JOptionPane.showMessageDialog(frame, "Hello World!!!");
             }
         });
+
 
         TabbedContentUI contentUI = contentManagerUI.getContentUI(toolWindowManager.getContentManager().getContent(0));
 

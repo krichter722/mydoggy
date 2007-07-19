@@ -45,9 +45,9 @@
     </modules>
 
     <scm>
-        <connection>scm:svn:https://svn.sourceforge.net/svnroot/mydoggy/mydoggy/trunk</connection>
-        <developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/mydoggy/mydoggy/trunk</developerConnection>
-        <url>http://svn.sourceforge.net/viewvc/mydoggy/mydoggy/trunk</url>
+        <connection>scm:svn:https://mydoggy.svn.sourceforge.net/svnroot/mydoggy/mydoggy/trunk</connection>
+        <developerConnection>scm:svn:https://mydoggy.svn.sourceforge.net/svnroot/mydoggy/mydoggy/trunk</developerConnection>
+        <url>http://mydoggy.svn.sourceforge.net/viewvc/mydoggy/mydoggy/trunk/</url>
     </scm>
 
     <profiles>
