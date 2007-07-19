@@ -24,6 +24,15 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library name="substance">
+        <CLASSES>
+          <root url="jar://D:/Java/Lib/substance-all/substance.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntryProperties />
   </component>
   <component name="POM File Configuration" pomFile="file://$MODULE_DIR$/pom.xml" />
