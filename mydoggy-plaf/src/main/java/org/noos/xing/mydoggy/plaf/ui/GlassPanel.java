@@ -1,7 +1,5 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ContainerEvent;
@@ -26,7 +24,7 @@ public class GlassPanel extends JPanel implements ContainerListener {
 
     public GlassPanel(RootPaneContainer rootPaneContainer) {
         this.rootPaneContainer = rootPaneContainer;
-        
+
         setOpaque(false);
         setVisible(false);
         setLayout(null);
@@ -61,7 +59,7 @@ public class GlassPanel extends JPanel implements ContainerListener {
     public Rectangle getRepaintRect() {
         if (location == null || oldLocation == null)
             return getBounds();
-        
+
         int x = (int) (location.getX() - (width / 2d));
         int y = (int) (location.getY() - (height / 2d));
 
@@ -127,7 +125,7 @@ public class GlassPanel extends JPanel implements ContainerListener {
     protected GlassPanel mount() {
         if (rootPaneContainer.getGlassPane() == this)
             return this;
-        
+
         oldGlassPanel = rootPaneContainer.getGlassPane();
         rootPaneContainer.setGlassPane(this);
         return this;
