@@ -49,6 +49,7 @@ public class ApplicationBarPanelUI extends PanelUI {
     private Timer flashingTimer;
     private int flasingDuration;
     private boolean flashingState;
+    private AbstractAnimation flashingAnimation;
 
     public ApplicationBarPanelUI(ToolWindowDescriptor descriptor, DockedContainer dockedContainer) {
         this.descriptor = descriptor;
@@ -65,6 +66,8 @@ public class ApplicationBarPanelUI extends PanelUI {
         animBackStart = new MutableColor(backStartDisabled);
         animBackEnd = new MutableColor(0, 0, 0);
         animTextColor = new MutableColor(0, 0, 0);
+
+        flashingAnimation = new GradientAnimation(700f);
 
         animation = new GradientAnimation();
 
@@ -141,14 +144,16 @@ public class ApplicationBarPanelUI extends PanelUI {
     public void update(Graphics g, JComponent c) {
         Rectangle r = c.getBounds();
         r.x = r.y = 0;
+        
         if (toolWindow.isFlashing()) {
+
             if (flashingState)
-                updateInternal(g, c, backStartEnabled, backEndEnabled, Colors.lightBlu, Color.BLACK);
+                updateInternal(g, c, animBackStart, animBackEnd, Colors.lightBlu, animTextColor);
             else
-                updateInternal(g, c, backStartDisabled, backEndDisabled, Color.LIGHT_GRAY, Color.GRAY);
+                updateInternal(g, c, animBackStart, animBackEnd, Color.LIGHT_GRAY, animTextColor);
 
             if (flashingTimer == null) {
-                flashingTimer = new Timer(500, new ActionListener() {
+                flashingTimer = new Timer(700, new ActionListener() {
                     long start = 0;
 
                     public void actionPerformed(ActionEvent e) {
@@ -156,12 +161,21 @@ public class ApplicationBarPanelUI extends PanelUI {
                             start = System.currentTimeMillis();
 
                         flashingState = !flashingState;
-                        SwingUtil.repaint(panel);
+                        if (flashingAnimation.isAnimating())
+                            flashingAnimation.stop();
+
+                        if (flashingState) {
+                            flashingAnimation.show();
+                        } else {
+                            flashingAnimation.hide();
+                        }
 
                         if (flasingDuration != -1 && System.currentTimeMillis() - start > flasingDuration)
                             toolWindow.setFlashing(false);
                     }
                 });
+                flashingState = true;
+                flashingAnimation.show();
             }
             if (!flashingTimer.isRunning()) {
                 flashingTimer.start();
@@ -250,6 +264,10 @@ public class ApplicationBarPanelUI extends PanelUI {
 
         public GradientAnimation() {
             super(300f);
+        }
+
+        private GradientAnimation(float animationDuration) {
+            super(animationDuration);
         }
 
         protected float onAnimating(float animationPercent) {

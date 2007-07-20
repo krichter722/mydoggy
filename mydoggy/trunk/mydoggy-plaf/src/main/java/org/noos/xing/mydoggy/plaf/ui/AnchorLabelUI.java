@@ -10,6 +10,7 @@ import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.translucent.TranslucentPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
@@ -47,6 +48,10 @@ public class AnchorLabelUI extends MetalLabelUI {
     private Timer flashingTimer;
     private int flasingDuration;
     private boolean flashingState;
+    private MutableColor flashingAnimBackStart = new MutableColor(gray);
+    private MutableColor flashingAnimBackEnd = new MutableColor(gray);
+    private AbstractAnimation flashingAnimation = new GradientAnimation();
+
 
     private TranslucentPanel previewPanel;
 
@@ -104,18 +109,15 @@ public class AnchorLabelUI extends MetalLabelUI {
 
     public void update(Graphics g, JComponent c) {
         Rectangle bounds = c.getBounds();
-        if (toolWindow.isFlashing()) {
+        if (toolWindow.isFlashing() && !toolWindow.isVisible()) {
 
-            if (flashingState) {
-                GraphicsUtil.fillRect(g, new Rectangle(0, 0, bounds.width, bounds.height),
-                                      start, end, null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
-            } else {
-                g.setColor(gray);
-                g.fillRect(0, 0, bounds.width, bounds.height);
-            }
+            GraphicsUtil.fillRect(g, new Rectangle(0, 0, bounds.width, bounds.height),
+                                  flashingAnimBackStart,
+                                  flashingAnimBackEnd,
+                                  null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
 
             if (flashingTimer == null) {
-                flashingTimer = new Timer(500, new ActionListener() {
+                flashingTimer = new Timer(600, new ActionListener() {
                     long start = 0;
 
                     public void actionPerformed(ActionEvent e) {
@@ -123,12 +125,22 @@ public class AnchorLabelUI extends MetalLabelUI {
                             start = System.currentTimeMillis();
 
                         flashingState = !flashingState;
-                        SwingUtil.repaint(label);
+
+                        if (flashingAnimation.isAnimating())
+                            flashingAnimation.stop();
+
+                        if (flashingState) {
+                            flashingAnimation.show();
+                        } else {
+                            flashingAnimation.hide();
+                        }
 
                         if (flasingDuration != -1 && System.currentTimeMillis() - start > flasingDuration)
                             toolWindow.setFlashing(false);
                     }
                 });
+                flashingState = true;
+                flashingAnimation.show();
             }
             if (!flashingTimer.isRunning()) {
                 flashingTimer.start();
@@ -185,6 +197,7 @@ public class AnchorLabelUI extends MetalLabelUI {
     public ToolWindowDescriptor getDescriptor() {
         return descriptor;
     }
+
 
     class AnchorLabelMouseAdapter extends MouseInputAdapter implements ActionListener, PropertyChangeListener {
 
@@ -620,6 +633,59 @@ public class AnchorLabelUI extends MetalLabelUI {
             previewTimer.setDelay(previewDelay);
         }
         
+    }
+
+    private class GradientAnimation extends AbstractAnimation {
+
+        public GradientAnimation() {
+            super(600f);
+        }
+
+        protected float onAnimating(float animationPercent) {
+            switch (getAnimationDirection()) {
+                case INCOMING:
+                    GraphicsUtil.getInterpolatedColor(flashingAnimBackStart, gray, start, animationPercent);
+                    GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd, gray, end, animationPercent);
+                    break;
+
+                case OUTGOING:
+                    GraphicsUtil.getInterpolatedColor(flashingAnimBackStart, start, gray, animationPercent);
+                    GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd, end, gray, animationPercent);
+                    break;
+            }
+            SwingUtil.repaint(label);
+            return animationPercent;
+        }
+
+        protected void onFinishAnimation() {
+            switch (getAnimationDirection()) {
+                case INCOMING:
+                    flashingAnimBackStart.setRGB(gray);
+                    break;
+                case OUTGOING:
+                    flashingAnimBackStart.setRGB(start);
+                    break;
+            }
+            SwingUtil.repaint(label);
+        }
+
+        protected void onHide(Object... params) {
+            flashingAnimBackStart.setRGB(start);
+            flashingAnimBackEnd.setRGB(end);
+        }
+
+        protected void onShow(Object... params) {
+            flashingAnimBackStart.setRGB(gray);
+            flashingAnimBackEnd.setRGB(gray);
+        }
+
+        protected void onStartAnimation(Direction direction) {
+        }
+
+        protected Direction chooseFinishDirection(Type type) {
+            return (type == Type.SHOW) ? Direction.OUTGOING : Direction.INCOMING;
+        }
+
     }
 
     class DragGesture implements DragGestureListener, DragSourceMotionListener, DragSourceListener {
