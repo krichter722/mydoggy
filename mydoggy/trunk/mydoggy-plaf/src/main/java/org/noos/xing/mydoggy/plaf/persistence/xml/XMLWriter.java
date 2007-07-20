@@ -125,6 +125,7 @@ public class XMLWriter {
         if (depth > 0)
             characters("\n");
         doIndent();
+        state = SEEN_ELEMENT;
 
         write('<');
         writeName(elementName);
