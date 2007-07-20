@@ -151,7 +151,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
         contentPaneLayout = (ExtendedTableLayout) contentPane.getLayout();
 
-        contentPane.setDropTarget(new ToolWindowBarDropTarget(anchor, contentPane));
+        contentPane.setDropTarget(new ToolWindowBarDropTarget(manager, anchor, contentPane));
         contentPane.addMouseListener(new ToolsOnBarMouseListener(manager, anchor));
     }
 

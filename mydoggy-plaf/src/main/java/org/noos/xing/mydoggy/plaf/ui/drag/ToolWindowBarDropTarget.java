@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.drag;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -17,14 +18,16 @@ import java.io.IOException;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ToolWindowBarDropTarget extends DropTarget {
+    private MyDoggyToolWindowManager manager;
     private ToolWindowAnchor anchor;
 
     private Container container;
     private TableLayout layout;
     private Point lastPosition;
 
-    public ToolWindowBarDropTarget(ToolWindowAnchor anchor, Container container) throws HeadlessException {
+    public ToolWindowBarDropTarget(MyDoggyToolWindowManager manager, ToolWindowAnchor anchor, Container container) throws HeadlessException {
         super(container, new ToolWindowBarDropTargetListener(anchor));
+        this.manager = manager;
         this.anchor = anchor;
         this.container = container;
         this.layout = (TableLayout) container.getLayout();
@@ -108,17 +111,16 @@ public class ToolWindowBarDropTarget extends DropTarget {
                 hidePosition(false);
 
                 // Insert space for dragging image at specific index.
-                GlassPanel glassPanel = (GlassPanel) SwingUtilities.getRootPane(container).getGlassPane();
                 switch (anchor) {
                     case TOP:
                     case BOTTOM:
                         container.add(new VerticalSeparatorLabel(), i + ",1,c,c");
-                        layout.setColumn(i, glassPanel.getDraggingImage().getWidth(container) + 6);
+                        layout.setColumn(i, manager.getGlassPanel().getDraggingImage().getWidth(container) + 6);
                         break;
                     case LEFT:
                     case RIGHT:
                         container.add(new HorizontalSeparatorLabel(), "1," + i + ",c,c");
-                        layout.setRow(i, glassPanel.getDraggingImage().getHeight(container) + 6);
+                        layout.setRow(i, manager.getGlassPanel().getDraggingImage().getHeight(container) + 6);
                         break;
                 }
 

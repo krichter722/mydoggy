@@ -305,7 +305,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(label);
 
                         if (frame != null) {
-                            GlassPanel glassPane = (GlassPanel) frame.getRootPane().getGlassPane();
+                            GlassPanel glassPane = descriptor.getManager().getGlassPanel();
                             glassPane.remove(previewPanel);
                             SwingUtil.repaint(glassPane);
                             glassPane.setVisible(false);
@@ -330,7 +330,9 @@ public class AnchorLabelUI extends MetalLabelUI {
                         firstPreview = true;
                         previewTimer.stop();
 
-                        GlassPanel glassPane = (GlassPanel) rootPaneContainer.getGlassPane();
+                        descriptor.getManager().getGlassPanel().mount();
+
+                        GlassPanel glassPane = descriptor.getManager().getGlassPanel();
 
                         if (previewPanel != null)
                             glassPane.remove(previewPanel);
@@ -627,7 +629,7 @@ public class AnchorLabelUI extends MetalLabelUI {
         public void dragGestureRecognized(DragGestureEvent dge) {
             // TODO: is there a better way to do this?
             // Check if a preview is still visible.
-            GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
+            GlassPanel glassPane = descriptor.getManager().getGlassPanel();
             if (previewPanel != null)
                 glassPane.remove(previewPanel);
 
@@ -666,7 +668,7 @@ public class AnchorLabelUI extends MetalLabelUI {
             if (!DragAndDropLock.isDragAndDropStarted() || ghostImage == null)
                 return;
 
-            GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
+            GlassPanel glassPane = descriptor.getManager().getGlassPanel();
 
             Point p = (Point) dsde.getLocation().clone();
             SwingUtilities.convertPointFromScreen(p, glassPane);
@@ -763,7 +765,7 @@ public class AnchorLabelUI extends MetalLabelUI {
 
             descriptor.getToolBar().propertyChange(new PropertyChangeEvent(label, "endDrag", null, dsde));
 
-            GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
+            GlassPanel glassPane = descriptor.getManager().getGlassPanel();
 
             Point p = (Point) dsde.getLocation().clone();
             SwingUtilities.convertPointFromScreen(p, glassPane);
