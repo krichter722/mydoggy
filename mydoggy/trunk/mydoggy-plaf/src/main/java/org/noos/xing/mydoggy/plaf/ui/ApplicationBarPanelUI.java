@@ -325,7 +325,7 @@ public class ApplicationBarPanelUI extends PanelUI {
             dge.startDrag(Cursor.getDefaultCursor(), new ToolWindowTrasferable(toolWindow), this);
 
             // Prepare glassPane for ghost image
-            GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
+            GlassPanel glassPane = descriptor.getManager().getGlassPanel();
 
             glassPane.setVisible(true);
 
@@ -350,7 +350,7 @@ public class ApplicationBarPanelUI extends PanelUI {
             if (!DragAndDropLock.isDragAndDropStarted() || ghostImage == null)
                 return;
 
-            GlassPanel glassPane = (GlassPanel) descriptor.getManager().getRootPane().getGlassPane();
+            GlassPanel glassPane = descriptor.getManager().getGlassPanel();
 
             Point p = (Point) dsde.getLocation().clone();
             SwingUtilities.convertPointFromScreen(p, glassPane);
@@ -427,7 +427,7 @@ public class ApplicationBarPanelUI extends PanelUI {
                 }
             }
 
-            GlassPanel glassPane = (GlassPanel) SwingUtilities.getRootPane(descriptor.getManager()).getGlassPane();
+            GlassPanel glassPane = descriptor.getManager().getGlassPanel();
 
             Point p = (Point) dsde.getLocation().clone();
             SwingUtilities.convertPointFromScreen(p, glassPane);

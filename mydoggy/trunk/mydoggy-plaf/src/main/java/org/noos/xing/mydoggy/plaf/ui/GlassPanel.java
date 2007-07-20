@@ -1,5 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ContainerEvent;
@@ -10,6 +12,9 @@ import java.awt.geom.Area;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class GlassPanel extends JPanel implements ContainerListener {
+    private RootPaneContainer rootPaneContainer;
+    private Component oldGlassPanel;
+
     private Image draggingImage = null;
 
     private Point location = new Point(0, 0);
@@ -19,10 +24,9 @@ public class GlassPanel extends JPanel implements ContainerListener {
     private int height;
     private Rectangle visibleRect = null;
 
-    private GlassPaneMouseAdapter adapter;
-
     public GlassPanel(RootPaneContainer rootPaneContainer) {
-        adapter = new GlassPaneMouseAdapter(rootPaneContainer);
+        this.rootPaneContainer = rootPaneContainer;
+        
         setOpaque(false);
         setVisible(false);
         setLayout(null);
@@ -101,28 +105,37 @@ public class GlassPanel extends JPanel implements ContainerListener {
 
     public void componentAdded(ContainerEvent e) {
         setVisible(true);
-        if (getComponentCount() == 1) {
-//            addMouseListener(adapter);
-//            addMouseMotionListener(adapter);
-//            addMouseWheelListener(adapter);
-        }
     }
 
     public void componentRemoved(ContainerEvent e) {
-        if (getComponentCount() == 0) {
+        if (getComponentCount() == 0)
             setVisible(false);
-//            removeMouseListener(adapter);
-//            removeMouseMotionListener(adapter);
-//            removeMouseWheelListener(adapter);
-        }
     }
 
     public void setVisible(boolean aFlag) {
         if (!aFlag) {
-            if (getComponentCount() == 0)
+            if (getComponentCount() == 0) {
                 super.setVisible(aFlag);
-        } else
+                unmount();
+            }
+        } else {
+            mount();
             super.setVisible(aFlag);
+        }
+    }
+
+    protected GlassPanel mount() {
+        if (rootPaneContainer.getGlassPane() == this)
+            return this;
+        
+        oldGlassPanel = rootPaneContainer.getGlassPane();
+        rootPaneContainer.setGlassPane(this);
+        return this;
+    }
+
+    protected void unmount() {
+        if (oldGlassPanel != null)
+            rootPaneContainer.setGlassPane(oldGlassPanel);
     }
 
 }

@@ -61,6 +61,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     private Object activeToolWindowId;
 
+    private GlassPanel glassPanel;
     private Component lastFocusOwner = null;
 
     private PersistenceDelegate persistenceDelegate;
@@ -401,7 +402,11 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
+    public GlassPanel getGlassPanel() {
+        return glassPanel;
+    }
 
+    
     protected void initResourceBoundles(Locale locale) {
         ResourceBoundles.initResourceBoundles(locale);
     }
@@ -460,7 +465,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     protected void initGlassPane() {
         RootPaneContainer rootPaneContainer = (RootPaneContainer) anchestor;
-        rootPaneContainer.setGlassPane(new GlassPanel(rootPaneContainer));
+        rootPaneContainer.setGlassPane(this.glassPanel = new GlassPanel(rootPaneContainer));
     }
 
     protected void initListeners() {
