@@ -76,7 +76,7 @@ public class SlidingContainer extends FloatingContainer {
             sheet.setBounds(point.x, point.y, mainPanel.getWidth(), height);
 
             layeredPane.remove(sheet);
-            layeredPane.setLayer(sheet, Integer.MAX_VALUE);
+            layeredPane.setLayer(sheet, 100);
             layeredPane.add(sheet);
 
             if (descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isAnimating())
