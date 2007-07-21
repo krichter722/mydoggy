@@ -67,7 +67,7 @@ public class MyDoggyHandler extends DefaultHandler {
                         throw new SAXException("Invalid version. Not defined version attribute.");
 
                     String version = attributes.getValue("version");
-                    if (!"1.3.0".equals(version))
+                    if (!"1.3.1".equals(version))
                         throw new SAXException("Invalid version : " + version);
 
                     persistedToolWindowManager = new PersistedToolWindowManager();
