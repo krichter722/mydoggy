@@ -329,7 +329,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
         tabbedContentManager.getContentPage(index).setContent(content);
         tabbedContentManager.setDisabledIconAt(index, content.getDisabledIcon());
         tabbedContentManager.setPopupMenuAt(index, content.getPopupMenu());
-        tabbedContentManager.setForegroundAt(index, content.getForeground());
+        if (content.getForeground() != null)
+            tabbedContentManager.setForegroundAt(index, content.getForeground());
     }
 
     protected void fireContentUIRemoving(ContentUI contentUI) {
