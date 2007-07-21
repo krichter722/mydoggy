@@ -289,8 +289,8 @@ public class AnchorLabelUI extends MetalLabelUI {
         }
 
         public void mouseExited(MouseEvent e) {
-            if (e.getX() == label.getWidth() || e.getX() < 0 ||
-                e.getY() == label.getHeight() || e.getY() < 0)
+            if (e.getX() >= label.getWidth() || e.getX() <= 0 ||
+                e.getY() >= label.getHeight() || e.getY() <= 0)
                 firstPreview = false;
 
             previewTimer.stop();
