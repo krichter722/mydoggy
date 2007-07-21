@@ -2,8 +2,8 @@ package org.noos.xing.mydoggy.examples.mydoggyset;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
+import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ContentsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ToolGroupsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ToolsTableModel;
@@ -60,14 +60,6 @@ public class MyDoggySet {
     }
 
     protected void setUp() {
-/*
-        try {
-            UIManager.setLookAndFeel(new SubstanceBusinessLookAndFeel());
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-*/
-
         initComponents();
         initToolWindowManager();
     }
