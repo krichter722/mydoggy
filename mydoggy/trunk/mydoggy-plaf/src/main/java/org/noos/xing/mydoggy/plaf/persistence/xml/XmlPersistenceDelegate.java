@@ -30,7 +30,7 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
             writer.startDocument();
 
             AttributesImpl mydoggyAttributes = new AttributesImpl();
-            mydoggyAttributes.addAttribute(null, "version", null, null, "1.3.0");
+            mydoggyAttributes.addAttribute(null, "version", null, null, "1.3.1");
             mydoggyAttributes.addAttribute(null, "pushAwayMode", null, null, 
                                            toolWindowManager.getToolWindowManagerDescriptor().getPushAwayMode().toString());
             writer.startElement("mydoggy", mydoggyAttributes);
