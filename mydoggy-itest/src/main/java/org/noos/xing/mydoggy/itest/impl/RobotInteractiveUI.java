@@ -47,7 +47,7 @@ public class RobotInteractiveUI implements InteractiveUI {
     }
 
     public Container[] getRoots() {
-        return roots.toArray(new Container[0]);
+        return roots.toArray(new Container[roots.size()]);
     }
 
 }

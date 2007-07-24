@@ -434,7 +434,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public ToolWindowTab[] getToolWindowTabs() {
-        return toolWindowTabs.toArray(new ToolWindowTab[0]);
+        return toolWindowTabs.toArray(new ToolWindowTab[toolWindowTabs.size()]);
     }
 
     public void addToolWindowListener(ToolWindowListener listener) {

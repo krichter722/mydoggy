@@ -317,6 +317,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     repaint = true;
                 } else if (!oldAvailable && newAvailable) {
                     // false -> true
+                    assert evt instanceof UserPropertyChangeEvent;
+                    assert ((UserPropertyChangeEvent) evt).getUserObject() instanceof Integer;
                     addAnchorLabel(anchorLabel, (Integer) ((UserPropertyChangeEvent) evt).getUserObject());
                     repaint = true;
                 }

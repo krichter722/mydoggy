@@ -217,7 +217,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
     }
 
     public ToolWindowAnchor[] getMostRecentAnchors() {
-        return mostRecentStack.toArray(new ToolWindowAnchor[0]);
+        return mostRecentStack.toArray(new ToolWindowAnchor[mostRecentStack.size()]);
     }
 
 
