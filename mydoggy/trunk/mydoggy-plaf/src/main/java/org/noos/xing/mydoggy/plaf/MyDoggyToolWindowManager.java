@@ -783,6 +783,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 getBar(oldAnchor).propertyChange(avEvent);
                 syncPanel(oldAnchor);
 
+                assert evt instanceof UserPropertyChangeEvent; 
                 avEvent = new UserPropertyChangeEvent(evt.getSource(), "available", false, true,
                                                       ((UserPropertyChangeEvent) evt).getUserObject());
                 getBar(newAnchor).propertyChange(avEvent);

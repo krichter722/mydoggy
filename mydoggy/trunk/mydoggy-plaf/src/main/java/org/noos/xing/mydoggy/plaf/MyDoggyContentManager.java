@@ -134,7 +134,7 @@ public class MyDoggyContentManager implements ContentManager {
     }
 
     public Content[] getContents() {
-        return contents.toArray(EMPTY_CONTENT_ARRAY);
+        return contents.toArray(new Content[contents.size()]);
     }
 
     public void setPopupMenu(JPopupMenu popupMenu) {

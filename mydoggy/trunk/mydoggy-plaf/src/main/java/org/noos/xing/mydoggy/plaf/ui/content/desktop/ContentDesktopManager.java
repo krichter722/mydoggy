@@ -183,9 +183,7 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
                 catch (PropertyVetoException e2) {
                 }
             }
-            if (d != null) {
-                d.setSelectedFrame(f);
-            }
+            d.setSelectedFrame(f);
         }
         f.moveToFront();
     }

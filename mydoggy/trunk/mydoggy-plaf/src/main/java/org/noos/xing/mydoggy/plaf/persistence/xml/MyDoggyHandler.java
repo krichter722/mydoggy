@@ -215,7 +215,7 @@ public class MyDoggyHandler extends DefaultHandler {
             // PushAwayModeDescriptors
             if (persistedMostRecentDescriptor != null)
                 ((MostRecentDescriptor) toolWindowManager.getToolWindowManagerDescriptor().getPushAwayModeDescriptor(PushAwayMode.MOST_RECENT)).
-                        append(persistedMostRecentDescriptor.getStack().toArray(new ToolWindowAnchor[0]));
+                        append(persistedMostRecentDescriptor.getStack().toArray(new ToolWindowAnchor[persistedMostRecentDescriptor.getStack().size()]));
 
             if (persistedToolWindowManager.getPushAwayMode() != null)
                 toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(persistedToolWindowManager.getPushAwayMode());

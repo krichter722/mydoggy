@@ -29,7 +29,7 @@ public class MutableColor extends Color {
         value = ((255 & 0xFF) << 24) |
                 ((r & 0xFF) << 16) |
                 ((g & 0xFF) << 8) |
-                ((b & 0xFF) << 0);
+                ((b & 0xFF));
         testColorValueRange(r, g, b, 255);
     }
 
