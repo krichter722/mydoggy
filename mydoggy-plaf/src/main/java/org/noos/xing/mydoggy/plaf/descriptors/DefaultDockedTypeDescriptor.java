@@ -126,6 +126,14 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         return previewTransparentRatio;
     }
 
+    public void setHideLabelOnVisible() {
+        // TODO 
+    }
+
+    public boolean isHideLabelOnVisible() {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public void setPreviewTransparentRatio(float previewTransparentRatio) {
         if (this.previewTransparentRatio == previewTransparentRatio)
             return;

@@ -298,6 +298,105 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         throw new IllegalStateException();
     }
 
+    protected void addAnchorLabel(JLabel anchorLabel, int index) {
+        availableTools++;
+        if (horizontal) {
+            int width = anchorLabel.getPreferredSize().width + 6;
+
+            contentPaneLayout.insertColumn(contentPaneLayout.getNumColumn(), contentPaneLayout.getNumColumn() > 0 ? 5 : 1);
+            contentPaneLayout.insertColumn(contentPaneLayout.getNumColumn(), width);
+
+            if (index >= 0) {
+                Component[] components = contentPane.getComponents();
+                int finalCol = (index * 2 + 2);
+
+                Map<Integer, Double> olds = new Hashtable<Integer, Double>();
+                for (Component component : components) {
+                    TableLayoutConstraints constraints = contentPaneLayout.getConstraints(component);
+                    if (constraints.col1 >= finalCol) {
+                        int newCol1 = constraints.col1 + 2;
+                        contentPaneLayout.setConstraints(component,
+                                                         new TableLayoutConstraints(
+                                                                 newCol1 + ",1,"
+                                                         ));
+
+                        olds.put(newCol1, contentPaneLayout.getColumn(newCol1));
+                        Double colSize = olds.get(constraints.col1);
+                        if (colSize == null)
+                            colSize = contentPaneLayout.getColumn(constraints.col1);
+
+                        contentPaneLayout.setColumn(newCol1, colSize);
+                    }
+                }
+                contentPaneLayout.setColumn(finalCol, width);
+                contentPane.add(anchorLabel, (index * 2 + 2) + ",1,");
+            } else
+                contentPane.add(anchorLabel, (contentPaneLayout.getNumColumn() - 1) + ",1,");
+        } else {
+            int height = Math.max(anchorLabel.getHeight(),
+                                  Math.max(anchorLabel.getPreferredSize().height,
+                                           anchorLabel.getSize().height)) + 12;
+
+            contentPaneLayout.insertRow(contentPaneLayout.getNumRow(), contentPaneLayout.getNumRow() > 0 ? 5 : 1);
+            contentPaneLayout.insertRow(contentPaneLayout.getNumRow(), height);
+
+            if (index >= 0) {
+                Component[] components = contentPane.getComponents();
+                int finalRow = (index * 2 + 2);
+
+
+                Map<Integer, Double> olds = new Hashtable<Integer, Double>();
+                for (Component component : components) {
+                    TableLayoutConstraints constraints = contentPaneLayout.getConstraints(component);
+
+                    if (constraints.row1 >= finalRow) {
+                        int newRow1 = constraints.row1 + 2;
+                        contentPaneLayout.setConstraints(component,
+                                                         new TableLayoutConstraints(
+                                                                 "1," + newRow1
+                                                         ));
+
+                        olds.put(newRow1, contentPaneLayout.getRow(newRow1));
+                        Double rowSize = olds.get(constraints.row1);
+                        if (rowSize == null)
+                            rowSize = contentPaneLayout.getRow(constraints.row1);
+
+                        contentPaneLayout.setRow(newRow1, rowSize);
+                    }
+                }
+                contentPaneLayout.setRow(finalRow, height);
+
+                contentPane.add(anchorLabel, "1," + (index * 2 + 2));
+            } else
+                contentPane.add(anchorLabel, "1," + (contentPaneLayout.getNumRow() - 1));
+        }
+        SwingUtil.repaint(toolScrollBar);
+    }
+
+    protected void removeAnchorLabel(JLabel anchorLabel, ToolWindowDescriptor descriptor) {
+        // Remove
+        availableTools--;
+
+        int toDelete;
+        if (horizontal) {
+            toDelete = contentPaneLayout.getConstraints(anchorLabel).col1;
+        } else {
+            toDelete = contentPaneLayout.getConstraints(anchorLabel).row1;
+        }
+        contentPane.remove(anchorLabel);
+        if (horizontal) {
+            contentPaneLayout.deleteColumn(toDelete);
+            contentPaneLayout.deleteColumn(toDelete - 1);
+        } else {
+            contentPaneLayout.deleteRow(toDelete);
+            contentPaneLayout.deleteRow(toDelete - 1);
+        }
+
+        SwingUtil.repaint(toolScrollBar);
+
+        descriptor.resetAnchorLabel();
+    }
+
 
     class AvailableListener implements PropertyChangeListener {
 
@@ -328,105 +427,6 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     SwingUtil.repaint(contentPane);
                 }
             }
-        }
-
-        protected void addAnchorLabel(JLabel anchorLabel, int index) {
-            availableTools++;
-            if (horizontal) {
-                int width = anchorLabel.getPreferredSize().width + 6;
-
-                contentPaneLayout.insertColumn(contentPaneLayout.getNumColumn(), contentPaneLayout.getNumColumn() > 0 ? 5 : 1);
-                contentPaneLayout.insertColumn(contentPaneLayout.getNumColumn(), width);
-
-                if (index >= 0) {
-                    Component[] components = contentPane.getComponents();
-                    int finalCol = (index * 2 + 2);
-
-                    Map<Integer, Double> olds = new Hashtable<Integer, Double>();
-                    for (Component component : components) {
-                        TableLayoutConstraints constraints = contentPaneLayout.getConstraints(component);
-                        if (constraints.col1 >= finalCol) {
-                            int newCol1 = constraints.col1 + 2;
-                            contentPaneLayout.setConstraints(component,
-                                                             new TableLayoutConstraints(
-                                                                     newCol1 + ",1,"
-                                                             ));
-
-                            olds.put(newCol1, contentPaneLayout.getColumn(newCol1));
-                            Double colSize = olds.get(constraints.col1);
-                            if (colSize == null)
-                                colSize = contentPaneLayout.getColumn(constraints.col1);
-
-                            contentPaneLayout.setColumn(newCol1, colSize);
-                        }
-                    }
-                    contentPaneLayout.setColumn(finalCol, width);
-                    contentPane.add(anchorLabel, (index * 2 + 2) + ",1,");
-                } else
-                    contentPane.add(anchorLabel, (contentPaneLayout.getNumColumn() - 1) + ",1,");
-            } else {
-                int height = Math.max(anchorLabel.getHeight(),
-                                      Math.max(anchorLabel.getPreferredSize().height,
-                                               anchorLabel.getSize().height)) + 12;
-
-                contentPaneLayout.insertRow(contentPaneLayout.getNumRow(), contentPaneLayout.getNumRow() > 0 ? 5 : 1);
-                contentPaneLayout.insertRow(contentPaneLayout.getNumRow(), height);
-
-                if (index >= 0) {
-                    Component[] components = contentPane.getComponents();
-                    int finalRow = (index * 2 + 2);
-
-
-                    Map<Integer, Double> olds = new Hashtable<Integer, Double>();
-                    for (Component component : components) {
-                        TableLayoutConstraints constraints = contentPaneLayout.getConstraints(component);
-
-                        if (constraints.row1 >= finalRow) {
-                            int newRow1 = constraints.row1 + 2;
-                            contentPaneLayout.setConstraints(component,
-                                                             new TableLayoutConstraints(
-                                                                     "1," + newRow1
-                                                             ));
-
-                            olds.put(newRow1, contentPaneLayout.getRow(newRow1));
-                            Double rowSize = olds.get(constraints.row1);
-                            if (rowSize == null)
-                                rowSize = contentPaneLayout.getRow(constraints.row1);
-
-                            contentPaneLayout.setRow(newRow1, rowSize);
-                        }
-                    }
-                    contentPaneLayout.setRow(finalRow, height);
-
-                    contentPane.add(anchorLabel, "1," + (index * 2 + 2));
-                } else
-                    contentPane.add(anchorLabel, "1," + (contentPaneLayout.getNumRow() - 1));
-            }
-            SwingUtil.repaint(toolScrollBar);
-        }
-
-        protected void removeAnchorLabel(JLabel anchorLabel, ToolWindowDescriptor descriptor) {
-            // Remove
-            availableTools--;
-
-            int toDelete;
-            if (horizontal) {
-                toDelete = contentPaneLayout.getConstraints(anchorLabel).col1;
-            } else {
-                toDelete = contentPaneLayout.getConstraints(anchorLabel).row1;
-            }
-            contentPane.remove(anchorLabel);
-            if (horizontal) {
-                contentPaneLayout.deleteColumn(toDelete);
-                contentPaneLayout.deleteColumn(toDelete - 1);
-            } else {
-                contentPaneLayout.deleteRow(toDelete);
-                contentPaneLayout.deleteRow(toDelete - 1);
-            }
-
-            SwingUtil.repaint(toolScrollBar);
-
-            descriptor.resetAnchorLabel();
         }
 
     }
@@ -533,8 +533,10 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     class VisibleDockedListener implements PropertyChangeListener {
         private final SplitAnimation splitAnimation = new SplitAnimation();
         private boolean vsdValueAdjusting = false;
+        private Map<ToolWindowDescriptor, Integer> poss;
 
         public VisibleDockedListener() {
+            poss = new HashMap<ToolWindowDescriptor, Integer>();
             splitPane.addPropertyChangeListener("dividerLocation", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     int dividerLocation = getSplitDividerLocation();
@@ -553,6 +555,13 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
             boolean visible = (Boolean) evt.getNewValue();
+
+            if (visible) {
+                poss.put(descriptor, descriptor.getLabelIndex());
+                removeAnchorLabel(descriptor.getAnchorLabel(), descriptor);
+            } else {
+                addAnchorLabel(descriptor.getAnchorLabel(contentPane), poss.get(descriptor));
+            }
 
             Component content = (visible) ? descriptor.getComponent() : null;
             if (content != null) {
