@@ -280,6 +280,10 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         return getToolBar().getLabelIndex(anchorLabel);
     }
 
+    public DockedTypeDescriptor getDockedTypeDescriptor() {
+        return dockedTypeDescriptor;
+    }
+
 
     private class AnchorLabel extends JLabel {
 

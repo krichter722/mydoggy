@@ -26,6 +26,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     private boolean previewEnabled;
     private int previewDelay;
     private float previewTransparentRatio;
+    private boolean hideLabelOnVisible;
 
     private EventListenerList listenerList;
 
@@ -39,11 +40,13 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.previewEnabled = true;
         this.previewDelay = 1000;
         this.previewTransparentRatio = 0.65f;
+        this.hideLabelOnVisible = false;
     }
 
     public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled,
                                        ToolWindowActionHandler toolWindowActionHandler, boolean animating, ToolWindowUI toolWindowUI,
-                                       boolean previewEnabled, int previewDelay, float previewTransparentRatio) {
+                                       boolean previewEnabled, int previewDelay, float previewTransparentRatio,
+                                       boolean hideLabelOnVisible) {
         this.toolsMenu = new JMenu(ResourceBoundles.getResourceBundle().getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = popupMenuEnabled;
         this.dockLength = dockLength;
@@ -53,6 +56,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.previewEnabled = previewEnabled;
         this.previewDelay = previewDelay;
         this.previewTransparentRatio = previewTransparentRatio;
+        this.hideLabelOnVisible = hideLabelOnVisible;
 
         this.listenerList = new EventListenerList();
 
@@ -126,12 +130,17 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         return previewTransparentRatio;
     }
 
-    public void setHideLabelOnVisible() {
-        // TODO 
+    public void setHideLabelOnVisible(boolean hideLabelOnVisible) {
+        if (this.hideLabelOnVisible == hideLabelOnVisible)
+            return;
+
+        boolean old = this.hideLabelOnVisible;
+        this.hideLabelOnVisible = hideLabelOnVisible;
+        firePropertyChange("hideLabelOnVisible", old, hideLabelOnVisible);
     }
 
     public boolean isHideLabelOnVisible() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return hideLabelOnVisible;
     }
 
     public void setPreviewTransparentRatio(float previewTransparentRatio) {
@@ -182,7 +191,8 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         return new DefaultDockedTypeDescriptor(this, dockLength, popupMenuEnabled,
                                                toolWindowActionHandler, animating,
                                                new MyDoggyToolWindowUI(),
-                                               previewEnabled, previewDelay, previewTransparentRatio);
+                                               previewEnabled, previewDelay, previewTransparentRatio,
+                                               hideLabelOnVisible);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
@@ -200,6 +210,8 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
             this.previewDelay = (Integer) evt.getNewValue();
         } else if ("previewTransparentRatio".equals(evt.getPropertyName())) {
             this.previewTransparentRatio = (Float) evt.getNewValue();
+        } else if ("hideLabelOnVisible".equals(evt.getPropertyName())) {
+            this.hideLabelOnVisible = (Boolean) evt.getNewValue();
         }
     }
 
