@@ -147,7 +147,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * TODO:
      * @since 1.3.1
      */
-    void setHideLabelOnVisible();
+    void setHideLabelOnVisible(boolean hideLabelOnVisible);
 
     /**
      *
