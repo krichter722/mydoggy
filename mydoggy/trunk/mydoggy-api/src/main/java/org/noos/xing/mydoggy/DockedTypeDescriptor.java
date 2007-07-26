@@ -144,6 +144,19 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
     float getPreviewTransparentRatio();
 
     /**
+     * TODO:
+     * @since 1.3.1
+     */
+    void setHideLabelOnVisible();
+
+    /**
+     *
+     * @return
+     * @since 1.3.1
+     */
+    boolean isHideLabelOnVisible();
+
+    /**
      * Adds a PropertyChangeListener to the listener list. The listener is
      * registered for all bound properties of this class, including the
      * following:
