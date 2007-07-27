@@ -21,15 +21,15 @@ public class SampleApp {
     protected void start() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
+                debugTool.setActive(true);
+
                 frame.setVisible(true);
             }
         });
     }
 
     protected void initComponents() {
-        // This is need to a correct visualization of all JPopupMenu.
-        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-
         this.frame = new JFrame("Sample App...");
         this.frame.setSize(640, 480);
         this.frame.setLocation(100, 100);
@@ -54,8 +54,8 @@ public class SampleApp {
         toolWindowManager.registerToolWindow("Debug",                      // Id
                                              "Debug Tool",                 // Title
                                              null,                         // Icon
-                                             panel,    // Component
-                                             ToolWindowAnchor.LEFT).setType(ToolWindowType.SLIDING);       // Anchor
+                                             panel,                        // Component
+                                             ToolWindowAnchor.LEFT);       // Anchor
 
         setupDebugTool();
 
@@ -93,6 +93,7 @@ public class SampleApp {
         dockedTypeDescriptor.setPreviewEnabled(true);
         dockedTypeDescriptor.setPreviewDelay(1500);
         dockedTypeDescriptor.setPreviewTransparentRatio(0.4f);
+        dockedTypeDescriptor.setHideLabelOnVisible(true);
 
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
         slidingTypeDescriptor.setEnabled(true);
