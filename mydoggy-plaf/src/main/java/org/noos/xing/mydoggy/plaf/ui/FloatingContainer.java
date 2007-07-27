@@ -220,11 +220,9 @@ public class FloatingContainer extends DockedContainer {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
                     if ((Boolean)evt.getNewValue()) {
-                        GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().
-                                setFullScreenWindow(window);
+                        window.getGraphicsConfiguration().getDevice().setFullScreenWindow(window);
                     } else
-                        GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().
-                                setFullScreenWindow(null);
+                        window.getGraphicsConfiguration().getDevice().setFullScreenWindow(null);
                 }
 
             }
