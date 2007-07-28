@@ -215,7 +215,7 @@ public class SwingUtil {
     }
 
     public static Component findFocusable(Component cmp) {
-        if (cmp.isFocusable() && !(cmp instanceof JPanel))
+        if (cmp.isFocusable() && !(cmp instanceof JPanel) && !(cmp instanceof JLabel))
             return cmp;
 
         if (cmp instanceof Container) {

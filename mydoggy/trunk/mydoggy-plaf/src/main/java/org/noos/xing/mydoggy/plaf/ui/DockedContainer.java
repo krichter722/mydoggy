@@ -145,6 +145,15 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         floatingButton.setToolTipText(ResourceBoundles.getResourceBundle().getString("@@tool.tooltip.float"));
     }
 
+    protected void assignFocus() {
+        focusRequester = SwingUtil.findFocusable(descriptor.getComponent());
+        if (focusRequester == null) {
+            hideButton.setFocusable(true);
+            focusRequester = hideButton;
+        }
+        SwingUtil.requestFocus(hideButton);
+    }
+
 
     private void initDockedComponents() {
         propertyChangeSupport = new PropertyChangeSupport(this);
@@ -211,7 +220,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         container.add(applicationBar, "0,0");
         container.add(toolWindowCmp, "0,1");
 
-        focusRequester = SwingUtil.findFocusable(toolWindowCmp);
+        focusRequester = SwingUtil.findFocusable(descriptor.getComponent());
         if (focusRequester == null) {
             hideButton.setFocusable(true);
             focusRequester = hideButton;
