@@ -88,8 +88,14 @@ public class FloatingContainer extends DockedContainer {
                 window.setVisible(true);
                 window.getContentPane().setVisible(true);
                 SwingUtil.repaint(window);
+
+                if (!window.isFocused() && toolWindow.isActive()) 
+                    assignFocus();
             }
         } else {
+            if (hideButton.isFocusable())
+                hideButton.setFocusable(false);
+
             lastBounds = window.getBounds();
 
             if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isAnimating())
@@ -219,6 +225,7 @@ public class FloatingContainer extends DockedContainer {
         addPropertyChangeListener("maximized", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
+                    // TODO: it's not good...
                     if ((Boolean)evt.getNewValue()) {
                         window.getGraphicsConfiguration().getDevice().setFullScreenWindow(window);
                     } else
@@ -317,6 +324,10 @@ public class FloatingContainer extends DockedContainer {
                 case INCOMING:
                     window.getContentPane().setVisible(true);
                     window.setBounds(originalBounds);
+
+                    if (!window.isFocused() && toolWindow.isActive())
+                        assignFocus();
+
                     SwingUtil.repaint(window);
                     break;
                 case OUTGOING:
