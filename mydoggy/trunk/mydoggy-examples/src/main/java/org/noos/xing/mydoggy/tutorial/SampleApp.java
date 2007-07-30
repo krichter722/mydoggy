@@ -47,12 +47,16 @@ public class SampleApp {
                                                         null);
         this.toolWindowManager = myDoggyToolWindowManager;
 
+        toolWindowManager.getToolWindowManagerDescriptor().setNumberingEnabled(false);
+        ((DockedTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).setIdVisibleOnToolBar(false);
+
 
         JPanel panel = new JPanel(new TableLayout(new double[][]{{-1,50,-1},{-1,20,-1}}));
         JComboBox box = new JComboBox(new Object[]{
                 "1","1","1","1","1","1","1","1","1","1","1","1","1","1","1",
         });
         panel.add(box,"1,1,FULL,FULL");
+
 
         // Register a Tool.
         toolWindowManager.registerToolWindow("Debug",                      // Id
