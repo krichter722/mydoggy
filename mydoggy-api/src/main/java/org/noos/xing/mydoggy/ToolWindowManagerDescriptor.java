@@ -62,6 +62,20 @@ public interface ToolWindowManagerDescriptor {
     void setCornerComponent(Corner corner, Component component);
 
     /**
+     *
+     * @param numberingEnabled
+     * @since 1.3.1
+     */
+    void setNumberingEnabled(boolean numberingEnabled);
+
+    /**
+     * TODO
+     * @return
+     * @since 1.3.1
+     */
+    boolean isNumberingEnabled();
+
+    /**
      * Adds a PropertyChangeListener to the listener list. The listener is
      * registered for all bound properties of this class, including the
      * following:

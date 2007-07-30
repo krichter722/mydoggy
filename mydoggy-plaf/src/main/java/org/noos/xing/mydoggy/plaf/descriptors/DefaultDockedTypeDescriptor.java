@@ -4,7 +4,7 @@ import org.noos.xing.mydoggy.DockedTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowActionHandler;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
-import org.noos.xing.mydoggy.plaf.ui.ResourceBoundles;
+import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyToolWindowUI;
 
 import javax.swing.*;
@@ -27,11 +27,12 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     private int previewDelay;
     private float previewTransparentRatio;
     private boolean hideLabelOnVisible;
+    private boolean idVisibleOnToolBar;
 
     private EventListenerList listenerList;
 
     public DefaultDockedTypeDescriptor() {
-        this.toolsMenu = new JMenu(ResourceBoundles.getResourceBundle().getString("@@tool.toolsMenu"));
+        this.toolsMenu = new JMenu(ResourceBundleManager.getInstance().getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = true;
         this.dockLength = 200;
         this.toolWindowActionHandler = null;
@@ -41,13 +42,14 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.previewDelay = 1000;
         this.previewTransparentRatio = 0.65f;
         this.hideLabelOnVisible = false;
+        this.idVisibleOnToolBar = false;
     }
 
     public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled,
                                        ToolWindowActionHandler toolWindowActionHandler, boolean animating, ToolWindowUI toolWindowUI,
                                        boolean previewEnabled, int previewDelay, float previewTransparentRatio,
-                                       boolean hideLabelOnVisible) {
-        this.toolsMenu = new JMenu(ResourceBoundles.getResourceBundle().getString("@@tool.toolsMenu"));
+                                       boolean hideLabelOnVisible, boolean idVisibleOnToolBar) {
+        this.toolsMenu = new JMenu(ResourceBundleManager.getInstance().getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = popupMenuEnabled;
         this.dockLength = dockLength;
         this.toolWindowActionHandler = toolWindowActionHandler;
@@ -57,6 +59,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.previewDelay = previewDelay;
         this.previewTransparentRatio = previewTransparentRatio;
         this.hideLabelOnVisible = hideLabelOnVisible;
+        this.idVisibleOnToolBar = idVisibleOnToolBar;
 
         this.listenerList = new EventListenerList();
 
@@ -143,6 +146,19 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         return hideLabelOnVisible;
     }
 
+    public void setIdVisibleOnToolBar(boolean idVisibleOnToolBar) {
+        if (this.idVisibleOnToolBar == idVisibleOnToolBar)
+            return;
+
+        boolean old = this.idVisibleOnToolBar;
+        this.idVisibleOnToolBar = idVisibleOnToolBar;
+        firePropertyChange("idVisibleOnToolBar", old, idVisibleOnToolBar);
+    }
+
+    public boolean isIdVisibleOnToolBar() {
+        return idVisibleOnToolBar;
+    }
+
     public void setPreviewTransparentRatio(float previewTransparentRatio) {
         if (this.previewTransparentRatio == previewTransparentRatio)
             return;
@@ -192,7 +208,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
                                                toolWindowActionHandler, animating,
                                                new MyDoggyToolWindowUI(),
                                                previewEnabled, previewDelay, previewTransparentRatio,
-                                               hideLabelOnVisible);
+                                               hideLabelOnVisible, idVisibleOnToolBar);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
@@ -212,6 +228,8 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
             this.previewTransparentRatio = (Float) evt.getNewValue();
         } else if ("hideLabelOnVisible".equals(evt.getPropertyName())) {
             this.hideLabelOnVisible = (Boolean) evt.getNewValue();
+        } else if ("idVisibleOnToolBar".equals(evt.getPropertyName())) {
+            this.idVisibleOnToolBar = (Boolean) evt.getNewValue();
         }
     }
 

@@ -2,7 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.content.tabbed.component;
 
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.TabbedContentUI;
-import org.noos.xing.mydoggy.plaf.ui.ResourceBoundles;
+import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
 import org.noos.xing.mydoggy.plaf.ui.icons.CompositeIcon;
 import org.noos.xing.mydoggy.plaf.ui.icons.TextIcon;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -157,14 +157,14 @@ public class ContentPage implements TabbedContentUI {
             if (isDetachable()) {
                 Rectangle detachIconRect = compositeIcon.getLastPaintedLeftRec();
                 if (point.getX() > detachIconRect.x && point.getX() < detachIconRect.x + detachIconRect.width) {
-                    return ResourceBoundles.getResourceBundle().getString("@@tab.content.detach");
+                    return ResourceBundleManager.getInstance().getString("@@tab.content.detach");
                 }
             }
 
             if (isCloseable()) {
                 Rectangle closeIconRect = compositeIcon.getLastPaintedRightRec();
                 if (point.getX() > closeIconRect.x && point.getX() < closeIconRect.x + closeIconRect.width) {
-                    return ResourceBoundles.getResourceBundle().getString("@@tab.content.close");
+                    return ResourceBundleManager.getInstance().getString("@@tab.content.close");
                 }
             }
             return (defaultTip.equals("")) ? null : defaultTip;
@@ -235,18 +235,18 @@ public class ContentPage implements TabbedContentUI {
             if (stdPopupMenu == null) {
                 // Init stdPopupMenu
                 stdPopupMenu = new JPopupMenu("Content Page Popup");
-                stdPopupMenu.add(new JMenuItem(new AbstractAction(ResourceBoundles.getResourceBundle().getString("@@tabbed.page.close")) {
+                stdPopupMenu.add(new JMenuItem(new AbstractAction(ResourceBundleManager.getInstance().getString("@@tabbed.page.close")) {
                     public void actionPerformed(ActionEvent e) {
                         tabbedPane.fireCloseTabEvent(mouseEvent, mouseOverTab);
                     }
                 }));
-                stdPopupMenu.add(new JMenuItem(new AbstractAction(ResourceBoundles.getResourceBundle().getString("@@tabbed.page.closeAll")) {
+                stdPopupMenu.add(new JMenuItem(new AbstractAction(ResourceBundleManager.getInstance().getString("@@tabbed.page.closeAll")) {
                     public void actionPerformed(ActionEvent e) {
                         for (int i = 0, size = tabbedPane.getTabCount(); i < size; i++)
                             tabbedPane.fireCloseTabEvent(mouseEvent, i);
                     }
                 }));
-                stdPopupMenu.add(new JMenuItem(new AbstractAction(ResourceBoundles.getResourceBundle().getString("@@tabbed.page.closeAllButThis")) {
+                stdPopupMenu.add(new JMenuItem(new AbstractAction(ResourceBundleManager.getInstance().getString("@@tabbed.page.closeAllButThis")) {
                     public void actionPerformed(ActionEvent e) {
                         for (int i = 0, size = tabbedPane.getTabCount(); i < size; i++)
                             if (i != mouseOverTab)
@@ -254,7 +254,7 @@ public class ContentPage implements TabbedContentUI {
                     }
                 }));
                 stdPopupMenu.addSeparator();
-                stdPopupMenu.add(new JMenuItem(new AbstractAction(ResourceBoundles.getResourceBundle().getString("@@tabbed.page.detach")) {
+                stdPopupMenu.add(new JMenuItem(new AbstractAction(ResourceBundleManager.getInstance().getString("@@tabbed.page.detach")) {
                     public void actionPerformed(ActionEvent e) {
                         tabbedPane.fireDetachTabEvent(mouseEvent, mouseOverTab);
                     }
@@ -262,8 +262,8 @@ public class ContentPage implements TabbedContentUI {
                 stdPopupMenu.add(maximizeAction = new MaximizeAction());
             } else {
                 maximizeAction.putValue(Action.NAME, tabbedPane.isMaximized() ?
-                                                     ResourceBoundles.getResourceBundle().getString("@@tabbed.page.restore") :
-                                                     ResourceBoundles.getResourceBundle().getString("@@tabbed.page.maximize")
+                                                     ResourceBundleManager.getInstance().getString("@@tabbed.page.restore") :
+                                                     ResourceBundleManager.getInstance().getString("@@tabbed.page.maximize")
                 );
             }
             
@@ -350,7 +350,7 @@ public class ContentPage implements TabbedContentUI {
 
     class MaximizeAction extends AbstractAction {
         public MaximizeAction() {
-            super(ResourceBoundles.getResourceBundle().getString("@@tabbed.page.maximize"));
+            super(ResourceBundleManager.getInstance().getString("@@tabbed.page.maximize"));
         }
 
         public void actionPerformed(ActionEvent e) {

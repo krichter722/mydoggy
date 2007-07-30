@@ -158,6 +158,20 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
     boolean isHideLabelOnVisible();
 
     /**
+     * TODO:
+     * @since 1.3.1
+     * @param visible
+     */
+    void setIdVisibleOnToolBar(boolean visible);
+
+    /**
+     *
+     * @return
+     * @since 1.3.1
+     */
+    boolean isIdVisibleOnToolBar();
+
+    /**
      * Adds a PropertyChangeListener to the listener list. The listener is
      * registered for all bound properties of this class, including the
      * following:
