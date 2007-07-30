@@ -8,6 +8,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Locale;
 
 public class SampleApp {
     private JFrame frame;
@@ -41,6 +42,9 @@ public class SampleApp {
     protected void initToolWindowManager() {
         // Create a new instance of MyDoggyToolWindowManager passing the frame.
         MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
+        myDoggyToolWindowManager.initUserResourceBundle(Locale.ITALY, 
+                                                        "org/noos/xing/mydoggy/tutorial/sampleApp",
+                                                        null);
         this.toolWindowManager = myDoggyToolWindowManager;
 
 
@@ -93,7 +97,7 @@ public class SampleApp {
         dockedTypeDescriptor.setPreviewEnabled(true);
         dockedTypeDescriptor.setPreviewDelay(1500);
         dockedTypeDescriptor.setPreviewTransparentRatio(0.4f);
-        dockedTypeDescriptor.setHideLabelOnVisible(true);
+        dockedTypeDescriptor.setHideLabelOnVisible(false);
 
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
         slidingTypeDescriptor.setEnabled(true);
