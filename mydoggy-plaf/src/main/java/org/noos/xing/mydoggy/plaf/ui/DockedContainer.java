@@ -184,9 +184,10 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         applicationBar.addMouseListener(applicationBarMouseAdapter);
 
         // TODO: se non è visible l'id bisogna correggere il layout...
-        applicationBarLayout.setColumn(0, applicationBar.getFontMetrics(
-                applicationBar.getFont()
-        ).stringWidth(ResourceBundleManager.getInstance().getUserString(id)) + 12);
+        if (descriptor.getDockedTypeDescriptor().isIdVisibleOnToolBar())
+            applicationBarLayout.setColumn(0, applicationBar.getFontMetrics(
+                    applicationBar.getFont()
+            ).stringWidth(ResourceBundleManager.getInstance().getUserString(id)) + 12);
 
         // Tabs
         applicationBarTabs = new ToolWindowTabPanel(this, toolWindow);
@@ -275,6 +276,27 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                     descriptor.getManager().getPersistenceDelegate().merge(new ByteArrayInputStream(workspace.toByteArray()),
                                                                            PersistenceDelegate.MergePolicy.UNION);
                     workspace = null;
+                }
+            }
+        });
+
+        descriptor.getDockedTypeDescriptor().addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("idVisibleOnToolBar".equals(evt.getPropertyName())) {
+                    if ((Boolean)evt.getNewValue()) {
+                        TableLayout layout = (TableLayout) applicationBar.getLayout();
+                        layout.setColumn(0,
+                                         applicationBar
+                                                 .getFontMetrics(applicationBar.getFont())
+                                                 .stringWidth(
+                                                         ResourceBundleManager.getInstance().getUserString(toolWindow.getId())
+                                                 )
+                                         + 12);
+                    } else {
+                        TableLayout layout = (TableLayout) applicationBar.getLayout();
+                        layout.setColumn(0,3);
+                    }
+
                 }
             }
         });

@@ -276,6 +276,7 @@ public class MyDoggySet {
     protected void initToolWindowManager() {
         MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame, Locale.US);
         this.toolWindowManager = myDoggyToolWindowManager;
+        ((DockedTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).setIdVisibleOnToolBar(false);
 
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);
         typeDescriptor.setTransparentDelay(0);
