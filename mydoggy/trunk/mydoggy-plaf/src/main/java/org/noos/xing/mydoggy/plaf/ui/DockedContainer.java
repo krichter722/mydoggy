@@ -183,6 +183,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         applicationBar.setUI(new ApplicationBarPanelUI(descriptor, this));
         applicationBar.addMouseListener(applicationBarMouseAdapter);
 
+        // TODO: se non è visible l'id bisogna correggere il layout...
         applicationBarLayout.setColumn(0, applicationBar.getFontMetrics(
                 applicationBar.getFont()
         ).stringWidth(ResourceBundleManager.getInstance().getUserString(id)) + 12);

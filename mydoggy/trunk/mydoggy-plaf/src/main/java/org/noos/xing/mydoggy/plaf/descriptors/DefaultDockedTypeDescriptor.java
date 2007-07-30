@@ -42,7 +42,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.previewDelay = 1000;
         this.previewTransparentRatio = 0.65f;
         this.hideLabelOnVisible = false;
-        this.idVisibleOnToolBar = false;
+        this.idVisibleOnToolBar = true;
     }
 
     public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled,
