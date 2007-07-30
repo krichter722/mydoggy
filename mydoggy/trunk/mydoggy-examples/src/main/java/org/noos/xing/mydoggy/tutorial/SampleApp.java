@@ -101,7 +101,7 @@ public class SampleApp {
         dockedTypeDescriptor.setPreviewEnabled(true);
         dockedTypeDescriptor.setPreviewDelay(1500);
         dockedTypeDescriptor.setPreviewTransparentRatio(0.4f);
-        dockedTypeDescriptor.setHideLabelOnVisible(false);
+        dockedTypeDescriptor.setHideLabelOnVisible(true);
 
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
         slidingTypeDescriptor.setEnabled(true);

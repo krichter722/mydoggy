@@ -537,6 +537,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
         public VisibleDockedListener() {
             poss = new HashMap<ToolWindowDescriptor, Integer>();
+            
             splitPane.addPropertyChangeListener("dividerLocation", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     int dividerLocation = getSplitDividerLocation();
