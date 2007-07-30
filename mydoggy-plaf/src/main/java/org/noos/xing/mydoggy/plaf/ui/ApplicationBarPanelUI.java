@@ -211,7 +211,6 @@ public class ApplicationBarPanelUI extends PanelUI {
                               null, GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
 
         if (descriptor.getDockedTypeDescriptor().isIdVisibleOnToolBar()) {
-            // TODO: l'id non cambia più..
             String id = ResourceBundleManager.getInstance().getUserString(descriptor.getToolWindow().getId());
             r.width = g.getFontMetrics().stringWidth(id) + 8;
 

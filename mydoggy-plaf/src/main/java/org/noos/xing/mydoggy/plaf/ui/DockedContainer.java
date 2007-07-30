@@ -183,7 +183,6 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         applicationBar.setUI(new ApplicationBarPanelUI(descriptor, this));
         applicationBar.addMouseListener(applicationBarMouseAdapter);
 
-        // TODO: se non è visible l'id bisogna correggere il layout...
         if (descriptor.getDockedTypeDescriptor().isIdVisibleOnToolBar())
             applicationBarLayout.setColumn(0, applicationBar.getFontMetrics(
                     applicationBar.getFont()
@@ -294,7 +293,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                                          + 12);
                     } else {
                         TableLayout layout = (TableLayout) applicationBar.getLayout();
-                        layout.setColumn(0,3);
+                        layout.setColumn(0, 3);
                     }
 
                 }
