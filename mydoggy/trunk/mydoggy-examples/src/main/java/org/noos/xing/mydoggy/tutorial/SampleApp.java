@@ -22,8 +22,8 @@ public class SampleApp {
     protected void start() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
-                debugTool.setActive(true);
+//                ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
+//                debugTool.setActive(true);
 
                 frame.setVisible(true);
             }
