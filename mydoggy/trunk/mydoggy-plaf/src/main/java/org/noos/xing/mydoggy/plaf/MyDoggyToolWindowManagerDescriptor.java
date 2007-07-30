@@ -20,6 +20,7 @@ import java.util.Stack;
 public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDescriptor, PropertyChangeListener, MostRecentDescriptor {
     private PushAwayMode pushAwayMode;
     private MyDoggyToolWindowManager manager;
+    private boolean numberingEnabled;
 
     private EventListenerList listenerList;
 
@@ -29,6 +30,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
     public MyDoggyToolWindowManagerDescriptor(MyDoggyToolWindowManager manager) {
         this.manager = manager;
         this.pushAwayMode = PushAwayMode.VERTICAL;
+        this.numberingEnabled = true;
         this.listenerList = new EventListenerList();
 
         initMostRecent();
@@ -178,6 +180,20 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         manager.setCornerComponent(corner, component);
     }
 
+    public void setNumberingEnabled(boolean numberingEnabled) {
+        if (this.numberingEnabled == numberingEnabled)
+            return;
+
+        boolean old = this.numberingEnabled;
+        this.numberingEnabled = numberingEnabled;
+        
+        firePropertyChange("numberingEnabled", old, numberingEnabled);
+    }
+
+    public boolean isNumberingEnabled() {
+        return numberingEnabled;
+    }
+
     public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
         if (listenerList == null)
             listenerList = new EventListenerList();
@@ -192,6 +208,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         return listenerList.getListeners(PropertyChangeListener.class);
     }
 
+
     public void propertyChange(PropertyChangeEvent evt) {
         if ("visible".equals(evt.getPropertyName())) {
             if (((Boolean) evt.getNewValue())) {
@@ -203,6 +220,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
             }
         }
     }
+
 
     public void append(ToolWindowAnchor... anchors) {
         if (anchors == null)

@@ -110,7 +110,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 ToolWindowTab tab;
 
                 public CloseTabAction(ToolWindowTab tab) {
-                    super(ResourceBoundles.getResourceBundle().getString("@@tool.tab.close"));
+                    super(ResourceBundleManager.getInstance().getString("@@tool.tab.close"));
                     this.tab = tab;
                 }
 
@@ -131,7 +131,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
             class CloseAllTabAction extends AbstractAction {
                 public CloseAllTabAction() {
-                    super(ResourceBoundles.getResourceBundle().getString("@@tool.tab.closeAll"));
+                    super(ResourceBundleManager.getInstance().getString("@@tool.tab.closeAll"));
                 }
 
                 public void actionPerformed(ActionEvent e) {
@@ -434,7 +434,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     class SelectNextTabAction extends AbstractAction {
 
         public SelectNextTabAction() {
-            super(ResourceBoundles.getResourceBundle().getString("@@tool.tab.selectNext"));
+            super(ResourceBundleManager.getInstance().getString("@@tool.tab.selectNext"));
         }
 
         public void actionPerformed(ActionEvent e) {
@@ -463,7 +463,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     class SelectPreviousTabAction extends AbstractAction {
 
         public SelectPreviousTabAction() {
-            super(ResourceBoundles.getResourceBundle().getString("@@tool.tab.selectPreviuos"));
+            super(ResourceBundleManager.getInstance().getString("@@tool.tab.selectPreviuos"));
         }
 
         public void actionPerformed(ActionEvent e) {

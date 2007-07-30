@@ -210,24 +210,26 @@ public class ApplicationBarPanelUI extends PanelUI {
         GraphicsUtil.fillRect(g, r, c1, c2,
                               null, GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
 
-        String id = descriptor.getToolWindow().getId();
-        r.width = g.getFontMetrics().stringWidth(id) + 8;
+        if (descriptor.getDockedTypeDescriptor().isIdVisibleOnToolBar()) {
+            // TODO: l'id non cambia più..
+            String id = ResourceBundleManager.getInstance().getUserString(descriptor.getToolWindow().getId());
+            r.width = g.getFontMetrics().stringWidth(id) + 8;
 
-        int halfHeigh = (r.height / 2);
-        GraphicsUtil.fillRect(g, r, Color.WHITE, c3,
-                              new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
-                                          new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
-                                          4),
-                              GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+            int halfHeigh = (r.height / 2);
+            GraphicsUtil.fillRect(g, r, Color.WHITE, c3,
+                                  new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
+                                              new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
+                                              4),
+                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
 
-        GraphicsUtil.fillRect(g, r, Color.WHITE, c3,
-                              new Arc2D.Double(r.x + r.width - r.height,
-                                               r.y, r.height, r.height, -90.0d, 180.0d, Arc2D.CHORD),
-                              GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+            GraphicsUtil.fillRect(g, r, Color.WHITE, c3,
+                                  new Arc2D.Double(r.x + r.width - r.height,
+                                                   r.y, r.height, r.height, -90.0d, 180.0d, Arc2D.CHORD),
+                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
 
-
-        g.setColor(c4);
-        g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
+            g.setColor(c4);
+            g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
+        } 
     }
 
 

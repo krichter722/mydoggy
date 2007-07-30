@@ -64,6 +64,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
                 setFloatingWindow(false);
         } else if ("index".equals(evt.getPropertyName())) {
             updateAnchorLabel();
+        } else if ("numberingEnabled".equals(evt.getPropertyName())) {
+            updateAnchorLabel();
         } else if ("icon".equals(evt.getPropertyName())) {
             updateAnchorLabel();
         } else if ("dockLength".equals(evt.getPropertyName())) {
@@ -168,8 +170,10 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         if (anchorLabel == null) {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
-            String toolAnchorLabelText = (toolWindow.getIndex() > 0) ? toolWindow.getIndex() + " : " + toolWindow.getId()
-                                         : toolWindow.getId();
+            String labelText = ResourceBundleManager.getInstance().getUserString(toolWindow.getId());
+            String toolAnchorLabelText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
+                                         ? toolWindow.getIndex() + " : " + labelText
+                                         : labelText;
 
             if (anchor == ToolWindowAnchor.BOTTOM || anchor == ToolWindowAnchor.TOP) {
                 anchorLabel = new AnchorLabel(toolAnchorLabelText, toolWindow.getIcon(), JLabel.CENTER);
@@ -228,16 +232,17 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         if (anchorLabel != null) {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
-            String toolAnchorLabelName = (toolWindow.getIndex() > 0) ? toolWindow.getIndex() + " : " + toolWindow.getId()
-                                         : toolWindow.getId();
-
+            String labelText = ResourceBundleManager.getInstance().getUserString(toolWindow.getId());
+            String toolAnchorLabelText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
+                                         ? toolWindow.getIndex() + " : " + labelText
+                                         : labelText;
 
             if (anchor == ToolWindowAnchor.BOTTOM || anchor == ToolWindowAnchor.TOP) {
                 anchorLabel.setIcon(toolWindow.getIcon());
-                anchorLabel.setText(toolAnchorLabelName);
+                anchorLabel.setText(toolAnchorLabelText);
             } else {
                 TextIcon textIcon = new TextIcon(((TextIcon) ((CompositeIcon) anchorLabel.getIcon()).getLeftIcon()).getComponent(),
-                                                 toolAnchorLabelName,
+                                                 toolAnchorLabelText,
                                                  anchor == ToolWindowAnchor.LEFT ? TextIcon.ROTATE_LEFT : TextIcon.ROTATE_RIGHT);
                 CompositeIcon compositeIcon = new CompositeIcon(textIcon, toolWindow.getIcon(),
                                                                 (anchor == ToolWindowAnchor.LEFT) ? SwingConstants.TOP

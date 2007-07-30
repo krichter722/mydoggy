@@ -11,7 +11,7 @@ import org.noos.xing.mydoggy.plaf.persistence.xml.XmlPersistenceDelegate;
 import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.GlassPanel;
-import org.noos.xing.mydoggy.plaf.ui.ResourceBoundles;
+import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.MyDoggyTabbedContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
@@ -266,6 +266,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         throw new IllegalStateException("Doen't exist a TypeDescriptor for : " + type);
     }
 
+    public void setPersistenceDelegate(PersistenceDelegate persistenceDelegate) {
+        this.persistenceDelegate = persistenceDelegate;
+    }
+
+    public void initUserResourceBundle(Locale locale, String bundle, ClassLoader classLoader) {
+        ResourceBundleManager.getInstance().initUserBundle(locale, bundle, classLoader);
+    }
 
     public void addToolWindowManagerListener(ToolWindowManagerListener listener) {
         twmListeners.add(ToolWindowManagerListener.class, listener);
@@ -408,7 +415,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     
     protected void initResourceBoundles(Locale locale) {
-        ResourceBoundles.initResourceBoundles(locale);
+        ResourceBundleManager.getInstance().init(locale);
     }
 
     protected void initComponents() {
@@ -483,6 +490,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         propertyChangeSupport.addPropertyChangeListener("index", new IndexChangeListener());
         propertyChangeSupport.addPropertyChangeListener("icon", new IconChangeListener());
         propertyChangeSupport.addPropertyChangeListener("title", new TitleChangeListener());
+        propertyChangeSupport.addPropertyChangeListener("numberingEnabled", new NumberingEnabledChangeListener());
         propertyChangeSupport.addPropertyChangeListener("tempShowed", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 for (ToolWindowDescriptor tool : tools.values())
@@ -853,6 +861,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
             descriptor.getToolWindowContainer().propertyChange(evt);
             getBar(descriptor.getToolWindow().getAnchor()).propertyChange(evt);
+        }
+    }
+
+    class NumberingEnabledChangeListener implements PropertyChangeListener {
+        public void propertyChange(PropertyChangeEvent evt) {
+            for (ToolWindowDescriptor descriptor : tools.values()) 
+                descriptor.propertyChange(evt);
         }
     }
 

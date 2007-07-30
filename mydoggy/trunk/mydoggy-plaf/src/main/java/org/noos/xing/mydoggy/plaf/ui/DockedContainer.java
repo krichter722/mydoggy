@@ -25,7 +25,7 @@ import java.util.ResourceBundle;
  * @author Angelo De Caro
  */
 public class DockedContainer implements PropertyChangeListener, ToolWindowContainer {
-    private static ResourceBundle resourceBundle = ResourceBoundles.getResourceBundle();
+    private static ResourceBundle resourceBundle = ResourceBundleManager.getInstance().getResourceBundle();
 
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
@@ -127,22 +127,22 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
     protected void setSliding() {
         dockButton.setIcon(toolWindowUI.getIcon(DOCKED));
-        dockButton.setToolTipText(ResourceBoundles.getResourceBundle().getString("@@tool.tooltip.dock"));
+        dockButton.setToolTipText(ResourceBundleManager.getInstance().getString("@@tool.tooltip.dock"));
     }
 
     protected void setDocked() {
         dockButton.setIcon(toolWindowUI.getIcon(SLIDING));
-        dockButton.setToolTipText(ResourceBoundles.getResourceBundle().getString("@@tool.tooltip.undock"));
+        dockButton.setToolTipText(ResourceBundleManager.getInstance().getString("@@tool.tooltip.undock"));
     }
 
     protected void setFix() {
         floatingButton.setIcon(toolWindowUI.getIcon(FIX));
-        floatingButton.setToolTipText(ResourceBoundles.getResourceBundle().getString("@@tool.tooltip.fix"));
+        floatingButton.setToolTipText(ResourceBundleManager.getInstance().getString("@@tool.tooltip.fix"));
     }
 
     protected void setFloating() {
         floatingButton.setIcon(toolWindowUI.getIcon(FLOATING));
-        floatingButton.setToolTipText(ResourceBoundles.getResourceBundle().getString("@@tool.tooltip.float"));
+        floatingButton.setToolTipText(ResourceBundleManager.getInstance().getString("@@tool.tooltip.float"));
     }
 
     protected void assignFocus() {
@@ -185,7 +185,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
         applicationBarLayout.setColumn(0, applicationBar.getFontMetrics(
                 applicationBar.getFont()
-        ).stringWidth(id) + 12);
+        ).stringWidth(ResourceBundleManager.getInstance().getUserString(id)) + 12);
 
         // Tabs
         applicationBarTabs = new ToolWindowTabPanel(this, toolWindow);

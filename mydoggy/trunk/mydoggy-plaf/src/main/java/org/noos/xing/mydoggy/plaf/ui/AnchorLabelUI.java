@@ -33,7 +33,7 @@ public class AnchorLabelUI extends MetalLabelUI {
     static final Color end = new Color(255, 244, 204);
     static final Color gray = new Color(247, 243, 239);
 
-    private static ResourceBundle resourceBundle = ResourceBoundles.getResourceBundle();
+    private static ResourceBundle resourceBundle = ResourceBundleManager.getInstance().getResourceBundle();
 
     private JComponent label;
 
