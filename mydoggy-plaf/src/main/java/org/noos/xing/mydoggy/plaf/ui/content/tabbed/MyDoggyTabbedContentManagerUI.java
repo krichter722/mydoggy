@@ -40,6 +40,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
 
     private PropertyChangeSupport propertyChangeSupport;
     private EventListenerList contentManagerUIListeners;
+    private PropertyChangeSupport propertyChangeListeners;
 
     private BackContentUI lastSelected;
 
@@ -49,13 +50,11 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
     private Map<Content, TabbedContentUI> detachedContentUIMap;
 
     public MyDoggyTabbedContentManagerUI() {
+        this.propertyChangeListeners = new PropertyChangeSupport(this);
+
         initComponents();
     }
 
-
-    public boolean isShowAlwaysTab() {
-        return showAlwaysTab;
-    }
 
     public void setCloseable(boolean closeable) {
         tabbedContentManager.setCloseable(closeable);
@@ -65,10 +64,22 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
         tabbedContentManager.setDetachable(detachable);
     }
 
+    public TabbedContentUI getContentUI(Content content) {
+        if (content.isDetached() || tabbedContentManager.getTabCount() == 0) {
+            return detachedContentUIMap.get(content);
+        } else
+            return tabbedContentManager.getContentPage(
+                    tabbedContentManager.indexOfComponent(content.getComponent()));
+    }
+
     public void setTabPlacement(TabPlacement tabPlacement) {
-        if (tabPlacement == null)
+        if (tabPlacement == null || tabPlacement == getTabPlacement())
             return;
+
+        TabPlacement old = getTabPlacement();
         tabbedContentManager.setTabPlacement(tabPlacement.ordinal() + 1);
+
+        propertyChangeListeners.firePropertyChange("tabPlacement", old, tabPlacement);
     }
 
     public TabPlacement getTabPlacement() {
@@ -86,9 +97,13 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
     }
 
     public void setTabLayout(TabLayout tabLayout) {
-        if (tabLayout == null)
+        if (tabLayout == null || tabLayout == getTabLayout())
             return;
+
+        TabLayout old = getTabLayout();
         tabbedContentManager.setTabLayoutPolicy(tabLayout.ordinal());
+
+        propertyChangeListeners.firePropertyChange("tabLayout", old, tabLayout);
     }
 
     public TabLayout getTabLayout() {
@@ -99,6 +114,10 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
                 return TabLayout.SCROLL;
         }
         throw new IllegalStateException("Invalid Tab Layout...");
+    }
+
+    public boolean isShowAlwaysTab() {
+        return showAlwaysTab;
     }
 
     public void setShowAlwaysTab(boolean showAlwaysTab) {
@@ -115,12 +134,16 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
         }
     }
 
-    public TabbedContentUI getContentUI(Content content) {
-        if (content.isDetached() || tabbedContentManager.getTabCount() == 0) {
-            return detachedContentUIMap.get(content);
-        } else
-            return tabbedContentManager.getContentPage(
-                    tabbedContentManager.indexOfComponent(content.getComponent()));
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeListeners.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeListeners.removePropertyChangeListener(listener);
+    }
+
+    public PropertyChangeListener[] getPropertyChangeListeners() {
+        return propertyChangeListeners.getPropertyChangeListeners();
     }
 
 
