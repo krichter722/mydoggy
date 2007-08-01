@@ -562,6 +562,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     poss.put(descriptor, descriptor.getLabelIndex());
                     removeAnchorLabel(descriptor.getAnchorLabel(), descriptor);
                 } else {
+                    assert poss.containsKey(descriptor);
                     addAnchorLabel(descriptor.getAnchorLabel(contentPane), poss.get(descriptor));
                 }
             }
