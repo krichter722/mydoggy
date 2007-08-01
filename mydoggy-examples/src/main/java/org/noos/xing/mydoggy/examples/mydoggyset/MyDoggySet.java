@@ -247,7 +247,9 @@ public class MyDoggySet {
         });
 
 
-        toolWindowManager.getContentManager().addContent("Tools", "Tools", null, new ToolsContentComponent(toolWindowManager), "ToolWindows");
+        toolWindowManager.getContentManager().addContent("Tools", "Tools",
+                                                         SwingUtil.loadIcon("org/noos/xing/mydoggy/examples/mydoggyset/icons/save.png"), 
+                                                         new ToolsContentComponent(toolWindowManager), "ToolWindows");
         assert toolWindowManager.getContentManager().getContentManagerUI().getContentUI(
                 toolWindowManager.getContentManager().getContent(0)
         ) != null;

@@ -1,24 +1,25 @@
 package org.noos.xing.mydoggy.examples.mydoggyset.content;
 
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.ToolWindowType;
+import info.clearthought.layout.TableLayout;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ToolsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.CheckBoxCellRenderer;
+import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-
-import info.clearthought.layout.TableLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ToolsContentComponent extends JPanel {
     private ToolWindowManager toolWindowManager;
+    private JPanel typeDescriptroPrefPanel;
 
     public ToolsContentComponent(ToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
@@ -87,14 +88,68 @@ public class ToolsContentComponent extends JPanel {
 
         // Preference Panel
 
-        JPanel prefPanel = new JPanel(new TableLayout(new double[][]{{-1},{20}}));
+        JPanel prefPanel = new JPanel(new TableLayout(new double[][]{{-1},{20,3,-1}}));
         prefPanel.setBorder(new TitledBorder("Preferences"));
 
+        prefPanel.add(typeDescriptroPrefPanel = initTypeDescriptorPrefPanel(), "0,2,FULL,FULL");
+        prefPanel.add(initTypeDescriptorSelectorPanel(), "0,0,FULL,FULL");
 
         // Setup main panel
         setLayout(new TableLayout(new double[][]{{-1},{-1,5,-1}}));
         add(toolsPanel, "0,0,FULL,FULL");
         add(prefPanel, "0,2,FULL,FULL");
+    }
+
+    protected JPanel initTypeDescriptorSelectorPanel() {
+        JPanel panel = new JPanel(new TableLayout(new double[][]{{150,3,-1},{-1}}));
+
+        JComboBox types = new JComboBox(new Object[]{
+                DockedTypeDescriptor.class,
+                SlidingTypeDescriptor.class,
+                FloatingTypeDescriptor.class
+        });
+
+        final Component dock = initDockedTypeDescrPrefPanel();
+        final Component sliding = initDockedTypeDescrPrefPanel();
+        final Component floating = initDockedTypeDescrPrefPanel();
+
+        types.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getItem().equals(DockedTypeDescriptor.class))
+                    setTypeDescriptorPrefPanel(dock);
+                else if (e.getItem().equals(SlidingTypeDescriptor.class))
+                    setTypeDescriptorPrefPanel(sliding);
+                else if (e.getItem().equals(FloatingTypeDescriptor.class))
+                    setTypeDescriptorPrefPanel(floating);
+            }
+        });
+
+        panel.add(new JLabel("Type Descriptor : "), "0,0,r,FULL");
+        panel.add(types, "2,0,FULL,FULL");
+
+        return panel;
+    }
+
+    protected JPanel initTypeDescriptorPrefPanel() {
+        JPanel panel = new JPanel(new TableLayout(new double[][]{{-1},{-1}}));
+        panel.setBorder(new LineBorder(Color.DARK_GRAY));
+
+        return panel;
+    }
+
+    protected void setTypeDescriptorPrefPanel(Component component) {
+        typeDescriptroPrefPanel.removeAll();
+        typeDescriptroPrefPanel.add(component, "0,0,FULL,FULL");
+
+        typeDescriptroPrefPanel.revalidate();
+        typeDescriptroPrefPanel.repaint();
+    }
+
+    protected JPanel initDockedTypeDescrPrefPanel() {
+        JPanel panel = new JPanel(new TableLayout(new double[][]{{-1, 50, -1},{-1, 20, -1}}));
+        panel.add(new JLabel("No Pref"), "1,1,FULL,FULL");
+
+        return panel;
     }
 
 }

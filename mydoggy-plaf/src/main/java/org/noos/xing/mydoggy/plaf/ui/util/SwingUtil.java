@@ -261,4 +261,12 @@ public class SwingUtil {
         }
         return null;
     }
+
+    public static int getIconWidth(Icon icon) {
+        return (icon != null) ? icon.getIconWidth() : 0;
+    }
+
+    public static int getIconHeight(Icon icon) {
+        return (icon != null) ? icon.getIconHeight() : 0;
+    }
 }

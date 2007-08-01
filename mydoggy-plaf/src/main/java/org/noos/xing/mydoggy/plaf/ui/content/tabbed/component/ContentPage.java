@@ -3,15 +3,15 @@ package org.noos.xing.mydoggy.plaf.ui.content.tabbed.component;
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.TabbedContentUI;
 import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
-import org.noos.xing.mydoggy.plaf.ui.icons.CompositeIcon;
+import org.noos.xing.mydoggy.plaf.ui.icons.AggregateIcon;
 import org.noos.xing.mydoggy.plaf.ui.icons.TextIcon;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -150,7 +150,7 @@ public class ContentPage implements TabbedContentUI {
 
     public String getToolTipTextAt(MouseEvent e, int index, String defaultTip) {
         if (index != -1) {
-            CompositeIcon compositeIcon = (CompositeIcon) ((CompositeIcon) getContentIcon()).getRightIcon();
+            AggregateIcon compositeIcon = (AggregateIcon) ((AggregateIcon) getContentIcon()).getRightIcon();
 
             Point point = SwingUtilities.convertPoint(tabbedPane, e.getPoint(), getDestination());
 
@@ -183,17 +183,16 @@ public class ContentPage implements TabbedContentUI {
                 titleIcon = new DynamicTextIcon();
 
             // Right Part
-            // TODO: Controllare allineamento... 
-            contentIcon = new CompositeIcon(new CompositeIcon(icon, titleIcon, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.TOP),
-                                            new DoubleIcon(), SwingConstants.LEFT,
-                                            SwingConstants.LEFT, SwingConstants.TOP);
+            contentIcon = new AggregateIcon(new AggregateIcon(icon, titleIcon, SwingConstants.HORIZONTAL),
+                                               new CloseMaximizeIcon(),
+                                               SwingConstants.HORIZONTAL);
         }
         return contentIcon;
     }
 
     public boolean isDetachFired(Point point) {
         Point relativeMousePoint = SwingUtilities.convertPoint(tabbedPane, point, getDestination());
-        CompositeIcon uiCompositeIcon = getUICompositeIcon();
+        AggregateIcon uiCompositeIcon = getUICompositeIcon();
 
         Rectangle detachIconRect = uiCompositeIcon.getLastPaintedLeftRec();
         return (isDetachable() && ((relativeMousePoint.getX() > detachIconRect.x && relativeMousePoint.getX() < detachIconRect.x + detachIconRect.width) ||
@@ -203,10 +202,10 @@ public class ContentPage implements TabbedContentUI {
     public void setContent(Content content) {
         this.content = content;
     }
-    
+
     public boolean isCloseFired(Point point) {
         Point relativeMousePoint = SwingUtilities.convertPoint(tabbedPane, point, getDestination());
-        CompositeIcon uiCompositeIcon = getUICompositeIcon();
+        AggregateIcon uiCompositeIcon = getUICompositeIcon();
 
         Rectangle closeIconRect = uiCompositeIcon.getLastPaintedRightRec();
         return (isCloseable() && ((relativeMousePoint.getX() > closeIconRect.x && relativeMousePoint.getX() < closeIconRect.x + closeIconRect.width) ||
@@ -222,8 +221,8 @@ public class ContentPage implements TabbedContentUI {
         return tabbedPane;
     }
 
-    private CompositeIcon getUICompositeIcon() {
-        return (CompositeIcon) ((CompositeIcon) getContentIcon()).getRightIcon();
+    private AggregateIcon getUICompositeIcon() {
+        return (AggregateIcon) ((AggregateIcon) getContentIcon()).getRightIcon();
     }
 
     public void showPopupMenu(Component source, final MouseEvent mouseEvent, final int mouseOverTab, JPopupMenu defaultContentPopupMenu) {
@@ -266,7 +265,7 @@ public class ContentPage implements TabbedContentUI {
                                                      ResourceBundleManager.getInstance().getString("@@tabbed.page.maximize")
                 );
             }
-            
+
             popupMenu = stdPopupMenu;
         }
 
@@ -306,11 +305,11 @@ public class ContentPage implements TabbedContentUI {
         }
     }
 
-    class DoubleIcon extends CompositeIcon {
+    class CloseMaximizeIcon extends AggregateIcon {
         private boolean isSelected;
 
-        public DoubleIcon() {
-            super(maxImgD, closeImgD, SwingConstants.LEFT);
+        public CloseMaximizeIcon() {
+            super(maxImgD, closeImgD, SwingConstants.HORIZONTAL);
         }
 
         public void paintIcon(Component c, Graphics g, int x, int y) {
@@ -326,16 +325,12 @@ public class ContentPage implements TabbedContentUI {
             super.paintIcon(c, g, x, y);
         }
 
-        protected void paintLeftIcon(Component c, Graphics g, Icon icon, int x, int y, int width, int height, int horizontalOrientation, int verticalOrientation) {
-            super.paintLeftIcon(c, g,
-                                isSelected ? maxImgI : maxImgD,
-                                x, y, width, height, horizontalOrientation, verticalOrientation);
+        public Icon getLeftIcon() {
+            return isSelected ? maxImgI : maxImgD;
         }
 
-        protected void paintRightIcon(Component c, Graphics g, Icon icon, int x, int y, int width, int height, int horizontalOrientation, int verticalOrientation) {
-            super.paintRightIcon(c, g,
-                                 isSelected ? closeImgI : closeImgD,
-                                 x, y, width, height, horizontalOrientation, verticalOrientation);
+        public Icon getRightIcon() {
+            return isSelected ? closeImgI : closeImgD;
         }
 
         public boolean isLeftVisible() {

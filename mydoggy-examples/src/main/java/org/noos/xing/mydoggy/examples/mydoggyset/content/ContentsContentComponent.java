@@ -32,6 +32,8 @@ public class ContentsContentComponent extends JPanel {
     private JPanel tabbedManagerUIPrefPanel;
     private JPanel dektopManagerUIPrefPanel;
 
+    private boolean valueChanging = false;
+
     public ContentsContentComponent(ToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
         this.map = new Hashtable<Class, ContentManagerUI>();
@@ -132,9 +134,13 @@ public class ContentsContentComponent extends JPanel {
         );
         tabPlaces.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-                ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).setTabPlacement(
-                        (TabbedContentManagerUI.TabPlacement) e.getItem()
-                );
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    valueChanging = true;
+                    ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).setTabPlacement(
+                            (TabbedContentManagerUI.TabPlacement) tabPlaces.getSelectedItem()
+                    );
+                    valueChanging = false;
+                }
             }
         });
         panel.add(tabPlaces, "3,1,FULL,FULL");
@@ -147,9 +153,13 @@ public class ContentsContentComponent extends JPanel {
         });
         tabLayouts.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-                ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).setTabLayout(
-                        (TabbedContentManagerUI.TabLayout) e.getItem()
-                );
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    valueChanging = true;
+                    ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).setTabLayout(
+                            (TabbedContentManagerUI.TabLayout) tabLayouts.getSelectedItem()
+                    );
+                    valueChanging = false;
+                }
             }
         });
         tabLayouts.setSelectedIndex(
@@ -159,6 +169,9 @@ public class ContentsContentComponent extends JPanel {
 
         ((TabbedContentManagerUI) map.get(TabbedContentManagerUI.class)).addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
+                if (valueChanging)
+                    return;
+                
                 String pName = evt.getPropertyName();
                 if ("tabPlacement".equals(pName)) {
                     tabPlaces.setSelectedIndex(((TabbedContentManagerUI.TabPlacement)evt.getNewValue()).ordinal());
