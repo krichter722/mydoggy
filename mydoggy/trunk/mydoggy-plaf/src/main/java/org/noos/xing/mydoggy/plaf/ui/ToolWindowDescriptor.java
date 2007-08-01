@@ -5,7 +5,7 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowBar;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.icons.CompositeIcon;
+import org.noos.xing.mydoggy.plaf.ui.icons.AggregateIcon;
 import org.noos.xing.mydoggy.plaf.ui.icons.TextIcon;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
 
@@ -175,18 +175,24 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
                                          ? toolWindow.getIndex() + " : " + labelText
                                          : labelText;
 
-            if (anchor == ToolWindowAnchor.BOTTOM || anchor == ToolWindowAnchor.TOP) {
-                anchorLabel = new AnchorLabel(toolAnchorLabelText, toolWindow.getIcon(), JLabel.CENTER);
-                anchorLabel.setName("toolWindow.rb." + toolWindow.getId());
-            } else {
-                TextIcon textIcon = new TextIcon(container, toolAnchorLabelText, anchor == ToolWindowAnchor.LEFT ? TextIcon.ROTATE_LEFT : TextIcon.ROTATE_RIGHT);
-                CompositeIcon compositeIcon = new CompositeIcon(textIcon, toolWindow.getIcon(),
-                                                                (anchor == ToolWindowAnchor.LEFT) ? SwingConstants.TOP
-                                                                : SwingConstants.BOTTOM);
-                anchorLabel = new AnchorLabel(compositeIcon, JLabel.CENTER);
-                anchorLabel.setName("toolWindow.rb." + toolWindow.getId());
+            switch (anchor) {
+                case BOTTOM :
+                case TOP :
+                    anchorLabel = new AnchorLabel(toolAnchorLabelText, toolWindow.getIcon(), JLabel.CENTER);
+                    break;
+                case LEFT :
+                    TextIcon textIcon = new TextIcon(container, toolAnchorLabelText, TextIcon.ROTATE_LEFT);
+                    AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolWindow.getIcon(), SwingConstants.VERTICAL);
+                    anchorLabel = new AnchorLabel(compositeIcon, JLabel.CENTER);
+                    break;
+                case RIGHT :
+                    textIcon = new TextIcon(container, toolAnchorLabelText, TextIcon.ROTATE_RIGHT);
+                    compositeIcon = new AggregateIcon(toolWindow.getIcon(), textIcon, SwingConstants.VERTICAL);
+                    anchorLabel = new AnchorLabel(compositeIcon, JLabel.CENTER);
+                    break;
             }
 
+            anchorLabel.setName("toolWindow.rb." + toolWindow.getId());
             anchorLabel.setUI(createLabelUI());
             anchorLabel.setOpaque(toolWindow.isActive());
             anchorLabel.setFocusable(false);
@@ -237,18 +243,24 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
                                          ? toolWindow.getIndex() + " : " + labelText
                                          : labelText;
 
-            if (anchor == ToolWindowAnchor.BOTTOM || anchor == ToolWindowAnchor.TOP) {
-                anchorLabel.setIcon(toolWindow.getIcon());
-                anchorLabel.setText(toolAnchorLabelText);
-            } else {
-                TextIcon textIcon = new TextIcon(((TextIcon) ((CompositeIcon) anchorLabel.getIcon()).getLeftIcon()).getComponent(),
-                                                 toolAnchorLabelText,
-                                                 anchor == ToolWindowAnchor.LEFT ? TextIcon.ROTATE_LEFT : TextIcon.ROTATE_RIGHT);
-                CompositeIcon compositeIcon = new CompositeIcon(textIcon, toolWindow.getIcon(),
-                                                                (anchor == ToolWindowAnchor.LEFT) ? SwingConstants.TOP
-                                                                : SwingConstants.BOTTOM);
-                anchorLabel.setText(null);
-                anchorLabel.setIcon(compositeIcon);
+            switch (anchor) {
+                case BOTTOM :
+                case TOP :
+                    anchorLabel.setIcon(toolWindow.getIcon());
+                    anchorLabel.setText(toolAnchorLabelText);
+                    break;
+                case LEFT :
+                    TextIcon textIcon = new TextIcon(((TextIcon) ((AggregateIcon) anchorLabel.getIcon()).getLeftIcon()).getComponent(), toolAnchorLabelText, TextIcon.ROTATE_LEFT);
+                    AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolWindow.getIcon(), SwingConstants.VERTICAL);
+                    anchorLabel.setText(null);
+                    anchorLabel.setIcon(compositeIcon);
+                    break;
+                case RIGHT :
+                    textIcon = new TextIcon(((TextIcon) ((AggregateIcon) anchorLabel.getIcon()).getLeftIcon()).getComponent(), toolAnchorLabelText, TextIcon.ROTATE_RIGHT);
+                    compositeIcon = new AggregateIcon(toolWindow.getIcon(), textIcon, SwingConstants.VERTICAL);
+                    anchorLabel.setText(null);
+                    anchorLabel.setIcon(compositeIcon);
+                    break;
             }
         }
     }
