@@ -150,8 +150,10 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         if (focusRequester == null) {
             hideButton.setFocusable(true);
             focusRequester = hideButton;
+        } else {
+            hideButton.setFocusable(false);
         }
-        SwingUtil.requestFocus(hideButton);
+        SwingUtil.requestFocus(focusRequester);
     }
 
 
@@ -820,7 +822,11 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
             if (active && focusRequester != null && !valueAdjusting) {
 //                System.out.println("focusRequester = " + focusRequester);
-                SwingUtil.requestFocus(focusRequester);
+                if (focusRequester == hideButton)
+                    assignFocus();
+                else
+                    SwingUtil.requestFocus(focusRequester);
+
             }
         }
     }
