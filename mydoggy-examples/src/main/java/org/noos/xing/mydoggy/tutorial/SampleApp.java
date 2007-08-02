@@ -42,7 +42,7 @@ public class SampleApp {
     protected void initToolWindowManager() {
         // Create a new instance of MyDoggyToolWindowManager passing the frame.
         MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
-        myDoggyToolWindowManager.initUserResourceBundle(Locale.ITALY, 
+        myDoggyToolWindowManager.initUserResourceBundle(Locale.ITALY,
                                                         "org/noos/xing/mydoggy/tutorial/sampleApp",
                                                         null);
         this.toolWindowManager = myDoggyToolWindowManager;
