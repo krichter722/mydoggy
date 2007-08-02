@@ -727,8 +727,12 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 else {
                     if (!(focusRequester instanceof ToolWindowActiveButton))
                         focusRequester = component;
-                    else
-                        focusRequester.requestFocusInWindow();
+                    else {
+                        if (focusRequester == hideButton)
+                            assignFocus();
+                        else
+                            focusRequester.requestFocusInWindow();
+                    }
                 }
             } else {
                 descriptor.getToolBar().deactiveTool(toolWindow); 
