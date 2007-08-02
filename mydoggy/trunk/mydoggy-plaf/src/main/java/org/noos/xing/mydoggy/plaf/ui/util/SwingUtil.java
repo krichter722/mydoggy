@@ -286,7 +286,7 @@ public class SwingUtil {
             for (final GraphicsDevice graphicsDevice : gda) {
                 final Rectangle bounds = graphicsDevice.getDefaultConfiguration().getBounds();
 
-                if (graphicsDevice.getType() == GraphicsDevice.TYPE_RASTER_SCREEN && !bounds.contains(location)) {
+                if (graphicsDevice.getType() == GraphicsDevice.TYPE_RASTER_SCREEN && bounds.contains(location)) {
                     targetBounds = bounds;
                     break;
                 }
