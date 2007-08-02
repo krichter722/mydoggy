@@ -225,11 +225,10 @@ public class FloatingContainer extends DockedContainer {
         addPropertyChangeListener("maximized", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-                    // TODO: it's not good...
-                    if ((Boolean)evt.getNewValue()) {
-                        window.getGraphicsConfiguration().getDevice().setFullScreenWindow(window);
-                    } else
-                        window.getGraphicsConfiguration().getDevice().setFullScreenWindow(null);
+                    if ((Boolean)evt.getNewValue())
+                        SwingUtil.setFullScreen(window);
+                     else
+                        SwingUtil.restoreFullScreenWindow(window);
                 }
 
             }

@@ -5,6 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Hashtable;
+import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -255,7 +257,7 @@ public class SwingUtil {
         if (c.getName() != null && c.getName().startsWith(parentName))
             return c;
 
-        for( ; c != null; c = c.getParent()) {
+        for (; c != null; c = c.getParent()) {
             if (c.getName() != null && c.getName().startsWith(parentName))
                 return c;
         }
@@ -268,5 +270,40 @@ public class SwingUtil {
 
     public static int getIconHeight(Icon icon) {
         return (icon != null) ? icon.getIconHeight() : 0;
+    }
+
+    private static Map<Window, Rectangle> fullScreenBounds = new Hashtable<Window, Rectangle>();
+
+    public static void setFullScreen(Window window) {
+        GraphicsDevice[] gda = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+
+        if (gda.length > 1) {
+            Rectangle targetBounds = window.getBounds();
+            fullScreenBounds.put(window, targetBounds);
+
+            Point location = window.getLocationOnScreen();
+
+            for (final GraphicsDevice graphicsDevice : gda) {
+                final Rectangle bounds = graphicsDevice.getDefaultConfiguration().getBounds();
+
+                if (graphicsDevice.getType() == GraphicsDevice.TYPE_RASTER_SCREEN && !bounds.contains(location)) {
+                    targetBounds = bounds;
+                    break;
+                }
+            }
+
+            window.setBounds(targetBounds);
+        } else
+            window.getGraphicsConfiguration().getDevice().setFullScreenWindow(window);
+    }
+
+    public static void restoreFullScreenWindow(Window window) {
+        GraphicsDevice[] gda = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+        if (gda.length > 1) {
+            Rectangle bounds = fullScreenBounds.get(window);
+            if (bounds != null)
+                window.setBounds(bounds);
+        } else
+            window.getGraphicsConfiguration().getDevice().setFullScreenWindow(null);
     }
 }
