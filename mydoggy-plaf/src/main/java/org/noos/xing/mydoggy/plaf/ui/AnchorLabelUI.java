@@ -48,9 +48,9 @@ public class AnchorLabelUI extends MetalLabelUI {
     private Timer flashingTimer;
     private int flasingDuration;
     private boolean flashingState;
-    private MutableColor flashingAnimBackStart = new MutableColor(gray);
-    private MutableColor flashingAnimBackEnd = new MutableColor(gray);
-    private AbstractAnimation flashingAnimation = new GradientAnimation();
+    private MutableColor flashingAnimBackStart;
+    private MutableColor flashingAnimBackEnd;
+    private AbstractAnimation flashingAnimation;
 
 
     private TranslucentPanel previewPanel;
@@ -58,7 +58,11 @@ public class AnchorLabelUI extends MetalLabelUI {
     public AnchorLabelUI(ToolWindowDescriptor descriptor, ToolWindow toolWindow) {
         this.descriptor = descriptor;
         this.toolWindow = toolWindow;
-        
+
+        flashingAnimation = new GradientAnimation();
+        flashingAnimBackStart = new MutableColor(gray);
+        flashingAnimBackEnd = new MutableColor(gray);
+
         this.dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
         this.dockedTypeDescriptor.addPropertyChangeListener(this);
     }
@@ -111,10 +115,8 @@ public class AnchorLabelUI extends MetalLabelUI {
         Rectangle bounds = c.getBounds();
         if (toolWindow.isFlashing() && !toolWindow.isVisible()) {
 
-            GraphicsUtil.fillRect(g, new Rectangle(0, 0, bounds.width, bounds.height),
-                                  flashingAnimBackStart,
-                                  flashingAnimBackEnd,
-                                  null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
+            descriptor.getToolWindowUI().updateAnchorFlash(g, new Rectangle(0, 0, bounds.width, bounds.height),
+                                                           flashingAnimBackStart, flashingAnimBackEnd);
 
             if (flashingTimer == null) {
                 flashingTimer = new Timer(600, new ActionListener() {
@@ -151,13 +153,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                 flashingTimer = null;
             }
 
-            if (c.isOpaque()) {
-                GraphicsUtil.fillRect(g, new Rectangle(0, 0, bounds.width, bounds.height),
-                                      start, end, null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
-            } else {
-                g.setColor(gray);
-                g.fillRect(0, 0, bounds.width, bounds.height);
-            }
+            descriptor.getToolWindowUI().updateAnchor(c.isOpaque(), g, new Rectangle(0, 0, bounds.width, bounds.height), start, end);
         }
         paint(g, c);
     }
