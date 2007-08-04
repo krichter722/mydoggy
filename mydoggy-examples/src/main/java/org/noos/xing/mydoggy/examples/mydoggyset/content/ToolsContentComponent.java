@@ -143,6 +143,11 @@ public class ToolsContentComponent extends JPanel {
                     setTypeDescriptorPrefPanel(floating);
             }
         });
+        SignalManager.getInstance().addSignalListener(ToolWindow.class, new SignalListener() {
+            public void handleSignalEvent(String signal, SignalEvent event) {
+                setTypeDescriptorPrefPanel(dock);
+            }
+        });
 
         panel.add(new JLabel("Type Descriptor : "), "0,0,r,FULL");
         panel.add(types, "2,0,FULL,FULL");
