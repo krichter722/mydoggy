@@ -73,6 +73,14 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
         }
 	}
 
+    public Object getValueAt(int row, int column) {
+        if (column == -1)
+            return windowManager.getToolWindow(getValueAt(row, 0));
+
+        return super.getValueAt(row, column);    
+
+    }
+
     public void propertyChange(PropertyChangeEvent evt) {
 		updateModel();
 	}
