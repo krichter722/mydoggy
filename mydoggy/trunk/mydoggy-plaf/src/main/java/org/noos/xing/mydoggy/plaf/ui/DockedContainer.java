@@ -3,7 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
-import static org.noos.xing.mydoggy.plaf.ui.ToolWindowUI.IconId.*;
+import static org.noos.xing.mydoggy.plaf.ui.ToolWindowUI.*;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -332,7 +332,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         toolWindow.addToolWindowListener(new DockedToolWindowListener());
     }
 
-    private JButton renderApplicationButton(String actionCommnad, ActionListener actionListener, String tooltip, ToolWindowUI.IconId iconId, String name) {
+    private JButton renderApplicationButton(String actionCommnad, ActionListener actionListener, String tooltip, String iconId, String name) {
         JButton button = new ToolWindowActiveButton();
         button.setUI((ButtonUI) BasicButtonUI.createUI(button));
         button.setName(name);
