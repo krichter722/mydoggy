@@ -649,7 +649,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
             if (animate) {
                 if (content != null) {
-                    splitPane.setDividerSize(5);
+                    splitPane.setDividerSize(descriptor.getDockedTypeDescriptor().getDividerSize());
                     if (manager.getShowingGroup() == null &&
                         descriptor.getTypeDescriptor(ToolWindowType.DOCKED).isAnimating()) {
                         splitAnimation.show(divederLocation);

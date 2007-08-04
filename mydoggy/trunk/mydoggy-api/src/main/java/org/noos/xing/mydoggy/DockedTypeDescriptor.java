@@ -172,6 +172,20 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
     boolean isIdVisibleOnToolBar();
 
     /**
+     *
+     * @param dividerSize
+     * @since 1.3.1
+     */
+    void setDividerSize(int dividerSize);
+
+    /**
+     *
+     * @return
+     * @since 1.3.1
+     */
+    int getDividerSize();
+
+    /**
      * Adds a PropertyChangeListener to the listener list. The listener is
      * registered for all bound properties of this class, including the
      * following:
