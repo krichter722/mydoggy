@@ -9,10 +9,7 @@ import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -26,12 +23,19 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
 
     private boolean checkParam = true;
     private Stack<ToolWindowAnchor> mostRecentStack;
+    private Map<ToolWindowAnchor, Integer> dividerSizes;
 
     public MyDoggyToolWindowManagerDescriptor(MyDoggyToolWindowManager manager) {
         this.manager = manager;
         this.pushAwayMode = PushAwayMode.VERTICAL;
         this.numberingEnabled = true;
         this.listenerList = new EventListenerList();
+
+        this.dividerSizes = new HashMap<ToolWindowAnchor, Integer>();
+        setDividerSize(LEFT, 5);
+        setDividerSize(RIGHT, 5);
+        setDividerSize(TOP, 5);
+        setDividerSize(BOTTOM, 5);
 
         initMostRecent();
     }
@@ -192,6 +196,16 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
 
     public boolean isNumberingEnabled() {
         return numberingEnabled;
+    }
+
+    public int getDividerSize(ToolWindowAnchor anchor) {
+        return dividerSizes.get(anchor);
+    }
+
+    public void setDividerSize(ToolWindowAnchor anchor, int size) {
+        // TODO: check oldsize and size
+        int oldSize = dividerSizes.put(anchor, size);
+        firePropertyChange("dividerSize", new Object[]{anchor, oldSize}, new Object[]{anchor, size});
     }
 
     public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {

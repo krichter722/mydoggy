@@ -76,6 +76,21 @@ public interface ToolWindowManagerDescriptor {
     boolean isNumberingEnabled();
 
     /**
+     *
+     * @param anchor
+     * @return
+     * @since 1.3.1
+     */
+    int getDividerSize(ToolWindowAnchor anchor);
+
+    /**
+     *
+     * @param anchor
+     * @param size
+     */
+    void setDividerSize(ToolWindowAnchor anchor, int size);
+
+    /**
      * Adds a PropertyChangeListener to the listener list. The listener is
      * registered for all bound properties of this class, including the
      * following:
