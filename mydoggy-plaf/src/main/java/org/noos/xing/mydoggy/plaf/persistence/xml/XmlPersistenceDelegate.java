@@ -101,6 +101,8 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
         dockedDescriptorAttributes.addAttribute(null, "previewEnabled", null, null, String.valueOf(dockedTypeDescriptor.isPreviewEnabled()));
         dockedDescriptorAttributes.addAttribute(null, "previewDelay", null, null, String.valueOf(dockedTypeDescriptor.getPreviewDelay()));
         dockedDescriptorAttributes.addAttribute(null, "previewTransparentRatio", null, null, String.valueOf(dockedTypeDescriptor.getPreviewTransparentRatio()));
+        dockedDescriptorAttributes.addAttribute(null, "hideLabelOnVisible", null, null, String.valueOf(dockedTypeDescriptor.isHideLabelOnVisible()));
+        dockedDescriptorAttributes.addAttribute(null, "idVisibleOnToolBar", null, null, String.valueOf(dockedTypeDescriptor.isIdVisibleOnToolBar()));
         writer.dataElement("docked", dockedDescriptorAttributes);
 
         // DockedTypeDescriptor
@@ -142,6 +144,14 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
     }
 
     protected void saveToolWindowManagerDescriptor(XMLWriter writer) throws SAXException{
+        AttributesImpl twdmAttributes = new AttributesImpl();
+        ToolWindowManagerDescriptor descriptor = toolWindowManager.getToolWindowManagerDescriptor();
+        twdmAttributes.addAttribute(null, "dividerLeft", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.LEFT)));
+        twdmAttributes.addAttribute(null, "dividerRight", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.RIGHT)));
+        twdmAttributes.addAttribute(null, "dividerTop", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.TOP)));
+        twdmAttributes.addAttribute(null, "dividerBottom", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.BOTTOM)));
+        writer.startElement("toolWindowDescriptorManager", twdmAttributes);
+
         // Start pushAway
         writer.startElement("pushAway");
 
@@ -163,6 +173,8 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
 
         // End pushAway
         writer.endElement("pushAway");
+
+        writer.endElement("toolWindowDescriptorManager");
     }
 
     protected void saveContentManager(XMLWriter writer) throws SAXException {

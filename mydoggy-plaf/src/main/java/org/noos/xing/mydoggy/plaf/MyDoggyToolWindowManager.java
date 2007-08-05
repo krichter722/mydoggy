@@ -90,13 +90,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         this.persistenceDelegate = new XmlPersistenceDelegate(this);
         this.allToolWindowGroup = new AllToolWindowGroup();
         this.aliases = new Hashtable<Object, ToolWindow>();
+        this.propertyChangeSupport = new PropertyChangeSupport(this);
+        this.toolWindowManagerDescriptor = new MyDoggyToolWindowManagerDescriptor(this);
+        this.toolWindowManagerDescriptor.addPropertyChangeListener(this);
 
         initResourceBoundles(locale);
         initComponents();
         initListeners();
-
-        this.toolWindowManagerDescriptor = new MyDoggyToolWindowManagerDescriptor(this);
-        this.toolWindowManagerDescriptor.addPropertyChangeListener(this);
     }
 
 
@@ -476,7 +476,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     protected void initListeners() {
-        propertyChangeSupport = new PropertyChangeSupport(this);
         propertyChangeSupport.addPropertyChangeListener("available", new AvailablePropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("visible", new VisiblePropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("active", new ActivePropertyChangeListener());
