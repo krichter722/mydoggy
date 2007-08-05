@@ -234,6 +234,18 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         propertyChangeSupport.addPropertyChangeListener("endDrag", dragListener);
 
         propertyChangeSupport.addPropertyChangeListener("maximized", new MaximizedListener());
+
+        manager.getToolWindowManagerDescriptor().addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("dividerSize".equals(evt.getPropertyName())) {
+                    Object[] values = (Object[]) evt.getNewValue();
+                    if (values[0].equals(anchor)) {
+                        if (splitPane.getDividerSize() > 0)
+                            splitPane.setDividerSize((Integer) values[1]);
+                    }
+                }
+            }
+        });
     }
 
 
@@ -649,7 +661,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
             if (animate) {
                 if (content != null) {
-                    splitPane.setDividerSize(descriptor.getDockedTypeDescriptor().getDividerSize());
+                    splitPane.setDividerSize(manager.getToolWindowManagerDescriptor().getDividerSize(anchor));
                     if (manager.getShowingGroup() == null &&
                         descriptor.getTypeDescriptor(ToolWindowType.DOCKED).isAnimating()) {
                         splitAnimation.show(divederLocation);

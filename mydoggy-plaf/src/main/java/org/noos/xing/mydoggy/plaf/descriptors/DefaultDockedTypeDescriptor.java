@@ -28,7 +28,6 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     private float previewTransparentRatio;
     private boolean hideLabelOnVisible;
     private boolean idVisibleOnToolBar;
-    private int dividerSize;
 
     private EventListenerList listenerList;
 
@@ -44,14 +43,12 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.previewTransparentRatio = 0.65f;
         this.hideLabelOnVisible = false;
         this.idVisibleOnToolBar = true;
-        this.dividerSize = 5;
     }
 
     public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled,
                                        ToolWindowActionHandler toolWindowActionHandler, boolean animating, ToolWindowUI toolWindowUI,
                                        boolean previewEnabled, int previewDelay, float previewTransparentRatio,
-                                       boolean hideLabelOnVisible, boolean idVisibleOnToolBar,
-                                       int dividerSize) {
+                                       boolean hideLabelOnVisible, boolean idVisibleOnToolBar) {
         this.toolsMenu = new JMenu(ResourceBundleManager.getInstance().getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = popupMenuEnabled;
         this.dockLength = dockLength;
@@ -63,7 +60,6 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.previewTransparentRatio = previewTransparentRatio;
         this.hideLabelOnVisible = hideLabelOnVisible;
         this.idVisibleOnToolBar = idVisibleOnToolBar;
-        this.dividerSize = dividerSize;
 
         this.listenerList = new EventListenerList();
 
@@ -163,19 +159,6 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         return idVisibleOnToolBar;
     }
 
-    public void setDividerSize(int dividerSize) {
-        if (this.dividerSize == dividerSize)
-            return;
-
-        int old = this.dividerSize;
-        this.dividerSize = dividerSize;
-        firePropertyChange("dividerSize", old, dividerSize);
-    }
-
-    public int getDividerSize() {
-        return dividerSize;
-    }
-
     public void setPreviewTransparentRatio(float previewTransparentRatio) {
         if (this.previewTransparentRatio == previewTransparentRatio)
             return;
@@ -225,8 +208,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
                                                toolWindowActionHandler, animating,
                                                new MyDoggyToolWindowUI(),
                                                previewEnabled, previewDelay, previewTransparentRatio,
-                                               hideLabelOnVisible, idVisibleOnToolBar,
-                                               dividerSize);
+                                               hideLabelOnVisible, idVisibleOnToolBar);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
@@ -248,9 +230,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
             this.hideLabelOnVisible = (Boolean) evt.getNewValue();
         } else if ("idVisibleOnToolBar".equals(evt.getPropertyName())) {
             this.idVisibleOnToolBar = (Boolean) evt.getNewValue();
-        } else if ("dividerSize".equals(evt.getPropertyName())) {
-            this.dividerSize = (Integer) evt.getNewValue();
-        }
+        } 
     }
 
 

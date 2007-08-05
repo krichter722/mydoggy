@@ -144,9 +144,12 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
     float getPreviewTransparentRatio();
 
     /**
-     * TODO:
+     * Sets whweter hide the representative button when the tool become visible and
+     * the tool has type ToolWindowType.DOCKED.
+     *
      * @since 1.3.1
-     * @param hideLabelOnVisible
+     * @param hideLabelOnVisible true if the representative button when the tool become visible and
+     * the tool has type ToolWindowType.DOCKED.
      */
     void setHideLabelOnVisible(boolean hideLabelOnVisible);
 
@@ -170,20 +173,6 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * @since 1.3.1
      */
     boolean isIdVisibleOnToolBar();
-
-    /**
-     *
-     * @param dividerSize
-     * @since 1.3.1
-     */
-    void setDividerSize(int dividerSize);
-
-    /**
-     *
-     * @return
-     * @since 1.3.1
-     */
-    int getDividerSize();
 
     /**
      * Adds a PropertyChangeListener to the listener list. The listener is
