@@ -150,6 +150,20 @@ public interface ContentManager {
     Content getSelectedContent();
 
     /**
+     * TODO:
+     * @return
+     * @since 1.3.1
+     */
+    Content getNextContent();
+
+    /**
+     *
+     * @return
+     * @since 1.3.1
+     */
+    Content getPreviousContent();
+
+    /**
      * Sets the default popup menu for the contents.
      * If a content has no specific popup menu then the content manager will show
      * <code>popupMenu</code>.

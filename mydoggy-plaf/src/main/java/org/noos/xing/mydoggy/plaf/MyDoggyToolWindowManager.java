@@ -12,6 +12,7 @@ import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
+import org.noos.xing.mydoggy.plaf.ui.ShortcutProcessor;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.MyDoggyTabbedContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
@@ -21,7 +22,6 @@ import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import javax.swing.plaf.SplitPaneUI;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -505,30 +505,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             }
         });
 
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(new KeyEventPostProcessor() {
-            public boolean postProcessKeyEvent(KeyEvent e) {
-                if (e.getID() == KeyEvent.KEY_TYPED) {
-                    if (e.isAltDown()) {
-                        if (Character.isDigit(e.getKeyChar())) {
-                            int index = Character.getNumericValue(e.getKeyChar());
-
-                            for (ToolWindow toolWindow : getToolWindows()) {
-                                if (toolWindow.getIndex() == index) {
-                                    if (toolWindow.isAvailable()) {
-                                        if (toolWindow.isActive())
-                                            toolWindow.setVisible(false);
-                                        else
-                                            toolWindow.setActive(true);
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                return false;
-            }
-        });
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(new ShortcutProcessor(this));
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 Component newFocusOwner = (Component) evt.getNewValue();
