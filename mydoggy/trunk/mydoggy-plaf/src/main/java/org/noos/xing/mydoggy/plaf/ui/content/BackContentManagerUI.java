@@ -4,11 +4,15 @@ import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ToolWindowManager;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public interface BackContentManagerUI {
+
+    Container getContainer();
+
 
     void install(ToolWindowManager manager);
 

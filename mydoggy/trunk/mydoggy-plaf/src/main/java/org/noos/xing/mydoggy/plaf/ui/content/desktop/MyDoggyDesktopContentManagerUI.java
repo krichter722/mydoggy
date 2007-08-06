@@ -75,6 +75,10 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     }
 
 
+    public Container getContainer() {
+        return desktopPane;
+    }
+
     public void install(ToolWindowManager manager) {
         this.toolWindowManager = (MyDoggyToolWindowManager) manager;
         this.contentManager = (MyDoggyContentManager) manager.getContentManager();

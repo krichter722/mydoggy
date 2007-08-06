@@ -133,6 +133,32 @@ public class MyDoggyContentManager implements ContentManager {
         return null;
     }
 
+    public Content getNextContent() {
+        if (contents.size() == 0)
+            return null;
+
+        if (getSelectedContent() == null)
+            return contents.get(0);
+
+        int index = contents.indexOf(getSelectedContent()) + 1;
+        if (index >= contents.size())
+            index = 0;
+        return getContent(index);
+    }
+
+    public Content getPreviousContent() {
+        if (contents.size() == 0)
+            return null;
+
+        if (getSelectedContent() == null)
+            return contents.get(0);
+
+        int index = contents.indexOf(getSelectedContent()) - 1;
+        if (index < 0)
+            index = contents.size() - 1;
+        return getContent(index);
+    }
+
     public Content[] getContents() {
         return contents.toArray(new Content[contents.size()]);
     }

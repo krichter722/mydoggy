@@ -147,6 +147,10 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
     }
 
 
+    public Container getContainer() {
+        return tabbedContentManager;
+    }
+
     public void install(ToolWindowManager manager) {
         this.toolWindowManager = (MyDoggyToolWindowManager) manager;
         this.contentManager = manager.getContentManager();
