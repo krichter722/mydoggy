@@ -1,20 +1,24 @@
 package org.noos.xing.mydoggy.plaf.ui.content.tabbed.component;
 
+import org.noos.xing.mydoggy.PersistenceDelegate;
 import org.noos.xing.mydoggy.TabbedContentUI;
 import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.PersistenceDelegate;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
+import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Hashtable;
 import java.util.Map;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
 
 public class JTabbedContentManager extends JTabbedPane {
     static final int BUTTONSIZE = 15;
@@ -28,6 +32,9 @@ public class JTabbedContentManager extends JTabbedPane {
     private boolean closeable;
     private boolean detachable;
 
+    private ByteArrayOutputStream tmpWorkspace = null;
+
+
     public JTabbedContentManager() {
         super.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
@@ -38,7 +45,7 @@ public class JTabbedContentManager extends JTabbedPane {
         MouseInputAdapter mouseInputAdapter = new MouseOverTabListener();
         addMouseListener(mouseInputAdapter);
         addMouseMotionListener(mouseInputAdapter);
-	}
+    }
 
 
     public void insertTab(String title, Icon icon, Component component, String tip, int index) {
@@ -125,6 +132,7 @@ public class JTabbedContentManager extends JTabbedPane {
 
     public void setToolWindowManager(MyDoggyToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
+        setupActions();
     }
 
     public void addTabListener(TabListener l) {
@@ -181,20 +189,28 @@ public class JTabbedContentManager extends JTabbedPane {
             tabListener.tabEventFired(event);
     }
 
-    private ByteArrayOutputStream workspace = null;
-    protected void setMaximized(boolean maximize) {        
+    protected void setMaximized(boolean maximize) {
         if (maximize) {
-            toolWindowManager.getPersistenceDelegate().save(workspace = new ByteArrayOutputStream());
+            toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
             toolWindowManager.getToolWindowGroup().setVisible(false);
         } else {
-            toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(workspace.toByteArray()),
+            toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
                                                              PersistenceDelegate.MergePolicy.UNION);
-            workspace = null;
+            tmpWorkspace = null;
         }
     }
 
     protected boolean isMaximized() {
-        return workspace != null;
+        return tmpWorkspace != null;
+    }
+
+    protected void setupActions() {
+        SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, this,
+                                      KeyStroke.getKeyStroke(39, InputEvent.ALT_MASK),
+                                      "nextContent", new NextContentAction(toolWindowManager));
+        SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, this,
+                                      KeyStroke.getKeyStroke(37, InputEvent.ALT_MASK),
+                                      "previousContent", new PreviousContentAction(toolWindowManager));
     }
 
     class MouseOverTabListener extends MouseInputAdapter {

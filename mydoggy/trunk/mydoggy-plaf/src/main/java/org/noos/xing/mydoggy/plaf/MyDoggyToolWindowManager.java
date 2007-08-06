@@ -505,7 +505,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             }
         });
 
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(new ShortcutProcessor(this));
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(new ShortcutProcessor(this, this));
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 Component newFocusOwner = (Component) evt.getNewValue();

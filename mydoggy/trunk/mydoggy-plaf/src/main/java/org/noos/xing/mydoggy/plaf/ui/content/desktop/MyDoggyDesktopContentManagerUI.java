@@ -8,6 +8,8 @@ import org.noos.xing.mydoggy.plaf.ui.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.content.BackContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.content.BackContentUI;
+import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
+import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -28,24 +30,24 @@ import java.util.Hashtable;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, BackContentManagerUI, PropertyChangeListener {
-    private MyDoggyToolWindowManager toolWindowManager;
-    private MyDoggyContentManager contentManager;
+    protected MyDoggyToolWindowManager toolWindowManager;
+    protected MyDoggyContentManager contentManager;
 
-    private JDesktopPane desktopPane;
+    protected JDesktopPane desktopPane;
 
-    private PropertyChangeSupport propertyChangeSupport;
-    private EventListenerList contentManagerUIListeners;
+    protected PropertyChangeSupport propertyChangeSupport;
+    protected EventListenerList contentManagerUIListeners;
 
-    private BackContentUI lastSelected;
+    protected BackContentUI lastSelected;
 
-    boolean valueAdjusting;
-    boolean contentValueAdjusting;
+    protected boolean valueAdjusting;
+    protected boolean contentValueAdjusting;
 
-    private Map<Content, DesktopContentUI> detachedContentUIMap;
+    protected Map<Content, DesktopContentUI> detachedContentUIMap;
 
-    private int contentIndex = 0;
+    protected int contentIndex = 0;
 
-    private JPopupMenu popupMenu;
+    protected JPopupMenu popupMenu;
 
 
     public MyDoggyDesktopContentManagerUI() {
@@ -85,6 +87,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         this.contentIndex = 0;
 
         initListeners();
+        setupActions();
 
         toolWindowManager.setMainContent(desktopPane);
 
@@ -208,6 +211,16 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             desktopPane.addMouseListener(new PopupMouseListener());
         }
         this.contentManagerUIListeners = new EventListenerList();
+    }
+
+    protected void setupActions() {
+        // Setup actions
+        SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, desktopPane,
+                                      KeyStroke.getKeyStroke(39, InputEvent.ALT_MASK),
+                                      "nextContent", new NextContentAction(toolWindowManager));
+        SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, desktopPane,
+                                      KeyStroke.getKeyStroke(37, InputEvent.ALT_MASK),
+                                      "previousContent", new PreviousContentAction(toolWindowManager));
     }
 
     protected void addUIForContent(Content content) {

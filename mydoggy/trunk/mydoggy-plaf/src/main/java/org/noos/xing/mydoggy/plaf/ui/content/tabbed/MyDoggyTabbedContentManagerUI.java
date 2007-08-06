@@ -32,22 +32,22 @@ import java.util.Map;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, BackContentManagerUI, PropertyChangeListener {
-    private MyDoggyToolWindowManager toolWindowManager;
-    private ContentManager contentManager;
+    protected MyDoggyToolWindowManager toolWindowManager;
+    protected ContentManager contentManager;
 
-    private JTabbedContentManager tabbedContentManager;
-    private boolean showAlwaysTab;
+    protected JTabbedContentManager tabbedContentManager;
+    protected boolean showAlwaysTab;
 
-    private PropertyChangeSupport propertyChangeSupport;
-    private EventListenerList contentManagerUIListeners;
-    private PropertyChangeSupport propertyChangeListeners;
+    protected PropertyChangeSupport propertyChangeSupport;
+    protected EventListenerList contentManagerUIListeners;
+    protected PropertyChangeSupport propertyChangeListeners;
 
-    private BackContentUI lastSelected;
+    protected BackContentUI lastSelected;
 
-    boolean valueAdjusting;
-    boolean contentValueAdjusting;
+    protected boolean valueAdjusting;
+    protected boolean contentValueAdjusting;
 
-    private Map<Content, TabbedContentUI> detachedContentUIMap;
+    protected Map<Content, TabbedContentUI> detachedContentUIMap;
 
     public MyDoggyTabbedContentManagerUI() {
         this.propertyChangeListeners = new PropertyChangeSupport(this);
