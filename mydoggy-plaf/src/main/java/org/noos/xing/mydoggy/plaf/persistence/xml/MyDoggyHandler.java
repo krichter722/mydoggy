@@ -22,6 +22,7 @@ public class MyDoggyHandler extends DefaultHandler {
         SUB_SECTION,
         TOOL,
         DESCRIPTORS,
+        TOOL_WINDOW_MANAGER_DESCRIPTOR,
         PUSH_AWAY_MODE,
         PUSH_AWAY_MOST_RECENT_MODE,
         CONTENT_MANAGER
@@ -79,8 +80,9 @@ public class MyDoggyHandler extends DefaultHandler {
                     throw new SAXException("Invalid element at this position. Expecting <mydoggy>");
                 break;
             case SUB_SECTION :
-                if ("pushAway".equals(qName)) {
-                    state = State.PUSH_AWAY_MODE;
+                if ("toolWindowDescriptorManager".equals(qName)) {
+                    state = State.TOOL_WINDOW_MANAGER_DESCRIPTOR;
+                    persistedToolWindowManager.update(attributes);                    
                 } else if ("tools".equals(qName)) {
                     state = State.TOOL;
                 } else if ("contentManager".equals(qName)) {
@@ -88,6 +90,10 @@ public class MyDoggyHandler extends DefaultHandler {
                     persistedContentManager = new PersistedContentManager();
                 } else
                     throw new SAXException("Invalid element at this position. Expecting <pushAway> or <tools> or <contentManager>");
+                break;
+            case TOOL_WINDOW_MANAGER_DESCRIPTOR:
+                if ("pushAway".equals(qName))
+                    state = State.PUSH_AWAY_MODE;
                 break;
             case PUSH_AWAY_MODE:
                 if ("mode".equals(qName)) {
@@ -199,9 +205,15 @@ public class MyDoggyHandler extends DefaultHandler {
             case MYDOGGY:
                 state = State.MYDOGGY;
                 break;
+            case TOOL_WINDOW_MANAGER_DESCRIPTOR :
+                if ("toolWindowDescriptorManager".equals(qName)) {
+                    state = State.SUB_SECTION;
+                    subState = State.NOP;
+                }
+                break;                
             case PUSH_AWAY_MODE:
                 if ("pushAway".equals(qName)) {
-                    state = State.SUB_SECTION;
+                    state = State.TOOL_WINDOW_MANAGER_DESCRIPTOR;
                     subState = State.NOP;
                 }
                 break;
@@ -217,8 +229,15 @@ public class MyDoggyHandler extends DefaultHandler {
                 ((MostRecentDescriptor) toolWindowManager.getToolWindowManagerDescriptor().getPushAwayModeDescriptor(PushAwayMode.MOST_RECENT)).
                         append(persistedMostRecentDescriptor.getStack().toArray(new ToolWindowAnchor[persistedMostRecentDescriptor.getStack().size()]));
 
-            if (persistedToolWindowManager.getPushAwayMode() != null)
-                toolWindowManager.getToolWindowManagerDescriptor().setPushAwayMode(persistedToolWindowManager.getPushAwayMode());
+            if (persistedToolWindowManager.getPushAwayMode() != null) {
+                ToolWindowManagerDescriptor managerDescriptor = toolWindowManager.getToolWindowManagerDescriptor();
+                managerDescriptor.setPushAwayMode(persistedToolWindowManager.getPushAwayMode());
+
+                managerDescriptor.setDividerSize(ToolWindowAnchor.LEFT, persistedToolWindowManager.getDividerLeft());
+                managerDescriptor.setDividerSize(ToolWindowAnchor.RIGHT, persistedToolWindowManager.getDividerRight());
+                managerDescriptor.setDividerSize(ToolWindowAnchor.TOP, persistedToolWindowManager.getDividerTop());
+                managerDescriptor.setDividerSize(ToolWindowAnchor.BOTTOM, persistedToolWindowManager.getDividerBottom());
+            }
 
             // ContentManager
             Content selectedContent = null;

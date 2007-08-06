@@ -14,15 +14,17 @@ import java.awt.event.KeyEvent;
  */
 public class ShortcutProcessor implements KeyEventPostProcessor {
     private ToolWindowManager manager;
+    private Container root;
 
-    public ShortcutProcessor(ToolWindowManager manager) {
+    public ShortcutProcessor(ToolWindowManager manager, Container root) {
         this.manager = manager;
+        this.root = root;
     }
 
     public boolean postProcessKeyEvent(KeyEvent e) {
         switch (e.getID()) {
             case KeyEvent.KEY_TYPED:
-                if (e.isAltDown()) {
+                if (SwingUtil.hasParent(e.getComponent(), root) && e.isAltDown()) {
                     if (Character.isDigit(e.getKeyChar())) {
                         int index = Character.getNumericValue(e.getKeyChar());
 
@@ -37,22 +39,6 @@ public class ShortcutProcessor implements KeyEventPostProcessor {
                                 break;
                             }
                         }
-                    }
-                }
-                break;
-            case KeyEvent.KEY_PRESSED:
-                if (e.isAltDown()) {
-                    if (SwingUtil.hasParent(e.getComponent(), ((BackContentManagerUI) manager.getContentManager().getContentManagerUI()).getContainer())) {
-                        if (e.getKeyCode() == 39) {
-                            Content content = manager.getContentManager().getNextContent();
-                            if (content != null)
-                                content.setSelected(true);
-                        } else if (e.getKeyCode() == 37) {
-                            Content content = manager.getContentManager().getPreviousContent();
-                            if (content != null)
-                                content.setSelected(true);
-                        }
-
                     }
                 }
                 break;
