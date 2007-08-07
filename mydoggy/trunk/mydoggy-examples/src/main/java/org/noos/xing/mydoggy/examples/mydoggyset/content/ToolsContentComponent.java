@@ -28,6 +28,7 @@ import java.awt.event.ItemListener;
 public class ToolsContentComponent extends JPanel {
     private ToolWindowManager toolWindowManager;
     private JPanel typeDescriptroPrefPanel;
+    private JPanel prefPanel;
 
     JComboBox types;
 
@@ -49,6 +50,8 @@ public class ToolsContentComponent extends JPanel {
                 if (toolsTable.getSelectedRow() != -1) {
                     ToolWindow selectedTool = (ToolWindow) toolsTable.getModel().getValueAt(toolsTable.getSelectedRow(), -1);
                     SignalManager.getInstance().sendEvent(ToolWindow.class, selectedTool);
+
+                    prefPanel.setBorder(new TitledBorder("Preference : " + selectedTool.getId()));
 
                     types.setSelectedIndex(0);
                 }
@@ -108,7 +111,7 @@ public class ToolsContentComponent extends JPanel {
 
         // Preference Panel
 
-        JPanel prefPanel = new JPanel(new TableLayout(new double[][]{{-1}, {20, 3, -1}}));
+        prefPanel = new JPanel(new TableLayout(new double[][]{{-1}, {20, 3, -1}}));
         prefPanel.setBorder(new TitledBorder("Preferences"));
 
         prefPanel.add(typeDescriptroPrefPanel = initTypeDescriptorPrefPanel(), "0,2,FULL,FULL");

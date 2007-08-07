@@ -635,6 +635,10 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                             if (multiSplitContainer.isEmpty()) {
                                 animate = true;
                                 content = null;
+                            } else if (multiSplitContainer.getContentCount() == 1) {
+                                animate = false;
+                                content = multiSplitContainer.getContents().get(0);
+                                setSplitPaneContent(content);
                             }
                         } else {
                             setSplitPaneContent(content);

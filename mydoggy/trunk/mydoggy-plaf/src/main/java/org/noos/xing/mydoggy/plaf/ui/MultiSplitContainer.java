@@ -141,6 +141,10 @@ public class MultiSplitContainer extends JPanel {
         return contents.size();
     }
 
+    public List<Component> getContents() {
+        return contents;
+    }
+
     protected Component getRightCmp(JSplitPane pane) {
         return ((JPanel) pane.getRightComponent()).getComponent(0);
     }

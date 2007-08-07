@@ -396,7 +396,11 @@ public class MyDoggyToolWindow implements ToolWindow {
 
         synchronized (getLock()) {
             publicEvent = false;
-            firePropertyChangeEvent("maximized.before", this.maximized, maximized);
+            try {
+                firePropertyChangeEvent("maximized.before", this.maximized, maximized);
+            } finally {
+                publicEvent = true;
+            }
 
             boolean old = this.maximized;
             this.maximized = maximized;
