@@ -263,6 +263,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         });
         addPropertyChangeListener("maximized.before", new PropertyChangeListener() {
             ByteArrayOutputStream workspace;
+            boolean valueAdj = false;
 
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getSource() != descriptor)
@@ -273,10 +274,18 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
                     maximizeButton.setIcon(toolWindowUI.getIcon(MINIMIZE));
                 } else if (workspace != null) {
-                    maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE));
-                    descriptor.getManager().getPersistenceDelegate().merge(new ByteArrayInputStream(workspace.toByteArray()),
-                                                                           PersistenceDelegate.MergePolicy.UNION);
-                    workspace = null;
+                    if (valueAdj)
+                        return;
+                    
+                    valueAdj = true;
+                    try {
+                        maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE));
+                        descriptor.getManager().getPersistenceDelegate().merge(new ByteArrayInputStream(workspace.toByteArray()),
+                                                                               PersistenceDelegate.MergePolicy.UNION);
+                        workspace = null;
+                    } finally {
+                        valueAdj = false;
+                    }
                 }
             }
         });
