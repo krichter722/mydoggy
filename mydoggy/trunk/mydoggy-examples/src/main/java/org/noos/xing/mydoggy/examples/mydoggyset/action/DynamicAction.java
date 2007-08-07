@@ -16,9 +16,9 @@ import java.lang.reflect.Method;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class DynamicAction extends AbstractAction implements SignalListener {
-    private Method method;
-    private Object target;
-    private Source source;
+    protected Method method;
+    protected Object target;
+    protected Source source;
 
     public DynamicAction(Class targetClass, String property, Source source) {
         SignalManager.getInstance().addSignalListener(targetClass, this);

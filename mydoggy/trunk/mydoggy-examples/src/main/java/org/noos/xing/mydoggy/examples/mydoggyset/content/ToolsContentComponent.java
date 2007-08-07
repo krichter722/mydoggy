@@ -4,6 +4,7 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.examples.mydoggyset.action.ChecBoxSelectionSource;
 import org.noos.xing.mydoggy.examples.mydoggyset.action.DynamicAction;
+import org.noos.xing.mydoggy.examples.mydoggyset.action.Source;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ToolsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.signal.SignalListener;
 import org.noos.xing.mydoggy.examples.mydoggyset.signal.SignalManager;
@@ -16,11 +17,14 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -188,7 +192,7 @@ public class ToolsContentComponent extends JPanel {
 
     private class DockedTypeDescrPrefPanel extends JPanel implements SignalListener<ToolWindow> {
         private JCheckBox popupMenuEnabled, hideLabelOnVisible, idVisibleOnToolBar, previewEnabled;
-        private JTextField dockLength, previewDelay, previewTransparentRatio;
+        private JSpinner dockLength, previewDelay, previewTransparentRatio;
 
         private DockedTypeDescrPrefPanel() {
             super(new TableLayout(new double[][]{{3, -2, 3, -1, 3, -2, 3, -1, 3}, {-1, 20, 3, 20, 3, 20, 3, 20, -1}}));
@@ -215,7 +219,7 @@ public class ToolsContentComponent extends JPanel {
                                                            new ChecBoxSelectionSource(idVisibleOnToolBar)));
 
             add(new JLabel("dockLength : "), "1,7,r,c");
-            add(dockLength = new JTextField(), "3,7,FULL,FULL");
+            add(dockLength = new JSpinner(new SpinnerNumberModel(100, 100, 400, 10)), "3,7,FULL,FULL");
 
             // Right
             add(new JLabel("previewEnabled : "), "5,1,r,c");
@@ -225,10 +229,31 @@ public class ToolsContentComponent extends JPanel {
                                                        new ChecBoxSelectionSource(previewEnabled)));
 
             add(new JLabel("previewDelay : "), "5,3,r,c");
-            add(previewDelay = new JTextField(), "7,3,FULL,FULL");
+            add(previewDelay = new JSpinner(new SpinnerNumberModel(0, 0, 5000, 500)), "7,3,FULL,FULL");
 
             add(new JLabel("previewTransparentRatio : "), "5,5,r,c");
-            add(previewTransparentRatio = new JTextField(), "7,5,FULL,FULL");
+            add(previewTransparentRatio = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 1.0, 0.05)), "7,5,FULL,FULL");
+            previewTransparentRatio.addChangeListener(new CC(DockedTypeDescriptor.class,
+                                                       "previewTransparentRatio",
+                                                       previewTransparentRatio));
+        }
+
+        private class CC extends DynamicAction implements ChangeListener, Source {
+            private JSpinner spinner;
+
+            private CC(Class targetClass, String property, JSpinner spinner) {
+                super(targetClass, property, null);
+                this.source = this;
+                this.spinner = spinner;
+            }
+
+            public Object getSource() {
+                return Float.valueOf(spinner.getValue().toString());
+            }
+
+            public void stateChanged(ChangeEvent e) {
+                actionPerformed(new ActionEvent(this, 0, null));
+            }
         }
 
         public void handleSignalEvent(String signal, SignalEvent<ToolWindow> event) {
@@ -239,11 +264,11 @@ public class ToolsContentComponent extends JPanel {
             popupMenuEnabled.setSelected(descriptor.isPopupMenuEnabled());
             hideLabelOnVisible.setSelected(descriptor.isHideLabelOnVisible());
             idVisibleOnToolBar.setSelected(descriptor.isIdVisibleOnToolBar());
-            dockLength.setText(String.valueOf(descriptor.getDockLength()));
+            dockLength.setValue(descriptor.getDockLength());
 
             previewEnabled.setSelected(descriptor.isPreviewEnabled());
-            previewDelay.setText(String.valueOf(descriptor.getPreviewDelay()));
-            previewTransparentRatio.setText(String.valueOf(descriptor.getPreviewTransparentRatio()));
+            previewDelay.setValue(descriptor.getPreviewDelay());
+            previewTransparentRatio.setValue(descriptor.getPreviewTransparentRatio());
         }
 
     }
@@ -290,15 +315,88 @@ public class ToolsContentComponent extends JPanel {
     }
 
     private class FloatingTypeDescrPrefPanel extends JPanel implements SignalListener<ToolWindow> {
+        private JCheckBox enabledBox, modal, idVisibleOnToolBar, transparentMode;
+        private JSpinner dockLength, transparentDelay, transparentRatio;
 
         private FloatingTypeDescrPrefPanel() {
-            super(new TableLayout(new double[][]{{3, 120, -1, 3}, {-1, 20, -1}}));
-            add(new JLabel("No Pref"), "1,1,FULL,FULL");
+            super(new TableLayout(new double[][]{{3, -2, 3, -1, 3, -2, 3, -1, 3}, {-1, 20, 3, 20, 3, 20, 3, 20, -1}}));
+
+            SignalManager.getInstance().addSignalListener(ToolWindow.class, this);
+
+            // Left
+            add(new JLabel("enabled : "), "1,1,r,c");
+            add(enabledBox = new JCheckBox(), "3,1,FULL,FULL");
+            enabledBox.setAction(new DynamicAction(FloatingTypeDescriptor.class,
+                                                         "enabled",
+                                                         new ChecBoxSelectionSource(enabledBox)));
+
+            add(new JLabel("modal : "), "1,3,r,c");
+            add(modal = new JCheckBox(), "3,3,FULL,FULL");
+            modal.setAction(new DynamicAction(FloatingTypeDescriptor.class,
+                                                           "modal",
+                                                           new ChecBoxSelectionSource(modal)));
+
+/*
+            add(new JLabel("IdVisibleOnToolBar : "), "1,5,r,c");
+            add(idVisibleOnToolBar = new JCheckBox(), "3,5,FULL,FULL");
+            idVisibleOnToolBar.setAction(new DynamicAction(DockedTypeDescriptor.class,
+                                                           "idVisibleOnToolBar",
+                                                           new ChecBoxSelectionSource(idVisibleOnToolBar)));
+
+            add(new JLabel("dockLength : "), "1,7,r,c");
+            add(dockLength = new JSpinner(new SpinnerNumberModel(100, 100, 400, 10)), "3,7,FULL,FULL");
+*/
+
+            // Right
+            add(new JLabel("transparentMode : "), "5,1,r,c");
+            add(transparentMode = new JCheckBox(), "7,1,FULL,FULL");
+            transparentMode.setAction(new DynamicAction(FloatingTypeDescriptor.class,
+                                                       "transparentMode",
+                                                       new ChecBoxSelectionSource(transparentMode)));
+
+            add(new JLabel("transparentDelay : "), "5,3,r,c");
+            add(transparentDelay = new JSpinner(new SpinnerNumberModel(0, 0, 5000, 500)), "7,3,FULL,FULL");
+
+            add(new JLabel("transparentRatio : "), "5,5,r,c");
+            add(transparentRatio = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 1.0, 0.05)), "7,5,FULL,FULL");
+            transparentRatio.addChangeListener(new CC(FloatingTypeDescriptor.class,
+                                                       "transparentRatio",
+                                                       transparentRatio));
+        }
+
+        private class CC extends DynamicAction implements ChangeListener, Source {
+            private JSpinner spinner;
+
+            private CC(Class targetClass, String property, JSpinner spinner) {
+                super(targetClass, property, null);
+                this.source = this;
+                this.spinner = spinner;
+            }
+
+            public Object getSource() {
+                return Float.valueOf(spinner.getValue().toString());
+            }
+
+            public void stateChanged(ChangeEvent e) {
+                actionPerformed(new ActionEvent(this, 0, null));
+            }
         }
 
         public void handleSignalEvent(String signal, SignalEvent<ToolWindow> event) {
+            FloatingTypeDescriptor descriptor = (FloatingTypeDescriptor) event.getMessage().getTypeDescriptor(ToolWindowType.FLOATING);
 
+            SignalManager.getInstance().sendEvent(FloatingTypeDescriptor.class, descriptor);
+
+            enabledBox.setSelected(descriptor.isEnabled());
+            modal.setSelected(descriptor.isModal());
+//            idVisibleOnToolBar.setSelected(descriptor.isIdVisibleOnToolBar());
+//            dockLength.setValue(descriptor.getDockLength());
+
+            transparentMode.setSelected(descriptor.isTransparentMode());
+            transparentDelay.setValue(descriptor.getTransparentDelay());
+            transparentRatio.setValue(descriptor.getTransparentRatio());
         }
+
     }
 
 }
