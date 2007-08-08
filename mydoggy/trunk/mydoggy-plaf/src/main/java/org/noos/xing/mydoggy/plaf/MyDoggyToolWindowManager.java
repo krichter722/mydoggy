@@ -266,14 +266,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         throw new IllegalStateException("Doen't exist a TypeDescriptor for : " + type);
     }
 
-    public void setPersistenceDelegate(PersistenceDelegate persistenceDelegate) {
-        this.persistenceDelegate = persistenceDelegate;
-    }
-
-    public void initUserResourceBundle(Locale locale, String bundle, ClassLoader classLoader) {
-        ResourceBundleManager.getInstance().initUserBundle(locale, bundle, classLoader);
-    }
-
     public void addToolWindowManagerListener(ToolWindowManagerListener listener) {
         twmListeners.add(ToolWindowManagerListener.class, listener);
     }
@@ -308,6 +300,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return anchestor;
     }
 
+    public void setPersistenceDelegate(PersistenceDelegate persistenceDelegate) {
+        this.persistenceDelegate = persistenceDelegate;
+    }
+
+    public void initUserResourceBundle(Locale locale, String bundle, ClassLoader classLoader) {
+        ResourceBundleManager.getInstance().initUserBundle(locale, bundle, classLoader);
+    }
 
     public void setMainContent(Component content) {
         mainContainer.setOpaque(false);

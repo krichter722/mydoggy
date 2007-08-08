@@ -17,7 +17,7 @@ import java.io.OutputStreamWriter;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class XmlPersistenceDelegate implements PersistenceDelegate {
-    private ToolWindowManager toolWindowManager;
+    protected ToolWindowManager toolWindowManager;
 
     public XmlPersistenceDelegate(ToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
@@ -194,6 +194,5 @@ public class XmlPersistenceDelegate implements PersistenceDelegate {
 
         // End contentManager
         writer.endElement("contentManager");
-
     }
 }

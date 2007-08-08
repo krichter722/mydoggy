@@ -13,8 +13,8 @@ import java.awt.event.KeyEvent;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ShortcutProcessor implements KeyEventPostProcessor {
-    private ToolWindowManager manager;
-    private Container root;
+    protected ToolWindowManager manager;
+    protected Container root;
 
     public ShortcutProcessor(ToolWindowManager manager, Container root) {
         this.manager = manager;
