@@ -73,6 +73,10 @@ public class TestContentManagerListener extends TestCase {
             this.lastEvent = event;
         }
 
+        public void contentSelected(ContentManagerEvent event) {
+            // TODO:
+        }
+
         public boolean isContentAdded() {
             return contentAdded;
         }

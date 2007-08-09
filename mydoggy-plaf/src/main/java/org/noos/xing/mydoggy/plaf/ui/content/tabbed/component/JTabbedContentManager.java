@@ -230,6 +230,8 @@ public class JTabbedContentManager extends JTabbedPane {
                     return;
                 }
 
+                // TODO: can mydoggy pass this to the user? if the user ovverride mydoggy will not excute the following code.
+
                 if (e.getClickCount() == 2) {
                     // Maximization
                     setMaximized(!isMaximized());
