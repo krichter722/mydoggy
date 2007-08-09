@@ -105,19 +105,19 @@ public class MyDoggySet {
         contentMenu.add(new AddContentAction(toolWindowManager,
                                              "Manager", "Manager", null,
                                              managerContentComponent = new ManagerContentComponent(toolWindowManager),
-                                             "Manager"));
+                                             "Manager", (int) 'M'));
         contentMenu.add(new AddContentAction(toolWindowManager,
                                              "Tools", "Tools", null,
                                              toolsContentComponent = new ToolsContentComponent(toolWindowManager),
-                                             "ToolWindows"));
+                                             "ToolWindows",(int) 'T'));
         contentMenu.add(new AddContentAction(toolWindowManager,
                                              "Group Editor", "Group Editor", null,
                                              groupEditorContentComponent = new GroupEditorContentComponent(toolWindowManager),
-                                             "Groups"));
+                                             "Groups",(int) 'G'));
         contentMenu.add(new AddContentAction(toolWindowManager,
                                              "Contents", "Contents", null,
                                              contentsContentComponent = new ContentsContentComponent(toolWindowManager),
-                                             "Contents"));
+                                             "Contents",(int) 'C'));
 
         // L&F Menu
         lafMenu = new JMenu("Looks");

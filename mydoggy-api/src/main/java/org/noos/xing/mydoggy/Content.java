@@ -210,6 +210,20 @@ public interface Content extends Serializable {
     boolean isDetached();
 
     /**
+     *
+     * @param mnemonic
+     * @since 1.3.1
+     */
+    void setMnemonic(int mnemonic);
+
+    /**
+     *
+     * @return
+     * @since 1.3.1
+     */
+    int getMnemonic();
+
+    /**
      * Adds a PropertyChangeListener to the listener list. The listener is
      * registered for all bound properties of this class, including the
      * following:

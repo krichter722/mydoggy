@@ -310,6 +310,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
             propertyChangeSupport.addPropertyChangeListener("component", new ComponentListener());
             propertyChangeSupport.addPropertyChangeListener("disabledIcon", new DisabledIconListener());
             propertyChangeSupport.addPropertyChangeListener("icon", new IconListener());
+            propertyChangeSupport.addPropertyChangeListener("mnemonic", new MnemonicListener());
             propertyChangeSupport.addPropertyChangeListener("enabled", new EnabledListener());
             propertyChangeSupport.addPropertyChangeListener("foreground", new ForegroundListener());
             propertyChangeSupport.addPropertyChangeListener("popupMenu", new PopupMenuListener());
@@ -356,6 +357,9 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
         tabbedContentManager.getContentPage(index).setContent(content);
         tabbedContentManager.setDisabledIconAt(index, content.getDisabledIcon());
         tabbedContentManager.setPopupMenuAt(index, content.getPopupMenu());
+        int mnemonic = content.getMnemonic();
+        if (mnemonic != -1)
+            tabbedContentManager.setMnemonicAt(index, mnemonic);
         if (content.getForeground() != null)
             tabbedContentManager.setForegroundAt(index, content.getForeground());
     }
@@ -422,6 +426,20 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
                 int index = tabbedContentManager.indexOfComponent(content.getComponent());
                 if (index != -1)
                     tabbedContentManager.setIconAt(index, (Icon) evt.getNewValue());
+                else if (toolWindowManager.getMainContent() != content.getComponent())
+                    throw new IllegalStateException("Invalid content ui state.");
+            }
+        }
+    }
+
+    class MnemonicListener implements PropertyChangeListener {
+        public void propertyChange(PropertyChangeEvent evt) {
+            Content content = (Content) evt.getSource();
+
+            if (!content.isDetached()) {
+                int index = tabbedContentManager.indexOfComponent(content.getComponent());
+                if (index != -1)
+                    tabbedContentManager.setMnemonicAt(index, (Integer) evt.getNewValue());
                 else if (toolWindowManager.getMainContent() != content.getComponent())
                     throw new IllegalStateException("Invalid content ui state.");
             }
