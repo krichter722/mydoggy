@@ -24,6 +24,7 @@ public class MyDoggyContent implements BackContentUI {
     private Component component;
     private JPopupMenu popupMenu;
     private boolean detached;
+    private int mnemonic;
 
     private EventListenerList internalListeners;
     private EventListenerList listeners;
@@ -38,6 +39,7 @@ public class MyDoggyContent implements BackContentUI {
         this.component = component;
         this.toolTipText = toolTipText;
         this.enabled = true;
+        this.mnemonic = -1;
 
         this.listeners = new EventListenerList();
         this.internalListeners = new EventListenerList();
@@ -53,6 +55,9 @@ public class MyDoggyContent implements BackContentUI {
     }
 
     public void setComponent(Component component) {
+        if (this.component != null && this.component.equals(component))
+            return;
+
         Component old = this.component;
         this.component = component;
 
@@ -64,6 +69,9 @@ public class MyDoggyContent implements BackContentUI {
     }
 
     public void setDisabledIcon(Icon disabledIcon) {
+        if (this.disabledIcon != null && this.disabledIcon.equals(disabledIcon))
+            return;
+
         Icon old = this.disabledIcon;
         this.disabledIcon = disabledIcon;
 
@@ -101,6 +109,9 @@ public class MyDoggyContent implements BackContentUI {
     }
 
     public void setForeground(Color foreground) {
+        if (this.foreground != null && this.foreground.equals(foreground))
+            return;
+
         Color old = this.foreground;
         this.foreground = foreground;
 
@@ -112,6 +123,9 @@ public class MyDoggyContent implements BackContentUI {
     }
 
     public void setIcon(Icon icon) {
+        if (this.icon != null && this.icon.equals(icon))
+            return;
+
         Icon old = this.icon;
         this.icon = icon;
 
@@ -123,6 +137,9 @@ public class MyDoggyContent implements BackContentUI {
     }
 
     public void setPopupMenu(JPopupMenu popupMenu) {
+        if (this.popupMenu != null && this.popupMenu.equals(popupMenu))
+            return;
+
         JPopupMenu old = this.popupMenu;
         this.popupMenu = popupMenu;
 
@@ -130,6 +147,9 @@ public class MyDoggyContent implements BackContentUI {
     }
 
     public void setDetached(boolean detached) {
+        if (this.detached == detached)
+            return;
+
         boolean old = this.detached;
         this.detached = detached;
 
@@ -138,6 +158,20 @@ public class MyDoggyContent implements BackContentUI {
 
     public boolean isDetached() {
         return detached;
+    }
+
+    public void setMnemonic(int mnemonic) {
+        if (this.mnemonic == mnemonic)
+            return;
+
+        int old = this.mnemonic;
+        this.mnemonic = mnemonic;
+
+        firePropertyChange("mnemonic", old, mnemonic);
+    }
+
+    public int getMnemonic() {
+        return mnemonic;
     }
 
     public String getTitle() {
