@@ -5,11 +5,12 @@ import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.examples.mydoggyset.action.*;
+import org.noos.xing.mydoggy.examples.mydoggyset.content.ContentsContentComponent;
+import org.noos.xing.mydoggy.examples.mydoggyset.content.GroupEditorContentComponent;
+import org.noos.xing.mydoggy.examples.mydoggyset.content.ManagerContentComponent;
+import org.noos.xing.mydoggy.examples.mydoggyset.content.ToolsContentComponent;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.MonitorPanel;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.RuntimeMemoryMonitorSource;
-import org.noos.xing.mydoggy.examples.mydoggyset.content.ToolsContentComponent;
-import org.noos.xing.mydoggy.examples.mydoggyset.content.GroupEditorContentComponent;
-import org.noos.xing.mydoggy.examples.mydoggyset.content.ContentsContentComponent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -33,6 +34,7 @@ public class MyDoggySet {
     private Component toolsContentComponent;
     private Component groupEditorContentComponent;
     private Component contentsContentComponent;
+    private Component managerContentComponent;
 
     private JMenu lafMenu;
 
@@ -100,19 +102,22 @@ public class MyDoggySet {
 
         // Content Menu
         JMenu contentMenu = new JMenu("Content");
-        contentMenu.add(new AddContentAction(toolWindowManager, 
+        contentMenu.add(new AddContentAction(toolWindowManager,
+                                             "Manager", "Manager", null,
+                                             managerContentComponent = new ManagerContentComponent(toolWindowManager),
+                                             "Manager"));
+        contentMenu.add(new AddContentAction(toolWindowManager,
                                              "Tools", "Tools", null,
                                              toolsContentComponent = new ToolsContentComponent(toolWindowManager),
                                              "ToolWindows"));
         contentMenu.add(new AddContentAction(toolWindowManager,
                                              "Group Editor", "Group Editor", null,
                                              groupEditorContentComponent = new GroupEditorContentComponent(toolWindowManager),
-                                             "ToolWindowGroup"));
+                                             "Groups"));
         contentMenu.add(new AddContentAction(toolWindowManager,
                                              "Contents", "Contents", null,
                                              contentsContentComponent = new ContentsContentComponent(toolWindowManager),
                                              "Contents"));
-
 
         // L&F Menu
         lafMenu = new JMenu("Looks");
