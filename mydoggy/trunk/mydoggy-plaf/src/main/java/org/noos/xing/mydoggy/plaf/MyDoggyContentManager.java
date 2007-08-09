@@ -21,8 +21,6 @@ import java.util.Map;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyContentManager implements ContentManager {
-    private static final Content[] EMPTY_CONTENT_ARRAY = new Content[0];
-
     private MyDoggyToolWindowManager toolWindowManager;
 
     private List<Content> contents;
@@ -71,6 +69,16 @@ public class MyDoggyContentManager implements ContentManager {
             throw new IllegalArgumentException("Cannot register content with passed key. An already registered content exists. [key : " + key + "]");
 
         MyDoggyContent content = new MyDoggyContent(this, key, title, icon, component, tip);
+        content.addInternalPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                assert evt.getSource() instanceof Content;
+                
+                if ("selected".equals(evt.getPropertyName())) {
+                    if (Boolean.TRUE.equals(evt.getNewValue()))
+                        fireContentSelected((Content) evt.getSource());
+                }
+            }
+        });
         contents.add(content);
         contentMap.put(key, content);
         backContentManagerUI.addContent(content);
@@ -221,6 +229,13 @@ public class MyDoggyContentManager implements ContentManager {
         ContentManagerEvent event = new ContentManagerEvent(this, ContentManagerEvent.ActionId.CONTENT_REMOVED, content);
         for (ContentManagerListener listener : listeners.getListeners(ContentManagerListener.class)) {
             listener.contentRemoved(event);
+        }
+    }
+
+    protected void fireContentSelected(Content content) {
+        ContentManagerEvent event = new ContentManagerEvent(this, ContentManagerEvent.ActionId.CONTENT_SELECTED, content);
+        for (ContentManagerListener listener : listeners.getListeners(ContentManagerListener.class)) {
+            listener.contentSelected(event);
         }
     }
 

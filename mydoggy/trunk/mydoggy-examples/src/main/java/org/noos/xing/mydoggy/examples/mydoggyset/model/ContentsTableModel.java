@@ -56,6 +56,9 @@ public final class ContentsTableModel extends DefaultTableModel implements Prope
         updateModel();
     }
 
+    public void contentSelected(ContentManagerEvent event) {
+    }
+
     protected void initToolsListeners() {
         windowManager.getContentManager().addContentManagerListener(this);
     }

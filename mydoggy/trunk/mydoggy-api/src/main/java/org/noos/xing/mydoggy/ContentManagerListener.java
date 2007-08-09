@@ -37,4 +37,14 @@ public interface ContentManagerListener extends EventListener {
      * @since 1.1.0
      */
     void contentRemoved(ContentManagerEvent event);
+
+    /**
+     * Invoked when a content has became selected.
+     *
+     * @param event the fired event.
+     * @see org.noos.xing.mydoggy.event.ContentManagerEvent
+     * @since 1.3.1
+     */
+    void contentSelected(ContentManagerEvent event);
+    
 }
