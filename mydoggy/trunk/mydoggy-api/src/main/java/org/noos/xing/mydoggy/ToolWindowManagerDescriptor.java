@@ -23,6 +23,7 @@ public interface ToolWindowManagerDescriptor {
 
     /**
      * Sets the push away mode to <code>pushAwayMode</code>
+     *
      * @param pushAwayMode the new push away mode
      * @see org.noos.xing.mydoggy.PushAwayMode
      * @since 1.2.0
@@ -31,8 +32,8 @@ public interface ToolWindowManagerDescriptor {
 
     /**
      * Returns the current push away mode.
-     * 
-     * @return the current push away mode. 
+     *
+     * @return the current push away mode.
      * @since 1.2.0
      */
     PushAwayMode getPushAwayMode();
@@ -43,18 +44,17 @@ public interface ToolWindowManagerDescriptor {
      *
      * @param pushAwayMode mode whose descriptor is to be returned.
      * @return the PushAwayModeDescriptor for the passed push away mode if
-     * it is supported, null otherwise.
-     *
-     * @since 1.3.0
+     *         it is supported, null otherwise.
      * @see PushAwayModeDescriptor
      * @see PushAwayMode
+     * @since 1.3.0
      */
     PushAwayModeDescriptor getPushAwayModeDescriptor(PushAwayMode pushAwayMode);
 
     /**
      * Adds the specified component at the given corner.
      *
-     * @param corner the corner at which to insert the component.
+     * @param corner    the corner at which to insert the component.
      * @param component the component to be added.
      * @see Corner
      * @since 1.3.0
@@ -62,7 +62,6 @@ public interface ToolWindowManagerDescriptor {
     void setCornerComponent(Corner corner, Component component);
 
     /**
-     *
      * @param numberingEnabled
      * @since 1.3.1
      */
@@ -70,25 +69,29 @@ public interface ToolWindowManagerDescriptor {
 
     /**
      * TODO
+     *
      * @return
      * @since 1.3.1
      */
     boolean isNumberingEnabled();
 
     /**
+     * Set the size of the separator the separate a visible toolwindow from the contenManager for a
+     * specific anchor.
      *
+     * @param anchor
+     * @param size
+     * TODO
+     */
+    void setDividerSize(ToolWindowAnchor anchor, int size);
+
+    /**
      * @param anchor
      * @return
      * @since 1.3.1
      */
     int getDividerSize(ToolWindowAnchor anchor);
 
-    /**
-     *
-     * @param anchor
-     * @param size
-     */
-    void setDividerSize(ToolWindowAnchor anchor, int size);
 
     /**
      * Adds a PropertyChangeListener to the listener list. The listener is
