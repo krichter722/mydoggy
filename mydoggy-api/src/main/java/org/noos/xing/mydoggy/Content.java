@@ -210,15 +210,28 @@ public interface Content extends Serializable {
     boolean isDetached();
 
     /**
+     * Sets the keyboard mnemonic for accessing this content.
+     * The mnemonic is the key which when combined with the look and feel's
+     * mouseless modifier (usually Alt) will activate this content by selecting it.
+     * <p>
+     * A mnemonic must correspond to a single key on the keyboard
+     * and should be specified using one of the <code>VK_XXX</code>
+     * keycodes defined in <code>java.awt.event.KeyEvent</code>.
+     * Mnemonics are case-insensitive, therefore a key event
+     * with the corresponding keycode would cause the button to be
+     * activated whether or not the Shift modifier was pressed.
      *
-     * @param mnemonic
+     * @param mnemonic the key code which represents the mnemonic
+     * @see #getMnemonic()
      * @since 1.3.1
      */
     void setMnemonic(int mnemonic);
 
     /**
+     * Returns the keyboard mnemonic for accessing this content.
      *
-     * @return
+     * @return the key code which represents the mnemonic;
+     *         -1 if a mnemonic is not specified for this content.
      * @since 1.3.1
      */
     int getMnemonic();

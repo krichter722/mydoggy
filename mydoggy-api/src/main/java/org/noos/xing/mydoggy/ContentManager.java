@@ -150,15 +150,19 @@ public interface ContentManager {
     Content getSelectedContent();
 
     /**
-     * TODO:
-     * @return
+     * Returns in order the next content related to the selected content, or <code>null</code> if no
+     * contents are registed.
+     *
+     * @return the next content related to the selected content.
      * @since 1.3.1
      */
     Content getNextContent();
 
     /**
+     * Returns in order the previous content related to the selected content, or <code>null</code> if no
+     * contents are registed.
      *
-     * @return
+     * @return the previous content related to the selected content.
      * @since 1.3.1
      */
     Content getPreviousContent();
