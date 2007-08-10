@@ -37,6 +37,7 @@ public class ContentPage implements TabbedContentUI {
     private AccessibleContext accessible;
 
     private String title;
+    private int displayedMnemonicIndex;
     private Icon icon;
     private JPopupMenu popupMenu;
     private JPopupMenu stdPopupMenu;
@@ -124,11 +125,18 @@ public class ContentPage implements TabbedContentUI {
 
     public void setTitle(String title) {
         this.title = title;
+        displayedMnemonicIndex = SwingUtil.findDisplayedMnemonicIndex(title,
+                                                                      tabbedPane.getMnemonicAt(getIndex()));
         contentIcon = null;
     }
 
     public String getTitle() {
         return title;
+    }
+
+    public void setMnemonic(int mnemonic) {
+        displayedMnemonicIndex = SwingUtil.findDisplayedMnemonicIndex(title, mnemonic);
+        contentIcon = null;
     }
 
     public Icon getIcon() {
@@ -212,6 +220,9 @@ public class ContentPage implements TabbedContentUI {
                                   (point.getX() > closeIconRect.x && point.getX() < closeIconRect.x + closeIconRect.width)));
     }
 
+    public int getIndex() {
+        return tabbedPane.indexOfComponent((Component) accessible.getAccessibleChild(0));
+    }
 
     private Component getDestination() {
         for (int i = 0, size = tabbedPane.getComponentCount(); i < size; i++) {
@@ -282,6 +293,8 @@ public class ContentPage implements TabbedContentUI {
 
         public void paintIcon(Component c, Graphics g, int x, int y) {
             Component tabComponent = (Component) accessible.getAccessibleChild(0);
+
+            underlinedIndex = displayedMnemonicIndex;
 
             boolean isSelected = false;
             int index = -1;

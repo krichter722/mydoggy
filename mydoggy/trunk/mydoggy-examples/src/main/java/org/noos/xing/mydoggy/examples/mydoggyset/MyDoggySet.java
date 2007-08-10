@@ -210,8 +210,6 @@ public class MyDoggySet {
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);
         slidingTypeDescriptor.setEnabled(false);
 
-        FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
-//        floatingTypeDescriptor.setEnabled(false);
 
         mainGroup.addToolWindow(toolWindow);
 
@@ -230,7 +228,7 @@ public class MyDoggySet {
         toolWindow = toolWindowManager.getToolWindow("Tool 7");
         toolWindow.setType(ToolWindowType.FLOATING);
 
-        floatingTypeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
+        FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
         floatingTypeDescriptor.setModal(true);
 
         defaultManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
@@ -238,8 +236,6 @@ public class MyDoggySet {
         tabbedContentManagerUI.setShowAlwaysTab(false);
         tabbedContentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
         tabbedContentManagerUI.setTabLayout(TabbedContentManagerUI.TabLayout.WRAP);
-//        tabbedContentManagerUI.setCloseable(false);
-//        tabbedContentManagerUI.setDetachable(false);
 
         defaultManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
             public boolean contentUIRemoving(ContentManagerUIEvent event) {
@@ -247,18 +243,8 @@ public class MyDoggySet {
             }
 
             public void contentUIDetached(ContentManagerUIEvent event) {
-                JOptionPane.showMessageDialog(frame, "Hello World!!!");
             }
         });
-
-
-        toolWindowManager.getContentManager().addContent("Tools", "Tools",
-                                                         SwingUtil.loadIcon("org/noos/xing/mydoggy/examples/mydoggyset/icons/save.png"), 
-                                                         new ToolsContentComponent(toolWindowManager), "ToolWindows");
-        assert toolWindowManager.getContentManager().getContentManagerUI().getContentUI(
-                toolWindowManager.getContentManager().getContent(0)
-        ) != null;
-        toolWindowManager.getContentManager().addContent("Group Editor", "Group Editor", null, new GroupEditorContentComponent(toolWindowManager), "ToolWindowGroup");
 
         ToolWindowManagerDescriptor managerDescriptor = toolWindowManager.getToolWindowManagerDescriptor();
         managerDescriptor.setCornerComponent(NORD_WEST, new JLabel("NW"));

@@ -1,5 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.icons;
 
+import com.sun.java.swing.SwingUtilities2;
+
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -21,19 +23,25 @@ public class TextIcon implements Icon, PropertyChangeListener {
     protected Component component;
     protected String text;
     protected int rotation;
+    protected int underlinedIndex;
 
     protected int fWidth;
     protected int fHeight;
     protected int fDescent;
 
     public TextIcon(Component component, String text) {
-        this(component, text, ROTATE_DEFAULT);
+        this(component, text, ROTATE_DEFAULT, -1);
     }
 
     public TextIcon(Component component, String text, int rotateHint) {
+        this(component, text, rotateHint, -1);
+    }
+
+    public TextIcon(Component component, String text, int rotateHint, int underlinedIndex) {
         this.component = component;
         this.text = text;
-        rotation = rotateHint;
+        this.underlinedIndex = underlinedIndex;
+        this.rotation = rotateHint;
         calcDimensions();
         this.component.addPropertyChangeListener(this);
     }
@@ -45,6 +53,20 @@ public class TextIcon implements Icon, PropertyChangeListener {
         switch (rotation) {
             case ROTATE_NONE:
                 g.drawString(text, x + kBufferSpace, y + fHeight - fDescent);
+
+                if (underlinedIndex >= 0 && underlinedIndex < text.length() ) {
+                    // PENDING: this needs to change.
+                    FontMetrics fm = g.getFontMetrics();
+
+                    int underlineRectX = x + kBufferSpace +
+                                         SwingUtilities2.stringWidth((JComponent) c,fm, text.substring(0, underlinedIndex));
+                    int underlineRectY = y + fHeight - 2;
+                    int underlineRectWidth = fm.charWidth(text.
+                                                          charAt(underlinedIndex));
+                    int underlineRectHeight = 1;
+                    g.fillRect(underlineRectX, underlineRectY + 1, 
+                               underlineRectWidth, underlineRectHeight);
+                }
                 break;
             case ROTATE_LEFT:
                 Graphics2D g2D = (Graphics2D) g;
@@ -96,6 +118,11 @@ public class TextIcon implements Icon, PropertyChangeListener {
         this.foreground = foreground;
     }
 
+    public void setUnderlinedIndex(int underlinedIndex) {
+        this.underlinedIndex = underlinedIndex;
+    }
+
+    
     protected void recalcDimensions() {
         int wOld = getIconWidth();
         int hOld = getIconHeight();
