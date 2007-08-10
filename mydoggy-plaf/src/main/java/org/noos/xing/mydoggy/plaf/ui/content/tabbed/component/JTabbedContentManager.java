@@ -77,10 +77,14 @@ public class JTabbedContentManager extends JTabbedPane {
         return getContentPage(index).getContentIcon();
     }
 
+    public void setMnemonicAt(int tabIndex, int mnemonic) {
+        super.setMnemonicAt(tabIndex, mnemonic);
+        getContentPage(tabIndex).setMnemonic(mnemonic);
+    }
+
     public Icon getDisabledIconAt(int index) {
         return getContentPage(index).getContentIcon();
     }
-
 
     public void addTab(String title, Icon icon, Component component, String tip, TabbedContentUI tabbedContentUI) {
         insertTab(title, icon, component, tip, getTabCount(), tabbedContentUI);
