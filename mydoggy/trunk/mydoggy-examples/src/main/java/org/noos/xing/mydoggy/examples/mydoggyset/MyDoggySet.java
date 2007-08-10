@@ -5,10 +5,7 @@ import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.examples.mydoggyset.action.*;
-import org.noos.xing.mydoggy.examples.mydoggyset.content.ContentsContentComponent;
-import org.noos.xing.mydoggy.examples.mydoggyset.content.GroupEditorContentComponent;
-import org.noos.xing.mydoggy.examples.mydoggyset.content.ManagerContentComponent;
-import org.noos.xing.mydoggy.examples.mydoggyset.content.ToolsContentComponent;
+import org.noos.xing.mydoggy.examples.mydoggyset.content.*;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.MonitorPanel;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
@@ -31,10 +28,13 @@ public class MyDoggySet {
     public JFrame frame;
     private ToolWindowManager toolWindowManager;
 
+    private Action wellcomeContentAction;
+
     private Component toolsContentComponent;
     private Component groupEditorContentComponent;
     private Component contentsContentComponent;
     private Component managerContentComponent;
+    private Component wellcomeContentComponent;
 
     private JMenu lafMenu;
 
@@ -72,6 +72,7 @@ public class MyDoggySet {
     protected void start() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                wellcomeContentAction.actionPerformed(null);
                 frame.setVisible(true);
             }
         });
@@ -102,6 +103,10 @@ public class MyDoggySet {
 
         // Content Menu
         JMenu contentMenu = new JMenu("Content");
+        contentMenu.add(wellcomeContentAction = new AddContentAction(toolWindowManager,
+                                                                     "Wellcome", "Wellcome", null,
+                                                                     wellcomeContentComponent = new WellcomeContentComponent(toolWindowManager),
+                                                                     "Wellcome", (int) 'W'));
         contentMenu.add(new AddContentAction(toolWindowManager,
                                              "Manager", "Manager", null,
                                              managerContentComponent = new ManagerContentComponent(toolWindowManager),
@@ -109,15 +114,15 @@ public class MyDoggySet {
         contentMenu.add(new AddContentAction(toolWindowManager,
                                              "Tools", "Tools", null,
                                              toolsContentComponent = new ToolsContentComponent(toolWindowManager),
-                                             "ToolWindows",(int) 'T'));
+                                             "ToolWindows", (int) 'T'));
         contentMenu.add(new AddContentAction(toolWindowManager,
                                              "Group Editor", "Group Editor", null,
                                              groupEditorContentComponent = new GroupEditorContentComponent(toolWindowManager),
-                                             "Groups",(int) 'G'));
+                                             "Groups", (int) 'G'));
         contentMenu.add(new AddContentAction(toolWindowManager,
                                              "Contents", "Contents", null,
                                              contentsContentComponent = new ContentsContentComponent(toolWindowManager),
-                                             "Contents",(int) 'C'));
+                                             "Contents", (int) 'C'));
 
         // L&F Menu
         lafMenu = new JMenu("Looks");
@@ -147,7 +152,7 @@ public class MyDoggySet {
         JPanel panel = new JPanel(new TableLayout(new double[][]{{20, -1, 20}, {20, -1, 20}}));
         panel.add(new JButton("Hello World 2"), "1,1,FULL,FULL");
 
-		toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, new JButton("Hello World 1"), ToolWindowAnchor.LEFT);
+        toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, new JButton("Hello World 1"), ToolWindowAnchor.LEFT);
         toolWindowManager.registerToolWindow("Tool 2", "Title 2", null, panel, ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 3", "Title 3",
                                              SwingUtil.loadIcon("org/noos/xing/mydoggy/examples/mydoggyset/icons/save.png"),
@@ -266,9 +271,11 @@ public class MyDoggySet {
             SwingUtilities.updateComponentTreeUI(groupEditorContentComponent);
             SwingUtilities.updateComponentTreeUI(toolsContentComponent);
             SwingUtilities.updateComponentTreeUI(contentsContentComponent);
+            SwingUtilities.updateComponentTreeUI(managerContentComponent);
+            SwingUtilities.updateComponentTreeUI(wellcomeContentComponent);
         } catch (Exception ex) {
-			ex.printStackTrace();
-		}
+            ex.printStackTrace();
+        }
     }
 
     protected void dispose() {
