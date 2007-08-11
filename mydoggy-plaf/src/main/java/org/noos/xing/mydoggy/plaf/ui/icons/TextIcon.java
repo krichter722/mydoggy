@@ -1,7 +1,5 @@
 package org.noos.xing.mydoggy.plaf.ui.icons;
 
-import com.sun.java.swing.SwingUtilities2;
-
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -58,8 +56,7 @@ public class TextIcon implements Icon, PropertyChangeListener {
                     // PENDING: this needs to change.
                     FontMetrics fm = g.getFontMetrics();
 
-                    int underlineRectX = x + kBufferSpace +
-                                         SwingUtilities2.stringWidth((JComponent) c,fm, text.substring(0, underlinedIndex));
+                    int underlineRectX = x + kBufferSpace + fm.stringWidth(text.substring(0, underlinedIndex));
                     int underlineRectY = y + fHeight - 2;
                     int underlineRectWidth = fm.charWidth(text.
                                                           charAt(underlinedIndex));
