@@ -90,7 +90,9 @@ public class RobotInteractiveMouse implements InteractiveMouse {
 
     public void click(String componentName, Type type) {
         moveTo(componentName);
+        System.out.println("now click");
         click(type);
+        System.out.println("after click");
     }
 
     public void wheel(int amount) {
@@ -113,8 +115,8 @@ public class RobotInteractiveMouse implements InteractiveMouse {
         if (Math.abs(dx) > Math.abs(dy)) {          // slope < 1
             float m = (float) dy / (float) dx;      // compute slope
             float b = y0 - m * x0;
-            dx = (dx < 0) ? -1 : 1;
-            while (x0 != x1) {
+            dx = (dx < 0) ? -5 : 5;
+            while ((dx < 0 && x0 >= x1) || (dx > 0 && x0 <= x1)) {
                 x0 += dx;
                 robot.mouseMove(x0, Math.round(m * x0 + b));
                 interactiveUI.delay(1);
@@ -122,8 +124,8 @@ public class RobotInteractiveMouse implements InteractiveMouse {
         } else if (dy != 0) {                        // slope >= 1
             float m = (float) dx / (float) dy;      // compute slope
             float b = x0 - m * y0;
-            dy = (dy < 0) ? -1 : 1;
-            while (y0 != y1) {
+            dy = (dy < 0) ? -5 : 5;
+            while ((dy < 0 && y0 >= y1) || (dy > 0 && y0 <= y1)) {
                 y0 += dy;
                 robot.mouseMove(Math.round(m * y0 + b), y0);
                 interactiveUI.delay(1);

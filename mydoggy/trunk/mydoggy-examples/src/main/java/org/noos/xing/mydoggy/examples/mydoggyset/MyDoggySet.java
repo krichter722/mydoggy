@@ -35,6 +35,7 @@ public class MyDoggySet {
     private Component contentsContentComponent;
     private Component managerContentComponent;
     private Component wellcomeContentComponent;
+    private Component interactiveTestContentComponent;
 
     private JMenu lafMenu;
 
@@ -123,6 +124,10 @@ public class MyDoggySet {
                                              "Contents", "Contents", null,
                                              contentsContentComponent = new ContentsContentComponent(toolWindowManager),
                                              "Contents", (int) 'C'));
+        contentMenu.add(new AddContentAction(toolWindowManager,
+                                             "Interactive Tests", "Interactive Tests", null,
+                                             interactiveTestContentComponent = new InteractiveTestContentComponent(frame, toolWindowManager),
+                                             "Interactive Tests", (int) 'I'));
 
         // L&F Menu
         lafMenu = new JMenu("Looks");
@@ -273,6 +278,7 @@ public class MyDoggySet {
             SwingUtilities.updateComponentTreeUI(contentsContentComponent);
             SwingUtilities.updateComponentTreeUI(managerContentComponent);
             SwingUtilities.updateComponentTreeUI(wellcomeContentComponent);
+            SwingUtilities.updateComponentTreeUI(interactiveTestContentComponent);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

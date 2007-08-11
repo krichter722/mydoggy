@@ -7,6 +7,10 @@ import java.awt.*;
  */
 public interface InteractiveTest {
 
+    String getName();
+
+    String getDescription();
+
     Container setup();
 
     void dispose();
