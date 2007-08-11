@@ -6,7 +6,8 @@ import org.noos.xing.mydoggy.examples.mydoggyset.content.interactive.Interactive
 import org.noos.xing.mydoggy.examples.mydoggyset.content.interactive.InteractiveSimpleTest;
 import org.noos.xing.mydoggy.examples.mydoggyset.content.interactive.InteractiveToolVisisbleTest;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
-import org.noos.xing.mydoggy.itest.impl.ListInteractiveTestRunner;
+import org.noos.xing.mydoggy.itest.InteractiveTestRunner;
+import org.noos.xing.mydoggy.itest.impl.SingleThreadInteractiveTestRunner;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 
 import javax.swing.*;
@@ -83,10 +84,9 @@ public class InteractiveTestContentComponent extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 InteractiveTest interactiveTest = (InteractiveTest) tests.getSelectedItem();
 
-                ListInteractiveTestRunner runner = new ListInteractiveTestRunner();
+                InteractiveTestRunner runner = new SingleThreadInteractiveTestRunner();
                 runner.addInteractiveTest(interactiveTest);
                 runner.run();
-
             }
         });
 

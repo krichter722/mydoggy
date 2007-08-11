@@ -90,9 +90,7 @@ public class RobotInteractiveMouse implements InteractiveMouse {
 
     public void click(String componentName, Type type) {
         moveTo(componentName);
-        System.out.println("now click");
         click(type);
-        System.out.println("after click");
     }
 
     public void wheel(int amount) {
