@@ -1,28 +1,23 @@
 package org.noos.xing.mydoggy.plaf.ui.util;
 
-import sun.awt.image.IntegerComponentRaster;
-
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
-import java.awt.image.Raster;
-import java.awt.image.WritableRaster;
-import java.util.Arrays;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MutableColor extends Color {
     
-    private static final double FACTOR = 0.7;
+    protected static final double FACTOR = 0.7;
 
-    private int value;
-    private float frgbvalue[] = null;
-    private float fvalue[] = null;
-    private float falpha = 0.0f;
-    private ColorSpace cs = null;
+    protected int value;
+    protected float frgbvalue[] = null;
+    protected float fvalue[] = null;
+    protected float falpha = 0.0f;
+    protected ColorSpace cs = null;
 
     public MutableColor(int r, int g, int b) {
         super(r, g, b);
@@ -230,18 +225,11 @@ public class MutableColor extends Color {
         return cs;
     }
 
-    transient private PaintContext theContext;
-
     public synchronized PaintContext createContext(ColorModel cm, Rectangle r,
                                                    Rectangle2D r2d,
                                                    AffineTransform xform,
                                                    RenderingHints hints) {
-        PaintContext pc = theContext;
-        if (pc == null) {
-            pc = new ColorPaintContext(value, cm);
-            theContext = pc;
-        }
-        return pc;
+        throw new RuntimeException("Method not supported...");
     }
 
     public int getTransparency() {
@@ -306,11 +294,11 @@ public class MutableColor extends Color {
             badComponentString = badComponentString + " Blue";
         }
         if (rangeError) {
-            throw new IllegalArgumentException("Color parameter outside of expected range:"
-                                               + badComponentString);
+            throw new IllegalArgumentException("Color parameter outside of expected range:" + badComponentString);
         }
     }
 
+/*
     static class ColorPaintContext implements PaintContext {
         int color;
         WritableRaster savedTile;
@@ -331,8 +319,10 @@ public class MutableColor extends Color {
 
             if (t == null || w > t.getWidth() || h > t.getHeight()) {
                 t = getColorModel().createCompatibleWritableRaster(w, h);
+                // TODO: download source from sun to see icr.getDataStorage() 
                 IntegerComponentRaster icr = (IntegerComponentRaster) t;
                 Arrays.fill(icr.getDataStorage(), color);
+
                 if (w <= 64 && h <= 64) {
                     savedTile = t;
                 }
@@ -341,5 +331,6 @@ public class MutableColor extends Color {
             return t;
         }
     }
+*/
 
 }
