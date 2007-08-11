@@ -1,9 +1,7 @@
 package org.noos.xing.mydoggy.examples.mydoggyset.model;
 
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
 
 import javax.swing.table.DefaultTableModel;
 import java.beans.PropertyChangeEvent;
@@ -86,6 +84,21 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
     }
 
     protected void initToolsListeners() {
+        windowManager.addToolWindowManagerListener(new ToolWindowManagerListener() {
+            public void toolWindowRegistered(ToolWindowManagerEvent event) {
+                event.getToolWindow().addPropertyChangeListener(ToolsTableModel.this);
+            }
+
+            public void toolWindowUnregistered(ToolWindowManagerEvent event) {
+                event.getToolWindow().removePropertyChangeListener(ToolsTableModel.this);
+            }
+
+            public void toolWindowGroupAdded(ToolWindowManagerEvent event) {
+            }
+
+            public void toolWindowGroupRemoved(ToolWindowManagerEvent event) {
+            }
+        });
         ToolWindow[] toolWindows = windowManager.getToolWindows();
         for (ToolWindow toolWindow : toolWindows) {
             toolWindow.addPropertyChangeListener(this);

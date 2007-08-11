@@ -24,8 +24,16 @@ public class MyDoggyInteractiveTester {
         runner.run();
     }
 
-    static abstract class MyDoggyInteractiveTest implements InteractiveTest {
+    public static abstract class MyDoggyInteractiveTest implements InteractiveTest {
         MyDoggySet myDoggySet;
+
+        public String getName() {
+            return null;
+        }
+
+        public String getDescription() {
+            return null;
+        }
 
         public Container setup() {
             myDoggySet = new MyDoggySet();
@@ -53,7 +61,7 @@ public class MyDoggyInteractiveTester {
         }
     }
 
-    static class PreviewInteractiveTest extends MyDoggyInteractiveTest {
+    public static class PreviewInteractiveTest extends MyDoggyInteractiveTest {
 
         public void interactiveTest(InteractiveUI interactiveUI) {
             InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
@@ -88,7 +96,7 @@ public class MyDoggyInteractiveTester {
         }
     }
 
-    static class ToolVisisbleInteractiveTest extends MyDoggyInteractiveTest {
+    public static class ToolVisisbleInteractiveTest extends MyDoggyInteractiveTest {
 
         public void interactiveTest(InteractiveUI interactiveUI) {
             InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
@@ -104,7 +112,7 @@ public class MyDoggyInteractiveTester {
         }
     }
 
-    static class DragInteractiveTest extends MyDoggyInteractiveTest {
+    public static class DragInteractiveTest extends MyDoggyInteractiveTest {
 
         public void interactiveTest(InteractiveUI interactiveUI) {
             InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
@@ -132,7 +140,7 @@ public class MyDoggyInteractiveTester {
 
     }
 
-    static class SlidingTypeInteractiveTest extends MyDoggyInteractiveTest {
+    public static class SlidingTypeInteractiveTest extends MyDoggyInteractiveTest {
 
         public void interactiveTest(InteractiveUI interactiveUI) {
             InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
@@ -156,7 +164,7 @@ public class MyDoggyInteractiveTester {
 
     }
 
-    static class FloatingMoveInteractiveTest extends MyDoggyInteractiveTest {
+    public static class FloatingMoveInteractiveTest extends MyDoggyInteractiveTest {
 
         public void interactiveTest(InteractiveUI interactiveUI) {
             InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
