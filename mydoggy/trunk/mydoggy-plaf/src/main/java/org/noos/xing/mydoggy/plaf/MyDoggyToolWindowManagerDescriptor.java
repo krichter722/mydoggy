@@ -203,8 +203,11 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
     }
 
     public void setDividerSize(ToolWindowAnchor anchor, int size) {
-        // TODO: check oldsize and size
-        Integer oldSize = dividerSizes.put(anchor, size);
+        Integer oldSize = dividerSizes.get(anchor);
+        if (oldSize != null && oldSize.equals(size))
+            return;
+
+        dividerSizes.put(anchor, size);
         firePropertyChange("dividerSize", new Object[]{anchor, oldSize}, new Object[]{anchor, size});
     }
 
