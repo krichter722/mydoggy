@@ -1,11 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
-import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -31,16 +27,35 @@ public interface ToolWindowUI {
     public static String MINIMIZE = "MINIMIZE";
     public static String MINIMIZE_INACTIVE = "MINIMIZE_INACTIVE";
 
-    public static String ANCHOR_LINE_BORDER_VISIBLE = "ANCHOR_LINE_BORDER_VISIBLE";
-    public static String ANCHOR_LINE_BORDER_NOT_VISIBLE = "ANCHOR_LINE_BORDER_NOT_VISIBLE"; 
+    public static String ANCHOR_BORDER_MOUSE_IN = "ANCHOR_BORDER_MOUSE_IN";
+    public static String ANCHOR_BORDER_MOUSE_OUT = "ANCHOR_BORDER_MOUSE_OUT";
+    public static String ANCHOR_INACTIVE_BGK = "ANCHOR_INACTIVE_BGK";
+    public static String ANCHOR_FLASHING_START = "ANCHOR_FLASHING_START";
+    public static String ANCHOR_FLASHING_END = "ANCHOR_FLASHING_END";
+    
+    public static String TW_APP_BACKGROUND_ENABLED_START = "TW_APP_BACKGROUND_ENABLED_START";
+    public static String TW_APP_BACKGROUND_ENABLED_END = "TW_APP_BACKGROUND_ENABLED_END";
+    public static String TW_APP_BACKGROUND_DISABLED_START = "TW_APP_BACKGROUND_DISABLED_START";
+    public static String TW_APP_BACKGROUND_DISABLED_END = "TW_APP_BACKGROUND_DISABLED_END";
+
+    public static String TW_APP_ID_BACKGROUND_FLASHING_0 = "TW_APP_ID_BACKGROUND_FLASHING_0";
+    public static String TW_APP_ID_BACKGROUND_FLASHING_1 = "TW_APP_ID_BACKGROUND_FLASHING_1";
+    public static String TW_APP_ID_BACKGROUND_ANIMATING = "TW_APP_ID_BACKGROUND_ANIMATING";
+    public static String TW_APP_ID_BACKGROUND_ACTIVE = "TW_APP_ID_BACKGROUND_ACTIVE";
+    public static String TW_APP_ID_BACKGROUND_INACTIVE = "TW_APP_ID_BACKGROUND_INACTIVE";
+    public static String TW_APP_ID_FOREGROUND_ACTIVE = "TW_APP_ID_FOREGROUND_ACTIVE";
+    public static String TW_APP_ID_FOREGROUND_INACTIVE = "TW_APP_ID_FOREGROUND_INACTIVE";
 
     Icon getIcon(String id);
 
     Color getColor(String id);
 
+    void updateAnchor(Graphics g, Rectangle rectangle,
+                      Color backgroundStart, Color backgroundEnd,
+                      boolean active, boolean flashing);
 
-    void updateAnchor(boolean opaque, Graphics g, Rectangle rectangle, Color start, Color end);
-
-    void updateAnchorFlash(Graphics g, Rectangle rectangle, Color flashingAnimBackStart, Color flashingAnimBackEnd);
+    void updateToolWindowAppBar(ToolWindowDescriptor descriptor, Graphics g, JComponent c,
+                                Color backgroundStart, Color backgroundEnd,
+                                Color idBackgroundColor, Color idColor);
 
 }
