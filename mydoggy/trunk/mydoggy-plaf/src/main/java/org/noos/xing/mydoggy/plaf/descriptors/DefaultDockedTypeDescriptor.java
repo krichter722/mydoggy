@@ -3,9 +3,7 @@ package org.noos.xing.mydoggy.plaf.descriptors;
 import org.noos.xing.mydoggy.DockedTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowActionHandler;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
 import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
-import org.noos.xing.mydoggy.plaf.ui.MyDoggyToolWindowUI;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -17,7 +15,6 @@ import java.beans.PropertyChangeListener;
  */
 public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
     private ToolWindowActionHandler toolWindowActionHandler;
-    private ToolWindowUI toolWindowUI;
     private boolean popupMenuEnabled;
     private JMenu toolsMenu;
     private int dockLength;
@@ -37,7 +34,6 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.dockLength = 200;
         this.toolWindowActionHandler = null;
         this.animating = true;
-        this.toolWindowUI = MyDoggyToolWindowUI.getInstance();
         this.previewEnabled = true;
         this.previewDelay = 1000;
         this.previewTransparentRatio = 0.65f;
@@ -46,14 +42,13 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     }
 
     public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled,
-                                       ToolWindowActionHandler toolWindowActionHandler, boolean animating, ToolWindowUI toolWindowUI,
+                                       ToolWindowActionHandler toolWindowActionHandler, boolean animating,
                                        boolean previewEnabled, int previewDelay, float previewTransparentRatio,
                                        boolean hideLabelOnVisible, boolean idVisibleOnToolBar) {
         this.toolsMenu = new JMenu(ResourceBundleManager.getInstance().getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = popupMenuEnabled;
         this.dockLength = dockLength;
         this.toolWindowActionHandler = toolWindowActionHandler;
-        this.toolWindowUI = toolWindowUI;
         this.animating = animating;
         this.previewEnabled = previewEnabled;
         this.previewDelay = previewDelay;
@@ -181,10 +176,6 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         firePropertyChange("animating", old, animating);
     }
 
-    public ToolWindowUI getToolWindowUI() {
-        return toolWindowUI;
-    }
-
     public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
         if (listenerList == null)
             listenerList = new EventListenerList();
@@ -206,7 +197,6 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     public ToolWindowTypeDescriptor cloneMe() {
         return new DefaultDockedTypeDescriptor(this, dockLength, popupMenuEnabled,
                                                toolWindowActionHandler, animating,
-                                               MyDoggyToolWindowUI.getInstance(),
                                                previewEnabled, previewDelay, previewTransparentRatio,
                                                hideLabelOnVisible, idVisibleOnToolBar);
     }

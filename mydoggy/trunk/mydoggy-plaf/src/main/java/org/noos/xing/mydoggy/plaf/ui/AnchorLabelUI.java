@@ -10,8 +10,8 @@ import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTrasferable;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.translucent.TranslucentPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
@@ -51,7 +51,7 @@ public class AnchorLabelUI extends MetalLabelUI {
     protected AbstractAnimation flashingAnimation;
 
     protected TranslucentPanel previewPanel;
-    
+
 
     public AnchorLabelUI(ToolWindowDescriptor descriptor, ToolWindow toolWindow) {
         this.descriptor = descriptor;
@@ -114,8 +114,11 @@ public class AnchorLabelUI extends MetalLabelUI {
         Rectangle bounds = c.getBounds();
         if (toolWindow.isFlashing() && !toolWindow.isVisible()) {
 
-            descriptor.getToolWindowUI().updateAnchor(g, new Rectangle(0, 0, bounds.width, bounds.height),
-                                                           flashingAnimBackStart, flashingAnimBackEnd, false, true);
+            descriptor.getToolWindowUI().updateAnchor(descriptor, g, c,
+                                                      flashingAnimBackStart,
+                                                      flashingAnimBackEnd,
+                                                      false,
+                                                      true);
 
             if (flashingTimer == null) {
                 flashingTimer = new Timer(600, new ActionListener() {
@@ -152,7 +155,10 @@ public class AnchorLabelUI extends MetalLabelUI {
                 flashingTimer = null;
             }
 
-            descriptor.getToolWindowUI().updateAnchor(g, new Rectangle(0, 0, bounds.width, bounds.height), toolWindowUI.getColor(ANCHOR_FLASHING_START), toolWindowUI.getColor(ANCHOR_FLASHING_END), c.isOpaque(),
+            descriptor.getToolWindowUI().updateAnchor(descriptor, g, c,
+                                                      toolWindowUI.getColor(ANCHOR_FLASHING_START),
+                                                      toolWindowUI.getColor(ANCHOR_FLASHING_END), 
+                                                      c.isOpaque(),
                                                       false);
         }
         paint(g, c);
@@ -186,7 +192,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                 SwingUtil.repaint(label);
             }
         } else if ("previewDelay".equals(propertyName)) {
-            adapter.setPreviewDelay((Integer)e.getNewValue());
+            adapter.setPreviewDelay((Integer) e.getNewValue());
         }
     }
 
@@ -334,7 +340,7 @@ public class AnchorLabelUI extends MetalLabelUI {
                     RootPaneContainer rootPaneContainer = (RootPaneContainer) SwingUtilities.getWindowAncestor(label);
                     if (rootPaneContainer != null) {
                         JMenuBar jMenuBar = rootPaneContainer instanceof JFrame ?
-                                             ((JFrame)rootPaneContainer).getJMenuBar() : null;
+                                            ((JFrame) rootPaneContainer).getJMenuBar() : null;
 
                         firstPreview = true;
                         previewTimer.stop();
@@ -383,25 +389,25 @@ public class AnchorLabelUI extends MetalLabelUI {
                                         (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                                         mainContainer.getY() +
                                         mainContainer.getHeight() -
-                                        previewPanel.getHeight() - 26
+                                                                  previewPanel.getHeight() - 26
                                 );
                                 break;
                             case RIGHT:
                                 previewPanel.setLocation(
                                         mainContainer.getX() +
                                         mainContainer.getWidth() -
-                                        previewPanel.getWidth() - 26,
+                                                                 previewPanel.getWidth() - 26,
 
                                         (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                                         mainContainer.getY() +
                                         label.getY() +
-                                        (descriptor.getToolBar(TOP).getAvailableTools() != 0 ? 23 : 0) 
+                                        (descriptor.getToolBar(TOP).getAvailableTools() != 0 ? 23 : 0)
                                 );
                                 break;
                         }
 
                         if (previewPanel.getY() + previewPanel.getHeight() >
-                                mainContainer.getY() + mainContainer.getHeight() - 26) {
+                            mainContainer.getY() + mainContainer.getHeight() - 26) {
 
                             previewPanel.setLocation(
                                     previewPanel.getX(),
@@ -409,20 +415,20 @@ public class AnchorLabelUI extends MetalLabelUI {
                                     (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                                     mainContainer.getY() +
                                     mainContainer.getHeight() -
-                                    (descriptor.getToolBar(BOTTOM).getAvailableTools() != 0 ? 23 : 0) -
-                                    previewPanel.getHeight() - 3
+                                                              (descriptor.getToolBar(BOTTOM).getAvailableTools() != 0 ? 23 : 0) -
+                                                              previewPanel.getHeight() - 3
                             );
                         }
 
                         if (previewPanel.getX() + previewPanel.getWidth() >
-                                mainContainer.getX() + mainContainer.getWidth() - 26) {
+                            mainContainer.getX() + mainContainer.getWidth() - 26) {
 
                             previewPanel.setLocation(
                                     mainContainer.getX() +
                                     mainContainer.getWidth() -
-                                    (descriptor.getToolBar(RIGHT).getAvailableTools() != 0 ? 23 : 0) -
-                                    previewPanel.getWidth() - 3,
-                                    
+                                                             (descriptor.getToolBar(RIGHT).getAvailableTools() != 0 ? 23 : 0) -
+                                                             previewPanel.getWidth() - 3,
+
                                     previewPanel.getY()
                             );
                         }
@@ -628,7 +634,7 @@ public class AnchorLabelUI extends MetalLabelUI {
         public void setPreviewDelay(int previewDelay) {
             previewTimer.setDelay(previewDelay);
         }
-        
+
     }
 
     private class GradientAnimation extends AbstractAnimation {

@@ -55,7 +55,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         this.internalListenerList = new EventListenerList();
         this.listenerList = new EventListenerList();
 
-        this.descriptor = new ToolWindowDescriptor(manager, this, anchestor, component);
+        this.descriptor = new ToolWindowDescriptor(manager, this, anchestor);
         this.resourceBoundle = resourceBundle;
         this.toolWindowTabs = new ArrayList<ToolWindowTab>();
 

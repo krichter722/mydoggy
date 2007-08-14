@@ -20,19 +20,21 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ToolWindowTabPanel extends JComponent implements PropertyChangeListener {
-    private DockedContainer dockedContainer;
-    private ToolWindow toolWindow;
+    protected DockedContainer dockedContainer;
+    protected ToolWindowDescriptor descriptor;
+    protected ToolWindow toolWindow;
 
-    private JViewport viewport;
-    private JPanel tabContainer;
-    private TableLayout containerLayout;
+    protected JViewport viewport;
+    protected JPanel tabContainer;
+    protected TableLayout containerLayout;
 
-    private ToolWindowTab selectedTab;
-    private TabButton selecTabButton;
-    private PopupButton popupButton;
+    protected ToolWindowTab selectedTab;
+    protected TabButton selecTabButton;
+    protected PopupButton popupButton;
 
-    public ToolWindowTabPanel(DockedContainer dockedContainer, ToolWindow toolWindow) {
-        this.toolWindow = toolWindow;
+    public ToolWindowTabPanel(DockedContainer dockedContainer, ToolWindowDescriptor descriptor) {
+        this.descriptor = descriptor;
+        this.toolWindow = descriptor.getToolWindow();
         this.dockedContainer = dockedContainer;
 
         initComponents();
@@ -277,7 +279,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             this.tab = tab;
             this.tab.addPropertyChangeListener(this);
 
-            setForeground(Color.LIGHT_GRAY);
+            setForeground(descriptor.getToolWindowUI().getColor(ToolWindowUI.TW_APP_TAB_FOREGROUND_UNSELECTED));
             setOpaque(false);
             setFocusable(false);
             setIcon(tab.getIcon());
@@ -296,7 +298,9 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 public void mousePressed(MouseEvent e) {
                     toolWindow.setActive(true);
 
-                    if (SwingUtilities.isLeftMouseButton(e) && getForeground() != Color.WHITE) {
+                    if (SwingUtilities.isLeftMouseButton(e) &&
+                        // TODO: it's orrible
+                        getForeground() != Color.WHITE) {
                         pressed = true;
                         repaint();
                     } else {
@@ -337,7 +341,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             if ("selected".equals(property)) {
                 if (evt.getNewValue() == Boolean.FALSE) {
                     selecTabButton = null;
-                    TabButton.this.setForeground(Color.LIGHT_GRAY);
+                    TabButton.this.setForeground(descriptor.getToolWindowUI().getColor(ToolWindowUI.TW_APP_TAB_FOREGROUND_UNSELECTED));
                 } else {
                     selecTabButton = this;
                     // Ensure position
@@ -345,7 +349,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                     cellBounds.x -= viewport.getViewPosition().x;
                     viewport.scrollRectToVisible(cellBounds);
                     
-                    TabButton.this.setForeground(Color.WHITE);
+                    TabButton.this.setForeground(descriptor.getToolWindowUI().getColor(ToolWindowUI.TW_APP_TAB_FOREGROUND_SELECTED));
                 }
             } else if ("title".equals(property)) {
                 setText((String) evt.getNewValue());
