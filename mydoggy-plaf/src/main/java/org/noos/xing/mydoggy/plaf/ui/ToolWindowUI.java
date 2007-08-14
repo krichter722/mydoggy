@@ -46,11 +46,14 @@ public interface ToolWindowUI {
     public static String TW_APP_ID_FOREGROUND_ACTIVE = "TW_APP_ID_FOREGROUND_ACTIVE";
     public static String TW_APP_ID_FOREGROUND_INACTIVE = "TW_APP_ID_FOREGROUND_INACTIVE";
 
+    public static String TW_APP_TAB_FOREGROUND_SELECTED = "TW_APP_TAB_FOREGROUND_SELECTED";
+    public static String TW_APP_TAB_FOREGROUND_UNSELECTED = "TW_APP_TAB_FOREGROUND_UNSELECTED";
+
     Icon getIcon(String id);
 
     Color getColor(String id);
 
-    void updateAnchor(Graphics g, Rectangle rectangle,
+    void updateAnchor(ToolWindowDescriptor descriptor, Graphics g, JComponent c,
                       Color backgroundStart, Color backgroundEnd,
                       boolean active, boolean flashing);
 

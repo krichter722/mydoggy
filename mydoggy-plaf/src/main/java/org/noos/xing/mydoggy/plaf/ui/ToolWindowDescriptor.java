@@ -7,7 +7,6 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.icons.AggregateIcon;
 import org.noos.xing.mydoggy.plaf.ui.icons.TextIcon;
-import org.noos.xing.mydoggy.plaf.ui.util.Colors;
 
 import javax.swing.*;
 import javax.swing.plaf.LabelUI;
@@ -37,8 +36,9 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     private boolean floatingWindow = false;
 
 
-    public ToolWindowDescriptor(MyDoggyToolWindowManager manager, MyDoggyToolWindow toolWindow,
-                                Window windowAnchestor, Component component) {
+    public ToolWindowDescriptor(MyDoggyToolWindowManager manager,
+                                MyDoggyToolWindow toolWindow,
+                                Window windowAnchestor) {
         this.manager = manager;
         this.windowAnchestor = windowAnchestor;
         this.toolWindow = toolWindow;
@@ -194,7 +194,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
             anchorLabel.setUI(createLabelUI());
             anchorLabel.setOpaque(toolWindow.isActive());
             anchorLabel.setFocusable(false);
-            anchorLabel.setBackground(Colors.skin);
         }
         return anchorLabel;
     }

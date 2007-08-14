@@ -191,7 +191,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             ).stringWidth(ResourceBundleManager.getInstance().getUserString(id)) + 12);
 
         // Tabs
-        applicationBarTabs = new ToolWindowTabPanel(this, toolWindow);
+        applicationBarTabs = new ToolWindowTabPanel(this, descriptor);
         toolWindow.getToolWindowTabs()[0].setSelected(true);
 
         // Buttons
