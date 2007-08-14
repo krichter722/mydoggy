@@ -29,7 +29,7 @@ public interface ToolWindowUI {
 
     public static String ANCHOR_BORDER_MOUSE_IN = "ANCHOR_BORDER_MOUSE_IN";
     public static String ANCHOR_BORDER_MOUSE_OUT = "ANCHOR_BORDER_MOUSE_OUT";
-    public static String ANCHOR_INACTIVE_BGK = "ANCHOR_INACTIVE_BGK";
+    public static String ANCHOR_BACKGROUND_INACTIVE = "ANCHOR_BACKGROUND_INACTIVE";
     public static String ANCHOR_FLASHING_START = "ANCHOR_FLASHING_START";
     public static String ANCHOR_FLASHING_END = "ANCHOR_FLASHING_END";
     
