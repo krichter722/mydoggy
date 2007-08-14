@@ -54,7 +54,7 @@ public class MyDoggyToolWindowUI implements ToolWindowUI {
                 GraphicsUtil.fillRect(g, rectangle,
                                       backgroundStart, backgroundEnd, null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
             } else {
-                g.setColor(getColor(ANCHOR_INACTIVE_BGK));
+                g.setColor(getColor(ANCHOR_BACKGROUND_INACTIVE));
                 g.fillRect(0, 0, rectangle.width, rectangle.height);
             }
         }

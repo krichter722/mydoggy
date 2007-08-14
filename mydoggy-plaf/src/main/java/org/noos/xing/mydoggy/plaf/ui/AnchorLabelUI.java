@@ -59,8 +59,8 @@ public class AnchorLabelUI extends MetalLabelUI {
         this.toolWindowUI = descriptor.getToolWindowUI();
 
         this.flashingAnimation = new GradientAnimation();
-        this.flashingAnimBackStart = new MutableColor(toolWindowUI.getColor(ANCHOR_INACTIVE_BGK));
-        this.flashingAnimBackEnd = new MutableColor(toolWindowUI.getColor(ANCHOR_INACTIVE_BGK));
+        this.flashingAnimBackStart = new MutableColor(toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE));
+        this.flashingAnimBackEnd = new MutableColor(toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE));
 
         this.dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
         this.dockedTypeDescriptor.addPropertyChangeListener(this);
@@ -641,11 +641,11 @@ public class AnchorLabelUI extends MetalLabelUI {
             switch (getAnimationDirection()) {
                 case INCOMING:
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackStart,
-                                                      toolWindowUI.getColor(ANCHOR_INACTIVE_BGK),
+                                                      toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE),
                                                       toolWindowUI.getColor(ANCHOR_FLASHING_START),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd,
-                                                      toolWindowUI.getColor(ANCHOR_INACTIVE_BGK), 
+                                                      toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE),
                                                       toolWindowUI.getColor(ANCHOR_FLASHING_END),
                                                       animationPercent);
                     break;
@@ -653,11 +653,11 @@ public class AnchorLabelUI extends MetalLabelUI {
                 case OUTGOING:
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackStart,
                                                       toolWindowUI.getColor(ANCHOR_FLASHING_START),
-                                                      toolWindowUI.getColor(ANCHOR_INACTIVE_BGK),
+                                                      toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd,
                                                       toolWindowUI.getColor(ANCHOR_FLASHING_END),
-                                                      toolWindowUI.getColor(ANCHOR_INACTIVE_BGK),
+                                                      toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE),
                                                       animationPercent);
                     break;
             }
@@ -668,7 +668,7 @@ public class AnchorLabelUI extends MetalLabelUI {
         protected void onFinishAnimation() {
             switch (getAnimationDirection()) {
                 case INCOMING:
-                    flashingAnimBackStart.setRGB(toolWindowUI.getColor(ANCHOR_INACTIVE_BGK));
+                    flashingAnimBackStart.setRGB(toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE));
                     break;
                 case OUTGOING:
                     flashingAnimBackStart.setRGB(toolWindowUI.getColor(ANCHOR_FLASHING_START));
@@ -683,8 +683,8 @@ public class AnchorLabelUI extends MetalLabelUI {
         }
 
         protected void onShow(Object... params) {
-            flashingAnimBackStart.setRGB(toolWindowUI.getColor(ANCHOR_INACTIVE_BGK));
-            flashingAnimBackEnd.setRGB(toolWindowUI.getColor(ANCHOR_INACTIVE_BGK));
+            flashingAnimBackStart.setRGB(toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE));
+            flashingAnimBackEnd.setRGB(toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE));
         }
 
         protected void onStartAnimation(Direction direction) {
