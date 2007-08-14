@@ -1,80 +1,179 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.geom.Arc2D;
+import java.io.File;
+import java.io.InputStream;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
-import java.awt.*;
+import java.util.Properties;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyToolWindowUI implements ToolWindowUI {
-    static final Color gray = new Color(247, 243, 239);
+    private static final String resourceName = "mydoggyplaf.properties";
 
-    private static Map<String, Icon> staticIcons;
-    private static Map<String, Color> staticColors;
+    private static final MyDoggyToolWindowUI INSTANCE = new MyDoggyToolWindowUI();
 
-    static {
-        staticIcons = new Hashtable<String, Icon>();
-
-        staticIcons.put(SLIDING, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/sliding.png"));
-        staticIcons.put(SLIDING_INACTIVE, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/slidingInactive.png"));
-
-        staticIcons.put(FLOATING, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/floating.png"));
-        staticIcons.put(FLOATING_INACTIVE, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/floatingInactive.png"));
-
-        staticIcons.put(FIX, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/fix.png"));
-        staticIcons.put(FIX_INACTIVE, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/fixInactive.png"));
-
-        staticIcons.put(DOCKED, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/docked.png"));
-        staticIcons.put(DOCKED_INACTIVE, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/dockedInactive.png"));
-
-        staticIcons.put(AUTO_HIDE_ON, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/autohideOn.png"));
-        staticIcons.put(AUTO_HIDE_ON_INACTIVE, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/autohideOnInactive.png"));
-
-        staticIcons.put(AUTO_HIDE_OFF, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/autohideOff.png"));
-        staticIcons.put(AUTO_HIDE_OFF_INACTIVE, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/autohideOffInactive.png"));
-
-        staticIcons.put(HIDE_TOOL_WINDOW, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/hideToolWindow.png"));
-        staticIcons.put(HIDE_TOOL_WINDOW_INACTIVE, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/hideToolWindowInactive.png"));
-
-        staticIcons.put(MAXIMIZE, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/maximize.png"));
-        staticIcons.put(MAXIMIZE_INACTIVE, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/maximizeInactive.png"));
-
-        staticIcons.put(MINIMIZE, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/minimize.png"));
-        staticIcons.put(MINIMIZE_INACTIVE, SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/minimizeInactive.png"));
-
-        staticColors = new Hashtable<String, Color>();
-
+    public static MyDoggyToolWindowUI getInstance() {
+        return INSTANCE;
     }
 
+    protected Properties properties;
+    protected Map<String, Icon> icons;
+    protected Map<String, Color> colors;
+
     public MyDoggyToolWindowUI() {
+        this.icons = new Hashtable<String, Icon>();
+        this.colors = new Hashtable<String, Color>();
+
+        loadResources();
     }
 
     public Icon getIcon(String id) {
-        return staticIcons.get(id);
+        return icons.get(id);
     }
 
     public Color getColor(String id) {
-        return staticColors.get(id);
+        return colors.get(id);
     }
 
-    public void updateAnchor(boolean active, Graphics g, Rectangle rectangle, Color start, Color end) {
-        if (active) {
-            GraphicsUtil.fillRect(g, rectangle,
-                                  start, end, null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
+    public void updateAnchor(Graphics g, Rectangle rectangle, Color backgroundStart, Color backgroundEnd, boolean active, boolean flashing) {
+        if (flashing) {
+            GraphicsUtil.fillRect(g, rectangle, backgroundStart, backgroundEnd,
+                                  null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
         } else {
-            g.setColor(gray);
-            g.fillRect(0, 0, rectangle.width, rectangle.height);
+            if (active) {
+                GraphicsUtil.fillRect(g, rectangle,
+                                      backgroundStart, backgroundEnd, null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
+            } else {
+                g.setColor(getColor(ANCHOR_INACTIVE_BGK));
+                g.fillRect(0, 0, rectangle.width, rectangle.height);
+            }
         }
     }
 
-    public void updateAnchorFlash(Graphics g, Rectangle rectangle, Color start, Color end) {
-        GraphicsUtil.fillRect(g, rectangle, start, end,
-                              null, GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
+    public void updateToolWindowAppBar(ToolWindowDescriptor descriptor, Graphics g, JComponent c,
+                                       Color backgroundStart, Color backgroundEnd,
+                                       Color idBackgroundColor, Color idColor) {
+        Rectangle r = c.getBounds();
+        r.x = r.y = 0;
+
+        GraphicsUtil.fillRect(g, r, backgroundStart, backgroundEnd,
+                              null, GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+
+        if (descriptor.getDockedTypeDescriptor().isIdVisibleOnToolBar()) {
+            String id = ResourceBundleManager.getInstance().getUserString(descriptor.getToolWindow().getId());
+            r.width = g.getFontMetrics().stringWidth(id) + 8;
+
+            int halfHeigh = (r.height / 2);
+            GraphicsUtil.fillRect(g, r, Color.WHITE, idBackgroundColor,
+                                  new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
+                                              new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
+                                              4),
+                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+
+            GraphicsUtil.fillRect(g, r, Color.WHITE, idBackgroundColor,
+                                  new Arc2D.Double(r.x + r.width - r.height,
+                                                   r.y, r.height, r.height, -90.0d, 180.0d, Arc2D.CHORD),
+                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+
+            g.setColor(idColor);
+            g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
+        }
+    }
+
+
+    protected void loadResources() {
+        properties = loadPropertiesFile();
+        loadIcons();
+        loadColors();
+    }
+
+    protected Properties loadPropertiesFile() {
+        InputStream is = null;
+        try {
+            URL resource = this.getClass().getClassLoader().getResource("META-INF/" + resourceName);
+            if (resource == null) {
+                File file = new File(resourceName);
+                if (file.exists())
+                    resource = file.toURL();
+                else {
+                    file = new File(System.getProperty("java.user.home") + "/" + resourceName);
+                    if (file.exists())
+                        resource = file.toURL();
+                    else
+                        throw new RuntimeException("Cannot find resource property file.");
+                }
+            }
+
+            is = resource.openStream();
+            Properties properties = new Properties();
+            properties.load(is);
+            
+            return properties;
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot load resource property file.", e);
+        } finally {
+            if (is != null)
+                try {
+                    is.close();
+                } catch (IOException e) {}
+        }
+    }
+
+    protected void loadIcons() {
+        String prefix = "ToolWindowUI.Icon.";
+
+        for (Object key : properties.keySet()) {
+            String strKey = key.toString();
+            if (strKey.startsWith(prefix)) {
+                String iconKey = strKey.substring(prefix.length());
+                String iconUrl = properties.getProperty(strKey);
+
+                icons.put(iconKey, loadIcon(iconUrl));
+            }
+        }
+    }
+
+    protected void loadColors() {
+        String prefix = "ToolWindowUI.Color.";
+
+        for (Object key : properties.keySet()) {
+            String strKey = key.toString();
+            if (strKey.startsWith(prefix)) {
+                String colorKey = strKey.substring(prefix.length());
+                String colorDef = properties.getProperty(strKey);
+
+                colors.put(colorKey, loadColor(colorDef));
+            }
+        }
+    }
+
+    protected Icon loadIcon(String url) {
+        return SwingUtil.loadIcon(url);
+    }
+
+    protected Color loadColor(String colorDef) {
+        colorDef = colorDef.toLowerCase();
+        if ("black".equals(colorDef))
+            return Color.BLACK;
+        else if ("gray".equals(colorDef))
+            return Color.GRAY;
+
+        String[] elms = colorDef.split(",");
+        return new Color(
+                Integer.parseInt(elms[0].trim()),
+                Integer.parseInt(elms[1].trim()),
+                Integer.parseInt(elms[2].trim())
+        );
     }
 
 }

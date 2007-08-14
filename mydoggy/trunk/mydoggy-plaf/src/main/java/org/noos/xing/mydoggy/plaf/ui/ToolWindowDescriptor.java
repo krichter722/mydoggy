@@ -19,8 +19,6 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ToolWindowDescriptor implements PropertyChangeListener {
-    private static ToolWindowUI toolWindowUI = new MyDoggyToolWindowUI();
-
     private MyDoggyToolWindowManager manager;
     private MyDoggyToolWindow toolWindow;
 
@@ -288,7 +286,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     }
 
     public ToolWindowUI getToolWindowUI() {
-        return toolWindowUI;
+        return MyDoggyToolWindowUI.getInstance();
     }
 
     public int getLabelIndex() {

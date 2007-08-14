@@ -4,10 +4,10 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
+import static org.noos.xing.mydoggy.plaf.ui.ToolWindowUI.*;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragAndDropLock;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTrasferable;
-import org.noos.xing.mydoggy.plaf.ui.util.Colors;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -21,7 +21,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
-import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -32,11 +31,7 @@ import java.beans.PropertyChangeListener;
 public class ApplicationBarPanelUI extends PanelUI {
     private ToolWindow toolWindow;
     private ToolWindowDescriptor descriptor;
-
-    private Color backStartEnabled;
-    private Color backEndEnabled;
-    private Color backStartDisabled;
-    private Color backEndDisabled;
+    private ToolWindowUI toolWindowUI;
 
     private MutableColor animBackStart;
     private MutableColor animBackEnd;
@@ -54,16 +49,11 @@ public class ApplicationBarPanelUI extends PanelUI {
     public ApplicationBarPanelUI(ToolWindowDescriptor descriptor, DockedContainer dockedContainer) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
+        this.toolWindowUI = descriptor.getToolWindowUI();
 
         dockedContainer.addPropertyChangeListener("active", new GradientActivationListener(descriptor));
 
-        backStartEnabled = new Color(145, 181, 255);
-        backEndEnabled = new Color(96, 123, 183);
-
-        backStartDisabled = new Color(193, 189, 182);
-        backEndDisabled = new Color(167, 164, 157);
-
-        animBackStart = new MutableColor(backStartDisabled);
+        animBackStart = new MutableColor(toolWindowUI.getColor(TW_APP_BACKGROUND_DISABLED_START));
         animBackEnd = new MutableColor(0, 0, 0);
         animTextColor = new MutableColor(0, 0, 0);
 
@@ -144,13 +134,19 @@ public class ApplicationBarPanelUI extends PanelUI {
     public void update(Graphics g, JComponent c) {
         Rectangle r = c.getBounds();
         r.x = r.y = 0;
-        
+
         if (toolWindow.isFlashing()) {
 
             if (flashingState)
-                updateInternal(g, c, animBackStart, animBackEnd, Colors.lightBlu, animTextColor);
+                toolWindowUI.updateToolWindowAppBar(descriptor, g, c,
+                                                    animBackStart, animBackEnd,
+                                                    toolWindowUI.getColor(TW_APP_ID_BACKGROUND_FLASHING_0),
+                                                    animTextColor);
             else
-                updateInternal(g, c, animBackStart, animBackEnd, Color.LIGHT_GRAY, animTextColor);
+                toolWindowUI.updateToolWindowAppBar(descriptor, g, c,
+                                                    animBackStart, animBackEnd,
+                                                    toolWindowUI.getColor(TW_APP_ID_BACKGROUND_FLASHING_1),
+                                                    animTextColor);
 
             if (flashingTimer == null) {
                 flashingTimer = new Timer(700, new ActionListener() {
@@ -182,11 +178,22 @@ public class ApplicationBarPanelUI extends PanelUI {
             }
         } else {
             if (animation.isAnimating()) {
-                updateInternal(g, c, animBackStart, animBackEnd, Color.LIGHT_GRAY, animTextColor);
+                toolWindowUI.updateToolWindowAppBar(descriptor, g, c,
+                                                    animBackStart, animBackEnd,
+                                                    toolWindowUI.getColor(TW_APP_ID_BACKGROUND_ANIMATING),
+                                                    animTextColor);
             } else if (c.isEnabled()) {
-                updateInternal(g, c, backStartEnabled, backEndEnabled, Colors.lightBlu, Color.BLACK);
+                toolWindowUI.updateToolWindowAppBar(descriptor, g, c,
+                                                    toolWindowUI.getColor(TW_APP_BACKGROUND_ENABLED_START),
+                                                    toolWindowUI.getColor(TW_APP_BACKGROUND_ENABLED_END),
+                                                    toolWindowUI.getColor(TW_APP_ID_BACKGROUND_ACTIVE),
+                                                    toolWindowUI.getColor(TW_APP_ID_FOREGROUND_ACTIVE));
             } else {
-                updateInternal(g, c, backStartDisabled, backEndDisabled, Color.LIGHT_GRAY, Color.GRAY);
+                toolWindowUI.updateToolWindowAppBar(descriptor, g, c,
+                                                    toolWindowUI.getColor(TW_APP_BACKGROUND_DISABLED_START),
+                                                    toolWindowUI.getColor(TW_APP_BACKGROUND_DISABLED_END),
+                                                    toolWindowUI.getColor(TW_APP_ID_BACKGROUND_INACTIVE),
+                                                    toolWindowUI.getColor(TW_APP_ID_FOREGROUND_INACTIVE));
             }
         }
 
@@ -201,34 +208,6 @@ public class ApplicationBarPanelUI extends PanelUI {
 
     protected void uninstallDefaults(JComponent c) {
         LookAndFeel.uninstallBorder(c);
-    }
-
-    protected void updateInternal(Graphics g, JComponent c, Color c1, Color c2, Color c3, Color c4) {
-        Rectangle r = c.getBounds();
-        r.x = r.y = 0;
-
-        GraphicsUtil.fillRect(g, r, c1, c2,
-                              null, GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-
-        if (descriptor.getDockedTypeDescriptor().isIdVisibleOnToolBar()) {
-            String id = ResourceBundleManager.getInstance().getUserString(descriptor.getToolWindow().getId());
-            r.width = g.getFontMetrics().stringWidth(id) + 8;
-
-            int halfHeigh = (r.height / 2);
-            GraphicsUtil.fillRect(g, r, Color.WHITE, c3,
-                                  new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
-                                              new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
-                                              4),
-                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-
-            GraphicsUtil.fillRect(g, r, Color.WHITE, c3,
-                                  new Arc2D.Double(r.x + r.width - r.height,
-                                                   r.y, r.height, r.height, -90.0d, 180.0d, Arc2D.CHORD),
-                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-
-            g.setColor(c4);
-            g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
-        } 
     }
 
 
@@ -251,10 +230,10 @@ public class ApplicationBarPanelUI extends PanelUI {
 
             if ("active".equals(evt.getPropertyName())) {
                 if (evt.getNewValue() == Boolean.FALSE) {
-                    if (animBackStart.equals(backStartEnabled))
+                    if (animBackStart.equals(toolWindowUI.getColor(TW_APP_BACKGROUND_ENABLED_START)))
                         animation.hide();
                 } else {
-                    if (animBackStart.equals(backStartDisabled))
+                    if (animBackStart.equals(toolWindowUI.getColor(TW_APP_BACKGROUND_DISABLED_START)))
                         animation.show();
                 }
             }
@@ -274,15 +253,33 @@ public class ApplicationBarPanelUI extends PanelUI {
         protected float onAnimating(float animationPercent) {
             switch (getAnimationDirection()) {
                 case INCOMING:
-                    GraphicsUtil.getInterpolatedColor(animBackStart, backStartEnabled, backStartDisabled, animationPercent);
-                    GraphicsUtil.getInterpolatedColor(animBackEnd, backEndEnabled, backEndDisabled, animationPercent);
-                    GraphicsUtil.getInterpolatedColor(animTextColor, Color.BLACK, Color.GRAY, animationPercent);
+                    GraphicsUtil.getInterpolatedColor(animBackStart,
+                                                      toolWindowUI.getColor(TW_APP_BACKGROUND_ENABLED_START),
+                                                      toolWindowUI.getColor(TW_APP_BACKGROUND_DISABLED_START),
+                                                      animationPercent);
+                    GraphicsUtil.getInterpolatedColor(animBackEnd,
+                                                      toolWindowUI.getColor(TW_APP_BACKGROUND_ENABLED_END),
+                                                      toolWindowUI.getColor(TW_APP_BACKGROUND_DISABLED_END),
+                                                      animationPercent);
+                    GraphicsUtil.getInterpolatedColor(animTextColor,
+                                                      toolWindowUI.getColor(TW_APP_ID_FOREGROUND_ACTIVE),
+                                                      toolWindowUI.getColor(TW_APP_ID_FOREGROUND_INACTIVE),
+                                                      animationPercent);
                     break;
 
                 case OUTGOING:
-                    GraphicsUtil.getInterpolatedColor(animBackStart, backStartDisabled, backStartEnabled, animationPercent);
-                    GraphicsUtil.getInterpolatedColor(animBackEnd, backEndDisabled, backEndEnabled, animationPercent);
-                    GraphicsUtil.getInterpolatedColor(animTextColor, Color.GRAY, Color.BLACK, animationPercent);
+                    GraphicsUtil.getInterpolatedColor(animBackStart,
+                                                      toolWindowUI.getColor(TW_APP_BACKGROUND_DISABLED_START),
+                                                      toolWindowUI.getColor(TW_APP_BACKGROUND_ENABLED_START),
+                                                      animationPercent);
+                    GraphicsUtil.getInterpolatedColor(animBackEnd,
+                                                      toolWindowUI.getColor(TW_APP_BACKGROUND_DISABLED_END),
+                                                      toolWindowUI.getColor(TW_APP_BACKGROUND_ENABLED_END),
+                                                      animationPercent);
+                    GraphicsUtil.getInterpolatedColor(animTextColor,
+                                                      toolWindowUI.getColor(TW_APP_ID_FOREGROUND_INACTIVE),
+                                                      toolWindowUI.getColor(TW_APP_ID_FOREGROUND_ACTIVE),
+                                                      animationPercent);
                     break;
             }
             SwingUtil.repaint(panel);
@@ -292,23 +289,23 @@ public class ApplicationBarPanelUI extends PanelUI {
         protected void onFinishAnimation() {
             switch (getAnimationDirection()) {
                 case INCOMING:
-                    animBackStart.setRGB(backStartEnabled);
+                    animBackStart.setRGB(toolWindowUI.getColor(TW_APP_BACKGROUND_ENABLED_START));
                     break;
                 case OUTGOING:
-                    animBackStart.setRGB(backStartDisabled);
+                    animBackStart.setRGB(toolWindowUI.getColor(TW_APP_BACKGROUND_DISABLED_START));
                     break;
             }
             SwingUtil.repaint(panel);
         }
 
         protected void onHide(Object... params) {
-            animBackStart.setRGB(backStartEnabled);
-            animBackEnd.setRGB(backEndEnabled);
+            animBackStart.setRGB(toolWindowUI.getColor(TW_APP_BACKGROUND_ENABLED_START));
+            animBackEnd.setRGB(toolWindowUI.getColor(TW_APP_BACKGROUND_ENABLED_END));
         }
 
         protected void onShow(Object... params) {
-            animBackStart.setRGB(backStartDisabled);
-            animBackEnd.setRGB(backEndDisabled);
+            animBackStart.setRGB(toolWindowUI.getColor(TW_APP_BACKGROUND_DISABLED_START));
+            animBackEnd.setRGB(toolWindowUI.getColor(TW_APP_BACKGROUND_DISABLED_END));
         }
 
         protected void onStartAnimation(Direction direction) {
@@ -440,7 +437,7 @@ public class ApplicationBarPanelUI extends PanelUI {
                 try {
                     toolWindow.setAggregateMode(true);
                     toolWindow.setAnchor(anchor,
-                                     ((MyDoggyToolWindow) destToolWindow).getDescriptor().getLabelIndex());
+                                         ((MyDoggyToolWindow) destToolWindow).getDescriptor().getLabelIndex());
                 } finally {
                     toolWindow.setAggregateMode(oldAM);
                 }

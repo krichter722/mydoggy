@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Vector;
@@ -189,9 +190,13 @@ public class SwingUtil {
         return false;
     }
 
-    public static Icon loadIcon(String url) {
+    public static Icon loadIcon(String urlDef) {
         try {
-            return new ImageIcon(Toolkit.getDefaultToolkit().getImage(SwingUtil.class.getClassLoader().getResource(url)));
+            URL url = SwingUtil.class.getClassLoader().getResource(urlDef);
+            if (url == null)
+                throw new IllegalArgumentException("Invalid URL : " + urlDef);
+
+            return new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
         } catch (Throwable e) {
             e.printStackTrace();
         }

@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
+import static org.noos.xing.mydoggy.plaf.ui.ToolWindowUI.*;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragAndDropLock;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTrasferable;
@@ -29,39 +30,37 @@ import java.util.ResourceBundle;
  * @author Angelo De Caro
  */
 public class AnchorLabelUI extends MetalLabelUI {
-    static final Color start = new Color(255, 212, 151);
-    static final Color end = new Color(255, 244, 204);
-    static final Color gray = new Color(247, 243, 239);
-
     private static ResourceBundle resourceBundle = ResourceBundleManager.getInstance().getResourceBundle();
 
-    private JComponent label;
+    protected JComponent label;
 
     protected LineBorder labelBorder;
 
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
+    protected ToolWindowUI toolWindowUI;
     protected DockedTypeDescriptor dockedTypeDescriptor;
 
-    private AnchorLabelMouseAdapter adapter;
+    protected AnchorLabelMouseAdapter adapter;
 
-    private Timer flashingTimer;
-    private int flasingDuration;
-    private boolean flashingState;
-    private MutableColor flashingAnimBackStart;
-    private MutableColor flashingAnimBackEnd;
-    private AbstractAnimation flashingAnimation;
+    protected Timer flashingTimer;
+    protected int flasingDuration;
+    protected boolean flashingState;
+    protected MutableColor flashingAnimBackStart;
+    protected MutableColor flashingAnimBackEnd;
+    protected AbstractAnimation flashingAnimation;
 
-
-    private TranslucentPanel previewPanel;
+    protected TranslucentPanel previewPanel;
+    
 
     public AnchorLabelUI(ToolWindowDescriptor descriptor, ToolWindow toolWindow) {
         this.descriptor = descriptor;
         this.toolWindow = toolWindow;
+        this.toolWindowUI = descriptor.getToolWindowUI();
 
-        flashingAnimation = new GradientAnimation();
-        flashingAnimBackStart = new MutableColor(gray);
-        flashingAnimBackEnd = new MutableColor(gray);
+        this.flashingAnimation = new GradientAnimation();
+        this.flashingAnimBackStart = new MutableColor(toolWindowUI.getColor(ANCHOR_INACTIVE_BGK));
+        this.flashingAnimBackEnd = new MutableColor(toolWindowUI.getColor(ANCHOR_INACTIVE_BGK));
 
         this.dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
         this.dockedTypeDescriptor.addPropertyChangeListener(this);
@@ -71,7 +70,7 @@ public class AnchorLabelUI extends MetalLabelUI {
         super.installUI(c);
 
         this.label = c;
-        labelBorder = new LineBorder(Color.GRAY, 1, true, 3, 3);
+        labelBorder = new LineBorder(toolWindowUI.getColor(ANCHOR_BORDER_MOUSE_OUT), 1, true, 3, 3);
         c.setBorder(labelBorder);
 
         DragGesture dragGesture = new DragGesture();
@@ -115,8 +114,8 @@ public class AnchorLabelUI extends MetalLabelUI {
         Rectangle bounds = c.getBounds();
         if (toolWindow.isFlashing() && !toolWindow.isVisible()) {
 
-            descriptor.getToolWindowUI().updateAnchorFlash(g, new Rectangle(0, 0, bounds.width, bounds.height),
-                                                           flashingAnimBackStart, flashingAnimBackEnd);
+            descriptor.getToolWindowUI().updateAnchor(g, new Rectangle(0, 0, bounds.width, bounds.height),
+                                                           flashingAnimBackStart, flashingAnimBackEnd, false, true);
 
             if (flashingTimer == null) {
                 flashingTimer = new Timer(600, new ActionListener() {
@@ -153,7 +152,8 @@ public class AnchorLabelUI extends MetalLabelUI {
                 flashingTimer = null;
             }
 
-            descriptor.getToolWindowUI().updateAnchor(c.isOpaque(), g, new Rectangle(0, 0, bounds.width, bounds.height), start, end);
+            descriptor.getToolWindowUI().updateAnchor(g, new Rectangle(0, 0, bounds.width, bounds.height), toolWindowUI.getColor(ANCHOR_FLASHING_START), toolWindowUI.getColor(ANCHOR_FLASHING_END), c.isOpaque(),
+                                                      false);
         }
         paint(g, c);
     }
@@ -165,11 +165,11 @@ public class AnchorLabelUI extends MetalLabelUI {
             boolean visible = (Boolean) e.getNewValue();
             label.setOpaque(visible);
             if (visible) {
-                labelBorder.setLineColor(Color.BLACK);
+                labelBorder.setLineColor(toolWindowUI.getColor(ToolWindowUI.ANCHOR_BORDER_MOUSE_IN));
 
                 descriptor.getToolBar().ensureVisible(label);
             } else
-                labelBorder.setLineColor(Color.GRAY);
+                labelBorder.setLineColor(toolWindowUI.getColor(ToolWindowUI.ANCHOR_BORDER_MOUSE_OUT));
 
             toolWindow.setFlashing(false);
             SwingUtil.repaint(label);
@@ -264,7 +264,7 @@ public class AnchorLabelUI extends MetalLabelUI {
             }
 //            if (label.getBorder() != labelBorder)
             label.setBorder(labelBorder);
-            labelBorder.setLineColor(Color.BLACK);
+            labelBorder.setLineColor(toolWindowUI.getColor(ToolWindowUI.ANCHOR_BORDER_MOUSE_IN));
             SwingUtil.repaint(label);
         }
 
@@ -279,7 +279,7 @@ public class AnchorLabelUI extends MetalLabelUI {
 
             Component source = e.getComponent();
             if (!source.isOpaque()) {
-                labelBorder.setLineColor(Color.BLACK);
+                labelBorder.setLineColor(toolWindowUI.getColor(ToolWindowUI.ANCHOR_BORDER_MOUSE_IN));
                 SwingUtil.repaint(source);
             }
         }
@@ -297,7 +297,7 @@ public class AnchorLabelUI extends MetalLabelUI {
 
             Component source = e.getComponent();
             if (!source.isOpaque()) {
-                labelBorder.setLineColor(Color.GRAY);
+                labelBorder.setLineColor(toolWindowUI.getColor(ToolWindowUI.ANCHOR_BORDER_MOUSE_OUT));
                 SwingUtil.repaint(source);
             }
         }
@@ -640,13 +640,25 @@ public class AnchorLabelUI extends MetalLabelUI {
         protected float onAnimating(float animationPercent) {
             switch (getAnimationDirection()) {
                 case INCOMING:
-                    GraphicsUtil.getInterpolatedColor(flashingAnimBackStart, gray, start, animationPercent);
-                    GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd, gray, end, animationPercent);
+                    GraphicsUtil.getInterpolatedColor(flashingAnimBackStart,
+                                                      toolWindowUI.getColor(ANCHOR_INACTIVE_BGK),
+                                                      toolWindowUI.getColor(ANCHOR_FLASHING_START),
+                                                      animationPercent);
+                    GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd,
+                                                      toolWindowUI.getColor(ANCHOR_INACTIVE_BGK), 
+                                                      toolWindowUI.getColor(ANCHOR_FLASHING_END),
+                                                      animationPercent);
                     break;
 
                 case OUTGOING:
-                    GraphicsUtil.getInterpolatedColor(flashingAnimBackStart, start, gray, animationPercent);
-                    GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd, end, gray, animationPercent);
+                    GraphicsUtil.getInterpolatedColor(flashingAnimBackStart,
+                                                      toolWindowUI.getColor(ANCHOR_FLASHING_START),
+                                                      toolWindowUI.getColor(ANCHOR_INACTIVE_BGK),
+                                                      animationPercent);
+                    GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd,
+                                                      toolWindowUI.getColor(ANCHOR_FLASHING_END),
+                                                      toolWindowUI.getColor(ANCHOR_INACTIVE_BGK),
+                                                      animationPercent);
                     break;
             }
             SwingUtil.repaint(label);
@@ -656,23 +668,23 @@ public class AnchorLabelUI extends MetalLabelUI {
         protected void onFinishAnimation() {
             switch (getAnimationDirection()) {
                 case INCOMING:
-                    flashingAnimBackStart.setRGB(gray);
+                    flashingAnimBackStart.setRGB(toolWindowUI.getColor(ANCHOR_INACTIVE_BGK));
                     break;
                 case OUTGOING:
-                    flashingAnimBackStart.setRGB(start);
+                    flashingAnimBackStart.setRGB(toolWindowUI.getColor(ANCHOR_FLASHING_START));
                     break;
             }
             SwingUtil.repaint(label);
         }
 
         protected void onHide(Object... params) {
-            flashingAnimBackStart.setRGB(start);
-            flashingAnimBackEnd.setRGB(end);
+            flashingAnimBackStart.setRGB(toolWindowUI.getColor(ANCHOR_FLASHING_START));
+            flashingAnimBackEnd.setRGB(toolWindowUI.getColor(ANCHOR_FLASHING_END));
         }
 
         protected void onShow(Object... params) {
-            flashingAnimBackStart.setRGB(gray);
-            flashingAnimBackEnd.setRGB(gray);
+            flashingAnimBackStart.setRGB(toolWindowUI.getColor(ANCHOR_INACTIVE_BGK));
+            flashingAnimBackEnd.setRGB(toolWindowUI.getColor(ANCHOR_INACTIVE_BGK));
         }
 
         protected void onStartAnimation(Direction direction) {

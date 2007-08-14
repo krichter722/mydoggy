@@ -37,7 +37,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.dockLength = 200;
         this.toolWindowActionHandler = null;
         this.animating = true;
-        this.toolWindowUI = new MyDoggyToolWindowUI();
+        this.toolWindowUI = MyDoggyToolWindowUI.getInstance();
         this.previewEnabled = true;
         this.previewDelay = 1000;
         this.previewTransparentRatio = 0.65f;
@@ -206,7 +206,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     public ToolWindowTypeDescriptor cloneMe() {
         return new DefaultDockedTypeDescriptor(this, dockLength, popupMenuEnabled,
                                                toolWindowActionHandler, animating,
-                                               new MyDoggyToolWindowUI(),
+                                               MyDoggyToolWindowUI.getInstance(),
                                                previewEnabled, previewDelay, previewTransparentRatio,
                                                hideLabelOnVisible, idVisibleOnToolBar);
     }
