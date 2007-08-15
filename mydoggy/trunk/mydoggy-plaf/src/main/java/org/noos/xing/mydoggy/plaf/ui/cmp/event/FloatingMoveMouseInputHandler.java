@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.plaf.ui;
+package org.noos.xing.mydoggy.plaf.ui.cmp.event;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;

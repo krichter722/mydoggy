@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.plaf.ui.content.desktop;
+package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import javax.swing.*;
 import java.awt.*;

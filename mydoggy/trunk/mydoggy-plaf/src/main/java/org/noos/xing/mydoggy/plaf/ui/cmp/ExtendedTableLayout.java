@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.plaf.ui.layout;
+package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import info.clearthought.layout.TableLayout;
 
