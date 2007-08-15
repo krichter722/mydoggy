@@ -12,7 +12,6 @@ import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
-import org.noos.xing.mydoggy.plaf.ui.cmp.UIFSplitPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ShortcutProcessor;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyTabbedContentManagerUI;
@@ -20,7 +19,6 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
-import javax.swing.plaf.SplitPaneUI;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -75,6 +73,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     // ToolWindwoManager Listener List
     private EventListenerList twmListeners;
+
+
+    protected ToolWindowUI toolWindowUI;
+    protected ToolWindowManagerUI toolWindowManagerUI;
 
 
     public MyDoggyToolWindowManager(Window windowAnchestor) {
@@ -412,7 +414,15 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return glassPanel;
     }
 
+    public ToolWindowUI getToolWindowUI() {
+        return toolWindowUI;
+    }
+
+    public ToolWindowManagerUI getToolWindowManagerUI() {
+        return toolWindowManagerUI;
+    }
     
+
     protected void initResourceBoundles(Locale locale) {
         ResourceBundleManager.getInstance().init(locale);
     }
@@ -420,7 +430,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected void initComponents() {
         this.twmListeners = new EventListenerList();
 
+        initUI();
         initContentManager();
+
+        toolWindowManagerUI.applyCustomization(ToolWindowManagerUI.MY_DOGGY_MANAGER_PANEL, this);
 
         ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
@@ -443,10 +456,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         setLayout(contentPaneLayout);
 
         // Register bars, one for every anchor
-        addBar(LEFT, JSplitPane.HORIZONTAL_SPLIT, "0,1", "0,0,c,c");
-        addBar(RIGHT, JSplitPane.HORIZONTAL_SPLIT, "2,1", "2,0,c,c");
-        addBar(TOP, JSplitPane.VERTICAL_SPLIT, "1,0", "2,2,c,c");
-        addBar(BOTTOM, JSplitPane.VERTICAL_SPLIT, "1,2", "0,2,c,c");
+        addBar(LEFT, JSplitPane.HORIZONTAL_SPLIT, "0,1", "0,0,FULL,FULL");
+        addBar(RIGHT, JSplitPane.HORIZONTAL_SPLIT, "2,1", "2,0,FULL,FULL");
+        addBar(TOP, JSplitPane.VERTICAL_SPLIT, "1,0", "2,2,FULL,FULL");
+        addBar(BOTTOM, JSplitPane.VERTICAL_SPLIT, "1,2", "0,2,FULL,FULL");
 
         mainContainer = new JPanel();
         mainContainer.setName("toolWindowManager.mainContainer");
@@ -519,16 +532,15 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         });
     }
 
+    protected void initUI() {
+        Properties properties = SwingUtil.loadPropertiesFile("mydoggyplaf.properties", this.getClass().getClassLoader());
+
+        this.toolWindowUI = (ToolWindowUI) SwingUtil.newObject(properties.getProperty("ToolWindowUI.class"));
+        this.toolWindowManagerUI = (ToolWindowManagerUI) SwingUtil.newObject(properties.getProperty("ToolWindowManagerUI.class"));
+    }
 
     protected JSplitPane renderSplitPane(int orientation) {
-        JSplitPane splitPane = new ExtendedJSP(orientation);
-        splitPane.setBorder(null);
-        splitPane.setContinuousLayout(true);
-        splitPane.setDividerSize(0);
-        splitPane.setDividerLocation(300);
-        splitPane.setLeftComponent(null);
-        splitPane.setRightComponent(null);
-        return splitPane;
+        return (JSplitPane) toolWindowManagerUI.createComponent(ToolWindowManagerUI.BAR_SPLIT_PANE, this, orientation);
     }
 
 
@@ -580,8 +592,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         add(bars[anchor.ordinal()].getToolScrollBar(), barConstraints);
 
         // Add Corner to Container
-        JPanel panel = new JPanel();
-        add(panel, cornerConstraints);
+        add(toolWindowManagerUI.createComponent(ToolWindowManagerUI.CORNER_CONTENT_PANE, this),
+            cornerConstraints);
 
         return bars[anchor.ordinal()].getSplitPane();
     }
@@ -917,51 +929,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                    "name='all'" +
                    ", tools=" + tools +
                    '}';
-        }
-    }
-
-    public static class ExtendedJSP extends UIFSplitPane {
-        private MyDoggyToolWindowBar toolWindowBar;
-
-        public ExtendedJSP() {
-        }
-
-        public ExtendedJSP(int newOrientation) {
-            super(newOrientation);
-        }
-
-        public ExtendedJSP(int newOrientation, boolean newContinuousLayout) {
-            super(newOrientation, newContinuousLayout);
-        }
-
-        public ExtendedJSP(int newOrientation, Component newLeftComponent, Component newRightComponent) {
-            super(newOrientation, newLeftComponent, newRightComponent);
-        }
-
-        public ExtendedJSP(int newOrientation, boolean newContinuousLayout, Component newLeftComponent, Component newRightComponent) {
-            super(newOrientation, newContinuousLayout, newLeftComponent, newRightComponent);
-        }
-
-        public void setUI(SplitPaneUI ui) {
-            super.setUI(ui);
-            setBorder(null);
-            setContinuousLayout(true);
-        }
-
-        public void setDividerLocation(int location) {
-//            if (toolWindowBar != null && toolWindowBar.aa && location == 0)
-//                return;
-
-//            String anchor = (toolWindowBar != null) ? toolWindowBar.getAnchor().toString() : "";
-
-//            System.out.println("--dividerLocation(" + anchor + ") : " + location);
-//            if (toolWindowBar != null && toolWindowBar.getAnchor() == ToolWindowAnchor.LEFT)
-//                System.out.println("--dividerLocation : " + location);
-            super.setDividerLocation(location);
-        }
-
-        public void setToolWindowBar(MyDoggyToolWindowBar toolWindowBar) {
-            this.toolWindowBar = toolWindowBar;
         }
     }
 

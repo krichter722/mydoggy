@@ -36,7 +36,7 @@ import java.util.ResourceBundle;
  * @author Angelo De Caro
  */
 public class AnchorLabelUI extends MetalLabelUI {
-    private static ResourceBundle resourceBundle = ResourceBundleManager.getInstance().getResourceBundle();
+    protected static ResourceBundle resourceBundle = ResourceBundleManager.getInstance().getResourceBundle();
 
     protected JComponent label;
 
@@ -59,9 +59,9 @@ public class AnchorLabelUI extends MetalLabelUI {
     protected TranslucentPanel previewPanel;
 
 
-    public AnchorLabelUI(ToolWindowDescriptor descriptor, ToolWindow toolWindow) {
+    public AnchorLabelUI(ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
-        this.toolWindow = toolWindow;
+        this.toolWindow = descriptor.getToolWindow();
         this.toolWindowUI = descriptor.getToolWindowUI();
 
         this.flashingAnimation = new GradientAnimation();
@@ -71,6 +71,7 @@ public class AnchorLabelUI extends MetalLabelUI {
         this.dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
         this.dockedTypeDescriptor.addPropertyChangeListener(this);
     }
+
 
     public void installUI(JComponent c) {
         super.installUI(c);

@@ -8,7 +8,6 @@ import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.AggregateIcon;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
 import org.noos.xing.mydoggy.plaf.ui.look.AnchorLabelUI;
-import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyToolWindowUI;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
 
 import javax.swing.*;
@@ -231,7 +230,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
 
     protected LabelUI createLabelUI() {
-        return new AnchorLabelUI(this, toolWindow);
+        return (LabelUI) manager.getToolWindowManagerUI().createComponentUI(ToolWindowManagerUI.ANCHOR_LABEL_UI, manager, this);
     }
 
     protected void updateAnchorLabel() {
@@ -288,7 +287,11 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     }
 
     public ToolWindowUI getToolWindowUI() {
-        return MyDoggyToolWindowUI.getInstance();
+        return manager.getToolWindowUI();
+    }
+
+    public ToolWindowManagerUI getToolWindowManagerUI() {
+        return manager.getToolWindowManagerUI();
     }
 
     public int getLabelIndex() {
@@ -300,6 +303,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     public DockedTypeDescriptor getDockedTypeDescriptor() {
         return dockedTypeDescriptor;
     }
+
 
 
     private class AnchorLabel extends JLabel {

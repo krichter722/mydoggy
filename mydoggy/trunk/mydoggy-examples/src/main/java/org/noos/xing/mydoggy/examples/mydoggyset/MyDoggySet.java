@@ -257,10 +257,10 @@ public class MyDoggySet {
         });
 
         ToolWindowManagerDescriptor managerDescriptor = toolWindowManager.getToolWindowManagerDescriptor();
-        managerDescriptor.setCornerComponent(NORD_WEST, new JLabel("NW"));
-        managerDescriptor.setCornerComponent(SOUTH_WEST, new JLabel("SW"));
-        managerDescriptor.setCornerComponent(NORD_EAST, new JLabel("NE"));
-        managerDescriptor.setCornerComponent(SOUTH_EAST, new JLabel("SE"));
+//        managerDescriptor.setCornerComponent(NORD_WEST, new JLabel("NW"));
+//        managerDescriptor.setCornerComponent(SOUTH_WEST, new JLabel("SW"));
+//        managerDescriptor.setCornerComponent(NORD_EAST, new JLabel("NE"));
+//        managerDescriptor.setCornerComponent(SOUTH_EAST, new JLabel("SE"));
 
         // Add MyDoggyToolWindowManager to frame
         this.frame.getContentPane().add((Component) toolWindowManager, "1,1,");

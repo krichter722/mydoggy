@@ -35,22 +35,23 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro
  */
 public class ApplicationBarPanelUI extends PanelUI {
-    private ToolWindow toolWindow;
-    private ToolWindowDescriptor descriptor;
-    private ToolWindowUI toolWindowUI;
+    protected ToolWindow toolWindow;
+    protected ToolWindowDescriptor descriptor;
+    protected ToolWindowUI toolWindowUI;
 
-    private MutableColor animBackStart;
-    private MutableColor animBackEnd;
-    private MutableColor animTextColor;
+    protected MutableColor animBackStart;
+    protected MutableColor animBackEnd;
+    protected MutableColor animTextColor;
 
-    private JComponent panel;
+    protected JComponent panel;
 
-    private GradientAnimation animation;
+    protected GradientAnimation animation;
 
-    private Timer flashingTimer;
-    private int flasingDuration;
-    private boolean flashingState;
-    private AbstractAnimation flashingAnimation;
+    protected Timer flashingTimer;
+    protected int flasingDuration;
+    protected boolean flashingState;
+    protected AbstractAnimation flashingAnimation;
+
 
     public ApplicationBarPanelUI(ToolWindowDescriptor descriptor, DockedContainer dockedContainer) {
         this.descriptor = descriptor;
@@ -86,6 +87,7 @@ public class ApplicationBarPanelUI extends PanelUI {
             }
         });
     }
+
 
     public void installUI(JComponent c) {
         super.installUI(c);
@@ -217,11 +219,11 @@ public class ApplicationBarPanelUI extends PanelUI {
     }
 
 
-    private class GradientActivationListener implements PropertyChangeListener {
+    protected class GradientActivationListener implements PropertyChangeListener {
         public static final float ANIMATION_DURATION = 80f;
         public static final int ANIMATION_SLEEP = 10;
 
-        private ToolWindowDescriptor descriptor;
+        protected ToolWindowDescriptor descriptor;
 
         public GradientActivationListener(ToolWindowDescriptor descriptor) {
             this.descriptor = descriptor;
@@ -246,13 +248,13 @@ public class ApplicationBarPanelUI extends PanelUI {
         }
     }
 
-    private class GradientAnimation extends AbstractAnimation {
+    protected class GradientAnimation extends AbstractAnimation {
 
         public GradientAnimation() {
             super(300f);
         }
 
-        private GradientAnimation(float animationDuration) {
+        protected GradientAnimation(float animationDuration) {
             super(animationDuration);
         }
 
@@ -323,14 +325,14 @@ public class ApplicationBarPanelUI extends PanelUI {
 
     }
 
-    class DragGesture implements DragGestureListener, DragSourceMotionListener, DragSourceListener {
-        private BufferedImage ghostImage;
-        private JPanel lastToolWindowContainer = null;
-        private Border oldBorder = null;
+    protected class DragGesture implements DragGestureListener, DragSourceMotionListener, DragSourceListener {
+        protected BufferedImage ghostImage;
+        protected JPanel lastToolWindowContainer = null;
+        protected Border oldBorder = null;
 
-        private LineBorder highligthBorder = new LineBorder(Color.BLUE, 3);
+        protected LineBorder highligthBorder = new LineBorder(Color.BLUE, 3);
 
-        private ToolWindowAnchor lastAnchor;
+        protected ToolWindowAnchor lastAnchor;
 
         public void dragGestureRecognized(DragGestureEvent dge) {
             if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE)
