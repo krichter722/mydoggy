@@ -9,6 +9,10 @@ import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Vector;
+import java.util.Properties;
+import java.io.InputStream;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author Angelo De Caro
@@ -331,5 +335,49 @@ public class SwingUtil {
             return (lci < uci) ? lci : uci;
         }
     }
+
+    public static Properties loadPropertiesFile(String resourceName, ClassLoader classLoader) {
+        InputStream is = null;
+        try {
+            if (classLoader == null)
+                classLoader = SwingUtil.class.getClassLoader();
+
+            URL resource = classLoader.getResource("META-INF" + File.separator + resourceName);
+            if (resource == null) {
+                File file = new File(resourceName);
+                if (file.exists())
+                    resource = file.toURL();
+                else {
+                    file = new File(System.getProperty("user.home") + File.separator + resourceName);
+                    if (file.exists())
+                        resource = file.toURL();
+                    else
+                        throw new RuntimeException("Cannot find resource property file.");
+                }
+            }
+
+            is = resource.openStream();
+            Properties properties = new Properties();
+            properties.load(is);
+
+            return properties;
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot load resource property file.", e);
+        } finally {
+            if (is != null)
+                try {
+                    is.close();
+                } catch (IOException e) {}
+        }
+    }
+
+    public static Object newObject(String className) {
+        try {
+            return SwingUtil.class.getClassLoader().loadClass(className).newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }

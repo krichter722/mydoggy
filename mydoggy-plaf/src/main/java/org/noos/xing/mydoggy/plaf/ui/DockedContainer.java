@@ -4,13 +4,12 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import static org.noos.xing.mydoggy.plaf.ui.ToolWindowUI.*;
-import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.look.ApplicationBarPanelUI;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ButtonUI;
@@ -186,7 +185,13 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         applicationBar.setName("toolWindow.bar." + toolWindow.getId());
         applicationBar.setBorder(null);
         applicationBar.setEnabled(false);
-        applicationBar.setUI(new ApplicationBarPanelUI(descriptor, this));
+        applicationBar.setUI(
+                (PanelUI) descriptor.getToolWindowManagerUI().createComponentUI(
+                        ToolWindowManagerUI.APP_BAR_PANEL,
+                        descriptor.getManager(),
+                        descriptor,
+                        this)
+        );
         applicationBar.addMouseListener(applicationBarMouseAdapter);
 
         if (descriptor.getDockedTypeDescriptor().isIdVisibleOnToolBar())
@@ -280,7 +285,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 } else if (workspace != null) {
                     if (valueAdj)
                         return;
-                    
+
                     valueAdj = true;
                     try {
                         maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE));
@@ -297,7 +302,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         descriptor.getDockedTypeDescriptor().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if ("idVisibleOnToolBar".equals(evt.getPropertyName())) {
-                    if ((Boolean)evt.getNewValue()) {
+                    if ((Boolean) evt.getNewValue()) {
                         TableLayout layout = (TableLayout) applicationBar.getLayout();
                         layout.setColumn(0,
                                          applicationBar
@@ -748,7 +753,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                     }
                 }
             } else {
-                descriptor.getToolBar().deactiveTool(toolWindow); 
+                descriptor.getToolBar().deactiveTool(toolWindow);
 
                 if (toolWindow.isAutoHide())
                     toolWindow.setVisible(false);
