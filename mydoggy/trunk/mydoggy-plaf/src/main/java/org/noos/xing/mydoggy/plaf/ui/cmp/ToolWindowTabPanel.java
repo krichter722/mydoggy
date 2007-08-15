@@ -12,7 +12,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
+import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowUI;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLabelUI;
