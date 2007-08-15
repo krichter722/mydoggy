@@ -109,13 +109,13 @@ public class MyDoggyToolWindowUI implements ToolWindowUI {
     protected Properties loadPropertiesFile() {
         InputStream is = null;
         try {
-            URL resource = this.getClass().getClassLoader().getResource("META-INF/" + resourceName);
+            URL resource = this.getClass().getClassLoader().getResource("META-INF" + File.separator + resourceName);
             if (resource == null) {
                 File file = new File(resourceName);
                 if (file.exists())
                     resource = file.toURL();
                 else {
-                    file = new File(System.getProperty("java.user.home") + "/" + resourceName);
+                    file = new File(System.getProperty("user.home") + File.separator + resourceName);
                     if (file.exists())
                         resource = file.toURL();
                     else
