@@ -1,16 +1,16 @@
-package org.noos.xing.mydoggy.plaf.ui.content.tabbed;
+package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.ToFrontWindowFocusListener;
-import org.noos.xing.mydoggy.plaf.ui.WindowTransparencyListener;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabEvent;
 import org.noos.xing.mydoggy.plaf.ui.content.BackContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.content.BackContentUI;
-import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.ContentPage;
-import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.JTabbedContentManager;
-import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.TabEvent;
-import org.noos.xing.mydoggy.plaf.ui.content.tabbed.component.TabListener;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ContentPage;
+import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabListener;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
