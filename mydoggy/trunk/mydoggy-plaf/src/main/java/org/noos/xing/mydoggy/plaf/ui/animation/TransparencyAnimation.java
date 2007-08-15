@@ -1,7 +1,8 @@
-package org.noos.xing.mydoggy.plaf.ui;
+package org.noos.xing.mydoggy.plaf.ui.animation;
 
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
+import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 
 import java.awt.*;
 

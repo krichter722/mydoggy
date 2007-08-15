@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.plaf.ui;
+package org.noos.xing.mydoggy.plaf.ui.animation;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
