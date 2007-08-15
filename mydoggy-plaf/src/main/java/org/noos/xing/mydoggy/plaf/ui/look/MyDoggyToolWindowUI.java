@@ -2,7 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.look;
 
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
+import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowUI;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
 
@@ -21,7 +21,7 @@ import java.util.Properties;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyToolWindowUI implements ToolWindowUI {
-    private static final String resourceName = "mydoggyplaf.properties";
+    private static final String resourceName = "toolwindowui.properties";
 
     private static final MyDoggyToolWindowUI INSTANCE = new MyDoggyToolWindowUI();
 

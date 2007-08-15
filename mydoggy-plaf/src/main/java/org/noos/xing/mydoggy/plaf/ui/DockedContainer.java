@@ -3,13 +3,14 @@ package org.noos.xing.mydoggy.plaf.ui;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
-import static org.noos.xing.mydoggy.plaf.ui.ToolWindowUI.*;
+import static org.noos.xing.mydoggy.plaf.ui.look.ToolWindowUI.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.look.ApplicationBarPanelUI;
+import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowUI;
 
 import javax.swing.*;
 import javax.swing.plaf.ButtonUI;

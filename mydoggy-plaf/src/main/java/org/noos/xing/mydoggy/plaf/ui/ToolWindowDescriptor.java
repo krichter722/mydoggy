@@ -9,6 +9,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.AggregateIcon;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
 import org.noos.xing.mydoggy.plaf.ui.look.AnchorLabelUI;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyToolWindowUI;
+import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowUI;
 
 import javax.swing.*;
 import javax.swing.plaf.LabelUI;
