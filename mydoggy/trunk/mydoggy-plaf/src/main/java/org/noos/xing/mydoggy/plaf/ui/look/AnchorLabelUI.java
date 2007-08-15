@@ -3,7 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.look;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
-import static org.noos.xing.mydoggy.plaf.ui.look.ToolWindowUI.*;
+import static org.noos.xing.mydoggy.plaf.ui.ToolWindowUI.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.cmp.drag.DragAndDropLock;
 import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ToolWindowTrasferable;
@@ -16,7 +16,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowUI;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 
 import javax.swing.*;
