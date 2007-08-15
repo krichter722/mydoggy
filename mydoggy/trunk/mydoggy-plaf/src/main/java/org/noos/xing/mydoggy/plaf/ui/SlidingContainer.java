@@ -2,7 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.plaf.ui.border.SlidingBorder;
+import org.noos.xing.mydoggy.plaf.ui.cmp.border.SlidingBorder;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TranslucentPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;

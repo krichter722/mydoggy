@@ -5,7 +5,7 @@ import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.ContentManagerListener;
 import org.noos.xing.mydoggy.ContentManagerUI;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
-import org.noos.xing.mydoggy.plaf.ui.content.BackContentManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.content.PlafContentManagerUI;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -25,7 +25,7 @@ public class MyDoggyContentManager implements ContentManager {
 
     private List<Content> contents;
     private Map<Object, Content> contentMap;
-    private BackContentManagerUI backContentManagerUI;
+    private PlafContentManagerUI plafContentManagerUI;
 
     private EventListenerList listeners;
 
@@ -38,21 +38,21 @@ public class MyDoggyContentManager implements ContentManager {
 
 
     public void setContentManagerUI(ContentManagerUI contentManagerUI) {
-        if (!(contentManagerUI instanceof BackContentManagerUI))
+        if (!(contentManagerUI instanceof PlafContentManagerUI))
             throw new IllegalArgumentException("ContentManagerUI type not supported. See Plaf prescription.");
 
-        if (this.backContentManagerUI == contentManagerUI)
+        if (this.plafContentManagerUI == contentManagerUI)
             return;
 
-        if (this.backContentManagerUI != null)
-            this.backContentManagerUI.unistall();
+        if (this.plafContentManagerUI != null)
+            this.plafContentManagerUI.unistall();
 
-        this.backContentManagerUI = (BackContentManagerUI) contentManagerUI;
-        this.backContentManagerUI.install(toolWindowManager);
+        this.plafContentManagerUI = (PlafContentManagerUI) contentManagerUI;
+        this.plafContentManagerUI.install(toolWindowManager);
     }
 
     public ContentManagerUI getContentManagerUI() {
-        return (ContentManagerUI) backContentManagerUI;
+        return (ContentManagerUI) plafContentManagerUI;
     }
 
     public int getContentCount() {
@@ -81,7 +81,7 @@ public class MyDoggyContentManager implements ContentManager {
         });
         contents.add(content);
         contentMap.put(key, content);
-        backContentManagerUI.addContent(content);
+        plafContentManagerUI.addContent(content);
 
         fireContentAdded(content);
 
@@ -96,7 +96,7 @@ public class MyDoggyContentManager implements ContentManager {
         if (content == null)
             throw new IllegalArgumentException("Content cannot be null");
 
-        backContentManagerUI.removeContent((MyDoggyContent) content);
+        plafContentManagerUI.removeContent((MyDoggyContent) content);
         boolean result = contents.remove(content);
 
         if (result) {
@@ -172,11 +172,11 @@ public class MyDoggyContentManager implements ContentManager {
     }
 
     public void setPopupMenu(JPopupMenu popupMenu) {
-        backContentManagerUI.setPopupMenu(popupMenu);
+        plafContentManagerUI.setPopupMenu(popupMenu);
     }
 
     public JPopupMenu getPopupMenu() {
-        return backContentManagerUI.getPopupMenu();
+        return plafContentManagerUI.getPopupMenu();
     }
 
     public void addContentManagerListener(ContentManagerListener listener) {
@@ -202,11 +202,11 @@ public class MyDoggyContentManager implements ContentManager {
         if (getPopupMenu() != null)
             SwingUtilities.updateComponentTreeUI(getPopupMenu());
 
-        backContentManagerUI.updateUI();
+        plafContentManagerUI.updateUI();
     }
 
-	public BackContentManagerUI getBackContentManagerUI() {
-		return backContentManagerUI;
+	public PlafContentManagerUI getBackContentManagerUI() {
+		return plafContentManagerUI;
 	}
 
 	

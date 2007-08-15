@@ -10,7 +10,7 @@ import org.noos.xing.mydoggy.examples.mydoggyset.signal.SignalListener;
 import org.noos.xing.mydoggy.examples.mydoggyset.signal.SignalManager;
 import org.noos.xing.mydoggy.examples.mydoggyset.signal.SignalEvent;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.CheckBoxCellRenderer;
-import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
+import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;

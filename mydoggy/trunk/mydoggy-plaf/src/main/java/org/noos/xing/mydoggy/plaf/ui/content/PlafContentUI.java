@@ -7,7 +7,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public interface BackContentUI extends Content {
+public interface PlafContentUI extends Content {
 
     void addUIPropertyChangeListener(PropertyChangeListener listener);
 

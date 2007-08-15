@@ -9,8 +9,9 @@ import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.*;
-import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowBarDropTarget;
+import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ToolWindowBarDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
+import org.noos.xing.mydoggy.plaf.ui.look.AnchorLabelUI;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToolsOnBarMouseListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 

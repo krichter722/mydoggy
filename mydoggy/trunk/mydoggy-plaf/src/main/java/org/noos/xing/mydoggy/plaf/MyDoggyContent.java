@@ -1,6 +1,6 @@
 package org.noos.xing.mydoggy.plaf;
 
-import org.noos.xing.mydoggy.plaf.ui.content.BackContentUI;
+import org.noos.xing.mydoggy.plaf.ui.content.PlafContentUI;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -11,7 +11,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyContent implements BackContentUI {
+public class MyDoggyContent implements PlafContentUI {
     private MyDoggyContentManager contentManager;
 
     private Object key;

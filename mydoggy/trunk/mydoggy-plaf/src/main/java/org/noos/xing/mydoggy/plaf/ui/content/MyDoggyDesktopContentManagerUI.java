@@ -8,8 +8,8 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DesktopContentFrame;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
-import org.noos.xing.mydoggy.plaf.ui.content.BackContentManagerUI;
-import org.noos.xing.mydoggy.plaf.ui.content.BackContentUI;
+import org.noos.xing.mydoggy.plaf.ui.content.PlafContentManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.content.PlafContentUI;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
 import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
@@ -31,7 +31,7 @@ import java.util.Hashtable;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, BackContentManagerUI, PropertyChangeListener {
+public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
     protected MyDoggyToolWindowManager toolWindowManager;
     protected MyDoggyContentManager contentManager;
 
@@ -40,7 +40,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     protected PropertyChangeSupport propertyChangeSupport;
     protected EventListenerList contentManagerUIListeners;
 
-    protected BackContentUI lastSelected;
+    protected PlafContentUI lastSelected;
 
     protected boolean valueAdjusting;
     protected boolean contentValueAdjusting;
@@ -97,7 +97,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
         contentValueAdjusting = true;
         for (Content content : contentManager.getContents()) {
-            addContent((BackContentUI) content);
+            addContent((PlafContentUI) content);
         }
         contentValueAdjusting = false;
 
@@ -108,16 +108,16 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     public void unistall() {
         for (Content content : contentManager.getContents()) {
-            removeContent((BackContentUI) content);
+            removeContent((PlafContentUI) content);
         }
     }
 
-    public void addContent(BackContentUI content) {
+    public void addContent(PlafContentUI content) {
         addUIForContent(content);
         content.addUIPropertyChangeListener(this);
     }
 
-    public void removeContent(BackContentUI content) {
+    public void removeContent(PlafContentUI content) {
         if (content.isDetached())
             content.setDetached(false);
 
@@ -154,7 +154,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 try {
                     valueAdjusting = true;
                     internalFrame.setSelected(selected);
-                    lastSelected = (BackContentUI) content;
+                    lastSelected = (PlafContentUI) content;
                     valueAdjusting = false;
                 } catch (PropertyVetoException e) {
                     e.printStackTrace();
@@ -270,9 +270,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                                             if (lastSelected.isDetached())
                                                 lastSelected.fireSelected(false);
                                         }
-                                        lastSelected = (BackContentUI) content;
+                                        lastSelected = (PlafContentUI) content;
                                     }
-                                    ((BackContentUI) content).fireSelected((Boolean) evt.getNewValue());
+                                    ((PlafContentUI) content).fireSelected((Boolean) evt.getNewValue());
                                     break;
                                 }
                             }
@@ -488,7 +488,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 dialog.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent event) {
                         Component component = dialog.getContentPane().getComponent(0);
-                        BackContentUI content = (BackContentUI) contentManager.getContentByComponent(component);
+                        PlafContentUI content = (PlafContentUI) contentManager.getContentByComponent(component);
                         content.fireSelected(false);
                         content.setDetached(false);
                     }
@@ -497,7 +497,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 dialog.addWindowFocusListener(new WindowFocusListener() {
                     public void windowGainedFocus(WindowEvent e) {
                         if (!valueAdjusting && !contentValueAdjusting) {
-                            BackContentUI newSelected = (BackContentUI) contentManager.getContentByComponent(
+                            PlafContentUI newSelected = (PlafContentUI) contentManager.getContentByComponent(
                                     dialog.getContentPane().getComponent(0));
 
                             if (newSelected == lastSelected)
