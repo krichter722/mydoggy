@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.plaf.ui;
+package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
@@ -6,8 +6,13 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowListener;
 import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
-import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
+import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLabelUI;

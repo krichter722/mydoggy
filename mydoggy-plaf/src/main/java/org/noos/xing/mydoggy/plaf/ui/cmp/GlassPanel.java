@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.plaf.ui;
+package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import javax.swing.*;
 import java.awt.*;
@@ -122,7 +122,8 @@ public class GlassPanel extends JPanel implements ContainerListener {
         }
     }
 
-    protected GlassPanel mount() {
+    // TODO: rethink to this...
+    public GlassPanel mount() {
         if (rootPaneContainer.getGlassPane() == this)
             return this;
 
@@ -131,7 +132,7 @@ public class GlassPanel extends JPanel implements ContainerListener {
         return this;
     }
 
-    protected void unmount() {
+    public void unmount() {
         if (oldGlassPanel != null)
             rootPaneContainer.setGlassPane(oldGlassPanel);
     }

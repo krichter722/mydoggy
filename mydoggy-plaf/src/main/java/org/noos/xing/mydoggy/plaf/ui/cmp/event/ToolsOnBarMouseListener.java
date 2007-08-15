@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.plaf.ui;
+package org.noos.xing.mydoggy.plaf.ui.cmp.event;
 
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.ToolWindowAnchor;

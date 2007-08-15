@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.plaf.ui.modal;
+package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;

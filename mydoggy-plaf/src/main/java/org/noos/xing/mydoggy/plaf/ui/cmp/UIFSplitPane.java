@@ -28,7 +28,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.noos.xing.mydoggy.plaf.ui;
+package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import java.awt.Component;
 

@@ -1,6 +1,6 @@
-package org.noos.xing.mydoggy.plaf.ui;
+package org.noos.xing.mydoggy.plaf.ui.cmp;
 
-import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 
 import javax.swing.*;
 import java.awt.*;
