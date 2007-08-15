@@ -1,19 +1,22 @@
-package org.noos.xing.mydoggy.plaf.ui;
+package org.noos.xing.mydoggy.plaf.ui.look;
 
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 import static org.noos.xing.mydoggy.plaf.ui.ToolWindowUI.*;
-import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.drag.DragAndDropLock;
-import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTrasferable;
+import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
+import org.noos.xing.mydoggy.plaf.ui.cmp.drag.DragAndDropLock;
+import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ToolWindowTrasferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
+import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 
 import javax.swing.*;
 import javax.swing.border.Border;

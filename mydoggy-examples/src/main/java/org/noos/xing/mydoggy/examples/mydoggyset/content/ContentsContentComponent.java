@@ -7,7 +7,7 @@ import org.noos.xing.mydoggy.TabbedContentManagerUI;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.examples.mydoggyset.model.ContentsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.CheckBoxCellRenderer;
-import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
+import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyDesktopContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyTabbedContentManagerUI;
 

@@ -3,7 +3,7 @@ package org.noos.xing.mydoggy.examples.mydoggyset.content;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
-import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
+import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 
 import javax.swing.*;
 import java.awt.*;

@@ -6,8 +6,8 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabEvent;
-import org.noos.xing.mydoggy.plaf.ui.content.BackContentManagerUI;
-import org.noos.xing.mydoggy.plaf.ui.content.BackContentUI;
+import org.noos.xing.mydoggy.plaf.ui.content.PlafContentManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.content.PlafContentUI;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentPage;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabListener;
@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, BackContentManagerUI, PropertyChangeListener {
+public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
     protected MyDoggyToolWindowManager toolWindowManager;
     protected ContentManager contentManager;
 
@@ -42,7 +42,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
     protected EventListenerList contentManagerUIListeners;
     protected PropertyChangeSupport propertyChangeListeners;
 
-    protected BackContentUI lastSelected;
+    protected PlafContentUI lastSelected;
 
     protected boolean valueAdjusting;
     protected boolean contentValueAdjusting;
@@ -162,7 +162,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
         lastSelected = null;
         contentValueAdjusting = true;
         for (Content content : contentManager.getContents()) {
-            addContent((BackContentUI) content);
+            addContent((PlafContentUI) content);
             contentValueAdjusting = false;
         }
         contentValueAdjusting = false;
@@ -171,17 +171,17 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
     public void unistall() {
         contentValueAdjusting = true;
         for (Content content : contentManager.getContents()) {
-            removeContent((BackContentUI) content);
+            removeContent((PlafContentUI) content);
         }
         contentValueAdjusting = false;
     }
 
-    public void addContent(BackContentUI content) {
+    public void addContent(PlafContentUI content) {
         addUIForContent(content);
         content.addUIPropertyChangeListener(this);
     }
 
-    public void removeContent(BackContentUI content) {
+    public void removeContent(PlafContentUI content) {
         if (content.isDetached())
             content.setDetached(false);
 
@@ -216,7 +216,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
             if (index != -1) {
                 valueAdjusting = true;
                 tabbedContentManager.setSelectedIndex(index);
-                lastSelected = (BackContentUI) content;
+                lastSelected = (PlafContentUI) content;
                 valueAdjusting = false;
             } else if (toolWindowManager.getMainContent() != content.getComponent())
                 throw new IllegalStateException("Invalid content ui state.");
@@ -283,7 +283,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
                     Component selectedComponent = tabbedContentManager.getSelectedComponent();
                     if (selectedComponent == null)
                         return;
-                    BackContentUI newSelected = (BackContentUI) contentManager.getContentByComponent(selectedComponent);
+                    PlafContentUI newSelected = (PlafContentUI) contentManager.getContentByComponent(selectedComponent);
 
                     if (newSelected == lastSelected)
                         return;
@@ -330,7 +330,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
         if (!showAlwaysTab && tabbedContentManager.getTabCount() == 0 && (contentValueAdjusting || toolWindowManager.getMainContent() == null)) {
             detachedContentUIMap.put(content, new ContentPage(content, tabbedContentManager, null));
             toolWindowManager.setMainContent(content.getComponent());
-            lastSelected = (BackContentUI) content;
+            lastSelected = (PlafContentUI) content;
         } else {
             if (!showAlwaysTab && tabbedContentManager.getParent() == null) {
                 valueAdjusting = true;
@@ -584,7 +584,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
                 dialog.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent event) {
                         Component component = dialog.getContentPane().getComponent(0);
-                        BackContentUI content = (BackContentUI) contentManager.getContentByComponent(component);
+                        PlafContentUI content = (PlafContentUI) contentManager.getContentByComponent(component);
                         content.fireSelected(false);
                         content.setDetached(false);
                     }
@@ -593,7 +593,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Ba
                 dialog.addWindowFocusListener(new WindowFocusListener() {
                     public void windowGainedFocus(WindowEvent e) {
                         if (!valueAdjusting && !contentValueAdjusting) {
-                            BackContentUI newSelected = (BackContentUI) contentManager.getContentByComponent(
+                            PlafContentUI newSelected = (PlafContentUI) contentManager.getContentByComponent(
                                     dialog.getContentPane().getComponent(0));
 
                             if (newSelected == lastSelected)

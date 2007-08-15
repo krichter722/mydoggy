@@ -8,7 +8,7 @@ import org.noos.xing.mydoggy.examples.mydoggyset.content.interactive.Interactive
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.itest.InteractiveTestRunner;
 import org.noos.xing.mydoggy.itest.impl.SingleThreadInteractiveTestRunner;
-import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
+import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
