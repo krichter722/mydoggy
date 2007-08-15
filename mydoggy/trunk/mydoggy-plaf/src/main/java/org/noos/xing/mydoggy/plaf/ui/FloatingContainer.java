@@ -3,9 +3,13 @@ package org.noos.xing.mydoggy.plaf.ui;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowType;
-import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
-import org.noos.xing.mydoggy.plaf.ui.modal.JModalWindow;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.JModalWindow;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingMoveMouseInputHandler;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingResizeMouseInputHandler;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingToolTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 
 import javax.swing.*;
 import java.awt.*;

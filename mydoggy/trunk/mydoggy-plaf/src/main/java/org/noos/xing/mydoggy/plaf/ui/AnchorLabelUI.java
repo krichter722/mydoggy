@@ -7,11 +7,13 @@ import static org.noos.xing.mydoggy.plaf.ui.ToolWindowUI.*;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragAndDropLock;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTrasferable;
-import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
-import org.noos.xing.mydoggy.plaf.ui.translucent.TranslucentPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.TranslucentPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
+import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
@@ -111,7 +113,6 @@ public class AnchorLabelUI extends MetalLabelUI {
     }
 
     public void update(Graphics g, JComponent c) {
-        Rectangle bounds = c.getBounds();
         if (toolWindow.isFlashing() && !toolWindow.isVisible()) {
 
             descriptor.getToolWindowUI().updateAnchor(descriptor, g, c,

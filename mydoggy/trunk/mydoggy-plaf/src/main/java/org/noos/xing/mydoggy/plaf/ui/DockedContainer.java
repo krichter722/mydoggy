@@ -5,8 +5,10 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import static org.noos.xing.mydoggy.plaf.ui.ToolWindowUI.*;
 import org.noos.xing.mydoggy.plaf.ui.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 
 import javax.swing.*;
 import javax.swing.plaf.ButtonUI;
@@ -95,14 +97,14 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         this.popupUpdater = popupUpdater;
     }
 
-
-    protected void addPropertyChangeListener(String property, PropertyChangeListener listener) {
+    public void addPropertyChangeListener(String property, PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(property, listener);
     }
 
-    protected void removePropertyChangeListener(String property, PropertyChangeListener listener) {
+    public void removePropertyChangeListener(String property, PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(property, listener);
     }
+
 
     protected void setPinVisible(boolean visible) {
         pinButton.setVisible(visible);
