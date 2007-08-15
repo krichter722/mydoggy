@@ -7,12 +7,14 @@ import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultDockedTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultFloatingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultSlidingTypeDescriptor;
-import org.noos.xing.mydoggy.plaf.persistence.xml.XmlPersistenceDelegate;
+import org.noos.xing.mydoggy.plaf.persistence.xml.XMLPersistenceDelegate;
 import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.*;
-import org.noos.xing.mydoggy.plaf.ui.content.tabbed.MyDoggyTabbedContentManagerUI;
-import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.UIFSplitPane;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyTabbedContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -38,7 +40,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     private ToolWindowGroup showingGroup;
     private boolean shiftShow;
 
-    private MyDoggyContentManager contentManager;
+    protected MyDoggyContentManager contentManager;
 
     private Window anchestor;
 
@@ -84,7 +86,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         this.anchestor = windowAnchestor;
 
-        this.persistenceDelegate = new XmlPersistenceDelegate(this);
+        this.persistenceDelegate = new XMLPersistenceDelegate(this);
         this.allToolWindowGroup = new AllToolWindowGroup();
         this.aliases = new Hashtable<Object, ToolWindow>();
         this.propertyChangeSupport = new PropertyChangeSupport(this);
@@ -416,8 +418,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     protected void initComponents() {
         this.twmListeners = new EventListenerList();
-        this.contentManager = new MyDoggyContentManager(this);
-        this.contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
+
+        initContentManager();
 
         ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
@@ -447,9 +449,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         mainContainer = new JPanel();
         mainContainer.setName("toolWindowManager.mainContainer");
-        mainContainer.setBackground(Color.GRAY);
         mainContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         mainContainer.setFocusCycleRoot(true);
+        mainContainer.setBackground(Color.GRAY);
 
         getBar(BOTTOM).getSplitPane().setTopComponent(getBar(TOP).getSplitPane());
         getBar(TOP).getSplitPane().setBottomComponent(getBar(LEFT).getSplitPane());
@@ -462,8 +464,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         mainSplitPane.addPropertyChangeListener("UI", new UpdateUIChangeListener());
         mainSplitPane.setLeftComponent(mainContainer);
 
-        // Init glass pane used for SLIDING
+        // Init glass pane...
         initGlassPane();
+    }
+
+    protected void initContentManager() {
+        this.contentManager = new MyDoggyContentManager(this);
+        this.contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
     }
 
     protected void initGlassPane() {
@@ -561,7 +568,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
 
-    private JSplitPane addBar(ToolWindowAnchor anchor, int splitPaneOrientation,
+    protected JSplitPane addBar(ToolWindowAnchor anchor, int splitPaneOrientation,
                               String barConstraints, String cornerConstraints) {
         // Initialize bar
         bars[anchor.ordinal()] = new MyDoggyToolWindowBar(this,
