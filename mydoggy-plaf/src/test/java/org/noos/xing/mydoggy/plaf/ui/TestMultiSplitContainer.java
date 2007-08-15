@@ -4,6 +4,8 @@ import junit.framework.TestCase;
 
 import javax.swing.*;
 
+import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitContainer;
+
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
