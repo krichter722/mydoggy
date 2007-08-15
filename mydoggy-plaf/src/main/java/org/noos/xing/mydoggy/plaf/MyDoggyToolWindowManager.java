@@ -10,10 +10,7 @@ import org.noos.xing.mydoggy.plaf.descriptors.DefaultSlidingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.persistence.xml.XmlPersistenceDelegate;
 import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
-import org.noos.xing.mydoggy.plaf.ui.GlassPanel;
-import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
-import org.noos.xing.mydoggy.plaf.ui.ShortcutProcessor;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.content.tabbed.MyDoggyTabbedContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -915,7 +912,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    public static class ExtendedJSP extends JSplitPane {
+    public static class ExtendedJSP extends UIFSplitPane {
         private MyDoggyToolWindowBar toolWindowBar;
 
         public ExtendedJSP() {

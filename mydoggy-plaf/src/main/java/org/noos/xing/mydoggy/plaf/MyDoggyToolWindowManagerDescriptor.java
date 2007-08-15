@@ -19,6 +19,8 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
     private MyDoggyToolWindowManager manager;
     private boolean numberingEnabled;
 
+
+    
     private EventListenerList listenerList;
 
     private boolean checkParam = true;
@@ -32,10 +34,10 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         this.listenerList = new EventListenerList();
 
         this.dividerSizes = new HashMap<ToolWindowAnchor, Integer>();
-        setDividerSize(LEFT, 5);
-        setDividerSize(RIGHT, 5);
-        setDividerSize(TOP, 5);
-        setDividerSize(BOTTOM, 5);
+        setDividerSize(LEFT, 3);
+        setDividerSize(RIGHT, 3);
+        setDividerSize(TOP, 3);
+        setDividerSize(BOTTOM, 3);
 
         initMostRecent();
     }
