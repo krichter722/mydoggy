@@ -102,6 +102,7 @@ public class MyDoggyToolWindowUI implements ToolWindowUI {
 
     protected void loadResources() {
         properties = loadPropertiesFile();
+        
         loadIcons();
         loadColors();
     }

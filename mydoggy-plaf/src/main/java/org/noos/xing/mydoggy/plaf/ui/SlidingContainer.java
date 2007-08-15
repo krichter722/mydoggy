@@ -3,9 +3,12 @@ package org.noos.xing.mydoggy.plaf.ui;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.border.SlidingBorder;
-import org.noos.xing.mydoggy.plaf.ui.layout.ExtendedTableLayout;
-import org.noos.xing.mydoggy.plaf.ui.translucent.TranslucentPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.TranslucentPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
+import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.SlidingMouseInputHandler;
 
 import javax.swing.*;
 import java.awt.*;

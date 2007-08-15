@@ -5,8 +5,8 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowBar;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.icons.AggregateIcon;
-import org.noos.xing.mydoggy.plaf.ui.icons.TextIcon;
+import org.noos.xing.mydoggy.plaf.ui.cmp.AggregateIcon;
+import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
 
 import javax.swing.*;
 import javax.swing.plaf.LabelUI;

@@ -11,6 +11,9 @@ import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTrasferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
+import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 
 import javax.swing.*;
 import javax.swing.border.Border;
