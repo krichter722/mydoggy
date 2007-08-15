@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @TODO: think again this
  */
 public class MergePolicyProvider {
     private static Map<PersistenceDelegate.MergePolicy, MergePolicyApplier> appliers;
