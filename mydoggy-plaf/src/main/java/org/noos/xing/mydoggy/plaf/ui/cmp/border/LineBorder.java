@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.plaf.ui.border;
+package org.noos.xing.mydoggy.plaf.ui.cmp.border;
 
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
 

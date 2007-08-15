@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.plaf.ui.drag;
+package org.noos.xing.mydoggy.plaf.ui.cmp.drag;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
