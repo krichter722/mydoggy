@@ -257,27 +257,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         detachedContentUIMap = new Hashtable<Content, TabbedContentUI>();
 
         final JTabbedContentManager tabbedContentManager = new JTabbedContentManager();
-
-        tabbedContentManager.addTabListener(new TabListener() {
-            public void tabEventFired(TabEvent event) {
-                Content content = contentManager.getContentByComponent(event.getContentManager().getComponentAt(event.getOverTabIndex()));
-                switch (event.getActionId()) {
-                    case ON_CLOSE:
-                        try {
-                            fireContentUIRemoving(getContentUI(content));
-                            contentManager.removeContent(content);
-                        } catch (Exception ignore) {
-                        }
-                        break;
-                    case ON_DETACH:
-                        content.setDetached(true);
-                        fireContentUIDetached(getContentUI(content));
-                        break;
-                }
-            }
-        });
         tabbedContentManager.addChangeListener(new ChangeListener() {
-
             public void stateChanged(ChangeEvent e) {
                 if (!valueAdjusting && !contentValueAdjusting) {
                     Component selectedComponent = tabbedContentManager.getSelectedComponent();
@@ -297,6 +277,24 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
                     lastSelected = newSelected;
                     newSelected.fireSelected(true);
+                }
+            }
+        });
+        tabbedContentManager.addTabListener(new TabListener() {
+            public void tabEventFired(TabEvent event) {
+                Content content = contentManager.getContentByComponent(event.getContentManager().getComponentAt(event.getOverTabIndex()));
+                switch (event.getActionId()) {
+                    case ON_CLOSE:
+                        try {
+                            fireContentUIRemoving(getContentUI(content));
+                            contentManager.removeContent(content);
+                        } catch (Exception ignore) {
+                        }
+                        break;
+                    case ON_DETACH:
+                        content.setDetached(true);
+                        fireContentUIDetached(getContentUI(content));
+                        break;
                 }
             }
         });

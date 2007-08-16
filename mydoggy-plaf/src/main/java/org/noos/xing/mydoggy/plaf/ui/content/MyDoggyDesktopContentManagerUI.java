@@ -4,12 +4,11 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.DesktopContentFrame;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
-import org.noos.xing.mydoggy.plaf.ui.cmp.DesktopContentFrame;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
-import org.noos.xing.mydoggy.plaf.ui.content.PlafContentManagerUI;
-import org.noos.xing.mydoggy.plaf.ui.content.PlafContentUI;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
 import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
@@ -25,8 +24,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyVetoException;
-import java.util.Map;
 import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -188,8 +187,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     protected void initComponents() {
         detachedContentUIMap = new Hashtable<Content, DesktopContentUI>();
-        desktopPane = new JDesktopPane();
-        desktopPane.setDesktopManager(new ContentDesktopManager());
+        desktopPane = (JDesktopPane) toolWindowManager.getToolWindowManagerUI().createComponent(
+                ToolWindowManagerUI.DESKTOP_CONTENT_PANE, toolWindowManager
+        );
     }
 
     protected void initListeners() {
