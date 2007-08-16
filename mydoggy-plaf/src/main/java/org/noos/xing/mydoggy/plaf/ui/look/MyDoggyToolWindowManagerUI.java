@@ -42,6 +42,7 @@ public class MyDoggyToolWindowManagerUI implements ToolWindowManagerUI {
         cmpCreators.put(BAR_SPLIT_PANE, new BarSplitPaneComponentCreator());
         cmpCreators.put(BAR_CONTENT_PANE, new BarContentPaneComponentCreator());
         cmpCreators.put(CORNER_CONTENT_PANE, new CornerContentPaneComponentCreator());
+        cmpCreators.put(MY_DOGGY_MANAGER_MAIN_CONTAINER, new MyDoggyManagerMainContainerComponentCreator());
 
         cmpUiCreators = new Hashtable<String, ComponentUICreator>();
         cmpUiCreators.put(ANCHOR_LABEL_UI, new AnchorLabelComponentUICreator());
@@ -84,7 +85,7 @@ public class MyDoggyToolWindowManagerUI implements ToolWindowManagerUI {
 
         public Component createComponent(ToolWindowManager manager, Object... args) {
             JPanel panel = new JPanel();
-            panel.setBackground(Color.black);
+//            panel.setBackground(Color.black);
             return panel;
         }
     }
@@ -93,7 +94,16 @@ public class MyDoggyToolWindowManagerUI implements ToolWindowManagerUI {
 
         public Component createComponent(ToolWindowManager manager, Object... args) {
             JPanel panel = new JPanel();
-            panel.setBackground(Color.black);
+//            panel.setBackground(Color.black);
+            return panel;
+        }
+    }
+
+    public static class MyDoggyManagerMainContainerComponentCreator implements ComponentCreator {
+
+        public Component createComponent(ToolWindowManager manager, Object... args) {
+            JPanel panel = new JPanel();
+            panel.setBackground(Color.GRAY);
             return panel;
         }
     }
@@ -115,7 +125,7 @@ public class MyDoggyToolWindowManagerUI implements ToolWindowManagerUI {
     public static class MyDoggyManagerPanelComponentCustomizer implements ComponentCustomizer {
 
         public void applyCustomization(Component component, Object... args) {
-            component.setBackground(Color.black);
+//            component.setBackground(Color.black);
         }
     }
 

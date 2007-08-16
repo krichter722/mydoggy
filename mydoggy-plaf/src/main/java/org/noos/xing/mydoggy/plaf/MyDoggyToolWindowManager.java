@@ -1,5 +1,6 @@
 package org.noos.xing.mydoggy.plaf;
 
+import static org.noos.xing.mydoggy.plaf.ui.ToolWindowManagerUI.*;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
@@ -433,7 +434,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         initUI();
         initContentManager();
 
-        toolWindowManagerUI.applyCustomization(ToolWindowManagerUI.MY_DOGGY_MANAGER_PANEL, this);
+        toolWindowManagerUI.applyCustomization(MY_DOGGY_MANAGER_PANEL, this);
 
         ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
@@ -461,11 +462,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         addBar(TOP, JSplitPane.VERTICAL_SPLIT, "1,0", "2,2,FULL,FULL");
         addBar(BOTTOM, JSplitPane.VERTICAL_SPLIT, "1,2", "0,2,FULL,FULL");
 
-        mainContainer = new JPanel();
+        mainContainer = (JPanel) toolWindowManagerUI.createComponent(MY_DOGGY_MANAGER_MAIN_CONTAINER, this);
         mainContainer.setName("toolWindowManager.mainContainer");
         mainContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         mainContainer.setFocusCycleRoot(true);
-        mainContainer.setBackground(Color.GRAY);
 
         getBar(BOTTOM).getSplitPane().setTopComponent(getBar(TOP).getSplitPane());
         getBar(TOP).getSplitPane().setBottomComponent(getBar(LEFT).getSplitPane());
@@ -540,7 +540,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     protected JSplitPane renderSplitPane(int orientation) {
-        return (JSplitPane) toolWindowManagerUI.createComponent(ToolWindowManagerUI.BAR_SPLIT_PANE, this, orientation);
+        return (JSplitPane) toolWindowManagerUI.createComponent(BAR_SPLIT_PANE, this, orientation);
     }
 
 
@@ -592,7 +592,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         add(bars[anchor.ordinal()].getToolScrollBar(), barConstraints);
 
         // Add Corner to Container
-        add(toolWindowManagerUI.createComponent(ToolWindowManagerUI.CORNER_CONTENT_PANE, this),
+        add(toolWindowManagerUI.createComponent(CORNER_CONTENT_PANE, this),
             cornerConstraints);
 
         return bars[anchor.ordinal()].getSplitPane();
