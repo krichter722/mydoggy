@@ -19,6 +19,8 @@ public interface ToolWindowManagerUI {
     public static String MY_DOGGY_MANAGER_PANEL = "MY_DOGGY_MANAGER_PANEL";
     public static String MY_DOGGY_MANAGER_MAIN_CONTAINER = "MY_DOGGY_MANAGER_MAIN_CONTAINER";
 
+    public static String DESKTOP_CONTENT_PANE = "DESKTOP_CONTENT_PANE";
+
 
     Component createComponent(String key, ToolWindowManager manager, Object... args);
 

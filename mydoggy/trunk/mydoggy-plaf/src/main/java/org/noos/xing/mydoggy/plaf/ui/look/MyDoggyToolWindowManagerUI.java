@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.plaf.ui.ToolWindowManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -96,6 +97,15 @@ public class MyDoggyToolWindowManagerUI implements ToolWindowManagerUI {
             JPanel panel = new JPanel();
 //            panel.setBackground(Color.black);
             return panel;
+        }
+    }
+
+    public static class DesktopContentPaneComponentCreator implements ComponentCreator {
+
+        public Component createComponent(ToolWindowManager manager, Object... args) {
+            JDesktopPane desktopPane = new JDesktopPane();
+            desktopPane.setDesktopManager(new ContentDesktopManager());
+            return desktopPane;
         }
     }
 
