@@ -52,7 +52,6 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
 
     public MyDoggyDesktopContentManagerUI() {
-        initComponents();
     }
 
 
@@ -87,6 +86,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         this.contentManager = (MyDoggyContentManager) manager.getContentManager();
         this.contentIndex = 0;
 
+        initComponents();
         initListeners();
         setupActions();
 
@@ -186,10 +186,12 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
 
     protected void initComponents() {
-        detachedContentUIMap = new Hashtable<Content, DesktopContentUI>();
-        desktopPane = (JDesktopPane) toolWindowManager.getToolWindowManagerUI().createComponent(
-                ToolWindowManagerUI.DESKTOP_CONTENT_PANE, toolWindowManager
-        );
+        if (desktopPane == null) {
+            detachedContentUIMap = new Hashtable<Content, DesktopContentUI>();
+            desktopPane = (JDesktopPane) toolWindowManager.getToolWindowManagerUI().createComponent(
+                    ToolWindowManagerUI.DESKTOP_CONTENT_PANE, toolWindowManager
+            );
+        }
     }
 
     protected void initListeners() {
