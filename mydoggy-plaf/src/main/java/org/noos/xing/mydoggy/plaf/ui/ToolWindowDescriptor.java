@@ -97,7 +97,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         return toolWindow;
     }
 
-
     public Container getToolWindowManagerContainer() {
         return manager;
     }
@@ -206,60 +205,12 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         representativeAnchor = null;
     }
 
-
     public boolean isFloatingWindow() {
         return floatingWindow;
     }
 
     public void setFloatingWindow(boolean floatingWindow) {
         this.floatingWindow = floatingWindow;
-    }
-
-
-    protected void initTypeDescriptors() {
-        floatingTypeDescriptor = (FloatingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING)).cloneMe();
-        floatingTypeDescriptor.addPropertyChangeListener(this);
-
-        dockedTypeDescriptor = (DockedTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).cloneMe();
-        dockedTypeDescriptor.addPropertyChangeListener(this);
-
-        slidingTypeDescriptor = (SlidingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.SLIDING)).cloneMe();
-    }
-
-
-    protected LabelUI createLabelUI() {
-        return (LabelUI) manager.getToolWindowManagerUI().createComponentUI(ToolWindowManagerUI.REPRESENTATIVE_ANCHOR_BUTTON_UI, manager, this);
-    }
-
-    protected void updateRepresentativeAnchor() {
-        if (representativeAnchor != null) {
-            ToolWindowAnchor anchor = toolWindow.getAnchor();
-
-            String labelText = ResourceBundleManager.getInstance().getUserString(toolWindow.getId());
-            String toolRepresentativeAnchorText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
-                                         ? toolWindow.getIndex() + " : " + labelText
-                                         : labelText;
-
-            switch (anchor) {
-                case BOTTOM :
-                case TOP :
-                    representativeAnchor.setIcon(toolWindow.getIcon());
-                    representativeAnchor.setText(toolRepresentativeAnchorText);
-                    break;
-                case LEFT :
-                    TextIcon textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getLeftIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_LEFT);
-                    AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolWindow.getIcon(), SwingConstants.VERTICAL);
-                    representativeAnchor.setText(null);
-                    representativeAnchor.setIcon(compositeIcon);
-                    break;
-                case RIGHT :
-                    textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getLeftIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
-                    compositeIcon = new AggregateIcon(toolWindow.getIcon(), textIcon, SwingConstants.VERTICAL);
-                    representativeAnchor.setText(null);
-                    representativeAnchor.setIcon(compositeIcon);
-                    break;
-            }
-        }
     }
 
     public void updateUI() {
@@ -302,9 +253,58 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         return dockedTypeDescriptor;
     }
 
+    public Component getContentContainer() {
+        return ((DockedContainer) getToolWindowContainer()).getContentContainer();
+    }
 
 
-    private class RepresentativeAnchor extends JLabel {
+    protected void initTypeDescriptors() {
+        floatingTypeDescriptor = (FloatingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING)).cloneMe();
+        floatingTypeDescriptor.addPropertyChangeListener(this);
+
+        dockedTypeDescriptor = (DockedTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).cloneMe();
+        dockedTypeDescriptor.addPropertyChangeListener(this);
+
+        slidingTypeDescriptor = (SlidingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.SLIDING)).cloneMe();
+    }
+
+    protected LabelUI createLabelUI() {
+        return (LabelUI) manager.getToolWindowManagerUI().createComponentUI(ToolWindowManagerUI.REPRESENTATIVE_ANCHOR_BUTTON_UI, manager, this);
+    }
+
+    protected void updateRepresentativeAnchor() {
+        if (representativeAnchor != null) {
+            ToolWindowAnchor anchor = toolWindow.getAnchor();
+
+            String labelText = ResourceBundleManager.getInstance().getUserString(toolWindow.getId());
+            String toolRepresentativeAnchorText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
+                                         ? toolWindow.getIndex() + " : " + labelText
+                                         : labelText;
+
+            switch (anchor) {
+                case BOTTOM :
+                case TOP :
+                    representativeAnchor.setIcon(toolWindow.getIcon());
+                    representativeAnchor.setText(toolRepresentativeAnchorText);
+                    break;
+                case LEFT :
+                    TextIcon textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getLeftIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_LEFT);
+                    AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolWindow.getIcon(), SwingConstants.VERTICAL);
+                    representativeAnchor.setText(null);
+                    representativeAnchor.setIcon(compositeIcon);
+                    break;
+                case RIGHT :
+                    textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getLeftIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
+                    compositeIcon = new AggregateIcon(toolWindow.getIcon(), textIcon, SwingConstants.VERTICAL);
+                    representativeAnchor.setText(null);
+                    representativeAnchor.setIcon(compositeIcon);
+                    break;
+            }
+        }
+    }
+
+
+    protected class RepresentativeAnchor extends JLabel {
 
         public RepresentativeAnchor(Icon image, int horizontalAlignment) {
             super(image, horizontalAlignment);
