@@ -55,8 +55,4 @@ public interface ToolWindowUI {
 
     Color getColor(String id);
 
-    void updateToolWindowAppBar(ToolWindowDescriptor descriptor, Graphics g, JComponent c,
-                                Color backgroundStart, Color backgroundEnd,
-                                Color idBackgroundColor, Color idColor);
-
 }
