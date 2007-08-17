@@ -3,16 +3,9 @@ package org.noos.xing.mydoggy.plaf.ui.look;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Arc2D;
-import java.io.File;
-import java.io.InputStream;
-import java.io.IOException;
-import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
@@ -49,42 +42,10 @@ public class MyDoggyToolWindowUI implements ToolWindowUI {
     }
 
     protected void loadResources() {
-        properties = loadPropertiesFile();
+        properties = SwingUtil.loadPropertiesFile(resourceName, null);
         
         loadIcons();
         loadColors();
-    }
-
-    protected Properties loadPropertiesFile() {
-        InputStream is = null;
-        try {
-            URL resource = this.getClass().getClassLoader().getResource("META-INF" + File.separator + resourceName);
-            if (resource == null) {
-                File file = new File(resourceName);
-                if (file.exists())
-                    resource = file.toURL();
-                else {
-                    file = new File(System.getProperty("user.home") + File.separator + resourceName);
-                    if (file.exists())
-                        resource = file.toURL();
-                    else
-                        throw new RuntimeException("Cannot find resource property file.");
-                }
-            }
-
-            is = resource.openStream();
-            Properties properties = new Properties();
-            properties.load(is);
-            
-            return properties;
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot load resource property file.", e);
-        } finally {
-            if (is != null)
-                try {
-                    is.close();
-                } catch (IOException e) {}
-        }
     }
 
     protected void loadIcons() {
