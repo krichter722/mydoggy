@@ -48,41 +48,6 @@ public class MyDoggyToolWindowUI implements ToolWindowUI {
         return colors.get(id);
     }
 
-    public void updateToolWindowAppBar(ToolWindowDescriptor descriptor,
-                                       Graphics g, JComponent c,
-                                       Color backgroundStart, Color backgroundEnd,
-                                       Color idBackgroundColor, Color idColor) {
-        Rectangle r = c.getBounds();
-        r.x = r.y = 0;
-
-        GraphicsUtil.fillRect(g, r,
-                              backgroundStart, backgroundEnd,
-                              null,
-                              GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-
-        if (descriptor.getDockedTypeDescriptor().isIdVisibleOnToolBar()) {
-            String id = ResourceBundleManager.getInstance().getUserString(descriptor.getToolWindow().getId());
-            r.width = g.getFontMetrics().stringWidth(id) + 8;
-
-            // TODO: add customization
-            int halfHeigh = (r.height / 2);
-            GraphicsUtil.fillRect(g, r, Color.WHITE, idBackgroundColor,
-                                  new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
-                                              new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
-                                              4),
-                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-
-            GraphicsUtil.fillRect(g, r, Color.WHITE, idBackgroundColor,
-                                  new Arc2D.Double(r.x + r.width - r.height,
-                                                   r.y, r.height, r.height, -90.0d, 180.0d, Arc2D.CHORD),
-                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-
-            g.setColor(idColor);
-            g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
-        }
-    }
-
-
     protected void loadResources() {
         properties = loadPropertiesFile();
         

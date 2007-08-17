@@ -4,19 +4,20 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
+import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
+import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
 import static org.noos.xing.mydoggy.plaf.ui.ToolWindowUI.*;
+import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
+import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.cmp.drag.DragAndDropLock;
 import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ToolWindowTrasferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
-import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
-import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -27,6 +28,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
+import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -146,15 +148,15 @@ public class ToolWindowTitleBarUI extends PanelUI {
         if (toolWindow.isFlashing()) {
 
             if (flashingState)
-                toolWindowUI.updateToolWindowAppBar(descriptor, g, c,
-                                                    animBackStart, animBackEnd,
-                                                    toolWindowUI.getColor(TW_APP_ID_BACKGROUND_FLASHING_0),
-                                                    animTextColor);
+                updateToolWindowAppBar(g, c,
+                                       animBackStart, animBackEnd,
+                                       toolWindowUI.getColor(TW_APP_ID_BACKGROUND_FLASHING_0),
+                                       animTextColor);
             else
-                toolWindowUI.updateToolWindowAppBar(descriptor, g, c,
-                                                    animBackStart, animBackEnd,
-                                                    toolWindowUI.getColor(TW_APP_ID_BACKGROUND_FLASHING_1),
-                                                    animTextColor);
+                updateToolWindowAppBar(g, c,
+                                       animBackStart, animBackEnd,
+                                       toolWindowUI.getColor(TW_APP_ID_BACKGROUND_FLASHING_1),
+                                       animTextColor);
 
             if (flashingTimer == null) {
                 flashingTimer = new Timer(700, new ActionListener() {
@@ -186,22 +188,22 @@ public class ToolWindowTitleBarUI extends PanelUI {
             }
         } else {
             if (animation.isAnimating()) {
-                toolWindowUI.updateToolWindowAppBar(descriptor, g, c,
-                                                    animBackStart, animBackEnd,
-                                                    toolWindowUI.getColor(TW_APP_ID_BACKGROUND_ANIMATING),
-                                                    animTextColor);
+                updateToolWindowAppBar(g, c,
+                                       animBackStart, animBackEnd,
+                                       toolWindowUI.getColor(TW_APP_ID_BACKGROUND_ANIMATING),
+                                       animTextColor);
             } else if (c.isEnabled()) {
-                toolWindowUI.updateToolWindowAppBar(descriptor, g, c,
-                                                    toolWindowUI.getColor(TW_APP_BACKGROUND_ENABLED_START),
-                                                    toolWindowUI.getColor(TW_APP_BACKGROUND_ENABLED_END),
-                                                    toolWindowUI.getColor(TW_APP_ID_BACKGROUND_ACTIVE),
-                                                    toolWindowUI.getColor(TW_APP_ID_FOREGROUND_ACTIVE));
+                updateToolWindowAppBar(g, c,
+                                       toolWindowUI.getColor(TW_APP_BACKGROUND_ENABLED_START),
+                                       toolWindowUI.getColor(TW_APP_BACKGROUND_ENABLED_END),
+                                       toolWindowUI.getColor(TW_APP_ID_BACKGROUND_ACTIVE),
+                                       toolWindowUI.getColor(TW_APP_ID_FOREGROUND_ACTIVE));
             } else {
-                toolWindowUI.updateToolWindowAppBar(descriptor, g, c,
-                                                    toolWindowUI.getColor(TW_APP_BACKGROUND_DISABLED_START),
-                                                    toolWindowUI.getColor(TW_APP_BACKGROUND_DISABLED_END),
-                                                    toolWindowUI.getColor(TW_APP_ID_BACKGROUND_INACTIVE),
-                                                    toolWindowUI.getColor(TW_APP_ID_FOREGROUND_INACTIVE));
+                updateToolWindowAppBar(g, c,
+                                       toolWindowUI.getColor(TW_APP_BACKGROUND_DISABLED_START),
+                                       toolWindowUI.getColor(TW_APP_BACKGROUND_DISABLED_END),
+                                       toolWindowUI.getColor(TW_APP_ID_BACKGROUND_INACTIVE),
+                                       toolWindowUI.getColor(TW_APP_ID_FOREGROUND_INACTIVE));
             }
         }
 
@@ -216,6 +218,43 @@ public class ToolWindowTitleBarUI extends PanelUI {
 
     protected void uninstallDefaults(JComponent c) {
         LookAndFeel.uninstallBorder(c);
+    }
+
+    protected void updateToolWindowAppBar(Graphics g, JComponent c,
+                                          Color backgroundStart, Color backgroundEnd,
+                                          Color idBackgroundColor, Color idColor) {
+        Rectangle r = c.getBounds();
+        r.x = r.y = 0;
+
+        GraphicsUtil.fillRect(g, r,
+                              backgroundStart, backgroundEnd,
+                              null,
+                              GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+
+        if (descriptor.getDockedTypeDescriptor().isIdVisibleOnToolBar()) {
+            String id = ResourceBundleManager.getInstance().getUserString(descriptor.getToolWindow().getId());
+            r.width = g.getFontMetrics().stringWidth(id) + 8;
+
+            // TODO: add customization
+            int halfHeigh = (r.height / 2);
+            GraphicsUtil.fillRect(g, r,
+                                  Color.WHITE,
+                                  idBackgroundColor,
+                                  new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
+                                              new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
+                                              4),
+                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+
+            GraphicsUtil.fillRect(g, r,
+                                  Color.WHITE,
+                                  idBackgroundColor,
+                                  new Arc2D.Double(r.x + r.width - r.height,
+                                                   r.y, r.height, r.height, -90.0d, 180.0d, Arc2D.CHORD),
+                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+
+            g.setColor(idColor);
+            g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
+        }
     }
 
 
