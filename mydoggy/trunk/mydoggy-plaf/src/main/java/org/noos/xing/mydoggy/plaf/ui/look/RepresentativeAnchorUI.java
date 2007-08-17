@@ -3,21 +3,21 @@ package org.noos.xing.mydoggy.plaf.ui.look;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
-import static org.noos.xing.mydoggy.plaf.ui.ToolWindowUI.*;
-import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.DragAndDropLock;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ToolWindowTrasferable;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
-import org.noos.xing.mydoggy.plaf.ui.cmp.TranslucentPanel;
-import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
-import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
-import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
+import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
-import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
+import static org.noos.xing.mydoggy.plaf.ui.ToolWindowUI.*;
+import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.TranslucentPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
+import org.noos.xing.mydoggy.plaf.ui.cmp.drag.DragAndDropLock;
+import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ToolWindowTrasferable;
+import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
@@ -35,7 +35,7 @@ import java.util.ResourceBundle;
 /**
  * @author Angelo De Caro
  */
-public class AnchorLabelUI extends MetalLabelUI {
+public class RepresentativeAnchorUI extends MetalLabelUI {
     protected static ResourceBundle resourceBundle = ResourceBundleManager.getInstance().getResourceBundle();
 
     protected JComponent label;
@@ -47,7 +47,7 @@ public class AnchorLabelUI extends MetalLabelUI {
     protected ToolWindowUI toolWindowUI;
     protected DockedTypeDescriptor dockedTypeDescriptor;
 
-    protected AnchorLabelMouseAdapter adapter;
+    protected RepresentativeAnchorMouseAdapter adapter;
 
     protected Timer flashingTimer;
     protected int flasingDuration;
@@ -59,7 +59,7 @@ public class AnchorLabelUI extends MetalLabelUI {
     protected TranslucentPanel previewPanel;
 
 
-    public AnchorLabelUI(ToolWindowDescriptor descriptor) {
+    public RepresentativeAnchorUI(ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
         this.toolWindowUI = descriptor.getToolWindowUI();
@@ -110,7 +110,7 @@ public class AnchorLabelUI extends MetalLabelUI {
             c.setToolTipText(oldText);
         }
 
-        adapter = new AnchorLabelMouseAdapter();
+        adapter = new RepresentativeAnchorMouseAdapter();
         c.addMouseListener(adapter);
         c.addMouseMotionListener(adapter);
 
@@ -120,11 +120,11 @@ public class AnchorLabelUI extends MetalLabelUI {
     public void update(Graphics g, JComponent c) {
         if (toolWindow.isFlashing() && !toolWindow.isVisible()) {
 
-            descriptor.getToolWindowUI().updateAnchor(descriptor, g, c,
-                                                      flashingAnimBackStart,
-                                                      flashingAnimBackEnd,
-                                                      false,
-                                                      true);
+            updateAnchor(g, c,
+                         flashingAnimBackStart,
+                         flashingAnimBackEnd,
+                         false,
+                         true);
 
             if (flashingTimer == null) {
                 flashingTimer = new Timer(600, new ActionListener() {
@@ -161,11 +161,11 @@ public class AnchorLabelUI extends MetalLabelUI {
                 flashingTimer = null;
             }
 
-            descriptor.getToolWindowUI().updateAnchor(descriptor, g, c,
-                                                      toolWindowUI.getColor(ANCHOR_FLASHING_START),
-                                                      toolWindowUI.getColor(ANCHOR_FLASHING_END), 
-                                                      c.isOpaque(),
-                                                      false);
+            updateAnchor(g, c,
+                         toolWindowUI.getColor(ANCHOR_FLASHING_START),
+                         toolWindowUI.getColor(ANCHOR_FLASHING_END),
+                         c.isOpaque(),
+                         false);
         }
         paint(g, c);
     }
@@ -206,8 +206,27 @@ public class AnchorLabelUI extends MetalLabelUI {
         return descriptor;
     }
 
+    protected void updateAnchor(Graphics g, JComponent c,
+                                Color backgroundStart, Color backgroundEnd,
+                                boolean active, boolean flashing) {
+        Rectangle r = c.getBounds();
+        r.x = r.y = 0;
 
-    class AnchorLabelMouseAdapter extends MouseInputAdapter implements ActionListener, PropertyChangeListener {
+        if (flashing || active) {
+            GraphicsUtil.fillRect(g,
+                                  r,
+                                  backgroundStart,
+                                  backgroundEnd,
+                                  null,
+                                  GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
+        } else {
+            g.setColor(toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE));
+            g.fillRect(0, 0, r.width, r.height);
+        }
+    }
+
+
+    protected class RepresentativeAnchorMouseAdapter extends MouseInputAdapter implements ActionListener, PropertyChangeListener {
 
         JPopupMenu popupMenu;
 
@@ -227,7 +246,7 @@ public class AnchorLabelUI extends MetalLabelUI {
         boolean firstPreview = true;
 
 
-        public AnchorLabelMouseAdapter() {
+        public RepresentativeAnchorMouseAdapter() {
             initPopupMenu();
             previewTimer = new Timer(dockedTypeDescriptor.getPreviewDelay(), this);
             descriptor.getToolWindow().addInternalPropertyChangeListener(this);
@@ -643,7 +662,7 @@ public class AnchorLabelUI extends MetalLabelUI {
 
     }
 
-    private class GradientAnimation extends AbstractAnimation {
+    protected class GradientAnimation extends AbstractAnimation {
 
         public GradientAnimation() {
             super(600f);
@@ -708,7 +727,7 @@ public class AnchorLabelUI extends MetalLabelUI {
 
     }
 
-    class DragGesture implements DragGestureListener, DragSourceMotionListener, DragSourceListener {
+    protected class DragGesture implements DragGestureListener, DragSourceMotionListener, DragSourceListener {
         private BufferedImage ghostImage;
         private ToolWindowAnchor lastAnchor;
 
@@ -734,9 +753,9 @@ public class AnchorLabelUI extends MetalLabelUI {
             glassPane.setVisible(true);
 
             // Build orginalDragImage
-            JComponent anchorLabel = descriptor.getAnchorLabel();
-            ghostImage = new BufferedImage(anchorLabel.getWidth(), anchorLabel.getHeight(), BufferedImage.TYPE_INT_RGB);
-            anchorLabel.print(ghostImage.createGraphics());
+            JComponent representativeAnchor = descriptor.getRepresentativeAnchor();
+            ghostImage = new BufferedImage(representativeAnchor.getWidth(), representativeAnchor.getHeight(), BufferedImage.TYPE_INT_RGB);
+            representativeAnchor.print(ghostImage.createGraphics());
 
             descriptor.getToolBar().propertyChange(new PropertyChangeEvent(label, "startDrag", null, dge));
 

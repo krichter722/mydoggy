@@ -202,7 +202,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 setPopupButtonVisibility();
             }
         });
-        viewport.addMouseListener(dockedContainer.getApplicationBarMouseAdapter());
+        viewport.addMouseListener(dockedContainer.getTitleBarMouseAdapter());
     }
 
     protected void initTabs() {
@@ -297,7 +297,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 }
             });
 
-            addMouseListener(dockedContainer.getApplicationBarMouseAdapter());
+            addMouseListener(dockedContainer.getTitleBarMouseAdapter());
             addMouseListener(new MouseAdapter() {
 
                 public void mousePressed(MouseEvent e) {

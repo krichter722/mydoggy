@@ -11,7 +11,7 @@ import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ToolWindowBarDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
-import org.noos.xing.mydoggy.plaf.ui.look.AnchorLabelUI;
+import org.noos.xing.mydoggy.plaf.ui.look.RepresentativeAnchorUI;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToolsOnBarMouseListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -117,8 +117,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         manager.propertyChange(new PropertyChangeEvent(this, "tempShowed", old, tempShowed));
     }
 
-    public int getLabelIndex(JLabel anchorLabel) {
-        TableLayoutConstraints constraints = contentPaneLayout.getConstraints(anchorLabel);
+    public int getRepresentativeAnchorIndex(JLabel representativeAnchor) {
+        TableLayoutConstraints constraints = contentPaneLayout.getConstraints(representativeAnchor);
         if (horizontal)
             return (constraints.col1 / 2) -1;
         else
@@ -202,8 +202,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 int i = 0;
                 for (Component component : components) {
                     if (component instanceof JLabel) {
-                        JLabel anchorLabel = (JLabel) component;
-                        ToolWindowDescriptor d = ((AnchorLabelUI) anchorLabel.getUI()).getDescriptor();
+                        JLabel representativeAnchor = (JLabel) component;
+                        ToolWindowDescriptor d = ((RepresentativeAnchorUI) representativeAnchor.getUI()).getDescriptor();
 
                         if (d.getToolWindow().isVisible()) {
                             Component content = ((DockedContainer) d.getToolWindowContainer()).getContentContainer();
@@ -314,10 +314,10 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         throw new IllegalStateException();
     }
 
-    protected void addAnchorLabel(JLabel anchorLabel, int index) {
+    protected void addRepresentativeAnchor(JLabel representativeAnchor, int index) {
         availableTools++;
         if (horizontal) {
-            int width = anchorLabel.getPreferredSize().width + 6;
+            int width = representativeAnchor.getPreferredSize().width + 6;
 
             contentPaneLayout.insertColumn(contentPaneLayout.getNumColumn(), contentPaneLayout.getNumColumn() > 0 ? 5 : 1);
             contentPaneLayout.insertColumn(contentPaneLayout.getNumColumn(), width);
@@ -345,13 +345,13 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     }
                 }
                 contentPaneLayout.setColumn(finalCol, width);
-                contentPane.add(anchorLabel, (index * 2 + 2) + ",1,");
+                contentPane.add(representativeAnchor, (index * 2 + 2) + ",1,");
             } else
-                contentPane.add(anchorLabel, (contentPaneLayout.getNumColumn() - 1) + ",1,");
+                contentPane.add(representativeAnchor, (contentPaneLayout.getNumColumn() - 1) + ",1,");
         } else {
-            int height = Math.max(anchorLabel.getHeight(),
-                                  Math.max(anchorLabel.getPreferredSize().height,
-                                           anchorLabel.getSize().height)) + 12;
+            int height = Math.max(representativeAnchor.getHeight(),
+                                  Math.max(representativeAnchor.getPreferredSize().height,
+                                           representativeAnchor.getSize().height)) + 12;
 
             contentPaneLayout.insertRow(contentPaneLayout.getNumRow(), contentPaneLayout.getNumRow() > 0 ? 5 : 1);
             contentPaneLayout.insertRow(contentPaneLayout.getNumRow(), height);
@@ -382,24 +382,24 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 }
                 contentPaneLayout.setRow(finalRow, height);
 
-                contentPane.add(anchorLabel, "1," + (index * 2 + 2));
+                contentPane.add(representativeAnchor, "1," + (index * 2 + 2));
             } else
-                contentPane.add(anchorLabel, "1," + (contentPaneLayout.getNumRow() - 1));
+                contentPane.add(representativeAnchor, "1," + (contentPaneLayout.getNumRow() - 1));
         }
         SwingUtil.repaint(toolScrollBar);
     }
 
-    protected void removeAnchorLabel(JLabel anchorLabel, ToolWindowDescriptor descriptor) {
+    protected void removeRepresentativeAnchor(JLabel representativeAnchor, ToolWindowDescriptor descriptor) {
         // Remove
         availableTools--;
 
         int toDelete;
         if (horizontal) {
-            toDelete = contentPaneLayout.getConstraints(anchorLabel).col1;
+            toDelete = contentPaneLayout.getConstraints(representativeAnchor).col1;
         } else {
-            toDelete = contentPaneLayout.getConstraints(anchorLabel).row1;
+            toDelete = contentPaneLayout.getConstraints(representativeAnchor).row1;
         }
-        contentPane.remove(anchorLabel);
+        contentPane.remove(representativeAnchor);
         if (horizontal) {
             contentPaneLayout.deleteColumn(toDelete);
             contentPaneLayout.deleteColumn(toDelete - 1);
@@ -410,7 +410,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
         SwingUtil.repaint(toolScrollBar);
 
-        descriptor.resetAnchorLabel();
+        descriptor.resetRepresentativeAnchor();
     }
 
 
@@ -424,22 +424,22 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 boolean newAvailable = (Boolean) evt.getNewValue();
 
                 boolean repaint = false;
-                JLabel anchorLabel = descriptor.getAnchorLabel(contentPane);
+                JLabel representativeAnchor = descriptor.getRepresentativeAnchor(contentPane);
 
                 if (oldAvailable && !newAvailable) {
                     // true -> false
-                    removeAnchorLabel(anchorLabel, descriptor);
+                    removeRepresentativeAnchor(representativeAnchor, descriptor);
                     repaint = true;
                 } else if (!oldAvailable && newAvailable) {
                     // false -> true
                     assert evt instanceof UserPropertyChangeEvent;
                     assert ((UserPropertyChangeEvent) evt).getUserObject() instanceof Integer;
-                    addAnchorLabel(anchorLabel, (Integer) ((UserPropertyChangeEvent) evt).getUserObject());
+                    addRepresentativeAnchor(representativeAnchor, (Integer) ((UserPropertyChangeEvent) evt).getUserObject());
                     repaint = true;
                 }
 
                 if (repaint) {
-                    anchorLabel.setEnabled(newAvailable);
+                    representativeAnchor.setEnabled(newAvailable);
                     SwingUtil.repaint(contentPane);
                 }
             }
@@ -479,14 +479,14 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
 
             if (evt.getOldValue() == ToolWindowType.FLOATING_FREE) {
-                addAnchorLabel(toolWindowDescriptor.getAnchorLabel(contentPane), -1);
-                ensureVisible(toolWindowDescriptor.getAnchorLabel());
+                addRepresentativeAnchor(toolWindowDescriptor.getRepresentativeAnchor(contentPane), -1);
+                ensureVisible(toolWindowDescriptor.getRepresentativeAnchor());
 
                 SwingUtil.repaint(contentPane);
             } else if (evt.getNewValue() == ToolWindowType.FLOATING_FREE &&
-                       toolWindowDescriptor.getAnchorLabel() != null) {
+                       toolWindowDescriptor.getRepresentativeAnchor() != null) {
 
-                removeAnchorLabel(toolWindowDescriptor.getAnchorLabel(), toolWindowDescriptor);
+                removeRepresentativeAnchor(toolWindowDescriptor.getRepresentativeAnchor(), toolWindowDescriptor);
                 SwingUtil.repaint(contentPane);
             }
 
@@ -576,10 +576,10 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             if (descriptor.getDockedTypeDescriptor().isHideLabelOnVisible()) {
                 if (visible) {
                     poss.put(descriptor, descriptor.getLabelIndex());
-                    removeAnchorLabel(descriptor.getAnchorLabel(), descriptor);
+                    removeRepresentativeAnchor(descriptor.getRepresentativeAnchor(), descriptor);
                 } else {
                     assert poss.containsKey(descriptor);
-                    addAnchorLabel(descriptor.getAnchorLabel(contentPane), poss.get(descriptor));
+                    addRepresentativeAnchor(descriptor.getRepresentativeAnchor(contentPane), poss.get(descriptor));
                 }
             }
 
@@ -854,17 +854,17 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
-            JLabel anchorLabel = descriptor.getAnchorLabel();
-            if (anchorLabel != null) {
-                TableLayoutConstraints constraints = contentPaneLayout.getConstraints(anchorLabel);
+            JLabel representativeAnchor = descriptor.getRepresentativeAnchor();
+            if (representativeAnchor != null) {
+                TableLayoutConstraints constraints = contentPaneLayout.getConstraints(representativeAnchor);
 
                 if (horizontal) {
-                    int width = anchorLabel.getPreferredSize().width + 6;
+                    int width = representativeAnchor.getPreferredSize().width + 6;
 
                     contentPaneLayout.setColumn(constraints.col1, width);
                 } else {
-                    int height = Math.max(anchorLabel.getPreferredSize().height,
-                                          anchorLabel.getSize().height);
+                    int height = Math.max(representativeAnchor.getPreferredSize().height,
+                                          representativeAnchor.getSize().height);
                     contentPaneLayout.setRow(constraints.row1, height);
                 }
 

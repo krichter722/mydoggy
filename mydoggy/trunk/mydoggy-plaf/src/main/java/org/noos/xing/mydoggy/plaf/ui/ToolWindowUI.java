@@ -55,10 +55,6 @@ public interface ToolWindowUI {
 
     Color getColor(String id);
 
-    void updateAnchor(ToolWindowDescriptor descriptor, Graphics g, JComponent c,
-                      Color backgroundStart, Color backgroundEnd,
-                      boolean active, boolean flashing);
-
     void updateToolWindowAppBar(ToolWindowDescriptor descriptor, Graphics g, JComponent c,
                                 Color backgroundStart, Color backgroundEnd,
                                 Color idBackgroundColor, Color idColor);

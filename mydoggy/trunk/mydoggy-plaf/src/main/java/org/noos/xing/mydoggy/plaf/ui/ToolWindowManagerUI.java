@@ -11,8 +11,8 @@ import java.awt.*;
 public interface ToolWindowManagerUI {
 
     public static String BAR_SPLIT_PANE = "BAR_SPLIT_PANE";
-    public static String ANCHOR_LABEL_UI = "ANCHOR_LABEL_UI";
-    public static String APP_BAR_PANEL = "APP_BAR_PANEL";
+    public static String REPRESENTATIVE_ANCHOR_BUTTON_UI = "REPRESENTATIVE_ANCHOR_BUTTON_UI";
+    public static String TOOL_WINDOW_TITLE_BAR_UI = "TOOL_WINDOW_TITLE_BAR_UI";
     public static String BAR_CONTENT_PANE = "BAR_CONTENT_PANE";
     public static String CORNER_CONTENT_PANE = "CORNER_CONTENT_PANE";
 

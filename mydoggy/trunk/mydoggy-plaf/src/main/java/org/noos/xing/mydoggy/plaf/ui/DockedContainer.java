@@ -8,7 +8,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.look.ApplicationBarPanelUI;
+import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTitleBarUI;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -36,8 +36,8 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
     private JPanel container;
 
-    protected JPanel applicationBar;
-    protected ToolWindowTabPanel applicationBarTabs;
+    protected JPanel titleBar;
+    protected ToolWindowTabPanel titleBarTabs;
 
     private Component focusRequester;
 
@@ -47,7 +47,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     protected JButton hideButton;
     protected JButton maximizeButton;
 
-    private ApplicationBarMouseAdapter applicationBarMouseAdapter;
+    private TitleBarMouseAdapter titleBarMouseAdapter;
     private PropertyChangeSupport propertyChangeSupport;
 
     private PopupUpdater popupUpdater;
@@ -79,7 +79,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
     public void uninstall() {
         Component cmp = descriptor.getComponent();
-        cmp.removeMouseListener(applicationBarMouseAdapter);
+        cmp.removeMouseListener(titleBarMouseAdapter);
     }
 
     public void setMainComponent(Component component) {
@@ -90,8 +90,8 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         SwingUtil.repaint(container);
     }
 
-    public MouseListener getApplicationBarMouseAdapter() {
-        return applicationBarMouseAdapter;
+    public MouseListener getTitleBarMouseAdapter() {
+        return titleBarMouseAdapter;
     }
 
     public void setPopupUpdater(PopupUpdater popupUpdater) {
@@ -109,21 +109,21 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
     protected void setPinVisible(boolean visible) {
         pinButton.setVisible(visible);
-        TableLayout tableLayout = (TableLayout) applicationBar.getLayout();
+        TableLayout tableLayout = (TableLayout) titleBar.getLayout();
         tableLayout.setColumn(7, (visible) ? 17 : 0);
         tableLayout.setColumn(8, (visible) ? 2 : 0);
     }
 
     protected void setFloatingVisible(boolean visible) {
         floatingButton.setVisible(visible);
-        TableLayout tableLayout = (TableLayout) applicationBar.getLayout();
+        TableLayout tableLayout = (TableLayout) titleBar.getLayout();
         tableLayout.setColumn(5, (visible) ? 17 : 0);
         tableLayout.setColumn(6, (visible) ? 2 : 0);
     }
 
     protected void setDockedVisible(boolean visible) {
         dockButton.setVisible(visible);
-        TableLayout tableLayout = (TableLayout) applicationBar.getLayout();
+        TableLayout tableLayout = (TableLayout) titleBar.getLayout();
         tableLayout.setColumn(3, (visible) ? 17 : 0);
         tableLayout.setColumn(4, (visible) ? 2 : 0);
     }
@@ -163,8 +163,8 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     private void initDockedComponents() {
         propertyChangeSupport = new PropertyChangeSupport(this);
 
-        applicationBarMouseAdapter = new ApplicationBarMouseAdapter();
-        ActionListener applicationBarActionListener = new ApplicationBarActionListener();
+        titleBarMouseAdapter = new TitleBarMouseAdapter();
+        ActionListener titleBarActionListener = new TitleBarActionListener();
 
         // Container
         container = new JPanel(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {16, TableLayout.FILL}}, false));
@@ -174,62 +174,62 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
         String id = toolWindow.getId();
 
-        // Application Bar
-        ExtendedTableLayout applicationBarLayout = new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 2, 15, 2, 15, 2, 15, 2, 15, 2, 15, 3}, {1, 14, 1}}, false);
-        applicationBar = new JPanel(applicationBarLayout) {
+        // Title Bar
+        ExtendedTableLayout titleBarLayout = new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 2, 15, 2, 15, 2, 15, 2, 15, 2, 15, 3}, {1, 14, 1}}, false);
+        titleBar = new JPanel(titleBarLayout) {
             public void setUI(PanelUI ui) {
-                if (ui instanceof ApplicationBarPanelUI)
+                if (ui instanceof ToolWindowTitleBarUI)
                     super.setUI(ui);
             }
         };
-        applicationBar.setName("toolWindow.bar." + toolWindow.getId());
-        applicationBar.setBorder(null);
-        applicationBar.setEnabled(false);
-        applicationBar.setUI(
+        titleBar.setName("toolWindow.bar." + toolWindow.getId());
+        titleBar.setBorder(null);
+        titleBar.setEnabled(false);
+        titleBar.setUI(
                 (PanelUI) descriptor.getToolWindowManagerUI().createComponentUI(
-                        ToolWindowManagerUI.APP_BAR_PANEL,
+                        ToolWindowManagerUI.TOOL_WINDOW_TITLE_BAR_UI,
                         descriptor.getManager(),
                         descriptor,
                         this)
         );
-        applicationBar.addMouseListener(applicationBarMouseAdapter);
+        titleBar.addMouseListener(titleBarMouseAdapter);
 
         if (descriptor.getDockedTypeDescriptor().isIdVisibleOnToolBar())
-            applicationBarLayout.setColumn(0, applicationBar.getFontMetrics(
-                    applicationBar.getFont()
+            titleBarLayout.setColumn(0, titleBar.getFontMetrics(
+                    titleBar.getFont()
             ).stringWidth(ResourceBundleManager.getInstance().getUserString(id)) + 12);
 
         // Tabs
-        applicationBarTabs = new ToolWindowTabPanel(this, descriptor);
+        titleBarTabs = new ToolWindowTabPanel(this, descriptor);
         toolWindow.getToolWindowTabs()[0].setSelected(true);
 
         // Buttons
-        hideButton = renderApplicationButton("visible", applicationBarActionListener,
+        hideButton = renderTitleButton("visible", titleBarActionListener,
                                              "@@tool.tooltip.hide", HIDE_TOOL_WINDOW_INACTIVE,
                                              null);
-        maximizeButton = renderApplicationButton("maximize", applicationBarActionListener, "@@tool.tooltip.maximize", MAXIMIZE_INACTIVE, null);
-        pinButton = renderApplicationButton("pin", applicationBarActionListener, "@@tool.tooltip.unpin", AUTO_HIDE_OFF_INACTIVE, null);
-        floatingButton = renderApplicationButton("floating", applicationBarActionListener,
+        maximizeButton = renderTitleButton("maximize", titleBarActionListener, "@@tool.tooltip.maximize", MAXIMIZE_INACTIVE, null);
+        pinButton = renderTitleButton("pin", titleBarActionListener, "@@tool.tooltip.unpin", AUTO_HIDE_OFF_INACTIVE, null);
+        floatingButton = renderTitleButton("floating", titleBarActionListener,
                                                  "@@tool.tooltip.float", FLOATING_INACTIVE,
                                                  "toolWindow.floatingButton." + toolWindow.getId());
-        dockButton = renderApplicationButton("undock", applicationBarActionListener,
+        dockButton = renderTitleButton("undock", titleBarActionListener,
                                              "@@tool.tooltip.undock", DOCKED_INACTIVE,
                                              "toolWindow.dockButton." + toolWindow.getId());
 
-        // Set ApplicationBar content
-        applicationBar.add(applicationBarTabs, "1,1");
+        // Set TitleBar content
+        titleBar.add(titleBarTabs, "1,1");
 
-        applicationBar.add(dockButton, "3,1");
-        applicationBar.add(floatingButton, "5,1");
-        applicationBar.add(pinButton, "7,1");
-        applicationBar.add(maximizeButton, "9,1");
-        applicationBar.add(hideButton, "11,1");
+        titleBar.add(dockButton, "3,1");
+        titleBar.add(floatingButton, "5,1");
+        titleBar.add(pinButton, "7,1");
+        titleBar.add(maximizeButton, "9,1");
+        titleBar.add(hideButton, "11,1");
 
         Component toolWindowCmp = descriptor.getComponent();
-//        toolWindowCmp.addMouseListener(applicationBarMouseAdapter);
+//        toolWindowCmp.addMouseListener(titleBarMouseAdapter);
 
         // Set Container content
-        container.add(applicationBar, "0,0");
+        container.add(titleBar, "0,0");
         container.add(toolWindowCmp, "0,1");
 
         focusRequester = SwingUtil.findFocusable(descriptor.getComponent());
@@ -303,16 +303,16 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             public void propertyChange(PropertyChangeEvent evt) {
                 if ("idVisibleOnToolBar".equals(evt.getPropertyName())) {
                     if ((Boolean) evt.getNewValue()) {
-                        TableLayout layout = (TableLayout) applicationBar.getLayout();
+                        TableLayout layout = (TableLayout) titleBar.getLayout();
                         layout.setColumn(0,
-                                         applicationBar
-                                                 .getFontMetrics(applicationBar.getFont())
+                                         titleBar
+                                                 .getFontMetrics(titleBar.getFont())
                                                  .stringWidth(
                                                          ResourceBundleManager.getInstance().getUserString(toolWindow.getId())
                                                  )
                                          + 12);
                     } else {
-                        TableLayout layout = (TableLayout) applicationBar.getLayout();
+                        TableLayout layout = (TableLayout) titleBar.getLayout();
                         layout.setColumn(0, 3);
                     }
 
@@ -350,7 +350,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         toolWindow.addToolWindowListener(new DockedToolWindowListener());
     }
 
-    private JButton renderApplicationButton(String actionCommnad, ActionListener actionListener, String tooltip, String iconId, String name) {
+    private JButton renderTitleButton(String actionCommnad, ActionListener actionListener, String tooltip, String iconId, String name) {
         JButton button = new ToolWindowActiveButton();
         button.setUI((ButtonUI) BasicButtonUI.createUI(button));
         button.setName(name);
@@ -385,7 +385,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
 
-    class ApplicationBarMouseAdapter extends MouseAdapter implements ActionListener, PropertyChangeListener {
+    protected class TitleBarMouseAdapter extends MouseAdapter implements ActionListener, PropertyChangeListener {
         JPopupMenu popupMenu;
 
         JMenuItem visible;
@@ -400,7 +400,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         JMenuItem top;
         JMenuItem bottom;
 
-        public ApplicationBarMouseAdapter() {
+        public TitleBarMouseAdapter() {
             initPopupMenu();
             descriptor.getToolWindow().addInternalPropertyChangeListener(this);
 
@@ -610,7 +610,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
 
         public void showPopupMenu(MouseEvent e) {
-            if ((e.getComponent() == applicationBar || SwingUtil.hasParent(e.getComponent(), applicationBar)) &&
+            if ((e.getComponent() == titleBar || SwingUtil.hasParent(e.getComponent(), titleBar)) &&
                 ((DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED)).isPopupMenuEnabled()) {
 
                 popupMenu.removeAll();
@@ -635,7 +635,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         }
     }
 
-    class ApplicationBarActionListener implements ActionListener {
+    protected class TitleBarActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String actionCommnad = e.getActionCommand();
             if (!"visible".equals(actionCommnad))
@@ -671,7 +671,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
 
-    class DockedToolWindowListener implements ToolWindowListener, PropertyChangeListener {
+    protected class DockedToolWindowListener implements ToolWindowListener, PropertyChangeListener {
 
         public DockedToolWindowListener() {
             for (ToolWindowTab tab : toolWindow.getToolWindowTabs())
@@ -684,7 +684,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
         public void toolWindowTabAdded(ToolWindowTabEvent event) {
             ToolWindowTab tab = event.getToolWindowTab();
-            tab.getComponent().addMouseListener(applicationBarMouseAdapter);
+            tab.getComponent().addMouseListener(titleBarMouseAdapter);
             tab.addPropertyChangeListener(this);
         }
 
@@ -694,7 +694,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 SwingUtil.repaint(container);
             }
 
-            event.getToolWindowTab().getComponent().removeMouseListener(applicationBarMouseAdapter);
+            event.getToolWindowTab().getComponent().removeMouseListener(titleBarMouseAdapter);
             event.getToolWindowTab().removePropertyChangeListener(this);
         }
 
@@ -724,7 +724,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         }
     }
 
-    class FocusOwnerPropertyChangeListener implements PropertyChangeListener {
+    protected class FocusOwnerPropertyChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             if (!toolWindow.isVisible())
@@ -777,13 +777,13 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
     }
 
-    class ActivePropertyChangeListener implements PropertyChangeListener {
+    protected class ActivePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getSource() != descriptor)
                 return;
 
             boolean active = (Boolean) evt.getNewValue();
-            applicationBar.setEnabled(active);
+            titleBar.setEnabled(active);
 
             boolean found = false;
             for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {

@@ -7,8 +7,6 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.AggregateIcon;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
-import org.noos.xing.mydoggy.plaf.ui.look.AnchorLabelUI;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
 
 import javax.swing.*;
 import javax.swing.plaf.LabelUI;
@@ -26,7 +24,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     private Window windowAnchestor;
     private ToolWindowContainer toolWindowContainer;
     private Component component;
-    private JLabel anchorLabel;
+    private JLabel representativeAnchor;
 
     private int divederLocation = -1;
     private int tempDivederLocation;
@@ -63,11 +61,11 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
             else if (evt.getOldValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING)
                 setFloatingWindow(false);
         } else if ("index".equals(evt.getPropertyName())) {
-            updateAnchorLabel();
+            updateRepresentativeAnchor();
         } else if ("numberingEnabled".equals(evt.getPropertyName())) {
-            updateAnchorLabel();
+            updateRepresentativeAnchor();
         } else if ("icon".equals(evt.getPropertyName())) {
-            updateAnchorLabel();
+            updateRepresentativeAnchor();
         } else if ("dockLength".equals(evt.getPropertyName())) {
             if (!valueAdj) {
                 this.divederLocation = (Integer) evt.getNewValue();
@@ -166,46 +164,46 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         this.tempDivederLocation = tempDivederLocation;
     }
 
-    public JLabel getAnchorLabel(Component container) {
-        if (anchorLabel == null) {
+    public JLabel getRepresentativeAnchor(Component container) {
+        if (representativeAnchor == null) {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
             String labelText = ResourceBundleManager.getInstance().getUserString(toolWindow.getId());
-            String toolAnchorLabelText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
+            String toolRepresentativeAnchorText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
                                          ? toolWindow.getIndex() + " : " + labelText
                                          : labelText;
 
             switch (anchor) {
                 case BOTTOM :
                 case TOP :
-                    anchorLabel = new AnchorLabel(toolAnchorLabelText, toolWindow.getIcon(), JLabel.CENTER);
+                    representativeAnchor = new RepresentativeAnchor(toolRepresentativeAnchorText, toolWindow.getIcon(), JLabel.CENTER);
                     break;
                 case LEFT :
-                    TextIcon textIcon = new TextIcon(container, toolAnchorLabelText, TextIcon.ROTATE_LEFT);
+                    TextIcon textIcon = new TextIcon(container, toolRepresentativeAnchorText, TextIcon.ROTATE_LEFT);
                     AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolWindow.getIcon(), SwingConstants.VERTICAL);
-                    anchorLabel = new AnchorLabel(compositeIcon, JLabel.CENTER);
+                    representativeAnchor = new RepresentativeAnchor(compositeIcon, JLabel.CENTER);
                     break;
                 case RIGHT :
-                    textIcon = new TextIcon(container, toolAnchorLabelText, TextIcon.ROTATE_RIGHT);
+                    textIcon = new TextIcon(container, toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
                     compositeIcon = new AggregateIcon(toolWindow.getIcon(), textIcon, SwingConstants.VERTICAL);
-                    anchorLabel = new AnchorLabel(compositeIcon, JLabel.CENTER);
+                    representativeAnchor = new RepresentativeAnchor(compositeIcon, JLabel.CENTER);
                     break;
             }
 
-            anchorLabel.setName("toolWindow.rb." + toolWindow.getId());
-            anchorLabel.setUI(createLabelUI());
-            anchorLabel.setOpaque(toolWindow.isActive());
-            anchorLabel.setFocusable(false);
+            representativeAnchor.setName("toolWindow.rb." + toolWindow.getId());
+            representativeAnchor.setUI(createLabelUI());
+            representativeAnchor.setOpaque(toolWindow.isActive());
+            representativeAnchor.setFocusable(false);
         }
-        return anchorLabel;
+        return representativeAnchor;
     }
 
-    public JLabel getAnchorLabel() {
-        return anchorLabel;
+    public JLabel getRepresentativeAnchor() {
+        return representativeAnchor;
     }
 
-    public void resetAnchorLabel() {
-        anchorLabel = null;
+    public void resetRepresentativeAnchor() {
+        representativeAnchor = null;
     }
 
 
@@ -230,35 +228,35 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
 
     protected LabelUI createLabelUI() {
-        return (LabelUI) manager.getToolWindowManagerUI().createComponentUI(ToolWindowManagerUI.ANCHOR_LABEL_UI, manager, this);
+        return (LabelUI) manager.getToolWindowManagerUI().createComponentUI(ToolWindowManagerUI.REPRESENTATIVE_ANCHOR_BUTTON_UI, manager, this);
     }
 
-    protected void updateAnchorLabel() {
-        if (anchorLabel != null) {
+    protected void updateRepresentativeAnchor() {
+        if (representativeAnchor != null) {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
             String labelText = ResourceBundleManager.getInstance().getUserString(toolWindow.getId());
-            String toolAnchorLabelText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
+            String toolRepresentativeAnchorText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
                                          ? toolWindow.getIndex() + " : " + labelText
                                          : labelText;
 
             switch (anchor) {
                 case BOTTOM :
                 case TOP :
-                    anchorLabel.setIcon(toolWindow.getIcon());
-                    anchorLabel.setText(toolAnchorLabelText);
+                    representativeAnchor.setIcon(toolWindow.getIcon());
+                    representativeAnchor.setText(toolRepresentativeAnchorText);
                     break;
                 case LEFT :
-                    TextIcon textIcon = new TextIcon(((TextIcon) ((AggregateIcon) anchorLabel.getIcon()).getLeftIcon()).getComponent(), toolAnchorLabelText, TextIcon.ROTATE_LEFT);
+                    TextIcon textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getLeftIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_LEFT);
                     AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolWindow.getIcon(), SwingConstants.VERTICAL);
-                    anchorLabel.setText(null);
-                    anchorLabel.setIcon(compositeIcon);
+                    representativeAnchor.setText(null);
+                    representativeAnchor.setIcon(compositeIcon);
                     break;
                 case RIGHT :
-                    textIcon = new TextIcon(((TextIcon) ((AggregateIcon) anchorLabel.getIcon()).getLeftIcon()).getComponent(), toolAnchorLabelText, TextIcon.ROTATE_RIGHT);
+                    textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getLeftIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
                     compositeIcon = new AggregateIcon(toolWindow.getIcon(), textIcon, SwingConstants.VERTICAL);
-                    anchorLabel.setText(null);
-                    anchorLabel.setIcon(compositeIcon);
+                    representativeAnchor.setText(null);
+                    representativeAnchor.setIcon(compositeIcon);
                     break;
             }
         }
@@ -267,8 +265,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     public void updateUI() {
         getToolWindowContainer().updateUI();
         SwingUtilities.updateComponentTreeUI(getComponent());
-        if (getAnchorLabel() != null)
-            getAnchorLabel().updateUI();
+        if (getRepresentativeAnchor() != null)
+            getRepresentativeAnchor().updateUI();
     }
 
     public ToolWindowAnchor getToolWindowAnchor(Point p) {
@@ -295,9 +293,9 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     }
 
     public int getLabelIndex() {
-        if (anchorLabel == null)
+        if (representativeAnchor == null)
             return -1;
-        return getToolBar().getLabelIndex(anchorLabel);
+        return getToolBar().getRepresentativeAnchorIndex(representativeAnchor);
     }
 
     public DockedTypeDescriptor getDockedTypeDescriptor() {
@@ -306,14 +304,14 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
 
 
-    private class AnchorLabel extends JLabel {
+    private class RepresentativeAnchor extends JLabel {
 
-        public AnchorLabel(Icon image, int horizontalAlignment) {
+        public RepresentativeAnchor(Icon image, int horizontalAlignment) {
             super(image, horizontalAlignment);
             super.setUI(createLabelUI());
         }
 
-        public AnchorLabel(String text, Icon icon, int horizontalAlignment) {
+        public RepresentativeAnchor(String text, Icon icon, int horizontalAlignment) {
             super(text, icon, horizontalAlignment);
             super.setUI(createLabelUI());
         }
