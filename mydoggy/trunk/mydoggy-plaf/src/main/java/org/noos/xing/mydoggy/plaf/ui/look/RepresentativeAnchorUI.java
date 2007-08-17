@@ -370,8 +370,6 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                         firstPreview = true;
                         previewTimer.stop();
 
-                        descriptor.getManager().getGlassPanel().mount();
-
                         GlassPanel glassPane = descriptor.getManager().getGlassPanel();
 
                         if (previewPanel != null)

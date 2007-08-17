@@ -10,17 +10,17 @@ import java.awt.geom.Area;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class GlassPanel extends JPanel implements ContainerListener {
-    private RootPaneContainer rootPaneContainer;
-    private Component oldGlassPanel;
+    protected RootPaneContainer rootPaneContainer;
+    protected Component oldGlassPanel;
 
-    private Image draggingImage = null;
+    protected Image draggingImage = null;
 
-    private Point location = new Point(0, 0);
-    private Point oldLocation = new Point(0, 0);
+    protected Point location = new Point(0, 0);
+    protected Point oldLocation = new Point(0, 0);
 
-    private int width;
-    private int height;
-    private Rectangle visibleRect = null;
+    protected int width;
+    protected int height;
+    protected Rectangle visibleRect = null;
 
     public GlassPanel(RootPaneContainer rootPaneContainer) {
         this.rootPaneContainer = rootPaneContainer;
@@ -122,8 +122,7 @@ public class GlassPanel extends JPanel implements ContainerListener {
         }
     }
 
-    // TODO: rethink to this...
-    public GlassPanel mount() {
+    protected GlassPanel mount() {
         if (rootPaneContainer.getGlassPane() == this)
             return this;
 
@@ -132,7 +131,7 @@ public class GlassPanel extends JPanel implements ContainerListener {
         return this;
     }
 
-    public void unmount() {
+    protected void unmount() {
         if (oldGlassPanel != null)
             rootPaneContainer.setGlassPane(oldGlassPanel);
     }
