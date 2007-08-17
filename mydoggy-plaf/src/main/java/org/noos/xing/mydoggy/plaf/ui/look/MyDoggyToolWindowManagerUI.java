@@ -46,8 +46,8 @@ public class MyDoggyToolWindowManagerUI implements ToolWindowManagerUI {
         cmpCreators.put(MY_DOGGY_MANAGER_MAIN_CONTAINER, new MyDoggyManagerMainContainerComponentCreator());
 
         cmpUiCreators = new Hashtable<String, ComponentUICreator>();
-        cmpUiCreators.put(ANCHOR_LABEL_UI, new AnchorLabelComponentUICreator());
-        cmpUiCreators.put(APP_BAR_PANEL, new ApplicationBarPanelComponentUICreator());
+        cmpUiCreators.put(REPRESENTATIVE_ANCHOR_BUTTON_UI, new RepresentativeAnchorButtonComponentUICreator());
+        cmpUiCreators.put(TOOL_WINDOW_TITLE_BAR_UI, new ToolWindowTitleBarComponentUICreator());
 
         cmpCustomizers = new Hashtable<String, ComponentCustomizer>();
         cmpCustomizers.put(MY_DOGGY_MANAGER_PANEL, new MyDoggyManagerPanelComponentCustomizer());
@@ -118,17 +118,17 @@ public class MyDoggyToolWindowManagerUI implements ToolWindowManagerUI {
         }
     }
 
-    public static class AnchorLabelComponentUICreator implements ComponentUICreator {
+    public static class RepresentativeAnchorButtonComponentUICreator implements ComponentUICreator {
 
         public ComponentUI createComponentUI(ToolWindowManager manager, Object... args) {
-            return new AnchorLabelUI((ToolWindowDescriptor) args[0]);
+            return new RepresentativeAnchorUI((ToolWindowDescriptor) args[0]);
         }
     }
 
-    public static class ApplicationBarPanelComponentUICreator implements ComponentUICreator {
+    public static class ToolWindowTitleBarComponentUICreator implements ComponentUICreator {
 
         public ComponentUI createComponentUI(ToolWindowManager manager, Object... args) {
-            return new ApplicationBarPanelUI((ToolWindowDescriptor) args[0], (DockedContainer) args[1]);
+            return new ToolWindowTitleBarUI((ToolWindowDescriptor) args[0], (DockedContainer) args[1]);
         }
     }
 

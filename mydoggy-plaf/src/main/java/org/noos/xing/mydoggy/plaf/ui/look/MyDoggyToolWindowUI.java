@@ -48,26 +48,6 @@ public class MyDoggyToolWindowUI implements ToolWindowUI {
         return colors.get(id);
     }
 
-    public void updateAnchor(ToolWindowDescriptor descriptor,
-                             Graphics g, JComponent c,
-                             Color backgroundStart, Color backgroundEnd,
-                             boolean active, boolean flashing) {
-        Rectangle r = c.getBounds();
-        r.x = r.y = 0;
-
-        if (flashing || active) {
-            GraphicsUtil.fillRect(g,
-                                  r,
-                                  backgroundStart,
-                                  backgroundEnd,
-                                  null,
-                                  GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
-        } else {
-            g.setColor(getColor(ANCHOR_BACKGROUND_INACTIVE));
-            g.fillRect(0, 0, r.width, r.height);
-        }
-    }
-
     public void updateToolWindowAppBar(ToolWindowDescriptor descriptor,
                                        Graphics g, JComponent c,
                                        Color backgroundStart, Color backgroundEnd,
