@@ -3,7 +3,7 @@ package org.noos.xing.mydoggy.plaf.persistence.xml;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.persistence.*;
 import org.noos.xing.mydoggy.plaf.persistence.merge.MergePolicyApplier;
-import org.noos.xing.mydoggy.plaf.persistence.merge.MergePolicyProvider;
+import org.noos.xing.mydoggy.plaf.persistence.merge.ResetMergePolicy;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -29,7 +29,7 @@ public class XMLReaderHandler extends DefaultHandler {
     }
 
     private ToolWindowManager toolWindowManager;
-    private PersistenceDelegate.MergePolicy mergePolicy;
+    private MergePolicyApplier mergePolicyApplier;
 
     private State state;
     private State subState;
@@ -45,9 +45,11 @@ public class XMLReaderHandler extends DefaultHandler {
     private Map<ToolWindow, PersistedToolWindow> map;
 
 
-    public XMLReaderHandler(ToolWindowManager toolWindowManager, PersistenceDelegate.MergePolicy mergePolicy) {
+    public XMLReaderHandler(ToolWindowManager toolWindowManager, MergePolicyApplier mergePolicyApplier) {
         this.toolWindowManager = toolWindowManager;
-        this.mergePolicy = mergePolicy;
+        this.mergePolicyApplier = mergePolicyApplier;
+        if (mergePolicyApplier == null)
+            this.mergePolicyApplier = new ResetMergePolicy();
     }
 
     public void startDocument() throws SAXException {
@@ -262,7 +264,6 @@ public class XMLReaderHandler extends DefaultHandler {
         ToolWindow activeTool = null;
         ToolWindow maximizedTool = null;
 
-        MergePolicyApplier mergePolicyApplier = MergePolicyProvider.getMergePolicyApplier(mergePolicy);
         for (ToolWindow toolWindow : map.keySet()) {
             if (toolWindow.getAnchor() != anchor)
                 continue;

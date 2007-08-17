@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module relativePaths="true" type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
     <output url="file://$MODULE_DIR$/target/classes" />
     <exclude-output />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
@@ -8,27 +8,30 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/target/classes" />
+      <excludeFolder url="file://$MODULE_DIR$/target/site" />
+      <excludeFolder url="file://$MODULE_DIR$/target/surefire-reports" />
+      <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
     </content>
     <orderEntry type="inheritedJdk" />
+    <orderEntry type="module" module-name="mydoggy-res" exported="" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
       <library name="junit:junit:3.8.1">
         <CLASSES>
-          <root url="jar://C:\Documents and Settings\Angelo\.m2\repository\junit\junit\3.8.1\junit-3.8.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://C:\Documents and Settings\Angelo\.m2\repository\junit\junit\3.8.1\junit-3.8.1-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="mydoggy-api" exported="" />
-    <orderEntry type="module" module-name="mydoggy-res" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="tablelayout:TableLayout:20020517">
         <CLASSES>
-          <root url="jar://C:\Documents and Settings\Angelo\.m2\repository\tablelayout\TableLayout\20020517\TableLayout-20020517.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/tablelayout/TableLayout/20020517/TableLayout-20020517.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

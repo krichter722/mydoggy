@@ -352,7 +352,7 @@ public class SwingUtil {
                     if (file.exists())
                         resource = file.toURL();
                     else
-                        throw new RuntimeException("Cannot find resource property file.");
+                        throw new RuntimeException("Cannot find resource property file called " + resourceName + ".");
                 }
             }
 
