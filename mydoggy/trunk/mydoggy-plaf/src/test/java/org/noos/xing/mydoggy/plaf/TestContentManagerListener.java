@@ -20,7 +20,6 @@ public class TestContentManagerListener extends TestCase {
     protected void setUp() throws Exception {
         frame = new JFrame("test");
         toolWindowManager = new MyDoggyToolWindowManager(frame);
-
     }
 
     protected void tearDown() throws Exception {
@@ -59,6 +58,7 @@ public class TestContentManagerListener extends TestCase {
     private class TestCMListener implements ContentManagerListener {
         private boolean contentAdded;
         private boolean contentRemoved;
+        private boolean contentSelected;
 
         private ContentManagerEvent lastEvent;
 
@@ -74,7 +74,8 @@ public class TestContentManagerListener extends TestCase {
         }
 
         public void contentSelected(ContentManagerEvent event) {
-            // TODO:
+            this.contentSelected = true;
+            this.lastEvent = event;
         }
 
         public boolean isContentAdded() {
@@ -83,6 +84,10 @@ public class TestContentManagerListener extends TestCase {
 
         public boolean isContentRemoved() {
             return contentRemoved;
+        }
+
+        public boolean isContentSelected() {
+            return contentSelected;
         }
 
         public ContentManagerEvent getLastEvent() {
