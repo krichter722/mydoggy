@@ -273,16 +273,18 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     }
     
 
-    class TabButton extends JLabel implements PropertyChangeListener {
-        ToolWindowTab tab;
-        boolean pressed = false;
-        boolean inside = false;
+    protected class TabButton extends JLabel implements PropertyChangeListener {
+        protected ToolWindowTab tab;
+        protected boolean pressed;
+        protected boolean inside;
+        protected boolean selected;
 
         public TabButton(ToolWindowTab tab) {
             super(tab.getTitle());
 
             this.tab = tab;
             this.tab.addPropertyChangeListener(this);
+            this.selected = this.pressed = this.inside = false;
 
             setForeground(descriptor.getToolWindowUI().getColor(ToolWindowUI.TW_APP_TAB_FOREGROUND_UNSELECTED));
             setOpaque(false);
@@ -303,9 +305,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 public void mousePressed(MouseEvent e) {
                     toolWindow.setActive(true);
 
-                    if (SwingUtilities.isLeftMouseButton(e) &&
-                        // TODO: it's orrible
-                        getForeground() != Color.WHITE) {
+                    if (SwingUtilities.isLeftMouseButton(e) && !selected) {
                         pressed = true;
                         repaint();
                     } else {
@@ -347,6 +347,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 if (evt.getNewValue() == Boolean.FALSE) {
                     selecTabButton = null;
                     TabButton.this.setForeground(descriptor.getToolWindowUI().getColor(ToolWindowUI.TW_APP_TAB_FOREGROUND_UNSELECTED));
+                    selected = false;
                 } else {
                     selecTabButton = this;
                     // Ensure position
@@ -355,6 +356,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                     viewport.scrollRectToVisible(cellBounds);
                     
                     TabButton.this.setForeground(descriptor.getToolWindowUI().getColor(ToolWindowUI.TW_APP_TAB_FOREGROUND_SELECTED));
+                    selected = true;
                 }
             } else if ("title".equals(property)) {
                 setText((String) evt.getNewValue());

@@ -44,6 +44,7 @@ public class MyDoggyToolWindowManagerUI implements ToolWindowManagerUI {
         cmpCreators.put(BAR_CONTENT_PANE, new BarContentPaneComponentCreator());
         cmpCreators.put(CORNER_CONTENT_PANE, new CornerContentPaneComponentCreator());
         cmpCreators.put(MY_DOGGY_MANAGER_MAIN_CONTAINER, new MyDoggyManagerMainContainerComponentCreator());
+        cmpCreators.put(DESKTOP_CONTENT_PANE, new DesktopContentPaneComponentCreator());
 
         cmpUiCreators = new Hashtable<String, ComponentUICreator>();
         cmpUiCreators.put(REPRESENTATIVE_ANCHOR_BUTTON_UI, new RepresentativeAnchorButtonComponentUICreator());
