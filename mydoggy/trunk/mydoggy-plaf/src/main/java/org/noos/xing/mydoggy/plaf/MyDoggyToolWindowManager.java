@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy.plaf;
 
-import static org.noos.xing.mydoggy.plaf.ui.ToolWindowManagerUI.*;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
@@ -11,11 +10,17 @@ import org.noos.xing.mydoggy.plaf.descriptors.DefaultSlidingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.persistence.xml.XMLPersistenceDelegate;
 import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
-import org.noos.xing.mydoggy.plaf.ui.*;
-import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
+import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowManagerUI;
+import static org.noos.xing.mydoggy.plaf.ui.ToolWindowManagerUI.*;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ShortcutProcessor;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyTabbedContentManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyToolWindowUI;
+import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyToolWindowManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -90,7 +95,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         this.anchestor = windowAnchestor;
 
-        this.persistenceDelegate = new XMLPersistenceDelegate(this);
         this.allToolWindowGroup = new AllToolWindowGroup();
         this.aliases = new Hashtable<Object, ToolWindow>();
         this.propertyChangeSupport = new PropertyChangeSupport(this);
@@ -98,6 +102,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         this.toolWindowManagerDescriptor.addPropertyChangeListener(this);
 
         initResourceBoundles(locale);
+        initPersistenceDelegate();
         initComponents();
         initListeners();
     }
@@ -428,6 +433,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         ResourceBundleManager.getInstance().init(locale);
     }
 
+    protected void initPersistenceDelegate() {
+        this.persistenceDelegate = new XMLPersistenceDelegate(this);
+    }
+
     protected void initComponents() {
         this.twmListeners = new EventListenerList();
 
@@ -535,14 +544,53 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected void initUI() {
         Properties properties = SwingUtil.loadPropertiesFile("mydoggyplaf.properties", this.getClass().getClassLoader());
 
-        this.toolWindowUI = (ToolWindowUI) SwingUtil.newObject(properties.getProperty("ToolWindowUI.class"));
-        this.toolWindowManagerUI = (ToolWindowManagerUI) SwingUtil.newObject(properties.getProperty("ToolWindowManagerUI.class"));
+        String className = properties.getProperty("ToolWindowUI.class");
+        if (className == null) {
+            System.err.println("Cannot find ToolWindowUI.class property value. Use default.");
+            className = MyDoggyToolWindowUI.class.getName();
+        }
+        try {
+            this.toolWindowUI = (ToolWindowUI) SwingUtil.newObject(className);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.toolWindowUI = new MyDoggyToolWindowUI();
+        }
+
+        className = properties.getProperty("ToolWindowManagerUI.class");
+        if (className == null) {
+            System.err.println("Cannot find ToolWindowManagerUI.class property value. Use default.");
+            className = MyDoggyToolWindowManagerUI.class.getName();
+        }
+        try {
+            this.toolWindowManagerUI = (ToolWindowManagerUI) SwingUtil.newObject(className);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.toolWindowManagerUI = new MyDoggyToolWindowManagerUI();
+        }
     }
+
 
     protected JSplitPane renderSplitPane(int orientation) {
         return (JSplitPane) toolWindowManagerUI.createComponent(BAR_SPLIT_PANE, this, orientation);
     }
 
+
+    protected JSplitPane addBar(ToolWindowAnchor anchor, int splitPaneOrientation,
+                              String barConstraints, String cornerConstraints) {
+        // Initialize bar
+        bars[anchor.ordinal()] = new MyDoggyToolWindowBar(this,
+                                                          renderSplitPane(splitPaneOrientation),
+                                                          anchor);
+
+        // Add Bar to Container
+        add(bars[anchor.ordinal()].getToolScrollBar(), barConstraints);
+
+        // Add Corner to Container
+        add(toolWindowManagerUI.createComponent(CORNER_CONTENT_PANE, this),
+            cornerConstraints);
+
+        return bars[anchor.ordinal()].getSplitPane();
+    }
 
     protected void fireRegisteredToolEvent(ToolWindow toolWindow) {
         ToolWindowManagerEvent event = new ToolWindowManagerEvent(this,
@@ -578,24 +626,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         for (ToolWindowManagerListener listener : twmListeners.getListeners(ToolWindowManagerListener.class)) {
             listener.toolWindowGroupRemoved(event);
         }
-    }
-
-
-    protected JSplitPane addBar(ToolWindowAnchor anchor, int splitPaneOrientation,
-                              String barConstraints, String cornerConstraints) {
-        // Initialize bar
-        bars[anchor.ordinal()] = new MyDoggyToolWindowBar(this,
-                                                          renderSplitPane(splitPaneOrientation),
-                                                          anchor);
-
-        // Add Bar to Container
-        add(bars[anchor.ordinal()].getToolScrollBar(), barConstraints);
-
-        // Add Corner to Container
-        add(toolWindowManagerUI.createComponent(CORNER_CONTENT_PANE, this),
-            cornerConstraints);
-
-        return bars[anchor.ordinal()].getSplitPane();
     }
 
 

@@ -1,6 +1,9 @@
 package org.noos.xing.mydoggy.plaf.persistence.xml;
 
 import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.plaf.persistence.merge.MergePolicyApplier;
+import org.noos.xing.mydoggy.plaf.persistence.merge.ResetMergePolicy;
+import org.noos.xing.mydoggy.plaf.persistence.merge.UnionMergePolicy;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -12,15 +15,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class XMLPersistenceDelegate implements PersistenceDelegate {
     protected ToolWindowManager toolWindowManager;
+    protected Map<MergePolicy, MergePolicyApplier> mergePolicyApplierMap;
 
     public XMLPersistenceDelegate(ToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
+        initMergePolicyApplierMap();
     }
 
     public void save(OutputStream outputStream) {
@@ -65,7 +72,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
             SAXParser saxParser = factory.newSAXParser();
-            saxParser.parse(inputStream, new XMLReaderHandler(toolWindowManager, mergePolicy));
+            saxParser.parse(inputStream, new XMLReaderHandler(toolWindowManager,
+                                                              mergePolicyApplierMap.get(mergePolicy)));
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (SAXException se) {
@@ -75,6 +83,12 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         }
     }
 
+
+    protected void initMergePolicyApplierMap() {
+        mergePolicyApplierMap = new HashMap<MergePolicy, MergePolicyApplier>();
+        mergePolicyApplierMap.put(PersistenceDelegate.MergePolicy.RESET, new ResetMergePolicy());
+        mergePolicyApplierMap.put(PersistenceDelegate.MergePolicy.UNION, new UnionMergePolicy());
+    }
 
     protected void saveToolWindow(XMLWriter writer, ToolWindow toolWindow) throws SAXException {
         AttributesImpl toolAttributes = new AttributesImpl();
