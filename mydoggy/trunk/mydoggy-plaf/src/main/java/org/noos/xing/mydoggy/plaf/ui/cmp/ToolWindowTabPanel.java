@@ -179,7 +179,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 else
                     addTab(event.getToolWindowTab());
 
-                setPopupButtonVisibility();
+                checkPopupButton();
             }
 
             public boolean toolWindowTabRemoving(ToolWindowTabEvent event) {
@@ -199,7 +199,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                     }
                 }
 
-                setPopupButtonVisibility();
+                checkPopupButton();
             }
         });
         viewport.addMouseListener(dockedContainer.getTitleBarMouseAdapter());
@@ -210,7 +210,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             addTab(tab);
         }
 
-        setPopupButtonVisibility();
+        checkPopupButton();
     }
 
     protected void addTab(ToolWindowTab tab) {
@@ -265,7 +265,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         return null;
     }
 
-    protected void setPopupButtonVisibility() {
+    protected void checkPopupButton() {
         boolean visible = toolWindow.getToolWindowTabs().length > 1;
         popupButton.setVisible(visible);
 
@@ -273,7 +273,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     }
     
 
-    protected class TabButton extends JLabel implements PropertyChangeListener {
+    protected class TabButton extends JLabel implements PropertyChangeListener, MouseListener {
         protected ToolWindowTab tab;
         protected boolean pressed;
         protected boolean inside;
@@ -300,45 +300,45 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             });
 
             addMouseListener(dockedContainer.getTitleBarMouseAdapter());
-            addMouseListener(new MouseAdapter() {
+            addMouseListener(this);
+        }
 
-                public void mousePressed(MouseEvent e) {
-                    toolWindow.setActive(true);
 
-                    if (SwingUtilities.isLeftMouseButton(e) && !selected) {
-                        pressed = true;
-                        repaint();
-                    } else {
-                        pressed = false;
-                        repaint();
+        public void mousePressed(MouseEvent e) {
+            toolWindow.setActive(true);
+
+            if (SwingUtilities.isLeftMouseButton(e) && !selected) {
+                pressed = true;
+                repaint();
+            } else {
+                pressed = false;
+                repaint();
+            }
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            pressed = false;
+            repaint();
+        }
+
+        public void mouseEntered(MouseEvent e) {
+            inside = true;
+            repaint();
+        }
+
+        public void mouseExited(MouseEvent e) {
+            inside = false;
+            repaint();
+        }
+
+        public void mouseClicked(MouseEvent e) {
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        TabButton.this.tab.setSelected(true);
                     }
-                }
-
-                public void mouseReleased(MouseEvent e) {
-                    pressed = false;
-                    repaint();
-                }
-
-                public void mouseEntered(MouseEvent e) {
-                    inside = true;
-                    repaint();
-                }
-
-                public void mouseExited(MouseEvent e) {
-                    inside = false;
-                    repaint();
-                }
-
-                public void mouseClicked(MouseEvent e) {
-                    if (SwingUtilities.isLeftMouseButton(e)) {
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                TabButton.this.tab.setSelected(true);
-                            }
-                        });
-                    }
-                }
-            });
+                });
+            }
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
@@ -365,14 +365,26 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 setIcon((Icon) evt.getNewValue());
             }
         }
-
     }
 
-    class PopupButton extends ToolWindowActiveButton implements ActionListener {
+    public static class SelectTabAction extends AbstractAction {
+        private ToolWindowTab tab;
+
+        public SelectTabAction(ToolWindowTab tab) {
+            super(tab.getTitle());
+            this.tab = tab;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            tab.setSelected(true);
+        }
+    }
+
+    protected class PopupButton extends ToolWindowActiveButton implements ActionListener {
         private JPopupMenu popupMenu;
 
         public PopupButton() {
-            setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/down.png"));
+            setIcon(descriptor.getToolWindowUI().getIcon(ToolWindowUI.TOO_WINDOW_TAB_POPUP));
             addActionListener(this);
             addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent e) {
@@ -404,20 +416,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
     }
 
-    static class SelectTabAction extends AbstractAction {
-        private ToolWindowTab tab;
-
-        public SelectTabAction(ToolWindowTab tab) {
-            super(tab.getTitle());
-            this.tab = tab;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            tab.setSelected(true);
-        }
-    }
-
-    class WheelScroller implements MouseWheelListener {
+    protected class WheelScroller implements MouseWheelListener {
         public void mouseWheelMoved(MouseWheelEvent e) {
             switch (e.getWheelRotation()) {
                 case 1:
@@ -442,7 +441,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         }
     }
 
-    class SelectNextTabAction extends AbstractAction {
+    protected class SelectNextTabAction extends AbstractAction {
 
         public SelectNextTabAction() {
             super(ResourceBundleManager.getInstance().getString("@@tool.tab.selectNext"));
@@ -471,7 +470,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         }
     }
 
-    class SelectPreviousTabAction extends AbstractAction {
+    protected class SelectPreviousTabAction extends AbstractAction {
 
         public SelectPreviousTabAction() {
             super(ResourceBundleManager.getInstance().getString("@@tool.tab.selectPreviuos"));

@@ -225,6 +225,12 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         }
     }
 
+    protected void hideAllPreview() {
+        if (previewPanel != null) {
+            GlassPanel glassPane = descriptor.getManager().getGlassPanel();
+            glassPane.remove(previewPanel);
+        }
+    }
 
     protected class RepresentativeAnchorMouseAdapter extends MouseInputAdapter implements ActionListener, PropertyChangeListener {
 
@@ -730,11 +736,8 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         private ToolWindowAnchor lastAnchor;
 
         public void dragGestureRecognized(DragGestureEvent dge) {
-            // TODO: is there a better way to do this?
             // Check if a preview is still visible.
-            GlassPanel glassPane = descriptor.getManager().getGlassPanel();
-            if (previewPanel != null)
-                glassPane.remove(previewPanel);
+            hideAllPreview();
 
             // Start GestureRecognized
             if (DragAndDropLock.isLocked()) {
@@ -748,6 +751,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             dge.startDrag(Cursor.getDefaultCursor(), new ToolWindowTrasferable(toolWindow), this);
 
             // Prepare glassPane for ghost image
+            GlassPanel glassPane = descriptor.getManager().getGlassPanel();
             glassPane.setVisible(true);
 
             // Build orginalDragImage
