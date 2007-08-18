@@ -176,22 +176,14 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
         // Title Bar
         ExtendedTableLayout titleBarLayout = new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 2, 15, 2, 15, 2, 15, 2, 15, 2, 15, 3}, {1, 14, 1}}, false);
-        titleBar = new JPanel(titleBarLayout) {
-            public void setUI(PanelUI ui) {
-                if (ui instanceof ToolWindowTitleBarUI)
-                    super.setUI(ui);
-            }
-        };
-        titleBar.setName("toolWindow.bar." + toolWindow.getId());
-        titleBar.setBorder(null);
-        titleBar.setEnabled(false);
-        titleBar.setUI(
-                (PanelUI) descriptor.getToolWindowManagerUI().createComponentUI(
-                        ToolWindowManagerUI.TOOL_WINDOW_TITLE_BAR_UI,
-                        descriptor.getManager(),
-                        descriptor,
-                        this)
+        titleBar = (JPanel) descriptor.getToolWindowManagerUI().createComponent(
+                ToolWindowManagerUI.TOOL_WINDOW_TITLE_BAR, descriptor.getManager(),
+                descriptor,
+                this
         );
+        titleBar.setLayout(titleBarLayout);
+        titleBar.setName("toolWindow.bar." + toolWindow.getId());
+        titleBar.setEnabled(false);
         titleBar.addMouseListener(titleBarMouseAdapter);
 
         if (descriptor.getDockedTypeDescriptor().isIdVisibleOnToolBar())
@@ -351,14 +343,11 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
     private JButton renderTitleButton(String actionCommnad, ActionListener actionListener, String tooltip, String iconId, String name) {
-        JButton button = new ToolWindowActiveButton();
-        button.setUI((ButtonUI) BasicButtonUI.createUI(button));
+        JButton button = (JButton) descriptor.getToolWindowManagerUI().createComponent(
+                ToolWindowManagerUI.TOOL_WINDOW_TITLE_BUTTON,
+                descriptor.getManager()
+        );
         button.setName(name);
-        button.setRolloverEnabled(true);
-        button.setOpaque(false);
-        button.setFocusPainted(false);
-        button.setFocusable(false);
-        button.setBorderPainted(false);
         button.setActionCommand(actionCommnad);
         button.addActionListener(actionListener);
         button.setToolTipText(resourceBundle.getString(tooltip));
@@ -386,19 +375,19 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
 
     protected class TitleBarMouseAdapter extends MouseAdapter implements ActionListener, PropertyChangeListener {
-        JPopupMenu popupMenu;
+        protected JPopupMenu popupMenu;
 
-        JMenuItem visible;
-        JMenuItem aggregate;
-        JCheckBoxMenuItem floatingMode;
-        JCheckBoxMenuItem dockedMode;
-        JCheckBoxMenuItem pinnedMode;
+        protected JMenuItem visible;
+        protected JMenuItem aggregate;
+        protected JCheckBoxMenuItem floatingMode;
+        protected JCheckBoxMenuItem dockedMode;
+        protected JCheckBoxMenuItem pinnedMode;
 
-        JMenu moveTo;
-        JMenuItem right;
-        JMenuItem left;
-        JMenuItem top;
-        JMenuItem bottom;
+        protected JMenu moveTo;
+        protected JMenuItem right;
+        protected JMenuItem left;
+        protected JMenuItem top;
+        protected JMenuItem bottom;
 
         public TitleBarMouseAdapter() {
             initPopupMenu();
@@ -636,6 +625,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
     protected class TitleBarActionListener implements ActionListener {
+
         public void actionPerformed(ActionEvent e) {
             String actionCommnad = e.getActionCommand();
             if (!"visible".equals(actionCommnad))
