@@ -144,35 +144,43 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
     float getPreviewTransparentRatio();
 
     /**
-     * Sets whweter hide the representative button when the tool become visible and
+     * Sets if mydoggy must hide the representative button when the tool become visible and
      * the tool has type ToolWindowType.DOCKED.
      *
+     * @param hideRepresentativeButtonOnVisible <code>true</code> if mydoggy must hide the representative button when the tool become visible and the
+     * tool has type ToolWindowType.DOCKED.<br>
+     *         <code>false</code> otherwise.
      * @since 1.3.1
-     * @param hideLabelOnVisible true if the representative button when the tool become visible and
-     * the tool has type ToolWindowType.DOCKED.
      */
-    void setHideLabelOnVisible(boolean hideLabelOnVisible);
+    void setHideRepresentativeButtonOnVisible(boolean hideRepresentativeButtonOnVisible);
 
     /**
+     * Returns the "hideRepresentativeButtonOnVisible" proprty value.
+     * @return <code>true</code> if mydoggy must hide the representative button when the tool become visible and the
+     * tool has type ToolWindowType.DOCKED.<br>
+     *         <code>false</code> otherwise.
+     * @since 1.3.1
+     */
+    boolean isHideRepresentativeButtonOnVisible();
+
+    /**
+     * Sets if the toolwindow id has to be showed on the title bar.
      *
-     * @return
-     * @since 1.3.1
+     * @param idVisibleOnTitleBar <code>true</code> if the toolwindow id has to be showed on the title bar.
+     * tool has type ToolWindowType.DOCKED.<br>
+     *         <code>false</code> otherwise.
+     * @since 1.3.1 
      */
-    boolean isHideLabelOnVisible();
+    void setIdVisibleOnTitleBar(boolean idVisibleOnTitleBar);
 
     /**
-     * TODO:
-     * @since 1.3.1
-     * @param visible
-     */
-    void setIdVisibleOnToolBar(boolean visible);
-
-    /**
-     *
-     * @return
+     * Returns the "idVisibleOnTitleBar" proprty value.
+     * @return <code>true</code> if the toolwindow id has to be showed on the title bar.
+     * tool has type ToolWindowType.DOCKED.<br>
+     *         <code>false</code> otherwise.
      * @since 1.3.1
      */
-    boolean isIdVisibleOnToolBar();
+    boolean isIdVisibleOnTitleBar();
 
     /**
      * Adds a PropertyChangeListener to the listener list. The listener is

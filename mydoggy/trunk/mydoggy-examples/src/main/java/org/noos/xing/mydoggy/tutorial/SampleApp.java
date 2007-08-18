@@ -48,7 +48,7 @@ public class SampleApp {
         this.toolWindowManager = myDoggyToolWindowManager;
 
         toolWindowManager.getToolWindowManagerDescriptor().setNumberingEnabled(false);
-        ((DockedTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).setIdVisibleOnToolBar(false);
+        ((DockedTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).setIdVisibleOnTitleBar(false);
 
 
         JPanel panel = new JPanel(new TableLayout(new double[][]{{-1,50,-1},{-1,20,-1}}));
@@ -101,7 +101,7 @@ public class SampleApp {
         dockedTypeDescriptor.setPreviewEnabled(true);
         dockedTypeDescriptor.setPreviewDelay(1500);
         dockedTypeDescriptor.setPreviewTransparentRatio(0.4f);
-        dockedTypeDescriptor.setHideLabelOnVisible(true);
+        dockedTypeDescriptor.setHideRepresentativeButtonOnVisible(true);
 
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
         slidingTypeDescriptor.setEnabled(true);

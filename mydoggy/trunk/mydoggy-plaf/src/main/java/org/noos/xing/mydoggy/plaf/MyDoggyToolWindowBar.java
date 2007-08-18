@@ -573,7 +573,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
             boolean visible = (Boolean) evt.getNewValue();
 
-            if (descriptor.getDockedTypeDescriptor().isHideLabelOnVisible()) {
+            if (descriptor.getDockedTypeDescriptor().isHideRepresentativeButtonOnVisible()) {
                 if (visible) {
                     poss.put(descriptor, descriptor.getLabelIndex());
                     removeRepresentativeAnchor(descriptor.getRepresentativeAnchor(), descriptor);

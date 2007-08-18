@@ -231,7 +231,7 @@ public class ToolWindowTitleBarUI extends PanelUI {
                               null,
                               GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
 
-        if (descriptor.getDockedTypeDescriptor().isIdVisibleOnToolBar()) {
+        if (descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar()) {
             String id = ResourceBundleManager.getInstance().getUserString(descriptor.getToolWindow().getId());
             r.width = g.getFontMetrics().stringWidth(id) + 8;
 

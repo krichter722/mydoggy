@@ -9,6 +9,7 @@ import org.xml.sax.Attributes;
 public class PersistedToolWindowManager {
     private PushAwayMode pushAwayMode;
     private int dividerLeft, dividerRight, dividerTop, dividerBottom;
+    private boolean numberingEnabled;
 
     public PersistedToolWindowManager() {
     }
@@ -26,6 +27,7 @@ public class PersistedToolWindowManager {
         this.dividerRight = Integer.parseInt(attributes.getValue("dividerRight"));
         this.dividerTop = Integer.parseInt(attributes.getValue("dividerTop"));
         this.dividerBottom = Integer.parseInt(attributes.getValue("dividerBottom"));
+        this.numberingEnabled = Boolean.parseBoolean(attributes.getValue("numberingEnabled"));
     }
 
     public int getDividerLeft() {
