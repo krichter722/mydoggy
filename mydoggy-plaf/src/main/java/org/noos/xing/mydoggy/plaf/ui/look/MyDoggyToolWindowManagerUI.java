@@ -6,9 +6,13 @@ import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.PanelUI;
+import javax.swing.plaf.ButtonUI;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.util.Map;
 import java.util.Hashtable;
@@ -45,6 +49,8 @@ public class MyDoggyToolWindowManagerUI implements ToolWindowManagerUI {
         cmpCreators.put(CORNER_CONTENT_PANE, new CornerContentPaneComponentCreator());
         cmpCreators.put(MY_DOGGY_MANAGER_MAIN_CONTAINER, new MyDoggyManagerMainContainerComponentCreator());
         cmpCreators.put(DESKTOP_CONTENT_PANE, new DesktopContentPaneComponentCreator());
+        cmpCreators.put(TOOL_WINDOW_TITLE_BAR, new ToolWindowTitleBarComponentCreator());
+        cmpCreators.put(TOOL_WINDOW_TITLE_BUTTON, new ToolWindowTitleButtonComponentCreator());
 
         cmpUiCreators = new Hashtable<String, ComponentUICreator>();
         cmpUiCreators.put(REPRESENTATIVE_ANCHOR_BUTTON_UI, new RepresentativeAnchorButtonComponentUICreator());
@@ -109,6 +115,32 @@ public class MyDoggyToolWindowManagerUI implements ToolWindowManagerUI {
             return desktopPane;
         }
     }
+
+    public static class ToolWindowTitleBarComponentCreator implements ComponentCreator {
+
+        public Component createComponent(ToolWindowManager manager, Object... args) {
+            JPanel titleBar = new JPanel() {
+                public void setUI(PanelUI ui) {
+                    if (ui instanceof ToolWindowTitleBarUI)
+                        super.setUI(ui);
+                }
+            };
+            titleBar.setBorder(null);
+            titleBar.setUI(new ToolWindowTitleBarUI((ToolWindowDescriptor) args[0], (DockedContainer) args[1]));
+            return titleBar;
+        }
+    }
+
+    public static class ToolWindowTitleButtonComponentCreator implements ComponentCreator {
+
+        public Component createComponent(ToolWindowManager manager, Object... args) {
+            JButton button = new ToolWindowActiveButton();
+            button.setUI((ButtonUI) BasicButtonUI.createUI(button));
+            return button;
+        }
+        
+    }
+
 
     public static class MyDoggyManagerMainContainerComponentCreator implements ComponentCreator {
 
