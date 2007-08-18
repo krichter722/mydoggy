@@ -28,18 +28,18 @@ import java.util.ResourceBundle;
  * @author Angelo De Caro
  */
 public class DockedContainer implements PropertyChangeListener, ToolWindowContainer {
-    private static ResourceBundle resourceBundle = ResourceBundleManager.getInstance().getResourceBundle();
+    protected static ResourceBundle resourceBundle = ResourceBundleManager.getInstance().getResourceBundle();
 
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
     protected ToolWindowUI toolWindowUI;
 
-    private JPanel container;
+    protected JPanel container;
 
     protected JPanel titleBar;
     protected ToolWindowTabPanel titleBarTabs;
 
-    private Component focusRequester;
+    protected Component focusRequester;
 
     protected JButton floatingButton;
     protected JButton pinButton;
@@ -47,10 +47,10 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     protected JButton hideButton;
     protected JButton maximizeButton;
 
-    private TitleBarMouseAdapter titleBarMouseAdapter;
-    private PropertyChangeSupport propertyChangeSupport;
+    protected TitleBarMouseAdapter titleBarMouseAdapter;
+    protected PropertyChangeSupport propertyChangeSupport;
 
-    private PopupUpdater popupUpdater;
+    protected PopupUpdater popupUpdater;
 
     boolean valueAdjusting;
 
