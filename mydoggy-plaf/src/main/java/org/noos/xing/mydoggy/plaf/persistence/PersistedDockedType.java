@@ -12,6 +12,8 @@ public class PersistedDockedType {
     private boolean previewEnabled;
     private int previewDelay;
     private float previewTransparentRatio;
+    private boolean idVisibleOnTitleBar;
+    private boolean hideRepresentativeButtonOnVisible;
 
     public PersistedDockedType(Attributes attributes) {
         this.popupMenuEnabled = Boolean.parseBoolean(attributes.getValue("popupMenuEnabled"));
@@ -20,6 +22,8 @@ public class PersistedDockedType {
         this.previewEnabled = Boolean.parseBoolean(attributes.getValue("previewEnabled"));
         this.previewDelay = Integer.parseInt(attributes.getValue("previewDelay"));
         this.previewTransparentRatio = Float.parseFloat(attributes.getValue("previewTransparentRatio"));
+        this.idVisibleOnTitleBar = Boolean.parseBoolean(attributes.getValue("idVisibleOnTitleBar"));
+        this.hideRepresentativeButtonOnVisible = Boolean.parseBoolean(attributes.getValue("hideRepresentativeButtonOnVisible"));
     }
 
     public boolean isPopupMenuEnabled() {
@@ -44,5 +48,13 @@ public class PersistedDockedType {
 
     public float getPreviewTransparentRatio() {
         return previewTransparentRatio;
+    }
+
+    public boolean isIdVisibleOnTitleBar() {
+        return idVisibleOnTitleBar;
+    }
+
+    public boolean isHideRepresentativeButtonOnVisible() {
+        return hideRepresentativeButtonOnVisible;
     }
 }

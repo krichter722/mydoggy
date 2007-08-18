@@ -162,6 +162,8 @@ public class XMLReaderHandler extends DefaultHandler {
                             descriptor.setPreviewEnabled(dockedType.isPreviewEnabled());
                             descriptor.setPreviewDelay(dockedType.getPreviewDelay());
                             descriptor.setPreviewTransparentRatio(dockedType.getPreviewTransparentRatio());
+                            descriptor.setIdVisibleOnTitleBar(dockedType.isIdVisibleOnTitleBar());
+                            descriptor.setHideRepresentativeButtonOnVisible(dockedType.isHideRepresentativeButtonOnVisible());
                         }
 
                         if (slidingType != null) {

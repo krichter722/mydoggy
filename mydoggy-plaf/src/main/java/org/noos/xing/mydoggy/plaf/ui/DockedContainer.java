@@ -8,13 +8,9 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTitleBarUI;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
-import javax.swing.plaf.ButtonUI;
-import javax.swing.plaf.PanelUI;
-import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -186,7 +182,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         titleBar.setEnabled(false);
         titleBar.addMouseListener(titleBarMouseAdapter);
 
-        if (descriptor.getDockedTypeDescriptor().isIdVisibleOnToolBar())
+        if (descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar())
             titleBarLayout.setColumn(0, titleBar.getFontMetrics(
                     titleBar.getFont()
             ).stringWidth(ResourceBundleManager.getInstance().getUserString(id)) + 12);

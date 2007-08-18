@@ -115,8 +115,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         dockedDescriptorAttributes.addAttribute(null, "previewEnabled", null, null, String.valueOf(dockedTypeDescriptor.isPreviewEnabled()));
         dockedDescriptorAttributes.addAttribute(null, "previewDelay", null, null, String.valueOf(dockedTypeDescriptor.getPreviewDelay()));
         dockedDescriptorAttributes.addAttribute(null, "previewTransparentRatio", null, null, String.valueOf(dockedTypeDescriptor.getPreviewTransparentRatio()));
-        dockedDescriptorAttributes.addAttribute(null, "hideLabelOnVisible", null, null, String.valueOf(dockedTypeDescriptor.isHideLabelOnVisible()));
-        dockedDescriptorAttributes.addAttribute(null, "idVisibleOnToolBar", null, null, String.valueOf(dockedTypeDescriptor.isIdVisibleOnToolBar()));
+        dockedDescriptorAttributes.addAttribute(null, "hideRepresentativeButtonOnVisible", null, null, String.valueOf(dockedTypeDescriptor.isHideRepresentativeButtonOnVisible()));
+        dockedDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(dockedTypeDescriptor.isIdVisibleOnTitleBar()));
         writer.dataElement("docked", dockedDescriptorAttributes);
 
         // DockedTypeDescriptor
@@ -164,6 +164,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         twdmAttributes.addAttribute(null, "dividerRight", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.RIGHT)));
         twdmAttributes.addAttribute(null, "dividerTop", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.TOP)));
         twdmAttributes.addAttribute(null, "dividerBottom", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.BOTTOM)));
+        twdmAttributes.addAttribute(null, "numberingEnabled", null, null, String.valueOf(descriptor.isNumberingEnabled()));
         writer.startElement("toolWindowDescriptorManager", twdmAttributes);
 
         // Start pushAway

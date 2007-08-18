@@ -23,8 +23,8 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     private boolean previewEnabled;
     private int previewDelay;
     private float previewTransparentRatio;
-    private boolean hideLabelOnVisible;
-    private boolean idVisibleOnToolBar;
+    private boolean hideRepresentativeButtonOnVisible;
+    private boolean idVisibleOnTitleBar;
 
     private EventListenerList listenerList;
 
@@ -37,14 +37,14 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.previewEnabled = true;
         this.previewDelay = 1000;
         this.previewTransparentRatio = 0.65f;
-        this.hideLabelOnVisible = false;
-        this.idVisibleOnToolBar = true;
+        this.hideRepresentativeButtonOnVisible = false;
+        this.idVisibleOnTitleBar = true;
     }
 
     public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled,
                                        ToolWindowActionHandler toolWindowActionHandler, boolean animating,
                                        boolean previewEnabled, int previewDelay, float previewTransparentRatio,
-                                       boolean hideLabelOnVisible, boolean idVisibleOnToolBar) {
+                                       boolean hideRepresentativeButtonOnVisible, boolean idVisibleOnTitleBar) {
         this.toolsMenu = new JMenu(ResourceBundleManager.getInstance().getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = popupMenuEnabled;
         this.dockLength = dockLength;
@@ -53,8 +53,8 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.previewEnabled = previewEnabled;
         this.previewDelay = previewDelay;
         this.previewTransparentRatio = previewTransparentRatio;
-        this.hideLabelOnVisible = hideLabelOnVisible;
-        this.idVisibleOnToolBar = idVisibleOnToolBar;
+        this.hideRepresentativeButtonOnVisible = hideRepresentativeButtonOnVisible;
+        this.idVisibleOnTitleBar = idVisibleOnTitleBar;
 
         this.listenerList = new EventListenerList();
 
@@ -128,30 +128,30 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         return previewTransparentRatio;
     }
 
-    public void setHideLabelOnVisible(boolean hideLabelOnVisible) {
-        if (this.hideLabelOnVisible == hideLabelOnVisible)
+    public void setHideRepresentativeButtonOnVisible(boolean hideRepresentativeButtonOnVisible) {
+        if (this.hideRepresentativeButtonOnVisible == hideRepresentativeButtonOnVisible)
             return;
 
-        boolean old = this.hideLabelOnVisible;
-        this.hideLabelOnVisible = hideLabelOnVisible;
-        firePropertyChange("hideLabelOnVisible", old, hideLabelOnVisible);
+        boolean old = this.hideRepresentativeButtonOnVisible;
+        this.hideRepresentativeButtonOnVisible = hideRepresentativeButtonOnVisible;
+        firePropertyChange("hideRepresentativeButtonOnVisible", old, hideRepresentativeButtonOnVisible);
     }
 
-    public boolean isHideLabelOnVisible() {
-        return hideLabelOnVisible;
+    public boolean isHideRepresentativeButtonOnVisible() {
+        return hideRepresentativeButtonOnVisible;
     }
 
-    public void setIdVisibleOnToolBar(boolean idVisibleOnToolBar) {
-        if (this.idVisibleOnToolBar == idVisibleOnToolBar)
+    public void setIdVisibleOnTitleBar(boolean idVisibleOnTitleBar) {
+        if (this.idVisibleOnTitleBar == idVisibleOnTitleBar)
             return;
 
-        boolean old = this.idVisibleOnToolBar;
-        this.idVisibleOnToolBar = idVisibleOnToolBar;
-        firePropertyChange("idVisibleOnToolBar", old, idVisibleOnToolBar);
+        boolean old = this.idVisibleOnTitleBar;
+        this.idVisibleOnTitleBar = idVisibleOnTitleBar;
+        firePropertyChange("idVisibleOnTitleBar", old, idVisibleOnTitleBar);
     }
 
-    public boolean isIdVisibleOnToolBar() {
-        return idVisibleOnToolBar;
+    public boolean isIdVisibleOnTitleBar() {
+        return idVisibleOnTitleBar;
     }
 
     public void setPreviewTransparentRatio(float previewTransparentRatio) {
@@ -198,7 +198,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         return new DefaultDockedTypeDescriptor(this, dockLength, popupMenuEnabled,
                                                toolWindowActionHandler, animating,
                                                previewEnabled, previewDelay, previewTransparentRatio,
-                                               hideLabelOnVisible, idVisibleOnToolBar);
+                                               hideRepresentativeButtonOnVisible, idVisibleOnTitleBar);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
@@ -216,10 +216,10 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
             this.previewDelay = (Integer) evt.getNewValue();
         } else if ("previewTransparentRatio".equals(evt.getPropertyName())) {
             this.previewTransparentRatio = (Float) evt.getNewValue();
-        } else if ("hideLabelOnVisible".equals(evt.getPropertyName())) {
-            this.hideLabelOnVisible = (Boolean) evt.getNewValue();
-        } else if ("idVisibleOnToolBar".equals(evt.getPropertyName())) {
-            this.idVisibleOnToolBar = (Boolean) evt.getNewValue();
+        } else if ("hideRepresentativeButtonOnVisible".equals(evt.getPropertyName())) {
+            this.hideRepresentativeButtonOnVisible = (Boolean) evt.getNewValue();
+        } else if ("idVisibleOnTitleBar".equals(evt.getPropertyName())) {
+            this.idVisibleOnTitleBar = (Boolean) evt.getNewValue();
         } 
     }
 

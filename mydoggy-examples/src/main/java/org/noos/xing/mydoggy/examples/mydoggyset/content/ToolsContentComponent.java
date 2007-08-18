@@ -262,8 +262,8 @@ public class ToolsContentComponent extends JPanel {
             SignalManager.getInstance().sendEvent(DockedTypeDescriptor.class, descriptor);
 
             popupMenuEnabled.setSelected(descriptor.isPopupMenuEnabled());
-            hideLabelOnVisible.setSelected(descriptor.isHideLabelOnVisible());
-            idVisibleOnToolBar.setSelected(descriptor.isIdVisibleOnToolBar());
+            hideLabelOnVisible.setSelected(descriptor.isHideRepresentativeButtonOnVisible());
+            idVisibleOnToolBar.setSelected(descriptor.isIdVisibleOnTitleBar());
             dockLength.setValue(descriptor.getDockLength());
 
             previewEnabled.setSelected(descriptor.isPreviewEnabled());
@@ -389,7 +389,7 @@ public class ToolsContentComponent extends JPanel {
 
             enabledBox.setSelected(descriptor.isEnabled());
             modal.setSelected(descriptor.isModal());
-//            idVisibleOnToolBar.setSelected(descriptor.isIdVisibleOnToolBar());
+//            idVisibleOnToolBar.setSelected(descriptor.isIdVisibleOnTitleBar());
 //            dockLength.setValue(descriptor.getDockLength());
 
             transparentMode.setSelected(descriptor.isTransparentMode());
