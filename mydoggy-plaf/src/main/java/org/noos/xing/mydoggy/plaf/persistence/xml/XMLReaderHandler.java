@@ -241,6 +241,7 @@ public class XMLReaderHandler extends DefaultHandler {
                 managerDescriptor.setDividerSize(ToolWindowAnchor.RIGHT, persistedToolWindowManager.getDividerRight());
                 managerDescriptor.setDividerSize(ToolWindowAnchor.TOP, persistedToolWindowManager.getDividerTop());
                 managerDescriptor.setDividerSize(ToolWindowAnchor.BOTTOM, persistedToolWindowManager.getDividerBottom());
+                managerDescriptor.setNumberingEnabled(persistedToolWindowManager.isNumberingEnabled());
             }
 
             // ContentManager
