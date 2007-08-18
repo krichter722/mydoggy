@@ -28,6 +28,7 @@ public interface ToolWindowUI {
     public static String MAXIMIZE_INACTIVE = "MAXIMIZE_INACTIVE";
     public static String MINIMIZE = "MINIMIZE";
     public static String MINIMIZE_INACTIVE = "MINIMIZE_INACTIVE";
+    public static String TOO_WINDOW_TAB_POPUP = "TOO_WINDOW_TAB_POPUP"; 
 
     public static String ANCHOR_BORDER_MOUSE_IN = "ANCHOR_BORDER_MOUSE_IN";
     public static String ANCHOR_BORDER_MOUSE_OUT = "ANCHOR_BORDER_MOUSE_OUT";
