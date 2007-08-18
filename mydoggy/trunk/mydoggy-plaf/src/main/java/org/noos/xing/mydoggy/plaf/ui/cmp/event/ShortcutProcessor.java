@@ -21,8 +21,8 @@ public class ShortcutProcessor implements KeyEventPostProcessor {
     public boolean postProcessKeyEvent(KeyEvent e) {
         switch (e.getID()) {
             case KeyEvent.KEY_TYPED:
-//                if (SwingUtil.hasParent(e.getComponent(), root) ) {
-                    if (e.isAltDown() && Character.isDigit(e.getKeyChar())) {
+                if (e.isAltDown() && Character.isDigit(e.getKeyChar())) {
+                    if (manager.getToolWindowManagerDescriptor().isNumberingEnabled()) {
                         int index = Character.getNumericValue(e.getKeyChar());
 
                         for (ToolWindow toolWindow : manager.getToolWindows()) {
@@ -37,7 +37,7 @@ public class ShortcutProcessor implements KeyEventPostProcessor {
                             }
                         }
                     }
-//                }
+                }
                 break;
         }
 
