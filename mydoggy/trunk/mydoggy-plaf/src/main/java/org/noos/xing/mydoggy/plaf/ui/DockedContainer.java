@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
  * @author Angelo De Caro
  */
 public class DockedContainer implements PropertyChangeListener, ToolWindowContainer {
-    protected static ResourceBundle resourceBundle = ResourceBundleManager.getInstance().getResourceBundle();
+    protected static final ResourceBundle resourceBundle = ResourceBundleManager.getInstance().getResourceBundle();
 
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;

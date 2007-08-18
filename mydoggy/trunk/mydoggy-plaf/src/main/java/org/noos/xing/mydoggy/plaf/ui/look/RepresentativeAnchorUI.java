@@ -36,7 +36,7 @@ import java.util.ResourceBundle;
  * @author Angelo De Caro
  */
 public class RepresentativeAnchorUI extends MetalLabelUI {
-    protected static ResourceBundle resourceBundle = ResourceBundleManager.getInstance().getResourceBundle();
+    protected static final ResourceBundle resourceBundle = ResourceBundleManager.getInstance().getResourceBundle();
 
     protected JComponent label;
 

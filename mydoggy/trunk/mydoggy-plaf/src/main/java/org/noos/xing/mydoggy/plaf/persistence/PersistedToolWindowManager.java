@@ -45,4 +45,8 @@ public class PersistedToolWindowManager {
     public int getDividerBottom() {
         return dividerBottom;
     }
+
+    public boolean isNumberingEnabled() {
+        return numberingEnabled;
+    }
 }
