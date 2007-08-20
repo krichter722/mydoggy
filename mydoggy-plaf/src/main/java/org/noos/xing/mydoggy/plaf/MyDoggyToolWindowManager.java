@@ -42,58 +42,59 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     public final static Object sync = new Object();
 
-    private ToolWindowGroup showingGroup;
-    private boolean shiftShow;
+    protected ToolWindowGroup showingGroup;
+    protected boolean shiftShow;
 
     protected MyDoggyContentManager contentManager;
 
-    private Window anchestor;
+    protected Window anchestor;
 
-    private MyDoggyToolWindowBar[] bars;
-    private Map<Object, ToolWindowDescriptor> tools;
-    private Map<Object, ToolWindowGroup> toolWindowGroups;
-    private Map<Object, ToolWindow> aliases;
+    protected MyDoggyToolWindowBar[] bars;
+    protected Map<Object, ToolWindowDescriptor> tools;
+    protected Map<Object, ToolWindowGroup> toolWindowGroups;
+    protected Map<Object, ToolWindow> aliases;
 
-    private ToolWindowGroup allToolWindowGroup;
+    protected ToolWindowGroup allToolWindowGroup;
 
-    private TableLayout contentPaneLayout;
+    protected TableLayout contentPaneLayout;
 
-    private JSplitPane mainSplitPane;
-    private JPanel mainContainer;
+    protected JSplitPane mainSplitPane;
+    protected JPanel mainContainer;
 
-    private PropertyChangeSupport propertyChangeSupport;
+    protected PropertyChangeSupport propertyChangeSupport;
 
-    private Object activeToolWindowId;
+    protected Object activeToolWindowId;
 
-    private GlassPanel glassPanel;
-    private Component lastFocusOwner = null;
+    protected GlassPanel glassPanel;
+    protected Component lastFocusOwner = null;
 
-    private PersistenceDelegate persistenceDelegate;
+    protected PersistenceDelegate persistenceDelegate;
 
     // Type Descriptors Template.
-    private DefaultFloatingTypeDescriptor floatingTypeDescriptor;
-    private DefaultDockedTypeDescriptor dockingTypeDescriptor;
-    private DefaultSlidingTypeDescriptor slidingTypeDescriptor;
+    protected DefaultFloatingTypeDescriptor floatingTypeDescriptor;
+    protected DefaultDockedTypeDescriptor dockingTypeDescriptor;
+    protected DefaultSlidingTypeDescriptor slidingTypeDescriptor;
 
-    private ToolWindowManagerDescriptor toolWindowManagerDescriptor;
+    protected ToolWindowManagerDescriptor toolWindowManagerDescriptor;
 
     // ToolWindwoManager Listener List
-    private EventListenerList twmListeners;
+    protected EventListenerList twmListeners;
 
-
+    protected ClassLoader uiClassLoader;
     protected ToolWindowUI toolWindowUI;
     protected ToolWindowManagerUI toolWindowManagerUI;
 
 
     public MyDoggyToolWindowManager(Window windowAnchestor) {
-        this(windowAnchestor, Locale.getDefault());
+        this(windowAnchestor, Locale.getDefault(), null);
     }
 
-    public MyDoggyToolWindowManager(Window windowAnchestor, Locale locale) {
+    public MyDoggyToolWindowManager(Window windowAnchestor, Locale locale, ClassLoader uiClassLoader) {
         if (!(windowAnchestor instanceof RootPaneContainer))
             throw new IllegalArgumentException("WindowAnchestor must implement RootPaneContainer");
 
         this.anchestor = windowAnchestor;
+        this.uiClassLoader = uiClassLoader;
 
         this.allToolWindowGroup = new AllToolWindowGroup();
         this.aliases = new Hashtable<Object, ToolWindow>();
@@ -542,7 +543,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     protected void initUI() {
-        Properties properties = SwingUtil.loadPropertiesFile("mydoggyplaf.properties", this.getClass().getClassLoader());
+        Properties properties = SwingUtil.loadPropertiesFile("mydoggyplaf.properties", uiClassLoader);
 
         String className = properties.getProperty("ToolWindowUI.class");
         if (className == null) {

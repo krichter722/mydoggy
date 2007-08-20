@@ -47,7 +47,7 @@ public class SampleApp {
                                                         null);
         this.toolWindowManager = myDoggyToolWindowManager;
 
-        toolWindowManager.getToolWindowManagerDescriptor().setNumberingEnabled(false);
+//        toolWindowManager.getToolWindowManagerDescriptor().setNumberingEnabled(false);
         ((DockedTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).setIdVisibleOnTitleBar(false);
 
 
