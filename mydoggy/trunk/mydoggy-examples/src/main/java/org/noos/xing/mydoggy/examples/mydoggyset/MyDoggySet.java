@@ -2,7 +2,6 @@ package org.noos.xing.mydoggy.examples.mydoggyset;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
-import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.examples.mydoggyset.action.*;
 import org.noos.xing.mydoggy.examples.mydoggyset.content.*;
@@ -87,7 +86,7 @@ public class MyDoggySet {
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
 
-        this.toolWindowManager = new MyDoggyToolWindowManager(frame, Locale.US);
+        this.toolWindowManager = new MyDoggyToolWindowManager(frame, Locale.US, null);
 
         initMenuBar();
     }

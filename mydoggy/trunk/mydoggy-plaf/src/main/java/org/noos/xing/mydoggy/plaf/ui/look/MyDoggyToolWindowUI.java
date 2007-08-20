@@ -42,7 +42,7 @@ public class MyDoggyToolWindowUI implements ToolWindowUI {
     }
 
     protected void loadResources() {
-        properties = SwingUtil.loadPropertiesFile(resourceName, null);
+        properties = SwingUtil.loadPropertiesFile(resourceName, this.getClass().getClassLoader());
         
         loadIcons();
         loadColors();
