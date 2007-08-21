@@ -342,7 +342,7 @@ public class SwingUtil {
             if (classLoader == null)
                 classLoader = SwingUtil.class.getClassLoader();
 
-            URL resource = classLoader.getResource("META-INF" + File.separator + resourceName);
+            URL resource = classLoader.getResource("META-INF/" + resourceName);
             if (resource == null) {
                 File file = new File(resourceName);
                 if (file.exists())
