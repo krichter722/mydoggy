@@ -178,6 +178,7 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
         label.setBackground(Colors.orange);
         label.setName(name);
         label.addMouseListener(new ArrowListener());
+        // TODO: move to resourceManager
         label.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/plaf/ui/icons/" + iconName + ".png"));
 
         return label;

@@ -611,13 +611,16 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
             int divederLocation = descriptor.getDividerLocation();
 
-            for (ToolWindow toolWindow : manager.getToolsByAnchor(anchor)) {
-                if (descriptor.getToolWindow() != toolWindow && toolWindow.isVisible() &&
-                    toolWindow.getType() == ToolWindowType.DOCKED) {
-                    divederLocation = getSplitDividerLocation();
-                    break;
+            if (getSplitDividerLocation() != 0) {
+                for (ToolWindow toolWindow : manager.getToolsByAnchor(anchor)) {
+                    if (descriptor.getToolWindow() != toolWindow && toolWindow.isVisible() &&
+                        toolWindow.getType() == ToolWindowType.DOCKED) {
+                        divederLocation = getSplitDividerLocation();
+                        break;
+                    }
                 }
             }
+
 //            if (getSplitDividerLocation() != 0)
 //                divederLocation = getSplitDividerLocation();
 //            System.out.println("divederLocation(" + anchor + ") : " + divederLocation);
@@ -642,7 +645,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                             } else if (multiSplitContainer.getContentCount() == 1) {
                                 animate = false;
                                 content = multiSplitContainer.getContents().get(0);
+                                int temp = getSplitDividerLocation();
                                 setSplitPaneContent(content);
+                                setSplitDividerLocation(temp);
                             }
                         } else {
                             setSplitPaneContent(content);
