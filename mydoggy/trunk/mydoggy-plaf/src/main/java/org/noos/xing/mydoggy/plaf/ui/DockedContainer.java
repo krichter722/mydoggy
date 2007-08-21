@@ -3,7 +3,6 @@ package org.noos.xing.mydoggy.plaf.ui;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
-import static org.noos.xing.mydoggy.plaf.ui.ToolWindowUI.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
@@ -24,11 +23,9 @@ import java.util.ResourceBundle;
  * @author Angelo De Caro
  */
 public class DockedContainer implements PropertyChangeListener, ToolWindowContainer {
-    protected static final ResourceBundle resourceBundle = ResourceBundleManager.getInstance().getResourceBundle();
-
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
-    protected ToolWindowUI toolWindowUI;
+    protected ResourceManager resourceManager;
 
     protected JPanel container;
 
@@ -54,7 +51,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     public DockedContainer(ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
-        this.toolWindowUI = descriptor.getToolWindowUI();
+        this.resourceManager = descriptor.getResourceManager();
 
         initDockedComponents();
         initDockedListeners();
@@ -125,23 +122,23 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
     protected void setSliding() {
-        dockButton.setIcon(toolWindowUI.getIcon(DOCKED));
-        dockButton.setToolTipText(ResourceBundleManager.getInstance().getString("@@tool.tooltip.dock"));
+        dockButton.setIcon(resourceManager.getIcon(ResourceManager.DOCKED));
+        dockButton.setToolTipText(resourceManager.getString("@@tool.tooltip.dock"));
     }
 
     protected void setDocked() {
-        dockButton.setIcon(toolWindowUI.getIcon(SLIDING));
-        dockButton.setToolTipText(ResourceBundleManager.getInstance().getString("@@tool.tooltip.undock"));
+        dockButton.setIcon(resourceManager.getIcon(ResourceManager.SLIDING));
+        dockButton.setToolTipText(resourceManager.getString("@@tool.tooltip.undock"));
     }
 
     protected void setFix() {
-        floatingButton.setIcon(toolWindowUI.getIcon(FIX));
-        floatingButton.setToolTipText(ResourceBundleManager.getInstance().getString("@@tool.tooltip.fix"));
+        floatingButton.setIcon(resourceManager.getIcon(ResourceManager.FIX));
+        floatingButton.setToolTipText(resourceManager.getString("@@tool.tooltip.fix"));
     }
 
     protected void setFloating() {
-        floatingButton.setIcon(toolWindowUI.getIcon(FLOATING));
-        floatingButton.setToolTipText(ResourceBundleManager.getInstance().getString("@@tool.tooltip.float"));
+        floatingButton.setIcon(resourceManager.getIcon(ResourceManager.FLOATING));
+        floatingButton.setToolTipText(resourceManager.getString("@@tool.tooltip.float"));
     }
 
     protected void assignFocus() {
@@ -172,8 +169,8 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
         // Title Bar
         ExtendedTableLayout titleBarLayout = new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 2, 15, 2, 15, 2, 15, 2, 15, 2, 15, 3}, {1, 14, 1}}, false);
-        titleBar = (JPanel) descriptor.getToolWindowManagerUI().createComponent(
-                ToolWindowManagerUI.TOOL_WINDOW_TITLE_BAR, descriptor.getManager(),
+        titleBar = (JPanel) resourceManager.createComponent(
+                ResourceManager.TOOL_WINDOW_TITLE_BAR, descriptor.getManager(),
                 descriptor,
                 this
         );
@@ -185,7 +182,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         if (descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar())
             titleBarLayout.setColumn(0, titleBar.getFontMetrics(
                     titleBar.getFont()
-            ).stringWidth(ResourceBundleManager.getInstance().getUserString(id)) + 12);
+            ).stringWidth(resourceManager.getUserString(id)) + 12);
 
         // Tabs
         titleBarTabs = new ToolWindowTabPanel(this, descriptor);
@@ -193,15 +190,15 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
         // Buttons
         hideButton = renderTitleButton("visible", titleBarActionListener,
-                                             "@@tool.tooltip.hide", HIDE_TOOL_WINDOW_INACTIVE,
+                                             "@@tool.tooltip.hide", ResourceManager.HIDE_TOOL_WINDOW_INACTIVE,
                                              null);
-        maximizeButton = renderTitleButton("maximize", titleBarActionListener, "@@tool.tooltip.maximize", MAXIMIZE_INACTIVE, null);
-        pinButton = renderTitleButton("pin", titleBarActionListener, "@@tool.tooltip.unpin", AUTO_HIDE_OFF_INACTIVE, null);
+        maximizeButton = renderTitleButton("maximize", titleBarActionListener, "@@tool.tooltip.maximize", ResourceManager.MAXIMIZE_INACTIVE, null);
+        pinButton = renderTitleButton("pin", titleBarActionListener, "@@tool.tooltip.unpin", ResourceManager.AUTO_HIDE_OFF_INACTIVE, null);
         floatingButton = renderTitleButton("floating", titleBarActionListener,
-                                                 "@@tool.tooltip.float", FLOATING_INACTIVE,
+                                                 "@@tool.tooltip.float", ResourceManager.FLOATING_INACTIVE,
                                                  "toolWindow.floatingButton." + toolWindow.getId());
         dockButton = renderTitleButton("undock", titleBarActionListener,
-                                             "@@tool.tooltip.undock", DOCKED_INACTIVE,
+                                             "@@tool.tooltip.undock", ResourceManager.DOCKED_INACTIVE,
                                              "toolWindow.dockButton." + toolWindow.getId());
 
         // Set TitleBar content
@@ -240,11 +237,11 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 boolean newValue = ((Boolean) evt.getNewValue());
 
                 if (newValue) {
-                    pinButton.setIcon(toolWindowUI.getIcon(AUTO_HIDE_ON));
-                    pinButton.setToolTipText(resourceBundle.getString("@@tool.tooltip.pin"));
+                    pinButton.setIcon(resourceManager.getIcon(ResourceManager.AUTO_HIDE_ON));
+                    pinButton.setToolTipText(resourceManager.getString("@@tool.tooltip.pin"));
                 } else {
-                    pinButton.setIcon(toolWindowUI.getIcon(AUTO_HIDE_OFF));
-                    pinButton.setToolTipText(resourceBundle.getString("@@tool.tooltip.unpin"));
+                    pinButton.setIcon(resourceManager.getIcon(ResourceManager.AUTO_HIDE_OFF));
+                    pinButton.setToolTipText(resourceManager.getString("@@tool.tooltip.unpin"));
                 }
             }
         });
@@ -269,14 +266,14 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 if ((Boolean) evt.getNewValue()) {
                     descriptor.getManager().getPersistenceDelegate().save(workspace = new ByteArrayOutputStream());
 
-                    maximizeButton.setIcon(toolWindowUI.getIcon(MINIMIZE));
+                    maximizeButton.setIcon(resourceManager.getIcon(ResourceManager.MINIMIZE));
                 } else if (workspace != null) {
                     if (valueAdj)
                         return;
 
                     valueAdj = true;
                     try {
-                        maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE));
+                        maximizeButton.setIcon(resourceManager.getIcon(ResourceManager.MAXIMIZE));
                         descriptor.getManager().getPersistenceDelegate().merge(new ByteArrayInputStream(workspace.toByteArray()),
                                                                                PersistenceDelegate.MergePolicy.UNION);
                         workspace = null;
@@ -296,7 +293,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                                          titleBar
                                                  .getFontMetrics(titleBar.getFont())
                                                  .stringWidth(
-                                                         ResourceBundleManager.getInstance().getUserString(toolWindow.getId())
+                                                         resourceManager.getUserString(toolWindow.getId())
                                                  )
                                          + 12);
                     } else {
@@ -339,15 +336,15 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
     private JButton renderTitleButton(String actionCommnad, ActionListener actionListener, String tooltip, String iconId, String name) {
-        JButton button = (JButton) descriptor.getToolWindowManagerUI().createComponent(
-                ToolWindowManagerUI.TOOL_WINDOW_TITLE_BUTTON,
+        JButton button = (JButton) resourceManager.createComponent(
+                ResourceManager.TOOL_WINDOW_TITLE_BUTTON,
                 descriptor.getManager()
         );
         button.setName(name);
         button.setActionCommand(actionCommnad);
         button.addActionListener(actionListener);
-        button.setToolTipText(resourceBundle.getString(tooltip));
-        button.setIcon(toolWindowUI.getIcon(iconId));
+        button.setToolTipText(resourceManager.getString(tooltip));
+        button.setIcon(resourceManager.getIcon(iconId));
 
         return button;
     }
@@ -482,47 +479,47 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             visible.addActionListener(this);
 
             aggregate = new JMenuItem();
-            aggregate.setText(resourceBundle.getString("@@tool.aggregate"));
+            aggregate.setText(resourceManager.getString("@@tool.aggregate"));
             aggregate.setActionCommand("aggregate");
             aggregate.addActionListener(this);
 
             floatingMode = new JCheckBoxMenuItem(null, toolWindow.getType() == ToolWindowType.FLOATING);
-            floatingMode.setText(resourceBundle.getString("@@tool.mode.floating"));
+            floatingMode.setText(resourceManager.getString("@@tool.mode.floating"));
             floatingMode.setActionCommand("floating");
             floatingMode.addActionListener(this);
 
             dockedMode = new JCheckBoxMenuItem(null, toolWindow.getType() == ToolWindowType.DOCKED);
-            dockedMode.setText(resourceBundle.getString("@@tool.mode.docked"));
+            dockedMode.setText(resourceManager.getString("@@tool.mode.docked"));
             dockedMode.setActionCommand("docked");
             dockedMode.addActionListener(this);
 
             pinnedMode = new JCheckBoxMenuItem(null, !toolWindow.isAutoHide());
-            pinnedMode.setText(resourceBundle.getString("@@tool.mode.pinned"));
+            pinnedMode.setText(resourceManager.getString("@@tool.mode.pinned"));
             pinnedMode.setActionCommand("pinned");
             pinnedMode.addActionListener(this);
 
             // MoveTo SubMenu
             moveTo = new JMenu();
             moveTo.getPopupMenu().setLightWeightPopupEnabled(false);
-            moveTo.setText(resourceBundle.getString("@@tool.moveTo"));
+            moveTo.setText(resourceManager.getString("@@tool.moveTo"));
 
             right = new JMenuItem();
-            right.setText(resourceBundle.getString("@@tool.move.right"));
+            right.setText(resourceManager.getString("@@tool.move.right"));
             right.setActionCommand("move.right");
             right.addActionListener(this);
 
             left = new JMenuItem();
-            left.setText(resourceBundle.getString("@@tool.move.left"));
+            left.setText(resourceManager.getString("@@tool.move.left"));
             left.setActionCommand("move.left");
             left.addActionListener(this);
 
             top = new JMenuItem();
-            top.setText(resourceBundle.getString("@@tool.move.top"));
+            top.setText(resourceManager.getString("@@tool.move.top"));
             top.setActionCommand("move.top");
             top.addActionListener(this);
 
             bottom = new JMenuItem();
-            bottom.setText(resourceBundle.getString("@@tool.move.bottom"));
+            bottom.setText(resourceManager.getString("@@tool.move.bottom"));
             bottom.setActionCommand("move.bottom");
             bottom.addActionListener(this);
 
@@ -543,8 +540,8 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         protected void enableVisible() {
             aggregate.setVisible(!toolWindow.isVisible());
             visible.setText(toolWindow.isVisible() ?
-                            resourceBundle.getString("@@tool.hide") :
-                            resourceBundle.getString("@@tool.show"));
+                            resourceManager.getString("@@tool.hide") :
+                            resourceManager.getString("@@tool.show"));
 
             if (toolWindow.getType() == ToolWindowType.DOCKED) {
                 dockedMode.setVisible(((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled());
@@ -784,48 +781,48 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
             if (active) {
                 if (toolWindow.isAutoHide()) {
-                    pinButton.setIcon(toolWindowUI.getIcon(AUTO_HIDE_ON));
+                    pinButton.setIcon(resourceManager.getIcon(ResourceManager.AUTO_HIDE_ON));
                 } else
-                    pinButton.setIcon(toolWindowUI.getIcon(AUTO_HIDE_OFF));
+                    pinButton.setIcon(resourceManager.getIcon(ResourceManager.AUTO_HIDE_OFF));
 
-                hideButton.setIcon(toolWindowUI.getIcon(HIDE_TOOL_WINDOW));
+                hideButton.setIcon(resourceManager.getIcon(ResourceManager.HIDE_TOOL_WINDOW));
 
                 if (toolWindow.getType() == ToolWindowType.SLIDING) {
-                    dockButton.setIcon(toolWindowUI.getIcon(DOCKED));
+                    dockButton.setIcon(resourceManager.getIcon(ResourceManager.DOCKED));
                 } else
-                    dockButton.setIcon(toolWindowUI.getIcon(SLIDING));
+                    dockButton.setIcon(resourceManager.getIcon(ResourceManager.SLIDING));
 
                 if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-                    floatingButton.setIcon(toolWindowUI.getIcon(FIX));
+                    floatingButton.setIcon(resourceManager.getIcon(ResourceManager.FIX));
                 } else
-                    floatingButton.setIcon(toolWindowUI.getIcon(FLOATING));
+                    floatingButton.setIcon(resourceManager.getIcon(ResourceManager.FLOATING));
 
                 if (toolWindow.isMaximized())
-                    maximizeButton.setIcon(toolWindowUI.getIcon(MINIMIZE));
+                    maximizeButton.setIcon(resourceManager.getIcon(ResourceManager.MINIMIZE));
                 else
-                    maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE));
+                    maximizeButton.setIcon(resourceManager.getIcon(ResourceManager.MAXIMIZE));
             } else {
                 if (toolWindow.isAutoHide()) {
-                    pinButton.setIcon(toolWindowUI.getIcon(AUTO_HIDE_ON_INACTIVE));
+                    pinButton.setIcon(resourceManager.getIcon(ResourceManager.AUTO_HIDE_ON_INACTIVE));
                 } else
-                    pinButton.setIcon(toolWindowUI.getIcon(AUTO_HIDE_OFF_INACTIVE));
+                    pinButton.setIcon(resourceManager.getIcon(ResourceManager.AUTO_HIDE_OFF_INACTIVE));
 
-                hideButton.setIcon(toolWindowUI.getIcon(HIDE_TOOL_WINDOW_INACTIVE));
+                hideButton.setIcon(resourceManager.getIcon(ResourceManager.HIDE_TOOL_WINDOW_INACTIVE));
 
                 if (toolWindow.getType() == ToolWindowType.SLIDING) {
-                    dockButton.setIcon(toolWindowUI.getIcon(DOCKED_INACTIVE));
+                    dockButton.setIcon(resourceManager.getIcon(ResourceManager.DOCKED_INACTIVE));
                 } else
-                    dockButton.setIcon(toolWindowUI.getIcon(SLIDING_INACTIVE));
+                    dockButton.setIcon(resourceManager.getIcon(ResourceManager.SLIDING_INACTIVE));
 
                 if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-                    floatingButton.setIcon(toolWindowUI.getIcon(FIX_INACTIVE));
+                    floatingButton.setIcon(resourceManager.getIcon(ResourceManager.FIX_INACTIVE));
                 } else
-                    floatingButton.setIcon(toolWindowUI.getIcon(FLOATING_INACTIVE));
+                    floatingButton.setIcon(resourceManager.getIcon(ResourceManager.FLOATING_INACTIVE));
 
                 if (toolWindow.isMaximized())
-                    maximizeButton.setIcon(toolWindowUI.getIcon(MINIMIZE_INACTIVE));
+                    maximizeButton.setIcon(resourceManager.getIcon(ResourceManager.MINIMIZE_INACTIVE));
                 else
-                    maximizeButton.setIcon(toolWindowUI.getIcon(MAXIMIZE_INACTIVE));
+                    maximizeButton.setIcon(resourceManager.getIcon(ResourceManager.MAXIMIZE_INACTIVE));
             }
 
             if (active && focusRequester != null && !valueAdjusting) {

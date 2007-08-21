@@ -6,8 +6,6 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabEvent;
-import org.noos.xing.mydoggy.plaf.ui.content.PlafContentManagerUI;
-import org.noos.xing.mydoggy.plaf.ui.content.PlafContentUI;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentPage;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabListener;
@@ -326,7 +324,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
     protected void addUIForContent(Content content) {
         if (!showAlwaysTab && tabbedContentManager.getTabCount() == 0 && (contentValueAdjusting || toolWindowManager.getMainContent() == null)) {
-            detachedContentUIMap.put(content, new ContentPage(content, tabbedContentManager, null));
+            detachedContentUIMap.put(content, new ContentPage(content, tabbedContentManager,
+                                                              null, toolWindowManager.getResourceManager()));
             toolWindowManager.setMainContent(content.getComponent());
             lastSelected = (PlafContentUI) content;
         } else {

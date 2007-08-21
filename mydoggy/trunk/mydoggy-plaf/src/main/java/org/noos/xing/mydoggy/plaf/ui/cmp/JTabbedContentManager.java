@@ -4,11 +4,12 @@ import org.noos.xing.mydoggy.PersistenceDelegate;
 import org.noos.xing.mydoggy.TabbedContentUI;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabEvent;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabListener;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
 import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabEvent;
-import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabListener;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -27,6 +28,7 @@ public class JTabbedContentManager extends JTabbedPane {
     static final int WIDTHDELTA = 5;
 
     private ToolWindowManager toolWindowManager;
+    private ResourceManager resourceManager;
 
     private Map<Accessible, ContentPage> contentPages;
 
@@ -138,6 +140,7 @@ public class JTabbedContentManager extends JTabbedPane {
 
     public void setToolWindowManager(MyDoggyToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
+        this.resourceManager = toolWindowManager.getResourceManager();
         setupActions();
     }
 
@@ -168,7 +171,7 @@ public class JTabbedContentManager extends JTabbedPane {
         ContentPage contentPage = contentPages.get(accessible);
         if (contentPage == null) {
             if (tabbedContentUI == null)
-                contentPage = new ContentPage(this, (AccessibleContext) accessible);
+                contentPage = new ContentPage(this, (AccessibleContext) accessible, resourceManager);
             else {
                 contentPage = (ContentPage) tabbedContentUI;
                 contentPage.setAccessible((AccessibleContext) accessible);

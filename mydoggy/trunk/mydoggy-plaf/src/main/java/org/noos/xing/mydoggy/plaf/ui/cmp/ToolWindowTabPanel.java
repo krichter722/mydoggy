@@ -6,13 +6,8 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowListener;
 import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
-import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
+import org.noos.xing.mydoggy.plaf.ui.*;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLabelUI;
@@ -117,7 +112,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 ToolWindowTab tab;
 
                 public CloseTabAction(ToolWindowTab tab) {
-                    super(ResourceBundleManager.getInstance().getString("@@tool.tab.close"));
+                    super(descriptor.getResourceManager().getString("@@tool.tab.close"));
                     this.tab = tab;
                 }
 
@@ -138,7 +133,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
             class CloseAllTabAction extends AbstractAction {
                 public CloseAllTabAction() {
-                    super(ResourceBundleManager.getInstance().getString("@@tool.tab.closeAll"));
+                    super(descriptor.getResourceManager().getString("@@tool.tab.closeAll"));
                 }
 
                 public void actionPerformed(ActionEvent e) {
@@ -286,7 +281,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             this.tab.addPropertyChangeListener(this);
             this.selected = this.pressed = this.inside = false;
 
-            setForeground(descriptor.getToolWindowUI().getColor(ToolWindowUI.TW_APP_TAB_FOREGROUND_UNSELECTED));
+            setForeground(descriptor.getResourceManager().getColor(ResourceManager.TW_APP_TAB_FOREGROUND_UNSELECTED));
             setOpaque(false);
             setFocusable(false);
             setIcon(tab.getIcon());
@@ -346,7 +341,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             if ("selected".equals(property)) {
                 if (evt.getNewValue() == Boolean.FALSE) {
                     selecTabButton = null;
-                    TabButton.this.setForeground(descriptor.getToolWindowUI().getColor(ToolWindowUI.TW_APP_TAB_FOREGROUND_UNSELECTED));
+                    TabButton.this.setForeground(descriptor.getResourceManager().getColor(ResourceManager.TW_APP_TAB_FOREGROUND_UNSELECTED));
                     selected = false;
                 } else {
                     selecTabButton = this;
@@ -355,7 +350,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                     cellBounds.x -= viewport.getViewPosition().x;
                     viewport.scrollRectToVisible(cellBounds);
                     
-                    TabButton.this.setForeground(descriptor.getToolWindowUI().getColor(ToolWindowUI.TW_APP_TAB_FOREGROUND_SELECTED));
+                    TabButton.this.setForeground(descriptor.getResourceManager().getColor(ResourceManager.TW_APP_TAB_FOREGROUND_SELECTED));
                     selected = true;
                 }
             } else if ("title".equals(property)) {
@@ -384,7 +379,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         private JPopupMenu popupMenu;
 
         public PopupButton() {
-            setIcon(descriptor.getToolWindowUI().getIcon(ToolWindowUI.TOO_WINDOW_TAB_POPUP));
+            setIcon(descriptor.getResourceManager().getIcon(ResourceManager.TOO_WINDOW_TAB_POPUP));
             addActionListener(this);
             addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent e) {
@@ -444,7 +439,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     protected class SelectNextTabAction extends AbstractAction {
 
         public SelectNextTabAction() {
-            super(ResourceBundleManager.getInstance().getString("@@tool.tab.selectNext"));
+            super(descriptor.getResourceManager().getString("@@tool.tab.selectNext"));
         }
 
         public void actionPerformed(ActionEvent e) {
@@ -473,7 +468,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     protected class SelectPreviousTabAction extends AbstractAction {
 
         public SelectPreviousTabAction() {
-            super(ResourceBundleManager.getInstance().getString("@@tool.tab.selectPreviuos"));
+            super(descriptor.getResourceManager().getString("@@tool.tab.selectPreviuos"));
         }
 
         public void actionPerformed(ActionEvent e) {

@@ -10,17 +10,12 @@ import org.noos.xing.mydoggy.plaf.descriptors.DefaultSlidingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.persistence.xml.XMLPersistenceDelegate;
 import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
-import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowManagerUI;
-import static org.noos.xing.mydoggy.plaf.ui.ToolWindowManagerUI.*;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
+import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ShortcutProcessor;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyTabbedContentManagerUI;
-import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyToolWindowUI;
-import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyToolWindowManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -81,8 +76,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected EventListenerList twmListeners;
 
     protected ClassLoader uiClassLoader;
-    protected ToolWindowUI toolWindowUI;
-    protected ToolWindowManagerUI toolWindowManagerUI;
+    protected ResourceManager resourceManager;
 
 
     public MyDoggyToolWindowManager(Window windowAnchestor) {
@@ -102,7 +96,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         this.toolWindowManagerDescriptor = new MyDoggyToolWindowManagerDescriptor(this);
         this.toolWindowManagerDescriptor.addPropertyChangeListener(this);
 
-        initResourceBoundles(locale);
+        initUI(locale);
         initPersistenceDelegate();
         initComponents();
         initListeners();
@@ -265,7 +259,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 return floatingTypeDescriptor;
             case DOCKED:
                 if (dockingTypeDescriptor == null)
-                    dockingTypeDescriptor = new DefaultDockedTypeDescriptor();
+                    dockingTypeDescriptor = new DefaultDockedTypeDescriptor(resourceManager);
                 return dockingTypeDescriptor;
             case SLIDING:
                 if (slidingTypeDescriptor == null)
@@ -313,8 +307,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         this.persistenceDelegate = persistenceDelegate;
     }
 
-    public void initUserResourceBundle(Locale locale, String bundle, ClassLoader classLoader) {
-        ResourceBundleManager.getInstance().initUserBundle(locale, bundle, classLoader);
+    public void setUserResourceBundle(Locale locale, String bundle, ClassLoader classLoader) {
+        resourceManager.setUserBundle(locale, bundle, classLoader);
     }
 
     public void setMainContent(Component content) {
@@ -421,18 +415,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return glassPanel;
     }
 
-    public ToolWindowUI getToolWindowUI() {
-        return toolWindowUI;
-    }
-
-    public ToolWindowManagerUI getToolWindowManagerUI() {
-        return toolWindowManagerUI;
+    public ResourceManager getResourceManager() {
+        return resourceManager;
     }
     
-
-    protected void initResourceBoundles(Locale locale) {
-        ResourceBundleManager.getInstance().init(locale);
-    }
 
     protected void initPersistenceDelegate() {
         this.persistenceDelegate = new XMLPersistenceDelegate(this);
@@ -441,10 +427,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected void initComponents() {
         this.twmListeners = new EventListenerList();
 
-        initUI();
         initContentManager();
 
-        toolWindowManagerUI.applyCustomization(MY_DOGGY_MANAGER_PANEL, this);
+        resourceManager.applyCustomization(ResourceManager.MY_DOGGY_MANAGER_PANEL, this);
 
         ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
@@ -472,7 +457,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         addBar(TOP, JSplitPane.VERTICAL_SPLIT, "1,0", "2,2,FULL,FULL");
         addBar(BOTTOM, JSplitPane.VERTICAL_SPLIT, "1,2", "0,2,FULL,FULL");
 
-        mainContainer = (JPanel) toolWindowManagerUI.createComponent(MY_DOGGY_MANAGER_MAIN_CONTAINER, this);
+        mainContainer = (JPanel) resourceManager.createComponent(ResourceManager.MY_DOGGY_MANAGER_MAIN_CONTAINER, this);
         mainContainer.setName("toolWindowManager.mainContainer");
         mainContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         mainContainer.setFocusCycleRoot(true);
@@ -542,32 +527,21 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         });
     }
 
-    protected void initUI() {
+    protected void initUI(Locale locale) {
         Properties properties = SwingUtil.loadPropertiesFile("mydoggyplaf.properties", uiClassLoader);
 
-        String className = properties.getProperty("ToolWindowUI.class");
+        String className = properties.getProperty("ResourceManager.class");
         if (className == null) {
-            System.err.println("Cannot find ToolWindowUI.class property value. Use default.");
-            className = MyDoggyToolWindowUI.class.getName();
+            System.err.println("Cannot find ResourceManager.class property value. Use default.");
+            className = MyDoggyResourceManager.class.getName();
         }
         try {
-            this.toolWindowUI = (ToolWindowUI) SwingUtil.newObject(className);
+            this.resourceManager = (ResourceManager) SwingUtil.newObject(className);
         } catch (Exception e) {
             e.printStackTrace();
-            this.toolWindowUI = new MyDoggyToolWindowUI();
+            this.resourceManager = new MyDoggyResourceManager();
         }
-
-        className = properties.getProperty("ToolWindowManagerUI.class");
-        if (className == null) {
-            System.err.println("Cannot find ToolWindowManagerUI.class property value. Use default.");
-            className = MyDoggyToolWindowManagerUI.class.getName();
-        }
-        try {
-            this.toolWindowManagerUI = (ToolWindowManagerUI) SwingUtil.newObject(className);
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.toolWindowManagerUI = new MyDoggyToolWindowManagerUI();
-        }
+        resourceManager.setLocale(locale);
     }
 
     protected void initShortcut() {
@@ -576,7 +550,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
 
     protected JSplitPane renderSplitPane(int orientation) {
-        return (JSplitPane) toolWindowManagerUI.createComponent(BAR_SPLIT_PANE, this, orientation);
+        return (JSplitPane) resourceManager.createComponent(ResourceManager.BAR_SPLIT_PANE, this, orientation);
     }
 
 
@@ -591,7 +565,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         add(bars[anchor.ordinal()].getToolScrollBar(), barConstraints);
 
         // Add Corner to Container
-        add(toolWindowManagerUI.createComponent(CORNER_CONTENT_PANE, this),
+        add(resourceManager.createComponent(ResourceManager.CORNER_CONTENT_PANE, this),
             cornerConstraints);
 
         return bars[anchor.ordinal()].getSplitPane();
