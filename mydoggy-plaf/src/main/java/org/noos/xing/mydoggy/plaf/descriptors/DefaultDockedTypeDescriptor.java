@@ -1,9 +1,9 @@
 package org.noos.xing.mydoggy.plaf.descriptors;
 
 import org.noos.xing.mydoggy.DockedTypeDescriptor;
-import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowActionHandler;
-import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
+import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -14,6 +14,8 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
+    private ResourceManager resourceManager;
+
     private ToolWindowActionHandler toolWindowActionHandler;
     private boolean popupMenuEnabled;
     private JMenu toolsMenu;
@@ -28,8 +30,9 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
 
     private EventListenerList listenerList;
 
-    public DefaultDockedTypeDescriptor() {
-        this.toolsMenu = new JMenu(ResourceBundleManager.getInstance().getString("@@tool.toolsMenu"));
+    public DefaultDockedTypeDescriptor(ResourceManager resourceManager) {
+        this.resourceManager = resourceManager;
+        this.toolsMenu = new JMenu(resourceManager.getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = true;
         this.dockLength = 200;
         this.toolWindowActionHandler = null;
@@ -41,11 +44,13 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.idVisibleOnTitleBar = true;
     }
 
-    public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, int dockLength, boolean popupMenuEnabled,
+    public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, ResourceManager resourceManager,
+                                       int dockLength, boolean popupMenuEnabled,
                                        ToolWindowActionHandler toolWindowActionHandler, boolean animating,
                                        boolean previewEnabled, int previewDelay, float previewTransparentRatio,
                                        boolean hideRepresentativeButtonOnVisible, boolean idVisibleOnTitleBar) {
-        this.toolsMenu = new JMenu(ResourceBundleManager.getInstance().getString("@@tool.toolsMenu"));
+        this.resourceManager = resourceManager;
+        this.toolsMenu = new JMenu(resourceManager.getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = popupMenuEnabled;
         this.dockLength = dockLength;
         this.toolWindowActionHandler = toolWindowActionHandler;
@@ -195,7 +200,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     }
 
     public ToolWindowTypeDescriptor cloneMe() {
-        return new DefaultDockedTypeDescriptor(this, dockLength, popupMenuEnabled,
+        return new DefaultDockedTypeDescriptor(this, resourceManager, dockLength, popupMenuEnabled,
                                                toolWindowActionHandler, animating,
                                                previewEnabled, previewDelay, previewTransparentRatio,
                                                hideRepresentativeButtonOnVisible, idVisibleOnTitleBar);

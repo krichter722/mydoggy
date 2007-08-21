@@ -167,7 +167,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         if (representativeAnchor == null) {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
-            String labelText = ResourceBundleManager.getInstance().getUserString(toolWindow.getId());
+            String labelText = getResourceManager().getUserString(toolWindow.getId());
             String toolRepresentativeAnchorText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
                                          ? toolWindow.getIndex() + " : " + labelText
                                          : labelText;
@@ -235,12 +235,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         return null;
     }
 
-    public ToolWindowUI getToolWindowUI() {
-        return manager.getToolWindowUI();
-    }
-
-    public ToolWindowManagerUI getToolWindowManagerUI() {
-        return manager.getToolWindowManagerUI();
+    public ResourceManager getResourceManager() {
+        return manager.getResourceManager();
     }
 
     public int getLabelIndex() {
@@ -269,14 +265,14 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     }
 
     protected LabelUI createLabelUI() {
-        return (LabelUI) manager.getToolWindowManagerUI().createComponentUI(ToolWindowManagerUI.REPRESENTATIVE_ANCHOR_BUTTON_UI, manager, this);
+        return (LabelUI) manager.getResourceManager().createComponentUI(ResourceManager.REPRESENTATIVE_ANCHOR_BUTTON_UI, manager, this);
     }
 
     protected void updateRepresentativeAnchor() {
         if (representativeAnchor != null) {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
-            String labelText = ResourceBundleManager.getInstance().getUserString(toolWindow.getId());
+            String labelText = getResourceManager().getUserString(toolWindow.getId());
             String toolRepresentativeAnchorText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
                                          ? toolWindow.getIndex() + " : " + labelText
                                          : labelText;

@@ -3,11 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.look;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
-import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
-import org.noos.xing.mydoggy.plaf.ui.ResourceBundleManager;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowUI;
-import static org.noos.xing.mydoggy.plaf.ui.ToolWindowUI.*;
+import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
@@ -36,15 +32,13 @@ import java.util.ResourceBundle;
  * @author Angelo De Caro
  */
 public class RepresentativeAnchorUI extends MetalLabelUI {
-    protected static final ResourceBundle resourceBundle = ResourceBundleManager.getInstance().getResourceBundle();
-
     protected JComponent label;
 
     protected LineBorder labelBorder;
 
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
-    protected ToolWindowUI toolWindowUI;
+    protected ResourceManager resourceManager;
     protected DockedTypeDescriptor dockedTypeDescriptor;
 
     protected RepresentativeAnchorMouseAdapter adapter;
@@ -62,11 +56,11 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
     public RepresentativeAnchorUI(ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
-        this.toolWindowUI = descriptor.getToolWindowUI();
+        this.resourceManager = descriptor.getResourceManager();
 
         this.flashingAnimation = new GradientAnimation();
-        this.flashingAnimBackStart = new MutableColor(toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE));
-        this.flashingAnimBackEnd = new MutableColor(toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE));
+        this.flashingAnimBackStart = new MutableColor(resourceManager.getColor(ResourceManager.ANCHOR_BACKGROUND_INACTIVE));
+        this.flashingAnimBackEnd = new MutableColor(resourceManager.getColor(ResourceManager.ANCHOR_BACKGROUND_INACTIVE));
 
         this.dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
         this.dockedTypeDescriptor.addPropertyChangeListener(this);
@@ -77,7 +71,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         super.installUI(c);
 
         this.label = c;
-        labelBorder = new LineBorder(toolWindowUI.getColor(ANCHOR_BORDER_MOUSE_OUT), 1, true, 3, 3);
+        labelBorder = new LineBorder(resourceManager.getColor(ResourceManager.ANCHOR_BORDER_MOUSE_OUT), 1, true, 3, 3);
         c.setBorder(labelBorder);
 
         DragGesture dragGesture = new DragGesture();
@@ -162,8 +156,8 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             }
 
             updateAnchor(g, c,
-                         toolWindowUI.getColor(ANCHOR_FLASHING_START),
-                         toolWindowUI.getColor(ANCHOR_FLASHING_END),
+                         resourceManager.getColor(ResourceManager.ANCHOR_FLASHING_START),
+                         resourceManager.getColor(ResourceManager.ANCHOR_FLASHING_END),
                          c.isOpaque(),
                          false);
         }
@@ -177,11 +171,11 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             boolean visible = (Boolean) e.getNewValue();
             label.setOpaque(visible);
             if (visible) {
-                labelBorder.setLineColor(toolWindowUI.getColor(ToolWindowUI.ANCHOR_BORDER_MOUSE_IN));
+                labelBorder.setLineColor(resourceManager.getColor(ResourceManager.ANCHOR_BORDER_MOUSE_IN));
 
                 descriptor.getToolBar().ensureVisible(label);
             } else
-                labelBorder.setLineColor(toolWindowUI.getColor(ToolWindowUI.ANCHOR_BORDER_MOUSE_OUT));
+                labelBorder.setLineColor(resourceManager.getColor(ResourceManager.ANCHOR_BORDER_MOUSE_OUT));
 
             toolWindow.setFlashing(false);
             SwingUtil.repaint(label);
@@ -220,7 +214,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                                   null,
                                   GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
         } else {
-            g.setColor(toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE));
+            g.setColor(resourceManager.getColor(ResourceManager.ANCHOR_BACKGROUND_INACTIVE));
             g.fillRect(0, 0, r.width, r.height);
         }
     }
@@ -301,7 +295,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             }
 //            if (label.getBorder() != labelBorder)
             label.setBorder(labelBorder);
-            labelBorder.setLineColor(toolWindowUI.getColor(ToolWindowUI.ANCHOR_BORDER_MOUSE_IN));
+            labelBorder.setLineColor(resourceManager.getColor(ResourceManager.ANCHOR_BORDER_MOUSE_IN));
             SwingUtil.repaint(label);
         }
 
@@ -316,7 +310,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
 
             Component source = e.getComponent();
             if (!source.isOpaque()) {
-                labelBorder.setLineColor(toolWindowUI.getColor(ToolWindowUI.ANCHOR_BORDER_MOUSE_IN));
+                labelBorder.setLineColor(resourceManager.getColor(ResourceManager.ANCHOR_BORDER_MOUSE_IN));
                 SwingUtil.repaint(source);
             }
         }
@@ -334,7 +328,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
 
             Component source = e.getComponent();
             if (!source.isOpaque()) {
-                labelBorder.setLineColor(toolWindowUI.getColor(ToolWindowUI.ANCHOR_BORDER_MOUSE_OUT));
+                labelBorder.setLineColor(resourceManager.getColor(ResourceManager.ANCHOR_BORDER_MOUSE_OUT));
                 SwingUtil.repaint(source);
             }
         }
@@ -549,47 +543,47 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             visible.addActionListener(this);
 
             aggregate = new JMenuItem();
-            aggregate.setText(resourceBundle.getString("@@tool.aggregate"));
+            aggregate.setText(resourceManager.getString("@@tool.aggregate"));
             aggregate.setActionCommand("aggregate");
             aggregate.addActionListener(this);
 
             floatingMode = new JCheckBoxMenuItem(null, toolWindow.getType() == ToolWindowType.FLOATING);
-            floatingMode.setText(resourceBundle.getString("@@tool.mode.floating"));
+            floatingMode.setText(resourceManager.getString("@@tool.mode.floating"));
             floatingMode.setActionCommand("floating");
             floatingMode.addActionListener(this);
 
             dockedMode = new JCheckBoxMenuItem(null, toolWindow.getType() == ToolWindowType.DOCKED);
-            dockedMode.setText(resourceBundle.getString("@@tool.mode.docked"));
+            dockedMode.setText(resourceManager.getString("@@tool.mode.docked"));
             dockedMode.setActionCommand("docked");
             dockedMode.addActionListener(this);
 
             pinnedMode = new JCheckBoxMenuItem(null, !toolWindow.isAutoHide());
-            pinnedMode.setText(resourceBundle.getString("@@tool.mode.pinned"));
+            pinnedMode.setText(resourceManager.getString("@@tool.mode.pinned"));
             pinnedMode.setActionCommand("pinned");
             pinnedMode.addActionListener(this);
 
             // MoveTo SubMenu
             moveTo = new JMenu();
             moveTo.getPopupMenu().setLightWeightPopupEnabled(false);
-            moveTo.setText(resourceBundle.getString("@@tool.moveTo"));
+            moveTo.setText(resourceManager.getString("@@tool.moveTo"));
 
             right = new JMenuItem();
-            right.setText(resourceBundle.getString("@@tool.move.right"));
+            right.setText(resourceManager.getString("@@tool.move.right"));
             right.setActionCommand("move.right");
             right.addActionListener(this);
 
             left = new JMenuItem();
-            left.setText(resourceBundle.getString("@@tool.move.left"));
+            left.setText(resourceManager.getString("@@tool.move.left"));
             left.setActionCommand("move.left");
             left.addActionListener(this);
 
             top = new JMenuItem();
-            top.setText(resourceBundle.getString("@@tool.move.top"));
+            top.setText(resourceManager.getString("@@tool.move.top"));
             top.setActionCommand("move.top");
             top.addActionListener(this);
 
             bottom = new JMenuItem();
-            bottom.setText(resourceBundle.getString("@@tool.move.bottom"));
+            bottom.setText(resourceManager.getString("@@tool.move.bottom"));
             bottom.setActionCommand("move.bottom");
             bottom.addActionListener(this);
 
@@ -610,8 +604,8 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         protected void enableVisible() {
             aggregate.setVisible(!toolWindow.isVisible());
             visible.setText(toolWindow.isVisible() ?
-                            resourceBundle.getString("@@tool.hide") :
-                            resourceBundle.getString("@@tool.show"));
+                            resourceManager.getString("@@tool.hide") :
+                            resourceManager.getString("@@tool.show"));
 
             if (toolWindow.getType() == ToolWindowType.DOCKED) {
                 dockedMode.setVisible(((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled());
@@ -676,23 +670,23 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             switch (getAnimationDirection()) {
                 case INCOMING:
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackStart,
-                                                      toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE),
-                                                      toolWindowUI.getColor(ANCHOR_FLASHING_START),
+                                                      resourceManager.getColor(ResourceManager.ANCHOR_BACKGROUND_INACTIVE),
+                                                      resourceManager.getColor(ResourceManager.ANCHOR_FLASHING_START),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd,
-                                                      toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE),
-                                                      toolWindowUI.getColor(ANCHOR_FLASHING_END),
+                                                      resourceManager.getColor(ResourceManager.ANCHOR_BACKGROUND_INACTIVE),
+                                                      resourceManager.getColor(ResourceManager.ANCHOR_FLASHING_END),
                                                       animationPercent);
                     break;
 
                 case OUTGOING:
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackStart,
-                                                      toolWindowUI.getColor(ANCHOR_FLASHING_START),
-                                                      toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE),
+                                                      resourceManager.getColor(ResourceManager.ANCHOR_FLASHING_START),
+                                                      resourceManager.getColor(ResourceManager.ANCHOR_BACKGROUND_INACTIVE),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd,
-                                                      toolWindowUI.getColor(ANCHOR_FLASHING_END),
-                                                      toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE),
+                                                      resourceManager.getColor(ResourceManager.ANCHOR_FLASHING_END),
+                                                      resourceManager.getColor(ResourceManager.ANCHOR_BACKGROUND_INACTIVE),
                                                       animationPercent);
                     break;
             }
@@ -703,23 +697,23 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         protected void onFinishAnimation() {
             switch (getAnimationDirection()) {
                 case INCOMING:
-                    flashingAnimBackStart.setRGB(toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE));
+                    flashingAnimBackStart.setRGB(resourceManager.getColor(ResourceManager.ANCHOR_BACKGROUND_INACTIVE));
                     break;
                 case OUTGOING:
-                    flashingAnimBackStart.setRGB(toolWindowUI.getColor(ANCHOR_FLASHING_START));
+                    flashingAnimBackStart.setRGB(resourceManager.getColor(ResourceManager.ANCHOR_FLASHING_START));
                     break;
             }
             SwingUtil.repaint(label);
         }
 
         protected void onHide(Object... params) {
-            flashingAnimBackStart.setRGB(toolWindowUI.getColor(ANCHOR_FLASHING_START));
-            flashingAnimBackEnd.setRGB(toolWindowUI.getColor(ANCHOR_FLASHING_END));
+            flashingAnimBackStart.setRGB(resourceManager.getColor(ResourceManager.ANCHOR_FLASHING_START));
+            flashingAnimBackEnd.setRGB(resourceManager.getColor(ResourceManager.ANCHOR_FLASHING_END));
         }
 
         protected void onShow(Object... params) {
-            flashingAnimBackStart.setRGB(toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE));
-            flashingAnimBackEnd.setRGB(toolWindowUI.getColor(ANCHOR_BACKGROUND_INACTIVE));
+            flashingAnimBackStart.setRGB(resourceManager.getColor(ResourceManager.ANCHOR_BACKGROUND_INACTIVE));
+            flashingAnimBackEnd.setRGB(resourceManager.getColor(ResourceManager.ANCHOR_BACKGROUND_INACTIVE));
         }
 
         protected void onStartAnimation(Direction direction) {
