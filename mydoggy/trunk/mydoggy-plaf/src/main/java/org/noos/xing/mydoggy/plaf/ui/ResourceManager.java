@@ -42,6 +42,7 @@ public interface ResourceManager {
     public static final String ANCHOR_BACKGROUND_INACTIVE = "ANCHOR_BACKGROUND_INACTIVE";
     public static final String ANCHOR_FLASHING_START = "ANCHOR_FLASHING_START";
     public static final String ANCHOR_FLASHING_END = "ANCHOR_FLASHING_END";
+    public static final String RA_FOREGROUND = "RA_FOREGROUND";
     public static final String TW_APP_BACKGROUND_ENABLED_START = "TW_APP_BACKGROUND_ENABLED_START";
     public static final String TW_APP_BACKGROUND_ENABLED_END = "TW_APP_BACKGROUND_ENABLED_END";
     public static final String TW_APP_BACKGROUND_DISABLED_START = "TW_APP_BACKGROUND_DISABLED_START";
@@ -72,7 +73,7 @@ public interface ResourceManager {
 
     ComponentUI createComponentUI(String key, ToolWindowManager manager, Object... args);
 
-    void applyCustomization(String key, Component component, Object... args);
+    Component applyCustomization(String key, Component component, Object... args);
 
 
     Icon getIcon(String id);
@@ -91,5 +92,5 @@ public interface ResourceManager {
     String getString(String key);
 
     String getUserString(String key);
-    
+
 }

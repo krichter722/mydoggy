@@ -73,6 +73,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         this.label = c;
         labelBorder = new LineBorder(resourceManager.getColor(ResourceManager.ANCHOR_BORDER_MOUSE_OUT), 1, true, 3, 3);
         c.setBorder(labelBorder);
+        c.setForeground(resourceManager.getColor(ResourceManager.RA_FOREGROUND));
 
         DragGesture dragGesture = new DragGesture();
         DragSource dragSource = DragSource.getDefaultDragSource();
