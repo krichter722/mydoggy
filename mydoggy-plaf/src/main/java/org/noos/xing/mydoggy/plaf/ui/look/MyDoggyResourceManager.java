@@ -164,7 +164,7 @@ public class MyDoggyResourceManager implements ResourceManager {
         cmpCreators.put(ResourceManager.BAR_SPLIT_PANE, new BarSplitPaneComponentCreator());
         cmpCreators.put(ResourceManager.BAR_CONTENT_PANE, new BarContentPaneComponentCreator());
         cmpCreators.put(ResourceManager.CORNER_CONTENT_PANE, new CornerContentPaneComponentCreator());
-        cmpCreators.put(ResourceManager.MY_DOGGY_MANAGER_MAIN_CONTAINER, new MyDoggyManagerMainContainerComponentCreator());
+        cmpCreators.put(ResourceManager.MDM_MAIN_CONTAINER, new MyDoggyManagerMainContainerComponentCreator());
         cmpCreators.put(ResourceManager.DESKTOP_CONTENT_PANE, new DesktopContentPaneComponentCreator());
         cmpCreators.put(ResourceManager.TOOL_WINDOW_TITLE_BAR, new ToolWindowTitleBarComponentCreator());
         cmpCreators.put(ResourceManager.TOOL_WINDOW_TITLE_BUTTON, new ToolWindowTitleButtonComponentCreator());
@@ -174,7 +174,7 @@ public class MyDoggyResourceManager implements ResourceManager {
         cmpUiCreators.put(ResourceManager.TOOL_WINDOW_TITLE_BAR_UI, new ToolWindowTitleBarComponentUICreator());
 
         cmpCustomizers = new Hashtable<String, ComponentCustomizer>();
-        cmpCustomizers.put(ResourceManager.MY_DOGGY_MANAGER_PANEL, new MyDoggyManagerPanelComponentCustomizer());
+        cmpCustomizers.put(ResourceManager.MDM_PANEL, new MyDoggyManagerPanelComponentCustomizer());
     }
 
     protected ResourceBundle initResourceBundle(Locale locale, String bundle, ClassLoader classLoader) {

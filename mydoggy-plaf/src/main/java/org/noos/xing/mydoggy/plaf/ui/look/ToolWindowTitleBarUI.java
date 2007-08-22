@@ -58,7 +58,7 @@ public class ToolWindowTitleBarUI extends PanelUI {
 
         dockedContainer.addPropertyChangeListener("active", new GradientActivationListener(descriptor));
 
-        animBackStart = new MutableColor(resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_DISABLED_START));
+        animBackStart = new MutableColor(resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_DISABLED_START));
         animBackEnd = new MutableColor(0, 0, 0);
         animTextColor = new MutableColor(0, 0, 0);
 
@@ -146,12 +146,12 @@ public class ToolWindowTitleBarUI extends PanelUI {
             if (flashingState)
                 updateToolWindowAppBar(g, c,
                                        animBackStart, animBackEnd,
-                                       resourceManager.getColor(ResourceManager.TW_APP_ID_BACKGROUND_FLASHING_0),
+                                       resourceManager.getColor(ResourceManager.TWTB_ID_BACKGROUND_FLASHING_0),
                                        animTextColor);
             else
                 updateToolWindowAppBar(g, c,
                                        animBackStart, animBackEnd,
-                                       resourceManager.getColor(ResourceManager.TW_APP_ID_BACKGROUND_FLASHING_1),
+                                       resourceManager.getColor(ResourceManager.TWTB_ID_BACKGROUND_FLASHING_1),
                                        animTextColor);
 
             if (flashingTimer == null) {
@@ -186,20 +186,20 @@ public class ToolWindowTitleBarUI extends PanelUI {
             if (animation.isAnimating()) {
                 updateToolWindowAppBar(g, c,
                                        animBackStart, animBackEnd,
-                                       resourceManager.getColor(ResourceManager.TW_APP_ID_BACKGROUND_ANIMATING),
+                                       resourceManager.getColor(ResourceManager.TWTB_ID_BACKGROUND_ANIMATING),
                                        animTextColor);
             } else if (c.isEnabled()) {
                 updateToolWindowAppBar(g, c,
-                                       resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_ENABLED_START),
-                                       resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_ENABLED_END),
-                                       resourceManager.getColor(ResourceManager.TW_APP_ID_BACKGROUND_ACTIVE),
-                                       resourceManager.getColor(ResourceManager.TW_APP_ID_FOREGROUND_ACTIVE));
+                                       resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_ENABLED_START),
+                                       resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_ENABLED_END),
+                                       resourceManager.getColor(ResourceManager.TWTB_ID_BACKGROUND_ACTIVE),
+                                       resourceManager.getColor(ResourceManager.TWTB_ID_FOREGROUND_ACTIVE));
             } else {
                 updateToolWindowAppBar(g, c,
-                                       resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_DISABLED_START),
-                                       resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_DISABLED_END),
-                                       resourceManager.getColor(ResourceManager.TW_APP_ID_BACKGROUND_INACTIVE),
-                                       resourceManager.getColor(ResourceManager.TW_APP_ID_FOREGROUND_INACTIVE));
+                                       resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_DISABLED_START),
+                                       resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_DISABLED_END),
+                                       resourceManager.getColor(ResourceManager.TWTB_ID_BACKGROUND_INACTIVE),
+                                       resourceManager.getColor(ResourceManager.TWTB_ID_FOREGROUND_INACTIVE));
             }
         }
 
@@ -273,10 +273,10 @@ public class ToolWindowTitleBarUI extends PanelUI {
 
             if ("active".equals(evt.getPropertyName())) {
                 if (evt.getNewValue() == Boolean.FALSE) {
-                    if (animBackStart.equals(resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_ENABLED_START)))
+                    if (animBackStart.equals(resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_ENABLED_START)))
                         animation.hide();
                 } else {
-                    if (animBackStart.equals(resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_DISABLED_START)))
+                    if (animBackStart.equals(resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_DISABLED_START)))
                         animation.show();
                 }
             }
@@ -297,31 +297,31 @@ public class ToolWindowTitleBarUI extends PanelUI {
             switch (getAnimationDirection()) {
                 case INCOMING:
                     GraphicsUtil.getInterpolatedColor(animBackStart,
-                                                      resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_ENABLED_START),
-                                                      resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_DISABLED_START),
+                                                      resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_ENABLED_START),
+                                                      resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_DISABLED_START),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(animBackEnd,
-                                                      resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_ENABLED_END),
-                                                      resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_DISABLED_END),
+                                                      resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_ENABLED_END),
+                                                      resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_DISABLED_END),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(animTextColor,
-                                                      resourceManager.getColor(ResourceManager.TW_APP_ID_FOREGROUND_ACTIVE),
-                                                      resourceManager.getColor(ResourceManager.TW_APP_ID_FOREGROUND_INACTIVE),
+                                                      resourceManager.getColor(ResourceManager.TWTB_ID_FOREGROUND_ACTIVE),
+                                                      resourceManager.getColor(ResourceManager.TWTB_ID_FOREGROUND_INACTIVE),
                                                       animationPercent);
                     break;
 
                 case OUTGOING:
                     GraphicsUtil.getInterpolatedColor(animBackStart,
-                                                      resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_DISABLED_START),
-                                                      resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_ENABLED_START),
+                                                      resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_DISABLED_START),
+                                                      resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_ENABLED_START),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(animBackEnd,
-                                                      resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_DISABLED_END),
-                                                      resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_ENABLED_END),
+                                                      resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_DISABLED_END),
+                                                      resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_ENABLED_END),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(animTextColor,
-                                                      resourceManager.getColor(ResourceManager.TW_APP_ID_FOREGROUND_INACTIVE),
-                                                      resourceManager.getColor(ResourceManager.TW_APP_ID_FOREGROUND_ACTIVE),
+                                                      resourceManager.getColor(ResourceManager.TWTB_ID_FOREGROUND_INACTIVE),
+                                                      resourceManager.getColor(ResourceManager.TWTB_ID_FOREGROUND_ACTIVE),
                                                       animationPercent);
                     break;
             }
@@ -332,23 +332,23 @@ public class ToolWindowTitleBarUI extends PanelUI {
         protected void onFinishAnimation() {
             switch (getAnimationDirection()) {
                 case INCOMING:
-                    animBackStart.setRGB(resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_ENABLED_START));
+                    animBackStart.setRGB(resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_ENABLED_START));
                     break;
                 case OUTGOING:
-                    animBackStart.setRGB(resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_DISABLED_START));
+                    animBackStart.setRGB(resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_DISABLED_START));
                     break;
             }
             SwingUtil.repaint(panel);
         }
 
         protected void onHide(Object... params) {
-            animBackStart.setRGB(resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_ENABLED_START));
-            animBackEnd.setRGB(resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_ENABLED_END));
+            animBackStart.setRGB(resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_ENABLED_START));
+            animBackEnd.setRGB(resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_ENABLED_END));
         }
 
         protected void onShow(Object... params) {
-            animBackStart.setRGB(resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_DISABLED_START));
-            animBackEnd.setRGB(resourceManager.getColor(ResourceManager.TW_APP_BACKGROUND_DISABLED_END));
+            animBackStart.setRGB(resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_DISABLED_START));
+            animBackEnd.setRGB(resourceManager.getColor(ResourceManager.TWTB_BACKGROUND_DISABLED_END));
         }
 
         protected void onStartAnimation(Direction direction) {

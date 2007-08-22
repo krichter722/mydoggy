@@ -13,6 +13,8 @@ import java.util.ResourceBundle;
  */
 public interface ResourceManager {
 
+    // Icons
+
     public static final String DOCKED = "DOCKED";
     public static final String DOCKED_INACTIVE = "DOCKED_INACTIVE";
     public static final String SLIDING = "SLIDING";
@@ -31,41 +33,52 @@ public interface ResourceManager {
     public static final String MAXIMIZE_INACTIVE = "MAXIMIZE_INACTIVE";
     public static final String MINIMIZE = "MINIMIZE";
     public static final String MINIMIZE_INACTIVE = "MINIMIZE_INACTIVE";
+    public static final String TOO_WINDOW_TAB_POPUP = "TOO_WINDOW_TAB_POPUP";
     public static final String CONTENT_PAGE_DETACH = "CONTENT_PAGE_DETACH";
     public static final String CONTENT_PAGE_CLOSE = "CONTENT_PAGE_CLOSE";
     public static final String CONTENT_PAGE_DETACH_INACTIVE = "CONTENT_PAGE_DETACH_INACTIVE";
     public static final String CONTENT_PAGE_CLOSE_INACTIVE = "CONTENT_PAGE_CLOSE_INACTIVE";
 
-    public static final String TOO_WINDOW_TAB_POPUP = "TOO_WINDOW_TAB_POPUP";
-    public static final String ANCHOR_BORDER_MOUSE_IN = "ANCHOR_BORDER_MOUSE_IN";
-    public static final String ANCHOR_BORDER_MOUSE_OUT = "ANCHOR_BORDER_MOUSE_OUT";
-    public static final String ANCHOR_BACKGROUND_INACTIVE = "ANCHOR_BACKGROUND_INACTIVE";
-    public static final String ANCHOR_FLASHING_START = "ANCHOR_FLASHING_START";
-    public static final String ANCHOR_FLASHING_END = "ANCHOR_FLASHING_END";
-    public static final String RA_FOREGROUND = "RA_FOREGROUND";
-    public static final String TW_APP_BACKGROUND_ENABLED_START = "TW_APP_BACKGROUND_ENABLED_START";
-    public static final String TW_APP_BACKGROUND_ENABLED_END = "TW_APP_BACKGROUND_ENABLED_END";
-    public static final String TW_APP_BACKGROUND_DISABLED_START = "TW_APP_BACKGROUND_DISABLED_START";
-    public static final String TW_APP_BACKGROUND_DISABLED_END = "TW_APP_BACKGROUND_DISABLED_END";
-    public static final String TW_APP_ID_BACKGROUND_FLASHING_0 = "TW_APP_ID_BACKGROUND_FLASHING_0";
-    public static final String TW_APP_ID_BACKGROUND_FLASHING_1 = "TW_APP_ID_BACKGROUND_FLASHING_1";
-    public static final String TW_APP_ID_BACKGROUND_ANIMATING = "TW_APP_ID_BACKGROUND_ANIMATING";
-    public static final String TW_APP_ID_BACKGROUND_ACTIVE = "TW_APP_ID_BACKGROUND_ACTIVE";
-    public static final String TW_APP_ID_BACKGROUND_INACTIVE = "TW_APP_ID_BACKGROUND_INACTIVE";
-    public static final String TW_APP_ID_FOREGROUND_ACTIVE = "TW_APP_ID_FOREGROUND_ACTIVE";
-    public static final String TW_APP_ID_FOREGROUND_INACTIVE = "TW_APP_ID_FOREGROUND_INACTIVE";
-    public static final String TW_APP_TAB_FOREGROUND_SELECTED = "TW_APP_TAB_FOREGROUND_SELECTED";
-    public static final String TW_APP_TAB_FOREGROUND_UNSELECTED = "TW_APP_TAB_FOREGROUND_UNSELECTED";
+    // Representative Anchor Button - Colors
+
+    public static final String RAB_MOUSE_IN_BORDER = "RAB_MOUSE_IN_BORDER";
+    public static final String RAB_MOUSE_OUT_BORDER = "RAB_MOUSE_OUT_BORDER";
+    public static final String RAB_BACKGROUND_INACTIVE = "RAB_BACKGROUND_INACTIVE";
+    public static final String RAB_BACKGROUND_FLASHING_START = "RAB_BACKGROUND_FLASHING_START";
+    public static final String RAB_BACKGROUND_FLASHING_END = "RAB_BACKGROUND_FLASHING_END";
+    public static final String RAB_FOREGROUND = "RAB_FOREGROUND";
+
+    // ToolWindow TitleBar - Colors
+
+    public static final String TWTB_BACKGROUND_ENABLED_START = "TWTB_BACKGROUND_ENABLED_START";
+    public static final String TWTB_BACKGROUND_ENABLED_END = "TWTB_BACKGROUND_ENABLED_END";
+    public static final String TWTB_BACKGROUND_DISABLED_START = "TWTB_BACKGROUND_DISABLED_START";
+    public static final String TWTB_BACKGROUND_DISABLED_END = "TWTB_BACKGROUND_DISABLED_END";
+    public static final String TWTB_ID_BACKGROUND_FLASHING_0 = "TWTB_ID_BACKGROUND_FLASHING_0";
+    public static final String TWTB_ID_BACKGROUND_FLASHING_1 = "TWTB_ID_BACKGROUND_FLASHING_1";
+    public static final String TWTB_ID_BACKGROUND_ANIMATING = "TWTB_ID_BACKGROUND_ANIMATING";
+    public static final String TWTB_ID_BACKGROUND_ACTIVE = "TWTB_ID_BACKGROUND_ACTIVE";
+    public static final String TWTB_ID_BACKGROUND_INACTIVE = "TWTB_ID_BACKGROUND_INACTIVE";
+    public static final String TWTB_ID_FOREGROUND_ACTIVE = "TWTB_ID_FOREGROUND_ACTIVE";
+    public static final String TWTB_ID_FOREGROUND_INACTIVE = "TWTB_ID_FOREGROUND_INACTIVE";
+    public static final String TWTB_TAB_FOREGROUND_SELECTED = "TWTB_TAB_FOREGROUND_SELECTED";
+    public static final String TWTB_TAB_FOREGROUND_UNSELECTED = "TWTB_TAB_FOREGROUND_UNSELECTED";
+
+    // Components, ComponentsUIs, Customizers
 
     public static final String BAR_SPLIT_PANE = "BAR_SPLIT_PANE";
     public static final String REPRESENTATIVE_ANCHOR_BUTTON_UI = "REPRESENTATIVE_ANCHOR_BUTTON_UI";
+
     public static final String TOOL_WINDOW_TITLE_BAR = "TOOL_WINDOW_TITLE_BAR";
-    public static final String TOOL_WINDOW_TITLE_BUTTON = "TOOL_WINDOW_TITLE_BUTTON";
     public static final String TOOL_WINDOW_TITLE_BAR_UI = "TOOL_WINDOW_TITLE_BAR_UI";
+    public static final String TOOL_WINDOW_TITLE_BUTTON = "TOOL_WINDOW_TITLE_BUTTON";
+
+    public static final String MDM_PANEL = "MDM_PANEL";
+    public static final String MDM_MAIN_CONTAINER = "MDM_MAIN_CONTAINER";
+
     public static final String BAR_CONTENT_PANE = "BAR_CONTENT_PANE";
     public static final String CORNER_CONTENT_PANE = "CORNER_CONTENT_PANE";
-    public static final String MY_DOGGY_MANAGER_PANEL = "MY_DOGGY_MANAGER_PANEL";
-    public static final String MY_DOGGY_MANAGER_MAIN_CONTAINER = "MY_DOGGY_MANAGER_MAIN_CONTAINER";
+
     public static final String DESKTOP_CONTENT_PANE = "DESKTOP_CONTENT_PANE";
 
 

@@ -429,7 +429,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         initContentManager();
 
-        resourceManager.applyCustomization(ResourceManager.MY_DOGGY_MANAGER_PANEL, this);
+        resourceManager.applyCustomization(ResourceManager.MDM_PANEL, this);
 
         ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
@@ -457,7 +457,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         addBar(TOP, JSplitPane.VERTICAL_SPLIT, "1,0", "2,2,FULL,FULL");
         addBar(BOTTOM, JSplitPane.VERTICAL_SPLIT, "1,2", "0,2,FULL,FULL");
 
-        mainContainer = (JPanel) resourceManager.createComponent(ResourceManager.MY_DOGGY_MANAGER_MAIN_CONTAINER, this);
+        mainContainer = (JPanel) resourceManager.createComponent(ResourceManager.MDM_MAIN_CONTAINER, this);
         mainContainer.setName("toolWindowManager.mainContainer");
         mainContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         mainContainer.setFocusCycleRoot(true);
