@@ -1,21 +1,21 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
+import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
-import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.ToolWindowManager;
 
 import javax.swing.*;
+import javax.swing.plaf.ButtonUI;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.PanelUI;
-import javax.swing.plaf.ButtonUI;
 import javax.swing.plaf.basic.BasicButtonUI;
-import java.util.*;
 import java.awt.*;
+import java.util.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -55,22 +55,26 @@ public class MyDoggyResourceManager implements ResourceManager {
     }
 
     public Component createComponent(String key, ToolWindowManager manager, Object... args) {
-        return cmpCreators.get(key).createComponent(manager, args);
+        return applyCustomization(key, 
+                                  cmpCreators.get(key).createComponent(manager, args),
+                                  args);
     }
 
     public ComponentUI createComponentUI(String key, ToolWindowManager manager, Object... args) {
         return cmpUiCreators.get(key).createComponentUI(manager, args);
     }
 
-    public void applyCustomization(String key, Component component, Object... args) {
-        cmpCustomizers.get(key).applyCustomization(component, args);
+    public Component applyCustomization(String key, Component component, Object... args) {
+        if (cmpCustomizers.containsKey(key))
+            cmpCustomizers.get(key).applyCustomization(component, args);
+        return component;
     }
 
     public void setLocale(Locale locale) {
         this.resourceBundle = initResourceBundle(locale,
                                                  bundlePath,
                                                  this.getClass().getClassLoader());
-	}
+    }
 
     public void setUserBundle(Locale locale, String bundle, ClassLoader classLoader) {
         this.userResourceBundle = initResourceBundle(locale, bundle, classLoader);
@@ -91,7 +95,6 @@ public class MyDoggyResourceManager implements ResourceManager {
     public String getUserString(String key) {
         return (userResourceBundle != null) ? userResourceBundle.getString(key) : key;
     }
-
 
 
     protected void loadResources() {
@@ -179,36 +182,36 @@ public class MyDoggyResourceManager implements ResourceManager {
         if (locale == null)
             locale = Locale.getDefault();
 
-		try {
+        try {
             if (classLoader == null)
                 result = ResourceBundle.getBundle(bundle, locale);
             else
                 result = ResourceBundle.getBundle(bundle, locale, classLoader);
-		} catch (Throwable e) {
-			e.printStackTrace();
+        } catch (Throwable e) {
+            e.printStackTrace();
 
             result = new ResourceBundle() {
-				protected Object handleGetObject(String key) {
-					return key;
-				}
+                protected Object handleGetObject(String key) {
+                    return key;
+                }
 
-				public Enumeration<String> getKeys() {
-					return new Enumeration<String>() {
-						public boolean hasMoreElements() {
-							return false;
-						}
+                public Enumeration<String> getKeys() {
+                    return new Enumeration<String>() {
+                        public boolean hasMoreElements() {
+                            return false;
+                        }
 
-						public String nextElement() {
-							return null;
-						}
-					};
-				}
-			};
-		}
+                        public String nextElement() {
+                            return null;
+                        }
+                    };
+                }
+            };
+        }
         return result;
     }
 
-    
+
     public static interface ComponentCreator {
         Component createComponent(ToolWindowManager manager, Object... args);
     }
@@ -240,18 +243,14 @@ public class MyDoggyResourceManager implements ResourceManager {
     public static class BarContentPaneComponentCreator implements ComponentCreator {
 
         public Component createComponent(ToolWindowManager manager, Object... args) {
-            JPanel panel = new JPanel();
-//            panel.setBackground(Color.black);
-            return panel;
+            return new JPanel();
         }
     }
 
     public static class CornerContentPaneComponentCreator implements ComponentCreator {
 
         public Component createComponent(ToolWindowManager manager, Object... args) {
-            JPanel panel = new JPanel();
-//            panel.setBackground(Color.black);
-            return panel;
+            return new JPanel();
         }
     }
 
