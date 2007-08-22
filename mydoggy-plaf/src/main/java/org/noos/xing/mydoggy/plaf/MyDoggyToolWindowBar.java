@@ -151,7 +151,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             orientation = JSplitPane.HORIZONTAL_SPLIT;
         }
 
-        toolScrollBar = new JToolScrollBar(orientation, contentPane);
+        toolScrollBar = new JToolScrollBar(manager.getResourceManager(), orientation, contentPane);
 
         contentPaneLayout = (ExtendedTableLayout) contentPane.getLayout();
 

@@ -38,6 +38,13 @@ public interface ResourceManager {
     public static final String CONTENT_PAGE_CLOSE = "CONTENT_PAGE_CLOSE";
     public static final String CONTENT_PAGE_DETACH_INACTIVE = "CONTENT_PAGE_DETACH_INACTIVE";
     public static final String CONTENT_PAGE_CLOSE_INACTIVE = "CONTENT_PAGE_CLOSE_INACTIVE";
+    public static final String TOOL_SCROLL_BAR_UP = "TOOL_SCROLL_BAR_UP";
+    public static final String TOOL_SCROLL_BAR_DOWN = "TOOL_SCROLL_BAR_DOWN";
+    public static final String TOOL_SCROLL_BAR_LEFT = "TOOL_SCROLL_BAR_LEFT";
+    public static final String TOOL_SCROLL_BAR_RIGHT = "TOOL_SCROLL_BAR_RIGHT";
+    public static final String TOOL_SCROLL_BAR_UI_BCK_START = "TOOL_SCROLL_BAR_UI_BCK_START";
+    public static final String TOOL_SCROLL_BAR_UI_BCK_END = "TOOL_SCROLL_BAR_UI_BCK_END";
+
 
     // Representative Anchor Button - Colors
 
@@ -80,6 +87,8 @@ public interface ResourceManager {
     public static final String CORNER_CONTENT_PANE = "CORNER_CONTENT_PANE";
 
     public static final String DESKTOP_CONTENT_PANE = "DESKTOP_CONTENT_PANE";
+
+    public static final String TOOL_SCROLL_BAR_ARROW = "TOOL_SCROLL_BAR_ARROW";
 
 
     Component createComponent(String key, ToolWindowManager manager, Object... args);
