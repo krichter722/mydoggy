@@ -281,7 +281,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             this.tab.addPropertyChangeListener(this);
             this.selected = this.pressed = this.inside = false;
 
-            setForeground(descriptor.getResourceManager().getColor(ResourceManager.TW_APP_TAB_FOREGROUND_UNSELECTED));
+            setForeground(descriptor.getResourceManager().getColor(ResourceManager.TWTB_TAB_FOREGROUND_UNSELECTED));
             setOpaque(false);
             setFocusable(false);
             setIcon(tab.getIcon());
@@ -341,7 +341,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             if ("selected".equals(property)) {
                 if (evt.getNewValue() == Boolean.FALSE) {
                     selecTabButton = null;
-                    TabButton.this.setForeground(descriptor.getResourceManager().getColor(ResourceManager.TW_APP_TAB_FOREGROUND_UNSELECTED));
+                    TabButton.this.setForeground(descriptor.getResourceManager().getColor(ResourceManager.TWTB_TAB_FOREGROUND_UNSELECTED));
                     selected = false;
                 } else {
                     selecTabButton = this;
@@ -350,7 +350,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                     cellBounds.x -= viewport.getViewPosition().x;
                     viewport.scrollRectToVisible(cellBounds);
                     
-                    TabButton.this.setForeground(descriptor.getResourceManager().getColor(ResourceManager.TW_APP_TAB_FOREGROUND_SELECTED));
+                    TabButton.this.setForeground(descriptor.getResourceManager().getColor(ResourceManager.TWTB_TAB_FOREGROUND_SELECTED));
                     selected = true;
                 }
             } else if ("title".equals(property)) {
