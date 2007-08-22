@@ -8,11 +8,13 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.Colors;
 
 import javax.swing.*;
 import javax.swing.plaf.ButtonUI;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.PanelUI;
+import javax.swing.plaf.LabelUI;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.util.*;
@@ -168,6 +170,26 @@ public class MyDoggyResourceManager implements ResourceManager {
         cmpCreators.put(ResourceManager.DESKTOP_CONTENT_PANE, new DesktopContentPaneComponentCreator());
         cmpCreators.put(ResourceManager.TOOL_WINDOW_TITLE_BAR, new ToolWindowTitleBarComponentCreator());
         cmpCreators.put(ResourceManager.TOOL_WINDOW_TITLE_BUTTON, new ToolWindowTitleButtonComponentCreator());
+        cmpCreators.put(ResourceManager.TOOL_SCROLL_BAR_ARROW, new ComponentCreator() {
+            public Component createComponent(ToolWindowManager manager, Object... args) {
+                JLabel label = new JLabel() {
+                    public void setUI(LabelUI ui) {
+                        if (ui instanceof ToolScrollBarArrowUI)
+                            super.setUI(ui);
+                    }
+                };
+                label.setUI(new ToolScrollBarArrowUI(MyDoggyResourceManager.this));
+                label.setPreferredSize(new Dimension(16, 16));
+                label.setHorizontalAlignment(SwingConstants.CENTER);
+                label.setVerticalAlignment(SwingConstants.CENTER);
+                label.setOpaque(false);
+                label.setFocusable(false);
+                label.setBackground(Colors.orange);
+                label.setIcon(getIcon((String) args[0]));
+
+                return label;
+            }
+        });
 
         cmpUiCreators = new Hashtable<String, ComponentUICreator>();
         cmpUiCreators.put(ResourceManager.REPRESENTATIVE_ANCHOR_BUTTON_UI, new RepresentativeAnchorButtonComponentUICreator());
