@@ -32,6 +32,7 @@ public class MyDoggyResourceManager implements ResourceManager {
     protected Map<String, ComponentUICreator> cmpUiCreators;
     protected Map<String, ComponentCustomizer> cmpCustomizers;
 
+    private String bundlePath;
     private ResourceBundle resourceBundle;
     private ResourceBundle userResourceBundle;
 
@@ -67,13 +68,12 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     public void setLocale(Locale locale) {
         this.resourceBundle = initResourceBundle(locale,
-                                                 "org/noos/xing/mydoggy/plaf/ui/messages/messages",
+                                                 bundlePath,
                                                  this.getClass().getClassLoader());
 	}
 
     public void setUserBundle(Locale locale, String bundle, ClassLoader classLoader) {
         this.userResourceBundle = initResourceBundle(locale, bundle, classLoader);
-
     }
 
     public ResourceBundle getResourceBundle() {
@@ -99,7 +99,9 @@ public class MyDoggyResourceManager implements ResourceManager {
 
         loadIcons();
         loadColors();
+        loadResourceBundles();
     }
+
 
     protected void loadIcons() {
         String prefix = "Icon.";
@@ -127,6 +129,12 @@ public class MyDoggyResourceManager implements ResourceManager {
                 colors.put(colorKey, loadColor(colorDef));
             }
         }
+    }
+
+    protected void loadResourceBundles() {
+        bundlePath = resources.getProperty("ResourceBundle");
+        if (bundlePath == null)
+            bundlePath = "org/noos/xing/mydoggy/plaf/ui/messages/messages";
     }
 
     protected Icon loadIcon(String url) {
