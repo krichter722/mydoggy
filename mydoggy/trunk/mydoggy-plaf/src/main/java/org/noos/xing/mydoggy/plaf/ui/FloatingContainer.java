@@ -113,7 +113,10 @@ public class FloatingContainer extends DockedContainer {
 
 
     private void initFloatingComponents() {
-        window = new JModalWindow(descriptor.getWindowAnchestor(), null, false);
+        window = new JModalWindow(getResourceManager(),
+                                  descriptor.getWindowAnchestor(),
+                                  null,
+                                  false);
         window.setName("toolWindow.floating.window." + toolWindow.getId());
 
         JPanel contentPane = new JPanel(new ExtendedTableLayout(new double[][]{{1, TableLayout.FILL, 1}, {1, TableLayout.FILL, 1}}));

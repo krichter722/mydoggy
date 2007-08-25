@@ -98,7 +98,11 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         propertyChangeSupport.removePropertyChangeListener(property, listener);
     }
 
+    public ResourceManager getResourceManager() {
+        return resourceManager;
+    }
 
+    
     protected void setPinVisible(boolean visible) {
         pinButton.setVisible(visible);
         TableLayout tableLayout = (TableLayout) titleBar.getLayout();

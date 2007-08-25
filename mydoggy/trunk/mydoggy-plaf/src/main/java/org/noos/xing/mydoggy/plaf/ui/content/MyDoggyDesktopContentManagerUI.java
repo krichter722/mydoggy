@@ -10,7 +10,6 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
 import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
-import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -32,6 +31,7 @@ import java.util.Map;
 public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
     protected MyDoggyToolWindowManager toolWindowManager;
     protected MyDoggyContentManager contentManager;
+    protected ResourceManager resourceManager;
 
     protected JDesktopPane desktopPane;
 
@@ -83,6 +83,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     public void install(ToolWindowManager manager) {
         this.toolWindowManager = (MyDoggyToolWindowManager) manager;
         this.contentManager = (MyDoggyContentManager) manager.getContentManager();
+        this.resourceManager = toolWindowManager.getResourceManager();
         this.contentIndex = 0;
 
         initComponents();
@@ -477,8 +478,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
                 dialog.pack();
 
-                if (WindowTransparencyManager.getInstance().isServiceAvailable()) {
+                if (resourceManager.getTransparencyManager().isServiceAvailable()) {
                     WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(
+                            resourceManager.getTransparencyManager(), 
                             getContentUI(content),
                             dialog
                     );
