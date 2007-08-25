@@ -69,9 +69,11 @@ public abstract class AbstractAnimation implements ActionListener {
 	}
 
 	public final synchronized void stop() {
-		stopAnimation();
-		onFinishAnimation();
-	}
+        if (isAnimating()) {
+            stopAnimation();
+            onFinishAnimation();
+        }
+    }
 
 	public final synchronized boolean isAnimating() {
 		return animating;

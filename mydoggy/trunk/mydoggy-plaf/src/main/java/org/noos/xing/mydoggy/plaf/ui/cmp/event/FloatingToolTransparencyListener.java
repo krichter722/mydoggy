@@ -28,7 +28,6 @@ public class FloatingToolTransparencyListener implements PropertyChangeListener,
 
     public FloatingToolTransparencyListener(FloatingContainer floatingContainer, ToolWindowDescriptor descriptor, final Window window) {
         this.transparencyManager = floatingContainer.getResourceManager().getTransparencyManager();
-        
         if (transparencyManager.isServiceAvailable()) {
             this.descriptor = descriptor;
             this.window = window;

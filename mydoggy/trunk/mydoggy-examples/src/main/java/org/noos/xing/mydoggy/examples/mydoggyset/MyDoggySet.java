@@ -10,6 +10,7 @@ import org.noos.xing.mydoggy.examples.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.transparency.JNAWindowTransparencyManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -86,7 +87,13 @@ public class MyDoggySet {
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
 
-        this.toolWindowManager = new MyDoggyToolWindowManager(frame, Locale.US, null);
+        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame, Locale.US, null);
+/*
+        myDoggyToolWindowManager.getResourceManager().setTransparencyManager(
+                new JNAWindowTransparencyManager()
+        );
+*/
+        this.toolWindowManager = myDoggyToolWindowManager;
 
         initMenuBar();
     }

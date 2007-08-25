@@ -33,8 +33,7 @@ public class JModalWindow extends JWindow {
     public void setVisible(boolean visible) {
         if (!visible) {
             TransparencyManager transparencyManager = resourceManager.getTransparencyManager();
-            if (transparencyManager.isAlphaModeEnabled(this)) 
-                transparencyManager.setAlphaModeRatio(this, 0.0f);
+            transparencyManager.setAlphaModeRatio(this, 0.0f);
 
             restoreOwner();
         } else {
