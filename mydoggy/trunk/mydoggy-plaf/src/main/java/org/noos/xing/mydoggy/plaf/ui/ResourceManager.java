@@ -106,6 +106,8 @@ public interface ResourceManager {
 
     TransparencyManager<Window> getTransparencyManager();
 
+    void setTransparencyManager(TransparencyManager<Window> transparencyManager);
+
 
     void setLocale(Locale locale);
 

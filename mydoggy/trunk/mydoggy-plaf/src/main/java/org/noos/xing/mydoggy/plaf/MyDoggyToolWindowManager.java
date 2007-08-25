@@ -418,7 +418,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public ResourceManager getResourceManager() {
         return resourceManager;
     }
-    
 
     protected void initPersistenceDelegate() {
         this.persistenceDelegate = new XMLPersistenceDelegate(this);
