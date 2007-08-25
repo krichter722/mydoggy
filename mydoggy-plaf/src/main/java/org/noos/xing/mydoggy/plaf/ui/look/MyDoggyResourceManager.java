@@ -65,6 +65,10 @@ public class MyDoggyResourceManager implements ResourceManager {
         return transparencyManager;
     }
 
+    public void setTransparencyManager(TransparencyManager<Window> transparencyManager) {
+        this.transparencyManager = transparencyManager;
+    }
+
     public Component createComponent(String key, ToolWindowManager manager, Object... args) {
         return applyCustomization(key, 
                                   cmpCreators.get(key).createComponent(manager, args),
@@ -243,7 +247,7 @@ public class MyDoggyResourceManager implements ResourceManager {
     }
 
     protected void initTransparencyManager() {
-        transparencyManager = new WindowTransparencyManager();
+        setTransparencyManager(new WindowTransparencyManager());
     }
 
 
