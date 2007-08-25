@@ -1,5 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.transparency;
 
+import com.sun.jna.examples.WindowUtils;
+
 import java.awt.*;
 
 
@@ -8,8 +10,6 @@ import java.awt.*;
  */
 public class WindowTransparencyManager implements TransparencyManager<Window> {
     private static boolean LIBRARIES_LOADED;
-
-    private static final WindowTransparencyManager INSTANCE = new WindowTransparencyManager();
 
     static {
         try {
@@ -23,12 +23,7 @@ public class WindowTransparencyManager implements TransparencyManager<Window> {
         }
     }
 
-    public static TransparencyManager<Window> getInstance() {
-        return INSTANCE;
-    }
-
-
-    private WindowTransparencyManager() {
+    public WindowTransparencyManager() {
     }
 
 

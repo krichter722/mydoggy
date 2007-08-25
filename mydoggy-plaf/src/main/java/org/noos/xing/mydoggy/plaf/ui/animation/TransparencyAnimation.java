@@ -1,8 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.animation;
 
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
-import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
-import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 
 import java.awt.*;
 
@@ -14,8 +12,8 @@ public class TransparencyAnimation extends AbstractAnimation {
     private Component component;
     private float alpha;
 
-    public TransparencyAnimation(Component component, float alpha) {
-        this(WindowTransparencyManager.getInstance(), component, alpha, 2000f);
+    public TransparencyAnimation(TransparencyManager transparencyManager, Component component, float alpha) {
+        this(transparencyManager, component, alpha, 2000f);
     }
 
     public TransparencyAnimation(TransparencyManager transparencyManager, Component component, float alpha, float duration) {

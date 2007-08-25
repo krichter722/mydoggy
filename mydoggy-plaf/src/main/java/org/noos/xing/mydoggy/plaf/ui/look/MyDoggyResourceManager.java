@@ -4,6 +4,8 @@ import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
+import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
@@ -38,6 +40,8 @@ public class MyDoggyResourceManager implements ResourceManager {
     private ResourceBundle resourceBundle;
     private ResourceBundle userResourceBundle;
 
+    private TransparencyManager<Window> transparencyManager;
+
 
     public MyDoggyResourceManager() {
         this.icons = new Hashtable<String, Icon>();
@@ -45,6 +49,7 @@ public class MyDoggyResourceManager implements ResourceManager {
 
         loadResources();
         initComponentCreators();
+        initTransparencyManager();
     }
 
 
@@ -54,6 +59,10 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     public Color getColor(String id) {
         return colors.get(id);
+    }
+
+    public TransparencyManager<Window> getTransparencyManager() {
+        return transparencyManager;
     }
 
     public Component createComponent(String key, ToolWindowManager manager, Object... args) {
@@ -231,6 +240,10 @@ public class MyDoggyResourceManager implements ResourceManager {
             };
         }
         return result;
+    }
+
+    protected void initTransparencyManager() {
+        transparencyManager = new WindowTransparencyManager();
     }
 
 

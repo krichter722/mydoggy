@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
-import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,12 +9,15 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 
 public class JModalWindow extends JWindow {
+    private ResourceManager resourceManager;
     private Window modalToWindow;
     private boolean notifiedModalToWindow;
     private Component returnFocus;
 
-    public JModalWindow(Window owner, Component returnFocus, boolean modal) {
+    public JModalWindow(ResourceManager resourceManager, Window owner, Component returnFocus, boolean modal) {
         super(owner);
+        
+        this.resourceManager = resourceManager;
         setFocusableWindowState(true);
         this.returnFocus = returnFocus;
         if (modal)
@@ -29,7 +32,7 @@ public class JModalWindow extends JWindow {
 
     public void setVisible(boolean visible) {
         if (!visible) {
-            TransparencyManager<Window> transparencyManager = WindowTransparencyManager.getInstance();
+            TransparencyManager transparencyManager = resourceManager.getTransparencyManager();
             if (transparencyManager.isAlphaModeEnabled(this)) 
                 transparencyManager.setAlphaModeRatio(this, 0.0f);
 

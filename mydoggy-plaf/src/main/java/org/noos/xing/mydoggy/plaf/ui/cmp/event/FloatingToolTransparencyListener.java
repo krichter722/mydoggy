@@ -2,11 +2,10 @@ package org.noos.xing.mydoggy.plaf.ui.cmp.event;
 
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowType;
-import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
-import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
+import org.noos.xing.mydoggy.plaf.ui.FloatingContainer;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
-import org.noos.xing.mydoggy.plaf.ui.FloatingContainer;
+import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,17 +21,22 @@ public class FloatingToolTransparencyListener implements PropertyChangeListener,
     private ToolWindowDescriptor descriptor;
     private Window window;
 
-    private final TransparencyManager<Window> transparencyManager = WindowTransparencyManager.getInstance();
+    private TransparencyManager<Window> transparencyManager;
     private TransparencyAnimation transparencyAnimation;
 
     private Timer timer;
 
     public FloatingToolTransparencyListener(FloatingContainer floatingContainer, ToolWindowDescriptor descriptor, final Window window) {
+        this.transparencyManager = floatingContainer.getResourceManager().getTransparencyManager();
+        
         if (transparencyManager.isServiceAvailable()) {
             this.descriptor = descriptor;
             this.window = window;
 
-            this.transparencyAnimation = new TransparencyAnimation(window, 0.0f);
+            this.transparencyAnimation = new TransparencyAnimation(
+                    descriptor.getResourceManager().getTransparencyManager(),
+                    window, 0.0f
+            );
 
             floatingContainer.addPropertyChangeListener("active", this);
             floatingContainer.addPropertyChangeListener("visible.FLOATING", this);

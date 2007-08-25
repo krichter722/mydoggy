@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
 import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -101,6 +102,9 @@ public interface ResourceManager {
     Icon getIcon(String id);
 
     Color getColor(String id);
+
+
+    TransparencyManager<Window> getTransparencyManager();
 
 
     void setLocale(Locale locale);

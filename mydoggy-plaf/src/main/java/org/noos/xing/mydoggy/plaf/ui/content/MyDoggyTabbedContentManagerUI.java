@@ -3,13 +3,13 @@ package org.noos.xing.mydoggy.plaf.ui.content;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
-import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
-import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabEvent;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentPage;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabListener;
-import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -32,6 +32,7 @@ import java.util.Map;
 public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
     protected MyDoggyToolWindowManager toolWindowManager;
     protected ContentManager contentManager;
+    protected ResourceManager resourceManager;
 
     protected JTabbedContentManager tabbedContentManager;
     protected boolean showAlwaysTab;
@@ -152,6 +153,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     public void install(ToolWindowManager manager) {
         this.toolWindowManager = (MyDoggyToolWindowManager) manager;
         this.contentManager = manager.getContentManager();
+        this.resourceManager = resourceManager;
         tabbedContentManager.setToolWindowManager(toolWindowManager);
         initListeners();
 
@@ -570,9 +572,11 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
                 dialog.pack();
 
-                if (WindowTransparencyManager.getInstance().isServiceAvailable()) {
+                if (resourceManager.getTransparencyManager().isServiceAvailable()) {
                     WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(
-                            getContentUI(content), dialog
+                            resourceManager.getTransparencyManager(),
+                            getContentUI(content),
+                            dialog
                     );
                     dialog.addWindowListener(windowTransparencyListener);
                     dialog.addWindowFocusListener(windowTransparencyListener);
