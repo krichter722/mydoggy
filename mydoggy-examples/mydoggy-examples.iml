@@ -25,7 +25,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="jna" level="project" />
     <orderEntryProperties />
   </component>
   <component name="POM File Configuration" pomFile="file://$MODULE_DIR$/pom.xml" />
