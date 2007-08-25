@@ -10,7 +10,6 @@ import org.noos.xing.mydoggy.examples.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.plaf.ui.transparency.JNAWindowTransparencyManager;
 
 import javax.swing.*;
 import java.awt.*;
