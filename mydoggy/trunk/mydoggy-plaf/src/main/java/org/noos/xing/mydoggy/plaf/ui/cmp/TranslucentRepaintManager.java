@@ -15,9 +15,8 @@ public class TranslucentRepaintManager extends javax.swing.RepaintManager {
                 if (!parent.isVisible() || !parent.isDisplayable())
                     return;
 
-                // TODO: something more fine grounded..
-                if (parent instanceof TranslucentPanel && (((TranslucentPanel) parent).getAlpha() < 1f ||
-                                                           !parent.isOpaque())) {
+                if (parent instanceof TranslucentComponent &&
+                    (((TranslucentComponent) parent).getAlphaModeEnabled() < 1f || !parent.isOpaque())) {
                     x += lastDeltaX;
                     y += lastDeltaY;
                     lastDeltaX = lastDeltaY = 0;
