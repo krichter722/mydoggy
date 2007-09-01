@@ -10,6 +10,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
+import org.noos.xing.mydoggy.plaf.ui.util.DummyResourceBundle;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -36,11 +37,11 @@ public class MyDoggyResourceManager implements ResourceManager {
     protected Map<String, ComponentUICreator> cmpUiCreators;
     protected Map<String, ComponentCustomizer> cmpCustomizers;
 
-    private String bundlePath;
-    private ResourceBundle resourceBundle;
-    private ResourceBundle userResourceBundle;
+    protected String bundlePath;
+    protected ResourceBundle resourceBundle;
+    protected ResourceBundle userResourceBundle;
 
-    private TransparencyManager<Window> transparencyManager;
+    protected TransparencyManager<Window> transparencyManager;
 
 
     public MyDoggyResourceManager() {
@@ -71,17 +72,17 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     public Component createComponent(String key, ToolWindowManager manager, Object... args) {
         return applyCustomization(key, 
-                                  cmpCreators.get(key).createComponent(manager, args),
+                                  cmpCreators.get(key).createComponent(manager, this, args),
                                   args);
     }
 
     public ComponentUI createComponentUI(String key, ToolWindowManager manager, Object... args) {
-        return cmpUiCreators.get(key).createComponentUI(manager, args);
+        return cmpUiCreators.get(key).createComponentUI(manager, this, args);
     }
 
     public Component applyCustomization(String key, Component component, Object... args) {
         if (cmpCustomizers.containsKey(key))
-            cmpCustomizers.get(key).applyCustomization(component, args);
+            cmpCustomizers.get(key).applyCustomization(component, this, args);
         return component;
     }
 
@@ -119,7 +120,6 @@ public class MyDoggyResourceManager implements ResourceManager {
         loadColors();
         loadResourceBundles();
     }
-
 
     protected void loadIcons() {
         String prefix = "Icon.";
@@ -183,26 +183,7 @@ public class MyDoggyResourceManager implements ResourceManager {
         cmpCreators.put(ResourceManager.DESKTOP_CONTENT_PANE, new DesktopContentPaneComponentCreator());
         cmpCreators.put(ResourceManager.TOOL_WINDOW_TITLE_BAR, new ToolWindowTitleBarComponentCreator());
         cmpCreators.put(ResourceManager.TOOL_WINDOW_TITLE_BUTTON, new ToolWindowTitleButtonComponentCreator());
-        cmpCreators.put(ResourceManager.TOOL_SCROLL_BAR_ARROW, new ComponentCreator() {
-            public Component createComponent(ToolWindowManager manager, Object... args) {
-                JLabel label = new JLabel() {
-                    public void setUI(LabelUI ui) {
-                        if (ui instanceof ToolScrollBarArrowUI)
-                            super.setUI(ui);
-                    }
-                };
-                label.setUI(new ToolScrollBarArrowUI(MyDoggyResourceManager.this));
-                label.setPreferredSize(new Dimension(16, 16));
-                label.setHorizontalAlignment(SwingConstants.CENTER);
-                label.setVerticalAlignment(SwingConstants.CENTER);
-                label.setOpaque(false);
-                label.setFocusable(false);
-                label.setBackground(Colors.orange);
-                label.setIcon(getIcon((String) args[0]));
-
-                return label;
-            }
-        });
+        cmpCreators.put(ResourceManager.TOOL_SCROLL_BAR_ARROW, new ToolScrollBarArrowComponentCreator());
 
         cmpUiCreators = new Hashtable<String, ComponentUICreator>();
         cmpUiCreators.put(ResourceManager.REPRESENTATIVE_ANCHOR_BUTTON_UI, new RepresentativeAnchorButtonComponentUICreator());
@@ -224,24 +205,7 @@ public class MyDoggyResourceManager implements ResourceManager {
                 result = ResourceBundle.getBundle(bundle, locale, classLoader);
         } catch (Throwable e) {
             e.printStackTrace();
-
-            result = new ResourceBundle() {
-                protected Object handleGetObject(String key) {
-                    return key;
-                }
-
-                public Enumeration<String> getKeys() {
-                    return new Enumeration<String>() {
-                        public boolean hasMoreElements() {
-                            return false;
-                        }
-
-                        public String nextElement() {
-                            return null;
-                        }
-                    };
-                }
-            };
+            result = new DummyResourceBundle();       
         }
         return result;
     }
@@ -252,22 +216,22 @@ public class MyDoggyResourceManager implements ResourceManager {
 
 
     public static interface ComponentCreator {
-        Component createComponent(ToolWindowManager manager, Object... args);
+        Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args);
     }
 
     public static interface ComponentUICreator {
-        ComponentUI createComponentUI(ToolWindowManager manager, Object... args);
+        ComponentUI createComponentUI(ToolWindowManager manager, ResourceManager resourceManager, Object... args);
     }
 
     public static interface ComponentCustomizer {
 
-        void applyCustomization(Component component, Object... args);
+        void applyCustomization(Component component, ResourceManager resourceManager, Object... args);
     }
 
 
     public static class BarSplitPaneComponentCreator implements ComponentCreator {
 
-        public Component createComponent(ToolWindowManager manager, Object... args) {
+        public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
             JSplitPane splitPane = new DebugSplitPane((Integer) args[0]);
             splitPane.setBorder(null);
             splitPane.setContinuousLayout(true);
@@ -281,21 +245,21 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     public static class BarContentPaneComponentCreator implements ComponentCreator {
 
-        public Component createComponent(ToolWindowManager manager, Object... args) {
+        public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
             return new JPanel();
         }
     }
 
     public static class CornerContentPaneComponentCreator implements ComponentCreator {
 
-        public Component createComponent(ToolWindowManager manager, Object... args) {
+        public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
             return new JPanel();
         }
     }
 
     public static class DesktopContentPaneComponentCreator implements ComponentCreator {
 
-        public Component createComponent(ToolWindowManager manager, Object... args) {
+        public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
             JDesktopPane desktopPane = new JDesktopPane();
             desktopPane.setDesktopManager(new ContentDesktopManager());
             return desktopPane;
@@ -304,7 +268,7 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     public static class ToolWindowTitleBarComponentCreator implements ComponentCreator {
 
-        public Component createComponent(ToolWindowManager manager, Object... args) {
+        public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
             JPanel titleBar = new JPanel() {
                 public void setUI(PanelUI ui) {
                     if (ui instanceof ToolWindowTitleBarUI)
@@ -319,7 +283,7 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     public static class ToolWindowTitleButtonComponentCreator implements ComponentCreator {
 
-        public Component createComponent(ToolWindowManager manager, Object... args) {
+        public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
             JButton button = new ToolWindowActiveButton();
             button.setUI((ButtonUI) BasicButtonUI.createUI(button));
             return button;
@@ -329,7 +293,7 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     public static class MyDoggyManagerMainContainerComponentCreator implements ComponentCreator {
 
-        public Component createComponent(ToolWindowManager manager, Object... args) {
+        public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
             JPanel panel = new JPanel();
             panel.setBackground(Color.GRAY);
             return panel;
@@ -338,24 +302,45 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     public static class RepresentativeAnchorButtonComponentUICreator implements ComponentUICreator {
 
-        public ComponentUI createComponentUI(ToolWindowManager manager, Object... args) {
+        public ComponentUI createComponentUI(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
             return new RepresentativeAnchorUI((ToolWindowDescriptor) args[0]);
         }
     }
 
     public static class ToolWindowTitleBarComponentUICreator implements ComponentUICreator {
 
-        public ComponentUI createComponentUI(ToolWindowManager manager, Object... args) {
+        public ComponentUI createComponentUI(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
             return new ToolWindowTitleBarUI((ToolWindowDescriptor) args[0], (DockedContainer) args[1]);
         }
     }
 
     public static class MyDoggyManagerPanelComponentCustomizer implements ComponentCustomizer {
 
-        public void applyCustomization(Component component, Object... args) {
+        public void applyCustomization(Component component, ResourceManager resourceManager, Object... args) {
 //            component.setBackground(Color.black);
         }
     }
 
+    public static class ToolScrollBarArrowComponentCreator implements ComponentCreator {
+
+        public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
+            JLabel label = new JLabel() {
+                public void setUI(LabelUI ui) {
+                    if (ui instanceof ToolScrollBarArrowUI)
+                        super.setUI(ui);
+                }
+            };
+            label.setUI(new ToolScrollBarArrowUI(resourceManager));
+            label.setPreferredSize(new Dimension(16, 16));
+            label.setHorizontalAlignment(SwingConstants.CENTER);
+            label.setVerticalAlignment(SwingConstants.CENTER);
+            label.setOpaque(false);
+            label.setFocusable(false);
+            label.setBackground(Colors.orange);
+            label.setIcon(resourceManager.getIcon((String) args[0]));
+
+            return label;
+        }
+    }
 
 }

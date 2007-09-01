@@ -21,14 +21,15 @@ import java.util.Map;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyContentManager implements ContentManager {
-    private MyDoggyToolWindowManager toolWindowManager;
+    protected MyDoggyToolWindowManager toolWindowManager;
 
-    private List<Content> contents;
-    private Map<Object, Content> contentMap;
-    private PlafContentManagerUI plafContentManagerUI;
+    protected List<Content> contents;
+    protected Map<Object, Content> contentMap;
+    protected PlafContentManagerUI plafContentManagerUI;
 
-    private EventListenerList listeners;
+    protected EventListenerList listeners;
 
+    
     MyDoggyContentManager(MyDoggyToolWindowManager windowManager) {
         this.toolWindowManager = windowManager;
         this.contents = new ArrayList<Content>();
@@ -205,7 +206,7 @@ public class MyDoggyContentManager implements ContentManager {
         plafContentManagerUI.updateUI();
     }
 
-	public PlafContentManagerUI getBackContentManagerUI() {
+	public PlafContentManagerUI getPlafContentManagerUI() {
 		return plafContentManagerUI;
 	}
 

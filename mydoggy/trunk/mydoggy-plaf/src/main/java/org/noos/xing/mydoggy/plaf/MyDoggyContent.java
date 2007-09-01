@@ -92,13 +92,13 @@ public class MyDoggyContent implements PlafContentUI {
     }
 
     public boolean isSelected() {
-        return contentManager.getBackContentManagerUI().isSelected(this);
+        return contentManager.getPlafContentManagerUI().isSelected(this);
     }
 
     public void setSelected(boolean selected) {
         if (isSelected() != selected) {
             boolean old = isSelected();
-            contentManager.getBackContentManagerUI().setSelected(this, selected);
+            contentManager.getPlafContentManagerUI().setSelected(this, selected);
 
             firePropertyChange("selected", old, selected);
         }
@@ -207,6 +207,7 @@ public class MyDoggyContent implements PlafContentUI {
     public synchronized PropertyChangeListener[] getPropertyChangeListeners() {
         return listeners.getListeners(PropertyChangeListener.class);
     }
+
 
     public void addUIPropertyChangeListener(PropertyChangeListener listener) {
         addInternalPropertyChangeListener(listener);
