@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
-import org.noos.xing.mydoggy.plaf.ui.cmp.UIFSplitPane;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowBar;
 
 import javax.swing.plaf.SplitPaneUI;

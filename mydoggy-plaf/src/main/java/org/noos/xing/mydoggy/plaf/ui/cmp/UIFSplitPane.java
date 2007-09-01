@@ -30,14 +30,10 @@
 
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
-import java.awt.Component;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JSplitPane;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.plaf.SplitPaneUI;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
+import java.awt.*;
 
 /**
  * A <code>JSplitPane</code> subclass that can try to remove the divider border.

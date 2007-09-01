@@ -10,9 +10,8 @@ import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ToolWindowBarDropTarget;
-import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
-import org.noos.xing.mydoggy.plaf.ui.look.RepresentativeAnchorUI;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToolsOnBarMouseListener;
+import org.noos.xing.mydoggy.plaf.ui.look.RepresentativeAnchorUI;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -30,26 +29,26 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     public static final int VERTICAL_RIGHT = TextIcon.ROTATE_RIGHT;
     public static final int HORIZONTAL = TextIcon.ROTATE_NONE;
 
-    private static final double[] COLUMNS = {2, 19, 2};
-    private static final double[] ROWS = COLUMNS;
+    protected static final double[] COLUMNS = {2, 19, 2};
+    protected static final double[] ROWS = COLUMNS;
 
-    private MyDoggyToolWindowManager manager;
+    protected MyDoggyToolWindowManager manager;
 
-    private ToolWindowAnchor anchor;
+    protected ToolWindowAnchor anchor;
 
     // Bar Components
-    private JToolScrollBar toolScrollBar;
-    private JPanel contentPane;
-    private TableLayout contentPaneLayout;
+    protected JToolScrollBar toolScrollBar;
+    protected JPanel contentPane;
+    protected TableLayout contentPaneLayout;
 
-    private JSplitPane splitPane;
-    private int availableTools;
-    private int orientation;
-    private boolean horizontal;
+    protected JSplitPane splitPane;
+    protected int availableTools;
+    protected int orientation;
+    protected boolean horizontal;
 
-    private PropertyChangeSupport propertyChangeSupport;
+    protected PropertyChangeSupport propertyChangeSupport;
 
-    private boolean tempShowed;
+    protected boolean tempShowed;
 
     boolean valueAdjusting = false;
 
@@ -414,7 +413,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     }
 
 
-    class AvailableListener implements PropertyChangeListener {
+    protected class AvailableListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
@@ -447,7 +446,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
     }
 
-    class ActiveBeforeListener implements PropertyChangeListener {
+    protected class ActiveBeforeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
             boolean newValue = (Boolean) evt.getNewValue();
@@ -465,7 +464,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         }
     }
 
-    static class ActiveListener implements PropertyChangeListener {
+    protected static class ActiveListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
             toolWindowDescriptor.getToolWindowContainer().propertyChange(evt);
@@ -473,7 +472,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     }
 
 
-    class TypeListener extends AvailableListener {
+    protected class TypeListener extends AvailableListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
@@ -494,7 +493,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     }
 
 
-    class VisibleBeforeListener implements PropertyChangeListener {
+    protected class VisibleBeforeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
@@ -534,7 +533,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
     }
 
-    class VisibleListener implements PropertyChangeListener {
+    protected class VisibleListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
             boolean oldValue = (Boolean) evt.getOldValue();
@@ -546,10 +545,10 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     }
 
 
-    class VisibleDockedListener implements PropertyChangeListener {
-        private final SplitAnimation splitAnimation = new SplitAnimation();
-        private boolean vsdValueAdjusting = false;
-        private Map<ToolWindowDescriptor, Integer> poss;
+    protected class VisibleDockedListener implements PropertyChangeListener {
+        protected final SplitAnimation splitAnimation = new SplitAnimation();
+        protected boolean vsdValueAdjusting = false;
+        protected Map<ToolWindowDescriptor, Integer> poss;
 
         public VisibleDockedListener() {
             poss = new HashMap<ToolWindowDescriptor, Integer>();
@@ -731,9 +730,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             }
         }
 
-        private class SplitAnimation extends AbstractAnimation {
-            private int dividerLocation;
-            private int sheetLen;
+        protected class SplitAnimation extends AbstractAnimation {
+            protected int dividerLocation;
+            protected int sheetLen;
 
             public SplitAnimation() {
                 super(60f);
@@ -804,7 +803,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
     }
 
-    static class VisibleFloatingListener implements PropertyChangeListener {
+    protected static class VisibleFloatingListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
@@ -821,7 +820,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         }
     }
 
-    static class VisibleFloatingFreeListener implements PropertyChangeListener {
+    protected static class VisibleFloatingFreeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
@@ -838,7 +837,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         }
     }
 
-    class VisibleSlidingListener implements PropertyChangeListener {
+    protected class VisibleSlidingListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
@@ -855,7 +854,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     }
 
 
-    class IndexListener implements PropertyChangeListener {
+    protected class IndexListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
@@ -878,15 +877,15 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         }
     }
 
-    class IconListener extends IndexListener {
+    protected class IconListener extends IndexListener {
     }
 
-    class TitleListener extends IndexListener {
+    protected class TitleListener extends IndexListener {
     }
 
 
-    class DragListener implements PropertyChangeListener {
-        private int len;
+    protected class DragListener implements PropertyChangeListener {
+        protected int len;
 
         public void propertyChange(PropertyChangeEvent evt) {
             if ("startDrag".equals(evt.getPropertyName())) {
@@ -928,7 +927,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         }
     }
 
-    class MaximizedListener implements PropertyChangeListener {
+    protected class MaximizedListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();

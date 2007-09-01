@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy.plaf.persistence;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)

@@ -22,33 +22,33 @@ public class MyDoggyToolWindow implements ToolWindow {
     static class ToolWindowLock {
     }
 
-    private int index;
-    private String id;
-    private ToolWindowAnchor anchor;
-    private ToolWindowType type;
+    protected int index;
+    protected String id;
+    protected ToolWindowAnchor anchor;
+    protected ToolWindowType type;
 
-    private boolean autoHide;
-    private boolean available;
-    private boolean visible;
-    private boolean active;
-    private boolean flash;
-    private boolean maximized;
-    private boolean aggregateEnabled;
+    protected boolean autoHide;
+    protected boolean available;
+    protected boolean visible;
+    protected boolean active;
+    protected boolean flash;
+    protected boolean maximized;
+    protected boolean aggregateEnabled;
 
-    private java.util.List<ToolWindowTab> toolWindowTabs;
-    private ToolWindowTab defaultToolWindowTab;
+    protected java.util.List<ToolWindowTab> toolWindowTabs;
+    protected ToolWindowTab defaultToolWindowTab;
 
-    private ResourceBundle resourceBoundle;
-    private ToolWindowDescriptor descriptor;
+    protected ResourceBundle resourceBoundle;
+    protected ToolWindowDescriptor descriptor;
 
-    private EventListenerList internalListenerList;
-    private EventListenerList listenerList;
+    protected EventListenerList internalListenerList;
+    protected EventListenerList listenerList;
 
-    private boolean publicEvent = true;
+    protected boolean publicEvent = true;
 
-    private int availablePosition;
+    protected int availablePosition;
 
-    MyDoggyToolWindow(MyDoggyToolWindowManager manager, Window anchestor, String id, int index,
+    protected MyDoggyToolWindow(MyDoggyToolWindowManager manager, Window anchestor, String id, int index,
                       ToolWindowAnchor anchor, ToolWindowType type,
                       String title, Icon icon, Component component,
                       ResourceBundle resourceBundle) {

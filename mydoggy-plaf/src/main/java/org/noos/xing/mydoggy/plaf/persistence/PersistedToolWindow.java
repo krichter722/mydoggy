@@ -1,8 +1,8 @@
 package org.noos.xing.mydoggy.plaf.persistence;
 
-import org.xml.sax.Attributes;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
+import org.xml.sax.Attributes;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)

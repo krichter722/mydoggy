@@ -1,7 +1,5 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-
 import javax.swing.*;
 import java.awt.*;
 

@@ -80,8 +80,8 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * @param toolWindowActionHandler the handler.
      * @see ToolWindowActionHandler
      * @see #getToolWindowActionHandler()
-     * @since 1.2.0
      * @see #getToolWindowActionHandler()
+     * @since 1.2.0
      */
     void setToolWindowActionHandler(ToolWindowActionHandler toolWindowActionHandler);
 
@@ -91,8 +91,8 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      *
      * @param enabled <code>true</code> to enable preview mode;
      *                <code>false</code> to disable preview mode.
-     * @since 1.3.0
      * @see #isPreviewEnabled()
+     * @since 1.3.0
      */
     void setPreviewEnabled(boolean enabled);
 
@@ -101,8 +101,8 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      *
      * @return <code>true</code> if the preview mode is enabled;
      *         <code>false</code> otherwise.
-     * @since 1.3.0
      * @see #setPreviewEnabled(boolean)
+     * @since 1.3.0
      */
     boolean isPreviewEnabled();
 
@@ -111,8 +111,8 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * after a delay time the preview will become visible if the preview mode is enabled.
      *
      * @param delay the preview delay
-     * @since 1.3.0
      * @see #getPreviewDelay()
+     * @since 1.3.0
      */
     void setPreviewDelay(int delay);
 
@@ -120,8 +120,8 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * Returns the preview delay.
      *
      * @return preview delay in milliseconds.
-     * @since 1.3.0
      * @see #setPreviewDelay(int)
+     * @since 1.3.0
      */
     int getPreviewDelay();
 
@@ -129,8 +129,8 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * Sets the transparent ratio of the preview. Valid range is [0.0, 1.0]
      *
      * @param transparentRatio the transparent ratio.
-     * @since 1.3.0
      * @see #getPreviewTransparentRatio()
+     * @since 1.3.0
      */
     void setPreviewTransparentRatio(float transparentRatio);
 
@@ -138,8 +138,8 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * Returns the transparent ratio.
      *
      * @return ratio value used to describe the opacity of the preview.
+     * @see #setPreviewTransparentRatio(float)
      * @since 1.3.0
-     * @see #setPreviewTransparentRatio(float)  
      */
     float getPreviewTransparentRatio();
 
@@ -164,12 +164,12 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
     boolean isHideRepresentativeButtonOnVisible();
 
     /**
-     * Sets if the toolwindow id has to be showed on the title bar.
+     * Sets if the toolwindow id has to be showed on the title bar when the toolwindow is docked (that is type == DOCKED).
      *
      * @param idVisibleOnTitleBar <code>true</code> if the toolwindow id has to be showed on the title bar.
-     * tool has type ToolWindowType.DOCKED.<br>
-     *         <code>false</code> otherwise.
-     * @since 1.3.1 
+     * tool has type ToolWindowType.DOCKED.<br><code>false</code> otherwise.
+     * @see #isIdVisibleOnTitleBar()
+     * @since 1.3.1
      */
     void setIdVisibleOnTitleBar(boolean idVisibleOnTitleBar);
 
@@ -178,6 +178,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * @return <code>true</code> if the toolwindow id has to be showed on the title bar.
      * tool has type ToolWindowType.DOCKED.<br>
      *         <code>false</code> otherwise.
+     * @see #setIdVisibleOnTitleBar(boolean)
      * @since 1.3.1
      */
     boolean isIdVisibleOnTitleBar();

@@ -64,7 +64,7 @@ contentManager.setContentManagerUI(new MyDoggyDesktopContentManagerUI());
         <section name="Your own implementation">
             <p>
                 If you want to implement your own <code>ContentManageUI,</code> your class must implement non only the
-                <code>ContentManageUI</code> interface but also the <code>BackContentManagerUI</code> interface in the
+                <code>ContentManageUI</code> interface but also the <code>PlafContentManagerUI</code> interface in the
                 package <code>org.noos.xing.mydoggy.plaf.ui.content</code>.
                 <br/>
                 This is to provide all neccesary methods to use the manager.

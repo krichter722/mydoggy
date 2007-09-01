@@ -1,7 +1,9 @@
 package org.noos.xing.mydoggy.plaf;
 
 import junit.framework.TestCase;
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.FloatingTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.ToolWindowType;
 
 import javax.swing.*;
 

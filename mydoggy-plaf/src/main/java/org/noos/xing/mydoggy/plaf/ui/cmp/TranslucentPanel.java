@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
-import org.noos.xing.mydoggy.plaf.ui.cmp.TranslucentRepaintManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +31,7 @@ public class TranslucentPanel extends JPanel implements TransparencyManager {
     public void paint(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         Composite oldComp = g2d.getComposite();
+
         float alpha = getAlpha();
 
         Composite alphaComp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);

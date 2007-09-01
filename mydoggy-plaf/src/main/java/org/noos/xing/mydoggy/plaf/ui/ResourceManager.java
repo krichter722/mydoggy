@@ -46,7 +46,6 @@ public interface ResourceManager {
     public static final String TOOL_SCROLL_BAR_UI_BCK_START = "TOOL_SCROLL_BAR_UI_BCK_START";
     public static final String TOOL_SCROLL_BAR_UI_BCK_END = "TOOL_SCROLL_BAR_UI_BCK_END";
 
-
     // Representative Anchor Button - Colors
 
     public static final String RAB_MOUSE_IN_BORDER = "RAB_MOUSE_IN_BORDER";

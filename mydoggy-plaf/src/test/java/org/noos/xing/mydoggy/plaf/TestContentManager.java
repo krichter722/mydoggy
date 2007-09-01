@@ -1,9 +1,9 @@
 package org.noos.xing.mydoggy.plaf;
 
 import junit.framework.TestCase;
-import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.ContentManager;
+import org.noos.xing.mydoggy.ToolWindowManager;
 
 import javax.swing.*;
 

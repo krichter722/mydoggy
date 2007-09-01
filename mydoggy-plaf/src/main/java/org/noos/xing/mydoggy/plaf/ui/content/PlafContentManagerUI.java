@@ -8,6 +8,7 @@ import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @todo add javadocs
  */
 public interface PlafContentManagerUI {
 
