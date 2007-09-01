@@ -11,14 +11,15 @@ import java.util.List;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyToolWindowGroup implements ToolWindowGroup {
-    private MyDoggyToolWindowManager manager;
+    protected MyDoggyToolWindowManager manager;
 
-    private String name;
-    private List<ToolWindow> tools;
-    private EventListenerList listenerList;
-    private boolean implicit;
+    protected String name;
+    protected List<ToolWindow> tools;
+    protected EventListenerList listenerList;
+    protected boolean implicit;
 
-    MyDoggyToolWindowGroup(MyDoggyToolWindowManager manager, String name) {
+
+    protected MyDoggyToolWindowGroup(MyDoggyToolWindowManager manager, String name) {
         this.manager = manager;
         this.name = name;
         this.tools = new ArrayList<ToolWindow>();
@@ -30,7 +31,6 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
     public String getName() {
         return name;
     }
-
 
     public void addToolWindow(ToolWindow toolWindow) {
         if (toolWindow == null)
