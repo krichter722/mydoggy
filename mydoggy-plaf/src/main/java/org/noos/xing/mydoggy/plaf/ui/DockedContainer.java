@@ -156,7 +156,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
 
-    private void initDockedComponents() {
+    protected void initDockedComponents() {
         propertyChangeSupport = new PropertyChangeSupport(this);
 
         titleBarMouseAdapter = new TitleBarMouseAdapter();
@@ -230,7 +230,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         configureDockedIcons();
     }
 
-    private void initDockedListeners() {
+    protected void initDockedListeners() {
         addPropertyChangeListener("active", new ActivePropertyChangeListener());
         addPropertyChangeListener("autoHide", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
@@ -291,17 +291,9 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             public void propertyChange(PropertyChangeEvent evt) {
                 if ("idVisibleOnToolBar".equals(evt.getPropertyName())) {
                     if ((Boolean) evt.getNewValue()) {
-                        TableLayout layout = (TableLayout) titleBar.getLayout();
-                        layout.setColumn(0,
-                                         titleBar
-                                                 .getFontMetrics(titleBar.getFont())
-                                                 .stringWidth(
-                                                         resourceManager.getUserString(toolWindow.getId())
-                                                 )
-                                         + 12);
+                        enableIdOnTitleBar();
                     } else {
-                        TableLayout layout = (TableLayout) titleBar.getLayout();
-                        layout.setColumn(0, 3);
+                        disableIdOnTitleBar();
                     }
 
                 }
@@ -338,7 +330,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         toolWindow.addToolWindowListener(new DockedToolWindowListener());
     }
 
-    private JButton renderTitleButton(String actionCommnad, ActionListener actionListener, String tooltip, String iconId, String name) {
+    protected JButton renderTitleButton(String actionCommnad, ActionListener actionListener, String tooltip, String iconId, String name) {
         JButton button = (JButton) resourceManager.createComponent(
                 ResourceManager.TOOL_WINDOW_TITLE_BUTTON,
                 descriptor.getManager()
@@ -352,7 +344,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         return button;
     }
 
-    private void configureDockedIcons() {
+    protected void configureDockedIcons() {
         setPinVisible(true);
 
         setFloating();
@@ -362,6 +354,21 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         setDocked();
     }
 
+    protected void enableIdOnTitleBar() {
+        TableLayout layout = (TableLayout) titleBar.getLayout();
+        layout.setColumn(0,
+                         titleBar
+                                 .getFontMetrics(titleBar.getFont())
+                                 .stringWidth(
+                                         resourceManager.getUserString(toolWindow.getId())
+                                 )
+                         + 12);
+    }
+
+    protected void disableIdOnTitleBar() {
+        TableLayout layout = (TableLayout) titleBar.getLayout();
+        layout.setColumn(0, 3);
+    }
 
     public interface PopupUpdater {
 

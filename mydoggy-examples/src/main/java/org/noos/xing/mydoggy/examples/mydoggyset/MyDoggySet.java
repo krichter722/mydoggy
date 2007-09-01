@@ -93,6 +93,9 @@ public class MyDoggySet {
         );
 */
         this.toolWindowManager = myDoggyToolWindowManager;
+        ((DockedTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).setIdVisibleOnTitleBar(false);
+
+
 
         initMenuBar();
     }

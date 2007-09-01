@@ -144,6 +144,8 @@ public class FloatingContainer extends DockedContainer {
 
                 assert "type".equals(evt.getPropertyName());
                 if (evt.getNewValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING_FREE) {
+                    enableIdOnTitleBar();
+                    
                     // Remove
                     window.removeMouseMotionListener(resizeMouseInputHandler);
                     window.removeMouseListener(resizeMouseInputHandler);
@@ -176,6 +178,9 @@ public class FloatingContainer extends DockedContainer {
 
                     settedListener = true;
                 } else {
+                    if (!descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar())
+                        disableIdOnTitleBar();
+                                        
                     if (settedListener)
                         lastBounds = window.getBounds();
 
