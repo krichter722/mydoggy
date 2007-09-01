@@ -62,36 +62,45 @@ public interface ToolWindowManagerDescriptor {
     void setCornerComponent(Corner corner, Component component);
 
     /**
-     * @param numberingEnabled
+     * Enable or disable toolwindow index shortcuts.
+     *
+     * @param numberingEnabled <tt>true</tt> to enabled toolwindow index shortcuts, <tt>false</tt> to disable..
      * @since 1.3.1
+     * @see org.noos.xing.mydoggy.ToolWindow#setIndex(int)
+     * @see #isNumberingEnabled() 
      */
     void setNumberingEnabled(boolean numberingEnabled);
 
     /**
-     * TODO
+     * Returns the activation status of the toolwindow index shortcuts.
      *
-     * @return
+     * @return <tt>true</tt> is the toolwindow index shortcuts are enabled, <tt>false</tt> otherwise. 
      * @since 1.3.1
+     * @see #setNumberingEnabled(boolean)
      */
     boolean isNumberingEnabled();
 
     /**
-     * Set the size of the separator the separate a visible toolwindow from the contenManager for a
+     * Sets the size of the border the separate a docked toolwindow from the contenManager for a
      * specific anchor.
      *
-     * @param anchor
-     * @param size
-     * TODO
+     * @param anchor the anchor.
+     * @param size an integer giving the size of the divider in pixels
+     * @see #getDividerSize(ToolWindowAnchor)
+     * @see org.noos.xing.mydoggy.ToolWindowAnchor
      */
     void setDividerSize(ToolWindowAnchor anchor, int size);
 
     /**
-     * @param anchor
-     * @return
+     * Returns the size of the border the separate a docked toolwindow from the contenManager for the
+     * specified anchor.
+     *
+     * @param anchor the anchor.
+     * @return the size of the border
      * @since 1.3.1
+     * @see #setDividerSize(ToolWindowAnchor, int)
      */
     int getDividerSize(ToolWindowAnchor anchor);
-
 
     /**
      * Adds a PropertyChangeListener to the listener list. The listener is
