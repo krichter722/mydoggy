@@ -10,18 +10,18 @@ import java.io.Writer;
 import java.util.Stack;
 
 public class XMLWriter {
-    private final static Object SEEN_NOTHING = new Object();
-    private final static Object SEEN_ELEMENT = new Object();
-    private final static Object SEEN_DATA = new Object();
+    protected final static Object SEEN_NOTHING = new Object();
+    protected final static Object SEEN_ELEMENT = new Object();
+    protected final static Object SEEN_DATA = new Object();
 
-    private int elementLevel = 0;
-    private Writer output;
-    private final Attributes EMPTY_ATTS = new AttributesImpl();
+    protected int elementLevel = 0;
+    protected Writer output;
+    protected final Attributes EMPTY_ATTS = new AttributesImpl();
 
-    private Object state = SEEN_NOTHING;
-    private Stack<Object> stateStack;
-    private int indentStep = 0;
-    private int depth = 0;
+    protected Object state = SEEN_NOTHING;
+    protected Stack<Object> stateStack;
+    protected int indentStep = 0;
+    protected int depth = 0;
 
 
     public XMLWriter(Writer writer) {
@@ -164,13 +164,13 @@ public class XMLWriter {
     }
 
 
-    private void init(Writer writer) {
+    protected void init(Writer writer) {
         setOutput(writer);
         reset();
         setIndentStep(4);
     }
 
-    private void write(char c) throws SAXException {
+    protected void write(char c) throws SAXException {
         try {
             output.write(c);
         } catch (IOException e) {
@@ -178,7 +178,7 @@ public class XMLWriter {
         }
     }
 
-    private void write(String s) throws SAXException {
+    protected void write(String s) throws SAXException {
         try {
             output.write(s);
         } catch (IOException e) {
@@ -186,7 +186,7 @@ public class XMLWriter {
         }
     }
 
-    private void writeAttributes(Attributes atts) throws SAXException {
+    protected void writeAttributes(Attributes atts) throws SAXException {
         int len = atts.getLength();
         for (int i = 0; i < len; i++) {
             write(' ');
@@ -198,7 +198,7 @@ public class XMLWriter {
         }
     }
 
-    private void writeEsc(char ch[], int start, int length, boolean isAttVal) throws SAXException {
+    protected void writeEsc(char ch[], int start, int length, boolean isAttVal) throws SAXException {
         for (int i = start; i < start + length; i++) {
             switch (ch[i]) {
                 case '&':
@@ -229,11 +229,11 @@ public class XMLWriter {
         }
     }
 
-    private void writeName(String elementName) throws SAXException {
+    protected void writeName(String elementName) throws SAXException {
         write(elementName);
     }
 
-    private void doIndent() throws SAXException {
+    protected void doIndent() throws SAXException {
         if (indentStep > 0 && depth > 0) {
             int n = indentStep * depth;
             char ch[] = new char[n];

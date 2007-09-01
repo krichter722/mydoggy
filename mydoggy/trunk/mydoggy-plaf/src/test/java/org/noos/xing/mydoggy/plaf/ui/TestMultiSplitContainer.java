@@ -1,10 +1,9 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
 import junit.framework.TestCase;
+import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitContainer;
 
 import javax.swing.*;
-
-import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitContainer;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)

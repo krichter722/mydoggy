@@ -10,7 +10,9 @@
     <body>
 		<section name="Tutorial - Step 6">
             <p>
-                Now we'll play with <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTab.html">ToolWindowTab</a> class.
+                Now we'll play with <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTab.html">PersistenceDelegate</a> interface.
+                We'll add a WindowListener to the main frame to catch the necessary events to load and store the toolwindowmanager
+                workspace.
             </p>
 
             <source>

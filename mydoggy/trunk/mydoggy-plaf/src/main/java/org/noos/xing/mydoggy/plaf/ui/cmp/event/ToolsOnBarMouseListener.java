@@ -1,14 +1,14 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp.event;
 
-import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowManager;
 
 import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)

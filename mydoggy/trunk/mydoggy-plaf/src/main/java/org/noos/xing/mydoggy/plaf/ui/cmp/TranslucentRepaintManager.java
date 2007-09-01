@@ -1,7 +1,5 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
-import org.noos.xing.mydoggy.plaf.ui.cmp.TranslucentPanel;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -14,9 +12,10 @@ public class TranslucentRepaintManager extends javax.swing.RepaintManager {
             int lastDeltaY = c.getY();
             Container parent = c.getParent();
             while (parent instanceof JComponent) {
-                if (!parent.isVisible() || !parent.isDisplayable()) {
+                if (!parent.isVisible() || !parent.isDisplayable())
                     return;
-                }
+
+                // TODO: something more fine grounded..
                 if (parent instanceof TranslucentPanel && (((TranslucentPanel) parent).getAlpha() < 1f ||
                                                            !parent.isOpaque())) {
                     x += lastDeltaX;
@@ -24,6 +23,7 @@ public class TranslucentRepaintManager extends javax.swing.RepaintManager {
                     lastDeltaX = lastDeltaY = 0;
                     c = (JComponent) parent;
                 }
+
                 lastDeltaX += parent.getX();
                 lastDeltaY += parent.getY();
                 parent = parent.getParent();

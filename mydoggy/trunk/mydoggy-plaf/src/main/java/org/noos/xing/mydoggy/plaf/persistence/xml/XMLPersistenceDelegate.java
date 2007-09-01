@@ -7,16 +7,16 @@ import org.noos.xing.mydoggy.plaf.persistence.merge.UnionMergePolicy;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)

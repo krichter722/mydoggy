@@ -5,8 +5,8 @@ import org.noos.xing.mydoggy.ToolWindowTab;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import java.awt.*;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)

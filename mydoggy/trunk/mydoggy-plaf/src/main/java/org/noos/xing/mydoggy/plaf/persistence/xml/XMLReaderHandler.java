@@ -16,7 +16,7 @@ import java.util.Map;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class XMLReaderHandler extends DefaultHandler {
-    enum State {
+    public enum State {
         NOP,
         MYDOGGY,
         SUB_SECTION,
@@ -28,21 +28,21 @@ public class XMLReaderHandler extends DefaultHandler {
         CONTENT_MANAGER
     }
 
-    private ToolWindowManager toolWindowManager;
-    private MergePolicyApplier mergePolicyApplier;
+    protected ToolWindowManager toolWindowManager;
+    protected MergePolicyApplier mergePolicyApplier;
 
-    private State state;
-    private State subState;
+    protected State state;
+    protected State subState;
 
-    private PersistedToolWindowManager persistedToolWindowManager;
-    private PersistedToolWindow persistedToolWindow;
-    private PersistedDockedType dockedType;
-    private PersistedSlidingType slidingType;
-    private PersistedFloatingType floatingType;
-    private PersistedMostRecentDescriptor persistedMostRecentDescriptor;
-    private PersistedContentManager persistedContentManager;
+    protected PersistedToolWindowManager persistedToolWindowManager;
+    protected PersistedToolWindow persistedToolWindow;
+    protected PersistedDockedType dockedType;
+    protected PersistedSlidingType slidingType;
+    protected PersistedFloatingType floatingType;
+    protected PersistedMostRecentDescriptor persistedMostRecentDescriptor;
+    protected PersistedContentManager persistedContentManager;
 
-    private Map<ToolWindow, PersistedToolWindow> map;
+    protected Map<ToolWindow, PersistedToolWindow> map;
 
 
     public XMLReaderHandler(ToolWindowManager toolWindowManager, MergePolicyApplier mergePolicyApplier) {
@@ -262,6 +262,7 @@ public class XMLReaderHandler extends DefaultHandler {
                 selectedContent.setSelected(true);
         }
     }
+
 
     protected void applyTo(ToolWindowAnchor anchor) {
         ToolWindow activeTool = null;

@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
-import org.noos.xing.mydoggy.DesktopContentUI;
 import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.DesktopContentUI;
 
 import javax.swing.*;
 import java.beans.PropertyVetoException;

@@ -8,7 +8,10 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Locale;
+import java.io.FileOutputStream;
 
 public class SampleApp {
     private JFrame frame;
@@ -17,6 +20,7 @@ public class SampleApp {
     protected void setUp() {
         initComponents();
         initToolWindowManager();
+        initListeners();
     }
 
     protected void start() {
@@ -77,7 +81,6 @@ public class SampleApp {
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
     }
 
-
     protected void setupDebugTool() {
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
 
@@ -130,7 +133,6 @@ public class SampleApp {
         profilingTab.setCloseable(true);
     }
 
-
     protected void initContentManager() {
          JTree treeContent = new JTree();
 
@@ -144,7 +146,6 @@ public class SampleApp {
 
         setupContentManagerUI();
      }
-
 
     protected void setupContentManagerUI() {
         TabbedContentManagerUI contentManagerUI = (TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
@@ -168,6 +169,20 @@ public class SampleApp {
         contentUI.setTransparentMode(true);
         contentUI.setTransparentRatio(0.7f);
         contentUI.setTransparentDelay(1000);
+    }
+
+    protected void initListeners() {
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                try {
+                    FileOutputStream output = new FileOutputStream("workspace.xml");
+                    toolWindowManager.getPersistenceDelegate().save(output);
+                    output.close();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
     }
 
 

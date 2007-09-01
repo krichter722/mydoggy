@@ -33,8 +33,8 @@ import java.util.*;
  * description: MyDoggyToolWindowManager
  */
 public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener {
-    private static final int COLUMN_LENGTH = 23;
-    private static final int ROW_LENGTH = 23;
+    protected static final int COLUMN_LENGTH = 23;
+    protected static final int ROW_LENGTH = 23;
 
     public final static Object sync = new Object();
 
@@ -420,6 +420,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return resourceManager;
     }
 
+
     protected void initPersistenceDelegate() {
         this.persistenceDelegate = new XMLPersistenceDelegate(this);
     }
@@ -683,7 +684,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
 
-    class AvailablePropertyChangeListener implements PropertyChangeListener {
+    protected class AvailablePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor window = (ToolWindowDescriptor) evt.getSource();
 
@@ -695,7 +696,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    class VisiblePropertyChangeListener implements PropertyChangeListener {
+    protected class VisiblePropertyChangeListener implements PropertyChangeListener {
         boolean showingGroupValueAdj = false;
 
         public void propertyChange(PropertyChangeEvent evt) {
@@ -741,7 +742,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    class ActivePropertyChangeListener implements PropertyChangeListener {
+    protected class ActivePropertyChangeListener implements PropertyChangeListener {
 
         public synchronized void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
@@ -776,7 +777,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    class AnchorPropertyChangeListener implements PropertyChangeListener {
+    protected class AnchorPropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
 
@@ -806,13 +807,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    static class AutoHideChangeListener implements PropertyChangeListener {
+    protected static class AutoHideChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ((ToolWindowDescriptor) evt.getSource()).getToolWindowContainer().propertyChange(evt);
         }
     }
 
-    class TypePropertyChangeListener implements PropertyChangeListener {
+    protected class TypePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor window = (ToolWindowDescriptor) evt.getSource();
 
@@ -825,7 +826,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    class IndexChangeListener implements PropertyChangeListener {
+    protected class IndexChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
             ToolWindow modifiedTool = descriptor.getToolWindow();
@@ -846,7 +847,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    class IconChangeListener implements PropertyChangeListener {
+    protected class IconChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
 
@@ -855,7 +856,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    class TitleChangeListener implements PropertyChangeListener {
+    protected class TitleChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
 
@@ -864,14 +865,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    class NumberingEnabledChangeListener implements PropertyChangeListener {
+    protected class NumberingEnabledChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             for (ToolWindowDescriptor descriptor : tools.values())
                 descriptor.propertyChange(evt);
         }
     }
 
-    class UpdateUIChangeListener implements PropertyChangeListener {
+    protected class UpdateUIChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             contentManager.updateUI();
@@ -882,7 +883,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    class MaximizedChangeListener implements PropertyChangeListener {
+    protected class MaximizedChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
             toolWindowDescriptor.getToolWindowContainer().propertyChange(evt);

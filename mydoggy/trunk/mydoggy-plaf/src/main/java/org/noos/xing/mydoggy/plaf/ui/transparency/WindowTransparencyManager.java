@@ -1,7 +1,5 @@
 package org.noos.xing.mydoggy.plaf.ui.transparency;
 
-import com.sun.jna.examples.WindowUtils;
-
 import java.awt.*;
 
 

@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy.plaf.support;
 
-import java.util.Hashtable;
 import java.io.Serializable;
+import java.util.Hashtable;
 
 /**
  * @author Angelo De Caro

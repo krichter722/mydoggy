@@ -4,15 +4,15 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.Vector;
 import java.util.Properties;
-import java.io.InputStream;
-import java.io.File;
-import java.io.IOException;
+import java.util.Vector;
 
 /**
  * @author Angelo De Caro
