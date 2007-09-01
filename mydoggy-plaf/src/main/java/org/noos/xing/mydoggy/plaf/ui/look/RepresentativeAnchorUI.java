@@ -378,7 +378,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                             glassPane.remove(previewPanel);
 
                         previewPanel = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
-                        previewPanel.setAlpha(dockedTypeDescriptor.getPreviewTransparentRatio());
+                        previewPanel.setAlphaModeRatio(dockedTypeDescriptor.getPreviewTransparentRatio());
                         previewPanel.setSize(width + 4, height + 4);
 
                         Container mainContainer = descriptor.getManager();

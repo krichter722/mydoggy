@@ -23,7 +23,7 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro
  */
 public class SlidingContainer extends FloatingContainer {
-    private final SlidingAnimation slidingAnimation = new SlidingAnimation();
+    private SlidingAnimation slidingAnimation;
 
     private SlidingBorder border;
     private Container barContainer;
@@ -197,6 +197,7 @@ public class SlidingContainer extends FloatingContainer {
         mainPanel = new JPanel();
         sheet = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
         border = new SlidingBorder();
+        slidingAnimation = new SlidingAnimation();
 
         Window anchestor = descriptor.getWindowAnchestor();
         if (anchestor instanceof RootPaneContainer) {
@@ -466,7 +467,7 @@ public class SlidingContainer extends FloatingContainer {
                             animation.stop();
                     }
 
-                    sheet.setAlpha(1.0f);
+                    sheet.setAlphaModeRatio(1.0f);
                 } else {
                     SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING);
                     if (slidingTypeDescriptor.isTransparentMode()) {

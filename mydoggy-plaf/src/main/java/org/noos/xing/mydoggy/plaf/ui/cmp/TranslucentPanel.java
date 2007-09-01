@@ -1,7 +1,5 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
-import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,7 +7,7 @@ import java.awt.*;
 /**
  * @author Angelo De Caro
  */
-public class TranslucentPanel extends JPanel implements TransparencyManager {
+public class TranslucentPanel extends JPanel implements TranslucentComponent {
     private float alpha = 1.0f;
     private boolean oldOpaque;
 
@@ -28,11 +26,12 @@ public class TranslucentPanel extends JPanel implements TransparencyManager {
         super(layout, isDoubleBuffered);
     }
 
+
     public void paint(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         Composite oldComp = g2d.getComposite();
 
-        float alpha = getAlpha();
+        float alpha = getAlphaModeEnabled();
 
         Composite alphaComp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
         g2d.setComposite(alphaComp);
@@ -42,19 +41,7 @@ public class TranslucentPanel extends JPanel implements TransparencyManager {
         g2d.setComposite(oldComp);
     }
 
-    public boolean isServiceAvailable() {
-        return true;
-    }
-
-    public void setAlphaModeRatio(Component component, float transparency) {
-        setAlpha(transparency);
-    }
-
-    public boolean isAlphaModeEnabled(Component component) {
-        return true;
-    }
-
-    public void setAlpha(float alpha) {
+    public void setAlphaModeRatio(float alpha) {
         if (this.alpha != alpha) {
             assert alpha >= 0 && alpha <= 1.0;
             float oldAlpha = this.alpha;
@@ -79,9 +66,8 @@ public class TranslucentPanel extends JPanel implements TransparencyManager {
         }
     }
 
-    public float getAlpha() {
+    public float getAlphaModeEnabled() {
         return alpha;
     }
-
 
 }
