@@ -10,7 +10,8 @@ import org.noos.xing.mydoggy.plaf.descriptors.DefaultSlidingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.persistence.xml.XMLPersistenceDelegate;
 import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
-import org.noos.xing.mydoggy.plaf.ui.*;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ShortcutProcessor;
@@ -552,9 +553,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return (JSplitPane) resourceManager.createComponent(ResourceManager.BAR_SPLIT_PANE, this, orientation);
     }
 
-
     protected JSplitPane addBar(ToolWindowAnchor anchor, int splitPaneOrientation,
-                              String barConstraints, String cornerConstraints) {
+                                String barConstraints, String cornerConstraints) {
         // Initialize bar
         bars[anchor.ordinal()] = new MyDoggyToolWindowBar(this,
                                                           renderSplitPane(splitPaneOrientation),
@@ -791,7 +791,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 getBar(oldAnchor).propertyChange(avEvent);
                 syncPanel(oldAnchor);
 
-                assert evt instanceof UserPropertyChangeEvent; 
+                assert evt instanceof UserPropertyChangeEvent;
                 avEvent = new UserPropertyChangeEvent(evt.getSource(), "available", false, true,
                                                       ((UserPropertyChangeEvent) evt).getUserObject());
                 getBar(newAnchor).propertyChange(avEvent);
@@ -866,7 +866,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     class NumberingEnabledChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
-            for (ToolWindowDescriptor descriptor : tools.values()) 
+            for (ToolWindowDescriptor descriptor : tools.values())
                 descriptor.propertyChange(evt);
         }
     }
