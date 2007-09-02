@@ -26,7 +26,7 @@ public class MyDoggyContent implements PlafContentUI {
     private boolean detached;
     private int mnemonic;
 
-    private EventListenerList internalListeners;
+    private EventListenerList uiListeners;
     private EventListenerList listeners;
 
 
@@ -42,7 +42,7 @@ public class MyDoggyContent implements PlafContentUI {
         this.mnemonic = -1;
 
         this.listeners = new EventListenerList();
-        this.internalListeners = new EventListenerList();
+        this.uiListeners = new EventListenerList();
     }
 
 
@@ -210,11 +210,11 @@ public class MyDoggyContent implements PlafContentUI {
 
 
     public void addUIPropertyChangeListener(PropertyChangeListener listener) {
-        addInternalPropertyChangeListener(listener);
+        uiListeners.add(PropertyChangeListener.class, listener);
     }
 
     public void removeUIPropertyChangeListener(PropertyChangeListener listener) {
-        removeInternalPropertyChangeListener(listener);
+        uiListeners.remove(PropertyChangeListener.class, listener);
     }
 
     public void fireSelected(boolean selected) {
@@ -223,18 +223,10 @@ public class MyDoggyContent implements PlafContentUI {
     }
 
 
-    public synchronized void addInternalPropertyChangeListener(PropertyChangeListener listener) {
-        internalListeners.add(PropertyChangeListener.class, listener);
-    }
-
-    public synchronized void removeInternalPropertyChangeListener(PropertyChangeListener listener) {
-        internalListeners.remove(PropertyChangeListener.class, listener);
-    }
-
     public void firePropertyChange(String property, Object oldValue, Object newValue) {
         PropertyChangeEvent event = new PropertyChangeEvent(this, property, oldValue, newValue);
 
-        for (PropertyChangeListener listener : internalListeners.getListeners(PropertyChangeListener.class)) {
+        for (PropertyChangeListener listener : uiListeners.getListeners(PropertyChangeListener.class)) {
             listener.propertyChange(event);
         }
 
@@ -242,4 +234,5 @@ public class MyDoggyContent implements PlafContentUI {
             listener.propertyChange(event);
         }
     }
+    
 }

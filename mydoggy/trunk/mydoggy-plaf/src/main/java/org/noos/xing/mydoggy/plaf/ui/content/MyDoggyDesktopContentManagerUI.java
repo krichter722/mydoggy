@@ -323,7 +323,8 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         }
     }
 
-    class ComponentListener implements PropertyChangeListener {
+
+    protected class ComponentListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -344,12 +345,12 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         }
     }
 
-    class DisabledIconListener implements PropertyChangeListener {
+    protected class DisabledIconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
         }
     }
 
-    class IconListener implements PropertyChangeListener {
+    protected class IconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -363,7 +364,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         }
     }
 
-    class EnabledListener implements PropertyChangeListener {
+    protected class EnabledListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -377,7 +378,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         }
     }
 
-    class ForegroundListener implements PropertyChangeListener {
+    protected class ForegroundListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -391,7 +392,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         }
     }
 
-    class PopupMenuListener implements PropertyChangeListener {
+    protected class PopupMenuListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -405,7 +406,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         }
     }
 
-    class TitleListener implements PropertyChangeListener {
+    protected class TitleListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -422,7 +423,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         }
     }
 
-    class ToolTipTextListener implements PropertyChangeListener {
+    protected class ToolTipTextListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -440,8 +441,8 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         }
     }
 
-    class DetachedListener implements PropertyChangeListener {
-        private Frame parentFrame;
+    protected class DetachedListener implements PropertyChangeListener {
+        protected Frame parentFrame;
 
         public DetachedListener() {
             parentFrame = (toolWindowManager.getAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getAnchestor() : null;
@@ -543,8 +544,8 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     }
 
 
-    class PopupMouseListener extends MouseAdapter implements ActionListener {
-        private JPopupMenu popupMenu;
+    protected class PopupMouseListener extends MouseAdapter implements ActionListener {
+        protected JPopupMenu popupMenu;
 
         public PopupMouseListener() {
             popupMenu = new JPopupMenu();

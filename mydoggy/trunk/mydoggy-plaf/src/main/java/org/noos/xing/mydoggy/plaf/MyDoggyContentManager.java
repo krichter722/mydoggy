@@ -70,7 +70,7 @@ public class MyDoggyContentManager implements ContentManager {
             throw new IllegalArgumentException("Cannot register content with passed key. An already registered content exists. [key : " + key + "]");
 
         MyDoggyContent content = new MyDoggyContent(this, key, title, icon, component, tip);
-        content.addInternalPropertyChangeListener(new PropertyChangeListener() {
+        content.addUIPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 assert evt.getSource() instanceof Content;
                 
