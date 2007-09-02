@@ -4,24 +4,37 @@ import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ToolWindowManager;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * @todo add javadocs
  */
 public interface PlafContentManagerUI {
 
-    Container getContainer();
-
-
+    /**
+     * Configures this manager appropriate for the specified toolwindow manager.
+     * @param manager the component where this UI delegate is being installed
+     * @see #unistall()
+     */
     void install(ToolWindowManager manager);
 
+    /**
+     * Reverses configuration which was done during <code>install(...)</code>.
+     * @see #install
+     */
     void unistall();
 
-
+    /**
+     * Adds the ui part of a content.
+     *
+     * @param content the content ui part to be added.
+     */
     void addContent(PlafContentUI content);
 
+    /**
+     * Removes the ui part of a content.
+     *
+     * @param content the content ui part to be removed.
+     */
     void removeContent(PlafContentUI content);
 
     /**
