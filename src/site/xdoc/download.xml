@@ -74,7 +74,7 @@
                             <td align="left">
                                 <b>Disk</b>
                             </td>
-                            <td align="left">Approximately 2MB will be used.
+                            <td align="left">The distro is approximately 2MB, but the core jars are approximately 0.5MB
                             </td>
                         </tr>
                         <tr class="a">
