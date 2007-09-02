@@ -96,6 +96,13 @@ public class MyDoggyResourceManager implements ResourceManager {
         this.userResourceBundle = initResourceBundle(locale, bundle, classLoader);
     }
 
+    public void setUserBundle(ResourceBundle userBundle) {
+        if (userBundle == null)
+            userResourceBundle = new DummyResourceBundle();
+        else
+            this.userResourceBundle = userBundle;
+    }
+
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
     }
@@ -110,6 +117,18 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     public String getUserString(String key) {
         return (userResourceBundle != null) ? userResourceBundle.getString(key) : key;
+    }
+
+    public void setIcon(String id, Icon icon) {
+        icons.put(id, icon);
+    }
+
+    public void setColor(String id, Color color) {
+        colors.put(id, color);
+    }
+
+    public void setBundle(Locale locale, String bundle, ClassLoader classLoader) {
+        this.resourceBundle = initResourceBundle(locale, bundle, classLoader);
     }
 
 

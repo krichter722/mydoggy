@@ -13,11 +13,11 @@ public class TransparencyAnimation extends AbstractAnimation {
     private Component component;
     private float alpha;
 
-    public TransparencyAnimation(TransparencyManager<Component> transparencyManager, Component component, float alpha) {
+    public TransparencyAnimation(TransparencyManager transparencyManager, Component component, float alpha) {
         this(transparencyManager, component, alpha, 2000f);
     }
 
-    public TransparencyAnimation(TransparencyManager<Component> transparencyManager, Component component, float alpha, float duration) {
+    public TransparencyAnimation(TransparencyManager transparencyManager, Component component, float alpha, float duration) {
         super(duration);
         this.transparencyManager = transparencyManager;
         this.component = component;

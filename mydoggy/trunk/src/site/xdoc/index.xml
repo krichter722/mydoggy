@@ -65,7 +65,8 @@
 						contains the default implementation of mydoggy-api.
                         <ul>
                             <li>
-                                MyDoggy-Res contains all resources (icons and messages) used by mydoggy-plaf.
+                                MyDoggy-Res contains all resources (icons and messages) used by mydoggy-plaf. Look at
+                                ResourceManager link to know how to customize mydoggy in a deep way. 
                             </li>
                         </ul>
                     </li>

@@ -10,6 +10,9 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
+ * This interface is used to customize not only icons, colors and internationalization but also
+ * ui components creation with relative customization and transparency manager.
+ *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public interface ResourceManager {
@@ -91,33 +94,120 @@ public interface ResourceManager {
     public static final String TOOL_SCROLL_BAR_ARROW = "TOOL_SCROLL_BAR_ARROW";
 
 
+    /**
+     * Create the component using the rule specified by the key param.
+     *
+     * @param key key whose associated rule is used to create the component.
+     * @param manager the toolwindow manager
+     * @param args any arguments used to create the component.
+     * @return the component created using the rule specified by the key param.
+     */
     Component createComponent(String key, ToolWindowManager manager, Object... args);
 
+    /**
+     * Create the component ui using the rule specified by the key param.
+     *
+     * @param key key whose associated rule is used to create the component.
+     * @param manager the toolwindow manager
+     * @param args any arguments used to create the component ui.
+     * @return the component ui created using the rule specified by the key param.
+     */
     ComponentUI createComponentUI(String key, ToolWindowManager manager, Object... args);
 
+    /**
+     * Applay the customization using the rule specified by the key param.
+     *
+     * @param key key whose associated rule is used to customize the component.
+     * @param component the component to be costumized.
+     * @param args any arguments used to customize the component.
+     * @return the component customized.
+     */
     Component applyCustomization(String key, Component component, Object... args);
 
-
+    /**
+     * Returns the icon to which this manager maps the specified id.  Returns
+     * <tt>null</tt> if the manager contains no mapping for this id.
+     *
+     * @param id id whose associated icon is to be returned.
+     * @return the icon to which this manager maps the specified id, or
+     *	       <tt>null</tt> if the manager contains no mapping for this id.
+     */
     Icon getIcon(String id);
 
+    /**
+     * Returns the color to which this manager maps the specified id.  Returns
+     * <tt>null</tt> if the manager contains no mapping for this id.
+     *
+     * @param id id whose associated color is to be returned.
+     * @return the color to which this manager maps the specified id, or
+     *	       <tt>null</tt> if the manager contains no mapping for this id.
+     */
     Color getColor(String id);
 
-
+    /**
+     * Returns the transparency manager for the windows used to manage transparency of toolwindows
+     * of FLOATING or FLOATING_FREE type.
+     *
+     * @return the transparency manager for the windows.
+     */
     TransparencyManager<Window> getTransparencyManager();
 
+    /**
+     * Setys the transparency manager for the windows used to manage transparency of toolwindows
+     * of FLOATING or FLOATING_FREE type.
+     *
+     * @param transparencyManager the transparency manager for the windows.
+     */
     void setTransparencyManager(TransparencyManager<Window> transparencyManager);
 
-
+    /**
+     * Sets the locale of this manager used for the internationalization of the relative toolwindow manager.
+     *
+     * @param locale the locale to become this manager's locale
+     */
     void setLocale(Locale locale);
 
+    /**
+     * Sets the bundle used for the internationalization of special strings like the the toolwindow id.
+     *
+     * @param locale the locale for which a resource bundle is desired
+     * @param bundle the base name of the resource bundle, a fully qualified class name
+     * @param classLoader the class loader from which to load the resource bundle
+     * @see #getUserResourceBundle()
+     */
     void setUserBundle(Locale locale, String bundle, ClassLoader classLoader);
 
+    /**
+     * Sets the bundle used for the internationalization of special strings like the the toolwindow id.
+     *
+     * @param userBundle the ResourceBundle
+     */
+    void setUserBundle(ResourceBundle userBundle);
+
+    /**
+     * Returns the resource bundle used for the internationalization of mydoggy.
+     * @return the resource bundle used for the internationalization of mydoggy.
+     */
     ResourceBundle getResourceBundle();
 
+    /**
+     * Returns the resource bundle used for the internationalization of special strings like the the toolwindow id.
+     * @return the resource bundle used for the internationalization of special strings like the the toolwindow id.
+     */
     ResourceBundle getUserResourceBundle();
 
+    /**
+     * This method is equivalent to <code>getResourceBundle().getString(key)</code>
+     * @param key the key for the desired string
+     * @return the string for the given key
+     */
     String getString(String key);
 
+    /**
+     * This method is equivalent to <code>getUserResourceBundle().getString(key)</code>
+     * @param key the key for the desired string
+     * @return the string for the given key
+     */
     String getUserString(String key);
 
 }
