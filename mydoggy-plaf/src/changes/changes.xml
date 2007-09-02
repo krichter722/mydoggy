@@ -7,6 +7,19 @@
     </properties>
 
     <body>
+        <release version="1.3.1" date="2007-04-07" description="Fifth release">
+			<action dev="adecaro" type="update">
+				Module refactored to clean the code and make it more simply to extend.
+			</action>
+            <action dev="adecaro" type="add">
+                Added ResourceManager interface to simply mydoggy customization.
+                See <![CDATA[<a href="resourceManager.html">this</a>]]>.
+            </action>
+            <action dev="adecaro" type="add">
+                Added TransparencyManager interface to simply the support for windows transparency. Now you can plug
+                you own manager. See <![CDATA[<a href="transparency.html">this</a>]]>.
+            </action>
+        </release>
         <release version="1.3.0" date="2007-04-07" description="Fourth release">
 			<action dev="adecaro" type="add">
 				Support for all new features.

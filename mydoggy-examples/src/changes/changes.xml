@@ -7,6 +7,12 @@
     </properties>
 
     <body>
+        <release version="1.3.1" date="2007-04-07" description="Fifth release">
+			<action dev="adecaro" type="update">
+				MyDoggySet updated. Now there are more ways to see in action all mydoggy capabilities.
+                Try new interactive tests.
+            </action>
+        </release>
         <release version="1.3.0" date="2007-04-07" description="Fourth release">
 			<action dev="adecaro" type="add">
                 <![CDATA[

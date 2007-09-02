@@ -174,7 +174,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
     void setIdVisibleOnTitleBar(boolean idVisibleOnTitleBar);
 
     /**
-     * Returns the "idVisibleOnTitleBar" proprty value.
+     * Returns the "idVisibleOnTitleBar" property value.
      * @return <code>true</code> if the toolwindow id has to be showed on the title bar.
      * tool has type ToolWindowType.DOCKED.<br>
      *         <code>false</code> otherwise.
