@@ -13,8 +13,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <img src="./images/tw_transparency.png" alt="ToolWindow Transparency" border="0"
-                                 hspace="18"/>
+                            <img src="./images/tw_transparency.png" alt="ToolWindow Transparency" border="0" hspace="18"/>
                         </td>
                         <td>
                             <p>
@@ -92,11 +91,18 @@
 
                 <source xml:space="preserve">
 import com.sun.jna.examples.WindowUtils;
-import java.awt.*;
 
+import java.awt.*;
+import java.util.Map;
+import java.util.WeakHashMap;
+
+/**
+ * @author Angelo De Caro (angelo.decaro@gmail.com)
+ */
 public class JNAWindowTransparencyManager implements TransparencyManager&lt;Window&gt; {
 
     private boolean available;
+    private Map&lt;Window, Float&gt; windowTransparencies;
 
     public JNAWindowTransparencyManager() {
         initTransparencyManager();
@@ -107,12 +113,18 @@ public class JNAWindowTransparencyManager implements TransparencyManager&lt;Wind
     }
 
     public void setAlphaModeRatio(Window component, float transparency) {
-        if (available)
+        if (available) {
+            windowTransparencies.put(component, transparency);
             WindowUtils.setWindowAlpha(component, transparency);
+        }
     }
 
     public boolean isAlphaModeEnabled(Window component) {
-        return true;    // TODO:
+        if (available) {
+            Float transparency = windowTransparencies.get(component);
+            return transparency != null &amp;&amp; transparency &gt;= 0.0;
+        }
+        return false;
     }
 
     protected void initTransparencyManager() {
@@ -120,6 +132,8 @@ public class JNAWindowTransparencyManager implements TransparencyManager&lt;Wind
         try {
             Class.forName("com.sun.jna.examples.WindowUtils");
             available = WindowUtils.isWindowAlphaSupported();
+            if (available)
+                this.windowTransparencies = new WeakHashMap&lt;Window, Float&gt;();
         } catch (ClassNotFoundException e) {}
     }
 
