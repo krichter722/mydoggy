@@ -88,6 +88,7 @@ public interface ToolWindowManagerDescriptor {
      * @param size an integer giving the size of the divider in pixels
      * @see #getDividerSize(ToolWindowAnchor)
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
+     * @since 1.3.1
      */
     void setDividerSize(ToolWindowAnchor anchor, int size);
 
@@ -97,8 +98,8 @@ public interface ToolWindowManagerDescriptor {
      *
      * @param anchor the anchor.
      * @return the size of the border
-     * @since 1.3.1
      * @see #setDividerSize(ToolWindowAnchor, int)
+     * @since 1.3.1
      */
     int getDividerSize(ToolWindowAnchor anchor);
 
