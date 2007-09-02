@@ -137,9 +137,9 @@ public interface ToolWindow {
     /**
      * This method is used to enable flashing for a specific duration.
      *
-     * @param duration
-     * @since 1.3.0
+     * @param duration the duration of the flashing in millisiconds.
      * @see #setFlashing(boolean)
+     * @since 1.3.0
      */
     void setFlashing(int duration);
 

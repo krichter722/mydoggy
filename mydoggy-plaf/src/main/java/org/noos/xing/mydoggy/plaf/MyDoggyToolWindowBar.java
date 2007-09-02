@@ -29,8 +29,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     public static final int VERTICAL_RIGHT = TextIcon.ROTATE_RIGHT;
     public static final int HORIZONTAL = TextIcon.ROTATE_NONE;
 
-    protected static final double[] COLUMNS = {2, 19, 2};
-    protected static final double[] ROWS = COLUMNS;
+    private static final double[] COLUMNS = {2, 19, 2};
+    private static final double[] ROWS = COLUMNS;
 
     protected MyDoggyToolWindowManager manager;
 
