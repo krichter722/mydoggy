@@ -49,6 +49,14 @@
             <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
         </file>
         <file>
+            <source>mydoggy-res/target/mydoggy-res-1.3.1.jar</source>
+            <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
+        </file>
+        <file>
+            <source>mydoggy-itest/target/mydoggy-itest-1.3.1.jar</source>
+            <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
+        </file>
+        <file>
             <source>mydoggy-examples/target/mydoggy-examples-1.3.1.jar</source>
             <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
         </file>
@@ -64,6 +72,12 @@
             <source>mydoggy-plaf/src/main/resources/persistence_1_3_0.dtd</source>
             <outputDirectory>site/mydoggy-plaf/resources/dtd</outputDirectory>
         </file>
+<!-- TODO:
+        <file>
+            <source>mydoggy-plaf/src/main/resources/persistence_1_3_1.dtd</source>
+            <outputDirectory>site/mydoggy-plaf/resources/dtd</outputDirectory>
+        </file>
+-->
     </files>
 
 </assembly>
