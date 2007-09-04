@@ -39,8 +39,6 @@ public class InteractiveDragTest extends AbstractInteractiveTest {
         mouse.moveTo("toolWindowManager.bar.LEFT", 10, 80);
         interactiveUI.delay(500);
         mouse.release();
-
-        assertor.askForConfirm("Is behaviuor correct?");
     }
 
 }

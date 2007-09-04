@@ -50,6 +50,7 @@ public class AddContentAction extends AbstractAction implements SignalListener {
                                       tooltip);
             if (mnemonic != -1)
                 content.setMnemonic(mnemonic);
+            content.setSelected(true);
         }
     }
 }
