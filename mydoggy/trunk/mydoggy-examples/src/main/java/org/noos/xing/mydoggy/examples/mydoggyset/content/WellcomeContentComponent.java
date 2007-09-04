@@ -15,10 +15,8 @@ import java.awt.event.ActionListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class WellcomeContentComponent extends JPanel {
-    private ToolWindowManager toolWindowManager;
 
-    public WellcomeContentComponent(ToolWindowManager toolWindowManager) {
-        this.toolWindowManager = toolWindowManager;
+    public WellcomeContentComponent() {
         initComponents();
     }
 
@@ -29,34 +27,30 @@ public class WellcomeContentComponent extends JPanel {
                                                                  {-1, 70, 10, 70, 10, 70, -1}}));
         panel.setBackground(Colors.blu);
 
-        JButton manager = new JButton("Manager");
-        manager.setOpaque(false);
-        manager.setContentAreaFilled(false);
-        manager.setForeground(Color.WHITE);
-        manager.setFocusPainted(false);
-        manager.setBorder(new LineBorder(Color.WHITE));
-        manager.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                SignalManager.getInstance().sendEvent("content.Manager", null);
-            }
-        });
+        panel.add(renderButton("Manager"),
+                  "1,1,FULL,FULL");
+        panel.add(renderLabel("<html>Edit ToolWindowManager </br> properties </html>"),
+                  "3,1,FULL,FULL");
 
-        JLabel managerLabel = new JLabel("<html>Content to setup all manager </br> properties </html>");
-        managerLabel.setForeground(Color.WHITE);
+        panel.add(renderButton("Tools"),
+                  "1,3,FULL,FULL");
+        panel.add(renderLabel("<html>Edit ToolWindows </br> properties</html>"), 
+                  "3,3,FULL,FULL");
 
-        JButton tools = new JButton("tools");
-        JButton contents = new JButton("contents");
-        JButton groups = new JButton("groups");
-        JButton itests = new JButton("itests");
+        panel.add(renderButton("Contents"),
+                  "1,5,FULL,FULL");
+        panel.add(renderLabel("<html>Edit Contents </br> properties</html>"), 
+                  "3,5,FULL,FULL");
 
-        panel.add(manager, "1,1,FULL,FULL");
-        panel.add(managerLabel, "3,1,FULL,FULL");
+        panel.add(renderButton("Groups"),
+                  "5,1,FULL,FULL");
+        panel.add(renderLabel("<html>Edit Groups </br> properties</html>"),
+                  "7,1,FULL,FULL");
 
-        panel.add(tools, "1,3,FULL,FULL");
-        panel.add(contents, "1,5,FULL,FULL");
-
-        panel.add(groups, "5,1,FULL,FULL");
-        panel.add(itests, "5,3,FULL,FULL");
+        panel.add(renderButton("ITests"),
+                  "5,3,FULL,FULL");
+        panel.add(renderLabel("<html>Run Interactive </br> Tests</html>"), 
+                  "7,3,FULL,FULL");
 
         // Setup main panel
         setLayout(new TableLayout(new double[][]{{3, -1, 3},{3, 93,5,-1,3}}));
@@ -66,15 +60,35 @@ public class WellcomeContentComponent extends JPanel {
         add(panel, "1,3,FULL,FULL");
     }
 
-    protected void render(JPanel panel, Icon buttonIcon, String labelText) {
-        JButton manager = new JButton(buttonIcon);
-        manager.setOpaque(false);
-        manager.setContentAreaFilled(false);
-        manager.setFocusPainted(false);
-        manager.setBorder(new LineBorder(Color.WHITE));
+    protected JButton renderButton(String text) {
+        JButton button = new JButton(text);
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorder(new LineBorder(Color.WHITE));
+        button.addActionListener(new SendEventActionListener("content." + text));
 
-        JLabel managerLabel = new JLabel(labelText);
-        managerLabel.setForeground(Color.WHITE);
+        return button;
+    }
+
+    protected JLabel renderLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setForeground(Color.WHITE);
+
+        return label;
+    }
+
+    protected class SendEventActionListener implements ActionListener {
+        protected String signal;
+
+        public SendEventActionListener(String signal) {
+            this.signal = signal;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            SignalManager.getInstance().sendEvent(signal, null);
+        }
     }
 
 

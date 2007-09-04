@@ -114,7 +114,7 @@ public class MyDoggySet {
         JMenu contentMenu = new JMenu("Content");
         contentMenu.add(wellcomeContentAction = new AddContentAction(toolWindowManager,
                                                                      "Wellcome", "Wellcome", null,
-                                                                     wellcomeContentComponent = new WellcomeContentComponent(toolWindowManager),
+                                                                     wellcomeContentComponent = new WellcomeContentComponent(),
                                                                      "Wellcome", (int) 'W'));
         contentMenu.add(new AddContentAction(toolWindowManager,
                                              "Manager", "Manager", null,
@@ -125,7 +125,7 @@ public class MyDoggySet {
                                              toolsContentComponent = new ToolsContentComponent(toolWindowManager),
                                              "ToolWindows", (int) 'T'));
         contentMenu.add(new AddContentAction(toolWindowManager,
-                                             "Group Editor", "Group Editor", null,
+                                             "Groups", "Group Editor", null,
                                              groupEditorContentComponent = new GroupEditorContentComponent(toolWindowManager),
                                              "Groups", (int) 'G'));
         contentMenu.add(new AddContentAction(toolWindowManager,
@@ -133,7 +133,7 @@ public class MyDoggySet {
                                              contentsContentComponent = new ContentsContentComponent(toolWindowManager),
                                              "Contents", (int) 'C'));
         contentMenu.add(new AddContentAction(toolWindowManager,
-                                             "Interactive Tests", "Interactive Tests", null,
+                                             "ITests", "Interactive Tests", null,
                                              interactiveTestContentComponent = new InteractiveTestContentComponent(frame, toolWindowManager),
                                              "Interactive Tests", (int) 'I'));
 
