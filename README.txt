@@ -98,10 +98,14 @@ Changes
 
 - For 1.3.1
 
+    Bug Resolved:
 
-    Features Requested:
+    -- Problem with focushandling in DockedContainer : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1765219&group_id=178005&atid=883495">Request ID 1765219</a>
+    -- TabbedContentManager problem when display icon and title : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1765198&group_id=178005&atid=883495">Request ID 1765198</a>
 
-    -- TODO
+    Feature Requests:
+    
+    -- Maximize windows - Handle multiple monitors : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1761886&group_id=178005&atid=883498">Request ID 1761886</a>
 
 - For 1.3.0
 
