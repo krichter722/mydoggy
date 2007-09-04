@@ -1,4 +1,4 @@
-MyDoggy - My Java Docking Framework 1.3.0 (http://mydoggy.sourceforge.net/)
+MyDoggy - My Java Docking Framework 1.3.1 (http://mydoggy.sourceforge.net/)
 
 CONTENTS
 ========
@@ -40,13 +40,13 @@ Directory Structure
 mydoggy-1.3.0
     bin                         - Contains scripts for launching mydoggy examples.
     lib                         - Contains mydoggy jars (
-    								mydoggy-api-1.3.0.jar,
-    								mydoggy-plaf-1.3.0.jar,
-    								mydoggy-res-1.3.0.jar,
+    								mydoggy-api-1.3.1.jar,
+    								mydoggy-plaf-1.3.1.jar,
+    								mydoggy-res-1.3.1.jar,
     							    TableLayout-20020517.jar,
-    							    mydoggy-examples-1.3.0.jar,
-    								mydoggy-itest-1.3.0.jar,
-    							    junit-3.8.1.jar).
+    							    mydoggy-examples-1.3.1.jar,
+    								mydoggy-itest-1.3.1.jar,
+    							    junit-3.8.1.jar.
         win32                   - Contains TransparencyManager.dll
     license                     - Contains license information.
     mydoggy-api                 - Contains sources of mydoggy api.
@@ -95,6 +95,13 @@ use the forums or the support section at sourceforge.net.
 
 Changes
 =======
+
+- For 1.3.1
+
+
+    Features Requested:
+
+    -- TODO
 
 - For 1.3.0
 
