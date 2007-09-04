@@ -2,11 +2,14 @@ package org.noos.xing.mydoggy.examples.mydoggyset.content;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.util.Colors;
+import org.noos.xing.mydoggy.examples.mydoggyset.signal.SignalManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
+import org.noos.xing.mydoggy.plaf.ui.util.Colors;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -29,8 +32,14 @@ public class WellcomeContentComponent extends JPanel {
         JButton manager = new JButton("Manager");
         manager.setOpaque(false);
         manager.setContentAreaFilled(false);
+        manager.setForeground(Color.WHITE);
         manager.setFocusPainted(false);
         manager.setBorder(new LineBorder(Color.WHITE));
+        manager.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SignalManager.getInstance().sendEvent("content.Manager", null);
+            }
+        });
 
         JLabel managerLabel = new JLabel("<html>Content to setup all manager </br> properties </html>");
         managerLabel.setForeground(Color.WHITE);
