@@ -72,12 +72,10 @@
             <source>mydoggy-plaf/src/main/resources/persistence_1_3_0.dtd</source>
             <outputDirectory>site/mydoggy-plaf/resources/dtd</outputDirectory>
         </file>
-<!-- TODO:
         <file>
             <source>mydoggy-plaf/src/main/resources/persistence_1_3_1.dtd</source>
             <outputDirectory>site/mydoggy-plaf/resources/dtd</outputDirectory>
         </file>
--->
     </files>
 
 </assembly>
