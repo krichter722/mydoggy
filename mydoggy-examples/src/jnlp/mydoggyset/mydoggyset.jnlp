@@ -13,10 +13,11 @@
     <resources>
         <j2se version="1.5+"/>
         <jar href="TableLayout-20020517.jar"/>
-        <jar href="mydoggy-api-1.3.0.jar"/>
-        <jar href="mydoggy-plaf-1.3.0.jar"/>
-        <jar href="mydoggy-res-1.3.0.jar"/>
-        <jar main="true" href="mydoggy-examples-1.3.0.jar"/>
+        <jar href="mydoggy-api-1.3.1.jar"/>
+        <jar href="mydoggy-plaf-1.3.1.jar"/>
+        <jar href="mydoggy-res-1.3.1.jar"/>
+        <jar href="mydoggy-itest-1.3.1.jar"/>
+        <jar main="true" href="mydoggy-examples-1.3.1.jar"/>
     </resources>
 
     <application-desc main-class="org.noos.xing.mydoggy.examples.mydoggyset.MyDoggySet"/>
