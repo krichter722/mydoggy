@@ -101,6 +101,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
         TabLayout old = getTabLayout();
         tabbedContentManager.setTabLayoutPolicy(tabLayout.ordinal());
+        SwingUtil.repaint(tabbedContentManager);
 
         propertyChangeListeners.firePropertyChange("tabLayout", old, tabLayout);
     }

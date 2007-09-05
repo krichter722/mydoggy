@@ -17,6 +17,7 @@ public final class ContentsTableModel extends DefaultTableModel implements Prope
 
 	public ContentsTableModel(ToolWindowManager windowManager) {
         this.windowManager = windowManager;
+
         setColumnIdentifiers(new Object[]{
                 "Title", "Enabled", "Selected", "Detached"
         });

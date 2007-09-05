@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.examples.mydoggyset.action;
+package org.noos.xing.yasaf.ioc;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -6,5 +6,7 @@ package org.noos.xing.mydoggy.examples.mydoggyset.action;
 public interface Source {
 
     Object getSource();
-    
+
+    Object[] getSources();
+
 }
