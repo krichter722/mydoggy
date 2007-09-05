@@ -1,4 +1,6 @@
-package org.noos.xing.mydoggy.examples.mydoggyset.action;
+package org.noos.xing.yasaf.plaf.ioc.source;
+
+import org.noos.xing.yasaf.ioc.Source;
 
 import javax.swing.*;
 
@@ -14,5 +16,9 @@ public class ChecBoxSelectionSource implements Source {
 
     public Object getSource() {
         return checkBox.isSelected();
+    }
+
+    public Object[] getSources() {
+        return new Object[]{getSource()};
     }
 }

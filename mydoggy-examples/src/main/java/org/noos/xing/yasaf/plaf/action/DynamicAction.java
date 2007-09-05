@@ -1,8 +1,8 @@
-package org.noos.xing.mydoggy.examples.mydoggyset.action;
+package org.noos.xing.yasaf.plaf.action;
 
-import org.noos.xing.mydoggy.examples.mydoggyset.signal.SignalListener;
-import org.noos.xing.mydoggy.examples.mydoggyset.signal.SignalManager;
-import org.noos.xing.mydoggy.examples.mydoggyset.signal.SignalEvent;
+import org.noos.xing.yasaf.bean.Invocation;
+import org.noos.xing.yasaf.ioc.Source;
+import org.noos.xing.yasaf.plaf.bean.DefaultInvocation;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -15,14 +15,12 @@ import java.lang.reflect.Method;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class DynamicAction extends AbstractAction implements SignalListener {
+public class DynamicAction extends AbstractAction {
     protected Method method;
-    protected Object target;
-    protected Source source;
+    protected Invocation invocation;
 
-    public DynamicAction(Class targetClass, String property, Source source) {
-        SignalManager.getInstance().addSignalListener(targetClass, this);
-        this.source = source;
+    public DynamicAction(Class targetClass, String property, Invocation invocation) {
+        this.invocation = invocation;
         try {
             for (PropertyDescriptor propertyDescriptor : Introspector.getBeanInfo(targetClass).getPropertyDescriptors()) {
                 if (property.equals(propertyDescriptor.getName())) {
@@ -35,13 +33,15 @@ public class DynamicAction extends AbstractAction implements SignalListener {
         }
     }
 
-    public void handleSignalEvent(String signal, SignalEvent event) {
-        this.target = event.getMessage();
+    public DynamicAction(Class targetClass, String property, Source target, Source args) {
+        this(targetClass, property, new DefaultInvocation(target, args));
     }
+
 
     public void actionPerformed(ActionEvent e) {
         try {
-            method.invoke(target, source.getSource());
+            method.invoke(invocation.getTarget(),
+                          invocation.getArgs());
         } catch (IllegalAccessException e1) {
             throw new RuntimeException(e1);
         } catch (InvocationTargetException e1) {

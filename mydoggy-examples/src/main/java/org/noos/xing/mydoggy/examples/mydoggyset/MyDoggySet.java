@@ -4,7 +4,12 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.examples.mydoggyset.action.*;
-import org.noos.xing.mydoggy.examples.mydoggyset.content.*;
+import org.noos.xing.mydoggy.examples.mydoggyset.content.GroupEditorContentComponent;
+import org.noos.xing.mydoggy.examples.mydoggyset.content.InteractiveTestContentComponent;
+import org.noos.xing.mydoggy.examples.mydoggyset.content.ManagerContentComponent;
+import org.noos.xing.mydoggy.examples.mydoggyset.content.WellcomeContentComponent;
+import org.noos.xing.mydoggy.examples.mydoggyset.content.contents.ContentsView;
+import org.noos.xing.mydoggy.examples.mydoggyset.content.toolwindows.ToolWindowsView;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.MonitorPanel;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
@@ -122,7 +127,7 @@ public class MyDoggySet {
                                              "Manager", (int) 'M'));
         contentMenu.add(new AddContentAction(toolWindowManager,
                                              "Tools", "Tools", null,
-                                             toolsContentComponent = new ToolsContentComponent(toolWindowManager),
+                                             toolsContentComponent = new ToolWindowsView(toolWindowManager).getComponent(),
                                              "ToolWindows", (int) 'T'));
         contentMenu.add(new AddContentAction(toolWindowManager,
                                              "Groups", "Group Editor", null,
@@ -130,7 +135,7 @@ public class MyDoggySet {
                                              "Groups", (int) 'G'));
         contentMenu.add(new AddContentAction(toolWindowManager,
                                              "Contents", "Contents", null,
-                                             contentsContentComponent = new ContentsContentComponent(toolWindowManager),
+                                             contentsContentComponent = new ContentsView(toolWindowManager).getComponent(),
                                              "Contents", (int) 'C'));
         contentMenu.add(new AddContentAction(toolWindowManager,
                                              "ITests", "Interactive Tests", null,
