@@ -1,15 +1,11 @@
 package org.noos.xing.mydoggy.examples.mydoggyset.content;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.examples.mydoggyset.signal.SignalManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -67,7 +63,6 @@ public class WellcomeContentComponent extends JPanel {
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setBorder(new LineBorder(Color.WHITE));
-        button.addActionListener(new SendEventActionListener("content." + text));
 
         return button;
     }
@@ -78,18 +73,5 @@ public class WellcomeContentComponent extends JPanel {
 
         return label;
     }
-
-    protected class SendEventActionListener implements ActionListener {
-        protected String signal;
-
-        public SendEventActionListener(String signal) {
-            this.signal = signal;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            SignalManager.getInstance().sendEvent(signal, null);
-        }
-    }
-
 
 }
