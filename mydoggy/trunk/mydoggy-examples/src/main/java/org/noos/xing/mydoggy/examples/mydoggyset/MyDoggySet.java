@@ -12,9 +12,12 @@ import org.noos.xing.mydoggy.examples.mydoggyset.content.contents.ContentsView;
 import org.noos.xing.mydoggy.examples.mydoggyset.content.toolwindows.ToolWindowsView;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.MonitorPanel;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.RuntimeMemoryMonitorSource;
+import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.yasaf.ioc.Directory;
+import org.noos.xing.yasaf.plaf.ioc.YasafRepository;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,7 +73,6 @@ public class MyDoggySet {
 
     protected void setUp() {
         initComponents();
-
         initToolWindowManager();
     }
 
@@ -91,18 +93,41 @@ public class MyDoggySet {
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
 
-        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame, Locale.US, null);
-/*
-        myDoggyToolWindowManager.getResourceManager().setTransparencyManager(
-                new JNAWindowTransparencyManager()
-        );
-*/
-        this.toolWindowManager = myDoggyToolWindowManager;
-        ((DockedTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).setIdVisibleOnTitleBar(false);
+        this.toolWindowManager = new MyDoggyToolWindowManager(frame, Locale.US, null);
 
-
-
+        initActions();
         initMenuBar();
+    }
+
+    protected void initActions() {
+        Directory root = YasafRepository.getInstance().getRoot();
+        root.getDirectoryOf(ActionListener.class).
+        Directory actions = root.addDirectory(ActionListener.class);
+        actions.addResource(MyDoggySet.class, new AddContentAction(toolWindowManager,
+                                                                   "Wellcome", "Wellcome", null,
+                                                                   wellcomeContentComponent = new WellcomeContentComponent(),
+                                                                   "Wellcome", (int) 'W'));
+        actions.addResource(ToolWindowManager.class, new AddContentAction(toolWindowManager,
+                                                                          "Manager", "Manager", null,
+                                                                          managerContentComponent = new ManagerContentComponent(toolWindowManager),
+                                                                          "Manager", (int) 'M'));
+        actions.addResource(ToolWindow.class, new AddContentAction(toolWindowManager,
+                                                                   "Tools", "Tools", null,
+                                                                   toolsContentComponent = new ToolWindowsView(toolWindowManager).getComponent(),
+                                                                   "ToolWindows", (int) 'T'));
+        actions.addResource(ToolWindowGroup.class, new AddContentAction(toolWindowManager,
+                                                                        "Groups", "Group Editor", null,
+                                                                        groupEditorContentComponent = new GroupEditorContentComponent(toolWindowManager),
+                                                                        "Groups", (int) 'G'));
+        actions.addResource(Content.class, new AddContentAction(toolWindowManager,
+                                                                "Contents", "Contents", null,
+                                                                contentsContentComponent = new ContentsView(toolWindowManager).getComponent(),
+                                                                "Contents", (int) 'C'));
+        actions.addResource(InteractiveTest.class, new AddContentAction(toolWindowManager,
+                                                                        "ITests", "Interactive Tests", null,
+                                                                        interactiveTestContentComponent = new InteractiveTestContentComponent(frame, toolWindowManager),
+                                                                        "Interactive Tests", (int) 'I'));
+
     }
 
     protected void initMenuBar() {
@@ -116,6 +141,8 @@ public class MyDoggySet {
         fileMenu.add(new ExitAction(frame));
 
         // Content Menu
+        YasafRepository.getInstance().goTo(ActionListener.class);
+
         JMenu contentMenu = new JMenu("Content");
         contentMenu.add(wellcomeContentAction = new AddContentAction(toolWindowManager,
                                                                      "Wellcome", "Wellcome", null,
