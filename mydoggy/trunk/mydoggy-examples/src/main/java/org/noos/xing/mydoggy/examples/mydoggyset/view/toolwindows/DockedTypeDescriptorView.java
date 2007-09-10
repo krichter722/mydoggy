@@ -1,10 +1,10 @@
-package org.noos.xing.mydoggy.examples.mydoggyset.content.toolwindows;
+package org.noos.xing.mydoggy.examples.mydoggyset.view.toolwindows;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.yasaf.plaf.ioc.source.ChecBoxSelectionSource;
-import org.noos.xing.yasaf.plaf.ioc.source.ToFloatSource;
-import org.noos.xing.yasaf.plaf.ioc.source.SpinnerValueSource;
+import org.noos.xing.yasaf.plaf.bean.ChecBoxSelectionSource;
+import org.noos.xing.yasaf.plaf.bean.ToFloatSource;
+import org.noos.xing.yasaf.plaf.bean.SpinnerValueSource;
 import org.noos.xing.yasaf.plaf.action.DynamicAction;
 import org.noos.xing.yasaf.plaf.action.ViewContextSource;
 import org.noos.xing.yasaf.plaf.action.ChangeListenerAction;

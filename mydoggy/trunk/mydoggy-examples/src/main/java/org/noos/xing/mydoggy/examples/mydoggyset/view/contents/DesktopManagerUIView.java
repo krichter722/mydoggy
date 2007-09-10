@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.examples.mydoggyset.content.contents;
+package org.noos.xing.mydoggy.examples.mydoggyset.view.contents;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
@@ -10,10 +10,6 @@ import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
