@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.examples.mydoggyset.content.toolwindows;
+package org.noos.xing.mydoggy.examples.mydoggyset.view.toolwindows;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;

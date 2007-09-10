@@ -1,8 +1,8 @@
-package org.noos.xing.mydoggy.examples.mydoggyset.content.contents;
+package org.noos.xing.mydoggy.examples.mydoggyset.view.contents;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.examples.mydoggyset.model.ContentsTableModel;
+import org.noos.xing.mydoggy.examples.mydoggyset.view.contents.model.ContentsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.CheckBoxCellRenderer;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.view.ViewContext;

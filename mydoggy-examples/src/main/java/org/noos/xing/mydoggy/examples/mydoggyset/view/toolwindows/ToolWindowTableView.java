@@ -1,11 +1,11 @@
-package org.noos.xing.mydoggy.examples.mydoggyset.content.toolwindows;
+package org.noos.xing.mydoggy.examples.mydoggyset.view.toolwindows;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.ToolWindowType;
-import org.noos.xing.mydoggy.examples.mydoggyset.model.ToolsTableModel;
+import org.noos.xing.mydoggy.examples.mydoggyset.view.toolwindows.model.ToolsTableModel;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.CheckBoxCellRenderer;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.view.ViewContext;

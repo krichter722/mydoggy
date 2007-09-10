@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.examples.mydoggyset.content.contents;
+package org.noos.xing.mydoggy.examples.mydoggyset.view.toolwindows;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindowManager;
@@ -12,10 +12,10 @@ import java.awt.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ContentsView implements View {
+public class ToolWindowsView implements View {
     protected ToolWindowManager toolWindowManager;
 
-    public ContentsView(ToolWindowManager toolWindowManager) {
+    public ToolWindowsView(ToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
     }
 
@@ -25,9 +25,9 @@ public class ContentsView implements View {
 
         JPanel panel = new JPanel();
         panel.setLayout(new TableLayout(new double[][]{{-1}, {-1, 5, -1}}));
-        panel.add(new PreferencePanelView(viewContext).getComponent(),
+        panel.add(new ToolWindowTableView(viewContext).getComponent(),
                   "0,0,FULL,FULL");
-        panel.add(new ContentTableView(viewContext).getComponent(),
+        panel.add(new PreferencePanelView(viewContext).getComponent(),
                   "0,2,FULL,FULL");
 
         return panel;
