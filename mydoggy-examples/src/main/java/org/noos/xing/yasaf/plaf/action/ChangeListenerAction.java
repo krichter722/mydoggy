@@ -1,11 +1,10 @@
 package org.noos.xing.yasaf.plaf.action;
 
 import org.noos.xing.yasaf.plaf.action.DynamicAction;
-import org.noos.xing.yasaf.ioc.Source;
+import org.noos.xing.yasaf.bean.Source;
 
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**

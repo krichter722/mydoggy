@@ -1,6 +1,6 @@
 package org.noos.xing.yasaf.plaf.action;
 
-import org.noos.xing.yasaf.ioc.Source;
+import org.noos.xing.yasaf.bean.Source;
 import org.noos.xing.yasaf.view.ViewContext;
 
 /**
