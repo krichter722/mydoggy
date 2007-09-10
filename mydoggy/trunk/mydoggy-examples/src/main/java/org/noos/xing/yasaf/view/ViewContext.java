@@ -15,6 +15,8 @@ public interface ViewContext {
 
     Object put(Object key, Object value);
 
+    void addViewContextChangeListener(Object key, ViewContextChangeListener listener);
+
     void addViewContextChangeListener(ViewContextChangeListener listener);
 
 }
