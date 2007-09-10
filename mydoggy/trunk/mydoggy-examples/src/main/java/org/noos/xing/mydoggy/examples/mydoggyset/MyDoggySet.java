@@ -3,21 +3,19 @@ package org.noos.xing.mydoggy.examples.mydoggyset;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
-import org.noos.xing.mydoggy.examples.mydoggyset.action.*;
-import org.noos.xing.mydoggy.examples.mydoggyset.content.GroupEditorContentComponent;
-import org.noos.xing.mydoggy.examples.mydoggyset.content.InteractiveTestContentComponent;
-import org.noos.xing.mydoggy.examples.mydoggyset.content.ManagerContentComponent;
-import org.noos.xing.mydoggy.examples.mydoggyset.content.WellcomeContentComponent;
-import org.noos.xing.mydoggy.examples.mydoggyset.content.contents.ContentsView;
-import org.noos.xing.mydoggy.examples.mydoggyset.content.toolwindows.ToolWindowsView;
+import org.noos.xing.mydoggy.examples.mydoggyset.action.ChangeLookAndFeelAction;
+import org.noos.xing.mydoggy.examples.mydoggyset.action.ExitAction;
+import org.noos.xing.mydoggy.examples.mydoggyset.action.LoadWorkspaceAction;
+import org.noos.xing.mydoggy.examples.mydoggyset.action.StoreWorkspaceAction;
+import org.noos.xing.mydoggy.examples.mydoggyset.context.AddContentContext;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.MonitorPanel;
 import org.noos.xing.mydoggy.examples.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.yasaf.ioc.Directory;
-import org.noos.xing.yasaf.plaf.ioc.YasafRepository;
+import org.noos.xing.yasaf.plaf.action.ViewContextAction;
+import org.noos.xing.yasaf.plaf.view.YasafViewContextManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,25 +27,10 @@ import java.util.Locale;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggySet {
-    // Possible Look & Feels
     private String currentLookAndFeel;
-
-    public JFrame frame;
+    private JFrame frame;
     private ToolWindowManager toolWindowManager;
-
-    private Action wellcomeContentAction;
-
-    private Component toolsContentComponent;
-    private Component groupEditorContentComponent;
-    private Component contentsContentComponent;
-    private Component managerContentComponent;
-    private Component wellcomeContentComponent;
-    private Component interactiveTestContentComponent;
-
     private JMenu lafMenu;
-
-    private ContentManagerUI defaultManagerUI;
-
 
     public JFrame getFrame() {
         return frame;
@@ -79,7 +62,7 @@ public class MyDoggySet {
     protected void start() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                wellcomeContentAction.actionPerformed(null);
+                YasafViewContextManager.getInstance().getViewContext(AddContentContext.class).put(MyDoggySet.class, null);
                 frame.setVisible(true);
             }
         });
@@ -95,40 +78,11 @@ public class MyDoggySet {
 
         this.toolWindowManager = new MyDoggyToolWindowManager(frame, Locale.US, null);
 
-        initActions();
+        YasafViewContextManager.getInstance().addViewContext(AddContentContext.class, new AddContentContext(toolWindowManager, frame));
+
         initMenuBar();
     }
 
-    protected void initActions() {
-        Directory root = YasafRepository.getInstance().getRoot();
-        root.getDirectoryOf(ActionListener.class).
-        Directory actions = root.addDirectory(ActionListener.class);
-        actions.addResource(MyDoggySet.class, new AddContentAction(toolWindowManager,
-                                                                   "Wellcome", "Wellcome", null,
-                                                                   wellcomeContentComponent = new WellcomeContentComponent(),
-                                                                   "Wellcome", (int) 'W'));
-        actions.addResource(ToolWindowManager.class, new AddContentAction(toolWindowManager,
-                                                                          "Manager", "Manager", null,
-                                                                          managerContentComponent = new ManagerContentComponent(toolWindowManager),
-                                                                          "Manager", (int) 'M'));
-        actions.addResource(ToolWindow.class, new AddContentAction(toolWindowManager,
-                                                                   "Tools", "Tools", null,
-                                                                   toolsContentComponent = new ToolWindowsView(toolWindowManager).getComponent(),
-                                                                   "ToolWindows", (int) 'T'));
-        actions.addResource(ToolWindowGroup.class, new AddContentAction(toolWindowManager,
-                                                                        "Groups", "Group Editor", null,
-                                                                        groupEditorContentComponent = new GroupEditorContentComponent(toolWindowManager),
-                                                                        "Groups", (int) 'G'));
-        actions.addResource(Content.class, new AddContentAction(toolWindowManager,
-                                                                "Contents", "Contents", null,
-                                                                contentsContentComponent = new ContentsView(toolWindowManager).getComponent(),
-                                                                "Contents", (int) 'C'));
-        actions.addResource(InteractiveTest.class, new AddContentAction(toolWindowManager,
-                                                                        "ITests", "Interactive Tests", null,
-                                                                        interactiveTestContentComponent = new InteractiveTestContentComponent(frame, toolWindowManager),
-                                                                        "Interactive Tests", (int) 'I'));
-
-    }
 
     protected void initMenuBar() {
         JMenuBar menuBar = new JMenuBar();
@@ -141,33 +95,13 @@ public class MyDoggySet {
         fileMenu.add(new ExitAction(frame));
 
         // Content Menu
-        YasafRepository.getInstance().goTo(ActionListener.class);
-
         JMenu contentMenu = new JMenu("Content");
-        contentMenu.add(wellcomeContentAction = new AddContentAction(toolWindowManager,
-                                                                     "Wellcome", "Wellcome", null,
-                                                                     wellcomeContentComponent = new WellcomeContentComponent(),
-                                                                     "Wellcome", (int) 'W'));
-        contentMenu.add(new AddContentAction(toolWindowManager,
-                                             "Manager", "Manager", null,
-                                             managerContentComponent = new ManagerContentComponent(toolWindowManager),
-                                             "Manager", (int) 'M'));
-        contentMenu.add(new AddContentAction(toolWindowManager,
-                                             "Tools", "Tools", null,
-                                             toolsContentComponent = new ToolWindowsView(toolWindowManager).getComponent(),
-                                             "ToolWindows", (int) 'T'));
-        contentMenu.add(new AddContentAction(toolWindowManager,
-                                             "Groups", "Group Editor", null,
-                                             groupEditorContentComponent = new GroupEditorContentComponent(toolWindowManager),
-                                             "Groups", (int) 'G'));
-        contentMenu.add(new AddContentAction(toolWindowManager,
-                                             "Contents", "Contents", null,
-                                             contentsContentComponent = new ContentsView(toolWindowManager).getComponent(),
-                                             "Contents", (int) 'C'));
-        contentMenu.add(new AddContentAction(toolWindowManager,
-                                             "ITests", "Interactive Tests", null,
-                                             interactiveTestContentComponent = new InteractiveTestContentComponent(frame, toolWindowManager),
-                                             "Interactive Tests", (int) 'I'));
+        contentMenu.add(new ViewContextAction("Wellcome", AddContentContext.class, MyDoggySet.class));
+        contentMenu.add(new ViewContextAction("Manager", AddContentContext.class, ToolWindowManager.class));
+        contentMenu.add(new ViewContextAction("ToolWindows", AddContentContext.class, ToolWindow.class));
+        contentMenu.add(new ViewContextAction("Contents", AddContentContext.class, Content.class));
+        contentMenu.add(new ViewContextAction("Groups", AddContentContext.class, ToolWindowGroup.class));
+        contentMenu.add(new ViewContextAction("ITests", AddContentContext.class, InteractiveTest.class));
 
         // L&F Menu
         lafMenu = new JMenu("Looks");
@@ -281,7 +215,7 @@ public class MyDoggySet {
         FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
         floatingTypeDescriptor.setModal(true);
 
-        defaultManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
+        ContentManagerUI defaultManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
         TabbedContentManagerUI tabbedContentManagerUI = (TabbedContentManagerUI) defaultManagerUI;
         tabbedContentManagerUI.setShowAlwaysTab(false);
         tabbedContentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
@@ -313,12 +247,7 @@ public class MyDoggySet {
 
             SwingUtilities.updateComponentTreeUI(frame);
 
-            SwingUtilities.updateComponentTreeUI(groupEditorContentComponent);
-            SwingUtilities.updateComponentTreeUI(toolsContentComponent);
-            SwingUtilities.updateComponentTreeUI(contentsContentComponent);
-            SwingUtilities.updateComponentTreeUI(managerContentComponent);
-            SwingUtilities.updateComponentTreeUI(wellcomeContentComponent);
-            SwingUtilities.updateComponentTreeUI(interactiveTestContentComponent);
+            YasafViewContextManager.getInstance().getViewContext(AddContentContext.class).put(UIManager.class, null);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

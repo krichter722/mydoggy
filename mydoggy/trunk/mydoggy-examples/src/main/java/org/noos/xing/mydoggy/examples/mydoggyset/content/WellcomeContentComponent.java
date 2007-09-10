@@ -1,8 +1,15 @@
 package org.noos.xing.mydoggy.examples.mydoggyset.content;
 
 import info.clearthought.layout.TableLayout;
+import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowGroup;
+import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.examples.mydoggyset.context.AddContentContext;
+import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
+import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,27 +30,27 @@ public class WellcomeContentComponent extends JPanel {
                                                                  {-1, 70, 10, 70, 10, 70, -1}}));
         panel.setBackground(Colors.blu);
 
-        panel.add(renderButton("Manager"),
+        panel.add(renderButton("Manager", ToolWindowManager.class),
                   "1,1,FULL,FULL");
         panel.add(renderLabel("<html>Edit ToolWindowManager </br> properties </html>"),
                   "3,1,FULL,FULL");
 
-        panel.add(renderButton("Tools"),
+        panel.add(renderButton("Tools", ToolWindow.class),
                   "1,3,FULL,FULL");
         panel.add(renderLabel("<html>Edit ToolWindows </br> properties</html>"), 
                   "3,3,FULL,FULL");
 
-        panel.add(renderButton("Contents"),
+        panel.add(renderButton("Contents", Content.class),
                   "1,5,FULL,FULL");
         panel.add(renderLabel("<html>Edit Contents </br> properties</html>"), 
                   "3,5,FULL,FULL");
 
-        panel.add(renderButton("Groups"),
+        panel.add(renderButton("Groups", ToolWindowGroup.class),
                   "5,1,FULL,FULL");
         panel.add(renderLabel("<html>Edit Groups </br> properties</html>"),
                   "7,1,FULL,FULL");
 
-        panel.add(renderButton("ITests"),
+        panel.add(renderButton("ITests", InteractiveTest.class),
                   "5,3,FULL,FULL");
         panel.add(renderLabel("<html>Run Interactive </br> Tests</html>"), 
                   "7,3,FULL,FULL");
@@ -56,13 +63,14 @@ public class WellcomeContentComponent extends JPanel {
         add(panel, "1,3,FULL,FULL");
     }
 
-    protected JButton renderButton(String text) {
+    protected JButton renderButton(String text, Object inContextKey) {
         JButton button = new JButton(text);
         button.setOpaque(false);
         button.setContentAreaFilled(false);
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setBorder(new LineBorder(Color.WHITE));
+        button.addActionListener(new ViewContextAction(AddContentContext.class, inContextKey));
 
         return button;
     }

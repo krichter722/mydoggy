@@ -3,6 +3,8 @@ package org.noos.xing.mydoggy.examples.mydoggyset.action;
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.yasaf.view.ViewContextChangeListener;
+import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +14,7 @@ import java.awt.event.ActionListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class AddContentAction implements ActionListener {
+public class AddContentAction implements ActionListener, ViewContextChangeListener {
     private ToolWindowManager toolWindowManager;
     private String contentId;
     private String title;
@@ -31,6 +33,9 @@ public class AddContentAction implements ActionListener {
         this.mnemonic = mnemonic;
     }
 
+    public void contextChange(ViewContextChangeEvent evt) {
+        actionPerformed(null);
+    }
 
     public void actionPerformed(ActionEvent e) {
         ContentManager contentManager = toolWindowManager.getContentManager();
