@@ -1,17 +1,17 @@
-package org.noos.xing.mydoggy.examples.mydoggyset.context;
+package org.noos.xing.mydoggy.mydoggyset.context;
 
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowGroup;
 import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.examples.mydoggyset.MyDoggySet;
-import org.noos.xing.mydoggy.examples.mydoggyset.action.AddContentAction;
-import org.noos.xing.mydoggy.examples.mydoggyset.content.GroupEditorContentComponent;
-import org.noos.xing.mydoggy.examples.mydoggyset.content.InteractiveTestContentComponent;
-import org.noos.xing.mydoggy.examples.mydoggyset.content.ManagerContentComponent;
-import org.noos.xing.mydoggy.examples.mydoggyset.content.WellcomeContentComponent;
-import org.noos.xing.mydoggy.examples.mydoggyset.view.contents.ContentsView;
-import org.noos.xing.mydoggy.examples.mydoggyset.view.toolwindows.ToolWindowsView;
+import org.noos.xing.mydoggy.mydoggyset.MyDoggySet;
+import org.noos.xing.mydoggy.mydoggyset.action.AddContentAction;
+import org.noos.xing.mydoggy.mydoggyset.content.GroupEditorContentComponent;
+import org.noos.xing.mydoggy.mydoggyset.content.InteractiveTestContentComponent;
+import org.noos.xing.mydoggy.mydoggyset.content.ManagerContentComponent;
+import org.noos.xing.mydoggy.mydoggyset.content.WellcomeContentComponent;
+import org.noos.xing.mydoggy.mydoggyset.view.contents.ContentsView;
+import org.noos.xing.mydoggy.mydoggyset.view.toolwindows.ToolWindowsView;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.yasaf.plaf.view.MapViewContext;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
