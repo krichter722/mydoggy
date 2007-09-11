@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.examples.mydoggyset.action;
+package org.noos.xing.mydoggy.mydoggyset.action;
 
 import org.noos.xing.mydoggy.ToolWindowManager;
 

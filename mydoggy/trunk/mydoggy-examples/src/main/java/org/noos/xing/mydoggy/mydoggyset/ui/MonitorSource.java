@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.examples.mydoggyset.ui;
+package org.noos.xing.mydoggy.mydoggyset.ui;
 
 /**
  * @author Angelo De Caro

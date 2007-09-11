@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.examples.mydoggyset.view.interactive;
+package org.noos.xing.mydoggy.mydoggyset.view.interactive;
 
 import org.noos.xing.mydoggy.itest.InteractiveMouse;
 import org.noos.xing.mydoggy.itest.InteractiveUI;

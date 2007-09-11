@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.examples.mydoggyset.view.contents.model;
+package org.noos.xing.mydoggy.mydoggyset.view.contents.model;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;

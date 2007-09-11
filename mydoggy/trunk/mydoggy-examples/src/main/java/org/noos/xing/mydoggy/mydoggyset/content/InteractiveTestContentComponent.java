@@ -1,10 +1,10 @@
-package org.noos.xing.mydoggy.examples.mydoggyset.content;
+package org.noos.xing.mydoggy.mydoggyset.content;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.examples.mydoggyset.view.interactive.InteractiveDragTest;
-import org.noos.xing.mydoggy.examples.mydoggyset.view.interactive.InteractiveSimpleTest;
-import org.noos.xing.mydoggy.examples.mydoggyset.view.interactive.InteractiveToolVisisbleTest;
+import org.noos.xing.mydoggy.mydoggyset.view.interactive.InteractiveDragTest;
+import org.noos.xing.mydoggy.mydoggyset.view.interactive.InteractiveSimpleTest;
+import org.noos.xing.mydoggy.mydoggyset.view.interactive.InteractiveToolVisisbleTest;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.itest.InteractiveTestRunner;
 import org.noos.xing.mydoggy.itest.impl.SingleThreadInteractiveTestRunner;

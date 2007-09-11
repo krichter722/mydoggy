@@ -1,12 +1,7 @@
-package org.noos.xing.mydoggy.examples.mydoggyset.action;
-
-import org.noos.xing.mydoggy.ToolWindowManager;
+package org.noos.xing.mydoggy.mydoggyset.action;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
