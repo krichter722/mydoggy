@@ -134,7 +134,7 @@ public class MyDoggySet {
         toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, new JButton("Hello World 1"), ToolWindowAnchor.LEFT);
         toolWindowManager.registerToolWindow("Tool 2", "Title 2", null, panel, ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 3", "Title 3",
-                                             SwingUtil.loadIcon("org/noos/xing/mydoggy/examples/mydoggyset/icons/save.png"),
+                                             SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"),
                                              new JButton("Hello World 3"), ToolWindowAnchor.LEFT);
         toolWindowManager.registerToolWindow("Tool 4", "Title 4", null, new JButton("Hello World 4"), ToolWindowAnchor.TOP);
         toolWindowManager.registerToolWindow("Tool 5", "Title 5", null, new JButton("Hello World 5"), ToolWindowAnchor.TOP);

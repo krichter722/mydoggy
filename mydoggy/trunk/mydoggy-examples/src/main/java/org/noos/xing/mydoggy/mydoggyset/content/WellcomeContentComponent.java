@@ -58,7 +58,7 @@ public class WellcomeContentComponent extends JPanel {
         // Setup main panel
         setLayout(new TableLayout(new double[][]{{3, -1, 3},{3, 93,5,-1,3}}));
         add(new JLabel(new ImageIcon(
-                this.getClass().getClassLoader().getResource("org/noos/xing/mydoggy/examples/mydoggyset/images/banner.jpg")
+                this.getClass().getClassLoader().getResource("org/noos/xing/mydoggy/mydoggyset/images/banner.jpg")
         )), "1,1,FULL,FULL");
         add(panel, "1,3,FULL,FULL");
     }
