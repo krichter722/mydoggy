@@ -203,7 +203,6 @@ public interface ToolWindowManager {
      */
     boolean containsGroup(String name);
 
-
     /**
      * Returns the template type descrptor for <code>type</code>.
      * Any modifications to those templates will be reflected on all registered tool windows.
@@ -217,7 +216,6 @@ public interface ToolWindowManager {
      * @since 1.0.0
      */
     ToolWindowTypeDescriptor getTypeDescriptorTemplate(ToolWindowType type);
-
 
     /**
      * Registers <code>listener</code> so that it will receive events when
