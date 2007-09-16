@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.mydoggyset.content;
+package org.noos.xing.mydoggy.mydoggyset.view.group;
 
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.mydoggyset.model.ToolGroupsTableModel;
