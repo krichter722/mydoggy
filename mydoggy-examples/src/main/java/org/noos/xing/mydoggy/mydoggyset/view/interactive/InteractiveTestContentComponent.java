@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.mydoggyset.content;
+package org.noos.xing.mydoggy.mydoggyset.view.interactive;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindowManager;

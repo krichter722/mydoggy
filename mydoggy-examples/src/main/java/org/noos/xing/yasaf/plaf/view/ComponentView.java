@@ -12,6 +12,10 @@ public abstract class ComponentView implements View {
     protected Component component;
     protected ViewContext viewContext;
 
+    protected ComponentView() {
+        this(new MapViewContext());
+    }
+
     protected ComponentView(ViewContext viewContext) {
         this.viewContext = viewContext;
         this.component = initComponent();
