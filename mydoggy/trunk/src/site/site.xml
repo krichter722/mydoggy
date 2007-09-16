@@ -29,13 +29,13 @@
         </menu>
 
         <menu name="Core Interfaces">
-            <item name="MyDoggy-Api">
+            <item name="MyDoggy-Api" href="/mydoggy-api/index.html">
                 <item name="ToolWindowManager" href="/mydoggy-api/toolwindowManager.html"/>
                 <item name="ToolWindow" href="/mydoggy-api/toolwindow.html"/>
                 <item name="ToolWindowGroup" href="/mydoggy-api/toolwindowGroups.html"/>
                 <item name="ContentManager" href="/mydoggy-api/contentManager.html"/>
             </item>
-            <item name="MyDoggy-Plaf">
+            <item name="MyDoggy-Plaf" href="/mydoggy-plaf/index.html">
                 <item name="ResourceManager" href="/mydoggy-plaf/resourceManager.html"/>
                 <item name="TransparencyManager" href="/mydoggy-plaf/transparency.html"/>
             </item>

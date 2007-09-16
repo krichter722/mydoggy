@@ -140,7 +140,7 @@ public class JNAWindowTransparencyManager implements TransparencyManager&lt;Wind
 }</source>
 
                 <p>
-                    Now you can tell to mydoggy to works with that class using the following...
+                    Now to use that custom implementation use the following...
                 </p>
                 <source xml:space="preserve">
 MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(...);

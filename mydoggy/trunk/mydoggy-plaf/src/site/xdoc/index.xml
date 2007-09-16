@@ -42,7 +42,13 @@
                 </li>
                 <li>
                     <a href="./transparency.html">Transparency</a> : On Windows platform, starting from Windows 2000,
-                    you can see the transparency in action for floating tool window and for detached contents.
+                    you can see the transparency in action for floating tool window and for detached contents. But
+                    you can plug your own manager. See the relative page for an example that use JNA.
+                </li>
+                <li>
+                    <a href="./resourceManager.html">Resource Manager</a> : The ResourceManager interface is used to
+                    customize not only icons, colors and internationalization but also ui components creation,
+                    with relative customization, and transparency manager.
                 </li>
             </ul>
         </section>
