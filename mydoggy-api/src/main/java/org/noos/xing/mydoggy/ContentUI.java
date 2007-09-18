@@ -19,7 +19,7 @@ public interface ContentUI {
     Content getContent();
 
     /**
-	 * Returns whether this content could be close using the ui.
+     * Returns whether this content could be close using the ui.
      *
 	 * @return <code>true</code> if this content can be closed using the ui, <code>false</code> otherwise.
      * @see #setCloseable(boolean)
