@@ -51,7 +51,7 @@ public interface Content extends Serializable {
      * @see #getForeground
      * @since 1.0.0
      */
-    public void setForeground(Color foreground);
+    void setForeground(Color foreground);
 
     /**
      * Returns the content foreground color.
@@ -60,7 +60,7 @@ public interface Content extends Serializable {
      * @see #setForeground
      * @since 1.0.0
      */
-    public Color getForeground();
+    Color getForeground();
 
     /**
      * Sets the icon to <code>icon</code> which can be <code>null</code>.
