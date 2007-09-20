@@ -192,6 +192,7 @@ public class MyDoggySet {
             }
         });
         dockedTypeDescriptor.getToolsMenu().add(menuItem);
+        dockedTypeDescriptor.setPreviewDelay(1500);
 
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);
         slidingTypeDescriptor.setEnabled(false);

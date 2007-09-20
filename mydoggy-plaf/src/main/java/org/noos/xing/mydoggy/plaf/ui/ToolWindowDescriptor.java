@@ -190,7 +190,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
             }
 
             representativeAnchor.setName("toolWindow.rb." + toolWindow.getId());
-            representativeAnchor.setUI(createLabelUI());
             representativeAnchor.setOpaque(toolWindow.isActive());
             representativeAnchor.setFocusable(false);
         }
