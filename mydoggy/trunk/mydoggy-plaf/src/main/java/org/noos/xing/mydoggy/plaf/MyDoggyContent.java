@@ -25,6 +25,7 @@ public class MyDoggyContent implements PlafContentUI {
     private JPopupMenu popupMenu;
     private boolean detached;
     private int mnemonic;
+    private boolean selected;
 
     private EventListenerList uiListeners;
     private EventListenerList listeners;
@@ -40,6 +41,7 @@ public class MyDoggyContent implements PlafContentUI {
         this.toolTipText = toolTipText;
         this.enabled = true;
         this.mnemonic = -1;
+        this.selected = false;
 
         this.listeners = new EventListenerList();
         this.uiListeners = new EventListenerList();
@@ -92,12 +94,16 @@ public class MyDoggyContent implements PlafContentUI {
     }
 
     public boolean isSelected() {
-        return contentManager.getPlafContentManagerUI().isSelected(this);
+        if (contentManager.getPlafContentManagerUI().isInstalled())
+            return contentManager.getPlafContentManagerUI().isSelected(this);
+        else
+            return selected;
     }
 
     public void setSelected(boolean selected) {
-        if (isSelected() != selected) {
+        if (isSelected() != selected || !contentManager.getPlafContentManagerUI().isInstalled()) {
             boolean old = isSelected();
+            this.selected = selected;
             contentManager.getPlafContentManagerUI().setSelected(this, selected);
 
             firePropertyChange("selected", old, selected);

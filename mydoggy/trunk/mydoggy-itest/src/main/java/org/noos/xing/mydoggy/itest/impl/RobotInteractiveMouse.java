@@ -35,7 +35,6 @@ public class RobotInteractiveMouse implements InteractiveMouse {
             target.validate();
             interactiveUI.delay(100);
         }
-        System.out.println(target.isShowing());
 
         Point targetPoint = target.getLocationOnScreen();
         targetPoint.x += offsetX;

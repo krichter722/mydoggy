@@ -24,6 +24,12 @@ public interface PlafContentManagerUI {
     void unistall();
 
     /**
+     * TODO
+     * @return
+     */
+    boolean isInstalled();
+
+    /**
      * Adds the ui part of a content.
      *
      * @param content the content ui part to be added.
@@ -73,4 +79,5 @@ public interface PlafContentManagerUI {
      * Calls the updateUI method on all components used by this manager.
      */
     void updateUI();
+
 }

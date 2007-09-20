@@ -34,6 +34,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     protected ResourceManager resourceManager;
 
     protected JDesktopPane desktopPane;
+    protected boolean installed;
 
     protected PropertyChangeSupport propertyChangeSupport;
     protected EventListenerList contentManagerUIListeners;
@@ -95,20 +96,30 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         setPopupMenu(contentManager.getPopupMenu());
 
         contentValueAdjusting = true;
+        Content selectedContent = null;
         for (Content content : contentManager.getContents()) {
+            if (content.isSelected())
+                selectedContent = content;
             addContent((PlafContentUI) content);
         }
         contentValueAdjusting = false;
-
-        if (contentManager.getContentCount() > 0) {
+        if (selectedContent != null)
+            selectedContent.setSelected(true);
+        else if (contentManager.getContentCount() > 0) {
             contentManager.getContent(0).setSelected(true);
         }
+        this.installed = true;
     }
 
     public void unistall() {
         for (Content content : contentManager.getContents()) {
             removeContent((PlafContentUI) content);
         }
+        this.installed = false;
+    }
+
+    public boolean isInstalled() {
+        return installed;
     }
 
     public void addContent(PlafContentUI content) {

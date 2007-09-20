@@ -36,6 +36,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
     protected JTabbedContentManager tabbedContentManager;
     protected boolean showAlwaysTab;
+    protected boolean installed;
 
     protected PropertyChangeSupport propertyChangeSupport;
     protected EventListenerList contentManagerUIListeners;
@@ -161,12 +162,22 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         setPopupMenu(contentManager.getPopupMenu());
 
         lastSelected = null;
+        Content selectedContent = null;
         contentValueAdjusting = true;
         for (Content content : contentManager.getContents()) {
+            if (content.isSelected())
+                selectedContent = content;
             addContent((PlafContentUI) content);
             contentValueAdjusting = false;
         }
         contentValueAdjusting = false;
+
+        if (selectedContent != null)
+            selectedContent.setSelected(true);
+        else if (contentManager.getContentCount() > 0) {
+            contentManager.getContent(0).setSelected(true);
+        }
+        this.installed = true;
     }
 
     public void unistall() {
@@ -175,6 +186,11 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             removeContent((PlafContentUI) content);
         }
         contentValueAdjusting = false;
+        this.installed = false;
+    }
+
+    public boolean isInstalled() {
+        return installed;
     }
 
     public void addContent(PlafContentUI content) {
@@ -247,7 +263,6 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     public ContentManagerUIListener[] getContentManagerUiListener() {
         return contentManagerUIListeners.getListeners(ContentManagerUIListener.class);
     }
-
 
     public void propertyChange(PropertyChangeEvent evt) {
         propertyChangeSupport.firePropertyChange(evt);

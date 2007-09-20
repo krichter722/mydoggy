@@ -4,6 +4,10 @@ import org.noos.xing.yasaf.view.View;
 import org.noos.xing.yasaf.view.ViewContext;
 
 import java.awt.*;
+import java.awt.event.ComponentListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.HierarchyListener;
+import java.awt.event.HierarchyEvent;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -11,6 +15,7 @@ import java.awt.*;
 public abstract class ComponentView implements View {
     protected Component component;
     protected ViewContext viewContext;
+    protected boolean first = false;
 
     protected ComponentView() {
         this(new MapViewContext());
@@ -19,6 +24,16 @@ public abstract class ComponentView implements View {
     protected ComponentView(ViewContext viewContext) {
         this.viewContext = viewContext;
         this.component = initComponent();
+        this.component.addHierarchyListener(new HierarchyListener() {
+            public void hierarchyChanged(HierarchyEvent e) {
+                if (e.getChangeFlags() == HierarchyEvent.SHOWING_CHANGED) {
+                    if (!first) {
+                        onVisible();
+                        first = true;
+                    }
+                }
+            }
+        });
         initListeners();
     }
 
@@ -29,6 +44,9 @@ public abstract class ComponentView implements View {
     protected abstract Component initComponent();
 
     protected void initListeners() {
+    }
+
+    protected void onVisible() {
     }
 
 }
