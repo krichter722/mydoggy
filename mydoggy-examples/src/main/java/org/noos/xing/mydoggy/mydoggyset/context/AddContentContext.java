@@ -4,15 +4,15 @@ import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowGroup;
 import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.mydoggyset.MyDoggySet;
 import org.noos.xing.mydoggy.mydoggyset.action.AddContentAction;
-import org.noos.xing.mydoggy.mydoggyset.view.group.GroupEditorContentComponent;
-import org.noos.xing.mydoggy.mydoggyset.view.interactive.InteractiveTestContentComponent;
-import org.noos.xing.mydoggy.mydoggyset.view.manager.ManagerContentComponent;
-import org.noos.xing.mydoggy.mydoggyset.view.wellcome.WellcomeContentComponent;
 import org.noos.xing.mydoggy.mydoggyset.view.contents.ContentsView;
+import org.noos.xing.mydoggy.mydoggyset.view.group.GroupEditorContentComponent;
+import org.noos.xing.mydoggy.mydoggyset.view.interactive.InteractiveTestView;
+import org.noos.xing.mydoggy.mydoggyset.view.manager.ManagerContentComponent;
 import org.noos.xing.mydoggy.mydoggyset.view.toolwindows.ToolWindowsView;
-import org.noos.xing.mydoggy.itest.InteractiveTest;
+import org.noos.xing.mydoggy.mydoggyset.view.wellcome.WellcomeContentComponent;
 import org.noos.xing.yasaf.plaf.view.MapViewContext;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
 import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
@@ -24,8 +24,6 @@ import java.awt.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class AddContentContext extends MapViewContext {
-    private ToolWindowManager toolWindowManager;
-    private JFrame frame;
 
     private Component toolsContentComponent;
     private Component groupEditorContentComponent;
@@ -35,9 +33,6 @@ public class AddContentContext extends MapViewContext {
     private Component interactiveTestContentComponent;
 
     public AddContentContext(ToolWindowManager toolWindowManager, JFrame frame) {
-        this.toolWindowManager = toolWindowManager;
-        this.frame = frame;
-
         addViewContextChangeListener(MyDoggySet.class, new AddContentAction(toolWindowManager,
                                                                             "Wellcome", "Wellcome", null,
                                                                             wellcomeContentComponent = new WellcomeContentComponent().getComponent(),
@@ -60,7 +55,7 @@ public class AddContentContext extends MapViewContext {
                                                                          "Contents", (int) 'C'));
         addViewContextChangeListener(InteractiveTest.class, new AddContentAction(toolWindowManager,
                                                                                  "ITests", "Interactive Tests", null,
-                                                                                 interactiveTestContentComponent = new InteractiveTestContentComponent(frame, toolWindowManager),
+                                                                                 interactiveTestContentComponent = new InteractiveTestView(frame, toolWindowManager).getComponent(),
                                                                                  "Interactive Tests", (int) 'I'));
         addViewContextChangeListener(UIManager.class, new ViewContextChangeListener() {
             public void contextChange(ViewContextChangeEvent evt) {

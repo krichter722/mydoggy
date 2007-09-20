@@ -48,7 +48,6 @@ public class PreferencePanelView extends ComponentView {
     protected void initListeners() {
         viewContext.addViewContextChangeListener(new TabbedManagerUIView(viewContext));
         viewContext.addViewContextChangeListener(new DesktopManagerUIView(viewContext));
-
         viewContext.addViewContextChangeListener(new ViewContextChangeListener() {
             public void contextChange(ViewContextChangeEvent evt) {
                 if (ContentManagerUI.class.equals(evt.getProperty())) {
@@ -81,13 +80,15 @@ public class PreferencePanelView extends ComponentView {
                 }
             });
 
-            uis.setSelectedIndex(0);
-
             panel.add(new JLabel("ContentManagerUI : "), "0,0,r,FULL");
             panel.add(uis, "2,0,FULL,FULL");
 
             return panel;
         }
 
+        protected void onVisible() {
+            uis.setSelectedItem(null);
+            uis.setSelectedIndex(0);
+        }
     }
 }

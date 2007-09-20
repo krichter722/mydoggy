@@ -42,6 +42,8 @@ public class MyDoggyContentManager implements ContentManager {
         if (!(contentManagerUI instanceof PlafContentManagerUI))
             throw new IllegalArgumentException("ContentManagerUI type not supported. See Plaf prescription.");
 
+
+
         if (this.plafContentManagerUI == contentManagerUI)
             return;
 
