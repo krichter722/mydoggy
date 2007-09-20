@@ -20,7 +20,7 @@ import java.awt.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class DockedTypeDescriptorView extends ComponentView implements ViewContextChangeListener {
-    private JCheckBox popupMenuEnabled, hideLabelOnVisible, idVisibleOnToolBar, previewEnabled;
+    private JCheckBox popupMenuEnabled, hideLabelOnVisible, idVisibleOnTitleBar, previewEnabled;
     private JSpinner dockLength, previewDelay, previewTransparentRatio;
 
     public DockedTypeDescriptorView(ViewContext viewContext) {
@@ -41,19 +41,25 @@ public class DockedTypeDescriptorView extends ComponentView implements ViewConte
         panel.add(new JLabel("HideLabelOnVisible : "), "1,3,r,c");
         panel.add(hideLabelOnVisible = new JCheckBox(), "3,3,FULL,FULL");
         hideLabelOnVisible.setAction(new DynamicAction(DockedTypeDescriptor.class,
-                                                       "hideLabelOnVisible",
+                                                       "hideRepresentativeButtonOnVisible",
                                                        new ViewContextSource(viewContext, DockedTypeDescriptor.class),
                                                        new ChecBoxSelectionSource(hideLabelOnVisible)));
 
         panel.add(new JLabel("IdVisibleOnToolBar : "), "1,5,r,c");
-        panel.add(idVisibleOnToolBar = new JCheckBox(), "3,5,FULL,FULL");
-        idVisibleOnToolBar.setAction(new DynamicAction(DockedTypeDescriptor.class,
-                                                       "idVisibleOnToolBar",
+        panel.add(idVisibleOnTitleBar = new JCheckBox(), "3,5,FULL,FULL");
+        idVisibleOnTitleBar.setAction(new DynamicAction(DockedTypeDescriptor.class,
+                                                       "idVisibleOnTitleBar",
                                                        new ViewContextSource(viewContext, DockedTypeDescriptor.class),
-                                                       new ChecBoxSelectionSource(idVisibleOnToolBar)));
+                                                       new ChecBoxSelectionSource(idVisibleOnTitleBar)));
 
         panel.add(new JLabel("dockLength : "), "1,7,r,c");
         panel.add(dockLength = new JSpinner(new SpinnerNumberModel(100, 100, 400, 10)), "3,7,FULL,FULL");
+        dockLength.addChangeListener(
+                new ChangeListenerAction(DockedTypeDescriptor.class,
+                                         "dockLength",
+                                         new ViewContextSource(viewContext, DockedTypeDescriptor.class),
+                                         new SpinnerValueSource(dockLength))
+        );
 
         // Right
         panel.add(new JLabel("previewEnabled : "), "5,1,r,c");
@@ -65,6 +71,12 @@ public class DockedTypeDescriptorView extends ComponentView implements ViewConte
 
         panel.add(new JLabel("previewDelay : "), "5,3,r,c");
         panel.add(previewDelay = new JSpinner(new SpinnerNumberModel(0, 0, 5000, 500)), "7,3,FULL,FULL");
+        previewDelay.addChangeListener(
+                new ChangeListenerAction(DockedTypeDescriptor.class,
+                                         "previewDelay",
+                                         new ViewContextSource(viewContext, DockedTypeDescriptor.class),
+                                         new SpinnerValueSource(previewDelay))
+        );
 
         panel.add(new JLabel("previewTransparentRatio : "), "5,5,r,c");
         panel.add(previewTransparentRatio = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 1.0, 0.05)), "7,5,FULL,FULL");
@@ -87,7 +99,7 @@ public class DockedTypeDescriptorView extends ComponentView implements ViewConte
 
                 popupMenuEnabled.setSelected(descriptor.isPopupMenuEnabled());
                 hideLabelOnVisible.setSelected(descriptor.isHideRepresentativeButtonOnVisible());
-                idVisibleOnToolBar.setSelected(descriptor.isIdVisibleOnTitleBar());
+                idVisibleOnTitleBar.setSelected(descriptor.isIdVisibleOnTitleBar());
                 dockLength.setValue(descriptor.getDockLength());
 
                 previewEnabled.setSelected(descriptor.isPreviewEnabled());
