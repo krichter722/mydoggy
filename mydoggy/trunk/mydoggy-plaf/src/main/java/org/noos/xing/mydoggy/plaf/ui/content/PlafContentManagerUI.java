@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.ContentManagerUI;
 import org.noos.xing.mydoggy.ToolWindowManager;
 
 import javax.swing.*;
@@ -15,7 +16,7 @@ public interface PlafContentManagerUI {
      * @param manager the component where this UI delegate is being installed
      * @see #unistall()
      */
-    void install(ToolWindowManager manager);
+    PlafContentManagerUI install(ContentManagerUI oldContentManagerUI, ToolWindowManager manager);
 
     /**
      * Reverses configuration which was done during <code>install(...)</code>.

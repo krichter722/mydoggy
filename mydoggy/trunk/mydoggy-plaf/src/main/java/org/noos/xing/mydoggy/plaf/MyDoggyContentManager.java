@@ -42,16 +42,14 @@ public class MyDoggyContentManager implements ContentManager {
         if (!(contentManagerUI instanceof PlafContentManagerUI))
             throw new IllegalArgumentException("ContentManagerUI type not supported. See Plaf prescription.");
 
-
-
         if (this.plafContentManagerUI == contentManagerUI)
             return;
 
         if (this.plafContentManagerUI != null)
             this.plafContentManagerUI.unistall();
 
-        this.plafContentManagerUI = (PlafContentManagerUI) contentManagerUI;
-        this.plafContentManagerUI.install(toolWindowManager);
+        PlafContentManagerUI newContentManagerUI = (PlafContentManagerUI) contentManagerUI;
+        this.plafContentManagerUI = newContentManagerUI.install(getContentManagerUI(), toolWindowManager);
     }
 
     public ContentManagerUI getContentManagerUI() {
@@ -179,7 +177,9 @@ public class MyDoggyContentManager implements ContentManager {
     }
 
     public JPopupMenu getPopupMenu() {
-        return plafContentManagerUI.getPopupMenu();
+        if (plafContentManagerUI != null)
+            return plafContentManagerUI.getPopupMenu();
+        return null;
     }
 
     public void addContentManagerListener(ContentManagerListener listener) {

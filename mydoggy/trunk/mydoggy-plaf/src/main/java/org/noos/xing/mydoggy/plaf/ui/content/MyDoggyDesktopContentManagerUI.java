@@ -81,7 +81,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         return desktopPane;
     }
 
-    public void install(ToolWindowManager manager) {
+    public PlafContentManagerUI install(ContentManagerUI oldContentManagerUI, ToolWindowManager manager) {
         this.toolWindowManager = (MyDoggyToolWindowManager) manager;
         this.contentManager = (MyDoggyContentManager) manager.getContentManager();
         this.resourceManager = toolWindowManager.getResourceManager();
@@ -103,12 +103,27 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             addContent((PlafContentUI) content);
         }
         contentValueAdjusting = false;
-        if (selectedContent != null)
-            selectedContent.setSelected(true);
-        else if (contentManager.getContentCount() > 0) {
-            contentManager.getContent(0).setSelected(true);
+
+        if (oldContentManagerUI != null) {
+            for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
+                addContentManagerUIListener(listener);
+            }
         }
+
         this.installed = true;
+
+        final Content selectedContent1 = selectedContent;
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                if (selectedContent1 != null)
+                    selectedContent1.setSelected(true);
+                else if (contentManager.getContentCount() > 0) {
+                    contentManager.getContent(0).setSelected(true);
+                }
+            }
+        });
+
+        return this;
     }
 
     public void unistall() {
