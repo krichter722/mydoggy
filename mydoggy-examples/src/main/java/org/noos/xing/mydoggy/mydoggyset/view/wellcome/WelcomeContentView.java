@@ -19,14 +19,14 @@ import java.awt.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class WellcomeContentComponent extends ComponentView {
+public class WelcomeContentView extends ComponentView {
 
-    public WellcomeContentComponent(ViewContext viewContext) {
+    public WelcomeContentView(ViewContext viewContext) {
         super(viewContext);
     }
 
     protected Component initComponent() {
-        // Setup wellcome panel...
+        // Setup welcome panel...
         JPanel panel = new JPanel(new TableLayout(new double[][]{{-1, 100, 5, 160, 3, 100, 5, 160, -1},
                                                                  {-1, 70, 10, 70, 10, 70, -1}}));
         panel.setBackground(Colors.blu);
