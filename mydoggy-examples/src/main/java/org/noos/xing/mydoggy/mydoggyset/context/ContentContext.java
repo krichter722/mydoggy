@@ -10,7 +10,7 @@ import org.noos.xing.mydoggy.mydoggyset.action.AddContentAction;
 import org.noos.xing.mydoggy.mydoggyset.view.contents.ContentsView;
 import org.noos.xing.mydoggy.mydoggyset.view.group.GroupEditorContentComponent;
 import org.noos.xing.mydoggy.mydoggyset.view.interactive.InteractiveTestView;
-import org.noos.xing.mydoggy.mydoggyset.view.manager.ManagerContentComponent;
+import org.noos.xing.mydoggy.mydoggyset.view.manager.ManagerView;
 import org.noos.xing.mydoggy.mydoggyset.view.toolwindows.ToolWindowsView;
 import org.noos.xing.mydoggy.mydoggyset.view.wellcome.WellcomeContentComponent;
 import org.noos.xing.yasaf.plaf.view.MapViewContext;
@@ -39,7 +39,7 @@ public class ContentContext extends MapViewContext {
                                                                             "Wellcome", (int) 'W'));
         addViewContextChangeListener(ToolWindowManager.class, new AddContentAction(toolWindowManager,
                                                                                    "Manager", "Manager", null,
-                                                                                   managerContentComponent = new ManagerContentComponent(toolWindowManager),
+                                                                                   managerContentComponent = new ManagerView(toolWindowManager).getComponent(),
                                                                                    "Manager", (int) 'M'));
         addViewContextChangeListener(ToolWindow.class, new AddContentAction(toolWindowManager,
                                                                             "Tools", "Tools", null,
