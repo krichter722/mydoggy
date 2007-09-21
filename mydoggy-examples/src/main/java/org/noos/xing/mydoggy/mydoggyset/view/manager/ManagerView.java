@@ -1,12 +1,19 @@
 package org.noos.xing.mydoggy.mydoggyset.view.manager;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.PushAwayMode;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.ToolWindowManagerDescriptor;
 import org.noos.xing.yasaf.plaf.action.ChangeListenerAction;
 import org.noos.xing.yasaf.plaf.action.DynamicAction;
+import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.plaf.action.ViewContextSource;
+import org.noos.xing.yasaf.plaf.bean.AndSource;
 import org.noos.xing.yasaf.plaf.bean.ChecBoxSelectionSource;
+import org.noos.xing.yasaf.plaf.bean.ConstantSource;
 import org.noos.xing.yasaf.plaf.bean.SpinnerValueSource;
+import org.noos.xing.yasaf.plaf.component.MatrixPanel;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.plaf.view.MapViewContext;
 import org.noos.xing.yasaf.view.View;
@@ -17,8 +24,10 @@ import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -35,14 +44,17 @@ public class ManagerView implements View {
         viewContext.put(ToolWindowManager.class, toolWindowManager);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new TableLayout(new double[][]{{-1}, {-1}}));
+        panel.setLayout(new TableLayout(new double[][]{{-1}, {120, 3, -1}}));
         panel.add(new ToolWindowManagerDescriptorPrefView(viewContext).getComponent(), "0,0,FULL,FULL");
+        panel.add(new PersistencePrefView(viewContext).getComponent(), "0,2,FULL,FULL");
+
+        viewContext.put(ToolWindowManagerDescriptor.class, toolWindowManager.getToolWindowManagerDescriptor());
 
         return panel;
     }
 
-    public class ToolWindowManagerDescriptorPrefView extends ComponentView {
-        private JSpinner leftDividerSize, rightDivederSize, topDividerSize, bottomDividerSize;
+    public class ToolWindowManagerDescriptorPrefView extends ComponentView implements ViewContextChangeListener {
+        private JSpinner leftDividerSize, rightDividerSize, topDividerSize, bottomDividerSize;
         private JCheckBox numberingEnabled;
         private JComboBox pushAwayMode;
 
@@ -51,19 +63,15 @@ public class ManagerView implements View {
         }
 
         protected Component initComponent() {
-            ToolWindowManagerDescriptor managerDescriptor = viewContext.get(ToolWindowManager.class).getToolWindowManagerDescriptor();
-            viewContext.put(ToolWindowManagerDescriptor.class, managerDescriptor);
-
-            JPanel panel = new JPanel(new TableLayout(new double[][]{{3, -2, 3, -1, 3, -2, 3, -1, 3}, {-1, 20, 3, 20, 3, 20, 3, 20, -1}}));
+            MatrixPanel panel = new MatrixPanel(2, 4);
             panel.setBorder(new TitledBorder("ToolWindowManagerDescriptor Preference"));
 
             // Right
-            panel.add(new JLabel("numberingEnabled : "), "1,1,r,c");
-            panel.add(numberingEnabled = new JCheckBox(), "3,1,FULL,FULL");
+            panel.addPair(0, 0, "numberingEnabled : ", numberingEnabled = new JCheckBox());
             numberingEnabled.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
-                                                       "numberingEnabled",
-                                                       new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                                                       new ChecBoxSelectionSource(numberingEnabled)));
+                                                         "numberingEnabled",
+                                                         new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
+                                                         new ChecBoxSelectionSource(numberingEnabled)));
 
             panel.add(new JLabel("pushAwayMode : "), "1,3,r,c");
             pushAwayMode = new JComboBox(new Object[]{
@@ -77,43 +85,63 @@ public class ManagerView implements View {
                     viewContext.put(PushAwayMode.class, e.getItem());
                 }
             });
-            panel.add(pushAwayMode, "3,3,FULL,FULL");
+            panel.addPair(0, 1, "pushAwayMode : ", pushAwayMode);
 
             // Left
-            panel.add(new JLabel("DividerSize (LEFT) : "), "5,1,r,c");
-            panel.add(leftDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)), "7,1,FULL,FULL");
+            panel.addPair(1, 0,
+                          "DividerSize (LEFT) : ",
+                          leftDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
             leftDividerSize.addChangeListener(
                     new ChangeListenerAction(ToolWindowManagerDescriptor.class,
-                                             "dividerSize",
+                                             "setDividerSize",
                                              new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                                             new SpinnerValueSource(leftDividerSize))
+                                             new AndSource(
+                                                     new ConstantSource(ToolWindowAnchor.LEFT),
+                                                     new SpinnerValueSource(leftDividerSize)
+                                             )
+                    )
             );
 
-            panel.add(new JLabel("DividerSize (RIGHT) : "), "5,3,r,c");
-            panel.add(rightDivederSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)), "7,3,FULL,FULL");
-            rightDivederSize.addChangeListener(
+            panel.addPair(1, 1,
+                          "DividerSize (RIGHT) : ",
+                          rightDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
+            rightDividerSize.addChangeListener(
                     new ChangeListenerAction(ToolWindowManagerDescriptor.class,
-                                             "dividerSize",
+                                             "setDividerSize",
                                              new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                                             new SpinnerValueSource(rightDivederSize))
+                                             new AndSource(
+                                                     new ConstantSource(ToolWindowAnchor.RIGHT),
+                                                     new SpinnerValueSource(rightDividerSize)
+                                             )
+                    )
             );
 
-            panel.add(new JLabel("DividerSize (TOP) : "), "5,5,r,c");
-            panel.add(topDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)), "7,5,FULL,FULL");
+            panel.addPair(1, 2,
+                          "DividerSize (TOP) : ",
+                          topDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
             topDividerSize.addChangeListener(
                     new ChangeListenerAction(ToolWindowManagerDescriptor.class,
-                                             "dividerSize",
+                                             "setDividerSize",
                                              new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                                             new SpinnerValueSource(topDividerSize))
+                                             new AndSource(
+                                                     new ConstantSource(ToolWindowAnchor.TOP),
+                                                     new SpinnerValueSource(topDividerSize)
+                                             )
+                    )
             );
 
-            panel.add(new JLabel("DividerSize (BOTTOM) : "), "5,7,r,c");
-            panel.add(bottomDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)), "7,7,FULL,FULL");
+            panel.addPair(1, 3,
+                          "DividerSize (BOTTOM) : ",
+                          bottomDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
             bottomDividerSize.addChangeListener(
                     new ChangeListenerAction(ToolWindowManagerDescriptor.class,
-                                             "dividerSize",
+                                             "setDividerSize",
                                              new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                                             new SpinnerValueSource(bottomDividerSize))
+                                             new AndSource(
+                                                     new ConstantSource(ToolWindowAnchor.BOTTOM),
+                                                     new SpinnerValueSource(bottomDividerSize)
+                                             )
+                    )
             );
 
             return panel;
@@ -124,6 +152,65 @@ public class ManagerView implements View {
                 public void contextChange(ViewContextChangeEvent evt) {
                     ToolWindowManagerDescriptor managerDescriptor = viewContext.get(ToolWindowManagerDescriptor.class);
                     managerDescriptor.setPushAwayMode((PushAwayMode) evt.getNewValue());
+                }
+            });
+            viewContext.addViewContextChangeListener(ToolWindowManagerDescriptor.class, this);
+        }
+
+        public void contextChange(ViewContextChangeEvent evt) {
+            ToolWindowManagerDescriptor managerDescriptor = (ToolWindowManagerDescriptor) evt.getNewValue();
+
+            numberingEnabled.setSelected(managerDescriptor.isNumberingEnabled());
+            pushAwayMode.setSelectedItem(managerDescriptor.getPushAwayMode());
+            leftDividerSize.setValue(managerDescriptor.getDividerSize(ToolWindowAnchor.LEFT));
+            rightDividerSize.setValue(managerDescriptor.getDividerSize(ToolWindowAnchor.RIGHT));
+            topDividerSize.setValue(managerDescriptor.getDividerSize(ToolWindowAnchor.TOP));
+            bottomDividerSize.setValue(managerDescriptor.getDividerSize(ToolWindowAnchor.BOTTOM));
+        }
+    }
+
+    public class PersistencePrefView extends ComponentView {
+        protected JEditorPane editorPane;
+
+        public PersistencePrefView(ViewContext viewContext) {
+            super(viewContext);
+        }
+
+        protected Component initComponent() {
+            JPanel panel = new JPanel(new TableLayout(new double[][]{{3,80,3,-1,3},{3,20,3,20,-1,3}}));
+            panel.setBorder(new TitledBorder("Persistence Preference"));
+
+            JButton save = new JButton("Save ");
+            save.addActionListener(new ViewContextAction(viewContext, "save"));
+            panel.add(save, "1,1,FULL,FULL");
+
+            JButton load = new JButton("Load ");
+            load.addActionListener(new ViewContextAction(viewContext, "load"));
+            panel.add(load, "1,3,FULL,FULL");
+
+            editorPane = new JEditorPane();
+            panel.add(new JScrollPane(editorPane), "3,1,3,4");
+
+            return panel;
+        }
+
+        protected void initListeners() {
+            viewContext.addViewContextChangeListener("save", new ViewContextChangeListener() {
+                public void contextChange(ViewContextChangeEvent evt) {
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    viewContext.get(ToolWindowManager.class).getPersistenceDelegate().save(outputStream);
+                    viewContext.put("output", outputStream.toString());
+                }
+            });
+            viewContext.addViewContextChangeListener("load", new ViewContextChangeListener() {
+                public void contextChange(ViewContextChangeEvent evt) {
+                    ByteArrayInputStream inputStream = new ByteArrayInputStream(editorPane.getText().getBytes());
+                    viewContext.get(ToolWindowManager.class).getPersistenceDelegate().apply(inputStream);
+                }
+            });
+            viewContext.addViewContextChangeListener("output", new ViewContextChangeListener() {
+                public void contextChange(ViewContextChangeEvent evt) {
+                    editorPane.setText((String) viewContext.get("output"));
                 }
             });
         }

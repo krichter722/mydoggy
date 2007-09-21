@@ -12,7 +12,7 @@ import org.noos.xing.mydoggy.mydoggyset.view.group.GroupEditorContentComponent;
 import org.noos.xing.mydoggy.mydoggyset.view.interactive.InteractiveTestView;
 import org.noos.xing.mydoggy.mydoggyset.view.manager.ManagerView;
 import org.noos.xing.mydoggy.mydoggyset.view.toolwindows.ToolWindowsView;
-import org.noos.xing.mydoggy.mydoggyset.view.wellcome.WellcomeContentComponent;
+import org.noos.xing.mydoggy.mydoggyset.view.wellcome.WelcomeContentComponent;
 import org.noos.xing.yasaf.plaf.view.MapViewContext;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
 import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
@@ -35,7 +35,7 @@ public class ContentContext extends MapViewContext {
     public ContentContext(ToolWindowManager toolWindowManager, JFrame frame) {
         addViewContextChangeListener(MyDoggySet.class, new AddContentAction(toolWindowManager,
                                                                             "Wellcome", "Wellcome", null,
-                                                                            wellcomeContentComponent = new WellcomeContentComponent(this).getComponent(),
+                                                                            wellcomeContentComponent = new WelcomeContentComponent(this).getComponent(),
                                                                             "Wellcome", (int) 'W'));
         addViewContextChangeListener(ToolWindowManager.class, new AddContentAction(toolWindowManager,
                                                                                    "Manager", "Manager", null,
