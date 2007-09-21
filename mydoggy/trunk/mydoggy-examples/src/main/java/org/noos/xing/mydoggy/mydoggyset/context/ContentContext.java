@@ -8,11 +8,11 @@ import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.mydoggyset.MyDoggySet;
 import org.noos.xing.mydoggy.mydoggyset.action.AddContentAction;
 import org.noos.xing.mydoggy.mydoggyset.view.contents.ContentsView;
-import org.noos.xing.mydoggy.mydoggyset.view.group.GroupEditorContentComponent;
+import org.noos.xing.mydoggy.mydoggyset.view.group.GroupsView;
 import org.noos.xing.mydoggy.mydoggyset.view.interactive.InteractiveTestView;
 import org.noos.xing.mydoggy.mydoggyset.view.manager.ManagerView;
 import org.noos.xing.mydoggy.mydoggyset.view.toolwindows.ToolWindowsView;
-import org.noos.xing.mydoggy.mydoggyset.view.wellcome.WelcomeContentComponent;
+import org.noos.xing.mydoggy.mydoggyset.view.wellcome.WelcomeContentView;
 import org.noos.xing.yasaf.plaf.view.MapViewContext;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
 import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
@@ -35,7 +35,7 @@ public class ContentContext extends MapViewContext {
     public ContentContext(ToolWindowManager toolWindowManager, JFrame frame) {
         addViewContextChangeListener(MyDoggySet.class, new AddContentAction(toolWindowManager,
                                                                             "Wellcome", "Wellcome", null,
-                                                                            wellcomeContentComponent = new WelcomeContentComponent(this).getComponent(),
+                                                                            wellcomeContentComponent = new WelcomeContentView(this).getComponent(),
                                                                             "Wellcome", (int) 'W'));
         addViewContextChangeListener(ToolWindowManager.class, new AddContentAction(toolWindowManager,
                                                                                    "Manager", "Manager", null,
@@ -47,7 +47,7 @@ public class ContentContext extends MapViewContext {
                                                                             "ToolWindows", (int) 'T'));
         addViewContextChangeListener(ToolWindowGroup.class, new AddContentAction(toolWindowManager,
                                                                                  "Groups", "Group Editor", null,
-                                                                                 groupEditorContentComponent = new GroupEditorContentComponent(toolWindowManager),
+                                                                                 groupEditorContentComponent = new GroupsView(frame, toolWindowManager).getComponent(),
                                                                                  "Groups", (int) 'G'));
         addViewContextChangeListener(Content.class, new AddContentAction(toolWindowManager,
                                                                          "Contents", "Contents", null,

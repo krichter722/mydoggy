@@ -156,18 +156,12 @@ public class MyDoggySet {
             window.setAvailable(true);
         }
 
-        // Create two groups
-        ToolWindowGroup mainGroup = toolWindowManager.getToolWindowGroup("Main");
-        ToolWindowGroup submainGroup = toolWindowManager.getToolWindowGroup("SubMain");
-
         // Set TypeDescriptor properties for tool window 1
         ToolWindow toolWindow = toolWindowManager.getToolWindow("Tool 1");
 
         DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
         dockedTypeDescriptor.setPopupMenuEnabled(false);
         dockedTypeDescriptor.setDockLength(200);
-
-        mainGroup.addToolWindow(toolWindow);
 
         // Set properties for tool window 2
         toolWindow = toolWindowManager.getToolWindow("Tool 2");
@@ -179,8 +173,6 @@ public class MyDoggySet {
         FloatingTypeDescriptor descriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_FREE);
         descriptor.setLocation(100, 100);
         descriptor.setSize(250, 250);
-
-        submainGroup.addToolWindow(toolWindow);
 
         toolWindow = toolWindowManager.getToolWindow("Tool 3");
         dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
@@ -198,18 +190,14 @@ public class MyDoggySet {
         slidingTypeDescriptor.setEnabled(false);
 
 
-        mainGroup.addToolWindow(toolWindow);
-
         // Set properties for tool window 4
         toolWindow = toolWindowManager.getToolWindow("Tool 4");
         toolWindow.setType(ToolWindowType.FLOATING_FREE);
-        submainGroup.addToolWindow(toolWindow);
 
         // Set properties for tool window 5
         toolWindow = toolWindowManager.getToolWindow("Tool 5");
         toolWindow.setType(ToolWindowType.FLOATING_FREE);
 
-        submainGroup.addToolWindow(toolWindowManager.getToolWindow("Tool 6"));
 
         // Set properties for tool window 7
         toolWindow = toolWindowManager.getToolWindow("Tool 7");
