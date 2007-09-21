@@ -150,9 +150,17 @@ public class MyDoggyContentManager implements ContentManager {
             return contents.get(0);
 
         int index = contents.indexOf(getSelectedContent()) + 1;
-        if (index >= contents.size())
-            index = 0;
-        return getContent(index);
+        int startIndex = index;
+        do {
+            if (index >= contents.size())
+                index = 0;
+            Content content = getContent(index);
+            if (content.isEnabled())
+                return content;
+            index++;
+        } while (index != startIndex);
+        
+        return null;
     }
 
     public Content getPreviousContent() {
@@ -163,9 +171,17 @@ public class MyDoggyContentManager implements ContentManager {
             return contents.get(0);
 
         int index = contents.indexOf(getSelectedContent()) - 1;
-        if (index < 0)
-            index = contents.size() - 1;
-        return getContent(index);
+        int startIndex = index;
+        do {
+            if (index < 0)
+                index = contents.size() - 1;
+            Content content = getContent(index);
+            if (content.isEnabled())
+                return content;
+            index--;
+        } while (index != startIndex);
+        
+        return null;
     }
 
     public Content[] getContents() {

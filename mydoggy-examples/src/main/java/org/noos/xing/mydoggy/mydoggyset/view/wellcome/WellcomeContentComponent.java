@@ -6,11 +6,12 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowGroup;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
-import org.noos.xing.mydoggy.mydoggyset.context.AddContentContext;
+import org.noos.xing.mydoggy.mydoggyset.context.ContentContext;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
+import org.noos.xing.yasaf.view.ViewContext;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +20,10 @@ import java.awt.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class WellcomeContentComponent extends ComponentView {
+
+    public WellcomeContentComponent(ViewContext viewContext) {
+        super(viewContext);
+    }
 
     protected Component initComponent() {
         // Setup wellcome panel...
@@ -67,7 +72,7 @@ public class WellcomeContentComponent extends ComponentView {
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setBorder(new LineBorder(Color.WHITE));
-        button.addActionListener(new ViewContextAction(AddContentContext.class, inContextKey));
+        button.addActionListener(new ViewContextAction(viewContext, inContextKey));
 
         return button;
     }
