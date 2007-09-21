@@ -150,19 +150,19 @@ public interface ContentManager {
     Content getSelectedContent();
 
     /**
-     * Returns in order the next content related to the selected content, or <code>null</code> if no
-     * contents are registed.
+     * Returns in order the next enabled content related to the selected content, or <code>null</code> if no
+     * contents are registered or no content is enabled.
      *
-     * @return the next content related to the selected content.
+     * @return the next enabled content related to the selected content.
      * @since 1.3.1
      */
     Content getNextContent();
 
     /**
-     * Returns in order the previous content related to the selected content, or <code>null</code> if no
-     * contents are registed.
+     * Returns in order the previous enabled content related to the selected content, or <code>null</code> if no
+     * contents are registered or no content is enabled.
      *
-     * @return the previous content related to the selected content.
+     * @return the previous enabled content related to the selected content.
      * @since 1.3.1
      */
     Content getPreviousContent();

@@ -2,22 +2,21 @@ package org.noos.xing.mydoggy.mydoggyset;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
-import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner;
 import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
+import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.mydoggyset.action.ChangeLookAndFeelAction;
 import org.noos.xing.mydoggy.mydoggyset.action.ExitAction;
 import org.noos.xing.mydoggy.mydoggyset.action.LoadWorkspaceAction;
 import org.noos.xing.mydoggy.mydoggyset.action.StoreWorkspaceAction;
-import org.noos.xing.mydoggy.mydoggyset.context.AddContentContext;
+import org.noos.xing.mydoggy.mydoggyset.context.ContentContext;
 import org.noos.xing.mydoggy.mydoggyset.ui.MonitorPanel;
 import org.noos.xing.mydoggy.mydoggyset.ui.RuntimeMemoryMonitorSource;
-import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
-import org.noos.xing.yasaf.plaf.view.YasafViewContextManager;
+import org.noos.xing.yasaf.view.ViewContext;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,6 +32,8 @@ public class MyDoggySet {
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
     private JMenu lafMenu;
+
+    private ViewContext contentContext;
 
     public JFrame getFrame() {
         return frame;
@@ -64,7 +65,7 @@ public class MyDoggySet {
     protected void start() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                YasafViewContextManager.getInstance().getViewContext(AddContentContext.class).put(MyDoggySet.class, null);
+                contentContext.put(MyDoggySet.class, null);
                 frame.setVisible(true);
             }
         });
@@ -80,11 +81,10 @@ public class MyDoggySet {
 
         this.toolWindowManager = new MyDoggyToolWindowManager(frame, Locale.US, null);
 
-        YasafViewContextManager.getInstance().addViewContext(AddContentContext.class, new AddContentContext(toolWindowManager, frame));
+        this.contentContext = new ContentContext(toolWindowManager, frame);
 
         initMenuBar();
     }
-
 
     protected void initMenuBar() {
         JMenuBar menuBar = new JMenuBar();
@@ -98,12 +98,12 @@ public class MyDoggySet {
 
         // Content Menu
         JMenu contentMenu = new JMenu("Content");
-        contentMenu.add(new ViewContextAction("Wellcome", AddContentContext.class, MyDoggySet.class));
-        contentMenu.add(new ViewContextAction("Manager", AddContentContext.class, ToolWindowManager.class));
-        contentMenu.add(new ViewContextAction("ToolWindows", AddContentContext.class, ToolWindow.class));
-        contentMenu.add(new ViewContextAction("Contents", AddContentContext.class, Content.class));
-        contentMenu.add(new ViewContextAction("Groups", AddContentContext.class, ToolWindowGroup.class));
-        contentMenu.add(new ViewContextAction("ITests", AddContentContext.class, InteractiveTest.class));
+        contentMenu.add(new ViewContextAction("Wellcome", contentContext, MyDoggySet.class));
+        contentMenu.add(new ViewContextAction("Manager", contentContext, ToolWindowManager.class));
+        contentMenu.add(new ViewContextAction("ToolWindows", contentContext, ToolWindow.class));
+        contentMenu.add(new ViewContextAction("Contents", contentContext, Content.class));
+        contentMenu.add(new ViewContextAction("Groups", contentContext, ToolWindowGroup.class));
+        contentMenu.add(new ViewContextAction("ITests", contentContext, InteractiveTest.class));
 
         // L&F Menu
         lafMenu = new JMenu("Looks");
@@ -247,10 +247,8 @@ public class MyDoggySet {
     protected void updateLookAndFeel() {
         try {
             UIManager.setLookAndFeel(currentLookAndFeel);
-
             SwingUtilities.updateComponentTreeUI(frame);
-
-            YasafViewContextManager.getInstance().getViewContext(AddContentContext.class).put(UIManager.class, null);
+            contentContext.put(UIManager.class, null);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
