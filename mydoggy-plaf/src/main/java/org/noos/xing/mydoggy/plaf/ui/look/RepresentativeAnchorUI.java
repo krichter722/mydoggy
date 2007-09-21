@@ -193,9 +193,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                 flasingDuration = (Integer) e.getNewValue();
                 SwingUtil.repaint(label);
             }
-        } else if ("previewDelay".equals(propertyName)) {
-            adapter.setPreviewDelay((Integer) e.getNewValue());
-        }
+        } 
     }
 
     public ToolWindowDescriptor getDescriptor() {
@@ -250,7 +248,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
 
         public RepresentativeAnchorMouseAdapter() {
             initPopupMenu();
-            previewTimer = new Timer(dockedTypeDescriptor.getPreviewDelay(), this);
+            previewTimer = new Timer(0, this);
             descriptor.getToolWindow().addInternalPropertyChangeListener(this);
         }
 
@@ -303,8 +301,14 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
 
         public void mouseEntered(MouseEvent e) {
             if (!toolWindow.isVisible()) {
-                if (previewPanel == null)
+                if (previewPanel == null) {
+                    // TODO: when dockedTypeDescriptor.getPreviewDelay() is grater than 1000 then there is a
+                    // a delay of 1000 ms in addition...BOH!!
+                    previewTimer.setInitialDelay(
+                            dockedTypeDescriptor.getPreviewDelay()
+                    );
                     previewTimer.start();
+                }
             }
 
             if (toolWindow.isFlashing())
@@ -654,10 +658,6 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                 popupMenu.add(menu, 4);
                 old = menu;
             }
-        }
-
-        public void setPreviewDelay(int previewDelay) {
-            previewTimer.setDelay(previewDelay);
         }
 
     }

@@ -58,8 +58,16 @@ public class MyDoggyResourceManager implements ResourceManager {
         return icons.get(id);
     }
 
+    public Icon putIcon(String id, Icon icon) {
+        return icons.put(id, icon);
+    }
+
     public Color getColor(String id) {
         return colors.get(id);
+    }
+
+    public Color putColor(String id, Color color) {
+        return colors.put(id, color);
     }
 
     public TransparencyManager<Window> getTransparencyManager() {

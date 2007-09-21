@@ -14,6 +14,7 @@ import java.util.ResourceBundle;
  * ui components creation with relative customization and transparency manager.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @since 1.3.1
  */
 public interface ResourceManager {
 
@@ -101,6 +102,7 @@ public interface ResourceManager {
      * @param manager the toolwindow manager
      * @param args any arguments used to create the component.
      * @return the component created using the rule specified by the key param.
+     * @since 1.3.1
      */
     Component createComponent(String key, ToolWindowManager manager, Object... args);
 
@@ -111,16 +113,18 @@ public interface ResourceManager {
      * @param manager the toolwindow manager
      * @param args any arguments used to create the component ui.
      * @return the component ui created using the rule specified by the key param.
+     * @since 1.3.1
      */
     ComponentUI createComponentUI(String key, ToolWindowManager manager, Object... args);
 
     /**
-     * Applay the customization using the rule specified by the key param.
+     * Apply the customization using the rule specified by the key param.
      *
      * @param key key whose associated rule is used to customize the component.
-     * @param component the component to be costumized.
+     * @param component the component to be customized.
      * @param args any arguments used to customize the component.
      * @return the component customized.
+     * @since 1.3.1
      */
     Component applyCustomization(String key, Component component, Object... args);
 
@@ -131,8 +135,21 @@ public interface ResourceManager {
      * @param id id whose associated icon is to be returned.
      * @return the icon to which this manager maps the specified id, or
      *	       <tt>null</tt> if the manager contains no mapping for this id.
+     * @since 1.3.1
      */
     Icon getIcon(String id);
+
+    /**
+     * Associates the specified icon with the specified id. If the manager previously
+     * contained a mapping for this id, the old icon is replaced by the specified icon.
+     *
+     * @param id id with which the specified icon is to be associated.
+     * @param icon icon to be associated with the specified id.
+     * @return previous icon associated with specified id, or <tt>null</tt>
+     *	       if there was no mapping for id.
+     * @since 1.3.1
+     */
+    Icon putIcon(String id, Icon icon);
 
     /**
      * Returns the color to which this manager maps the specified id.  Returns
@@ -141,14 +158,28 @@ public interface ResourceManager {
      * @param id id whose associated color is to be returned.
      * @return the color to which this manager maps the specified id, or
      *	       <tt>null</tt> if the manager contains no mapping for this id.
+     * @since 1.3.1
      */
     Color getColor(String id);
+
+    /**
+     * Associates the specified color with the specified id. If the manager previously
+     * contained a mapping for this id, the old color is replaced by the specified color.
+     *
+     * @param id id with which the specified color is to be associated.
+     * @param color color to be associated with the specified id.
+     * @return previous color associated with specified id, or <tt>null</tt>
+     *	       if there was no mapping for id.
+     * @since 1.3.1
+     */
+    Color putColor(String id, Color color);
 
     /**
      * Returns the transparency manager for the windows used to manage transparency of toolwindows
      * of FLOATING or FLOATING_FREE type.
      *
      * @return the transparency manager for the windows.
+     * @since 1.3.1
      */
     TransparencyManager<Window> getTransparencyManager();
 
@@ -157,6 +188,7 @@ public interface ResourceManager {
      * of FLOATING or FLOATING_FREE type.
      *
      * @param transparencyManager the transparency manager for the windows.
+     * @since 1.3.1
      */
     void setTransparencyManager(TransparencyManager<Window> transparencyManager);
 
@@ -164,6 +196,7 @@ public interface ResourceManager {
      * Sets the locale of this manager used for the internationalization of the relative toolwindow manager.
      *
      * @param locale the locale to become this manager's locale
+     * @since 1.3.1
      */
     void setLocale(Locale locale);
 
@@ -174,6 +207,7 @@ public interface ResourceManager {
      * @param bundle the base name of the resource bundle, a fully qualified class name
      * @param classLoader the class loader from which to load the resource bundle
      * @see #getUserResourceBundle()
+     * @since 1.3.1
      */
     void setUserBundle(Locale locale, String bundle, ClassLoader classLoader);
 
@@ -181,18 +215,21 @@ public interface ResourceManager {
      * Sets the bundle used for the internationalization of special strings like the the toolwindow id.
      *
      * @param userBundle the ResourceBundle
+     * @since 1.3.1
      */
     void setUserBundle(ResourceBundle userBundle);
 
     /**
      * Returns the resource bundle used for the internationalization of mydoggy.
      * @return the resource bundle used for the internationalization of mydoggy.
+     * @since 1.3.1
      */
     ResourceBundle getResourceBundle();
 
     /**
      * Returns the resource bundle used for the internationalization of special strings like the the toolwindow id.
      * @return the resource bundle used for the internationalization of special strings like the the toolwindow id.
+     * @since 1.3.1
      */
     ResourceBundle getUserResourceBundle();
 
@@ -200,6 +237,7 @@ public interface ResourceManager {
      * This method is equivalent to <code>getResourceBundle().getString(key)</code>
      * @param key the key for the desired string
      * @return the string for the given key
+     * @since 1.3.1
      */
     String getString(String key);
 
@@ -207,6 +245,7 @@ public interface ResourceManager {
      * This method is equivalent to <code>getUserResourceBundle().getString(key)</code>
      * @param key the key for the desired string
      * @return the string for the given key
+     * @since 1.3.1
      */
     String getUserString(String key);
 
