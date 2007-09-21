@@ -54,7 +54,7 @@ public class MapViewContext implements ViewContext {
         EventListenerList unrestricted = listeners.get(MapViewContext.class);
         EventListenerList restricted = listeners.get(key);
 
-        ViewContextChangeEvent event = new ViewContextChangeEvent(this, key, oldValue, newValue);
+        ViewContextChangeEvent event = new ViewContextChangeEvent(this, this, key, oldValue, newValue);
 
         ViewContextChangeListener[] changeListeners = unrestricted.getListeners(ViewContextChangeListener.class);
         for (ViewContextChangeListener changeListener : changeListeners) {

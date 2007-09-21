@@ -30,6 +30,16 @@ public class ToolGroupsTableModel extends DefaultTableModel {
                 updateModel();
             }
         });
+        viewContext.addViewContextChangeListener("addTool", new ViewContextChangeListener() {
+            public void contextChange(ViewContextChangeEvent evt) {
+                updateModel();
+            }
+        });
+        viewContext.addViewContextChangeListener("removeTool", new ViewContextChangeListener() {
+            public void contextChange(ViewContextChangeEvent evt) {
+                updateModel();
+            }
+        });
     }
 
     public int getRowCount() {
@@ -47,7 +57,7 @@ public class ToolGroupsTableModel extends DefaultTableModel {
     }
 
     public void setValueAt(Object aValue, int row, int column) {
-        super.setValueAt(aValue, row, column);
+        groups.get(row)[column] = aValue;
         if (column == 2) {
             windowManager.getToolWindowGroups()[row].setImplicit(
                     (Boolean) aValue 

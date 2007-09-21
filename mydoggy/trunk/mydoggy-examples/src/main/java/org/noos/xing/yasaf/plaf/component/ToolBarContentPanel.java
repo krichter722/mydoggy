@@ -12,8 +12,12 @@ public class ToolBarContentPanel extends JPanel {
     protected JToolBar toolBar;
 
     public ToolBarContentPanel(Component content) {
-        setLayout(new TableLayout(new double[][]{{-1},{20,3,-1}}));
+        setLayout(new TableLayout(new double[][]{{-1},{25,3,-1}}));
         add(toolBar = new JToolBar(), "0,0,r,FULL");
+        toolBar.setBorderPainted(false);
+        toolBar.setFloatable(false);
+        toolBar.setOpaque(false);
+        
         add(content, "0,2");
     }
 
