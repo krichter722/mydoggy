@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
+import java.beans.MethodDescriptor;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,18 +20,29 @@ public class DynamicAction extends AbstractAction {
     protected Method method;
     protected Invocation invocation;
 
-    public DynamicAction(Class targetClass, String property, Invocation invocation) {
+    public DynamicAction(Class targetClass, String methodName, Invocation invocation) {
         this.invocation = invocation;
         try {
             for (PropertyDescriptor propertyDescriptor : Introspector.getBeanInfo(targetClass).getPropertyDescriptors()) {
-                if (property.equals(propertyDescriptor.getName())) {
+                if (methodName.equals(propertyDescriptor.getName())) {
                     method = propertyDescriptor.getWriteMethod();
                     break;
+                }
+            }
+
+            if (method == null) {
+                for (MethodDescriptor methodDescriptor : Introspector.getBeanInfo(targetClass).getMethodDescriptors()) {
+                    if (methodName.equals(methodDescriptor.getName())) {
+                        method = methodDescriptor.getMethod();
+                        break;
+                    }
                 }
             }
         } catch (IntrospectionException e) {
             throw new RuntimeException(e);
         }
+        if (method == null)
+            throw new IllegalArgumentException("Cannot find method named : " + methodName);
     }
 
     public DynamicAction(Class targetClass, String property, Source target, Source args) {
