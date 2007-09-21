@@ -30,7 +30,7 @@ public class ContentManagerEvent extends EventObject {
     private final ActionId actionId;
 
     /**
-     * Indicates the content on which the action has occured.
+     * Indicates the content on which the action has occurred.
      */
     private final Content content;
 
@@ -44,7 +44,7 @@ public class ContentManagerEvent extends EventObject {
      * <code>IllegalArgumentException</code> if <code>source</code>
      * is <code>null</code>.
      *
-     * @param source     the content manager where the action has occured.
+     * @param source     the content manager where the action has occurred.
      * @param actionId   the action identifier
      * @param content    the content subject of the action.
      * @see org.noos.xing.mydoggy.ContentManager
