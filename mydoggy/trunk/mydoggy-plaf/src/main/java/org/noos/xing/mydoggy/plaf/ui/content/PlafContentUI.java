@@ -6,6 +6,7 @@ import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @since 1.3.1
  */
 public interface PlafContentUI extends Content {
 
@@ -18,6 +19,7 @@ public interface PlafContentUI extends Content {
      *
      * @param listener the PropertyChangeListener to be added.
      * @see #removeUIPropertyChangeListener(java.beans.PropertyChangeListener)
+     * @since 1.3.1
      */
     void addUIPropertyChangeListener(PropertyChangeListener listener);
 
@@ -30,12 +32,14 @@ public interface PlafContentUI extends Content {
      *
      * @param listener the PropertyChangeListener to be removed
      * @see #addUIPropertyChangeListener(java.beans.PropertyChangeListener) 
+     * @since 1.3.1
      */
     void removeUIPropertyChangeListener(PropertyChangeListener listener);
 
     /**
-     *
+     * TODO:
      * @param selected
+     * @since 1.3.1
      */
     void fireSelected(boolean selected);
     
