@@ -3,14 +3,14 @@
 		"http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
 	<properties>
-		<title>MyDoggy : Tutorial - Step 7</title>
+		<title>MyDoggy : Tutorial - Step 8</title>
 		<author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
 	</properties>
 
     <body>
 		<section name="Tutorial - Step 7">
             <p>
-                Now we'll play with <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTab.html">ToolWindowTab</a> class.
+                Now we'll play with a special way of show a tool, the aggregate mode.
             </p>
 
             <source>
@@ -36,7 +36,7 @@ import info.clearthought.layout.TableLayout;
 
 import java.io.*;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
+import java.awt.event.*;
 
 public class SampleApp {
     private JFrame frame;
@@ -53,7 +53,10 @@ public class SampleApp {
                 // Set debug tool active
                 ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
                 debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#setActive(boolean)">setActive</a>(true);
-
+                <strong style="color:green">
+                ToolWindow runTool = toolWindowManager.getToolWindow("Run");
+                runTool.aggregate();
+                </strong>                                        
                 frame.setVisible(true);
             }
         });
@@ -107,6 +110,14 @@ public class SampleApp {
                                              ToolWindowAnchor.LEFT);       // Anchor
 
         <a href="#setupDebugTool">setupDebugTool();</a>
+        <strong style="color:green">
+        // Register another Tool.
+        toolWindowManager.registerToolWindow("Run",                      // Id
+                                             "Run Tool",                 // Title
+                                             null,                       // Icon
+                                             new JButton("Run Tool"),    // Component
+                                             ToolWindowAnchor.LEFT);     // Anchor
+        </strong>
 
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
@@ -161,15 +172,14 @@ public class SampleApp {
         floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTypeDescriptor.html#setAnimating(boolean)">setAnimating(true)</a>;
 
         // Setup Tabs
-        <strong style="color:green"><a href="#initTabs">initTabs();</a></strong>
+        <a href="#initTabs">initTabs();</a>
     }
-    <strong style="color:green"><a name="initTabs"/>
+    <a name="initTabs"/>
     protected void initTabs() {
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
         <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTab.html">ToolWindowTab</a> profilingTab = debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#addToolWindowTab(java.lang.String, java.awt.Component)">addToolWindowTab</a>("Profiling", new JButton("Profiling"));
         profilingTab.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTab.html#setCloseable(boolean)">setCloseable</a>(true);
     }
-    </strong>
     <a name="initContentManager"/>
     protected void initContentManager() {
          JTree treeContent = new JTree();
@@ -223,14 +233,13 @@ public class SampleApp {
                         <tr>
                             <td>
                                 <div align="center">
-                                    <img align="middle" src="./../images/tutorial/step6.png" alt="ToolWindowTab" border="0" hspace="18"/>
+                                    <img align="middle" src="./../images/tutorial/step8.png" alt="Aggregate Tools" border="0" hspace="18"/>
                                 </div>
                             </td>
                             <td>
                                 <div align="left">
                                     <p>
-                                        This is the effect. See the title bar of the debug tool. There are two title.
-                                        Click on the title to see the content.
+                                        This is the effect. We have two tools showed together on the same anchor.
                                     </p>
                                 </div>
                             </td>
@@ -238,7 +247,10 @@ public class SampleApp {
                     </tbody>
                 </table>
                 <p>
-                    Good! Next Step. <a href="./step8.html">Step 8</a> - Add another tool and show them together on the same anchor.
+                    Good! We are now at the end of this tutorial. I hope this has been useful, if not please
+                    help me to improve this tutorial and mydoggy. See
+                    <a href="./../contact.html">contant</a>
+                    section.
                 </p>
             </subsection>
         </section>

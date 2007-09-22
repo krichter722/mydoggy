@@ -1,17 +1,26 @@
 package org.noos.xing.mydoggy.tutorial;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.DockedTypeDescriptor;
+import org.noos.xing.mydoggy.SlidingTypeDescriptor;
+import org.noos.xing.mydoggy.FloatingTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.ToolWindowActionHandler;
+import org.noos.xing.mydoggy.ContentManager;
+import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.TabbedContentManagerUI;
+import org.noos.xing.mydoggy.TabbedContentUI;
+import org.noos.xing.mydoggy.ContentManagerUIListener;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
+import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
+import java.io.*;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.Locale;
-import java.io.FileOutputStream;
+import java.awt.event.*;
 
 public class SampleApp {
     private JFrame frame;
@@ -20,14 +29,17 @@ public class SampleApp {
     protected void setUp() {
         initComponents();
         initToolWindowManager();
-        initListeners();
     }
 
     protected void start() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-//                ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
-//                debugTool.setActive(true);
+                // Set debug tool active
+                ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
+                debugTool.setActive(true);
+
+                ToolWindow runTool = toolWindowManager.getToolWindow("Run");
+                runTool.aggregate();
 
                 frame.setVisible(true);
             }
@@ -41,35 +53,55 @@ public class SampleApp {
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // I love TableLayout. It's great.
         this.frame.getContentPane().setLayout(new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
+
+        // Store (on close) and load (on start) the toolwindow manager workspace.
+        this.frame.addWindowListener(new WindowAdapter() {
+            public void windowOpened(WindowEvent e) {
+                try {
+                    File workspaceFile = new File("workspace.xml");
+                    if (workspaceFile.exists()) {
+                        FileInputStream inputStream = new FileInputStream("workspace.xml");
+                        toolWindowManager.getPersistenceDelegate().apply(inputStream);
+                        inputStream.close();
+                    }
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+            public void windowClosing(WindowEvent e) {
+                try {
+                    FileOutputStream output = new FileOutputStream("workspace.xml");
+                    toolWindowManager.getPersistenceDelegate().save(output);
+                    output.close();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
     }
 
     protected void initToolWindowManager() {
         // Create a new instance of MyDoggyToolWindowManager passing the frame.
         MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
-        myDoggyToolWindowManager.setUserResourceBundle(Locale.ITALY,
-                                                        "org/noos/xing/mydoggy/tutorial/sampleApp",
-                                                        null);
         this.toolWindowManager = myDoggyToolWindowManager;
-
-//        toolWindowManager.getToolWindowManagerDescriptor().setNumberingEnabled(false);
-        ((DockedTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).setIdVisibleOnTitleBar(false);
-
-
-        JPanel panel = new JPanel(new TableLayout(new double[][]{{-1,50,-1},{-1,20,-1}}));
-        JComboBox box = new JComboBox(new Object[]{
-                "1","1","1","1","1","1","1","1","1","1","1","1","1","1","1",
-        });
-        panel.add(box,"1,1,FULL,FULL");
-
 
         // Register a Tool.
         toolWindowManager.registerToolWindow("Debug",                      // Id
                                              "Debug Tool",                 // Title
                                              null,                         // Icon
-                                             panel,                        // Component
+                                             new JButton("Debug Tool"),    // Component
                                              ToolWindowAnchor.LEFT);       // Anchor
 
         setupDebugTool();
+
+        // Register another Tool.
+        toolWindowManager.registerToolWindow("Run",                      // Id
+                                             "Run Tool",                 // Title
+                                             null,                       // Icon
+                                             new JButton("Run Tool"),    // Component
+                                             ToolWindowAnchor.LEFT);     // Anchor
+
 
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
@@ -80,6 +112,7 @@ public class SampleApp {
         // Add myDoggyToolWindowManager to the frame. MyDoggyToolWindowManager is an extension of a JPanel
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
     }
+
 
     protected void setupDebugTool() {
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
@@ -104,10 +137,9 @@ public class SampleApp {
         dockedTypeDescriptor.setPreviewEnabled(true);
         dockedTypeDescriptor.setPreviewDelay(1500);
         dockedTypeDescriptor.setPreviewTransparentRatio(0.4f);
-        dockedTypeDescriptor.setHideRepresentativeButtonOnVisible(true);
 
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
-        slidingTypeDescriptor.setEnabled(true);
+        slidingTypeDescriptor.setEnabled(false);
         slidingTypeDescriptor.setTransparentMode(true);
         slidingTypeDescriptor.setTransparentRatio(0.8f);
         slidingTypeDescriptor.setTransparentDelay(0);
@@ -142,10 +174,9 @@ public class SampleApp {
                                                     null,      // An icon
                                                     treeContent);
         content.setToolTipText("Tree tip");
-        content.setIcon(SwingUtil.loadIcon("org/noos/xing/mydoggy/examples/mydoggyset/icons/save.png"));
 
         setupContentManagerUI();
-     }
+    }
 
     protected void setupContentManagerUI() {
         TabbedContentManagerUI contentManagerUI = (TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
@@ -161,7 +192,6 @@ public class SampleApp {
             }
         });
 
-
         TabbedContentUI contentUI = contentManagerUI.getContentUI(toolWindowManager.getContentManager().getContent(0));
 
         contentUI.setCloseable(true);
@@ -170,21 +200,6 @@ public class SampleApp {
         contentUI.setTransparentRatio(0.7f);
         contentUI.setTransparentDelay(1000);
     }
-
-    protected void initListeners() {
-        frame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                try {
-                    FileOutputStream output = new FileOutputStream("workspace.xml");
-                    toolWindowManager.getPersistenceDelegate().save(output);
-                    output.close();
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-            }
-        });
-    }
-
 
     public static void main(String[] args) {
         SampleApp test = new SampleApp();

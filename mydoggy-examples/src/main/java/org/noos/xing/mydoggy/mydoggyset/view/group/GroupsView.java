@@ -3,7 +3,6 @@ package org.noos.xing.mydoggy.mydoggyset.view.group;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindowGroup;
 import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.ToolWindowManagerDescriptor;
 import org.noos.xing.mydoggy.mydoggyset.ui.CheckBoxCellRenderer;
 import org.noos.xing.mydoggy.mydoggyset.view.group.model.ToolGroupsTableModel;
 import org.noos.xing.mydoggy.mydoggyset.view.group.model.ToolsComboBoxModel;
@@ -23,9 +22,6 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 
-/**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
- */
 public class GroupsView implements View {
     protected ToolWindowManager toolWindowManager;
     protected JFrame frame;
@@ -45,8 +41,6 @@ public class GroupsView implements View {
         panel.add(new GroupsTableView(viewContext).getComponent(), "1,1,FULL,FULL");
         panel.add(new ToolsInGroupTableView(viewContext).getComponent(), "3,1,FULL,FULL");
 
-        viewContext.put(ToolWindowManagerDescriptor.class, toolWindowManager.getToolWindowManagerDescriptor());
-
         return panel;
     }
 
@@ -59,7 +53,7 @@ public class GroupsView implements View {
 
         protected Component initComponent() {
             groupsTable = new JTable(new ToolGroupsTableModel(viewContext));
-            groupsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
             groupsTable.getSelectionModel().addListSelectionListener(
                     new ContextPutListSelectionListener(viewContext, ToolWindowGroup.class, groupsTable, -1)
             );
@@ -89,7 +83,6 @@ public class GroupsView implements View {
                 public void contextChange(ViewContextChangeEvent evt) {
                     String groupName = JOptionPane.showInputDialog(viewContext.get(JFrame.class), "Group Name");
                     viewContext.get(ToolWindowManager.class).getToolWindowGroup(groupName);
-                    viewContext.put(GroupKeySpace.REFRESH_GROUPS, null);
                 }
             });
             viewContext.addViewContextChangeListener(GroupKeySpace.SHOW_GROUP, new ViewContextChangeListener() {

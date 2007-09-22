@@ -12,5 +12,4 @@ public enum GroupKeySpace {
     REMOVE_TOOL,
     TOOL_ID,
     TOOL_IN_GROUP_ID,
-    REFRESH_GROUPS 
 }

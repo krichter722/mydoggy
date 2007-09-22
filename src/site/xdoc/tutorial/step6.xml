@@ -11,7 +11,7 @@
 		<section name="Tutorial - Step 6">
             <p>
                 Now we'll play with <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTab.html">PersistenceDelegate</a> interface.
-                We'll add a WindowListener to the main frame to catch the necessary events to load and store the toolwindowmanager
+                We'll add a WindowListener to the main frame to catch the necessary events to load and store the toolwindow manager
                 workspace.
             </p>
 
@@ -36,6 +36,7 @@ import info.clearthought.layout.TableLayout;
 <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTab.html">import org.noos.xing.mydoggy.ToolWindowTab;</a>
 <a href="./../mydoggy-plaf/toolwindowManager.html">import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;</a>
 
+import java.io.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
@@ -61,15 +62,40 @@ public class SampleApp {
     }
 
     protected void initComponents() {
-        // This is need to a correct visualization of all JPopupMenu.
-        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-
         this.frame = new JFrame("Sample App...");
         this.frame.setSize(640, 480);
         this.frame.setLocation(100, 100);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // I love TableLayout. It's great.
         this.frame.getContentPane().setLayout(new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
+
+        <strong style="color:green">
+        // Store (on close) and load (on start) the toolwindow manager workspace.
+        this.frame.addWindowListener(new WindowAdapter() {
+            public void windowOpened(WindowEvent e) {
+                try {
+                    File workspaceFile = new File("workspace.xml");
+                    if (workspaceFile.exists()) {
+                        FileInputStream inputStream = new FileInputStream("workspace.xml");
+                        toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getPersistenceDelegate()">getPersistenceDelegate</a>().<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/PersistenceDelegate.html#apply()">apply</a>(inputStream);
+                        inputStream.close();
+                    } 
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+            public void windowClosing(WindowEvent e) {
+                try {
+                    FileOutputStream output = new FileOutputStream("workspace.xml");
+                    toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getPersistenceDelegate()">getPersistenceDelegate</a>().<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/PersistenceDelegate.html#save(java.io.OutputStream)">save</a>(output);
+                    output.close();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        </strong>
     }
 
     protected void initToolWindowManager() {
@@ -137,17 +163,7 @@ public class SampleApp {
         floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setTransparentRatio(float)">setTransparentRatio(0.2f)</a>;
         floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setTransparentDelay(int)">setTransparentDelay(1000)</a>;
         floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTypeDescriptor.html#setAnimating(boolean)">setAnimating(true)</a>;
-
-        // Setup Tabs
-        <strong style="color:green"><a href="#initTabs">initTabs();</a></strong>
     }
-    <strong style="color:green"><a name="initTabs"/>
-    protected void initTabs() {
-        ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
-        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTab.html">ToolWindowTab</a> profilingTab = debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#addToolWindowTab(java.lang.String, java.awt.Component)">addToolWindowTab</a>("Profiling", new JButton("Profiling"));
-        profilingTab.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTab.html#setCloseable(boolean)">setCloseable</a>(true);
-    }
-    </strong>
     <a name="initContentManager"/>
     protected void initContentManager() {
          JTree treeContent = new JTree();
@@ -207,8 +223,7 @@ public class SampleApp {
                             <td>
                                 <div align="left">
                                     <p>
-                                        This is the effect. We have changed the tab position and add a listener that
-                                        show a message after a content is detached.
+                                        No special result to show...Just play with the app.
                                     </p>
                                 </div>
                             </td>
@@ -216,10 +231,7 @@ public class SampleApp {
                     </tbody>
                 </table>
                 <p>
-                    Good! We are now at the end of this tutorial. I hope this will be useful, if not please
-                    help me to improve this tutorial and mydoggy. See
-                    <a href="./../contact.html">contant</a>
-                    section.
+                    Good! Next Step. <a href="./step7.html">Step 7</a> - ToolWindowTabs.
                 </p>
             </subsection>
         </section>
