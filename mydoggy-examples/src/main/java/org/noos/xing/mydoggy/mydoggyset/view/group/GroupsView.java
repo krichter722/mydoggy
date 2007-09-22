@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy.mydoggyset.view.group;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowGroup;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.ToolWindowManagerDescriptor;
@@ -13,6 +12,8 @@ import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.plaf.component.ToolBarContentPanel;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.plaf.view.MapViewContext;
+import org.noos.xing.yasaf.plaf.view.listener.ContextPutItemListener;
+import org.noos.xing.yasaf.plaf.view.listener.ContextPutListSelectionListener;
 import org.noos.xing.yasaf.view.View;
 import org.noos.xing.yasaf.view.ViewContext;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
@@ -20,12 +21,7 @@ import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.util.ArrayList;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -64,6 +60,9 @@ public class GroupsView implements View {
         protected Component initComponent() {
             groupsTable = new JTable(new ToolGroupsTableModel(viewContext));
             groupsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            groupsTable.getSelectionModel().addListSelectionListener(
+                    new ContextPutListSelectionListener(viewContext, ToolWindowGroup.class, groupsTable, -1)
+            );
 
             JCheckBox booleanEditor = new JCheckBox();
             booleanEditor.setHorizontalAlignment(SwingConstants.CENTER);
@@ -72,41 +71,39 @@ public class GroupsView implements View {
             groupsTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(booleanEditor));
 
             ToolBarContentPanel panel = new ToolBarContentPanel(new JScrollPane(groupsTable));
-            panel.getToolBar().add(new ViewContextAction("Add", viewContext, "addGroup"));
-            panel.getToolBar().add(new ViewContextAction("Show", viewContext, "showGroup"));
-            panel.getToolBar().add(new ViewContextAction("Hide", viewContext, "hideGroup"));
             panel.setBorder(new TitledBorder("Groups"));
+
+            panel.getToolBar().add(new ViewContextAction("Add", viewContext, GroupKeySpace.ADD_GROUP));
+            panel.getToolBar().add(new ViewContextAction("Remove", null, viewContext, GroupKeySpace.REMOVE_GROUP,
+                                                         ToolWindowGroup.class));
+            panel.getToolBar().add(new ViewContextAction("Show", null, viewContext, GroupKeySpace.SHOW_GROUP,
+                                                         ToolWindowGroup.class));
+            panel.getToolBar().add(new ViewContextAction("Hide", null, viewContext, GroupKeySpace.HIDE_GROUP,
+                                                         ToolWindowGroup.class));
+
             return panel;
         }
 
         protected void initListeners() {
-            viewContext.addViewContextChangeListener("addGroup", new ViewContextChangeListener() {
+            viewContext.addViewContextChangeListener(GroupKeySpace.ADD_GROUP, new ViewContextChangeListener() {
                 public void contextChange(ViewContextChangeEvent evt) {
                     String groupName = JOptionPane.showInputDialog(viewContext.get(JFrame.class), "Group Name");
                     viewContext.get(ToolWindowManager.class).getToolWindowGroup(groupName);
-                    viewContext.put("refreshGroups", null);
+                    viewContext.put(GroupKeySpace.REFRESH_GROUPS, null);
                 }
             });
-            viewContext.addViewContextChangeListener("showGroup", new ViewContextChangeListener() {
+            viewContext.addViewContextChangeListener(GroupKeySpace.SHOW_GROUP, new ViewContextChangeListener() {
                 public void contextChange(ViewContextChangeEvent evt) {
                     ToolWindowGroup group = viewContext.get(ToolWindowGroup.class);
                     if (group != null)
                         group.setVisible(true);
                 }
             });
-            viewContext.addViewContextChangeListener("hideGroup", new ViewContextChangeListener() {
+            viewContext.addViewContextChangeListener(GroupKeySpace.HIDE_GROUP, new ViewContextChangeListener() {
                 public void contextChange(ViewContextChangeEvent evt) {
                     ToolWindowGroup group = viewContext.get(ToolWindowGroup.class);
                     if (group != null)
                         group.setVisible(false);
-                }
-            });
-            groupsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-                public void valueChanged(ListSelectionEvent e) {
-                    if (groupsTable.getSelectedRow() != -1) {
-                        ToolWindowGroup group = (ToolWindowGroup) groupsTable.getValueAt(groupsTable.getSelectedRow(), -1);
-                        viewContext.put(ToolWindowGroup.class, group);
-                    }
                 }
             });
         }
@@ -119,31 +116,23 @@ public class GroupsView implements View {
         }
 
         protected Component initComponent() {
-            final JTable toolsInGroupTable = new JTable(new ToolsInGroupTableModel(viewContext));
+            JTable toolsInGroupTable = new JTable(new ToolsInGroupTableModel(viewContext));
             toolsInGroupTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-            toolsInGroupTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-                public void valueChanged(ListSelectionEvent e) {
-                    if (toolsInGroupTable.getSelectedRow() != -1) {
-                        viewContext.put("toolInGroupId", 
-                                        toolsInGroupTable.getValueAt(toolsInGroupTable.getSelectedRow(), 0));
-                    }
-                }
-            });
+            toolsInGroupTable.getSelectionModel().addListSelectionListener(
+                    new ContextPutListSelectionListener(viewContext, GroupKeySpace.TOOL_IN_GROUP_ID, toolsInGroupTable, 0)
+            );
 
             ToolBarContentPanel panel = new ToolBarContentPanel(new JScrollPane(toolsInGroupTable));
+            panel.setBorder(new TitledBorder("Tools In"));
 
             JComboBox tools = new JComboBox(new ToolsComboBoxModel(viewContext));
-            tools.addItemListener(new ItemListener() {
-                public void itemStateChanged(ItemEvent e) {
-                    viewContext.put("toolId", e.getItem());
-                }
-            });
+            tools.addItemListener(new ContextPutItemListener(viewContext, GroupKeySpace.TOOL_ID));
 
             panel.getToolBar().add(tools);
-            panel.getToolBar().add(new ViewContextAction("Add", viewContext, "addTool"));
-            panel.getToolBar().add(new ViewContextAction("Remove", viewContext, "removeTool"));
-            panel.setBorder(new TitledBorder("Tools In"));
+            panel.getToolBar().add(new ViewContextAction("Add", null, viewContext, GroupKeySpace.ADD_TOOL,
+                                                         ToolWindowGroup.class));
+            panel.getToolBar().add(new ViewContextAction("Remove", null, viewContext, GroupKeySpace.REMOVE_TOOL,
+                                                         GroupKeySpace.TOOL_IN_GROUP_ID));
 
             return panel;
         }
