@@ -33,10 +33,13 @@
                     <a href="./step5.html">Step 5</a> : Configure ContentManagerUI.
                 </li>
                 <li>
-                    <a href="./step6.html">Step 6</a> : Store (on close) and load (on start) the toolwindowmanager workspace.
+                    <a href="./step6.html">Step 6</a> : Store (on close) and load (on start) the toolwindow manager workspace.
                 </li>
                 <li>
                     <a href="./step7.html">Step 7</a> : ToolWindowTabs.
+                </li>
+                <li>
+                    <a href="./step8.html">Step 8</a> : Add another tool and show them together on the same anchor.
                 </li>
             </ul>
         </section>

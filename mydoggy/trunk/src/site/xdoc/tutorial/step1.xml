@@ -35,9 +35,6 @@ public class SampleApp {
     }
 
     protected void initComponents() {
-        // This is need to a correct visualization of all JPopupMenu.
-        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-
         this.frame = new JFrame("Sample App...");
         this.frame.setSize(640, 480);
         this.frame.setLocation(100, 100);
@@ -81,7 +78,5 @@ public class SampleApp {
                 </p>
             </subsection>
         </section>
-
-        <navbar home="./tutorial.html" next="./step2.html"/>
 	</body>
 </document>

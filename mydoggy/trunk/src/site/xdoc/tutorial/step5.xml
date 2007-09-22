@@ -58,9 +58,6 @@ public class SampleApp {
     }
 
     protected void initComponents() {
-        // This is need to a correct visualization of all JPopupMenu.
-        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-
         this.frame = new JFrame("Sample App...");
         this.frame.setSize(640, 480);
         this.frame.setLocation(100, 100);
@@ -206,7 +203,7 @@ public class SampleApp {
                     </tbody>
                 </table>
                 <p>
-                    Good! Final Step. <a href="./step6.html">Step 6</a> - ToolWindowTabs.
+                    Good! Next Step. <a href="./step5.html">Step 6</a> - Store (on close) and load (on start) the toolwindow manager workspace.
                 </p>
             </subsection>
         </section>

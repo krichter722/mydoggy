@@ -2,6 +2,8 @@ package org.noos.xing.mydoggy.mydoggyset.view.group.model;
 
 import org.noos.xing.mydoggy.ToolWindowGroup;
 import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.ToolWindowManagerListener;
+import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
 import org.noos.xing.mydoggy.mydoggyset.view.group.GroupKeySpace;
 import org.noos.xing.yasaf.view.ViewContext;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
@@ -26,7 +28,21 @@ public class ToolGroupsTableModel extends DefaultTableModel implements ViewConte
         });
         updateModel();
 
-        viewContext.addViewContextChangeListener(GroupKeySpace.REFRESH_GROUPS, this);
+        windowManager.addToolWindowManagerListener(new ToolWindowManagerListener() {
+            public void toolWindowRegistered(ToolWindowManagerEvent event) {
+            }
+
+            public void toolWindowUnregistered(ToolWindowManagerEvent event) {
+            }
+
+            public void toolWindowGroupAdded(ToolWindowManagerEvent event) {
+                updateModel();
+            }
+
+            public void toolWindowGroupRemoved(ToolWindowManagerEvent event) {
+                updateModel();
+            }
+        });
     }
 
     public void contextChange(ViewContextChangeEvent evt) {
