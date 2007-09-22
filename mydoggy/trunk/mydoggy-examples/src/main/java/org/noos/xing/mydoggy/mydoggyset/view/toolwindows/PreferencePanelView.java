@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.plaf.view.PanelViewContainer;
+import org.noos.xing.yasaf.plaf.view.listener.ContextPutItemListener;
 import org.noos.xing.yasaf.view.View;
 import org.noos.xing.yasaf.view.ViewContainer;
 import org.noos.xing.yasaf.view.ViewContext;
@@ -83,11 +84,7 @@ public class PreferencePanelView extends ComponentView {
                     FloatingTypeDescriptor.class
             });
 
-            types.addItemListener(new ItemListener() {
-                public void itemStateChanged(ItemEvent e) {
-                    viewContext.put(ToolWindowTypeDescriptor.class, e.getItem());
-                }
-            });
+            types.addItemListener(new ContextPutItemListener(viewContext, ToolWindowTypeDescriptor.class));
 
             panel.add(new JLabel("Type Descriptor : "), "0,0,r,FULL");
             panel.add(types, "2,0,FULL,FULL");

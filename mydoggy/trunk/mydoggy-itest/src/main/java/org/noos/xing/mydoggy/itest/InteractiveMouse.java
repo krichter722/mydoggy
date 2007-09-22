@@ -11,22 +11,32 @@ public interface InteractiveMouse {
         CENTER
     }
 
-    void moveTo(int x, int y);
+    InteractiveMouse moveTo(int x, int y);
 
-    void moveTo(String componentName);
+    InteractiveMouse moveTo(String componentName);
 
-    void moveTo(String componentName, int offsetX, int offsetY);
+    InteractiveMouse moveTo(String componentName, int delay);
 
-    void press(Type type);
+    InteractiveMouse moveTo(String componentName, int offsetX, int offsetY);
 
-    void release();
+    InteractiveMouse moveTo(String componentName, int offsetX, int offsetY, int delay);
 
-    void release(Type type);
+    InteractiveMouse press(Type type);
 
-    void click(Type type);
+    InteractiveMouse release();
 
-    void click(String componentName, Type type);
+    InteractiveMouse release(int delay);
 
-    void wheel(int amount);
+    InteractiveMouse release(Type type);
+
+    InteractiveMouse click(Type type);
+
+    InteractiveMouse click(Type type, int delay);
+
+    InteractiveMouse click(String componentName, Type type);
+
+    InteractiveMouse click(String componentName, Type type, int delay);
+
+    InteractiveMouse wheel(int amount);
 
 }

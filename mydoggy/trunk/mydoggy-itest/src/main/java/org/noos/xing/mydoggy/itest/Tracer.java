@@ -9,4 +9,9 @@ public interface Tracer {
 
     void stop();
 
+    interface Emitter {
+
+        void emit(String text);
+    }
+
 }
