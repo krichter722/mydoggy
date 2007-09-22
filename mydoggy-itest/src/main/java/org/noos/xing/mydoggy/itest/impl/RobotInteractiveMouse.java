@@ -19,15 +19,23 @@ public class RobotInteractiveMouse implements InteractiveMouse {
         this.robot = robot;
     }
 
-    public void moveTo(int x, int y) {
+    public InteractiveMouse moveTo(int x, int y) {
         moveMouse(new Point(x, y));
+        return this;
     }
 
-    public void moveTo(String componentName) {
+    public InteractiveMouse moveTo(String componentName) {
         moveTo(componentName, 5, 5);
+        return this;
     }
 
-    public void moveTo(String componentName, int offsetX, int offsetY) {
+    public InteractiveMouse moveTo(String componentName, int delay) {
+        moveTo(componentName);
+        interactiveUI.delay(delay);
+        return this;
+    }
+
+    public InteractiveMouse moveTo(String componentName, int offsetX, int offsetY) {
         Component target = findComponentInRoots(componentName);
         assert target != null;
 
@@ -41,9 +49,16 @@ public class RobotInteractiveMouse implements InteractiveMouse {
         targetPoint.y += offsetY;
 
         moveMouse(targetPoint);
+        return this;
     }
 
-    public void press(Type type) {
+    public InteractiveMouse moveTo(String componentName, int offsetX, int offsetY, int delay) {
+        moveTo(componentName, offsetX, offsetY);
+        interactiveUI.delay(delay);
+        return this;
+    }
+
+    public InteractiveMouse press(Type type) {
         lastPressType = type;
         switch (type) {
             case LEFT:
@@ -56,9 +71,10 @@ public class RobotInteractiveMouse implements InteractiveMouse {
                 robot.mousePress(InputEvent.BUTTON3_MASK);
                 break;
         }
+        return this;
     }
 
-    public void release() {
+    public InteractiveMouse release() {
         if (lastPressType != null) {
             try {
                 release(lastPressType);
@@ -66,9 +82,16 @@ public class RobotInteractiveMouse implements InteractiveMouse {
                 lastPressType = null;
             }
         }
+        return this;
     }
 
-    public void release(Type type) {
+    public InteractiveMouse release(int delay) {
+        release();
+        interactiveUI.delay(delay);
+        return this;
+    }
+
+    public InteractiveMouse release(Type type) {
         switch (type) {
             case LEFT:
                 robot.mouseRelease(InputEvent.BUTTON1_MASK);
@@ -80,23 +103,39 @@ public class RobotInteractiveMouse implements InteractiveMouse {
                 robot.mouseRelease(InputEvent.BUTTON3_MASK);
                 break;
         }
+        return this;
     }
 
-    public void click(Type type) {
+    public InteractiveMouse click(Type type) {
         press(type);
         release(type);
+        return this;
     }
 
-    public void click(String componentName, Type type) {
+    public InteractiveMouse click(Type type, int delay) {
+        click(type);
+        interactiveUI.delay(delay);
+        return this;
+    }
+
+    public InteractiveMouse click(String componentName, Type type) {
         moveTo(componentName);
         click(type);
+        return this;
     }
 
-    public void wheel(int amount) {
+    public InteractiveMouse click(String componentName, Type type, int delay) {
+        click(componentName, type);
+        interactiveUI.delay(delay);
+        return this;
+    }
+
+    public InteractiveMouse wheel(int amount) {
         robot.mouseWheel(amount);
+        return this;
     }
 
-    public void moveMouse(Point to) {
+    public InteractiveMouse moveMouse(Point to) {
         Point from = MouseInfo.getPointerInfo().getLocation();
 
         int x0 = from.x;
@@ -129,6 +168,7 @@ public class RobotInteractiveMouse implements InteractiveMouse {
             }
         }
         robot.mouseMove(to.x, to.y);
+        return this;
     }
 
 

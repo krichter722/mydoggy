@@ -5,17 +5,19 @@ import org.noos.xing.mydoggy.itest.Tracer;
 import java.awt.*;
 import java.awt.event.AWTEventListener;
 import java.awt.event.MouseEvent;
+import java.io.PrintStream;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ToolkitTracer implements Tracer {
-    private boolean mounted;
-    private boolean running;
+    protected boolean mounted;
+    protected boolean running;
+    protected Emitter emitter;
 
-
-    public ToolkitTracer() {
+    public ToolkitTracer(Emitter emitter) {
         this.mounted = false;
+        this.emitter = emitter;
     }
 
     public void start() {
@@ -47,7 +49,7 @@ public class ToolkitTracer implements Tracer {
 
             switch(me.getID()) {
                 case MouseEvent.MOUSE_CLICKED :
-                    System.out.println("click on " + name + " on " + me.getPoint());
+                    emitter.emit("click on " + name + " on " + me.getPoint() + "\n");
                     break;
             }
         }

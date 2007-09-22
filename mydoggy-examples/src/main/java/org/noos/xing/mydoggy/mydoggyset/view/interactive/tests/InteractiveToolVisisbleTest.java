@@ -21,11 +21,8 @@ public class InteractiveToolVisisbleTest extends AbstractInteractiveTest {
     public void interactiveTest(InteractiveUI interactiveUI) {
         InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
 
-        mouse.click("toolWindow.rb.Tool 1", InteractiveMouse.Type.LEFT);
-        interactiveUI.delay(1000);
-
-        mouse.click("toolWindow.rb.Tool 3", InteractiveMouse.Type.LEFT);
-        interactiveUI.delay(1000);
+        mouse.click("toolWindow.rb.Tool 1", InteractiveMouse.Type.LEFT, 1000)
+                .click("toolWindow.rb.Tool 3", InteractiveMouse.Type.LEFT, 1000);
     }
        
 }
