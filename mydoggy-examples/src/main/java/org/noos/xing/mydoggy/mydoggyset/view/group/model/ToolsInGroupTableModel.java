@@ -17,10 +17,10 @@ import java.util.List;
  */
 public class ToolsInGroupTableModel extends DefaultTableModel {
     private ToolWindowGroup windowGroup;
-    private List tools;
+    private List<String> tools;
 
     public ToolsInGroupTableModel(final ViewContext viewContext) {
-        this.tools = new ArrayList();
+        this.tools = new ArrayList<String>();
         setColumnIdentifiers(new Object[]{
                 "Tool Id"
         });
@@ -58,9 +58,11 @@ public class ToolsInGroupTableModel extends DefaultTableModel {
 
     protected void updateModel() {
         tools.clear();
-        for (ToolWindow tool : windowGroup.getToolsWindow()) {
-            tools.add(tool.getId());
-        }
+
+        if (windowGroup != null)
+            for (ToolWindow tool : windowGroup.getToolsWindow()) {
+                tools.add(tool.getId());
+            }
         fireTableDataChanged();
     }
 

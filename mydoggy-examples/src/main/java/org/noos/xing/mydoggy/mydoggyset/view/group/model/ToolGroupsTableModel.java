@@ -22,12 +22,11 @@ public class ToolGroupsTableModel extends DefaultTableModel implements ViewConte
         this.windowManager = viewContext.get(ToolWindowManager.class);
         this.groups = new ArrayList<Object[]>();
         setColumnIdentifiers(new Object[]{
-                "Name", "#Tools", "Implicit"
+                "Name", "Implicit"
         });
         updateModel();
 
         viewContext.addViewContextChangeListener(GroupKeySpace.REFRESH_GROUPS, this);
-        viewContext.addViewContextChangeListener(GroupKeySpace.ADD_TOOL,this);
     }
 
     public void contextChange(ViewContextChangeEvent evt) {
@@ -39,18 +38,18 @@ public class ToolGroupsTableModel extends DefaultTableModel implements ViewConte
     }
 
     public boolean isCellEditable(int row, int column) {
-        return (column == 2);
+        return (column == 1);
     }
 
     public Object getValueAt(int row, int column) {
         if (column == -1)
-            return groups.get(row)[3];
+            return groups.get(row)[2];
         return groups.get(row)[column];
     }
 
     public void setValueAt(Object aValue, int row, int column) {
         groups.get(row)[column] = aValue;
-        if (column == 2) {
+        if (column == 1) {
             windowManager.getToolWindowGroups()[row].setImplicit(
                     (Boolean) aValue 
             );
@@ -59,13 +58,12 @@ public class ToolGroupsTableModel extends DefaultTableModel implements ViewConte
     }
 
     protected void updateModel() {
-        groups.clear();
-
         ToolWindowGroup[] toolWindowsGroups = windowManager.getToolWindowGroups();
+
+        groups.clear();
         for (ToolWindowGroup toolWindowGroup : toolWindowsGroups) {
             groups.add(new Object[]{
                     toolWindowGroup.getName(),
-                    toolWindowGroup.getToolsWindow().length,
                     toolWindowGroup.isImplicit(),
                     toolWindowGroup
             });
