@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
 
 import javax.swing.table.DefaultTableModel;
+import javax.swing.event.TableModelEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -69,6 +70,7 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
                 ).setFlashing((Boolean) aValue);
                 break;
         }
+        fireTableChanged(new TableModelEvent(this, row));
     }
 
     public Object getValueAt(int row, int column) {
@@ -106,9 +108,12 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
     }
 
     protected void updateModel() {
+        ToolWindow[] toolWindows = windowManager.getToolWindows();
+        if (dataVector.size() == toolWindows.length)
+            return;
+
         dataVector.clear();
 
-        ToolWindow[] toolWindows = windowManager.getToolWindows();
         for (ToolWindow toolWindow : toolWindows) {
             dataVector.add(convertToVector(new Object[]{
                     toolWindow.getId(), toolWindow.getTitle(), toolWindow.getType(), toolWindow.getAnchor(),

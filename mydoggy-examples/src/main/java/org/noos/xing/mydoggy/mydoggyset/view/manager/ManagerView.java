@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.PushAwayMode;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.ToolWindowManagerDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.yasaf.plaf.action.ChangeListenerAction;
 import org.noos.xing.yasaf.plaf.action.DynamicAction;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
@@ -26,6 +27,8 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
@@ -52,6 +55,7 @@ public class ManagerView implements View {
 
         return panel;
     }
+
 
     public class ToolWindowManagerDescriptorPrefView extends ComponentView implements ViewContextChangeListener {
         private JSpinner leftDividerSize, rightDividerSize, topDividerSize, bottomDividerSize;
@@ -177,19 +181,27 @@ public class ManagerView implements View {
         }
 
         protected Component initComponent() {
-            JPanel panel = new JPanel(new TableLayout(new double[][]{{3,80,3,-1,3},{3,20,3,20,-1,3}}));
+            JPanel panel = new JPanel(new TableLayout(new double[][]{{3,100,3,-1,3},{3,20,3,20,3,20,3,-1,3}}));
             panel.setBorder(new TitledBorder("Persistence Preference"));
 
-            JButton save = new JButton("Save ");
+            JButton save = new JButton("Save ->");
             save.addActionListener(new ViewContextAction(viewContext, "save"));
             panel.add(save, "1,1,FULL,FULL");
 
-            JButton load = new JButton("Load ");
+            JButton load = new JButton("<- Load");
             load.addActionListener(new ViewContextAction(viewContext, "load"));
             panel.add(load, "1,3,FULL,FULL");
 
+            JButton clear = new JButton("Clear");
+            clear.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    viewContext.put("output", "");
+                }
+            });
+            panel.add(clear, "1,5,FULL,FULL");
+
             editorPane = new JEditorPane();
-            panel.add(new JScrollPane(editorPane), "3,1,3,4");
+            panel.add(new JScrollPane(editorPane), "3,1,3,7");
 
             return panel;
         }
@@ -214,6 +226,7 @@ public class ManagerView implements View {
                 }
             });
         }
+
     }
 
 }
