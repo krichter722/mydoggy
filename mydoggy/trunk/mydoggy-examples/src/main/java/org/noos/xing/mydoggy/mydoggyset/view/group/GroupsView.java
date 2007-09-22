@@ -67,8 +67,8 @@ public class GroupsView implements View {
             JCheckBox booleanEditor = new JCheckBox();
             booleanEditor.setHorizontalAlignment(SwingConstants.CENTER);
 
-            groupsTable.getColumnModel().getColumn(2).setCellRenderer(new CheckBoxCellRenderer());
-            groupsTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(booleanEditor));
+            groupsTable.getColumnModel().getColumn(1).setCellRenderer(new CheckBoxCellRenderer());
+            groupsTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(booleanEditor));
 
             ToolBarContentPanel panel = new ToolBarContentPanel(new JScrollPane(groupsTable));
             panel.setBorder(new TitledBorder("Groups"));
