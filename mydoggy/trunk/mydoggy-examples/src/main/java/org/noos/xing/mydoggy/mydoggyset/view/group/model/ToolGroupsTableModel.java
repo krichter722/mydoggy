@@ -2,18 +2,19 @@ package org.noos.xing.mydoggy.mydoggyset.view.group.model;
 
 import org.noos.xing.mydoggy.ToolWindowGroup;
 import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.mydoggyset.view.group.GroupKeySpace;
 import org.noos.xing.yasaf.view.ViewContext;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
 import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
 
 import javax.swing.table.DefaultTableModel;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolGroupsTableModel extends DefaultTableModel {
+public class ToolGroupsTableModel extends DefaultTableModel implements ViewContextChangeListener {
     protected ToolWindowManager windowManager;
     protected List<Object[]> groups;
 
@@ -25,21 +26,12 @@ public class ToolGroupsTableModel extends DefaultTableModel {
         });
         updateModel();
 
-        viewContext.addViewContextChangeListener("refreshGroups", new ViewContextChangeListener() {
-            public void contextChange(ViewContextChangeEvent evt) {
-                updateModel();
-            }
-        });
-        viewContext.addViewContextChangeListener("addTool", new ViewContextChangeListener() {
-            public void contextChange(ViewContextChangeEvent evt) {
-                updateModel();
-            }
-        });
-        viewContext.addViewContextChangeListener("removeTool", new ViewContextChangeListener() {
-            public void contextChange(ViewContextChangeEvent evt) {
-                updateModel();
-            }
-        });
+        viewContext.addViewContextChangeListener(GroupKeySpace.REFRESH_GROUPS, this);
+        viewContext.addViewContextChangeListener(GroupKeySpace.ADD_TOOL,this);
+    }
+
+    public void contextChange(ViewContextChangeEvent evt) {
+        updateModel();
     }
 
     public int getRowCount() {

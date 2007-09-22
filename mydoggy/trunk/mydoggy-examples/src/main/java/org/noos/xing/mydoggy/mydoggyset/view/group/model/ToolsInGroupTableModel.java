@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.mydoggyset.view.group.model;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowGroup;
 import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.mydoggyset.view.group.GroupKeySpace;
 import org.noos.xing.yasaf.view.ViewContext;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
 import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
@@ -29,18 +30,18 @@ public class ToolsInGroupTableModel extends DefaultTableModel {
                 updateModel();
             }
         });
-        viewContext.addViewContextChangeListener("addTool", new ViewContextChangeListener() {
+        viewContext.addViewContextChangeListener(GroupKeySpace.ADD_TOOL, new ViewContextChangeListener() {
             public void contextChange(ViewContextChangeEvent evt) {
                 windowGroup.addToolWindow(evt.getViewContext().get(ToolWindowManager.class).getToolWindow(
-                        evt.getViewContext().get("toolId")
+                        evt.getViewContext().get(GroupKeySpace.TOOL_ID)
                 ));
                 updateModel();
             }
         });
-        viewContext.addViewContextChangeListener("removeTool", new ViewContextChangeListener() {
+        viewContext.addViewContextChangeListener(GroupKeySpace.REMOVE_TOOL, new ViewContextChangeListener() {
             public void contextChange(ViewContextChangeEvent evt) {
                 windowGroup.removeToolWindow(evt.getViewContext().get(ToolWindowManager.class).getToolWindow(
-                        evt.getViewContext().get("toolInGroupId")
+                        evt.getViewContext().get(GroupKeySpace.TOOL_IN_GROUP_ID)
                 ));
                 updateModel();
             }
