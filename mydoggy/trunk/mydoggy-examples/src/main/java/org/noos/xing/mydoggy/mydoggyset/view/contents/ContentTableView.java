@@ -21,8 +21,8 @@ public class ContentTableView extends ComponentView {
     }
 
     protected Component initComponent() {
-        JPanel contensPanel = new JPanel(new TableLayout(new double[][]{{-1},{-1}}));
-        contensPanel.setBorder(new TitledBorder("Contents"));
+        JPanel main = new JPanel(new TableLayout(new double[][]{{-1},{-1}}));
+        main.setBorder(new TitledBorder("Contents"));
 
         JTable contentsTable = new JTable(new ContentsTableModel(viewContext.get(ToolWindowManager.class)));
         contentsTable.getTableHeader().setReorderingAllowed(false);
@@ -34,7 +34,8 @@ public class ContentTableView extends ComponentView {
             contentsTable.getColumnModel().getColumn(i).setCellEditor(new DefaultCellEditor(booleanEditor));
         }
 
-        contensPanel.add(new JScrollPane(contentsTable), "0,0,FULL,FULL");
-        return contensPanel;
+        main.add(new JScrollPane(contentsTable), "0,0,FULL,FULL");
+
+        return main;
     }
 }

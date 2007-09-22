@@ -252,9 +252,11 @@ public class ContentPage implements TabbedContentUI {
                 }));
                 stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.closeAllButThis")) {
                     public void actionPerformed(ActionEvent e) {
-                        for (int i = 0, size = tabbedPane.getTabCount(); i < size; i++)
+                        for (int i = 0, j = 0, size = tabbedPane.getTabCount(); i < size; i++) {
                             if (i != mouseOverTab)
-                                tabbedPane.fireCloseTabEvent(mouseEvent, i);
+                                tabbedPane.fireCloseTabEvent(mouseEvent, j);
+                            else j++;
+                        }
                     }
                 }));
                 stdPopupMenu.addSeparator();
