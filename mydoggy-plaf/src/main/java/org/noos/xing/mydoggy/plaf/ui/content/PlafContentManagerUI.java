@@ -14,6 +14,7 @@ public interface PlafContentManagerUI {
 
     /**
      * Configures this manager appropriate for the specified toolwindow manager.
+     *
      * @param manager the component where this UI delegate is being installed
      * @param oldContentManagerUI
      * @see #unistall()
@@ -24,14 +25,16 @@ public interface PlafContentManagerUI {
 
     /**
      * Reverses configuration which was done during <code>install(...)</code>.
+     *
      * @see #install
      * @since 1.3.1
      */
     void unistall();
 
     /**
-     * TODO
-     * @return
+     * Returns <tt>true</tt> is the manager is installed, <tt>false</tt> otherwise.
+     * 
+     * @return <tt>true</tt> is the manager is installed, <tt>false</tt> otherwise.
      * @since 1.3.1
      */
     boolean isInstalled();
@@ -90,6 +93,7 @@ public interface PlafContentManagerUI {
 
     /**
      * Calls the updateUI method on all components used by this manager.
+     *
      * @since 1.3.1
      */
     void updateUI();

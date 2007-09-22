@@ -14,7 +14,7 @@ public interface PlafContentUI extends Content {
      * Adds a PropertyChangeListener to the ui listener list. The listener is
      * registered for all bound properties of this class and Content class.
      * If listener is null, no exception is thrown and no action is performed.
-     * All event fired are recevied by this listener before the listeners registered
+     * All event fired are received by this listener before the listeners registered
      * using the Content interface.
      *
      * @param listener the PropertyChangeListener to be added.
@@ -37,8 +37,9 @@ public interface PlafContentUI extends Content {
     void removeUIPropertyChangeListener(PropertyChangeListener listener);
 
     /**
-     * TODO:
-     * @param selected
+     * Notify selection.
+     *
+     * @param selected <tt>true</tt> is the content must be selected, <tt>false</tt> otherwise.
      * @since 1.3.1
      */
     void fireSelected(boolean selected);
