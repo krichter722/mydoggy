@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.FloatingContainer;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 
@@ -57,8 +58,12 @@ public class FloatingToolTransparencyListener implements PropertyChangeListener,
 
         if ("active".equals(evt.getPropertyName())) {
             FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
+//            if (descriptor.getFloatingContainer().isAnimating())
+//                return;
+            
             if (typeDescriptor.isTransparentMode()) {
                 System.out.println(evt.getNewValue());
+                System.out.println(window.getBounds());
                 if (evt.getNewValue() == Boolean.FALSE) {
                     timer = new Timer(typeDescriptor.getTransparentDelay(), this);
                     timer.start();
