@@ -338,11 +338,7 @@ public class FloatingContainer extends DockedContainer {
                     window.setBounds(originalBounds);
 
                     if (!window.isFocused() && toolWindow.isActive()) {
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                assignFocus();
-                            }
-                        });
+                        assignFocus();
                     }
 
                     SwingUtil.repaint(window);
