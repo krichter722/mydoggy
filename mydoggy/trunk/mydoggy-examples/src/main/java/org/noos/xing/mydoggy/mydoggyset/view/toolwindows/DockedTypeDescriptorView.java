@@ -93,7 +93,7 @@ public class DockedTypeDescriptorView extends ComponentView implements ViewConte
     public void contextChange(ViewContextChangeEvent evt) {
         if (ToolWindowTypeDescriptor.class.equals(evt.getProperty())) {
             if (evt.getNewValue().equals(DockedTypeDescriptor.class)) {
-                ToolWindow toolWindow = (ToolWindow) viewContext.get(ToolWindow.class);
+                ToolWindow toolWindow = viewContext.get(ToolWindow.class);
                 DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
                 viewContext.put(DockedTypeDescriptor.class, descriptor);
 

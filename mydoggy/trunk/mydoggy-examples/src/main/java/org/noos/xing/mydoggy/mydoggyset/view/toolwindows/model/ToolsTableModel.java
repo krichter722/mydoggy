@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.mydoggyset.view.toolwindows.model;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
 
+import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import java.beans.PropertyChangeEvent;
@@ -32,7 +33,7 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
         return toolWindows != null ? toolWindows.length : 0;
     }
 
-    public void setValueAt(Object aValue, int row, int column) {
+    public void setValueAt(final Object aValue, final int row, int column) {
         switch (column) {
             case 1:
                 toolWindows[row].setTitle((String) aValue);
