@@ -74,6 +74,7 @@ public abstract class AbstractAnimation implements ActionListener {
             stopAnimation();
             onFinishAnimation();
             fireOnFinished();
+            notifyAll();
         }
     }
 

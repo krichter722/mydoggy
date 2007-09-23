@@ -246,6 +246,20 @@ public class FloatingContainer extends DockedContainer {
 
             }
         });
+        addPropertyChangeListener("active", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
+                    if (Boolean.TRUE.equals(evt.getNewValue())) {
+                        synchronized (floatingAnimation) {
+                            if (floatingAnimation.isAnimating()) {
+                                lister = true;
+                            } else
+                                assignFocus();
+                        }
+                    }
+                }
+            }
+        });
 
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
         typeDescriptor.addPropertyChangeListener(this);
@@ -279,8 +293,18 @@ public class FloatingContainer extends DockedContainer {
                 }
             }
         });
+
+        floatingAnimation.addAnimationListener(new AnimationListener() {
+            public void onFinished() {
+                if (lister) {
+                    assignFocus();
+                    lister = false;
+                }
+            }
+        });
     }
 
+    boolean lister = false;
 
     private void configureFloatingIcons() {
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
@@ -337,11 +361,10 @@ public class FloatingContainer extends DockedContainer {
                     window.getContentPane().setVisible(true);
                     window.setBounds(originalBounds);
 
-                    if (!window.isFocused() && toolWindow.isActive()) {
-                        assignFocus();
-                    }
-
                     SwingUtil.repaint(window);
+
+                    if (!window.isFocused() && toolWindow.isActive())
+                        assignFocus();
                     break;
                 case OUTGOING:
                     window.getContentPane().setVisible(true);

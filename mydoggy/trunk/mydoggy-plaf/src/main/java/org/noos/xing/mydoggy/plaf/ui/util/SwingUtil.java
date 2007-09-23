@@ -39,10 +39,17 @@ public class SwingUtil {
     public static void requestFocus(final Component component) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                                System.out.println("IN RUN - requestFocus for : " + component.isFocusable() + " - " + component);
-                System.out.println("false = " + SwingUtilities.getWindowAncestor(component).isFocusableWindow());
+//                                System.out.println("IN RUN - requestFocus for : " + component.isFocusable() + " - " + component);
+//                System.out.println("false = " + SwingUtilities.getWindowAncestor(component).isFocusableWindow());
+//                System.out.println("false = " + SwingUtilities.getWindowAncestor(component).getBounds());
+//                System.out.println("false = " + SwingUtilities.getWindowAncestor(component));
 //                System.out.println("Focus result : " + component.requestFocusInWindow());
-                component.requestFocusInWindow();
+
+                Window ancestor = SwingUtilities.getWindowAncestor(component);
+                if (ancestor != null && ancestor.isFocused())
+                    component.requestFocusInWindow();
+                else
+                    component.requestFocus();
             }
         });
     }
