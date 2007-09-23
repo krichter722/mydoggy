@@ -21,7 +21,7 @@ public class FloatingToolTransparencyListener implements PropertyChangeListener,
     private ToolWindowDescriptor descriptor;
     private Window window;
 
-    private TransparencyManager<Window> transparencyManager;
+    private final TransparencyManager<Window> transparencyManager;
     private TransparencyAnimation transparencyAnimation;
 
     private Timer timer;
@@ -40,7 +40,8 @@ public class FloatingToolTransparencyListener implements PropertyChangeListener,
             floatingContainer.addPropertyChangeListener("active", this);
             floatingContainer.addPropertyChangeListener("visible.FLOATING", this);
             floatingContainer.addPropertyChangeListener("visible.FLOATING_FREE", this);
-        }
+        } else
+            this.transparencyAnimation = null;
     }
 
     public synchronized void propertyChange(PropertyChangeEvent evt) {
@@ -57,6 +58,7 @@ public class FloatingToolTransparencyListener implements PropertyChangeListener,
         if ("active".equals(evt.getPropertyName())) {
             FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
             if (typeDescriptor.isTransparentMode()) {
+                System.out.println(evt.getNewValue());
                 if (evt.getNewValue() == Boolean.FALSE) {
                     timer = new Timer(typeDescriptor.getTransparentDelay(), this);
                     timer.start();
