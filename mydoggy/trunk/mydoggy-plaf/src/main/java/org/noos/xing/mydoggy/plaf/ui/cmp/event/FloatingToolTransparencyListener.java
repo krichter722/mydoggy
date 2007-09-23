@@ -58,8 +58,18 @@ public class FloatingToolTransparencyListener implements PropertyChangeListener,
 
         if ("active".equals(evt.getPropertyName())) {
             FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
-//            if (descriptor.getFloatingContainer().isAnimating())
-//                return;
+            if (descriptor.getFloatingContainer().isAnimating()) {
+                if (timer != null) {
+                    timer.stop();
+                    synchronized (transparencyManager) {
+                        if (transparencyManager.isAlphaModeEnabled(window)) {
+                            transparencyAnimation.stop();
+                            transparencyManager.setAlphaModeRatio(window, 0.0f);
+                        }
+                    }
+                }
+                return;
+            }
             
             if (typeDescriptor.isTransparentMode()) {
                 System.out.println(evt.getNewValue());
