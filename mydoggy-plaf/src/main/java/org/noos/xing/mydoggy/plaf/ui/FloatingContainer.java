@@ -85,9 +85,9 @@ public class FloatingContainer extends DockedContainer {
                 lastBounds = null;
             }
 
-            if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isAnimating())
+            if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isAnimating()) {
                 floatingAnimation.show();
-             else {
+            } else {
                 FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
                 window.setModal(typeDescriptor.isModal());
                 window.setVisible(true);
