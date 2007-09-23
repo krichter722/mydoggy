@@ -252,6 +252,10 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         return ((DockedContainer) getToolWindowContainer()).getContentContainer();
     }
 
+    public FloatingContainer getFloatingContainer() {
+        return (FloatingContainer) getToolWindowContainer();
+    }
+
 
     protected void initTypeDescriptors() {
         floatingTypeDescriptor = (FloatingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING)).cloneMe();
@@ -297,6 +301,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
             }
         }
     }
+
 
 
     protected class RepresentativeAnchor extends JLabel {

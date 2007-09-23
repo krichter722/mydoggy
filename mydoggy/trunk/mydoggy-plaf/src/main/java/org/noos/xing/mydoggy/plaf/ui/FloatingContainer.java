@@ -112,6 +112,10 @@ public class FloatingContainer extends DockedContainer {
         }
     }
 
+    public boolean isAnimating() {
+        return floatingAnimation.isAnimating();
+    }
+
 
     private void initFloatingComponents() {
         window = new JModalWindow(getResourceManager(),
@@ -322,7 +326,7 @@ public class FloatingContainer extends DockedContainer {
     }
 
 
-    private class FloatingAnimation extends AbstractAnimation {
+    public class FloatingAnimation extends AbstractAnimation {
         private Rectangle originalBounds;
         private int lastLenX = 0;
         private int lastLenY = 0;
