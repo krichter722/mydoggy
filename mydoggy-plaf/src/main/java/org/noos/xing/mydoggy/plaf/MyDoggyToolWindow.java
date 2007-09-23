@@ -507,35 +507,41 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     protected void firePropertyChangeEvent(String property, Object oldValue, Object newValue) {
         PropertyChangeEvent event = new PropertyChangeEvent(descriptor, property, oldValue, newValue);
-        fireEvent(event);
+        PropertyChangeEvent publicEvent = new PropertyChangeEvent(this, property, oldValue, newValue);
+        fireEvent(event, publicEvent);
     }
 
     protected void firePropertyChangeEvent(String property, Object oldValue, Object newValue, Object userObject) {
         PropertyChangeEvent event = new UserPropertyChangeEvent(descriptor, property, oldValue, newValue, userObject);
-        fireEvent(event);
+        PropertyChangeEvent publicEvent = new UserPropertyChangeEvent(this, property, oldValue, newValue, userObject);
+        fireEvent(event, publicEvent);
     }
 
     protected void fireAnchorEvent(ToolWindowAnchor oldValue, ToolWindowAnchor newValue, Object userObject) {
         PropertyChangeEvent event = new UserPropertyChangeEvent(descriptor, "anchor", oldValue, newValue, userObject);
-        fireEvent(event);
+        PropertyChangeEvent publicEvent = new UserPropertyChangeEvent(this, "anchor", oldValue, newValue, userObject);
+        fireEvent(event, publicEvent);
     }
 
     protected void fireTypeEvent(ToolWindowType oldValue, ToolWindowType newValue) {
         PropertyChangeEvent event = new PropertyChangeEvent(descriptor, "type", oldValue, newValue);
-        fireEvent(event);
+        PropertyChangeEvent publicEvent = new PropertyChangeEvent(this, "type", oldValue, newValue);
+        fireEvent(event, publicEvent);
     }
 
     protected void fireIconEvent(Icon oldValue, Icon newValue) {
         PropertyChangeEvent event = new PropertyChangeEvent(descriptor, "icon", oldValue, newValue);
-        fireEvent(event);
+        PropertyChangeEvent publicEvent = new PropertyChangeEvent(this, "icon", oldValue, newValue);
+        fireEvent(event, publicEvent);
     }
 
     protected void fireTitleEvent(String oldValue, String newValue) {
         PropertyChangeEvent event = new PropertyChangeEvent(descriptor, "title", oldValue, newValue);
-        fireEvent(event);
+        PropertyChangeEvent publicEvent = new PropertyChangeEvent(this, "title", oldValue, newValue);
+        fireEvent(event, publicEvent);
     }
 
-    protected void fireEvent(PropertyChangeEvent event) {
+    protected void fireEvent(PropertyChangeEvent event, PropertyChangeEvent publiEvent) {
         PropertyChangeListener[] listeners = internalListenerList.getListeners(PropertyChangeListener.class);
         for (PropertyChangeListener listener : listeners) {
             listener.propertyChange(event);
@@ -544,7 +550,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (publicEvent) {
             listeners = listenerList.getListeners(PropertyChangeListener.class);
             for (PropertyChangeListener listener : listeners) {
-                listener.propertyChange(event);
+                listener.propertyChange(publiEvent);
             }
         }
     }

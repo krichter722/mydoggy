@@ -98,6 +98,17 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
 
     public void propertyChange(PropertyChangeEvent evt) {
         updateModel();
+
+        ToolWindow toolWindow = (ToolWindow) evt.getSource();
+        if (toolWindows != null) {
+            for (int i = 0; i < toolWindows.length; i++) {
+                if (toolWindow == toolWindows[i]) {
+                    fireTableRowsUpdated(i, i);
+                    return;
+                }
+            }
+        }
+
     }
 
     protected void initToolsListeners() {
