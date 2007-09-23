@@ -4,6 +4,7 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
+import org.noos.xing.mydoggy.plaf.ui.animation.AnimationListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JModalWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingMoveMouseInputHandler;
@@ -336,8 +337,13 @@ public class FloatingContainer extends DockedContainer {
                     window.getContentPane().setVisible(true);
                     window.setBounds(originalBounds);
 
-                    if (!window.isFocused() && toolWindow.isActive())
-                        assignFocus();
+                    if (!window.isFocused() && toolWindow.isActive()) {
+                        SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                assignFocus();
+                            }
+                        });
+                    }
 
                     SwingUtil.repaint(window);
                     break;

@@ -3,8 +3,8 @@ package org.noos.xing.mydoggy.mydoggyset.view.toolwindows.model;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
 
-import javax.swing.table.DefaultTableModel;
 import javax.swing.event.TableModelEvent;
+import javax.swing.table.DefaultTableModel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -12,7 +12,8 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public final class ToolsTableModel extends DefaultTableModel implements PropertyChangeListener {
-    private final ToolWindowManager windowManager;
+    protected ToolWindowManager windowManager;
+    protected ToolWindow[] toolWindows;
 
     public ToolsTableModel(ToolWindowManager windowManager) {
         this.windowManager = windowManager;
@@ -27,58 +28,72 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
         return column != 0;
     }
 
+    public int getRowCount() {
+        return toolWindows != null ? toolWindows.length : 0;
+    }
+
     public void setValueAt(Object aValue, int row, int column) {
         switch (column) {
             case 1:
-                windowManager.getToolWindow(
-                        getValueAt(row, 0)
-                ).setTitle((String) aValue);
+                toolWindows[row].setTitle((String) aValue);
                 break;
             case 2:
-                windowManager.getToolWindow(
-                        getValueAt(row, 0)
-                ).setType((ToolWindowType) aValue);
+                toolWindows[row].setType((ToolWindowType) aValue);
                 break;
             case 3:
-                windowManager.getToolWindow(
-                        getValueAt(row, 0)
-                ).setAnchor((ToolWindowAnchor) aValue);
+                toolWindows[row].setAnchor((ToolWindowAnchor) aValue);
                 break;
             case 4:
-                windowManager.getToolWindow(
-                        getValueAt(row, 0)
-                ).setAvailable((Boolean) aValue);
+                toolWindows[row].setAvailable((Boolean) aValue);
                 break;
             case 5:
-                windowManager.getToolWindow(
-                        getValueAt(row, 0)
-                ).setVisible((Boolean) aValue);
+                toolWindows[row].setVisible((Boolean) aValue);
                 break;
             case 6:
-                windowManager.getToolWindow(
-                        getValueAt(row, 0)
-                ).setActive((Boolean) aValue);
+                toolWindows[row].setActive((Boolean) aValue);
                 break;
             case 7:
-                windowManager.getToolWindow(
-                        getValueAt(row, 0)
-                ).setIndex((Integer) aValue);
+                toolWindows[row].setIndex((Integer) aValue);
                 break;
             case 8:
-                windowManager.getToolWindow(
-                        getValueAt(row, 0)
-                ).setFlashing((Boolean) aValue);
+                toolWindows[row].setFlashing((Boolean) aValue);
                 break;
         }
         fireTableChanged(new TableModelEvent(this, row));
     }
 
     public Object getValueAt(int row, int column) {
-        if (column == -1)
-            return windowManager.getToolWindow(getValueAt(row, 0));
+        switch (column) {
+            case 0:
+                return toolWindows[row].getId();
 
-        return super.getValueAt(row, column);
+            case 1:
+                return toolWindows[row].getTitle();
 
+            case 2:
+                return toolWindows[row].getType();
+
+            case 3:
+                return toolWindows[row].getAnchor();
+
+            case 4:
+                return toolWindows[row].isAvailable();
+
+            case 5:
+                return toolWindows[row].isVisible();
+
+            case 6:
+                return toolWindows[row].isActive();
+
+            case 7:
+                return toolWindows[row].getIndex();
+
+            case 8:
+                return toolWindows[row].isFlashing();
+
+            default:
+                return toolWindows[row];
+        }
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
@@ -108,19 +123,10 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
     }
 
     protected void updateModel() {
-        ToolWindow[] toolWindows = windowManager.getToolWindows();
-        if (dataVector.size() == toolWindows.length)
+        int oldSize = (toolWindows != null) ? toolWindows.length : 0;
+        toolWindows = windowManager.getToolWindows();
+        if (oldSize == toolWindows.length)
             return;
-
-        dataVector.clear();
-
-        for (ToolWindow toolWindow : toolWindows) {
-            dataVector.add(convertToVector(new Object[]{
-                    toolWindow.getId(), toolWindow.getTitle(), toolWindow.getType(), toolWindow.getAnchor(),
-                    toolWindow.isAvailable(), toolWindow.isVisible(), toolWindow.isActive(),
-                    toolWindow.getIndex(), toolWindow.isFlashing()
-            }));
-        }
 
         fireTableDataChanged();
     }
