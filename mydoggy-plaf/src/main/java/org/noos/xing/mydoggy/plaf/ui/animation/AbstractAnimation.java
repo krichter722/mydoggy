@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.animation;
 
 import javax.swing.*;
+import javax.swing.event.EventListenerList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -8,7 +9,6 @@ import java.awt.event.ActionListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public abstract class AbstractAnimation implements ActionListener {
-
 	public enum Direction {INCOMING, OUTGOING, NONE}
 	protected enum Type {SHOW, HIDE}
 
@@ -19,10 +19,12 @@ public abstract class AbstractAnimation implements ActionListener {
 	private Timer animationTimer;
 	private long animationStart;
 	private float animationDuration;
+    private EventListenerList listenerList;
 
-	protected AbstractAnimation(float animationDuration) {
+
+    protected AbstractAnimation(float animationDuration) {
 		this.animationDuration = animationDuration;
-	}
+    }
 
 	public final synchronized void actionPerformed(ActionEvent e) {
 		if (animating) {
@@ -33,8 +35,7 @@ public abstract class AbstractAnimation implements ActionListener {
 				animationPercent = onAnimating(animationPercent);
 			} finally {
 				if (animationPercent >= 1.0f) {
-					stopAnimation();
-					onFinishAnimation();
+					stop();
 				}
 			}
 		}
@@ -72,6 +73,7 @@ public abstract class AbstractAnimation implements ActionListener {
         if (isAnimating()) {
             stopAnimation();
             onFinishAnimation();
+            fireOnFinished();
         }
     }
 
@@ -83,8 +85,14 @@ public abstract class AbstractAnimation implements ActionListener {
 		return animationDirection;
 	}
 
+    public void addAnimationListener(AnimationListener animationListener) {
+        if (listenerList == null)
+            listenerList = new EventListenerList();
+        listenerList.add(AnimationListener.class, animationListener);
 
-	private synchronized void startAnimation(Direction direction) {
+    }
+
+    private synchronized void startAnimation(Direction direction) {
 		if (!animating) {
 			onStartAnimation(direction);
 
@@ -117,8 +125,16 @@ public abstract class AbstractAnimation implements ActionListener {
 
 	protected abstract float onAnimating(float animationPercent);
 
-	protected Direction chooseFinishDirection(Type type) {
-		return getAnimationDirection();
-	}
+
+    protected Direction chooseFinishDirection(Type type) {
+        return getAnimationDirection();
+    }
+
+    protected void fireOnFinished() {
+        if (listenerList != null) {
+            for (AnimationListener listener : listenerList.getListeners(AnimationListener.class)) 
+                listener.onFinished();
+        }
+    }
 
 }
