@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 import org.noos.xing.mydoggy.PersistenceDelegate;
 import org.noos.xing.mydoggy.TabbedContentUI;
 import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabEvent;
@@ -138,6 +139,14 @@ public class JTabbedContentManager extends JTabbedPane {
         return getContentPage(index, null);
     }
 
+    public ContentPage getContentPage(Content content) {
+        for (ContentPage contentPage : contentPages.values()) {
+            if (contentPage.getContent() == content)
+                return contentPage;
+        }
+        return null;
+    }
+
     public void setToolWindowManager(MyDoggyToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
         this.resourceManager = toolWindowManager.getResourceManager();
@@ -221,6 +230,7 @@ public class JTabbedContentManager extends JTabbedPane {
                                       KeyStroke.getKeyStroke(37, InputEvent.ALT_MASK),
                                       "previousContent", new PreviousContentAction(toolWindowManager));
     }
+
 
     class MouseOverTabListener extends MouseInputAdapter {
         private int mouseOverTab = -1;
