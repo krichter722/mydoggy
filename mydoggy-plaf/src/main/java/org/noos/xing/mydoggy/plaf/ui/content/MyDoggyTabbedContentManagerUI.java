@@ -228,6 +228,12 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         if (tabbedContentManager.getTabCount() == 0) {
             toolWindowManager.resetMainContent();
             lastSelected = null;
+        } if (tabbedContentManager.getTabCount() == 1 && !isShowAlwaysTab()) {
+            Content lastContent = contentManager.getNextContent();
+            ContentPage contantPage = tabbedContentManager.getContentPage(lastContent);
+            detachedContentUIMap.put(lastContent, contantPage);
+            toolWindowManager.setMainContent(lastContent.getComponent());
+            lastSelected = null;
         } else {
             tabbedContentManager.getContentPage(tabbedContentManager.getSelectedIndex()).getContent().setSelected(true);
         }
