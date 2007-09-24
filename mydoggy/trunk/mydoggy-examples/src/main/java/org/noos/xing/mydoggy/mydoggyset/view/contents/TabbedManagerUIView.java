@@ -1,18 +1,23 @@
 package org.noos.xing.mydoggy.mydoggyset.view.contents;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.ContentManagerUI;
+import org.noos.xing.mydoggy.TabbedContentManagerUI;
+import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.yasaf.plaf.component.MatrixPanel;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.view.ViewContext;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
 import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 import java.awt.*;
-import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -23,6 +28,7 @@ public class TabbedManagerUIView extends ComponentView implements ViewContextCha
 
     protected JComboBox tabPlaces;
     protected JComboBox tabLayouts;
+    protected JCheckBox isShowAlwaysTab;
     boolean valueChanging;
 
     public TabbedManagerUIView(ViewContext viewContext) {
@@ -37,9 +43,11 @@ public class TabbedManagerUIView extends ComponentView implements ViewContextCha
 
                 String pName = evt.getPropertyName();
                 if ("tabPlacement".equals(pName)) {
-                    tabPlaces.setSelectedIndex(((TabbedContentManagerUI.TabPlacement)evt.getNewValue()).ordinal());
+                    tabPlaces.setSelectedIndex(((TabbedContentManagerUI.TabPlacement) evt.getNewValue()).ordinal());
                 } else if ("tabLayout".equals(pName)) {
-                    tabLayouts.setSelectedIndex(((TabbedContentManagerUI.TabLayout)evt.getNewValue()).ordinal());
+                    tabLayouts.setSelectedIndex(((TabbedContentManagerUI.TabLayout) evt.getNewValue()).ordinal());
+                } else if ("isShowAlwaysTab".equals(pName)) {
+                    isShowAlwaysTab.setSelected((Boolean) evt.getNewValue());
                 }
             }
         });
@@ -48,10 +56,10 @@ public class TabbedManagerUIView extends ComponentView implements ViewContextCha
     protected Component initComponent() {
         this.toolWindowManager = viewContext.get(ToolWindowManager.class);
 
-        JPanel panel = new JPanel(new TableLayout(new double[][]{{3, 120, 3, -1, 3},{3, 20, 3, 20, 3, 20, 3}}));
+        MatrixPanel panel = new MatrixPanel(1, 3);
 
         // Tab Placement
-        panel.add(new JLabel("Tab Placement : "), "1,1,r,c");
+        panel.add(new JLabel(), "1,1,r,c");
         tabPlaces = new JComboBox(new Object[]{
                 TabbedContentManagerUI.TabPlacement.TOP,
                 TabbedContentManagerUI.TabPlacement.LEFT,
@@ -72,10 +80,9 @@ public class TabbedManagerUIView extends ComponentView implements ViewContextCha
                 }
             }
         });
-        panel.add(tabPlaces, "3,1,FULL,FULL");
+        panel.addPair(0, 0, "Tab Placement : ", tabPlaces);
 
         // Tab Layout
-        panel.add(new JLabel("Tab Layout : "), "1,3,r,c");
         tabLayouts = new JComboBox(new Object[]{
                 TabbedContentManagerUI.TabLayout.SCROLL,
                 TabbedContentManagerUI.TabLayout.WRAP
@@ -94,7 +101,18 @@ public class TabbedManagerUIView extends ComponentView implements ViewContextCha
         tabLayouts.setSelectedIndex(
                 ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).getTabLayout().ordinal()
         );
-        panel.add(tabLayouts, "3,3,FULL,FULL");
+        panel.addPair(0, 1, "Tab Layout : ", tabLayouts);
+
+        // isShowAlwaysTab
+        isShowAlwaysTab = new JCheckBox();
+        isShowAlwaysTab.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).setShowAlwaysTab(
+                        isShowAlwaysTab.isSelected()
+                );
+            }
+        });
+        panel.addPair(0, 2, "IsShowAlwaysTab : ", isShowAlwaysTab);
 
         return panel;
     }
