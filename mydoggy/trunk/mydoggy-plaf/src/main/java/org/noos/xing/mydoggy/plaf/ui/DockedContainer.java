@@ -366,7 +366,6 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                                  )
                          + 12);
 
-        // TODO: non si aggiorna correttamente ....
         SwingUtil.repaint(titleBar);
     }
 

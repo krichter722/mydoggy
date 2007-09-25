@@ -6,10 +6,10 @@ CONTENTS
 * License
 * System Requirements
 * Introduction
-* Directory Strucutre
+* Directory Structure
 * Usage and Installation
 * Building instructions
-* Contant
+* Contact
 * Changes
 
  
@@ -80,7 +80,7 @@ To build the site simply call :
 
     mvn -Dsite clean package site assembly:assembly
 
-To build TransparencyManager.dll simply call (starting from the directory you have choosed to unzip mydoggy):
+To build TransparencyManager.dll simply call (starting from the directory you have chosen to unzip mydoggy):
 
  	mingw32-make
 
