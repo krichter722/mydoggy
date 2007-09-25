@@ -293,7 +293,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
                     representativeAnchor.setIcon(compositeIcon);
                     break;
                 case RIGHT :
-                    textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getLeftIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
+                    textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getRightIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
                     compositeIcon = new AggregateIcon(toolWindow.getIcon(), textIcon, SwingConstants.VERTICAL);
                     representativeAnchor.setText(null);
                     representativeAnchor.setIcon(compositeIcon);
