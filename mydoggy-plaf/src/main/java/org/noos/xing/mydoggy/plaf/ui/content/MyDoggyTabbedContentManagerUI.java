@@ -226,19 +226,25 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         content.removeUIPropertyChangeListener(this);
 
         if (contentValueAdjusting)
-
+            return;
 
         if (tabbedContentManager.getTabCount() == 0) {
             toolWindowManager.resetMainContent();
             lastSelected = null;
         } if (tabbedContentManager.getTabCount() == 1 && !isShowAlwaysTab()) {
-            Content lastContent = contentManager.getNextContent();
+            Content lastContent = contentManager.getSelectedContent();
+            if (lastContent == content)
+                lastContent = contentManager.getNextContent();
             ContentPage contantPage = tabbedContentManager.getContentPage(lastContent);
             detachedContentUIMap.put(lastContent, contantPage);
             toolWindowManager.setMainContent(lastContent.getComponent());
             lastSelected = null;
         } else {
-            tabbedContentManager.getContentPage(tabbedContentManager.getSelectedIndex()).getContent().setSelected(true);
+            int selectedIndex = tabbedContentManager.getSelectedIndex();
+            if (selectedIndex != -1)
+                tabbedContentManager.getContentPage(selectedIndex).getContent().setSelected(true);
+            else
+                lastSelected = null;
         }
     }
 
@@ -328,6 +334,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                             fireContentUIRemoving(getContentUI(content));
                             contentManager.removeContent(content);
                         } catch (Exception ignore) {
+                            ignore.printStackTrace();
                         }
                         break;
                     case ON_DETACH:

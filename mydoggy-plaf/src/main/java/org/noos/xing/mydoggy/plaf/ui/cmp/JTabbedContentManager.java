@@ -1,9 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
-import org.noos.xing.mydoggy.PersistenceDelegate;
-import org.noos.xing.mydoggy.TabbedContentUI;
-import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabEvent;
@@ -196,14 +193,13 @@ public class JTabbedContentManager extends JTabbedPane {
     }
 
     protected void fireCloseTabEvent(MouseEvent e, int overTabIndex) {
-        // TODO: se overTabIndex == 0 e non ci sono tab allora può essere che sia isAlwaysShowTab = false...correggere
-        TabEvent event = new TabEvent(this, TabEvent.ActionId.ON_CLOSE, getContentPage(overTabIndex).getContent(), e, null, overTabIndex);
+        TabEvent event = new TabEvent(this, TabEvent.ActionId.ON_CLOSE, getContent(overTabIndex), e, null, overTabIndex);
         for (TabListener tabListener : getListeners(TabListener.class))
             tabListener.tabEventFired(event);
     }
 
     protected void fireDetachTabEvent(MouseEvent e, int overTabIndex) {
-        TabEvent event = new TabEvent(this, TabEvent.ActionId.ON_DETACH, getContentPage(overTabIndex).getContent(), e, null, overTabIndex);
+        TabEvent event = new TabEvent(this, TabEvent.ActionId.ON_DETACH, getContent(overTabIndex), e, null, overTabIndex);
         for (TabListener tabListener : getListeners(TabListener.class))
             tabListener.tabEventFired(event);
     }
@@ -232,6 +228,15 @@ public class JTabbedContentManager extends JTabbedPane {
                                       "previousContent", new PreviousContentAction(toolWindowManager));
     }
 
+    protected Content getContent(int tabIndex) {
+        if (getTabCount() == 0) {
+            if (tabIndex == 0 && !((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).isShowAlwaysTab())
+                return toolWindowManager.getContentManager().getContent(0);
+            else
+                throw new IllegalStateException("TODO");    // TODO:
+        } else
+            return getContentPage(tabIndex).getContent();
+    }
 
     class MouseOverTabListener extends MouseInputAdapter {
         private int mouseOverTab = -1;
