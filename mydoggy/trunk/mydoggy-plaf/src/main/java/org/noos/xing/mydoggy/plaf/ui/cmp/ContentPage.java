@@ -236,7 +236,8 @@ public class ContentPage implements TabbedContentUI {
             popupMenu = defaultContentPopupMenu;
 
         if (popupMenu == null) {
-            if (stdPopupMenu == null) {
+//            if (stdPopupMenu == null) {
+            // TODO: can recycle these instances...
                 // Init stdPopupMenu
                 stdPopupMenu = new JPopupMenu("Content Page Popup");
                 stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.close")) {
@@ -252,6 +253,7 @@ public class ContentPage implements TabbedContentUI {
                 }));
                 stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.closeAllButThis")) {
                     public void actionPerformed(ActionEvent e) {
+                        System.out.println("mouseOverTab(!)  " + mouseOverTab);
                         for (int i = 0, j = 0, size = tabbedPane.getTabCount(); i < size; i++) {
                             if (i != mouseOverTab)
                                 tabbedPane.fireCloseTabEvent(mouseEvent, j);
@@ -266,12 +268,12 @@ public class ContentPage implements TabbedContentUI {
                     }
                 }));
                 stdPopupMenu.add(maximizeAction = new MaximizeAction());
-            } else {
+//            } else {
                 maximizeAction.putValue(Action.NAME, tabbedPane.isMaximized() ?
                                                      resourceManager.getString("@@tabbed.page.restore") :
                                                      resourceManager.getString("@@tabbed.page.maximize")
                 );
-            }
+//            }
 
             popupMenu = stdPopupMenu;
         }
