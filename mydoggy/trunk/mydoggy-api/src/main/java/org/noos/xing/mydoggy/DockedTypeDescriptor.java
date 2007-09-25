@@ -155,7 +155,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
     void setHideRepresentativeButtonOnVisible(boolean hideRepresentativeButtonOnVisible);
 
     /**
-     * Returns the "hideRepresentativeButtonOnVisible" proprty value.
+     * Returns the "hideRepresentativeButtonOnVisible" property value.
      * @return <code>true</code> if mydoggy must hide the representative button when the tool become visible and the
      * tool has type ToolWindowType.DOCKED.<br>
      *         <code>false</code> otherwise.
@@ -215,7 +215,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
 
     /**
      * Returns an array of all the property change listeners
-     * registered on this descritpro.
+     * registered on this descriptor.
      *
      * @return all of this descriptor's <code>PropertyChangeListener</code>s
      *         or an empty array if no property change

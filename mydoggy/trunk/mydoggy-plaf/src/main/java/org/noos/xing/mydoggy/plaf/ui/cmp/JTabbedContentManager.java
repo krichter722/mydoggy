@@ -196,13 +196,14 @@ public class JTabbedContentManager extends JTabbedPane {
     }
 
     protected void fireCloseTabEvent(MouseEvent e, int overTabIndex) {
-        TabEvent event = new TabEvent(this, TabEvent.ActionId.ON_CLOSE, e, null, overTabIndex);
+        // TODO: se overTabIndex == 0 e non ci sono tab allora può essere che sia isAlwaysShowTab = false...correggere
+        TabEvent event = new TabEvent(this, TabEvent.ActionId.ON_CLOSE, getContentPage(overTabIndex).getContent(), e, null, overTabIndex);
         for (TabListener tabListener : getListeners(TabListener.class))
             tabListener.tabEventFired(event);
     }
 
     protected void fireDetachTabEvent(MouseEvent e, int overTabIndex) {
-        TabEvent event = new TabEvent(this, TabEvent.ActionId.ON_DETACH, e, null, overTabIndex);
+        TabEvent event = new TabEvent(this, TabEvent.ActionId.ON_DETACH, getContentPage(overTabIndex).getContent(), e, null, overTabIndex);
         for (TabListener tabListener : getListeners(TabListener.class))
             tabListener.tabEventFired(event);
     }

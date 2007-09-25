@@ -225,6 +225,9 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
         content.removeUIPropertyChangeListener(this);
 
+        if (contentValueAdjusting)
+
+
         if (tabbedContentManager.getTabCount() == 0) {
             toolWindowManager.resetMainContent();
             lastSelected = null;
@@ -318,7 +321,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         });
         tabbedContentManager.addTabListener(new TabListener() {
             public void tabEventFired(TabEvent event) {
-                Content content = contentManager.getContentByComponent(event.getContentManager().getComponentAt(event.getOverTabIndex()));
+                Content content = event.getContent();
                 switch (event.getActionId()) {
                     case ON_CLOSE:
                         try {

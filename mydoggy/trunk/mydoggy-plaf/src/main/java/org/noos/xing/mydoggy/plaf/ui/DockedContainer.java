@@ -61,10 +61,6 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         propertyChangeSupport.firePropertyChange(evt);
     }
 
-    public Container getContentContainer() {
-        return container;
-    }
-
     public void updateUI() {
         SwingUtilities.updateComponentTreeUI(getContentContainer());
     }
@@ -72,6 +68,11 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     public void uninstall() {
         Component cmp = descriptor.getComponent();
         cmp.removeMouseListener(titleBarMouseAdapter);
+    }
+
+
+    public Container getContentContainer() {
+        return container;
     }
 
     public void setMainComponent(Component component) {
@@ -178,7 +179,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 this
         );
         titleBar.setLayout(titleBarLayout);
-        titleBar.setName("toolWindow.bar." + toolWindow.getId());
+        titleBar.setName("toolWindow.titleBar." + toolWindow.getId());
         titleBar.setEnabled(false);
         titleBar.addMouseListener(titleBarMouseAdapter);
 
@@ -289,7 +290,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
         descriptor.getDockedTypeDescriptor().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                if ("idVisibleOnToolBar".equals(evt.getPropertyName())) {
+                if ("idVisibleOnTitleBar".equals(evt.getPropertyName())) {
                     if ((Boolean) evt.getNewValue()) {
                         enableIdOnTitleBar();
                     } else {
@@ -330,6 +331,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         toolWindow.addToolWindowListener(new DockedToolWindowListener());
     }
 
+
     protected JButton renderTitleButton(String actionCommnad, ActionListener actionListener, String tooltip, String iconId, String name) {
         JButton button = (JButton) resourceManager.createComponent(
                 ResourceManager.TOOL_WINDOW_TITLE_BUTTON,
@@ -363,12 +365,18 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                                          resourceManager.getUserString(toolWindow.getId())
                                  )
                          + 12);
+
+        // TODO: non si aggiorna correttamente ....
+        SwingUtil.repaint(titleBar);
     }
 
     protected void disableIdOnTitleBar() {
         TableLayout layout = (TableLayout) titleBar.getLayout();
         layout.setColumn(0, 3);
+
+        SwingUtil.repaint(titleBar);
     }
+
 
     public interface PopupUpdater {
 
