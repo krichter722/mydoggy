@@ -233,7 +233,7 @@ public class JTabbedContentManager extends JTabbedPane {
             if (tabIndex == 0 && !((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).isShowAlwaysTab())
                 return toolWindowManager.getContentManager().getContent(0);
             else
-                throw new IllegalStateException("TODO");    // TODO:
+                throw new IllegalStateException("Invalid State [code: AZ001]");
         } else
             return getContentPage(tabIndex).getContent();
     }
