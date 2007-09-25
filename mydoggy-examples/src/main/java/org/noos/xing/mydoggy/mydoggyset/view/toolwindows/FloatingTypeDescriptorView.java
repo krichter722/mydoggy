@@ -20,8 +20,8 @@ import java.awt.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class FloatingTypeDescriptorView extends ComponentView implements ViewContextChangeListener {
-    private JCheckBox enabledBox, modal, idVisibleOnToolBar, transparentMode;
-    private JSpinner dockLength, transparentDelay, transparentRatio;
+    private JCheckBox enabledBox, modal, transparentMode;
+    private JSpinner transparentDelay, transparentRatio;
 
     public FloatingTypeDescriptorView(ViewContext viewContext) {
         super(viewContext);
@@ -44,17 +44,6 @@ public class FloatingTypeDescriptorView extends ComponentView implements ViewCon
                                           "modal",
                                           new ViewContextSource(viewContext, FloatingTypeDescriptor.class),
                                           new ChecBoxSelectionSource(modal)));
-
-/*
-            add(new JLabel("IdVisibleOnToolBar : "), "1,5,r,c");
-            add(idVisibleOnToolBar = new JCheckBox(), "3,5,FULL,FULL");
-            idVisibleOnToolBar.setAction(new DynamicAction(DockedTypeDescriptor.class,
-                                                           "idVisibleOnToolBar",
-                                                           new ChecBoxSelectionSource(idVisibleOnToolBar)));
-
-            add(new JLabel("dockLength : "), "1,7,r,c");
-            add(dockLength = new JSpinner(new SpinnerNumberModel(100, 100, 400, 10)), "3,7,FULL,FULL");
-*/
 
         // Right
         panel.add(new JLabel("transparentMode : "), "5,1,r,c");
@@ -82,7 +71,7 @@ public class FloatingTypeDescriptorView extends ComponentView implements ViewCon
     public void contextChange(ViewContextChangeEvent evt) {
         if (ToolWindowTypeDescriptor.class.equals(evt.getProperty())) {
             if (evt.getNewValue().equals(FloatingTypeDescriptor.class)) {
-                ToolWindow toolWindow = (ToolWindow) viewContext.get(ToolWindow.class);
+                ToolWindow toolWindow = viewContext.get(ToolWindow.class);
                 FloatingTypeDescriptor descriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
                 viewContext.put(FloatingTypeDescriptor.class, descriptor);
 

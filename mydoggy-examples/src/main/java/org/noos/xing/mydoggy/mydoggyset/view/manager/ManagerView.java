@@ -182,7 +182,7 @@ public class ManagerView implements View {
 
         protected Component initComponent() {
             JPanel panel = new JPanel(new TableLayout(new double[][]{{3,100,3,-1,3},{3,20,3,20,3,20,3,-1,3}}));
-            panel.setBorder(new TitledBorder("Persistence Preference"));
+            panel.setBorder(new TitledBorder("(Persistence) Worskpace Editor"));
 
             JButton save = new JButton("Save ->");
             save.addActionListener(new ViewContextAction(viewContext, "save"));

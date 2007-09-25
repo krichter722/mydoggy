@@ -31,21 +31,21 @@ public class DockedTypeDescriptorView extends ComponentView implements ViewConte
         JPanel panel = new JPanel(new TableLayout(new double[][]{{3, -2, 3, -1, 3, -2, 3, -1, 3}, {-1, 20, 3, 20, 3, 20, 3, 20, -1}}));
 
         // Left
-        panel.add(new JLabel("PopupMenuEnabled : "), "1,1,r,c");
+        panel.add(new JLabel("popupMenuEnabled : "), "1,1,r,c");
         panel.add(popupMenuEnabled = new JCheckBox(), "3,1,FULL,FULL");
         popupMenuEnabled.setAction(new DynamicAction(DockedTypeDescriptor.class,
                                                      "popupMenuEnabled",
                                                      new ViewContextSource(viewContext, DockedTypeDescriptor.class),
                                                      new ChecBoxSelectionSource(popupMenuEnabled)));
 
-        panel.add(new JLabel("HideLabelOnVisible : "), "1,3,r,c");
+        panel.add(new JLabel("hideRepresentativeButtonOnVisible : "), "1,3,r,c");
         panel.add(hideLabelOnVisible = new JCheckBox(), "3,3,FULL,FULL");
         hideLabelOnVisible.setAction(new DynamicAction(DockedTypeDescriptor.class,
                                                        "hideRepresentativeButtonOnVisible",
                                                        new ViewContextSource(viewContext, DockedTypeDescriptor.class),
                                                        new ChecBoxSelectionSource(hideLabelOnVisible)));
 
-        panel.add(new JLabel("IdVisibleOnToolBar : "), "1,5,r,c");
+        panel.add(new JLabel("idVisibleOnTitleBar : "), "1,5,r,c");
         panel.add(idVisibleOnTitleBar = new JCheckBox(), "3,5,FULL,FULL");
         idVisibleOnTitleBar.setAction(new DynamicAction(DockedTypeDescriptor.class,
                                                        "idVisibleOnTitleBar",
