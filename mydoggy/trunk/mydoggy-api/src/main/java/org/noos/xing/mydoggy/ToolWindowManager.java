@@ -195,6 +195,16 @@ public interface ToolWindowManager {
     boolean removeToolWindowGroup(String name);
 
     /**
+     * Removes the tool window group from this manager if it is registered.
+     *
+     * @param toolWindowGroup the group to be removed from the manager.
+     * @return true if the group is registered into this manager, false otherwise.
+     * @see #getToolWindowGroup(String)
+     * @since 1.3.1
+     */
+    boolean removeToolWindowGroup(ToolWindowGroup toolWindowGroup);
+
+    /**
      * Returns <tt>true</tt> if this manager contains a group for the specified name.
      *
      * @param name name whose presence in this manager is to be tested.
