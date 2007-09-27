@@ -239,12 +239,19 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public boolean removeToolWindowGroup(String name) {
+        if (name == null)
+            return false;
+        
         ToolWindowGroup group = toolWindowGroups.remove(name);
         if (group != null) {
             fireRemovedGroupEvent(group);
             return true;
         }
         return false;
+    }
+
+    public boolean removeToolWindowGroup(ToolWindowGroup toolWindowGroup) {
+        return toolWindowGroup != null && removeToolWindowGroup(toolWindowGroup.getName()); 
     }
 
     public boolean containsGroup(String name) {

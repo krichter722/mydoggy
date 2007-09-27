@@ -82,7 +82,15 @@ public class GroupsView implements View {
             viewContext.addViewContextChangeListener(GroupKeySpace.ADD_GROUP, new ViewContextChangeListener() {
                 public void contextChange(ViewContextChangeEvent evt) {
                     String groupName = JOptionPane.showInputDialog(viewContext.get(JFrame.class), "Group Name");
-                    viewContext.get(ToolWindowManager.class).getToolWindowGroup(groupName);
+                    if (groupName != null)
+                        viewContext.get(ToolWindowManager.class).getToolWindowGroup(groupName);
+                }
+            });
+            viewContext.addViewContextChangeListener(GroupKeySpace.REMOVE_GROUP, new ViewContextChangeListener() {
+                public void contextChange(ViewContextChangeEvent evt) {
+                    evt.getViewContext().get(ToolWindowManager.class).removeToolWindowGroup(
+                            evt.getViewContext().get(ToolWindowGroup.class)
+                    );
                 }
             });
             viewContext.addViewContextChangeListener(GroupKeySpace.SHOW_GROUP, new ViewContextChangeListener() {

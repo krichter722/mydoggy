@@ -132,6 +132,19 @@
                 </ul>
                 ]]>
             </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowManager.html">
+                    <code>ToolWindowManager</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">boolean removeToolWindowGroup(ToolWindowGroup toolWindowGroup);</code>
+                        Removes the tool window group from this manager if it is registered.
+                    </li>
+                </ul>
+                ]]>
+            </action>
         </release>
         <release version="1.3.0" date="2007-05-26" description="Fourth release">
             <action dev="adecaro" type="update">
