@@ -304,7 +304,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
 
 
-    protected class RepresentativeAnchor extends JLabel {
+    public class RepresentativeAnchor extends JLabel {
 
         public RepresentativeAnchor(Icon image, int horizontalAlignment) {
             super(image, horizontalAlignment);

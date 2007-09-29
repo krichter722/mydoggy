@@ -72,8 +72,8 @@ public class FloatingToolTransparencyListener implements PropertyChangeListener,
             }
             
             if (typeDescriptor.isTransparentMode()) {
-                System.out.println(evt.getNewValue());
-                System.out.println(window.getBounds());
+//                System.out.println(evt.getNewValue());
+//                System.out.println(window.getBounds());
                 if (evt.getNewValue() == Boolean.FALSE) {
                     timer = new Timer(typeDescriptor.getTransparentDelay(), this);
                     timer.start();

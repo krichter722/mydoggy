@@ -38,7 +38,7 @@ public class WindowTransparencyManager implements TransparencyManager<Window> {
 
     public synchronized void setAlphaModeRatio(Window window, float transparency) {
         if (LIBRARIES_LOADED) {
-            System.out.println(transparency + " : " + window);
+//            System.out.println(transparency + " : " + window);
 //            System.out.println(isAlphaModeEnabledNative(window));
             if (isAlphaModeEnabledNative(window)) {
                 if (transparency == 0.0f) {
