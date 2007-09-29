@@ -35,7 +35,7 @@ toolWindowManager.setResourceManager(new ...);</source>
             <code>org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager</code><br/>
             This class looks for a file called "resource.properties" in the classloader space. This file contains colors,
             icons and bundle declaration. But you can also change this declaration using specific methods like
-            <code>setIcon(...)</code><br/>
+            <code>putIcon(...)</code><br/>
             Here is an example of resource.properties file...
             <source xml:space="preserve">
 Icon.TOOL_SCROLL_BAR_LEFT = org/noos/xing/mydoggy/plaf/ui/icons/arrowLeft.png
