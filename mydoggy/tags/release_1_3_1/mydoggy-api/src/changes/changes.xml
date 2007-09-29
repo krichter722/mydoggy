@@ -1,0 +1,636 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+
+    <properties>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+        <title>MyDoggy - Changes</title>
+    </properties>
+
+    <body>
+        <release version="1.3.1" date="2007-05-26" description="Fifth release">
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/Content.html">
+                    <code>Content</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">void setMnemonic(int mnemonic);</code>
+                         Sets the keyboard mnemonic for accessing this content.
+                         The mnemonic is the key which when combined with the look and feel's
+                         mouseless modifier (usually Alt) will activate this content by selecting it.
+                         <p>
+                         A mnemonic must correspond to a single key on the keyboard
+                         and should be specified using one of the <code>VK_XXX</code>
+                         keycodes defined in <code>java.awt.event.KeyEvent</code>.
+                         Mnemonics are case-insensitive, therefore a key event
+                         with the corresponding keycode would cause the button to be
+                         activated whether or not the Shift modifier was pressed.
+                    </li>
+                    <li>
+                        <code style="color:green">int getMnemonic();</code></br>
+                        Returns the keyboard mnemonic for accessing this content.
+                        </br>
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentManager.html">
+                    <code>ContentManager</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">Content getNextContent();</code>
+                        Returns in order the next content related to the selected content, or <code>null</code> if no
+                        contents are registed.
+                    </li>
+                    <li>
+                        <code style="color:green">Content getPreviousContent();</code></br>
+                        Returns in order the previous content related to the selected content, or <code>null</code> if no
+                        contents are registed.
+                        </br>
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentManagerListener.html">
+                    <code>ContentManagerListener</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">void contentSelected(ContentManagerEvent event);</code>
+                        Invoked when a content has became selected.
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">
+                    <code>DockedTypeDescriptor</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">void setHideRepresentativeButtonOnVisible(boolean hideRepresentativeButtonOnVisible);</code>
+                        Sets if mydoggy must hide the representative button when the tool become visible and
+                        the tool has type ToolWindowType.DOCKED.
+                    </li>
+                    <li>
+                        <code style="color:green">boolean isHideRepresentativeButtonOnVisible();</code></br>
+                        Returns the "hideRepresentativeButtonOnVisible" proprty value.
+                        </br>
+                    </li>
+                    <li>
+                        <code style="color:green">void setIdVisibleOnTitleBar(boolean idVisibleOnTitleBar);</code>
+                        Sets if the toolwindow id has to be showed on the title bar when the toolwindow is docked (that is type == DOCKED).
+                    </li>
+                    <li>
+                        <code style="color:green">boolean isIdVisibleOnTitleBar();</code></br>
+                        Returns the "idVisibleOnTitleBar" property value.
+                        </br>
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html">
+                    <code>TabbedContentManagerUI</code>
+                </a> - Added Property Change Listener support.
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowManagerDescriptor.html">
+                    <code>ToolWindowManagerDescriptor</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">void setNumberingEnabled(boolean numberingEnabled);</code>
+                        Enable or disable toolwindow index shortcuts.
+                    </li>
+                    <li>
+                        <code style="color:green">boolean isNumberingEnabled();</code></br>
+                        Returns the activation status of the toolwindow index shortcuts.
+                        </br>
+                    </li>
+                    <li>
+                        <code style="color:green">void setDividerSize(ToolWindowAnchor anchor, int size);</code>
+                        Sets the size of the border the separate a docked toolwindow from the contenManager for a
+                        specific anchor.
+                    </li>
+                    <li>
+                        <code style="color:green">int getDividerSize(ToolWindowAnchor anchor);</code></br>
+                        Returns the size of the border the separate a docked toolwindow from the contenManager for the
+                        specified anchor.
+                        </br>
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowManager.html">
+                    <code>ToolWindowManager</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">boolean removeToolWindowGroup(ToolWindowGroup toolWindowGroup);</code>
+                        Removes the tool window group from this manager if it is registered.
+                    </li>
+                </ul>
+                ]]>
+            </action>
+        </release>
+        <release version="1.3.0" date="2007-05-26" description="Fourth release">
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">
+                    <code>DockedTypeDescriptor</code>
+                </a> - Added support for toolwindow Preview Mode. Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">void setPreviewEnabled(boolean enabled);</code>
+                        </br>
+                        Sets the preview mode. If the preview mode is enabled then when the mouse waits
+                        on the toolwindow representative button after a delay time the preview will become visible.
+                    </li>
+                    <li>
+                        <code style="color:green">boolean isPreviewEnabled();</code>
+                        </br>
+                        Returns the preview mode status.
+                    </li>
+                    <li>
+                        <code style="color:green">void setPreviewDelay(int delay);</code>
+                        </br>
+                        Sets the preview delay. When the mouse waits on the toolwindow representative button
+                        after a delay time the preview will become visible if the preview mode is enabled.
+                    </li>
+                    <li>
+                        <code style="color:green">int getPreviewDelay();</code>
+                        </br>
+                        Returns the preview delay.
+                    </li>
+                    <li>
+                        <code style="color:green">void setPreviewTransparentRatio(float transparentRatio);</code>
+                        </br>
+                        Sets the transparent ratio of the preview. Valid range is [0.0, 1.0]
+                    </li>
+                    <li>
+                        <code style="color:green">float getPreviewTransparentRatio();</code>
+                        </br>
+                        Returns the transparent ratio.
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/PersistenceDelegate.html">
+                    <code>PersistenceDelegate</code>
+                </a> - Added methods and enums :
+                <ul>
+                    <li>
+                        <code style="color:green">enum MergePolicy</code>
+                        </br>
+                    </li>
+                    <li>
+                        <code style="color:green">void merge(InputStream inputStream, MergePolicy mergePolicy)</code>
+                         Reads the settings for the ToolWindows, already registered into the manager, from the input
+                         stream applying the passed merge policy
+                        </br>
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/PushAwayMode.html">
+                    <code>PushAwayMode</code>
+                </a> - Added enum item:
+                <ul>
+                    <li>
+                        <code style="color:green">MOST_RECENT</code>
+                        </br>
+                        Whoever is pressed last toolwindow push away the previous toolwindows. This way the order
+                        of opening the toolwindows determine who push who (and you can achieve any "priority" mode
+                        by selecting the order of clicks)
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/PushAwayModeDescriptor.html">
+                    <code>PushAwayModeDescriptor</code>
+                </a> - This is a marker for all interfaces that provides methods to modify push away mode behaviours.
+                ]]>
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/MostRecentDescriptor.html">
+                    <code>MostRecentDescriptor</code>
+                </a> - This interface is used to modify the behaviour of PushAwayMode.MOST_RECENT mode.
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindow.html">
+                    <code>ToolWindow</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">void setAggregateMode(boolean aggregateEnabled);</code>
+                        The method is used to set the aggregateEnabled property of the tool.
+                        If <code>aggregateEnabled</code> is <tt>true</tt> then every call to
+                        <code>setVisible(true)</code> will have the same behaviout of a call to <code>aggregate()</code>
+                        method. Default value is false.
+                        </br>
+                    </li>
+                    <li>
+                        <code style="color:green">boolean isAggregateMode();</code></br>
+                        Returns aggregateEnabled property value.
+                        </br>
+                    </li>
+                    <li>
+                        <code style="color:green">void setFlashing(boolean flash);</code>
+                        </br>
+                        Sets the flashing mode. If the flashing mode is enabled then the toolwindow representative button
+                        will be flashing until the tool will be made visible.
+                    </li>
+                    <li>
+                        <code style="color:green">boolean isFlashing();</code>
+                        </br>
+                        Returns whether the representative button is currently flashing.
+                    </li>
+                    <li>
+                        <code style="color:green">void setFlashing(int duration);</code>
+                        </br>
+                        This method is used to enable flashing for a specific duration.
+                    </li>
+                    <li>
+                        <code style="color:green">void setAnchor(ToolWindowAnchor anchor, int index);</code>
+                        </br>
+                        This method is used to set the anchor for the tool. The anchor specifies the position of the tool when
+                        it is anchored to the docking system. The index specifies the position relative to the other tools on
+                        the same anchor.
+                    </li>
+                    <li>
+                        <code style="color:green">void setMaximized(boolean maximized);</code>
+                        </br>
+                        Maximizes this toolwindow. A maximized toolwindow is resized to
+                        fully fit the main content area.
+                    </li>
+                    <li>
+                        <code style="color:green">boolean isMaximized();</code>
+                        </br>
+                        Returns whether the toolwindow is currently maximized.
+                    </li>
+                    <li>
+                        <code style="color:green">ToolWindowTab addToolWindowTab(String title, Component component);</code>
+                        </br>
+                        Adds a <code>component</code> represented by a <code>title</code> and no icon.
+                    </li>
+                    <li>
+                        <code style="color:green">boolean removeToolWindowTab(ToolWindowTab toolWindowTab);</code>
+                        </br>
+                        Removes the specified tab from this toolwindow.
+                    </li>
+                    <li>
+                        <code style="color:green">ToolWindowTab[] getToolWindowTabs();</code>
+                        </br>
+                        Gets all the tabs in this toolwindow.
+                    </li>
+                    <li>
+                        <code style="color:green">void addToolWindowListener(ToolWindowListener listener);</code>
+                        </br>
+                        Adds the specified toolwindow listener to receive toolwindow events from
+                        this tool.                        
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowListener.html">
+                    <code>ToolWindowListener</code>
+                </a> - The listener interface for receiving "interesting" events (tab added, removed and removing).
+                The listener object created is then registered with a tool window using the <code>addToolWindowListener</code> method.
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowManagerDescriptor.html">
+                    <code>ToolWindowManagerDescriptor</code>
+                </a> - Added methods and enum :
+                <ul>
+                    <li>
+                        <code style="color:green">enum Corner</code>
+                        </br>
+                    </li>
+                    <li>
+                        <code style="color:green">PushAwayModeDescriptor getPushAwayModeDescriptor(PushAwayMode pushAwayMode);</code>
+                        </br>
+                        Returns the PushAwayModeDescriptor for the passed push away mode if
+                        it is supported, null otherwise.                        
+                    </li>
+                    <li>
+                        <code style="color:green">void setCornerComponent(Corner corner, Component component);</code>
+                        </br>
+                        Adds the specified component at the given corner.
+                    </li>
+                    <li>
+                        <code style="color:green">void addPropertyChangeListener(PropertyChangeListener listener);</code>
+                        </br>
+                        Adds a PropertyChangeListener to the listener list. The listener is
+                        registered for all bound properties of this class.
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowTab.html">
+                    <code>ToolWindowTab</code>
+                </a> - Every toolwindow can be considered as a special JTabbedPane and so it can contain more than one component.
+                A ToolWindowTab represents a tab in this special JTabbedPane. Is is described by a title, an icon and a component.
+                A tab can be selected or not.
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowGroup.html">
+                    <code>ToolWindowGroup</code>
+                </a> - Added methods :
+                <ul>
+                    <li>
+                        <code style="color:green">void setImplicit(boolean implicit);</code>
+                         The method is used to set the implicit property of the group.
+                         If <code>implicit</code> is <tt>true</tt> then if a tool in this group is made visible then
+                         all tools in this group will be make visible.<br> Default value is false.
+                        </br>
+                    </li>
+                    <li>
+                        <code style="color:green">boolean isImplicit();</code>
+                        Returns <tt>true</tt> if this is an implicit group, <tt>false</tt> otherwise.
+                        </br>
+                    </li>
+                </ul>
+                ]]>
+            </action>
+        </release>
+        <release version="1.2.0" date="2007-04-07" description="Third release">
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">
+                    <code>SlidingTypeDescriptor</code>
+                </a> ]]>
+                - This interface is used to modify the behaviours of SLIDING type.
+                Now you can enable or disable sliding mode for a specific tool window and it is now supported
+                transparency mode also for this type.
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/PersistenceDelegate.html">
+                    <code>PersistenceDelegate</code>
+                </a>
+                - This interface provides useful methods to save and load the tool window manager's
+                workspace.
+                When you request to save the workspace, all settings of ToolWindows with relative descriptors are saved.
+                To obtain an instance of PersistenceDelegate you have to invoke the method
+                <code>getPersistenceDelegate</code>
+                of
+                <code>ToolWindowManager</code>
+                interface. So you can obtain a persistence delegate specific to a
+                particular tool window manager.
+                ]]>
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowManagerDescriptor.html">
+                    <code>ToolWindowManagerDescriptor</code>
+                </a> ]]>
+                - This interface is used to modify the behaviours of the ToolWindowManager. Play with new PushWayMode.
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentManagerUIListener.html">
+                    <code>ContentManagerUIListener</code>
+                </a> ]]>
+                - The listener interface for receiving "interesting" events
+                (content removing, content detached) on the content manager ui.
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentManagerUI.html">
+                    <code>ContentManagerUI</code>
+                </a> ]]>
+                - Add support for ContentManagerUIListener. 
+            </action>
+
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentUI.html">
+                    <code>ContentUI</code>
+                </a> ]]>
+                - Added methods for transparency support.
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">
+                    <code>FloatingTypeDescriptor</code>
+                </a> - Added Methods :
+                <ul>
+                    <li>
+                        <code style="color:green">void setEnabled(boolean enabled);</code>
+                        </br>
+                        Enables or disables this mode, depending on the value of the
+                        parameter <code>enabled</code>. An enabled mode can used by user.
+                        This Mode is enabled initially by default.
+                    </li>
+                    <li>
+                        <code style="color:green">void isEnabled();</code>
+                        </br>
+                        Determines whether this mode is enabled. An enabled mode
+                        can used by user. This Mode is enabled initially by default.
+                        This mode may be enabled or disabled by
+                        calling its <code>setEnabled</code> method.
+                    </li>
+                </ul>
+                ]]>
+            </action>
+
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowManager.html">
+                    <code>ToolWindowManager</code>
+                </a> ]]>
+                - Added Methods :
+                <![CDATA[
+                <ul>
+                    <li>
+                        <code style="color:green">ToolWindowManagerDescriptor getToolWindowManagerDescriptor();</code>
+                        </br>
+                        Returns the type descriptor for this manager.
+                    </li>
+                    <li>
+                        <code style="color:green">PersistenceDelegate getPersistenceDelegate();</code>
+                        </br>
+                        Returns an instance of <code>PersistenceDelegate</code> relative to this manager.
+                    </li>
+                    <li>
+                        <code style="color:green">void addAlias(ToolWindow toolWindow, Object alias);</code>
+                        </br>
+                        Associates the specified toolWindow with the specified alias in this manager.
+                        If the manager previously contained a mapping for this alias, the old toolWindow is replaced
+                        by the specified toolWindow.
+                    </li>
+                    <li>
+                        <code style="color:green">ToolWindow getToolWindowByAlias(Object alias);</code>
+                        </br>
+                        Returns the toolWindow to which this manager maps the specified alias.  Returns
+                        <tt>null</tt> if the manager contains no mapping for this alias.
+                    </li>
+                    <li>
+                        <code style="color:green">ToolWindowGroup getToolWindowGroup();</code>
+                        </br>
+                        Returns a special group that contains all toolwindows registered in this manager.
+                    </li>
+                </ul>
+                ]]>
+            </action>
+
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentManager.html">
+                    <code>ContentManager</code>
+                </a> ]]>
+                - Added Methods :
+                <![CDATA[
+                <ul>
+                    <li>
+                        <code style="color:green">Content getSelectedContent();</code>
+                        </br>
+                        Returns the selected content, or <code>null</code> if the selection is empty.
+                    </li>
+                    <li>
+                        <code style="color:green">Content getContentByComponent(Component component);</code>
+                        </br>
+                        Returns the content that wraps the passed <code>component</code>
+                    </li>
+                </ul>
+                ]]>
+            </action>
+
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">
+                    <code>DockedTypeDescriptor</code>
+                </a> ]]>
+                - Added Methods :
+                <![CDATA[
+                <ul>
+                    <li>
+                        <code style="color:green">ToolWindowActionHandler getToolWindowActionHandler();</code>
+                        </br>
+                        Returns the ToolWindowActionHandler instance or null if it is not present.
+                    </li>
+                    <li>
+                        <code style="color:green">void setToolWindowActionHandler(ToolWindowActionHandler toolWindowActionHandler);</code>
+                        </br>
+                        Sets the ToolWindowActionHandler to this descriptor.
+                    </li>
+                </ul>
+                ]]>
+            </action>
+        </release>
+        <release version="1.1.0" date="2007-01-31" description="Second release">
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentManagerUI.html">
+                    <code>ContentManagerUI</code>
+                </a> ]]>
+                 - A ContentManagerUI is an interface to modify the ui behaviours of
+                a content manager. For example this is used to modify the way a content
+                is showed.
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentUI.html">
+                    <code>ContentUI</code>
+                </a> ]]>
+                 -
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html">
+                    <code>TabbedContentManagerUI</code>
+                </a> ]]>
+                - This interface represents a ui that use a component that lets the user switch
+                between a group of components by clicking on a tab with a given title and/or icon (i.e. JTabbedPane).
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/TabbedContentUI.html">
+                    <code>TabbedContentUI</code>
+                </a> ]]>
+                - This interface let you modify ui behaviours of a content when a
+                <![CDATA[<code>TabbedContentManagerUI</code>]]>
+                is used as current <![CDATA[<code>ContentManagerUI</code>]]>.
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/DesktopContentManagerUI.html">
+                    <code>DesktopContentManagerUI</code>
+                </a> ]]>
+                - This interface represents a ui that use a container to create a
+                multiple-document interface or a virtual desktop.
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/DesktopContentUI.html">
+                    <code>DesktopContentUI</code>
+                </a> ]]>
+                - This interface let you modify ui behaviours of a content when a
+                <![CDATA[<code>DesktopContentManagerUI</code>]]>
+                is used as current <![CDATA[<code>ContentManagerUI</code>]]>.
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentManager.html">
+                    <code>ContentManager</code>
+                </a> ]]>
+                - Added Methods :
+                <![CDATA[
+				<ul>
+					<li>
+						<code style="color:green">void setContentManagerUI(ContentManagerUI contentManagerUI);</code>
+						</br>
+						Sets the content manager ui to <code>contentManagerUI</code>.
+					</li>
+					<li>
+						<code style="color:green">ContentManagerUI getContentManagerUI();</code>
+						</br>
+						Returns the content manager ui.
+					</li>
+					<li>
+						<code style="color:green">void removeAllContents();</code>
+						</br>
+						Removes all of the contents from this manager.
+					</li>
+				</ul>
+				]]>
+            </action>
+        </release>
+        <release version="1.0.0" date="2006-10-31" description="First release">
+            <action dev="adecaro" type="add">
+                MyDoggy 1.0.0 released.
+            </action>
+        </release>
+    </body>
+
+</document>
