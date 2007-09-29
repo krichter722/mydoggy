@@ -12,11 +12,11 @@
 				Module refactored to clean the code and make it more simply to extend.
 			</action>
             <action dev="adecaro" type="add">
-                Added ResourceManager interface to simply mydoggy customization.
+                Added ResourceManager interface to simplify mydoggy customization.
                 See <![CDATA[<a href="resourceManager.html">this</a>]]>.
             </action>
             <action dev="adecaro" type="add">
-                Added TransparencyManager interface to simply the support for windows transparency. Now you can plug
+                Added TransparencyManager interface to simplify the support for windows transparency. Now you can plug
                 you own manager. See <![CDATA[<a href="transparency.html">this</a>]]>.
             </action>
         </release>
