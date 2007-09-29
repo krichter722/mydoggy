@@ -186,8 +186,8 @@ public class ContentPage implements TabbedContentUI {
 
             // Right Part
             contentIcon = new AggregateIcon(new AggregateIcon(icon, titleIcon, SwingConstants.HORIZONTAL),
-                                               new CloseMaximizeIcon(),
-                                               SwingConstants.HORIZONTAL);
+                                            new CloseMaximizeIcon(),
+                                            SwingConstants.HORIZONTAL);
         }
         return contentIcon;
     }
@@ -236,45 +236,41 @@ public class ContentPage implements TabbedContentUI {
             popupMenu = defaultContentPopupMenu;
 
         if (popupMenu == null) {
-//            if (stdPopupMenu == null) {
-            // TODO: can recycle these instances...
-                // Init stdPopupMenu
-                stdPopupMenu = new JPopupMenu("Content Page Popup");
-                stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.close")) {
-                    public void actionPerformed(ActionEvent e) {
-                        tabbedPane.fireCloseTabEvent(mouseEvent, mouseOverTab);
+            // Init stdPopupMenu
+            stdPopupMenu = new JPopupMenu("Content Page Popup");
+            stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.close")) {
+                public void actionPerformed(ActionEvent e) {
+                    tabbedPane.fireCloseTabEvent(mouseEvent, mouseOverTab);
+                }
+            }));
+            stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.closeAll")) {
+                public void actionPerformed(ActionEvent e) {
+                    for (int i = 0, size = tabbedPane.getTabCount(); i < size; i++)
+                        tabbedPane.fireCloseTabEvent(mouseEvent, 0);
+                }
+            }));
+            stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.closeAllButThis")) {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("mouseOverTab(!)  " + mouseOverTab);
+                    for (int i = 0, j = 0, size = tabbedPane.getTabCount(); i < size; i++) {
+                        if (i != mouseOverTab)
+                            tabbedPane.fireCloseTabEvent(mouseEvent, j);
+                        else j++;
                     }
-                }));
-                stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.closeAll")) {
-                    public void actionPerformed(ActionEvent e) {
-                        for (int i = 0, size = tabbedPane.getTabCount(); i < size; i++)
-                            tabbedPane.fireCloseTabEvent(mouseEvent, 0);
-                    }
-                }));
-                stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.closeAllButThis")) {
-                    public void actionPerformed(ActionEvent e) {
-                        System.out.println("mouseOverTab(!)  " + mouseOverTab);
-                        for (int i = 0, j = 0, size = tabbedPane.getTabCount(); i < size; i++) {
-                            if (i != mouseOverTab)
-                                tabbedPane.fireCloseTabEvent(mouseEvent, j);
-                            else j++;
-                        }
-                    }
-                }));
-                stdPopupMenu.addSeparator();
-                stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.detach")) {
-                    public void actionPerformed(ActionEvent e) {
-                        tabbedPane.fireDetachTabEvent(mouseEvent, mouseOverTab);
-                    }
-                }));
-                stdPopupMenu.add(maximizeAction = new MaximizeAction());
+                }
+            }));
+            stdPopupMenu.addSeparator();
+            stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.detach")) {
+                public void actionPerformed(ActionEvent e) {
+                    tabbedPane.fireDetachTabEvent(mouseEvent, mouseOverTab);
+                }
+            }));
+            stdPopupMenu.add(maximizeAction = new MaximizeAction());
 //            } else {
-                maximizeAction.putValue(Action.NAME, tabbedPane.isMaximized() ?
-                                                     resourceManager.getString("@@tabbed.page.restore") :
-                                                     resourceManager.getString("@@tabbed.page.maximize")
-                );
-//            }
-
+            maximizeAction.putValue(Action.NAME, tabbedPane.isMaximized() ?
+                                                 resourceManager.getString("@@tabbed.page.restore") :
+                                                 resourceManager.getString("@@tabbed.page.maximize")
+            );
             popupMenu = stdPopupMenu;
         }
 
