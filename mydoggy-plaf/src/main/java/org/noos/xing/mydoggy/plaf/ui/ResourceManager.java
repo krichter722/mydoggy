@@ -184,7 +184,7 @@ public interface ResourceManager {
     TransparencyManager<Window> getTransparencyManager();
 
     /**
-     * Setys the transparency manager for the windows used to manage transparency of toolwindows
+     * Sets the transparency manager for the windows used to manage transparency of toolwindows
      * of FLOATING or FLOATING_FREE type.
      *
      * @param transparencyManager the transparency manager for the windows.
