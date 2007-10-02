@@ -73,7 +73,7 @@ public class MyDoggySet {
 
 
     protected void initComponents() {
-        this.frame = new JFrame("MyDoggy-Set...");
+        this.frame = new JFrame("MyDoggy-Set 1.3.2 ...");
         this.frame.setSize(640, 480);
         this.frame.setLocation(100, 100);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -205,6 +205,7 @@ public class MyDoggySet {
 
         FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
         floatingTypeDescriptor.setModal(true);
+        floatingTypeDescriptor.setAnimating(false);
 
         ContentManagerUI defaultManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
         TabbedContentManagerUI tabbedContentManagerUI = (TabbedContentManagerUI) defaultManagerUI;

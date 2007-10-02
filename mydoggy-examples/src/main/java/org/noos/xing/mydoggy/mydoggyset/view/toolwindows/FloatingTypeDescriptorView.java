@@ -9,6 +9,7 @@ import org.noos.xing.yasaf.plaf.action.DynamicAction;
 import org.noos.xing.yasaf.plaf.action.ViewContextSource;
 import org.noos.xing.yasaf.plaf.action.ChangeListenerAction;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
+import org.noos.xing.yasaf.plaf.component.MatrixPanel;
 import org.noos.xing.yasaf.view.ViewContext;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
 import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
@@ -20,7 +21,7 @@ import java.awt.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class FloatingTypeDescriptorView extends ComponentView implements ViewContextChangeListener {
-    private JCheckBox enabledBox, modal, transparentMode;
+    private JCheckBox enabledBox, modal, animating, transparentMode;
     private JSpinner transparentDelay, transparentRatio;
 
     public FloatingTypeDescriptorView(ViewContext viewContext) {
@@ -28,22 +29,27 @@ public class FloatingTypeDescriptorView extends ComponentView implements ViewCon
     }
 
     protected Component initComponent() {
-        JPanel panel = new JPanel(new TableLayout(new double[][]{{3, -2, 3, -1, 3, -2, 3, -1, 3}, {-1, 20, 3, 20, 3, 20, 3, 20, -1}}));
+        MatrixPanel panel = new MatrixPanel(2, 4);
 
         // Left
-        panel.add(new JLabel("enabled : "), "1,1,r,c");
-        panel.add(enabledBox = new JCheckBox(), "3,1,FULL,FULL");
+        panel.addPair(0, 0, "enabled : ", enabledBox = new JCheckBox());
         enabledBox.setAction(new DynamicAction(FloatingTypeDescriptor.class,
                                                "enabled",
                                                new ViewContextSource(viewContext, FloatingTypeDescriptor.class),
                                                new ChecBoxSelectionSource(enabledBox)));
 
-        panel.add(new JLabel("modal : "), "1,3,r,c");
-        panel.add(modal = new JCheckBox(), "3,3,FULL,FULL");
+        panel.addPair(0, 1, "modal : ", modal = new JCheckBox());
         modal.setAction(new DynamicAction(FloatingTypeDescriptor.class,
                                           "modal",
                                           new ViewContextSource(viewContext, FloatingTypeDescriptor.class),
                                           new ChecBoxSelectionSource(modal)));
+
+        panel.addPair(0, 2, "animating : ", animating = new JCheckBox());
+        animating.setSelected(true);
+        animating.setAction(new DynamicAction(ToolWindowTypeDescriptor.class,
+                                              "animating",
+                                              new ViewContextSource(viewContext, FloatingTypeDescriptor.class),
+                                              new ChecBoxSelectionSource(animating)));
 
         // Right
         panel.add(new JLabel("transparentMode : "), "5,1,r,c");
@@ -77,8 +83,7 @@ public class FloatingTypeDescriptorView extends ComponentView implements ViewCon
 
                 enabledBox.setSelected(descriptor.isEnabled());
                 modal.setSelected(descriptor.isModal());
-//            idVisibleOnToolBar.setSelected(descriptor.isIdVisibleOnTitleBar());
-//            dockLength.setValue(descriptor.getDockLength());
+                animating.setSelected(descriptor.isAnimating());
 
                 transparentMode.setSelected(descriptor.isTransparentMode());
                 transparentDelay.setValue(descriptor.getTransparentDelay());

@@ -28,6 +28,7 @@ public class SlidingTypeDescriptorView extends ComponentView implements ViewCont
     }
 
     protected Component initComponent() {
+        // TODO: add animating
         JPanel panel = new JPanel(new TableLayout(new double[][]{{3, -2, 3, -1, 3}, {-1, 20, 3, 20, 3, 20, 3, 20, -1}}));
 
         panel.add(new JLabel("enabled : "), "1,1,r,c");
