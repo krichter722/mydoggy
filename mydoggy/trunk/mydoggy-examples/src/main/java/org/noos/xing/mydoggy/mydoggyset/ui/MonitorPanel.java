@@ -68,11 +68,11 @@ public class MonitorPanel extends JPanel {
         }
 
         public void paint(Graphics g) {
-            Dimension d = getSize();
+            Dimension size = getSize();
 
-            if (d.width != w || d.height != h) {
-                w = d.width;
-                h = d.height;
+            if (size.width != w || size.height != h) {
+                w = size.width;
+                h = size.height;
 
                 backImage = (BufferedImage) createImage(w, h);
                 backImageGrfx = backImage.createGraphics();
@@ -123,6 +123,8 @@ public class MonitorPanel extends JPanel {
             int graphX = 30;
             int graphY = (int) ssH;
             int graphW = w - graphX - 5;
+            if (graphW < 0)
+                graphW = 100;
             int graphH = (int) (ssH + (9 * blockHeight) + blockHeight - 1);
 
             i = 0;
@@ -175,7 +177,6 @@ public class MonitorPanel extends JPanel {
                     }
                 }
             }
-
             g.drawImage(backImage, 0, 0, this);
         }
 

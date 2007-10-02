@@ -2,12 +2,13 @@ package org.noos.xing.mydoggy.mydoggyset.view.toolwindows;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.yasaf.plaf.bean.ChecBoxSelectionSource;
-import org.noos.xing.yasaf.plaf.bean.ToFloatSource;
-import org.noos.xing.yasaf.plaf.bean.SpinnerValueSource;
+import org.noos.xing.yasaf.plaf.action.ChangeListenerAction;
 import org.noos.xing.yasaf.plaf.action.DynamicAction;
 import org.noos.xing.yasaf.plaf.action.ViewContextSource;
-import org.noos.xing.yasaf.plaf.action.ChangeListenerAction;
+import org.noos.xing.yasaf.plaf.bean.ChecBoxSelectionSource;
+import org.noos.xing.yasaf.plaf.bean.SpinnerValueSource;
+import org.noos.xing.yasaf.plaf.bean.ToFloatSource;
+import org.noos.xing.yasaf.plaf.component.MatrixPanel;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.view.ViewContext;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
@@ -20,7 +21,7 @@ import java.awt.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class DockedTypeDescriptorView extends ComponentView implements ViewContextChangeListener {
-    private JCheckBox popupMenuEnabled, hideLabelOnVisible, idVisibleOnTitleBar, previewEnabled;
+    private JCheckBox popupMenuEnabled, hideLabelOnVisible, idVisibleOnTitleBar, previewEnabled, animating;
     private JSpinner dockLength, previewDelay, previewTransparentRatio;
 
     public DockedTypeDescriptorView(ViewContext viewContext) {
@@ -28,7 +29,7 @@ public class DockedTypeDescriptorView extends ComponentView implements ViewConte
     }
 
     protected Component initComponent() {
-        JPanel panel = new JPanel(new TableLayout(new double[][]{{3, -2, 3, -1, 3, -2, 3, -1, 3}, {-1, 20, 3, 20, 3, 20, 3, 20, -1}}));
+        MatrixPanel panel = new MatrixPanel(2, 4);
 
         // Left
         panel.add(new JLabel("popupMenuEnabled : "), "1,1,r,c");
@@ -87,6 +88,12 @@ public class DockedTypeDescriptorView extends ComponentView implements ViewConte
                                          new ToFloatSource(new SpinnerValueSource(previewTransparentRatio)))
         );
 
+        panel.addPair(1, 3, "animating : ", animating = new JCheckBox());
+        animating.setSelected(true);
+        animating.setAction(new DynamicAction(ToolWindowTypeDescriptor.class,
+                                              "animating",
+                                              new ViewContextSource(viewContext, FloatingTypeDescriptor.class),
+                                              new ChecBoxSelectionSource(animating)));
         return panel;
     }
 
@@ -105,6 +112,8 @@ public class DockedTypeDescriptorView extends ComponentView implements ViewConte
                 previewEnabled.setSelected(descriptor.isPreviewEnabled());
                 previewDelay.setValue(descriptor.getPreviewDelay());
                 previewTransparentRatio.setValue(descriptor.getPreviewTransparentRatio());
+
+                animating.setSelected(descriptor.isAnimating());
 
                 viewContext.put(ToolWindowTypeDescriptor.class, this);
             }

@@ -190,8 +190,28 @@ public class MyDoggyResourceManager implements ResourceManager {
         colorDef = colorDef.toLowerCase();
         if ("black".equals(colorDef))
             return Color.BLACK;
+        else if ("blue".equals(colorDef))
+            return Color.BLUE;
+        else if ("cyan".equals(colorDef))
+            return Color.CYAN;
+        else if ("dark_grey".equals(colorDef))
+            return Color.DARK_GRAY;
         else if ("gray".equals(colorDef))
             return Color.GRAY;
+        else if ("green".equals(colorDef))
+            return Color.GREEN;
+        else if ("magenta".equals(colorDef))
+            return Color.MAGENTA;
+        else if ("orange".equals(colorDef))
+            return Color.ORANGE;
+        else if ("pink".equals(colorDef))
+            return Color.PINK;
+        else if ("red".equals(colorDef))
+            return Color.RED;
+        else if ("white".equals(colorDef))
+            return Color.WHITE;
+        else if ("yellow".equals(colorDef))
+            return Color.YELLOW;
 
         String[] elms = colorDef.split(",");
         return new Color(
