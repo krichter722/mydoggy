@@ -119,9 +119,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     public int getRepresentativeAnchorIndex(JLabel representativeAnchor) {
         TableLayoutConstraints constraints = contentPaneLayout.getConstraints(representativeAnchor);
         if (horizontal)
-            return (constraints.col1 / 2) -1;
+            return (constraints.col1 / 2) - 1;
         else
-            return (constraints.row1 / 2) -1;
+            return (constraints.row1 / 2) - 1;
     }
 
     public void deactiveTool(ToolWindow toolWindow) {
@@ -130,7 +130,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         valueAdjusting = false;
     }
 
-    
+
     protected void initComponents() {
         splitPane.setName(anchor.toString());
         splitPane.setFocusCycleRoot(true);
@@ -418,7 +418,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
 
-            if (descriptor.getToolWindow().getType() != ToolWindowType.FLOATING_FREE) {
+            if (descriptor.getToolWindow().getType() != ToolWindowType.FLOATING_FREE &&
+                descriptor.getToolWindow().getType() != ToolWindowType.TABBED) {
                 boolean oldAvailable = (Boolean) evt.getOldValue();
                 boolean newAvailable = (Boolean) evt.getNewValue();
 
@@ -427,8 +428,10 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
                 if (oldAvailable && !newAvailable) {
                     // true -> false
-                    removeRepresentativeAnchor(representativeAnchor, descriptor);
-                    repaint = true;
+                    if (representativeAnchor != null) {
+                        removeRepresentativeAnchor(representativeAnchor, descriptor);
+                        repaint = true;
+                    }
                 } else if (!oldAvailable && newAvailable) {
                     // false -> true
                     assert evt instanceof UserPropertyChangeEvent;
@@ -482,8 +485,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 ensureVisible(toolWindowDescriptor.getRepresentativeAnchor());
 
                 SwingUtil.repaint(contentPane);
-            } else if (evt.getNewValue() == ToolWindowType.FLOATING_FREE &&
-                       toolWindowDescriptor.getRepresentativeAnchor() != null) {
+            } else
+            if ((evt.getNewValue() == ToolWindowType.FLOATING_FREE || evt.getNewValue() == ToolWindowType.TABBED) &&
+                toolWindowDescriptor.getRepresentativeAnchor() != null) {
 
                 removeRepresentativeAnchor(toolWindowDescriptor.getRepresentativeAnchor(), toolWindowDescriptor);
                 SwingUtil.repaint(contentPane);
@@ -519,8 +523,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                         else if (toolWindow.isAutoHide() || toolWindow.getType() == ToolWindowType.SLIDING)
                             toolWindow.setVisible(false);
                     } else if (toolWindow.getType() == ToolWindowType.SLIDING
-                               /*TODO Monitor this.. && toolWindow.getAnchor() == sourceTool.getAnchor()
-                               && manager.isShiftShow()*/)
+                        /*TODO Monitor this.. && toolWindow.getAnchor() == sourceTool.getAnchor()
+                       && manager.isShiftShow()*/)
                         toolWindow.setVisible(false);
 
                     if (toolWindow.isVisible() && toolWindow.isMaximized()
@@ -552,7 +556,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
         public VisibleDockedListener() {
             poss = new HashMap<ToolWindowDescriptor, Integer>();
-            
+
             splitPane.addPropertyChangeListener("dividerLocation", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     int dividerLocation = getSplitDividerLocation();

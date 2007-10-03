@@ -81,6 +81,10 @@ public class MyDoggyToolWindow implements ToolWindow {
         return index;
     }
 
+    public Component getComponent() {
+        return getToolWindowTabs()[0].getComponent();   // TODO: validate this...  
+    }
+
     public void setIndex(int index) {
         if (index != -1 && index <= 0 && index > 9)
             throw new IllegalArgumentException("Invalid index. Valid index range is [-1, 1-9]. [tool : " + getId() + ", index : " + index + "]");
@@ -410,15 +414,17 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public ToolWindowTab addToolWindowTab(String title, Component component) {
-        ToolWindowTab tab = new MyDoggyToolWindowTab(title, null, component);
-        toolWindowTabs.add(tab);
+        return addTabInternal(title, null, component, null);
+    }
 
-        fireToolWindowTabEvent(new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_ADDED, this, tab));
-
-        if (toolWindowTabs.size() == 1)
-            defaultToolWindowTab = tab;
-
-        return tab;
+    public ToolWindowTab addToolWindowTab(ToolWindow toolWindow) {
+        synchronized (getLock()) {
+            toolWindow.setType(ToolWindowType.TABBED);
+            return addTabInternal(toolWindow.getTitle(),
+                                  toolWindow.getIcon(),
+                                  toolWindow.getComponent(),
+                                  toolWindow);
+        }
     }
 
     public boolean removeToolWindowTab(ToolWindowTab toolWindowTab) {
@@ -504,6 +510,19 @@ public class MyDoggyToolWindow implements ToolWindow {
         internalListenerList.remove(PropertyChangeListener.class, listener);
     }
 
+
+    protected ToolWindowTab addTabInternal(String title, Icon icon, Component component, ToolWindow toolWindow) {
+        ToolWindowTab tab = new MyDoggyToolWindowTab(title, icon, component, toolWindow);
+        toolWindowTabs.add(tab);
+
+        fireToolWindowTabEvent(new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_ADDED, this, tab));
+
+        if (toolWindowTabs.size() == 1)
+            defaultToolWindowTab = tab;
+
+        return tab;
+
+    }
 
     protected void firePropertyChangeEvent(String property, Object oldValue, Object newValue) {
         PropertyChangeEvent event = new PropertyChangeEvent(descriptor, property, oldValue, newValue);
