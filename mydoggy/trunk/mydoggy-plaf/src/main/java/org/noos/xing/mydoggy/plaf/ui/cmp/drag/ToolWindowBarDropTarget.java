@@ -195,8 +195,8 @@ public class ToolWindowBarDropTarget extends DropTarget {
                     ownerToolWindow.removeToolWindowTab(toolWindowTab);
 
                     ToolWindow sourceTool = toolWindowTab.getToolWindow();
-                    sourceTool.setAnchor(anchor, index);
                     sourceTool.setType(ToolWindowType.DOCKED);
+                    sourceTool.setAnchor(anchor, index);
                     sourceTool.setActive(true);
 
                     dtde.dropComplete(true);
@@ -238,9 +238,10 @@ public class ToolWindowBarDropTarget extends DropTarget {
             try {
                 if (transferable.isDataFlavorSupported(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR) ||
                     (transferable.isDataFlavorSupported(ToolWindowTabTrasferable.TOOL_WINDOW_TAB_DATA_FAVLOR) &&
-                     transferable.getTransferData(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR) != null))
+                     ((ToolWindowTab) transferable.getTransferData(ToolWindowTabTrasferable.TOOL_WINDOW_TAB_DATA_FAVLOR)).getToolWindow() != null))
                     return true;
             } catch (Exception e) {
+                e.printStackTrace();
                 // Impossible
             }
             return false;
