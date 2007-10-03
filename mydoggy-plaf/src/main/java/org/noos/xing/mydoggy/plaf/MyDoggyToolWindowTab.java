@@ -13,6 +13,7 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyToolWindowTab implements ToolWindowTab {
+    protected ToolWindow owner;
     protected String title;
     protected Icon icon;
     protected Component component;
@@ -22,7 +23,8 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
 
     protected EventListenerList listenerList;
 
-    public MyDoggyToolWindowTab(String title, Icon icon, Component component, ToolWindow toolWindow) {
+    public MyDoggyToolWindowTab(ToolWindow owner, String title, Icon icon, Component component, ToolWindow toolWindow) {
+        this.owner = owner;
         this.title = title;
         this.icon = icon;
         this.component = component;
@@ -125,5 +127,9 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
 
     public ToolWindow getToolWindow() {
         return toolWindow;
+    }
+
+    public ToolWindow getOwner() {
+        return owner;
     }
 }

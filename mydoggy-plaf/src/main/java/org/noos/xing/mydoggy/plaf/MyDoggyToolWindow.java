@@ -512,7 +512,7 @@ public class MyDoggyToolWindow implements ToolWindow {
 
 
     protected ToolWindowTab addTabInternal(String title, Icon icon, Component component, ToolWindow toolWindow) {
-        ToolWindowTab tab = new MyDoggyToolWindowTab(title, icon, component, toolWindow);
+        ToolWindowTab tab = new MyDoggyToolWindowTab(this, title, icon, component, toolWindow);
         toolWindowTabs.add(tab);
 
         fireToolWindowTabEvent(new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_ADDED, this, tab));

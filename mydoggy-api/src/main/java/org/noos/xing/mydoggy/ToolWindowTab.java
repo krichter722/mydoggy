@@ -150,4 +150,8 @@ public interface ToolWindowTab {
      * @since 1.3.0
      */
     PropertyChangeListener[] getPropertyChangeListeners();
+
+    ToolWindow getToolWindow();
+
+    ToolWindow getOwner();
 }
