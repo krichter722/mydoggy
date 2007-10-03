@@ -34,6 +34,14 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         this.toolWindow = toolWindow;
     }
 
+    public ToolWindow getToolWindow() {
+        return toolWindow;
+    }
+
+    public ToolWindow getOwner() {
+        return owner;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -116,6 +124,20 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         return listenerList.getListeners(PropertyChangeListener.class);
     }
 
+    public String toString() {
+        return "MyDoggyToolWindowTab{" +
+               "owner=" + owner +
+               ", title='" + title + '\'' +
+               ", icon=" + icon +
+               ", component=" + component +
+               ", selected=" + selected +
+               ", closeable=" + closeable +
+               ", toolWindow=" + toolWindow +
+               ", listenerList=" + listenerList +
+               '}';
+    }
+
+    
     protected void firePropertyChangeEvent(String property, Object oldValue, Object newValue) {
         PropertyChangeEvent event = new PropertyChangeEvent(this, property, oldValue, newValue);
 
@@ -125,11 +147,4 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         }
     }
 
-    public ToolWindow getToolWindow() {
-        return toolWindow;
-    }
-
-    public ToolWindow getOwner() {
-        return owner;
-    }
 }

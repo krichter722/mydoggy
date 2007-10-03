@@ -44,4 +44,11 @@ public class ToolWindowTabTrasferable implements Transferable, ClipboardOwner {
 
     public void lostOwnership(Clipboard clipboard, Transferable contents) {
     }
+
+
+    public String toString() {
+        return "ToolWindowTabTrasferable{" +
+               "toolWindowTab=" + toolWindowTab +
+               '}';
+    }
 }

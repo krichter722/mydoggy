@@ -389,15 +389,19 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     }
 
     protected void removeRepresentativeAnchor(JLabel representativeAnchor, ToolWindowDescriptor descriptor) {
+        if (representativeAnchor == null)
+            return;
+        
+        int toDelete;
+        TableLayoutConstraints constraints = contentPaneLayout.getConstraints(representativeAnchor);
+        if (constraints == null)
+            return;
+
         // Remove
         availableTools--;
 
-        int toDelete;
-        if (horizontal) {
-            toDelete = contentPaneLayout.getConstraints(representativeAnchor).col1;
-        } else {
-            toDelete = contentPaneLayout.getConstraints(representativeAnchor).row1;
-        }
+        toDelete = horizontal ? constraints.col1 : constraints.row1;
+
         contentPane.remove(representativeAnchor);
         if (horizontal) {
             contentPaneLayout.deleteColumn(toDelete);
@@ -428,10 +432,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
                 if (oldAvailable && !newAvailable) {
                     // true -> false
-                    if (representativeAnchor != null) {
-                        removeRepresentativeAnchor(representativeAnchor, descriptor);
-                        repaint = true;
-                    }
+                    removeRepresentativeAnchor(representativeAnchor, descriptor);
+                    repaint = true;
                 } else if (!oldAvailable && newAvailable) {
                     // false -> true
                     assert evt instanceof UserPropertyChangeEvent;
