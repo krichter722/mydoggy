@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
@@ -12,6 +13,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.cmp.drag.DragAndDropLock;
+import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ToolWindowTabTrasferable;
 import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ToolWindowTrasferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
@@ -21,6 +23,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.PanelUI;
 import java.awt.*;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,6 +34,7 @@ import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 
 /**
  * @author Angelo De Caro
@@ -232,7 +237,7 @@ public class ToolWindowTitleBarUI extends PanelUI {
         if (descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar() ||
             toolWindow.getType() == ToolWindowType.FLOATING ||
             toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-            
+
             String id = resourceManager.getUserString(descriptor.getToolWindow().getId());
             r.width = g.getFontMetrics().stringWidth(id) + 8;
 
@@ -367,11 +372,12 @@ public class ToolWindowTitleBarUI extends PanelUI {
 
     protected class DragGesture implements DragGestureListener, DragSourceMotionListener, DragSourceListener {
         protected BufferedImage ghostImage;
-        protected JPanel lastToolWindowContainer = null;
+        protected JComponent lastOverCmp = null;
         protected Border oldBorder = null;
 
         protected LineBorder highligthBorder = new LineBorder(Color.BLUE, 3);
 
+        protected boolean moveAnchor;
         protected ToolWindowAnchor lastAnchor;
 
         public void dragGestureRecognized(DragGestureEvent dge) {
@@ -386,7 +392,20 @@ public class ToolWindowTitleBarUI extends PanelUI {
             DragAndDropLock.setDragAndDropStarted(true);
 
             // Start Drag
-            dge.startDrag(Cursor.getDefaultCursor(), new ToolWindowTrasferable(toolWindow), this);
+            System.out.println("dge.getComponent() = " + dge.getComponent());
+            MyDoggyToolWindowTab toolWindowTab = null;
+            if (dge.getComponent() instanceof ToolWindowTabPanel.TabButton) {
+                ToolWindowTabPanel.TabButton tabButton = (ToolWindowTabPanel.TabButton) dge.getComponent();
+                toolWindowTab = (MyDoggyToolWindowTab) tabButton.getTab();
+            }
+
+            if (toolWindowTab != null && toolWindowTab.getToolWindow() != null) {
+                dge.startDrag(Cursor.getDefaultCursor(),
+                              new ToolWindowTabTrasferable(toolWindowTab), this);
+            } else {
+                dge.startDrag(Cursor.getDefaultCursor(),
+                              new ToolWindowTrasferable(toolWindow), this);
+            }
 
             // Prepare glassPane for ghost image
             GlassPanel glassPane = descriptor.getManager().getGlassPanel();
@@ -416,24 +435,39 @@ public class ToolWindowTitleBarUI extends PanelUI {
 
             GlassPanel glassPane = descriptor.getManager().getGlassPanel();
 
-            Point p = (Point) dsde.getLocation().clone();
+            Point p = dsde.getLocation();
             SwingUtilities.convertPointFromScreen(p, glassPane);
             glassPane.setPoint(p);
 
+            // TODO: if there is a JMenuBar we must add an y offset
             Container contentPane = descriptor.getManager().getRootPane().getContentPane();
-            Component component = SwingUtilities.getDeepestComponentAt(contentPane, p.x, p.y);
-            if (component != null) {
-                if (lastToolWindowContainer != null)
-                    lastToolWindowContainer.setBorder(oldBorder);
+            Component deepestCmp = SwingUtilities.getDeepestComponentAt(contentPane, p.x, p.y);
 
-                lastToolWindowContainer = (JPanel) SwingUtil.getParent(component, "toolWindow.container");
-                if (lastToolWindowContainer != null) {
-                    oldBorder = lastToolWindowContainer.getBorder();
-                    lastToolWindowContainer.setBorder(highligthBorder);
+            if (deepestCmp != null) {
+                if (deepestCmp instanceof ToolWindowTabPanel ||
+                    SwingUtil.getParent(deepestCmp, ToolWindowTabPanel.class) != null) {
+                    moveAnchor = false;
+
+                    if (lastOverCmp != null)
+                        lastOverCmp.setBorder(oldBorder);
+
+                    lastOverCmp = (JComponent) deepestCmp;
+                    oldBorder = lastOverCmp.getBorder();
+                    lastOverCmp.setBorder(highligthBorder);
+                } else {
+                    moveAnchor = true;
+                    if (lastOverCmp != null)
+                        lastOverCmp.setBorder(oldBorder);
+
+                    lastOverCmp = (JPanel) SwingUtil.getParent(deepestCmp, "toolWindow.container");
+                    if (lastOverCmp != null) {
+                        oldBorder = lastOverCmp.getBorder();
+                        lastOverCmp.setBorder(highligthBorder);
+                    }
                 }
             }
 
-            p = (Point) dsde.getLocation().clone();
+            p = dsde.getLocation();
             SwingUtilities.convertPointFromScreen(p, descriptor.getManager());
             ToolWindowAnchor newAnchor = descriptor.getToolWindowAnchor(p);
 
@@ -472,25 +506,82 @@ public class ToolWindowTitleBarUI extends PanelUI {
 
             DragAndDropLock.setDragAndDropStarted(false);
 
-            if (lastToolWindowContainer != null) {
-                lastToolWindowContainer.setBorder(oldBorder);
+            Transferable transferable = dsde.getDragSourceContext().getTransferable();
+            if (transferable.isDataFlavorSupported(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR)) {
+                // Do action
+                if (lastOverCmp != null) {
+                    // Clear border
+                    lastOverCmp.setBorder(oldBorder);
 
-                String toolId = lastToolWindowContainer.getName().substring(21);
-                ToolWindow destToolWindow = descriptor.getManager().getToolWindow(toolId);
-                assert destToolWindow != null;
+                    if (moveAnchor) {
+                        // Move tool to another anchor
+                        String toolId = lastOverCmp.getName().substring(21);
+                        ToolWindow destToolWindow = descriptor.getManager().getToolWindow(toolId);
+                        assert destToolWindow != null;
 
-                ToolWindowAnchor anchor = destToolWindow.getAnchor();
+                        ToolWindowAnchor anchor = destToolWindow.getAnchor();
 
-                boolean oldAM = toolWindow.isAggregateMode();
-                try {
-                    toolWindow.setAggregateMode(true);
-                    toolWindow.setAnchor(anchor,
-                                         ((MyDoggyToolWindow) destToolWindow).getDescriptor().getLabelIndex());
-                } finally {
-                    toolWindow.setAggregateMode(oldAM);
+                        boolean oldAM = toolWindow.isAggregateMode();
+                        try {
+                            toolWindow.setAggregateMode(true);
+                            toolWindow.setAnchor(anchor,
+                                                 ((MyDoggyToolWindow) destToolWindow).getDescriptor().getLabelIndex());
+                        } finally {
+                            toolWindow.setAggregateMode(oldAM);
+                        }
+                    } else {
+                        // Add the tool as tab
+                        ToolWindow target = (ToolWindow) ((JComponent) SwingUtil.getParent(lastOverCmp, "toolWindow.container")).getClientProperty(
+                                ToolWindow.class
+                        );
+                        target.addToolWindowTab(toolWindow);
+                    }
+                }
+            } else if (transferable.isDataFlavorSupported(ToolWindowTabTrasferable.TOOL_WINDOW_TAB_DATA_FAVLOR)) {
+                if (lastOverCmp != null) {
+                    // Clear border
+                    lastOverCmp.setBorder(oldBorder);
+
+                    try {
+                        MyDoggyToolWindowTab toolWindowTab = (MyDoggyToolWindowTab) transferable.getTransferData(ToolWindowTabTrasferable.TOOL_WINDOW_TAB_DATA_FAVLOR);
+                        toolWindow.removeToolWindowTab(toolWindowTab);
+
+                        ToolWindow toolWindow = toolWindowTab.getToolWindow();
+                        if (moveAnchor) {
+                            // Move tool to another anchor
+                            ToolWindow destToolWindow = (ToolWindow) lastOverCmp.getClientProperty(ToolWindow.class);
+                            assert destToolWindow != null;
+
+                            ToolWindowAnchor anchor = destToolWindow.getAnchor();
+
+                            boolean oldAM = toolWindow.isAggregateMode();
+                            try {
+                                toolWindow.setAggregateMode(true);
+                                toolWindow.setAnchor(anchor,
+                                                     ((MyDoggyToolWindow) destToolWindow).getDescriptor().getLabelIndex());
+                                toolWindow.setType(ToolWindowType.DOCKED);
+                                toolWindow.aggregate();
+                                toolWindow.setActive(true);
+                            } finally {
+                                toolWindow.setAggregateMode(oldAM);
+                            }
+                        } else {
+                            // Add the tool as tab
+                            ToolWindow target = (ToolWindow) ((JComponent) SwingUtil.getParent(lastOverCmp, "toolWindow.container")).getClientProperty(
+                                    ToolWindow.class
+                            );
+                            target.addToolWindowTab(toolWindow);
+                        }
+
+                    } catch (UnsupportedFlavorException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
+            // Finalize drag action...
             GlassPanel glassPane = descriptor.getManager().getGlassPanel();
 
             Point p = (Point) dsde.getLocation().clone();

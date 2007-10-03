@@ -44,6 +44,9 @@ public interface ToolWindow {
      */
     int getIndex();
 
+
+    Component getComponent();
+
     /**
      * The method is used to set the available property of the tool.
      * If <code>available</code> is <tt>true</tt> then tool becomes available in a way that depends on tool window type.
@@ -313,6 +316,10 @@ public interface ToolWindow {
      * @since 1.3.0
      */
     ToolWindowTab addToolWindowTab(String title, Component component);
+
+    /**
+     */
+    ToolWindowTab addToolWindowTab(ToolWindow toolWindow);
 
     /**
      * Removes the specified tab from this toolwindow.

@@ -123,7 +123,7 @@ public class MyDoggySet {
         menuBar.add(contentMenu);
         menuBar.add(lafMenu);
 
-        this.frame.setJMenuBar(menuBar);
+//        this.frame.setJMenuBar(menuBar);
     }
 
     protected void initToolWindowManager() {

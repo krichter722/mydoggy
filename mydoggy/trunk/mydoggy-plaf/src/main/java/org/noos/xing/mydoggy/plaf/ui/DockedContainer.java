@@ -168,6 +168,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         container.setName("toolWindow.container." + toolWindow.getId());
         container.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
         container.setFocusCycleRoot(true);
+        container.putClientProperty(ToolWindow.class, toolWindow);
 
         String id = toolWindow.getId();
 

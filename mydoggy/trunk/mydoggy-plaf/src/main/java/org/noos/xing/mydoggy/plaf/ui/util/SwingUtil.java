@@ -1,5 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.util;
 
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -276,6 +278,21 @@ public class SwingUtil {
 
         for (; c != null; c = c.getParent()) {
             if (c.getName() != null && c.getName().startsWith(parentName))
+                return c;
+        }
+        return null;
+    }
+
+
+    public static Object getParent(Component c, Class<ToolWindowTabPanel> parentClass) {
+        if (c == null || parentClass == null)
+            return null;
+
+        if (parentClass.isInstance(c))
+            return c;
+
+        for (; c != null; c = c.getParent()) {
+            if (parentClass.isInstance(c))
                 return c;
         }
         return null;

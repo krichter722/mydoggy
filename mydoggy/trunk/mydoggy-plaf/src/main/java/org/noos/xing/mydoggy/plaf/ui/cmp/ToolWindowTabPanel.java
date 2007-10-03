@@ -2,18 +2,23 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowListener;
-import org.noos.xing.mydoggy.ToolWindowTab;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
+import org.noos.xing.mydoggy.plaf.ui.cmp.drag.DragAndDropLock;
+import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ToolWindowTrasferable;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicLabelUI;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.dnd.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -270,7 +275,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     }
     
 
-    protected class TabButton extends JLabel implements PropertyChangeListener, MouseListener {
+    public class TabButton extends JLabel implements PropertyChangeListener, MouseListener {
         protected ToolWindowTab tab;
         protected boolean pressed;
         protected boolean inside;
@@ -361,6 +366,10 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             } else if ("icon".equals(property)) {
                 setIcon((Icon) evt.getNewValue());
             }
+        }
+
+        public ToolWindowTab getTab() {
+            return tab;
         }
     }
 
@@ -495,4 +504,5 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 tabs[tabs.length - 1].setSelected(true);
         }
     }
+
 }

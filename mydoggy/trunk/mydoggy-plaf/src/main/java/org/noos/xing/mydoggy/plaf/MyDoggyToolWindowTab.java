@@ -1,5 +1,6 @@
 package org.noos.xing.mydoggy.plaf;
 
+import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowTab;
 
 import javax.swing.*;
@@ -12,21 +13,23 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyToolWindowTab implements ToolWindowTab {
-    private String title;
-    private Icon icon;
-    private Component component;
-    private boolean selected;
-    private boolean closeable;
+    protected String title;
+    protected Icon icon;
+    protected Component component;
+    protected boolean selected;
+    protected boolean closeable;
+    protected ToolWindow toolWindow;
 
-    private EventListenerList listenerList;
+    protected EventListenerList listenerList;
 
-    public MyDoggyToolWindowTab(String title, Icon icon, Component component) {
+    public MyDoggyToolWindowTab(String title, Icon icon, Component component, ToolWindow toolWindow) {
         this.title = title;
         this.icon = icon;
         this.component = component;
         this.selected = false;
         this.listenerList = new EventListenerList();
         this.closeable = true;
+        this.toolWindow = toolWindow;
     }
 
     public String getTitle() {
@@ -120,4 +123,7 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         }
     }
 
+    public ToolWindow getToolWindow() {
+        return toolWindow;
+    }
 }
