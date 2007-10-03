@@ -3,12 +3,16 @@ package org.noos.xing.mydoggy.plaf.ui.cmp.drag;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowTab;
+import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.io.IOException;
@@ -163,15 +167,37 @@ public class ToolWindowBarDropTarget extends DropTarget {
         }
 
         public void drop(DropTargetDropEvent dtde) {
-            if (dtde.getTransferable().isDataFlavorSupported(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR)) {
+            Transferable transferable = dtde.getTransferable();
+            if (transferable.isDataFlavorSupported(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR)) {
                 dtde.acceptDrop(DnDConstants.ACTION_MOVE);
                 try {
+//                    System.out.println("index = " + index);
+                    ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
+                    ((ToolWindow) transferable.getTransferData(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR))
+                            .setAnchor(anchor, index);
+
+                    dtde.dropComplete(true);
+                } catch (UnsupportedFlavorException e) {
+                    e.printStackTrace();
+                    dtde.rejectDrop();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    dtde.rejectDrop();
+                }
+            } else if (transferable.isDataFlavorSupported(ToolWindowTabTrasferable.TOOL_WINDOW_TAB_DATA_FAVLOR)) {
+                dtde.acceptDrop(DnDConstants.ACTION_MOVE);
+                try {
+//                    System.out.println("index = " + index);
                     ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
 
-//                    System.out.println("index = " + index);
+                    ToolWindowTab toolWindowTab = (ToolWindowTab) transferable.getTransferData(ToolWindowTabTrasferable.TOOL_WINDOW_TAB_DATA_FAVLOR);
+                    ToolWindow ownerToolWindow = toolWindowTab.getOwner();
+                    ownerToolWindow.removeToolWindowTab(toolWindowTab);
 
-                    ((ToolWindow) dtde.getTransferable().getTransferData(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR))
-                            .setAnchor(anchor, index);
+                    ToolWindow sourceTool = toolWindowTab.getToolWindow();
+                    sourceTool.setAnchor(anchor, index);
+                    sourceTool.setType(ToolWindowType.DOCKED);
+                    sourceTool.setActive(true);
 
                     dtde.dropComplete(true);
                 } catch (UnsupportedFlavorException e) {
@@ -208,11 +234,16 @@ public class ToolWindowBarDropTarget extends DropTarget {
 
 
         public boolean checkEvent(DropTargetDragEvent dtde) {
-            if (!dtde.getTransferable().isDataFlavorSupported(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR)) {
-                dtde.rejectDrag();
-                return false;
+            Transferable transferable = dtde.getTransferable();
+            try {
+                if (transferable.isDataFlavorSupported(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR) ||
+                    (transferable.isDataFlavorSupported(ToolWindowTabTrasferable.TOOL_WINDOW_TAB_DATA_FAVLOR) &&
+                     transferable.getTransferData(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR) != null))
+                    return true;
+            } catch (Exception e) {
+                // Impossible
             }
-            return true;
+            return false;
         }
 
     }

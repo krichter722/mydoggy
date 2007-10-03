@@ -31,6 +31,7 @@ public class ToolWindowTabTrasferable implements Transferable, ClipboardOwner {
                 return true;
             }
         }
+
         return false;
     }
 
