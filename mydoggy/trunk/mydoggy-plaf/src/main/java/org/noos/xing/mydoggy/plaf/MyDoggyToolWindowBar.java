@@ -428,16 +428,21 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 boolean newAvailable = (Boolean) evt.getNewValue();
 
                 boolean repaint = false;
-                JLabel representativeAnchor = descriptor.getRepresentativeAnchor(contentPane);
 
+                JLabel representativeAnchor = null;
                 if (oldAvailable && !newAvailable) {
                     // true -> false
-                    removeRepresentativeAnchor(representativeAnchor, descriptor);
-                    repaint = true;
+                    representativeAnchor = descriptor.getRepresentativeAnchor();
+                    if (representativeAnchor != null) {
+                        removeRepresentativeAnchor(representativeAnchor, descriptor);
+                        repaint = true;
+                    }
                 } else if (!oldAvailable && newAvailable) {
                     // false -> true
                     assert evt instanceof UserPropertyChangeEvent;
                     assert ((UserPropertyChangeEvent) evt).getUserObject() instanceof Integer;
+
+                    representativeAnchor = descriptor.getRepresentativeAnchor(contentPane);
                     addRepresentativeAnchor(representativeAnchor, (Integer) ((UserPropertyChangeEvent) evt).getUserObject());
                     repaint = true;
                 }
