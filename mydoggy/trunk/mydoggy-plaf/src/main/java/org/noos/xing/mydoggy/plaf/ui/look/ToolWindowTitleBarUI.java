@@ -515,8 +515,7 @@ public class ToolWindowTitleBarUI extends PanelUI {
 
                     if (moveAnchor) {
                         // Move tool to another anchor
-                        String toolId = lastOverCmp.getName().substring(21);
-                        ToolWindow destToolWindow = descriptor.getManager().getToolWindow(toolId);
+                        ToolWindow destToolWindow = (ToolWindow) lastOverCmp.getClientProperty(ToolWindow.class);
                         assert destToolWindow != null;
 
                         ToolWindowAnchor anchor = destToolWindow.getAnchor();

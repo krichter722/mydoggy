@@ -103,7 +103,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         return resourceManager;
     }
 
-    
+
     protected void setPinVisible(boolean visible) {
         pinButton.setVisible(visible);
         TableLayout tableLayout = (TableLayout) titleBar.getLayout();
@@ -195,16 +195,16 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
         // Buttons
         hideButton = renderTitleButton("visible", titleBarActionListener,
-                                             "@@tool.tooltip.hide", ResourceManager.HIDE_TOOL_WINDOW_INACTIVE,
-                                             null);
+                                       "@@tool.tooltip.hide", ResourceManager.HIDE_TOOL_WINDOW_INACTIVE,
+                                       null);
         maximizeButton = renderTitleButton("maximize", titleBarActionListener, "@@tool.tooltip.maximize", ResourceManager.MAXIMIZE_INACTIVE, null);
         pinButton = renderTitleButton("pin", titleBarActionListener, "@@tool.tooltip.unpin", ResourceManager.AUTO_HIDE_OFF_INACTIVE, null);
         floatingButton = renderTitleButton("floating", titleBarActionListener,
-                                                 "@@tool.tooltip.float", ResourceManager.FLOATING_INACTIVE,
-                                                 "toolWindow.floatingButton." + toolWindow.getId());
+                                           "@@tool.tooltip.float", ResourceManager.FLOATING_INACTIVE,
+                                           "toolWindow.floatingButton." + toolWindow.getId());
         dockButton = renderTitleButton("undock", titleBarActionListener,
-                                             "@@tool.tooltip.undock", ResourceManager.DOCKED_INACTIVE,
-                                             "toolWindow.dockButton." + toolWindow.getId());
+                                       "@@tool.tooltip.undock", ResourceManager.DOCKED_INACTIVE,
+                                       "toolWindow.dockButton." + toolWindow.getId());
 
         // Set TitleBar content
         titleBar.add(titleBarTabs, "1,1");

@@ -230,6 +230,8 @@ public class MyDoggyToolWindow implements ToolWindow {
             }
 
             boolean old = this.active;
+            if (!publicEvent)
+                old = false;
             this.active = active;
 
             firePropertyChangeEvent("active", old, active);
@@ -268,9 +270,9 @@ public class MyDoggyToolWindow implements ToolWindow {
 
                     availablePosition = index;
                     setAvailable(true);
-                    if (tempActive)
+                    if (tempActive) {
                         setActive(true);
-                    else if (tempVisible)
+                    } else if (tempVisible)
                         setVisible(true);
                 } finally {
                     publicEvent = true;
@@ -401,6 +403,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (toolWindowTab.getToolWindow() != null) {
             ToolWindow toolWindow = toolWindowTab.getToolWindow(); 
             toolWindow.setType(ToolWindowType.DOCKED);
+            this.available = false;
             toolWindow.setAvailable(true);
         }
 
