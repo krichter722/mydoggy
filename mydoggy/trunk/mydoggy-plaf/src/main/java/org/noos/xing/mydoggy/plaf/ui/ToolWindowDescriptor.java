@@ -83,6 +83,12 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     }
 
 
+    public String toString() {
+        return "ToolWindowDescriptor{" +
+               "toolWindow=" + toolWindow +
+               '}';
+    }
+
     public MyDoggyToolWindowManager getManager() {
         return manager;
     }

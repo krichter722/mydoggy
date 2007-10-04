@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -404,5 +405,8 @@ public class SwingUtil {
         }
     }
 
+    public static String toString(PropertyChangeEvent event) {
+        return event.getPropertyName() + ":\n\t" + event.getSource() + ":\n\t" + event.getOldValue() + ":\n\t" + event.getNewValue();
+    }
 
 }

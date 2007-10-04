@@ -195,7 +195,6 @@ public class ToolWindowBarDropTarget extends DropTarget {
                     ownerToolWindow.removeToolWindowTab(toolWindowTab);
 
                     ToolWindow sourceTool = toolWindowTab.getToolWindow();
-                    sourceTool.setType(ToolWindowType.DOCKED);
                     sourceTool.setAnchor(anchor, index);
                     sourceTool.setActive(true);
 
