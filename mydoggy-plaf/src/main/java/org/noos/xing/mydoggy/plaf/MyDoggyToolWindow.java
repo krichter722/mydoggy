@@ -403,7 +403,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (toolWindowTab.getToolWindow() != null) {
             ToolWindow toolWindow = toolWindowTab.getToolWindow(); 
             toolWindow.setType(ToolWindowType.DOCKED);
-            this.available = false;
+            ((MyDoggyToolWindow) toolWindow).available = false; // TODO: porcata...
             toolWindow.setAvailable(true);
         }
 
@@ -453,7 +453,6 @@ public class MyDoggyToolWindow implements ToolWindow {
                ", anchor=" + anchor +
                ", type=" + type +
                ", title='" + getTitle() + '\'' +
-               ", descriptor=" + descriptor +
                ", autoHide=" + autoHide +
                ", flashing=" + flash +
                ", maximized=" + maximized +

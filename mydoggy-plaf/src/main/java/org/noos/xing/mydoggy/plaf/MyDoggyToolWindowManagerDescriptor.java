@@ -15,17 +15,14 @@ import java.util.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDescriptor, PropertyChangeListener, MostRecentDescriptor {
-    private PushAwayMode pushAwayMode;
-    private MyDoggyToolWindowManager manager;
-    private boolean numberingEnabled;
+    protected PushAwayMode pushAwayMode;
+    protected MyDoggyToolWindowManager manager;
+    protected boolean numberingEnabled;
+    protected boolean checkParam = true;
+    protected Stack<ToolWindowAnchor> mostRecentStack;
+    protected Map<ToolWindowAnchor, Integer> dividerSizes;
 
-
-    
-    private EventListenerList listenerList;
-
-    private boolean checkParam = true;
-    private Stack<ToolWindowAnchor> mostRecentStack;
-    private Map<ToolWindowAnchor, Integer> dividerSizes;
+    protected EventListenerList listenerList;
 
     public MyDoggyToolWindowManagerDescriptor(MyDoggyToolWindowManager manager) {
         this.manager = manager;
@@ -257,7 +254,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         return mostRecentStack.toArray(new ToolWindowAnchor[mostRecentStack.size()]);
     }
 
-
+  
     protected void initMostRecent() {
         this.mostRecentStack = new Stack<ToolWindowAnchor>();
         mostRecentStack.push(TOP);
@@ -337,7 +334,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
     }
 
 
-    private void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+    protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
         PropertyChangeListener[] listeners = listenerList.getListeners(PropertyChangeListener.class);
         PropertyChangeEvent event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
         for (PropertyChangeListener listener : listeners) {
