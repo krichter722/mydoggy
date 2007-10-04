@@ -392,7 +392,7 @@ public class ToolWindowTitleBarUI extends PanelUI {
             DragAndDropLock.setDragAndDropStarted(true);
 
             // Start Drag
-            System.out.println("dge.getComponent() = " + dge.getComponent());
+//            System.out.println("dge.getComponent() = " + dge.getComponent());
             MyDoggyToolWindowTab toolWindowTab = null;
             if (dge.getComponent() instanceof ToolWindowTabPanel.TabButton) {
                 ToolWindowTabPanel.TabButton tabButton = (ToolWindowTabPanel.TabButton) dge.getComponent();

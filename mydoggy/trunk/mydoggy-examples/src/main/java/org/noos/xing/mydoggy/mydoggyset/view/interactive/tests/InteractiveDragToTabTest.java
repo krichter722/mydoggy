@@ -32,26 +32,24 @@ public class InteractiveDragToTabTest extends AbstractInteractiveTest {
 
         interactiveUI.delay(500);
 
-        mouse.moveTo("toolWindow.Tool 13.tab.Title 13");
-        interactiveUI.delay(500);
+        mouse.moveTo("toolWindow.Tool 13.tab.Title 13", 500);
         mouse.press(InteractiveMouse.Type.LEFT);
         interactiveUI.delay(500);
         mouse.moveTo("toolWindow.tabContainer.Tool 3", 500);
         mouse.release(500);
 
-        mouse.moveTo("toolWindow.Tool 3.tab.Title 13");
+        mouse.moveTo("toolWindow.Tool 3.tab.Title 13", 500);
         mouse.press(InteractiveMouse.Type.LEFT);
-        interactiveUI.delay(500);
-        mouse.moveTo("toolWindowManager.bar." + ToolWindowAnchor.TOP, 100, 15, 500);
+        mouse.moveTo("toolWindowManager.bar." + ToolWindowAnchor.TOP, 300, 15, 500);
         mouse.release(500);
 
-        mouse.moveTo("toolWindow.Tool 13.tab.Title 13");
+        mouse.moveTo("toolWindow.Tool 13.tab.Title 13", 500);
         mouse.press(InteractiveMouse.Type.LEFT);
         interactiveUI.delay(500);
         mouse.moveTo("toolWindow.tabContainer.Tool 3", 500);
         mouse.release(500);
 
-        mouse.moveTo("toolWindow.Tool 3.tab.Title 13");
+        mouse.moveTo("toolWindow.Tool 3.tab.Title 13", 500);
         mouse.press(InteractiveMouse.Type.LEFT);
         interactiveUI.delay(500);
         mouse.moveTo("toolWindow.container.Tool 3", 100,150, 500);
