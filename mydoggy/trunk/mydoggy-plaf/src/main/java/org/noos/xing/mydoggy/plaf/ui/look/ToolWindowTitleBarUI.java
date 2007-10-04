@@ -557,7 +557,6 @@ public class ToolWindowTitleBarUI extends PanelUI {
                             boolean oldAM = toolWindow.isAggregateMode();
                             try {
                                 toolWindow.setAggregateMode(true);
-                                toolWindow.setType(ToolWindowType.DOCKED);
                                 toolWindow.setAnchor(anchor,
                                                      ((MyDoggyToolWindow) destToolWindow).getDescriptor().getLabelIndex());
                                 toolWindow.aggregate();

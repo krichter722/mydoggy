@@ -440,6 +440,12 @@ public class MyDoggyToolWindow implements ToolWindow {
                 defaultToolWindowTab = toolWindowTabs.get(0);
         }
 
+        if (toolWindowTab.getToolWindow() != null) {
+            ToolWindow toolWindow = toolWindowTab.getToolWindow(); 
+            toolWindow.setType(ToolWindowType.DOCKED);
+            toolWindow.setAvailable(true);
+        }
+
         return result;
     }
 
