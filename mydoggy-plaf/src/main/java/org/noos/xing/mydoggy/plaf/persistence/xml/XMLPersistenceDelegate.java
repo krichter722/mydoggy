@@ -154,6 +154,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         writer.dataElement("floating", floatingDescriptorAttributes);
 
         writer.endElement("descriptors");
+
+        for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+            // TODO: add support for tab with toolwindow...
+        }
+
         writer.endElement("tool");
     }
 
