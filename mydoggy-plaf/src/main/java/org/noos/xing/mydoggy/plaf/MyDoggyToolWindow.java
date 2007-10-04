@@ -310,51 +310,9 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setType(ToolWindowType type) {
-        synchronized (getLock()) {
-            if (this.type == type)
-                return;
-
-            switch (type) {
-                case SLIDING:
-                    if (!((SlidingTypeDescriptor) getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled())
-                        return;
-                    break;
-                case FLOATING:
-                case FLOATING_FREE:
-                    if (!((FloatingTypeDescriptor) getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled())
-                        return;
-                    break;
-            }
-
-            if (isMaximized())
-                setMaximized(false);
-            
-            boolean tempVisible = isVisible();
-            boolean tempActive = isActive();
-
-            publicEvent = false;
-
-            ToolWindowType oldType;
-            try {
-                setVisible(false);
-                if (tempActive)
-                    active = false;
-
-                publicEvent = true;
-
-                oldType = this.type;
-                this.type = type;
-
-                if (tempActive) {
-                    setActive(true);
-                } else if (tempVisible)
-                    setVisible(true);
-            } finally {
-                publicEvent = true;
-            }
-
-            fireTypeEvent(oldType, type);
-        }
+        if (type == ToolWindowType.TABBED)
+            throw new IllegalArgumentException("Cannot call this method using that paramenter.");
+        setTypeInternal(type);
     }
 
     public Icon getIcon() {
@@ -419,7 +377,7 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     public ToolWindowTab addToolWindowTab(ToolWindow toolWindow) {
         synchronized (getLock()) {
-            toolWindow.setType(ToolWindowType.TABBED);
+            ((MyDoggyToolWindow) toolWindow).setTypeInternal(ToolWindowType.TABBED);
             return addTabInternal(toolWindow.getTitle(),
                                   toolWindow.getIcon(),
                                   toolWindow.getComponent(),
@@ -530,6 +488,54 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     }
 
+    protected void setTypeInternal(ToolWindowType type) {
+        synchronized (getLock()) {
+            if (this.type == type)
+                return;
+
+            switch (type) {
+                case SLIDING:
+                    if (!((SlidingTypeDescriptor) getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled())
+                        return;
+                    break;
+                case FLOATING:
+                case FLOATING_FREE:
+                    if (!((FloatingTypeDescriptor) getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled())
+                        return;
+                    break;
+            }
+
+            if (isMaximized())
+                setMaximized(false);
+
+            boolean tempVisible = isVisible();
+            boolean tempActive = isActive();
+
+            publicEvent = false;
+
+            ToolWindowType oldType;
+            try {
+                setVisible(false);
+                if (tempActive)
+                    active = false;
+
+                publicEvent = true;
+
+                oldType = this.type;
+                this.type = type;
+
+                if (tempActive) {
+                    setActive(true);
+                } else if (tempVisible)
+                    setVisible(true);
+            } finally {
+                publicEvent = true;
+            }
+
+            fireTypeEvent(oldType, type);
+        }
+    }
+         
     protected void firePropertyChangeEvent(String property, Object oldValue, Object newValue) {
         PropertyChangeEvent event = new PropertyChangeEvent(descriptor, property, oldValue, newValue);
         PropertyChangeEvent publicEvent = new PropertyChangeEvent(this, property, oldValue, newValue);

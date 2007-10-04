@@ -689,7 +689,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
         public void toolWindowTabAdded(ToolWindowTabEvent event) {
             ToolWindowTab tab = event.getToolWindowTab();
-            tab.getComponent().addMouseListener(titleBarMouseAdapter);
+// TODO: check for this           tab.getComponent().addMouseListener(titleBarMouseAdapter);
             tab.addPropertyChangeListener(this);
         }
 
@@ -699,7 +699,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 SwingUtil.repaint(container);
             }
 
-            event.getToolWindowTab().getComponent().removeMouseListener(titleBarMouseAdapter);
+//            event.getToolWindowTab().getComponent().removeMouseListener(titleBarMouseAdapter);
             event.getToolWindowTab().removePropertyChangeListener(this);
         }
 
