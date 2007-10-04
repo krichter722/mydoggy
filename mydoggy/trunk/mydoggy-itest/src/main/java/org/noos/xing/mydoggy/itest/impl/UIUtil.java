@@ -16,6 +16,7 @@ public class UIUtil {
             return root;
 
         for (Component component : root.getComponents()) {
+//            System.out.println(component.getName());
             if (component.getName() != null && component.getName().equals(name))
                 return component;
 

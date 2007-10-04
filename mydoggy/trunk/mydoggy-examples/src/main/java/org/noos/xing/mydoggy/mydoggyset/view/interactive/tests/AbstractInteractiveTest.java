@@ -44,5 +44,12 @@ public abstract class AbstractInteractiveTest implements InteractiveTest {
         mouse.release();
         interactiveUI.delay(500);
     }
-    
+
+    protected void showTool(InteractiveUI interactiveUI, String toolId) {
+        InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
+
+        mouse.moveTo("toolWindow.rb." + toolId);
+        interactiveUI.delay(500);
+        mouse.click(InteractiveMouse.Type.LEFT);
+    }
 }
