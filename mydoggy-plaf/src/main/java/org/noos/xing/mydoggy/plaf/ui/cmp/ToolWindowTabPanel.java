@@ -74,6 +74,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         setFocusable(false);
 
         tabContainer = new JPanel(containerLayout = new TableLayout(new double[][]{{0}, {14}}));
+        tabContainer.setName("toolWindow.tabContainer." + descriptor.getToolWindow().getId());
         tabContainer.setOpaque(false);
         tabContainer.setBorder(null);
         tabContainer.setFocusable(false);
@@ -222,7 +223,6 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         containerLayout.insertColumn(column + 2, 10);
 
         TabButton tabButton = new TabButton(tab);
-        tabButton.setName("toolWindow." + toolWindow.getId() + ".tabs." + tab.getTitle());
         tabContainer.add(tabButton, (column + 1) + ",0" + ",c,c");
 
         tab.removePropertyChangeListener(this);
@@ -288,6 +288,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             this.tab.addPropertyChangeListener(this);
             this.selected = this.pressed = this.inside = false;
 
+            setName("toolWindow." + tab.getOwner().getId() + ".tab." + tab.getTitle());
             setForeground(descriptor.getResourceManager().getColor(ResourceManager.TWTB_TAB_FOREGROUND_UNSELECTED));
             setOpaque(false);
             setFocusable(false);
@@ -352,11 +353,16 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                     selected = false;
                 } else {
                     selecTabButton = this;
-                    // Ensure position
-                    Rectangle cellBounds = getBounds();
-                    cellBounds.x -= viewport.getViewPosition().x;
-                    viewport.scrollRectToVisible(cellBounds);
                     
+                    // Ensure position
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            Rectangle cellBounds = getBounds();
+                            cellBounds.x -= viewport.getViewPosition().x;
+                            viewport.scrollRectToVisible(cellBounds);
+                        }
+                    });
+
                     TabButton.this.setForeground(descriptor.getResourceManager().getColor(ResourceManager.TWTB_TAB_FOREGROUND_SELECTED));
                     selected = true;
                 }

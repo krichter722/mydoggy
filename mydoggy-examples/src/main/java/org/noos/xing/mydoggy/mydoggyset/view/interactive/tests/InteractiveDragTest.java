@@ -1,6 +1,6 @@
 package org.noos.xing.mydoggy.mydoggyset.view.interactive.tests;
 
-import org.noos.xing.mydoggy.itest.InteractiveAssertor;
+import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.itest.InteractiveMouse;
 import org.noos.xing.mydoggy.itest.InteractiveUI;
 

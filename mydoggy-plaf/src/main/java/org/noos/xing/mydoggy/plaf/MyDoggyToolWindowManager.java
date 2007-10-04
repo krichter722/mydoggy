@@ -303,7 +303,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             return;
         }
 
-        System.out.println(SwingUtil.toString(evt));
+//        System.out.println(SwingUtil.toString(evt));
 
         propertyChangeSupport.firePropertyChange(evt);
     }

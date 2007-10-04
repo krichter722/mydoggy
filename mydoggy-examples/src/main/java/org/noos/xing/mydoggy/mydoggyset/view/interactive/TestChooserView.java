@@ -1,30 +1,27 @@
 package org.noos.xing.mydoggy.mydoggyset.view.interactive;
 
+import info.clearthought.layout.TableLayout;
+import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.itest.InteractiveTest;
+import org.noos.xing.mydoggy.itest.InteractiveTestRunner;
+import org.noos.xing.mydoggy.itest.impl.SingleThreadInteractiveTestRunner;
+import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveDragTest;
+import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveDragToTabTest;
+import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveSimpleTest;
+import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveToolVisisbleTest;
+import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
-import org.noos.xing.yasaf.plaf.view.MapViewContext;
 import org.noos.xing.yasaf.plaf.view.listener.ContextPutItemListener;
 import org.noos.xing.yasaf.view.ViewContext;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
 import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
-import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveToolVisisbleTest;
-import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveDragTest;
-import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveSimpleTest;
-import org.noos.xing.mydoggy.itest.InteractiveTest;
-import org.noos.xing.mydoggy.itest.InteractiveTestRunner;
-import org.noos.xing.mydoggy.itest.impl.SingleThreadInteractiveTestRunner;
-import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
-import info.clearthought.layout.TableLayout;
+import java.awt.event.ActionListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -56,8 +53,10 @@ public class TestChooserView extends ComponentView {
             JPanel panel = new JPanel(new TableLayout(new double[][]{{150,3,-1,3, 100},{-1}}));
 
             JFrame frame = viewContext.get(JFrame.class);
+            ToolWindowManager toolWindowManager = viewContext.get(ToolWindowManager.class);
 
             tests = new JComboBox(new Object[]{
+                    new InteractiveDragToTabTest(toolWindowManager, frame),
                     new InteractiveToolVisisbleTest(frame),
                     new InteractiveDragTest(frame),
                     new InteractiveSimpleTest(frame)
