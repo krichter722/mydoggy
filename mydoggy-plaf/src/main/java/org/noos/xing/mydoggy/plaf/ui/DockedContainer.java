@@ -258,6 +258,10 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 if (evt.getNewValue() == ToolWindowType.DOCKED) {
                     configureDockedIcons();
                 }
+
+                if (evt.getOldValue() == ToolWindowType.TABBED) {
+                    setMainComponent(toolWindow.getToolWindowTabs()[0].getComponent());
+                }
             }
         });
         addPropertyChangeListener("maximized.before", new PropertyChangeListener() {
