@@ -29,13 +29,15 @@ public class FloatingContainer extends DockedContainer {
 
     private FloatingResizeMouseInputHandler resizeMouseInputHandler;
     private FloatingMoveMouseInputHandler moveMouseInputHandler;
-    private boolean settedListener = false;
 
+    private boolean settedListener = false;
     private boolean valueAdjusting = false;
 
     private Rectangle lastBounds;
 
     private final FloatingAnimation floatingAnimation = new FloatingAnimation();
+    private boolean assignFocusOnAnimFinished = false;
+
 
     public FloatingContainer(ToolWindowDescriptor descriptor) {
         super(descriptor);
@@ -56,7 +58,7 @@ public class FloatingContainer extends DockedContainer {
         content.setFocusCycleRoot(!visible);
 
         if (visible) {
-            configureFloatingIcons();
+            titleBarButtons.configureIcons(ToolWindowType.FLOATING);
 
             window.getContentPane().removeAll();
 
@@ -98,8 +100,8 @@ public class FloatingContainer extends DockedContainer {
                     assignFocus();
             }
         } else {
-            if (hideButton.isFocusable())
-                hideButton.setFocusable(false);
+            if (titleBarButtons.getFocusable().isFocusable())
+                titleBarButtons.getFocusable().setFocusable(false);
 
             lastBounds = window.getBounds();
 
@@ -256,7 +258,7 @@ public class FloatingContainer extends DockedContainer {
                     if (Boolean.TRUE.equals(evt.getNewValue())) {
                         synchronized (floatingAnimation) {
                             if (floatingAnimation.isAnimating()) {
-                                lister = true;
+                                assignFocusOnAnimFinished = true;
                             } else
                                 assignFocus();
                         }
@@ -300,33 +302,16 @@ public class FloatingContainer extends DockedContainer {
 
         floatingAnimation.addAnimationListener(new AnimationListener() {
             public void onFinished() {
-                if (lister) {
+                if (assignFocusOnAnimFinished) {
                     assignFocus();
-                    lister = false;
+                    assignFocusOnAnimFinished = false;
                 }
             }
         });
     }
 
-    boolean lister = false;
 
-    private void configureFloatingIcons() {
-        FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
-
-        if (typeDescriptor.isModal()) {
-            setPinVisible(false);
-            setFloatingVisible(false);
-            setDockedVisible(false);
-        } else {
-            setPinVisible(true);
-            setFloatingVisible(true);
-            setDockedVisible(false);
-            setFix();
-        }
-    }
-
-
-    public class FloatingAnimation extends AbstractAnimation {
+    private class FloatingAnimation extends AbstractAnimation {
         private Rectangle originalBounds;
         private int lastLenX = 0;
         private int lastLenY = 0;

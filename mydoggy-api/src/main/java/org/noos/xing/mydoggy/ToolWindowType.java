@@ -26,7 +26,7 @@ public enum ToolWindowType {
     /**
      * This type enables a tool window to be detached from the main window frame.
      * When Floating type is used, the tool window detaches to the position where it was last floated
-     (or screen center or location setted for toolwindow's FloatingTypeDescriptor, if never before floated)
+     * (or screen center or location setted for toolwindow's FloatingTypeDescriptor, if never before floated)
      * @see org.noos.xing.mydoggy.FloatingTypeDescriptor
      * @since 1.0.0
      */
@@ -41,5 +41,7 @@ public enum ToolWindowType {
      */
     FLOATING_FREE,
 
-    TABBED
+    TABBED,
+
+    LIVE_FLOATING
 }

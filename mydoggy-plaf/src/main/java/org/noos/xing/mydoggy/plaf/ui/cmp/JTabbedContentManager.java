@@ -13,9 +13,12 @@ import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
+import javax.swing.plaf.TabbedPaneUI;
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Hashtable;
@@ -45,8 +48,12 @@ public class JTabbedContentManager extends JTabbedPane {
         setFocusable(false);
 
         MouseInputAdapter mouseInputAdapter = new MouseOverTabListener();
+        TabMoveHandler tabMoveHandler = new TabMoveHandler();
         addMouseListener(mouseInputAdapter);
+        addMouseListener(tabMoveHandler);
         addMouseMotionListener(mouseInputAdapter);
+        addMouseMotionListener(tabMoveHandler);
+
     }
 
 
@@ -238,6 +245,7 @@ public class JTabbedContentManager extends JTabbedPane {
             return getContentPage(tabIndex).getContent();
     }
 
+
     class MouseOverTabListener extends MouseInputAdapter {
         private int mouseOverTab = -1;
 
@@ -297,6 +305,125 @@ public class JTabbedContentManager extends JTabbedPane {
                 if (tabIndex < getTabCount())
                     repaint(getBoundsAt(tabIndex));
             }
+        }
+    }
+
+    /**
+     * TODO: far funzionare meglio.......
+     */
+    class TabMoveHandler extends MouseAdapter implements MouseMotionListener {
+        int startIndex = -1;
+        private int currentIndex = -1;
+
+        /* (non-Javadoc)
+        * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
+        */
+        public void mousePressed(MouseEvent e) {
+            if (!e.isPopupTrigger()) {
+                JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
+                startIndex = tabbedPane.indexAtLocation(e.getX(), e.getY());
+            }
+            currentIndex = -1;
+        }
+
+        /* (non-Javadoc)
+        * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
+        */
+        public void mouseReleased(MouseEvent e) {
+            JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
+            if (!e.isPopupTrigger()) {
+                int endIndex = tabbedPane.indexAtLocation(e.getX(), e.getY());
+
+                if (startIndex != -1 && endIndex != -1 && startIndex != endIndex) {
+                    moveTab(tabbedPane, startIndex, endIndex);
+                    tabbedPane.setSelectedIndex(endIndex);
+
+               }
+            }
+            startIndex = -1;
+            clearRectangle(tabbedPane);
+            currentIndex = -1;
+        }
+
+        /**
+         */
+        private void moveTab(JTabbedPane pane, int src, int dst) {
+            // Get all the properties
+            Component comp = pane.getComponentAt(src);
+            String label = pane.getTitleAt(src);
+            Icon icon = pane.getIconAt(src);
+            Icon iconDis = pane.getDisabledIconAt(src);
+            String tooltip = pane.getToolTipTextAt(src);
+            boolean enabled = pane.isEnabledAt(src);
+            int keycode = pane.getMnemonicAt(src);
+            int mnemonicLoc = pane.getDisplayedMnemonicIndexAt(src);
+            Color fg = pane.getForegroundAt(src);
+            Color bg = pane.getBackgroundAt(src);
+
+            // Remove the tab
+            pane.remove(src);
+
+            // Add a new tab
+            pane.insertTab(label, icon, comp, tooltip, dst);
+
+            // Restore all properties
+            pane.setDisabledIconAt(dst, iconDis);
+            pane.setEnabledAt(dst, enabled);
+            pane.setMnemonicAt(dst, keycode);
+            pane.setDisplayedMnemonicIndexAt(dst, mnemonicLoc);
+            pane.setForegroundAt(dst, fg);
+            pane.setBackgroundAt(dst, bg);
+        }
+
+
+        /* (non-Javadoc)
+        * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
+        */
+        public void mouseDragged(MouseEvent e) {
+            if (startIndex != -1) {
+                JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
+                int index = tabbedPane.indexAtLocation(e.getX(), e.getY());
+
+                if (index != -1 && index != currentIndex) { // moved over another tab
+                    clearRectangle(tabbedPane);
+                    currentIndex = index;
+                }
+
+                if (currentIndex != -1 && currentIndex != startIndex) {
+                    drawRectangle(tabbedPane);
+                }
+            }
+        }
+
+        private void clearRectangle(JTabbedPane tabbedPane) {
+            if (currentIndex == -1) {
+                return;
+            }
+            TabbedPaneUI ui = tabbedPane.getUI();
+            Rectangle rect = ui.getTabBounds(tabbedPane, currentIndex);
+            tabbedPane.repaint(rect);
+        }
+
+        private void drawRectangle(JTabbedPane tabbedPane) {
+            TabbedPaneUI ui = tabbedPane.getUI();
+            Rectangle rect = ui.getTabBounds(tabbedPane, currentIndex);
+            Graphics graphics = tabbedPane.getGraphics();
+            graphics.setColor(Color.WHITE);
+            graphics.drawRect(rect.x, rect.y, rect.width - 1, rect.height - 1);
+        }
+
+        /* (non-Javadoc)
+        * @see java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
+        */
+        public void mouseMoved(MouseEvent e) {
+        }
+
+        /* (non-Javadoc)
+        * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
+        */
+        public void mouseExited(MouseEvent e) {
+            clearRectangle((JTabbedPane) e.getSource());
+            currentIndex = -1;
         }
     }
 }

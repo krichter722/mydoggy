@@ -1,9 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
 import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
-import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
@@ -36,6 +34,7 @@ public class MyDoggyResourceManager implements ResourceManager {
     protected Map<String, ComponentCreator> cmpCreators;
     protected Map<String, ComponentUICreator> cmpUiCreators;
     protected Map<String, ComponentCustomizer> cmpCustomizers;
+    protected Map<Class, InstanceCreator> cmpInstanceCreators;
 
     protected String bundlePath;
     protected ResourceBundle resourceBundle;
@@ -76,6 +75,10 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     public void setTransparencyManager(TransparencyManager<Window> transparencyManager) {
         this.transparencyManager = transparencyManager;
+    }
+
+    public <T> T createInstance(Class<T> clazz, Object... args) {
+        return (T) cmpInstanceCreators.get(clazz).createComponent(args);
     }
 
     public Component createComponent(String key, ToolWindowManager manager, Object... args) {
@@ -238,6 +241,10 @@ public class MyDoggyResourceManager implements ResourceManager {
 
         cmpCustomizers = new Hashtable<String, ComponentCustomizer>();
         cmpCustomizers.put(ResourceManager.MDM_PANEL, new MyDoggyManagerPanelComponentCustomizer());
+
+        cmpInstanceCreators = new Hashtable<Class, InstanceCreator>();
+        cmpInstanceCreators.put(TitleBarButtons.class, new TitleBarButtonsInstanceCreator());
+
     }
 
     protected ResourceBundle initResourceBundle(Locale locale, String bundle, ClassLoader classLoader) {
@@ -261,6 +268,10 @@ public class MyDoggyResourceManager implements ResourceManager {
         setTransparencyManager(new WindowTransparencyManager());
     }
 
+
+    public static interface InstanceCreator {
+        Object createComponent(Object... args);
+    }
 
     public static interface ComponentCreator {
         Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args);
@@ -387,6 +398,21 @@ public class MyDoggyResourceManager implements ResourceManager {
             label.setIcon(resourceManager.getIcon((String) args[0]));
 
             return label;
+        }
+    }
+
+    public static class TitleBarButtonsInstanceCreator implements InstanceCreator {
+        public Object createComponent(Object... args) {
+/*
+            return new ExtendedTitleBarButtons(
+                    (ToolWindowDescriptor) args[0],
+                    (DockedContainer) args[1]
+            );
+*/
+            return new SimplyTitleBarButtons(
+                    (ToolWindowDescriptor) args[0],
+                    (DockedContainer) args[1]
+            );
         }
     }
 

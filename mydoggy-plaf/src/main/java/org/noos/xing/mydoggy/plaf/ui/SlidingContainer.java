@@ -42,6 +42,7 @@ public class SlidingContainer extends FloatingContainer {
         initSlidingListeners();
     }
 
+
     public void setVisible(boolean visible, Container barContainer) {
         this.barContainer = barContainer;
 
@@ -55,7 +56,7 @@ public class SlidingContainer extends FloatingContainer {
 
         if (visible) {
             // Reset Layout
-            configureSlidingIcons();
+            titleBarButtons.configureIcons(ToolWindowType.SLIDING);
 
             TableLayout layout = (TableLayout) sheet.getLayout();
             layout.setColumn(0, 0);
@@ -114,9 +115,9 @@ public class SlidingContainer extends FloatingContainer {
     }
 
 
-    protected void update() {
+    private void update() {
         // Reset Layout
-        configureSlidingIcons();
+        titleBarButtons.configureIcons(ToolWindowType.SLIDING);
 
         TableLayout layout = (TableLayout) sheet.getLayout();
         layout.setColumn(0, 0);
@@ -147,7 +148,7 @@ public class SlidingContainer extends FloatingContainer {
         layeredPane.validate();
     }
 
-    protected void resize() {
+    private void resize() {
         int length = descriptor.getDividerLocation();
         if (length == -1)
             length = 200;
@@ -191,7 +192,6 @@ public class SlidingContainer extends FloatingContainer {
                 break;
         }
     }
-
 
     private void initSlidingComponents() {
         mainPanel = new JPanel();
@@ -324,13 +324,6 @@ public class SlidingContainer extends FloatingContainer {
         });
 
         slidingMouseInputHandler = new SlidingMouseInputHandler(descriptor);
-    }
-
-
-    private void configureSlidingIcons() {
-        setPinVisible(false);
-        setFloatingVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
-        setSliding();
     }
 
 
