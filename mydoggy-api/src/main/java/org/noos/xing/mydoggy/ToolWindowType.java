@@ -43,5 +43,5 @@ public enum ToolWindowType {
 
     TABBED,
 
-    LIVE_FLOATING
+    FLOATING_LIVE
 }

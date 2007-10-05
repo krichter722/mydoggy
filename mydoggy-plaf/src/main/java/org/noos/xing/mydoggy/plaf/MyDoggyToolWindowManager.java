@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultDockedTypeDescriptor;
+import org.noos.xing.mydoggy.plaf.descriptors.DefaultFloatingLiveTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultFloatingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultSlidingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.persistence.xml.XMLPersistenceDelegate;
@@ -70,6 +71,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected DefaultFloatingTypeDescriptor floatingTypeDescriptor;
     protected DefaultDockedTypeDescriptor dockingTypeDescriptor;
     protected DefaultSlidingTypeDescriptor slidingTypeDescriptor;
+    protected DefaultFloatingLiveTypeDescriptor floatingLiveTypeDescriptor;
 
     protected ToolWindowManagerDescriptor toolWindowManagerDescriptor;
 
@@ -265,6 +267,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 if (floatingTypeDescriptor == null)
                     floatingTypeDescriptor = new DefaultFloatingTypeDescriptor();
                 return floatingTypeDescriptor;
+            case FLOATING_LIVE:
+                if (floatingLiveTypeDescriptor == null)
+                    floatingLiveTypeDescriptor = new DefaultFloatingLiveTypeDescriptor();
+                return floatingLiveTypeDescriptor;
             case DOCKED:
                 if (dockingTypeDescriptor == null)
                     dockingTypeDescriptor = new DefaultDockedTypeDescriptor(resourceManager);

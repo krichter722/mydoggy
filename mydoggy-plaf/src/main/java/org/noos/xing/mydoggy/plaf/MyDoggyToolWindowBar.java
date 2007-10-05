@@ -166,6 +166,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         propertyChangeSupport.addPropertyChangeListener("visible.FLOATING", new VisibleFloatingListener());
         propertyChangeSupport.addPropertyChangeListener("visible.FLOATING_FREE", new VisibleFloatingFreeListener());
         propertyChangeSupport.addPropertyChangeListener("visible.SLIDING", new VisibleSlidingListener());
+        propertyChangeSupport.addPropertyChangeListener("visible.FLOATING_LIVE", new VisibleLiveFloatingListener());
         propertyChangeSupport.addPropertyChangeListener("visible.after", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
@@ -864,6 +865,21 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         }
     }
 
+    protected class VisibleLiveFloatingListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
+            boolean visible = (Boolean) evt.getNewValue();
+
+            Component content = (visible) ? toolWindowDescriptor.getComponent() : null;
+            LiveFloatingContainer container = (LiveFloatingContainer) toolWindowDescriptor.getToolWindowContainer();
+
+            if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
+                return;
+
+            container.setVisible(visible);
+        }
+    }
 
     protected class IndexListener implements PropertyChangeListener {
 
