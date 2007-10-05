@@ -6,8 +6,6 @@ import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TranslucentPanel;
-import org.noos.xing.mydoggy.plaf.ui.cmp.border.SlidingBorder;
-import org.noos.xing.mydoggy.plaf.ui.cmp.event.SlidingMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -22,20 +20,13 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro
  */
-public class SlidingContainer extends FloatingContainer {
-    private SlidingAnimation slidingAnimation;
-
-    private SlidingBorder border;
-    private Container barContainer;
-
+public class LiveFloatingContainer extends SlidingContainer {
     private JLayeredPane layeredPane;
-
-    private SlidingMouseInputHandler slidingMouseInputHandler;
 
     private JPanel mainPanel;
     private TranslucentPanel sheet;
 
-    public SlidingContainer(ToolWindowDescriptor descriptor) {
+    public LiveFloatingContainer(ToolWindowDescriptor descriptor) {
         super(descriptor);
 
         initSlidingComponents();
@@ -43,20 +34,13 @@ public class SlidingContainer extends FloatingContainer {
     }
 
 
-    public void setVisible(boolean visible, Container barContainer) {
-        this.barContainer = barContainer;
-
+    public void setVisible(boolean visible) {
         Component content = getContentContainer();
         sheet.remove(content);
 
-        synchronized (slidingAnimation) {
-            if (slidingAnimation.isAnimating())
-                slidingAnimation.stop();
-        }
-
         if (visible) {
             // Reset Layout
-            titleBarButtons.configureIcons(ToolWindowType.SLIDING);
+            titleBarButtons.configureIcons(ToolWindowType.DOCKED);
 
             TableLayout layout = (TableLayout) sheet.getLayout();
             layout.setColumn(0, 0);
@@ -64,27 +48,28 @@ public class SlidingContainer extends FloatingContainer {
             layout.setRow(0, 0);
             layout.setRow(2, 0);
 
-            barContainer.getParent().getLayout().layoutContainer(barContainer.getParent());
             resize();
 
             content.setVisible(true);
             sheet.add(content, "1,1,FULL,FULL");
 
             // Prepare sheet
-            border.setAnchor(toolWindow.getAnchor());
-            sheet.setBorder(border);
+            sheet.setBorder(BorderFactory.createEtchedBorder());
 
             int height = mainPanel.getHeight();
             Point point = SwingUtilities.convertPoint(mainPanel, 0, 0, layeredPane);
 
-            sheet.setBounds(point.x, point.y, mainPanel.getWidth(), height);
+//            sheet.setBounds(point.x, point.y, mainPanel.getWidth(), height);
+            sheet.setBounds(150,150,150,150);
+
 
             layeredPane.remove(sheet);
-            layeredPane.setLayer(sheet, 100);
+            layeredPane.setLayer(sheet, 1);
             layeredPane.add(sheet);
-
+/*
             if (descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isAnimating())
                 slidingAnimation.show(sheet.getBounds());
+*/
         } else {
             // Set Layout
             TableLayout layout = (TableLayout) sheet.getLayout();
@@ -104,18 +89,24 @@ public class SlidingContainer extends FloatingContainer {
                     break;
             }
 
+/*
             if (descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isAnimating())
                 slidingAnimation.hide(sheet.getBounds());
             else {
+*/
                 layeredPane.remove(sheet);
                 sheet.setBorder(null);
                 sheet.removeAll();
+//            layeredPane.setVisible(false);
+/*
             }
+*/
         }
     }
 
 
     private void update() {
+/*
         // Reset Layout
         titleBarButtons.configureIcons(ToolWindowType.SLIDING);
 
@@ -143,12 +134,14 @@ public class SlidingContainer extends FloatingContainer {
         sheet.setBounds(point.x, point.y, mainPanel.getWidth(), height);
 
         layeredPane.remove(sheet);
-        layeredPane.setLayer(sheet, 100);
+        layeredPane.setLayer(sheet, 1);
         layeredPane.add(sheet);
         layeredPane.validate();
+*/
     }
 
     private void resize() {
+/*
         int length = descriptor.getDividerLocation();
         if (length == -1)
             length = 200;
@@ -191,13 +184,16 @@ public class SlidingContainer extends FloatingContainer {
                 mainPanel.setLocation(location);
                 break;
         }
+*/
     }
 
     private void initSlidingComponents() {
         mainPanel = new JPanel();
         sheet = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
+/*
         border = new SlidingBorder();
         slidingAnimation = new SlidingAnimation();
+*/
 
         Window anchestor = descriptor.getWindowAnchestor();
         if (anchestor instanceof RootPaneContainer) {
@@ -229,13 +225,17 @@ public class SlidingContainer extends FloatingContainer {
                 assert "type".equals(evt.getPropertyName());
                 if (evt.getNewValue() == ToolWindowType.SLIDING) {
                     if (layeredPane != null) {
+/*
                         sheet.addMouseMotionListener(slidingMouseInputHandler);
                         sheet.addMouseListener(slidingMouseInputHandler);
+*/
                     }
                 } else {
                     if (layeredPane != null) {
+/*
                         sheet.removeMouseMotionListener(slidingMouseInputHandler);
                         sheet.removeMouseListener(slidingMouseInputHandler);
+*/
                     }
                 }
             }
@@ -323,7 +323,9 @@ public class SlidingContainer extends FloatingContainer {
             }
         });
 
+/*
         slidingMouseInputHandler = new SlidingMouseInputHandler(descriptor);
+*/
     }
 
 
@@ -452,7 +454,7 @@ public class SlidingContainer extends FloatingContainer {
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            if (descriptor.getToolWindow().getType() == ToolWindowType.SLIDING) {
+            if (descriptor.getToolWindow().getType() == ToolWindowType.FLOATING_LIVE) {
                 if (Boolean.TRUE.equals(evt.getNewValue())) {
                     if (timer != null) {
                         timer.stop();
@@ -462,9 +464,9 @@ public class SlidingContainer extends FloatingContainer {
 
                     sheet.setAlphaModeRatio(1.0f);
                 } else {
-                    SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING);
-                    if (slidingTypeDescriptor.isTransparentMode()) {
-                        timer = new Timer(slidingTypeDescriptor.getTransparentDelay(), this);
+                    FloatingLiveTypeDescriptor floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
+                    if (floatingLiveTypeDescriptor.isTransparentMode()) {
+                        timer = new Timer(floatingLiveTypeDescriptor.getTransparentDelay(), this);
                         timer.start();
                     }
                 }

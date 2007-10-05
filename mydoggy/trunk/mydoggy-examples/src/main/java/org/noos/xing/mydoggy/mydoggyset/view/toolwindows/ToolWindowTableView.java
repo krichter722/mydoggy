@@ -46,7 +46,10 @@ public class ToolWindowTableView extends ComponentView {
 
         // Type column
         JComboBox types = new JComboBox(new Object[]{ToolWindowType.DOCKED,
-                                                     ToolWindowType.SLIDING, ToolWindowType.FLOATING, ToolWindowType.FLOATING_FREE});
+                                                     ToolWindowType.SLIDING,
+                                                     ToolWindowType.FLOATING,
+                                                     ToolWindowType.FLOATING_FREE,
+                                                     ToolWindowType.FLOATING_LIVE});
         toolsTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(types));
 
         // Anchor column

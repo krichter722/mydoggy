@@ -32,6 +32,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     private FloatingTypeDescriptor floatingTypeDescriptor;
     private DockedTypeDescriptor dockedTypeDescriptor;
     private SlidingTypeDescriptor slidingTypeDescriptor;
+    private FloatingLiveTypeDescriptor floatingLiveTypeDescriptor;
 
     private boolean floatingWindow = false;
 
@@ -125,7 +126,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
     public ToolWindowContainer getToolWindowContainer() {
         if (toolWindowContainer == null)
-            toolWindowContainer = new SlidingContainer(this);
+            toolWindowContainer = new LiveFloatingContainer(this);
         return toolWindowContainer;
     }
 
@@ -134,6 +135,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
             case FLOATING:
             case FLOATING_FREE:
                 return floatingTypeDescriptor;
+            case FLOATING_LIVE:
+                return floatingLiveTypeDescriptor;
             case DOCKED:
                 return dockedTypeDescriptor;
             case SLIDING:
@@ -268,6 +271,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     protected void initTypeDescriptors() {
         floatingTypeDescriptor = (FloatingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING)).cloneMe();
         floatingTypeDescriptor.addPropertyChangeListener(this);
+
+        floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING_LIVE)).cloneMe();
 
         dockedTypeDescriptor = (DockedTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).cloneMe();
         dockedTypeDescriptor.addPropertyChangeListener(this);
