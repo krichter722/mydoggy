@@ -176,7 +176,7 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
 
         public ArrowListener(Direction direction) {
             this.scrollTimer = new Timer(60, this);
-            this.direction = (direction == Direction.RIGHT) ? 1 : 0;
+            this.direction = (direction == Direction.RIGHT) ? 0 : 1;
         }
 
         public void mousePressed(MouseEvent e) {
@@ -210,7 +210,7 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
     protected class WheelScroller implements MouseWheelListener {
         public void mouseWheelMoved(MouseWheelEvent e) {
             if (scrollEnabled)
-                scrollBy(e.getWheelRotation() == 1 ? 0 : 1, e.getScrollAmount() * 3);
+                scrollBy(e.getWheelRotation() == 1 ? 1 : 0, e.getScrollAmount() * 3);
         }
     }
 
