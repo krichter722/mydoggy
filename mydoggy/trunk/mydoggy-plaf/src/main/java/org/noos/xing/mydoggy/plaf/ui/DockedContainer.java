@@ -33,11 +33,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
     protected Component focusRequester;
 
-    protected JButton floatingButton;
-    protected JButton pinButton;
-    protected JButton dockButton;
-    protected JButton hideButton;
-    protected JButton maximizeButton;
+    protected TitleBarButtons titleBarButtons;
 
     protected TitleBarMouseAdapter titleBarMouseAdapter;
     protected PropertyChangeSupport propertyChangeSupport;
@@ -104,54 +100,13 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
 
-    protected void setPinVisible(boolean visible) {
-        pinButton.setVisible(visible);
-        TableLayout tableLayout = (TableLayout) titleBar.getLayout();
-        tableLayout.setColumn(7, (visible) ? 17 : 0);
-        tableLayout.setColumn(8, (visible) ? 2 : 0);
-    }
-
-    protected void setFloatingVisible(boolean visible) {
-        floatingButton.setVisible(visible);
-        TableLayout tableLayout = (TableLayout) titleBar.getLayout();
-        tableLayout.setColumn(5, (visible) ? 17 : 0);
-        tableLayout.setColumn(6, (visible) ? 2 : 0);
-    }
-
-    protected void setDockedVisible(boolean visible) {
-        dockButton.setVisible(visible);
-        TableLayout tableLayout = (TableLayout) titleBar.getLayout();
-        tableLayout.setColumn(3, (visible) ? 17 : 0);
-        tableLayout.setColumn(4, (visible) ? 2 : 0);
-    }
-
-    protected void setSliding() {
-        dockButton.setIcon(resourceManager.getIcon(ResourceManager.DOCKED));
-        dockButton.setToolTipText(resourceManager.getString("@@tool.tooltip.dock"));
-    }
-
-    protected void setDocked() {
-        dockButton.setIcon(resourceManager.getIcon(ResourceManager.SLIDING));
-        dockButton.setToolTipText(resourceManager.getString("@@tool.tooltip.undock"));
-    }
-
-    protected void setFix() {
-        floatingButton.setIcon(resourceManager.getIcon(ResourceManager.FIX));
-        floatingButton.setToolTipText(resourceManager.getString("@@tool.tooltip.fix"));
-    }
-
-    protected void setFloating() {
-        floatingButton.setIcon(resourceManager.getIcon(ResourceManager.FLOATING));
-        floatingButton.setToolTipText(resourceManager.getString("@@tool.tooltip.float"));
-    }
-
     protected void assignFocus() {
         focusRequester = SwingUtil.findFocusable(descriptor.getComponent());
         if (focusRequester == null) {
-            hideButton.setFocusable(true);
-            focusRequester = hideButton;
+            titleBarButtons.getFocusable().setFocusable(true);
+            focusRequester = titleBarButtons.getFocusable();
         } else {
-            hideButton.setFocusable(false);
+            titleBarButtons.getFocusable().setFocusable(false);
         }
         SwingUtil.requestFocus(focusRequester);
     }
@@ -161,7 +116,6 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         propertyChangeSupport = new PropertyChangeSupport(this);
 
         titleBarMouseAdapter = new TitleBarMouseAdapter();
-        ActionListener titleBarActionListener = new TitleBarActionListener();
 
         // Container
         container = new JPanel(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {16, TableLayout.FILL}}, false));
@@ -173,7 +127,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         String id = toolWindow.getId();
 
         // Title Bar
-        ExtendedTableLayout titleBarLayout = new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 2, 15, 2, 15, 2, 15, 2, 15, 2, 15, 3}, {1, 14, 1}}, false);
+        ExtendedTableLayout titleBarLayout = new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 2, -2, 3}, {1, 14, 1}}, false);
         titleBar = (JPanel) resourceManager.createComponent(
                 ResourceManager.TOOL_WINDOW_TITLE_BAR, descriptor.getManager(),
                 descriptor,
@@ -194,69 +148,35 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         toolWindow.getToolWindowTabs()[0].setSelected(true);
 
         // Buttons
-        hideButton = renderTitleButton("visible", titleBarActionListener,
-                                       "@@tool.tooltip.hide", ResourceManager.HIDE_TOOL_WINDOW_INACTIVE,
-                                       null);
-        maximizeButton = renderTitleButton("maximize", titleBarActionListener, "@@tool.tooltip.maximize", ResourceManager.MAXIMIZE_INACTIVE, null);
-        pinButton = renderTitleButton("pin", titleBarActionListener, "@@tool.tooltip.unpin", ResourceManager.AUTO_HIDE_OFF_INACTIVE, null);
-        floatingButton = renderTitleButton("floating", titleBarActionListener,
-                                           "@@tool.tooltip.float", ResourceManager.FLOATING_INACTIVE,
-                                           "toolWindow.floatingButton." + toolWindow.getId());
-        dockButton = renderTitleButton("undock", titleBarActionListener,
-                                       "@@tool.tooltip.undock", ResourceManager.DOCKED_INACTIVE,
-                                       "toolWindow.dockButton." + toolWindow.getId());
+        titleBarButtons = resourceManager.createInstance(TitleBarButtons.class, descriptor, this); 
 
         // Set TitleBar content
         titleBar.add(titleBarTabs, "1,1");
-
-        titleBar.add(dockButton, "3,1");
-        titleBar.add(floatingButton, "5,1");
-        titleBar.add(pinButton, "7,1");
-        titleBar.add(maximizeButton, "9,1");
-        titleBar.add(hideButton, "11,1");
-
-        Component toolWindowCmp = descriptor.getComponent();
-//        toolWindowCmp.addMouseListener(titleBarMouseAdapter);
+        titleBar.add(titleBarButtons.getButtonsContainer(), "3,1");
 
         // Set Container content
         container.add(titleBar, "0,0");
-        container.add(toolWindowCmp, "0,1");
+        container.add(descriptor.getComponent(), "0,1");
 
         focusRequester = SwingUtil.findFocusable(descriptor.getComponent());
         if (focusRequester == null) {
-            hideButton.setFocusable(true);
-            focusRequester = hideButton;
+            titleBarButtons.getFocusable().setFocusable(true);
+            focusRequester = titleBarButtons.getFocusable();
         }
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", new FocusOwnerPropertyChangeListener());
 
-        configureDockedIcons();
+        titleBarButtons.configureIcons(ToolWindowType.DOCKED);
     }
 
     protected void initDockedListeners() {
         addPropertyChangeListener("active", new ActivePropertyChangeListener());
-        addPropertyChangeListener("autoHide", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getSource() != descriptor)
-                    return;
-
-                boolean newValue = ((Boolean) evt.getNewValue());
-
-                if (newValue) {
-                    pinButton.setIcon(resourceManager.getIcon(ResourceManager.AUTO_HIDE_ON));
-                    pinButton.setToolTipText(resourceManager.getString("@@tool.tooltip.pin"));
-                } else {
-                    pinButton.setIcon(resourceManager.getIcon(ResourceManager.AUTO_HIDE_OFF));
-                    pinButton.setToolTipText(resourceManager.getString("@@tool.tooltip.unpin"));
-                }
-            }
-        });
         addPropertyChangeListener("type", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getSource() != descriptor)
                     return;
 
                 if (evt.getNewValue() == ToolWindowType.DOCKED) {
-                    configureDockedIcons();
+                    titleBarButtons.configureIcons(ToolWindowType.DOCKED);
                 }
 
                 if (evt.getOldValue() == ToolWindowType.TABBED) {
@@ -274,15 +194,12 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
                 if ((Boolean) evt.getNewValue()) {
                     descriptor.getManager().getPersistenceDelegate().save(workspace = new ByteArrayOutputStream());
-
-                    maximizeButton.setIcon(resourceManager.getIcon(ResourceManager.MINIMIZE));
                 } else if (workspace != null) {
                     if (valueAdj)
                         return;
 
                     valueAdj = true;
                     try {
-                        maximizeButton.setIcon(resourceManager.getIcon(ResourceManager.MAXIMIZE));
                         descriptor.getManager().getPersistenceDelegate().merge(new ByteArrayInputStream(workspace.toByteArray()),
                                                                                PersistenceDelegate.MergePolicy.UNION);
                         workspace = null;
@@ -311,8 +228,6 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                     public void propertyChange(PropertyChangeEvent evt) {
                         if ("enabled".equals(evt.getPropertyName())) {
                             boolean newValue = (Boolean) evt.getNewValue();
-                            setDockedVisible(newValue);
-
                             if (!newValue && toolWindow.getType() == ToolWindowType.SLIDING)
                                 toolWindow.setType(ToolWindowType.DOCKED);
                         }
@@ -324,7 +239,6 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                     public void propertyChange(PropertyChangeEvent evt) {
                         if ("enabled".equals(evt.getPropertyName())) {
                             boolean newValue = (Boolean) evt.getNewValue();
-                            setFloatingVisible(newValue);
 
                             if (!newValue && toolWindow.getType() == ToolWindowType.FLOATING)
                                 toolWindow.setType(ToolWindowType.DOCKED);
@@ -337,29 +251,6 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
 
-    protected JButton renderTitleButton(String actionCommnad, ActionListener actionListener, String tooltip, String iconId, String name) {
-        JButton button = (JButton) resourceManager.createComponent(
-                ResourceManager.TOOL_WINDOW_TITLE_BUTTON,
-                descriptor.getManager()
-        );
-        button.setName(name);
-        button.setActionCommand(actionCommnad);
-        button.addActionListener(actionListener);
-        button.setToolTipText(resourceManager.getString(tooltip));
-        button.setIcon(resourceManager.getIcon(iconId));
-
-        return button;
-    }
-
-    protected void configureDockedIcons() {
-        setPinVisible(true);
-
-        setFloating();
-        setFloatingVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
-
-        setDockedVisible(((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled());
-        setDocked();
-    }
 
     protected void enableIdOnTitleBar() {
         TableLayout layout = (TableLayout) titleBar.getLayout();
@@ -381,10 +272,14 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         SwingUtil.repaint(titleBar);
     }
 
+    public void showPopupMenu(Component c, int x, int y) {
+        titleBarMouseAdapter.showPopupMenu(c, x, y);
+    }
+
 
     public interface PopupUpdater {
 
-        void update(MouseEvent e, JPopupMenu popupMenu);
+        void update(Component source, JPopupMenu popupMenu);
 
     }
 
@@ -398,6 +293,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         protected JCheckBoxMenuItem dockedMode;
         protected JCheckBoxMenuItem pinnedMode;
 
+        protected JMenu old;
         protected JMenu moveTo;
         protected JMenuItem right;
         protected JMenuItem left;
@@ -420,7 +316,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 if (e.getClickCount() == 2)
                     toolWindow.setMaximized(!toolWindow.isMaximized());
             } else if (SwingUtilities.isRightMouseButton(e)) {
-                showPopupMenu(e);
+                showPopupMenu(e.getComponent(), e.getX(), e.getY());
             }
         }
 
@@ -463,13 +359,6 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             } else if ("pinned".equals(actionCommand)) {
                 toolWindow.setAutoHide(!toolWindow.isAutoHide());
             }
-//            if (toolWindow.isActive()) {
-//                SwingUtilities.invokeLater(new Runnable() {
-//                    public void run() {
-//                        toolWindow.setActive(true);
-//                    }
-//                });
-//            }
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
@@ -488,6 +377,31 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
                 SwingUtilities.updateComponentTreeUI(descriptor.getToolsMenu());
             }
+        }
+
+        public void showPopupMenu(Component source, int x, int y) {
+            if ((source == titleBar || SwingUtil.hasParent(source, titleBar)) &&
+                ((DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED)).isPopupMenuEnabled()) {
+
+                popupMenu.removeAll();
+                popupMenu.add(pinnedMode);
+                popupMenu.add(dockedMode);
+                popupMenu.add(floatingMode);
+                popupMenu.add(moveTo);
+                popupMenu.addSeparator();
+                popupMenu.add(visible);
+                popupMenu.add(aggregate);
+
+                enableVisible();
+                enableMoveToItem();
+                enableUserDefined();
+
+                if (popupUpdater != null)
+                    popupUpdater.update(source, popupMenu);
+
+                popupMenu.show(source, x, y);
+            }
+
         }
 
 
@@ -597,8 +511,6 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             }
         }
 
-        private JMenu old;
-
         protected void enableUserDefined() {
             DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
             if (old != null) {
@@ -612,69 +524,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             }
         }
 
-
-        public void showPopupMenu(MouseEvent e) {
-            if ((e.getComponent() == titleBar || SwingUtil.hasParent(e.getComponent(), titleBar)) &&
-                ((DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED)).isPopupMenuEnabled()) {
-
-                popupMenu.removeAll();
-                popupMenu.add(pinnedMode);
-                popupMenu.add(dockedMode);
-                popupMenu.add(floatingMode);
-                popupMenu.add(moveTo);
-                popupMenu.addSeparator();
-                popupMenu.add(visible);
-                popupMenu.add(aggregate);
-
-                enableVisible();
-                enableMoveToItem();
-                enableUserDefined();
-
-                if (popupUpdater != null)
-                    popupUpdater.update(e, popupMenu);
-
-                popupMenu.show(e.getComponent(), e.getX(), e.getY());
-            }
-
-        }
     }
-
-    protected class TitleBarActionListener implements ActionListener {
-
-        public void actionPerformed(ActionEvent e) {
-            String actionCommnad = e.getActionCommand();
-            if (!"visible".equals(actionCommnad))
-                toolWindow.setActive(true);
-
-            if ("visible".equals(actionCommnad)) {
-                ToolWindowActionHandler toolWindowActionHandler = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowActionHandler();
-                if (toolWindowActionHandler != null)
-                    toolWindowActionHandler.onHideButtonClick(toolWindow);
-                else
-                    toolWindow.setVisible(false);
-            } else if ("pin".equals(actionCommnad)) {
-                toolWindow.setAutoHide(!toolWindow.isAutoHide());
-            } else if ("floating".equals(actionCommnad)) {
-                ToolWindowType type = toolWindow.getType();
-                if (type == ToolWindowType.FLOATING || type == ToolWindowType.FLOATING_FREE) {
-                    toolWindow.setType(ToolWindowType.DOCKED);
-                } else if (type == ToolWindowType.DOCKED || type == ToolWindowType.SLIDING) {
-                    toolWindow.setType(descriptor.isFloatingWindow() ? ToolWindowType.FLOATING_FREE : ToolWindowType.FLOATING);
-                }
-            } else if ("undock".equals(actionCommnad)) {
-                ToolWindowType type = toolWindow.getType();
-                if (type == ToolWindowType.DOCKED) {
-                    toolWindow.setType(ToolWindowType.SLIDING);
-                } else if (type == ToolWindowType.SLIDING) {
-                    toolWindow.setType(ToolWindowType.DOCKED);
-                }
-            } else if ("maximize".equals(actionCommnad)) {
-                toolWindow.setMaximized(!toolWindow.isMaximized());
-            }
-        }
-
-    }
-
 
     protected class DockedToolWindowListener implements ToolWindowListener, PropertyChangeListener {
 
@@ -689,7 +539,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
 
         public void toolWindowTabAdded(ToolWindowTabEvent event) {
             ToolWindowTab tab = event.getToolWindowTab();
-// TODO: check for this           tab.getComponent().addMouseListener(titleBarMouseAdapter);
+            // TODO: check for this           tab.getComponent().addMouseListener(titleBarMouseAdapter);
             tab.addPropertyChangeListener(this);
         }
 
@@ -717,7 +567,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                             if (focusable != null)
                                 focusable.requestFocus();
                             else
-                                hideButton.requestFocus();
+                                titleBarButtons.getFocusable().requestFocus();
                         }
                     });
                 }
@@ -751,7 +601,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                     if (!(focusRequester instanceof ToolWindowActiveButton))
                         focusRequester = component;
                     else {
-                        if (focusRequester == hideButton)
+                        if (focusRequester == titleBarButtons.getFocusable())
                             assignFocus();
                         else
                             focusRequester.requestFocusInWindow();
@@ -783,6 +633,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
     }
 
     protected class ActivePropertyChangeListener implements PropertyChangeListener {
+
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getSource() != descriptor)
                 return;
@@ -801,61 +652,18 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
             if (!found && toolWindow.getToolWindowTabs().length > 0)
                 toolWindow.getToolWindowTabs()[0].setSelected(true);
 
-            if (active) {
-                if (toolWindow.isAutoHide()) {
-                    pinButton.setIcon(resourceManager.getIcon(ResourceManager.AUTO_HIDE_ON));
-                } else
-                    pinButton.setIcon(resourceManager.getIcon(ResourceManager.AUTO_HIDE_OFF));
-
-                hideButton.setIcon(resourceManager.getIcon(ResourceManager.HIDE_TOOL_WINDOW));
-
-                if (toolWindow.getType() == ToolWindowType.SLIDING) {
-                    dockButton.setIcon(resourceManager.getIcon(ResourceManager.DOCKED));
-                } else
-                    dockButton.setIcon(resourceManager.getIcon(ResourceManager.SLIDING));
-
-                if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-                    floatingButton.setIcon(resourceManager.getIcon(ResourceManager.FIX));
-                } else
-                    floatingButton.setIcon(resourceManager.getIcon(ResourceManager.FLOATING));
-
-                if (toolWindow.isMaximized())
-                    maximizeButton.setIcon(resourceManager.getIcon(ResourceManager.MINIMIZE));
-                else
-                    maximizeButton.setIcon(resourceManager.getIcon(ResourceManager.MAXIMIZE));
-            } else {
-                if (toolWindow.isAutoHide()) {
-                    pinButton.setIcon(resourceManager.getIcon(ResourceManager.AUTO_HIDE_ON_INACTIVE));
-                } else
-                    pinButton.setIcon(resourceManager.getIcon(ResourceManager.AUTO_HIDE_OFF_INACTIVE));
-
-                hideButton.setIcon(resourceManager.getIcon(ResourceManager.HIDE_TOOL_WINDOW_INACTIVE));
-
-                if (toolWindow.getType() == ToolWindowType.SLIDING) {
-                    dockButton.setIcon(resourceManager.getIcon(ResourceManager.DOCKED_INACTIVE));
-                } else
-                    dockButton.setIcon(resourceManager.getIcon(ResourceManager.SLIDING_INACTIVE));
-
-                if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-                    floatingButton.setIcon(resourceManager.getIcon(ResourceManager.FIX_INACTIVE));
-                } else
-                    floatingButton.setIcon(resourceManager.getIcon(ResourceManager.FLOATING_INACTIVE));
-
-                if (toolWindow.isMaximized())
-                    maximizeButton.setIcon(resourceManager.getIcon(ResourceManager.MINIMIZE_INACTIVE));
-                else
-                    maximizeButton.setIcon(resourceManager.getIcon(ResourceManager.MAXIMIZE_INACTIVE));
-            }
+            titleBarButtons.configureIcons(active);
 
             if (active && focusRequester != null && !valueAdjusting) {
 //                System.out.println("focusRequester = " + focusRequester);
-                if (focusRequester == hideButton)
+                if (focusRequester == titleBarButtons.getFocusable())
                     assignFocus();
                 else
                     SwingUtil.requestFocus(focusRequester);
 
             }
         }
+        
     }
 
 }

@@ -38,6 +38,8 @@ public interface ResourceManager {
     public static final String MAXIMIZE_INACTIVE = "MAXIMIZE_INACTIVE";
     public static final String MINIMIZE = "MINIMIZE";
     public static final String MINIMIZE_INACTIVE = "MINIMIZE_INACTIVE";
+    public static final String ACTIONS = "ACTIONS";
+    public static final String ACTIONS_INACTIVE = "ACTIONS_INACTIVE";
     public static final String TOO_WINDOW_TAB_POPUP = "TOO_WINDOW_TAB_POPUP";
     public static final String CONTENT_PAGE_DETACH = "CONTENT_PAGE_DETACH";
     public static final String CONTENT_PAGE_CLOSE = "CONTENT_PAGE_CLOSE";
@@ -94,6 +96,12 @@ public interface ResourceManager {
 
     public static final String TOOL_SCROLL_BAR_ARROW = "TOOL_SCROLL_BAR_ARROW";
 
+    /**
+     * TODO
+     * @param clazz
+     *@param args @return
+     */
+    <T> T createInstance(Class<T> clazz, Object... args);
 
     /**
      * Create the component using the rule specified by the key param.

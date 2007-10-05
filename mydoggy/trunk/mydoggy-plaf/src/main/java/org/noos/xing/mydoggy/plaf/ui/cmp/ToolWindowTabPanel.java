@@ -7,18 +7,11 @@ import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.DragAndDropLock;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ToolWindowTrasferable;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicLabelUI;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.dnd.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -99,9 +92,9 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             final JMenuItem previousTabItem = new JMenuItem(new SelectPreviousTabAction());
             final JMenuItem closeAllItem = new JMenuItem(new CloseAllTabAction());
 
-            public void update(MouseEvent e, JPopupMenu popupMenu) {
-                if (e.getComponent() instanceof TabButton) {
-                    TabButton tabButton = (TabButton) e.getComponent();
+            public void update(Component source, JPopupMenu popupMenu) {
+                if (source instanceof TabButton) {
+                    TabButton tabButton = (TabButton) source;
 
                     int index = 0;
                     if (tabButton.tab.isCloseable()) {
