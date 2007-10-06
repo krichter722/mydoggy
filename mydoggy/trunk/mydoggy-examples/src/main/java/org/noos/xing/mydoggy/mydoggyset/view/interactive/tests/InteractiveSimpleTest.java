@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy.mydoggyset.view.interactive.tests;
 
-import org.noos.xing.mydoggy.itest.InteractiveMouse;
 import org.noos.xing.mydoggy.itest.InteractiveUI;
 
 import java.awt.*;
@@ -18,10 +17,8 @@ public class InteractiveSimpleTest extends AbstractInteractiveTest {
         return "TODO";
     }
 
-    public void interactiveTest(InteractiveUI interactiveUI) {
-        InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
-
-        mouse.click("toolWindow.rb.Tool 1", InteractiveMouse.Type.LEFT);
+    public void execute(InteractiveUI interactiveUI) {
+        clickOn(interactiveUI, "toolWindow.rb.Tool 1");
     }
 
 }

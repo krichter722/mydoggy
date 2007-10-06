@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.itest.impl;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.itest.InteractiveTestRunner;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,12 +23,16 @@ public class ListInteractiveTestRunner implements InteractiveTestRunner {
 
     public void run() {
         for (InteractiveTest interactiveTest : interactiveTests) {
-            RobotInteractiveUI interactiveUI = new RobotInteractiveUI(interactiveTest.setup());
+
             try {
-                interactiveTest.interactiveTest(interactiveUI);
+                RobotInteractiveUI interactiveUI = new RobotInteractiveUI(interactiveTest.setup());
+                interactiveTest.execute(interactiveUI);
+            } catch (AWTException e) {
+                e.printStackTrace();
             } finally {
                 interactiveTest.dispose();
             }
+
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
