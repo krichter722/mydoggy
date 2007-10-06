@@ -5,10 +5,7 @@ import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.itest.InteractiveTestRunner;
 import org.noos.xing.mydoggy.itest.impl.SingleThreadInteractiveTestRunner;
-import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveDragTest;
-import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveDragToTabTest;
-import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveSimpleTest;
-import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveToolVisisbleTest;
+import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.plaf.view.listener.ContextPutItemListener;
@@ -59,7 +56,8 @@ public class TestChooserView extends ComponentView {
                     new InteractiveDragToTabTest(toolWindowManager, frame),
                     new InteractiveToolVisisbleTest(frame),
                     new InteractiveDragTest(frame),
-                    new InteractiveSimpleTest(frame)
+                    new InteractiveSimpleTest(frame),
+                    new InteractiveFloatingLiveTest(frame),
             });
             tests.addItemListener(new ContextPutItemListener(viewContext, InteractiveTest.class));
 

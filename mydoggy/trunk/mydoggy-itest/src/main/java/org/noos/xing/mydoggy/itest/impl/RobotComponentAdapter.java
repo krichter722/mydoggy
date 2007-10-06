@@ -4,7 +4,9 @@ import org.noos.xing.mydoggy.itest.ComponentAdapter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.PathIterator;
 import java.awt.event.InputEvent;
+import java.util.Arrays;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -34,7 +36,36 @@ public class RobotComponentAdapter implements ComponentAdapter {
     }
 
     public ComponentAdapter moveTo(int x, int y) {
-        return moveToInternal(new Point(x, y));
+        Point to = new Point(x, y);
+        SwingUtilities.convertPointToScreen(to, component);
+        return moveToInternal(to);
+    }
+
+    public ComponentAdapter move(Shape shape) {
+        PathIterator iterator = shape.getPathIterator(null);
+        double[] values = new double[6];
+
+        while (!iterator.isDone()) {
+            int type = iterator.currentSegment(values);
+            System.out.println(type);
+            switch (type) {
+                case PathIterator.SEG_MOVETO :
+                    moveToInternal(new Point((int) values[0], (int) values[1]));
+                    break;
+                case PathIterator.SEG_LINETO :
+                    moveToInternal(new Point((int) values[0], (int) values[1]));
+                    break;
+                case PathIterator.SEG_CUBICTO :
+                    moveToInternal(new Point((int) values[0], (int) values[1]));
+                    moveToInternal(new Point((int) values[2], (int) values[3]));
+                    moveToInternal(new Point((int) values[4], (int) values[5]));
+                break;
+            }
+            robot.delay(5);
+            iterator.next();
+        }
+
+        return this;
     }
 
     public ComponentAdapter press(MouseButton mouseButton) {
@@ -108,7 +139,6 @@ public class RobotComponentAdapter implements ComponentAdapter {
     }
 
     public ComponentAdapter moveToInternal(Point to) {
-        SwingUtilities.convertPointToScreen(to, component);
         Point from = MouseInfo.getPointerInfo().getLocation();
 
         int x0 = from.x;

@@ -31,17 +31,17 @@ public abstract class AbstractInteractiveTest implements InteractiveTest {
         return getName();
     }
 
-    protected void clickOn(InteractiveUI interactiveUI, String componentName) {
-        interactiveUI.getComponentLookuper().lookup(new NamedComponentFilter(componentName)).moveToCenter(500).click(ComponentAdapter.MouseButton.LEFT);
+    protected ComponentAdapter clickOn(InteractiveUI interactiveUI, String componentName) {
+        return interactiveUI.getComponentLookuper().lookup(new NamedComponentFilter(componentName)).moveToCenter(500).click(ComponentAdapter.MouseButton.LEFT, 500);
     }
 
-    protected void drag(InteractiveUI interactiveUI, String from, String to) {
+    protected ComponentAdapter drag(InteractiveUI interactiveUI, String from, String to) {
         interactiveUI.getComponentLookuper().lookup(new NamedComponentFilter(from)).moveToCenter(500).press(ComponentAdapter.MouseButton.LEFT);
-        interactiveUI.getComponentLookuper().lookup(new NamedComponentFilter(to)).moveToCenter(500).release(ComponentAdapter.MouseButton.LEFT, 500);
+        return interactiveUI.getComponentLookuper().lookup(new NamedComponentFilter(to)).moveToCenter(500).release(ComponentAdapter.MouseButton.LEFT, 500);
     }
 
-    protected void moveToAnchor(InteractiveUI interactiveUI, String componentName, ToolWindowAnchor anchor) {
-        drag(interactiveUI, componentName, "toolWindowManager.bar." + anchor.toString());
+    protected ComponentAdapter moveToAnchor(InteractiveUI interactiveUI, String componentName, ToolWindowAnchor anchor) {
+        return drag(interactiveUI, componentName, "toolWindowManager.bar." + anchor.toString());
     }
 
 }
