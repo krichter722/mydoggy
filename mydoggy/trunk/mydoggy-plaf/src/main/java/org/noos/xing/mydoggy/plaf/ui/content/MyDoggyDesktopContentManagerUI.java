@@ -25,7 +25,6 @@ import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * TODO: when i remove a content there is a problem with the listener for the absens to the removing..
  */
 public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
     protected MyDoggyToolWindowManager toolWindowManager;
