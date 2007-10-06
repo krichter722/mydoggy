@@ -156,6 +156,7 @@ public class MyDoggySet {
         manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED, Color.CYAN);
 
         // More deep customization ...
+        // Change the way the background is drawing
         MyDoggyResourceManager resourceManager = (MyDoggyResourceManager) manager.getResourceManager();
         resourceManager.putComponentUICreator(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR_UI, new MyDoggyResourceManager.ComponentUICreator() {
 
@@ -204,6 +205,7 @@ public class MyDoggySet {
             }
         });
 
+        // Change title bar buttons dispositions
         ((MyDoggyResourceManager) ((MyDoggyToolWindowManager) toolWindowManager).getResourceManager()).putInstanceCreator(
                 TitleBarButtons.class, new MyDoggyResourceManager.InstanceCreator() {
 
@@ -212,6 +214,12 @@ public class MyDoggySet {
                         (ToolWindowDescriptor) args[0],
                         (DockedContainer) args[1]
                 );
+/*
+                return new ExtendedTitleBarButtons(
+                        (ToolWindowDescriptor) args[0],
+                        (DockedContainer) args[1]
+                );
+*/
             }
         }
         );
