@@ -443,7 +443,6 @@ public class ToolWindowTitleBarUI extends PanelUI {
             SwingUtilities.convertPointFromScreen(p, glassPane);
             glassPane.setPoint(p);
 
-            // TODO: if there is a JMenuBar we must add an y offset
             Container contentPane = descriptor.getManager().getRootPane().getLayeredPane();
             Component deepestCmp = SwingUtilities.getDeepestComponentAt(contentPane, p.x, p.y);
 

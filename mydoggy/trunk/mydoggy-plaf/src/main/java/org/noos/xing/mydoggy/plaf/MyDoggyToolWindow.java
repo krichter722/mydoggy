@@ -82,7 +82,17 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public Component getComponent() {
-        return getToolWindowTabs()[0].getComponent();   // TODO: validate this...  
+        if (toolWindowTabs.size() == 0)
+            return null;
+        if (toolWindowTabs.size() == 1)
+            return toolWindowTabs.get(0).getComponent();
+        else {
+            for (ToolWindowTab toolWindowTab : toolWindowTabs) {
+                if (toolWindowTab.isSelected())
+                    return toolWindowTab.getComponent();
+            }
+            return toolWindowTabs.get(0).getComponent();
+        }
     }
 
     public void setIndex(int index) {
@@ -338,7 +348,17 @@ public class MyDoggyToolWindow implements ToolWindow {
     public void setType(ToolWindowType type) {
         if (type == ToolWindowType.TABBED)
             throw new IllegalArgumentException("Cannot call this method using that paramenter.");
+
+        boolean forceAvailable = false;
+        if (this.type == ToolWindowType.TABBED && type != ToolWindowType.FLOATING_FREE)
+            forceAvailable = true;
+
         setTypeInternal(type);
+
+        if (forceAvailable) {
+            available = false;
+            setAvailable(true);
+        }
     }
 
     public Icon getIcon() {
@@ -427,8 +447,6 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (toolWindowTab.getToolWindow() != null) {
             ToolWindow toolWindow = toolWindowTab.getToolWindow(); 
             toolWindow.setType(ToolWindowType.DOCKED);
-            ((MyDoggyToolWindow) toolWindow).available = false; // TODO: porcata...
-            toolWindow.setAvailable(true);
         }
 
         return result;
