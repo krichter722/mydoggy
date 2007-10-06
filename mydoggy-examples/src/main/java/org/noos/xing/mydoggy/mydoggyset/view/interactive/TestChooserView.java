@@ -58,6 +58,7 @@ public class TestChooserView extends ComponentView {
                     new InteractiveDragTest(frame),
                     new InteractiveSimpleTest(frame),
                     new InteractiveFloatingLiveTest(frame),
+                    new TitleBarInteractiveTest(toolWindowManager, frame),
             });
             tests.addItemListener(new ContextPutItemListener(viewContext, InteractiveTest.class));
 

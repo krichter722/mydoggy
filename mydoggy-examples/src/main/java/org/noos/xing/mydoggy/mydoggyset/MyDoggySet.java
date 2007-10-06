@@ -13,23 +13,23 @@ import org.noos.xing.mydoggy.mydoggyset.context.ContentContext;
 import org.noos.xing.mydoggy.mydoggyset.ui.MonitorPanel;
 import org.noos.xing.mydoggy.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
-import org.noos.xing.mydoggy.plaf.ui.TitleBarButtons;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.SimpliedTitleBarButtons;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTitleBarUI;
+import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.view.ViewContext;
 
 import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Arc2D;
 import java.util.Locale;
-
-import com.jtattoo.plaf.bernstein.BernsteinLookAndFeel;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -141,9 +141,72 @@ public class MyDoggySet {
     }
 
     protected void initToolWindowManager() {
-/*
+
+        // CUSTOMIZATION....
+
+        // Customize toolwindow TitleBar ...
+        MyDoggyToolWindowManager manager = ((MyDoggyToolWindowManager) toolWindowManager);
+        manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ENABLED_START, Color.RED);
+        manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ENABLED_END, Color.PINK);
+        manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_DISABLED_START, Color.BLACK);
+        manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_DISABLED_END, Color.GRAY);
+
+        // Customize toolwindow tabs ...
+        manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED, Color.BLUE);
+        manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED, Color.CYAN);
+
+        // More deep customization ...
+        MyDoggyResourceManager resourceManager = (MyDoggyResourceManager) manager.getResourceManager();
+        resourceManager.putComponentUICreator(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR_UI, new MyDoggyResourceManager.ComponentUICreator() {
+
+            public ComponentUI createComponentUI(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
+                return new ToolWindowTitleBarUI((ToolWindowDescriptor) args[0],
+                                                (DockedContainer) args[1]) {
+                    protected void updateToolWindowTitleBar(Graphics g, JComponent c, Color backgroundStart, Color backgroundEnd, Color idBackgroundColor, Color idColor) {
+                        Rectangle r = c.getBounds();
+                        r.x = r.y = 0;
+
+                        GraphicsUtil.fillRect(g, r,
+                                              backgroundStart, backgroundEnd,
+                                              null,
+                                              GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
+
+                        if (descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar() ||
+                            toolWindow.getType() == ToolWindowType.FLOATING ||
+                            toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
+                            toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
+
+                            String id = resourceManager.getUserString(descriptor.getToolWindow().getId());
+                            r.width = g.getFontMetrics().stringWidth(id) + 8;
+
+                            // TODO: add customization
+                            int halfHeigh = (r.height / 2);
+                            GraphicsUtil.fillRect(g, r,
+                                                  Color.WHITE,
+                                                  idBackgroundColor,
+                                                  new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
+                                                              new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
+                                                              4),
+                                                  GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
+
+                            GraphicsUtil.fillRect(g, r,
+                                                  Color.WHITE,
+                                                  idBackgroundColor,
+                                                  new Arc2D.Double(r.x + r.width - r.height,
+                                                                   r.y, r.height, r.height, -90.0d, 180.0d, Arc2D.CHORD),
+                                                  GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
+
+                            g.setColor(idColor);
+                            g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
+                        }
+                    }
+                };
+            }
+        });
+
         ((MyDoggyResourceManager) ((MyDoggyToolWindowManager) toolWindowManager).getResourceManager()).putInstanceCreator(
                 TitleBarButtons.class, new MyDoggyResourceManager.InstanceCreator() {
+
             public Object createComponent(Object... args) {
                 return new SimpliedTitleBarButtons(
                         (ToolWindowDescriptor) args[0],
@@ -152,8 +215,8 @@ public class MyDoggySet {
             }
         }
         );
-*/
 
+        // END CUSTOMIZATION....
 
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);
         typeDescriptor.setTransparentDelay(0);

@@ -340,7 +340,9 @@ public class MyDoggyResourceManager implements ResourceManager {
                 }
             };
             titleBar.setBorder(null);
-            titleBar.setUI(new ToolWindowTitleBarUI((ToolWindowDescriptor) args[0], (DockedContainer) args[1]));
+            titleBar.setUI(
+                    (PanelUI) resourceManager.createComponentUI(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR_UI, manager, args)
+            );
             return titleBar;
         }
     }
