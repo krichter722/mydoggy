@@ -13,7 +13,12 @@ import org.noos.xing.mydoggy.mydoggyset.context.ContentContext;
 import org.noos.xing.mydoggy.mydoggyset.ui.MonitorPanel;
 import org.noos.xing.mydoggy.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
+import org.noos.xing.mydoggy.plaf.ui.TitleBarButtons;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.SimpliedTitleBarButtons;
+import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.view.ViewContext;
@@ -127,6 +132,20 @@ public class MyDoggySet {
     }
 
     protected void initToolWindowManager() {
+/*
+        ((MyDoggyResourceManager) ((MyDoggyToolWindowManager) toolWindowManager).getResourceManager()).putInstanceCreator(
+                TitleBarButtons.class, new MyDoggyResourceManager.InstanceCreator() {
+            public Object createComponent(Object... args) {
+                return new SimpliedTitleBarButtons(
+                        (ToolWindowDescriptor) args[0],
+                        (DockedContainer) args[1]
+                );
+            }
+        }
+        );
+*/
+
+
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);
         typeDescriptor.setTransparentDelay(0);
 
@@ -189,7 +208,6 @@ public class MyDoggySet {
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);
         slidingTypeDescriptor.setEnabled(false);
 
-
         // Set properties for tool window 4
         toolWindow = toolWindowManager.getToolWindow("Tool 4");
         toolWindow.setType(ToolWindowType.FLOATING_FREE);
@@ -197,7 +215,6 @@ public class MyDoggySet {
         // Set properties for tool window 5
         toolWindow = toolWindowManager.getToolWindow("Tool 5");
         toolWindow.setType(ToolWindowType.FLOATING_FREE);
-
 
         // Set properties for tool window 7
         toolWindow = toolWindowManager.getToolWindow("Tool 7");

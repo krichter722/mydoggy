@@ -5,8 +5,8 @@ import info.clearthought.layout.TableLayoutConstraints;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
-import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -282,7 +282,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             this.selected = this.pressed = this.inside = false;
 
             setName("toolWindow." + tab.getOwner().getId() + ".tab." + tab.getTitle());
-            setForeground(descriptor.getResourceManager().getColor(ResourceManager.TWTB_TAB_FOREGROUND_UNSELECTED));
+            setForeground(descriptor.getResourceManager().getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
             setOpaque(false);
             setFocusable(false);
             setIcon(tab.getIcon());
@@ -342,7 +342,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             if ("selected".equals(property)) {
                 if (evt.getNewValue() == Boolean.FALSE) {
                     selecTabButton = null;
-                    TabButton.this.setForeground(descriptor.getResourceManager().getColor(ResourceManager.TWTB_TAB_FOREGROUND_UNSELECTED));
+                    TabButton.this.setForeground(descriptor.getResourceManager().getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
                     selected = false;
                 } else {
                     selecTabButton = this;
@@ -356,7 +356,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                         }
                     });
 
-                    TabButton.this.setForeground(descriptor.getResourceManager().getColor(ResourceManager.TWTB_TAB_FOREGROUND_SELECTED));
+                    TabButton.this.setForeground(descriptor.getResourceManager().getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
                     selected = true;
                 }
             } else if ("title".equals(property)) {
@@ -389,7 +389,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         private JPopupMenu popupMenu;
 
         public PopupButton() {
-            setIcon(descriptor.getResourceManager().getIcon(ResourceManager.TOO_WINDOW_TAB_POPUP));
+            setIcon(descriptor.getResourceManager().getIcon(MyDoggyKeySpace.TOO_WINDOW_TAB_POPUP));
             addActionListener(this);
             addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent e) {

@@ -6,6 +6,7 @@ import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
@@ -60,8 +61,8 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         this.resourceManager = descriptor.getResourceManager();
 
         this.flashingAnimation = new GradientAnimation();
-        this.flashingAnimBackStart = new MutableColor(resourceManager.getColor(ResourceManager.RAB_BACKGROUND_INACTIVE));
-        this.flashingAnimBackEnd = new MutableColor(resourceManager.getColor(ResourceManager.RAB_BACKGROUND_INACTIVE));
+        this.flashingAnimBackStart = new MutableColor(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+        this.flashingAnimBackEnd = new MutableColor(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
 
         this.dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
         this.dockedTypeDescriptor.addPropertyChangeListener(this);
@@ -72,9 +73,9 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         super.installUI(c);
 
         this.label = c;
-        labelBorder = new LineBorder(resourceManager.getColor(ResourceManager.RAB_MOUSE_OUT_BORDER), 1, true, 3, 3);
+        labelBorder = new LineBorder(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER), 1, true, 3, 3);
         c.setBorder(labelBorder);
-        c.setForeground(resourceManager.getColor(ResourceManager.RAB_FOREGROUND));
+        c.setForeground(resourceManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
 
         DragGesture dragGesture = new DragGesture();
         DragSource dragSource = DragSource.getDefaultDragSource();
@@ -158,8 +159,8 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             }
 
             updateAnchor(g, c,
-                         resourceManager.getColor(ResourceManager.RAB_BACKGROUND_FLASHING_START),
-                         resourceManager.getColor(ResourceManager.RAB_BACKGROUND_FLASHING_END),
+                         resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_FLASHING_START),
+                         resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_FLASHING_END),
                          c.isOpaque(),
                          false);
         }
@@ -173,11 +174,11 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             boolean visible = (Boolean) e.getNewValue();
             label.setOpaque(visible);
             if (visible) {
-                labelBorder.setLineColor(resourceManager.getColor(ResourceManager.RAB_MOUSE_IN_BORDER));
+                labelBorder.setLineColor(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
 
                 descriptor.getToolBar().ensureVisible(label);
             } else
-                labelBorder.setLineColor(resourceManager.getColor(ResourceManager.RAB_MOUSE_OUT_BORDER));
+                labelBorder.setLineColor(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER));
 
             toolWindow.setFlashing(false);
             SwingUtil.repaint(label);
@@ -214,7 +215,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                                   null,
                                   GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
         } else {
-            g.setColor(resourceManager.getColor(ResourceManager.RAB_BACKGROUND_INACTIVE));
+            g.setColor(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
             g.fillRect(0, 0, r.width, r.height);
         }
     }
@@ -298,7 +299,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             }
 //            if (label.getBorder() != labelBorder)
             label.setBorder(labelBorder);
-            labelBorder.setLineColor(resourceManager.getColor(ResourceManager.RAB_MOUSE_IN_BORDER));
+            labelBorder.setLineColor(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
             SwingUtil.repaint(label);
         }
 
@@ -319,7 +320,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
 
             Component source = e.getComponent();
             if (!source.isOpaque()) {
-                labelBorder.setLineColor(resourceManager.getColor(ResourceManager.RAB_MOUSE_IN_BORDER));
+                labelBorder.setLineColor(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
                 SwingUtil.repaint(source);
             }
         }
@@ -337,7 +338,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
 
             Component source = e.getComponent();
             if (!source.isOpaque()) {
-                labelBorder.setLineColor(resourceManager.getColor(ResourceManager.RAB_MOUSE_OUT_BORDER));
+                labelBorder.setLineColor(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER));
                 SwingUtil.repaint(source);
             }
         }
@@ -675,23 +676,23 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             switch (getAnimationDirection()) {
                 case INCOMING:
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackStart,
-                                                      resourceManager.getColor(ResourceManager.RAB_BACKGROUND_INACTIVE),
-                                                      resourceManager.getColor(ResourceManager.RAB_BACKGROUND_FLASHING_START),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_FLASHING_START),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd,
-                                                      resourceManager.getColor(ResourceManager.RAB_BACKGROUND_INACTIVE),
-                                                      resourceManager.getColor(ResourceManager.RAB_BACKGROUND_FLASHING_END),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_FLASHING_END),
                                                       animationPercent);
                     break;
 
                 case OUTGOING:
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackStart,
-                                                      resourceManager.getColor(ResourceManager.RAB_BACKGROUND_FLASHING_START),
-                                                      resourceManager.getColor(ResourceManager.RAB_BACKGROUND_INACTIVE),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_FLASHING_START),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd,
-                                                      resourceManager.getColor(ResourceManager.RAB_BACKGROUND_FLASHING_END),
-                                                      resourceManager.getColor(ResourceManager.RAB_BACKGROUND_INACTIVE),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_FLASHING_END),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
                                                       animationPercent);
                     break;
             }
@@ -702,23 +703,23 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         protected void onFinishAnimation() {
             switch (getAnimationDirection()) {
                 case INCOMING:
-                    flashingAnimBackStart.setRGB(resourceManager.getColor(ResourceManager.RAB_BACKGROUND_INACTIVE));
+                    flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
                     break;
                 case OUTGOING:
-                    flashingAnimBackStart.setRGB(resourceManager.getColor(ResourceManager.RAB_BACKGROUND_FLASHING_START));
+                    flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_FLASHING_START));
                     break;
             }
             SwingUtil.repaint(label);
         }
 
         protected void onHide(Object... params) {
-            flashingAnimBackStart.setRGB(resourceManager.getColor(ResourceManager.RAB_BACKGROUND_FLASHING_START));
-            flashingAnimBackEnd.setRGB(resourceManager.getColor(ResourceManager.RAB_BACKGROUND_FLASHING_END));
+            flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_FLASHING_START));
+            flashingAnimBackEnd.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_FLASHING_END));
         }
 
         protected void onShow(Object... params) {
-            flashingAnimBackStart.setRGB(resourceManager.getColor(ResourceManager.RAB_BACKGROUND_INACTIVE));
-            flashingAnimBackEnd.setRGB(resourceManager.getColor(ResourceManager.RAB_BACKGROUND_INACTIVE));
+            flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+            flashingAnimBackEnd.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
         }
 
         protected void onStartAnimation(Direction direction) {

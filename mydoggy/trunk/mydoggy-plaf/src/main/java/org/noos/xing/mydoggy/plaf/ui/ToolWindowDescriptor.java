@@ -307,7 +307,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     }
 
     protected LabelUI createLabelUI() {
-        return (LabelUI) manager.getResourceManager().createComponentUI(ResourceManager.REPRESENTATIVE_ANCHOR_BUTTON_UI, manager, this);
+        return (LabelUI) manager.getResourceManager().createComponentUI(MyDoggyKeySpace.REPRESENTATIVE_ANCHOR_BUTTON_UI, manager, this);
     }
 
     protected void updateRepresentativeAnchor() {

@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -39,8 +40,8 @@ public class ToolScrollBarArrowUI extends MetalLabelUI {
         if (c.isOpaque())
             GraphicsUtil.fillRect(g,
                                   new Rectangle(0, 0, c.getWidth(), c.getHeight()),
-                                  resourceManager.getColor(ResourceManager.TOOL_SCROLL_BAR_UI_BCK_START),
-                                  resourceManager.getColor(ResourceManager.TOOL_SCROLL_BAR_UI_BCK_END),
+                                  resourceManager.getColor(MyDoggyKeySpace.TOOL_SCROLL_BAR_UI_BCK_START),
+                                  resourceManager.getColor(MyDoggyKeySpace.TOOL_SCROLL_BAR_UI_BCK_END),
                                   null,
                                   GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
         else {

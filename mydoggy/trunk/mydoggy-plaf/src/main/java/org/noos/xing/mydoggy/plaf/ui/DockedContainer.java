@@ -129,7 +129,7 @@ public class DockedContainer implements ToolWindowContainer {
         // Title Bar
         ExtendedTableLayout titleBarLayout = new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 2, -2, 3}, {1, 14, 1}}, false);
         titleBar = (JPanel) resourceManager.createComponent(
-                ResourceManager.TOOL_WINDOW_TITLE_BAR, descriptor.getManager(),
+                MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR, descriptor.getManager(),
                 descriptor,
                 this
         );
