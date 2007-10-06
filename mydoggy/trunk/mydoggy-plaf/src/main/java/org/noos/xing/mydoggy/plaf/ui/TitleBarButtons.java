@@ -15,5 +15,4 @@ public interface TitleBarButtons {
 
     void configureIcons(ToolWindowType type);
 
-    void configureIcons(boolean active);
 }

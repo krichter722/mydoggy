@@ -19,10 +19,7 @@ import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.beans.PropertyVetoException;
+import java.beans.*;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -274,11 +271,27 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
             internalFrame.setBounds(contentX, contentY, 320, 200);
 
+            internalFrame.addVetoableChangeListener(new VetoableChangeListener() {
+                public void vetoableChange(PropertyChangeEvent evt) throws PropertyVetoException {
+                    if (JInternalFrame.IS_CLOSED_PROPERTY.equals(evt.getPropertyName())) {
+                        if (Boolean.TRUE.equals(evt.getNewValue())) {
+                            try {
+                                Content content = contentManager.getContentByComponent(
+                                        ((JInternalFrame) evt.getSource()).getContentPane().getComponent(0)
+                                );
+                                fireContentUIRemoving(getContentUI(content));
+                            } catch (Exception ignore) {
+                                throw new PropertyVetoException(ignore.getMessage(), evt);
+                            }
+                        }
+                    }
+                }
+            });
             internalFrame.addInternalFrameListener(new InternalFrameAdapter() {
+
                 public void internalFrameClosed(InternalFrameEvent e) {
                     try {
                         Content content = contentManager.getContentByComponent(e.getInternalFrame().getContentPane().getComponent(0));
-                        fireContentUIRemoving(getContentUI(content));
                         contentManager.removeContent(content);
                     } catch (Exception ignore) {
                         ignore.printStackTrace();

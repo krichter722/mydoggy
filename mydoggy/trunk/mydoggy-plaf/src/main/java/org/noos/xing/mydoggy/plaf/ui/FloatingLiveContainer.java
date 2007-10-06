@@ -62,7 +62,6 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
             // Prepare sheet
             sheet.setBorder(BorderFactory.createEtchedBorder());
 
-
             if (lastBounds == null) {
                 FloatingLiveTypeDescriptor typeDescriptor = (FloatingLiveTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
 
@@ -86,7 +85,9 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                     sheet.setSize(typeDescriptor.getSize());
 
                 // Set Location
-                if (typeDescriptor.getLocation() == null) {
+                if (typeDescriptor.getLocation() == null ||
+                    typeDescriptor.getLocation().x > descriptor.getManager().getWidth() ||
+                    typeDescriptor.getLocation().y > descriptor.getManager().getHeight()) {
                     Component managerCmp = descriptor.getManager();
 
                     switch (toolWindow.getAnchor()) {
@@ -113,7 +114,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
             }
 
             layeredPane.remove(sheet);
-            layeredPane.setLayer(sheet, 1);
+            layeredPane.setLayer(sheet, 3);
             layeredPane.add(sheet);
 /*
             if (descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isAnimating())
@@ -556,7 +557,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                             animation.stop();
                     }
 
-                    layeredPane.setLayer(sheet, 2);
+                    layeredPane.setLayer(sheet, 4);
                     sheet.setAlphaModeRatio(1.0f);
                 } else {
                     FloatingLiveTypeDescriptor floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
@@ -564,7 +565,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                         timer = new Timer(floatingLiveTypeDescriptor.getTransparentDelay(), this);
                         timer.start();
                     }
-                    layeredPane.setLayer(sheet, 1);
+                    layeredPane.setLayer(sheet, 3);
                 }
                 SwingUtil.repaint(layeredPane);
             }

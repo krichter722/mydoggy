@@ -52,7 +52,6 @@ public class ExtendedTitleBarButtons implements TitleBarButtons {
     public void configureIcons(ToolWindowType type) {
         switch (type) {
             case DOCKED:
-            case FLOATING_LIVE: // TODO: check this choice
                 setPinVisible(true);
 
                 setFloating();
@@ -60,6 +59,13 @@ public class ExtendedTitleBarButtons implements TitleBarButtons {
 
                 setDockedVisible(((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled());
                 setDocked();
+                break;
+            case FLOATING_LIVE:
+                setPinVisible(true);
+                setFloating();
+                setFloatingVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
+                setDockedVisible(((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled());
+                setSliding();
                 break;
             case SLIDING:
                 setPinVisible(false);
@@ -84,57 +90,8 @@ public class ExtendedTitleBarButtons implements TitleBarButtons {
         }
     }
 
-    public void configureIcons(boolean active) {
-        if (active) {
-            if (toolWindow.isAutoHide()) {
-                pinButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_ON));
-            } else
-                pinButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF));
-
-            hideButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW));
-
-            if (toolWindow.getType() == ToolWindowType.SLIDING) {
-                dockButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.DOCKED));
-            } else
-                dockButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.SLIDING));
-
-            if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-                floatingButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.FIX));
-            } else
-                floatingButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.FLOATING));
-
-            if (toolWindow.isMaximized())
-                maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MINIMIZE));
-            else
-                maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
-        } else {
-            if (toolWindow.isAutoHide()) {
-                pinButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_ON_INACTIVE));
-            } else
-                pinButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF_INACTIVE));
-
-            hideButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE));
-
-            if (toolWindow.getType() == ToolWindowType.SLIDING) {
-                dockButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.DOCKED_INACTIVE));
-            } else
-                dockButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.SLIDING_INACTIVE));
-
-            if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-                floatingButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.FIX_INACTIVE));
-            } else
-                floatingButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.FLOATING_INACTIVE));
-
-            if (toolWindow.isMaximized())
-                maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MINIMIZE_INACTIVE));
-            else
-                maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MAXIMIZE_INACTIVE));
-        }
-    }
-
-
     protected void initComponents() {
-        buttonContainer = new JPanel(new ExtendedTableLayout(new double[][]{{15, 2, 15, 2, 15, 2, 15, 2, 15}, {1, 14, 1}}, false));
+        buttonContainer = new JPanel(new ExtendedTableLayout(new double[][]{{13, 1, 13, 1, 13, 1, 13, 1, 13}, {1, 14, 1}}, false));
         buttonContainer.setOpaque(false);
 
         // Buttons
@@ -160,7 +117,6 @@ public class ExtendedTitleBarButtons implements TitleBarButtons {
     }
 
     protected void initListeners() {
-
         dockedContainer.addPropertyChangeListener("autoHide", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getSource() != descriptor)
@@ -186,6 +142,60 @@ public class ExtendedTitleBarButtons implements TitleBarButtons {
                     maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MINIMIZE));
                 } else /*TODO if (workspace != null)*/ {
                     maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
+                }
+            }
+        });
+        dockedContainer.addPropertyChangeListener("active", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getSource() != descriptor)
+                    return;
+
+                boolean active = (Boolean) evt.getNewValue();
+
+                if (active) {
+                    if (toolWindow.isAutoHide()) {
+                        pinButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_ON));
+                    } else
+                        pinButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF));
+
+                    hideButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW));
+
+                    if (toolWindow.getType() == ToolWindowType.SLIDING || toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
+                        dockButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.DOCKED));
+                    } else
+                        dockButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.SLIDING));
+
+                    if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
+                        floatingButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.FIX));
+                    } else
+                        floatingButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.FLOATING));
+
+                    if (toolWindow.isMaximized())
+                        maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MINIMIZE));
+                    else
+                        maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
+                } else {
+                    if (toolWindow.isAutoHide()) {
+                        pinButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_ON_INACTIVE));
+                    } else
+                        pinButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF_INACTIVE));
+
+                    hideButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE));
+
+                    if (toolWindow.getType() == ToolWindowType.SLIDING || toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
+                        dockButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.DOCKED_INACTIVE));
+                    } else
+                        dockButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.SLIDING_INACTIVE));
+
+                    if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
+                        floatingButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.FIX_INACTIVE));
+                    } else
+                        floatingButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.FLOATING_INACTIVE));
+
+                    if (toolWindow.isMaximized())
+                        maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MINIMIZE_INACTIVE));
+                    else
+                        maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MAXIMIZE_INACTIVE));
                 }
             }
         });
@@ -226,22 +236,22 @@ public class ExtendedTitleBarButtons implements TitleBarButtons {
     protected void setPinVisible(boolean visible) {
         pinButton.setVisible(visible);
         TableLayout tableLayout = (TableLayout) pinButton.getParent().getLayout();
-        tableLayout.setColumn(4, (visible) ? 17 : 0);
-        tableLayout.setColumn(5, (visible) ? 2 : 0);
+        tableLayout.setColumn(4, (visible) ? 13 : 0);
+        tableLayout.setColumn(5, (visible) ? 1 : 0);
     }
 
     protected void setFloatingVisible(boolean visible) {
         floatingButton.setVisible(visible);
         TableLayout tableLayout = (TableLayout) pinButton.getParent().getLayout();
-        tableLayout.setColumn(2, (visible) ? 17 : 0);
-        tableLayout.setColumn(3, (visible) ? 2 : 0);
+        tableLayout.setColumn(2, (visible) ? 13 : 0);
+        tableLayout.setColumn(3, (visible) ? 1 : 0);
     }
 
     protected void setDockedVisible(boolean visible) {
         dockButton.setVisible(visible);
         TableLayout tableLayout = (TableLayout) pinButton.getParent().getLayout();
-        tableLayout.setColumn(0, (visible) ? 17 : 0);
-        tableLayout.setColumn(1, (visible) ? 2 : 0);
+        tableLayout.setColumn(0, (visible) ? 13 : 0);
+        tableLayout.setColumn(1, (visible) ? 1 : 0);
     }
 
     protected void setSliding() {
@@ -284,21 +294,18 @@ public class ExtendedTitleBarButtons implements TitleBarButtons {
                 ToolWindowType type = toolWindow.getType();
                 if (type == ToolWindowType.FLOATING || type == ToolWindowType.FLOATING_FREE) {
                     toolWindow.setType(ToolWindowType.DOCKED);
-                } else if (type == ToolWindowType.DOCKED || type == ToolWindowType.SLIDING) {
+                } else if (type == ToolWindowType.DOCKED || type == ToolWindowType.SLIDING || type == ToolWindowType.FLOATING_LIVE) {
                     toolWindow.setType(descriptor.isFloatingWindow() ? ToolWindowType.FLOATING_FREE : ToolWindowType.FLOATING);
                 }
             } else if ("undock".equals(actionCommnad)) {
                 ToolWindowType type = toolWindow.getType();
                 if (type == ToolWindowType.DOCKED) {
                     toolWindow.setType(ToolWindowType.SLIDING);
-                } else if (type == ToolWindowType.SLIDING) {
+                } else if (type == ToolWindowType.SLIDING || type == ToolWindowType.FLOATING_LIVE) {
                     toolWindow.setType(ToolWindowType.DOCKED);
                 }
             } else if ("maximize".equals(actionCommnad)) {
                 toolWindow.setMaximized(!toolWindow.isMaximized());
-            } else if ("showPopup".equals(actionCommnad)) {
-                Component c = (Component) e.getSource();
-                dockedContainer.showPopupMenu(c, 0, c.getHeight());
             }
         }
 
