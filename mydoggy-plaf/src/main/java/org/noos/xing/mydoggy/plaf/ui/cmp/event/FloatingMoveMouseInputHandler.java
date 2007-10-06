@@ -72,8 +72,10 @@ public class FloatingMoveMouseInputHandler implements MouseInputListener {
 
     public void mouseDragged(MouseEvent ev) {
         if (isMovingWindow) {
+
             Point pt = ev.getPoint();
-            Point windowPt = floatingContainer.getLocationOnScreen();
+            Point windowPt = (floatingContainer instanceof Window) ? floatingContainer.getLocationOnScreen()
+                             : floatingContainer.getLocation();
 
             windowPt.x += pt.x - dragOffsetX;
             windowPt.y += pt.y - dragOffsetY;

@@ -22,31 +22,33 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro
  */
-public class SlidingContainer extends FloatingContainer {
-    private SlidingAnimation slidingAnimation;
+public class SlidingContainer extends MyDoggyToolWindowContainer {
 
-    private SlidingBorder border;
-    private Container barContainer;
+    protected SlidingAnimation slidingAnimation;
 
-    private JLayeredPane layeredPane;
+    protected SlidingBorder border;
+    protected Container barContainer;
 
-    private SlidingMouseInputHandler slidingMouseInputHandler;
+    protected JLayeredPane layeredPane;
 
-    private JPanel mainPanel;
-    private TranslucentPanel sheet;
+    protected SlidingMouseInputHandler slidingMouseInputHandler;
 
-    public SlidingContainer(ToolWindowDescriptor descriptor) {
-        super(descriptor);
+    protected JPanel mainPanel;
+    protected TranslucentPanel sheet;
 
-        initSlidingComponents();
-        initSlidingListeners();
+
+    public SlidingContainer(DockedContainer dockedContainer) {
+        super(dockedContainer);
+
+        initComponents();
+        initListeners();
     }
 
 
     public void setVisible(boolean visible, Container barContainer) {
         this.barContainer = barContainer;
 
-        Component content = getContentContainer();
+        Component content = dockedContainer.getContentContainer();
         sheet.remove(content);
 
         synchronized (slidingAnimation) {
@@ -115,85 +117,7 @@ public class SlidingContainer extends FloatingContainer {
     }
 
 
-    private void update() {
-        // Reset Layout
-        titleBarButtons.configureIcons(ToolWindowType.SLIDING);
-
-        TableLayout layout = (TableLayout) sheet.getLayout();
-        layout.setColumn(0, 0);
-        layout.setColumn(2, 0);
-        layout.setRow(0, 0);
-        layout.setRow(2, 0);
-
-        if (barContainer != null)
-            barContainer.getParent().getLayout().layoutContainer(barContainer.getParent());
-        resize();
-
-        Component content = getContentContainer();
-        sheet.remove(content);
-        sheet.add(content, "1,1,FULL,FULL");
-
-        // Prepare sheet
-        border.setAnchor(toolWindow.getAnchor());
-        sheet.setBorder(border);
-
-        int height = mainPanel.getHeight();
-        Point point = SwingUtilities.convertPoint(mainPanel, 0, 0, layeredPane);
-
-        sheet.setBounds(point.x, point.y, mainPanel.getWidth(), height);
-
-        layeredPane.remove(sheet);
-        layeredPane.setLayer(sheet, 100);
-        layeredPane.add(sheet);
-        layeredPane.validate();
-    }
-
-    private void resize() {
-        int length = descriptor.getDividerLocation();
-        if (length == -1)
-            length = 200;
-
-        switch (toolWindow.getAnchor()) {
-            case LEFT:
-                int height = barContainer.getHeight();
-                mainPanel.setSize(length, height);
-
-                Point location = new Point(0, 0);
-                SwingUtilities.convertPointToScreen(location, barContainer);
-                location.x += barContainer.getWidth();
-                mainPanel.setLocation(location);
-                break;
-            case RIGHT:
-                height = barContainer.getHeight();
-                mainPanel.setSize(length, height);
-
-                location = new Point(0, 0);
-                SwingUtilities.convertPointToScreen(location, barContainer);
-                location.x -= mainPanel.getWidth();
-                mainPanel.setLocation(location);
-                break;
-            case TOP:
-                int width = barContainer.getWidth();
-                mainPanel.setSize(width, length);
-
-                location = new Point(0, 0);
-                SwingUtilities.convertPointToScreen(location, barContainer);
-                location.y += barContainer.getHeight();
-                mainPanel.setLocation(location);
-                break;
-            case BOTTOM:
-                width = barContainer.getWidth();
-                mainPanel.setSize(width, length);
-
-                location = new Point(0, 0);
-                SwingUtilities.convertPointToScreen(location, barContainer);
-                location.y -= mainPanel.getHeight();
-                mainPanel.setLocation(location);
-                break;
-        }
-    }
-
-    private void initSlidingComponents() {
+    protected void initComponents() {
         mainPanel = new JPanel();
         sheet = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
         border = new SlidingBorder();
@@ -213,15 +137,15 @@ public class SlidingContainer extends FloatingContainer {
             throw new IllegalStateException("Can stay only on a RootPaneContainer");
     }
 
-    private void initSlidingListeners() {
-        addPropertyChangeListener("anchor", new PropertyChangeListener() {
+    protected void initListeners() {
+        dockedContainer.addPropertyChangeListener("anchor", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 ToolWindow evtToolWindow = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
                 if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible() && !evtToolWindow.isVisible())
                     update();
             }
         });
-        addPropertyChangeListener("type", new PropertyChangeListener() {
+        dockedContainer.addPropertyChangeListener("type", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getSource() != descriptor)
                     return;
@@ -240,9 +164,9 @@ public class SlidingContainer extends FloatingContainer {
                 }
             }
         });
-        addPropertyChangeListener("active", new ActivePropertyChangeListener());
-        addPropertyChangeListener("maximized", new PropertyChangeListener() {
-            private Rectangle oldBounds = null;
+        dockedContainer.addPropertyChangeListener("active", new ActivePropertyChangeListener());
+        dockedContainer.addPropertyChangeListener("maximized", new PropertyChangeListener() {
+            protected Rectangle oldBounds = null;
 
             public void propertyChange(PropertyChangeEvent evt) {
                 if (toolWindow.getType() == ToolWindowType.SLIDING) {
@@ -290,15 +214,15 @@ public class SlidingContainer extends FloatingContainer {
                 }
             }
 
-            private int calcFirstX() {
+            protected int calcFirstX() {
                 return descriptor.getManager().getX() + ((descriptor.getToolBar(ToolWindowAnchor.LEFT).getAvailableTools() > 0) ? 23 : 0);
             }
 
-            private int calcFirstY() {
+            protected int calcFirstY() {
                 return descriptor.getManager().getY() + ((descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0) ? 23 : 0);
             }
 
-            private int calcMaxWidth() {
+            protected int calcMaxWidth() {
                 int width = descriptor.getManager().getWidth();
                 if (descriptor.getToolBar(ToolWindowAnchor.LEFT).getAvailableTools() > 0)
                     width -= 23;
@@ -307,7 +231,7 @@ public class SlidingContainer extends FloatingContainer {
                 return width;
             }
 
-            private int calcMaxHeight() {
+            protected int calcMaxHeight() {
                 int width = descriptor.getManager().getHeight();
                 if (descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0)
                     width -= 23;
@@ -316,7 +240,7 @@ public class SlidingContainer extends FloatingContainer {
                 return width;
             }
         });
-        addPropertyChangeListener("tempShowed", new PropertyChangeListener() {
+        dockedContainer.addPropertyChangeListener("tempShowed", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
                     update();
@@ -326,11 +250,89 @@ public class SlidingContainer extends FloatingContainer {
         slidingMouseInputHandler = new SlidingMouseInputHandler(descriptor);
     }
 
+    protected void update() {
+        // Reset Layout
+        titleBarButtons.configureIcons(ToolWindowType.SLIDING);
 
-    private class SlidingAnimation extends AbstractAnimation {
-        private int length;
-        private Rectangle bounds;
-        private int lastLen = 0;
+        TableLayout layout = (TableLayout) sheet.getLayout();
+        layout.setColumn(0, 0);
+        layout.setColumn(2, 0);
+        layout.setRow(0, 0);
+        layout.setRow(2, 0);
+
+        if (barContainer != null)
+            barContainer.getParent().getLayout().layoutContainer(barContainer.getParent());
+        resize();
+
+        Component content = dockedContainer.getContentContainer();
+        sheet.remove(content);
+        sheet.add(content, "1,1,FULL,FULL");
+
+        // Prepare sheet
+        border.setAnchor(toolWindow.getAnchor());
+        sheet.setBorder(border);
+
+        int height = mainPanel.getHeight();
+        Point point = SwingUtilities.convertPoint(mainPanel, 0, 0, layeredPane);
+
+        sheet.setBounds(point.x, point.y, mainPanel.getWidth(), height);
+
+        layeredPane.remove(sheet);
+        layeredPane.setLayer(sheet, 100);
+        layeredPane.add(sheet);
+        layeredPane.validate();
+    }
+
+    protected void resize() {
+        int length = descriptor.getDividerLocation();
+        if (length == -1)
+            length = 200;
+
+        switch (toolWindow.getAnchor()) {
+            case LEFT:
+                int height = barContainer.getHeight();
+                mainPanel.setSize(length, height);
+
+                Point location = new Point(0, 0);
+                SwingUtilities.convertPointToScreen(location, barContainer);
+                location.x += barContainer.getWidth();
+                mainPanel.setLocation(location);
+                break;
+            case RIGHT:
+                height = barContainer.getHeight();
+                mainPanel.setSize(length, height);
+
+                location = new Point(0, 0);
+                SwingUtilities.convertPointToScreen(location, barContainer);
+                location.x -= mainPanel.getWidth();
+                mainPanel.setLocation(location);
+                break;
+            case TOP:
+                int width = barContainer.getWidth();
+                mainPanel.setSize(width, length);
+
+                location = new Point(0, 0);
+                SwingUtilities.convertPointToScreen(location, barContainer);
+                location.y += barContainer.getHeight();
+                mainPanel.setLocation(location);
+                break;
+            case BOTTOM:
+                width = barContainer.getWidth();
+                mainPanel.setSize(width, length);
+
+                location = new Point(0, 0);
+                SwingUtilities.convertPointToScreen(location, barContainer);
+                location.y -= mainPanel.getHeight();
+                mainPanel.setLocation(location);
+                break;
+        }
+    }
+
+
+    protected class SlidingAnimation extends AbstractAnimation {
+        protected int length;
+        protected Rectangle bounds;
+        protected int lastLen = 0;
 
         public SlidingAnimation() {
             super(60f);
@@ -443,9 +445,9 @@ public class SlidingContainer extends FloatingContainer {
 
     }
 
-    private class ActivePropertyChangeListener implements PropertyChangeListener, ActionListener {
-        private TransparencyAnimation animation;
-        private Timer timer;
+    protected class ActivePropertyChangeListener implements PropertyChangeListener, ActionListener {
+        protected TransparencyAnimation animation;
+        protected Timer timer;
 
         public ActivePropertyChangeListener() {
             this.animation = new TransparencyAnimation(sheet, sheet, 1.0f, 500f);

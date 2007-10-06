@@ -22,7 +22,12 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     private MyDoggyToolWindow toolWindow;
 
     private Window windowAnchestor;
-    private ToolWindowContainer toolWindowContainer;
+
+    private DockedContainer dockedContainer;
+    private FloatingContainer floatingContainer;
+    private SlidingContainer slidingContainer;
+    private FloatingLiveContainer floatingLiveContainer;
+
     private Component component;
     private JLabel representativeAnchor;
 
@@ -51,7 +56,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
     public void unregister() {
         toolWindow.removePropertyChangeListener(this);
-        getToolWindowContainer().uninstall();
+        dockedContainer.uninstall();
     }
 
 
@@ -125,9 +130,30 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     }
 
     public ToolWindowContainer getToolWindowContainer() {
-        if (toolWindowContainer == null)
-            toolWindowContainer = new FloatingLiveContainer(this);
-        return toolWindowContainer;
+        if (dockedContainer == null) {
+            dockedContainer = new DockedContainer(this);
+            slidingContainer = new SlidingContainer(dockedContainer);
+            floatingContainer = new FloatingContainer(dockedContainer);
+            floatingLiveContainer = new FloatingLiveContainer(dockedContainer);
+        }
+        return dockedContainer;
+    }
+
+    public ToolWindowContainer getToolWindowContainer(ToolWindowType toolWindowType) {
+        if (dockedContainer == null)
+            getToolWindowContainer();
+        switch (toolWindowType) {
+            case FLOATING:
+            case FLOATING_FREE:
+                return floatingContainer;
+            case FLOATING_LIVE:
+                return floatingLiveContainer;
+            case DOCKED:
+                return dockedContainer;
+            case SLIDING:
+                return slidingContainer;
+        }
+        throw new IllegalArgumentException("Type not reconized.");
     }
 
     public ToolWindowTypeDescriptor getTypeDescriptor(ToolWindowType type) {

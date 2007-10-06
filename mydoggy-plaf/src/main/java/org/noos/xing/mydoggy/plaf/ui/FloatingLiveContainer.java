@@ -6,45 +6,46 @@ import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TranslucentPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingMoveMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingResizeMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro
  */
-public class FloatingLiveContainer extends SlidingContainer {
-    private JLayeredPane layeredPane;
+public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
+    protected JLayeredPane layeredPane;
+    protected JPanel mainPanel;
+    protected TranslucentPanel sheet;
 
-    private JPanel mainPanel;
-    private TranslucentPanel sheet;
+    protected FloatingResizeMouseInputHandler resizeMouseInputHandler;
+    protected FloatingMoveMouseInputHandler moveMouseInputHandler;
 
-    private FloatingResizeMouseInputHandler resizeMouseInputHandler;
+    protected boolean settedListener = false;
+    protected Rectangle lastBounds;
 
 
-    public FloatingLiveContainer(ToolWindowDescriptor descriptor) {
-        super(descriptor);
-
-        initFloatingLiveComponents();
-        initFloatingLiveListeners();
+    public FloatingLiveContainer(DockedContainer dockedContainer) {
+        super(dockedContainer);
+        
+        initComponents();
+        initListeners();
     }
 
 
     public void setVisible(boolean visible) {
-        Component content = getContentContainer();
+        Component content = dockedContainer.getContentContainer();
         sheet.remove(content);
 
         if (visible) {
             // Reset Layout
-            titleBarButtons.configureIcons(ToolWindowType.DOCKED);
+            dockedContainer.getTitleBarButtons().configureIcons(ToolWindowType.DOCKED);
 
             TableLayout layout = (TableLayout) sheet.getLayout();
             layout.setColumn(0, 0);
@@ -109,7 +110,207 @@ public class FloatingLiveContainer extends SlidingContainer {
     }
 
 
-    private void update() {
+    protected void initComponents() {
+        mainPanel = new JPanel();
+        sheet = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
+/*
+        border = new SlidingBorder();
+        slidingAnimation = new SlidingAnimation();
+*/
+
+        Window anchestor = descriptor.getWindowAnchestor();
+        if (anchestor instanceof RootPaneContainer) {
+            layeredPane = ((RootPaneContainer) anchestor).getLayeredPane();
+
+            anchestor.addComponentListener(new ComponentAdapter() {
+                public void componentResized(ComponentEvent e) {
+                    if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
+                        update();
+                }
+            });
+        } else
+            throw new IllegalStateException("Can stay only on a RootPaneContainer");
+    }
+
+    protected void initListeners() {
+        dockedContainer.addPropertyChangeListener("anchor", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                ToolWindow evtToolWindow = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
+                if (toolWindow.getType() == ToolWindowType.FLOATING_LIVE && toolWindow.isVisible() && !evtToolWindow.isVisible())
+                    update();
+            }
+        });
+        dockedContainer.addPropertyChangeListener("type", new PropertyChangeListener() {
+            ContainerListener listener = new ContainerListener() {
+                public void componentAdded(ContainerEvent e) {
+                    e.getChild().addMouseMotionListener(resizeMouseInputHandler);
+                    e.getChild().addMouseListener(resizeMouseInputHandler);
+                }
+
+                public void componentRemoved(ContainerEvent e) {
+                    e.getChild().removeMouseMotionListener(resizeMouseInputHandler);
+                    e.getChild().removeMouseListener(resizeMouseInputHandler);
+                }
+            };
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getSource() != descriptor)
+                    return;
+
+                assert "type".equals(evt.getPropertyName());
+                if (evt.getNewValue() == ToolWindowType.FLOATING_LIVE) {
+                    if (layeredPane != null) {
+                        dockedContainer.enableIdOnTitleBar();
+                        // Remove
+                        sheet.removeMouseMotionListener(resizeMouseInputHandler);
+                        sheet.removeMouseListener(resizeMouseInputHandler);
+
+
+                        titleBarTabs.getViewport().removeMouseMotionListener(moveMouseInputHandler);
+                        titleBarTabs.getViewport().removeMouseListener(moveMouseInputHandler);
+                        for (Component cmp : titleBarTabs.getTabContainer().getComponents()) {
+                            cmp.removeMouseMotionListener(moveMouseInputHandler);
+                            cmp.removeMouseListener(moveMouseInputHandler);
+                        }
+                        titleBarTabs.getTabContainer().removeContainerListener(listener);
+
+                        dockedContainer.getTitleBar().removeMouseMotionListener(moveMouseInputHandler);
+                        dockedContainer.getTitleBar().removeMouseListener(moveMouseInputHandler);
+
+                        // Add
+                        sheet.addMouseMotionListener(resizeMouseInputHandler);
+                        sheet.addMouseListener(resizeMouseInputHandler);
+
+                        titleBarTabs.getViewport().addMouseMotionListener(moveMouseInputHandler);
+                        titleBarTabs.getViewport().addMouseListener(moveMouseInputHandler);
+                        for (Component cmp : titleBarTabs.getTabContainer().getComponents()) {
+                            cmp.addMouseMotionListener(moveMouseInputHandler);
+                            cmp.addMouseListener(moveMouseInputHandler);
+                        }
+                        titleBarTabs.getTabContainer().addContainerListener(listener);
+
+                        dockedContainer.getTitleBar().addMouseMotionListener(moveMouseInputHandler);
+                        dockedContainer.getTitleBar().addMouseListener(moveMouseInputHandler);
+
+                        settedListener = true;
+                    }
+                } else if (evt.getOldValue() == ToolWindowType.FLOATING_LIVE) {
+                    if (layeredPane != null) {
+                        if (!descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar())
+                            dockedContainer.disableIdOnTitleBar();
+
+                        if (settedListener)
+                            lastBounds = sheet.getBounds();
+
+                        // Remove listeners
+                        sheet.removeMouseMotionListener(resizeMouseInputHandler);
+                        sheet.removeMouseListener(resizeMouseInputHandler);
+
+                        titleBarTabs.getViewport().removeMouseMotionListener(moveMouseInputHandler);
+                        titleBarTabs.getViewport().removeMouseListener(moveMouseInputHandler);
+                        for (Component cmp : titleBarTabs.getTabContainer().getComponents()) {
+                            cmp.removeMouseMotionListener(moveMouseInputHandler);
+                            cmp.removeMouseListener(moveMouseInputHandler);
+                        }
+                        titleBarTabs.getTabContainer().removeContainerListener(listener);
+
+                        titleBar.removeMouseMotionListener(moveMouseInputHandler);
+                        titleBar.removeMouseListener(moveMouseInputHandler);
+
+                        settedListener = false;
+                    }
+                }
+            }
+        });
+        dockedContainer.addPropertyChangeListener("active", new ActivePropertyChangeListener());
+        dockedContainer.addPropertyChangeListener("maximized", new PropertyChangeListener() {
+            protected Rectangle oldBounds = null;
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
+                    if ((Boolean) evt.getNewValue()) {
+                        oldBounds = sheet.getBounds();
+
+                        switch (toolWindow.getAnchor()) {
+                            case LEFT:
+                                sheet.setBounds(
+                                        sheet.getX(),
+                                        sheet.getY(),
+                                        calcMaxWidth(),
+                                        sheet.getHeight()
+                                );
+                                break;
+                            case RIGHT:
+                                sheet.setBounds(
+                                        calcFirstX(),
+                                        sheet.getY(),
+                                        calcMaxWidth(),
+                                        sheet.getHeight()
+                                );
+                                break;
+                            case TOP:
+                                sheet.setBounds(
+                                        sheet.getX(),
+                                        sheet.getY(),
+                                        sheet.getWidth(),
+                                        calcMaxHeight()
+                                );
+                                break;
+                            case BOTTOM:
+                                sheet.setBounds(
+                                        sheet.getX(),
+                                        calcFirstY(),
+                                        sheet.getWidth(),
+                                        calcMaxHeight()
+                                );
+                                break;
+                        }
+                    } else {
+                        sheet.setBounds(oldBounds);
+                    }
+                    SwingUtil.repaint(sheet);
+                }
+            }
+
+            protected int calcFirstX() {
+                return descriptor.getManager().getX() + ((descriptor.getToolBar(ToolWindowAnchor.LEFT).getAvailableTools() > 0) ? 23 : 0);
+            }
+
+            protected int calcFirstY() {
+                return descriptor.getManager().getY() + ((descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0) ? 23 : 0);
+            }
+
+            protected int calcMaxWidth() {
+                int width = descriptor.getManager().getWidth();
+                if (descriptor.getToolBar(ToolWindowAnchor.LEFT).getAvailableTools() > 0)
+                    width -= 23;
+                if (descriptor.getToolBar(ToolWindowAnchor.RIGHT).getAvailableTools() > 0)
+                    width -= 23;
+                return width;
+            }
+
+            protected int calcMaxHeight() {
+                int width = descriptor.getManager().getHeight();
+                if (descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0)
+                    width -= 23;
+                if (descriptor.getToolBar(ToolWindowAnchor.BOTTOM).getAvailableTools() > 0)
+                    width -= 23;
+                return width;
+            }
+        });
+        dockedContainer.addPropertyChangeListener("tempShowed", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
+                    update();
+            }
+        });
+
+        resizeMouseInputHandler = new FloatingResizeMouseInputHandler(sheet);
+        moveMouseInputHandler = new FloatingMoveMouseInputHandler(sheet);
+    }
+
+
+    protected void update() {
 /*
         // Reset Layout
         titleBarButtons.configureIcons(ToolWindowType.SLIDING);
@@ -144,7 +345,7 @@ public class FloatingLiveContainer extends SlidingContainer {
 */
     }
 
-    private void resize() {
+    protected void resize() {
 /*
         int length = descriptor.getDividerLocation();
         if (length == -1)
@@ -191,146 +392,11 @@ public class FloatingLiveContainer extends SlidingContainer {
 */
     }
 
-    private void initFloatingLiveComponents() {
-        mainPanel = new JPanel();
-        sheet = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
-/*
-        border = new SlidingBorder();
-        slidingAnimation = new SlidingAnimation();
-*/
 
-        Window anchestor = descriptor.getWindowAnchestor();
-        if (anchestor instanceof RootPaneContainer) {
-            layeredPane = ((RootPaneContainer) anchestor).getLayeredPane();
-
-            anchestor.addComponentListener(new ComponentAdapter() {
-                public void componentResized(ComponentEvent e) {
-                    if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
-                        update();
-                }
-            });
-        } else
-            throw new IllegalStateException("Can stay only on a RootPaneContainer");
-    }
-
-    private void initFloatingLiveListeners() {
-        addPropertyChangeListener("anchor", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                ToolWindow evtToolWindow = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
-                if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible() && !evtToolWindow.isVisible())
-                    update();
-            }
-        });
-        addPropertyChangeListener("type", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getSource() != descriptor)
-                    return;
-
-                assert "type".equals(evt.getPropertyName());
-                if (evt.getNewValue() == ToolWindowType.FLOATING_LIVE) {
-                    if (layeredPane != null) {
-                        sheet.addMouseMotionListener(resizeMouseInputHandler);
-                        sheet.addMouseListener(resizeMouseInputHandler);
-                    }
-                } else {
-                    if (layeredPane != null) {
-                        sheet.removeMouseMotionListener(resizeMouseInputHandler);
-                        sheet.removeMouseListener(resizeMouseInputHandler);
-                    }
-                }
-            }
-        });
-        addPropertyChangeListener("active", new ActivePropertyChangeListener());
-        addPropertyChangeListener("maximized", new PropertyChangeListener() {
-            private Rectangle oldBounds = null;
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (toolWindow.getType() == ToolWindowType.SLIDING) {
-                    if ((Boolean) evt.getNewValue()) {
-                        oldBounds = sheet.getBounds();
-
-                        switch (toolWindow.getAnchor()) {
-                            case LEFT:
-                                sheet.setBounds(
-                                        sheet.getX(),
-                                        sheet.getY(),
-                                        calcMaxWidth(),
-                                        sheet.getHeight()
-                                );
-                                break;
-                            case RIGHT:
-                                sheet.setBounds(
-                                        calcFirstX(),
-                                        sheet.getY(),
-                                        calcMaxWidth(),
-                                        sheet.getHeight()
-                                );
-                                break;
-                            case TOP:
-                                sheet.setBounds(
-                                        sheet.getX(),
-                                        sheet.getY(),
-                                        sheet.getWidth(),
-                                        calcMaxHeight()
-                                );
-                                break;
-                            case BOTTOM:
-                                sheet.setBounds(
-                                        sheet.getX(),
-                                        calcFirstY(),
-                                        sheet.getWidth(),
-                                        calcMaxHeight()
-                                );
-                                break;
-                        }
-                    } else {
-                        sheet.setBounds(oldBounds);
-                    }
-                    SwingUtil.repaint(sheet);
-                }
-            }
-
-            private int calcFirstX() {
-                return descriptor.getManager().getX() + ((descriptor.getToolBar(ToolWindowAnchor.LEFT).getAvailableTools() > 0) ? 23 : 0);
-            }
-
-            private int calcFirstY() {
-                return descriptor.getManager().getY() + ((descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0) ? 23 : 0);
-            }
-
-            private int calcMaxWidth() {
-                int width = descriptor.getManager().getWidth();
-                if (descriptor.getToolBar(ToolWindowAnchor.LEFT).getAvailableTools() > 0)
-                    width -= 23;
-                if (descriptor.getToolBar(ToolWindowAnchor.RIGHT).getAvailableTools() > 0)
-                    width -= 23;
-                return width;
-            }
-
-            private int calcMaxHeight() {
-                int width = descriptor.getManager().getHeight();
-                if (descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0)
-                    width -= 23;
-                if (descriptor.getToolBar(ToolWindowAnchor.BOTTOM).getAvailableTools() > 0)
-                    width -= 23;
-                return width;
-            }
-        });
-        addPropertyChangeListener("tempShowed", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
-                    update();
-            }
-        });
-
-        resizeMouseInputHandler = new FloatingResizeMouseInputHandler(sheet);
-    }
-
-
-    private class SlidingAnimation extends AbstractAnimation {
-        private int length;
-        private Rectangle bounds;
-        private int lastLen = 0;
+    protected class SlidingAnimation extends AbstractAnimation {
+        protected int length;
+        protected Rectangle bounds;
+        protected int lastLen = 0;
 
         public SlidingAnimation() {
             super(60f);
@@ -443,9 +509,9 @@ public class FloatingLiveContainer extends SlidingContainer {
 
     }
 
-    private class ActivePropertyChangeListener implements PropertyChangeListener, ActionListener {
-        private TransparencyAnimation animation;
-        private Timer timer;
+    protected class ActivePropertyChangeListener implements PropertyChangeListener, ActionListener {
+        protected TransparencyAnimation animation;
+        protected Timer timer;
 
         public ActivePropertyChangeListener() {
             this.animation = new TransparencyAnimation(sheet, sheet, 1.0f, 500f);
