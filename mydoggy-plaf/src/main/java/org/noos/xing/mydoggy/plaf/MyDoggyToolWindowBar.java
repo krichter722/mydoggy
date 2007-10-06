@@ -872,7 +872,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             boolean visible = (Boolean) evt.getNewValue();
 
             Component content = (visible) ? toolWindowDescriptor.getComponent() : null;
-            LiveFloatingContainer container = (LiveFloatingContainer) toolWindowDescriptor.getToolWindowContainer();
+            FloatingLiveContainer container = (FloatingLiveContainer) toolWindowDescriptor.getToolWindowContainer();
 
             if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
                 return;

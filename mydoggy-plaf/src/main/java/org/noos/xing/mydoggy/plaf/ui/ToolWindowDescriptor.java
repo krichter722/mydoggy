@@ -126,7 +126,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
     public ToolWindowContainer getToolWindowContainer() {
         if (toolWindowContainer == null)
-            toolWindowContainer = new LiveFloatingContainer(this);
+            toolWindowContainer = new FloatingLiveContainer(this);
         return toolWindowContainer;
     }
 

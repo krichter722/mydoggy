@@ -28,17 +28,19 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
     private int dragWidth;
     private int dragHeight;
 
-    private Window window;
+    private Component floatingContainer;
 
-    public FloatingResizeMouseInputHandler(Window window) {
-        this.window = window;
+    public FloatingResizeMouseInputHandler(Component floatingContainer) {
+        this.floatingContainer = floatingContainer;
     }
 
     public void mousePressed(MouseEvent ev) {
         Point dragWindowOffset = ev.getPoint();
         Component w = (Component) ev.getSource();
 
-        window.toFront();
+        if (floatingContainer instanceof Window)
+            ((Window) floatingContainer).toFront();
+
         dragOffsetX = dragWindowOffset.x;
         dragOffsetY = dragWindowOffset.y;
         dragWidth = w.getWidth();
@@ -47,13 +49,13 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
     }
 
     public void mouseReleased(MouseEvent ev) {
-        if (dragCursor != 0 && window != null && !window.isValid()) {
+        if (dragCursor != 0 && floatingContainer != null && !floatingContainer.isValid()) {
             // Some Window systems validate as you resize, others won't,
             // thus the check for validity before repainting.
-            window.validate();
+            floatingContainer.validate();
         }
         dragCursor = 0;
-        window.setCursor(Cursor.getDefaultCursor());
+        floatingContainer.setCursor(Cursor.getDefaultCursor());
     }
 
     public void mouseMoved(MouseEvent ev) {
@@ -70,9 +72,9 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
         Point pt = ev.getPoint();
 
         if (dragCursor != 0) {
-            Rectangle r = window.getBounds();
+            Rectangle r = floatingContainer.getBounds();
             Rectangle startBounds = new Rectangle(r);
-            Dimension min = window.getMinimumSize();
+            Dimension min = floatingContainer.getMinimumSize();
 
             switch (dragCursor) {
                 case Cursor.E_RESIZE_CURSOR:
@@ -122,11 +124,11 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
                 if (r.height < 24)
                     r.height = 24;
 
-                window.setBounds(r);
+                floatingContainer.setBounds(r);
                 // Defer repaint/validate on mouseReleased unless dynamic
                 // layout is active.
                 if (Toolkit.getDefaultToolkit().isDynamicLayoutActive()) {
-                    window.validate();
+                    floatingContainer.validate();
                 }
             }
         }
