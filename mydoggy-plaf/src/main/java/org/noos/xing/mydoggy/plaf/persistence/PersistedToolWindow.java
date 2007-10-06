@@ -4,6 +4,9 @@ import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.xml.sax.Attributes;
 
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
@@ -18,6 +21,7 @@ public class PersistedToolWindow {
     private int index;
     private ToolWindowAnchor anchor;
     private ToolWindowType type;
+    private List<String> tabs;
 
     public PersistedToolWindow(Attributes attributes) {
         this.id = attributes.getValue("id");
@@ -29,7 +33,8 @@ public class PersistedToolWindow {
         this.type = ToolWindowType.valueOf(attributes.getValue("type"));
         this.aggregateMode = Boolean.parseBoolean(attributes.getValue("aggregateMode"));
         this.maximized = Boolean.parseBoolean(attributes.getValue("maximized"));
-        this.index = Integer.parseInt(attributes.getValue("index")); 
+        this.index = Integer.parseInt(attributes.getValue("index"));
+        this.tabs = new ArrayList<String>();
     }
 
 
@@ -71,5 +76,13 @@ public class PersistedToolWindow {
 
     public int getIndex() {
         return index;
+    }
+
+    public List<String> getTabs() {
+        return tabs;
+    }
+
+    public void addTab(Attributes attributes) {
+        tabs.add(attributes.getValue("toolWindowId"));
     }
 }

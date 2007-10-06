@@ -73,7 +73,7 @@ public class JTabbedContentManager extends JTabbedPane {
     }
 
     public String getTitleAt(int index) {
-        return "";
+        return "";  // TODO: others look&feel may request for this ..........
     }
 
     public void setIconAt(int index, Icon icon) {

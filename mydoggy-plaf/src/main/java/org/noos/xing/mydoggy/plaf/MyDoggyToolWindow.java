@@ -124,6 +124,16 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public boolean isVisible() {
+        if (getType() == ToolWindowType.TABBED) {
+            for (ToolWindow tool : descriptor.getManager().getToolWindows()) {
+                for (ToolWindowTab tab : tool.getToolWindowTabs()) {
+                    if (tab.getToolWindow() == this) {
+                        return tool.isVisible() && tab.isSelected();
+                    }
+                }
+            }
+        }
+
         return visible;
     }
 
@@ -195,6 +205,20 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (aggregateEnabled && visible && !descriptor.getManager().isShiftShow() &&
             getType() == ToolWindowType.DOCKED)
             aggregate();
+
+        if (getType() == ToolWindowType.TABBED) {
+            // Call setVisible on tool that own this tool as tab...
+            for (ToolWindow tool : descriptor.getManager().getToolWindows()) {
+                for (ToolWindowTab tab : tool.getToolWindowTabs()) {
+                    if (tab.getToolWindow() == this) {
+                        tool.setVisible(visible);
+                        if (visible)
+                            tab.setSelected(true);
+                        return;
+                    }
+                }
+            }
+        }
 
         if (this.visible == visible)
             return;

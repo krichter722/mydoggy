@@ -37,7 +37,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             writer.startDocument();
 
             AttributesImpl mydoggyAttributes = new AttributesImpl();
-            mydoggyAttributes.addAttribute(null, "version", null, null, "1.3.1");
+            mydoggyAttributes.addAttribute(null, "version", null, null, "1.3.2");
             mydoggyAttributes.addAttribute(null, "pushAwayMode", null, null, 
                                            toolWindowManager.getToolWindowManagerDescriptor().getPushAwayMode().toString());
             writer.startElement("mydoggy", mydoggyAttributes);
@@ -155,9 +155,21 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
         writer.endElement("descriptors");
 
+        boolean addTabsTag = false;
         for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
-            // TODO: add support for tab with toolwindow...
+            if (tab.getToolWindow() != null) {
+                if (!addTabsTag) {
+                    addTabsTag = true;
+                    writer.startElement("tabs");
+                }
+                AttributesImpl attributes = new AttributesImpl();
+                attributes.addAttribute(null, "toolWindowId", null, null, tab.getToolWindow().getId());
+                writer.dataElement("tab", attributes);
+            }
         }
+
+        if (addTabsTag)
+            writer.endElement("tabs");
 
         writer.endElement("tool");
     }
