@@ -24,28 +24,28 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro
  */
-public class FloatingContainer extends DockedContainer {
-    private JModalWindow window;
+public class FloatingContainer extends MyDoggyToolWindowContainer {
+    protected JModalWindow window;
 
-    private FloatingResizeMouseInputHandler resizeMouseInputHandler;
-    private FloatingMoveMouseInputHandler moveMouseInputHandler;
+    protected FloatingResizeMouseInputHandler resizeMouseInputHandler;
+    protected FloatingMoveMouseInputHandler moveMouseInputHandler;
 
-    private boolean settedListener = false;
-    private boolean valueAdjusting = false;
+    protected boolean settedListener = false;
+    protected boolean valueAdjusting = false;
 
-    private Rectangle lastBounds;
+    protected Rectangle lastBounds;
 
-    private final FloatingAnimation floatingAnimation = new FloatingAnimation();
-    private boolean assignFocusOnAnimFinished = false;
+    protected final FloatingAnimation floatingAnimation;
+    protected boolean assignFocusOnAnimFinished = false;
 
 
-    public FloatingContainer(ToolWindowDescriptor descriptor) {
-        super(descriptor);
+    public FloatingContainer(DockedContainer dockedContainer) {
+        super(dockedContainer);
+        this.floatingAnimation =  new FloatingAnimation();
 
-        initFloatingComponents();
-        initFloatingListeners();
+        initComponents();
+        initListeners();
     }
-
 
     public void setVisible(boolean visible) {
         synchronized (floatingAnimation) {
@@ -54,7 +54,7 @@ public class FloatingContainer extends DockedContainer {
             }
         }
 
-        Container content = getContentContainer();
+        Container content = dockedContainer.getContentContainer();
         content.setFocusCycleRoot(!visible);
 
         if (visible) {
@@ -97,7 +97,7 @@ public class FloatingContainer extends DockedContainer {
                 SwingUtil.repaint(window);
 
                 if (!window.isFocused() && toolWindow.isActive()) 
-                    assignFocus();
+                    dockedContainer.assignFocus();
             }
         } else {
             if (titleBarButtons.getFocusable().isFocusable())
@@ -119,8 +119,8 @@ public class FloatingContainer extends DockedContainer {
     }
 
 
-    private void initFloatingComponents() {
-        window = new JModalWindow(getResourceManager(),
+    protected void initComponents() {
+        window = new JModalWindow(dockedContainer.getResourceManager(),
                                   descriptor.getWindowAnchestor(),
                                   null,
                                   false);
@@ -131,7 +131,7 @@ public class FloatingContainer extends DockedContainer {
         window.setContentPane(contentPane);
     }
 
-    private void initFloatingListeners() {
+    protected void initListeners() {
         addPropertyChangeListener("type", new PropertyChangeListener() {
             ContainerListener listener = new ContainerListener() {
                 public void componentAdded(ContainerEvent e) {
@@ -151,7 +151,7 @@ public class FloatingContainer extends DockedContainer {
 
                 assert "type".equals(evt.getPropertyName());
                 if (evt.getNewValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING_FREE) {
-                    enableIdOnTitleBar();
+                    dockedContainer.enableIdOnTitleBar();
                     
                     // Remove
                     window.removeMouseMotionListener(resizeMouseInputHandler);
@@ -186,7 +186,7 @@ public class FloatingContainer extends DockedContainer {
                     settedListener = true;
                 } else {
                     if (!descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar())
-                        disableIdOnTitleBar();
+                        dockedContainer.disableIdOnTitleBar();
                                         
                     if (settedListener)
                         lastBounds = window.getBounds();
@@ -260,7 +260,7 @@ public class FloatingContainer extends DockedContainer {
                             if (floatingAnimation.isAnimating()) {
                                 assignFocusOnAnimFinished = true;
                             } else
-                                assignFocus();
+                                dockedContainer.assignFocus();
                         }
                     }
                 }
@@ -268,7 +268,7 @@ public class FloatingContainer extends DockedContainer {
         });
 
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
-        typeDescriptor.addPropertyChangeListener(this);
+        typeDescriptor.addPropertyChangeListener(dockedContainer);
 
         new FloatingToolTransparencyListener(this, descriptor, window);
         resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window);
@@ -303,7 +303,7 @@ public class FloatingContainer extends DockedContainer {
         floatingAnimation.addAnimationListener(new AnimationListener() {
             public void onFinished() {
                 if (assignFocusOnAnimFinished) {
-                    assignFocus();
+                    dockedContainer.assignFocus();
                     assignFocusOnAnimFinished = false;
                 }
             }
@@ -311,10 +311,10 @@ public class FloatingContainer extends DockedContainer {
     }
 
 
-    private class FloatingAnimation extends AbstractAnimation {
-        private Rectangle originalBounds;
-        private int lastLenX = 0;
-        private int lastLenY = 0;
+    protected class FloatingAnimation extends AbstractAnimation {
+        protected Rectangle originalBounds;
+        protected int lastLenX = 0;
+        protected int lastLenY = 0;
 
         public FloatingAnimation() {
             super(80f);
@@ -353,7 +353,7 @@ public class FloatingContainer extends DockedContainer {
                     SwingUtil.repaint(window);
 
                     if (!window.isFocused() && toolWindow.isActive())
-                        assignFocus();
+                        dockedContainer.assignFocus();
                     break;
                 case OUTGOING:
                     window.getContentPane().setVisible(true);

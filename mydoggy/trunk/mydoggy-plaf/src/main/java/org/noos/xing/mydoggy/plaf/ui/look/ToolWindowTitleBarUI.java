@@ -236,7 +236,8 @@ public class ToolWindowTitleBarUI extends PanelUI {
 
         if (descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar() ||
             toolWindow.getType() == ToolWindowType.FLOATING ||
-            toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
+            toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
+            toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
 
             String id = resourceManager.getUserString(descriptor.getToolWindow().getId());
             r.width = g.getFontMetrics().stringWidth(id) + 8;
@@ -381,7 +382,9 @@ public class ToolWindowTitleBarUI extends PanelUI {
         protected ToolWindowAnchor lastAnchor;
 
         public void dragGestureRecognized(DragGestureEvent dge) {
-            if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE)
+            if (toolWindow.getType() == ToolWindowType.FLOATING ||
+                toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
+                toolWindow.getType() == ToolWindowType.FLOATING_LIVE)
                 return;
 
             if (DragAndDropLock.isLocked()) {
@@ -440,7 +443,7 @@ public class ToolWindowTitleBarUI extends PanelUI {
             glassPane.setPoint(p);
 
             // TODO: if there is a JMenuBar we must add an y offset
-            Container contentPane = descriptor.getManager().getRootPane().getContentPane();
+            Container contentPane = descriptor.getManager().getRootPane().getLayeredPane();
             Component deepestCmp = SwingUtilities.getDeepestComponentAt(contentPane, p.x, p.y);
 
             if (deepestCmp != null) {

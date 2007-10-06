@@ -166,7 +166,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         propertyChangeSupport.addPropertyChangeListener("visible.FLOATING", new VisibleFloatingListener());
         propertyChangeSupport.addPropertyChangeListener("visible.FLOATING_FREE", new VisibleFloatingFreeListener());
         propertyChangeSupport.addPropertyChangeListener("visible.SLIDING", new VisibleSlidingListener());
-        propertyChangeSupport.addPropertyChangeListener("visible.FLOATING_LIVE", new VisibleLiveFloatingListener());
+        propertyChangeSupport.addPropertyChangeListener("visible.FLOATING_LIVE", new VisibleFloatingLiveListener());
         propertyChangeSupport.addPropertyChangeListener("visible.after", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
@@ -523,7 +523,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
                     if (manager.getShowingGroup() == null) {
                         if (toolWindow.getType() == ToolWindowType.FLOATING ||
-                            toolWindow.getType() == ToolWindowType.FLOATING_FREE)
+                            toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
+                            toolWindow.getType() == ToolWindowType.FLOATING_LIVE )
                             continue;
 
                         if (toolWindow.getAnchor().equals(sourceTool.getAnchor()))
@@ -822,7 +823,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             boolean visible = (Boolean) evt.getNewValue();
 
             Component content = (visible) ? toolWindowDescriptor.getComponent() : null;
-            FloatingContainer container = (FloatingContainer) toolWindowDescriptor.getToolWindowContainer();
+            FloatingContainer container = (FloatingContainer) toolWindowDescriptor.getToolWindowContainer(ToolWindowType.FLOATING);
 
             if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
                 return;
@@ -839,7 +840,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             boolean visible = (Boolean) evt.getNewValue();
 
             Component content = (visible) ? toolWindowDescriptor.getComponent() : null;
-            FloatingContainer container = (FloatingContainer) toolWindowDescriptor.getToolWindowContainer();
+            FloatingContainer container = (FloatingContainer) toolWindowDescriptor.getToolWindowContainer(ToolWindowType.FLOATING_FREE);
 
             if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
                 return;
@@ -856,7 +857,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             boolean visible = (Boolean) evt.getNewValue();
 
             Component content = (visible) ? toolWindowDescriptor.getComponent() : null;
-            SlidingContainer container = (SlidingContainer) toolWindowDescriptor.getToolWindowContainer();
+            SlidingContainer container = (SlidingContainer) toolWindowDescriptor.getToolWindowContainer(ToolWindowType.SLIDING);
 
             if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
                 return;
@@ -865,14 +866,14 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         }
     }
 
-    protected class VisibleLiveFloatingListener implements PropertyChangeListener {
+    protected class VisibleFloatingLiveListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
             boolean visible = (Boolean) evt.getNewValue();
 
             Component content = (visible) ? toolWindowDescriptor.getComponent() : null;
-            FloatingLiveContainer container = (FloatingLiveContainer) toolWindowDescriptor.getToolWindowContainer();
+            FloatingLiveContainer container = (FloatingLiveContainer) toolWindowDescriptor.getToolWindowContainer(ToolWindowType.FLOATING_LIVE);
 
             if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
                 return;

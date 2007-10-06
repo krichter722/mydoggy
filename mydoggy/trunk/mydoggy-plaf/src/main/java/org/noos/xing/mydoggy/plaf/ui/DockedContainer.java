@@ -21,7 +21,7 @@ import java.io.ByteArrayOutputStream;
 /**
  * @author Angelo De Caro
  */
-public class DockedContainer implements PropertyChangeListener, ToolWindowContainer {
+public class DockedContainer implements ToolWindowContainer {
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
     protected ResourceManager resourceManager;
@@ -276,6 +276,22 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         titleBarMouseAdapter.showPopupMenu(c, x, y);
     }
 
+    public ToolWindowDescriptor getToolWindowDescriptor() {
+        return descriptor;
+    }
+
+    public TitleBarButtons getTitleBarButtons() {
+        return titleBarButtons;
+    }
+
+    public ToolWindowTabPanel getTitleBarTabs() {
+        return titleBarTabs;
+    }
+
+    public Component getTitleBar() {
+        return titleBar;
+    }
+
 
     public interface PopupUpdater {
 
@@ -316,7 +332,8 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
                 if (e.getClickCount() == 2)
                     toolWindow.setMaximized(!toolWindow.isMaximized());
             } else if (SwingUtilities.isRightMouseButton(e)) {
-                showPopupMenu(e.getComponent(), e.getX(), e.getY());
+                if (((DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED)).isPopupMenuEnabled())
+                    showPopupMenu(e.getComponent(), e.getX(), e.getY());
             }
         }
 
@@ -380,8 +397,7 @@ public class DockedContainer implements PropertyChangeListener, ToolWindowContai
         }
 
         public void showPopupMenu(Component source, int x, int y) {
-            if ((source == titleBar || SwingUtil.hasParent(source, titleBar)) &&
-                ((DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED)).isPopupMenuEnabled()) {
+            if ((source == titleBar || SwingUtil.hasParent(source, titleBar))) {
 
                 popupMenu.removeAll();
                 popupMenu.add(pinnedMode);
