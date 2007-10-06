@@ -168,7 +168,9 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
 
 
     public ToolWindowTypeDescriptor cloneMe() {
-        return new DefaultFloatingTypeDescriptor(this, getLocation(), getSize(), getTransparentDelay(), getTransparentRatio(), isTransparentMode(), modal, isEnabled(), animating);
+        return new DefaultFloatingTypeDescriptor(this, getLocation(), getSize(), getTransparentDelay(),
+                                                 getTransparentRatio(), isTransparentMode(),
+                                                 modal, isEnabled(), animating);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

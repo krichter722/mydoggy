@@ -212,6 +212,10 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         });
         addPropertyChangeListener("location", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
+                if (toolWindow.getType() != ToolWindowType.FLOATING &&
+                    toolWindow.getType() != ToolWindowType.FLOATING_FREE)
+                    return;
+
                 if (valueAdjusting)
                     return;
 
@@ -224,6 +228,10 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         });
         addPropertyChangeListener("size", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
+                if (toolWindow.getType() != ToolWindowType.FLOATING &&
+                    toolWindow.getType() != ToolWindowType.FLOATING_FREE)
+                    return;
+
                 if (valueAdjusting)
                     return;
 
@@ -236,6 +244,10 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         });
         addPropertyChangeListener("modal", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
+                if (toolWindow.getType() != ToolWindowType.FLOATING &&
+                    toolWindow.getType() != ToolWindowType.FLOATING_FREE)
+                    return;
+
                 if (window.isVisible()) {
                     window.setModal((Boolean) evt.getNewValue());
                 }
@@ -268,7 +280,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         });
 
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
-        typeDescriptor.addPropertyChangeListener(dockedContainer);
+        typeDescriptor.addPropertyChangeListener(this);
 
         new FloatingToolTransparencyListener(this, descriptor, window);
         resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window);

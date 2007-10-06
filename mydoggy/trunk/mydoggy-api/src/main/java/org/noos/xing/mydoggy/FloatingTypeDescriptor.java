@@ -215,5 +215,4 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      */
     PropertyChangeListener[] getPropertyChangeListeners();
 
-
 }
