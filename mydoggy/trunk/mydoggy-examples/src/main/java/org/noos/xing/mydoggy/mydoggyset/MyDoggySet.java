@@ -29,6 +29,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Locale;
 
+import com.jtattoo.plaf.bernstein.BernsteinLookAndFeel;
+
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
@@ -63,6 +65,13 @@ public class MyDoggySet {
 
 
     protected void setUp() {
+/*
+        try {
+            UIManager.setLookAndFeel(new BernsteinLookAndFeel());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+*/
         initComponents();
         initToolWindowManager();
     }
@@ -128,7 +137,7 @@ public class MyDoggySet {
         menuBar.add(contentMenu);
         menuBar.add(lafMenu);
 
-//        this.frame.setJMenuBar(menuBar);
+        this.frame.setJMenuBar(menuBar);
     }
 
     protected void initToolWindowManager() {

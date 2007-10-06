@@ -70,7 +70,7 @@ public class XMLReaderHandler extends DefaultHandler {
                         throw new SAXException("Invalid version. Not defined version attribute.");
 
                     String version = attributes.getValue("version");
-                    if (!"1.3.1".equals(version))
+                    if (!"1.3.2".equals(version))
                         throw new SAXException("Invalid version : " + version);
 
                     persistedToolWindowManager = new PersistedToolWindowManager();
@@ -124,6 +124,7 @@ public class XMLReaderHandler extends DefaultHandler {
                     dockedType = null;
                     slidingType = null;
                     floatingType = null;
+
                     subState = State.DESCRIPTORS;
                 } else {
                     if ("docked".equals(qName)) {
@@ -132,6 +133,8 @@ public class XMLReaderHandler extends DefaultHandler {
                         slidingType = new PersistedSlidingType(attributes);
                     } else if ("floating".equals(qName)) {
                         floatingType = new PersistedFloatingType(attributes);
+                    } else if("tab".equals(qName)) {
+                        persistedToolWindow.addTab(attributes);
                     }
                 }
                 break;
@@ -193,11 +196,18 @@ public class XMLReaderHandler extends DefaultHandler {
                         }
 
                         toolWindow.setAnchor(persistedToolWindow.getAnchor());
-                        toolWindow.setType(persistedToolWindow.getType());
+                        if (persistedToolWindow.getType() != ToolWindowType.TABBED)
+                            toolWindow.setType(persistedToolWindow.getType());
                         toolWindow.setAutoHide(persistedToolWindow.isAutoHide());
                         toolWindow.setAvailable(persistedToolWindow.isAvailable());
                         toolWindow.setIndex(persistedToolWindow.getIndex());
                         toolWindow.setAggregateMode(persistedToolWindow.isAggregateMode());
+
+                        for(String toolWindowId : persistedToolWindow.getTabs()) {
+                            ToolWindow tabTool = toolWindowManager.getToolWindow(toolWindowId);
+                            if (tabTool != null)
+                                toolWindow.addToolWindowTab(tabTool);
+                        }
 
                         map.put(toolWindow, persistedToolWindow);
                     }
@@ -281,10 +291,10 @@ public class XMLReaderHandler extends DefaultHandler {
             if (persistedToolWindow.isMaximized())
                 maximizedTool = toolWindow;
         }
-        
+
         if (activeTool != null)
             activeTool.setActive(true);
-        
+
         if (maximizedTool != null)
             maximizedTool.setMaximized(true);
     }
