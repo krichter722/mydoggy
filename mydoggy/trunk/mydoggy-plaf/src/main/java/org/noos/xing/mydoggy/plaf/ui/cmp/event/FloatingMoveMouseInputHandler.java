@@ -26,16 +26,17 @@ public class FloatingMoveMouseInputHandler implements MouseInputListener {
     private int dragOffsetX;
     private int dragOffsetY;
 
-    private Window window;
+    private Component floatingContainer;
 
-    public FloatingMoveMouseInputHandler(Window window) {
-        this.window = window;
+    public FloatingMoveMouseInputHandler(Component floatingContainer) {
+        this.floatingContainer = floatingContainer;
     }
 
     public void mousePressed(MouseEvent ev) {
         Component w = (Component) ev.getSource();
         if (w != null) {
-            window.toFront();
+            if (floatingContainer instanceof Window)
+                ((Window) floatingContainer).toFront();
 
             Point dragWindowOffset = ev.getPoint();
             Point convertedDragWindowOffset = SwingUtilities.convertPoint(w,
@@ -56,10 +57,10 @@ public class FloatingMoveMouseInputHandler implements MouseInputListener {
 
     public void mouseReleased(MouseEvent ev) {
         if (isMovingWindow) {
-            if (dragCursor != 0 && window != null && !window.isValid()) {
+            if (dragCursor != 0 && floatingContainer != null && !floatingContainer.isValid()) {
                 // Some Window systems validate as you resize, others won't,
                 // thus the check for validity before repainting.
-                window.validate();
+                floatingContainer.validate();
             }
             isMovingWindow = false;
             dragCursor = 0;
@@ -72,12 +73,12 @@ public class FloatingMoveMouseInputHandler implements MouseInputListener {
     public void mouseDragged(MouseEvent ev) {
         if (isMovingWindow) {
             Point pt = ev.getPoint();
-            Point windowPt = window.getLocationOnScreen();
+            Point windowPt = floatingContainer.getLocationOnScreen();
 
             windowPt.x += pt.x - dragOffsetX;
             windowPt.y += pt.y - dragOffsetY;
 
-            window.setLocation(windowPt);
+            floatingContainer.setLocation(windowPt);
         }
     }
 
