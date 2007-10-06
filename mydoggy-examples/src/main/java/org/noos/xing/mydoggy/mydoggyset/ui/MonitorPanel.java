@@ -74,7 +74,7 @@ public class MonitorPanel extends JPanel {
                 w = size.width;
                 h = size.height;
 
-                backImage = (BufferedImage) createImage(w, h);
+                backImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
                 backImageGrfx = backImage.createGraphics();
                 backImageGrfx.setFont(font);
 

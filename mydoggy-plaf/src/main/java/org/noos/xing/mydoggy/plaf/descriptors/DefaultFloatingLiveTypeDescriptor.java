@@ -6,11 +6,15 @@ import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import javax.swing.event.EventListenerList;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
+    private Point location;
+    private Dimension size;
+
     private boolean transparentMode;
     private float transparentRatio;
     private int transparentDelay;
@@ -27,14 +31,48 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
         animating = true;
     }
 
-    public DefaultFloatingLiveTypeDescriptor(DefaultFloatingLiveTypeDescriptor parent, int transparentDelay, float transparentRatio, boolean transparentMode, boolean enabled, boolean animating) {
+    public DefaultFloatingLiveTypeDescriptor(DefaultFloatingLiveTypeDescriptor parent, Point location, Dimension size,
+                                             int transparentDelay, float transparentRatio, boolean useTransparentMode,
+                                             boolean enabled, boolean animating) {
+        this.location = location;
+        this.size = size;
         this.transparentDelay = transparentDelay;
         this.transparentRatio = transparentRatio;
-        this.transparentMode = transparentMode;
+        this.transparentMode = useTransparentMode;
         this.enabled = enabled;
         this.animating = animating;
 
         parent.addPropertyChangeListener(this);
+    }
+
+    public void setLocation(int x, int y) {
+        Point newLocation = new Point(x, y);
+        if (location != null && location.equals(newLocation))
+            return;
+
+        Point old = this.location;
+        this.location = newLocation;
+
+        firePropertyChange("location", old, location);
+    }
+
+    public void setSize(int width, int height) {
+        Dimension newSize = new Dimension(width, height);
+        if (size != null && size.equals(newSize))
+            return;
+
+        Dimension old = this.size;
+        this.size = newSize;
+
+        firePropertyChange("size", old, size);
+    }
+
+    public Point getLocation() {
+        return location;
+    }
+
+    public Dimension getSize() {
+        return size;
     }
 
     public float getTransparentRatio() {
@@ -111,13 +149,19 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
 
 
     public ToolWindowTypeDescriptor cloneMe() {
-        return new DefaultFloatingLiveTypeDescriptor(this,
-                                                     getTransparentDelay(), getTransparentRatio(),
-                                                     isTransparentMode(), isEnabled(), animating);
+        return new DefaultFloatingLiveTypeDescriptor(this, getLocation(), getSize(), getTransparentDelay(),
+                                                     getTransparentRatio(), isTransparentMode(),
+                                                     isEnabled(), animating);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("transparentMode".equals(evt.getPropertyName())) {
+        if ("location".equals(evt.getPropertyName())) {
+            Point p = (Point) evt.getNewValue();
+            setLocation(p.x, p.y);
+        } else if ("size".equals(evt.getPropertyName())) {
+            Dimension d = (Dimension) evt.getNewValue();
+            setSize(d.width, d.height);
+        } else if ("transparentMode".equals(evt.getPropertyName())) {
             setTransparentMode((Boolean) evt.getNewValue());
         } else if ("transparentRatio".equals(evt.getPropertyName())) {
             setTransparentRatio((Float) evt.getNewValue());
