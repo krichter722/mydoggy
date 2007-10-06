@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -98,16 +99,16 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
         switch (orientation) {
             case JSplitPane.VERTICAL_SPLIT:
                 setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {0, 1, TableLayout.FILL, 1,  0}}));
-                add(renderArrow(resourceManager, Direction.LEFT, ResourceManager.TOOL_SCROLL_BAR_UP), "0,0,c,c");
+                add(renderArrow(resourceManager, Direction.LEFT, MyDoggyKeySpace.TOOL_SCROLL_BAR_UP), "0,0,c,c");
                 add(viewport, "0,2,FULL,FULL");
-                add(renderArrow(resourceManager, Direction.RIGHT, ResourceManager.TOOL_SCROLL_BAR_DOWN), "0,4,c,c");
+                add(renderArrow(resourceManager, Direction.RIGHT, MyDoggyKeySpace.TOOL_SCROLL_BAR_DOWN), "0,4,c,c");
 
                 break;
             case JSplitPane.HORIZONTAL_SPLIT:
                 setLayout(new ExtendedTableLayout(new double[][]{{0, 1, TableLayout.FILL, 1, 0}, {TableLayout.FILL}}));
-                add(renderArrow(resourceManager, Direction.LEFT, ResourceManager.TOOL_SCROLL_BAR_LEFT), "0,0,c,c");
+                add(renderArrow(resourceManager, Direction.LEFT, MyDoggyKeySpace.TOOL_SCROLL_BAR_LEFT), "0,0,c,c");
                 add(viewport, "2,0,FULL,FULL");
-                add(renderArrow(resourceManager, Direction.RIGHT, ResourceManager.TOOL_SCROLL_BAR_RIGHT), "4,0,c,c");
+                add(renderArrow(resourceManager, Direction.RIGHT, MyDoggyKeySpace.TOOL_SCROLL_BAR_RIGHT), "4,0,c,c");
 
                 break;
         }
@@ -164,7 +165,7 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
     }
 
     protected Component renderArrow(ResourceManager resourceManager, Direction direction, String iconName) {
-        JLabel label =  (JLabel) resourceManager.createComponent(ResourceManager.TOOL_SCROLL_BAR_ARROW, null, iconName);
+        JLabel label =  (JLabel) resourceManager.createComponent(MyDoggyKeySpace.TOOL_SCROLL_BAR_ARROW, null, iconName);
         label.addMouseListener(new ArrowListener(direction));
         return label;
     }

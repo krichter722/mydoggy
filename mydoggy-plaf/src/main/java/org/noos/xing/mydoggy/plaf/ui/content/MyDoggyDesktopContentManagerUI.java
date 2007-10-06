@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DesktopContentFrame;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
@@ -216,7 +217,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         if (desktopPane == null) {
             detachedContentUIMap = new Hashtable<Content, DesktopContentUI>();
             desktopPane = (JDesktopPane) toolWindowManager.getResourceManager().createComponent(
-                    ResourceManager.DESKTOP_CONTENT_PANE, toolWindowManager
+                    MyDoggyKeySpace.DESKTOP_CONTENT_PANE, toolWindowManager
             );
         }
     }

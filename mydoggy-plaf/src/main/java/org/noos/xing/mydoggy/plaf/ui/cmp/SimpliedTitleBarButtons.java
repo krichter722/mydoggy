@@ -2,10 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
-import org.noos.xing.mydoggy.plaf.ui.TitleBarButtons;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
+import org.noos.xing.mydoggy.plaf.ui.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +12,7 @@ import java.awt.event.ActionListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class SimplyTitleBarButtons implements TitleBarButtons {
+public class SimpliedTitleBarButtons implements TitleBarButtons {
     protected ToolWindow toolWindow;
     protected ToolWindowDescriptor descriptor;
     protected ResourceManager resourceManager;
@@ -25,7 +22,7 @@ public class SimplyTitleBarButtons implements TitleBarButtons {
 
     protected JButton hideButton;
 
-    public SimplyTitleBarButtons(ToolWindowDescriptor toolWindowDescriptor, DockedContainer dockedContainer) {
+    public SimpliedTitleBarButtons(ToolWindowDescriptor toolWindowDescriptor, DockedContainer dockedContainer) {
         this.descriptor = toolWindowDescriptor;
         this.toolWindow = toolWindowDescriptor.getToolWindow();
         this.resourceManager = dockedContainer.getResourceManager();
@@ -59,10 +56,10 @@ public class SimplyTitleBarButtons implements TitleBarButtons {
         ActionListener titleBarActionListener = new TitleBarActionListener();
 
         hideButton = renderTitleButton("visible", titleBarActionListener,
-                                       "@@tool.tooltip.hide", ResourceManager.HIDE_TOOL_WINDOW_INACTIVE,
+                                       "@@tool.tooltip.hide", MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE,
                                        null);
         JButton popupButton = renderTitleButton("showPopup", titleBarActionListener,
-                                       "@@tool.tooltip.showPopup", ResourceManager.ACTIONS,
+                                       "@@tool.tooltip.showPopup", MyDoggyKeySpace.ACTIONS,
                                        "toolWindow.showPopupButton." + toolWindow.getId());
 
         buttonContainer.add(popupButton, "0,1");
@@ -74,7 +71,7 @@ public class SimplyTitleBarButtons implements TitleBarButtons {
 
     protected JButton renderTitleButton(String actionCommand, ActionListener actionListener, String tooltip, String iconId, String name) {
         JButton button = (JButton) resourceManager.createComponent(
-                ResourceManager.TOOL_WINDOW_TITLE_BUTTON,
+                MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON,
                 descriptor.getManager()
         );
         button.setName(name);

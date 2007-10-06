@@ -13,6 +13,7 @@ import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ShortcutProcessor;
@@ -445,7 +446,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         initContentManager();
 
-        resourceManager.applyCustomization(ResourceManager.MDM_PANEL, this);
+        resourceManager.applyCustomization(MyDoggyKeySpace.MDM_PANEL, this);
 
         ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
@@ -473,7 +474,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         addBar(TOP, JSplitPane.VERTICAL_SPLIT, "1,0", "2,2,FULL,FULL");
         addBar(BOTTOM, JSplitPane.VERTICAL_SPLIT, "1,2", "0,2,FULL,FULL");
 
-        mainContainer = (JPanel) resourceManager.createComponent(ResourceManager.MDM_MAIN_CONTAINER, this);
+        mainContainer = (JPanel) resourceManager.createComponent(MyDoggyKeySpace.MDM_MAIN_CONTAINER, this);
         mainContainer.setName("toolWindowManager.mainContainer");
         mainContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         mainContainer.setFocusCycleRoot(true);
@@ -566,7 +567,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
 
     protected JSplitPane renderSplitPane(int orientation) {
-        return (JSplitPane) resourceManager.createComponent(ResourceManager.BAR_SPLIT_PANE, this, orientation);
+        return (JSplitPane) resourceManager.createComponent(MyDoggyKeySpace.BAR_SPLIT_PANE, this, orientation);
     }
 
     protected JSplitPane addBar(ToolWindowAnchor anchor, int splitPaneOrientation,
@@ -580,7 +581,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         add(bars[anchor.ordinal()].getToolScrollBar(), barConstraints);
 
         // Add Corner to Container
-        add(resourceManager.createComponent(ResourceManager.CORNER_CONTENT_PANE, this),
+        add(resourceManager.createComponent(MyDoggyKeySpace.CORNER_CONTENT_PANE, this),
             cornerConstraints);
 
         return bars[anchor.ordinal()].getSplitPane();

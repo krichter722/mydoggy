@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.TabbedContentUI;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.accessibility.AccessibleContext;
@@ -280,10 +281,10 @@ public class ContentPage implements TabbedContentUI {
 
 
     protected void initIcons() {
-        detachIcon = resourceManager.getIcon(ResourceManager.CONTENT_PAGE_DETACH);
-        detachInactiveIcon = resourceManager.getIcon(ResourceManager.CONTENT_PAGE_DETACH_INACTIVE);
-        closeIcon = resourceManager.getIcon(ResourceManager.CONTENT_PAGE_CLOSE);
-        closeInactiveIcon = resourceManager.getIcon(ResourceManager.CONTENT_PAGE_CLOSE_INACTIVE);
+        detachIcon = resourceManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_DETACH);
+        detachInactiveIcon = resourceManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_DETACH_INACTIVE);
+        closeIcon = resourceManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_CLOSE);
+        closeInactiveIcon = resourceManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_CLOSE_INACTIVE);
     }
 
 

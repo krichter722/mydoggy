@@ -4,8 +4,8 @@ import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTitleBarButtons;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
-import org.noos.xing.mydoggy.plaf.ui.cmp.SimplyTitleBarButtons;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
@@ -35,7 +35,7 @@ public class MyDoggyResourceManager implements ResourceManager {
     protected Map<String, ComponentCreator> cmpCreators;
     protected Map<String, ComponentUICreator> cmpUiCreators;
     protected Map<String, ComponentCustomizer> cmpCustomizers;
-    protected Map<Class, InstanceCreator> cmpInstanceCreators;
+    protected Map<Class, InstanceCreator> instanceCreators;
 
     protected String bundlePath;
     protected ResourceBundle resourceBundle;
@@ -79,7 +79,7 @@ public class MyDoggyResourceManager implements ResourceManager {
     }
 
     public <T> T createInstance(Class<T> clazz, Object... args) {
-        return (T) cmpInstanceCreators.get(clazz).createComponent(args);
+        return (T) instanceCreators.get(clazz).createComponent(args);
     }
 
     public Component createComponent(String key, ToolWindowManager manager, Object... args) {
@@ -131,16 +131,21 @@ public class MyDoggyResourceManager implements ResourceManager {
         return (userResourceBundle != null) ? userResourceBundle.getString(key) : key;
     }
 
-    public void setIcon(String id, Icon icon) {
-        icons.put(id, icon);
+
+    public void putInstanceCreator(Class aClass, InstanceCreator instanceCreator) {
+        instanceCreators.put(aClass, instanceCreator);
     }
 
-    public void setColor(String id, Color color) {
-        colors.put(id, color);
+    public void putComponentCreator(String key, ComponentCreator componentCreator) {
+        cmpCreators.put(key, componentCreator);
     }
 
-    public void setBundle(Locale locale, String bundle, ClassLoader classLoader) {
-        this.resourceBundle = initResourceBundle(locale, bundle, classLoader);
+    public void putComponentCustomizer(String key, ComponentCustomizer componentCustomizer) {
+        cmpCustomizers.put(key, componentCustomizer);
+    }
+
+    public void putComponentUICreator(String key, ComponentUICreator componentUICreator) {
+        cmpUiCreators.put(key, componentUICreator);
     }
 
 
@@ -227,24 +232,24 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     protected void initComponentCreators() {
         cmpCreators = new Hashtable<String, ComponentCreator>();
-        cmpCreators.put(ResourceManager.BAR_SPLIT_PANE, new BarSplitPaneComponentCreator());
-        cmpCreators.put(ResourceManager.BAR_CONTENT_PANE, new BarContentPaneComponentCreator());
-        cmpCreators.put(ResourceManager.CORNER_CONTENT_PANE, new CornerContentPaneComponentCreator());
-        cmpCreators.put(ResourceManager.MDM_MAIN_CONTAINER, new MyDoggyManagerMainContainerComponentCreator());
-        cmpCreators.put(ResourceManager.DESKTOP_CONTENT_PANE, new DesktopContentPaneComponentCreator());
-        cmpCreators.put(ResourceManager.TOOL_WINDOW_TITLE_BAR, new ToolWindowTitleBarComponentCreator());
-        cmpCreators.put(ResourceManager.TOOL_WINDOW_TITLE_BUTTON, new ToolWindowTitleButtonComponentCreator());
-        cmpCreators.put(ResourceManager.TOOL_SCROLL_BAR_ARROW, new ToolScrollBarArrowComponentCreator());
+        cmpCreators.put(MyDoggyKeySpace.BAR_SPLIT_PANE, new BarSplitPaneComponentCreator());
+        cmpCreators.put(MyDoggyKeySpace.BAR_CONTENT_PANE, new BarContentPaneComponentCreator());
+        cmpCreators.put(MyDoggyKeySpace.CORNER_CONTENT_PANE, new CornerContentPaneComponentCreator());
+        cmpCreators.put(MyDoggyKeySpace.MDM_MAIN_CONTAINER, new MyDoggyManagerMainContainerComponentCreator());
+        cmpCreators.put(MyDoggyKeySpace.DESKTOP_CONTENT_PANE, new DesktopContentPaneComponentCreator());
+        cmpCreators.put(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR, new ToolWindowTitleBarComponentCreator());
+        cmpCreators.put(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON, new ToolWindowTitleButtonComponentCreator());
+        cmpCreators.put(MyDoggyKeySpace.TOOL_SCROLL_BAR_ARROW, new ToolScrollBarArrowComponentCreator());
 
         cmpUiCreators = new Hashtable<String, ComponentUICreator>();
-        cmpUiCreators.put(ResourceManager.REPRESENTATIVE_ANCHOR_BUTTON_UI, new RepresentativeAnchorButtonComponentUICreator());
-        cmpUiCreators.put(ResourceManager.TOOL_WINDOW_TITLE_BAR_UI, new ToolWindowTitleBarComponentUICreator());
+        cmpUiCreators.put(MyDoggyKeySpace.REPRESENTATIVE_ANCHOR_BUTTON_UI, new RepresentativeAnchorButtonComponentUICreator());
+        cmpUiCreators.put(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR_UI, new ToolWindowTitleBarComponentUICreator());
 
         cmpCustomizers = new Hashtable<String, ComponentCustomizer>();
-        cmpCustomizers.put(ResourceManager.MDM_PANEL, new MyDoggyManagerPanelComponentCustomizer());
+        cmpCustomizers.put(MyDoggyKeySpace.MDM_PANEL, new MyDoggyManagerPanelComponentCustomizer());
 
-        cmpInstanceCreators = new Hashtable<Class, InstanceCreator>();
-        cmpInstanceCreators.put(TitleBarButtons.class, new TitleBarButtonsInstanceCreator());
+        instanceCreators = new Hashtable<Class, InstanceCreator>();
+        instanceCreators.put(TitleBarButtons.class, new TitleBarButtonsInstanceCreator());
 
     }
 
@@ -404,16 +409,16 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     public static class TitleBarButtonsInstanceCreator implements InstanceCreator {
         public Object createComponent(Object... args) {
+           return new ExtendedTitleBarButtons(
+                    (ToolWindowDescriptor) args[0],
+                    (DockedContainer) args[1]
+            );
 /*
-            return new ExtendedTitleBarButtons(
+           return new SimpliedTitleBarButtons(
                     (ToolWindowDescriptor) args[0],
                     (DockedContainer) args[1]
             );
 */
-            return new SimplyTitleBarButtons(
-                    (ToolWindowDescriptor) args[0],
-                    (DockedContainer) args[1]
-            );
         }
     }
 
