@@ -598,7 +598,6 @@ public class DockedContainer implements ToolWindowContainer {
 
         public void toolWindowTabAdded(ToolWindowTabEvent event) {
             ToolWindowTab tab = event.getToolWindowTab();
-            // TODO: check for this           tab.getComponent().addMouseListener(titleBarMouseAdapter);
             tab.addPropertyChangeListener(this);
         }
 
@@ -608,7 +607,6 @@ public class DockedContainer implements ToolWindowContainer {
                 SwingUtil.repaint(container);
             }
 
-//            event.getToolWindowTab().getComponent().removeMouseListener(titleBarMouseAdapter);
             event.getToolWindowTab().removePropertyChangeListener(this);
         }
 

@@ -51,6 +51,7 @@ public class PreferencePanelView extends ComponentView {
         viewContext.addViewContextChangeListener(new DockedTypeDescriptorView(viewContext));
         viewContext.addViewContextChangeListener(new SlidingTypeDescriptorView(viewContext));
         viewContext.addViewContextChangeListener(new FloatingTypeDescriptorView(viewContext));
+        viewContext.addViewContextChangeListener(new FloatingLiveTypeDescriptorView(viewContext));
 
         viewContext.addViewContextChangeListener(new ViewContextChangeListener() {
             public void contextChange(ViewContextChangeEvent evt) {
@@ -81,7 +82,8 @@ public class PreferencePanelView extends ComponentView {
                     null,
                     DockedTypeDescriptor.class,
                     SlidingTypeDescriptor.class,
-                    FloatingTypeDescriptor.class
+                    FloatingTypeDescriptor.class,
+                    FloatingLiveTypeDescriptor.class
             });
 
             types.addItemListener(new ContextPutItemListener(viewContext, ToolWindowTypeDescriptor.class));
