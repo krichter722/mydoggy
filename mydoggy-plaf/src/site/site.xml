@@ -20,7 +20,9 @@
             <item name="PersistenceDelgate" href="persistenceDelegate.html"/>
             <item name="ContentManageUI" href="contentManagerUI.html"/>
             <item name="TransparencyManager" href="transparency.html"/>
-            <item name="ResourceManager" href="resourceManager.html"/>
+            <item name="ResourceManager" href="resourceManager.html">
+                <item name="Using" href="resourceManagerUsing.html"/>
+            </item>
         </menu>
 
         ${reports}

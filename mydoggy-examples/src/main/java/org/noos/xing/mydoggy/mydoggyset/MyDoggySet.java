@@ -146,19 +146,23 @@ public class MyDoggySet {
 
         // Customize toolwindow TitleBar ...
         MyDoggyToolWindowManager manager = ((MyDoggyToolWindowManager) toolWindowManager);
-        manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ENABLED_START, Color.RED);
-        manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ENABLED_END, Color.PINK);
-        manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_DISABLED_START, Color.BLACK);
-        manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_DISABLED_END, Color.GRAY);
+        ResourceManager resourceManager = manager.getResourceManager();
 
-        // Customize toolwindow tabs ...
-        manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED, Color.BLUE);
-        manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED, Color.CYAN);
+        manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START, Color.RED);
+        manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END, Color.PINK);
+        manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START, Color.BLACK);
+        manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END, Color.GRAY);
+
+        resourceManager.putColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED, Color.BLUE);
+        resourceManager.putColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED, Color.LIGHT_GRAY);
+
+        resourceManager.putColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START, Color.RED);
+        resourceManager.putColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END, Color.PINK);
 
         // More deep customization ...
         // Change the way the background is drawing
-        MyDoggyResourceManager resourceManager = (MyDoggyResourceManager) manager.getResourceManager();
-        resourceManager.putComponentUICreator(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR_UI, new MyDoggyResourceManager.ComponentUICreator() {
+        MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) manager.getResourceManager();
+        myDoggyResourceManager.putComponentUICreator(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR_UI, new MyDoggyResourceManager.ComponentUICreator() {
 
             public ComponentUI createComponentUI(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
                 return new ToolWindowTitleBarUI((ToolWindowDescriptor) args[0],
@@ -206,7 +210,7 @@ public class MyDoggySet {
         });
 
         // Change title bar buttons dispositions
-        ((MyDoggyResourceManager) ((MyDoggyToolWindowManager) toolWindowManager).getResourceManager()).putInstanceCreator(
+        myDoggyResourceManager.putInstanceCreator(
                 TitleBarButtons.class, new MyDoggyResourceManager.InstanceCreator() {
 
             public Object createComponent(Object... args) {

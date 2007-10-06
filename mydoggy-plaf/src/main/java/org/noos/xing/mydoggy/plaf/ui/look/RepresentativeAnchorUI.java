@@ -28,7 +28,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro
@@ -159,8 +158,8 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             }
 
             updateAnchor(g, c,
-                         resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_FLASHING_START),
-                         resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_FLASHING_END),
+                         resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
+                         resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
                          c.isOpaque(),
                          false);
         }
@@ -464,21 +463,21 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                 case INCOMING:
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackStart,
                                                       resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_FLASHING_START),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd,
                                                       resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_FLASHING_END),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
                                                       animationPercent);
                     break;
 
                 case OUTGOING:
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackStart,
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_FLASHING_START),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
                                                       resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd,
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_FLASHING_END),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
                                                       resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
                                                       animationPercent);
                     break;
@@ -493,15 +492,15 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                     flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
                     break;
                 case OUTGOING:
-                    flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_FLASHING_START));
+                    flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START));
                     break;
             }
             SwingUtil.repaint(label);
         }
 
         protected void onHide(Object... params) {
-            flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_FLASHING_START));
-            flashingAnimBackEnd.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_FLASHING_END));
+            flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START));
+            flashingAnimBackEnd.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END));
         }
 
         protected void onShow(Object... params) {
