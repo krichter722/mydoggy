@@ -1,13 +1,6 @@
 package org.noos.xing.mydoggy.mydoggyset;
 
-import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.itest.InteractiveAssertor;
-import org.noos.xing.mydoggy.itest.InteractiveMouse;
-import org.noos.xing.mydoggy.itest.InteractiveTest;
-import org.noos.xing.mydoggy.itest.InteractiveUI;
 import org.noos.xing.mydoggy.itest.impl.ListInteractiveTestRunner;
-
-import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -16,14 +9,17 @@ public class MyDoggyInteractiveTester {
 
     public static void main(String[] args) {
         ListInteractiveTestRunner runner = new ListInteractiveTestRunner();
+/*
         runner.addInteractiveTest(new ToolVisisbleInteractiveTest());
         runner.addInteractiveTest(new PreviewInteractiveTest());
         runner.addInteractiveTest(new DragInteractiveTest());
         runner.addInteractiveTest(new SlidingTypeInteractiveTest());
         runner.addInteractiveTest(new FloatingMoveInteractiveTest());
+*/
         runner.run();
     }
 
+/*
     public static abstract class MyDoggyInteractiveTest implements InteractiveTest {
         MyDoggySet myDoggySet;
 
@@ -63,7 +59,7 @@ public class MyDoggyInteractiveTester {
 
     public static class PreviewInteractiveTest extends MyDoggyInteractiveTest {
 
-        public void interactiveTest(InteractiveUI interactiveUI) {
+        public void execute(InteractiveUI interactiveUI) {
             InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
             InteractiveAssertor assertor = interactiveUI.getInteractiveAssertor();
 
@@ -98,7 +94,7 @@ public class MyDoggyInteractiveTester {
 
     public static class ToolVisisbleInteractiveTest extends MyDoggyInteractiveTest {
 
-        public void interactiveTest(InteractiveUI interactiveUI) {
+        public void execute(InteractiveUI interactiveUI) {
             InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
             InteractiveAssertor assertor = interactiveUI.getInteractiveAssertor();
 
@@ -114,7 +110,7 @@ public class MyDoggyInteractiveTester {
 
     public static class DragInteractiveTest extends MyDoggyInteractiveTest {
 
-        public void interactiveTest(InteractiveUI interactiveUI) {
+        public void execute(InteractiveUI interactiveUI) {
             InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
             InteractiveAssertor assertor = interactiveUI.getInteractiveAssertor();
 
@@ -142,7 +138,7 @@ public class MyDoggyInteractiveTester {
 
     public static class SlidingTypeInteractiveTest extends MyDoggyInteractiveTest {
 
-        public void interactiveTest(InteractiveUI interactiveUI) {
+        public void execute(InteractiveUI interactiveUI) {
             InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
             InteractiveAssertor assertor = interactiveUI.getInteractiveAssertor();
 
@@ -166,7 +162,7 @@ public class MyDoggyInteractiveTester {
 
     public static class FloatingMoveInteractiveTest extends MyDoggyInteractiveTest {
 
-        public void interactiveTest(InteractiveUI interactiveUI) {
+        public void execute(InteractiveUI interactiveUI) {
             InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
             InteractiveAssertor assertor = interactiveUI.getInteractiveAssertor();
 
@@ -197,4 +193,5 @@ public class MyDoggyInteractiveTester {
         }
 
     }
+*/
 }

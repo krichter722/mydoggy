@@ -15,6 +15,6 @@ public interface InteractiveTest {
 
     void dispose();
 
-    void interactiveTest(InteractiveUI interactiveUI);
+    void execute(InteractiveUI interactiveUI);
 
 }

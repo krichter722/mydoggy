@@ -2,7 +2,6 @@ package org.noos.xing.mydoggy.mydoggyset.view.interactive.tests;
 
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.itest.InteractiveMouse;
 import org.noos.xing.mydoggy.itest.InteractiveUI;
 
 import java.awt.*;
@@ -22,39 +21,19 @@ public class InteractiveDragToTabTest extends AbstractInteractiveTest {
         return "InteractiveDragToTabTest";
     }
 
-    public void interactiveTest(InteractiveUI interactiveUI) {
+    public void execute(InteractiveUI interactiveUI) {
         toolWindowManager.getToolWindowGroup().setVisible(false);
 
-        InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
-
-        showTool(interactiveUI, "Tool 3");
-        showTool(interactiveUI, "Tool 13");
+        clickOn(interactiveUI, "toolWindow.rb.Tool 3");
+        clickOn(interactiveUI, "toolWindow.rb.Tool 13");
 
         interactiveUI.delay(500);
 
-        mouse.moveTo("toolWindow.Tool 13.tab.Title 13", 500);
-        mouse.press(InteractiveMouse.Type.LEFT);
-        interactiveUI.delay(500);
-        mouse.moveTo("toolWindow.tabContainer.Tool 3", 500);
-        mouse.release(500);
-
-        mouse.moveTo("toolWindow.Tool 3.tab.Title 13", 500);
-        mouse.press(InteractiveMouse.Type.LEFT);
-        mouse.moveTo("toolWindowManager.bar." + ToolWindowAnchor.TOP, 300, 15, 500);
-        mouse.release(500);
-
-        mouse.moveTo("toolWindow.Tool 13.tab.Title 13", 500);
-        mouse.press(InteractiveMouse.Type.LEFT);
-        interactiveUI.delay(500);
-        mouse.moveTo("toolWindow.tabContainer.Tool 3", 500);
-        mouse.release(500);
-
-        mouse.moveTo("toolWindow.Tool 3.tab.Title 13", 500);
-        mouse.press(InteractiveMouse.Type.LEFT);
-        interactiveUI.delay(500);
-        mouse.moveTo("toolWindow.container.Tool 3", 100,150, 500);
-        mouse.release(500);
-
+        drag(interactiveUI, "toolWindow.Tool 13.tab.Title 13", "toolWindow.tabContainer.Tool 3");
+        drag(interactiveUI, "toolWindow.Tool 3.tab.Title 13", "toolWindowManager.bar." + ToolWindowAnchor.TOP);
+        drag(interactiveUI, "toolWindow.Tool 13.tab.Title 13", "toolWindow.tabContainer.Tool 3");
+        drag(interactiveUI, "toolWindow.Tool 3.tab.Title 13", "toolWindow.container.Tool 3");
     }
+
 
 }

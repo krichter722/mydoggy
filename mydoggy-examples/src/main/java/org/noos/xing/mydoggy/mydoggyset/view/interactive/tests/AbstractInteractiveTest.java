@@ -1,8 +1,7 @@
 package org.noos.xing.mydoggy.mydoggyset.view.interactive.tests;
 
-import org.noos.xing.mydoggy.itest.InteractiveTest;
-import org.noos.xing.mydoggy.itest.InteractiveUI;
-import org.noos.xing.mydoggy.itest.InteractiveMouse;
+import org.noos.xing.mydoggy.itest.*;
+import org.noos.xing.mydoggy.itest.impl.NamedComponentFilter;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 
 import java.awt.*;
@@ -11,10 +10,10 @@ import java.awt.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public abstract class AbstractInteractiveTest implements InteractiveTest {
-    private Container masterContainer;
+    private Container root;
 
-    protected AbstractInteractiveTest(Container masterContainer) {
-        this.masterContainer = masterContainer;
+    protected AbstractInteractiveTest(Container root) {
+        this.root = root;
     }
 
     public String getName() {
@@ -22,7 +21,7 @@ public abstract class AbstractInteractiveTest implements InteractiveTest {
     }
 
     public Container setup() {
-        return masterContainer; 
+        return root;
     }
 
     public void dispose() {
@@ -32,24 +31,17 @@ public abstract class AbstractInteractiveTest implements InteractiveTest {
         return getName();
     }
 
-    protected void moveToolTo(InteractiveUI interactiveUI, String toolId, ToolWindowAnchor anchor) {
-        InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
-
-        mouse.moveTo("toolWindow.rb." + toolId);
-        interactiveUI.delay(500);
-        mouse.press(InteractiveMouse.Type.LEFT);
-
-        mouse.moveTo("toolWindowManager.bar." + anchor.toString(), 10, 15);
-        interactiveUI.delay(500);
-        mouse.release();
-        interactiveUI.delay(500);
+    protected void clickOn(InteractiveUI interactiveUI, String componentName) {
+        interactiveUI.getComponentLookuper().lookup(new NamedComponentFilter(componentName)).moveToCenter(500).click(ComponentAdapter.MouseButton.LEFT);
     }
 
-    protected void showTool(InteractiveUI interactiveUI, String toolId) {
-        InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
-
-        mouse.moveTo("toolWindow.rb." + toolId);
-        interactiveUI.delay(500);
-        mouse.click(InteractiveMouse.Type.LEFT);
+    protected void drag(InteractiveUI interactiveUI, String from, String to) {
+        interactiveUI.getComponentLookuper().lookup(new NamedComponentFilter(from)).moveToCenter(500).press(ComponentAdapter.MouseButton.LEFT);
+        interactiveUI.getComponentLookuper().lookup(new NamedComponentFilter(to)).moveToCenter(500).release(ComponentAdapter.MouseButton.LEFT, 500);
     }
+
+    protected void moveToAnchor(InteractiveUI interactiveUI, String componentName, ToolWindowAnchor anchor) {
+        drag(interactiveUI, componentName, "toolWindowManager.bar." + anchor.toString());
+    }
+
 }
