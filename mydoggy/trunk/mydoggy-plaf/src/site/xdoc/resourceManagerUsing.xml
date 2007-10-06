@@ -1,0 +1,103 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy-Plaf : ResourceManager Using</title>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="Using ResourceManager">
+            <p>
+            Here are some examples that show how to customize mydoggy. Remember to obtain an instance of ResourceManager
+            you can use the following:
+            </p>
+            <source xml:space="preserve">
+MyDoggyToolWindowManager toolWindowManager = new MyDoggyToolWindowManager(...);
+ResourceManager resourceManager = toolWindowManager.getResourceManager();</source>
+            <p>
+                Look at this page to understand at what i'm referring when i write TitleBar, ToolWindowTab, etc.. 
+            </p>
+
+            <subsection name="Change TitleBar Background Colors">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./images/resourceManager/titleBarBackgroundColors.png" alt="TitleBar Background Colors" border="0" hspace="18"/>
+                            </td>
+                            <td>
+                                <p>You can use the following code:</p>
+                                <source>
+resourceManager.putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START, Color.RED);
+resourceManager.putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END, Color.PINK);
+resourceManager.putColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START, Color.BLACK);
+resourceManager.putColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END, Color.GRAY);</source>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
+            <subsection name="Change ToolWindowTab Foreground Colors">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./images/resourceManager/toolWindowTabForegroundColors.png" alt="ToolWindowTab Foreground Colors" border="0" hspace="18"/>
+                            </td>
+                            <td>
+                                <p>You can use the following code:</p>
+                                <source>
+resourceManager.putColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED, Color.BLUE);
+resourceManager.putColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED, Color.LIGHT_GRAY);
+                </source>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
+            <subsection name="Change Representative Anchor Button Background Colors">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./images/resourceManager/representativeAnchorButtonBackgroundColors.png" alt="Representative Anchor Button Background Colors" border="0" hspace="18"/>
+                            </td>
+                            <td>
+                                <p>You can use the following code:</p>
+                                <source>
+resourceManager.putColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START, Color.RED);
+resourceManager.putColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END, Color.PINK);
+                </source>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
+            <subsection name="Change Representative Anchor Button Foreground Color">
+                You can use the following code:
+                <source>
+resourceManager.putColor(MyDoggyKeySpace.RAB_FOREGROUND, Color.BLUE);
+</source>
+            </subsection>
+            <subsection name="Change TitleBar Button Icons">
+                You can use the following code:
+                <source>
+resourceManager.putIcon(MyDoggyKeySpace.DOCKED, new Icon(...));
+</source>
+            </subsection>
+        </section>
+
+        <section name="Using MyDoggyResourceManager - A more deep customization">
+            <p>
+            Here are some examples that show how to customize in a more deep way mydoggy. To obtain an instance
+            of MyDoggyResourceManager you can use the following:
+            </p>
+            <source xml:space="preserve">
+MyDoggyToolWindowManager toolWindowManager = new MyDoggyToolWindowManager(...);
+MyDoggyResourceManager resourceManager = (MyDoggyResourceManager) toolWindowManager.getResourceManager();</source>
+        </section>
+
+    </body>
+</document>
