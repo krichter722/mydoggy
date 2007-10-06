@@ -212,8 +212,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         });
         addPropertyChangeListener("location", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                if (toolWindow.getType() != ToolWindowType.FLOATING &&
-                    toolWindow.getType() != ToolWindowType.FLOATING_FREE)
+                if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING) != evt.getSource())
                     return;
 
                 if (valueAdjusting)
@@ -228,8 +227,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         });
         addPropertyChangeListener("size", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                if (toolWindow.getType() != ToolWindowType.FLOATING &&
-                    toolWindow.getType() != ToolWindowType.FLOATING_FREE)
+                if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING) != evt.getSource())
                     return;
 
                 if (valueAdjusting)
@@ -244,8 +242,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         });
         addPropertyChangeListener("modal", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                if (toolWindow.getType() != ToolWindowType.FLOATING &&
-                    toolWindow.getType() != ToolWindowType.FLOATING_FREE)
+                if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING) != evt.getSource())
                     return;
 
                 if (window.isVisible()) {

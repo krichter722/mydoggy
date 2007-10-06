@@ -1,7 +1,11 @@
-package org.noos.xing.mydoggy.plaf.ui;
+package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.TitleBarButtons;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,6 +55,7 @@ public class ExtendedTitleBarButtons implements TitleBarButtons {
     public void configureIcons(ToolWindowType type) {
         switch (type) {
             case DOCKED:
+            case FLOATING_LIVE: // TODO: check this choice
                 setPinVisible(true);
 
                 setFloating();

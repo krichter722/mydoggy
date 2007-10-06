@@ -800,7 +800,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 oldAnchor = newAnchor;
 
             ToolWindowType toolType = descriptor.getToolWindow().getType();
-            if (toolType == ToolWindowType.FLOATING || toolType == ToolWindowType.FLOATING_FREE) {
+            if (toolType == ToolWindowType.FLOATING ||
+                toolType == ToolWindowType.FLOATING_FREE ||
+                toolType == ToolWindowType.FLOATING_LIVE) {
                 PropertyChangeEvent avEvent = new UserPropertyChangeEvent(evt.getSource(), "available", true, false, -1);
                 getBar(oldAnchor).propertyChange(avEvent);
                 syncPanel(oldAnchor);

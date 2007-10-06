@@ -226,6 +226,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         }
     }
 
+
     protected class RepresentativeAnchorMouseAdapter extends MouseInputAdapter implements ActionListener, PropertyChangeListener {
 
         JPopupMenu popupMenu;
@@ -290,7 +291,9 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                     enableMoveToItem();
                     enableUserDefined();
 
-                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                    descriptor.getToolWindowContainer().showPopupMenu(e.getComponent(), e.getX(), e.getY());
+
+//                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
 //            if (label.getBorder() != labelBorder)
