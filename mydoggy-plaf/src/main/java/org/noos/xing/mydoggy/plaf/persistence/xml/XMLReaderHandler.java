@@ -203,7 +203,12 @@ public class XMLReaderHandler extends DefaultHandler {
                         toolWindow.setIndex(persistedToolWindow.getIndex());
                         toolWindow.setAggregateMode(persistedToolWindow.isAggregateMode());
 
-                        // TODO: remove all tabs (referred to a tool) not included in persistedToolWindow 
+                        for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+                            if (tab.getToolWindow() != null) {
+                                if (!persistedToolWindow.getTabs().contains(tab.getToolWindow().getId()))
+                                    toolWindow.removeToolWindowTab(tab);
+                            }
+                        }
 
                         for(String toolWindowId : persistedToolWindow.getTabs()) {
                             ToolWindow tabTool = toolWindowManager.getToolWindow(toolWindowId);

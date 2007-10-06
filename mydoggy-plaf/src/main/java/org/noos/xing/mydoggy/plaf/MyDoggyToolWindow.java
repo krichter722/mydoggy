@@ -423,6 +423,11 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     public ToolWindowTab addToolWindowTab(ToolWindow toolWindow) {
         synchronized (getLock()) {
+            for (ToolWindowTab toolWindowTab : toolWindowTabs) {
+                if (toolWindowTab.getToolWindow() == toolWindow)
+                    return toolWindowTab;
+            }
+
             ((MyDoggyToolWindow) toolWindow).setTypeInternal(ToolWindowType.TABBED);
             return addTabInternal(toolWindow.getTitle(),
                                   toolWindow.getIcon(),
