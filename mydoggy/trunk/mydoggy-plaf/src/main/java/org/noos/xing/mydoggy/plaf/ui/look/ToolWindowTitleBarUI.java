@@ -152,15 +152,15 @@ public class ToolWindowTitleBarUI extends PanelUI {
         if (toolWindow.isFlashing()) {
 
             if (flashingState)
-                updateToolWindowAppBar(g, c,
-                                       animBackStart, animBackEnd,
-                                       resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_FLASHING_0),
-                                       animTextColor);
+                updateToolWindowTitleBar(g, c,
+                                         animBackStart, animBackEnd,
+                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_FLASHING_0),
+                                         animTextColor);
             else
-                updateToolWindowAppBar(g, c,
-                                       animBackStart, animBackEnd,
-                                       resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_FLASHING_1),
-                                       animTextColor);
+                updateToolWindowTitleBar(g, c,
+                                         animBackStart, animBackEnd,
+                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_FLASHING_1),
+                                         animTextColor);
 
             if (flashingTimer == null) {
                 flashingTimer = new Timer(700, new ActionListener() {
@@ -192,22 +192,22 @@ public class ToolWindowTitleBarUI extends PanelUI {
             }
         } else {
             if (animation.isAnimating()) {
-                updateToolWindowAppBar(g, c,
-                                       animBackStart, animBackEnd,
-                                       resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_ANIMATING),
-                                       animTextColor);
+                updateToolWindowTitleBar(g, c,
+                                         animBackStart, animBackEnd,
+                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_ANIMATING),
+                                         animTextColor);
             } else if (c.isEnabled()) {
-                updateToolWindowAppBar(g, c,
-                                       resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ENABLED_START),
-                                       resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ENABLED_END),
-                                       resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_ACTIVE),
-                                       resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_FOREGROUND_ACTIVE));
+                updateToolWindowTitleBar(g, c,
+                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ENABLED_START),
+                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ENABLED_END),
+                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_ACTIVE),
+                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_FOREGROUND_ACTIVE));
             } else {
-                updateToolWindowAppBar(g, c,
-                                       resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_DISABLED_START),
-                                       resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_DISABLED_END),
-                                       resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_INACTIVE),
-                                       resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_FOREGROUND_INACTIVE));
+                updateToolWindowTitleBar(g, c,
+                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_DISABLED_START),
+                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_DISABLED_END),
+                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_INACTIVE),
+                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_FOREGROUND_INACTIVE));
             }
         }
 
@@ -224,9 +224,9 @@ public class ToolWindowTitleBarUI extends PanelUI {
         LookAndFeel.uninstallBorder(c);
     }
 
-    protected void updateToolWindowAppBar(Graphics g, JComponent c,
-                                          Color backgroundStart, Color backgroundEnd,
-                                          Color idBackgroundColor, Color idColor) {
+    protected void updateToolWindowTitleBar(Graphics g, JComponent c,
+                                            Color backgroundStart, Color backgroundEnd,
+                                            Color idBackgroundColor, Color idColor) {
         Rectangle r = c.getBounds();
         r.x = r.y = 0;
 
