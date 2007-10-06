@@ -711,8 +711,6 @@ public class DockedContainer implements ToolWindowContainer {
             if (!found && toolWindow.getToolWindowTabs().length > 0)
                 toolWindow.getToolWindowTabs()[0].setSelected(true);
 
-            titleBarButtons.configureIcons(active);
-
             if (active && focusRequester != null && !valueAdjusting) {
 //                System.out.println("focusRequester = " + focusRequester);
                 if (focusRequester == titleBarButtons.getFocusable())

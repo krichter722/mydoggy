@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.*;
 
 import javax.swing.*;
@@ -42,9 +41,6 @@ public class SimpliedTitleBarButtons implements TitleBarButtons {
     }
 
     public void configureIcons(ToolWindowType type) {
-    }
-
-    public void configureIcons(boolean active) {
     }
 
 
