@@ -1,5 +1,8 @@
 package org.noos.xing.mydoggy.itest;
 
+import java.awt.geom.Ellipse2D;
+import java.awt.*;
+
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
@@ -18,6 +21,8 @@ public interface ComponentAdapter {
     ComponentAdapter moveToCenter(int delay);
 
     ComponentAdapter moveTo(int x, int y);
+
+    ComponentAdapter move(Shape shape);
 
     ComponentAdapter press(MouseButton mouseButton);
 

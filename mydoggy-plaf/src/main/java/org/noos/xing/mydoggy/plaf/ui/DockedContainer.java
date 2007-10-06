@@ -452,6 +452,7 @@ public class DockedContainer implements ToolWindowContainer {
             floatingMode.addActionListener(this);
 
             floatingLiveMode = new JCheckBoxMenuItem(null, toolWindow.getType() == ToolWindowType.FLOATING_LIVE);
+            floatingLiveMode.setName("toolWindow.popup.floatingLive." + toolWindow.getId());
             floatingLiveMode.setText(resourceManager.getString("@@tool.mode.floatingLive"));
             floatingLiveMode.setActionCommand("floatingLive");
             floatingLiveMode.addActionListener(this);
