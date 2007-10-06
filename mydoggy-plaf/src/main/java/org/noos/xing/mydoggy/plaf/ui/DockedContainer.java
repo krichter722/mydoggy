@@ -148,7 +148,7 @@ public class DockedContainer implements ToolWindowContainer {
         toolWindow.getToolWindowTabs()[0].setSelected(true);
 
         // Buttons
-        titleBarButtons = resourceManager.createInstance(TitleBarButtons.class, descriptor, this); 
+        titleBarButtons = resourceManager.createInstance(TitleBarButtons.class, descriptor, this);
 
         // Set TitleBar content
         titleBar.add(titleBarTabs, "1,1");
@@ -251,7 +251,6 @@ public class DockedContainer implements ToolWindowContainer {
     }
 
 
-
     protected void enableIdOnTitleBar() {
         TableLayout layout = (TableLayout) titleBar.getLayout();
         layout.setColumn(0,
@@ -306,10 +305,13 @@ public class DockedContainer implements ToolWindowContainer {
         protected JMenuItem visible;
         protected JMenuItem aggregate;
         protected JCheckBoxMenuItem floatingMode;
+        protected JCheckBoxMenuItem floatingLiveMode;
         protected JCheckBoxMenuItem dockedMode;
         protected JCheckBoxMenuItem pinnedMode;
 
         protected JMenu old;
+
+        protected JMenuItem maximize;
         protected JMenu moveTo;
         protected JMenuItem right;
         protected JMenuItem left;
@@ -371,10 +373,14 @@ public class DockedContainer implements ToolWindowContainer {
                     dockedMode.setVisible(!floatingMode.isSelected());
                 } else
                     toolWindow.setType(ToolWindowType.DOCKED);
+            } else if ("floatingLive".equals(actionCommand)) {
+                toolWindow.setType(floatingLiveMode.isSelected() ? ToolWindowType.FLOATING_LIVE : ToolWindowType.DOCKED);
             } else if ("docked".equals(actionCommand)) {
                 toolWindow.setType(dockedMode.isSelected() ? ToolWindowType.DOCKED : ToolWindowType.SLIDING);
             } else if ("pinned".equals(actionCommand)) {
                 toolWindow.setAutoHide(!toolWindow.isAutoHide());
+            } else if ("maximize".equals(actionCommand)) {
+                toolWindow.setMaximized(!toolWindow.isMaximized());
             }
         }
 
@@ -397,13 +403,17 @@ public class DockedContainer implements ToolWindowContainer {
         }
 
         public void showPopupMenu(Component source, int x, int y) {
-            if ((source == titleBar || SwingUtil.hasParent(source, titleBar))) {
+            if (source == titleBar ||
+                SwingUtil.hasParent(source, titleBar) ||
+                source instanceof ToolWindowDescriptor.RepresentativeAnchor) {
 
                 popupMenu.removeAll();
                 popupMenu.add(pinnedMode);
                 popupMenu.add(dockedMode);
                 popupMenu.add(floatingMode);
+                popupMenu.add(floatingLiveMode);
                 popupMenu.add(moveTo);
+                popupMenu.add(maximize);
                 popupMenu.addSeparator();
                 popupMenu.add(visible);
                 popupMenu.add(aggregate);
@@ -411,6 +421,7 @@ public class DockedContainer implements ToolWindowContainer {
                 enableVisible();
                 enableMoveToItem();
                 enableUserDefined();
+                enableMaximize();
 
                 if (popupUpdater != null)
                     popupUpdater.update(source, popupMenu);
@@ -440,6 +451,11 @@ public class DockedContainer implements ToolWindowContainer {
             floatingMode.setActionCommand("floating");
             floatingMode.addActionListener(this);
 
+            floatingLiveMode = new JCheckBoxMenuItem(null, toolWindow.getType() == ToolWindowType.FLOATING_LIVE);
+            floatingLiveMode.setText(resourceManager.getString("@@tool.mode.floatingLive"));
+            floatingLiveMode.setActionCommand("floatingLive");
+            floatingLiveMode.addActionListener(this);
+
             dockedMode = new JCheckBoxMenuItem(null, toolWindow.getType() == ToolWindowType.DOCKED);
             dockedMode.setText(resourceManager.getString("@@tool.mode.docked"));
             dockedMode.setActionCommand("docked");
@@ -449,6 +465,11 @@ public class DockedContainer implements ToolWindowContainer {
             pinnedMode.setText(resourceManager.getString("@@tool.mode.pinned"));
             pinnedMode.setActionCommand("pinned");
             pinnedMode.addActionListener(this);
+
+            maximize = new JMenuItem();
+            maximize.setText(resourceManager.getString("@@tool.maximize"));
+            maximize.setActionCommand("maximize");
+            maximize.addActionListener(this);
 
             // MoveTo SubMenu
             moveTo = new JMenu();
@@ -483,7 +504,9 @@ public class DockedContainer implements ToolWindowContainer {
             popupMenu.add(pinnedMode);
             popupMenu.add(dockedMode);
             popupMenu.add(floatingMode);
+            popupMenu.add(floatingLiveMode);
             popupMenu.add(moveTo);
+            popupMenu.add(maximize);
             popupMenu.addSeparator();
             popupMenu.add(visible);
             popupMenu.add(aggregate);
@@ -498,8 +521,20 @@ public class DockedContainer implements ToolWindowContainer {
             if (toolWindow.getType() == ToolWindowType.DOCKED) {
                 dockedMode.setVisible(((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled());
                 floatingMode.setVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
-            } else if (toolWindow.getType() == ToolWindowType.SLIDING)
+                floatingLiveMode.setState(false);
+                floatingLiveMode.setVisible(((FloatingLiveTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE)).isEnabled());
+            } else if (toolWindow.getType() == ToolWindowType.SLIDING) {
                 floatingMode.setVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
+                floatingLiveMode.setState(false);
+                floatingLiveMode.setVisible(((FloatingLiveTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE)).isEnabled());
+            } else if (toolWindow.getType() == ToolWindowType.FLOATING) {
+                floatingLiveMode.setState(false);
+                floatingLiveMode.setVisible(((FloatingLiveTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE)).isEnabled());
+            } else if (toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
+                dockedMode.setState(false);
+                floatingMode.setState(false);
+                floatingMode.setVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
+            }
         }
 
         protected void enableMoveToItem() {
@@ -540,6 +575,13 @@ public class DockedContainer implements ToolWindowContainer {
             }
         }
 
+        protected void enableMaximize() {
+            maximize.setVisible(toolWindow.isVisible());
+            maximize.setText(toolWindow.isMaximized() ?
+                             resourceManager.getString("@@tool.maximize.restore") :
+                             resourceManager.getString("@@tool.maximize"));
+
+        }
     }
 
     protected class DockedToolWindowListener implements ToolWindowListener, PropertyChangeListener {
@@ -679,7 +721,7 @@ public class DockedContainer implements ToolWindowContainer {
 
             }
         }
-        
+
     }
 
 }

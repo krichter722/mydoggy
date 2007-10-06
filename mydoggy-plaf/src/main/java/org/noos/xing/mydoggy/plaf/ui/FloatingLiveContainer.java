@@ -34,7 +34,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
     public FloatingLiveContainer(DockedContainer dockedContainer) {
         super(dockedContainer);
-        
+
         initComponents();
         initListeners();
     }
@@ -46,7 +46,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
         if (visible) {
             // Reset Layout
-            dockedContainer.getTitleBarButtons().configureIcons(ToolWindowType.DOCKED);
+            dockedContainer.getTitleBarButtons().configureIcons(ToolWindowType.FLOATING_LIVE);
 
             TableLayout layout = (TableLayout) sheet.getLayout();
             layout.setColumn(0, 0);
@@ -68,18 +68,42 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
                 // Set Size
                 if (typeDescriptor.getSize() == null) {
-                    Window windowAnchestor = descriptor.getWindowAnchestor();
-                    sheet.setSize(descriptor.getDockedTypeDescriptor().getDockLength(),
-                                  (int) (windowAnchestor.getHeight() / 1.5));
-                } else {
+                    Component managerCmp = descriptor.getManager();
+
+                    switch (toolWindow.getAnchor()) {
+                        case LEFT:
+                        case RIGHT:
+                            sheet.setSize(descriptor.getDockedTypeDescriptor().getDockLength(),
+                                          (int) (managerCmp.getHeight() / 1.5));
+                            break;
+                        case TOP:
+                        case BOTTOM:
+                            sheet.setSize((int) (managerCmp.getWidth() / 1.5),
+                                          descriptor.getDockedTypeDescriptor().getDockLength());
+                            break;
+                    }
+                } else
                     sheet.setSize(typeDescriptor.getSize());
-                }
 
                 // Set Location
                 if (typeDescriptor.getLocation() == null) {
-                    if (content.getX() == 0 || content.getY() == 0) {
-                        // A Better location... 
-                        sheet.setLocation(50, 50);
+                    Component managerCmp = descriptor.getManager();
+
+                    switch (toolWindow.getAnchor()) {
+                        case LEFT:
+                            sheet.setLocation(50, 50);
+                            break;
+                        case RIGHT:
+                            sheet.setLocation(managerCmp.getWidth() - 50 - sheet.getWidth(),
+                                              50);
+                            break;
+                        case TOP:
+                            sheet.setLocation(50, 50);
+                            break;
+                        case BOTTOM:
+                            sheet.setLocation(50,
+                                              managerCmp.getHeight() - 50 - sheet.getHeight());
+                            break;
                     }
                 } else
                     sheet.setLocation(typeDescriptor.getLocation());
@@ -108,9 +132,10 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                 slidingAnimation.hide(sheet.getBounds());
             else {
 */
-                layeredPane.remove(sheet);
-                sheet.setBorder(null);
-                sheet.removeAll();
+            layeredPane.remove(sheet);
+            sheet.setBorder(null);
+            sheet.removeAll();
+            SwingUtil.repaint(layeredPane);
 /*
             }
 */
@@ -141,13 +166,6 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
     }
 
     protected void initListeners() {
-        addPropertyChangeListener("anchor", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                ToolWindow evtToolWindow = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
-                if (toolWindow.getType() == ToolWindowType.FLOATING_LIVE && toolWindow.isVisible() && !evtToolWindow.isVisible())
-                    update();
-            }
-        });
         addPropertyChangeListener("type", new PropertyChangeListener() {
             ContainerListener listener = new ContainerListener() {
                 public void componentAdded(ContainerEvent e) {
@@ -241,8 +259,8 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
                         Rectangle bounds = descriptor.getManager().getMainContainer().getBounds();
                         bounds = SwingUtilities.convertRectangle(descriptor.getManager().getMainContainer(),
-                                                        bounds,
-                                                        descriptor.getManager().getRootPane().getLayeredPane());
+                                                                 bounds,
+                                                                 descriptor.getManager().getRootPane().getLayeredPane());
                         sheet.setBounds(bounds);
                     } else {
                         sheet.setBounds(oldBounds);
@@ -259,7 +277,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         });
         addPropertyChangeListener("location", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                if (toolWindow.getType() != ToolWindowType.FLOATING_LIVE)
+                if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE) != evt.getSource())
                     return;
 
                 if (valueAdjusting)
@@ -274,7 +292,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         });
         addPropertyChangeListener("size", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                if (toolWindow.getType() != ToolWindowType.FLOATING_LIVE)
+                if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE) != evt.getSource())
                     return;
 
                 if (valueAdjusting)
@@ -538,6 +556,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                             animation.stop();
                     }
 
+                    layeredPane.setLayer(sheet, 2);
                     sheet.setAlphaModeRatio(1.0f);
                 } else {
                     FloatingLiveTypeDescriptor floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
@@ -545,6 +564,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                         timer = new Timer(floatingLiveTypeDescriptor.getTransparentDelay(), this);
                         timer.start();
                     }
+                    layeredPane.setLayer(sheet, 1);
                 }
                 SwingUtil.repaint(layeredPane);
             }

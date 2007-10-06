@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
+import org.noos.xing.mydoggy.plaf.ui.cmp.SimplyTitleBarButtons;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;

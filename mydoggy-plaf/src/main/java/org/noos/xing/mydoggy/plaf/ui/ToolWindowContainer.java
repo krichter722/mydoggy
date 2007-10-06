@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.awt.*;
 
 
 /**
@@ -14,5 +15,7 @@ public interface ToolWindowContainer extends PropertyChangeListener {
     void addPropertyChangeListener(String property, PropertyChangeListener listener);
 
     void updateUI();
+
+    void showPopupMenu(Component c, int x, int y);
 
 }

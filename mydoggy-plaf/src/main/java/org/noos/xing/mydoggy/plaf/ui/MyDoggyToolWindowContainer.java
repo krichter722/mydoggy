@@ -43,4 +43,8 @@ public class MyDoggyToolWindowContainer implements ToolWindowContainer {
     public void propertyChange(PropertyChangeEvent evt) {
         dockedContainer.propertyChange(evt);
     }
+
+    public void showPopupMenu(Component c, int x, int y) {
+        dockedContainer.showPopupMenu(c, x, y);
+    }
 }
