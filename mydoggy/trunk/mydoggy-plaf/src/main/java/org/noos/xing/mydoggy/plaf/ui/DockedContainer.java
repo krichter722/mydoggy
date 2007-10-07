@@ -27,17 +27,14 @@ public class DockedContainer implements ToolWindowContainer {
     protected ResourceManager resourceManager;
 
     protected JPanel container;
-
     protected JPanel titleBar;
     protected ToolWindowTabPanel titleBarTabs;
-
-    protected Component focusRequester;
-
     protected TitleBarButtons titleBarButtons;
-
     protected TitleBarMouseAdapter titleBarMouseAdapter;
+
     protected PropertyChangeSupport propertyChangeSupport;
 
+    protected Component focusRequester;
     protected PopupUpdater popupUpdater;
 
     boolean valueAdjusting;
@@ -48,27 +45,59 @@ public class DockedContainer implements ToolWindowContainer {
         this.toolWindow = descriptor.getToolWindow();
         this.resourceManager = descriptor.getResourceManager();
 
-        initDockedComponents();
-        initDockedListeners();
+        initComponents();
+        initListeners();
     }
 
+
+    public void updateUI() {
+        SwingUtilities.updateComponentTreeUI(getContentContainer());
+    }
+
+    public ResourceManager getResourceManager() {
+        return resourceManager;
+    }
+
+    public void showPopupMenu(Component c, int x, int y) {
+        titleBarMouseAdapter.showPopupMenu(c, x, y);
+    }
+
+    public void addPropertyChangeListener(String property, PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(property, listener);
+    }
 
     public void propertyChange(PropertyChangeEvent evt) {
         propertyChangeSupport.firePropertyChange(evt);
     }
 
-    public void updateUI() {
-        SwingUtilities.updateComponentTreeUI(getContentContainer());
-    }
 
     public void uninstall() {
         Component cmp = descriptor.getComponent();
         cmp.removeMouseListener(titleBarMouseAdapter);
     }
 
+    public void removePropertyChangeListener(String property, PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(property, listener);
+    }
+
+    public ToolWindowDescriptor getToolWindowDescriptor() {
+        return descriptor;
+    }
 
     public Container getContentContainer() {
         return container;
+    }
+
+    public TitleBarButtons getTitleBarButtons() {
+        return titleBarButtons;
+    }
+
+    public ToolWindowTabPanel getTitleBarTabs() {
+        return titleBarTabs;
+    }
+
+    public Component getTitleBar() {
+        return titleBar;
     }
 
     public void setMainComponent(Component component) {
@@ -87,40 +116,16 @@ public class DockedContainer implements ToolWindowContainer {
         this.popupUpdater = popupUpdater;
     }
 
-    public void addPropertyChangeListener(String property, PropertyChangeListener listener) {
-        propertyChangeSupport.addPropertyChangeListener(property, listener);
-    }
 
-    public void removePropertyChangeListener(String property, PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener(property, listener);
-    }
-
-    public ResourceManager getResourceManager() {
-        return resourceManager;
-    }
-
-
-    protected void assignFocus() {
-        focusRequester = SwingUtil.findFocusable(descriptor.getComponent());
-        if (focusRequester == null) {
-            titleBarButtons.getFocusable().setFocusable(true);
-            focusRequester = titleBarButtons.getFocusable();
-        } else {
-            titleBarButtons.getFocusable().setFocusable(false);
-        }
-        SwingUtil.requestFocus(focusRequester);
-    }
-
-
-    protected void initDockedComponents() {
+    protected void initComponents() {
         propertyChangeSupport = new PropertyChangeSupport(this);
 
         titleBarMouseAdapter = new TitleBarMouseAdapter();
 
         // Container
-        container = new JPanel(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {16, TableLayout.FILL}}, false));
+        container = (JPanel) resourceManager.createComponent(MyDoggyKeySpace.TOOL_WINDOW_CMP_CONTAINER, null);
+        container.setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {16, TableLayout.FILL}}, false));
         container.setName("toolWindow.container." + toolWindow.getId());
-        container.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
         container.setFocusCycleRoot(true);
         container.putClientProperty(ToolWindow.class, toolWindow);
 
@@ -168,7 +173,7 @@ public class DockedContainer implements ToolWindowContainer {
         titleBarButtons.configureIcons(ToolWindowType.DOCKED);
     }
 
-    protected void initDockedListeners() {
+    protected void initListeners() {
         addPropertyChangeListener("active", new ActivePropertyChangeListener());
         addPropertyChangeListener("type", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
@@ -250,6 +255,16 @@ public class DockedContainer implements ToolWindowContainer {
         toolWindow.addToolWindowListener(new DockedToolWindowListener());
     }
 
+    protected void assignFocus() {
+        focusRequester = SwingUtil.findFocusable(descriptor.getComponent());
+        if (focusRequester == null) {
+            titleBarButtons.getFocusable().setFocusable(true);
+            focusRequester = titleBarButtons.getFocusable();
+        } else {
+            titleBarButtons.getFocusable().setFocusable(false);
+        }
+        SwingUtil.requestFocus(focusRequester);
+    }
 
     protected void enableIdOnTitleBar() {
         TableLayout layout = (TableLayout) titleBar.getLayout();
@@ -269,26 +284,6 @@ public class DockedContainer implements ToolWindowContainer {
         layout.setColumn(0, 3);
 
         SwingUtil.repaint(titleBar);
-    }
-
-    public void showPopupMenu(Component c, int x, int y) {
-        titleBarMouseAdapter.showPopupMenu(c, x, y);
-    }
-
-    public ToolWindowDescriptor getToolWindowDescriptor() {
-        return descriptor;
-    }
-
-    public TitleBarButtons getTitleBarButtons() {
-        return titleBarButtons;
-    }
-
-    public ToolWindowTabPanel getTitleBarTabs() {
-        return titleBarTabs;
-    }
-
-    public Component getTitleBar() {
-        return titleBar;
     }
 
 

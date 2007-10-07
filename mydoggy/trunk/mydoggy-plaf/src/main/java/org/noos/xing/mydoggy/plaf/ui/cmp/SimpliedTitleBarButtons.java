@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -19,7 +21,7 @@ public class SimpliedTitleBarButtons implements TitleBarButtons {
 
     protected JPanel buttonContainer;
 
-    protected JButton hideButton;
+    protected JButton hideButton, popupButton;
 
     public SimpliedTitleBarButtons(ToolWindowDescriptor toolWindowDescriptor, DockedContainer dockedContainer) {
         this.descriptor = toolWindowDescriptor;
@@ -54,8 +56,8 @@ public class SimpliedTitleBarButtons implements TitleBarButtons {
         hideButton = renderTitleButton("visible", titleBarActionListener,
                                        "@@tool.tooltip.hide", MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE,
                                        null);
-        JButton popupButton = renderTitleButton("showPopup", titleBarActionListener,
-                                       "@@tool.tooltip.showPopup", MyDoggyKeySpace.ACTIONS,
+        popupButton = renderTitleButton("showPopup", titleBarActionListener,
+                                       "@@tool.tooltip.showPopup", MyDoggyKeySpace.ACTIONS_POPUP,
                                        "toolWindow.showPopupButton." + toolWindow.getId());
 
         buttonContainer.add(popupButton, "0,1");
@@ -63,6 +65,22 @@ public class SimpliedTitleBarButtons implements TitleBarButtons {
     }
 
     protected void initListeners() {
+        dockedContainer.addPropertyChangeListener("active", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getSource() != descriptor)
+                    return;
+
+                boolean active = (Boolean) evt.getNewValue();
+
+                if (active) {
+                    hideButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW));
+                    popupButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.ACTIONS_POPUP));
+                } else {
+                    hideButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE));
+                    popupButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.ACTIONS_POPUP_INACTIVE));
+                }
+            }
+        });
     }
 
     protected JButton renderTitleButton(String actionCommand, ActionListener actionListener, String tooltip, String iconId, String name) {

@@ -90,6 +90,7 @@ public class ExtendedTitleBarButtons implements TitleBarButtons {
         }
     }
 
+
     protected void initComponents() {
         buttonContainer = new JPanel(new ExtendedTableLayout(new double[][]{{13, 1, 13, 1, 13, 1, 13, 1, 13}, {1, 14, 1}}, false));
         buttonContainer.setOpaque(false);
@@ -221,6 +222,7 @@ public class ExtendedTitleBarButtons implements TitleBarButtons {
         );
 
     }
+
 
     protected JButton renderTitleButton(String actionCommand, ActionListener actionListener, String tooltip, String iconId, String name) {
         JButton button = (JButton) resourceManager.createComponent(
