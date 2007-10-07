@@ -29,6 +29,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Arc2D;
+import java.awt.geom.GeneralPath;
 import java.util.Locale;
 
 /**
@@ -159,6 +160,8 @@ public class MyDoggySet {
         resourceManager.putColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START, Color.RED);
         resourceManager.putColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END, Color.PINK);
 
+        resourceManager.putColor(MyDoggyKeySpace.RAB_FOREGROUND, Color.CYAN);
+
         // More deep customization ...
         // Change the way the background is drawing
         MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) manager.getResourceManager();
@@ -194,11 +197,16 @@ public class MyDoggySet {
                                                               4),
                                                   GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
 
+
+                            Polygon polygon = new Polygon();
+                            polygon.addPoint(r.x + r.width - halfHeigh, r.y);
+                            polygon.addPoint(r.x + r.width - halfHeigh + 8, r.y + (r.height / 2));
+                            polygon.addPoint(r.x + r.width - halfHeigh, r.y + r.height);
+
                             GraphicsUtil.fillRect(g, r,
                                                   Color.WHITE,
                                                   idBackgroundColor,
-                                                  new Arc2D.Double(r.x + r.width - r.height,
-                                                                   r.y, r.height, r.height, -90.0d, 180.0d, Arc2D.CHORD),
+                                                  polygon,
                                                   GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
 
                             g.setColor(idColor);
@@ -210,22 +218,15 @@ public class MyDoggySet {
         });
 
         // Change title bar buttons dispositions
-        myDoggyResourceManager.putInstanceCreator(
-                TitleBarButtons.class, new MyDoggyResourceManager.InstanceCreator() {
-
-            public Object createComponent(Object... args) {
-                return new SimpliedTitleBarButtons(
-                        (ToolWindowDescriptor) args[0],
-                        (DockedContainer) args[1]
-                );
-/*
-                return new ExtendedTitleBarButtons(
-                        (ToolWindowDescriptor) args[0],
-                        (DockedContainer) args[1]
-                );
-*/
+        myDoggyResourceManager.putInstanceCreator(TitleBarButtons.class,
+                                                  new MyDoggyResourceManager.InstanceCreator() {
+                public Object createComponent(Object... args) {
+                    return new SimpliedTitleBarButtons(
+                            (ToolWindowDescriptor) args[0],
+                            (DockedContainer) args[1]
+                    );
+                }
             }
-        }
         );
 
         // END CUSTOMIZATION....

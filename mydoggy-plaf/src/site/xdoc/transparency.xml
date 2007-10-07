@@ -17,11 +17,11 @@
                         </td>
                         <td>
                             <p>
-                                Using the
-                                <code>org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager</code>
+                                Using the <code>TransparencyManager</code> interface in the package
+                                <code>org.noos.xing.mydoggy.plaf.ui.transparency</code>
                                 mydoggy can manage the transparency of windows.
                                 <br/>
-                                In fact, when a toolwindow (of type FLOATING of FLOATING_FREE) or a detached content lost
+                                In fact, when a toolwindow (of type FLOATING of FLOATING_FREE) or a detached content losts
                                 the focus, it becomes transparent in a few milliseconds.
                                 <br/>
                                 There are many ways to obtain this useful (at least for me) effect. Following tow examples... 
@@ -96,9 +96,6 @@ import java.awt.*;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-/**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
- */
 public class JNAWindowTransparencyManager implements TransparencyManager&lt;Window&gt; {
 
     private boolean available;
