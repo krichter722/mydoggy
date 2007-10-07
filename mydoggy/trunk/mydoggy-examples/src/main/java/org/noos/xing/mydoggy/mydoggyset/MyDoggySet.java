@@ -187,7 +187,6 @@ public class MyDoggySet {
                             String id = resourceManager.getUserString(descriptor.getToolWindow().getId());
                             r.width = g.getFontMetrics().stringWidth(id) + 8;
 
-                            // TODO: add customization
                             int halfHeigh = (r.height / 2);
                             GraphicsUtil.fillRect(g, r,
                                                   Color.WHITE,

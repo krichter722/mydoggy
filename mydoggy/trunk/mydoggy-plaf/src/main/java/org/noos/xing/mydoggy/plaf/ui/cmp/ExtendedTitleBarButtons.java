@@ -134,14 +134,17 @@ public class ExtendedTitleBarButtons implements TitleBarButtons {
             }
         });
         dockedContainer.addPropertyChangeListener("maximized.before", new PropertyChangeListener() {
+            private boolean flag = false;
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getSource() != descriptor)
                     return;
 
                 if ((Boolean) evt.getNewValue()) {
                     maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MINIMIZE));
-                } else /*TODO if (workspace != null)*/ {
+                    flag = true;
+                } else if (flag) {
                     maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
+                    flag = false;
                 }
             }
         });

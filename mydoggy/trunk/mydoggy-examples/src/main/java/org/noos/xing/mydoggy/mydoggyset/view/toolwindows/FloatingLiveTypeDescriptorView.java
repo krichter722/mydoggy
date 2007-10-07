@@ -55,6 +55,12 @@ public class FloatingLiveTypeDescriptorView extends ComponentView implements Vie
 
         panel.add(new JLabel("transparentDelay : "), "5,3,r,c");
         panel.add(transparentDelay = new JSpinner(new SpinnerNumberModel(0, 0, 5000, 500)), "7,3,FULL,FULL");
+        transparentDelay.addChangeListener(
+                new ChangeListenerAction(FloatingLiveTypeDescriptor.class,
+                                         "transparentDelay",
+                                         new ViewContextSource(viewContext, FloatingLiveTypeDescriptor.class),
+                                         new SpinnerValueSource(transparentDelay))
+        );
 
         panel.add(new JLabel("transparentRatio : "), "5,5,r,c");
         panel.add(transparentRatio = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 1.0, 0.05)), "7,5,FULL,FULL");

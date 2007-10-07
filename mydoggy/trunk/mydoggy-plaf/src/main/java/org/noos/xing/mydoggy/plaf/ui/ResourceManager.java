@@ -24,6 +24,7 @@ public interface ResourceManager {
      * @param clazz the class of the instance to be returned.
      * @param args the arguments needed to create the instance.
      * @return an instance of class <code>clazz</code> using passed <code>args</code>.
+     * @since 1.3.2
      */
     <T> T createInstance(Class<T> clazz, Object... args);
 
