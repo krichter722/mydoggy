@@ -1,6 +1,8 @@
 package org.noos.xing.mydoggy.mydoggyset.action;
 
 import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.yasaf.plaf.component.JDialogView;
+import org.noos.xing.yasaf.view.View;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -15,14 +17,17 @@ import java.io.File;
 public class FrameshotAction extends AbstractAction {
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
+    private JDialogView dialogView;
 
     public FrameshotAction(JFrame frame, ToolWindowManager toolWindowManager) {
         super("Frameshot");
         this.frame = frame;
         this.toolWindowManager = toolWindowManager;
+        this.dialogView = new JDialogView(new SaveFrameshotView());
     }
 
     public void actionPerformed(ActionEvent e) {
+        dialogView.setVisible(true);
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 try {
@@ -34,5 +39,13 @@ public class FrameshotAction extends AbstractAction {
                 }
             }
         });
+    }
+
+    protected class SaveFrameshotView implements View {
+
+        public Component getComponent() {
+            return new JButton();
+        }
+        
     }
 }
