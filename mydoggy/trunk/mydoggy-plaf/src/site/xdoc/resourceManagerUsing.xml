@@ -76,10 +76,20 @@ resourceManager.putColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END, Color.PINK);
                 </table>
             </subsection>
             <subsection name="Change Representative Anchor Button Foreground Color">
-                You can use the following code:
-                <source>
-resourceManager.putColor(MyDoggyKeySpace.RAB_FOREGROUND, Color.BLUE);
-</source>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./images/resourceManager/representativeAnchorButtonForegroundColor.png" alt="Representative Anchor Button Foreground Color" border="0" hspace="18"/>
+                            </td>
+                            <td>
+                                <p>You can use the following code:</p>
+                                <source>
+resourceManager.putColor(MyDoggyKeySpace.RAB_FOREGROUND, Color.BLUE);</source>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </subsection>
             <subsection name="Change TitleBar Button Icons">
                 You can use the following code:
@@ -96,7 +106,108 @@ resourceManager.putIcon(MyDoggyKeySpace.DOCKED, new Icon(...));
             </p>
             <source xml:space="preserve">
 MyDoggyToolWindowManager toolWindowManager = new MyDoggyToolWindowManager(...);
-MyDoggyResourceManager resourceManager = (MyDoggyResourceManager) toolWindowManager.getResourceManager();</source>
+MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) toolWindowManager.getResourceManager();</source>
+
+            <subsection name="Change TitleBar UI">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./images/resourceManager/titleBarUI.png" alt="TitleBar UI" border="0" hspace="18"/>
+                            </td>
+                            <td>
+                                <p> As you can see, now the gradient direction has changed and instead of an arc there
+                                    is a arrow.
+                                </p>
+                                <p>You can use the following code:</p>
+                                <source>
+myDoggyResourceManager.putComponentUICreator(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR_UI,
+                                             new MyDoggyResourceManager.ComponentUICreator() {
+
+    public ComponentUI createComponentUI(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
+        return new ToolWindowTitleBarUI((ToolWindowDescriptor) args[0],
+                                        (DockedContainer) args[1]) {
+            protected void updateToolWindowTitleBar(Graphics g, JComponent c, Color backgroundStart, Color backgroundEnd, Color idBackgroundColor, Color idColor) {
+                Rectangle r = c.getBounds();
+                r.x = r.y = 0;
+
+                GraphicsUtil.fillRect(g, r,
+                                      backgroundStart, backgroundEnd,
+                                      null,
+                                      GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
+
+                if (descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar() ||
+                    toolWindow.getType() == ToolWindowType.FLOATING ||
+                    toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
+                    toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
+
+                    String id = resourceManager.getUserString(descriptor.getToolWindow().getId());
+                    r.width = g.getFontMetrics().stringWidth(id) + 8;
+
+                    int halfHeigh = (r.height / 2);
+                    GraphicsUtil.fillRect(g, r,
+                                          Color.WHITE,
+                                          idBackgroundColor,
+                                          new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
+                                                      new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
+                                                      4),
+                                          GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
+
+
+                    Polygon polygon = new Polygon();
+                    polygon.addPoint(r.x + r.width - halfHeigh, r.y);
+                    polygon.addPoint(r.x + r.width - halfHeigh + 8, r.y + (r.height/2));
+                    polygon.addPoint(r.x + r.width - halfHeigh, r.y + r.height);
+
+                    GraphicsUtil.fillRect(g, r,
+                                          Color.WHITE,
+                                          idBackgroundColor,
+                                          polygon,
+                                          GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
+
+                    g.setColor(idColor);
+                    g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
+                }
+            }
+        };
+    }
+});</source>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
+
+            <subsection name="Change TitleBar Buttons disposition">
+                  <table>
+                      <tbody>
+                          <tr>
+                              <td>
+                                  <img src="./images/resourceManager/titleBarButtonsDisposition.png" alt="TitleBar Buttons disposition" border="0" hspace="18"/>
+                              </td>
+                              <td>
+                                  <p>As use can see, now we have two buttons. One is the hide buttone, the other is
+                                      a special button, if the user clicks on it then a popup menu is showed with all
+                                      available actions.
+                                  </p>
+                                  <p>You can use the following code:</p>
+                                  <source>
+myDoggyResourceManager.putInstanceCreator(TitleBarButtons.class,
+                                        new MyDoggyResourceManager.InstanceCreator() {
+      public Object createComponent(Object... args) {
+          return new SimpliedTitleBarButtons(
+                  (ToolWindowDescriptor) args[0],
+                  (DockedContainer) args[1]
+          );
+      }
+  }
+);</source>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </subsection>
+              
         </section>
 
     </body>

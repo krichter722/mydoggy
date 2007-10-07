@@ -18,19 +18,21 @@ import java.util.ResourceBundle;
  */
 public interface ResourceManager {
 
-   /**
-     * TODO
-     * @param clazz
-     *@param args @return
+    /**
+     * Returns an instance of class <code>clazz</code> using passed <code>args</code>.
+     *
+     * @param clazz the class of the instance to be returned.
+     * @param args the arguments needed to create the instance.
+     * @return an instance of class <code>clazz</code> using passed <code>args</code>.
      */
     <T> T createInstance(Class<T> clazz, Object... args);
 
     /**
      * Create the component using the rule specified by the key param.
      *
-     * @param key key whose associated rule is used to create the component.
+     * @param key     key whose associated rule is used to create the component.
      * @param manager the toolwindow manager
-     * @param args any arguments used to create the component.
+     * @param args    any arguments used to create the component.
      * @return the component created using the rule specified by the key param.
      * @since 1.3.1
      */
@@ -39,9 +41,9 @@ public interface ResourceManager {
     /**
      * Create the component ui using the rule specified by the key param.
      *
-     * @param key key whose associated rule is used to create the component.
+     * @param key     key whose associated rule is used to create the component.
      * @param manager the toolwindow manager
-     * @param args any arguments used to create the component ui.
+     * @param args    any arguments used to create the component ui.
      * @return the component ui created using the rule specified by the key param.
      * @since 1.3.1
      */
@@ -50,9 +52,9 @@ public interface ResourceManager {
     /**
      * Apply the customization using the rule specified by the key param.
      *
-     * @param key key whose associated rule is used to customize the component.
+     * @param key       key whose associated rule is used to customize the component.
      * @param component the component to be customized.
-     * @param args any arguments used to customize the component.
+     * @param args      any arguments used to customize the component.
      * @return the component customized.
      * @since 1.3.1
      */
@@ -64,7 +66,7 @@ public interface ResourceManager {
      *
      * @param id id whose associated icon is to be returned.
      * @return the icon to which this manager maps the specified id, or
-     *	       <tt>null</tt> if the manager contains no mapping for this id.
+     *         <tt>null</tt> if the manager contains no mapping for this id.
      * @since 1.3.1
      */
     Icon getIcon(String id);
@@ -73,10 +75,10 @@ public interface ResourceManager {
      * Associates the specified icon with the specified id. If the manager previously
      * contained a mapping for this id, the old icon is replaced by the specified icon.
      *
-     * @param id id with which the specified icon is to be associated.
+     * @param id   id with which the specified icon is to be associated.
      * @param icon icon to be associated with the specified id.
      * @return previous icon associated with specified id, or <tt>null</tt>
-     *	       if there was no mapping for id.
+     *         if there was no mapping for id.
      * @since 1.3.1
      */
     Icon putIcon(String id, Icon icon);
@@ -87,7 +89,7 @@ public interface ResourceManager {
      *
      * @param id id whose associated color is to be returned.
      * @return the color to which this manager maps the specified id, or
-     *	       <tt>null</tt> if the manager contains no mapping for this id.
+     *         <tt>null</tt> if the manager contains no mapping for this id.
      * @since 1.3.1
      */
     Color getColor(String id);
@@ -96,10 +98,10 @@ public interface ResourceManager {
      * Associates the specified color with the specified id. If the manager previously
      * contained a mapping for this id, the old color is replaced by the specified color.
      *
-     * @param id id with which the specified color is to be associated.
+     * @param id    id with which the specified color is to be associated.
      * @param color color to be associated with the specified id.
      * @return previous color associated with specified id, or <tt>null</tt>
-     *	       if there was no mapping for id.
+     *         if there was no mapping for id.
      * @since 1.3.1
      */
     Color putColor(String id, Color color);
@@ -133,8 +135,8 @@ public interface ResourceManager {
     /**
      * Sets the bundle used for the internationalization of special strings like the the toolwindow id.
      *
-     * @param locale the locale for which a resource bundle is desired
-     * @param bundle the base name of the resource bundle, a fully qualified class name
+     * @param locale      the locale for which a resource bundle is desired
+     * @param bundle      the base name of the resource bundle, a fully qualified class name
      * @param classLoader the class loader from which to load the resource bundle
      * @see #getUserResourceBundle()
      * @since 1.3.1
@@ -151,6 +153,7 @@ public interface ResourceManager {
 
     /**
      * Returns the resource bundle used for the internationalization of mydoggy.
+     *
      * @return the resource bundle used for the internationalization of mydoggy.
      * @since 1.3.1
      */
@@ -158,6 +161,7 @@ public interface ResourceManager {
 
     /**
      * Returns the resource bundle used for the internationalization of special strings like the the toolwindow id.
+     *
      * @return the resource bundle used for the internationalization of special strings like the the toolwindow id.
      * @since 1.3.1
      */
@@ -165,6 +169,7 @@ public interface ResourceManager {
 
     /**
      * This method is equivalent to <code>getResourceBundle().getString(key)</code>
+     *
      * @param key the key for the desired string
      * @return the string for the given key
      * @since 1.3.1
@@ -173,6 +178,7 @@ public interface ResourceManager {
 
     /**
      * This method is equivalent to <code>getUserResourceBundle().getString(key)</code>
+     *
      * @param key the key for the desired string
      * @return the string for the given key
      * @since 1.3.1

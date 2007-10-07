@@ -50,11 +50,15 @@ ToolWindow toolwindow = toolWindowManager.
                     The above image shows two tabs for the debut toolswindow. The first is declared when the tool
                     is registered, for the second use the following:
                 </p>
-                <source>ToolWindowTab profilingTab = toolwindow.
-    addToolWindowTab("Profiling",    // Tab Title
-                     profilingCmp,   // Tab Component
-                    )
+                <source>ToolWindowTab profilingTab = toolwindow.addToolWindowTab(
+                    "Profiling",    // Tab Title
+                    profilingCmp,   // Tab Component
+)
                 </source>
+                <p>
+                    Also, the user can add a toolwindow to another tool as a tab. Use the following
+                </p>
+                <source>ToolWindowTab profilingTab = toolwindow.addToolWindowTab(profilingToolWindow)</source>
             </subsection>
         </section>
     </body>

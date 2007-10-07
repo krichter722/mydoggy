@@ -82,7 +82,7 @@ toolWindow.setType(ToolWindowType.FLOATING);</source>
                             <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
                                 <code>ToolWindowType.FLOATING_FREE</code>
                             </a>
-                            This type differs from <code>FLOATING</code> type for the absence of the representative button
+                            - This type differs from <code>FLOATING</code> type for the absence of the representative button
                             on the tool window bar.
 
                             <br/>To set <code>ToolWindowType.FLOATING_FREE</code> type use the following:
@@ -98,7 +98,8 @@ toolWindow.setType(ToolWindowType.FLOATING_FREE);</source>
                             <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
                                 <code>ToolWindowType.FLOATING_LIVE</code>
                             </a>
-                            <!--TODO : add comment-->
+                            - This type enables a tool to be floating in the frame rather than having
+                            floating windows "out of the frame".
 
                             <br/>To set <code>ToolWindowType.FLOATING_LIVE</code> type use the following:
                             <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
