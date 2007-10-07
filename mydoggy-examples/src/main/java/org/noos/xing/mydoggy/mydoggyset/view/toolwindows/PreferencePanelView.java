@@ -37,7 +37,7 @@ public class PreferencePanelView extends ComponentView {
         typeDescriptorContainer = new PanelViewContainer() {
             protected void initComponents() {
                 super.initComponents();
-                panel.setBorder(new LineBorder(Color.DARK_GRAY));
+                ((JComponent) panel).setBorder(new LineBorder(Color.DARK_GRAY));
             }
         };
 

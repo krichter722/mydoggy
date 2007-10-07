@@ -14,9 +14,14 @@ import java.awt.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class PanelViewContainer implements ViewContainer {
-    protected JPanel panel;
+    protected Container panel;
 
     public PanelViewContainer() {
+        initComponents();
+    }
+
+    public PanelViewContainer(Container panel) {
+        this.panel = panel;
         initComponents();
     }
 
@@ -32,7 +37,10 @@ public class PanelViewContainer implements ViewContainer {
     }
 
     protected void initComponents() {
-        this.panel = new JPanel(new TableLayout(new double[][]{{-1}, {-1}}));
+        if (this.panel != null)
+            this.panel.setLayout(new TableLayout(new double[][]{{-1}, {-1}}));
+        else
+            this.panel = new JPanel(new TableLayout(new double[][]{{-1}, {-1}}));
     }
     
 }
