@@ -6,6 +6,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTitleBarButtons;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
+import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
@@ -83,7 +84,7 @@ public class MyDoggyResourceManager implements ResourceManager {
     }
 
     public Component createComponent(String key, ToolWindowManager manager, Object... args) {
-        return applyCustomization(key, 
+        return applyCustomization(key,
                                   cmpCreators.get(key).createComponent(manager, this, args),
                                   args);
     }
@@ -240,6 +241,7 @@ public class MyDoggyResourceManager implements ResourceManager {
         cmpCreators.put(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR, new ToolWindowTitleBarComponentCreator());
         cmpCreators.put(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON, new ToolWindowTitleButtonComponentCreator());
         cmpCreators.put(MyDoggyKeySpace.TOOL_SCROLL_BAR_ARROW, new ToolScrollBarArrowComponentCreator());
+        cmpCreators.put(MyDoggyKeySpace.TOOL_WINDOW_CMP_CONTAINER, new ToolWindowCmpContainerComponentCreator());
 
         cmpUiCreators = new Hashtable<String, ComponentUICreator>();
         cmpUiCreators.put(MyDoggyKeySpace.REPRESENTATIVE_ANCHOR_BUTTON_UI, new RepresentativeAnchorButtonComponentUICreator());
@@ -247,10 +249,10 @@ public class MyDoggyResourceManager implements ResourceManager {
 
         cmpCustomizers = new Hashtable<String, ComponentCustomizer>();
         cmpCustomizers.put(MyDoggyKeySpace.MDM_PANEL, new MyDoggyManagerPanelComponentCustomizer());
+        cmpCustomizers.put(MyDoggyKeySpace.TOOL_WINDOW_CMP_CONTAINER, new ToolWindowCmpContainerComponentCustomizer());
 
         instanceCreators = new Hashtable<Class, InstanceCreator>();
         instanceCreators.put(TitleBarButtons.class, new TitleBarButtonsInstanceCreator());
-
     }
 
     protected ResourceBundle initResourceBundle(Locale locale, String bundle, ClassLoader classLoader) {
@@ -292,6 +294,15 @@ public class MyDoggyResourceManager implements ResourceManager {
         void applyCustomization(Component component, ResourceManager resourceManager, Object... args);
     }
 
+
+    public static class ToolWindowCmpContainerComponentCreator implements ComponentCreator {
+
+         public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
+             JPanel panel = new JPanel();
+             panel.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
+             return panel;
+         }
+     }
 
     public static class BarSplitPaneComponentCreator implements ComponentCreator {
 
@@ -366,27 +377,6 @@ public class MyDoggyResourceManager implements ResourceManager {
         }
     }
 
-    public static class RepresentativeAnchorButtonComponentUICreator implements ComponentUICreator {
-
-        public ComponentUI createComponentUI(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
-            return new RepresentativeAnchorUI((ToolWindowDescriptor) args[0]);
-        }
-    }
-
-    public static class ToolWindowTitleBarComponentUICreator implements ComponentUICreator {
-
-        public ComponentUI createComponentUI(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
-            return new ToolWindowTitleBarUI((ToolWindowDescriptor) args[0], (DockedContainer) args[1]);
-        }
-    }
-
-    public static class MyDoggyManagerPanelComponentCustomizer implements ComponentCustomizer {
-
-        public void applyCustomization(Component component, ResourceManager resourceManager, Object... args) {
-//            component.setBackground(Color.black);
-        }
-    }
-
     public static class ToolScrollBarArrowComponentCreator implements ComponentCreator {
 
         public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
@@ -409,18 +399,44 @@ public class MyDoggyResourceManager implements ResourceManager {
         }
     }
 
+
+    public static class RepresentativeAnchorButtonComponentUICreator implements ComponentUICreator {
+
+        public ComponentUI createComponentUI(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
+            return new RepresentativeAnchorUI((ToolWindowDescriptor) args[0]);
+        }
+    }
+
+    public static class ToolWindowTitleBarComponentUICreator implements ComponentUICreator {
+
+        public ComponentUI createComponentUI(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
+            return new ToolWindowTitleBarUI((ToolWindowDescriptor) args[0], (DockedContainer) args[1]);
+        }
+    }
+
+
+    public static class MyDoggyManagerPanelComponentCustomizer implements ComponentCustomizer {
+
+        public void applyCustomization(Component component, ResourceManager resourceManager, Object... args) {
+//            component.setBackground(Color.black);
+        }
+    }
+
+    public static class ToolWindowCmpContainerComponentCustomizer implements ComponentCustomizer {
+
+        public void applyCustomization(Component component, ResourceManager resourceManager, Object... args) {
+            JPanel panel = (JPanel) component;
+            panel.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
+        }
+     }
+
+
     public static class TitleBarButtonsInstanceCreator implements InstanceCreator {
         public Object createComponent(Object... args) {
            return new ExtendedTitleBarButtons(
                     (ToolWindowDescriptor) args[0],
                     (DockedContainer) args[1]
             );
-/*
-           return new SimpliedTitleBarButtons(
-                    (ToolWindowDescriptor) args[0],
-                    (DockedContainer) args[1]
-            );
-*/
         }
     }
 
