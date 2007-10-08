@@ -23,11 +23,10 @@ public class ListInteractiveTestRunner implements InteractiveTestRunner {
 
     public void run() {
         for (InteractiveTest interactiveTest : interactiveTests) {
-
             try {
-                RobotInteractiveUI interactiveUI = new RobotInteractiveUI(interactiveTest.setup());
-                interactiveTest.execute(interactiveUI);
-            } catch (AWTException e) {
+                interactiveTest.setup();
+                interactiveTest.execute();
+            } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 interactiveTest.dispose();

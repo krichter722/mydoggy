@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy.mydoggyset.view.interactive.tests;
 
 import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.itest.InteractiveUI;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 
@@ -10,19 +9,15 @@ import java.awt.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class TitleBarInteractiveTest extends AbstractInteractiveTest {
+public class TitleBarInteractiveTest extends MyDoggySetInteractiveTest {
     protected ToolWindowManager toolWindowManager;
 
-    public TitleBarInteractiveTest(ToolWindowManager toolWindowManager, Container masterContainer) {
-        super(masterContainer);
+    public TitleBarInteractiveTest(Container root, ToolWindowManager toolWindowManager) throws AWTException {
+        super("TitleBarInteractiveTest", "TitleBarInteractiveTest", root);
         this.toolWindowManager = toolWindowManager;
     }
 
-    public String getDescription() {
-        return "TitleBarInteractiveTest";
-    }
-
-    public void execute(InteractiveUI interactiveUI) {
+    public void execute() {
         toolWindowManager.getToolWindowGroup().setVisible(false);
 
         MyDoggyToolWindowManager manager = (MyDoggyToolWindowManager) toolWindowManager;
@@ -37,7 +32,7 @@ public class TitleBarInteractiveTest extends AbstractInteractiveTest {
         manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED, Color.BLUE);
         manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED, Color.CYAN);
 
-        clickOn(interactiveUI, "toolWindow.rb.Tool 1");
+        clickOn("toolWindow.rb.Tool 1");
     }
 
 

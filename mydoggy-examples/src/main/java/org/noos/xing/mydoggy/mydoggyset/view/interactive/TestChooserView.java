@@ -52,14 +52,17 @@ public class TestChooserView extends ComponentView {
             JFrame frame = viewContext.get(JFrame.class);
             ToolWindowManager toolWindowManager = viewContext.get(ToolWindowManager.class);
 
-            tests = new JComboBox(new Object[]{
-                    new InteractiveDragToTabTest(toolWindowManager, frame),
-                    new InteractiveToolVisisbleTest(frame),
-                    new InteractiveDragTest(frame),
-                    new InteractiveSimpleTest(frame),
-                    new InteractiveFloatingLiveTest(frame),
-                    new TitleBarInteractiveTest(toolWindowManager, frame),
-            });
+            try {
+                tests = new JComboBox(new Object[]{
+                        new InteractiveDragToTabTest(frame,toolWindowManager),
+                        new InteractiveToolVisisbleTest(frame),
+                        new InteractiveDragTest(frame),
+                        new InteractiveSimpleTest(frame),
+                        new InteractiveFloatingLiveTest(frame),
+                        new TitleBarInteractiveTest(frame, toolWindowManager),
+                });
+            } catch (AWTException ignore) {
+            }
             tests.addItemListener(new ContextPutItemListener(viewContext, InteractiveTest.class));
 
             JButton execute = new JButton("Execute");
