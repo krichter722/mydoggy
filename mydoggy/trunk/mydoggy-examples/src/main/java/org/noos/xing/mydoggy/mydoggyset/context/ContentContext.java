@@ -8,11 +8,13 @@ import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.mydoggyset.MyDoggySet;
 import org.noos.xing.mydoggy.mydoggyset.action.AddContentAction;
 import org.noos.xing.mydoggy.mydoggyset.view.contents.ContentsView;
+import org.noos.xing.mydoggy.mydoggyset.view.customize.CustomizeView;
 import org.noos.xing.mydoggy.mydoggyset.view.group.GroupsView;
 import org.noos.xing.mydoggy.mydoggyset.view.interactive.InteractiveTestView;
 import org.noos.xing.mydoggy.mydoggyset.view.manager.ManagerView;
 import org.noos.xing.mydoggy.mydoggyset.view.toolwindows.ToolWindowsView;
 import org.noos.xing.mydoggy.mydoggyset.view.wellcome.WelcomeContentView;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.yasaf.plaf.view.MapViewContext;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
 import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
@@ -31,6 +33,7 @@ public class ContentContext extends MapViewContext {
     private Component managerContentComponent;
     private Component wellcomeContentComponent;
     private Component interactiveTestContentComponent;
+    private Component customizeContentComponent;
 
     public ContentContext(ToolWindowManager toolWindowManager, JFrame frame) {
         addViewContextChangeListener(MyDoggySet.class, new AddContentAction(toolWindowManager,
@@ -57,6 +60,10 @@ public class ContentContext extends MapViewContext {
                                                                                  "ITests", "Interactive Tests", null,
                                                                                  interactiveTestContentComponent = new InteractiveTestView(frame, toolWindowManager).getComponent(),
                                                                                  "Interactive Tests", (int) 'I'));
+        addViewContextChangeListener(ResourceManager.class, new AddContentAction(toolWindowManager,
+                                                                                 "Customize", "Customize", null,
+                                                                                 customizeContentComponent = new CustomizeView(frame, toolWindowManager).getComponent(),
+                                                                                 "Customize", (int) 'u'));
         addViewContextChangeListener(UIManager.class, new ViewContextChangeListener() {
             public void contextChange(ViewContextChangeEvent evt) {
                 SwingUtilities.updateComponentTreeUI(groupEditorContentComponent);
@@ -65,6 +72,7 @@ public class ContentContext extends MapViewContext {
                 SwingUtilities.updateComponentTreeUI(managerContentComponent);
                 SwingUtilities.updateComponentTreeUI(wellcomeContentComponent);
                 SwingUtilities.updateComponentTreeUI(interactiveTestContentComponent);
+                SwingUtilities.updateComponentTreeUI(customizeContentComponent);
             }
         });
     }

@@ -115,6 +115,7 @@ public class MyDoggySet {
         contentMenu.add(new ViewContextAction("Contents", contentContext, Content.class));
         contentMenu.add(new ViewContextAction("Groups", contentContext, ToolWindowGroup.class));
         contentMenu.add(new ViewContextAction("ITests", contentContext, InteractiveTest.class));
+        contentMenu.add(new ViewContextAction("Customize", contentContext, ResourceManager.class));
 
         // L&F Menu
         lafMenu = new JMenu("Looks");

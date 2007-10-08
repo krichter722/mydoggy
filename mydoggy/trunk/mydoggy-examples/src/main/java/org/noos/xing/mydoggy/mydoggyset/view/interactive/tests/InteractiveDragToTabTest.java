@@ -2,7 +2,9 @@ package org.noos.xing.mydoggy.mydoggyset.view.interactive.tests;
 
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.itest.impl.JPopupMessage;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -19,7 +21,10 @@ public class InteractiveDragToTabTest extends MyDoggySetInteractiveTest {
     public void execute() {
         toolWindowManager.getToolWindowGroup().setVisible(false);
 
+        JPopupMessage popupMessage = new JPopupMessage((JFrame) getRoot());
+
         clickOn("toolWindow.rb.Tool 3");
+        popupMessage.showMessage("Hello World", 150, 150);
         clickOn("toolWindow.rb.Tool 13");
 
         delay(500);
