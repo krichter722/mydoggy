@@ -11,10 +11,10 @@ public interface InteractiveTest {
 
     String getDescription();
 
-    Container setup();
+    void setup();
 
     void dispose();
 
-    void execute(InteractiveUI interactiveUI);
+    void execute();
 
 }

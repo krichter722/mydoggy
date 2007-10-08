@@ -103,7 +103,7 @@ public class MyDoggySet {
         JMenu fileMenu = new JMenu("File");
         fileMenu.add(new LoadWorkspaceAction(frame, toolWindowManager));
         fileMenu.add(new StoreWorkspaceAction(frame, toolWindowManager));
-        fileMenu.add(new FrameshotAction(frame, toolWindowManager));
+        fileMenu.add(new FrameshotAction(frame));
         fileMenu.addSeparator();
         fileMenu.add(new ExitAction(frame));
 

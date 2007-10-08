@@ -1,24 +1,18 @@
 package org.noos.xing.mydoggy.mydoggyset.view.interactive.tests;
 
-import org.noos.xing.mydoggy.itest.InteractiveUI;
-
 import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class InteractiveSimpleTest extends AbstractInteractiveTest {
+public class InteractiveSimpleTest extends MyDoggySetInteractiveTest {
 
-    public InteractiveSimpleTest(Container masterContainer) {
-        super(masterContainer);
+    public InteractiveSimpleTest(Container root) throws AWTException {
+        super("InteractiveSimpleTest", "InteractiveSimpleTest", root);
     }
 
-    public String getDescription() {
-        return "TODO";
-    }
-
-    public void execute(InteractiveUI interactiveUI) {
-        clickOn(interactiveUI, "toolWindow.rb.Tool 1");
+    public void execute() {
+        clickOn("toolWindow.rb.Tool 1");
     }
 
 }
