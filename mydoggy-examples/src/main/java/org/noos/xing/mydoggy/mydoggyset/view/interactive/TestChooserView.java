@@ -54,7 +54,7 @@ public class TestChooserView extends ComponentView {
 
             try {
                 tests = new JComboBox(new Object[]{
-                        new InteractiveDragToTabTest(frame,toolWindowManager),
+                        new InteractiveDragToTabTest(frame, toolWindowManager),
                         new InteractiveToolVisisbleTest(frame),
                         new InteractiveDragTest(frame),
                         new InteractiveSimpleTest(frame),

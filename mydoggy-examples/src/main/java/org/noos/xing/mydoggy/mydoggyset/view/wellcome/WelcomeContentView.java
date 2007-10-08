@@ -6,7 +6,7 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowGroup;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
-import org.noos.xing.mydoggy.mydoggyset.context.ContentContext;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
@@ -55,6 +55,11 @@ public class WelcomeContentView extends ComponentView {
                   "5,3,FULL,FULL");
         panel.add(renderLabel("<html>Run Interactive </br> Tests</html>"),
                   "7,3,FULL,FULL");
+
+        panel.add(renderButton("Customize", ResourceManager.class),
+                          "5,5,FULL,FULL");
+        panel.add(renderLabel("<html>Customize MyDoggy</html>"),
+                          "7,5,FULL,FULL");
 
         // Setup main panel
         JPanel main = new JPanel(new TableLayout(new double[][]{{3, -1, 3},{3, 93,5,-1,3}}));
