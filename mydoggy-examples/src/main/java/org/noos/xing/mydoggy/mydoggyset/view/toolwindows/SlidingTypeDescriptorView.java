@@ -21,7 +21,7 @@ import java.awt.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class SlidingTypeDescriptorView extends ComponentView implements ViewContextChangeListener {
-    private JCheckBox enabled, animating, transparentMode;
+    private JCheckBox enabled, animating, idVisibleOnTitleBar, transparentMode;
     private JSpinner transparentDelay, transparentRatio;
 
     public SlidingTypeDescriptorView(ViewContext viewContext) {
@@ -43,6 +43,13 @@ public class SlidingTypeDescriptorView extends ComponentView implements ViewCont
                                               "animating",
                                               new ViewContextSource(viewContext, SlidingTypeDescriptor.class),
                                               new ChecBoxSelectionSource(animating)));
+
+        panel.addPair(0, 2, "idVisibleOnTitleBar : ", idVisibleOnTitleBar = new JCheckBox());
+        idVisibleOnTitleBar.setAction(new DynamicAction(ToolWindowTypeDescriptor.class,
+                                                       "idVisibleOnTitleBar",
+                                                       new ViewContextSource(viewContext, SlidingTypeDescriptor.class),
+                                                       new ChecBoxSelectionSource(idVisibleOnTitleBar)));
+
 
         panel.addPair(1, 0, "transparentMode : ", transparentMode = new JCheckBox());
         transparentMode.setAction(new DynamicAction(SlidingTypeDescriptor.class,
@@ -78,6 +85,7 @@ public class SlidingTypeDescriptorView extends ComponentView implements ViewCont
 
                 enabled.setSelected(descriptor.isEnabled());
                 animating.setSelected(descriptor.isAnimating());
+                idVisibleOnTitleBar.setSelected(descriptor.isIdVisibleOnTitleBar());                
  
                 transparentMode.setSelected(descriptor.isTransparentMode());
                 transparentDelay.setValue(descriptor.getTransparentDelay());

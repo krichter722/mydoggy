@@ -21,7 +21,7 @@ import java.awt.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class FloatingTypeDescriptorView extends ComponentView implements ViewContextChangeListener {
-    private JCheckBox enabledBox, modal, animating, transparentMode;
+    private JCheckBox enabledBox, modal, animating, idVisibleOnTitleBar, transparentMode;
     private JSpinner transparentDelay, transparentRatio;
 
     public FloatingTypeDescriptorView(ViewContext viewContext) {
@@ -50,6 +50,12 @@ public class FloatingTypeDescriptorView extends ComponentView implements ViewCon
                                               "animating",
                                               new ViewContextSource(viewContext, FloatingTypeDescriptor.class),
                                               new ChecBoxSelectionSource(animating)));
+
+        panel.addPair(0, 3, "idVisibleOnTitleBar : ", idVisibleOnTitleBar = new JCheckBox());
+        idVisibleOnTitleBar.setAction(new DynamicAction(ToolWindowTypeDescriptor.class,
+                                                       "idVisibleOnTitleBar",
+                                                       new ViewContextSource(viewContext, FloatingTypeDescriptor.class),
+                                                       new ChecBoxSelectionSource(idVisibleOnTitleBar)));
 
         // Right
         panel.add(new JLabel("transparentMode : "), "5,1,r,c");
@@ -90,7 +96,8 @@ public class FloatingTypeDescriptorView extends ComponentView implements ViewCon
                 enabledBox.setSelected(descriptor.isEnabled());
                 modal.setSelected(descriptor.isModal());
                 animating.setSelected(descriptor.isAnimating());
-
+                idVisibleOnTitleBar.setSelected(descriptor.isIdVisibleOnTitleBar());
+ 
                 transparentMode.setSelected(descriptor.isTransparentMode());
                 transparentDelay.setValue(descriptor.getTransparentDelay());
                 transparentRatio.setValue(descriptor.getTransparentRatio());

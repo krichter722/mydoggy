@@ -57,9 +57,10 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
         }
 
         if (visible) {
-            // Reset Layout
+            descriptor.checkIdOnTitleBar();
             titleBarButtons.configureIcons(ToolWindowType.SLIDING);
 
+            // Reset Layout
             TableLayout layout = (TableLayout) sheet.getLayout();
             layout.setColumn(0, 0);
             layout.setColumn(2, 0);
