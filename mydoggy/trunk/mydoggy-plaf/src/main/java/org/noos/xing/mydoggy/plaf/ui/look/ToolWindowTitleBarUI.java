@@ -235,11 +235,7 @@ public class ToolWindowTitleBarUI extends PanelUI {
                               null,
                               GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
 
-        if (descriptor.isIdVisibleOnTitleBar() ||
-            toolWindow.getType() == ToolWindowType.FLOATING ||
-            toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
-            toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
-
+        if (descriptor.isIdVisibleOnTitleBar()) {
             String id = resourceManager.getUserString(descriptor.getToolWindow().getId());
             r.width = g.getFontMetrics().stringWidth(id) + 8;
 

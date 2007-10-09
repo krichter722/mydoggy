@@ -21,7 +21,7 @@ import java.awt.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class FloatingLiveTypeDescriptorView extends ComponentView implements ViewContextChangeListener {
-    private JCheckBox enabledBox, animating, transparentMode;
+    private JCheckBox enabledBox, animating, idVisibleOnTitleBar, transparentMode;
     private JSpinner transparentDelay, transparentRatio;
 
     public FloatingLiveTypeDescriptorView(ViewContext viewContext) {
@@ -29,7 +29,7 @@ public class FloatingLiveTypeDescriptorView extends ComponentView implements Vie
     }
 
     protected Component initComponent() {
-        MatrixPanel panel = new MatrixPanel(2, 4);
+        MatrixPanel panel = new MatrixPanel(2, 3);
 
         // Left
         panel.addPair(0, 0, "enabled : ", enabledBox = new JCheckBox());
@@ -38,12 +38,18 @@ public class FloatingLiveTypeDescriptorView extends ComponentView implements Vie
                                                new ViewContextSource(viewContext, FloatingLiveTypeDescriptor.class),
                                                new ChecBoxSelectionSource(enabledBox)));
 
-        panel.addPair(0, 2, "animating : ", animating = new JCheckBox());
+        panel.addPair(0, 1, "animating : ", animating = new JCheckBox());
         animating.setSelected(true);
         animating.setAction(new DynamicAction(ToolWindowTypeDescriptor.class,
                                               "animating",
                                               new ViewContextSource(viewContext, FloatingLiveTypeDescriptor.class),
                                               new ChecBoxSelectionSource(animating)));
+
+        panel.addPair(0, 2, "idVisibleOnTitleBar : ", idVisibleOnTitleBar = new JCheckBox());
+        idVisibleOnTitleBar.setAction(new DynamicAction(ToolWindowTypeDescriptor.class,
+                                                       "idVisibleOnTitleBar",
+                                                       new ViewContextSource(viewContext, FloatingLiveTypeDescriptor.class),
+                                                       new ChecBoxSelectionSource(idVisibleOnTitleBar)));
 
         // Right
         panel.add(new JLabel("transparentMode : "), "5,1,r,c");
@@ -83,6 +89,7 @@ public class FloatingLiveTypeDescriptorView extends ComponentView implements Vie
 
                 enabledBox.setSelected(descriptor.isEnabled());
                 animating.setSelected(descriptor.isAnimating());
+                idVisibleOnTitleBar.setSelected(descriptor.isIdVisibleOnTitleBar());               
 
                 transparentMode.setSelected(descriptor.isTransparentMode());
                 transparentDelay.setValue(descriptor.getTransparentDelay());

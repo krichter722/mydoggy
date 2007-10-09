@@ -48,7 +48,7 @@ public class DockedTypeDescriptorView extends ComponentView implements ViewConte
 
         panel.add(new JLabel("idVisibleOnTitleBar : "), "1,5,r,c");
         panel.add(idVisibleOnTitleBar = new JCheckBox(), "3,5,FULL,FULL");
-        idVisibleOnTitleBar.setAction(new DynamicAction(DockedTypeDescriptor.class,
+        idVisibleOnTitleBar.setAction(new DynamicAction(ToolWindowTypeDescriptor.class,
                                                        "idVisibleOnTitleBar",
                                                        new ViewContextSource(viewContext, DockedTypeDescriptor.class),
                                                        new ChecBoxSelectionSource(idVisibleOnTitleBar)));

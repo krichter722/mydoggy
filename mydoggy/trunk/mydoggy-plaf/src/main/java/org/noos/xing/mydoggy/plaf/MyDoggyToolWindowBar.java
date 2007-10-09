@@ -595,6 +595,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 }
             }
 
+            if (visible)
+                descriptor.checkIdOnTitleBar();
+
             Component content = (visible) ? descriptor.getComponent() : null;
             if (content != null) {
                 DockedContainer container = (DockedContainer) descriptor.getToolWindowContainer();

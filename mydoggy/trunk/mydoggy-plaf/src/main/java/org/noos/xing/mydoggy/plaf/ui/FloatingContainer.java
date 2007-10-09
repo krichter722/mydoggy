@@ -58,6 +58,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         content.setFocusCycleRoot(!visible);
 
         if (visible) {
+            descriptor.checkIdOnTitleBar();
             titleBarButtons.configureIcons(ToolWindowType.FLOATING);
 
             window.getContentPane().removeAll();

@@ -45,9 +45,10 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         sheet.remove(content);
 
         if (visible) {
-            // Reset Layout
+            descriptor.checkIdOnTitleBar();
             dockedContainer.getTitleBarButtons().configureIcons(ToolWindowType.FLOATING_LIVE);
 
+            // Reset Layout
             TableLayout layout = (TableLayout) sheet.getLayout();
             layout.setColumn(0, 0);
             layout.setColumn(2, 0);

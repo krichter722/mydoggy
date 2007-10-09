@@ -85,6 +85,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
                         )
                 );
             }
+        } else if ("idVisibleOnTitleBar".equals(evt.getPropertyName())) {
+            checkIdOnTitleBar();
         }
     }
 
@@ -299,11 +301,13 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         floatingTypeDescriptor.addPropertyChangeListener(this);
 
         floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING_LIVE)).cloneMe();
+        floatingLiveTypeDescriptor.addPropertyChangeListener(this);
 
         dockedTypeDescriptor = (DockedTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).cloneMe();
         dockedTypeDescriptor.addPropertyChangeListener(this);
 
         slidingTypeDescriptor = (SlidingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.SLIDING)).cloneMe();
+        slidingTypeDescriptor.addPropertyChangeListener(this);
     }
 
     protected LabelUI createLabelUI() {
@@ -344,15 +348,23 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     public boolean isIdVisibleOnTitleBar() {
         switch (toolWindow.getType()) {
             case DOCKED:
-                return toolWindow.getTypeDescriptor(ToolWindowType.DOCKED).isIdVisibleOnTitleBar()
+                return toolWindow.getTypeDescriptor(ToolWindowType.DOCKED).isIdVisibleOnTitleBar();
             case SLIDING:
-                return toolWindow.getTypeDescriptor(ToolWindowType.SLIDING).isIdVisibleOnTitleBar()
+                return toolWindow.getTypeDescriptor(ToolWindowType.SLIDING).isIdVisibleOnTitleBar();
             case FLOATING:
             case FLOATING_FREE:
-                return toolWindow.getTypeDescriptor(ToolWindowType.FLOATING).isIdVisibleOnTitleBar()
+                return toolWindow.getTypeDescriptor(ToolWindowType.FLOATING).isIdVisibleOnTitleBar();
             case FLOATING_LIVE:
-                return toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).isIdVisibleOnTitleBar()
+                return toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).isIdVisibleOnTitleBar();
         }
+        throw new IllegalStateException("ToolWindowDescriptor.isIdVisibleOnTitleBar");
+    }
+
+    public void checkIdOnTitleBar() {
+        if (isIdVisibleOnTitleBar())
+            dockedContainer.enableIdOnTitleBar();
+        else
+            dockedContainer.disableIdOnTitleBar();
     }
 
 
