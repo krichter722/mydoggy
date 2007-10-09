@@ -16,6 +16,7 @@ public class DefaultSlidingTypeDescriptor implements SlidingTypeDescriptor, Prop
     private int transparentDelay;
     private boolean enabled;
     private boolean animating;
+    private boolean idVisibleOnTitleBar;
 
     private EventListenerList listenerList;
 
@@ -25,14 +26,18 @@ public class DefaultSlidingTypeDescriptor implements SlidingTypeDescriptor, Prop
         transparentDelay = 1000;
         enabled = true;
         animating = true;
+        idVisibleOnTitleBar = true;
     }
 
-    public DefaultSlidingTypeDescriptor(DefaultSlidingTypeDescriptor parent, int transparentDelay, float transparentRatio, boolean transparentMode, boolean enabled, boolean animating) {
+    public DefaultSlidingTypeDescriptor(DefaultSlidingTypeDescriptor parent, int transparentDelay,
+                                        float transparentRatio, boolean transparentMode,
+                                        boolean enabled, boolean animating, boolean idVisibleOnTitleBar) {
         this.transparentDelay = transparentDelay;
         this.transparentRatio = transparentRatio;
         this.transparentMode = transparentMode;
         this.enabled = enabled;
         this.animating = animating;
+        this.idVisibleOnTitleBar = idVisibleOnTitleBar;
 
         parent.addPropertyChangeListener(this);
     }
@@ -71,7 +76,7 @@ public class DefaultSlidingTypeDescriptor implements SlidingTypeDescriptor, Prop
     public int getTransparentDelay() {
         return transparentDelay;
     }
-             
+
     public void setEnabled(boolean enabled) {
         if (this.enabled == enabled)
             return;
@@ -109,11 +114,24 @@ public class DefaultSlidingTypeDescriptor implements SlidingTypeDescriptor, Prop
         firePropertyChange("animating", old, animating);
     }
 
-    
+    public void setIdVisibleOnTitleBar(boolean idVisibleOnTitleBar) {
+        if (this.idVisibleOnTitleBar == idVisibleOnTitleBar)
+            return;
+
+        boolean old = this.idVisibleOnTitleBar;
+        this.idVisibleOnTitleBar = idVisibleOnTitleBar;
+        firePropertyChange("idVisibleOnTitleBar", old, idVisibleOnTitleBar);
+    }
+
+    public boolean isIdVisibleOnTitleBar() {
+        return idVisibleOnTitleBar;
+    }
+
+
     public ToolWindowTypeDescriptor cloneMe() {
         return new DefaultSlidingTypeDescriptor(this,
-                                                getTransparentDelay(), getTransparentRatio(),
-                                                isTransparentMode(), isEnabled(), animating);
+                                                transparentDelay, transparentRatio,
+                                                transparentMode, enabled, animating, idVisibleOnTitleBar);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

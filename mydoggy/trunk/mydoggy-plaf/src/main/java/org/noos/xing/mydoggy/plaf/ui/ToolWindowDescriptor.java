@@ -341,6 +341,19 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         }
     }
 
+    public boolean isIdVisibleOnTitleBar() {
+        switch (toolWindow.getType()) {
+            case DOCKED:
+                return toolWindow.getTypeDescriptor(ToolWindowType.DOCKED).isIdVisibleOnTitleBar()
+            case SLIDING:
+                return toolWindow.getTypeDescriptor(ToolWindowType.SLIDING).isIdVisibleOnTitleBar()
+            case FLOATING:
+            case FLOATING_FREE:
+                return toolWindow.getTypeDescriptor(ToolWindowType.FLOATING).isIdVisibleOnTitleBar()
+            case FLOATING_LIVE:
+                return toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).isIdVisibleOnTitleBar()
+        }
+    }
 
 
     public class RepresentativeAnchor extends JLabel {

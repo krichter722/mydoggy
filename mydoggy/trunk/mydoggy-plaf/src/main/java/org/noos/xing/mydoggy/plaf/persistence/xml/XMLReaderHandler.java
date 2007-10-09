@@ -39,6 +39,7 @@ public class XMLReaderHandler extends DefaultHandler {
     protected PersistedDockedType dockedType;
     protected PersistedSlidingType slidingType;
     protected PersistedFloatingType floatingType;
+    protected PersistedFloatingLiveType floatingLiveType;
     protected PersistedMostRecentDescriptor persistedMostRecentDescriptor;
     protected PersistedContentManager persistedContentManager;
 
@@ -133,6 +134,8 @@ public class XMLReaderHandler extends DefaultHandler {
                         slidingType = new PersistedSlidingType(attributes);
                     } else if ("floating".equals(qName)) {
                         floatingType = new PersistedFloatingType(attributes);
+                    } else if ("floatingLive".equals(qName)) {
+                        floatingLiveType = new PersistedFloatingLiveType(attributes);
                     } else if("tab".equals(qName)) {
                         persistedToolWindow.addTab(attributes);
                     }
@@ -191,6 +194,22 @@ public class XMLReaderHandler extends DefaultHandler {
                             if (point != null)
                                 descriptor.setLocation(point.x, point.y);
                             Dimension dimension = floatingType.getSize();
+                            if (dimension != null)
+                                descriptor.setSize(dimension.width, dimension.height);
+                        }
+
+                        if (floatingLiveType != null) {
+                            FloatingLiveTypeDescriptor descriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
+                            descriptor.setEnabled(floatingLiveType.isEnabled());
+                            descriptor.setTransparentDelay(floatingLiveType.getTransparentDelay());
+                            descriptor.setTransparentMode(floatingLiveType.isTransparentMode());
+                            descriptor.setTransparentRatio(floatingLiveType.getTransparentRatio());
+                            descriptor.setAnimating(floatingLiveType.isAnimating());
+
+                            Point point = floatingLiveType.getLocation();
+                            if (point != null)
+                                descriptor.setLocation(point.x, point.y);
+                            Dimension dimension = floatingLiveType.getSize();
                             if (dimension != null)
                                 descriptor.setSize(dimension.width, dimension.height);
                         }
