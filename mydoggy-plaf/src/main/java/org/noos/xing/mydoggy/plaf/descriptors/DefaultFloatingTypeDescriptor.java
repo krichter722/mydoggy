@@ -23,6 +23,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
 
     private boolean enabled;
     private boolean animating;
+    private boolean idVisibleOnTitleBar;
 
     private EventListenerList listenerList;
 
@@ -33,11 +34,12 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         modal = false;
         enabled = true;
         animating = true;
+        idVisibleOnTitleBar = true;
     }
 
     public DefaultFloatingTypeDescriptor(DefaultFloatingTypeDescriptor parent, Point location, Dimension size,
                                          int transparentDelay, float transparentRatio, boolean useTransparentMode,
-                                         boolean modal, boolean enabled, boolean animating) {
+                                         boolean modal, boolean enabled, boolean animating, boolean idVisibleOnTitleBar) {
         this.location = location;
         this.size = size;
         this.transparentDelay = transparentDelay;
@@ -46,6 +48,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         this.modal = modal;
         this.enabled = enabled;
         this.animating = animating;
+        this.idVisibleOnTitleBar = idVisibleOnTitleBar;
 
         parent.addPropertyChangeListener(this);
     }
@@ -124,7 +127,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
 
         firePropertyChange("transparentMode", old, transparentMode);
     }
-                             
+
     public int getTransparentDelay() {
         return transparentDelay;
     }
@@ -166,11 +169,24 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         firePropertyChange("animating", old, animating);
     }
 
+    public void setIdVisibleOnTitleBar(boolean idVisibleOnTitleBar) {
+        if (this.idVisibleOnTitleBar == idVisibleOnTitleBar)
+            return;
+
+        boolean old = this.idVisibleOnTitleBar;
+        this.idVisibleOnTitleBar = idVisibleOnTitleBar;
+        firePropertyChange("idVisibleOnTitleBar", old, idVisibleOnTitleBar);
+    }
+
+    public boolean isIdVisibleOnTitleBar() {
+        return idVisibleOnTitleBar;
+    }
+
 
     public ToolWindowTypeDescriptor cloneMe() {
-        return new DefaultFloatingTypeDescriptor(this, getLocation(), getSize(), getTransparentDelay(),
-                                                 getTransparentRatio(), isTransparentMode(),
-                                                 modal, isEnabled(), animating);
+        return new DefaultFloatingTypeDescriptor(this, location, size, transparentDelay,
+                                                 transparentRatio, transparentMode,
+                                                 modal, enabled, animating, idVisibleOnTitleBar);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

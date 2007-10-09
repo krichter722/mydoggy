@@ -175,7 +175,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     public void setAnimating(boolean animating) {
         if (this.animating == animating)
             return;
-        
+
         boolean old = this.animating;
         this.animating = animating;
         firePropertyChange("animating", old, animating);
@@ -225,7 +225,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
             this.hideRepresentativeButtonOnVisible = (Boolean) evt.getNewValue();
         } else if ("idVisibleOnTitleBar".equals(evt.getPropertyName())) {
             this.idVisibleOnTitleBar = (Boolean) evt.getNewValue();
-        } 
+        }
     }
 
 

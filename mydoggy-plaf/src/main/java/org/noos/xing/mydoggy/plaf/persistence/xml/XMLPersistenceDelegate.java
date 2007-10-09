@@ -127,6 +127,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         slidingDescriptorAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(slidingTypeDescriptor.getTransparentRatio()));
         slidingDescriptorAttributes.addAttribute(null, "enabled", null, null, String.valueOf(slidingTypeDescriptor.isEnabled()));
         slidingDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(slidingTypeDescriptor.isAnimating()));
+        slidingDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(slidingTypeDescriptor.isIdVisibleOnTitleBar()));
         writer.dataElement("sliding", slidingDescriptorAttributes);
 
         // FloatingTypeDescriptor
@@ -138,6 +139,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         floatingDescriptorAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(floatingTypeDescriptor.getTransparentRatio()));
         floatingDescriptorAttributes.addAttribute(null, "enabled", null, null, String.valueOf(floatingTypeDescriptor.isEnabled()));
         floatingDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(floatingTypeDescriptor.isAnimating()));
+        floatingDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(floatingTypeDescriptor.isIdVisibleOnTitleBar()));
 
         Point point = floatingTypeDescriptor.getLocation();
         if (point != null) {
@@ -152,6 +154,32 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         }
 
         writer.dataElement("floating", floatingDescriptorAttributes);
+
+        // FloatingLiveTypeDescriptor
+        // FloatingTypeDescriptor
+        FloatingLiveTypeDescriptor floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
+        AttributesImpl floatingLiveDescriptorAttributes = new AttributesImpl();
+        floatingLiveDescriptorAttributes.addAttribute(null, "transparentMode", null, null, String.valueOf(floatingLiveTypeDescriptor.isTransparentMode()));
+        floatingLiveDescriptorAttributes.addAttribute(null, "transparentDelay", null, null, String.valueOf(floatingLiveTypeDescriptor.getTransparentDelay()));
+        floatingLiveDescriptorAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(floatingLiveTypeDescriptor.getTransparentRatio()));
+        floatingLiveDescriptorAttributes.addAttribute(null, "enabled", null, null, String.valueOf(floatingLiveTypeDescriptor.isEnabled()));
+        floatingLiveDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(floatingLiveTypeDescriptor.isAnimating()));
+        floatingLiveDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(floatingLiveTypeDescriptor.isIdVisibleOnTitleBar()));
+
+        point = floatingLiveTypeDescriptor.getLocation();
+        if (point != null) {
+            floatingLiveDescriptorAttributes.addAttribute(null, "x", null, null, String.valueOf(point.x));
+            floatingLiveDescriptorAttributes.addAttribute(null, "y", null, null, String.valueOf(point.y));
+        }
+
+        dimension = floatingLiveTypeDescriptor.getSize();
+        if (dimension != null) {
+            floatingLiveDescriptorAttributes.addAttribute(null, "width", null, null, String.valueOf(dimension.width));
+            floatingLiveDescriptorAttributes.addAttribute(null, "height", null, null, String.valueOf(dimension.height));
+        }
+
+        writer.dataElement("floatingLive", floatingLiveDescriptorAttributes);
+
 
         writer.endElement("descriptors");
 

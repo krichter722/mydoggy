@@ -20,6 +20,7 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
     private int transparentDelay;
     private boolean enabled;
     private boolean animating;
+    private boolean idVisibleOnTitleBar;
 
     private EventListenerList listenerList;
 
@@ -29,11 +30,12 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
         transparentDelay = 1000;
         enabled = true;
         animating = true;
+        idVisibleOnTitleBar = true;
     }
 
     public DefaultFloatingLiveTypeDescriptor(DefaultFloatingLiveTypeDescriptor parent, Point location, Dimension size,
                                              int transparentDelay, float transparentRatio, boolean useTransparentMode,
-                                             boolean enabled, boolean animating) {
+                                             boolean enabled, boolean animating, boolean idVisibleOnTitleBar) {
         this.location = location;
         this.size = size;
         this.transparentDelay = transparentDelay;
@@ -41,6 +43,7 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
         this.transparentMode = useTransparentMode;
         this.enabled = enabled;
         this.animating = animating;
+        this.idVisibleOnTitleBar = idVisibleOnTitleBar;
 
         parent.addPropertyChangeListener(this);
     }
@@ -147,11 +150,24 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
         firePropertyChange("animating", old, animating);
     }
 
+    public void setIdVisibleOnTitleBar(boolean idVisibleOnTitleBar) {
+        if (this.idVisibleOnTitleBar == idVisibleOnTitleBar)
+            return;
+
+        boolean old = this.idVisibleOnTitleBar;
+        this.idVisibleOnTitleBar = idVisibleOnTitleBar;
+        firePropertyChange("idVisibleOnTitleBar", old, idVisibleOnTitleBar);
+    }
+
+    public boolean isIdVisibleOnTitleBar() {
+        return idVisibleOnTitleBar;
+    }
+
 
     public ToolWindowTypeDescriptor cloneMe() {
-        return new DefaultFloatingLiveTypeDescriptor(this, getLocation(), getSize(), getTransparentDelay(),
-                                                     getTransparentRatio(), isTransparentMode(),
-                                                     isEnabled(), animating);
+        return new DefaultFloatingLiveTypeDescriptor(this, location, size, transparentDelay,
+                                                     transparentRatio, transparentMode,
+                                                     enabled, animating, idVisibleOnTitleBar);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
