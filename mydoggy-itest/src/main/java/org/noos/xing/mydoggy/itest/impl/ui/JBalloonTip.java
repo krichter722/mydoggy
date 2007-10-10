@@ -60,7 +60,7 @@ public class JBalloonTip extends JPanel {
     private void determineAndSetLocation() {
 //        Point location = SwingUtilities.convertPoint(attachedComponent, getLocation(), this);
         setSize(getPreferredSize().width,
-                  getPreferredSize().height);
+                getPreferredSize().height);
         validate();
     }
 
@@ -130,9 +130,8 @@ public class JBalloonTip extends JPanel {
             if (reset) {
                 lastSize = null;
                 reset = false;
-            } else
-                if (currentSize.equals(lastSize))
-                    return insets;
+            } else if (currentSize.equals(lastSize))
+                return insets;
 
             switch (position) {
                 case BOTTOM:
@@ -178,7 +177,7 @@ public class JBalloonTip extends JPanel {
                     g.fillRoundRect(x, y, bWidth, bHeight - vOffset, arcWidth * 2, arcHeight * 2);
 
                     g.setColor(borderColor);
-                    g.drawRoundRect(x, y, bWidth, bHeight - vOffset, arcWidth * 2, arcHeight * 2);
+                    g.drawRoundRect(x, y, bWidth - 1, bHeight - vOffset - 1, arcWidth * 2, arcHeight * 2);
 
                     int[] xPoints = {x + hOffset, x + hOffset + vOffset, x + hOffset};
                     int[] yPoints = {y + bHeight - vOffset - 1, y + bHeight - vOffset - 1, y + bHeight - 1};
@@ -192,12 +191,12 @@ public class JBalloonTip extends JPanel {
                     break;
                 case TOP:
                     g.setColor(fillColor);
-                    g.fillRoundRect(x, y + vOffset, bWidth, bHeight - vOffset , arcWidth * 2, arcHeight * 2);
+                    g.fillRoundRect(x, y + vOffset, bWidth, bHeight - vOffset, arcWidth * 2, arcHeight * 2);
 
                     g.setColor(borderColor);
-                    g.drawRoundRect(x, y + vOffset, bWidth, bHeight - vOffset, arcWidth * 2, arcHeight * 2);
+                    g.drawRoundRect(x, y + vOffset, bWidth - 1, bHeight - vOffset - 1, arcWidth * 2, arcHeight * 2);
 
-                    xPoints = new int[]{x + hOffset , x + hOffset + vOffset, x + hOffset};
+                    xPoints = new int[]{x + hOffset, x + hOffset + vOffset, x + hOffset};
                     yPoints = new int[]{y + vOffset + 1, y + vOffset + 1, y + 1};
 
                     g.setColor(fillColor);
@@ -212,16 +211,16 @@ public class JBalloonTip extends JPanel {
                     g.fillRoundRect(x + hOffset, y, bWidth - hOffset, bHeight, arcWidth * 2, arcHeight * 2);
 
                     g.setColor(borderColor);
-                    g.drawRoundRect(x + hOffset, y, bWidth - hOffset , bHeight, arcWidth * 2, arcHeight * 2);
+                    g.drawRoundRect(x + hOffset, y, bWidth - hOffset - 1, bHeight - 1, arcWidth * 2, arcHeight * 2);
 
                     switch (angle) {
                         case LEFT:
                             xPoints = new int[]{x, x + hOffset + 1, x + hOffset + 1};
-                            yPoints = new int[]{y + vOffset, y + vOffset + hOffset , y + vOffset};
+                            yPoints = new int[]{y + vOffset, y + vOffset + hOffset, y + vOffset};
                             break;
                         case RIGHT:
                             xPoints = new int[]{x, x + hOffset + 1, x + hOffset + 1};
-                            yPoints = new int[]{y + vOffset + hOffset , y + vOffset + hOffset , y + vOffset};
+                            yPoints = new int[]{y + vOffset + hOffset, y + vOffset + hOffset, y + vOffset};
                             break;
                         default:
                             throw new IllegalStateException();
@@ -240,16 +239,16 @@ public class JBalloonTip extends JPanel {
                     g.fillRoundRect(x, y, bWidth - hOffset, bHeight, arcWidth * 2, arcHeight * 2);
 
                     g.setColor(borderColor);
-                    g.drawRoundRect(x, y, bWidth - hOffset , bHeight, arcWidth * 2, arcHeight * 2);
+                    g.drawRoundRect(x, y, bWidth - hOffset - 1, bHeight - 1, arcWidth * 2, arcHeight * 2);
 
                     switch (angle) {
                         case LEFT:
                             xPoints = new int[]{x + bWidth - hOffset, x + bWidth, x + bWidth - hOffset};
-                            yPoints = new int[]{y + vOffset, y + vOffset, y + vOffset + hOffset };
+                            yPoints = new int[]{y + vOffset, y + vOffset, y + vOffset + hOffset};
                             break;
                         case RIGHT:
                             xPoints = new int[]{x + bWidth - hOffset, x + bWidth, x + bWidth - hOffset};
-                            yPoints = new int[]{y + vOffset  + hOffset, y + vOffset + hOffset, y + vOffset };
+                            yPoints = new int[]{y + vOffset + hOffset, y + vOffset + hOffset, y + vOffset};
                             break;
                         default:
                             throw new IllegalStateException();

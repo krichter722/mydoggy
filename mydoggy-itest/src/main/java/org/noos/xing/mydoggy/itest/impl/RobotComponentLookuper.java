@@ -21,6 +21,8 @@ public class RobotComponentLookuper implements ComponentLookuper {
     }
 
     public ComponentAdapter lookup(ComponentFilter componentFilter) {
+        if (componentFilter == null)
+            return new RobotComponentAdapter(robot, roots.get(0));
         for (Container root : roots) {
             Component filteredComponent = findComponentByName(root, componentFilter);
             if (filteredComponent != null)
