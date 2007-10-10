@@ -12,14 +12,18 @@ import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
 import org.noos.xing.mydoggy.plaf.ui.util.DummyResourceBundle;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 
 import javax.swing.*;
+import javax.swing.event.EventListenerList;
 import javax.swing.plaf.ButtonUI;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.LabelUI;
 import javax.swing.plaf.PanelUI;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.*;
 
 /**
@@ -44,10 +48,12 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     protected TransparencyManager<Window> transparencyManager;
 
+    protected EventListenerList listenerList;
 
     public MyDoggyResourceManager() {
         this.icons = new Hashtable<String, Icon>();
         this.colors = new Hashtable<String, Color>();
+        this.listenerList = new EventListenerList();
 
         loadResources();
         initComponentCreators();
@@ -68,7 +74,9 @@ public class MyDoggyResourceManager implements ResourceManager {
     }
 
     public Color putColor(String id, Color color) {
-        return colors.put(id, color);
+        Color oldColor = colors.put(id, color);
+        fireColorChanged(id, oldColor, color);
+        return oldColor;
     }
 
     public TransparencyManager<Window> getTransparencyManager() {
@@ -132,6 +140,21 @@ public class MyDoggyResourceManager implements ResourceManager {
         return (userResourceBundle != null) ? userResourceBundle.getString(key) : key;
     }
 
+    public Map<String, Color> getColors() {
+        return colors;
+    }
+
+    public Map<String, Icon> getIcons() {
+        return icons;
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener changeListener) {
+        listenerList.add(PropertyChangeListener.class, changeListener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener changeListener) {
+        listenerList.remove(PropertyChangeListener.class, changeListener);
+    }
 
     public void putInstanceCreator(Class aClass, InstanceCreator instanceCreator) {
         instanceCreators.put(aClass, instanceCreator);
@@ -274,6 +297,13 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     protected void initTransparencyManager() {
         setTransparencyManager(new WindowTransparencyManager());
+    }
+
+    protected void fireColorChanged(String key, Color oldValue, Color newValue){
+        PropertyChangeEvent event = new PropertyChangeEvent(this, key, oldValue, newValue);
+        for (PropertyChangeListener listener : listenerList.getListeners(PropertyChangeListener.class)) {
+            listener.propertyChange(event);
+        }
     }
 
 

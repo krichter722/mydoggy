@@ -2,11 +2,14 @@ package org.noos.xing.mydoggy.plaf.ui;
 
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
+import java.beans.PropertyChangeListener;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -185,5 +188,18 @@ public interface ResourceManager {
      * @since 1.3.1
      */
     String getUserString(String key);
+
+    /**
+     * TODO: 
+     * @return
+     * @since 1.3.2
+     */
+    Map<String, Color> getColors();
+
+    Map<String, Icon> getIcons();
+
+    void addPropertyChangeListener(PropertyChangeListener changeListener);
+
+    void removePropertyChangeListener(PropertyChangeListener changeListener);
 
 }

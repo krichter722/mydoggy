@@ -28,7 +28,7 @@ public class ToolWindowTableView extends ComponentView {
     }
 
     protected Component initComponent() {
-        ToolWindowManager toolWindowManager = (ToolWindowManager) viewContext.get(ToolWindowManager.class);
+        ToolWindowManager toolWindowManager = viewContext.get(ToolWindowManager.class);
 
         JPanel toolsPanel = new JPanel(new TableLayout(new double[][]{{-1}, {-1}}));
         toolsPanel.setBorder(new TitledBorder("ToolWindows"));
