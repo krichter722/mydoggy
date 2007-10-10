@@ -315,9 +315,6 @@ public class JTabbedContentManager extends JTabbedPane {
         int startIndex = -1;
         private int currentIndex = -1;
 
-        /* (non-Javadoc)
-        * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
-        */
         public void mousePressed(MouseEvent e) {
             if (!e.isPopupTrigger()) {
                 JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
@@ -326,9 +323,6 @@ public class JTabbedContentManager extends JTabbedPane {
             currentIndex = -1;
         }
 
-        /* (non-Javadoc)
-        * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
-        */
         public void mouseReleased(MouseEvent e) {
             JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
             if (!e.isPopupTrigger()) {
@@ -345,9 +339,32 @@ public class JTabbedContentManager extends JTabbedPane {
             currentIndex = -1;
         }
 
-        /**
-         */
-        private void moveTab(JTabbedPane pane, int src, int dst) {
+        public void mouseDragged(MouseEvent e) {
+            if (startIndex != -1) {
+                JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
+                int index = tabbedPane.indexAtLocation(e.getX(), e.getY());
+
+                if (index != -1 && index != currentIndex) { // moved over another tab
+                    clearRectangle(tabbedPane);
+                    currentIndex = index;
+                }
+
+                if (currentIndex != -1 && currentIndex != startIndex) {
+                    drawRectangle(tabbedPane);
+                }
+            }
+        }
+
+        public void mouseMoved(MouseEvent e) {
+        }
+
+        public void mouseExited(MouseEvent e) {
+            clearRectangle((JTabbedPane) e.getSource());
+            currentIndex = -1;
+        }
+
+
+        protected void moveTab(JTabbedPane pane, int src, int dst) {
             // Get all the properties
             Component comp = pane.getComponentAt(src);
             String label = pane.getTitleAt(src);
@@ -375,27 +392,7 @@ public class JTabbedContentManager extends JTabbedPane {
             pane.setBackgroundAt(dst, bg);
         }
 
-
-        /* (non-Javadoc)
-        * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
-        */
-        public void mouseDragged(MouseEvent e) {
-            if (startIndex != -1) {
-                JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
-                int index = tabbedPane.indexAtLocation(e.getX(), e.getY());
-
-                if (index != -1 && index != currentIndex) { // moved over another tab
-                    clearRectangle(tabbedPane);
-                    currentIndex = index;
-                }
-
-                if (currentIndex != -1 && currentIndex != startIndex) {
-                    drawRectangle(tabbedPane);
-                }
-            }
-        }
-
-        private void clearRectangle(JTabbedPane tabbedPane) {
+        protected void clearRectangle(JTabbedPane tabbedPane) {
             if (currentIndex == -1) {
                 return;
             }
@@ -404,7 +401,7 @@ public class JTabbedContentManager extends JTabbedPane {
             tabbedPane.repaint(rect);
         }
 
-        private void drawRectangle(JTabbedPane tabbedPane) {
+        protected void drawRectangle(JTabbedPane tabbedPane) {
             TabbedPaneUI ui = tabbedPane.getUI();
             Rectangle rect = ui.getTabBounds(tabbedPane, currentIndex);
             Graphics graphics = tabbedPane.getGraphics();
@@ -412,19 +409,6 @@ public class JTabbedContentManager extends JTabbedPane {
             graphics.drawRect(rect.x, rect.y, rect.width - 1, rect.height - 1);
         }
 
-        /* (non-Javadoc)
-        * @see java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
-        */
-        public void mouseMoved(MouseEvent e) {
-        }
-
-        /* (non-Javadoc)
-        * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
-        */
-        public void mouseExited(MouseEvent e) {
-            clearRectangle((JTabbedPane) e.getSource());
-            currentIndex = -1;
-        }
     }
 }
 

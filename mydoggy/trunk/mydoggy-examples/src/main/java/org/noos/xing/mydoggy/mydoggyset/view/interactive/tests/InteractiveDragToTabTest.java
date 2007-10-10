@@ -22,12 +22,9 @@ public class InteractiveDragToTabTest extends MyDoggySetInteractiveTest {
         toolWindowManager.getToolWindowGroup().setVisible(false);
 
         clickOn("toolWindow.rb.Tool 3");
-        JBalloonTip balloonTip = JBalloonTip.createRoundedBalloonTip(
-                ((JFrame)root).getContentPane(), 
-                Color.BLACK, new Color(255, 255, 225), 10, 15, 20, 7, 7,
-                false);
+        JBalloonTip balloonTip = new JBalloonTip(((JFrame) root));
         balloonTip.setText("Hello World");
-        balloonTip.show(150,150);
+        balloonTip.show(150, 150);
         clickOn("toolWindow.rb.Tool 13");
 
         delay(500);

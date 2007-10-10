@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
+import org.noos.xing.mydoggy.itest.impl.ui.JBalloonTip;
 import org.noos.xing.mydoggy.mydoggyset.action.*;
 import org.noos.xing.mydoggy.mydoggyset.context.ContentContext;
 import org.noos.xing.mydoggy.mydoggyset.ui.MonitorPanel;
@@ -76,6 +77,11 @@ public class MyDoggySet {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 contentContext.put(MyDoggySet.class, null);
+
+                JBalloonTip balloonTip = new JBalloonTip(frame);
+                balloonTip.setText("Hello World");
+                balloonTip.show(150,150);
+
                 frame.setVisible(true);
             }
         });
