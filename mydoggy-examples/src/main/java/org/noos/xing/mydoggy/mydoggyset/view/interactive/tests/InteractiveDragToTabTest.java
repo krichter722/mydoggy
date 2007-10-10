@@ -2,24 +2,21 @@ package org.noos.xing.mydoggy.mydoggyset.view.interactive.tests;
 
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.itest.impl.ui.JBalloonTip;
 
-import javax.swing.*;
 import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class InteractiveDragToTabTest extends MyDoggySetInteractiveTest {
-    protected ToolWindowManager toolWindowManager;
 
     public InteractiveDragToTabTest(Container root, ToolWindowManager toolWindowManager) throws AWTException {
         super("Drag a Tool as a Tab", 
-              "InteractiveDragToTabTest", root);
-        this.toolWindowManager = toolWindowManager;
+              "InteractiveDragToTabTest", toolWindowManager, root);
     }
 
     public void execute() {
+        restoreWorkspace();
         toolWindowManager.getToolWindowGroup().setVisible(false);
 
         componentLookuper.lookup(null).moveToCenter();

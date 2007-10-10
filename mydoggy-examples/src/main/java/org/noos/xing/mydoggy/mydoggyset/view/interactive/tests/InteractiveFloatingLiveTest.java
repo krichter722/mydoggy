@@ -12,7 +12,7 @@ import java.awt.geom.Ellipse2D;
 public class InteractiveFloatingLiveTest extends MyDoggySetInteractiveTest {
 
     public InteractiveFloatingLiveTest(Container root) throws AWTException {
-        super("InteractiveFloatingLiveTest", null, root);
+        super("InteractiveFloatingLiveTest", null, null, root);
     }
 
     public void execute() {

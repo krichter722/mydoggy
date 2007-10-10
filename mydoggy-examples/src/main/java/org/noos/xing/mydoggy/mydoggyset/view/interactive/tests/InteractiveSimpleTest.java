@@ -8,7 +8,7 @@ import java.awt.*;
 public class InteractiveSimpleTest extends MyDoggySetInteractiveTest {
 
     public InteractiveSimpleTest(Container root) throws AWTException {
-        super("InteractiveSimpleTest", "InteractiveSimpleTest", root);
+        super("InteractiveSimpleTest", "InteractiveSimpleTest", null, root);
     }
 
     public void execute() {

@@ -56,10 +56,9 @@ public class TestChooserView extends ComponentView {
                 tests = new JComboBox(new Object[]{
                         new InteractiveDragToTabTest(frame, toolWindowManager),
                         new InteractiveToolVisisbleTest(frame),
-                        new InteractiveDragTest(frame),
                         new InteractiveSimpleTest(frame),
                         new InteractiveFloatingLiveTest(frame),
-                        new TitleBarInteractiveTest(frame, toolWindowManager),
+                        new InteractiveRepresentativeDraggingTest(frame, toolWindowManager)
                 });
             } catch (AWTException ignore) {
             }

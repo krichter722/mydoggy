@@ -23,36 +23,40 @@ public class JBalloonTip extends JPanel {
     protected Position position;
     protected Angle angle;
     protected boolean reset = true;
+    protected JLayeredPane layeredPane;
+    protected int hOffset;
+    protected int vOffset;
 
     public JBalloonTip(RootPaneContainer rootPaneContainer) {
         this(rootPaneContainer,
              Color.BLACK, new Color(255, 255, 225),
              10,
-             25, 10,
+             15, 15,
              7, 7);
     }
 
     public JBalloonTip(RootPaneContainer rootPaneContainer, Color borderColor, Color fillColor,
-                       int borderWidth, int horizontalOffset, int verticalOffset,
+                       int borderWidth, int hOffset, int vOffset,
                        int arcWidth, int arcHeight) {
         this.position = Position.LEFT;
         this.angle = Angle.RIGHT;
+        this.hOffset = hOffset;
+        this.vOffset = vOffset;
 
-        setBorder(new RoundedBalloonBorder(arcWidth, arcHeight, horizontalOffset, verticalOffset, fillColor, borderColor));
+        setBorder(new RoundedBalloonBorder(arcWidth, arcHeight, fillColor, borderColor));
         setOpaque(false);
         setLayout(new GridBagLayout());
 
         label.setBorder(new EmptyBorder(borderWidth, borderWidth, borderWidth, borderWidth));
         add(label, new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-        JLayeredPane layeredPane = rootPaneContainer.getLayeredPane();
+        layeredPane = rootPaneContainer.getLayeredPane();
         layeredPane.add(this, JLayeredPane.POPUP_LAYER);
 
         // don't allow to click 'through' the component
         addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 e.consume();
-                setAngle(Angle.LEFT);
             }
         });
     }
@@ -77,6 +81,24 @@ public class JBalloonTip extends JPanel {
     }
 
     public void show(int x, int y) {
+        Dimension size = getPreferredSize();
+
+        if (y + size.height > layeredPane.getHeight()) {
+            y -= (size.height + vOffset);
+            setPosition(Position.BOTTOM);
+        } else {
+            setPosition(Position.TOP);
+        }
+
+        if (x + size.width > layeredPane.getWidth()) {
+            x -= (size.width + hOffset);
+            hOffset = size.width - 30;
+            setAngle(Angle.RIGHT);
+        } else {
+            setAngle(Angle.LEFT);
+            hOffset = 15;
+        }
+
         setLocation(x, y);
         setVisible(true);
     }
@@ -107,8 +129,6 @@ public class JBalloonTip extends JPanel {
 
         int arcWidth;
         int arcHeight;
-        int hOffset;
-        int vOffset;
 
         Color fillColor;
         Color borderColor;
@@ -116,11 +136,9 @@ public class JBalloonTip extends JPanel {
         Dimension lastSize;
         Insets insets = new Insets(0, 0, 0, 0);
 
-        public RoundedBalloonBorder(int arcWidth, int arcHeight, int hOffset, int vOffset, Color fillColor, Color borderColor) {
+        public RoundedBalloonBorder(int arcWidth, int arcHeight, Color fillColor, Color borderColor) {
             this.arcWidth = arcWidth;
             this.arcHeight = arcHeight;
-            this.hOffset = hOffset;
-            this.vOffset = vOffset;
             this.fillColor = fillColor;
             this.borderColor = borderColor;
         }
@@ -196,14 +214,24 @@ public class JBalloonTip extends JPanel {
                     g.setColor(borderColor);
                     g.drawRoundRect(x, y + vOffset, bWidth - 1, bHeight - vOffset - 1, arcWidth * 2, arcHeight * 2);
 
-                    xPoints = new int[]{x + hOffset, x + hOffset + vOffset, x + hOffset};
-                    yPoints = new int[]{y + vOffset + 1, y + vOffset + 1, y + 1};
+                    switch (angle) {
+                        case LEFT:
+                            xPoints = new int[]{x + hOffset, x + hOffset, x + hOffset + vOffset, };
+                            yPoints = new int[]{y + vOffset + 1, y + 1, y + vOffset + 1};
+                            break;
+                        case RIGHT:
+                            xPoints = new int[]{x + hOffset, x + hOffset + vOffset, x + hOffset + vOffset};
+                            yPoints = new int[]{y + vOffset + 1, y + 1, y + vOffset + 1};
+                            break;
+                        default:
+                            throw new IllegalStateException();
+                    }
 
                     g.setColor(fillColor);
                     g.fillPolygon(xPoints, yPoints, 3);
 
                     g.setColor(borderColor);
-                    g.drawLine(xPoints[0], yPoints[0], xPoints[2], yPoints[2]);
+                    g.drawLine(xPoints[0], yPoints[0], xPoints[1], yPoints[1]);
                     g.drawLine(xPoints[1], yPoints[1], xPoints[2], yPoints[2]);
                     break;
                 case LEFT:
@@ -220,7 +248,7 @@ public class JBalloonTip extends JPanel {
                             break;
                         case RIGHT:
                             xPoints = new int[]{x, x + hOffset + 1, x + hOffset + 1};
-                            yPoints = new int[]{y + vOffset + hOffset, y + vOffset + hOffset, y + vOffset};
+                            yPoints = new int[]{y + vOffset+ hOffset, y + vOffset, y + vOffset+ hOffset};
                             break;
                         default:
                             throw new IllegalStateException();
