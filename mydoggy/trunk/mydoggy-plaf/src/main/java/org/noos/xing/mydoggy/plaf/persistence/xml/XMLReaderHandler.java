@@ -281,21 +281,23 @@ public class XMLReaderHandler extends DefaultHandler {
             }
 
             // ContentManager
-            Content selectedContent = null;
-            for (PersistedContent persistedContent : persistedContentManager.getContents()) {
-                Content content = toolWindowManager.getContentManager().getContent(persistedContent.getKey());
+            if (persistedContentManager != null) {
+                Content selectedContent = null;
+                for (PersistedContent persistedContent : persistedContentManager.getContents()) {
+                    Content content = toolWindowManager.getContentManager().getContent(persistedContent.getKey());
 
-                if (content != null) {
-                    if (persistedContent.isSelected())
-                        selectedContent = content;
+                    if (content != null) {
+                        if (persistedContent.isSelected())
+                            selectedContent = content;
 
-                    content.setEnabled(persistedContent.isEnabled());
-                    content.setDetached(persistedContent.isDetached());
+                        content.setEnabled(persistedContent.isEnabled());
+                        content.setDetached(persistedContent.isDetached());
+                    }
                 }
-            }
 
-            if (selectedContent != null)
-                selectedContent.setSelected(true);
+                if (selectedContent != null)
+                    selectedContent.setSelected(true);
+            }
         }
     }
 
