@@ -80,6 +80,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected EventListenerList twmListeners;
 
     protected ClassLoader uiClassLoader;
+    protected ResourceManagerChangeListener resourceManagerChangeListener;
     protected ResourceManager resourceManager;
 
 
@@ -436,6 +437,19 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return resourceManager;
     }
 
+    public void setResourceManager(ResourceManager resourceManager) {
+        if (this.resourceManager != null) {
+            this.resourceManager.removePropertyChangeListener(resourceManagerChangeListener);
+        }
+
+        if (resourceManagerChangeListener == null)
+            resourceManagerChangeListener = new ResourceManagerChangeListener();
+        
+        this.resourceManager = resourceManager;
+        resourceManager.addPropertyChangeListener(resourceManagerChangeListener);
+        // TODO: fire changing...
+    }
+
 
     protected void initPersistenceDelegate() {
         this.persistenceDelegate = new XMLPersistenceDelegate(this);
@@ -553,10 +567,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             className = MyDoggyResourceManager.class.getName();
         }
         try {
-            this.resourceManager = (ResourceManager) SwingUtil.newObject(className);
+            setResourceManager((ResourceManager) SwingUtil.newObject(className));
         } catch (Exception e) {
             e.printStackTrace();
-            this.resourceManager = new MyDoggyResourceManager();
+            setResourceManager(new MyDoggyResourceManager());
         }
         resourceManager.setLocale(locale);
     }
@@ -909,6 +923,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
             // Syncronize bars panel
             syncPanel(toolWindowDescriptor.getToolWindow().getAnchor());
+        }
+    }
+
+    protected class ResourceManagerChangeListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            SwingUtil.repaint(MyDoggyToolWindowManager.this);
         }
     }
 

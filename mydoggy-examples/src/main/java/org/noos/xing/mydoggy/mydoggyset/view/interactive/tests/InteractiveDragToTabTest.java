@@ -14,7 +14,8 @@ public class InteractiveDragToTabTest extends MyDoggySetInteractiveTest {
     protected ToolWindowManager toolWindowManager;
 
     public InteractiveDragToTabTest(Container root, ToolWindowManager toolWindowManager) throws AWTException {
-        super("InteractiveDragToTabTest", "InteractiveDragToTabTest", root);
+        super("Drag a Tool as a Tab", 
+              "InteractiveDragToTabTest", root);
         this.toolWindowManager = toolWindowManager;
     }
 
@@ -32,8 +33,11 @@ public class InteractiveDragToTabTest extends MyDoggySetInteractiveTest {
 
         showTip("<html>Drag Tool 13 to <br>Tool 3 as a Tab", 1000);
         drag("toolWindow.Tool 13.tab.Title 13", "toolWindow.tabContainer.Tool 3");
+        showTip("<html>Drag Tool 3 to <br> the Top bar", 1000);
         drag("toolWindow.Tool 3.tab.Title 13", "toolWindowManager.bar." + ToolWindowAnchor.TOP);
+        showTip("<html>Drag Tool 13 to <br> Tool 3 as a Tab", 1000);
         drag("toolWindow.Tool 13.tab.Title 13", "toolWindow.tabContainer.Tool 3");
+        showTip("<html>Extract Tool 13", 1000);
         drag("toolWindow.Tool 3.tab.Title 13", "toolWindow.container.Tool 3");
     }
 
