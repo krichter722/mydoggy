@@ -4,16 +4,25 @@ import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.itest.ComponentAdapter;
 import org.noos.xing.mydoggy.itest.impl.AbstractInteractiveTest;
 import org.noos.xing.mydoggy.itest.impl.NamedComponentFilter;
+import org.noos.xing.mydoggy.itest.impl.ui.JBalloonTip;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public abstract class MyDoggySetInteractiveTest extends AbstractInteractiveTest {
+    protected JBalloonTip balloonTip;
 
     protected MyDoggySetInteractiveTest(String name, String description, Container root) throws AWTException {
         super(name, description, root);
+        balloonTip = new JBalloonTip(((JFrame) root));
+    }
+
+
+    protected ComponentAdapter clickOnRepresentativeButton(String toolId) {
+        return clickOn("toolWindow.rb." + toolId);
     }
 
     protected ComponentAdapter clickOn(String componentName) {
@@ -34,6 +43,15 @@ public abstract class MyDoggySetInteractiveTest extends AbstractInteractiveTest 
             Thread.currentThread().sleep(millis);
         } catch (InterruptedException e) {
         }
+    }
+
+    protected void showTip(String text, int millis) {
+        balloonTip.setText(text);
+        Point point = MouseInfo.getPointerInfo().getLocation();
+        SwingUtilities.convertPointFromScreen(point, root);
+        balloonTip.show(point.x, point.y);
+        delay(millis);
+        balloonTip.setVisible(false);
     }
 
 }

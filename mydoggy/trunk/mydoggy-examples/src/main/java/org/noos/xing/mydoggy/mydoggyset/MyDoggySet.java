@@ -77,11 +77,6 @@ public class MyDoggySet {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 contentContext.put(MyDoggySet.class, null);
-
-                JBalloonTip balloonTip = new JBalloonTip(frame);
-                balloonTip.setText("Hello World");
-                balloonTip.show(150,150);
-
                 frame.setVisible(true);
             }
         });
