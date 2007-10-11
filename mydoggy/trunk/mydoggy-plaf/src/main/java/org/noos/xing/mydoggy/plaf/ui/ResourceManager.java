@@ -190,16 +190,56 @@ public interface ResourceManager {
     String getUserString(String key);
 
     /**
-     * TODO: 
-     * @return
+     * Returns the map that contains all colors definition.
+     *
+     * @return the map that contains all colors definition.
      * @since 1.3.2
      */
     Map<String, Color> getColors();
 
+    /**
+     * Returns the map that contains all icons definition.
+     *
+     * @return the map that contains all icons definition.
+     * @since 1.3.2
+     */
     Map<String, Icon> getIcons();
 
-    void addPropertyChangeListener(PropertyChangeListener changeListener);
+    /**
+     * Adds a PropertyChangeListener to the listener list. The listener is
+     * registered for all bound properties of this class.
+     * If listener is null, no exception is thrown and no action is performed.
+     *
+     * @param listener the PropertyChangeListener to be added
+     * @see #getPropertyChangeListeners()
+     * @see #removePropertyChangeListener
+     * @since 1.3.2
+     */
+    void addPropertyChangeListener(PropertyChangeListener listener);
 
-    void removePropertyChangeListener(PropertyChangeListener changeListener);
+    /**
+     * Removes a PropertyChangeListener from the listener list.
+     * <p/>
+     * If listener is null, no exception is thrown and no action is performed.
+     *
+     * @param listener the PropertyChangeListener to be removed.
+     * @see #addPropertyChangeListener
+     * @see #getPropertyChangeListeners
+     * @since 1.3.2
+     */
+    void removePropertyChangeListener(PropertyChangeListener listener);
+
+    /**
+     * Returns an array of all the property change listeners
+     * registered on this class.
+     *
+     * @return all of this class's <code>PropertyChangeListener</code>s
+     *         or an empty array if no property change
+     *         listeners are currently registered.
+     * @see #addPropertyChangeListener
+     * @see #removePropertyChangeListener
+     * @since 1.3.2
+     */
+    PropertyChangeListener[] getPropertyChangeListeners();
 
 }

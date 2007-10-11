@@ -156,6 +156,10 @@ public class MyDoggyResourceManager implements ResourceManager {
         listenerList.remove(PropertyChangeListener.class, changeListener);
     }
 
+    public PropertyChangeListener[] getPropertyChangeListeners() {
+        return listenerList.getListeners(PropertyChangeListener.class);
+    }
+
     public void putInstanceCreator(Class aClass, InstanceCreator instanceCreator) {
         instanceCreators.put(aClass, instanceCreator);
     }
