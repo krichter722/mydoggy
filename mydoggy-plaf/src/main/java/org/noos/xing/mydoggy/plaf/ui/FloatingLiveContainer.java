@@ -87,8 +87,8 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                 if (typeDescriptor.getLocation() == null ||
                     typeDescriptor.getLocation().x > descriptor.getManager().getWidth() ||
                     typeDescriptor.getLocation().y > descriptor.getManager().getHeight() ||
-                    typeDescriptor.getLocation().x - sheet.getWidth() < 0 ||
-                    typeDescriptor.getLocation().y - sheet.getHeight() < 0) {
+                    typeDescriptor.getLocation().x < 0 ||
+                    typeDescriptor.getLocation().y < 0) {
                     Component managerCmp = descriptor.getManager();
 
                     switch (toolWindow.getAnchor()) {
