@@ -53,8 +53,19 @@ public abstract class MyDoggySetInteractiveTest extends AbstractInteractiveTest 
         return clickOn("toolWindow.rb." + toolId);
     }
 
+    protected ComponentAdapter clickOnRepresentativeButton(String toolId, ComponentAdapter.MouseButton mouseButton) {
+        return clickOn("toolWindow.rb." + toolId, mouseButton);
+    }
+
     protected ComponentAdapter clickOn(String componentName) {
-        return componentLookuper.lookup(new NamedComponentFilter(componentName)).moveToCenter(500).click(ComponentAdapter.MouseButton.LEFT, 500);
+        return clickOn(componentName, ComponentAdapter.MouseButton.LEFT);
+    }
+
+    protected ComponentAdapter clickOn(String componentName, ComponentAdapter.MouseButton mouseButton) {
+        return componentLookuper
+                .lookup(new NamedComponentFilter(componentName))
+                .moveToCenter(500)
+                .click(mouseButton, 500);
     }
 
     protected ComponentAdapter drag(String from, String to) {
@@ -65,7 +76,5 @@ public abstract class MyDoggySetInteractiveTest extends AbstractInteractiveTest 
     protected ComponentAdapter moveToAnchor(String componentName, ToolWindowAnchor anchor) {
         return drag(componentName, "toolWindowManager.bar." + anchor.toString());
     }
-
-
 
 }

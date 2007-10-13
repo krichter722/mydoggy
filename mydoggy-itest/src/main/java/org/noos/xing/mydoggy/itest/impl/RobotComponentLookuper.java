@@ -20,6 +20,10 @@ public class RobotComponentLookuper implements ComponentLookuper {
         this.robot = robot;
     }
 
+    public ComponentAdapter lookup(String componentName) {
+        return lookup(new NamedComponentFilter(componentName));
+    }
+
     public ComponentAdapter lookup(ComponentFilter componentFilter) {
         if (componentFilter == null)
             return new RobotComponentAdapter(robot, roots.get(0));
@@ -29,6 +33,10 @@ public class RobotComponentLookuper implements ComponentLookuper {
                 return createComponentAdapter(filteredComponent);
         }
         throw new IllegalStateException("Cannot find any components..."); 
+    }
+
+    public ComponentAdapter lookup() {
+        return new RobotComponentAdapter(robot, roots.get(0));
     }
 
 

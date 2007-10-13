@@ -174,7 +174,7 @@ public class ExtendedTitleBarButtons implements TitleBarButtons {
                     } else
                         floatingButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.FLOATING));
 
-                    if (toolWindow.isMaximized())
+                    if (toolWindow.isMaximized()) 
                         maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MINIMIZE));
                     else
                         maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
