@@ -55,8 +55,6 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
             layout.setRow(0, 0);
             layout.setRow(2, 0);
 
-            resize();
-
             content.setVisible(true);
             sheet.add(content, "1,1,FULL,FULL");
 
@@ -117,7 +115,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
             }
 
             layeredPane.remove(sheet);
-            layeredPane.setLayer(sheet, 3);
+            layeredPane.setLayer(sheet, JLayeredPane.POPUP_LAYER + 3);
             layeredPane.add(sheet);
 /*
             if (descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isAnimating())
@@ -158,13 +156,6 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         Window anchestor = descriptor.getWindowAnchestor();
         if (anchestor instanceof RootPaneContainer) {
             layeredPane = ((RootPaneContainer) anchestor).getLayeredPane();
-
-            anchestor.addComponentListener(new ComponentAdapter() {
-                public void componentResized(ComponentEvent e) {
-                    if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
-                        update();
-                }
-            });
         } else
             throw new IllegalStateException("Can stay only on a RootPaneContainer");
     }
@@ -273,12 +264,6 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                 }
             }
         });
-        addPropertyChangeListener("tempShowed", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (toolWindow.getType() == ToolWindowType.FLOATING_LIVE && toolWindow.isVisible())
-                    update();
-            }
-        });
         addPropertyChangeListener("location", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE) != evt.getSource())
@@ -341,89 +326,6 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
         resizeMouseInputHandler = new FloatingResizeMouseInputHandler(sheet);
         moveMouseInputHandler = new FloatingMoveMouseInputHandler(sheet);
-    }
-
-
-    protected void update() {
-/*
-        // Reset Layout
-        titleBarButtons.configureIcons(ToolWindowType.SLIDING);
-
-        TableLayout layout = (TableLayout) sheet.getLayout();
-        layout.setColumn(0, 0);
-        layout.setColumn(2, 0);
-        layout.setRow(0, 0);
-        layout.setRow(2, 0);
-
-        if (barContainer != null)
-            barContainer.getParent().getLayout().layoutContainer(barContainer.getParent());
-        resize();
-
-        Component content = getContentContainer();
-        sheet.remove(content);
-        sheet.add(content, "1,1,FULL,FULL");
-
-        // Prepare sheet
-        border.setAnchor(toolWindow.getAnchor());
-        sheet.setBorder(border);
-
-        int height = mainPanel.getHeight();
-        Point point = SwingUtilities.convertPoint(mainPanel, 0, 0, layeredPane);
-
-        sheet.setBounds(point.x, point.y, mainPanel.getWidth(), height);
-
-        layeredPane.remove(sheet);
-        layeredPane.setLayer(sheet, 1);
-        layeredPane.add(sheet);
-        layeredPane.validate();
-*/
-    }
-
-    protected void resize() {
-/*
-        int length = descriptor.getDividerLocation();
-        if (length == -1)
-            length = 200;
-
-        switch (toolWindow.getAnchor()) {
-            case LEFT:
-                int height = barContainer.getHeight();
-                mainPanel.setSize(length, height);
-
-                Point location = new Point(0, 0);
-                SwingUtilities.convertPointToScreen(location, barContainer);
-                location.x += barContainer.getWidth();
-                mainPanel.setLocation(location);
-                break;
-            case RIGHT:
-                height = barContainer.getHeight();
-                mainPanel.setSize(length, height);
-
-                location = new Point(0, 0);
-                SwingUtilities.convertPointToScreen(location, barContainer);
-                location.x -= mainPanel.getWidth();
-                mainPanel.setLocation(location);
-                break;
-            case TOP:
-                int width = barContainer.getWidth();
-                mainPanel.setSize(width, length);
-
-                location = new Point(0, 0);
-                SwingUtilities.convertPointToScreen(location, barContainer);
-                location.y += barContainer.getHeight();
-                mainPanel.setLocation(location);
-                break;
-            case BOTTOM:
-                width = barContainer.getWidth();
-                mainPanel.setSize(width, length);
-
-                location = new Point(0, 0);
-                SwingUtilities.convertPointToScreen(location, barContainer);
-                location.y -= mainPanel.getHeight();
-                mainPanel.setLocation(location);
-                break;
-        }
-*/
     }
 
 
@@ -560,7 +462,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                             animation.stop();
                     }
 
-                    layeredPane.setLayer(sheet, 4);
+                    layeredPane.setLayer(sheet, JLayeredPane.POPUP_LAYER + 4);
                     sheet.setAlphaModeRatio(1.0f);
                 } else {
                     FloatingLiveTypeDescriptor floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
@@ -568,7 +470,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                         timer = new Timer(floatingLiveTypeDescriptor.getTransparentDelay(), this);
                         timer.start();
                     }
-                    layeredPane.setLayer(sheet, 3);
+                    layeredPane.setLayer(sheet, JLayeredPane.POPUP_LAYER + 3);
                 }
                 SwingUtil.repaint(layeredPane);
             }
