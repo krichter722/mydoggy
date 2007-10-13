@@ -51,7 +51,8 @@ public class JBalloonTip extends JPanel {
         add(label, new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
         layeredPane = rootPaneContainer.getLayeredPane();
-        layeredPane.add(this, JLayeredPane.POPUP_LAYER);
+        layeredPane.setLayer(this, JLayeredPane.POPUP_LAYER + 5);
+        layeredPane.add(this);
 
         // don't allow to click 'through' the component
         addMouseListener(new MouseAdapter() {

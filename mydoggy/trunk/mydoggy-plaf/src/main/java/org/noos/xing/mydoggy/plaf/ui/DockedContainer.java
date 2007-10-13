@@ -433,10 +433,12 @@ public class DockedContainer implements ToolWindowContainer {
 
             // Visible
             visible = new JMenuItem();
+            visible.setName("toolWindow.popup.visible." + toolWindow.getId());
             visible.setActionCommand("visible");
             visible.addActionListener(this);
 
             aggregate = new JMenuItem();
+            aggregate.setName("toolWindow.popup.aggregate." + toolWindow.getId());
             aggregate.setText(resourceManager.getString("@@tool.aggregate"));
             aggregate.setActionCommand("aggregate");
             aggregate.addActionListener(this);

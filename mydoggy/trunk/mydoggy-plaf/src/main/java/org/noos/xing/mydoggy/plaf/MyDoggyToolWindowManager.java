@@ -438,9 +438,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public void setResourceManager(ResourceManager resourceManager) {
-        if (this.resourceManager != null) {
+        if (this.resourceManager != null)
             this.resourceManager.removePropertyChangeListener(resourceManagerChangeListener);
-        }
 
         if (resourceManagerChangeListener == null)
             resourceManagerChangeListener = new ResourceManagerChangeListener();
