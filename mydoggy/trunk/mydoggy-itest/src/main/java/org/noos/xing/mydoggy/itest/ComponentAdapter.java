@@ -41,4 +41,6 @@ public interface ComponentAdapter {
     ComponentAdapter wheel(int amount);
 
     ComponentAdapter wheel(int amount, int delay);
+
+    ComponentAdapter showTip(String message, int delay);
 }

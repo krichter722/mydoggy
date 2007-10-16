@@ -6,9 +6,10 @@ package org.noos.xing.mydoggy.itest;
  */
 public interface ComponentLookuper {
 
+    ComponentAdapter lookup();
+
     ComponentAdapter lookup(String componentName);
 
     ComponentAdapter lookup(ComponentFilter componentFilter);
 
-    ComponentAdapter lookup();
 }
