@@ -73,8 +73,8 @@ public abstract class MyDoggySetInteractiveTest extends AbstractInteractiveTest 
         return componentLookuper
                 .lookup(componentName)
                 .moveToCenter()
-                .showTip("<html>Now : <br> " + mouseButton + " Mouse Click", 500)
-                .click(mouseButton, 500);
+                .showTip("<html>Now : <br> " + mouseButton + " Mouse Click", 1000)
+                .click(mouseButton, 1000);
     }
 
     protected ComponentAdapter moveOn(String componentName, String tip) {
@@ -84,8 +84,8 @@ public abstract class MyDoggySetInteractiveTest extends AbstractInteractiveTest 
     }
 
     protected ComponentAdapter drag(String from, String to) {
-        componentLookuper.lookup(new NamedComponentFilter(from)).moveToCenter(500).press(ComponentAdapter.MouseButton.LEFT);
-        return componentLookuper.lookup(new NamedComponentFilter(to)).moveToCenter(500).release(ComponentAdapter.MouseButton.LEFT, 500);
+        componentLookuper.lookup(new NamedComponentFilter(from)).moveToCenter(1000).press(ComponentAdapter.MouseButton.LEFT);
+        return componentLookuper.lookup(new NamedComponentFilter(to)).moveToCenter(1000).release(ComponentAdapter.MouseButton.LEFT, 1000);
     }
 
     protected ComponentAdapter moveToAnchor(String componentName, ToolWindowAnchor anchor) {

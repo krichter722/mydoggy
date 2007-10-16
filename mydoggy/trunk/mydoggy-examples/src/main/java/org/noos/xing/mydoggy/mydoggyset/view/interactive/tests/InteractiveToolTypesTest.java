@@ -23,52 +23,36 @@ public class InteractiveToolTypesTest extends MyDoggySetInteractiveTest {
                 .showTip("<html>First : <strong>Docked Mode</strong>", 1000);
 
         clickOn(getRepresentativeButtonName("Tool 1"));
-        moveOn(getToolContainerName("Tool 1"),
-               "<html>This is <strong>Docked Mode</strong>");
+        moveOn(getToolContainerName("Tool 1"), "<html>This is <strong>Docked Mode</strong>");
 
         // Sliding Mode
         restoreWorkspace();
         componentLookuper.lookup()
                 .moveToCenter()
                 .showTip("<html>Second : <strong>Sliding Mode</strong>", 1000);
-
+        
         clickOn(getRepresentativeButtonName("Tool 1"));
-        delay(1000);
-        componentLookuper.lookup("toolWindow.dockButton.Tool 1")
-                .moveToCenter(1000)
-                .click(ComponentAdapter.MouseButton.LEFT, 1000);
-        componentLookuper.lookup("toolWindow.container.Tool 1").moveToCenter();
-        showTip("<html>This is <strong>Sliding Mode</strong>", 1000);
+        clickOn("toolWindow.dockButton.Tool 1");
+        moveOn("toolWindow.container.Tool 1", "<html>This is <strong>Sliding Mode</strong>");
 
         // FlaotingLive Mode
         restoreWorkspace();
         componentLookuper.lookup().moveToCenter();
-
         showTip("<html>Second : <strong>FlaotingLive Mode</strong>", 1000);
-        clickOnRepresentativeButton("Tool 3");
-        delay(1000);
-        componentLookuper.lookup("toolWindow.titleBar.Tool 3")
-                .moveToCenter(1000)
-                .click(ComponentAdapter.MouseButton.RIGHT, 1000);
-        componentLookuper.lookup("toolWindow.popup.floatingLive.Tool 3")
-                .moveToCenter(1000).
-                click(ComponentAdapter.MouseButton.LEFT, 1000);
-        componentLookuper.lookup("toolWindow.container.Tool 3").moveToCenter();
-        showTip("<html>This is <strong>FlaotingLive Mode</strong>", 1000);
+
+        clickOn(getRepresentativeButtonName("Tool 3"));
+        clickOn("toolWindow.titleBar.Tool 3", ComponentAdapter.MouseButton.RIGHT);
+        clickOn("toolWindow.popup.floatingLive.Tool 3");
+        moveOn("toolWindow.container.Tool 3", "<html>This is <strong>FlaotingLive Mode</strong>");
 
         // Flaoting Mode
         restoreWorkspace();
         componentLookuper.lookup().moveToCenter();
-
         showTip("<html>Second : <strong>Flaoting Mode</strong>", 1000);
-        clickOnRepresentativeButton("Tool 1");
-        delay(1000);
-        componentLookuper.lookup("toolWindow.floatingButton.Tool 1")
-                .moveToCenter(1000)
-                .click(ComponentAdapter.MouseButton.LEFT, 1000);
-        componentLookuper.lookup("toolWindow.container.Tool 1")
-                .moveToCenter()
-                .showTip("<html>This is <strong>Flaoting Mode</strong>", 1000);
+
+        clickOn(getRepresentativeButtonName("Tool 1"));
+        clickOn("toolWindow.floatingButton.Tool 1");
+        moveOn("toolWindow.container.Tool 1", "<html>This is <strong>Flaoting Mode</strong>");
     }
 
 
