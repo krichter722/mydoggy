@@ -6,7 +6,6 @@ import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
-import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -123,7 +122,7 @@ public class DockedContainer implements ToolWindowContainer {
         titleBarMouseAdapter = new TitleBarMouseAdapter();
 
         // Container
-        container = (JPanel) resourceManager.createComponent(MyDoggyKeySpace.TOOL_WINDOW_CMP_CONTAINER, null);
+        container = (JPanel) resourceManager.createComponent(MyDoggyKeySpace.TOOL_WINDOW_CONTAINER, null);
         container.setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {16, TableLayout.FILL}}, false));
         container.setName("toolWindow.container." + toolWindow.getId());
         container.setFocusCycleRoot(true);

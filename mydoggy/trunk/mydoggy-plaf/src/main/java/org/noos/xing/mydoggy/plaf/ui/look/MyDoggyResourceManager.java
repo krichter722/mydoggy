@@ -12,7 +12,6 @@ import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
 import org.noos.xing.mydoggy.plaf.ui.util.DummyResourceBundle;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -260,23 +259,23 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     protected void initComponentCreators() {
         cmpCreators = new Hashtable<String, ComponentCreator>();
-        cmpCreators.put(MyDoggyKeySpace.BAR_SPLIT_PANE, new BarSplitPaneComponentCreator());
-        cmpCreators.put(MyDoggyKeySpace.BAR_CONTENT_PANE, new BarContentPaneComponentCreator());
+        cmpCreators.put(MyDoggyKeySpace.ANCHOR_SPLIT_PANE, new BarSplitPaneComponentCreator());
+        cmpCreators.put(MyDoggyKeySpace.ANCHOR_CONTENT_PANE, new BarContentPaneComponentCreator());
         cmpCreators.put(MyDoggyKeySpace.CORNER_CONTENT_PANE, new CornerContentPaneComponentCreator());
-        cmpCreators.put(MyDoggyKeySpace.MDM_MAIN_CONTAINER, new MyDoggyManagerMainContainerComponentCreator());
+        cmpCreators.put(MyDoggyKeySpace.TOOL_WINDOW_MANAGER_CONTENT_CONTAINER, new MyDoggyManagerMainContainerComponentCreator());
         cmpCreators.put(MyDoggyKeySpace.DESKTOP_CONTENT_PANE, new DesktopContentPaneComponentCreator());
         cmpCreators.put(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR, new ToolWindowTitleBarComponentCreator());
         cmpCreators.put(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON, new ToolWindowTitleButtonComponentCreator());
         cmpCreators.put(MyDoggyKeySpace.TOOL_SCROLL_BAR_ARROW, new ToolScrollBarArrowComponentCreator());
-        cmpCreators.put(MyDoggyKeySpace.TOOL_WINDOW_CMP_CONTAINER, new ToolWindowCmpContainerComponentCreator());
+        cmpCreators.put(MyDoggyKeySpace.TOOL_WINDOW_CONTAINER, new ToolWindowCmpContainerComponentCreator());
 
         cmpUiCreators = new Hashtable<String, ComponentUICreator>();
         cmpUiCreators.put(MyDoggyKeySpace.REPRESENTATIVE_ANCHOR_BUTTON_UI, new RepresentativeAnchorButtonComponentUICreator());
         cmpUiCreators.put(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR_UI, new ToolWindowTitleBarComponentUICreator());
 
         cmpCustomizers = new Hashtable<String, ComponentCustomizer>();
-        cmpCustomizers.put(MyDoggyKeySpace.MDM_PANEL, new MyDoggyManagerPanelComponentCustomizer());
-        cmpCustomizers.put(MyDoggyKeySpace.TOOL_WINDOW_CMP_CONTAINER, new ToolWindowCmpContainerComponentCustomizer());
+        cmpCustomizers.put(MyDoggyKeySpace.TOOL_WINDOW_MANAGER, new MyDoggyManagerPanelComponentCustomizer());
+        cmpCustomizers.put(MyDoggyKeySpace.TOOL_WINDOW_CONTAINER, new ToolWindowCmpContainerComponentCustomizer());
 
         instanceCreators = new Hashtable<Class, InstanceCreator>();
         instanceCreators.put(TitleBarButtons.class, new TitleBarButtonsInstanceCreator());

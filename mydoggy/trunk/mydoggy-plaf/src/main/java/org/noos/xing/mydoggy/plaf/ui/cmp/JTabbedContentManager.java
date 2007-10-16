@@ -19,6 +19,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Hashtable;
@@ -329,7 +330,7 @@ public class JTabbedContentManager extends JTabbedPane {
                 int endIndex = tabbedPane.indexAtLocation(e.getX(), e.getY());
 
                 if (startIndex != -1 && endIndex != -1 && startIndex != endIndex) {
-                    moveTab(tabbedPane, startIndex, endIndex);
+                    moveTab((JTabbedContentManager) tabbedPane, startIndex, endIndex);
                     tabbedPane.setSelectedIndex(endIndex);
 
                }
@@ -344,7 +345,24 @@ public class JTabbedContentManager extends JTabbedPane {
                 JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
                 int index = tabbedPane.indexAtLocation(e.getX(), e.getY());
 
-                if (index != -1 && index != currentIndex) { // moved over another tab
+
+                GlassPanel glassPane = ((MyDoggyToolWindowManager) toolWindowManager).getGlassPanel();
+                glassPane.setVisible(true);
+
+
+                TabbedPaneUI ui = tabbedPane.getUI();
+                Rectangle rect = ui.getTabBounds(tabbedPane, startIndex);
+                BufferedImage bufferedImage = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_INT_RGB);
+                tabbedPane.print(bufferedImage.getGraphics());
+
+                Point p = new Point(100,100);
+                SwingUtilities.convertPointFromScreen(p, glassPane);
+                glassPane.setPoint(p);
+                glassPane.setDraggingImage(bufferedImage);
+                glassPane.repaint();
+
+
+                if (index != -1 && index != currentIndex) {
                     clearRectangle(tabbedPane);
                     currentIndex = index;
                 }
@@ -364,32 +382,21 @@ public class JTabbedContentManager extends JTabbedPane {
         }
 
 
-        protected void moveTab(JTabbedPane pane, int src, int dst) {
-            // Get all the properties
+        protected void moveTab(JTabbedContentManager pane, int src, int dst) {
+            // Get the properties
             Component comp = pane.getComponentAt(src);
-            String label = pane.getTitleAt(src);
-            Icon icon = pane.getIconAt(src);
-            Icon iconDis = pane.getDisabledIconAt(src);
             String tooltip = pane.getToolTipTextAt(src);
-            boolean enabled = pane.isEnabledAt(src);
-            int keycode = pane.getMnemonicAt(src);
-            int mnemonicLoc = pane.getDisplayedMnemonicIndexAt(src);
-            Color fg = pane.getForegroundAt(src);
-            Color bg = pane.getBackgroundAt(src);
+            ContentPage contentPage = pane.getContentPage(src);
 
             // Remove the tab
             pane.remove(src);
 
             // Add a new tab
-            pane.insertTab(label, icon, comp, tooltip, dst);
-
-            // Restore all properties
-            pane.setDisabledIconAt(dst, iconDis);
-            pane.setEnabledAt(dst, enabled);
-            pane.setMnemonicAt(dst, keycode);
-            pane.setDisplayedMnemonicIndexAt(dst, mnemonicLoc);
-            pane.setForegroundAt(dst, fg);
-            pane.setBackgroundAt(dst, bg);
+            pane.insertTab(contentPage.getTitle(),
+                           contentPage.getIcon(), 
+                           comp, tooltip,
+                           dst,
+                           contentPage);
         }
 
         protected void clearRectangle(JTabbedPane tabbedPane) {
@@ -405,7 +412,7 @@ public class JTabbedContentManager extends JTabbedPane {
             TabbedPaneUI ui = tabbedPane.getUI();
             Rectangle rect = ui.getTabBounds(tabbedPane, currentIndex);
             Graphics graphics = tabbedPane.getGraphics();
-            graphics.setColor(Color.WHITE);
+            graphics.setColor(Color.BLUE);
             graphics.drawRect(rect.x, rect.y, rect.width - 1, rect.height - 1);
         }
 
