@@ -11,6 +11,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingMoveMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingResizeMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingToolTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import sun.awt.AppContext;
 
 import javax.swing.*;
 import java.awt.*;

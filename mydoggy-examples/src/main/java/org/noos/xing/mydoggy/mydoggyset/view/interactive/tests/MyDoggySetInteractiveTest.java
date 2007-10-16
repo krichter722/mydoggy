@@ -49,6 +49,14 @@ public abstract class MyDoggySetInteractiveTest extends AbstractInteractiveTest 
     }
 
 
+    protected String getToolContainerName(String toolId) {
+        return "toolWindow.container." + toolId;
+    }
+
+    protected String getRepresentativeButtonName(String toolId) {
+        return "toolWindow.rb." + toolId;
+    }
+
     protected ComponentAdapter clickOnRepresentativeButton(String toolId) {
         return clickOn("toolWindow.rb." + toolId);
     }
@@ -63,9 +71,16 @@ public abstract class MyDoggySetInteractiveTest extends AbstractInteractiveTest 
 
     protected ComponentAdapter clickOn(String componentName, ComponentAdapter.MouseButton mouseButton) {
         return componentLookuper
-                .lookup(new NamedComponentFilter(componentName))
-                .moveToCenter(500)
+                .lookup(componentName)
+                .moveToCenter()
+                .showTip("<html>Now : <br> " + mouseButton + " Mouse Click", 500)
                 .click(mouseButton, 500);
+    }
+
+    protected ComponentAdapter moveOn(String componentName, String tip) {
+        return componentLookuper.lookup(componentName)
+                .moveToCenter()
+                .showTip(tip, 1000);
     }
 
     protected ComponentAdapter drag(String from, String to) {

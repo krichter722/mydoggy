@@ -7,12 +7,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 public class JModalWindow extends JWindow {
-    private ResourceManager resourceManager;
-    private Window modalToWindow;
-    private boolean notifiedModalToWindow;
-    private Component returnFocus;
+    private static java.util.List<JModalWindow> windowList = new ArrayList<JModalWindow>();
+
+    public static JModalWindow[] getModalWindows() {
+        return windowList.toArray(new JModalWindow[windowList.size()]);
+    }
+
+
+    protected ResourceManager resourceManager;
+    protected Window modalToWindow;
+    protected boolean notifiedModalToWindow;
+    protected Component returnFocus;
 
     public JModalWindow(ResourceManager resourceManager, Window owner, Component returnFocus, boolean modal) {
         super(owner);
@@ -28,6 +36,8 @@ public class JModalWindow extends JWindow {
         }
 
         enableEvents(WindowEvent.WINDOW_EVENT_MASK | ComponentEvent.MOUSE_MOTION_EVENT_MASK);
+
+        windowList.add(this);
     }
 
     public void setVisible(boolean visible) {
@@ -50,15 +60,6 @@ public class JModalWindow extends JWindow {
         super.setVisible(visible);
     }
 
-    public void setModal(boolean modal) {
-        modalToWindow = modal ? getOwner() : null;
-    }
-
-    public boolean isModal() {
-        return modalToWindow != null;
-    }
-
-    
     protected void processWindowEvent(WindowEvent windowEvent) {
         switch (windowEvent.getID()) {
             case WindowEvent.WINDOW_CLOSING:
@@ -73,8 +74,21 @@ public class JModalWindow extends JWindow {
         }
     }
 
+    protected void finalize() throws Throwable {
+        super.finalize();
+        windowList.remove(this);
+    }
 
-    private void restoreOwner() {
+    public void setModal(boolean modal) {
+        modalToWindow = modal ? getOwner() : null;
+    }
+
+    public boolean isModal() {
+        return modalToWindow != null;
+    }
+
+
+    protected void restoreOwner() {
         synchronized (JModalWindow.this) {
             if ((modalToWindow != null) && !notifiedModalToWindow) {
                 modalToWindow.setEnabled(true);
@@ -95,12 +109,12 @@ public class JModalWindow extends JWindow {
         }
     }
 
-    private void tryToDispose(WindowEvent windowEvent) {
+    protected void tryToDispose(WindowEvent windowEvent) {
         dispose();
         super.processWindowEvent(windowEvent);
     }
 
-    private void close(WindowEvent windowEvent) {
+    protected void close(WindowEvent windowEvent) {
         restoreOwner();
         super.processWindowEvent(windowEvent);
     }

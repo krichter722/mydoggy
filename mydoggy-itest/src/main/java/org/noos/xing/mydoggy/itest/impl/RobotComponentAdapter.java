@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.itest.impl;
 
 import org.noos.xing.mydoggy.itest.ComponentAdapter;
+import org.noos.xing.mydoggy.itest.impl.ui.JBalloonTip;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +16,7 @@ public class RobotComponentAdapter implements ComponentAdapter {
     protected Robot robot;
     protected Component component;
     protected MouseButton lastMouseButtonPressed;
+    protected JBalloonTip balloonTip;
 
     public RobotComponentAdapter(Robot robot, Component component) {
         this.robot = robot;
@@ -138,7 +140,25 @@ public class RobotComponentAdapter implements ComponentAdapter {
         return this;
     }
 
-    public ComponentAdapter moveToInternal(Point to) {
+    public ComponentAdapter showTip(String message, int delay) {
+        if (balloonTip == null)
+            balloonTip = new JBalloonTip(null);
+
+        Window windowAncestor = SwingUtilities.getWindowAncestor(component);
+        if (windowAncestor instanceof RootPaneContainer) {
+            balloonTip.setRootPaneContainer((RootPaneContainer) windowAncestor);
+            balloonTip.setText(message);
+            Point point = MouseInfo.getPointerInfo().getLocation();
+            SwingUtilities.convertPointFromScreen(point, windowAncestor);
+            balloonTip.show(point.x, point.y);
+            robot.delay(delay);
+            balloonTip.setVisible(false);
+        }
+        return this;
+    }
+
+    
+    protected ComponentAdapter moveToInternal(Point to) {
         Point from = MouseInfo.getPointerInfo().getLocation();
 
         int x0 = from.x;

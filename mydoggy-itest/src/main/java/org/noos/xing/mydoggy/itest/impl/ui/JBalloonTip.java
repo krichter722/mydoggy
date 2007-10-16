@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class JBalloonTip extends JPanel {
+
     enum Position {
         TOP,
         BOTTOM,
@@ -26,6 +27,14 @@ public class JBalloonTip extends JPanel {
     protected JLayeredPane layeredPane;
     protected int hOffset;
     protected int vOffset;
+
+    public JBalloonTip() {
+        this(null,
+             Color.BLACK, new Color(255, 255, 225),
+             10,
+             15, 15,
+             7, 7);
+    }
 
     public JBalloonTip(RootPaneContainer rootPaneContainer) {
         this(rootPaneContainer,
@@ -50,9 +59,11 @@ public class JBalloonTip extends JPanel {
         label.setBorder(new EmptyBorder(borderWidth, borderWidth, borderWidth, borderWidth));
         add(label, new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-        layeredPane = rootPaneContainer.getLayeredPane();
-        layeredPane.setLayer(this, JLayeredPane.POPUP_LAYER + 5);
-        layeredPane.add(this);
+        if (rootPaneContainer != null) {
+            layeredPane = rootPaneContainer.getLayeredPane();
+            layeredPane.setLayer(this, JLayeredPane.POPUP_LAYER + 5);
+            layeredPane.add(this);
+        }
 
         // don't allow to click 'through' the component
         addMouseListener(new MouseAdapter() {
@@ -62,12 +73,13 @@ public class JBalloonTip extends JPanel {
         });
     }
 
-    private void determineAndSetLocation() {
-//        Point location = SwingUtilities.convertPoint(attachedComponent, getLocation(), this);
-        setSize(getPreferredSize().width,
-                getPreferredSize().height);
-        validate();
+    public void setVisible(boolean show) {
+        if (show) {
+            determineAndSetLocation();
+        }
+        super.setVisible(show);
     }
+
 
     public void setText(String text) {
         label.setText(text);
@@ -118,13 +130,25 @@ public class JBalloonTip extends JPanel {
         repaint();
     }
 
-    public void setVisible(boolean show) {
-        if (show) {
-            determineAndSetLocation();
+    public void setRootPaneContainer(RootPaneContainer rootPaneContainer) {
+        if (rootPaneContainer != null) {
+            if (layeredPane != null) {
+                layeredPane.remove(this);
+            }
+            
+            layeredPane = rootPaneContainer.getLayeredPane();
+            layeredPane.setLayer(this, JLayeredPane.POPUP_LAYER + 5);
+            layeredPane.add(this);
         }
-        super.setVisible(show);
     }
 
+
+    protected void determineAndSetLocation() {
+//        Point location = SwingUtilities.convertPoint(attachedComponent, getLocation(), this);
+        setSize(getPreferredSize().width,
+                getPreferredSize().height);
+        validate();
+    }
 
     public class RoundedBalloonBorder implements Border {
 

@@ -1,9 +1,11 @@
 package org.noos.xing.mydoggy.itest.impl;
 
-import org.noos.xing.mydoggy.itest.ComponentLookuper;
 import org.noos.xing.mydoggy.itest.ComponentAdapter;
 import org.noos.xing.mydoggy.itest.ComponentFilter;
+import org.noos.xing.mydoggy.itest.ComponentLookuper;
+import org.noos.xing.mydoggy.plaf.ui.cmp.JModalWindow;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -20,11 +22,37 @@ public class RobotComponentLookuper implements ComponentLookuper {
         this.robot = robot;
     }
 
+    public ComponentAdapter lookup() {
+        return new RobotComponentAdapter(robot, roots.get(0));
+    }
+
     public ComponentAdapter lookup(String componentName) {
         return lookup(new NamedComponentFilter(componentName));
     }
 
     public ComponentAdapter lookup(ComponentFilter componentFilter) {
+        ComponentAdapter result = lookupInternal(componentFilter);
+        if (result == null) {
+            for (Frame frame : JFrame.getFrames()) {
+                if (!roots.contains(frame))
+                    roots.add(frame);
+            }
+
+            for (Window window : JModalWindow.getModalWindows()) {
+                if (!roots.contains(window))
+                    roots.add(window);
+            }
+
+            result = lookupInternal(componentFilter);
+        }
+        if (result != null)
+            return result;
+        throw new IllegalStateException("Cannot find any components...");
+    }
+
+
+
+    protected ComponentAdapter lookupInternal(ComponentFilter componentFilter) {
         if (componentFilter == null)
             return new RobotComponentAdapter(robot, roots.get(0));
         for (Container root : roots) {
@@ -32,14 +60,8 @@ public class RobotComponentLookuper implements ComponentLookuper {
             if (filteredComponent != null)
                 return createComponentAdapter(filteredComponent);
         }
-        throw new IllegalStateException("Cannot find any components..."); 
+        return null; 
     }
-
-    public ComponentAdapter lookup() {
-        return new RobotComponentAdapter(robot, roots.get(0));
-    }
-
-
     protected Component findComponentByName(Container root, ComponentFilter componentFilter) {
         if (root == null || componentFilter == null)
             return null;
