@@ -459,7 +459,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         initContentManager();
 
-        resourceManager.applyCustomization(MyDoggyKeySpace.MDM_PANEL, this);
+        resourceManager.applyCustomization(MyDoggyKeySpace.TOOL_WINDOW_MANAGER, this);
 
         ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
@@ -487,7 +487,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         addBar(TOP, JSplitPane.VERTICAL_SPLIT, "1,0", "2,2,FULL,FULL");
         addBar(BOTTOM, JSplitPane.VERTICAL_SPLIT, "1,2", "0,2,FULL,FULL");
 
-        mainContainer = (JPanel) resourceManager.createComponent(MyDoggyKeySpace.MDM_MAIN_CONTAINER, this);
+        mainContainer = (JPanel) resourceManager.createComponent(MyDoggyKeySpace.TOOL_WINDOW_MANAGER_CONTENT_CONTAINER, this);
         mainContainer.setName("toolWindowManager.mainContainer");
         mainContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         mainContainer.setFocusCycleRoot(true);
@@ -580,7 +580,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
 
     protected JSplitPane renderSplitPane(int orientation) {
-        return (JSplitPane) resourceManager.createComponent(MyDoggyKeySpace.BAR_SPLIT_PANE, this, orientation);
+        return (JSplitPane) resourceManager.createComponent(MyDoggyKeySpace.ANCHOR_SPLIT_PANE, this, orientation);
     }
 
     protected JSplitPane addBar(ToolWindowAnchor anchor, int splitPaneOrientation,
