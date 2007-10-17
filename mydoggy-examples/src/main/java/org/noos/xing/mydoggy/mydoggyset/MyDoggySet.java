@@ -91,6 +91,7 @@ public class MyDoggySet {
         this.frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
 
         this.toolWindowManager = new MyDoggyToolWindowManager(frame, Locale.US, null);
+//        customizeToolWindowManager();
 
         this.contentContext = new ContentContext(toolWindowManager, frame);
 
