@@ -10,9 +10,21 @@ import java.awt.*;
  */
 public class InteractiveDragToTabTest extends MyDoggySetInteractiveTest {
 
-    public InteractiveDragToTabTest(Container root, ToolWindowManager toolWindowManager) throws AWTException {
-        super("Drag a Tool as a Tab", 
-              "InteractiveDragToTabTest", toolWindowManager, root);
+    public InteractiveDragToTabTest(ToolWindowManager toolWindowManager, Container root) throws AWTException {
+        super(toolWindowManager, root);
+    }
+
+    public String getName() {
+        return "Drag a Tool as a Tab";
+    }
+
+    public String getDescription() {
+        return "<html>" +
+                "<h2>Test Description</h2>" +
+                "<p>" +
+                "This test shows how to drag a tool as a tab for another tool." +
+                "</p>" +
+                "</html>";
     }
 
     public void execute() {

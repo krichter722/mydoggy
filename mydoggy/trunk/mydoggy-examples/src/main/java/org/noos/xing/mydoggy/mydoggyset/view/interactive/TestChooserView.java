@@ -54,7 +54,7 @@ public class TestChooserView extends ComponentView {
 
             try {
                 tests = new JComboBox(new Object[]{
-                        new InteractiveDragToTabTest(frame, toolWindowManager),
+                        new InteractiveDragToTabTest(toolWindowManager, frame),
                         new InteractiveShowToolTest(frame, toolWindowManager),
                         new InteractiveRepresentativeDraggingTest(frame, toolWindowManager),
                         new InteractiveToolTypesTest(frame, toolWindowManager)
@@ -101,7 +101,6 @@ public class TestChooserView extends ComponentView {
             this.editorPane = new JEditorPane();
             editorPane.setEditorKit(new HTMLEditorKit());
             editorPane.setEditable(false);
-            editorPane.setOpaque(false);
 
             panel.add(new JScrollPane(editorPane), "0,0,FULL,FULL");
 

@@ -23,6 +23,11 @@ public abstract class MyDoggySetInteractiveTest extends AbstractInteractiveTest 
         this.balloonTip = new JBalloonTip(((JFrame) root));
     }
 
+    protected MyDoggySetInteractiveTest(ToolWindowManager toolWindowManager, Container root) throws AWTException {
+        super(null, null, root);
+        this.toolWindowManager = toolWindowManager;
+        this.balloonTip = new JBalloonTip(((JFrame) root));
+    }
 
     protected void restoreWorkspace() {
         toolWindowManager.getPersistenceDelegate().apply(
