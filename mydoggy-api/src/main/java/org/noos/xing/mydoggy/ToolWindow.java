@@ -318,6 +318,7 @@ public interface ToolWindow {
     ToolWindowTab addToolWindowTab(String title, Component component);
 
     /**
+     * TODO
      */
     ToolWindowTab addToolWindowTab(ToolWindow toolWindow);
 

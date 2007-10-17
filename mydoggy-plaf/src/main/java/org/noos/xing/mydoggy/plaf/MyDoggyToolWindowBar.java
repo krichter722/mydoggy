@@ -509,7 +509,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
-            if (sourceTool.getType() == ToolWindowType.FLOATING || sourceTool.getType() == ToolWindowType.FLOATING_FREE)
+            if (sourceTool.getType() == ToolWindowType.FLOATING ||
+                sourceTool.getType() == ToolWindowType.FLOATING_FREE)
                 return;
 
             boolean oldValue = (Boolean) evt.getOldValue();
@@ -524,7 +525,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     if (manager.getShowingGroup() == null) {
                         if (toolWindow.getType() == ToolWindowType.FLOATING ||
                             toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
-                            toolWindow.getType() == ToolWindowType.FLOATING_LIVE )
+                            toolWindow.getType() == ToolWindowType.FLOATING_LIVE ||
+                            toolWindow.getType() == ToolWindowType.TABBED)
                             continue;
 
                         if (toolWindow.getAnchor().equals(sourceTool.getAnchor()))

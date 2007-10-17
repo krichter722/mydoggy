@@ -85,8 +85,8 @@ public class PreferencePanelView extends ComponentView {
                     FloatingTypeDescriptor.class,
                     FloatingLiveTypeDescriptor.class
             });
-
             types.addItemListener(new ContextPutItemListener(viewContext, ToolWindowTypeDescriptor.class));
+            types.setEnabled(false);
 
             panel.add(new JLabel("Type Descriptor : "), "0,0,r,FULL");
             panel.add(types, "2,0,FULL,FULL");
@@ -101,6 +101,11 @@ public class PreferencePanelView extends ComponentView {
                         types.setSelectedIndex(0);
                         types.setSelectedIndex(1);
                     }
+                }
+            });
+            viewContext.addViewContextChangeListener(ToolWindow.class, new ViewContextChangeListener() {
+                public void contextChange(ViewContextChangeEvent evt) {
+                    types.setEnabled(evt.getNewValue() != null);
                 }
             });
         }
