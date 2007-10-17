@@ -10,13 +10,6 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 public class JModalWindow extends JWindow {
-    private static java.util.List<JModalWindow> windowList = new ArrayList<JModalWindow>();
-
-    public static JModalWindow[] getModalWindows() {
-        return windowList.toArray(new JModalWindow[windowList.size()]);
-    }
-
-
     protected ResourceManager resourceManager;
     protected Window modalToWindow;
     protected boolean notifiedModalToWindow;
@@ -36,8 +29,6 @@ public class JModalWindow extends JWindow {
         }
 
         enableEvents(WindowEvent.WINDOW_EVENT_MASK | ComponentEvent.MOUSE_MOTION_EVENT_MASK);
-
-        windowList.add(this);
     }
 
     public void setVisible(boolean visible) {
@@ -74,10 +65,6 @@ public class JModalWindow extends JWindow {
         }
     }
 
-    protected void finalize() throws Throwable {
-        super.finalize();
-        windowList.remove(this);
-    }
 
     public void setModal(boolean modal) {
         modalToWindow = modal ? getOwner() : null;
