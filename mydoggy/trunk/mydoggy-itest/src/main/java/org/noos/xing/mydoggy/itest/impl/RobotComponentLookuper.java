@@ -3,11 +3,10 @@ package org.noos.xing.mydoggy.itest.impl;
 import org.noos.xing.mydoggy.itest.ComponentAdapter;
 import org.noos.xing.mydoggy.itest.ComponentFilter;
 import org.noos.xing.mydoggy.itest.ComponentLookuper;
-import org.noos.xing.mydoggy.plaf.ui.cmp.JModalWindow;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -33,12 +32,7 @@ public class RobotComponentLookuper implements ComponentLookuper {
     public ComponentAdapter lookup(ComponentFilter componentFilter) {
         ComponentAdapter result = lookupInternal(componentFilter);
         if (result == null) {
-            for (Frame frame : JFrame.getFrames()) {
-                if (!roots.contains(frame))
-                    roots.add(frame);
-            }
-
-            for (Window window : JModalWindow.getModalWindows()) {
+            for (Window window : getTopContainers()) {
                 if (!roots.contains(window))
                     roots.add(window);
             }
@@ -62,6 +56,7 @@ public class RobotComponentLookuper implements ComponentLookuper {
         }
         return null; 
     }
+    
     protected Component findComponentByName(Container root, ComponentFilter componentFilter) {
         if (root == null || componentFilter == null)
             return null;
@@ -86,6 +81,25 @@ public class RobotComponentLookuper implements ComponentLookuper {
 
     protected ComponentAdapter createComponentAdapter(Component component) {
         return new RobotComponentAdapter(robot, component);
+    }
+
+    protected java.util.List<Window> getTopContainers() {
+        Vector<Window> containers = new Vector<Window>();
+
+        Frame frames[] = Frame.getFrames();
+        for (Frame frame : frames) {
+            Window[] windows = frame.getOwnedWindows();
+
+            for (Window window : windows) {
+                if (window.getName() != null)
+                    containers.add(window);
+            }
+
+            if (!containers.contains(frame)) {
+                containers.add(frame);
+            }
+        }
+        return containers;
     }
 
 }
