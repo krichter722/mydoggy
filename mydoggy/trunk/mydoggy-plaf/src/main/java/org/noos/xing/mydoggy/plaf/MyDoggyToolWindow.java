@@ -346,7 +346,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setType(ToolWindowType type) {
-        if (type == ToolWindowType.TABBED)
+        if (type == ToolWindowType.TABBED /*|| this.type == ToolWindowType.TABBED TODO: */)
             throw new IllegalArgumentException("Cannot call this method using that paramenter.");
 
         boolean forceAvailable = false;
@@ -573,10 +573,12 @@ public class MyDoggyToolWindow implements ToolWindow {
                 oldType = this.type;
                 this.type = type;
 
-                if (tempActive) {
-                    setActive(true);
-                } else if (tempVisible)
-                    setVisible(true);
+                if (type != ToolWindowType.TABBED) {
+                    if (tempActive) {
+                        setActive(true);
+                    } else if (tempVisible)
+                        setVisible(true);
+                }
             } finally {
                 publicEvent = true;
             }

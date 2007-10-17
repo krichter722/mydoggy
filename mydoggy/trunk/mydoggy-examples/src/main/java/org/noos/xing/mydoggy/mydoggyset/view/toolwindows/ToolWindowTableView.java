@@ -8,6 +8,7 @@ import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.mydoggyset.view.toolwindows.model.ToolsTableModel;
 import org.noos.xing.mydoggy.mydoggyset.ui.CheckBoxCellRenderer;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
+import org.noos.xing.yasaf.plaf.view.listener.ContextPutListSelectionListener;
 import org.noos.xing.yasaf.view.ViewContext;
 
 import javax.swing.*;
@@ -35,14 +36,10 @@ public class ToolWindowTableView extends ComponentView {
 
         final JTable toolsTable = new JTable(new ToolsTableModel(toolWindowManager));
         toolsTable.getTableHeader().setReorderingAllowed(false);
-        toolsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                if (toolsTable.getSelectedRow() != -1) {
-                    ToolWindow selectedTool = (ToolWindow) toolsTable.getModel().getValueAt(toolsTable.getSelectedRow(), -1);
-                    viewContext.put(ToolWindow.class, selectedTool);
-                }
-            }
-        });
+        toolsTable.getSelectionModel().addListSelectionListener(
+                new ContextPutListSelectionListener(viewContext, ToolWindow.class, toolsTable, -1)
+        );
+
 
         // Type column
         JComboBox types = new JComboBox(new Object[]{ToolWindowType.DOCKED,

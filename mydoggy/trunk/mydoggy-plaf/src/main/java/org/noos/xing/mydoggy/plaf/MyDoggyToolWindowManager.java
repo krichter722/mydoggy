@@ -302,7 +302,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         if (source instanceof ToolWindowDescriptor) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) source;
             if (!tools.containsValue(descriptor)) {
-                new RuntimeException("Manager doesn't containe that ToolWindow. [id : " + descriptor.getToolWindow().getId() + "]").printStackTrace();
+                new RuntimeException("Manager doesn't contain that ToolWindow. [id : " + descriptor.getToolWindow().getId() + "]").printStackTrace();
                 return;
             }
         } else
