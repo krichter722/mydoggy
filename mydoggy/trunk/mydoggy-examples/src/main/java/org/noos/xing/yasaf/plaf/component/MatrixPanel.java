@@ -23,7 +23,7 @@ public class MatrixPanel extends JPanel {
         for (int i = 0, index = 1; i < columns; i++) {
             layoutCols[index] = -2;
             layoutCols[index + 1] = 3;
-            layoutCols[index + 2] = -1;
+            layoutCols[index + 2] = -1; // TODO: -1 or -2 ???
             layoutCols[index + 3] = 3;
             index += 4;
         }
