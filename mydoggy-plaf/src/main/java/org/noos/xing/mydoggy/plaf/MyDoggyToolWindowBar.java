@@ -972,7 +972,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     ToolWindow maximizedTool = descriptor.getToolWindow();
                     for (ToolWindow tool : descriptor.getManager().getToolWindows())
                         if (tool != maximizedTool &&
-                            tool.getType() != ToolWindowType.FLOATING && tool.getType() != ToolWindowType.FLOATING_FREE)
+                            tool.getType() != ToolWindowType.FLOATING &&
+                            tool.getType() != ToolWindowType.FLOATING_FREE &&
+                            tool.getType() != ToolWindowType.TABBED)
                             tool.setVisible(false);
 
                     setSplitDividerLocation(-1);

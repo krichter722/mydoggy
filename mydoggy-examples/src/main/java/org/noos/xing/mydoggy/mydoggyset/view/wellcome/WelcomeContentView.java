@@ -14,6 +14,9 @@ import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.view.ViewContext;
 
 import javax.swing.*;
+import javax.swing.plaf.ButtonUI;
+import javax.swing.plaf.LabelUI;
+import javax.swing.plaf.PanelUI;
 import java.awt.*;
 
 /**
@@ -28,7 +31,13 @@ public class WelcomeContentView extends ComponentView {
     protected Component initComponent() {
         // Setup welcome panel...
         JPanel panel = new JPanel(new TableLayout(new double[][]{{-1, 100, 5, 160, 3, 100, 5, 160, -1},
-                                                                 {-1, 70, 10, 70, 10, 70, -1}}));
+                                                                 {-1, 70, 10, 70, 10, 70, -1}})) {
+            public void setUI(PanelUI ui) {
+                if (getUI() == null)
+                    super.setUI(ui);
+            }
+        };
+
         panel.setBackground(Colors.blu);
 
         panel.add(renderButton("Manager", ToolWindowManager.class),
@@ -71,7 +80,12 @@ public class WelcomeContentView extends ComponentView {
     }
 
     protected JButton renderButton(String text, Object inContextKey) {
-        JButton button = new JButton(text);
+        JButton button = new JButton(text) {
+            public void setUI(ButtonUI ui) {
+                if (getUI() == null)
+                    super.setUI(ui);
+            }
+        };
         button.setOpaque(false);
         button.setContentAreaFilled(false);
         button.setForeground(Color.WHITE);
@@ -83,7 +97,12 @@ public class WelcomeContentView extends ComponentView {
     }
 
     protected JLabel renderLabel(String text) {
-        JLabel label = new JLabel(text);
+        JLabel label = new JLabel(text) {
+            public void setUI(LabelUI ui) {
+                if (getUI() == null)
+                    super.setUI(ui);
+            }
+        };
         label.setForeground(Color.WHITE);
         return label;
     }

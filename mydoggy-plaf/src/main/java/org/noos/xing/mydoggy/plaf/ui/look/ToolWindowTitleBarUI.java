@@ -532,7 +532,8 @@ public class ToolWindowTitleBarUI extends PanelUI {
                         ToolWindow target = (ToolWindow) ((JComponent) SwingUtil.getParent(lastOverCmp, "toolWindow.container")).getClientProperty(
                                 ToolWindow.class
                         );
-                        target.addToolWindowTab(toolWindow).setSelected(true);
+                        if (target != toolWindow)
+                            target.addToolWindowTab(toolWindow).setSelected(true);
                     }
                 }
             } else if (transferable.isDataFlavorSupported(ToolWindowTabTrasferable.TOOL_WINDOW_TAB_DATA_FAVLOR)) {
@@ -567,7 +568,8 @@ public class ToolWindowTitleBarUI extends PanelUI {
                             ToolWindow target = (ToolWindow) ((JComponent) SwingUtil.getParent(lastOverCmp, "toolWindow.container")).getClientProperty(
                                     ToolWindow.class
                             );
-                            target.addToolWindowTab(toolWindow).setSelected(true);
+                            if (target != toolWindow)
+                                target.addToolWindowTab(toolWindow).setSelected(true);
                         }
 
                     } catch (UnsupportedFlavorException e) {
