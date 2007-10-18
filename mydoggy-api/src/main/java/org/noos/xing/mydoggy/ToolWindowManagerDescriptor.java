@@ -104,6 +104,20 @@ public interface ToolWindowManagerDescriptor {
     int getDividerSize(ToolWindowAnchor anchor);
 
     /**
+     * TODO
+     * @param anchor
+     * @param enable
+     */
+    void setAggregateMode(ToolWindowAnchor anchor, boolean enable);
+
+    /**
+     * TODO
+     * @param anchor
+     * @return
+     */
+    boolean isAggregateMode(ToolWindowAnchor anchor);
+
+    /**
      * Adds a PropertyChangeListener to the listener list. The listener is
      * registered for all bound properties of this class, including the
      * following:

@@ -367,10 +367,12 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     }
 
     public void checkIdOnTitleBar() {
-        if (isIdVisibleOnTitleBar())
-            dockedContainer.enableIdOnTitleBar();
-        else
-            dockedContainer.disableIdOnTitleBar();
+        if (dockedContainer !=  null)  {
+            if (isIdVisibleOnTitleBar())
+                dockedContainer.enableIdOnTitleBar();
+            else
+                dockedContainer.disableIdOnTitleBar();
+        }
     }
 
 

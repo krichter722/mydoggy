@@ -44,7 +44,10 @@ public interface ToolWindow {
      */
     int getIndex();
 
-
+    /**
+     * TODO
+     * @return
+     */
     Component getComponent();
 
     /**

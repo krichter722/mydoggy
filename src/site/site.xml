@@ -36,7 +36,7 @@
                 <item name="ContentManager" href="/mydoggy-api/contentManager.html"/>
             </item>
             <item name="MyDoggy-Plaf" href="/mydoggy-plaf/index.html">
-                <item name="ResourceManager" href="/mydoggy-plaf/resourceManager.html"/>
+                <item img="/images/new.png" name="ResourceManager" href="/mydoggy-plaf/resourceManager.html"/>
                 <item name="TransparencyManager" href="/mydoggy-plaf/transparency.html"/>
             </item>
         </menu>
