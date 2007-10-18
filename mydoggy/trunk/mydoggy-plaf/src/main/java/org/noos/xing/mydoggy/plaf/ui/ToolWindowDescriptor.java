@@ -253,7 +253,13 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
     public void updateUI() {
         getToolWindowContainer().updateUI();
+
         SwingUtilities.updateComponentTreeUI(getComponent());
+
+        for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+            SwingUtilities.updateComponentTreeUI(tab.getComponent());
+        }
+
         if (getRepresentativeAnchor() != null)
             getRepresentativeAnchor().updateUI();
     }

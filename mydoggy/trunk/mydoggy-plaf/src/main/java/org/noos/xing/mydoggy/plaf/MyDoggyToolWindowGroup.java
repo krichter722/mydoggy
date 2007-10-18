@@ -83,8 +83,10 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
                 }
 
                 if (doAction) {
-                    for (ToolWindow tool : manager.getToolWindows())
-                        tool.setVisible(false);
+                    for (ToolWindow tool : manager.getToolWindows()) {
+                        if (tool.getType() != ToolWindowType.TABBED)
+                            tool.setVisible(false);
+                    }
 
                     if (visible) {
                         manager.setShowingGroup(this);

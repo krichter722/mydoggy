@@ -91,7 +91,7 @@ public class MyDoggySet {
         this.frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
 
         this.toolWindowManager = new MyDoggyToolWindowManager(frame, Locale.US, null);
-//        customizeToolWindowManager();
+        customizeToolWindowManager();
 
         this.contentContext = new ContentContext(toolWindowManager, frame);
 
@@ -250,7 +250,9 @@ public class MyDoggySet {
         // Customize toolwindow TitleBar ...
         MyDoggyToolWindowManager manager = ((MyDoggyToolWindowManager) toolWindowManager);
         ResourceManager resourceManager = manager.getResourceManager();
+        MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) manager.getResourceManager();
 
+/*
         manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START, Color.RED);
         manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END, Color.PINK);
         manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START, Color.BLACK);
@@ -266,7 +268,6 @@ public class MyDoggySet {
 
         // More deep customization ...
         // Change the way the background is drawing
-        MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) manager.getResourceManager();
         myDoggyResourceManager.putComponentUICreator(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR_UI, new MyDoggyResourceManager.ComponentUICreator() {
 
             public ComponentUI createComponentUI(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
@@ -318,6 +319,7 @@ public class MyDoggySet {
             }
         });
 
+*/
         // Change title bar buttons dispositions
         myDoggyResourceManager.putInstanceCreator(TitleBarButtons.class,
                                                   new MyDoggyResourceManager.InstanceCreator() {
