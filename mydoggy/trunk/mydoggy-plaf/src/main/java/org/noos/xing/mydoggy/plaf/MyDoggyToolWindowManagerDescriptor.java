@@ -21,6 +21,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
     protected boolean checkParam = true;
     protected Stack<ToolWindowAnchor> mostRecentStack;
     protected Map<ToolWindowAnchor, Integer> dividerSizes;
+    protected Map<ToolWindowAnchor, Boolean> aggregateModes;
 
     protected EventListenerList listenerList;
 
@@ -30,11 +31,17 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         this.numberingEnabled = true;
         this.listenerList = new EventListenerList();
 
-        this.dividerSizes = new HashMap<ToolWindowAnchor, Integer>();
+        this.dividerSizes = new Hashtable<ToolWindowAnchor, Integer>();
         setDividerSize(LEFT, 3);
         setDividerSize(RIGHT, 3);
         setDividerSize(TOP, 3);
         setDividerSize(BOTTOM, 3);
+
+        this.aggregateModes = new Hashtable<ToolWindowAnchor, Boolean>();
+        setAggregateMode(LEFT, false);
+        setAggregateMode(RIGHT, false);
+        setAggregateMode(TOP, false);
+        setAggregateMode(BOTTOM, false);
 
         initMostRecent();
     }
@@ -209,6 +216,20 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         dividerSizes.put(anchor, size);
         firePropertyChange("dividerSize", new Object[]{anchor, oldSize}, new Object[]{anchor, size});
     }
+
+    public void setAggregateMode(ToolWindowAnchor anchor, boolean enable) {
+        Boolean oldValue = aggregateModes.get(anchor);
+        if (oldValue != null && oldValue.equals(enable))
+            return;
+
+        aggregateModes.put(anchor, enable);
+        firePropertyChange("aggregateMode", new Object[]{anchor, oldValue}, new Object[]{anchor, enable});
+    }
+
+    public boolean isAggregateMode(ToolWindowAnchor anchor) {
+        return aggregateModes.get(anchor);
+    }
+
 
     public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
         if (listenerList == null)

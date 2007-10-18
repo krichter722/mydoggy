@@ -85,6 +85,7 @@ public class SampleApp {
         // Create a new instance of MyDoggyToolWindowManager passing the frame.
         MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
         this.toolWindowManager = myDoggyToolWindowManager;
+        toolWindowManager.getToolWindowManagerDescriptor().setAggregateMode(ToolWindowAnchor.LEFT, true);
 
         // Register a Tool.
         toolWindowManager.registerToolWindow("Debug",                      // Id

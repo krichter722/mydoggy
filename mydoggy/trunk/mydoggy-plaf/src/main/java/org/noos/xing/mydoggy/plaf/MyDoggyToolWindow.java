@@ -212,8 +212,10 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setVisible(boolean visible) {
-        if (aggregateEnabled && visible && !descriptor.getManager().isShiftShow() &&
-            getType() == ToolWindowType.DOCKED)
+        if ((aggregateEnabled || descriptor.getManager().getToolWindowManagerDescriptor().isAggregateMode(anchor)) && 
+                visible &&
+                !descriptor.getManager().isShiftShow() &&
+                getType() == ToolWindowType.DOCKED)
             aggregate();
 
         if (getType() == ToolWindowType.TABBED) {
