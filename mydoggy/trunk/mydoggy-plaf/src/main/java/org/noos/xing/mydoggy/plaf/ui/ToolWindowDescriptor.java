@@ -298,7 +298,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     }
 
     public FloatingContainer getFloatingContainer() {
-        return (FloatingContainer) getToolWindowContainer();
+        return floatingContainer;
     }
 
 
