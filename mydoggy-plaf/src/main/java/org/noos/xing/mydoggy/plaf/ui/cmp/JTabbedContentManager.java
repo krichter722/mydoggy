@@ -309,9 +309,6 @@ public class JTabbedContentManager extends JTabbedPane {
         }
     }
 
-    /**
-     * TODO: far funzionare meglio.......
-     */
     class TabMoveHandler extends MouseAdapter implements MouseMotionListener {
         int startIndex = -1;
         private int currentIndex = -1;
@@ -327,13 +324,14 @@ public class JTabbedContentManager extends JTabbedPane {
         public void mouseReleased(MouseEvent e) {
             JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
             if (!e.isPopupTrigger()) {
+/*
                 int endIndex = tabbedPane.indexAtLocation(e.getX(), e.getY());
 
                 if (startIndex != -1 && endIndex != -1 && startIndex != endIndex) {
                     moveTab((JTabbedContentManager) tabbedPane, startIndex, endIndex);
                     tabbedPane.setSelectedIndex(endIndex);
-
                }
+*/
             }
             startIndex = -1;
             clearRectangle(tabbedPane);
@@ -345,30 +343,18 @@ public class JTabbedContentManager extends JTabbedPane {
                 JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
                 int index = tabbedPane.indexAtLocation(e.getX(), e.getY());
 
-
-                GlassPanel glassPane = ((MyDoggyToolWindowManager) toolWindowManager).getGlassPanel();
-                glassPane.setVisible(true);
-
-
-                TabbedPaneUI ui = tabbedPane.getUI();
-                Rectangle rect = ui.getTabBounds(tabbedPane, startIndex);
-                BufferedImage bufferedImage = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_INT_RGB);
-                tabbedPane.print(bufferedImage.getGraphics());
-
-                Point p = new Point(100,100);
-                SwingUtilities.convertPointFromScreen(p, glassPane);
-                glassPane.setPoint(p);
-                glassPane.setDraggingImage(bufferedImage);
-                glassPane.repaint();
-
-
                 if (index != -1 && index != currentIndex) {
-                    clearRectangle(tabbedPane);
+//                    clearRectangle(tabbedPane);
                     currentIndex = index;
                 }
 
                 if (currentIndex != -1 && currentIndex != startIndex) {
-                    drawRectangle(tabbedPane);
+                    // TODO: check this, there are flickers...
+                    moveTab((JTabbedContentManager) tabbedPane, startIndex, currentIndex);
+                    tabbedPane.setSelectedIndex(currentIndex);
+                    startIndex = currentIndex;
+                   
+//                    drawRectangle(tabbedPane);
                 }
             }
         }
