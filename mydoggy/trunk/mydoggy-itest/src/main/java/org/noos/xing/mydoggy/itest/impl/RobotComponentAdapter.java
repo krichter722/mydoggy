@@ -178,7 +178,7 @@ public class RobotComponentAdapter implements ComponentAdapter {
             while ((dx < 0 && x0 >= x1) || (dx > 0 && x0 <= x1)) {
                 x0 += dx;
                 robot.mouseMove(x0, Math.round(m * x0 + b));
-                robot.delay(1);
+                robot.delay(10);
             }
         } else if (dy != 0) {                        // slope >= 1
             float m = (float) dx / (float) dy;      // compute slope
@@ -187,7 +187,7 @@ public class RobotComponentAdapter implements ComponentAdapter {
             while ((dy < 0 && y0 >= y1) || (dy > 0 && y0 <= y1)) {
                 y0 += dy;
                 robot.mouseMove(Math.round(m * y0 + b), y0);
-                robot.delay(1);
+                robot.delay(10);
             }
         }
         robot.mouseMove(to.x, to.y);

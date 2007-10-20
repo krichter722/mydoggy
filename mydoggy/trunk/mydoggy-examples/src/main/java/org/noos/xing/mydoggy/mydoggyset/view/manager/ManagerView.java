@@ -47,7 +47,7 @@ public class ManagerView implements View {
         viewContext.put(ToolWindowManager.class, toolWindowManager);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new TableLayout(new double[][]{{-1}, {120, 3, -1}}));
+        panel.setLayout(new TableLayout(new double[][]{{-1}, {150, 3, -1}}));
         panel.add(new ToolWindowManagerDescriptorPrefView(viewContext).getComponent(), "0,0,FULL,FULL");
         panel.add(new PersistencePrefView(viewContext).getComponent(), "0,2,FULL,FULL");
 
@@ -68,7 +68,7 @@ public class ManagerView implements View {
         }
 
         protected Component initComponent() {
-            MatrixPanel panel = new MatrixPanel(3, 4);
+            MatrixPanel panel = new MatrixPanel(2, 5);
             panel.setBorder(new TitledBorder("ToolWindowManagerDescriptor Preference"));
 
             // Column 0
@@ -77,25 +77,9 @@ public class ManagerView implements View {
                                                          "numberingEnabled",
                                                          new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
                                                          new ChecBoxSelectionSource(numberingEnabled)));
-
-            panel.add(new JLabel("pushAwayMode : "), "1,3,r,c");
-            pushAwayMode = new JComboBox(new Object[]{
-                    PushAwayMode.ANTICLOCKWISE,
-                    PushAwayMode.HORIZONTAL,
-                    PushAwayMode.VERTICAL,
-                    PushAwayMode.MOST_RECENT
-            });
-            pushAwayMode.addItemListener(new ItemListener() {
-                public void itemStateChanged(ItemEvent e) {
-                    viewContext.put(PushAwayMode.class, e.getItem());
-                }
-            });
-            panel.addPair(0, 1, "pushAwayMode : ", pushAwayMode);
-
             // Column 1
-            panel.addPair(1, 0,
-                          "DividerSize (LEFT) : ",
-                          leftDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
+            panel.addPair(0, 1, "DividerSize (LEFT) : ",
+                    leftDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
             leftDividerSize.addChangeListener(
                     new ChangeListenerAction(ToolWindowManagerDescriptor.class,
                                              "setDividerSize",
@@ -107,8 +91,7 @@ public class ManagerView implements View {
                     )
             );
 
-            panel.addPair(1, 1,
-                          "DividerSize (RIGHT) : ",
+            panel.addPair(0, 2, "DividerSize (RIGHT) : ",
                           rightDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
             rightDividerSize.addChangeListener(
                     new ChangeListenerAction(ToolWindowManagerDescriptor.class,
@@ -121,8 +104,7 @@ public class ManagerView implements View {
                     )
             );
 
-            panel.addPair(1, 2,
-                          "DividerSize (TOP) : ",
+            panel.addPair(0, 3, "DividerSize (TOP) : ",
                           topDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
             topDividerSize.addChangeListener(
                     new ChangeListenerAction(ToolWindowManagerDescriptor.class,
@@ -135,8 +117,7 @@ public class ManagerView implements View {
                     )
             );
 
-            panel.addPair(1, 3,
-                          "DividerSize (BOTTOM) : ",
+            panel.addPair(0, 4,"DividerSize (BOTTOM) : ",
                           bottomDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
             bottomDividerSize.addChangeListener(
                     new ChangeListenerAction(ToolWindowManagerDescriptor.class,
@@ -149,9 +130,22 @@ public class ManagerView implements View {
                     )
             );
 
+            // Column 1
+            pushAwayMode = new JComboBox(new Object[]{
+                    PushAwayMode.ANTICLOCKWISE,
+                    PushAwayMode.HORIZONTAL,
+                    PushAwayMode.VERTICAL,
+                    PushAwayMode.MOST_RECENT
+            });
+            pushAwayMode.addItemListener(new ItemListener() {
+                public void itemStateChanged(ItemEvent e) {
+                    viewContext.put(PushAwayMode.class, e.getItem());
+                }
+            });
+            panel.addPair(1, 0, "pushAwayMode : ", pushAwayMode);
 
-            // Column 2
-            panel.addPair(2, 0, "Agg Mode (LEFT) : ", leftAggregateMode = new JCheckBox());
+
+            panel.addPair(1, 1, "Agg Mode (LEFT) : ", leftAggregateMode = new JCheckBox());
             leftAggregateMode.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
                                                          "setAggregateMode",
                                                          new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
@@ -161,7 +155,7 @@ public class ManagerView implements View {
                                                          )
             ));
 
-            panel.addPair(2, 1, "Agg Mode (RIGHT) : ", rightAggregateMode = new JCheckBox());
+            panel.addPair(1, 2, "Agg Mode (RIGHT) : ", rightAggregateMode = new JCheckBox());
             rightAggregateMode.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
                                                          "setAggregateMode",
                                                          new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
@@ -172,7 +166,7 @@ public class ManagerView implements View {
             ));
 
 
-            panel.addPair(2, 2, "Agg Mode (TOP) : ", topAggregateMode = new JCheckBox());
+            panel.addPair(1, 3, "Agg Mode (TOP) : ", topAggregateMode = new JCheckBox());
             topAggregateMode.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
                                                          "setAggregateMode",
                                                          new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
@@ -183,7 +177,7 @@ public class ManagerView implements View {
             ));
 
 
-            panel.addPair(2, 3, "Agg Mode (BOTTOM) : ", bottomAggregateMode = new JCheckBox());
+            panel.addPair(1, 4, "Agg Mode (BOTTOM) : ", bottomAggregateMode = new JCheckBox());
             bottomAggregateMode.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
                                                          "setAggregateMode",
                                                          new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
@@ -211,10 +205,16 @@ public class ManagerView implements View {
 
             numberingEnabled.setSelected(managerDescriptor.isNumberingEnabled());
             pushAwayMode.setSelectedItem(managerDescriptor.getPushAwayMode());
+
             leftDividerSize.setValue(managerDescriptor.getDividerSize(ToolWindowAnchor.LEFT));
             rightDividerSize.setValue(managerDescriptor.getDividerSize(ToolWindowAnchor.RIGHT));
             topDividerSize.setValue(managerDescriptor.getDividerSize(ToolWindowAnchor.TOP));
             bottomDividerSize.setValue(managerDescriptor.getDividerSize(ToolWindowAnchor.BOTTOM));
+
+            leftAggregateMode.setSelected(managerDescriptor.isAggregateMode(ToolWindowAnchor.LEFT));
+            rightAggregateMode.setSelected(managerDescriptor.isAggregateMode(ToolWindowAnchor.RIGHT));
+            topAggregateMode.setSelected(managerDescriptor.isAggregateMode(ToolWindowAnchor.TOP));
+            bottomAggregateMode.setSelected(managerDescriptor.isAggregateMode(ToolWindowAnchor.BOTTOM));
         }
     }
 

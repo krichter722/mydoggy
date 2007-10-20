@@ -523,7 +523,7 @@ public class ToolWindowTitleBarUI extends PanelUI {
                         try {
                             toolWindow.setAggregateMode(true);
                             toolWindow.setAnchor(anchor,
-                                                 ((MyDoggyToolWindow) destToolWindow).getDescriptor().getLabelIndex());
+                                                 ((MyDoggyToolWindow) destToolWindow).getDescriptor().getRepresentativeAnchorIndex());
                         } finally {
                             toolWindow.setAggregateMode(oldAM);
                         }
@@ -557,7 +557,7 @@ public class ToolWindowTitleBarUI extends PanelUI {
                             try {
                                 toolWindow.setAggregateMode(true);
                                 toolWindow.setAnchor(anchor,
-                                                     ((MyDoggyToolWindow) destToolWindow).getDescriptor().getLabelIndex());
+                                                     ((MyDoggyToolWindow) destToolWindow).getDescriptor().getRepresentativeAnchorIndex());
                                 toolWindow.aggregate();
                                 toolWindow.setActive(true);
                             } finally {

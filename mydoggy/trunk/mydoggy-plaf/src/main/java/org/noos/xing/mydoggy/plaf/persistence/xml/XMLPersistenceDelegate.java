@@ -1,33 +1,37 @@
 package org.noos.xing.mydoggy.plaf.persistence.xml;
 
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.plaf.persistence.merge.MergePolicyApplier;
-import org.noos.xing.mydoggy.plaf.persistence.merge.ResetMergePolicy;
-import org.noos.xing.mydoggy.plaf.persistence.merge.UnionMergePolicy;
+import org.noos.xing.mydoggy.plaf.persistence.xml.merge.MergePolicyApplier;
+import org.noos.xing.mydoggy.plaf.persistence.xml.merge.ResetMergePolicy;
+import org.noos.xing.mydoggy.plaf.persistence.xml.merge.UnionMergePolicy;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class XMLPersistenceDelegate implements PersistenceDelegate {
     protected ToolWindowManager toolWindowManager;
+
     protected Map<MergePolicy, MergePolicyApplier> mergePolicyApplierMap;
+    protected Map<String, ElementParser> elementParserMap;
 
     public XMLPersistenceDelegate(ToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
-        initMergePolicyApplierMap();
+        initMaps();
     }
 
     public void save(OutputStream outputStream) {
@@ -38,18 +42,16 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
             AttributesImpl mydoggyAttributes = new AttributesImpl();
             mydoggyAttributes.addAttribute(null, "version", null, null, "1.3.2");
-            mydoggyAttributes.addAttribute(null, "pushAwayMode", null, null, 
-                                           toolWindowManager.getToolWindowManagerDescriptor().getPushAwayMode().toString());
             writer.startElement("mydoggy", mydoggyAttributes);
-
-            // Store PushAway Pref
-            saveToolWindowManagerDescriptor(writer);
 
             // Store tools pref.
             writer.startElement("tools");
             for (ToolWindow toolWindow : toolWindowManager.getToolWindows())
                 saveToolWindow(writer, toolWindow);
             writer.endElement("tools");
+
+            // Store PushAway Pref
+            saveToolWindowManagerDescriptor(writer);
 
             saveContentManager(writer);
 
@@ -69,26 +71,34 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     }
 
     public void merge(InputStream inputStream, MergePolicy mergePolicy) {
-        SAXParserFactory factory = SAXParserFactory.newInstance();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
-            SAXParser saxParser = factory.newSAXParser();
-            saxParser.parse(inputStream, new XMLReaderHandler(toolWindowManager,
-                                                              mergePolicyApplierMap.get(mergePolicy)));
-        } catch (ParserConfigurationException e) {
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(inputStream);
+
+            parseElement(document.getDocumentElement(), mergePolicyApplierMap.get(mergePolicy));
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (SAXException se) {
-            se.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
         }
+
     }
 
 
-    protected void initMergePolicyApplierMap() {
-        mergePolicyApplierMap = new HashMap<MergePolicy, MergePolicyApplier>();
+    protected void initMaps() {
+        mergePolicyApplierMap = new Hashtable<MergePolicy, MergePolicyApplier>();
         mergePolicyApplierMap.put(PersistenceDelegate.MergePolicy.RESET, new ResetMergePolicy());
         mergePolicyApplierMap.put(PersistenceDelegate.MergePolicy.UNION, new UnionMergePolicy());
+
+        elementParserMap = new Hashtable<String, ElementParser>();
+        elementParserMap.put("mydoggy", new MyDoggyElementParser());
+        elementParserMap.put("toolWindowManagerDescriptor", new ToolWindowManagerDescriptorElementParser());
+        elementParserMap.put("aggregateMode", new AggregateModeElementParser());
+        elementParserMap.put("dividerSize", new DividerSizeElementParser());
+        elementParserMap.put("pushAway", new PushAwayModeElementParser());
+        elementParserMap.put("tools", new ToolsElementParser());
+        elementParserMap.put("contentManager", new ContentManagerElementParser());
     }
+
 
     protected void saveToolWindow(XMLWriter writer, ToolWindow toolWindow) throws SAXException {
         AttributesImpl toolAttributes = new AttributesImpl();
@@ -98,6 +108,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         toolAttributes.addAttribute(null, "active", null, null, String.valueOf(toolWindow.isActive()));
         toolAttributes.addAttribute(null, "autoHide", null, null, String.valueOf(toolWindow.isAutoHide()));
         toolAttributes.addAttribute(null, "anchor", null, null, String.valueOf(toolWindow.getAnchor()));
+        toolAttributes.addAttribute(null, "anchorIndex", null, null, String.valueOf(toolWindow.getAnchorIndex()));
         toolAttributes.addAttribute(null, "type", null, null, String.valueOf(toolWindow.getType()));
         toolAttributes.addAttribute(null, "aggregateMode", null, null, String.valueOf(toolWindow.isAggregateMode()));
         toolAttributes.addAttribute(null, "maximized", null, null, String.valueOf(toolWindow.isMaximized()));
@@ -156,7 +167,6 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         writer.dataElement("floating", floatingDescriptorAttributes);
 
         // FloatingLiveTypeDescriptor
-        // FloatingTypeDescriptor
         FloatingLiveTypeDescriptor floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
         AttributesImpl floatingLiveDescriptorAttributes = new AttributesImpl();
         floatingLiveDescriptorAttributes.addAttribute(null, "transparentMode", null, null, String.valueOf(floatingLiveTypeDescriptor.isTransparentMode()));
@@ -180,7 +190,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
         writer.dataElement("floatingLive", floatingLiveDescriptorAttributes);
 
-
+        // End descriptors
         writer.endElement("descriptors");
 
         boolean addTabsTag = false;
@@ -202,23 +212,40 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         writer.endElement("tool");
     }
 
-    protected void saveToolWindowManagerDescriptor(XMLWriter writer) throws SAXException{
-        AttributesImpl twdmAttributes = new AttributesImpl();
+    protected void saveToolWindowManagerDescriptor(XMLWriter writer) throws SAXException {
         ToolWindowManagerDescriptor descriptor = toolWindowManager.getToolWindowManagerDescriptor();
-        twdmAttributes.addAttribute(null, "dividerLeft", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.LEFT)));
-        twdmAttributes.addAttribute(null, "dividerRight", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.RIGHT)));
-        twdmAttributes.addAttribute(null, "dividerTop", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.TOP)));
-        twdmAttributes.addAttribute(null, "dividerBottom", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.BOTTOM)));
-        twdmAttributes.addAttribute(null, "numberingEnabled", null, null, String.valueOf(descriptor.isNumberingEnabled()));
-        writer.startElement("toolWindowDescriptorManager", twdmAttributes);
+
+        // Start toolWindowDescriptorManager
+        AttributesImpl attributes = new AttributesImpl();
+        attributes.addAttribute(null, "numberingEnabled", null, null, String.valueOf(descriptor.isNumberingEnabled()));
+        writer.startElement("toolWindowManagerDescriptor", attributes);
+
+        // dividerSize element
+        attributes = new AttributesImpl();
+        attributes.addAttribute(null, "left", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.LEFT)));
+        attributes.addAttribute(null, "right", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.RIGHT)));
+        attributes.addAttribute(null, "top", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.TOP)));
+        attributes.addAttribute(null, "bottom", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.BOTTOM)));
+        writer.dataElement("dividerSize", attributes);
+
+        // aggregateMode element
+        attributes = new AttributesImpl();
+        attributes.addAttribute(null, "left", null, null, String.valueOf(descriptor.isAggregateMode(ToolWindowAnchor.LEFT)));
+        attributes.addAttribute(null, "right", null, null, String.valueOf(descriptor.isAggregateMode(ToolWindowAnchor.RIGHT)));
+        attributes.addAttribute(null, "top", null, null, String.valueOf(descriptor.isAggregateMode(ToolWindowAnchor.TOP)));
+        attributes.addAttribute(null, "bottom", null, null, String.valueOf(descriptor.isAggregateMode(ToolWindowAnchor.BOTTOM)));
+        writer.dataElement("aggregateMode", attributes);
 
         // Start pushAway
-        writer.startElement("pushAway");
+        attributes = new AttributesImpl();
+        attributes.addAttribute(null, "pushAwayMode", null, null,
+                                toolWindowManager.getToolWindowManagerDescriptor().getPushAwayMode().toString());
+        writer.startElement("pushAway", attributes);
 
         // start MOST_RECENT policy
-        AttributesImpl policyAttributes = new AttributesImpl();
-        policyAttributes.addAttribute(null, "type", null, null, String.valueOf(PushAwayMode.MOST_RECENT));
-        writer.startElement("mode", policyAttributes);
+        attributes = new AttributesImpl();
+        attributes.addAttribute(null, "type", null, null, String.valueOf(PushAwayMode.MOST_RECENT));
+        writer.startElement("mode", attributes);
 
         MostRecentDescriptor mostRecentDescriptor = (MostRecentDescriptor) toolWindowManager.getToolWindowManagerDescriptor().getPushAwayModeDescriptor(PushAwayMode.MOST_RECENT);
 
@@ -234,7 +261,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         // End pushAway
         writer.endElement("pushAway");
 
-        writer.endElement("toolWindowDescriptorManager");
+        // End toolWindowDescriptorManager
+        writer.endElement("toolWindowManagerDescriptor");
     }
 
     protected void saveContentManager(XMLWriter writer) throws SAXException {
@@ -254,5 +282,315 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
         // End contentManager
         writer.endElement("contentManager");
+    }
+
+
+    protected void parseElement(Element element, Object... args) {
+        ElementParser elementParser = elementParserMap.get(element.getNodeName());
+        if (elementParser == null || elementParser.parse(element, args)) {
+            NodeList children = element.getChildNodes();
+            for (int i = 0, size = children.getLength(); i < size; i++) {
+                Node node = children.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE)
+                    parseElement((Element) node, args);
+            }
+        }
+    }
+
+
+    public interface ElementParser {
+
+        boolean parse(Element element, Object... args);
+
+    }
+
+    public class MyDoggyElementParser implements ElementParser {
+        public boolean parse(Element element, Object... args) {
+            // Validate version
+            if (!"1.3.2".equals(element.getAttribute("version")))
+                throw new IllegalArgumentException("Invalid workspace version. Expected 1.3.2");
+            return true;
+        }
+    }
+
+    public class ToolWindowManagerDescriptorElementParser implements ElementParser {
+
+        public boolean parse(Element element, Object... args) {
+            ToolWindowManagerDescriptor descriptor = toolWindowManager.getToolWindowManagerDescriptor();
+            descriptor.setNumberingEnabled(Boolean.parseBoolean(element.getAttribute("numberingEnabled")));
+            return true;
+            
+        }
+    }
+
+    public class DividerSizeElementParser implements ElementParser {
+        public boolean parse(Element element, Object... args) {
+            ToolWindowManagerDescriptor descriptor = toolWindowManager.getToolWindowManagerDescriptor();
+            descriptor.setDividerSize(ToolWindowAnchor.LEFT, Integer.parseInt(element.getAttribute("left")));
+            descriptor.setDividerSize(ToolWindowAnchor.RIGHT, Integer.parseInt(element.getAttribute("right")));
+            descriptor.setDividerSize(ToolWindowAnchor.TOP, Integer.parseInt(element.getAttribute("top")));
+            descriptor.setDividerSize(ToolWindowAnchor.BOTTOM, Integer.parseInt(element.getAttribute("bottom")));
+            return true;
+        }
+    }
+
+    public class AggregateModeElementParser implements ElementParser {
+        public boolean parse(Element element, Object... args) {
+            ToolWindowManagerDescriptor descriptor = toolWindowManager.getToolWindowManagerDescriptor();
+            descriptor.setAggregateMode(ToolWindowAnchor.LEFT, Boolean.parseBoolean(element.getAttribute("left")));
+            descriptor.setAggregateMode(ToolWindowAnchor.RIGHT, Boolean.parseBoolean(element.getAttribute("right")));
+            descriptor.setAggregateMode(ToolWindowAnchor.TOP, Boolean.parseBoolean(element.getAttribute("top")));
+            descriptor.setAggregateMode(ToolWindowAnchor.BOTTOM, Boolean.parseBoolean(element.getAttribute("bottom")));
+            return true;
+        }
+    }
+
+    public class PushAwayModeElementParser implements ElementParser {
+        public boolean parse(Element element, Object... args) {
+            ToolWindowManagerDescriptor descriptor = toolWindowManager.getToolWindowManagerDescriptor();
+
+            // Load mode settings
+            NodeList modes = element.getElementsByTagName("mode");
+            for (int i = 0, size = modes.getLength(); i < size; i++) {
+                Element mode = (Element) modes.item(i);
+                if ("MOST_RECENT".equals(mode.getAttribute("type")))  {
+                    MostRecentDescriptor mostRecentDescriptor = (MostRecentDescriptor) descriptor.getPushAwayModeDescriptor(PushAwayMode.MOST_RECENT);
+
+                    NodeList anchors = element.getElementsByTagName("anchor");
+                    for (int j = 0, sizej = anchors.getLength(); j < sizej; j++) {
+                        Element anchor = (Element) anchors.item(j);
+                        mostRecentDescriptor.append(ToolWindowAnchor.valueOf(anchor.getAttribute("type")));
+                    }
+                }
+            }
+
+            // Setup pushAwayMode
+            descriptor.setPushAwayMode(PushAwayMode.valueOf(element.getAttribute("pushAwayMode")));
+
+            return false;
+        }
+    }
+
+    public class ToolsElementParser implements ElementParser {
+        protected MergePolicyApplier mergePolicyApplier;
+
+        public boolean parse(Element element, Object... args) {
+            mergePolicyApplier = (MergePolicyApplier) args[0];
+            
+            NodeList tools = element.getElementsByTagName("tool");
+
+            for (int i = 0, size = tools.getLength(); i < size; i++) {
+                Element tool = (Element) tools.item(i);
+
+                // load descriptors
+                ToolWindow toolWindow = toolWindowManager.getToolWindow(tool.getAttribute("id"));
+                if (toolWindow == null)
+                    continue;
+
+                Element dockedType = getElement(tool, "docked");
+                if (dockedType != null) {
+                    DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+                    descriptor.setDockLength(Integer.parseInt(dockedType.getAttribute("dockLength")));
+                    descriptor.setPopupMenuEnabled(Boolean.parseBoolean(dockedType.getAttribute("popupMenuEnabled")));
+                    descriptor.setAnimating(Boolean.parseBoolean(dockedType.getAttribute("animating")));
+                    descriptor.setPreviewEnabled(Boolean.parseBoolean(dockedType.getAttribute("previewEnabled")));
+                    descriptor.setPreviewDelay(Integer.parseInt(dockedType.getAttribute("previewDelay")));
+                    descriptor.setPreviewTransparentRatio(Float.parseFloat(dockedType.getAttribute("previewTransparentRatio")));
+                    descriptor.setIdVisibleOnTitleBar(Boolean.parseBoolean(dockedType.getAttribute("idVisibleOnTitleBar")));
+                    descriptor.setHideRepresentativeButtonOnVisible(Boolean.parseBoolean(dockedType.getAttribute("hideRepresentativeButtonOnVisible")));
+                }
+
+                Element slidingType = getElement(tool, "sliding");
+                if (slidingType != null) {
+                    SlidingTypeDescriptor descriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);
+                    descriptor.setEnabled(Boolean.parseBoolean(slidingType.getAttribute("enabled")));
+                    descriptor.setTransparentDelay(Integer.parseInt(slidingType.getAttribute("transparentDelay")));
+                    descriptor.setTransparentMode(Boolean.parseBoolean(slidingType.getAttribute("transparentMode")));
+                    descriptor.setTransparentRatio(Float.parseFloat(slidingType.getAttribute("transparentRatio")));
+                    descriptor.setAnimating(Boolean.parseBoolean(slidingType.getAttribute("animating")));
+                    descriptor.setIdVisibleOnTitleBar(Boolean.parseBoolean(slidingType.getAttribute("idVisibleOnTitleBar")));
+                }
+
+                Element floatingType = getElement(tool, "floating");
+                if (floatingType != null) {
+                    FloatingTypeDescriptor descriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
+                    descriptor.setEnabled(Boolean.parseBoolean(floatingType.getAttribute("enabled")));
+                    descriptor.setTransparentDelay(Integer.parseInt(floatingType.getAttribute("transparentDelay")));
+                    descriptor.setTransparentMode(Boolean.parseBoolean(floatingType.getAttribute("transparentMode")));
+                    descriptor.setTransparentRatio(Float.parseFloat(floatingType.getAttribute("transparentRatio")));
+                    descriptor.setModal(Boolean.parseBoolean(floatingType.getAttribute("modal")));
+                    descriptor.setAnimating(Boolean.parseBoolean(floatingType.getAttribute("animating")));
+                    descriptor.setIdVisibleOnTitleBar(Boolean.parseBoolean(floatingType.getAttribute("idVisibleOnTitleBar")));
+
+                    Element location = getElement(floatingType, "location");
+                    if (location != null)
+                        descriptor.setLocation(
+                                Integer.parseInt(location.getAttribute("x")),
+                                Integer.parseInt(location.getAttribute("y"))
+                        );
+                    Element dimension = getElement(floatingType, "size");
+                    if (dimension != null)
+                        descriptor.setSize(
+                                Integer.parseInt(dimension.getAttribute("width")),
+                                Integer.parseInt(dimension.getAttribute("height"))
+                        );
+                }
+
+                Element floatingLiveType = getElement(tool, "floatingLive");
+                if (floatingLiveType != null) {
+                    FloatingLiveTypeDescriptor descriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
+                    descriptor.setEnabled(Boolean.parseBoolean(floatingLiveType.getAttribute("enabled")));
+                    descriptor.setTransparentDelay(Integer.parseInt(floatingLiveType.getAttribute("transparentDelay")));
+                    descriptor.setTransparentMode(Boolean.parseBoolean(floatingLiveType.getAttribute("transparentMode")));
+                    descriptor.setTransparentRatio(Float.parseFloat(floatingLiveType.getAttribute("transparentRatio")));
+                    descriptor.setAnimating(Boolean.parseBoolean(floatingLiveType.getAttribute("animating")));
+                    descriptor.setIdVisibleOnTitleBar(Boolean.parseBoolean(floatingLiveType.getAttribute("idVisibleOnTitleBar")));
+
+                    Element location = getElement(floatingType, "location");
+                    if (location != null)
+                        descriptor.setLocation(
+                                Integer.parseInt(location.getAttribute("x")),
+                                Integer.parseInt(location.getAttribute("y"))
+                        );
+                    Element dimension = getElement(floatingType, "size");
+                    if (dimension != null)
+                        descriptor.setSize(
+                                Integer.parseInt(dimension.getAttribute("width")),
+                                Integer.parseInt(dimension.getAttribute("height"))
+                        );
+                }
+
+                ToolWindowType type = ToolWindowType.valueOf(tool.getAttribute("type"));
+                if (type != ToolWindowType.TABBED)
+                    toolWindow.setType(type);
+
+                toolWindow.setAutoHide(Boolean.parseBoolean(tool.getAttribute("autoHide")));
+                toolWindow.setAvailable(Boolean.parseBoolean(tool.getAttribute("available")));
+                toolWindow.setIndex(Integer.parseInt(tool.getAttribute("index")));
+                toolWindow.setAggregateMode(Boolean.parseBoolean(tool.getAttribute("aggregateMode")));
+
+                // Load tabs
+                Element tabs = getElement(tool, "tabs");
+                if (tabs != null) {
+                    NodeList tabList = tabs.getElementsByTagName("tab");
+
+                    // Compare tabLists
+                    for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+                        if (tab.getToolWindow() != null) {
+                            String id = tab.getToolWindow().getId();
+
+                            for (int j = 0, sizej = tabList.getLength(); j < sizej; j++) {
+                                Element tabElement = (Element) tabList.item(j);
+                                if (id.equals(tabElement.getAttribute("toolWindowId"))) {
+                                    toolWindow.removeToolWindowTab(tab);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    for (int j = 0, sizej = tabList.getLength(); j < sizej; j++) {
+                        Element tabElement = (Element) tabList.item(j);
+                        String toolWindowId = tabElement.getAttribute("toolWindowId");
+                        ToolWindow tabTool = toolWindowManager.getToolWindow(toolWindowId);
+                        if (tabTool != null)
+                            toolWindow.addToolWindowTab(tabTool);
+                    }
+                } else {
+                    for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+                        if (tab.getToolWindow() != null)
+                            toolWindow.removeToolWindowTab(tab);
+                    }
+                }
+            }
+
+            apply(tools, ToolWindowAnchor.LEFT);
+            apply(tools, ToolWindowAnchor.BOTTOM);
+            apply(tools, ToolWindowAnchor.RIGHT);
+            apply(tools, ToolWindowAnchor.TOP);
+            return false;
+        }
+
+        protected Element getElement(Element root, String name) {
+            NodeList list = root.getElementsByTagName(name);
+            if (list.getLength() == 0)
+                return null;
+            return (Element) list.item(0);
+        }
+
+        protected void apply(NodeList tools, ToolWindowAnchor anchor) {
+            // Filter tools by anchor
+            java.util.List<Element> toolsByAnchor = new ArrayList<Element>();
+            for (int i = 0, size = tools.getLength(); i < size; i++) {
+                Element tool = (Element) tools.item(i);
+                if (ToolWindowAnchor.valueOf(tool.getAttribute("anchor")) == anchor)
+                    toolsByAnchor.add(tool);
+            }
+
+            Collections.sort(toolsByAnchor, new Comparator<Element>() {
+                public int compare(Element o1, Element o2) {
+                    int anchorIndex1 = Integer.parseInt(o1.getAttribute("anchorIndex"));
+                    int anchorIndex2 = Integer.parseInt(o2.getAttribute("anchorIndex"));
+
+                    if (anchorIndex1 < anchorIndex2)
+                        return -1;
+                    else if (anchorIndex1 == anchorIndex2)
+                        return 0;
+                    return 1;                    
+                }
+            });
+
+            ToolWindow activeTool = null;
+            ToolWindow maximizedTool = null;
+            for (Element tool : toolsByAnchor) {
+                ToolWindow toolWindow = toolWindowManager.getToolWindow(tool.getAttribute("id"));
+
+                toolWindow.setAnchor(
+                        ToolWindowAnchor.valueOf(tool.getAttribute("anchor")),
+                        Integer.parseInt(tool.getAttribute("anchorIndex"))
+                );
+
+                mergePolicyApplier.applyToolWindow(toolWindow, tool);
+
+                if (Boolean.parseBoolean(tool.getAttribute("active")))
+                    activeTool = toolWindow;
+
+                if (Boolean.parseBoolean(tool.getAttribute("maximized")))
+                    maximizedTool = toolWindow;
+            }
+
+            if (activeTool != null)
+                activeTool.setActive(true);
+
+            if (maximizedTool != null)
+                maximizedTool.setMaximized(true);
+
+        }
+    }
+
+    public class ContentManagerElementParser implements ElementParser  {
+
+        public boolean parse(Element element, Object... args) {
+            NodeList contents = element.getElementsByTagName("content");
+
+            Content selectedContent = null;
+            for (int i = 0, size = contents .getLength(); i < size; i++) {
+                Element contentElement = (Element) contents .item(i);
+                Content content = toolWindowManager.getContentManager().getContent(contentElement.getAttribute("key"));
+
+                if (content != null) {
+                    if (Boolean.parseBoolean(contentElement.getAttribute("selected")))
+                        selectedContent = content;
+
+                    content.setEnabled(Boolean.parseBoolean(contentElement.getAttribute("enabled")));
+                    content.setDetached(Boolean.parseBoolean(contentElement.getAttribute("detached")));
+                }
+            }
+
+            if (selectedContent != null)
+                selectedContent.setSelected(true);
+
+            return false;
+        }
     }
 }

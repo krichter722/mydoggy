@@ -380,7 +380,10 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                         contentPaneLayout.setRow(newRow1, rowSize);
                     }
                 }
-                contentPaneLayout.setRow(finalRow, height);
+                if (contentPaneLayout.getNumRow() <= finalRow) {
+                    contentPaneLayout.setRow(contentPaneLayout.getNumRow() - 1, height);
+                } else
+                    contentPaneLayout.setRow(finalRow, height);
 
                 contentPane.add(representativeAnchor, "1," + (index * 2 + 2));
             } else
@@ -589,7 +592,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
             if (descriptor.getDockedTypeDescriptor().isHideRepresentativeButtonOnVisible()) {
                 if (visible) {
-                    poss.put(descriptor, descriptor.getLabelIndex());
+                    poss.put(descriptor, descriptor.getRepresentativeAnchorIndex());
                     removeRepresentativeAnchor(descriptor.getRepresentativeAnchor(), descriptor);
                 } else {
                     assert poss.containsKey(descriptor);
