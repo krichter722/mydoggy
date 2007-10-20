@@ -217,6 +217,12 @@ public interface ToolWindow {
     ToolWindowAnchor getAnchor();
 
     /**
+     * TODO
+     * @return
+     */
+    int getAnchorIndex();
+
+    /**
      * This method is used to set the autoHide property for the tool.
      *
      * @param autoHide <code>true</code> to hide the tool when the tool losts focus;

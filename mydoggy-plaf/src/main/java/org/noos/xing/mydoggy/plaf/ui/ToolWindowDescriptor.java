@@ -9,6 +9,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.AggregateIcon;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
 
 import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.LabelUI;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -41,6 +42,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
     private boolean floatingWindow = false;
 
+    boolean valueAdj = false;
+
 
     public ToolWindowDescriptor(MyDoggyToolWindowManager manager,
                                 MyDoggyToolWindow toolWindow,
@@ -52,11 +55,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         toolWindow.addInternalPropertyChangeListener(this);
 
         initTypeDescriptors();
-    }
-
-    public void unregister() {
-        toolWindow.removePropertyChangeListener(this);
-        dockedContainer.uninstall();
     }
 
 
@@ -90,36 +88,12 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         }
     }
 
-
     public String toString() {
         return "ToolWindowDescriptor{" +
                "toolWindow=" + toolWindow +
                '}';
     }
 
-    public MyDoggyToolWindowManager getManager() {
-        return manager;
-    }
-
-    public MyDoggyToolWindowBar getToolBar(ToolWindowAnchor anchor) {
-        return manager.getBar(anchor);
-    }
-
-    public MyDoggyToolWindowBar getToolBar() {
-        return manager.getBar(toolWindow.getAnchor());
-    }
-
-    public MyDoggyToolWindow getToolWindow() {
-        return toolWindow;
-    }
-
-    public Container getToolWindowManagerContainer() {
-        return manager;
-    }
-
-    public Window getWindowAnchestor() {
-        return windowAnchestor;
-    }
 
     public Component getComponent() {
         if (component == null)
@@ -131,56 +105,12 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         this.component = component;
     }
 
-    public ToolWindowContainer getToolWindowContainer() {
-        if (dockedContainer == null) {
-            dockedContainer = new DockedContainer(this);
-            slidingContainer = new SlidingContainer(dockedContainer);
-            floatingContainer = new FloatingContainer(dockedContainer);
-            floatingLiveContainer = new FloatingLiveContainer(dockedContainer);
-        }
-        return dockedContainer;
-    }
-
-    public ToolWindowContainer getToolWindowContainer(ToolWindowType toolWindowType) {
-        if (dockedContainer == null)
-            getToolWindowContainer();
-        switch (toolWindowType) {
-            case FLOATING:
-            case FLOATING_FREE:
-                return floatingContainer;
-            case FLOATING_LIVE:
-                return floatingLiveContainer;
-            case DOCKED:
-                return dockedContainer;
-            case SLIDING:
-                return slidingContainer;
-        }
-        throw new IllegalArgumentException("Type not reconized.");
-    }
-
-    public ToolWindowTypeDescriptor getTypeDescriptor(ToolWindowType type) {
-        switch (type) {
-            case FLOATING:
-            case FLOATING_FREE:
-                return floatingTypeDescriptor;
-            case FLOATING_LIVE:
-                return floatingLiveTypeDescriptor;
-            case DOCKED:
-                return dockedTypeDescriptor;
-            case SLIDING:
-                return slidingTypeDescriptor;
-        }
-        throw new IllegalStateException("Doen't exist a TypeDescriptor for : " + type);
-    }
-
     public int getDividerLocation() {
         if (divederLocation == -1)
             this.divederLocation = ((DockedTypeDescriptor) getTypeDescriptor(ToolWindowType.DOCKED)).getDockLength();
 
         return divederLocation;
     }
-
-    boolean valueAdj = false;
 
     public void setDividerLocation(int divederLocation) {
         this.divederLocation = divederLocation;
@@ -243,12 +173,48 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         representativeAnchor = null;
     }
 
+    public int getRepresentativeAnchorIndex() {
+        if (representativeAnchor == null)
+            return -1;
+        return getToolBar().getRepresentativeAnchorIndex(representativeAnchor);
+    }
+
     public boolean isFloatingWindow() {
         return floatingWindow;
     }
 
     public void setFloatingWindow(boolean floatingWindow) {
         this.floatingWindow = floatingWindow;
+    }
+
+    public boolean isIdVisibleOnTitleBar() {
+        switch (toolWindow.getType()) {
+            case DOCKED:
+                return toolWindow.getTypeDescriptor(ToolWindowType.DOCKED).isIdVisibleOnTitleBar();
+            case SLIDING:
+                return toolWindow.getTypeDescriptor(ToolWindowType.SLIDING).isIdVisibleOnTitleBar();
+            case FLOATING:
+            case FLOATING_FREE:
+                return toolWindow.getTypeDescriptor(ToolWindowType.FLOATING).isIdVisibleOnTitleBar();
+            case FLOATING_LIVE:
+                return toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).isIdVisibleOnTitleBar();
+        }
+        throw new IllegalStateException("ToolWindowDescriptor.isIdVisibleOnTitleBar");
+    }
+
+    public void checkIdOnTitleBar() {
+        if (dockedContainer !=  null)  {
+            if (isIdVisibleOnTitleBar())
+                dockedContainer.enableIdOnTitleBar();
+            else
+                dockedContainer.disableIdOnTitleBar();
+        }
+    }
+
+
+    public void unregister() {
+        toolWindow.removePropertyChangeListener(this);
+        dockedContainer.uninstall();
     }
 
     public void updateUI() {
@@ -262,6 +228,73 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
         if (getRepresentativeAnchor() != null)
             getRepresentativeAnchor().updateUI();
+    }
+
+
+    public MyDoggyToolWindowManager getManager() {
+        return manager;
+    }
+
+    public MyDoggyToolWindowBar getToolBar(ToolWindowAnchor anchor) {
+        return manager.getBar(anchor);
+    }
+
+    public MyDoggyToolWindowBar getToolBar() {
+        return manager.getBar(toolWindow.getAnchor());
+    }
+
+    public MyDoggyToolWindow getToolWindow() {
+        return toolWindow;
+    }
+
+    public Container getToolWindowManagerContainer() {
+        return manager;
+    }
+
+    public Window getWindowAnchestor() {
+        return windowAnchestor;
+    }
+
+    public ToolWindowContainer getToolWindowContainer() {
+        if (dockedContainer == null) {
+            dockedContainer = new DockedContainer(this);
+            slidingContainer = new SlidingContainer(dockedContainer);
+            floatingContainer = new FloatingContainer(dockedContainer);
+            floatingLiveContainer = new FloatingLiveContainer(dockedContainer);
+        }
+        return dockedContainer;
+    }
+
+    public ToolWindowContainer getToolWindowContainer(ToolWindowType toolWindowType) {
+        if (dockedContainer == null)
+            getToolWindowContainer();
+        switch (toolWindowType) {
+            case FLOATING:
+            case FLOATING_FREE:
+                return floatingContainer;
+            case FLOATING_LIVE:
+                return floatingLiveContainer;
+            case DOCKED:
+                return dockedContainer;
+            case SLIDING:
+                return slidingContainer;
+        }
+        throw new IllegalArgumentException("Type not reconized.");
+    }
+
+    public ToolWindowTypeDescriptor getTypeDescriptor(ToolWindowType type) {
+        switch (type) {
+            case FLOATING:
+            case FLOATING_FREE:
+                return floatingTypeDescriptor;
+            case FLOATING_LIVE:
+                return floatingLiveTypeDescriptor;
+            case DOCKED:
+                return dockedTypeDescriptor;
+            case SLIDING:
+                return slidingTypeDescriptor;
+        }
+        throw new IllegalStateException("Doen't exist a TypeDescriptor for : " + type);
     }
 
     public ToolWindowAnchor getToolWindowAnchor(Point p) {
@@ -283,22 +316,17 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         return manager.getResourceManager();
     }
 
-    public int getLabelIndex() {
-        if (representativeAnchor == null)
-            return -1;
-        return getToolBar().getRepresentativeAnchorIndex(representativeAnchor);
-    }
 
     public DockedTypeDescriptor getDockedTypeDescriptor() {
         return dockedTypeDescriptor;
     }
 
-    public Component getContentContainer() {
-        return ((DockedContainer) getToolWindowContainer()).getContentContainer();
-    }
-
     public FloatingContainer getFloatingContainer() {
         return floatingContainer;
+    }
+
+    public Component getContentContainer() {
+        return ((DockedContainer) getToolWindowContainer()).getContentContainer();
     }
 
 
@@ -316,8 +344,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         slidingTypeDescriptor.addPropertyChangeListener(this);
     }
 
-    protected LabelUI createLabelUI() {
-        return (LabelUI) manager.getResourceManager().createComponentUI(MyDoggyKeySpace.REPRESENTATIVE_ANCHOR_BUTTON_UI, manager, this);
+    protected ComponentUI createRepresentativeAnchorUI() {
+        return manager.getResourceManager().createComponentUI(MyDoggyKeySpace.REPRESENTATIVE_ANCHOR_BUTTON_UI, manager, this);
     }
 
     protected void updateRepresentativeAnchor() {
@@ -351,41 +379,17 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         }
     }
 
-    public boolean isIdVisibleOnTitleBar() {
-        switch (toolWindow.getType()) {
-            case DOCKED:
-                return toolWindow.getTypeDescriptor(ToolWindowType.DOCKED).isIdVisibleOnTitleBar();
-            case SLIDING:
-                return toolWindow.getTypeDescriptor(ToolWindowType.SLIDING).isIdVisibleOnTitleBar();
-            case FLOATING:
-            case FLOATING_FREE:
-                return toolWindow.getTypeDescriptor(ToolWindowType.FLOATING).isIdVisibleOnTitleBar();
-            case FLOATING_LIVE:
-                return toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).isIdVisibleOnTitleBar();
-        }
-        throw new IllegalStateException("ToolWindowDescriptor.isIdVisibleOnTitleBar");
-    }
-
-    public void checkIdOnTitleBar() {
-        if (dockedContainer !=  null)  {
-            if (isIdVisibleOnTitleBar())
-                dockedContainer.enableIdOnTitleBar();
-            else
-                dockedContainer.disableIdOnTitleBar();
-        }
-    }
-
 
     public class RepresentativeAnchor extends JLabel {
 
         public RepresentativeAnchor(Icon image, int horizontalAlignment) {
             super(image, horizontalAlignment);
-            super.setUI(createLabelUI());
+            super.setUI((LabelUI) createRepresentativeAnchorUI());
         }
 
         public RepresentativeAnchor(String text, Icon icon, int horizontalAlignment) {
             super(text, icon, horizontalAlignment);
-            super.setUI(createLabelUI());
+            super.setUI((LabelUI) createRepresentativeAnchorUI());
         }
 
         public void setUI(LabelUI ui) {

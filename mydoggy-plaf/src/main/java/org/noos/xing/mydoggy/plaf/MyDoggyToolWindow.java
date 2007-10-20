@@ -278,6 +278,10 @@ public class MyDoggyToolWindow implements ToolWindow {
         return anchor;
     }
 
+    public int getAnchorIndex() {
+        return descriptor.getRepresentativeAnchorIndex();
+    }
+
     public void setAnchor(ToolWindowAnchor anchor) {
         setAnchor(anchor, -2);
     }
@@ -285,7 +289,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     public void setAnchor(ToolWindowAnchor anchor, int index) {
         synchronized (getLock()) {
             if (this.anchor == anchor &&
-                (index == getDescriptor().getLabelIndex() || index == -2))
+                (index == getDescriptor().getRepresentativeAnchorIndex() || index == -2))
                 return;
 
             if (isMaximized())

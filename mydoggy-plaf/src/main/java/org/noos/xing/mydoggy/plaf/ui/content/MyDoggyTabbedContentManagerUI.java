@@ -334,7 +334,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                             fireContentUIRemoving(getContentUI(content));
                             contentManager.removeContent(content);
                         } catch (Exception ignore) {
-                            ignore.printStackTrace();
+//                            ignore.printStackTrace();
                         }
                         break;
                     case ON_DETACH:
