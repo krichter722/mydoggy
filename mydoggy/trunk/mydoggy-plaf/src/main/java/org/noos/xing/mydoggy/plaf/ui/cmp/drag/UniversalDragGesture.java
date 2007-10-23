@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp.drag;
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
@@ -251,8 +252,11 @@ public class UniversalDragGesture implements DragGestureListener, DragSourceMoti
         } else if (transferable.isDataFlavorSupported(ContentTrasferable.CONTENT_DATA_FAVLOR)) {
             try {
                 Content content = (Content) transferable.getTransferData(ContentTrasferable.CONTENT_DATA_FAVLOR);
-                if (content.getToolWindow() != null)  {
+                universalDragCallback.getManager().getContentManager().removeContent(content);
 
+                if (content.getToolWindow() != null)  {
+                    content.getToolWindow().setType(ToolWindowType.DOCKED);
+                    content.getToolWindow().setActive(true);
                 } else {
                 }
             } catch (UnsupportedFlavorException e) {

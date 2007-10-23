@@ -1,5 +1,7 @@
 package org.noos.xing.mydoggy;
 
+import java.io.Serializable;
+
 /**
  * A ContentManagerUI is an interface to modify the ui behaviours of
  * a content manager. For example this is used to modify the way a content
@@ -10,7 +12,7 @@ package org.noos.xing.mydoggy;
  * @see DesktopContentManagerUI
  * @since 1.1.0
  */
-public interface ContentManagerUI<C extends ContentUI> {
+public interface ContentManagerUI<C extends ContentUI> extends Serializable {
 
 	/**
 	 * Sets the closeable property of all contents registered to content manager.

@@ -81,7 +81,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     protected ClassLoader uiClassLoader;
     protected ResourceManagerChangeListener resourceManagerChangeListener;
-    protected ResourceManager resourceManager;
+    protected transient ResourceManager resourceManager;
 
 
     public MyDoggyToolWindowManager(Window windowAnchestor) {

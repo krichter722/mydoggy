@@ -142,6 +142,11 @@ public class MyDoggyToolWindow implements ToolWindow {
                     }
                 }
             }
+            for (Content content : descriptor.getManager().getContentManager().getContents()) {
+                if (content.getToolWindow() == this)  {
+                    return content.isSelected();
+                }
+            }
         }
 
         return visible;
@@ -228,6 +233,12 @@ public class MyDoggyToolWindow implements ToolWindow {
                             tab.setSelected(true);
                         return;
                     }
+                }
+            }
+            for (Content content : descriptor.getManager().getContentManager().getContents()) {
+                if (content.getToolWindow() == this)  {
+                    content.setSelected(true);
+                    return;
                 }
             }
         }

@@ -334,7 +334,7 @@ public class JTabbedContentManager extends JTabbedPane {
 */
             }
             startIndex = -1;
-            clearRectangle(tabbedPane);
+//            clearRectangle(tabbedPane);
             currentIndex = -1;
         }
 
@@ -363,7 +363,7 @@ public class JTabbedContentManager extends JTabbedPane {
         }
 
         public void mouseExited(MouseEvent e) {
-            clearRectangle((JTabbedPane) e.getSource());
+//            clearRectangle((JTabbedPane) e.getSource());
             currentIndex = -1;
         }
 
@@ -383,23 +383,6 @@ public class JTabbedContentManager extends JTabbedPane {
                            comp, tooltip,
                            dst,
                            contentPage);
-        }
-
-        protected void clearRectangle(JTabbedPane tabbedPane) {
-            if (currentIndex == -1) {
-                return;
-            }
-            TabbedPaneUI ui = tabbedPane.getUI();
-            Rectangle rect = ui.getTabBounds(tabbedPane, currentIndex);
-            tabbedPane.repaint(rect);
-        }
-
-        protected void drawRectangle(JTabbedPane tabbedPane) {
-            TabbedPaneUI ui = tabbedPane.getUI();
-            Rectangle rect = ui.getTabBounds(tabbedPane, currentIndex);
-            Graphics graphics = tabbedPane.getGraphics();
-            graphics.setColor(Color.BLUE);
-            graphics.drawRect(rect.x, rect.y, rect.width - 1, rect.height - 1);
         }
 
     }

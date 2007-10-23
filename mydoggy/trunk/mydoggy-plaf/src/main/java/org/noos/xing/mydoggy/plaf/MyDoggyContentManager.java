@@ -89,6 +89,12 @@ public class MyDoggyContentManager implements ContentManager {
             fireContentRemoved(content);
         }
 
+        if (content.getToolWindow() != null) {
+            ToolWindow toolWindow = content.getToolWindow();
+            toolWindow.setType(ToolWindowType.DOCKED);
+            toolWindow.setActive(true);
+        }
+
         return result;
     }
 

@@ -1,13 +1,11 @@
 package org.noos.xing.yasaf.view;
 
-import org.noos.xing.yasaf.view.ViewContextChangeListener;
-
-import java.util.List;
+import java.io.Serializable;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public interface ViewContext {
+public interface ViewContext extends Serializable {
 
     Object get(Object key);
 

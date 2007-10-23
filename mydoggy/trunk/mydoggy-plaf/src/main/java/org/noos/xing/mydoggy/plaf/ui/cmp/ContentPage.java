@@ -17,7 +17,7 @@ import java.awt.event.MouseEvent;
  */
 public class ContentPage implements TabbedContentUI {
     private JTabbedContentManager tabbedPane;
-    private ResourceManager resourceManager;
+    private transient ResourceManager resourceManager;
 
     private Content content;
 
