@@ -107,6 +107,7 @@ public interface ToolWindowManagerDescriptor {
      * TODO
      * @param anchor
      * @param enable
+     * @since 1.3.2
      */
     void setAggregateMode(ToolWindowAnchor anchor, boolean enable);
 
@@ -114,6 +115,7 @@ public interface ToolWindowManagerDescriptor {
      * TODO
      * @param anchor
      * @return
+     * @since 1.3.2
      */
     boolean isAggregateMode(ToolWindowAnchor anchor);
 

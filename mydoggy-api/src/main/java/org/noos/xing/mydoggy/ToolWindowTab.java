@@ -153,5 +153,7 @@ public interface ToolWindowTab {
 
     ToolWindow getToolWindow();
 
+    ToolWindowTab getToolWindowTab();
+
     ToolWindow getOwner();
 }

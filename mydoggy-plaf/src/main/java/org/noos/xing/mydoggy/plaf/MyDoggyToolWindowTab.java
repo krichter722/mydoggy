@@ -19,11 +19,14 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
     protected Component component;
     protected boolean selected;
     protected boolean closeable;
+    
     protected ToolWindow toolWindow;
+    protected ToolWindowTab toolWindowTab;
 
     protected EventListenerList listenerList;
 
-    public MyDoggyToolWindowTab(ToolWindow owner, String title, Icon icon, Component component, ToolWindow toolWindow) {
+    public MyDoggyToolWindowTab(ToolWindow owner, String title, Icon icon, Component component,
+                                ToolWindow toolWindow, ToolWindowTab toolWindowTab) {
         this.owner = owner;
         this.title = title;
         this.icon = icon;
@@ -32,10 +35,26 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         this.listenerList = new EventListenerList();
         this.closeable = true;
         this.toolWindow = toolWindow;
+        this.toolWindowTab = toolWindowTab;
+        if (toolWindowTab != null)  {
+            toolWindowTab.addPropertyChangeListener(new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+                    //  TODO: listen to all properties
+                    String propertyName = evt.getPropertyName();
+                    if ("selected".equals(propertyName))  {
+                        setSelected((Boolean) evt.getNewValue());
+                    }
+                }
+            });
+        }
     }
 
     public ToolWindow getToolWindow() {
         return toolWindow;
+    }
+
+    public ToolWindowTab getToolWindowTab() {
+        return toolWindowTab;
     }
 
     public ToolWindow getOwner() {

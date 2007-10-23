@@ -1,9 +1,6 @@
 package org.noos.xing.mydoggy.plaf;
 
-import org.noos.xing.mydoggy.Content;
-import org.noos.xing.mydoggy.ContentManager;
-import org.noos.xing.mydoggy.ContentManagerListener;
-import org.noos.xing.mydoggy.ContentManagerUI;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
 import org.noos.xing.mydoggy.plaf.ui.content.PlafContentManagerUI;
 
@@ -29,7 +26,7 @@ public class MyDoggyContentManager implements ContentManager {
 
     protected EventListenerList listeners;
 
-    
+
     MyDoggyContentManager(MyDoggyToolWindowManager windowManager) {
         this.toolWindowManager = windowManager;
         this.contents = new ArrayList<Content>();
@@ -61,36 +58,22 @@ public class MyDoggyContentManager implements ContentManager {
     }
 
     public Content addContent(Object key, String title, Icon icon, Component component, String tip) {
-        if (key == null)
-            throw new IllegalArgumentException("Key cannot be null.");
-        if (component == null)
-            throw new IllegalArgumentException("Component cannot be null.");
-
-        if (contentMap.containsKey(key))
-            throw new IllegalArgumentException("Cannot register content with passed key. An already registered content exists. [key : " + key + "]");
-
-        MyDoggyContent content = new MyDoggyContent(this, key, title, icon, component, tip);
-        content.addUIPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                assert evt.getSource() instanceof Content;
-                
-                if ("selected".equals(evt.getPropertyName())) {
-                    if (Boolean.TRUE.equals(evt.getNewValue()))
-                        fireContentSelected((Content) evt.getSource());
-                }
-            }
-        });
-        contents.add(content);
-        contentMap.put(key, content);
-        plafContentManagerUI.addContent(content);
-
-        fireContentAdded(content);
-
-        return content;
+        return addContentInternal(key, title, icon, component, tip, null);
     }
 
     public Content addContent(Object key, String title, Icon icon, Component component) {
         return addContent(key, title, icon, component, null);
+    }
+
+    public Content addContent(ToolWindow toolWindow) {
+        ((MyDoggyToolWindow)toolWindow).setTypeInternal(ToolWindowType.TABBED);
+        Content content = addContentInternal(toolWindow.getId(),
+                                             toolWindow.getTitle(),
+                                             toolWindow.getIcon(),
+                                             toolWindow.getComponent(),
+                                             null,
+                                             toolWindow);
+        return content;
     }
 
     public boolean removeContent(Content content) {
@@ -159,7 +142,7 @@ public class MyDoggyContentManager implements ContentManager {
                 return content;
             index++;
         } while (index != startIndex);
-        
+
         return null;
     }
 
@@ -180,7 +163,7 @@ public class MyDoggyContentManager implements ContentManager {
                 return content;
             index--;
         } while (index != startIndex);
-        
+
         return null;
     }
 
@@ -224,12 +207,42 @@ public class MyDoggyContentManager implements ContentManager {
         plafContentManagerUI.updateUI();
     }
 
-	public PlafContentManagerUI getPlafContentManagerUI() {
-		return plafContentManagerUI;
-	}
+    public PlafContentManagerUI getPlafContentManagerUI() {
+        return plafContentManagerUI;
+    }
 
-	
-	protected void firePropertyChange(String property, Object oldValue, Object newValue) {
+
+    protected Content addContentInternal(Object key, String title, Icon icon, Component component, String tip,
+                                         ToolWindow toolWindow) {
+        if (key == null)
+            throw new IllegalArgumentException("Key cannot be null.");
+        if (component == null)
+            throw new IllegalArgumentException("Component cannot be null.");
+
+        if (contentMap.containsKey(key))
+            throw new IllegalArgumentException("Cannot register content with passed key. An already registered content exists. [key : " + key + "]");
+
+        MyDoggyContent content = new MyDoggyContent(this, key, title, icon, component, tip);
+        content.addUIPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                assert evt.getSource() instanceof Content;
+
+                if ("selected".equals(evt.getPropertyName())) {
+                    if (Boolean.TRUE.equals(evt.getNewValue()))
+                        fireContentSelected((Content) evt.getSource());
+                }
+            }
+        });
+        contents.add(content);
+        contentMap.put(key, content);
+        plafContentManagerUI.addContent(content);
+
+        fireContentAdded(content);
+
+        return content;
+    }
+
+    protected void firePropertyChange(String property, Object oldValue, Object newValue) {
         PropertyChangeEvent event = new PropertyChangeEvent(this, property, oldValue, newValue);
 
         for (PropertyChangeListener listener : listeners.getListeners(PropertyChangeListener.class)) {
