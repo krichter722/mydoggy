@@ -61,7 +61,7 @@ public class SampleApp {
                     File workspaceFile = new File("workspace.xml");
                     if (workspaceFile.exists()) {
                         FileInputStream inputStream = new FileInputStream("workspace.xml");
-                        toolWindowManager.getPersistenceDelegate().apply(inputStream);
+//                        toolWindowManager.getPersistenceDelegate().apply(inputStream);
                         inputStream.close();
                     }
                 } catch (Exception e1) {

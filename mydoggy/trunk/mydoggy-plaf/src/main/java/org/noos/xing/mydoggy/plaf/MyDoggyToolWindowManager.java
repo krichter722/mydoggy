@@ -712,6 +712,21 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         propertyChangeSupport.addPropertyChangeListener(property, propertyChangeListener);
     }
 
+    public ToolWindowAnchor getToolWindowAnchor(Point p) {
+        Rectangle b = getBounds();
+
+        if (p.x <= 18 && p.y >= 18 && p.y <= b.height - 18) {
+            return ToolWindowAnchor.LEFT;
+        } else if (p.x >= b.width - 18 && p.y >= 18 && p.y <= b.height - 18) {
+            return ToolWindowAnchor.RIGHT;
+        } else if (p.y <= 18 && p.x >= 18 && p.x <= b.width - 18) {
+            return ToolWindowAnchor.TOP;
+        } else if (p.y >= b.height - 18 && p.x >= 18 && p.x <= b.width - 18) {
+            return ToolWindowAnchor.BOTTOM;
+        }
+        return null;
+    }
+
 
     protected class AvailablePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {

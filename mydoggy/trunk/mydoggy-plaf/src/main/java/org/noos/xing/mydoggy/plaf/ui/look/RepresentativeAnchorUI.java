@@ -647,6 +647,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         }
 
         public void dragExit(DragSourceEvent dse) {
+            System.out.print(dse);
         }
 
         public void dragDropEnd(DragSourceDropEvent dsde) {
@@ -657,6 +658,12 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
 
             if (lastAnchor != null)
                 descriptor.getToolBar(lastAnchor).setTempShowed(false);
+            else  {
+                descriptor.getToolBar(LEFT).setTempShowed(false);
+                descriptor.getToolBar(RIGHT).setTempShowed(false);
+                descriptor.getToolBar(TOP).setTempShowed(false);
+                descriptor.getToolBar(BOTTOM).setTempShowed(false);
+            }
 
             descriptor.getToolBar().propertyChange(new PropertyChangeEvent(label, "endDrag", null, dsde));
 

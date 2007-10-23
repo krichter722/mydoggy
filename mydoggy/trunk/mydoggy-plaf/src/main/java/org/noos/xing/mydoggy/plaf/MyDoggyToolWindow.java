@@ -435,10 +435,18 @@ public class MyDoggyToolWindow implements ToolWindow {
             }
 
             ((MyDoggyToolWindow) toolWindow).setTypeInternal(ToolWindowType.TABBED);
-            return addTabInternal(toolWindow.getTitle(),
+            ToolWindowTab result = addTabInternal(toolWindow.getTitle(),
                                   toolWindow.getIcon(),
                                   toolWindow.getComponent(),
                                   toolWindow);
+
+            // TODO: add all tabs of toolWindow
+            for (ToolWindowTab tab :  toolWindow.getToolWindowTabs()) {
+                if (!tab.getTitle().equals(toolWindow.getTitle()))
+                    addTabInternal(tab);
+            }
+
+            return result;
         }
     }
 
@@ -458,6 +466,15 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (toolWindowTab.getToolWindow() != null) {
             ToolWindow toolWindow = toolWindowTab.getToolWindow(); 
             toolWindow.setType(ToolWindowType.DOCKED);
+
+            for (ToolWindowTab tab :  toolWindow.getToolWindowTabs()) {
+                
+                for (ToolWindowTab fromTab :  getToolWindowTabs()) {
+                    if (fromTab.getToolWindowTab() == tab) {
+                        removeToolWindowTab(fromTab);
+                    }
+                }
+            }
         }
 
         return result;
@@ -531,7 +548,7 @@ public class MyDoggyToolWindow implements ToolWindow {
 
 
     protected ToolWindowTab addTabInternal(String title, Icon icon, Component component, ToolWindow toolWindow) {
-        ToolWindowTab tab = new MyDoggyToolWindowTab(this, title, icon, component, toolWindow);
+        ToolWindowTab tab = new MyDoggyToolWindowTab(this, title, icon, component, toolWindow, null);
         toolWindowTabs.add(tab);
 
         fireToolWindowTabEvent(new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_ADDED, this, tab));
@@ -541,6 +558,18 @@ public class MyDoggyToolWindow implements ToolWindow {
 
         return tab;
 
+    }
+
+    protected void addTabInternal(ToolWindowTab tab) {
+        ToolWindowTab newTab = new MyDoggyToolWindowTab(this,
+                                                        tab.getTitle(),
+                                                        tab.getIcon(),
+                                                        tab.getComponent(),
+                                                        this,
+                                                        tab);
+        toolWindowTabs.add(newTab);
+
+        fireToolWindowTabEvent(new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_ADDED, this, newTab));
     }
 
     protected void setTypeInternal(ToolWindowType type) {

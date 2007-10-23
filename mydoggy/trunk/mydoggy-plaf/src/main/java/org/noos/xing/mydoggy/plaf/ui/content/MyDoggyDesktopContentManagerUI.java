@@ -215,6 +215,8 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             desktopPane = (JDesktopPane) toolWindowManager.getResourceManager().createComponent(
                     MyDoggyKeySpace.DESKTOP_CONTENT_PANE, toolWindowManager
             );
+            desktopPane.setDropTarget(new ContentManagerDropTarget(desktopPane, contentManager));
+
         }
     }
 

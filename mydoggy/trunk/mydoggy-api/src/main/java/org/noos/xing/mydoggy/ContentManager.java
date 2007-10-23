@@ -72,6 +72,12 @@ public interface ContentManager {
     Content addContent(Object key, String title, Icon icon, Component component, String tip);
 
     /**
+     * 
+     * @param toolWindow
+     */
+    Content addContent(ToolWindow toolWindow);
+
+    /**
      * Removes the content <code>content</code>.
      *
      * @param content content to be removed from this manager, if present.

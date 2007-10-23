@@ -47,6 +47,7 @@ public interface ToolWindow {
     /**
      * TODO
      * @return
+     * @since 1.3.2
      */
     Component getComponent();
 
@@ -219,6 +220,7 @@ public interface ToolWindow {
     /**
      * TODO
      * @return
+     * @since 1.3.2
      */
     int getAnchorIndex();
 
@@ -328,6 +330,7 @@ public interface ToolWindow {
 
     /**
      * TODO
+     * @since 1.3.2
      */
     ToolWindowTab addToolWindowTab(ToolWindow toolWindow);
 
