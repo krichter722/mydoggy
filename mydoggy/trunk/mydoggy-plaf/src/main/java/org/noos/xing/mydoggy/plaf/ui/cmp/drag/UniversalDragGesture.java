@@ -1,5 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp.drag;
 
+import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
@@ -51,7 +52,6 @@ public class UniversalDragGesture implements DragGestureListener, DragSourceMoti
 //            System.out.println("dge.getComponent() = " + dge.getComponent());
 
         universalDragCallback.startDrag(dge, this);
-
 
         // Prepare glassPane for ghost image
         GlassPanel glassPane = universalDragCallback.getGlassPanel();
@@ -108,6 +108,7 @@ public class UniversalDragGesture implements DragGestureListener, DragSourceMoti
                     if (lastOverCmp != null) {
                         oldBorder = lastOverCmp.getBorder();
                         lastOverCmp.setBorder(highligthBorder);
+                        moveAnchor = false;
                     }
                 }
             }
@@ -177,13 +178,24 @@ public class UniversalDragGesture implements DragGestureListener, DragSourceMoti
                         toolWindow.setAggregateMode(oldAM);
                     }
                 } else {
-                    ToolWindow toolWindow = universalDragCallback.getToolWindow();
-                    // Add the tool as tab
-                    ToolWindow target = (ToolWindow) ((JComponent) SwingUtil.getParent(lastOverCmp, "toolWindow.container")).getClientProperty(
-                            ToolWindow.class
-                    );
-                    if (target != toolWindow)
-                        target.addToolWindowTab(toolWindow).setSelected(true);
+                    JComponent targetContainer = (JComponent) SwingUtil.getParent(lastOverCmp, "toolWindow.container");
+                    if (targetContainer != null)  {
+                        ToolWindow toolWindow = universalDragCallback.getToolWindow();
+                        // Add the tool as tab
+                        ToolWindow target = (ToolWindow) ((JComponent) SwingUtil.getParent(lastOverCmp, "toolWindow.container")).getClientProperty(
+                                ToolWindow.class
+                        );
+                        if (target != toolWindow)
+                            target.addToolWindowTab(toolWindow).setSelected(true);
+                    } else  {
+                        // Ad as content
+
+                        // TODO: if a toolwindow has tab???
+                        ToolWindow toolWindow = universalDragCallback.getToolWindow();
+                        universalDragCallback.getManager().getContentManager().addContent(
+                                toolWindow
+                        );
+                    }
                 }
             }
         } else if (transferable.isDataFlavorSupported(ToolWindowTabTrasferable.TOOL_WINDOW_TAB_DATA_FAVLOR)) {
@@ -215,20 +227,40 @@ public class UniversalDragGesture implements DragGestureListener, DragSourceMoti
                             toolWindow.setAggregateMode(oldAM);
                         }
                     } else {
-                        // Add the tool as tab
-                        ToolWindow target = (ToolWindow) ((JComponent) SwingUtil.getParent(lastOverCmp, "toolWindow.container")).getClientProperty(
-                                ToolWindow.class
-                        );
-                        if (target != toolWindow)
-                            target.addToolWindowTab(toolWindow).setSelected(true);
+                        JComponent targetContainer = (JComponent) SwingUtil.getParent(lastOverCmp, "toolWindow.container");
+                        if (targetContainer != null)  {
+                            // Add the tool as tab
+                            ToolWindow target = (ToolWindow) ((JComponent) SwingUtil.getParent(lastOverCmp, "toolWindow.container")).getClientProperty(
+                                    ToolWindow.class
+                            );
+                            if (target != toolWindow)
+                                target.addToolWindowTab(toolWindow).setSelected(true);
+                        } else  {
+                            // Ad as content
+                            universalDragCallback.getManager().getContentManager().addContent(
+                                    toolWindow
+                            );
+                        }
                     }
-
                 } catch (UnsupportedFlavorException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+        } else if (transferable.isDataFlavorSupported(ContentTrasferable.CONTENT_DATA_FAVLOR)) {
+            try {
+                Content content = (Content) transferable.getTransferData(ContentTrasferable.CONTENT_DATA_FAVLOR);
+                if (content.getToolWindow() != null)  {
+
+                } else {
+                }
+            } catch (UnsupportedFlavorException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
 
         // Finalize drag action...

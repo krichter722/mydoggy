@@ -1,35 +1,34 @@
 package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.*;
-import static org.noos.xing.mydoggy.ToolWindowAnchor.LEFT;
-import static org.noos.xing.mydoggy.ToolWindowAnchor.RIGHT;
-import static org.noos.xing.mydoggy.ToolWindowAnchor.TOP;
-import static org.noos.xing.mydoggy.ToolWindowAnchor.BOTTOM;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentPage;
-import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ToolWindowTrasferable;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.DragAndDropLock;
+import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ContentTrasferable;
+import org.noos.xing.mydoggy.plaf.ui.cmp.drag.UniversalDragCallback;
+import org.noos.xing.mydoggy.plaf.ui.cmp.drag.UniversalDragGesture;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.dnd.*;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DragSourceListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -356,10 +355,10 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             }
         });
 
-        DragGesture dragGesture = new DragGesture();
+        UniversalDragGesture universalDragGesture = new UniversalDragGesture(new TabbedUniversalDragCallback());
         DragSource dragSource = DragSource.getDefaultDragSource();
-        dragSource.createDefaultDragGestureRecognizer(tabbedContentManager, DnDConstants.ACTION_MOVE, dragGesture);
-        dragSource.addDragSourceMotionListener(dragGesture);
+        dragSource.createDefaultDragGestureRecognizer(tabbedContentManager, DnDConstants.ACTION_MOVE, universalDragGesture);
+        dragSource.addDragSourceMotionListener(universalDragGesture);
 
         this.tabbedContentManager = tabbedContentManager;
     }
@@ -382,8 +381,6 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                     //                System.out.println("SELECTED " + evt.getNewValue());
                 }
             });
-
-            tabbedContentManager.setDropTarget(new ContentManagerDropTarget(tabbedContentManager, contentManager));
         }
         contentManagerUIListeners = new EventListenerList();
     }
@@ -699,177 +696,50 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
     }
 
-    class DragGesture implements DragGestureListener, DragSourceMotionListener, DragSourceListener {
-        private BufferedImage ghostImage;
-        private ToolWindowAnchor lastAnchor;
 
-        public void dragGestureRecognized(DragGestureEvent dge) {
-            // Start GestureRecognized
-            if (DragAndDropLock.isLocked()) {
-                DragAndDropLock.setDragAndDropStarted(false);
-                return;
-            }
-            DragAndDropLock.setLocked(true);
-            DragAndDropLock.setDragAndDropStarted(true);
+    class TabbedUniversalDragCallback implements UniversalDragCallback {
+        protected int index;
 
+        public boolean accept(DragGestureEvent dge) {
+            return true;
+        }
+
+        public boolean startDrag(DragGestureEvent dge, DragSourceListener dragSourceListener) {
             Point origin = dge.getDragOrigin();
-            int index = tabbedContentManager.indexAtLocation(origin.x, origin.y);
+            index = tabbedContentManager.indexAtLocation(origin.x, origin.y);
             if (index != -1) {
                 // Start Drag
-                dge.startDrag(Cursor.getDefaultCursor(), new ToolWindowTrasferable(null), this);
+                dge.startDrag(Cursor.getDefaultCursor(),
+                              new ContentTrasferable(tabbedContentManager.getContentPage(index).getContent()),
+                              dragSourceListener);
+                return true;
+            }
+            return false;
+        }
 
-                // Prepare glassPane for ghost image
-                GlassPanel glassPane = toolWindowManager.getGlassPanel();
-                glassPane.setVisible(true);
+        public GlassPanel getGlassPanel() {
+            return toolWindowManager.getGlassPanel();
+        }
 
+        public Image getGhostImage() {
+            if (index != -1)  {
                 // Build orginalDragImage
                 Icon icon = tabbedContentManager.getContentPage(index).getContentIcon();
-                ghostImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
+                BufferedImage ghostImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
                 tabbedContentManager.getContentPage(index).getContentIcon().paintIcon(
                         tabbedContentManager, ghostImage.createGraphics(), 0,0
                 );
-
-                // Setup glasspane
-                Point p = (Point) dge.getDragOrigin().clone();
-                SwingUtilities.convertPointFromScreen(p, glassPane);
-                glassPane.setPoint(p);
-                glassPane.setDraggingImage(ghostImage);
-                glassPane.repaint();
-
+                return ghostImage;
             }
-            lastAnchor = null;
+            return null;
         }
 
-        public void dragMouseMoved(DragSourceDragEvent dsde) {
-            if (!DragAndDropLock.isDragAndDropStarted() || ghostImage == null)
-                return;
-
-            GlassPanel glassPane = toolWindowManager.getGlassPanel();
-
-            Point p = (Point) dsde.getLocation().clone();
-            SwingUtilities.convertPointFromScreen(p, glassPane);
-            glassPane.setPoint(p);
-
-            p = (Point) dsde.getLocation().clone();
-            SwingUtilities.convertPointFromScreen(p, toolWindowManager);
-            ToolWindowAnchor newAnchor = toolWindowManager.getToolWindowAnchor(p);
-
-/*
-            if (newAnchor != lastAnchor) {
-                Rectangle dirtyRegion = glassPane.getRepaintRect();
-                glassPane.setDraggingImage(null);
-                glassPane.repaint(dirtyRegion);
-
-                if (newAnchor == null) {
-                    glassPane.setDraggingImage(ghostImage);
-                    descriptor.getToolBar(lastAnchor).setTempShowed(false);
-                } else {
-                    if (descriptor.getToolBar(newAnchor).getAvailableTools() == 0)
-                        descriptor.getToolBar(newAnchor).setTempShowed(true);
-
-                    switch (newAnchor) {
-                        case LEFT:
-                            switch (descriptor.getToolWindow().getAnchor()) {
-                                case LEFT:
-                                    glassPane.setDraggingImage(ghostImage);
-                                    break;
-                                case RIGHT:
-                                    glassPane.setDraggingImage(GraphicsUtil.rotate(ghostImage, Math.PI));
-                                    break;
-                                default:
-                                    glassPane.setDraggingImage(GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI));
-                                    break;
-                            }
-                            break;
-                        case RIGHT:
-                            switch (descriptor.getToolWindow().getAnchor()) {
-                                case LEFT:
-                                    glassPane.setDraggingImage(GraphicsUtil.rotate(ghostImage, Math.PI));
-                                    break;
-                                case RIGHT:
-                                    glassPane.setDraggingImage(ghostImage);
-                                    break;
-                                default:
-                                    glassPane.setDraggingImage(GraphicsUtil.rotate(ghostImage, -1.5 * Math.PI));
-                                    break;
-                            }
-                            break;
-                        case TOP:
-                        case BOTTOM:
-                            switch (descriptor.getToolWindow().getAnchor()) {
-                                case LEFT:
-                                    glassPane.setDraggingImage(GraphicsUtil.rotate(ghostImage, -1.5 * Math.PI));
-                                    break;
-                                case RIGHT:
-                                    glassPane.setDraggingImage(GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI));
-                                    break;
-                                default:
-                                    glassPane.setDraggingImage(ghostImage);
-                                    break;
-                            }
-                            break;
-                    }
-                }
-*/
-
-                lastAnchor = newAnchor;
-/*
-                dirtyRegion = glassPane.getRepaintRect();
-                glassPane.repaint(dirtyRegion);
-            }
-*/
-            glassPane.repaint(glassPane.getRepaintRect());
+        public MyDoggyToolWindowManager getManager() {
+            return toolWindowManager;
         }
 
-        public void dragEnter(DragSourceDragEvent dsde) {
+        public ToolWindow getToolWindow() {
+            return null;
         }
-
-        public void dragOver(DragSourceDragEvent dsde) {
-        }
-
-        public void dropActionChanged(DragSourceDragEvent dsde) {
-        }
-
-        public void dragExit(DragSourceEvent dse) {
-            System.out.print(dse);
-        }
-
-        public void dragDropEnd(DragSourceDropEvent dsde) {
-            if (!DragAndDropLock.isDragAndDropStarted() || ghostImage == null)
-                return;
-
-            DragAndDropLock.setDragAndDropStarted(false);
-
-/*
-            if (lastAnchor != null)
-                toolWindowManager.getToolBar(lastAnchor).setTempShowed(false);
-            else  {
-                descriptor.getToolBar(LEFT).setTempShowed(false);
-                descriptor.getToolBar(RIGHT).setTempShowed(false);
-                descriptor.getToolBar(TOP).setTempShowed(false);
-                descriptor.getToolBar(BOTTOM).setTempShowed(false);
-            }
-
-            descriptor.getToolBar().propertyChange(new PropertyChangeEvent(label, "endDrag", null, dsde));
-*/
-
-            GlassPanel glassPane = toolWindowManager.getGlassPanel();
-
-            Point p = (Point) dsde.getLocation().clone();
-            SwingUtilities.convertPointFromScreen(p, glassPane);
-
-            glassPane.setDraggingImage(null);
-            glassPane.setVisible(false);
-
-            ghostImage = null;
-            lastAnchor = null;
-
-            DragAndDropLock.setLocked(false);
-
-            SwingUtilities.getWindowAncestor(toolWindowManager).repaint();
-
-            System.out.println("MyDoggyTabbedContentManagerUI$DragGesture.dragDropEnd");
-        }
-
     }
 }

@@ -66,6 +66,7 @@ public class MyDoggyContentManager implements ContentManager {
     }
 
     public Content addContent(ToolWindow toolWindow) {
+        System.out.println("toolWindow = " + toolWindow.getId());
         ((MyDoggyToolWindow)toolWindow).setTypeInternal(ToolWindowType.TABBED);
         Content content = addContentInternal(toolWindow.getId(),
                                              toolWindow.getTitle(),
@@ -222,7 +223,7 @@ public class MyDoggyContentManager implements ContentManager {
         if (contentMap.containsKey(key))
             throw new IllegalArgumentException("Cannot register content with passed key. An already registered content exists. [key : " + key + "]");
 
-        MyDoggyContent content = new MyDoggyContent(this, key, title, icon, component, tip);
+        MyDoggyContent content = new MyDoggyContent(this, key, title, icon, component, tip, toolWindow);
         content.addUIPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 assert evt.getSource() instanceof Content;
