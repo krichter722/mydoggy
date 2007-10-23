@@ -289,4 +289,5 @@ public interface Content extends Serializable {
      */
     PropertyChangeListener[] getPropertyChangeListeners();
 
+    ToolWindow getToolWindow();
 }

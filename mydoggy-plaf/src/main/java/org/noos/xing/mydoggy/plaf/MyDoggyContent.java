@@ -1,5 +1,6 @@
 package org.noos.xing.mydoggy.plaf;
 
+import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.plaf.ui.content.PlafContentUI;
 
 import javax.swing.*;
@@ -30,9 +31,11 @@ public class MyDoggyContent implements PlafContentUI {
     private EventListenerList uiListeners;
     private EventListenerList listeners;
 
+    protected ToolWindow toolWindow;
 
     public MyDoggyContent(MyDoggyContentManager contentManager,
-						  Object key, String title, Icon icon, Component component, String toolTipText) {
+						  Object key, String title, Icon icon, Component component, String toolTipText,
+                          ToolWindow toolWindow) {
         this.contentManager = contentManager;
         this.key = key;
         this.title = title;
@@ -42,6 +45,7 @@ public class MyDoggyContent implements PlafContentUI {
         this.enabled = true;
         this.mnemonic = -1;
         this.selected = false;
+        this.toolWindow = toolWindow;
 
         this.listeners = new EventListenerList();
         this.uiListeners = new EventListenerList();
@@ -212,6 +216,10 @@ public class MyDoggyContent implements PlafContentUI {
 
     public synchronized PropertyChangeListener[] getPropertyChangeListeners() {
         return listeners.getListeners(PropertyChangeListener.class);
+    }
+
+    public ToolWindow getToolWindow() {
+        return toolWindow; 
     }
 
 
