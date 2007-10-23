@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 
 /**
  * This manager manages the main window. You can add several contents to be displayed

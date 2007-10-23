@@ -23,7 +23,7 @@ import java.io.ByteArrayOutputStream;
 public class DockedContainer implements ToolWindowContainer {
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
-    protected ResourceManager resourceManager;
+    protected transient ResourceManager resourceManager;
 
     protected JPanel container;
     protected JPanel titleBar;

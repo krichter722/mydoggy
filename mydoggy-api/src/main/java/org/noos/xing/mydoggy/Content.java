@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.0.0
  */
-public interface Content extends Serializable {
+public interface Content {
 
     /**
       * Return the content unique identifier.

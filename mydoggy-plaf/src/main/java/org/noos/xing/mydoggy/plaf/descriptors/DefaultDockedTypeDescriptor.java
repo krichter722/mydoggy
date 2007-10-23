@@ -14,7 +14,7 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
-    private ResourceManager resourceManager;
+    private transient ResourceManager resourceManager;
 
     private ToolWindowActionHandler toolWindowActionHandler;
     private boolean popupMenuEnabled;

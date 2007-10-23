@@ -1,12 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp.drag;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowTab;
-import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -206,6 +202,27 @@ public class ToolWindowBarDropTarget extends DropTarget {
                     e.printStackTrace();
                     dtde.rejectDrop();
                 }
+            } else if (transferable.isDataFlavorSupported(ContentTrasferable.CONTENT_DATA_FAVLOR)) {
+                dtde.acceptDrop(DnDConstants.ACTION_MOVE);
+                try {
+//                    System.out.println("index = " + index);
+                    ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
+
+                    Content content = (Content) transferable.getTransferData(ContentTrasferable.CONTENT_DATA_FAVLOR);
+                    if (content.getToolWindow() != null) {
+                        ToolWindow sourceTool = content.getToolWindow();
+                        System.out.println("index = " + index);
+                        sourceTool.setAnchor(anchor, index);
+                    }
+
+                    dtde.dropComplete(true);
+                } catch (UnsupportedFlavorException e) {
+                    e.printStackTrace();
+                    dtde.rejectDrop();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    dtde.rejectDrop();
+                }
             } else
                 dtde.rejectDrop();
         }
@@ -236,6 +253,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
             Transferable transferable = dtde.getTransferable();
             try {
                 if (transferable.isDataFlavorSupported(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR) ||
+                    transferable.isDataFlavorSupported(ContentTrasferable.CONTENT_DATA_FAVLOR) ||
                     (transferable.isDataFlavorSupported(ToolWindowTabTrasferable.TOOL_WINDOW_TAB_DATA_FAVLOR) &&
                      ((ToolWindowTab) transferable.getTransferData(ToolWindowTabTrasferable.TOOL_WINDOW_TAB_DATA_FAVLOR)).getToolWindow() != null))
                     return true;

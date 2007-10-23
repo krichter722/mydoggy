@@ -19,7 +19,7 @@ import info.clearthought.layout.TableLayout;
 public class ExtendedTitleBarButtons implements TitleBarButtons {
     protected ToolWindow toolWindow;
     protected ToolWindowDescriptor descriptor;
-    protected ResourceManager resourceManager;
+    protected transient ResourceManager resourceManager;
     protected DockedContainer dockedContainer;
 
     protected JPanel buttonContainer;

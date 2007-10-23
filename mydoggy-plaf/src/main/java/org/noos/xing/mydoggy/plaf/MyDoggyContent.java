@@ -13,7 +13,7 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyContent implements PlafContentUI {
-    private MyDoggyContentManager contentManager;
+    private transient MyDoggyContentManager contentManager;
 
     private Object key;
     private String title;
@@ -22,7 +22,7 @@ public class MyDoggyContent implements PlafContentUI {
     private Icon disabledIcon;
     private String toolTipText;
     private boolean enabled;
-    private Component component;
+    private transient Component component;
     private JPopupMenu popupMenu;
     private boolean detached;
     private int mnemonic;
@@ -31,7 +31,7 @@ public class MyDoggyContent implements PlafContentUI {
     private EventListenerList uiListeners;
     private EventListenerList listeners;
 
-    protected ToolWindow toolWindow;
+    protected transient ToolWindow toolWindow;
 
     public MyDoggyContent(MyDoggyContentManager contentManager,
 						  Object key, String title, Icon icon, Component component, String toolTipText,
