@@ -528,6 +528,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             hideAllPreview();
 
             // Start GestureRecognized
+
             if (DragAndDropLock.isLocked()) {
                 DragAndDropLock.setDragAndDropStarted(false);
                 return;
@@ -542,11 +543,12 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             GlassPanel glassPane = descriptor.getManager().getGlassPanel();
             glassPane.setVisible(true);
 
-            // Build orginalDragImage
+            // Build ghostImage
             JComponent representativeAnchor = descriptor.getRepresentativeAnchor();
             ghostImage = new BufferedImage(representativeAnchor.getWidth(), representativeAnchor.getHeight(), BufferedImage.TYPE_INT_RGB);
             representativeAnchor.print(ghostImage.createGraphics());
 
+            // Fire Event
             descriptor.getToolBar().propertyChange(new PropertyChangeEvent(label, "startDrag", null, dge));
 
             // Setup glasspane
@@ -563,6 +565,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             if (!DragAndDropLock.isDragAndDropStarted() || ghostImage == null)
                 return;
 
+            // Update ghostImage point
             GlassPanel glassPane = descriptor.getManager().getGlassPanel();
 
             Point p = (Point) dsde.getLocation().clone();
@@ -573,6 +576,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             SwingUtilities.convertPointFromScreen(p, descriptor.getManager());
             ToolWindowAnchor newAnchor = descriptor.getToolWindowAnchor(p);
 
+            // Verify graphics
             if (newAnchor != lastAnchor) {
                 Rectangle dirtyRegion = glassPane.getRepaintRect();
                 glassPane.setDraggingImage(null);
@@ -647,7 +651,6 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         }
 
         public void dragExit(DragSourceEvent dse) {
-            System.out.print(dse);
         }
 
         public void dragDropEnd(DragSourceDropEvent dsde) {
@@ -656,6 +659,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
 
             DragAndDropLock.setDragAndDropStarted(false);
 
+            // Resotre graphics
             if (lastAnchor != null)
                 descriptor.getToolBar(lastAnchor).setTempShowed(false);
             else  {
@@ -667,6 +671,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
 
             descriptor.getToolBar().propertyChange(new PropertyChangeEvent(label, "endDrag", null, dsde));
 
+            // cleanup glassPane
             GlassPanel glassPane = descriptor.getManager().getGlassPanel();
 
             Point p = (Point) dsde.getLocation().clone();

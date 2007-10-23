@@ -727,7 +727,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return null;
     }
 
-
     protected class AvailablePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor window = (ToolWindowDescriptor) evt.getSource();
