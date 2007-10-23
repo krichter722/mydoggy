@@ -5,17 +5,16 @@ import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.DragAndDropLock;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ToolWindowTabTrasferable;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ToolWindowTrasferable;
+import org.noos.xing.mydoggy.plaf.ui.cmp.drag.*;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -100,10 +99,13 @@ public class ToolWindowTitleBarUI extends PanelUI {
         installDefaults(c);
         this.panel = c;
 
-        final DragGesture dragGesture = new DragGesture();
+//        final DragGesture dragGesture = new DragGesture();
+        final UniversalDragGesture universalDragGesture = new UniversalDragGesture(
+                new TitleUniversalDragCallback()
+        );
         DragSource dragSource = DragSource.getDefaultDragSource();
-        dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, dragGesture);
-        dragSource.addDragSourceMotionListener(dragGesture);
+        dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, universalDragGesture);
+        dragSource.addDragSourceMotionListener(universalDragGesture);
 
         panel.addContainerListener(new ContainerListener() {
             public void componentAdded(ContainerEvent e) {
@@ -112,15 +114,15 @@ public class ToolWindowTitleBarUI extends PanelUI {
 
                     for (Component cmp : panel.getTabContainer().getComponents()) {
                         DragSource dragSource = DragSource.getDefaultDragSource();
-                        dragSource.createDefaultDragGestureRecognizer(cmp, DnDConstants.ACTION_MOVE, dragGesture);
-                        dragSource.addDragSourceMotionListener(dragGesture);
+                        dragSource.createDefaultDragGestureRecognizer(cmp, DnDConstants.ACTION_MOVE, universalDragGesture);
+                        dragSource.addDragSourceMotionListener(universalDragGesture);
                     }
 
                     panel.getTabContainer().addContainerListener(new ContainerListener() {
                         public void componentAdded(ContainerEvent e) {
                             DragSource dragSource = DragSource.getDefaultDragSource();
-                            dragSource.createDefaultDragGestureRecognizer(e.getChild(), DnDConstants.ACTION_MOVE, dragGesture);
-                            dragSource.addDragSourceMotionListener(dragGesture);
+                            dragSource.createDefaultDragGestureRecognizer(e.getChild(), DnDConstants.ACTION_MOVE, universalDragGesture);
+                            dragSource.addDragSourceMotionListener(universalDragGesture);
                         }
 
                         public void componentRemoved(ContainerEvent e) {
@@ -129,8 +131,8 @@ public class ToolWindowTitleBarUI extends PanelUI {
                     });
 
                     DragSource dragSource = DragSource.getDefaultDragSource();
-                    dragSource.createDefaultDragGestureRecognizer(panel.getViewport(), DnDConstants.ACTION_MOVE, dragGesture);
-                    dragSource.addDragSourceMotionListener(dragGesture);
+                    dragSource.createDefaultDragGestureRecognizer(panel.getViewport(), DnDConstants.ACTION_MOVE, universalDragGesture);
+                    dragSource.addDragSourceMotionListener(universalDragGesture);
                 }
             }
 
@@ -458,10 +460,16 @@ public class ToolWindowTitleBarUI extends PanelUI {
                     if (lastOverCmp != null)
                         lastOverCmp.setBorder(oldBorder);
 
-                    lastOverCmp = (JPanel) SwingUtil.getParent(deepestCmp, "toolWindow.container");
+                    lastOverCmp = (JComponent) SwingUtil.getParent(deepestCmp, "toolWindow.container");
                     if (lastOverCmp != null) {
                         oldBorder = lastOverCmp.getBorder();
                         lastOverCmp.setBorder(highligthBorder);
+                    } else {
+                        lastOverCmp = (JComponent) SwingUtil.getParent(deepestCmp, "toolWindowManager.mainContainer");
+                        if (lastOverCmp != null) {
+                            oldBorder = lastOverCmp.getBorder();
+                            lastOverCmp.setBorder(highligthBorder);
+                        }
                     }
                 }
             }
@@ -508,6 +516,7 @@ public class ToolWindowTitleBarUI extends PanelUI {
             Transferable transferable = dsde.getDragSourceContext().getTransferable();
             if (transferable.isDataFlavorSupported(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR)) {
                 // Do action
+                // TODO: choose during moving the action type...
                 if (lastOverCmp != null) {
                     // Clear border
                     lastOverCmp.setBorder(oldBorder);
@@ -597,4 +606,53 @@ public class ToolWindowTitleBarUI extends PanelUI {
 
     }
 
+    protected class TitleUniversalDragCallback implements UniversalDragCallback {
+
+
+        public boolean accept(DragGestureEvent dge) {
+            if (toolWindow.getType() == ToolWindowType.FLOATING ||
+                toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
+                toolWindow.getType() == ToolWindowType.FLOATING_LIVE)
+                return false;
+            return true;
+        }
+
+        public boolean startDrag(DragGestureEvent dge, DragSourceListener dragSourceListener) {
+            MyDoggyToolWindowTab toolWindowTab = null;
+            if (dge.getComponent() instanceof ToolWindowTabPanel.TabButton) {
+                ToolWindowTabPanel.TabButton tabButton = (ToolWindowTabPanel.TabButton) dge.getComponent();
+                toolWindowTab = (MyDoggyToolWindowTab) tabButton.getTab();
+            }
+
+            if (toolWindowTab != null && toolWindowTab.getToolWindow() != null) {
+                dge.startDrag(Cursor.getDefaultCursor(), new ToolWindowTabTrasferable(toolWindowTab),
+                              dragSourceListener);
+            } else {
+                dge.startDrag(Cursor.getDefaultCursor(), new ToolWindowTrasferable(toolWindow),
+                              dragSourceListener);
+            }
+            return true;
+        }
+
+        public GlassPanel getGlassPanel() {
+            return getManager().getGlassPanel();
+        }
+
+        public Image getGhostImage() {
+            Component contentContainer = ((DockedContainer) descriptor.getToolWindowContainer()).getContentContainer();
+            BufferedImage ghostImage = new BufferedImage(contentContainer.getWidth(),
+                                                         contentContainer.getHeight(), BufferedImage.TYPE_INT_RGB);
+            contentContainer.print(ghostImage.getGraphics());
+            return (Image) ghostImage.getScaledInstance(contentContainer.getWidth() / 3,
+                                                        contentContainer.getHeight() / 3, BufferedImage.SCALE_SMOOTH);
+        }
+
+        public MyDoggyToolWindowManager getManager() {
+            return descriptor.getManager();
+        }
+
+        public ToolWindow getToolWindow() {
+            return toolWindow;
+        }
+    }
 }
