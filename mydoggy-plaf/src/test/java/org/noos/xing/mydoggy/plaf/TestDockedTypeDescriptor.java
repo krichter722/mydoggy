@@ -58,12 +58,12 @@ public class TestDockedTypeDescriptor extends TestCase {
         DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.DOCKED);
         descriptor.setDockLength(150);
 
-        // Check DockLength on tool window type descriptor
+        // Check DockLength on tool window type manager
         ToolWindow toolWindow = toolWindowManager.registerToolWindow("id", "title", null, new JLabel("title"), ToolWindowAnchor.LEFT);
         descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
         assertEquals(150, descriptor.getDockLength());
 
-        // Modify manager type descriptor 
+        // Modify manager type manager
         descriptor = (DockedTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.DOCKED);
         descriptor.setDockLength(250);
 
@@ -76,12 +76,12 @@ public class TestDockedTypeDescriptor extends TestCase {
         DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.DOCKED);
         descriptor.setPopupMenuEnabled(false);
 
-        // Check DockLength on tool window type descriptor
+        // Check DockLength on tool window type manager
         ToolWindow toolWindow = toolWindowManager.registerToolWindow("id", "title", null, new JLabel("title"), ToolWindowAnchor.LEFT);
         descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
         assertEquals(false, descriptor.isPopupMenuEnabled());
 
-        // Modify manager type descriptor
+        // Modify manager type manager
         descriptor = (DockedTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.DOCKED);
         descriptor.setPopupMenuEnabled(true);
 

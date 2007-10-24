@@ -11,7 +11,6 @@ import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.*;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTrasferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
@@ -22,7 +21,9 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.PanelUI;
 import java.awt.*;
-import java.awt.dnd.*;
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragSourceDragEvent;
+import java.awt.dnd.DragSourceDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerEvent;
@@ -388,7 +389,7 @@ public class ToolWindowTitleBarUI extends PanelUI {
             if (toolWindowTab != null && toolWindowTab.getToolWindow() != null) {
                 // TDDO: change..this
                 MyDoggyTrasferable trasferable = new MyDoggyTrasferable();
-                trasferable.addEntry(MyDoggyTrasferable.TOOL_WINDOW_ID_DF, toolWindow.getId());
+                trasferable.addEntry(MyDoggyTrasferable.TOOL_WINDOW_ID_DF, toolWindowTab.getToolWindow().getId());
                 trasferable.addEntry(MyDoggyTrasferable.TOOL_WINDOW_TAB_ID_DF, toolWindowTab.getId());
 
                 dge.startDrag(Cursor.getDefaultCursor(),
@@ -417,16 +418,16 @@ public class ToolWindowTitleBarUI extends PanelUI {
                 return;
 
             // Obtain anchor for location
-            ToolWindowAnchor newAnchor = descriptor.getToolWindowAnchor(
-                    SwingUtil.convertPointFromScreen(dsde.getLocation(), descriptor.getManager())
+            ToolWindowAnchor newAnchor = manager.getToolWindowAnchor(
+                    SwingUtil.convertPointFromScreen(dsde.getLocation(), manager)
             );
 
             if (newAnchor != lastAnchor) {
                 if (newAnchor == null) {
-                    descriptor.getToolBar(lastAnchor).setTempShowed(false);
+                    manager.getBar(lastAnchor).setTempShowed(false);
                 } else {
-                    if (descriptor.getToolBar(newAnchor).getAvailableTools() == 0)
-                        descriptor.getToolBar(newAnchor).setTempShowed(true);
+                    if (manager.getBar(newAnchor).getAvailableTools() == 0)
+                        manager.getBar(newAnchor).setTempShowed(true);
                 }
 
                 lastAnchor = newAnchor;

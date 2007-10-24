@@ -1,9 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.drag;
 
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.ToolWindowTab;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 
 import javax.swing.*;
@@ -37,7 +34,8 @@ public class ToolWindowDropTarget extends DropTarget {
         public void dragEnter(DropTargetDragEvent dtde) {
             if  (dtde.getDropAction() == DnDConstants.ACTION_MOVE &&
                  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTrasferable.TOOL_WINDOW_ID_DF) ||
-                  dtde.getTransferable().isDataFlavorSupported(MyDoggyTrasferable.TOOL_WINDOW_TAB_ID_DF))
+                  dtde.getTransferable().isDataFlavorSupported(MyDoggyTrasferable.TOOL_WINDOW_TAB_ID_DF) ||
+                  dtde.getTransferable().isDataFlavorSupported(MyDoggyTrasferable.CONTENT_ID_DF))
                  ) {
 
                 dtde.acceptDrag(dtde.getDropAction());
@@ -97,17 +95,34 @@ public class ToolWindowDropTarget extends DropTarget {
                         e.printStackTrace();
                         dtde.dropComplete(false);
                     }
-                } else if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTrasferable.TOOL_WINDOW_TAB_ID_DF))  {
+                } else if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTrasferable.CONTENT_ID_DF))  {
                     try {
-                        ToolWindow toolWindow = toolWindowManager.getToolWindow(
-                                dtde.getTransferable().getTransferData(MyDoggyTrasferable.TOOL_WINDOW_ID_DF)
+                        Content content = toolWindowManager.getContentManager().getContent(
+                                dtde.getTransferable().getTransferData(MyDoggyTrasferable.CONTENT_ID_DF)
                         );
-                        if (toolWindow != null) {
-/*
-                            ToolWindowTab toolWindowTab = toolWindow.getToolWindowTab(
-                                    dtde.getTransferable().getTransferData(MyDoggyTrasferable.TOOL_WINDOW_TAB_ID_DF)
-                            );
-*/
+                        if (content != null) {
+                            toolWindowManager.getContentManager().removeContent(content);
+
+                            if (content.getDockableDelegator() != null) {
+                                Dockable delegator = content.getDockableDelegator();
+
+                                if (delegator instanceof ToolWindow) {
+                                    ToolWindow toolWindow = (ToolWindow) delegator;
+                                    ToolWindowAnchor anchor = owner.getAnchor();
+
+                                    boolean oldAM = toolWindow.isAggregateMode();
+                                    try {
+                                        toolWindow.setAggregateMode(true);
+                                        toolWindow.setAnchor(anchor, owner.getAnchorIndex());
+                                        toolWindow.setActive(true);
+                                    } finally {
+                                        toolWindow.setAggregateMode(oldAM);
+                                    }
+
+                                }
+                            } else {
+                                // TODO : Need a tool window for delegation...
+                            }
 
                             dtde.dropComplete(true);
                         } else

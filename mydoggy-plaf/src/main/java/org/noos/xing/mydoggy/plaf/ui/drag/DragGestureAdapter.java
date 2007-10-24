@@ -1,8 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui.drag;
 
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.DragAndDropLock;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -18,11 +18,17 @@ import java.awt.image.BufferedImage;
  */
 public abstract class DragGestureAdapter implements DragGesture {
     protected ToolWindowDescriptor descriptor;
+    protected MyDoggyToolWindowManager manager;
     protected BufferedImage ghostImage;
     protected BufferedImage updatedGhostImage;
 
     protected DragGestureAdapter(ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
+        this.manager = descriptor.getManager();
+    }
+
+    protected DragGestureAdapter(MyDoggyToolWindowManager manager) {
+        this.manager = manager;
     }
 
     public void dragGestureRecognized(DragGestureEvent dge) {
@@ -75,7 +81,7 @@ public abstract class DragGestureAdapter implements DragGesture {
     }
 
     protected void updateGhostImage(Point point, BufferedImage ghostImage) {
-        GlassPanel glassPane = descriptor.getManager().getGlassPanel();
+        GlassPanel glassPane = manager.getGlassPanel();
         glassPane.setVisible(true);
         glassPane.setPoint(SwingUtil.convertPointFromScreen(point, glassPane));
         glassPane.setDraggingImage(ghostImage);
@@ -84,24 +90,24 @@ public abstract class DragGestureAdapter implements DragGesture {
     }
 
     protected void updateGhostImage(Point point) {
-        GlassPanel glassPane = descriptor.getManager().getGlassPanel();
+        GlassPanel glassPane = manager.getGlassPanel();
         glassPane.setPoint(SwingUtil.convertPointFromScreen(point, glassPane));
         glassPane.repaint();
     }
 
     protected void resetGhostImage() {
-        GlassPanel glassPane = descriptor.getManager().getGlassPanel();
+        GlassPanel glassPane = manager.getGlassPanel();
         Rectangle dirtyRegion = glassPane.getRepaintRect();
         glassPane.setDraggingImage(null);
         glassPane.repaint(dirtyRegion);
     }
 
     protected void cleanupGhostImage() {
-        GlassPanel glassPane = descriptor.getManager().getGlassPanel();
+        GlassPanel glassPane = manager.getGlassPanel();
         glassPane.setDraggingImage(null);
         glassPane.setVisible(false);
         ghostImage = null;
-        SwingUtilities.getWindowAncestor(descriptor.getManager()).repaint();
+        SwingUtilities.getWindowAncestor(manager).repaint();
     }
 
 }

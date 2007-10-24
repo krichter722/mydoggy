@@ -197,65 +197,6 @@ public class ToolWindowBarDropTarget extends DropTarget {
                 } catch (Exception e) {
                     dtde.rejectDrop();
                 }
-            } else if (transferable.isDataFlavorSupported(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR)) {
-                dtde.acceptDrop(DnDConstants.ACTION_MOVE);
-                try {
-//                    System.out.println("index = " + index);
-                    ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
-                    ((ToolWindow) transferable.getTransferData(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR))
-                            .setAnchor(anchor, index);
-
-                    dtde.dropComplete(true);
-                } catch (UnsupportedFlavorException e) {
-                    e.printStackTrace();
-                    dtde.rejectDrop();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    dtde.rejectDrop();
-                }
-            } else if (transferable.isDataFlavorSupported(ToolWindowTabTrasferable.TOOL_WINDOW_TAB_DATA_FAVLOR)) {
-                dtde.acceptDrop(DnDConstants.ACTION_MOVE);
-                try {
-//                    System.out.println("index = " + index);
-                    ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
-
-                    ToolWindowTab toolWindowTab = (ToolWindowTab) transferable.getTransferData(ToolWindowTabTrasferable.TOOL_WINDOW_TAB_DATA_FAVLOR);
-                    ToolWindow ownerToolWindow = toolWindowTab.getOwner();
-                    ownerToolWindow.removeToolWindowTab(toolWindowTab);
-
-                    ToolWindow sourceTool = toolWindowTab.getToolWindow();
-                    sourceTool.setAnchor(anchor, index);
-                    sourceTool.setActive(true);
-
-                    dtde.dropComplete(true);
-                } catch (UnsupportedFlavorException e) {
-                    e.printStackTrace();
-                    dtde.rejectDrop();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    dtde.rejectDrop();
-                }
-            } else if (transferable.isDataFlavorSupported(ContentTrasferable.CONTENT_DATA_FAVLOR)) {
-                dtde.acceptDrop(DnDConstants.ACTION_MOVE);
-                try {
-//                    System.out.println("index = " + index);
-                    ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
-
-                    Content content = (Content) transferable.getTransferData(ContentTrasferable.CONTENT_DATA_FAVLOR);
-                    if (content.getToolWindow() != null) {
-                        ToolWindow sourceTool = content.getToolWindow();
-                        System.out.println("index = " + index);
-                        sourceTool.setAnchor(anchor, index);
-                    }
-
-                    dtde.dropComplete(true);
-                } catch (UnsupportedFlavorException e) {
-                    e.printStackTrace();
-                    dtde.rejectDrop();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    dtde.rejectDrop();
-                }
             } else
                 dtde.rejectDrop();
         }
@@ -286,10 +227,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
             Transferable transferable = dtde.getTransferable();
             try {
                 if (transferable.isDataFlavorSupported(MyDoggyTrasferable.TOOL_WINDOW_ID_DF) ||
-                    transferable.isDataFlavorSupported(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR) ||
-                    transferable.isDataFlavorSupported(ContentTrasferable.CONTENT_DATA_FAVLOR) ||
-                    (transferable.isDataFlavorSupported(ToolWindowTabTrasferable.TOOL_WINDOW_TAB_DATA_FAVLOR) &&
-                     ((ToolWindowTab) transferable.getTransferData(ToolWindowTabTrasferable.TOOL_WINDOW_TAB_DATA_FAVLOR)).getToolWindow() != null))
+                    transferable.isDataFlavorSupported(MyDoggyTrasferable.CONTENT_ID_DF))
                     return true;
             } catch (Exception e) {
                 e.printStackTrace();

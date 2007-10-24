@@ -66,6 +66,9 @@ public class MyDoggyContentManager implements ContentManager {
     }
 
     public Content addContent(ToolWindow toolWindow) {
+        toolWindowManager.verifyDockable(toolWindow);
+
+
         System.out.println("toolWindow = " + toolWindow.getId());
         ((MyDoggyToolWindow)toolWindow).setTypeInternal(ToolWindowType.TABBED);
         Content content = addContentInternal(toolWindow.getId(),
@@ -89,10 +92,12 @@ public class MyDoggyContentManager implements ContentManager {
             fireContentRemoved(content);
         }
 
-        if (content.getToolWindow() != null) {
-            ToolWindow toolWindow = content.getToolWindow();
-            toolWindow.setType(ToolWindowType.DOCKED);
-            toolWindow.setActive(true);
+        if (content.getDockableDelegator() != null) {
+            Dockable delegator = content.getDockableDelegator();
+            if  (delegator instanceof ToolWindow) {
+                ToolWindow toolWindow = (ToolWindow) delegator;
+                toolWindow.setType(ToolWindowType.DOCKED);
+            }
         }
 
         return result;

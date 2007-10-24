@@ -5,7 +5,6 @@ import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
-import org.noos.xing.mydoggy.itest.impl.ui.JBalloonTip;
 import org.noos.xing.mydoggy.mydoggyset.action.*;
 import org.noos.xing.mydoggy.mydoggyset.context.ContentContext;
 import org.noos.xing.mydoggy.mydoggyset.ui.MonitorPanel;
@@ -15,14 +14,11 @@ import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.SimpliedTitleBarButtons;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTitleBarUI;
-import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.view.ViewContext;
 
 import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -282,12 +278,12 @@ public class MyDoggySet {
                                               null,
                                               GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
 
-                        if (descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar() ||
+                        if (manager.getDockedTypeDescriptor().isIdVisibleOnTitleBar() ||
                             toolWindow.getType() == ToolWindowType.FLOATING ||
                             toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
                             toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
 
-                            String id = resourceManager.getUserString(descriptor.getToolWindow().getId());
+                            String id = resourceManager.getUserString(manager.getToolWindow().getId());
                             r.width = g.getFontMetrics().stringWidth(id) + 8;
 
                             int halfHeigh = (r.height / 2);

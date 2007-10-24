@@ -14,7 +14,7 @@ import java.awt.*;
  * @see org.noos.xing.mydoggy.ToolWindowManager
  * @since 1.0.0
  */
-public interface ToolWindow {
+public interface ToolWindow extends Dockable {
 
     /**
      * Returns the id used to register the tool.
@@ -331,8 +331,9 @@ public interface ToolWindow {
     /**
      * TODO
      * @since 1.3.2
+     * @param dockable
      */
-    ToolWindowTab addToolWindowTab(ToolWindow toolWindow);
+    ToolWindowTab addToolWindowTab(Dockable dockable);
 
     /**
      * Removes the specified tab from this toolwindow.

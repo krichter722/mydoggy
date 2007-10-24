@@ -742,6 +742,24 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return null;
     }
 
+    public void verifyDockable(Dockable dockable) {
+        for (ToolWindow toolWindow : getToolWindows()) {
+            for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+                if (tab.getToolWindow() == dockable) {
+                    toolWindow.removeToolWindowTab(tab);
+                    break;
+                }
+            }
+        }
+        for (Content content : contentManager.getContents()) {
+            if (content.getDockableDelegator() == dockable) {
+                contentManager.removeContent(content);
+                break;
+            }
+        }
+    }
+
+
     protected class AvailablePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor window = (ToolWindowDescriptor) evt.getSource();

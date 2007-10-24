@@ -118,7 +118,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
             layeredPane.setLayer(sheet, JLayeredPane.POPUP_LAYER + 3);
             layeredPane.add(sheet);
 /*
-            if (descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isAnimating())
+            if (manager.getTypeDescriptor(ToolWindowType.SLIDING).isAnimating())
                 slidingAnimation.show(sheet.getBounds());
 */
         } else {
@@ -130,7 +130,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
             layout.setRow(2, 2);
 
 /*
-            if (descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isAnimating())
+            if (manager.getTypeDescriptor(ToolWindowType.SLIDING).isAnimating())
                 slidingAnimation.hide(sheet.getBounds());
             else {
 */

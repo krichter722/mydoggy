@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.drag;
 
 import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
@@ -9,6 +8,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
 
 /**
@@ -62,8 +62,9 @@ public class ToolWindowTitleDropTarget extends DropTarget {
             if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) {
                 if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTrasferable.TOOL_WINDOW_ID_DF))  {
                     try {
+                        Transferable transferable = dtde.getTransferable();
                         ToolWindow toolWindow = toolWindowManager.getToolWindow(
-                                dtde.getTransferable().getTransferData(MyDoggyTrasferable.TOOL_WINDOW_ID_DF)
+                                transferable.getTransferData(MyDoggyTrasferable.TOOL_WINDOW_ID_DF)
                         );
                         if (toolWindow != null && toolWindow != owner) {
                             owner.addToolWindowTab(toolWindow).setSelected(true);

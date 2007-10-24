@@ -4,16 +4,15 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentPage;
-import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentManager;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ContentTrasferable;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.UniversalDragCallback;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.UniversalDragGesture;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
+import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTrasferable;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -21,10 +20,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import java.awt.*;
-import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
-import java.awt.dnd.DragSource;
-import java.awt.dnd.DragSourceListener;
+import java.awt.dnd.DragSourceDragEvent;
+import java.awt.dnd.DragSourceDropEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
@@ -355,11 +353,6 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             }
         });
 
-        UniversalDragGesture universalDragGesture = new UniversalDragGesture(new TabbedUniversalDragCallback());
-        DragSource dragSource = DragSource.getDefaultDragSource();
-        dragSource.createDefaultDragGestureRecognizer(tabbedContentManager, DnDConstants.ACTION_MOVE, universalDragGesture);
-        dragSource.addDragSourceMotionListener(universalDragGesture);
-
         this.tabbedContentManager = tabbedContentManager;
     }
 
@@ -382,6 +375,9 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 }
             });
         }
+        SwingUtil.registerDragGesture(tabbedContentManager,
+                                      new TabbedContentManagerDragGesture());
+        // TODO: add drag gesture
         contentManagerUIListeners = new EventListenerList();
     }
 
@@ -696,50 +692,52 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
     }
 
+    class TabbedContentManagerDragGesture extends DragGestureAdapter {
 
-    class TabbedUniversalDragCallback implements UniversalDragCallback {
-        protected int index;
-
-        public boolean accept(DragGestureEvent dge) {
-            return true;
+        public TabbedContentManagerDragGesture() {
+            super(toolWindowManager);
         }
 
-        public boolean startDrag(DragGestureEvent dge, DragSourceListener dragSourceListener) {
+        public void dragGestureRecognized(DragGestureEvent dge) {
+            // Acquire locks
+            if (!acquireLocks())
+                return;
+
+            // Start Drag
             Point origin = dge.getDragOrigin();
-            index = tabbedContentManager.indexAtLocation(origin.x, origin.y);
+            int index = tabbedContentManager.indexAtLocation(origin.x, origin.y);
             if (index != -1) {
-                // Start Drag
                 dge.startDrag(Cursor.getDefaultCursor(),
-                              new ContentTrasferable(tabbedContentManager.getContentPage(index).getContent()),
-                              dragSourceListener);
-                return true;
-            }
-            return false;
-        }
+                              new MyDoggyTrasferable(MyDoggyTrasferable.CONTENT_ID_DF,
+                                                     tabbedContentManager.getContentPage(index).getContent().getKey()));
 
-        public GlassPanel getGlassPanel() {
-            return toolWindowManager.getGlassPanel();
-        }
-
-        public Image getGhostImage() {
-            if (index != -1)  {
-                // Build orginalDragImage
+                // Setup ghostImage
                 Icon icon = tabbedContentManager.getContentPage(index).getContentIcon();
                 BufferedImage ghostImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
                 tabbedContentManager.getContentPage(index).getContentIcon().paintIcon(
                         tabbedContentManager, ghostImage.createGraphics(), 0,0
                 );
-                return ghostImage;
+
+                setGhostImage(dge.getDragOrigin(), ghostImage);
             }
-            return null;
         }
 
-        public MyDoggyToolWindowManager getManager() {
-            return toolWindowManager;
+        public void dragMouseMoved(DragSourceDragEvent dsde) {
+            if (!checkStatus())
+                return;
+            updateGhostImage(dsde.getLocation());
         }
 
-        public ToolWindow getToolWindow() {
-            return null;
+        public void dragDropEnd(DragSourceDropEvent dsde) {
+            if (!checkStatus())
+                return;
+
+            releaseLocksOne();
+            releaseLocksTwo();
+
+            // Finalize drag action...
+            cleanupGhostImage();
         }
+
     }
 }
