@@ -444,7 +444,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     public ToolWindowTab addToolWindowTab(Dockable dockable) {
         synchronized (getLock()) {
             ToolWindowTab result;
-            if  (dockable instanceof ToolWindow) {
+            if (dockable instanceof ToolWindow) {
                 descriptor.getManager().verifyDockable(dockable);
 
                 ToolWindow delegator = (ToolWindow) dockable;
@@ -455,9 +455,9 @@ public class MyDoggyToolWindow implements ToolWindow {
 
                 ((MyDoggyToolWindow) dockable).setTypeInternal(ToolWindowType.TABBED);
                 result = addTabInternal(delegator.getTitle(),
-                                                      delegator.getIcon(),
-                                                      delegator.getComponent(),
-                                                      delegator);
+                                        delegator.getIcon(),
+                                        delegator.getComponent(),
+                                        delegator);
 
                 // TODO: add all tabs of delegator
                 for (ToolWindowTab tab : delegator.getToolWindowTabs()) {

@@ -2,14 +2,12 @@ package org.noos.xing.mydoggy.plaf.ui.drag;
 
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTrasferable;
+import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
 
 /**
@@ -33,11 +31,12 @@ public class ContentManagerDropTarget extends DropTarget {
         }
 
         public void dragEnter(DropTargetDragEvent dtde) {
-            if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTrasferable.TOOL_WINDOW_ID_DF) &&
+            if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) &&
                  dtde.getDropAction() == DnDConstants.ACTION_MOVE) {
 
                 dtde.acceptDrag(dtde.getDropAction());
-                oldBorder = component.getBorder();
+                if (component.getBorder() != dragBorder)
+                    oldBorder = component.getBorder();
                 component.setBorder(dragBorder);
             } else
                 dtde.rejectDrag();
@@ -57,10 +56,10 @@ public class ContentManagerDropTarget extends DropTarget {
 
         public void drop(DropTargetDropEvent dtde) {
             if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) {
-                if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTrasferable.TOOL_WINDOW_ID_DF))  {
+                if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF))  {
                     try {
                         ToolWindow toolWindow = toolWindowManager.getToolWindow(
-                                dtde.getTransferable().getTransferData(MyDoggyTrasferable.TOOL_WINDOW_ID_DF)
+                                dtde.getTransferable().getTransferData(MyDoggyTransferable.TOOL_WINDOW_ID_DF)
                         );
                         if (toolWindow != null) {
                             toolWindowManager.getContentManager().addContent(toolWindow);

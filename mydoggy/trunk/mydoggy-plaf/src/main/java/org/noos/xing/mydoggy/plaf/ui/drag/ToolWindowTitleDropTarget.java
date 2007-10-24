@@ -2,7 +2,6 @@ package org.noos.xing.mydoggy.plaf.ui.drag;
 
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 
 import javax.swing.*;
@@ -17,17 +16,17 @@ import java.awt.dnd.*;
 public class ToolWindowTitleDropTarget extends DropTarget {
 
     public ToolWindowTitleDropTarget(JComponent component, ToolWindow owner, ToolWindowManager toolWindowManager) throws HeadlessException {
-        super(component, DnDConstants.ACTION_MOVE, new ContentManagerDropTargetListener(toolWindowManager, owner, component));
+        super(component, DnDConstants.ACTION_MOVE, new ToolWindowTitleDropTargetListener(toolWindowManager, owner, component));
     }
 
-    public static class ContentManagerDropTargetListener implements DropTargetListener {
+    public static class ToolWindowTitleDropTargetListener implements DropTargetListener {
         protected ToolWindowManager toolWindowManager;
         protected ToolWindow owner;
         protected JComponent component;
         protected Border oldBorder;
         protected Border dragBorder = new LineBorder(Color.BLUE, 3);
 
-        public ContentManagerDropTargetListener(ToolWindowManager toolWindowManager, ToolWindow owner, JComponent component) {
+        public ToolWindowTitleDropTargetListener(ToolWindowManager toolWindowManager, ToolWindow owner, JComponent component) {
             this.toolWindowManager = toolWindowManager;
             this.owner = owner;
             this.component = component;
@@ -35,12 +34,13 @@ public class ToolWindowTitleDropTarget extends DropTarget {
 
         public void dragEnter(DropTargetDragEvent dtde) {
             if  (dtde.getDropAction() == DnDConstants.ACTION_MOVE &&
-                 (dtde.getTransferable().isDataFlavorSupported(MyDoggyTrasferable.TOOL_WINDOW_ID_DF) ||
-                  dtde.getTransferable().isDataFlavorSupported(MyDoggyTrasferable.TOOL_WINDOW_TAB_ID_DF))
+                 (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) ||
+                  dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF))
                  ) {
 
                 dtde.acceptDrag(dtde.getDropAction());
-                oldBorder = component.getBorder();
+                if (component.getBorder() != dragBorder)
+                    oldBorder = component.getBorder();
                 component.setBorder(dragBorder);
             } else
                 dtde.rejectDrag();
@@ -60,28 +60,15 @@ public class ToolWindowTitleDropTarget extends DropTarget {
 
         public void drop(DropTargetDropEvent dtde) {
             if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) {
-                if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTrasferable.TOOL_WINDOW_ID_DF))  {
+                if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF))  {
                     try {
                         Transferable transferable = dtde.getTransferable();
                         ToolWindow toolWindow = toolWindowManager.getToolWindow(
-                                transferable.getTransferData(MyDoggyTrasferable.TOOL_WINDOW_ID_DF)
+                                transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_ID_DF)
                         );
+                        
                         if (toolWindow != null && toolWindow != owner) {
                             owner.addToolWindowTab(toolWindow).setSelected(true);
-
-                            dtde.dropComplete(true);
-                        } else
-                            dtde.dropComplete(false);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        dtde.dropComplete(false);
-                    }
-                } else if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTrasferable.TOOL_WINDOW_TAB_ID_DF))  {
-                    try {
-                        ToolWindow toolWindow = toolWindowManager.getToolWindow(
-                                dtde.getTransferable().getTransferData(MyDoggyTrasferable.TOOL_WINDOW_ID_DF)
-                        );
-                        if (toolWindow != null) {
 
                             dtde.dropComplete(true);
                         } else
