@@ -3,18 +3,17 @@ package org.noos.xing.mydoggy.plaf.ui.look;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
-import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.cmp.drag.*;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
+import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTrasferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -23,8 +22,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.PanelUI;
 import java.awt.*;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,7 +31,6 @@ import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 
 /**
  * @author Angelo De Caro
@@ -99,47 +95,34 @@ public class ToolWindowTitleBarUI extends PanelUI {
         installDefaults(c);
         this.panel = c;
 
-//        final DragGesture dragGesture = new DragGesture();
-        final UniversalDragGesture universalDragGesture = new UniversalDragGesture(
-                new TitleUniversalDragCallback()
-        );
-        DragSource dragSource = DragSource.getDefaultDragSource();
-        dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, universalDragGesture);
-        dragSource.addDragSourceMotionListener(universalDragGesture);
-
+        // Drag Gesture
+        final ToolWindowTitleBarDragGesture dragGesture = new ToolWindowTitleBarDragGesture(descriptor);
+        SwingUtil.registerDragGesture(c, dragGesture);
         panel.addContainerListener(new ContainerListener() {
             public void componentAdded(ContainerEvent e) {
                 if (e.getChild() instanceof ToolWindowTabPanel) {
                     ToolWindowTabPanel panel = (ToolWindowTabPanel) e.getChild();
 
                     for (Component cmp : panel.getTabContainer().getComponents()) {
-                        DragSource dragSource = DragSource.getDefaultDragSource();
-                        dragSource.createDefaultDragGestureRecognizer(cmp, DnDConstants.ACTION_MOVE, universalDragGesture);
-                        dragSource.addDragSourceMotionListener(universalDragGesture);
+                        SwingUtil.registerDragGesture(cmp, dragGesture);
                     }
 
                     panel.getTabContainer().addContainerListener(new ContainerListener() {
                         public void componentAdded(ContainerEvent e) {
-                            DragSource dragSource = DragSource.getDefaultDragSource();
-                            dragSource.createDefaultDragGestureRecognizer(e.getChild(), DnDConstants.ACTION_MOVE, universalDragGesture);
-                            dragSource.addDragSourceMotionListener(universalDragGesture);
+                            SwingUtil.registerDragGesture(e.getChild(), dragGesture);
                         }
 
                         public void componentRemoved(ContainerEvent e) {
-
+                            // TODO: remove drag
                         }
                     });
-
-                    DragSource dragSource = DragSource.getDefaultDragSource();
-                    dragSource.createDefaultDragGestureRecognizer(panel.getViewport(), DnDConstants.ACTION_MOVE, universalDragGesture);
-                    dragSource.addDragSourceMotionListener(universalDragGesture);
+                    SwingUtil.registerDragGesture(panel.getViewport(), dragGesture);
                 }
             }
 
             public void componentRemoved(ContainerEvent e) {
             }
         });
-
     }
 
     public void uninstallUI(JComponent c) {
@@ -370,7 +353,7 @@ public class ToolWindowTitleBarUI extends PanelUI {
 
     }
 
-    protected class DragGesture implements DragGestureListener, DragSourceMotionListener, DragSourceListener {
+    protected class ToolWindowTitleBarDragGesture extends DragGestureAdapter {
         protected BufferedImage ghostImage;
         protected JComponent lastOverCmp = null;
         protected Border oldBorder = null;
@@ -380,21 +363,22 @@ public class ToolWindowTitleBarUI extends PanelUI {
         protected boolean moveAnchor;
         protected ToolWindowAnchor lastAnchor;
 
+        public ToolWindowTitleBarDragGesture(ToolWindowDescriptor descriptor) {
+            super(descriptor);
+        }
+
         public void dragGestureRecognized(DragGestureEvent dge) {
+            // Check validaty
             if (toolWindow.getType() == ToolWindowType.FLOATING ||
                 toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
                 toolWindow.getType() == ToolWindowType.FLOATING_LIVE)
                 return;
 
-            if (DragAndDropLock.isLocked()) {
-                DragAndDropLock.setDragAndDropStarted(false);
+            // Acquire locks
+            if (!acquireLocks())
                 return;
-            }
-            DragAndDropLock.setLocked(true);
-            DragAndDropLock.setDragAndDropStarted(true);
 
             // Start Drag
-//            System.out.println("dge.getComponent() = " + dge.getComponent());
             MyDoggyToolWindowTab toolWindowTab = null;
             if (dge.getComponent() instanceof ToolWindowTabPanel.TabButton) {
                 ToolWindowTabPanel.TabButton tabButton = (ToolWindowTabPanel.TabButton) dge.getComponent();
@@ -402,85 +386,42 @@ public class ToolWindowTitleBarUI extends PanelUI {
             }
 
             if (toolWindowTab != null && toolWindowTab.getToolWindow() != null) {
+                // TDDO: change..this
+                MyDoggyTrasferable trasferable = new MyDoggyTrasferable();
+                trasferable.addEntry(MyDoggyTrasferable.TOOL_WINDOW_ID_DF, toolWindow.getId());
+                trasferable.addEntry(MyDoggyTrasferable.TOOL_WINDOW_TAB_ID_DF, toolWindowTab.getId());
+
                 dge.startDrag(Cursor.getDefaultCursor(),
-                              new ToolWindowTabTrasferable(toolWindowTab), this);
+                              trasferable, this);
             } else {
                 dge.startDrag(Cursor.getDefaultCursor(),
-                              new ToolWindowTrasferable(toolWindow), this);
+                              new MyDoggyTrasferable(MyDoggyTrasferable.TOOL_WINDOW_ID_DF, toolWindow.getId()), this);
             }
 
-            // Prepare glassPane for ghost image
-            GlassPanel glassPane = descriptor.getManager().getGlassPanel();
-
-            glassPane.setVisible(true);
-
-            // Build orginalDragImage
+            // Setup ghostImage
             Component contentContainer = ((DockedContainer) descriptor.getToolWindowContainer()).getContentContainer();
-            ghostImage = new BufferedImage(contentContainer.getWidth(),
-                                           contentContainer.getHeight(), BufferedImage.TYPE_INT_RGB);
+            BufferedImage ghostImage = new BufferedImage(contentContainer.getWidth(),
+                                                         contentContainer.getHeight(), BufferedImage.TYPE_INT_RGB);
             contentContainer.print(ghostImage.getGraphics());
+            ghostImage = GraphicsUtil.scale(ghostImage,
+                                            contentContainer.getWidth() / 3,
+                                            contentContainer.getHeight() / 3);
 
-            // Setup glasspane
-            Point p = (Point) dge.getDragOrigin().clone();
-            SwingUtilities.convertPointFromScreen(p, glassPane);
-            glassPane.setPoint(p);
-            glassPane.setDraggingImage(ghostImage.getScaledInstance(contentContainer.getWidth() / 3,
-                                                                    contentContainer.getHeight() / 3, BufferedImage.SCALE_SMOOTH));
-            glassPane.repaint();
+            setGhostImage(dge.getDragOrigin(), ghostImage);
 
             lastAnchor = null;
         }
 
         public void dragMouseMoved(DragSourceDragEvent dsde) {
-            if (!DragAndDropLock.isDragAndDropStarted() || ghostImage == null)
+            if (!checkStatus())
                 return;
 
-            GlassPanel glassPane = descriptor.getManager().getGlassPanel();
-
-            Point p = dsde.getLocation();
-            SwingUtilities.convertPointFromScreen(p, glassPane);
-            glassPane.setPoint(p);
-
-            Container contentPane = descriptor.getManager().getRootPane().getLayeredPane();
-            Component deepestCmp = SwingUtilities.getDeepestComponentAt(contentPane, p.x, p.y);
-
-            if (deepestCmp != null) {
-                if (deepestCmp instanceof ToolWindowTabPanel ||
-                    SwingUtil.getParent(deepestCmp, ToolWindowTabPanel.class) != null) {
-                    moveAnchor = false;
-
-                    if (lastOverCmp != null)
-                        lastOverCmp.setBorder(oldBorder);
-
-                    lastOverCmp = (JComponent) deepestCmp;
-                    oldBorder = lastOverCmp.getBorder();
-                    lastOverCmp.setBorder(highligthBorder);
-                } else {
-                    moveAnchor = true;
-                    if (lastOverCmp != null)
-                        lastOverCmp.setBorder(oldBorder);
-
-                    lastOverCmp = (JComponent) SwingUtil.getParent(deepestCmp, "toolWindow.container");
-                    if (lastOverCmp != null) {
-                        oldBorder = lastOverCmp.getBorder();
-                        lastOverCmp.setBorder(highligthBorder);
-                    } else {
-                        lastOverCmp = (JComponent) SwingUtil.getParent(deepestCmp, "toolWindowManager.mainContainer");
-                        if (lastOverCmp != null) {
-                            oldBorder = lastOverCmp.getBorder();
-                            lastOverCmp.setBorder(highligthBorder);
-                        }
-                    }
-                }
-            }
-
-            p = dsde.getLocation();
-            SwingUtilities.convertPointFromScreen(p, descriptor.getManager());
-            ToolWindowAnchor newAnchor = descriptor.getToolWindowAnchor(p);
+            // Obtain anchor for location
+            ToolWindowAnchor newAnchor = descriptor.getToolWindowAnchor(
+                    SwingUtil.convertPointFromScreen(dsde.getLocation(), descriptor.getManager())
+            );
 
             if (newAnchor != lastAnchor) {
-                Rectangle dirtyRegion = glassPane.getRepaintRect();
-
                 if (newAnchor == null) {
                     descriptor.getToolBar(lastAnchor).setTempShowed(false);
                 } else {
@@ -489,30 +430,17 @@ public class ToolWindowTitleBarUI extends PanelUI {
                 }
 
                 lastAnchor = newAnchor;
-                glassPane.repaint(dirtyRegion);
             }
-
-            glassPane.repaint(glassPane.getRepaintRect());
-        }
-
-        public void dragEnter(DragSourceDragEvent dsde) {
-        }
-
-        public void dragOver(DragSourceDragEvent dsde) {
-        }
-
-        public void dropActionChanged(DragSourceDragEvent dsde) {
-        }
-
-        public void dragExit(DragSourceEvent dse) {
+            updateGhostImage(dsde.getLocation());
         }
 
         public void dragDropEnd(DragSourceDropEvent dsde) {
-            if (!DragAndDropLock.isDragAndDropStarted() || ghostImage == null)
+            if (!checkStatus())
                 return;
 
-            DragAndDropLock.setDragAndDropStarted(false);
+            releaseLocksOne();
 
+/*
             Transferable transferable = dsde.getDragSourceContext().getTransferable();
             if (transferable.isDataFlavorSupported(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR)) {
                 // Do action
@@ -588,71 +516,14 @@ public class ToolWindowTitleBarUI extends PanelUI {
                     }
                 }
             }
+*/
+
+            releaseLocksTwo();
 
             // Finalize drag action...
-            GlassPanel glassPane = descriptor.getManager().getGlassPanel();
-
-            Point p = (Point) dsde.getLocation().clone();
-            SwingUtilities.convertPointFromScreen(p, glassPane);
-
-            glassPane.setDraggingImage(null);
-            glassPane.setVisible(false);
-
-            ghostImage = null;
-
-            DragAndDropLock.setLocked(false);
-            SwingUtilities.getWindowAncestor(descriptor.getManager()).repaint();
+            cleanupGhostImage();
         }
 
     }
 
-    protected class TitleUniversalDragCallback implements UniversalDragCallback {
-
-
-        public boolean accept(DragGestureEvent dge) {
-            if (toolWindow.getType() == ToolWindowType.FLOATING ||
-                toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
-                toolWindow.getType() == ToolWindowType.FLOATING_LIVE)
-                return false;
-            return true;
-        }
-
-        public boolean startDrag(DragGestureEvent dge, DragSourceListener dragSourceListener) {
-            MyDoggyToolWindowTab toolWindowTab = null;
-            if (dge.getComponent() instanceof ToolWindowTabPanel.TabButton) {
-                ToolWindowTabPanel.TabButton tabButton = (ToolWindowTabPanel.TabButton) dge.getComponent();
-                toolWindowTab = (MyDoggyToolWindowTab) tabButton.getTab();
-            }
-
-            if (toolWindowTab != null && toolWindowTab.getToolWindow() != null) {
-                dge.startDrag(Cursor.getDefaultCursor(), new ToolWindowTabTrasferable(toolWindowTab),
-                              dragSourceListener);
-            } else {
-                dge.startDrag(Cursor.getDefaultCursor(), new ToolWindowTrasferable(toolWindow),
-                              dragSourceListener);
-            }
-            return true;
-        }
-
-        public GlassPanel getGlassPanel() {
-            return getManager().getGlassPanel();
-        }
-
-        public Image getGhostImage() {
-            Component contentContainer = ((DockedContainer) descriptor.getToolWindowContainer()).getContentContainer();
-            BufferedImage ghostImage = new BufferedImage(contentContainer.getWidth(),
-                                                         contentContainer.getHeight(), BufferedImage.TYPE_INT_RGB);
-            contentContainer.print(ghostImage.getGraphics());
-            return (Image) ghostImage.getScaledInstance(contentContainer.getWidth() / 3,
-                                                        contentContainer.getHeight() / 3, BufferedImage.SCALE_SMOOTH);
-        }
-
-        public MyDoggyToolWindowManager getManager() {
-            return descriptor.getManager();
-        }
-
-        public ToolWindow getToolWindow() {
-            return toolWindow;
-        }
-    }
 }

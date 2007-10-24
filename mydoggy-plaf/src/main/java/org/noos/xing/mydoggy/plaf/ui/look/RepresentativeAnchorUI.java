@@ -1,19 +1,22 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.DockedTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
+import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TranslucentPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.DragAndDropLock;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ToolWindowTrasferable;
+import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTrasferable;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -22,7 +25,9 @@ import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.metal.MetalLabelUI;
 import java.awt.*;
-import java.awt.dnd.*;
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragSourceDragEvent;
+import java.awt.dnd.DragSourceDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -76,10 +81,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         c.setBorder(labelBorder);
         c.setForeground(resourceManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
 
-        DragGesture dragGesture = new DragGesture();
-        DragSource dragSource = DragSource.getDefaultDragSource();
-        dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, dragGesture);
-        dragSource.addDragSourceMotionListener(dragGesture);
+        SwingUtil.registerDragGesture(c, new RepresentativeAnchorUIDragGesture(descriptor));
     }
 
     public void uninstallUI(JComponent c) {
@@ -88,29 +90,6 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         toolWindow.removePropertyChangeListener(this);
         c.removeMouseListener(adapter);
         c.removeMouseMotionListener(adapter);
-    }
-
-    protected void installListeners(JLabel c) {
-        super.installListeners(c);
-
-        // Forse PropertyChangeListener
-        String oldText = c.getText();
-        if (oldText != null) {
-            c.setText(null);
-            c.setText(oldText);
-        }
-
-        oldText = c.getToolTipText();
-        if (oldText != null) {
-            c.setToolTipText(null);
-            c.setToolTipText(oldText);
-        }
-
-        adapter = new RepresentativeAnchorMouseAdapter();
-        c.addMouseListener(adapter);
-        c.addMouseMotionListener(adapter);
-
-        descriptor.getToolWindow().addInternalPropertyChangeListener(this);
     }
 
     public void update(Graphics g, JComponent c) {
@@ -193,12 +172,36 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                 flasingDuration = (Integer) e.getNewValue();
                 SwingUtil.repaint(label);
             }
-        } 
+        }
     }
 
     public ToolWindowDescriptor getDescriptor() {
         return descriptor;
     }
+
+    protected void installListeners(JLabel c) {
+        super.installListeners(c);
+
+        // Forse PropertyChangeListener
+        String oldText = c.getText();
+        if (oldText != null) {
+            c.setText(null);
+            c.setText(oldText);
+        }
+
+        oldText = c.getToolTipText();
+        if (oldText != null) {
+            c.setToolTipText(null);
+            c.setToolTipText(oldText);
+        }
+
+        adapter = new RepresentativeAnchorMouseAdapter();
+        c.addMouseListener(adapter);
+        c.addMouseMotionListener(adapter);
+
+        descriptor.getToolWindow().addInternalPropertyChangeListener(this);
+    }
+
 
     protected void updateAnchor(Graphics g, JComponent c,
                                 Color backgroundStart, Color backgroundEnd,
@@ -226,6 +229,71 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         }
     }
 
+
+    protected class GradientAnimation extends AbstractAnimation {
+
+        public GradientAnimation() {
+            super(600f);
+        }
+
+        protected float onAnimating(float animationPercent) {
+            switch (getAnimationDirection()) {
+                case INCOMING:
+                    GraphicsUtil.getInterpolatedColor(flashingAnimBackStart,
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
+                                                      animationPercent);
+                    GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd,
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
+                                                      animationPercent);
+                    break;
+
+                case OUTGOING:
+                    GraphicsUtil.getInterpolatedColor(flashingAnimBackStart,
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
+                                                      animationPercent);
+                    GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd,
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
+                                                      animationPercent);
+                    break;
+            }
+            SwingUtil.repaint(label);
+            return animationPercent;
+        }
+
+        protected void onFinishAnimation() {
+            switch (getAnimationDirection()) {
+                case INCOMING:
+                    flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+                    break;
+                case OUTGOING:
+                    flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START));
+                    break;
+            }
+            SwingUtil.repaint(label);
+        }
+
+        protected void onHide(Object... params) {
+            flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START));
+            flashingAnimBackEnd.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END));
+        }
+
+        protected void onShow(Object... params) {
+            flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+            flashingAnimBackEnd.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+        }
+
+        protected void onStartAnimation(Direction direction) {
+        }
+
+        protected Direction chooseFinishDirection(Type type) {
+            return (type == Type.SHOW) ? Direction.OUTGOING : Direction.INCOMING;
+        }
+
+    }
 
     protected class RepresentativeAnchorMouseAdapter extends MouseInputAdapter implements ActionListener {
         Timer previewTimer;
@@ -454,136 +522,54 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
 
     }
 
-    protected class GradientAnimation extends AbstractAnimation {
-
-        public GradientAnimation() {
-            super(600f);
-        }
-
-        protected float onAnimating(float animationPercent) {
-            switch (getAnimationDirection()) {
-                case INCOMING:
-                    GraphicsUtil.getInterpolatedColor(flashingAnimBackStart,
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
-                                                      animationPercent);
-                    GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd,
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
-                                                      animationPercent);
-                    break;
-
-                case OUTGOING:
-                    GraphicsUtil.getInterpolatedColor(flashingAnimBackStart,
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
-                                                      animationPercent);
-                    GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd,
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
-                                                      animationPercent);
-                    break;
-            }
-            SwingUtil.repaint(label);
-            return animationPercent;
-        }
-
-        protected void onFinishAnimation() {
-            switch (getAnimationDirection()) {
-                case INCOMING:
-                    flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
-                    break;
-                case OUTGOING:
-                    flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START));
-                    break;
-            }
-            SwingUtil.repaint(label);
-        }
-
-        protected void onHide(Object... params) {
-            flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START));
-            flashingAnimBackEnd.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END));
-        }
-
-        protected void onShow(Object... params) {
-            flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
-            flashingAnimBackEnd.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
-        }
-
-        protected void onStartAnimation(Direction direction) {
-        }
-
-        protected Direction chooseFinishDirection(Type type) {
-            return (type == Type.SHOW) ? Direction.OUTGOING : Direction.INCOMING;
-        }
-
-    }
-
-    protected class DragGesture implements DragGestureListener, DragSourceMotionListener, DragSourceListener {
-        private BufferedImage ghostImage;
+    protected class RepresentativeAnchorUIDragGesture extends DragGestureAdapter {
         private ToolWindowAnchor lastAnchor;
+
+        public RepresentativeAnchorUIDragGesture(ToolWindowDescriptor descriptor) {
+            super(descriptor);
+        }
 
         public void dragGestureRecognized(DragGestureEvent dge) {
             // Check if a preview is still visible.
             hideAllPreview();
 
-            // Start GestureRecognized
-
-            if (DragAndDropLock.isLocked()) {
-                DragAndDropLock.setDragAndDropStarted(false);
-                return;
-            }
-            DragAndDropLock.setLocked(true);
-            DragAndDropLock.setDragAndDropStarted(true);
+            // Acquire locks
+            acquireLocks();
 
             // Start Drag
-            dge.startDrag(Cursor.getDefaultCursor(), new ToolWindowTrasferable(toolWindow), this);
+            dge.startDrag(Cursor.getDefaultCursor(),
+                          new MyDoggyTrasferable(MyDoggyTrasferable.TOOL_WINDOW_ID_DF, toolWindow.getId()),
+                          this);
 
-            // Prepare glassPane for ghost image
-            GlassPanel glassPane = descriptor.getManager().getGlassPanel();
-            glassPane.setVisible(true);
-
-            // Build ghostImage
-            JComponent representativeAnchor = descriptor.getRepresentativeAnchor();
-            ghostImage = new BufferedImage(representativeAnchor.getWidth(), representativeAnchor.getHeight(), BufferedImage.TYPE_INT_RGB);
-            representativeAnchor.print(ghostImage.createGraphics());
-
-            // Fire Event
+            // Fire startDrag Event
             descriptor.getToolBar().propertyChange(new PropertyChangeEvent(label, "startDrag", null, dge));
 
-            // Setup glasspane
-            Point p = (Point) dge.getDragOrigin().clone();
-            SwingUtilities.convertPointFromScreen(p, glassPane);
-            glassPane.setPoint(p);
-            glassPane.setDraggingImage(ghostImage);
-            glassPane.repaint();
+            // Setup ghostImage
+            JComponent representativeAnchor = descriptor.getRepresentativeAnchor();
+            BufferedImage ghostImage = new BufferedImage(representativeAnchor.getWidth(),
+                                                         representativeAnchor.getHeight(),
+                                                         BufferedImage.TYPE_INT_RGB);
+            representativeAnchor.print(ghostImage.createGraphics());
+            setGhostImage(dge.getDragOrigin(), ghostImage);
 
             lastAnchor = null;
         }
 
         public void dragMouseMoved(DragSourceDragEvent dsde) {
-            if (!DragAndDropLock.isDragAndDropStarted() || ghostImage == null)
+            if (!checkStatus() || ghostImage == null)
                 return;
 
-            // Update ghostImage point
-            GlassPanel glassPane = descriptor.getManager().getGlassPanel();
+            // Obtain anchor for location
+            ToolWindowAnchor newAnchor = descriptor.getToolWindowAnchor(
+                    SwingUtil.convertPointFromScreen(dsde.getLocation(), descriptor.getManager())
+            );
 
-            Point p = (Point) dsde.getLocation().clone();
-            SwingUtilities.convertPointFromScreen(p, glassPane);
-            glassPane.setPoint(p);
-
-            p = (Point) dsde.getLocation().clone();
-            SwingUtilities.convertPointFromScreen(p, descriptor.getManager());
-            ToolWindowAnchor newAnchor = descriptor.getToolWindowAnchor(p);
-
-            // Verify graphics
+            // Produce updatedGhostImage
             if (newAnchor != lastAnchor) {
-                Rectangle dirtyRegion = glassPane.getRepaintRect();
-                glassPane.setDraggingImage(null);
-                glassPane.repaint(dirtyRegion);
+                resetGhostImage();
 
                 if (newAnchor == null) {
-                    glassPane.setDraggingImage(ghostImage);
+                    updatedGhostImage = ghostImage;
                     descriptor.getToolBar(lastAnchor).setTempShowed(false);
                 } else {
                     if (descriptor.getToolBar(newAnchor).getAvailableTools() == 0)
@@ -593,26 +579,26 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                         case LEFT:
                             switch (descriptor.getToolWindow().getAnchor()) {
                                 case LEFT:
-                                    glassPane.setDraggingImage(ghostImage);
+                                    updatedGhostImage = ghostImage;
                                     break;
                                 case RIGHT:
-                                    glassPane.setDraggingImage(GraphicsUtil.rotate(ghostImage, Math.PI));
+                                    updatedGhostImage = GraphicsUtil.rotate(ghostImage, Math.PI);
                                     break;
                                 default:
-                                    glassPane.setDraggingImage(GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI));
+                                    updatedGhostImage = GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI);
                                     break;
                             }
                             break;
                         case RIGHT:
                             switch (descriptor.getToolWindow().getAnchor()) {
                                 case LEFT:
-                                    glassPane.setDraggingImage(GraphicsUtil.rotate(ghostImage, Math.PI));
+                                    updatedGhostImage = GraphicsUtil.rotate(ghostImage, Math.PI);
                                     break;
                                 case RIGHT:
-                                    glassPane.setDraggingImage(ghostImage);
+                                    updatedGhostImage = ghostImage;
                                     break;
                                 default:
-                                    glassPane.setDraggingImage(GraphicsUtil.rotate(ghostImage, -1.5 * Math.PI));
+                                    updatedGhostImage = GraphicsUtil.rotate(ghostImage, -1.5 * Math.PI);
                                     break;
                             }
                             break;
@@ -620,74 +606,51 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                         case BOTTOM:
                             switch (descriptor.getToolWindow().getAnchor()) {
                                 case LEFT:
-                                    glassPane.setDraggingImage(GraphicsUtil.rotate(ghostImage, -1.5 * Math.PI));
+                                    updatedGhostImage = GraphicsUtil.rotate(ghostImage, -1.5 * Math.PI);
                                     break;
                                 case RIGHT:
-                                    glassPane.setDraggingImage(GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI));
+                                    updatedGhostImage = GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI);
                                     break;
                                 default:
-                                    glassPane.setDraggingImage(ghostImage);
+                                    updatedGhostImage = ghostImage;
                                     break;
                             }
                             break;
                     }
                 }
-
                 lastAnchor = newAnchor;
-                dirtyRegion = glassPane.getRepaintRect();
-                glassPane.repaint(dirtyRegion);
             }
-
-            glassPane.repaint(glassPane.getRepaintRect());
-        }
-
-        public void dragEnter(DragSourceDragEvent dsde) {
-        }
-
-        public void dragOver(DragSourceDragEvent dsde) {
-        }
-
-        public void dropActionChanged(DragSourceDragEvent dsde) {
-        }
-
-        public void dragExit(DragSourceEvent dse) {
+            
+            updateGhostImage(dsde.getLocation(), updatedGhostImage);
         }
 
         public void dragDropEnd(DragSourceDropEvent dsde) {
-            if (!DragAndDropLock.isDragAndDropStarted() || ghostImage == null)
+            if (!checkStatus() || ghostImage == null)
                 return;
 
-            DragAndDropLock.setDragAndDropStarted(false);
+            releaseLocksOne();
 
-            // Resotre graphics
+            // Restore graphics
             if (lastAnchor != null)
                 descriptor.getToolBar(lastAnchor).setTempShowed(false);
-            else  {
+            else {
                 descriptor.getToolBar(LEFT).setTempShowed(false);
                 descriptor.getToolBar(RIGHT).setTempShowed(false);
                 descriptor.getToolBar(TOP).setTempShowed(false);
                 descriptor.getToolBar(BOTTOM).setTempShowed(false);
             }
 
+            // Fire endDrag event
             descriptor.getToolBar().propertyChange(new PropertyChangeEvent(label, "endDrag", null, dsde));
 
             // cleanup glassPane
-            GlassPanel glassPane = descriptor.getManager().getGlassPanel();
-
-            Point p = (Point) dsde.getLocation().clone();
-            SwingUtilities.convertPointFromScreen(p, glassPane);
-
-            glassPane.setDraggingImage(null);
-            glassPane.setVisible(false);
-
-            ghostImage = null;
+            cleanupGhostImage();
             lastAnchor = null;
 
-            DragAndDropLock.setLocked(false);
-
-            SwingUtilities.getWindowAncestor(descriptor.getManager()).repaint();
+            releaseLocksTwo();
         }
 
     }
+
 
 }

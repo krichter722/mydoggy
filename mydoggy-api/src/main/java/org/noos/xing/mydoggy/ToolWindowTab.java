@@ -156,4 +156,6 @@ public interface ToolWindowTab {
     ToolWindowTab getToolWindowTab();
 
     ToolWindow getOwner();
+
+    Object getId();
 }

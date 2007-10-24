@@ -7,6 +7,8 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowDropTarget;
+import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTitleDropTarget;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,6 +31,8 @@ public class DockedContainer implements ToolWindowContainer {
     protected JPanel titleBar;
     protected ToolWindowTabPanel titleBarTabs;
     protected TitleBarButtons titleBarButtons;
+    protected JPanel componentContainer;
+
     protected TitleBarMouseAdapter titleBarMouseAdapter;
 
     protected PropertyChangeSupport propertyChangeSupport;
@@ -100,11 +104,11 @@ public class DockedContainer implements ToolWindowContainer {
     }
 
     public void setMainComponent(Component component) {
-        container.remove(descriptor.getComponent());
+        componentContainer.removeAll();
         descriptor.setComponent(component);
-        container.add(component, "0,1");
+        componentContainer.add(component, "0,0,FULL,FULL");
 
-        SwingUtil.repaint(container);
+        SwingUtil.repaint(componentContainer);
     }
 
     public MouseListener getTitleBarMouseAdapter() {
@@ -126,7 +130,6 @@ public class DockedContainer implements ToolWindowContainer {
         container.setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {16, TableLayout.FILL}}, false));
         container.setName("toolWindow.container." + toolWindow.getId());
         container.setFocusCycleRoot(true);
-        container.putClientProperty(ToolWindow.class, toolWindow);
 
         String id = toolWindow.getId();
 
@@ -157,10 +160,18 @@ public class DockedContainer implements ToolWindowContainer {
         // Set TitleBar content
         titleBar.add(titleBarTabs, "1,1");
         titleBar.add(titleBarButtons.getButtonsContainer(), "3,1");
+        titleBar.setDropTarget(new ToolWindowTitleDropTarget(titleBarTabs, toolWindow, descriptor.getManager()));
+
+        // Set Component container
+        componentContainer = new JPanel();
+        componentContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1},{-1}}));
+        componentContainer.setOpaque(false);
+        componentContainer.add(descriptor.getComponent(), "0,0,FULL,FULL");
+        componentContainer.setDropTarget(new ToolWindowDropTarget(componentContainer, toolWindow, descriptor.getManager()));
 
         // Set Container content
         container.add(titleBar, "0,0");
-        container.add(descriptor.getComponent(), "0,1");
+        container.add(componentContainer, "0,1");
 
         focusRequester = SwingUtil.findFocusable(descriptor.getComponent());
         if (focusRequester == null) {
@@ -599,8 +610,8 @@ public class DockedContainer implements ToolWindowContainer {
 
         public void toolWindowTabRemoved(ToolWindowTabEvent event) {
             if (toolWindow.getToolWindowTabs().length == 0) {
-                container.remove(event.getToolWindowTab().getComponent());
-                SwingUtil.repaint(container);
+                componentContainer.remove(event.getToolWindowTab().getComponent());
+                SwingUtil.repaint(componentContainer);
             }
 
             event.getToolWindowTab().removePropertyChangeListener(this);

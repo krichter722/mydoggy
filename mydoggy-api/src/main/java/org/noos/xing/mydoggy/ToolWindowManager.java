@@ -263,4 +263,6 @@ public interface ToolWindowManager {
      * @since 1.0.0
      */
     ToolWindowManagerListener[] getToolWindowManagerListeners();
+
+    ToolWindowTab getToolWindowTab(Object id);
 }
