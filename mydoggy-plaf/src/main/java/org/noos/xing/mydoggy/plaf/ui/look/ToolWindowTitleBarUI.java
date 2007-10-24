@@ -12,7 +12,7 @@ import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
-import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTrasferable;
+import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -388,15 +388,15 @@ public class ToolWindowTitleBarUI extends PanelUI {
 
             if (toolWindowTab != null && toolWindowTab.getToolWindow() != null) {
                 // TDDO: change..this
-                MyDoggyTrasferable trasferable = new MyDoggyTrasferable();
-                trasferable.addEntry(MyDoggyTrasferable.TOOL_WINDOW_ID_DF, toolWindowTab.getToolWindow().getId());
-                trasferable.addEntry(MyDoggyTrasferable.TOOL_WINDOW_TAB_ID_DF, toolWindowTab.getId());
+                MyDoggyTransferable transferable = new MyDoggyTransferable();
+                transferable.addEntry(MyDoggyTransferable.TOOL_WINDOW_ID_DF, toolWindowTab.getToolWindow().getId());
+                transferable.addEntry(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF, toolWindowTab.getId());
 
-                dge.startDrag(Cursor.getDefaultCursor(),
-                              trasferable, this);
+                dge.startDrag(Cursor.getDefaultCursor(), transferable, this);
             } else {
                 dge.startDrag(Cursor.getDefaultCursor(),
-                              new MyDoggyTrasferable(MyDoggyTrasferable.TOOL_WINDOW_ID_DF, toolWindow.getId()), this);
+                              new MyDoggyTransferable(MyDoggyTransferable.TOOL_WINDOW_ID_DF, toolWindow.getId()),
+                              this);
             }
 
             // Setup ghostImage
@@ -439,87 +439,7 @@ public class ToolWindowTitleBarUI extends PanelUI {
             if (!checkStatus())
                 return;
 
-            releaseLocksOne();
-
-/*
-            Transferable transferable = dsde.getDragSourceContext().getTransferable();
-            if (transferable.isDataFlavorSupported(ToolWindowTrasferable.TOOL_WINDOW_DATA_FAVLOR)) {
-                // Do action
-                // TODO: choose during moving the action type...
-                if (lastOverCmp != null) {
-                    // Clear border
-                    lastOverCmp.setBorder(oldBorder);
-
-                    if (moveAnchor) {
-                        // Move tool to another anchor
-                        ToolWindow destToolWindow = (ToolWindow) lastOverCmp.getClientProperty(ToolWindow.class);
-                        assert destToolWindow != null;
-
-                        ToolWindowAnchor anchor = destToolWindow.getAnchor();
-
-                        boolean oldAM = toolWindow.isAggregateMode();
-                        try {
-                            toolWindow.setAggregateMode(true);
-                            toolWindow.setAnchor(anchor,
-                                                 ((MyDoggyToolWindow) destToolWindow).getDescriptor().getRepresentativeAnchorIndex());
-                        } finally {
-                            toolWindow.setAggregateMode(oldAM);
-                        }
-                    } else {
-                        // Add the tool as tab
-                        ToolWindow target = (ToolWindow) ((JComponent) SwingUtil.getParent(lastOverCmp, "toolWindow.container")).getClientProperty(
-                                ToolWindow.class
-                        );
-                        if (target != toolWindow)
-                            target.addToolWindowTab(toolWindow).setSelected(true);
-                    }
-                }
-            } else if (transferable.isDataFlavorSupported(ToolWindowTabTrasferable.TOOL_WINDOW_TAB_DATA_FAVLOR)) {
-                if (lastOverCmp != null) {
-                    // Clear border
-                    lastOverCmp.setBorder(oldBorder);
-
-                    try {
-                        MyDoggyToolWindowTab toolWindowTab = (MyDoggyToolWindowTab) transferable.getTransferData(ToolWindowTabTrasferable.TOOL_WINDOW_TAB_DATA_FAVLOR);
-                        toolWindow.removeToolWindowTab(toolWindowTab);
-
-                        ToolWindow toolWindow = toolWindowTab.getToolWindow();
-                        if (moveAnchor) {
-                            // Move tool to another anchor
-                            ToolWindow destToolWindow = (ToolWindow) lastOverCmp.getClientProperty(ToolWindow.class);
-                            assert destToolWindow != null;
-
-                            ToolWindowAnchor anchor = destToolWindow.getAnchor();
-
-                            boolean oldAM = toolWindow.isAggregateMode();
-                            try {
-                                toolWindow.setAggregateMode(true);
-                                toolWindow.setAnchor(anchor,
-                                                     ((MyDoggyToolWindow) destToolWindow).getDescriptor().getRepresentativeAnchorIndex());
-                                toolWindow.aggregate();
-                                toolWindow.setActive(true);
-                            } finally {
-                                toolWindow.setAggregateMode(oldAM);
-                            }
-                        } else {
-                            // Add the tool as tab
-                            ToolWindow target = (ToolWindow) ((JComponent) SwingUtil.getParent(lastOverCmp, "toolWindow.container")).getClientProperty(
-                                    ToolWindow.class
-                            );
-                            if (target != toolWindow)
-                                target.addToolWindowTab(toolWindow).setSelected(true);
-                        }
-
-                    } catch (UnsupportedFlavorException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-*/
-
-            releaseLocksTwo();
+            releaseLocks();
 
             // Finalize drag action...
             cleanupGhostImage();

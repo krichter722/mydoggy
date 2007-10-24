@@ -15,7 +15,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TranslucentPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTrasferable;
+import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
@@ -538,7 +538,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
 
             // Start Drag
             dge.startDrag(Cursor.getDefaultCursor(),
-                          new MyDoggyTrasferable(MyDoggyTrasferable.TOOL_WINDOW_ID_DF, toolWindow.getId()),
+                          new MyDoggyTransferable(MyDoggyTransferable.TOOL_WINDOW_ID_DF, toolWindow.getId()),
                           this);
 
             // Fire startDrag Event

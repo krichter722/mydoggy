@@ -4,7 +4,6 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentPage;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabEvent;
@@ -12,7 +11,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
-import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTrasferable;
+import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -708,7 +707,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             int index = tabbedContentManager.indexAtLocation(origin.x, origin.y);
             if (index != -1) {
                 dge.startDrag(Cursor.getDefaultCursor(),
-                              new MyDoggyTrasferable(MyDoggyTrasferable.CONTENT_ID_DF,
+                              new MyDoggyTransferable(MyDoggyTransferable.CONTENT_ID_DF,
                                                      tabbedContentManager.getContentPage(index).getContent().getKey()));
 
                 // Setup ghostImage

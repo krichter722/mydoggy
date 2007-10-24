@@ -4,18 +4,13 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
-import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTrasferable;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ToolWindowTrasferable;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ToolWindowTabTrasferable;
-import org.noos.xing.mydoggy.plaf.ui.cmp.drag.ContentTrasferable;
+import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
-import java.io.IOException;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -170,20 +165,20 @@ public class ToolWindowBarDropTarget extends DropTarget {
 
         public void drop(DropTargetDropEvent dtde) {
             Transferable transferable = dtde.getTransferable();
-            if (transferable.isDataFlavorSupported(MyDoggyTrasferable.TOOL_WINDOW_ID_DF)) {
+            if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF)) {
                 dtde.acceptDrop(DnDConstants.ACTION_MOVE);
 
                 ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
 
                 try {
-                    String toolId = (String) transferable.getTransferData(MyDoggyTrasferable.TOOL_WINDOW_ID_DF);
+                    String toolId = (String) transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_ID_DF);
                     ToolWindow toolWindow = manager.getToolWindow(toolId);
 
                     // Chech if it was a tab
-                    if (transferable.isDataFlavorSupported(MyDoggyTrasferable.TOOL_WINDOW_TAB_ID_DF)) {
+                    if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)) {
                         // Remove from tab
                         ToolWindowTab tab = manager.getToolWindowTab(
-                                transferable.getTransferData(MyDoggyTrasferable.TOOL_WINDOW_TAB_ID_DF)
+                                transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)
                         );
                         tab.getOwner().removeToolWindowTab(tab);
                         toolWindow = tab.getToolWindow();
@@ -226,8 +221,8 @@ public class ToolWindowBarDropTarget extends DropTarget {
         public boolean checkEvent(DropTargetDragEvent dtde) {
             Transferable transferable = dtde.getTransferable();
             try {
-                if (transferable.isDataFlavorSupported(MyDoggyTrasferable.TOOL_WINDOW_ID_DF) ||
-                    transferable.isDataFlavorSupported(MyDoggyTrasferable.CONTENT_ID_DF))
+                if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) ||
+                    transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF))
                     return true;
             } catch (Exception e) {
                 e.printStackTrace();

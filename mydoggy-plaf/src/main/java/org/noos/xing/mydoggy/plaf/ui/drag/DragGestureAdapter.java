@@ -67,6 +67,11 @@ public abstract class DragGestureAdapter implements DragGesture {
         return DragAndDropLock.isDragAndDropStarted() && ghostImage != null;
     }
 
+    protected void releaseLocks() {
+        releaseLocksOne();
+        releaseLocksTwo();
+    }
+
     protected void releaseLocksOne() {
         DragAndDropLock.setDragAndDropStarted(false);
     }
