@@ -89,26 +89,26 @@ public class UniversalDragGesture implements DragGestureListener, DragSourceMoti
                 SwingUtil.getParent(deepestCmp, ToolWindowTabPanel.class) != null) {
                 moveAnchor = false;
 
-                if (lastOverCmp != null)
-                    lastOverCmp.setBorder(oldBorder);
+//                if (lastOverCmp != null)
+//                    lastOverCmp.setBorder(oldBorder);
 
                 lastOverCmp = (JComponent) deepestCmp;
                 oldBorder = lastOverCmp.getBorder();
-                lastOverCmp.setBorder(highligthBorder);
+//                lastOverCmp.setBorder(highligthBorder);
             } else {
                 moveAnchor = true;
-                if (lastOverCmp != null)
-                    lastOverCmp.setBorder(oldBorder);
+//                if (lastOverCmp != null)
+//                    lastOverCmp.setBorder(oldBorder);
 
                 lastOverCmp = (JComponent) SwingUtil.getParent(deepestCmp, "toolWindow.container");
                 if (lastOverCmp != null) {
                     oldBorder = lastOverCmp.getBorder();
-                    lastOverCmp.setBorder(highligthBorder);
+//                    lastOverCmp.setBorder(highligthBorder);
                 } else {
                     lastOverCmp = (JComponent) SwingUtil.getParent(deepestCmp, "toolWindowManager.mainContainer");
                     if (lastOverCmp != null) {
                         oldBorder = lastOverCmp.getBorder();
-                        lastOverCmp.setBorder(highligthBorder);
+//                        lastOverCmp.setBorder(highligthBorder);
                         moveAnchor = false;
                     }
                 }
@@ -160,7 +160,7 @@ public class UniversalDragGesture implements DragGestureListener, DragSourceMoti
             // TODO: choose during moving the action type...
             if (lastOverCmp != null) {
                 // Clear border
-                lastOverCmp.setBorder(oldBorder);
+//                lastOverCmp.setBorder(oldBorder);
 
                 if (moveAnchor) {
                     // Move tool to another anchor
@@ -202,7 +202,7 @@ public class UniversalDragGesture implements DragGestureListener, DragSourceMoti
         } else if (transferable.isDataFlavorSupported(ToolWindowTabTrasferable.TOOL_WINDOW_TAB_DATA_FAVLOR)) {
             if (lastOverCmp != null) {
                 // Clear border
-                lastOverCmp.setBorder(oldBorder);
+//                lastOverCmp.setBorder(oldBorder);
 
                 try {
                     ToolWindow toolWindow = universalDragCallback.getToolWindow();
@@ -255,8 +255,16 @@ public class UniversalDragGesture implements DragGestureListener, DragSourceMoti
                 universalDragCallback.getManager().getContentManager().removeContent(content);
 
                 if (content.getToolWindow() != null)  {
-                    content.getToolWindow().setType(ToolWindowType.DOCKED);
-                    content.getToolWindow().setActive(true);
+                    ToolWindow toolWindow  = content.getToolWindow();
+                    boolean oldAM = toolWindow.isAggregateMode();
+                    try {
+                        toolWindow.setAggregateMode(true);
+                        content.getToolWindow().setType(ToolWindowType.DOCKED);
+                        toolWindow.aggregate();
+                        toolWindow.setActive(true);
+                    } finally {
+                        toolWindow.setAggregateMode(oldAM);
+                    }
                 } else {
                 }
             } catch (UnsupportedFlavorException e) {

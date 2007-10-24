@@ -1,10 +1,13 @@
 package org.noos.xing.mydoggy.plaf.ui.util;
 
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragSource;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
@@ -81,6 +84,11 @@ public class SwingUtil {
         component.repaint();
     }
 
+    public static void registerDragGesture(Component c, DragGesture dragGesture) {
+        DragSource dragSource = DragSource.getDefaultDragSource();
+        dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, dragGesture);
+        dragSource.addDragSourceMotionListener(dragGesture);
+    }
 
     public static boolean isLeftToRight(Component c) {
         return c != null && c.getComponentOrientation().isLeftToRight();
@@ -284,7 +292,6 @@ public class SwingUtil {
         return null;
     }
 
-
     public static Object getParent(Component c, Class<ToolWindowTabPanel> parentClass) {
         if (c == null || parentClass == null)
             return null;
@@ -409,4 +416,36 @@ public class SwingUtil {
         return event.getPropertyName() + ":\n\t" + event.getSource() + ":\n\t" + event.getOldValue() + ":\n\t" + event.getNewValue();
     }
 
+    public static Point convertPointFromScreen(Point p,Component c) {
+        Rectangle b;
+        int x,y;
+
+        do {
+            if(c instanceof JComponent) {
+                x = ((JComponent)c).getX();
+                y = ((JComponent)c).getY();
+            }  else if(c instanceof java.applet.Applet ||
+                       c instanceof java.awt.Window) {
+                try {
+                    Point pp = c.getLocationOnScreen();
+                    x = pp.x;
+                    y = pp.y;
+                } catch (IllegalComponentStateException icse) {
+		    x = c.getX();
+		    y = c.getY();
+                }
+            } else {
+		x = c.getX();
+		y = c.getY();
+            }
+
+            p.x -= x;
+            p.y -= y;
+
+            if(c instanceof java.awt.Window || c instanceof java.applet.Applet)
+                break;
+            c = c.getParent();
+        } while(c != null);
+        return p;
+    }
 }

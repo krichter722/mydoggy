@@ -13,6 +13,7 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyToolWindowTab implements ToolWindowTab {
+    protected String id;
     protected ToolWindow owner;
     protected String title;
     protected Icon icon;
@@ -27,6 +28,7 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
 
     public MyDoggyToolWindowTab(ToolWindow owner, String title, Icon icon, Component component,
                                 ToolWindow toolWindow, ToolWindowTab toolWindowTab) {
+        this.id = "" + System.nanoTime();
         this.owner = owner;
         this.title = title;
         this.icon = icon;
@@ -166,4 +168,7 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         }
     }
 
+    public Object getId() {
+        return id;
+    }
 }

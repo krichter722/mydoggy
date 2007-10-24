@@ -238,6 +238,19 @@ public class GraphicsUtil {
         return result;
     }
 
+    public static BufferedImage scale(BufferedImage image, int width, int height) {
+        Image scaledImage = image.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH);
+
+        GraphicsConfiguration gc = getDefaultConfiguration();
+
+        BufferedImage result = gc.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+        Graphics2D g = result.createGraphics();
+        g.drawImage(scaledImage, 0, 0, null);
+        g.dispose();
+
+        return result;
+    }
+
     public static GraphicsConfiguration getDefaultConfiguration() {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice gd = ge.getDefaultScreenDevice();

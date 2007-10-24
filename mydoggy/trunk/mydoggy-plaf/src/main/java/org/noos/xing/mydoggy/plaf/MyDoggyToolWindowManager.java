@@ -14,6 +14,7 @@ import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.drag.ContentManagerDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ShortcutProcessor;
@@ -297,6 +298,17 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return twmListeners.getListeners(ToolWindowManagerListener.class);
     }
 
+    public ToolWindowTab getToolWindowTab(Object id) {
+        for (ToolWindow toolWindow : getToolWindows()) {
+            for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+                if (tab.getId().equals(id)) {
+                    return tab;
+                }
+            }
+        }
+        return null;
+    }
+
     public synchronized void propertyChange(final PropertyChangeEvent evt) {
         Object source = evt.getSource();
         if (source instanceof ToolWindowDescriptor) {
@@ -555,6 +567,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                     lastFocusOwner = newFocusOwner;
             }
         });
+
+        // Setup DropTarget for main container
+        mainContainer.setDropTarget(new ContentManagerDropTarget(mainContainer, this));
     }
 
     protected void initUI(Locale locale) {
