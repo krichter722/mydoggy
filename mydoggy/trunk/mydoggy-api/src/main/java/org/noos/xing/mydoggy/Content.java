@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.0.0
  */
-public interface Content {
+public interface Content extends Dockable {
 
     /**
       * Return the content unique identifier.
@@ -228,6 +228,13 @@ public interface Content {
     void setMnemonic(int mnemonic);
 
     /**
+     *
+     * @return
+     * @since 1.3.2
+     */
+    Dockable getDockableDelegator();
+
+    /**
      * Returns the keyboard mnemonic for accessing this content.
      *
      * @return the key code which represents the mnemonic;
@@ -289,5 +296,4 @@ public interface Content {
      */
     PropertyChangeListener[] getPropertyChangeListeners();
 
-    ToolWindow getToolWindow();
 }

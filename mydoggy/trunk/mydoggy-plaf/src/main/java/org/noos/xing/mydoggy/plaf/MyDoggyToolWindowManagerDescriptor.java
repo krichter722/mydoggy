@@ -182,7 +182,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
             case MOST_RECENT:
                 return this;
             default:
-                throw new IllegalArgumentException("There isn't any descriptor for mode : " + pushAwayMode);
+                throw new IllegalArgumentException("There isn't any manager for mode : " + pushAwayMode);
         }
     }
 

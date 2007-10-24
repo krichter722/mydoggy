@@ -54,7 +54,6 @@ public class JTabbedContentManager extends JTabbedPane {
         addMouseListener(tabMoveHandler);
         addMouseMotionListener(mouseInputAdapter);
         addMouseMotionListener(tabMoveHandler);
-
     }
 
 

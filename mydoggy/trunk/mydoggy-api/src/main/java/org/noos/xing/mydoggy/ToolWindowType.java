@@ -57,7 +57,7 @@ public enum ToolWindowType {
      * When a toolwindow is added to another tool as a tab, that tool acquire this type.
      * The user cannot set directly this type.
      *
-     * @see ToolWindow#addToolWindowTab(ToolWindow) 
+     * @see ToolWindow#addToolWindowTab(Dockable)
      * @since 1.3.2
      */
     TABBED

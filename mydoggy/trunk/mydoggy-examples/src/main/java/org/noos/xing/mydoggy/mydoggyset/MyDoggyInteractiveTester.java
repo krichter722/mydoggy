@@ -67,9 +67,9 @@ public class MyDoggyInteractiveTester {
 
             moveToolTo(interactiveUI, "Tool 7", ToolWindowAnchor.BOTTOM);
 
-            DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-            descriptor.setPreviewEnabled(true);
-            descriptor.setPreviewDelay(1000);
+            DockedTypeDescriptor manager = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+            manager.setPreviewEnabled(true);
+            manager.setPreviewDelay(1000);
 
             mouse.moveTo("toolWindow.rb.Tool 6");
             interactiveUI.delay(1100);

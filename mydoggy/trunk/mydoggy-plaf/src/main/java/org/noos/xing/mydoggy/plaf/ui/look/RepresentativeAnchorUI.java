@@ -560,8 +560,8 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                 return;
 
             // Obtain anchor for location
-            ToolWindowAnchor newAnchor = descriptor.getToolWindowAnchor(
-                    SwingUtil.convertPointFromScreen(dsde.getLocation(), descriptor.getManager())
+            ToolWindowAnchor newAnchor = manager.getToolWindowAnchor(
+                    SwingUtil.convertPointFromScreen(dsde.getLocation(), manager)
             );
 
             // Produce updatedGhostImage
@@ -570,10 +570,10 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
 
                 if (newAnchor == null) {
                     updatedGhostImage = ghostImage;
-                    descriptor.getToolBar(lastAnchor).setTempShowed(false);
+                    manager.getBar(lastAnchor).setTempShowed(false);
                 } else {
-                    if (descriptor.getToolBar(newAnchor).getAvailableTools() == 0)
-                        descriptor.getToolBar(newAnchor).setTempShowed(true);
+                    if (manager.getBar(newAnchor).getAvailableTools() == 0)
+                        manager.getBar(newAnchor).setTempShowed(true);
 
                     switch (newAnchor) {
                         case LEFT:
@@ -632,12 +632,12 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
 
             // Restore graphics
             if (lastAnchor != null)
-                descriptor.getToolBar(lastAnchor).setTempShowed(false);
+                manager.getBar(lastAnchor).setTempShowed(false);
             else {
-                descriptor.getToolBar(LEFT).setTempShowed(false);
-                descriptor.getToolBar(RIGHT).setTempShowed(false);
-                descriptor.getToolBar(TOP).setTempShowed(false);
-                descriptor.getToolBar(BOTTOM).setTempShowed(false);
+                manager.getBar(LEFT).setTempShowed(false);
+                manager.getBar(RIGHT).setTempShowed(false);
+                manager.getBar(TOP).setTempShowed(false);
+                manager.getBar(BOTTOM).setTempShowed(false);
             }
 
             // Fire endDrag event
