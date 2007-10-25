@@ -337,11 +337,13 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 Content content = event.getContent();
                 switch (event.getActionId()) {
                     case ON_CLOSE:
-                        try {
-                            fireContentUIRemoving(getContentUI(content));
-                            contentManager.removeContent(content);
-                        } catch (Exception ignore) {
-//                            ignore.printStackTrace();
+                        if (getContentUI(content).isCloseable()) {
+                            try {
+                                fireContentUIRemoving(getContentUI(content));
+                                contentManager.removeContent(content);
+                            } catch (Exception ignore) {
+        //                            ignore.printStackTrace();
+                            }
                         }
                         break;
                     case ON_DETACH:

@@ -64,6 +64,17 @@ public interface ToolWindowManager {
                                   Component component, ToolWindowAnchor anchor);
 
     /**
+     *
+     * @param id
+     * @param title
+     * @param icon
+     * @param anchor
+     * @return
+     * @since 1.3.2
+     */
+    ActionTool registerActionTool(String id, String title, Icon icon, ToolWindowAnchor anchor);
+
+    /**
      * Removes the tool window for this id from this window manager if it is present.
      *
      * @param id id of tool window to be removed.

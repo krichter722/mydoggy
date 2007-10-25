@@ -34,6 +34,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     protected boolean flash;
     protected boolean maximized;
     protected boolean aggregateEnabled;
+    protected boolean representativeAnchorButtonVisible;
 
     protected java.util.List<ToolWindowTab> toolWindowTabs;
     protected ToolWindowTab defaultToolWindowTab;
@@ -70,6 +71,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         setTitle(title);
         setIcon(icon);
         this.available = this.active = this.visible = this.maximized = this.aggregateEnabled = false;
+        this.representativeAnchorButtonVisible = true;
     }
 
 
@@ -134,7 +136,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public boolean isVisible() {
-        if (getType() == ToolWindowType.TABBED) {
+        if (getType() == ToolWindowType.EXTERN) {
             for (ToolWindow tool : descriptor.getManager().getToolWindows()) {
                 for (ToolWindowTab tab : tool.getToolWindowTabs()) {
                     if (tab.getToolWindow() == this) {
@@ -223,7 +225,7 @@ public class MyDoggyToolWindow implements ToolWindow {
             getType() == ToolWindowType.DOCKED)
             aggregate();
 
-        if (getType() == ToolWindowType.TABBED) {
+        if (getType() == ToolWindowType.EXTERN) {
             // Call setVisible on tool that own this tool as tab...
             for (ToolWindow tool : descriptor.getManager().getToolWindows()) {
                 for (ToolWindowTab tab : tool.getToolWindowTabs()) {
@@ -363,14 +365,14 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setType(ToolWindowType type) {
-        if (type == ToolWindowType.TABBED /*|| this.type == ToolWindowType.TABBED TODO: */)
+        if (type == ToolWindowType.EXTERN /*|| this.type == ToolWindowType.EXTERN TODO: */)
             throw new IllegalArgumentException("Cannot call this method using that paramenter.");
 
-        if (this.type == ToolWindowType.TABBED)
+        if (this.type == ToolWindowType.EXTERN)
             descriptor.getManager().verifyDockable(this);
 
         boolean forceAvailable = false;
-        if (this.type == ToolWindowType.TABBED && type != ToolWindowType.FLOATING_FREE)
+        if (this.type == ToolWindowType.EXTERN && type != ToolWindowType.FLOATING_FREE)
             forceAvailable = true;
 
         setTypeInternal(type);
@@ -418,6 +420,22 @@ public class MyDoggyToolWindow implements ToolWindow {
         return maximized;
     }
 
+    public void setRepresentativeAnchorButtonVisible(boolean visible) {
+        synchronized (getLock()) {
+            if (this.representativeAnchorButtonVisible == visible)
+                return;
+
+            boolean old = this.representativeAnchorButtonVisible;
+            this.representativeAnchorButtonVisible = visible;
+
+            firePropertyChangeEvent("representativeAnchorButtonVisible", old, visible);
+        }
+    }
+
+    public boolean isRepresentativeAnchorButtonVisible() {
+        return representativeAnchorButtonVisible;
+    }
+
     public void setMaximized(boolean maximized) {
         if (this.maximized == maximized || !isVisible())
             return;
@@ -453,7 +471,7 @@ public class MyDoggyToolWindow implements ToolWindow {
                         return toolWindowTab;
                 }
 
-                ((MyDoggyToolWindow) dockable).setTypeInternal(ToolWindowType.TABBED);
+                ((MyDoggyToolWindow) dockable).setTypeInternal(ToolWindowType.EXTERN);
                 result = addTabInternal(delegator.getTitle(),
                                         delegator.getIcon(),
                                         delegator.getComponent(),
@@ -629,7 +647,7 @@ public class MyDoggyToolWindow implements ToolWindow {
                 oldType = this.type;
                 this.type = type;
 
-                if (type != ToolWindowType.TABBED) {
+                if (type != ToolWindowType.EXTERN) {
                     if (tempActive) {
                         setActive(true);
                     } else if (tempVisible)

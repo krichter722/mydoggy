@@ -70,7 +70,7 @@ public class MyDoggyContentManager implements ContentManager {
 
 
         System.out.println("toolWindow = " + toolWindow.getId());
-        ((MyDoggyToolWindow)toolWindow).setTypeInternal(ToolWindowType.TABBED);
+        ((MyDoggyToolWindow)toolWindow).setTypeInternal(ToolWindowType.EXTERN);
         Content content = addContentInternal(toolWindow.getId(),
                                              toolWindow.getTitle(),
                                              toolWindow.getIcon(),

@@ -319,6 +319,16 @@ public interface ToolWindow extends Dockable {
     boolean isMaximized();
 
     /**
+     * TODO:
+     *
+     * @param visible
+     * @since 1.3.2
+     */
+    void setRepresentativeAnchorButtonVisible(boolean visible);
+
+    boolean isRepresentativeAnchorButtonVisible();
+
+    /**
      * Adds a <code>component</code> represented by a <code>title</code> and no icon.
      *
      * @param title the title to be displayed in this tab

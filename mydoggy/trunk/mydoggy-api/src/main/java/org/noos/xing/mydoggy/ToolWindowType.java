@@ -60,5 +60,6 @@ public enum ToolWindowType {
      * @see ToolWindow#addToolWindowTab(Dockable)
      * @since 1.3.2
      */
-    TABBED
+    EXTERN,
+
 }

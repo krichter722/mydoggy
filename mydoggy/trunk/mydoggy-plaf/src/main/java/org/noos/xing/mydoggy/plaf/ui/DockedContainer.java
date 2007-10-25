@@ -194,7 +194,7 @@ public class DockedContainer implements ToolWindowContainer {
                     titleBarButtons.configureIcons(ToolWindowType.DOCKED);
                 }
 
-                if (evt.getOldValue() == ToolWindowType.TABBED) {
+                if (evt.getOldValue() == ToolWindowType.EXTERN) {
                     setMainComponent(toolWindow.getToolWindowTabs()[0].getComponent());
                 }
             }
