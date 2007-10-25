@@ -155,6 +155,11 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return toolWindow;
     }
 
+    public ActionTool registerActionTool(String id, String title, Icon icon, ToolWindowAnchor anchor) {
+        // TODO:
+        return null;
+    }
+
     public void unregisterToolWindow(String id) {
         ToolWindowDescriptor toolWindowDescriptor = tools.get(id);
 
@@ -530,7 +535,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     protected void initListeners() {
-        propertyChangeSupport.addPropertyChangeListener("available", new AvailablePropertyChangeListener());
+        AvailablePropertyChangeListener availablePropertyChangeListener = new AvailablePropertyChangeListener();
+        propertyChangeSupport.addPropertyChangeListener("available", availablePropertyChangeListener);
+        propertyChangeSupport.addPropertyChangeListener("representativeAnchorButtonVisible", availablePropertyChangeListener);
         propertyChangeSupport.addPropertyChangeListener("visible", new VisiblePropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("active", new ActivePropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("anchor", new AnchorPropertyChangeListener());

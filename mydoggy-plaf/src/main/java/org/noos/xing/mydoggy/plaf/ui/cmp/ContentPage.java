@@ -243,13 +243,15 @@ public class ContentPage implements TabbedContentUI {
                 public void actionPerformed(ActionEvent e) {
                     tabbedPane.fireCloseTabEvent(mouseEvent, mouseOverTab);
                 }
-            }));
+            })).setEnabled(isCloseable());
+
             stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.closeAll")) {
                 public void actionPerformed(ActionEvent e) {
                     for (int i = 0, size = tabbedPane.getTabCount(); i < size; i++)
                         tabbedPane.fireCloseTabEvent(mouseEvent, 0);
                 }
             }));
+
             stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.closeAllButThis")) {
                 public void actionPerformed(ActionEvent e) {
 //                    System.out.println("mouseOverTab(!)  " + mouseOverTab);
@@ -265,7 +267,7 @@ public class ContentPage implements TabbedContentUI {
                 public void actionPerformed(ActionEvent e) {
                     tabbedPane.fireDetachTabEvent(mouseEvent, mouseOverTab);
                 }
-            }));
+            })).setEnabled(isDetachable());
             stdPopupMenu.add(maximizeAction = new MaximizeAction());
 //            } else {
             maximizeAction.putValue(Action.NAME, tabbedPane.isMaximized() ?

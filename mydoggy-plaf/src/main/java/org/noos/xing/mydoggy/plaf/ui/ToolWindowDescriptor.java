@@ -64,7 +64,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
                 setFloatingWindow(true);
             else if (evt.getOldValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING)
                 setFloatingWindow(false);
-            if (evt.getNewValue() == ToolWindowType.TABBED)
+            if (evt.getNewValue() == ToolWindowType.EXTERN)
                 resetRepresentativeAnchor();
         } else if ("index".equals(evt.getPropertyName())) {
             updateRepresentativeAnchor();

@@ -84,7 +84,7 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
 
                 if (doAction) {
                     for (ToolWindow tool : manager.getToolWindows()) {
-                        if (tool.getType() != ToolWindowType.TABBED)
+                        if (tool.getType() != ToolWindowType.EXTERN)
                             tool.setVisible(false);
                     }
 

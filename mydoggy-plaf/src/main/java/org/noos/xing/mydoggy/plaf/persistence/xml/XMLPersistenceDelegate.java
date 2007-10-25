@@ -461,7 +461,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 }
 
                 ToolWindowType type = ToolWindowType.valueOf(tool.getAttribute("type"));
-                if (type != ToolWindowType.TABBED)
+                if (type != ToolWindowType.EXTERN)
                     toolWindow.setType(type);
 
                 toolWindow.setAutoHide(Boolean.parseBoolean(tool.getAttribute("autoHide")));

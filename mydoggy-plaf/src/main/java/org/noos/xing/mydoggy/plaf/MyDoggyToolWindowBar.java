@@ -160,7 +160,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
     protected void initListeners() {
         propertyChangeSupport = new PropertyChangeSupport(this);
-        propertyChangeSupport.addPropertyChangeListener("available", new AvailableListener());
+        AvailableListener availableListener = new AvailableListener();
+        propertyChangeSupport.addPropertyChangeListener("available", availableListener);
+        propertyChangeSupport.addPropertyChangeListener("representativeAnchorButtonVisible", availableListener);
         propertyChangeSupport.addPropertyChangeListener("visible.before", new VisibleBeforeListener());
         propertyChangeSupport.addPropertyChangeListener("visible.DOCKED", new VisibleDockedListener());
         propertyChangeSupport.addPropertyChangeListener("visible.FLOATING", new VisibleFloatingListener());
@@ -427,7 +429,14 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
 
             if (descriptor.getToolWindow().getType() != ToolWindowType.FLOATING_FREE &&
-                descriptor.getToolWindow().getType() != ToolWindowType.TABBED) {
+                descriptor.getToolWindow().getType() != ToolWindowType.EXTERN) {
+
+                if (!evt.getPropertyName().equals("representativeAnchorButtonVisible")) {
+                    if (!descriptor.getToolWindow().isRepresentativeAnchorButtonVisible())
+                        return;                    
+                }
+
+
                 boolean oldAvailable = (Boolean) evt.getOldValue();
                 boolean newAvailable = (Boolean) evt.getNewValue();
 
@@ -497,7 +506,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
                 SwingUtil.repaint(contentPane);
             } else
-            if ((evt.getNewValue() == ToolWindowType.FLOATING_FREE || evt.getNewValue() == ToolWindowType.TABBED) &&
+            if ((evt.getNewValue() == ToolWindowType.FLOATING_FREE || evt.getNewValue() == ToolWindowType.EXTERN) &&
                 toolWindowDescriptor.getRepresentativeAnchor() != null) {
 
                 removeRepresentativeAnchor(toolWindowDescriptor.getRepresentativeAnchor(), toolWindowDescriptor);
@@ -529,7 +538,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                         if (toolWindow.getType() == ToolWindowType.FLOATING ||
                             toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
                             toolWindow.getType() == ToolWindowType.FLOATING_LIVE ||
-                            toolWindow.getType() == ToolWindowType.TABBED)
+                            toolWindow.getType() == ToolWindowType.EXTERN)
                             continue;
 
                         if (toolWindow.getAnchor().equals(sourceTool.getAnchor()))
@@ -977,7 +986,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                         if (tool != maximizedTool &&
                             tool.getType() != ToolWindowType.FLOATING &&
                             tool.getType() != ToolWindowType.FLOATING_FREE &&
-                            tool.getType() != ToolWindowType.TABBED)
+                            tool.getType() != ToolWindowType.EXTERN)
                             tool.setVisible(false);
 
                     setSplitDividerLocation(-1);

@@ -185,6 +185,7 @@ public class MyDoggySet {
         descriptor.setSize(250, 250);
 
         toolWindow = toolWindowManager.getToolWindow("Tool 3");
+        toolWindow.setRepresentativeAnchorButtonVisible(false);
         dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
 
         JMenuItem menuItem = new JMenuItem("Hello World!!!");
