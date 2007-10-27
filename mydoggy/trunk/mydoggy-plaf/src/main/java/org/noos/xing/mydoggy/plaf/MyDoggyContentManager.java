@@ -68,8 +68,7 @@ public class MyDoggyContentManager implements ContentManager {
     public Content addContent(ToolWindow toolWindow) {
         toolWindowManager.verifyDockable(toolWindow);
 
-
-        System.out.println("toolWindow = " + toolWindow.getId());
+//        System.out.println("toolWindow = " + toolWindow.getId());
         ((MyDoggyToolWindow)toolWindow).setTypeInternal(ToolWindowType.EXTERN);
         Content content = addContentInternal(toolWindow.getId(),
                                              toolWindow.getTitle(),

@@ -192,6 +192,30 @@ public class ToolWindowBarDropTarget extends DropTarget {
                 } catch (Exception e) {
                     dtde.rejectDrop();
                 }
+            } if (transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {
+
+                ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
+
+                try {
+                    String contentId = (String) transferable.getTransferData(MyDoggyTransferable.CONTENT_ID_DF);
+                    Content content = manager.getContentManager().getContent(contentId);
+
+                    // Chech if it was a tab
+                    if (content.getDockableDelegator() != null) {
+                        if (content.getDockableDelegator() instanceof ToolWindow) {
+                            ToolWindow toolWindow = (ToolWindow) content.getDockableDelegator();
+
+                            manager.getContentManager().removeContent(content);
+
+                            toolWindow.setAnchor(anchor, index);
+                            toolWindow.setActive(true);
+                        }
+                    }
+
+                    dtde.dropComplete(true);
+                } catch (Exception e) {
+                    dtde.rejectDrop();
+                }
             } else
                 dtde.rejectDrop();
         }
