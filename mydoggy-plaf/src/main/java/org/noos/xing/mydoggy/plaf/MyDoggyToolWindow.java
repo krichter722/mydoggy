@@ -365,7 +365,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setType(ToolWindowType type) {
-        if (type == ToolWindowType.EXTERN /*|| this.type == ToolWindowType.EXTERN TODO: */)
+        if (type == ToolWindowType.EXTERN)
             throw new IllegalArgumentException("Cannot call this method using that paramenter.");
 
         if (this.type == ToolWindowType.EXTERN)
