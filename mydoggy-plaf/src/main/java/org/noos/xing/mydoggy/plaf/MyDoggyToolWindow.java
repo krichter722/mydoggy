@@ -375,6 +375,10 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (this.type == ToolWindowType.EXTERN && type != ToolWindowType.FLOATING_FREE)
             forceAvailable = true;
 
+        if (type == ToolWindowType.FLOATING_FREE) {
+            representativeAnchorButtonVisible = false;
+        }
+
         setTypeInternal(type);
 
         if (forceAvailable) {
@@ -422,6 +426,9 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     public void setRepresentativeAnchorButtonVisible(boolean visible) {
         synchronized (getLock()) {
+            if (type == ToolWindowType.FLOATING_FREE)
+                throw new IllegalArgumentException("Cannot call this method if the toolwindow has type FLOATING_FREE");
+
             if (this.representativeAnchorButtonVisible == visible)
                 return;
 

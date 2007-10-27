@@ -556,7 +556,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         }
 
         public void dragMouseMoved(DragSourceDragEvent dsde) {
-            if (!checkStatus() || ghostImage == null)
+            if (!checkStatus())
                 return;
 
             // Obtain anchor for location
@@ -625,7 +625,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         }
 
         public void dragDropEnd(DragSourceDropEvent dsde) {
-            if (!checkStatus() || ghostImage == null)
+            if (!checkStatus())
                 return;
 
             releaseLocksOne();

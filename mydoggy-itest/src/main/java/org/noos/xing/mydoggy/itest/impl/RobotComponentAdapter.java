@@ -49,7 +49,7 @@ public class RobotComponentAdapter implements ComponentAdapter {
 
         while (!iterator.isDone()) {
             int type = iterator.currentSegment(values);
-            System.out.println(type);
+//            System.out.println(type);
             switch (type) {
                 case PathIterator.SEG_MOVETO :
                     moveToInternal(new Point((int) values[0], (int) values[1]));

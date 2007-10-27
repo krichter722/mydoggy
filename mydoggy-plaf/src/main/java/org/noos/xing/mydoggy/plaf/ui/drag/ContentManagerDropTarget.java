@@ -62,7 +62,7 @@ public class ContentManagerDropTarget extends DropTarget {
                                 dtde.getTransferable().getTransferData(MyDoggyTransferable.TOOL_WINDOW_ID_DF)
                         );
                         if (toolWindow != null) {
-                            toolWindowManager.getContentManager().addContent(toolWindow);
+                            toolWindowManager.getContentManager().addContent(toolWindow).setSelected(true);
 
                             dtde.dropComplete(true);
                         } else

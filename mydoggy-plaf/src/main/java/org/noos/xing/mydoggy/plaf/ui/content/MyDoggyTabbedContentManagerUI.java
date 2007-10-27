@@ -378,7 +378,6 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         }
         SwingUtil.registerDragGesture(tabbedContentManager,
                                       new TabbedContentManagerDragGesture());
-        // TODO: add drag gesture
         contentManagerUIListeners = new EventListenerList();
     }
 
@@ -693,7 +692,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
     }
 
-    class TabbedContentManagerDragGesture extends DragGestureAdapter {
+    public class TabbedContentManagerDragGesture extends DragGestureAdapter {
 
         public TabbedContentManagerDragGesture() {
             super(toolWindowManager);
@@ -708,19 +707,24 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             Point origin = dge.getDragOrigin();
             int index = tabbedContentManager.indexAtLocation(origin.x, origin.y);
             if (index != -1) {
-                dge.startDrag(Cursor.getDefaultCursor(),
-                              new MyDoggyTransferable(MyDoggyTransferable.CONTENT_ID_DF,
-                                                     tabbedContentManager.getContentPage(index).getContent().getKey()));
+                ContentPage contantPage = tabbedContentManager.getContentPage(index);
+                if (contantPage.getContent().getDockableDelegator() !=null) {
+                    dge.startDrag(Cursor.getDefaultCursor(),
+                                  new MyDoggyTransferable(MyDoggyTransferable.CONTENT_ID_DF,
+                                                         contantPage.getContent().getKey()),
+                                  this);
 
-                // Setup ghostImage
-                Icon icon = tabbedContentManager.getContentPage(index).getContentIcon();
-                BufferedImage ghostImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
-                tabbedContentManager.getContentPage(index).getContentIcon().paintIcon(
-                        tabbedContentManager, ghostImage.createGraphics(), 0,0
-                );
+                    // Setup ghostImage
+                    Icon icon = contantPage.getContentIcon();
+                    BufferedImage ghostImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
+                    contantPage.getContentIcon().paintIcon(
+                            tabbedContentManager, ghostImage.createGraphics(), 0,0
+                    );
 
-                setGhostImage(dge.getDragOrigin(), ghostImage);
-            }
+                    setGhostImage(dge.getDragOrigin(), ghostImage);
+                } 
+            } else
+                releaseLocks();
         }
 
         public void dragMouseMoved(DragSourceDragEvent dsde) {
@@ -733,9 +737,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             if (!checkStatus())
                 return;
 
-            releaseLocksOne();
-            releaseLocksTwo();
-
+            releaseLocks();
             // Finalize drag action...
             cleanupGhostImage();
         }
