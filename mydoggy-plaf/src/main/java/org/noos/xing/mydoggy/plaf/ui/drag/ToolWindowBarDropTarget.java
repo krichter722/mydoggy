@@ -181,7 +181,8 @@ public class ToolWindowBarDropTarget extends DropTarget {
                                 transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)
                         );
                         tab.getOwner().removeToolWindowTab(tab);
-                        toolWindow = tab.getToolWindow();
+                        
+                        toolWindow = (ToolWindow) tab.getDockableDelegator();
                         toolWindow.setAnchor(anchor, index);
                         toolWindow.setActive(true);
                     } else {

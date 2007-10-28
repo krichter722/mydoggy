@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf;
 
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowTab;
+import org.noos.xing.mydoggy.Dockable;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -21,13 +22,12 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
     protected boolean selected;
     protected boolean closeable;
     
-    protected ToolWindow toolWindow;
-    protected ToolWindowTab toolWindowTab;
+    protected Dockable dockable;
 
     protected EventListenerList listenerList;
 
     public MyDoggyToolWindowTab(ToolWindow owner, String title, Icon icon, Component component,
-                                ToolWindow toolWindow, ToolWindowTab toolWindowTab) {
+                                Dockable dockable) {
         this.id = "" + System.nanoTime();
         this.owner = owner;
         this.title = title;
@@ -36,12 +36,12 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         this.selected = false;
         this.listenerList = new EventListenerList();
         this.closeable = true;
-        this.toolWindow = toolWindow;
-        this.toolWindowTab = toolWindowTab;
-        if (toolWindowTab != null)  {
-            toolWindowTab.addPropertyChangeListener(new PropertyChangeListener() {
+        this.dockable = dockable;
+
+        if (dockable instanceof ToolWindowTab)  {
+            //  TODO: listen to all properties...maybe the support is necessary for all type of dockable
+            ((ToolWindowTab)dockable).addPropertyChangeListener(new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
-                    //  TODO: listen to all properties
                     String propertyName = evt.getPropertyName();
                     if ("selected".equals(propertyName))  {
                         setSelected((Boolean) evt.getNewValue());
@@ -51,16 +51,13 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         }
     }
 
-    public ToolWindow getToolWindow() {
-        return toolWindow;
-    }
-
-    public ToolWindowTab getToolWindowTab() {
-        return toolWindowTab;
-    }
 
     public ToolWindow getOwner() {
         return owner;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getTitle() {
@@ -133,6 +130,10 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         firePropertyChangeEvent("closeable", old, closeable);
     }
 
+    public Dockable getDockableDelegator() {
+        return dockable;
+    }
+
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         listenerList.add(PropertyChangeListener.class, listener);
     }
@@ -153,7 +154,7 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
                ", component=" + component +
                ", selected=" + selected +
                ", closeable=" + closeable +
-               ", toolWindow=" + toolWindow +
+               ", toolWindow=" + dockable +
                ", listenerList=" + listenerList +
                '}';
     }
@@ -168,7 +169,4 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         }
     }
 
-    public Object getId() {
-        return id;
-    }
 }

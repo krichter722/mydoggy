@@ -752,7 +752,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public void verifyDockable(Dockable dockable) {
         for (ToolWindow toolWindow : getToolWindows()) {
             for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
-                if (tab.getToolWindow() == dockable) {
+                if (tab.getDockableDelegator() == dockable) {
                     toolWindow.removeToolWindowTab(tab);
                     break;
                 }

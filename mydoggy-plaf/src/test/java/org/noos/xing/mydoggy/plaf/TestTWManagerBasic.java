@@ -57,12 +57,12 @@ public class TestTWManagerBasic extends TestCase {
         assertNotNull(toolWindowManager.getToolsByAnchor(ToolWindowAnchor.RIGHT));
         assertEquals(0, toolWindowManager.getToolsByAnchor(ToolWindowAnchor.RIGHT).length);
 
-        // getToolWindow(int)
+        // getDockableDelegator(int)
         assertNull(toolWindowManager.getToolWindow(0));
         assertNull(toolWindowManager.getToolWindow(-1));
         assertNull(toolWindowManager.getToolWindow(10));
 
-        // getToolWindow(String)
+        // getDockableDelegator(String)
         assertNull(toolWindowManager.getToolWindow("id"));
         assertNull(toolWindowManager.getToolWindow(null));
     }

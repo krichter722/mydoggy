@@ -11,8 +11,16 @@ import java.awt.*;
  * 
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.3.0
+ * @todo add javadocs...
  */
 public interface ToolWindowTab extends Dockable {
+
+    /**
+     *
+     * @return
+     * @since 1.3.2
+     */
+    ToolWindow getOwner();
 
     /**
      * Returns the tab title.
@@ -106,6 +114,13 @@ public interface ToolWindowTab extends Dockable {
     void setCloseable(boolean closeable);
 
     /**
+     *
+     * @return
+     * @since 1.3.2
+     */
+    Dockable getDockableDelegator();
+
+    /**
      * Adds a PropertyChangeListener to the listener list. The listener is
      * registered for all bound properties of this class, including the
      * following:
@@ -151,11 +166,4 @@ public interface ToolWindowTab extends Dockable {
      */
     PropertyChangeListener[] getPropertyChangeListeners();
 
-    ToolWindow getToolWindow();
-
-    ToolWindowTab getToolWindowTab();
-
-    ToolWindow getOwner();
-
-    Object getId();
 }
