@@ -45,13 +45,13 @@ public class FloatingToolTransparencyListener implements PropertyChangeListener,
     }
 
     public synchronized void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getSource() != descriptor /*|| !manager.getToolWindow().isVisible()*/
+        if (evt.getSource() != descriptor /*|| !manager.getDockableDelegator().isVisible()*/
             || (descriptor.getToolWindow().getType() != ToolWindowType.FLOATING &&
                 descriptor.getToolWindow().getType() != ToolWindowType.FLOATING_FREE))
             return;
 
         assert evt.getPropertyName() != null;
-//        assert manager.getToolWindow().isVisible();
+//        assert manager.getDockableDelegator().isVisible();
         assert (descriptor.getToolWindow().getType() == ToolWindowType.FLOATING ||
                 descriptor.getToolWindow().getType() == ToolWindowType.FLOATING_FREE);
 

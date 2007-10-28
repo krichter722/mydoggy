@@ -139,7 +139,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (getType() == ToolWindowType.EXTERN) {
             for (ToolWindow tool : descriptor.getManager().getToolWindows()) {
                 for (ToolWindowTab tab : tool.getToolWindowTabs()) {
-                    if (tab.getToolWindow() == this) {
+                    if (tab.getDockableDelegator() == this) {
                         return tool.isVisible() && tab.isSelected();
                     }
                 }
@@ -229,7 +229,7 @@ public class MyDoggyToolWindow implements ToolWindow {
             // Call setVisible on tool that own this tool as tab...
             for (ToolWindow tool : descriptor.getManager().getToolWindows()) {
                 for (ToolWindowTab tab : tool.getToolWindowTabs()) {
-                    if (tab.getToolWindow() == this) {
+                    if (tab.getDockableDelegator() == this) {
                         tool.setVisible(visible);
                         if (visible)
                             tab.setSelected(true);
@@ -474,7 +474,7 @@ public class MyDoggyToolWindow implements ToolWindow {
 
                 ToolWindow delegator = (ToolWindow) dockable;
                 for (ToolWindowTab toolWindowTab : toolWindowTabs) {
-                    if (toolWindowTab.getToolWindow() == dockable)
+                    if (toolWindowTab.getDockableDelegator() == dockable)
                         return toolWindowTab;
                 }
 
@@ -509,15 +509,19 @@ public class MyDoggyToolWindow implements ToolWindow {
                 defaultToolWindowTab = toolWindowTabs.get(0);
         }
 
-        if (toolWindowTab.getToolWindow() != null) {
-            ToolWindow toolWindow = toolWindowTab.getToolWindow();
-            toolWindow.setType(ToolWindowType.DOCKED);
+        if (toolWindowTab.getDockableDelegator() != null) {
+            Dockable dockable = toolWindowTab.getDockableDelegator();
 
-            for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+            if (dockable instanceof ToolWindow) {
+                ToolWindow toolWindow = (ToolWindow) dockable;
+                toolWindow.setType(ToolWindowType.DOCKED);
 
-                for (ToolWindowTab fromTab : getToolWindowTabs()) {
-                    if (fromTab.getToolWindowTab() == tab) {
-                        removeToolWindowTab(fromTab);
+                for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+
+                    for (ToolWindowTab fromTab : getToolWindowTabs()) {
+                        if (fromTab.getDockableDelegator() == tab) {
+                            removeToolWindowTab(fromTab);
+                        }
                     }
                 }
             }
@@ -594,7 +598,7 @@ public class MyDoggyToolWindow implements ToolWindow {
 
 
     protected ToolWindowTab addTabInternal(String title, Icon icon, Component component, ToolWindow toolWindow) {
-        ToolWindowTab tab = new MyDoggyToolWindowTab(this, title, icon, component, toolWindow, null);
+        ToolWindowTab tab = new MyDoggyToolWindowTab(this, title, icon, component, toolWindow);
         toolWindowTabs.add(tab);
 
         fireToolWindowTabEvent(new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_ADDED, this, tab));
@@ -611,7 +615,6 @@ public class MyDoggyToolWindow implements ToolWindow {
                                                         tab.getTitle(),
                                                         tab.getIcon(),
                                                         tab.getComponent(),
-                                                        this,
                                                         tab);
         toolWindowTabs.add(newTab);
 

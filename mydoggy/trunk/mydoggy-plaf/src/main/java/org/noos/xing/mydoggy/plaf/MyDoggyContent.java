@@ -53,6 +53,9 @@ public class MyDoggyContent implements PlafContentUI {
         this.uiListeners = new EventListenerList();
     }
 
+    public String getId() {
+        return key.toString();
+    }
 
     public Object getKey() {
         return key;

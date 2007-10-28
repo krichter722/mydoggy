@@ -195,13 +195,15 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
         boolean addTabsTag = false;
         for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
-            if (tab.getToolWindow() != null) {
+            if (tab.getDockableDelegator() != null) {
+                Dockable dockable = (Dockable) tab.getDockableDelegator();
+
                 if (!addTabsTag) {
                     addTabsTag = true;
                     writer.startElement("tabs");
                 }
                 AttributesImpl attributes = new AttributesImpl();
-                attributes.addAttribute(null, "toolWindowId", null, null, tab.getToolWindow().getId());
+                attributes.addAttribute(null, "toolWindowId", null, null, tab.getDockableDelegator().getId());
                 writer.dataElement("tab", attributes);
             }
         }
@@ -476,8 +478,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                     // Compare tabLists
                     for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
-                        if (tab.getToolWindow() != null) {
-                            String id = tab.getToolWindow().getId();
+                        if (tab.getDockableDelegator() != null) {
+                            String id = tab.getDockableDelegator().getId();
 
                             for (int j = 0, sizej = tabList.getLength(); j < sizej; j++) {
                                 Element tabElement = (Element) tabList.item(j);
@@ -498,7 +500,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     }
                 } else {
                     for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
-                        if (tab.getToolWindow() != null)
+                        if (tab.getDockableDelegator() != null)
                             toolWindow.removeToolWindowTab(tab);
                     }
                 }

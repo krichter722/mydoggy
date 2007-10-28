@@ -77,7 +77,7 @@ public class ToolWindowDropTarget extends DropTarget {
                                         transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)
                                 );
                                 tab.getOwner().removeToolWindowTab(tab);
-                                toolWindow = tab.getToolWindow();
+                                toolWindow = (ToolWindow) tab.getDockableDelegator();
                             }
 
                             boolean oldAM = toolWindow.isAggregateMode();

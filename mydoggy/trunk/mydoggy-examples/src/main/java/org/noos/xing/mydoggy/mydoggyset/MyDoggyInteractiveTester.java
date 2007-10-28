@@ -63,7 +63,7 @@ public class MyDoggyInteractiveTester {
             InteractiveMouse mouse = interactiveUI.getInteractiveMouse();
             InteractiveAssertor assertor = interactiveUI.getInteractiveAssertor();
 
-            ToolWindow toolWindow = myDoggySet.getToolWindowManager().getToolWindow("Tool 1");
+            ToolWindow toolWindow = myDoggySet.getToolWindowManager().getDockableDelegator("Tool 1");
 
             moveToolTo(interactiveUI, "Tool 7", ToolWindowAnchor.BOTTOM);
 
@@ -144,7 +144,7 @@ public class MyDoggyInteractiveTester {
 
             // Validate initiale state...
             assertor.assertTrue("Invalid state",
-                                     myDoggySet.getToolWindowManager().getToolWindow("Tool 1").getType() != ToolWindowType.SLIDING);
+                                     myDoggySet.getToolWindowManager().getDockableDelegator("Tool 1").getType() != ToolWindowType.SLIDING);
 
             mouse.moveTo("toolWindow.rb.Tool 1");
             mouse.click(InteractiveMouse.Type.LEFT);
@@ -155,7 +155,7 @@ public class MyDoggyInteractiveTester {
             interactiveUI.delay(1000);
 
             assertor.assertTrue("Invalid state",
-                                     myDoggySet.getToolWindowManager().getToolWindow("Tool 1").getType() == ToolWindowType.SLIDING);
+                                     myDoggySet.getToolWindowManager().getDockableDelegator("Tool 1").getType() == ToolWindowType.SLIDING);
         }
 
     }
@@ -181,7 +181,7 @@ public class MyDoggyInteractiveTester {
             mouse.press(InteractiveMouse.Type.LEFT);
             interactiveUI.delay(1000);
 
-            Point wLocation = ((FloatingTypeDescriptor) myDoggySet.getToolWindowManager().getToolWindow("Tool 1").getTypeDescriptor(ToolWindowType.FLOATING)).getLocation();
+            Point wLocation = ((FloatingTypeDescriptor) myDoggySet.getToolWindowManager().getDockableDelegator("Tool 1").getTypeDescriptor(ToolWindowType.FLOATING)).getLocation();
             wLocation.x -= 50;
             wLocation.y -= 50;
 

@@ -13,6 +13,7 @@ import java.io.Serializable;
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.0.0
+ * @todo add javadocs..
  */
 public interface Content extends Dockable {
 
