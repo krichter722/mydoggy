@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.drag;
 
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 
 import javax.swing.*;
@@ -35,7 +34,8 @@ public class ToolWindowTitleDropTarget extends DropTarget {
         public void dragEnter(DropTargetDragEvent dtde) {
             if  (dtde.getDropAction() == DnDConstants.ACTION_MOVE &&
                  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) ||
-                  dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF))
+                  dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF) ||
+                  dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF))
                  ) {
 
                 dtde.acceptDrag(dtde.getDropAction());
@@ -69,6 +69,33 @@ public class ToolWindowTitleDropTarget extends DropTarget {
                         
                         if (toolWindow != null && toolWindow != owner) {
                             owner.addToolWindowTab(toolWindow).setSelected(true);
+
+                            dtde.dropComplete(true);
+                        } else
+                            dtde.dropComplete(false);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        dtde.dropComplete(false);
+                    }
+                } else if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF))  {
+                    try {
+                        Content content = toolWindowManager.getContentManager().getContent(
+                                dtde.getTransferable().getTransferData(MyDoggyTransferable.CONTENT_ID_DF)
+                        );
+                        if (content != null) {
+                            toolWindowManager.getContentManager().removeContent(content);
+
+                            if (content.getDockableDelegator() != null) {
+                                Dockable delegator = content.getDockableDelegator();
+
+                                if (delegator instanceof ToolWindow) {
+                                    ToolWindow toolWindow = (ToolWindow) delegator;
+
+                                    owner.addToolWindowTab(toolWindow).setSelected(true);
+                                }
+                            } else {
+                                // TODO : Need a tool window for delegation...
+                            }
 
                             dtde.dropComplete(true);
                         } else

@@ -469,6 +469,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     public ToolWindowTab addToolWindowTab(Dockable dockable) {
         synchronized (getLock()) {
             ToolWindowTab result;
+            
             if (dockable instanceof ToolWindow) {
                 descriptor.getManager().verifyDockable(dockable);
 
