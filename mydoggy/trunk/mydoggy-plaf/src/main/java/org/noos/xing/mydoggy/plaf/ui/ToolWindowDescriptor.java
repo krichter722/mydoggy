@@ -214,7 +214,10 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
     public void unregister() {
         toolWindow.removePropertyChangeListener(this);
-        dockedContainer.uninstall();
+
+        // TODO: should I call uninstall to all contains=
+        if (dockedContainer != null)
+            dockedContainer.uninstall();
     }
 
     public void updateUI() {
