@@ -13,6 +13,7 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.SimpliedTitleBarButtons;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
@@ -248,6 +249,13 @@ public class MyDoggySet {
         MyDoggyToolWindowManager manager = ((MyDoggyToolWindowManager) toolWindowManager);
         ResourceManager resourceManager = manager.getResourceManager();
         MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) manager.getResourceManager();
+        myDoggyResourceManager.putComponentCreator(MyDoggyKeySpace.DESKTOP_CONTENT_PANE, new MyDoggyResourceManager.ComponentCreator() {
+            public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
+                JDesktopPane desktopPane = new JDesktopPane();
+                desktopPane.setDesktopManager(new ContentDesktopManager());
+                return desktopPane;
+            }
+        });
 
 /*
         manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START, Color.RED);
