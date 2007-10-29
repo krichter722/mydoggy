@@ -769,13 +769,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     protected class AvailablePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowDescriptor window = (ToolWindowDescriptor) evt.getSource();
+            ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
 
+            ToolWindowAnchor target = descriptor.getToolWindow().getAnchor();
             // Notify specific bar
-            getBar(window.getToolWindow().getAnchor()).propertyChange(evt);
+            getBar(target).propertyChange(evt);
 
             // Syncronize bars panel
-            syncPanel(window.getToolWindow().getAnchor());
+            syncPanel(target);
         }
     }
 

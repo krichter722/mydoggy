@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @todo add store capabilities...
  */
 public class MultiSplitContainer extends JPanel {
     private List<Component> contents;
