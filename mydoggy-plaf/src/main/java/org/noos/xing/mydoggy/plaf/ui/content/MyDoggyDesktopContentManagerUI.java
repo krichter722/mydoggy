@@ -32,6 +32,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     protected ResourceManager resourceManager;
 
     protected JDesktopPane desktopPane;
+    protected boolean closeable, detachable;
     protected boolean installed;
 
     protected PropertyChangeSupport propertyChangeSupport;
@@ -50,21 +51,25 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
 
     public MyDoggyDesktopContentManagerUI() {
+        this.closeable = this.detachable = true;
     }
 
 
     public void setCloseable(boolean closeable) {
-        for (JInternalFrame frame : desktopPane.getAllFrames()) {
-            frame.setClosable(closeable);
-        }
+        this.closeable = closeable;
+        if (desktopPane != null)
+            for (JInternalFrame frame : desktopPane.getAllFrames()) {
+                frame.setClosable(closeable);
+            }
     }
 
     public void setDetachable(boolean detachable) {
-        JInternalFrame[] frames = desktopPane.getAllFrames();
-        for (JInternalFrame internalFrame : frames) {
-            DesktopContentFrame frame = (DesktopContentFrame) internalFrame;
-            frame.setDetachable(detachable);
-        }
+        this.detachable = detachable;
+        if (desktopPane != null)
+            for (JInternalFrame internalFrame : desktopPane.getAllFrames()) {
+                DesktopContentFrame frame = (DesktopContentFrame) internalFrame;
+                frame.setDetachable(detachable);
+            }
     }
 
     public DesktopContentUI getContentUI(Content content) {
@@ -256,6 +261,8 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         if (internalFrame == null) {
             internalFrame = new DesktopContentFrame(content, content.getTitle(), true, true, true, true);
             internalFrame.setFrameIcon(content.getIcon());
+            internalFrame.setClosable(closeable);
+            ((DesktopContentFrame)internalFrame).setDetachable(detachable);
 
             internalFrame.getContentPane().add(content.getComponent());
 
