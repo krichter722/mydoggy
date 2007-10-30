@@ -11,9 +11,10 @@ import org.noos.xing.mydoggy.mydoggyset.ui.MonitorPanel;
 import org.noos.xing.mydoggy.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.*;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.SimpliedTitleBarButtons;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
+import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyDesktopContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
@@ -73,6 +74,12 @@ public class MyDoggySet {
     protected void start() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                ContentManager contentManager = toolWindowManager.getContentManager();
+                MyDoggyDesktopContentManagerUI desktopManagerUI = new MyDoggyDesktopContentManagerUI();
+                desktopManagerUI.setDetachable(true);
+                desktopManagerUI.setCloseable(true);
+                contentManager.setContentManagerUI(desktopManagerUI);
+
                 contentContext.put(MyDoggySet.class, null);
                 frame.setVisible(true);
             }
@@ -328,13 +335,13 @@ public class MyDoggySet {
         // Change title bar buttons dispositions
         myDoggyResourceManager.putInstanceCreator(TitleBarButtons.class,
                                                   new MyDoggyResourceManager.InstanceCreator() {
-                public Object createComponent(Object... args) {
-                    return new SimpliedTitleBarButtons(
-                            (ToolWindowDescriptor) args[0],
-                            (DockedContainer) args[1]
-                    );
-                }
-            }
+                                                      public Object createComponent(Object... args) {
+                                                          return new SimpliedTitleBarButtons(
+                                                                  (ToolWindowDescriptor) args[0],
+                                                                  (DockedContainer) args[1]
+                                                          );
+                                                      }
+                                                  }
         );
 
         // END CUSTOMIZATION....
