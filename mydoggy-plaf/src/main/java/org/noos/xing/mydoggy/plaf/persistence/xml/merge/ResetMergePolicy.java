@@ -12,7 +12,9 @@ public class ResetMergePolicy implements MergePolicyApplier {
     public void applyToolWindow(ToolWindow toolWindow, Element toolElement) {
         boolean visible = Boolean.parseBoolean(toolElement.getAttribute("visible"));
 
-        if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
+        if (toolWindow.getType() == ToolWindowType.FLOATING || 
+            toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
+            toolWindow.getType() == ToolWindowType.SLIDING) {
             toolWindow.setVisible(visible);
         } else {
             if (visible)
