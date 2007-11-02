@@ -551,6 +551,19 @@ public class MyDoggyToolWindow implements ToolWindow {
         return descriptor.getTypeDescriptor(type);
     }
 
+    public <T extends ToolWindowTypeDescriptor> T getTypeDescriptor(Class<T> descriptorClass) {
+        if (descriptorClass.isAssignableFrom(DockedTypeDescriptor.class))
+            return (T) descriptor.getTypeDescriptor(ToolWindowType.DOCKED);
+        else if (descriptorClass.isAssignableFrom(SlidingTypeDescriptor.class))
+            return (T) descriptor.getTypeDescriptor(ToolWindowType.SLIDING);
+        else if (descriptorClass.isAssignableFrom(FloatingLiveTypeDescriptor.class))
+            return (T) descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
+        else if (descriptorClass.isAssignableFrom(FloatingTypeDescriptor.class))
+            return (T) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
+        else
+            throw new IllegalArgumentException("Cannot reconize the class type");
+    }
+
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         listenerList.add(PropertyChangeListener.class, listener);
     }

@@ -412,6 +412,13 @@ public interface ToolWindow extends Dockable {
     ToolWindowTypeDescriptor getTypeDescriptor(ToolWindowType type);
 
     /**
+     * TODO
+     * @since 1.3.2
+     * @param descriptorClass
+     */
+    <T extends ToolWindowTypeDescriptor> T getTypeDescriptor(Class<T> descriptorClass);
+
+    /**
      * Adds a PropertyChangeListener to the listener list. The listener is
      * registered for all bound properties of this class, including the
      * following:
