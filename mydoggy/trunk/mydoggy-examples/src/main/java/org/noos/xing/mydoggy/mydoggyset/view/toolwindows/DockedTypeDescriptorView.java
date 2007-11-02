@@ -101,7 +101,7 @@ public class DockedTypeDescriptorView extends ComponentView implements ViewConte
         if (ToolWindowTypeDescriptor.class.equals(evt.getProperty())) {
             if (evt.getNewValue().equals(DockedTypeDescriptor.class)) {
                 ToolWindow toolWindow = viewContext.get(ToolWindow.class);
-                DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+                DockedTypeDescriptor descriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
                 viewContext.put(DockedTypeDescriptor.class, descriptor);
 
                 popupMenuEnabled.setSelected(descriptor.isPopupMenuEnabled());
