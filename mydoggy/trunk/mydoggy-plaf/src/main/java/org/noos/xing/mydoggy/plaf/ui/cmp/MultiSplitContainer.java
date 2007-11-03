@@ -1,7 +1,14 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
+import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,18 +16,29 @@ import java.util.List;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @todo add store capabilities...
  */
-public class MultiSplitContainer extends JPanel {
-    private List<Component> contents;
-    private int orientation;
+public class MultiSplitContainer extends JPanel implements PropertyChangeListener {
+    protected ToolWindowManager toolWindowManager;
+    protected ResourceManager resourceManager;
+    protected List<Component> contents;
+    protected List<String> toolIds;
+    protected int orientation;
 
-    public MultiSplitContainer(int orientation) {
+
+    public MultiSplitContainer(MyDoggyToolWindowManager toolWindowManager, int orientation) {
         this.orientation = orientation;
         this.contents = new ArrayList<Component>();
+        this.toolIds = new ArrayList<String>();
+        this.toolWindowManager = toolWindowManager;
+        this.resourceManager = toolWindowManager.getResourceManager();
 
         setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
     }
 
-    public void addContent(Component content) {
+
+    public void propertyChange(PropertyChangeEvent evt) {
+    }
+
+    public void addContent(String toolId, Component content) {
         if (contents.size() == 0) {
             removeAll();
             add(content, "0,0");
@@ -28,11 +46,13 @@ public class MultiSplitContainer extends JPanel {
             Component root = getComponent(0);
             remove(root);
 
-            JSplitPane split = new JSplitPane(orientation);
+            JSplitPane split = (JSplitPane) resourceManager.createComponent(MyDoggyKeySpace.MULTI_SPLIT_CONTAINER_SPLIT,
+                                                                            toolWindowManager, orientation);
             split.setResizeWeight(0.5d);
             split.setContinuousLayout(true);
             split.setFocusable(false);
             split.setBorder(null);
+            split.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, this);
 
             JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
             panel.setFocusCycleRoot(true);
@@ -47,11 +67,14 @@ public class MultiSplitContainer extends JPanel {
             add(split, "0,0");
         }
         contents.add(content);
+        toolIds.add(toolId);
     }
 
     public void removeContent(Component content) {
-        if (!contents.remove(content))
+        int index = contents.indexOf(content);
+        if (index == -1 || contents.remove(index) == null)
             return;
+        toolIds.remove(index);
 
         if (contents.size() == 0)
             return;
@@ -92,17 +115,17 @@ public class MultiSplitContainer extends JPanel {
         }
     }
 
-    public void setComponentAt(Component content, int index) {
+    public void setComponentAt(String toolId, Component content, int index) {
         if (index >= contents.size())
-            throw new IllegalArgumentException("Illegal index.");
+            index = contents.size() - 1;
 
         if (contents.size() == 0)
-            addContent(content);
+            addContent(toolId, content);
         else if (contents.size() == 1) {
             removeAll();
             if (contents.contains(content))
                 return;
-            
+
             add(content, "0,0");
         } else {
             JSplitPane splitPane = (JSplitPane) getComponent(0);
@@ -120,7 +143,7 @@ public class MultiSplitContainer extends JPanel {
             }
 
             assert splitPane != null : "It's impossibile!!! Contact software developers.";
-            
+
             Container container;
             if (left) {
                 container = (Container) splitPane.getLeftComponent();
@@ -143,6 +166,12 @@ public class MultiSplitContainer extends JPanel {
     public List<Component> getContents() {
         return contents;
     }
+
+    public void clear() {
+        removeAll();
+        contents.clear();
+    }
+
 
     protected Component getRightCmp(JSplitPane pane) {
         return ((JPanel) pane.getRightComponent()).getComponent(0);
