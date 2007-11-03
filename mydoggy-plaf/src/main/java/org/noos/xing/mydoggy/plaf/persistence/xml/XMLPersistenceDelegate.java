@@ -113,6 +113,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         toolAttributes.addAttribute(null, "aggregateMode", null, null, String.valueOf(toolWindow.isAggregateMode()));
         toolAttributes.addAttribute(null, "maximized", null, null, String.valueOf(toolWindow.isMaximized()));
         toolAttributes.addAttribute(null, "index", null, null, String.valueOf(toolWindow.getIndex()));
+        toolAttributes.addAttribute(null, "representativeAnchorButtonVisible", null, null, String.valueOf(toolWindow.isRepresentativeAnchorButtonVisible()));
         writer.startElement("tool", toolAttributes);
 
         writer.startElement("descriptors");
@@ -306,6 +307,26 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
     }
 
+    /**
+     * @todo: extend the usage of this class
+     */
+    public abstract class ElementParserAdapter implements ElementParser {
+
+        public boolean getBoolean(Element element, String name, boolean defaultValue) {
+            try {
+                String attr = element.getAttribute(name);
+                if (attr != null && !"".equals(attr.trim()))
+                    return Boolean.parseBoolean(attr);
+                else
+                    return defaultValue;
+            } catch (Exception e) {
+                return defaultValue;
+            }
+        }
+                
+    }
+
+
     public class MyDoggyElementParser implements ElementParser {
         public boolean parse(Element element, Object... args) {
             // Validate version
@@ -373,7 +394,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         }
     }
 
-    public class ToolsElementParser implements ElementParser {
+    public class ToolsElementParser extends ElementParserAdapter {
         protected MergePolicyApplier mergePolicyApplier;
 
         public boolean parse(Element element, Object... args) {
@@ -399,7 +420,9 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     descriptor.setPreviewDelay(Integer.parseInt(dockedType.getAttribute("previewDelay")));
                     descriptor.setPreviewTransparentRatio(Float.parseFloat(dockedType.getAttribute("previewTransparentRatio")));
                     descriptor.setIdVisibleOnTitleBar(Boolean.parseBoolean(dockedType.getAttribute("idVisibleOnTitleBar")));
-                    descriptor.setHideRepresentativeButtonOnVisible(Boolean.parseBoolean(dockedType.getAttribute("hideRepresentativeButtonOnVisible")));
+                    descriptor.setHideRepresentativeButtonOnVisible(
+                            getBoolean(dockedType, "hideRepresentativeButtonOnVisible", false)
+                    );
                 }
 
                 Element slidingType = getElement(tool, "sliding");
@@ -470,6 +493,10 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 toolWindow.setAvailable(Boolean.parseBoolean(tool.getAttribute("available")));
                 toolWindow.setIndex(Integer.parseInt(tool.getAttribute("index")));
                 toolWindow.setAggregateMode(Boolean.parseBoolean(tool.getAttribute("aggregateMode")));
+                if (toolWindow.getType() != ToolWindowType.FLOATING_FREE)
+                    toolWindow.setRepresentativeAnchorButtonVisible(
+                            getBoolean(tool, "representativeAnchorButtonVisible", true)
+                    );
 
                 // Load tabs
                 Element tabs = getElement(tool, "tabs");
