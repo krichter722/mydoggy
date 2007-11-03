@@ -208,9 +208,12 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 for (Component component : components) {
                     if (component instanceof JLabel) {
                         JLabel representativeAnchor = (JLabel) component;
-                        ToolWindowDescriptor descriptor = ((RepresentativeAnchorUI) representativeAnchor.getUI()).getDescriptor();
 
-                        if (descriptor.getToolWindow().isVisible()) {
+                        ToolWindowDescriptor descriptor = (ToolWindowDescriptor) representativeAnchor.getClientProperty(ToolWindowDescriptor.class);
+                        ToolWindow toolWindow = descriptor.getToolWindow();
+
+                        if (toolWindow.isVisible() &&
+                            toolWindow.getType() == ToolWindowType.DOCKED) {
                             Component content = descriptor.getContentContainer();
                             multiSplitContainer.setComponentAt(
                                     descriptor.getToolWindow().getId(),

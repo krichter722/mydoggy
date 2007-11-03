@@ -161,6 +161,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
             representativeAnchor.setName("toolWindow.rb." + toolWindow.getId());
             representativeAnchor.setOpaque(toolWindow.isActive());
             representativeAnchor.setFocusable(false);
+            representativeAnchor.putClientProperty(ToolWindowDescriptor.class, this);
         }
         return representativeAnchor;
     }
