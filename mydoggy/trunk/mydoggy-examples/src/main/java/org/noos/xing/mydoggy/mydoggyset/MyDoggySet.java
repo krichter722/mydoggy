@@ -74,12 +74,6 @@ public class MyDoggySet {
     protected void start() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                ContentManager contentManager = toolWindowManager.getContentManager();
-                MyDoggyDesktopContentManagerUI desktopManagerUI = new MyDoggyDesktopContentManagerUI();
-                desktopManagerUI.setDetachable(true);
-                desktopManagerUI.setCloseable(true);
-                contentManager.setContentManagerUI(desktopManagerUI);
-
                 contentContext.put(MyDoggySet.class, null);
                 frame.setVisible(true);
             }

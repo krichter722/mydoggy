@@ -431,7 +431,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             if (descriptor.getToolWindow().getType() != ToolWindowType.FLOATING_FREE &&
                 descriptor.getToolWindow().getType() != ToolWindowType.EXTERN) {
 
-                if (!evt.getPropertyName().equals("representativeAnchorButtonVisible")) {
+                boolean rabsEvent = evt.getPropertyName().equals("representativeAnchorButtonVisible");
+
+                if (!rabsEvent) {
                     if (!descriptor.getToolWindow().isRepresentativeAnchorButtonVisible())
                         return;                    
                 }
@@ -456,7 +458,11 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     assert ((UserPropertyChangeEvent) evt).getUserObject() instanceof Integer;
 
                     representativeAnchor = descriptor.getRepresentativeAnchor(contentPane);
-                    addRepresentativeAnchor(representativeAnchor, (Integer) ((UserPropertyChangeEvent) evt).getUserObject());
+                    if (rabsEvent) {
+                        // TODO: we should remember anchor position before removing it when rabsEvent occurs.
+                        addRepresentativeAnchor(representativeAnchor, -1);
+                    } else
+                        addRepresentativeAnchor(representativeAnchor, (Integer) ((UserPropertyChangeEvent) evt).getUserObject());
                     repaint = true;
                 }
 
