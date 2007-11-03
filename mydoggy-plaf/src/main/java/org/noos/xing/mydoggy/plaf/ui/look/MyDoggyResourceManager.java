@@ -268,6 +268,11 @@ public class MyDoggyResourceManager implements ResourceManager {
         cmpCreators.put(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON, new ToolWindowTitleButtonComponentCreator());
         cmpCreators.put(MyDoggyKeySpace.TOOL_SCROLL_BAR_ARROW, new ToolScrollBarArrowComponentCreator());
         cmpCreators.put(MyDoggyKeySpace.TOOL_WINDOW_CONTAINER, new ToolWindowCmpContainerComponentCreator());
+        cmpCreators.put(MyDoggyKeySpace.MULTI_SPLIT_CONTAINER_SPLIT, new ComponentCreator() {
+            public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
+                return new JSplitPane((Integer) args[0]);
+            }
+        });
 
         cmpUiCreators = new Hashtable<String, ComponentUICreator>();
         cmpUiCreators.put(MyDoggyKeySpace.REPRESENTATIVE_ANCHOR_BUTTON_UI, new RepresentativeAnchorButtonComponentUICreator());
