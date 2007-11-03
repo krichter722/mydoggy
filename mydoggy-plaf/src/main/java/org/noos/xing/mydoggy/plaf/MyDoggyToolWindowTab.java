@@ -38,17 +38,8 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         this.closeable = true;
         this.dockable = dockable;
 
-        if (dockable instanceof ToolWindowTab)  {
-            //  TODO: listen to all properties...maybe the support is necessary for all type of dockable
-            ((ToolWindowTab)dockable).addPropertyChangeListener(new PropertyChangeListener() {
-                public void propertyChange(PropertyChangeEvent evt) {
-                    String propertyName = evt.getPropertyName();
-                    if ("selected".equals(propertyName))  {
-                        setSelected((Boolean) evt.getNewValue());
-                    }
-                }
-            });
-        }
+        if (dockable instanceof ToolWindowTab)
+            ((ToolWindowTab) dockable).addPropertyChangeListener(new TabDelegatorListener());
     }
 
 
@@ -169,4 +160,15 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         }
     }
 
+
+    protected class TabDelegatorListener implements PropertyChangeListener  {
+        //  TODO: listen to all properties...maybe the support is necessary for all type of dockable
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            String propertyName = evt.getPropertyName();
+            if ("selected".equals(propertyName))  {
+                setSelected((Boolean) evt.getNewValue());
+            }
+        }
+    }
 }

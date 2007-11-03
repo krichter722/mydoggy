@@ -36,6 +36,7 @@ public class MultiSplitContainer extends JPanel implements PropertyChangeListene
 
 
     public void propertyChange(PropertyChangeEvent evt) {
+        System.out.println(evt.getSource());
     }
 
     public void addContent(String toolId, Component content) {

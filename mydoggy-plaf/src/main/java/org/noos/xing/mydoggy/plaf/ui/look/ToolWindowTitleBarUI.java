@@ -114,7 +114,6 @@ public class ToolWindowTitleBarUI extends PanelUI {
                         }
 
                         public void componentRemoved(ContainerEvent e) {
-                            // TODO: remove drag
                         }
                     });
                     SwingUtil.registerDragGesture(panel.getViewport(), dragGesture);
@@ -225,7 +224,6 @@ public class ToolWindowTitleBarUI extends PanelUI {
             String id = resourceManager.getUserString(descriptor.getToolWindow().getId());
             r.width = g.getFontMetrics().stringWidth(id) + 8;
 
-            // TODO: add customization
             int halfHeigh = (r.height / 2);
             GraphicsUtil.fillRect(g, r,
                                   Color.WHITE,
