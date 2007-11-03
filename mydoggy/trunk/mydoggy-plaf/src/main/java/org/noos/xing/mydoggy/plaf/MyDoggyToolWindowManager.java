@@ -155,11 +155,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return toolWindow;
     }
 
-    public ActionTool registerActionTool(String id, String title, Icon icon, ToolWindowAnchor anchor) {
-        // TODO:
-        return null;
-    }
-
     public void unregisterToolWindow(String id) {
         ToolWindowDescriptor toolWindowDescriptor = tools.get(id);
 
