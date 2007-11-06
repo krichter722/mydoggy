@@ -4,7 +4,7 @@ package org.noos.xing.mydoggy;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @todo add javadocs..
  */
-public interface Dockable {
+public interface Dockable extends Observable {
 
     /**
      *

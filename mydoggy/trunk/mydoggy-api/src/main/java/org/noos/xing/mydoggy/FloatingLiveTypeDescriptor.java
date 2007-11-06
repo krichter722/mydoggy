@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy;
 
-import java.beans.PropertyChangeListener;
 import java.awt.*;
 
 /**
@@ -142,50 +141,4 @@ public interface FloatingLiveTypeDescriptor extends ToolWindowTypeDescriptor {
      * @since 1.3.2
      */
     boolean isEnabled();
-
-    /**
-     * Adds a PropertyChangeListener to the listener list. The listener is
-     * registered for all bound properties of this class, including the
-     * following:
-     * <ul>
-     * <li>this sliding's transparentMode ("transparentMode")</li>
-     * <li>this sliding's transparentRatio ("transparentRatio")</li>
-     * <li>this sliding's transparentDelay ("transparentDelay")</li>
-     * <li>this sliding's enabled property ("enabled")</li>
-     * </ul>
-     * <p/>
-     * If listener is null, no exception is thrown and no action is performed.
-     *
-     * @param listener the PropertyChangeListener to be added
-     * @see #getPropertyChangeListeners()
-     * @see #removePropertyChangeListener
-     * @since 1.3.2
-     */
-    void addPropertyChangeListener(PropertyChangeListener listener);
-
-    /**
-     * Removes a PropertyChangeListener from the listener list.
-     * <p/>
-     * If listener is null, no exception is thrown and no action is performed.
-     *
-     * @param listener the PropertyChangeListener to be removed.
-     * @see #addPropertyChangeListener
-     * @see #getPropertyChangeListeners
-     * @since 1.3.2
-     */
-    void removePropertyChangeListener(PropertyChangeListener listener);
-
-    /**
-     * Returns an array of all the property change listeners
-     * registered on this descritpro.
-     *
-     * @return all of this descriptor's <code>PropertyChangeListener</code>s
-     *         or an empty array if no property change
-     *         listeners are currently registered.
-     * @see #addPropertyChangeListener
-     * @see #removePropertyChangeListener
-     * @since 1.3.2
-     */
-    PropertyChangeListener[] getPropertyChangeListeners();
-
 }

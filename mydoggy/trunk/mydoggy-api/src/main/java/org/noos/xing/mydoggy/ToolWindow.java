@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy;
 
 import javax.swing.*;
-import java.beans.PropertyChangeListener;
 import java.awt.*;
 
 /**
@@ -417,55 +416,4 @@ public interface ToolWindow extends Dockable {
      * @param descriptorClass
      */
     <T extends ToolWindowTypeDescriptor> T getTypeDescriptor(Class<T> descriptorClass);
-
-    /**
-     * Adds a PropertyChangeListener to the listener list. The listener is
-     * registered for all bound properties of this class, including the
-     * following:
-     * <ul>
-     * <li>this tool's index ("index")</li>
-     * <li>this tool's aailable status ("available")</li>
-     * <li>this tool's visible status ("visible")</li>
-     * <li>this tool's active status ("active")</li>
-     * <li>this tool's anchor ("anchor")</li>
-     * <li>this tool's autoHide ("autoHide")</li>
-     * <li>this tool's type ("type")</li>
-     * <li>this tool's icon ("icon")</li>
-     * <li>this tool's title ("title")</li>
-     * </ul>
-     * <p/>
-     * If listener is null, no exception is thrown and no action is performed.
-     *
-     * @param listener the PropertyChangeListener to be added
-     * @see #getPropertyChangeListeners()
-     * @see #removePropertyChangeListener
-     * @since 1.0.0
-     */
-    void addPropertyChangeListener(PropertyChangeListener listener);
-
-    /**
-     * Removes a PropertyChangeListener from the listener list.
-     * <p/>
-     * If listener is null, no exception is thrown and no action is performed.
-     *
-     * @param listener the PropertyChangeListener to be removed.
-     * @see #addPropertyChangeListener
-     * @see #getPropertyChangeListeners
-     * @since 1.0.0
-     */
-    void removePropertyChangeListener(PropertyChangeListener listener);
-
-    /**
-     * Returns an array of all the property change listeners
-     * registered on this tool.
-     *
-     * @return all of this tool's <code>PropertyChangeListener</code>s
-     *         or an empty array if no property change
-     *         listeners are currently registered.
-     * @see #addPropertyChangeListener
-     * @see #removePropertyChangeListener
-     * @since 1.0.0
-     */
-    PropertyChangeListener[] getPropertyChangeListeners();
-
 }
