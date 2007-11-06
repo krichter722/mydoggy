@@ -11,7 +11,7 @@ package org.noos.xing.mydoggy;
  * @see org.noos.xing.mydoggy.FloatingTypeDescriptor
  * @since 1.0.0
  */
-public interface ToolWindowTypeDescriptor {
+public interface ToolWindowTypeDescriptor extends Observable {
 
     /**
      * Enables or disables animations, depending on the value of the
@@ -50,5 +50,4 @@ public interface ToolWindowTypeDescriptor {
      * @since 1.3.2
      */
     boolean isIdVisibleOnTitleBar();
-
 }

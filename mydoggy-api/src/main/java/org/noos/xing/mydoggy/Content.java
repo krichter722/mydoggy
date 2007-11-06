@@ -1,9 +1,7 @@
 package org.noos.xing.mydoggy;
 
 import javax.swing.*;
-import java.beans.PropertyChangeListener;
 import java.awt.*;
-import java.io.Serializable;
 
 /**
  * A content is a wrapper of a component decorated with some properties like
@@ -243,58 +241,4 @@ public interface Content extends Dockable {
      * @since 1.3.1
      */
     int getMnemonic();
-
-    /**
-     * Adds a PropertyChangeListener to the listener list. The listener is
-     * registered for all bound properties of this class, including the
-     * following:
-     * <ul>
-     * <li>this content's title ("title")</li>
-     * <li>this content's foreground ("foreground")</li>
-     * <li>this content's component ("component")</li>
-     * <li>this content's selected status ("selected")</li>
-     * <li>this content's enable status ("enabled")</li>
-     * <li>this content's icon ("icon")</li>
-     * <li>this content's disabledIcon ("disabledIcon")</li>
-     * <li>this content's popupMenu ("popupMenu")</li>
-     * <li>this content's detached ("detached")</li>
-     * <li>this content's toolTipText ("toolTipTexttoolTipText")</li>
-     * </ul>
-     * <p/>
-     * If listener is null, no exception is thrown and no action is performed.
-     *
-     * @param listener the PropertyChangeListener to be added
-     * @see #getPropertyChangeListeners()
-     * @see #removePropertyChangeListener
-     * @since 1.0.0
-     */
-    void addPropertyChangeListener(PropertyChangeListener listener);
-
-    /**
-     * Removes a PropertyChangeListener from the listener list. This method
-     * should be used to remove PropertyChangeListeners that were registered
-     * for all bound properties of this class.
-     * <p/>
-     * If listener is null, no exception is thrown and no action is performed.
-     *
-     * @param listener the PropertyChangeListener to be removed
-     * @see #addPropertyChangeListener
-     * @see #getPropertyChangeListeners
-     * @since 1.0.0
-     */
-    void removePropertyChangeListener(PropertyChangeListener listener);
-
-    /**
-     * Returns an array of all the property change listeners
-     * registered on this content.
-     *
-     * @return all of this content's <code>PropertyChangeListener</code>s
-     *         or an empty array if no property change
-     *         listeners are currently registered
-     * @see #addPropertyChangeListener
-     * @see #removePropertyChangeListener
-     * @since 1.0.0
-     */
-    PropertyChangeListener[] getPropertyChangeListeners();
-
 }

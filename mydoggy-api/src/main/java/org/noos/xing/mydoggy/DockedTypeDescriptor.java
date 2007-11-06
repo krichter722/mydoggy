@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy;
 
 import javax.swing.*;
-import java.beans.PropertyChangeListener;
 
 /**
  * This interface is used to modify the behaviours of DOCKED type.
@@ -162,48 +161,4 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * @since 1.3.1
      */
     boolean isHideRepresentativeButtonOnVisible();
-
-    /**
-     * Adds a PropertyChangeListener to the listener list. The listener is
-     * registered for all bound properties of this class, including the
-     * following:
-     * <ul>
-     * <li>this type's dockLength ("dockLength")</li>
-     * <li>this type's popupMenuEnabled property ("popupMenuEnabled")</li>
-     * </ul>
-     * <p/>
-     * If listener is null, no exception is thrown and no action is performed.
-     *
-     * @param listener the PropertyChangeListener to be added
-     * @see #getPropertyChangeListeners()
-     * @see #removePropertyChangeListener
-     * @since 1.0.0
-     */
-    void addPropertyChangeListener(PropertyChangeListener listener);
-
-    /**
-     * Removes a PropertyChangeListener from the listener list.
-     * <p/>
-     * If listener is null, no exception is thrown and no action is performed.
-     *
-     * @param listener the PropertyChangeListener to be removed.
-     * @see #addPropertyChangeListener
-     * @see #getPropertyChangeListeners
-     * @since 1.0.0
-     */
-    void removePropertyChangeListener(PropertyChangeListener listener);
-
-    /**
-     * Returns an array of all the property change listeners
-     * registered on this descriptor.
-     *
-     * @return all of this descriptor's <code>PropertyChangeListener</code>s
-     *         or an empty array if no property change
-     *         listeners are currently registered.
-     * @see #addPropertyChangeListener
-     * @see #removePropertyChangeListener
-     * @since 1.0.0
-     */
-    PropertyChangeListener[] getPropertyChangeListeners();
-
 }
