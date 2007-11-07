@@ -58,7 +58,6 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
 
 
     public void propertyChange(PropertyChangeEvent evt) {
-        System.out.println(evt.getSource());
     }
 
 
@@ -66,8 +65,6 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
         ToolWindow toolWindow = (ToolWindow) ((JComponent) content).getClientProperty(ToolWindow.class);
         if (toolWindow != null)
             toolId = toolWindow.getId();
-
-        System.out.println("toolId : " + toolId);
 
         // Store old layout
         StringBuilder builder = new StringBuilder();
@@ -200,16 +197,7 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
                 multiSplitPane.add(getComponentWrapper(content), leafName);
             }
 
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    multiSplitPane.invalidate();
-                    multiSplitPane.validate();
-                    multiSplitPane.repaint();
-                    System.out.println("END");
-                    multiSplitPane.getMultiSplitLayout().setFloatingDividers(false);
-                }
-            });
-//            SwingUtil.repaint(multiSplitPane);
+            repaintSplit();
         }
 
         contents.add(content);
@@ -277,7 +265,6 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
                 Stack<MultiSplitLayout.Split> stack = new Stack<MultiSplitLayout.Split>();
                 stack.push(multiSplitPaneModelRoot);
 
-                Set set = new HashSet();
                 while (!stack.isEmpty()) {
                     MultiSplitLayout.Split split = stack.pop();
 
@@ -332,10 +319,19 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
                         } else if (child instanceof MultiSplitLayout.Split) {
                             stack.push((MultiSplitLayout.Split) child);
                         }
-
                     }
 
-                    split.setChildren(children);    // TODO: recomput weight
+
+                    // TODO: recompute weight
+                    double w = 1.0 / ((children.size() / 2) + 1);
+                    for (MultiSplitLayout.Node child : children) {
+                        if (!(child instanceof MultiSplitLayout.Divider)) {
+                            child.setBounds(new Rectangle());
+                            child.setWeight(w);
+                        }
+                    }
+
+                    split.setChildren(children);
                 }
 
                 // Change constaints for component to the new leaf order. 
@@ -355,7 +351,7 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
 
                 multiSplitPane.setModel(multiSplitPaneModelRoot);
                 multiSplitPane.revalidate();
-                SwingUtil.repaint(multiSplitPane);
+                repaintSplit();
             }
 
         }
@@ -381,6 +377,37 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
 
             multiSplitPane.add(getComponentWrapper(content), leafName);
         }
+
+
+        if (multiSplitPaneModelRoot != null)  {
+            // Update model
+            Stack<MultiSplitLayout.Split> stack = new Stack<MultiSplitLayout.Split>();
+            stack.push(multiSplitPaneModelRoot);
+
+            while (!stack.isEmpty()) {
+                MultiSplitLayout.Split split = stack.pop();
+
+                List<MultiSplitLayout.Node> children = split.getChildren();
+
+                double w = 1.0 / ((children.size() / 2) + 1);
+                for (int i = 0; i < children.size(); i++) {
+                    MultiSplitLayout.Node child = children.get(i);
+
+                    if (child instanceof MultiSplitLayout.Leaf) {
+                        child.setBounds(new Rectangle());
+                        child.setWeight(w);
+                    } else if (child instanceof MultiSplitLayout.Split) {
+                        stack.push((MultiSplitLayout.Split) child);
+                    }
+                }
+                
+                split.setChildren(children);
+            }
+            multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
+            multiSplitPane.setModel(multiSplitPaneModelRoot);
+            repaintSplit();
+        }
+
     }
 
 
@@ -434,5 +461,16 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
     protected MultiSplitLayout.Split decode(byte[] bytes) {
         XMLDecoder d = new XMLDecoder(new ByteArrayInputStream(bytes));
         return (MultiSplitLayout.Split) (d.readObject());
+    }
+
+    protected void repaintSplit() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                multiSplitPane.invalidate();
+                multiSplitPane.validate();
+                multiSplitPane.repaint();
+                multiSplitPane.getMultiSplitLayout().setFloatingDividers(false);
+            }
+        });
     }
 }
