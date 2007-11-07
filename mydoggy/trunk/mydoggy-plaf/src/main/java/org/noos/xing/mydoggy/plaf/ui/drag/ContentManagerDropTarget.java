@@ -14,7 +14,7 @@ import java.awt.dnd.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
 */
 public class ContentManagerDropTarget extends DropTarget {
-
+    
     public ContentManagerDropTarget(JComponent component, ToolWindowManager toolWindowManager) throws HeadlessException {
         super(component, DnDConstants.ACTION_MOVE, new ContentManagerDropTargetListener(toolWindowManager, component));
     }
@@ -31,6 +31,9 @@ public class ContentManagerDropTarget extends DropTarget {
         }
 
         public void dragEnter(DropTargetDragEvent dtde) {
+            if (!isEnabled())
+                return;
+
             if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) &&
                  dtde.getDropAction() == DnDConstants.ACTION_MOVE) {
 
@@ -50,11 +53,17 @@ public class ContentManagerDropTarget extends DropTarget {
         }
 
         public void dragExit(DropTargetEvent dte) {
+            if (!isEnabled())
+                return;
+
             component.setBorder(oldBorder);
             oldBorder = null;
         }
 
         public void drop(DropTargetDropEvent dtde) {
+            if (!isEnabled())
+                return;
+
             if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) {
                 if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF))  {
                     try {
@@ -78,6 +87,12 @@ public class ContentManagerDropTarget extends DropTarget {
 
             // Restore component
             dragExit(dtde);
+        }
+
+        protected boolean isEnabled() {
+            // TODO: enable this...
+            String value = System.getProperty("org.xing.mydoggy.ContentManagerDropTarget.enabled");
+            return Boolean.parseBoolean(value);
         }
     }
 

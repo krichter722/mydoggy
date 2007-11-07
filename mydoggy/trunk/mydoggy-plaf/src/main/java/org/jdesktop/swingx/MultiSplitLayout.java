@@ -341,9 +341,6 @@ public class MultiSplitLayout implements LayoutManager {
 
     private Rectangle boundsWithYandHeight(Rectangle bounds, double y, double height) {
         if (height < 0) {
-            System.out.printf("---------------------------------------");
-            System.out.println("y = " + y);
-            System.out.println("height = " + height);
             height = -height;
         }
         Rectangle r = new Rectangle();
@@ -371,9 +368,6 @@ public class MultiSplitLayout implements LayoutManager {
             splitBounds.add(bounds.x + bounds.width, lastChildMaxY);
         }
         split.setBounds(splitBounds);
-
-        if (split.getChildren().size() == 5)
-            System.out.println(splitBounds.height + " - " + bounds.height);
     }
 
 
