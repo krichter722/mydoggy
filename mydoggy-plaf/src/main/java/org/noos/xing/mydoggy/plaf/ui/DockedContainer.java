@@ -130,6 +130,7 @@ public class DockedContainer implements ToolWindowContainer {
         container.setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {16, TableLayout.FILL}}, false));
         container.setName("toolWindow.container." + toolWindow.getId());
         container.setFocusCycleRoot(true);
+        container.putClientProperty(ToolWindow.class, toolWindow);
 
         String id = toolWindow.getId();
 
@@ -309,6 +310,7 @@ public class DockedContainer implements ToolWindowContainer {
 
         protected JMenuItem visible;
         protected JMenuItem aggregate;
+        protected JMenu aggregateMenu;
         protected JCheckBoxMenuItem floatingMode;
         protected JCheckBoxMenuItem floatingLiveMode;
         protected JCheckBoxMenuItem dockedMode;
@@ -354,14 +356,24 @@ public class DockedContainer implements ToolWindowContainer {
                     toolWindow.setVisible(false);
                 else
                     toolWindow.setActive(true);
-            } else if ("aggregate".equals(actionCommand)) {
+            } else if (actionCommand.startsWith("aggregate")) {
                 if (toolWindow.isActive()) {
                     toolWindow.setActive(false);
                     toolWindow.setVisible(false);
                 } else if (toolWindow.isVisible())
                     toolWindow.setVisible(false);
                 else {
-                    toolWindow.aggregate();
+                    if (actionCommand.endsWith("left"))
+                        toolWindow.aggregate(ToolWindow.Where.LEFT);
+                    else if (actionCommand.endsWith("right"))
+                        toolWindow.aggregate(ToolWindow.Where.RIGHT);
+                    else if (actionCommand.endsWith("top"))
+                        toolWindow.aggregate(ToolWindow.Where.TOP);
+                    else if (actionCommand.endsWith("bottom"))
+                        toolWindow.aggregate(ToolWindow.Where.BOTTOM);
+                    else
+                        toolWindow.aggregate();
+
                     toolWindow.setActive(true);
                 }
             } else if ("move.right".equals(actionCommand)) {
@@ -422,6 +434,7 @@ public class DockedContainer implements ToolWindowContainer {
                 popupMenu.addSeparator();
                 popupMenu.add(visible);
                 popupMenu.add(aggregate);
+                popupMenu.add(aggregateMenu);
 
                 enableVisible();
                 enableMoveToItem();
@@ -452,6 +465,36 @@ public class DockedContainer implements ToolWindowContainer {
             aggregate.setText(resourceManager.getString("@@tool.aggregate"));
             aggregate.setActionCommand("aggregate");
             aggregate.addActionListener(this);
+
+            aggregateMenu = new JMenu("Aggregate Where");
+
+            JMenuItem aggregateLeft = new JMenuItem();
+            aggregateLeft.setName("toolWindow.popup.aggregate.left." + toolWindow.getId());
+            aggregateLeft.setText(resourceManager.getString("@@tool.aggregate.left"));
+            aggregateLeft.setActionCommand("aggregate.left");
+            aggregateLeft.addActionListener(this);
+            aggregateMenu.add(aggregateLeft);
+
+            JMenuItem aggregateRight = new JMenuItem();
+            aggregateRight.setName("toolWindow.popup.aggregate.right." + toolWindow.getId());
+            aggregateRight.setText(resourceManager.getString("@@tool.aggregate.right"));
+            aggregateRight.setActionCommand("aggregate.right");
+            aggregateRight.addActionListener(this);
+            aggregateMenu.add(aggregateRight);
+
+            JMenuItem aggregateTop = new JMenuItem();
+            aggregateTop.setName("toolWindow.popup.aggregate.top." + toolWindow.getId());
+            aggregateTop.setText(resourceManager.getString("@@tool.aggregate.top"));
+            aggregateTop.setActionCommand("aggregate.top");
+            aggregateTop.addActionListener(this);
+            aggregateMenu.add(aggregateTop);
+
+            JMenuItem aggregateBottom = new JMenuItem();
+            aggregateBottom.setName("toolWindow.popup.aggregate.bottom." + toolWindow.getId());
+            aggregateBottom.setText(resourceManager.getString("@@tool.aggregate.bottom"));
+            aggregateBottom.setActionCommand("aggregate.bottom");
+            aggregateBottom.addActionListener(this);
+            aggregateMenu.add(aggregateBottom);
 
             floatingMode = new JCheckBoxMenuItem(null, toolWindow.getType() == ToolWindowType.FLOATING);
             floatingMode.setText(resourceManager.getString("@@tool.mode.floating"));
@@ -518,10 +561,12 @@ public class DockedContainer implements ToolWindowContainer {
             popupMenu.addSeparator();
             popupMenu.add(visible);
             popupMenu.add(aggregate);
+            popupMenu.add(aggregateMenu);
         }
 
         protected void enableVisible() {
             aggregate.setVisible(!toolWindow.isVisible());
+            aggregateMenu.setVisible(aggregate.isVisible());
             visible.setText(toolWindow.isVisible() ?
                             resourceManager.getString("@@tool.hide") :
                             resourceManager.getString("@@tool.show"));

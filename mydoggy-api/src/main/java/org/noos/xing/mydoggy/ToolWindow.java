@@ -15,6 +15,15 @@ import java.awt.*;
  */
 public interface ToolWindow extends Dockable {
 
+    enum Where {
+        LEFT,
+        RIGHT,
+        TOP,
+        BOTTOM,
+        DEFAULT
+    }
+
+
     /**
      * Returns the id used to register the tool.
      *
@@ -102,6 +111,13 @@ public interface ToolWindow extends Dockable {
      * @since 1.2.0
      */
     void aggregate();
+
+    /**
+     *
+     * @param where
+     * @since 1.3.2
+     */
+    void aggregate(Where where);
 
     /**
      * The method is used to set the aggregateEnabled property of the tool.

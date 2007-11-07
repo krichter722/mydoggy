@@ -29,6 +29,7 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.beans.PropertyVetoException;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -337,12 +338,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 Content content = event.getContent();
                 switch (event.getActionId()) {
                     case ON_CLOSE:
-                        try {
-                            fireContentUIRemoving(getContentUI(content));
+                        if (fireContentUIRemoving(getContentUI(content)));
                             contentManager.removeContent(content);
-                        } catch (Exception ignore) {
-    //                            ignore.printStackTrace();
-                        }
                         break;
                     case ON_DETACH:
                         content.setDetached(true);
@@ -418,12 +415,14 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             tabbedContentManager.setForegroundAt(index, content.getForeground());
     }
 
-    protected void fireContentUIRemoving(ContentUI contentUI) {
+    protected boolean fireContentUIRemoving(ContentUI contentUI) {
         ContentManagerUIEvent event = new ContentManagerUIEvent(this, ContentManagerUIEvent.ActionId.CONTENTUI_REMOVING, contentUI);
+
         for (ContentManagerUIListener listener : contentManagerUIListeners.getListeners(ContentManagerUIListener.class)) {
             if (!listener.contentUIRemoving(event))
-                throw new RuntimeException("Cannot remove Content.");
+                return false;
         }
+        return true;
     }
 
     protected void fireContentUIDetached(ContentUI contentUI) {

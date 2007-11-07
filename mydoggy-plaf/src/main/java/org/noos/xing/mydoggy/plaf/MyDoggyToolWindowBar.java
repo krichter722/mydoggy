@@ -7,11 +7,10 @@ import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.*;
-import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowBarDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToolsOnBarMouseListener;
-import org.noos.xing.mydoggy.plaf.ui.look.RepresentativeAnchorUI;
+import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowBarDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -41,7 +40,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     protected JPanel contentPane;
     protected TableLayout contentPaneLayout;
     protected JSplitPane splitPane;
-    protected MultiSplitContainer multiSplitContainer;
+    protected ToolsContainer multiSplitContainer;
 
     protected int availableTools;
     protected int orientation;
@@ -136,8 +135,6 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         splitPane.setName(anchor.toString());
         splitPane.setFocusCycleRoot(true);
 
-        multiSplitContainer = new MultiSplitContainer(manager, orientation);
-
         contentPane = (JPanel) manager.getResourceManager().createComponent(MyDoggyKeySpace.ANCHOR_CONTENT_PANE, manager);
         contentPane.setName("toolWindowManager.bar." + anchor.toString());
         contentPane.setFocusable(false);
@@ -152,6 +149,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             contentPane.setLayout(new ExtendedTableLayout(new double[][]{{0}, ROWS}));
             orientation = JSplitPane.HORIZONTAL_SPLIT;
         }
+
+        multiSplitContainer = new ToolsContainer(manager, orientation);
 
         toolScrollBar = new JToolScrollBar(manager.getResourceManager(), orientation, contentPane);
 
@@ -177,10 +176,10 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
                 if (sourceTool.getType() != ToolWindowType.DOCKED ||
                     sourceTool.getAnchor() != anchor ||
-                    !(getSplitPaneContent() instanceof MultiSplitContainer))
+                    !(getSplitPaneContent() instanceof ToolsContainer))
                     return;
 
-                MultiSplitContainer multiSplitContainer = (MultiSplitContainer) getSplitPaneContent();
+                ToolsContainer multiSplitContainer = (ToolsContainer) getSplitPaneContent();
                 if (multiSplitContainer.getContentCount() <= 1)
                     return;
 
@@ -405,7 +404,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     protected void removeRepresentativeAnchor(JLabel representativeAnchor, ToolWindowDescriptor descriptor) {
         if (representativeAnchor == null)
             return;
-        
+
         int toDelete;
         TableLayoutConstraints constraints = contentPaneLayout.getConstraints(representativeAnchor);
         if (constraints == null)
@@ -443,7 +442,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
                 if (!rabsEvent) {
                     if (!descriptor.getToolWindow().isRepresentativeAnchorButtonVisible())
-                        return;                    
+                        return;
                 }
 
 
@@ -580,8 +579,14 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             boolean oldValue = (Boolean) evt.getOldValue();
             boolean newValue = (Boolean) evt.getNewValue();
 
-            MyDoggyToolWindowBar.this.propertyChange(new PropertyChangeEvent(evt.getSource(), "visible." + sourceTool.getType().toString(),
-                                                                             null, !oldValue && newValue));
+            if (evt instanceof UserPropertyChangeEvent) {
+                MyDoggyToolWindowBar.this.propertyChange(new UserPropertyChangeEvent(evt.getSource(), "visible." + sourceTool.getType().toString(),
+                                                                                     null, !oldValue && newValue,
+                                                                                     ((UserPropertyChangeEvent) evt).getUserObject()
+                ));
+            } else
+                MyDoggyToolWindowBar.this.propertyChange(new PropertyChangeEvent(evt.getSource(), "visible." + sourceTool.getType().toString(),
+                                                                                 null, !oldValue && newValue));
         }
     }
 
@@ -610,6 +615,15 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
+            boolean shiftShow = false;
+            ToolWindow.Where where = ToolWindow.Where.DEFAULT;
+
+            if (evt instanceof UserPropertyChangeEvent) {
+                UserPropertyChangeEvent upce = (UserPropertyChangeEvent) evt;
+                shiftShow = (Boolean) ((Object[]) upce.getUserObject())[0];
+                where = (ToolWindow.Where) ((Object[]) upce.getUserObject())[1];
+            }
+
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
             boolean visible = (Boolean) evt.getNewValue();
 
@@ -671,11 +685,11 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             Component splitPaneContent = getSplitPaneContent();
             boolean animate = true;
             if (splitPaneContent != null) {
-                if (splitPaneContent instanceof MultiSplitContainer) {
-                    MultiSplitContainer multiSplitContainer = (MultiSplitContainer) splitPaneContent;
+                if (splitPaneContent instanceof ToolsContainer) {
+                    ToolsContainer multiSplitContainer = (ToolsContainer) splitPaneContent;
 
                     if (manager.getShowingGroup() != null) {
-                        multiSplitContainer.addContent(descriptor.getToolWindow().getId(), content);
+                        multiSplitContainer.addContent(descriptor.getToolWindow().getId(), content, where);
                     } else {
                         if (content == null) {
                             DockedContainer dockedContainer = (DockedContainer) descriptor.getToolWindowContainer();
@@ -698,9 +712,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     }
                 } else if (manager.getShowingGroup() != null && content != null) {
                     multiSplitContainer.clear();
-                    if (manager.isShiftShow())
-                        multiSplitContainer.addContent(descriptor.getToolWindow().getId(), splitPaneContent);
-                    multiSplitContainer.addContent(descriptor.getToolWindow().getId(), content);
+                    if (shiftShow)
+                        multiSplitContainer.addContent(descriptor.getToolWindow().getId(), splitPaneContent, ToolWindow.Where.DEFAULT);
+                    multiSplitContainer.addContent(descriptor.getToolWindow().getId(), content, where);
 
                     setSplitPaneContent(multiSplitContainer);
                 } else if (content != null)
@@ -708,7 +722,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             } else {
                 if (manager.getShowingGroup() != null && content != null) {
                     multiSplitContainer.clear();
-                    multiSplitContainer.addContent(descriptor.getToolWindow().getId(), content);
+                    multiSplitContainer.addContent(descriptor.getToolWindow().getId(), content, ToolWindow.Where.DEFAULT);
 
                     setSplitPaneContent(multiSplitContainer);
                 } else if (content != null)
