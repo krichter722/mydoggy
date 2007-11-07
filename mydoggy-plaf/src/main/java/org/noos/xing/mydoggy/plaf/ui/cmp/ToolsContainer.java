@@ -255,8 +255,6 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
                 }
             }
 
-            // TODO: complete remove
-
             // Remove content
             if (contentContainer != null) {
                 multiSplitPane.remove(contentContainer);
@@ -321,8 +319,6 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
                         }
                     }
 
-
-                    // TODO: recompute weight
                     double w = 1.0 / ((children.size() / 2) + 1);
                     for (MultiSplitLayout.Node child : children) {
                         if (!(child instanceof MultiSplitLayout.Divider)) {
@@ -390,9 +386,7 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
                 List<MultiSplitLayout.Node> children = split.getChildren();
 
                 double w = 1.0 / ((children.size() / 2) + 1);
-                for (int i = 0; i < children.size(); i++) {
-                    MultiSplitLayout.Node child = children.get(i);
-
+                for (MultiSplitLayout.Node child : children) {
                     if (child instanceof MultiSplitLayout.Leaf) {
                         child.setBounds(new Rectangle());
                         child.setWeight(w);
