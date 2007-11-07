@@ -430,6 +430,7 @@ public interface ToolWindow extends Dockable {
      * TODO
      * @since 1.3.2
      * @param descriptorClass
+     * @return
      */
     <T extends ToolWindowTypeDescriptor> T getTypeDescriptor(Class<T> descriptorClass);
 }
