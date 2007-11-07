@@ -80,14 +80,10 @@ public class ToolWindowDropTarget extends DropTarget {
                                 toolWindow = (ToolWindow) tab.getDockableDelegator();
                             }
 
-                            boolean oldAM = toolWindow.isAggregateMode();
-                            try {
-                                toolWindow.setAggregateMode(true);
-                                toolWindow.setAnchor(anchor, owner.getAnchorIndex());
-                                toolWindow.setActive(true);
-                            } finally {
-                                toolWindow.setAggregateMode(oldAM);
-                            }
+                            toolWindow.setAggregateMode(true);
+                            toolWindow.setAnchor(anchor, owner.getAnchorIndex());
+                            toolWindow.aggregate();
+                            toolWindow.setActive(true);
 
                             dtde.dropComplete(true);
                         } else
@@ -111,15 +107,10 @@ public class ToolWindowDropTarget extends DropTarget {
                                     ToolWindow toolWindow = (ToolWindow) delegator;
                                     ToolWindowAnchor anchor = owner.getAnchor();
 
-                                    boolean oldAM = toolWindow.isAggregateMode();
-                                    try {
-                                        toolWindow.setAggregateMode(true);
-                                        toolWindow.setAnchor(anchor, owner.getAnchorIndex());
-                                        toolWindow.setActive(true);
-                                    } finally {
-                                        toolWindow.setAggregateMode(oldAM);
-                                    }
-
+                                    toolWindow.setAggregateMode(true);
+                                    toolWindow.setAnchor(anchor, owner.getAnchorIndex());
+                                    toolWindow.aggregate();
+                                    toolWindow.setActive(true);
                                 }
                             } else {
                                 // TODO : Need a tool window for delegation...

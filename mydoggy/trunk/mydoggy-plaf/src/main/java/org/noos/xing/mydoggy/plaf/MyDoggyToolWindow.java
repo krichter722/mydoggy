@@ -156,12 +156,28 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     public void aggregate() {
         try {
+            // TODO: add enabledShiftShow mode ... 
             descriptor.getManager().enableShiftShow();
             if (!isVisible()) {
                 if (getType() == ToolWindowType.SLIDING)
                     setType(ToolWindowType.DOCKED);
 
-                setVisible(true);
+                setVisibleInternal(true, true, Where.DEFAULT);
+            }
+        } finally {
+            descriptor.getManager().resetShiftShow();
+        }
+    }
+
+    public void aggregate(Where where) {
+        try {
+            // TODO: add enabledShiftShow mode ...
+            descriptor.getManager().enableShiftShow();
+            if (!isVisible()) {
+                if (getType() == ToolWindowType.SLIDING)
+                    setType(ToolWindowType.DOCKED);
+
+                setVisibleInternal(true, true, where);
             }
         } finally {
             descriptor.getManager().resetShiftShow();
@@ -219,49 +235,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setVisible(boolean visible) {
-        if ((aggregateEnabled || descriptor.getManager().getToolWindowManagerDescriptor().isAggregateMode(anchor)) &&
-            visible &&
-            !descriptor.getManager().isShiftShow() &&
-            getType() == ToolWindowType.DOCKED)
-            aggregate();
-
-        if (getType() == ToolWindowType.EXTERN) {
-            // Call setVisible on tool that own this tool as tab...
-            for (ToolWindow tool : descriptor.getManager().getToolWindows()) {
-                for (ToolWindowTab tab : tool.getToolWindowTabs()) {
-                    if (tab.getDockableDelegator() == this) {
-                        tool.setVisible(visible);
-                        if (visible)
-                            tab.setSelected(true);
-                        return;
-                    }
-                }
-            }
-            for (Content content : descriptor.getManager().getContentManager().getContents()) {
-                if (content.getDockableDelegator() == this) {
-                    content.setSelected(true);
-                    return;
-                }
-            }
-        }
-
-        if (this.visible == visible)
-            return;
-
-        synchronized (getLock()) {
-            if (!visible && isMaximized())
-                setMaximized(false);
-
-            if (visible)
-                setAvailable(visible);
-            else if (active && publicEvent)
-                setActive(false);
-
-            boolean old = this.visible;
-            this.visible = visible;
-
-            firePropertyChangeEvent("visible", old, visible);
-        }
+        setVisibleInternal(visible, false, null);
     }
 
     public boolean isActive() {
@@ -610,6 +584,55 @@ public class MyDoggyToolWindow implements ToolWindow {
         internalListenerList.remove(PropertyChangeListener.class, listener);
     }
 
+
+    protected void setVisibleInternal(boolean visible, boolean aggregate, Where where) {
+        if ((aggregateEnabled || descriptor.getManager().getToolWindowManagerDescriptor().isAggregateMode(anchor)) &&
+            visible &&
+            !aggregate && /*!descriptor.getManager().isShiftShow() && TODO: check this*/
+            getType() == ToolWindowType.DOCKED)
+            aggregate();
+
+        if (getType() == ToolWindowType.EXTERN) {
+            // Call setVisible on tool that own this tool as tab...
+            for (ToolWindow tool : descriptor.getManager().getToolWindows()) {
+                for (ToolWindowTab tab : tool.getToolWindowTabs()) {
+                    if (tab.getDockableDelegator() == this) {
+                        tool.setVisible(visible);
+                        if (visible)
+                            tab.setSelected(true);
+                        return;
+                    }
+                }
+            }
+            for (Content content : descriptor.getManager().getContentManager().getContents()) {
+                if (content.getDockableDelegator() == this) {
+                    content.setSelected(true);
+                    return;
+                }
+            }
+        }
+
+        if (this.visible == visible)
+            return;
+
+        synchronized (getLock()) {
+            if (!visible && isMaximized())
+                setMaximized(false);
+
+            if (visible)
+                setAvailable(visible);
+            else if (active && publicEvent)
+                setActive(false);
+
+            boolean old = this.visible;
+            this.visible = visible;
+
+            if (aggregate) {                
+                firePropertyChangeEvent("visible", old, visible, new Object[]{aggregate, where});
+            } else
+                firePropertyChangeEvent("visible", old, visible);
+        }
+    }
 
     protected ToolWindowTab addTabInternal(String title, Icon icon, Component component, ToolWindow toolWindow) {
         ToolWindowTab tab = new MyDoggyToolWindowTab(this, title, icon, component, toolWindow);
