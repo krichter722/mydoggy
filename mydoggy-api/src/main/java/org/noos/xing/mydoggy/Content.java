@@ -16,32 +16,6 @@ import java.awt.*;
 public interface Content extends Dockable {
 
     /**
-      * Return the content unique identifier.
-      *
-      * @return the content unique identifier.
-     * @since 1.0.0
-      */
-    Object getKey();
-
-    /**
-     * Sets the title to <code>title</code> which can be <code>null</code>.
-     *
-     * @param title the title to be displayed for the content.
-     * @see #getTitle()
-     * @since 1.0.0
-     */
-    void setTitle(String title);
-
-    /**
-     * Returns the content title.
-     *
-     * @return the title.
-     * @see #setTitle(String)
-     * @since 1.0.0
-     */
-    String getTitle();
-
-    /**
      * Sets the foreground color <code>foreground</code> which can be
      * <code>null</code>, in which case the content's foreground color
      * will default to the foreground color of this <code>Content</code>.
@@ -60,24 +34,6 @@ public interface Content extends Dockable {
      * @since 1.0.0
      */
     Color getForeground();
-
-    /**
-     * Sets the icon to <code>icon</code> which can be <code>null</code>.
-     *
-     * @param icon the icon to be displayed for the content.
-     * @see #getIcon()
-     * @since 1.0.0
-     */
-    void setIcon(Icon icon);
-
-    /**
-     * Returns the content icon.
-     *
-     * @return the icon.
-     * @see #setIcon(javax.swing.Icon)
-     * @since 1.0.0
-     */
-    Icon getIcon();
 
     /**
      * Sets the disabled icon to <code>icon</code> which can be <code>null</code>.
@@ -164,15 +120,6 @@ public interface Content extends Dockable {
     void setComponent(Component component);
 
     /**
-     * Returns the component.
-     *
-     * @return the component.
-     * @see #setComponent(java.awt.Component)
-     * @since 1.0.0
-     */
-    Component getComponent();
-
-    /**
      * Sets the popup menu to <code>popupMenu</code>.
      *
      * @param popupMenu the popup menu for the content.
@@ -227,13 +174,6 @@ public interface Content extends Dockable {
     void setMnemonic(int mnemonic);
 
     /**
-     *
-     * @return
-     * @since 1.3.2
-     */
-    Dockable getDockableDelegator();
-
-    /**
      * Returns the keyboard mnemonic for accessing this content.
      *
      * @return the key code which represents the mnemonic;
@@ -241,4 +181,12 @@ public interface Content extends Dockable {
      * @since 1.3.1
      */
     int getMnemonic();
+
+    /**
+     *
+     * @return
+     * @since 1.3.2
+     */
+    Dockable getDockableDelegator();
+
 }

@@ -2,7 +2,6 @@ package org.noos.xing.mydoggy;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.Serializable;
 
 /**
  * This manager manages the main window. You can add several contents to be displayed
@@ -46,45 +45,43 @@ public interface ContentManager {
      * Adds a <code>component</code> represented by a unique identifier <code>key</code>
      * with a <code>title</code> and/or <code>icon</code>, either of which can be <code>null</code>.
      *
-     * @param key       key with which the specified content is to be associated.
-     * @param title     the title to be displayed in this content
+     * @param id
+     *@param title     the title to be displayed in this content
      * @param icon      the icon to be displayed in this content
-     * @param component the component to be displayed when this content is selected. @return the a <code>Content</code> object rapresents the content added.
-     * @see #removeContent(Content)
+     * @param component the component to be displayed when this content is selected. @return the a <code>Content</code> object rapresents the content added. @see #removeContent(Content)
      * @see Content
      * @return a <code>Content</code> instance that rapresents the <code>component</code>
      * @since 1.0.0
      */
-    Content addContent(Object key, String title, Icon icon, Component component);
+    Content addContent(String id, String title, Icon icon, Component component);
 
     /**
      * Adds a <code>component</code> represented by a unique identifier <code>key</code>
      * with a <code>title</code> and/or <code>icon</code>, either of which can be <code>null</code>.
      *
-     * @param key       key with which the specified content is to be associated.
-     * @param title     the title to be displayed in this content
+     * @param id
+     *@param title     the title to be displayed in this content
      * @param icon      the icon to be displayed in this content
      * @param component the component to be displayed when this content is selected.
-     * @param tip       the tool tip text @return the a <code>Content</code> object rapresents the content added.
-     * @see #removeContent(Content)
+     * @param tip       the tool tip text @return the a <code>Content</code> object rapresents the content added. @see #removeContent(Content)
      * @return a <code>Content</code> instance that rapresents the <code>component</code>
      * @since 1.0.0
      */
-    Content addContent(Object key, String title, Icon icon, Component component, String tip);
+    Content addContent(String id, String title, Icon icon, Component component, String tip);
 
     /**
      * 
-     * @param toolWindow
+     * @param dockable
      */
-    Content addContent(ToolWindow toolWindow);
+    Content addContent(Dockable dockable);
 
     /**
      * Removes the content <code>content</code>.
      *
      * @param content content to be removed from this manager, if present.
      * @return <tt>true</tt> if this manager contained the specified element.
-     * @see #addContent(Object,String,javax.swing.Icon,java.awt.Component)
-     * @see #addContent(Object,String,javax.swing.Icon,java.awt.Component,String)
+     * @see #addContent(String, String,javax.swing.Icon,java.awt.Component)
+     * @see #addContent(String, String,javax.swing.Icon,java.awt.Component, String)
      * @since 1.0.0
      */
     boolean removeContent(Content content);

@@ -57,26 +57,28 @@ public class MyDoggyContentManager implements ContentManager {
         return contents.size();
     }
 
-    public Content addContent(Object key, String title, Icon icon, Component component, String tip) {
-        return addContentInternal(key, title, icon, component, tip, null);
+    public Content addContent(String id, String title, Icon icon, Component component, String tip) {
+        return addContentInternal(id, title, icon, component, tip, null);
     }
 
-    public Content addContent(Object key, String title, Icon icon, Component component) {
-        return addContent(key, title, icon, component, null);
+    public Content addContent(String id, String title, Icon icon, Component component) {
+        return addContent(id, title, icon, component, null);
     }
 
-    public Content addContent(ToolWindow toolWindow) {
-        toolWindowManager.verifyDockable(toolWindow);
+    public Content addContent(Dockable dockable) {
+        if (dockable instanceof ToolWindow) {
+            toolWindowManager.verifyDockable(dockable);
 
-//        System.out.println("toolWindow = " + toolWindow.getId());
-        ((MyDoggyToolWindow)toolWindow).setTypeInternal(ToolWindowType.EXTERN);
-        Content content = addContentInternal(toolWindow.getId(),
-                                             toolWindow.getTitle(),
-                                             toolWindow.getIcon(),
-                                             toolWindow.getComponent(),
-                                             null,
-                                             toolWindow);
-        return content;
+            ((MyDoggyToolWindow) dockable).setTypeInternal(ToolWindowType.EXTERN);
+            Content content = addContentInternal(dockable.getId(),
+                                                 dockable.getTitle(),
+                                                 dockable.getIcon(),
+                                                 dockable.getComponent(),
+                                                 null,
+                                                 (ToolWindow) dockable);
+            return content;
+        } else
+            throw new IllegalArgumentException("Cannot add that type of dockable.");
     }
 
     public boolean removeContent(Content content) {
@@ -87,7 +89,7 @@ public class MyDoggyContentManager implements ContentManager {
         boolean result = contents.remove(content);
 
         if (result) {
-            contentMap.remove(content.getKey());
+            contentMap.remove(content.getId());
             fireContentRemoved(content);
         }
 
@@ -223,17 +225,17 @@ public class MyDoggyContentManager implements ContentManager {
     }
 
 
-    protected Content addContentInternal(Object key, String title, Icon icon, Component component, String tip,
+    protected Content addContentInternal(String id, String title, Icon icon, Component component, String tip,
                                          ToolWindow toolWindow) {
-        if (key == null)
+        if (id == null)
             throw new IllegalArgumentException("Key cannot be null.");
         if (component == null)
             throw new IllegalArgumentException("Component cannot be null.");
 
-        if (contentMap.containsKey(key))
-            throw new IllegalArgumentException("Cannot register content with passed key. An already registered content exists. [key : " + key + "]");
+        if (contentMap.containsKey(id))
+            throw new IllegalArgumentException("Cannot register content with passed key. An already registered content exists. [key : " + id + "]");
 
-        MyDoggyContent content = new MyDoggyContent(this, key, title, icon, component, tip, toolWindow);
+        MyDoggyContent content = new MyDoggyContent(this, id, title, icon, component, tip, toolWindow);
         content.addUIPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 assert evt.getSource() instanceof Content;
@@ -245,7 +247,7 @@ public class MyDoggyContentManager implements ContentManager {
             }
         });
         contents.add(content);
-        contentMap.put(key, content);
+        contentMap.put(id, content);
         plafContentManagerUI.addContent(content);
 
         fireContentAdded(content);

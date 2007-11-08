@@ -163,7 +163,20 @@ public class XMLWriter {
         this.depth = depth;
     }
 
+    public void cdata(String s) throws SAXException {
+        state = SEEN_ELEMENT;
+        if (depth > 0)
+            characters("\n");
+        doIndent();
+        state = SEEN_ELEMENT;
 
+        write("<![CDATA[");
+        write(s);
+        write("]]>");
+    }
+
+
+    
     protected void init(Writer writer) {
         setOutput(writer);
         reset();

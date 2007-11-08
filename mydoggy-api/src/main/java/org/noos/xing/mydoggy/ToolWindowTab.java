@@ -15,56 +15,12 @@ import java.awt.*;
 public interface ToolWindowTab extends Dockable {
 
     /**
+     * Returns the id used to register the tool.
      *
      * @return
      * @since 1.3.2
      */
     ToolWindow getOwner();
-
-    /**
-     * Returns the tab title.
-     *
-     * @return the title for the tab.
-     * @see #setTitle(String)
-     * @since 1.3.0
-     */
-    String getTitle();
-
-    /**
-     * This method is used to set the title for the tab.
-     *
-     * @param title the new title.
-     * @see #getTitle()
-     * @since 1.3.0
-     */
-    void setTitle(String title);
-
-    /**
-     * Returns the tab icon.
-     *
-     * @return the icon for the tab.
-     * @see #setIcon(javax.swing.Icon)
-     * @since 1.3.0
-     */
-    Icon getIcon();
-
-    /**
-     * This method is used to set the icon for the tab.
-     *
-     * @param icon the new icon.
-     * @see #getIcon()
-     * @since 1.3.0
-     */
-    void setIcon(Icon icon);
-
-    /**
-     * Returns the tab component.
-     *
-     * @return the component for the tab.
-     * @see #setComponent(java.awt.Component)
-     * @since 1.3.0
-     */
-    Component getComponent();
 
     /**
      * This method is used to set the component for the tab.
