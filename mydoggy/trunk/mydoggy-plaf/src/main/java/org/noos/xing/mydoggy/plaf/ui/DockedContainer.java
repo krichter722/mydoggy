@@ -364,13 +364,13 @@ public class DockedContainer implements ToolWindowContainer {
                     toolWindow.setVisible(false);
                 else {
                     if (actionCommand.endsWith("left"))
-                        toolWindow.aggregate(ToolWindow.Where.LEFT);
+                        toolWindow.aggregate(ToolWindow.AggregationPosition.LEFT);
                     else if (actionCommand.endsWith("right"))
-                        toolWindow.aggregate(ToolWindow.Where.RIGHT);
+                        toolWindow.aggregate(ToolWindow.AggregationPosition.RIGHT);
                     else if (actionCommand.endsWith("top"))
-                        toolWindow.aggregate(ToolWindow.Where.TOP);
+                        toolWindow.aggregate(ToolWindow.AggregationPosition.TOP);
                     else if (actionCommand.endsWith("bottom"))
-                        toolWindow.aggregate(ToolWindow.Where.BOTTOM);
+                        toolWindow.aggregate(ToolWindow.AggregationPosition.BOTTOM);
                     else
                         toolWindow.aggregate();
 
@@ -466,7 +466,7 @@ public class DockedContainer implements ToolWindowContainer {
             aggregate.setActionCommand("aggregate");
             aggregate.addActionListener(this);
 
-            aggregateMenu = new JMenu("Aggregate Where");
+            aggregateMenu = new JMenu("Aggregate Position Menu");
 
             JMenuItem aggregateLeft = new JMenuItem();
             aggregateLeft.setName("toolWindow.popup.aggregate.left." + toolWindow.getId());

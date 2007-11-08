@@ -708,7 +708,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 if (contantPage.getContent().getDockableDelegator() !=null) {
                     dge.startDrag(Cursor.getDefaultCursor(),
                                   new MyDoggyTransferable(MyDoggyTransferable.CONTENT_ID_DF,
-                                                         contantPage.getContent().getKey()),
+                                                         contantPage.getContent().getId()),
                                   this);
 
                     // Setup ghostImage

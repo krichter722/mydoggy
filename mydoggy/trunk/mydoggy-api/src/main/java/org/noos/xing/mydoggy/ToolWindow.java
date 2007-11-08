@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy;
 
-import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -15,22 +14,13 @@ import java.awt.*;
  */
 public interface ToolWindow extends Dockable {
 
-    enum Where {
+    enum AggregationPosition {
         LEFT,
         RIGHT,
         TOP,
         BOTTOM,
         DEFAULT
     }
-
-
-    /**
-     * Returns the id used to register the tool.
-     *
-     * @return tool id.
-     * @since 1.0.0
-     */
-    String getId();
 
     /**
      * This method is used to set the index for the tool. The index is used to activate or hide
@@ -51,13 +41,6 @@ public interface ToolWindow extends Dockable {
      * @since 1.0.0
      */
     int getIndex();
-
-    /**
-     * TODO
-     * @return
-     * @since 1.3.2
-     */
-    Component getComponent();
 
     /**
      * The method is used to set the available property of the tool.
@@ -113,11 +96,11 @@ public interface ToolWindow extends Dockable {
     void aggregate();
 
     /**
-     *
-     * @param where
+     * TODO:
+     * @param aggregationPosition
      * @since 1.3.2
      */
-    void aggregate(Where where);
+    void aggregate(AggregationPosition aggregationPosition);
 
     /**
      * The method is used to set the aggregateEnabled property of the tool.
@@ -280,42 +263,6 @@ public interface ToolWindow extends Dockable {
     ToolWindowType getType();
 
     /**
-     * This method is used to set the icon for the tool.
-     *
-     * @param icon the new icon.
-     * @see #getIcon()
-     * @since 1.0.0
-     */
-    void setIcon(Icon icon);
-
-    /**
-     * Returns the tool icon.
-     *
-     * @return the icon for the tool.
-     * @see #setIcon(javax.swing.Icon)
-     * @since 1.0.0
-     */
-    Icon getIcon();
-
-    /**
-     * This method is used to set the title for the tool.
-     *
-     * @param title the new title.
-     * @see #getTitle()
-     * @since 1.0.0
-     */
-    void setTitle(String title);
-
-    /**
-     * Returns the tool title.
-     *
-     * @return the title for the tool.
-     * @see #setTitle(String)
-     * @since 1.0.0
-     */
-    String getTitle();
-
-    /**
      * Maximizes this toolwindow. A maximized toolwindow is resized to
      * fully fit the main content area.
      *
@@ -341,6 +288,10 @@ public interface ToolWindow extends Dockable {
      */
     void setRepresentativeAnchorButtonVisible(boolean visible);
 
+    /**
+     *
+     * @return
+     */
     boolean isRepresentativeAnchorButtonVisible();
 
     /**

@@ -40,7 +40,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     protected JPanel contentPane;
     protected TableLayout contentPaneLayout;
     protected JSplitPane splitPane;
-    protected ToolsContainer multiSplitContainer;
+    protected ToolsContainer toolsContainer;
 
     protected int availableTools;
     protected int orientation;
@@ -80,6 +80,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                '}';
     }
 
+
     public JToolScrollBar getToolScrollBar() {
         return toolScrollBar;
     }
@@ -96,12 +97,17 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         return splitPane;
     }
 
-    public int getAvailableTools() {
-        return availableTools;
+    public ToolsContainer getToolsContainer() {
+        return toolsContainer;
     }
 
     public void ensureVisible(Component component) {
         toolScrollBar.ensureVisible(component);
+    }
+
+
+    public int getAvailableTools() {
+        return availableTools;
     }
 
     public boolean isTempShowed() {
@@ -150,7 +156,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             orientation = JSplitPane.HORIZONTAL_SPLIT;
         }
 
-        multiSplitContainer = new ToolsContainer(manager, orientation);
+        toolsContainer = new ToolsContainer(manager, orientation);
 
         toolScrollBar = new JToolScrollBar(manager.getResourceManager(), orientation, contentPane);
 
@@ -616,12 +622,12 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
         public void propertyChange(PropertyChangeEvent evt) {
             boolean shiftShow = false;
-            ToolWindow.Where where = ToolWindow.Where.DEFAULT;
+            ToolWindow.AggregationPosition aggregationPosition = ToolWindow.AggregationPosition.DEFAULT;
 
             if (evt instanceof UserPropertyChangeEvent) {
                 UserPropertyChangeEvent upce = (UserPropertyChangeEvent) evt;
                 shiftShow = (Boolean) ((Object[]) upce.getUserObject())[0];
-                where = (ToolWindow.Where) ((Object[]) upce.getUserObject())[1];
+                aggregationPosition = (ToolWindow.AggregationPosition) ((Object[]) upce.getUserObject())[1];
             }
 
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
@@ -689,7 +695,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     ToolsContainer multiSplitContainer = (ToolsContainer) splitPaneContent;
 
                     if (manager.getShowingGroup() != null) {
-                        multiSplitContainer.addContent(descriptor.getToolWindow().getId(), content, where);
+                        multiSplitContainer.addContent(descriptor.getToolWindow().getId(), content, aggregationPosition);
                     } else {
                         if (content == null) {
                             DockedContainer dockedContainer = (DockedContainer) descriptor.getToolWindowContainer();
@@ -711,20 +717,20 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                         }
                     }
                 } else if (manager.getShowingGroup() != null && content != null) {
-                    multiSplitContainer.clear();
+                    toolsContainer.clear();
                     if (shiftShow)
-                        multiSplitContainer.addContent(descriptor.getToolWindow().getId(), splitPaneContent, ToolWindow.Where.DEFAULT);
-                    multiSplitContainer.addContent(descriptor.getToolWindow().getId(), content, where);
+                        toolsContainer.addContent(descriptor.getToolWindow().getId(), splitPaneContent, ToolWindow.AggregationPosition.DEFAULT);
+                    toolsContainer.addContent(descriptor.getToolWindow().getId(), content, aggregationPosition);
 
-                    setSplitPaneContent(multiSplitContainer);
+                    setSplitPaneContent(toolsContainer);
                 } else if (content != null)
                     setSplitPaneContent(content);
             } else {
                 if (manager.getShowingGroup() != null && content != null) {
-                    multiSplitContainer.clear();
-                    multiSplitContainer.addContent(descriptor.getToolWindow().getId(), content, ToolWindow.Where.DEFAULT);
+                    toolsContainer.clear();
+                    toolsContainer.addContent(descriptor.getToolWindow().getId(), content, ToolWindow.AggregationPosition.DEFAULT);
 
-                    setSplitPaneContent(multiSplitContainer);
+                    setSplitPaneContent(toolsContainer);
                 } else if (content != null)
                     setSplitPaneContent(content);
             }

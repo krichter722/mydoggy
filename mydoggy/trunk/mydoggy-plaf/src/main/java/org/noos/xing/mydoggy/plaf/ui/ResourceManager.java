@@ -1,8 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
+import org.noos.xing.mydoggy.Observable;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -19,13 +19,13 @@ import java.util.ResourceBundle;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.3.1
  */
-public interface ResourceManager {
+public interface ResourceManager extends Observable {
 
     /**
      * Returns an instance of class <code>clazz</code> using passed <code>args</code>.
      *
      * @param clazz the class of the instance to be returned.
-     * @param args the arguments needed to create the instance.
+     * @param args  the arguments needed to create the instance.
      * @return an instance of class <code>clazz</code> using passed <code>args</code>.
      * @since 1.3.2
      */
@@ -206,40 +206,28 @@ public interface ResourceManager {
     Map<String, Icon> getIcons();
 
     /**
-     * Adds a PropertyChangeListener to the listener list. The listener is
-     * registered for all bound properties of this class.
-     * If listener is null, no exception is thrown and no action is performed.
+     * Searches for the property with the specified name in the property list.
+     * The method returns <code>null</code> if the property is not found.
      *
-     * @param listener the PropertyChangeListener to be added
-     * @see #getPropertyChangeListeners()
-     * @see #removePropertyChangeListener
-     * @since 1.3.2
+     * @param name the property bame.
+     * @return the value in this property list with the specified key value.
      */
-    void addPropertyChangeListener(PropertyChangeListener listener);
+    String getProperty(String name);
 
     /**
-     * Removes a PropertyChangeListener from the listener list.
-     * <p/>
-     * If listener is null, no exception is thrown and no action is performed.
+     * Associates the specified value with the specified property name.
      *
-     * @param listener the PropertyChangeListener to be removed.
-     * @see #addPropertyChangeListener
-     * @see #getPropertyChangeListeners
-     * @since 1.3.2
+     * @param name   property name with which the specified value is to be associated.
+     * @param value value to be associated with the specified name.
      */
-    void removePropertyChangeListener(PropertyChangeListener listener);
+    void putProperty(String name, String value);
 
     /**
-     * Returns an array of all the property change listeners
-     * registered on this class.
-     *
-     * @return all of this class's <code>PropertyChangeListener</code>s
-     *         or an empty array if no property change
-     *         listeners are currently registered.
-     * @see #addPropertyChangeListener
-     * @see #removePropertyChangeListener
-     * @since 1.3.2
+     * TODO
+     * @param name
+     * @param defualt
+     * @return
      */
-    PropertyChangeListener[] getPropertyChangeListeners();
+    boolean getBoolean(String name, boolean defualt);
 
 }

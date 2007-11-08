@@ -15,7 +15,7 @@ import java.beans.PropertyChangeListener;
 public class MyDoggyContent implements PlafContentUI {
     private transient MyDoggyContentManager contentManager;
 
-    private Object key;
+    private String id;
     private String title;
     private Color foreground;
     private Icon icon;
@@ -34,12 +34,12 @@ public class MyDoggyContent implements PlafContentUI {
 
 
     public MyDoggyContent(MyDoggyContentManager contentManager,
-						  Object key, String title, Icon icon,
+						  String id, String title, Icon icon,
                           Component component,
                           String toolTipText,
                           Dockable dockableDelegator) {
         this.contentManager = contentManager;
-        this.key = key;
+        this.id = id;
         this.title = title;
         this.icon = icon;
         this.component = component;
@@ -54,11 +54,7 @@ public class MyDoggyContent implements PlafContentUI {
     }
 
     public String getId() {
-        return key.toString();
-    }
-
-    public Object getKey() {
-        return key;
+        return id;
     }
 
     public Component getComponent() {

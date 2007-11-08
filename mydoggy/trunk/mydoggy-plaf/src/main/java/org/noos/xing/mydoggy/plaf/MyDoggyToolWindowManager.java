@@ -571,7 +571,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         });
 
         // Setup DropTarget for main container
-        mainContainer.setDropTarget(new ContentManagerDropTarget(mainContainer, this));
+        mainContainer.setDropTarget(new ContentManagerDropTarget(mainContainer, this, resourceManager));
     }
 
     protected void initUI(Locale locale) {

@@ -162,14 +162,14 @@ public class MyDoggyToolWindow implements ToolWindow {
                 if (getType() == ToolWindowType.SLIDING)
                     setType(ToolWindowType.DOCKED);
 
-                setVisibleInternal(true, true, Where.DEFAULT);
+                setVisibleInternal(true, true, AggregationPosition.DEFAULT);
             }
         } finally {
             descriptor.getManager().resetShiftShow();
         }
     }
 
-    public void aggregate(Where where) {
+    public void aggregate(AggregationPosition aggregationPosition) {
         try {
             // TODO: add enabledShiftShow mode ...
             descriptor.getManager().enableShiftShow();
@@ -177,7 +177,7 @@ public class MyDoggyToolWindow implements ToolWindow {
                 if (getType() == ToolWindowType.SLIDING)
                     setType(ToolWindowType.DOCKED);
 
-                setVisibleInternal(true, true, where);
+                setVisibleInternal(true, true, aggregationPosition);
             }
         } finally {
             descriptor.getManager().resetShiftShow();
@@ -459,7 +459,6 @@ public class MyDoggyToolWindow implements ToolWindow {
                                         delegator.getComponent(),
                                         delegator);
 
-                // TODO: add all tabs of delegator
                 for (ToolWindowTab tab : delegator.getToolWindowTabs()) {
                     if (!tab.getTitle().equals(delegator.getTitle()))
                         addTabInternal(tab);
@@ -585,10 +584,10 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
 
-    protected void setVisibleInternal(boolean visible, boolean aggregate, Where where) {
+    protected void setVisibleInternal(boolean visible, boolean aggregate, AggregationPosition aggregationPosition) {
         if ((aggregateEnabled || descriptor.getManager().getToolWindowManagerDescriptor().isAggregateMode(anchor)) &&
             visible &&
-            !aggregate && /*!descriptor.getManager().isShiftShow() && TODO: check this*/
+            !aggregate &&
             getType() == ToolWindowType.DOCKED)
             aggregate();
 
@@ -628,7 +627,7 @@ public class MyDoggyToolWindow implements ToolWindow {
             this.visible = visible;
 
             if (aggregate) {                
-                firePropertyChangeEvent("visible", old, visible, new Object[]{aggregate, where});
+                firePropertyChangeEvent("visible", old, visible, new Object[]{aggregate, aggregationPosition});
             } else
                 firePropertyChangeEvent("visible", old, visible);
         }

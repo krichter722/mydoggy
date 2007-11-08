@@ -147,6 +147,26 @@ public class MyDoggyResourceManager implements ResourceManager {
         return icons;
     }
 
+    public String getProperty(String name) {
+        return resources.getProperty("Property." + name);
+    }
+
+    public void putProperty(String name, String value) {
+        resources.put("Property." + name, value);
+    }
+
+    public boolean getBoolean(String name, boolean defualt) {
+        String value = resources.getProperty(name);
+        if (value == null || "".equals(value.trim()))
+            return defualt;
+
+        try {
+            return Boolean.parseBoolean(value);
+        } catch (Exception e) {
+            return defualt;
+        }
+    }
+
     public void addPropertyChangeListener(PropertyChangeListener changeListener) {
         listenerList.add(PropertyChangeListener.class, changeListener);
     }

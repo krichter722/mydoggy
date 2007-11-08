@@ -21,7 +21,6 @@ import java.util.List;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * @todo add store capabilities...
  */
 public class ToolsContainer extends JPanel implements PropertyChangeListener {
     protected Map<String, byte[]> models;
@@ -30,7 +29,7 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
     protected List<Component> contents;
     protected List<String> toolIds;
     protected int orientation;
-    protected ToolWindow.Where defaultWhere;
+    protected ToolWindow.AggregationPosition defaultAggregationPosition;
 
     protected MultiSplitPane multiSplitPane;
     protected MultiSplitLayout.Split multiSplitPaneModelRoot;
@@ -48,9 +47,9 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
         this.multiSplitPaneModelRoot = new MultiSplitLayout.Split();
         this.multiSplitPaneModelRoot.setRowLayout(orientation != JSplitPane.VERTICAL_SPLIT);
         if (multiSplitPaneModelRoot.isRowLayout()) {
-            defaultWhere = ToolWindow.Where.RIGHT;
+            defaultAggregationPosition = ToolWindow.AggregationPosition.RIGHT;
         } else
-            defaultWhere = ToolWindow.Where.BOTTOM;
+            defaultAggregationPosition = ToolWindow.AggregationPosition.BOTTOM;
         this.models = new Hashtable<String, byte[]>();
 
         setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
@@ -61,10 +60,12 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
     }
 
 
-    public void addContent(String toolId, Component content, ToolWindow.Where where) {
+    public void addContent(String toolId, Component content, ToolWindow.AggregationPosition aggregationPosition) {
         ToolWindow toolWindow = (ToolWindow) ((JComponent) content).getClientProperty(ToolWindow.class);
         if (toolWindow != null)
             toolId = toolWindow.getId();
+
+        toolId = toolId + aggregationPosition.toString();
 
         // Store old layout
         StringBuilder builder = new StringBuilder();
@@ -81,8 +82,8 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
         } else {
             byte[] oldModel = models.get(builder.toString());
 
-            if (where == ToolWindow.Where.DEFAULT)
-                where = defaultWhere;
+            if (aggregationPosition == ToolWindow.AggregationPosition.DEFAULT)
+                aggregationPosition = defaultAggregationPosition;
 
             if (contents.size() == 1) {
                 Component previousContent = getComponent(0);
@@ -100,7 +101,7 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
                                                                          new MultiSplitLayout.Divider(),
                                                                          leaf2);
 
-                    boolean rowLayout = (where == ToolWindow.Where.LEFT || where == ToolWindow.Where.RIGHT);
+                    boolean rowLayout = (aggregationPosition == ToolWindow.AggregationPosition.LEFT || aggregationPosition == ToolWindow.AggregationPosition.RIGHT);
 
                     multiSplitPaneModelRoot = new MultiSplitLayout.Split();
                     multiSplitPaneModelRoot.setRowLayout(rowLayout);
@@ -109,9 +110,9 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
                         multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
                 }
 
-                multiSplitPane.getMultiSplitLayout().setModel(multiSplitPaneModelRoot);
+                multiSplitPane.setModel(multiSplitPaneModelRoot);
 
-                switch (where) {
+                switch (aggregationPosition) {
                     case LEFT:
                     case TOP:
                         multiSplitPane.add(getComponentWrapper(content), "1");
@@ -135,12 +136,12 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
                 } else {
                     // Modify model
 
-                    boolean rowLayout = (where == ToolWindow.Where.LEFT || where == ToolWindow.Where.RIGHT);
+                    boolean rowLayout = (aggregationPosition == ToolWindow.AggregationPosition.LEFT || aggregationPosition == ToolWindow.AggregationPosition.RIGHT);
 
                     if (multiSplitPaneModelRoot.isRowLayout() == rowLayout) {
                         List<MultiSplitLayout.Node> children = multiSplitPaneModelRoot.getChildren();
 
-                        switch (where) {
+                        switch (aggregationPosition) {
                             case LEFT:
                             case TOP:
                                 children.add(0, new MultiSplitLayout.Leaf(leafName));
@@ -171,7 +172,7 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
                         multiSplitPaneModelRoot.setWeight(0.5);
 
                         List<MultiSplitLayout.Node> children = null;
-                        switch (where) {
+                        switch (aggregationPosition) {
                             case LEFT:
                             case TOP:
                                 children = Arrays.asList(leaf,
@@ -358,7 +359,7 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
             index = contents.size() - 1;
 
         if (contents.size() == 0)
-            addContent(toolId, content, ToolWindow.Where.DEFAULT);
+            addContent(toolId, content, ToolWindow.AggregationPosition.DEFAULT);
         else if (contents.size() == 1) {
             removeAll();
             if (contents.contains(content))
@@ -380,30 +381,55 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
             Stack<MultiSplitLayout.Split> stack = new Stack<MultiSplitLayout.Split>();
             stack.push(multiSplitPaneModelRoot);
 
+            boolean repaint = false;
             while (!stack.isEmpty()) {
                 MultiSplitLayout.Split split = stack.pop();
 
                 List<MultiSplitLayout.Node> children = split.getChildren();
 
-                double w = 1.0 / ((children.size() / 2) + 1);
+                double totalWeight = 0;
                 for (MultiSplitLayout.Node child : children) {
                     if (child instanceof MultiSplitLayout.Leaf) {
-                        child.setBounds(new Rectangle());
-                        child.setWeight(w);
+                        totalWeight += child.getWeight();
                     } else if (child instanceof MultiSplitLayout.Split) {
                         stack.push((MultiSplitLayout.Split) child);
+                    }
+                }
+
+                if (totalWeight > 1.0) {
+                    repaint = true;
+                    double w = 1.0 / ((children.size() / 2) + 1);
+                    for (MultiSplitLayout.Node child : children) {
+                        if (child instanceof MultiSplitLayout.Leaf) {
+                            child.setBounds(new Rectangle());
+                            child.setWeight(w);
+                        } else if (child instanceof MultiSplitLayout.Split) {
+                            stack.push((MultiSplitLayout.Split) child);
+                        }
                     }
                 }
                 
                 split.setChildren(children);
             }
-            multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
-            multiSplitPane.setModel(multiSplitPaneModelRoot);
-            repaintSplit();
+            if (repaint) {
+                multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
+                multiSplitPane.setModel(multiSplitPaneModelRoot);
+                repaintSplit();
+            }
         }
 
     }
 
+
+    public MultiSplitLayout.Split getModel() {
+        return multiSplitPaneModelRoot;
+    }
+
+    public void setModel(MultiSplitLayout.Split model) {
+        multiSplitPaneModelRoot = model;
+        multiSplitPane.setModel(multiSplitPaneModelRoot);
+        repaintSplit();
+    }
 
     public boolean isEmpty() {
         return contents.size() == 0;
@@ -458,6 +484,7 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
     }
 
     protected void repaintSplit() {
+        SwingUtil.repaint(multiSplitPane);
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 multiSplitPane.invalidate();

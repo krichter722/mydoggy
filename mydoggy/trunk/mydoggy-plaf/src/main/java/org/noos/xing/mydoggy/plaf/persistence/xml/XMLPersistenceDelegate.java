@@ -1,35 +1,37 @@
 package org.noos.xing.mydoggy.plaf.persistence.xml;
 
 import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.MergePolicyApplier;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.ResetMergePolicy;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.UnionMergePolicy;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolsContainer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
+import org.jdesktop.swingx.MultiSplitLayout;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.*;
 import java.util.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class XMLPersistenceDelegate implements PersistenceDelegate {
-    protected ToolWindowManager toolWindowManager;
+    protected MyDoggyToolWindowManager toolWindowManager;
 
     protected Map<MergePolicy, MergePolicyApplier> mergePolicyApplierMap;
     protected Map<String, ElementParser> elementParserMap;
 
-    public XMLPersistenceDelegate(ToolWindowManager toolWindowManager) {
+    public XMLPersistenceDelegate(MyDoggyToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
         initMaps();
     }
@@ -44,16 +46,10 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             mydoggyAttributes.addAttribute(null, "version", null, null, "1.3.2");
             writer.startElement("mydoggy", mydoggyAttributes);
 
-            // Store tools pref.
-            writer.startElement("tools");
-            for (ToolWindow toolWindow : toolWindowManager.getToolWindows())
-                saveToolWindow(writer, toolWindow);
-            writer.endElement("tools");
-
-            // Store PushAway Pref
+            saveToolWindows(writer);
             saveToolWindowManagerDescriptor(writer);
-
             saveContentManager(writer);
+            saveBars(writer);
 
             writer.endElement("mydoggy");
             writer.endDocument();
@@ -97,8 +93,18 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         elementParserMap.put("pushAway", new PushAwayModeElementParser());
         elementParserMap.put("tools", new ToolsElementParser());
         elementParserMap.put("contentManager", new ContentManagerElementParser());
+        elementParserMap.put("bar", new BarElementParser());
     }
 
+
+    protected void saveToolWindows(XMLWriter writer) throws SAXException {
+        writer.startElement("tools");
+
+        for (ToolWindow toolWindow : toolWindowManager.getToolWindows())
+            saveToolWindow(writer, toolWindow);
+
+        writer.endElement("tools");
+    }
 
     protected void saveToolWindow(XMLWriter writer, ToolWindow toolWindow) throws SAXException {
         AttributesImpl toolAttributes = new AttributesImpl();
@@ -275,7 +281,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         for (Content content : toolWindowManager.getContentManager().getContents()) {
 
             AttributesImpl contentAttributes = new AttributesImpl();
-            contentAttributes.addAttribute(null, "key", null, null, String.valueOf(content.getKey()));
+            contentAttributes.addAttribute(null, "id", null, null, content.getId());
             contentAttributes.addAttribute(null, "detached", null, null, String.valueOf(content.isDetached()));
             contentAttributes.addAttribute(null, "enabled", null, null, String.valueOf(content.isEnabled()));
             contentAttributes.addAttribute(null, "selected", null, null, String.valueOf(content.isSelected()));
@@ -287,6 +293,40 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         writer.endElement("contentManager");
     }
 
+    protected void saveBars(XMLWriter writer) throws SAXException {
+        // Store model for bar
+        writer.startElement("bars");
+
+        saveBar(writer, ToolWindowAnchor.LEFT);
+        saveBar(writer, ToolWindowAnchor.BOTTOM);
+        saveBar(writer, ToolWindowAnchor.RIGHT);
+        saveBar(writer, ToolWindowAnchor.TOP);
+
+        writer.endElement("bars");
+    }
+
+    protected void saveBar(XMLWriter writer, ToolWindowAnchor anchor) throws SAXException {
+        ToolsContainer toolsContainer = toolWindowManager.getBar(anchor).getToolsContainer();
+        if (toolsContainer.getContentCount() > 0) {
+            AttributesImpl attributes = new AttributesImpl();
+            attributes.addAttribute(null, "anchor", null, null, anchor.toString());
+            writer.startElement("bar", attributes);
+
+            writer.startElement("model");
+
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            XMLEncoder encoder = new XMLEncoder(os);
+            encoder.writeObject(toolsContainer.getModel());
+            encoder.flush();
+            encoder.close();
+
+            String model = os.toString();
+            writer.cdata(model.substring(model.indexOf('\n')));
+
+            writer.endElement("model");
+            writer.endElement("bar");
+        }
+    }
 
     protected void parseElement(Element element, Object... args) {
         ElementParser elementParser = elementParserMap.get(element.getNodeName());
@@ -312,6 +352,13 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
      */
     public abstract class ElementParserAdapter implements ElementParser {
 
+        public Element getElement(Element root, String name) {
+            NodeList list = root.getElementsByTagName(name);
+            if (list.getLength() == 0)
+                return null;
+            return (Element) list.item(0);
+        }
+
         public boolean getBoolean(Element element, String name, boolean defaultValue) {
             try {
                 String attr = element.getAttribute(name);
@@ -323,7 +370,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 return defaultValue;
             }
         }
-                
+
     }
 
 
@@ -342,7 +389,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             ToolWindowManagerDescriptor descriptor = toolWindowManager.getToolWindowManagerDescriptor();
             descriptor.setNumberingEnabled(Boolean.parseBoolean(element.getAttribute("numberingEnabled")));
             return true;
-            
+
         }
     }
 
@@ -376,7 +423,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             NodeList modes = element.getElementsByTagName("mode");
             for (int i = 0, size = modes.getLength(); i < size; i++) {
                 Element mode = (Element) modes.item(i);
-                if ("MOST_RECENT".equals(mode.getAttribute("type")))  {
+                if ("MOST_RECENT".equals(mode.getAttribute("type"))) {
                     MostRecentDescriptor mostRecentDescriptor = (MostRecentDescriptor) descriptor.getPushAwayModeDescriptor(PushAwayMode.MOST_RECENT);
 
                     NodeList anchors = element.getElementsByTagName("anchor");
@@ -399,7 +446,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
         public boolean parse(Element element, Object... args) {
             mergePolicyApplier = (MergePolicyApplier) args[0];
-            
+
             NodeList tools = element.getElementsByTagName("tool");
 
             for (int i = 0, size = tools.getLength(); i < size; i++) {
@@ -540,13 +587,6 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             return false;
         }
 
-        protected Element getElement(Element root, String name) {
-            NodeList list = root.getElementsByTagName(name);
-            if (list.getLength() == 0)
-                return null;
-            return (Element) list.item(0);
-        }
-
         protected void apply(NodeList tools, ToolWindowAnchor anchor) {
             // Filter tools by anchor
             java.util.List<Element> toolsByAnchor = new ArrayList<Element>();
@@ -565,7 +605,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                         return -1;
                     else if (anchorIndex1 == anchorIndex2)
                         return 0;
-                    return 1;                    
+                    return 1;
                 }
             });
 
@@ -597,14 +637,14 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         }
     }
 
-    public class ContentManagerElementParser implements ElementParser  {
+    public class ContentManagerElementParser implements ElementParser {
 
         public boolean parse(Element element, Object... args) {
             NodeList contents = element.getElementsByTagName("content");
 
             Content selectedContent = null;
-            for (int i = 0, size = contents .getLength(); i < size; i++) {
-                Element contentElement = (Element) contents .item(i);
+            for (int i = 0, size = contents.getLength(); i < size; i++) {
+                Element contentElement = (Element) contents.item(i);
                 Content content = toolWindowManager.getContentManager().getContent(contentElement.getAttribute("key"));
 
                 if (content != null) {
@@ -621,5 +661,24 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
             return false;
         }
+    }
+
+    public class BarElementParser extends ElementParserAdapter {
+
+        public boolean parse(Element element, Object... args) {
+            ToolWindowAnchor anchor = ToolWindowAnchor.valueOf(element.getAttribute("anchor"));
+
+            Element modelElement = getElement(element, "model");
+            if (modelElement != null) {
+                String text = modelElement.getTextContent();
+                XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(text.getBytes()));
+                MultiSplitLayout.Split model = (MultiSplitLayout.Split) decoder.readObject();
+
+                toolWindowManager.getBar(anchor).getToolsContainer().setModel(model);
+            }
+
+            return false;
+        }
+
     }
 }
