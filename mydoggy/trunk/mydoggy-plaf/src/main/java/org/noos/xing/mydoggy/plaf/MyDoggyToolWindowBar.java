@@ -692,29 +692,30 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             boolean animate = true;
             if (splitPaneContent != null) {
                 if (splitPaneContent instanceof ToolsContainer) {
-                    ToolsContainer multiSplitContainer = (ToolsContainer) splitPaneContent;
+                    ToolsContainer toolsContainer = (ToolsContainer) splitPaneContent;
 
-                    if (manager.getShowingGroup() != null) {
-                        multiSplitContainer.addContent(descriptor.getToolWindow().getId(), content, aggregationPosition);
-                    } else {
-                        if (content == null) {
-                            DockedContainer dockedContainer = (DockedContainer) descriptor.getToolWindowContainer();
-                            multiSplitContainer.removeContent(dockedContainer.getContentContainer());
+                    if (content == null) {
+                        DockedContainer dockedContainer = (DockedContainer) descriptor.getToolWindowContainer();
+                        toolsContainer.removeContent(dockedContainer.getContentContainer());
+                        animate = false;
+
+                        if (toolsContainer.isEmpty()) {
+                            animate = true;
+                            content = null;
+                        } else if (toolsContainer.getContentCount() == 1) {
                             animate = false;
-
-                            if (multiSplitContainer.isEmpty()) {
-                                animate = true;
-                                content = null;
-                            } else if (multiSplitContainer.getContentCount() == 1) {
-                                animate = false;
-                                content = multiSplitContainer.getContents().get(0);
-                                int temp = getSplitDividerLocation();
-                                setSplitPaneContent(content);
-                                setSplitDividerLocation(temp);
-                            }
-                        } else {
+                            content = toolsContainer.getContents().get(0);
+                            int temp = getSplitDividerLocation();
                             setSplitPaneContent(content);
+                            setSplitDividerLocation(temp);
                         }
+                    } else {
+                        if (manager.getShowingGroup() != null) {
+                            toolsContainer.addContent(descriptor.getToolWindow().getId(),
+                                                      content,
+                                                      aggregationPosition);
+                        } else
+                            setSplitPaneContent(content);
                     }
                 } else if (manager.getShowingGroup() != null && content != null) {
                     toolsContainer.clear();

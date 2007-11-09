@@ -49,6 +49,9 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     protected int availablePosition;
 
+    protected AggregationPosition lastAggregationPosition;
+
+
     protected MyDoggyToolWindow(MyDoggyToolWindowManager manager, Window anchestor, String id, int index,
                                 ToolWindowAnchor anchor, ToolWindowType type,
                                 String title, Icon icon, Component component,
@@ -178,7 +181,15 @@ public class MyDoggyToolWindow implements ToolWindow {
                     setType(ToolWindowType.DOCKED);
 
                 setVisibleInternal(true, true, aggregationPosition);
+            } else if (lastAggregationPosition != aggregationPosition) {
+                setVisible(false);
+
+                if (getType() == ToolWindowType.SLIDING)
+                    setType(ToolWindowType.DOCKED);
+
+                setVisibleInternal(true, true, aggregationPosition);
             }
+            lastAggregationPosition = aggregationPosition;
         } finally {
             descriptor.getManager().resetShiftShow();
         }

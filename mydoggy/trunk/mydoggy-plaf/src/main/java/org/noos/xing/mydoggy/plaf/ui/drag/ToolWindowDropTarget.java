@@ -81,7 +81,8 @@ public class ToolWindowDropTarget extends DropTarget {
                             }
 
                             toolWindow.setAggregateMode(true);
-                            toolWindow.setAnchor(anchor, owner.getAnchorIndex());
+                            toolWindow.setAnchor(anchor, owner.getAnchorIndex());                            
+                            // TODO: Choose where
                             toolWindow.aggregate();
                             toolWindow.setActive(true);
 
@@ -109,6 +110,7 @@ public class ToolWindowDropTarget extends DropTarget {
 
                                     toolWindow.setAggregateMode(true);
                                     toolWindow.setAnchor(anchor, owner.getAnchorIndex());
+                                    // TODO Choose Where
                                     toolWindow.aggregate();
                                     toolWindow.setActive(true);
                                 }
