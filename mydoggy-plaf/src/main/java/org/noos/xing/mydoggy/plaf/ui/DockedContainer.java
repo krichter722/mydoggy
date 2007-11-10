@@ -168,7 +168,7 @@ public class DockedContainer implements ToolWindowContainer {
         componentContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1},{-1}}));
         componentContainer.setOpaque(false);
         componentContainer.add(descriptor.getComponent(), "0,0,FULL,FULL");
-        componentContainer.setDropTarget(new ToolWindowDropTarget(componentContainer, toolWindow, descriptor.getManager()));
+//        TODO componentContainer.setDropTarget(new ToolWindowDropTarget(componentContainer, toolWindow, descriptor.getManager()));
 
         // Set Container content
         container.add(titleBar, "0,0");

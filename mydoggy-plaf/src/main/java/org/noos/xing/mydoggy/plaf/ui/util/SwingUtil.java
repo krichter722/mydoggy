@@ -292,20 +292,6 @@ public class SwingUtil {
         return null;
     }
 
-    public static Object getParent(Component c, Class<ToolWindowTabPanel> parentClass) {
-        if (c == null || parentClass == null)
-            return null;
-
-        if (parentClass.isInstance(c))
-            return c;
-
-        for (; c != null; c = c.getParent()) {
-            if (parentClass.isInstance(c))
-                return c;
-        }
-        return null;
-    }
-
     public static int getIconWidth(Icon icon) {
         return (icon != null) ? icon.getIconWidth() : 0;
     }

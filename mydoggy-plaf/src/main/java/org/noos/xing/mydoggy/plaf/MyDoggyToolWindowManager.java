@@ -159,6 +159,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         ToolWindowDescriptor toolWindowDescriptor = tools.get(id);
 
         if (toolWindowDescriptor != null) {
+            removeIfDockableDelegator(toolWindowDescriptor.getToolWindow());
             toolWindowDescriptor.unregister();
             toolWindowDescriptor.getToolWindow().setAvailable(false);
 
@@ -172,6 +173,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public void unregisterAllToolWindow() {
         for (Iterator<ToolWindowDescriptor> it = tools.values().iterator(); it.hasNext();) {
             ToolWindowDescriptor toolWindowDescriptor = it.next();
+
+            removeIfDockableDelegator(toolWindowDescriptor.getToolWindow());
             toolWindowDescriptor.unregister();
             toolWindowDescriptor.getToolWindow().setAvailable(false);
 
@@ -744,7 +747,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return null;
     }
 
-    public void verifyDockable(Dockable dockable) {
+    public void removeIfDockableDelegator(Dockable dockable) {
         for (ToolWindow toolWindow : getToolWindows()) {
             for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
                 if (tab.getDockableDelegator() == dockable) {

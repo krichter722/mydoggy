@@ -67,7 +67,7 @@ public class MyDoggyContentManager implements ContentManager {
 
     public Content addContent(Dockable dockable) {
         if (dockable instanceof ToolWindow) {
-            toolWindowManager.verifyDockable(dockable);
+            toolWindowManager.removeIfDockableDelegator(dockable);
 
             ((MyDoggyToolWindow) dockable).setTypeInternal(ToolWindowType.EXTERN);
             Content content = addContentInternal(dockable.getId(),

@@ -354,7 +354,7 @@ public class MyDoggyToolWindow implements ToolWindow {
             throw new IllegalArgumentException("Cannot call this method using that paramenter.");
 
         if (this.type == ToolWindowType.EXTERN)
-            descriptor.getManager().verifyDockable(this);
+            descriptor.getManager().removeIfDockableDelegator(this);
 
         boolean forceAvailable = false;
         if (this.type == ToolWindowType.EXTERN && type != ToolWindowType.FLOATING_FREE)
@@ -456,7 +456,7 @@ public class MyDoggyToolWindow implements ToolWindow {
             ToolWindowTab result;
             
             if (dockable instanceof ToolWindow) {
-                descriptor.getManager().verifyDockable(dockable);
+                descriptor.getManager().removeIfDockableDelegator(dockable);
 
                 ToolWindow delegator = (ToolWindow) dockable;
                 for (ToolWindowTab toolWindowTab : toolWindowTabs) {
