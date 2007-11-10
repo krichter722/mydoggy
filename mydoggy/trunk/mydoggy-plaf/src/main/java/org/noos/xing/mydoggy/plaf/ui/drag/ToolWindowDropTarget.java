@@ -2,33 +2,46 @@ package org.noos.xing.mydoggy.plaf.ui.drag;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
 */
 public class ToolWindowDropTarget extends DropTarget {
 
-    public ToolWindowDropTarget(JComponent component, ToolWindow owner, ToolWindowManager toolWindowManager) throws HeadlessException {
-        super(component, DnDConstants.ACTION_MOVE, new ToolWindowDropTargetListener(toolWindowManager, owner, component));
+    public ToolWindowDropTarget(JComponent component, ToolWindowManager toolWindowManager, ToolWindowAnchor anchor) throws HeadlessException {
+        super(component, DnDConstants.ACTION_MOVE, new ToolWindowDropTargetListener(component, toolWindowManager, anchor));
     }
 
-    public static class ToolWindowDropTargetListener implements DropTargetListener {
+    public static class ToolWindowDropTargetListener implements DropTargetListener, PropertyChangeListener {
         protected ToolWindowManager toolWindowManager;
-        protected ToolWindow owner;
+        protected ToolWindowAnchor anchor;
         protected JComponent component;
+
+        protected ToolWindow onToolWindow;
+        protected ToolWindowAnchor dragAnchor;
+
         protected Border oldBorder;
         protected Border dragBorder = new LineBorder(Color.BLUE, 3);
 
-        public ToolWindowDropTargetListener(ToolWindowManager toolWindowManager, ToolWindow owner, JComponent component) {
-            this.toolWindowManager = toolWindowManager;
-            this.owner = owner;
+        public ToolWindowDropTargetListener(JComponent component, ToolWindowManager toolWindowManager, ToolWindowAnchor anchor) {
             this.component = component;
+            this.toolWindowManager = toolWindowManager;
+            this.anchor = anchor;
+
+            this.component.addPropertyChangeListener("dragAnchor", this);
+        }
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            this.dragAnchor = (ToolWindowAnchor) evt.getNewValue();
         }
 
         public void dragEnter(DropTargetDragEvent dtde) {
@@ -37,16 +50,30 @@ public class ToolWindowDropTarget extends DropTarget {
                   dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF) ||
                   dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF))
                  ) {
+                onToolWindow = null;
 
                 dtde.acceptDrag(dtde.getDropAction());
+
                 if (component.getBorder() != dragBorder)
                     oldBorder = component.getBorder();
                 component.setBorder(dragBorder);
+
+                putProperty("dragStart");
             } else
                 dtde.rejectDrag();
         }
 
         public void dragOver(DropTargetDragEvent dtde) {
+            Point location = dtde.getLocation();
+            component.putClientProperty("dragOver", location);
+
+            Component deepestCmp = SwingUtilities.getDeepestComponentAt(component, location.x, location.y);
+            if (deepestCmp != null) {
+                JComponent toolWindowContainer = (JComponent) SwingUtil.getParent(deepestCmp, "toolWindow.container.");
+                if (toolWindowContainer != null)
+                    onToolWindow = (ToolWindow) toolWindowContainer.getClientProperty(ToolWindow.class);
+            } else
+                onToolWindow = null;
         }
 
         public void dropActionChanged(DropTargetDragEvent dtde) {
@@ -55,83 +82,134 @@ public class ToolWindowDropTarget extends DropTarget {
 
         public void dragExit(DropTargetEvent dte) {
             component.setBorder(oldBorder);
+            onToolWindow = null;
             oldBorder = null;
+            putProperty("dragExit");
         }
 
         public void drop(DropTargetDropEvent dtde) {
-            if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) {
-                if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF))  {
-                    try {
-                        Transferable transferable = dtde.getTransferable();
-                        ToolWindow toolWindow = toolWindowManager.getToolWindow(
-                                dtde.getTransferable().getTransferData(MyDoggyTransferable.TOOL_WINDOW_ID_DF)
-                        );
-                        if (toolWindow != null) {
-                            // Move tool to another anchor
-                            ToolWindowAnchor anchor = owner.getAnchor();
+            try {
+                if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) {
+                    if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF))  {
+                        try {
+                            Transferable transferable = dtde.getTransferable();
+                            ToolWindow toolWindow = toolWindowManager.getToolWindow(
+                                    dtde.getTransferable().getTransferData(MyDoggyTransferable.TOOL_WINDOW_ID_DF)
+                            );
 
-                            // Chech if it was a tab
-                            if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)) {
-                                // Remove from tab
-                                ToolWindowTab tab = toolWindowManager.getToolWindowTab(
-                                        transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)
-                                );
-                                tab.getOwner().removeToolWindowTab(tab);
-                                toolWindow = (ToolWindow) tab.getDockableDelegator();
-                            }
+                            if (toolWindow != null) {
+                                // Move tool to another anchor
 
-                            toolWindow.setAggregateMode(true);
-                            toolWindow.setAnchor(anchor, owner.getAnchorIndex());                            
-                            // TODO: Choose where
-                            toolWindow.aggregate();
-                            toolWindow.setActive(true);
-
-                            dtde.dropComplete(true);
-                        } else
-                            dtde.dropComplete(false);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        dtde.dropComplete(false);
-                    }
-                } else if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF))  {
-                    try {
-                        Content content = toolWindowManager.getContentManager().getContent(
-                                dtde.getTransferable().getTransferData(MyDoggyTransferable.CONTENT_ID_DF)
-                        );
-                        if (content != null) {
-                            toolWindowManager.getContentManager().removeContent(content);
-
-                            if (content.getDockableDelegator() != null) {
-                                Dockable delegator = content.getDockableDelegator();
-
-                                if (delegator instanceof ToolWindow) {
-                                    ToolWindow toolWindow = (ToolWindow) delegator;
-                                    ToolWindowAnchor anchor = owner.getAnchor();
-
-                                    toolWindow.setAggregateMode(true);
-                                    toolWindow.setAnchor(anchor, owner.getAnchorIndex());
-                                    // TODO Choose Where
-                                    toolWindow.aggregate();
-                                    toolWindow.setActive(true);
+                                // Chech if it was a tab
+                                if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)) {
+                                    // Remove from tab
+                                    ToolWindowTab tab = toolWindowManager.getToolWindowTab(
+                                            transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)
+                                    );
+                                    tab.getOwner().removeToolWindowTab(tab);
+                                    toolWindow = (ToolWindow) tab.getDockableDelegator();
                                 }
-                            } else {
-                                // TODO : Need a tool window for delegation...
-                            }
 
-                            dtde.dropComplete(true);
-                        } else
+                                toolWindow.setAggregateMode(true);
+                                if (onToolWindow != null)
+                                    toolWindow.setAnchor(anchor, onToolWindow.getAnchorIndex());
+                                else
+                                    toolWindow.setAnchor(anchor);
+
+                                if (dragAnchor != null)   {
+                                    switch (dragAnchor)  {
+                                        case LEFT:
+                                            toolWindow.aggregate(ToolWindow.AggregationPosition.LEFT);
+                                            break;
+                                        case RIGHT:
+                                            toolWindow.aggregate(ToolWindow.AggregationPosition.RIGHT);
+                                            break;
+                                        case BOTTOM:
+                                            toolWindow.aggregate(ToolWindow.AggregationPosition.BOTTOM);
+                                            break;
+                                        case TOP:
+                                            toolWindow.aggregate(ToolWindow.AggregationPosition.TOP);
+                                            break;
+                                    }
+                                } else
+                                    toolWindow.aggregate();
+                                toolWindow.setActive(true);
+
+                                dtde.dropComplete(true);
+                            } else
+                                dtde.dropComplete(false);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                             dtde.dropComplete(false);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        dtde.dropComplete(false);
-                    }
+                        }
+                    } else if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF))  {
+                        try {
+                            Content content = toolWindowManager.getContentManager().getContent(
+                                    dtde.getTransferable().getTransferData(MyDoggyTransferable.CONTENT_ID_DF)
+                            );
+                            if (content != null) {
+                                toolWindowManager.getContentManager().removeContent(content);
+
+                                if (content.getDockableDelegator() != null) {
+                                    Dockable delegator = content.getDockableDelegator();
+
+                                    if (delegator instanceof ToolWindow) {
+                                        ToolWindow toolWindow = (ToolWindow) delegator;
+
+                                        toolWindow.setAggregateMode(true);
+                                        if (onToolWindow != null)
+                                            toolWindow.setAnchor(anchor, onToolWindow.getAnchorIndex());
+                                        else
+                                            toolWindow.setAnchor(anchor);
+
+                                        if (dragAnchor != null)   {
+                                            switch (dragAnchor)  {
+                                                case LEFT:
+                                                    toolWindow.aggregate(ToolWindow.AggregationPosition.LEFT);
+                                                    break;
+                                                case RIGHT:
+                                                    toolWindow.aggregate(ToolWindow.AggregationPosition.RIGHT);
+                                                    break;
+                                                case BOTTOM:
+                                                    toolWindow.aggregate(ToolWindow.AggregationPosition.BOTTOM);
+                                                    break;
+                                                case TOP:
+                                                    toolWindow.aggregate(ToolWindow.AggregationPosition.TOP);
+                                                    break;
+                                            }
+                                        } else
+                                            toolWindow.aggregate();
+                                        toolWindow.setActive(true);
+                                    }
+                                } else {
+                                    // TODO : Need a tool window for delegation...
+                                }
+
+                                dtde.dropComplete(true);
+                            } else
+                                dtde.dropComplete(false);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            dtde.dropComplete(false);
+                        }
+                    } else
+                        dtde.rejectDrop();
                 } else
                     dtde.rejectDrop();
-            } else
-                dtde.rejectDrop();
+            } finally {
+                putProperty("dragEnd");
 
-            // Restore component
-            dragExit(dtde);
+                // Restore component
+                dragExit(dtde);
+            }
+        }
+
+        protected void putProperty(String name) {
+            Boolean value = (Boolean) component.getClientProperty(name);
+            if (value != null)
+                component.putClientProperty(name, !value);
+            else
+                component.putClientProperty(name, false);
         }
     }
 

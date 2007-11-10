@@ -233,7 +233,6 @@ public class MyDoggyContent implements PlafContentUI {
     }
 
     public void fireSelected(boolean selected) {
-//        System.out.println(key + " " + selected);
         firePropertyChange("selected", !selected, selected);
     }
 
