@@ -43,6 +43,7 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
         this.resourceManager = toolWindowManager.getResourceManager();
 
         this.multiSplitPane = new MultiSplitPane();
+        this.multiSplitPane.setDividerSize(5);
         this.multiSplitPane.setFocusable(false);
         this.multiSplitPaneModelRoot = new MultiSplitLayout.Split();
         this.multiSplitPaneModelRoot.setRowLayout(orientation != JSplitPane.VERTICAL_SPLIT);
@@ -60,7 +61,8 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
     }
 
 
-    public void addContent(String toolId, Component content, ToolWindow.AggregationPosition aggregationPosition) {
+    public void addContent(String toolId, Component content,
+                           ToolWindow aggregationOnTool, ToolWindow.AggregationPosition aggregationPosition) {
         ToolWindow toolWindow = (ToolWindow) ((JComponent) content).getClientProperty(ToolWindow.class);
         if (toolWindow != null)
             toolId = toolWindow.getId();
@@ -110,21 +112,21 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
                         multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
                 }
 
+                validateSplit(multiSplitPaneModelRoot);
                 multiSplitPane.setModel(multiSplitPaneModelRoot);
 
                 switch (aggregationPosition) {
                     case LEFT:
                     case TOP:
                         multiSplitPane.add(getComponentWrapper(content), "1");
-                        multiSplitPane.add(getComponentWrapper(content), "2");
+                        multiSplitPane.add(getComponentWrapper(previousContent), "2");
                         break;
                     case RIGHT:
                     case BOTTOM:
-                        multiSplitPane.add(getComponentWrapper(content), "1");
+                        multiSplitPane.add(getComponentWrapper(previousContent), "1");
                         multiSplitPane.add(getComponentWrapper(content), "2");
                         break;
                 }
-
 
                 add(multiSplitPane, "0,0,FULL,FULL");
             } else {
@@ -136,64 +138,164 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
                 } else {
                     // Modify model
 
-                    boolean rowLayout = (aggregationPosition == ToolWindow.AggregationPosition.LEFT || aggregationPosition == ToolWindow.AggregationPosition.RIGHT);
+                    if (aggregationOnTool != null) {
 
-                    if (multiSplitPaneModelRoot.isRowLayout() == rowLayout) {
-                        List<MultiSplitLayout.Node> children = multiSplitPaneModelRoot.getChildren();
+                        // Search for aggregationOnTool leaf
+                        Stack<MultiSplitLayout.Split> stack = new Stack<MultiSplitLayout.Split>();
+                        stack.push(multiSplitPaneModelRoot);
 
-                        switch (aggregationPosition) {
-                            case LEFT:
-                            case TOP:
-                                children.add(0, new MultiSplitLayout.Leaf(leafName));
-                                children.add(1, new MultiSplitLayout.Divider());
-                                break;
-                            case RIGHT:
-                            case BOTTOM:
-                                children.add(new MultiSplitLayout.Divider());
-                                children.add(new MultiSplitLayout.Leaf(leafName));
-                                break;
-                        }
+                        while (!stack.isEmpty()) {
+                            MultiSplitLayout.Split split = stack.pop();
 
-                        double w = 1.0 / ((children.size() / 2) + 1);
-                        for (MultiSplitLayout.Node child : children) {
-                            if (!(child instanceof MultiSplitLayout.Divider)) {
-                                child.setBounds(new Rectangle());
-                                child.setWeight(w);
+                            for (MultiSplitLayout.Node child : split.getChildren()) {
+                                if (child instanceof MultiSplitLayout.Leaf) {
+                                    MultiSplitLayout.Leaf leaf = (MultiSplitLayout.Leaf) child;
+
+                                    JComponent root = (JComponent) getWrappedComponent((Container) multiSplitPane.getMultiSplitLayout().getChildMap().get(leaf.getName()));
+                                    if (aggregationOnTool == root.getClientProperty(ToolWindow.class)) {                                        
+                                        boolean step1Failed = false;
+
+                                        // Check for concordance to leaf.getParent().isRowLayout and aggregationPosition
+                                        MultiSplitLayout.Split parent = leaf.getParent();
+                                        boolean rowLayout = parent.isRowLayout();
+
+                                        List<MultiSplitLayout.Node> parentChildren = parent.getChildren();
+                                        int startIndex = parentChildren.indexOf(leaf);
+                                        if (rowLayout) {
+                                            boolean finalize = false;
+                                            switch (aggregationPosition) {
+                                                case LEFT:
+                                                    parentChildren.add(startIndex, new MultiSplitLayout.Leaf(leafName));
+                                                    parentChildren.add(startIndex + 1, new MultiSplitLayout.Divider());
+                                                    finalize = true;
+                                                    break;
+                                                case RIGHT:
+                                                    parentChildren.add(startIndex + 1, new MultiSplitLayout.Divider());
+                                                    parentChildren.add(startIndex + 2, new MultiSplitLayout.Leaf(leafName));
+                                                    finalize = true;
+                                                    break;
+                                                default :
+                                                    step1Failed = true;
+                                            }
+
+                                            if (finalize) {
+                                                // Set new children
+                                                parent.setChildren(parentChildren);
+                                            }
+                                        } else {
+                                            boolean finalize = false;
+                                            switch (aggregationPosition) {
+                                                case TOP:
+                                                    parentChildren.add(startIndex, new MultiSplitLayout.Leaf(leafName));
+                                                    parentChildren.add(startIndex + 1, new MultiSplitLayout.Divider());
+                                                    finalize = true;
+                                                    break;
+                                                case BOTTOM:
+                                                    parentChildren.add(startIndex + 1, new MultiSplitLayout.Divider());
+                                                    parentChildren.add(startIndex + 2, new MultiSplitLayout.Leaf(leafName));
+                                                    finalize = true;
+                                                    break;
+                                                default :
+                                                    step1Failed = true;
+                                            }
+
+                                            if (finalize) {
+                                                // Set new children
+                                                parent.setChildren(parentChildren);
+                                            }
+                                        }
+
+
+                                        if (step1Failed) {
+                                            // Create two leafs
+
+                                            MultiSplitLayout.Leaf newleaf = new MultiSplitLayout.Leaf(leafName);
+                                            newleaf.setWeight(0.5);
+
+                                            // Creat the split
+                                            MultiSplitLayout.Split newSplit = new MultiSplitLayout.Split();
+                                            newSplit.setRowLayout((aggregationPosition == ToolWindow.AggregationPosition.LEFT || aggregationPosition == ToolWindow.AggregationPosition.RIGHT));
+                                            newSplit.setWeight(leaf.getWeight());
+                                            newSplit.setChildren(Arrays.asList(leaf,
+                                                                               new MultiSplitLayout.Divider(),
+                                                                               newleaf));
+
+                                            leaf.setWeight(0.5);
+
+                                            // Switch the leaf with the new split
+                                            parentChildren.set(startIndex, newSplit);
+                                            parent.setChildren(parentChildren);
+                                        }
+
+
+                                        stack.clear();
+                                        break;
+                                    }
+                                } else if (child instanceof MultiSplitLayout.Split) {
+                                    stack.push((MultiSplitLayout.Split) child);
+                                }
                             }
                         }
 
-                        multiSplitPaneModelRoot.setChildren(children);
+                        if (!multiSplitPane.getMultiSplitLayout().getFloatingDividers())
+                            multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
                     } else {
-                        MultiSplitLayout.Split newRoot = new MultiSplitLayout.Split();
-                        newRoot.setRowLayout(rowLayout);
+                        boolean rowLayout = (aggregationPosition == ToolWindow.AggregationPosition.LEFT || aggregationPosition == ToolWindow.AggregationPosition.RIGHT);
 
-                        MultiSplitLayout.Leaf leaf = new MultiSplitLayout.Leaf(leafName);
-                        leaf.setWeight(0.5);
-                        multiSplitPaneModelRoot.setWeight(0.5);
+                        if (multiSplitPaneModelRoot.isRowLayout() == rowLayout) {
+                            List<MultiSplitLayout.Node> children = multiSplitPaneModelRoot.getChildren();
 
-                        List<MultiSplitLayout.Node> children = null;
-                        switch (aggregationPosition) {
-                            case LEFT:
-                            case TOP:
-                                children = Arrays.asList(leaf,
-                                                         new MultiSplitLayout.Divider(),
-                                                         multiSplitPaneModelRoot);
-                                break;
-                            case RIGHT:
-                            case BOTTOM:
-                                children = Arrays.asList(multiSplitPaneModelRoot,
-                                                         new MultiSplitLayout.Divider(),
-                                                         leaf);
-                                break;
+                            switch (aggregationPosition) {
+                                case LEFT:
+                                case TOP:
+                                    children.add(0, new MultiSplitLayout.Leaf(leafName));
+                                    children.add(1, new MultiSplitLayout.Divider());
+                                    break;
+                                case RIGHT:
+                                case BOTTOM:
+                                    children.add(new MultiSplitLayout.Divider());
+                                    children.add(new MultiSplitLayout.Leaf(leafName));
+                                    break;
+                            }
+
+                            forceWeight(children);
+
+                            multiSplitPaneModelRoot.setChildren(children);
+                        } else {
+                            MultiSplitLayout.Split newRoot = new MultiSplitLayout.Split();
+                            newRoot.setRowLayout(rowLayout);
+
+                            MultiSplitLayout.Leaf leaf = new MultiSplitLayout.Leaf(leafName);
+                            leaf.setWeight(0.5);
+                            multiSplitPaneModelRoot.setWeight(0.5);
+
+                            List<MultiSplitLayout.Node> children = null;
+                            switch (aggregationPosition) {
+                                case LEFT:
+                                case TOP:
+                                    children = Arrays.asList(leaf,
+                                                             new MultiSplitLayout.Divider(),
+                                                             multiSplitPaneModelRoot);
+                                    break;
+                                case RIGHT:
+                                case BOTTOM:
+                                    children = Arrays.asList(multiSplitPaneModelRoot,
+                                                             new MultiSplitLayout.Divider(),
+                                                             leaf);
+                                    break;
+                            }
+                            forceWeight(children);
+                            newRoot.setChildren(children);
+
+                            multiSplitPaneModelRoot = newRoot;
                         }
-                        newRoot.setChildren(children);
 
-                        multiSplitPaneModelRoot = newRoot;
+                        if (!multiSplitPane.getMultiSplitLayout().getFloatingDividers())
+                            multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
                     }
-                    if (!multiSplitPane.getMultiSplitLayout().getFloatingDividers())
-                        multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
                 }
 
+                validateSplit(multiSplitPaneModelRoot);
                 multiSplitPane.setModel(multiSplitPaneModelRoot);
                 multiSplitPane.add(getComponentWrapper(content), leafName);
             }
@@ -320,14 +422,6 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
                         }
                     }
 
-                    double w = 1.0 / ((children.size() / 2) + 1);
-                    for (MultiSplitLayout.Node child : children) {
-                        if (!(child instanceof MultiSplitLayout.Divider)) {
-                            child.setBounds(new Rectangle());
-                            child.setWeight(w);
-                        }
-                    }
-
                     split.setChildren(children);
                 }
 
@@ -346,6 +440,7 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
                 }
 
 
+                validateSplit(multiSplitPaneModelRoot);
                 multiSplitPane.setModel(multiSplitPaneModelRoot);
                 multiSplitPane.revalidate();
                 repaintSplit();
@@ -354,78 +449,13 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
         }
     }
 
-    public void setComponentAt(String toolId, Component content, int index) {
-        if (index >= contents.size())
-            index = contents.size() - 1;
-
-        if (contents.size() == 0)
-            addContent(toolId, content, ToolWindow.AggregationPosition.DEFAULT);
-        else if (contents.size() == 1) {
-            removeAll();
-            if (contents.contains(content))
-                return;
-
-            add(content, "0,0");
-        } else {
-            String leafName = "" + (index + 1);
-            Component c = multiSplitPane.getMultiSplitLayout().getChildMap().get(leafName);
-            if (c != null)
-                multiSplitPane.remove(c);
-
-            multiSplitPane.add(getComponentWrapper(content), leafName);
-        }
-
-
-        if (multiSplitPaneModelRoot != null)  {
-            // Update model
-            Stack<MultiSplitLayout.Split> stack = new Stack<MultiSplitLayout.Split>();
-            stack.push(multiSplitPaneModelRoot);
-
-            boolean repaint = false;
-            while (!stack.isEmpty()) {
-                MultiSplitLayout.Split split = stack.pop();
-
-                List<MultiSplitLayout.Node> children = split.getChildren();
-
-                double totalWeight = 0;
-                for (MultiSplitLayout.Node child : children) {
-                    if (child instanceof MultiSplitLayout.Leaf) {
-                        totalWeight += child.getWeight();
-                    } else if (child instanceof MultiSplitLayout.Split) {
-                        stack.push((MultiSplitLayout.Split) child);
-                    }
-                }
-
-                if (totalWeight > 1.0) {
-                    repaint = true;
-                    double w = 1.0 / ((children.size() / 2) + 1);
-                    for (MultiSplitLayout.Node child : children) {
-                        if (child instanceof MultiSplitLayout.Leaf) {
-                            child.setBounds(new Rectangle());
-                            child.setWeight(w);
-                        } else if (child instanceof MultiSplitLayout.Split) {
-                            stack.push((MultiSplitLayout.Split) child);
-                        }
-                    }
-                }
-                
-                split.setChildren(children);
-            }
-            if (repaint) {
-                multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
-                multiSplitPane.setModel(multiSplitPaneModelRoot);
-                repaintSplit();
-            }
-        }
-
-    }
-
-
     public MultiSplitLayout.Split getModel() {
         return multiSplitPaneModelRoot;
     }
 
     public void setModel(MultiSplitLayout.Split model) {
+        validateSplit(model);
+
         multiSplitPaneModelRoot = model;
         multiSplitPane.setModel(multiSplitPaneModelRoot);
         repaintSplit();
@@ -494,4 +524,66 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
             }
         });
     }
+
+    protected String foundLeafName(MultiSplitLayout.Split root, int counter, int index) {
+        return (String) foundLeaf(root, counter, index)[0];
+    }
+
+    protected Object[] foundLeaf(MultiSplitLayout.Split root, int counter, int index) {
+        for (MultiSplitLayout.Node child : root.getChildren()) {
+            if (child instanceof MultiSplitLayout.Leaf) {
+                counter++;
+                if (counter == index) {
+                    return new Object[]{((MultiSplitLayout.Leaf) child).getName(), counter};
+                }
+            } else if (child instanceof MultiSplitLayout.Split) {
+                Object[] result = foundLeaf((MultiSplitLayout.Split) child, counter, index);
+                if (result[0] != null)
+                    return result;
+                else
+                    counter = (Integer) result[1];
+            }
+        }
+        return new Object[]{null, counter};
+    }
+
+    protected void validateSplit(MultiSplitLayout.Split split) {
+        List<MultiSplitLayout.Node> children = split.getChildren();
+
+        double sum = 0.0;
+        for (MultiSplitLayout.Node node : children) {
+            if (!(node instanceof MultiSplitLayout.Divider)) {
+                sum += node.getWeight();
+            }
+
+            if (node instanceof MultiSplitLayout.Split) {
+                validateSplit((MultiSplitLayout.Split) node);
+            }
+
+            if (sum > 1.0d)
+                break;
+        }
+        
+        if (sum > 1.0d) {
+            double w = 1.0 / ((children.size() / 2) + 1);
+            for (MultiSplitLayout.Node node : children) {
+                if (!(node instanceof MultiSplitLayout.Divider)) {
+                    node.setBounds(new Rectangle());
+                    node.setWeight(w);
+                }
+            }
+        }
+    }
+
+    protected void forceWeight(List<MultiSplitLayout.Node> children) {
+        double w = 1.0 / ((children.size() / 2) + 1);
+        for (MultiSplitLayout.Node node : children) {
+            if (!(node instanceof MultiSplitLayout.Divider)) {
+                node.setBounds(new Rectangle());
+                node.setWeight(w);
+            }
+        }
+    }
+
+
 }

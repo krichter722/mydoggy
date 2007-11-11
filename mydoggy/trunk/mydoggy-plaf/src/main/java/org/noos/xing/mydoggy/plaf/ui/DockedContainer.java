@@ -466,7 +466,7 @@ public class DockedContainer implements ToolWindowContainer {
             aggregate.setActionCommand("aggregate");
             aggregate.addActionListener(this);
 
-            aggregateMenu = new JMenu("Aggregate Position Menu");
+            aggregateMenu = new JMenu(resourceManager.getString("@@tool.aggregateMenu"));
 
             JMenuItem aggregateLeft = new JMenuItem();
             aggregateLeft.setName("toolWindow.popup.aggregate.left." + toolWindow.getId());

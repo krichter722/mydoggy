@@ -815,12 +815,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                     }
                 }
             }
-
-            event = new PropertyChangeEvent(evt.getSource(), "visible.after",
-                                            evt.getOldValue(), evt.getNewValue());
-
-            for (MyDoggyToolWindowBar bar : bars)
-                bar.propertyChange(event);
         }
     }
 
@@ -858,18 +852,23 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     protected class AnchorPropertyChangeListener implements PropertyChangeListener {
+
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
 
             ToolWindowAnchor oldAnchor = (ToolWindowAnchor) evt.getOldValue();
             ToolWindowAnchor newAnchor = (ToolWindowAnchor) evt.getNewValue();
-            if (oldAnchor == null)
+            boolean force = false;
+            if (oldAnchor == null) {
                 oldAnchor = newAnchor;
+                force  = true;
+            }
 
             ToolWindowType toolType = descriptor.getToolWindow().getType();
             if (toolType == ToolWindowType.FLOATING ||
                 toolType == ToolWindowType.FLOATING_FREE ||
-                toolType == ToolWindowType.FLOATING_LIVE) {
+                toolType == ToolWindowType.FLOATING_LIVE || force) {
+
                 PropertyChangeEvent avEvent = new UserPropertyChangeEvent(evt.getSource(), "available", true, false, -1);
                 getBar(oldAnchor).propertyChange(avEvent);
                 syncPanel(oldAnchor);
@@ -886,7 +885,15 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
             syncPanel(oldAnchor);
             syncPanel(newAnchor);
+
+            if (force) {
+                // Force reordering of aggregated tools.
+//                getBar(newAnchor).propertyChange(
+//                        new PropertyChangeEvent(evt.getSource(), "visible.reordering", false, true)
+//                );
+            }
         }
+        
     }
 
     protected static class AutoHideChangeListener implements PropertyChangeListener {

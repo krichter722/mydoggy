@@ -172,69 +172,19 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         AvailableListener availableListener = new AvailableListener();
         propertyChangeSupport.addPropertyChangeListener("available", availableListener);
         propertyChangeSupport.addPropertyChangeListener("representativeAnchorButtonVisible", availableListener);
+
         propertyChangeSupport.addPropertyChangeListener("visible.before", new VisibleBeforeListener());
         propertyChangeSupport.addPropertyChangeListener("visible.DOCKED", new VisibleDockedListener());
         propertyChangeSupport.addPropertyChangeListener("visible.FLOATING", new VisibleFloatingListener());
         propertyChangeSupport.addPropertyChangeListener("visible.FLOATING_FREE", new VisibleFloatingFreeListener());
         propertyChangeSupport.addPropertyChangeListener("visible.SLIDING", new VisibleSlidingListener());
         propertyChangeSupport.addPropertyChangeListener("visible.FLOATING_LIVE", new VisibleFloatingLiveListener());
-        propertyChangeSupport.addPropertyChangeListener("visible.after", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
-                if (sourceTool.getType() != ToolWindowType.DOCKED ||
-                    sourceTool.getAnchor() != anchor ||
-                    !(getSplitPaneContent() instanceof ToolsContainer))
-                    return;
-
-                ToolsContainer multiSplitContainer = (ToolsContainer) getSplitPaneContent();
-                if (multiSplitContainer.getContentCount() <= 1)
-                    return;
-
-                java.util.List<Component> components = Arrays.asList(representativeButtonsPanel.getComponents());
-                Collections.sort(components, new Comparator<Component>() {
-                    public int compare(Component o1, Component o2) {
-                        TableLayoutConstraints c1 = representativeButtonsPanelLayout.getConstraints(o1);
-                        TableLayoutConstraints c2 = representativeButtonsPanelLayout.getConstraints(o2);
-                        if (horizontal) {
-                            if (c1.col1 < c2.col1)
-                                return -1;
-                            else if (c1.col1 == c2.col1)
-                                return 0;
-                        } else {
-                            if (c1.row1 < c2.row1)
-                                return -1;
-                            else if (c1.row1 == c2.row1)
-                                return 0;
-                        }
-                        return 1;
-                    }
-                });
-
-                int i = 0;
-                for (Component component : components) {
-                    if (component instanceof JLabel) {
-                        JLabel representativeAnchor = (JLabel) component;
-
-                        ToolWindowDescriptor descriptor = (ToolWindowDescriptor) representativeAnchor.getClientProperty(ToolWindowDescriptor.class);
-                        ToolWindow toolWindow = descriptor.getToolWindow();
-
-                        if (toolWindow.isVisible() &&
-                            toolWindow.getType() == ToolWindowType.DOCKED) {
-                            Component content = descriptor.getContentContainer();
-                            multiSplitContainer.setComponentAt(
-                                    descriptor.getToolWindow().getId(),
-                                    content, i++);
-                        }
-                    }
-
-                }
-            }
-        });
         propertyChangeSupport.addPropertyChangeListener("visible", new VisibleListener());
+
         propertyChangeSupport.addPropertyChangeListener("active.before", new ActiveBeforeListener());
         propertyChangeSupport.addPropertyChangeListener("active", new ActiveListener());
-        propertyChangeSupport.addPropertyChangeListener("type", new TypeListener());
 
+        propertyChangeSupport.addPropertyChangeListener("type", new TypeListener());
         propertyChangeSupport.addPropertyChangeListener("index", new IndexListener());
         propertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
         propertyChangeSupport.addPropertyChangeListener("icon", new IconListener());
@@ -351,9 +301,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     if (constraints.col1 >= finalCol) {
                         int newCol1 = constraints.col1 + 2;
                         representativeButtonsPanelLayout.setConstraints(component,
-                                                         new TableLayoutConstraints(
-                                                                 newCol1 + ",1,"
-                                                         ));
+                                                                        new TableLayoutConstraints(
+                                                                                newCol1 + ",1,"
+                                                                        ));
 
                         olds.put(newCol1, representativeButtonsPanelLayout.getColumn(newCol1));
                         Double colSize = olds.get(constraints.col1);
@@ -387,9 +337,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     if (constraints.row1 >= finalRow) {
                         int newRow1 = constraints.row1 + 2;
                         representativeButtonsPanelLayout.setConstraints(component,
-                                                         new TableLayoutConstraints(
-                                                                 "1," + newRow1
-                                                         ));
+                                                                        new TableLayoutConstraints(
+                                                                                "1," + newRow1
+                                                                        ));
 
                         olds.put(newRow1, representativeButtonsPanelLayout.getRow(newRow1));
                         Double rowSize = olds.get(constraints.row1);
@@ -480,6 +430,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                         addRepresentativeAnchor(representativeAnchor, -1);
                     } else
                         addRepresentativeAnchor(representativeAnchor, (Integer) ((UserPropertyChangeEvent) evt).getUserObject());
+
                     repaint = true;
                 }
 
@@ -627,11 +578,15 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         public void propertyChange(PropertyChangeEvent evt) {
             boolean shiftShow = false;
             ToolWindow.AggregationPosition aggregationPosition = ToolWindow.AggregationPosition.DEFAULT;
+            ToolWindow aggregationOnTool = null;
 
             if (evt instanceof UserPropertyChangeEvent) {
                 UserPropertyChangeEvent upce = (UserPropertyChangeEvent) evt;
-                shiftShow = (Boolean) ((Object[]) upce.getUserObject())[0];
-                aggregationPosition = (ToolWindow.AggregationPosition) ((Object[]) upce.getUserObject())[1];
+                Object[] args = ((Object[]) upce.getUserObject());
+
+                shiftShow = (Boolean) args[0];
+                aggregationPosition = (ToolWindow.AggregationPosition) args[1];
+                aggregationOnTool = (ToolWindow) args[2];
             }
 
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
@@ -717,6 +672,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                         if (manager.getShowingGroup() != null) {
                             toolsContainer.addContent(descriptor.getToolWindow().getId(),
                                                       content,
+                                                      aggregationOnTool,
                                                       aggregationPosition);
                         } else
                             setSplitPaneContent(content);
@@ -724,8 +680,11 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 } else if (manager.getShowingGroup() != null && content != null) {
                     toolsContainer.clear();
                     if (shiftShow)
-                        toolsContainer.addContent(descriptor.getToolWindow().getId(), splitPaneContent, ToolWindow.AggregationPosition.DEFAULT);
-                    toolsContainer.addContent(descriptor.getToolWindow().getId(), content, aggregationPosition);
+                        toolsContainer.addContent(descriptor.getToolWindow().getId(),
+                                                  splitPaneContent,
+                                                  null,
+                                                  ToolWindow.AggregationPosition.DEFAULT);
+                    toolsContainer.addContent(descriptor.getToolWindow().getId(), content, null, aggregationPosition);
 
                     setSplitPaneContent(toolsContainer);
                 } else if (content != null)
@@ -733,7 +692,10 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             } else {
                 if (manager.getShowingGroup() != null && content != null) {
                     toolsContainer.clear();
-                    toolsContainer.addContent(descriptor.getToolWindow().getId(), content, ToolWindow.AggregationPosition.DEFAULT);
+                    toolsContainer.addContent(descriptor.getToolWindow().getId(),
+                                              content,
+                                              null,
+                                              ToolWindow.AggregationPosition.DEFAULT);
 
                     setSplitPaneContent(toolsContainer);
                 } else if (content != null)
@@ -800,7 +762,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                         break;
                 }
 
-                if (splitPaneContent != null) 
+                if (splitPaneContent != null)
                     content.setVisible(true);
             } finally {
                 vsdValueAdjusting = false;

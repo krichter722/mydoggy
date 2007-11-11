@@ -765,6 +765,7 @@ public class MultiSplitLayout implements LayoutManager {
     private void checkLayout(Node root) {
         if (root instanceof Split) {
             Split split = (Split) root;
+
             if (split.getChildren().size() <= 2) {
                 throwInvalidLayout("Split must have > 2 children", root);
             }
@@ -784,6 +785,7 @@ public class MultiSplitLayout implements LayoutManager {
                 weight += splitChild.getWeight();
                 checkLayout(splitChild);
             }
+
             if (weight > 1.0) {
                 throwInvalidLayout("Split children's total weight > 1.0", root);
             }
