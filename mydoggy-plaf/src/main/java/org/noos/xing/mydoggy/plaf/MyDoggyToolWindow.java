@@ -159,13 +159,19 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     public void aggregate() {
         try {
-            // TODO: add enabledShiftShow mode ... 
+            // TODO: add enabledShiftShow mode ...
             descriptor.getManager().enableShiftShow();
             if (!isVisible()) {
-                if (getType() == ToolWindowType.SLIDING)
-                    setType(ToolWindowType.DOCKED);
-
-                setVisibleInternal(true, true, AggregationPosition.DEFAULT);
+                switch (anchor)  {
+                    case LEFT:
+                    case RIGHT:
+                        aggregate(AggregationPosition.BOTTOM);
+                        break;
+                    case TOP:
+                    case BOTTOM:
+                        aggregate(AggregationPosition.RIGHT);
+                        break;
+                }
             }
         } finally {
             descriptor.getManager().resetShiftShow();
@@ -173,21 +179,41 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void aggregate(AggregationPosition aggregationPosition) {
+        aggregate(null, aggregationPosition);
+    }
+
+    public void aggregate(ToolWindow toolWindow, AggregationPosition aggregationPosition) {
         try {
+            if (toolWindow != null) {
+                if (toolWindow.getAnchor() != anchor || !toolWindow.isVisible())
+                    return;
+            }
+
             // TODO: add enabledShiftShow mode ...
             descriptor.getManager().enableShiftShow();
             if (!isVisible()) {
                 if (getType() == ToolWindowType.SLIDING)
                     setType(ToolWindowType.DOCKED);
 
-                setVisibleInternal(true, true, aggregationPosition);
-            } else if (lastAggregationPosition != aggregationPosition) {
-                setVisible(false);
+                setVisibleInternal(true, true, null, aggregationPosition);
+            } else /* TODO: we need a check if (lastAggregationPosition != aggregationPosition)*/ {
+                publicEvent = false;
+                try {
+                    setVisible(false);
+                } finally {
+                    publicEvent = true;
+                }
 
                 if (getType() == ToolWindowType.SLIDING)
                     setType(ToolWindowType.DOCKED);
 
-                setVisibleInternal(true, true, aggregationPosition);
+                try {
+                    setVisibleInternal(true, true, toolWindow, aggregationPosition);
+                } finally {
+                    publicEvent = true;
+                }
+
+                // Maybe we shourld fire an event to signal aggregation change...
             }
             lastAggregationPosition = aggregationPosition;
         } finally {
@@ -246,7 +272,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setVisible(boolean visible) {
-        setVisibleInternal(visible, false, null);
+        setVisibleInternal(visible, false, null, null);
     }
 
     public boolean isActive() {
@@ -297,26 +323,33 @@ public class MyDoggyToolWindow implements ToolWindow {
                 boolean tempVisible = isVisible();
                 boolean tempActive = isActive();
 
-                publicEvent = false;
 
-                ToolWindowAnchor oldAnchor;
-                try {
-                    setAvailable(false);
-
-                    oldAnchor = this.anchor;
+                if (this.anchor == anchor) {
+                    // TODO: Fire a more simple event
                     this.anchor = anchor;
+                    fireAnchorEvent(null, anchor, index);
+                } else {
+                    publicEvent = false;
 
-                    availablePosition = index;
-                    setAvailable(true);
-                    if (tempActive) {
-                        setActive(true);
-                    } else if (tempVisible)
-                        setVisible(true);
-                } finally {
-                    publicEvent = true;
+                    ToolWindowAnchor oldAnchor;
+                    try {
+                        setAvailable(false);
+
+                        oldAnchor = this.anchor;
+                        this.anchor = anchor;
+
+                        availablePosition = index;
+                        setAvailable(true);
+                        if (tempActive) {
+                            setActive(true);
+                        } else if (tempVisible)
+                            setVisible(true);
+                    } finally {
+                        publicEvent = true;
+                    }
+                    fireAnchorEvent(oldAnchor, anchor, index);
                 }
 
-                fireAnchorEvent(oldAnchor, anchor, index);
             } else {
                 ToolWindowAnchor oldAnchor = this.anchor;
                 this.anchor = anchor;
@@ -595,7 +628,8 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
 
-    protected void setVisibleInternal(boolean visible, boolean aggregate, AggregationPosition aggregationPosition) {
+    protected void setVisibleInternal(boolean visible, boolean aggregate,
+                                      ToolWindow aggregationOnTool, AggregationPosition aggregationPosition) {
         if ((aggregateEnabled || descriptor.getManager().getToolWindowManagerDescriptor().isAggregateMode(anchor)) &&
             visible &&
             !aggregate &&
@@ -638,7 +672,7 @@ public class MyDoggyToolWindow implements ToolWindow {
             this.visible = visible;
 
             if (aggregate) {                
-                firePropertyChangeEvent("visible", old, visible, new Object[]{aggregate, aggregationPosition});
+                firePropertyChangeEvent("visible", old, visible, new Object[]{aggregate, aggregationPosition, aggregationOnTool});
             } else
                 firePropertyChangeEvent("visible", old, visible);
         }

@@ -181,19 +181,27 @@ public class ToolWindowBarDropTarget extends DropTarget {
                                 transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)
                         );
                         tab.getOwner().removeToolWindowTab(tab);
-                        
+
                         toolWindow = (ToolWindow) tab.getDockableDelegator();
                         toolWindow.setAnchor(anchor, index);
                         toolWindow.setActive(true);
                     } else {
-                        toolWindow.setAnchor(anchor, index);
+                        boolean oldAggregateMode = toolWindow.isAggregateMode();
+                        toolWindow.setAggregateMode(true);
+
+                        try {
+                            toolWindow.setAnchor(anchor, index);
+                        } finally {
+                            toolWindow.setAggregateMode(oldAggregateMode);
+                        }
                     }
 
                     dtde.dropComplete(true);
                 } catch (Exception e) {
                     dtde.rejectDrop();
                 }
-            } if (transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {
+            }
+            if (transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {
 
                 ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
 

@@ -18,7 +18,7 @@ public interface ToolWindow extends Dockable {
         LEFT,
         RIGHT,
         TOP,
-        BOTTOM,
+        BOTTOM,        
         DEFAULT
     }
 
@@ -101,6 +101,14 @@ public interface ToolWindow extends Dockable {
      * @since 1.3.2
      */
     void aggregate(AggregationPosition aggregationPosition);
+
+    /**
+     * TODO:
+     * @param toolWindow
+     * @param aggregationPosition
+     * @since 1.3.2
+     */
+    void aggregate(ToolWindow toolWindow, AggregationPosition aggregationPosition);
 
     /**
      * The method is used to set the aggregateEnabled property of the tool.

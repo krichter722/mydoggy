@@ -104,6 +104,20 @@ public class GraphicsUtil {
         }
     }
 
+    public static void fillRect(Graphics g, Rectangle r, BufferedImage image) {
+        if (g instanceof Graphics2D) {
+            Graphics2D g2D = (Graphics2D) g;
+            g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            Paint oldPaint = g2D.getPaint();
+
+            g2D.setPaint(new TexturePaint(image, r));
+            g2D.fillRect(r.x, r.y, r.width, r.height);
+
+            g2D.setPaint(oldPaint);
+        }
+    }
+
     public static void fillRectTransparently(Graphics g, Rectangle r, Shape clip, int rule, float alpha) {
         Shape oldClip = g.getClip();
         if (clip != null)
@@ -125,17 +139,9 @@ public class GraphicsUtil {
     }
 
 
-    public static void fillRect(Graphics g, Rectangle r, BufferedImage image) {
-        if (g instanceof Graphics2D) {
-            Graphics2D g2D = (Graphics2D) g;
-            g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-            Paint oldPaint = g2D.getPaint();
-
-            g2D.setPaint(new TexturePaint(image, r));
-            g2D.fillRect(r.x, r.y, r.width, r.height);
-
-            g2D.setPaint(oldPaint);
+    public static void drawRect(Graphics g, int x, int y, int width, int height, int tickness) {
+        for (int i = 0; i < tickness; i++) {
+            g.drawRect(x + i, y + i, width - (i*2) - 1, height - (i*2) - 1);
         }
     }
 
