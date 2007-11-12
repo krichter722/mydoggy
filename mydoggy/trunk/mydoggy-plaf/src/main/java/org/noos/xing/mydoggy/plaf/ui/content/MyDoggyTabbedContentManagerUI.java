@@ -29,7 +29,6 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.beans.PropertyVetoException;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -214,7 +213,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         return installed;
     }
 
-    public void addContent(PlafContentUI content) {
+    public void addContent(PlafContentUI content, Object... constraints) {
         addUIForContent(content);
         content.addUIPropertyChangeListener(this);
     }

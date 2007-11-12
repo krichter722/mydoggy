@@ -7,7 +7,6 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTitleDropTarget;
 
 import javax.swing.*;
@@ -168,7 +167,6 @@ public class DockedContainer implements ToolWindowContainer {
         componentContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1},{-1}}));
         componentContainer.setOpaque(false);
         componentContainer.add(descriptor.getComponent(), "0,0,FULL,FULL");
-//        TODO componentContainer.setDropTarget(new ToolWindowDropTarget(componentContainer, toolWindow, descriptor.getManager()));
 
         // Set Container content
         container.add(titleBar, "0,0");
@@ -364,13 +362,13 @@ public class DockedContainer implements ToolWindowContainer {
                     toolWindow.setVisible(false);
                 else {
                     if (actionCommand.endsWith("left"))
-                        toolWindow.aggregate(ToolWindow.AggregationPosition.LEFT);
+                        toolWindow.aggregate(AggregationPosition.LEFT);
                     else if (actionCommand.endsWith("right"))
-                        toolWindow.aggregate(ToolWindow.AggregationPosition.RIGHT);
+                        toolWindow.aggregate(AggregationPosition.RIGHT);
                     else if (actionCommand.endsWith("top"))
-                        toolWindow.aggregate(ToolWindow.AggregationPosition.TOP);
+                        toolWindow.aggregate(AggregationPosition.TOP);
                     else if (actionCommand.endsWith("bottom"))
-                        toolWindow.aggregate(ToolWindow.AggregationPosition.BOTTOM);
+                        toolWindow.aggregate(AggregationPosition.BOTTOM);
                     else
                         toolWindow.aggregate();
 

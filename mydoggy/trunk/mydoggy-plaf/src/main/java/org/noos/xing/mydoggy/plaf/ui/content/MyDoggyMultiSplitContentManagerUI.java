@@ -1,14 +1,12 @@
 package org.noos.xing.mydoggy.plaf.ui.content;
 
+import org.jdesktop.swingx.MultiSplitPane;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DesktopContentFrame;
-import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
-import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
 import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -26,12 +24,12 @@ import java.util.Map;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
+public class MyDoggyMultiSplitContentManagerUI implements DesktopContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
     protected MyDoggyToolWindowManager toolWindowManager;
     protected MyDoggyContentManager contentManager;
     protected ResourceManager resourceManager;
 
-    protected JDesktopPane desktopPane;
+    protected MultiSplitPane multiSplitPane;
     protected boolean closeable, detachable;
     protected boolean installed;
 
@@ -50,38 +48,39 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     protected JPopupMenu popupMenu;
 
 
-    public MyDoggyDesktopContentManagerUI() {
+    public MyDoggyMultiSplitContentManagerUI() {
         this.closeable = this.detachable = true;
     }
 
 
     public void setCloseable(boolean closeable) {
         this.closeable = closeable;
-        if (desktopPane != null)
-            for (JInternalFrame frame : desktopPane.getAllFrames()) {
-                frame.setClosable(closeable);
-            }
+//        if (multiSplitPane != null)
+//            for (JInternalFrame frame : multiSplitPane.getAllFrames()) {
+//                frame.setClosable(closeable);
+//            }
     }
 
     public void setDetachable(boolean detachable) {
         this.detachable = detachable;
-        if (desktopPane != null)
-            for (JInternalFrame internalFrame : desktopPane.getAllFrames()) {
-                DesktopContentFrame frame = (DesktopContentFrame) internalFrame;
-                frame.setDetachable(detachable);
-            }
+//        if (multiSplitPane != null)
+//            for (JInternalFrame internalFrame : multiSplitPane.getAllFrames()) {
+//                DesktopContentFrame frame = (DesktopContentFrame) internalFrame;
+//                frame.setDetachable(detachable);
+//            }
     }
 
     public DesktopContentUI getContentUI(Content content) {
         if (content.isDetached()) {
             return detachedContentUIMap.get(content);
-        } else
-            return (DesktopContentUI) getFrameByComponent(content.getComponent());
+        } /*else
+            return (DesktopContentUI) getFrameByComponent(content.getComponent());*/
+        return null;
     }
 
 
     public Container getContainer() {
-        return desktopPane;
+        return multiSplitPane;
     }
 
     public PlafContentManagerUI install(ContentManagerUI oldContentManagerUI, ToolWindowManager manager) {
@@ -94,7 +93,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         initListeners();
         setupActions();
 
-        toolWindowManager.setMainContent(desktopPane);
+        toolWindowManager.setMainContent(multiSplitPane);
 
         setPopupMenu(contentManager.getPopupMenu());
 
@@ -149,12 +148,12 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         if (content.isDetached())
             content.setDetached(false);
 
-        for (JInternalFrame internalFrame : desktopPane.getAllFrames()) {
-            if (internalFrame.getContentPane().getComponent(0) == content.getComponent()) {
-                desktopPane.remove(internalFrame);
-                break;
-            }
-        }
+//        for (JInternalFrame internalFrame : multiSplitPane.getAllFrames()) {
+//            if (internalFrame.getContentPane().getComponent(0) == content.getComponent()) {
+//                multiSplitPane.remove(internalFrame);
+//                break;
+//            }
+//        }
 
         content.removeUIPropertyChangeListener(this);
     }
@@ -177,23 +176,23 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                     SwingUtilities.windowForComponent(content.getComponent())
             );
         } else {
-            JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
-            if (internalFrame != null)
-                try {
-                    valueAdjusting = true;
-                    internalFrame.setSelected(selected);
-                    lastSelected = (PlafContentUI) content;
-                    valueAdjusting = false;
-                } catch (PropertyVetoException e) {
-                    e.printStackTrace();
-                }
-            else
-                throw new IllegalStateException("Invalid content ui state.");
+//            JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
+//            if (internalFrame != null)
+//                try {
+//                    valueAdjusting = true;
+//                    internalFrame.setSelected(selected);
+//                    lastSelected = (PlafContentUI) content;
+//                    valueAdjusting = false;
+//                } catch (PropertyVetoException e) {
+//                    e.printStackTrace();
+//                }
+//            else
+//                throw new IllegalStateException("Invalid content ui state.");
         }
     }
 
     public void updateUI() {
-        desktopPane.updateUI();
+        multiSplitPane.updateUI();
     }
 
     public void addContentManagerUIListener(ContentManagerUIListener listener) {
@@ -215,11 +214,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
 
     protected void initComponents() {
-        if (desktopPane == null) {
+        if (multiSplitPane == null) {
             detachedContentUIMap = new Hashtable<Content, DesktopContentUI>();
-            desktopPane = (JDesktopPane) toolWindowManager.getResourceManager().createComponent(
-                    MyDoggyKeySpace.DESKTOP_CONTENT_PANE, toolWindowManager
-            );
+            multiSplitPane = new MultiSplitPane();
         }
     }
 
@@ -241,17 +238,17 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 }
             });
 
-            desktopPane.addMouseListener(new PopupMouseListener());
+            multiSplitPane.addMouseListener(new PopupMouseListener());
         }
         this.contentManagerUIListeners = new EventListenerList();
     }
 
     protected void setupActions() {
         // Setup actions
-        SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, desktopPane,
+        SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, multiSplitPane,
                                       KeyStroke.getKeyStroke(39, InputEvent.ALT_MASK),
                                       "nextContent", new NextContentAction(toolWindowManager));
-        SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, desktopPane,
+        SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, multiSplitPane,
                                       KeyStroke.getKeyStroke(37, InputEvent.ALT_MASK),
                                       "previousContent", new PreviousContentAction(toolWindowManager));
     }
@@ -270,7 +267,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             int contentY;
 
             contentY = contentX = 10 + (contentIndex++ * 25);
-            if (contentX > desktopPane.getWidth() - 320 || contentY > desktopPane.getHeight() - 200) {
+            if (contentX > multiSplitPane.getWidth() - 320 || contentY > multiSplitPane.getHeight() - 200) {
                 contentIndex = 0;
                 contentY = contentX = 10;
             }
@@ -334,7 +331,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             internalFrame.getContentPane().add(content.getComponent());
         }
 
-        desktopPane.add(internalFrame);
+        multiSplitPane.add(internalFrame);
         internalFrame.show();
         internalFrame.toFront();
 
@@ -342,17 +339,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             try {
                 internalFrame.setSelected(true);
             } catch (PropertyVetoException e) {
-                e.printStackTrace();  
+                e.printStackTrace();
             }
 
-    }
-
-    protected JInternalFrame getFrameByComponent(Component component) {
-        for (JInternalFrame internalFrame : desktopPane.getAllFrames()) {
-            if (internalFrame.getContentPane().getComponent(0) == component)
-                return internalFrame;
-        }
-        return null;
     }
 
     protected void fireContentUIRemoving(ContentUI contentUI) {
@@ -381,13 +370,13 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 container.removeAll();
                 container.add((Component) evt.getNewValue());
             } else {
-                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
-                if (internalFrame != null) {
-                    Container container = internalFrame.getContentPane();
-                    container.removeAll();
-                    container.add((Component) evt.getNewValue());
-                } else
-                    throw new IllegalStateException("Invalid content ui state.");
+//                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
+//                if (internalFrame != null) {
+//                    Container container = internalFrame.getContentPane();
+//                    container.removeAll();
+//                    container.add((Component) evt.getNewValue());
+//                } else
+//                    throw new IllegalStateException("Invalid content ui state.");
             }
         }
     }
@@ -402,11 +391,11 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             Content content = (Content) evt.getSource();
 
             if (!content.isDetached()) {
-                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
-                if (internalFrame != null)
-                    internalFrame.setFrameIcon((Icon) evt.getNewValue());
-                else
-                    throw new IllegalStateException("Invalid content ui state.");
+//                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
+//                if (internalFrame != null)
+//                    internalFrame.setFrameIcon((Icon) evt.getNewValue());
+//                else
+//                    throw new IllegalStateException("Invalid content ui state.");
             }
         }
     }
@@ -416,11 +405,11 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             Content content = (Content) evt.getSource();
 
             if (!content.isDetached()) {
-                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
-                if (internalFrame != null) {
-                    internalFrame.setEnabled((Boolean) evt.getNewValue());
-                } else
-                    throw new IllegalStateException("Invalid content ui state.");
+//                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
+//                if (internalFrame != null) {
+//                    internalFrame.setEnabled((Boolean) evt.getNewValue());
+//                } else
+//                    throw new IllegalStateException("Invalid content ui state.");
             }
         }
     }
@@ -430,11 +419,11 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             Content content = (Content) evt.getSource();
 
             if (!content.isDetached()) {
-                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
-                if (internalFrame != null)
-                    internalFrame.setForeground((Color) evt.getNewValue());
-                else
-                    throw new IllegalStateException("Invalid content ui state.");
+//                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
+//                if (internalFrame != null)
+//                    internalFrame.setForeground((Color) evt.getNewValue());
+//                else
+//                    throw new IllegalStateException("Invalid content ui state.");
             }
         }
     }
@@ -444,11 +433,11 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             Content content = (Content) evt.getSource();
 
             if (!content.isDetached()) {
-                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
-                if (internalFrame != null)
-                    internalFrame.setComponentPopupMenu((JPopupMenu) evt.getNewValue());
-                else
-                    throw new IllegalStateException("Invalid content ui state.");
+//                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
+//                if (internalFrame != null)
+//                    internalFrame.setComponentPopupMenu((JPopupMenu) evt.getNewValue());
+//                else
+//                    throw new IllegalStateException("Invalid content ui state.");
             }
         }
     }
@@ -461,11 +450,11 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 JDialog dialog = (JDialog) SwingUtilities.windowForComponent(content.getComponent());
                 dialog.setTitle((String) evt.getNewValue());
             } else {
-                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
-                if (internalFrame != null)
-                    internalFrame.setTitle((String) evt.getNewValue());
-                else
-                    throw new IllegalStateException("Invalid content ui state.");
+//                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
+//                if (internalFrame != null)
+//                    internalFrame.setTitle((String) evt.getNewValue());
+//                else
+//                    throw new IllegalStateException("Invalid content ui state.");
             }
         }
     }
@@ -475,15 +464,15 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             Content content = (Content) evt.getSource();
 
             if (!content.isDetached()) {
-                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
-                if (internalFrame != null) {
-                    String newToolTip = (String) evt.getNewValue();
-                    if (newToolTip == null)
-                        newToolTip = "";
-
-                    internalFrame.setToolTipText(newToolTip);
-                } else
-                    throw new IllegalStateException("Invalid content ui state.");
+//                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
+//                if (internalFrame != null) {
+//                    String newToolTip = (String) evt.getNewValue();
+//                    if (newToolTip == null)
+//                        newToolTip = "";
+//
+//                    internalFrame.setToolTipText(newToolTip);
+//                } else
+//                    throw new IllegalStateException("Invalid content ui state.");
             }
         }
     }
@@ -504,80 +493,80 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 final JDialog dialog = new JDialog(parentFrame, false);
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-                Window parentWindow = SwingUtilities.windowForComponent(desktopPane);
+                Window parentWindow = SwingUtilities.windowForComponent(multiSplitPane);
                 Component component = content.getComponent();
 
-                JInternalFrame internalFrame = getFrameByComponent(component);
-                if (internalFrame != null) {
-                    desktopPane.remove(internalFrame);
-                    detachedContentUIMap.put(content, (DesktopContentUI) internalFrame);
-                } else
-                    throw new IllegalStateException("Invalid Content : " + content);
-
-                component.setPreferredSize(component.getSize());
-
-                dialog.setTitle(content.getTitle());
-                dialog.getContentPane().add(component);
-
-                Point location = parentWindow.getLocation();
-                location.x += 5;
-                location.y += 5;
-                dialog.setLocation(location);
-
-                dialog.pack();
-
-                if (resourceManager.getTransparencyManager().isServiceAvailable()) {
-                    WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(
-                            resourceManager.getTransparencyManager(), 
-                            getContentUI(content),
-                            dialog
-                    );
-                    dialog.addWindowListener(windowTransparencyListener);
-                    dialog.addWindowFocusListener(windowTransparencyListener);
-                }
-
-                dialog.addWindowListener(new WindowAdapter() {
-                    public void windowClosing(WindowEvent event) {
-                        Component component = dialog.getContentPane().getComponent(0);
-                        PlafContentUI content = (PlafContentUI) contentManager.getContentByComponent(component);
-                        content.fireSelected(false);
-                        content.setDetached(false);
-                    }
-                });
-
-                dialog.addWindowFocusListener(new WindowFocusListener() {
-                    public void windowGainedFocus(WindowEvent e) {
-                        if (!valueAdjusting && !contentValueAdjusting) {
-                            PlafContentUI newSelected = (PlafContentUI) contentManager.getContentByComponent(
-                                    dialog.getContentPane().getComponent(0));
-
-                            if (newSelected == lastSelected)
-                                return;
-
-                            if (lastSelected != null) {
-                                try {
-                                    getFrameByComponent(lastSelected.getComponent()).setSelected(false);
-//                                    lastSelected.fireSelected(false);
-                                } catch (Exception ignoreIt) {
-                                }
-                            }
-
-                            lastSelected = newSelected;
-                            newSelected.fireSelected(true);
-                        }
-                    }
-
-                    public void windowLostFocus(WindowEvent e) {
-                    }
-                });
-
-                if (parentFrame == null)
-                    dialog.addWindowFocusListener(new ToFrontWindowFocusListener(dialog));
-
-                dialog.toFront();
-                dialog.setVisible(true);
-                SwingUtil.repaint(desktopPane);
-                SwingUtil.requestFocus(dialog);
+//                JInternalFrame internalFrame = getFrameByComponent(component);
+//                if (internalFrame != null) {
+//                    multiSplitPane.remove(internalFrame);
+//                    detachedContentUIMap.put(content, (DesktopContentUI) internalFrame);
+//                } else
+//                    throw new IllegalStateException("Invalid Content : " + content);
+//
+//                component.setPreferredSize(component.getSize());
+//
+//                dialog.setTitle(content.getTitle());
+//                dialog.getContentPane().add(component);
+//
+//                Point location = parentWindow.getLocation();
+//                location.x += 5;
+//                location.y += 5;
+//                dialog.setLocation(location);
+//
+//                dialog.pack();
+//
+//                if (resourceManager.getTransparencyManager().isServiceAvailable()) {
+//                    WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(
+//                            resourceManager.getTransparencyManager(),
+//                            getContentUI(content),
+//                            dialog
+//                    );
+//                    dialog.addWindowListener(windowTransparencyListener);
+//                    dialog.addWindowFocusListener(windowTransparencyListener);
+//                }
+//
+//                dialog.addWindowListener(new WindowAdapter() {
+//                    public void windowClosing(WindowEvent event) {
+//                        Component component = dialog.getContentPane().getComponent(0);
+//                        PlafContentUI content = (PlafContentUI) contentManager.getContentByComponent(component);
+//                        content.fireSelected(false);
+//                        content.setDetached(false);
+//                    }
+//                });
+//
+//                dialog.addWindowFocusListener(new WindowFocusListener() {
+//                    public void windowGainedFocus(WindowEvent e) {
+//                        if (!valueAdjusting && !contentValueAdjusting) {
+//                            PlafContentUI newSelected = (PlafContentUI) contentManager.getContentByComponent(
+//                                    dialog.getContentPane().getComponent(0));
+//
+//                            if (newSelected == lastSelected)
+//                                return;
+//
+//                            if (lastSelected != null) {
+//                                try {
+//                                    getFrameByComponent(lastSelected.getComponent()).setSelected(false);
+////                                    lastSelected.fireSelected(false);
+//                                } catch (Exception ignoreIt) {
+//                                }
+//                            }
+//
+//                            lastSelected = newSelected;
+//                            newSelected.fireSelected(true);
+//                        }
+//                    }
+//
+//                    public void windowLostFocus(WindowEvent e) {
+//                    }
+//                });
+//
+//                if (parentFrame == null)
+//                    dialog.addWindowFocusListener(new ToFrontWindowFocusListener(dialog));
+//
+//                dialog.toFront();
+//                dialog.setVisible(true);
+//                SwingUtil.repaint(multiSplitPane);
+//                SwingUtil.requestFocus(dialog);
             } else if (oldValue && !newValue) {
                 Window window = SwingUtilities.windowForComponent(content.getComponent());
                 window.setVisible(false);
@@ -616,7 +605,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                     popupMenu.add(menu);
                 }
 
-                popupMenu.show(desktopPane, e.getX(), e.getY());
+                popupMenu.show(multiSplitPane, e.getX(), e.getY());
             }
         }
 

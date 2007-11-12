@@ -14,14 +14,6 @@ import java.awt.*;
  */
 public interface ToolWindow extends Dockable {
 
-    enum AggregationPosition {
-        LEFT,
-        RIGHT,
-        TOP,
-        BOTTOM,        
-        DEFAULT
-    }
-
     /**
      * This method is used to set the index for the tool. The index is used to activate or hide
      * the tool with that index when the user uses the key combination ALT-index.

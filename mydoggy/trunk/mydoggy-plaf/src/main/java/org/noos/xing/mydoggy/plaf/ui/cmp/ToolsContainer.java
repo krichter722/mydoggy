@@ -4,6 +4,7 @@ import org.jdesktop.swingx.MultiSplitLayout;
 import org.jdesktop.swingx.MultiSplitPane;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -29,7 +30,7 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
     protected List<Component> contents;
     protected List<String> toolIds;
     protected int orientation;
-    protected ToolWindow.AggregationPosition defaultAggregationPosition;
+    protected AggregationPosition defaultAggregationPosition;
 
     protected MultiSplitPane multiSplitPane;
     protected MultiSplitLayout.Split multiSplitPaneModelRoot;
@@ -48,9 +49,9 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
         this.multiSplitPaneModelRoot = new MultiSplitLayout.Split();
         this.multiSplitPaneModelRoot.setRowLayout(orientation != JSplitPane.VERTICAL_SPLIT);
         if (multiSplitPaneModelRoot.isRowLayout()) {
-            defaultAggregationPosition = ToolWindow.AggregationPosition.RIGHT;
+            defaultAggregationPosition = AggregationPosition.RIGHT;
         } else
-            defaultAggregationPosition = ToolWindow.AggregationPosition.BOTTOM;
+            defaultAggregationPosition = AggregationPosition.BOTTOM;
         this.models = new Hashtable<String, byte[]>();
 
         setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
@@ -62,7 +63,7 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
 
 
     public void addContent(String toolId, Component content,
-                           ToolWindow aggregationOnTool, ToolWindow.AggregationPosition aggregationPosition) {
+                           ToolWindow aggregationOnTool, AggregationPosition aggregationPosition) {
         ToolWindow toolWindow = (ToolWindow) ((JComponent) content).getClientProperty(ToolWindow.class);
         if (toolWindow != null)
             toolId = toolWindow.getId();
@@ -84,7 +85,7 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
         } else {
             byte[] oldModel = models.get(builder.toString());
 
-            if (aggregationPosition == ToolWindow.AggregationPosition.DEFAULT)
+            if (aggregationPosition == AggregationPosition.DEFAULT)
                 aggregationPosition = defaultAggregationPosition;
 
             if (contents.size() == 1) {
@@ -103,7 +104,7 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
                                                                          new MultiSplitLayout.Divider(),
                                                                          leaf2);
 
-                    boolean rowLayout = (aggregationPosition == ToolWindow.AggregationPosition.LEFT || aggregationPosition == ToolWindow.AggregationPosition.RIGHT);
+                    boolean rowLayout = (aggregationPosition == AggregationPosition.LEFT || aggregationPosition == AggregationPosition.RIGHT);
 
                     multiSplitPaneModelRoot = new MultiSplitLayout.Split();
                     multiSplitPaneModelRoot.setRowLayout(rowLayout);
@@ -214,7 +215,7 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
 
                                             // Creat the split
                                             MultiSplitLayout.Split newSplit = new MultiSplitLayout.Split();
-                                            newSplit.setRowLayout((aggregationPosition == ToolWindow.AggregationPosition.LEFT || aggregationPosition == ToolWindow.AggregationPosition.RIGHT));
+                                            newSplit.setRowLayout((aggregationPosition == AggregationPosition.LEFT || aggregationPosition == AggregationPosition.RIGHT));
                                             newSplit.setWeight(leaf.getWeight());
                                             newSplit.setChildren(Arrays.asList(leaf,
                                                                                new MultiSplitLayout.Divider(),
@@ -240,7 +241,7 @@ public class ToolsContainer extends JPanel implements PropertyChangeListener {
                         if (!multiSplitPane.getMultiSplitLayout().getFloatingDividers())
                             multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
                     } else {
-                        boolean rowLayout = (aggregationPosition == ToolWindow.AggregationPosition.LEFT || aggregationPosition == ToolWindow.AggregationPosition.RIGHT);
+                        boolean rowLayout = (aggregationPosition == AggregationPosition.LEFT || aggregationPosition == AggregationPosition.RIGHT);
 
                         if (multiSplitPaneModelRoot.isRowLayout() == rowLayout) {
                             List<MultiSplitLayout.Node> children = multiSplitPaneModelRoot.getChildren();
