@@ -129,37 +129,37 @@ public class ToolWindowDropTarget extends DropTarget {
                                             case LEFT:
                                                 if (onToolWindow != null) {
                                                     toolWindow.setAnchor(anchor, anchorIndex != -1 ? anchorIndex - 1 : -1);
-                                                    toolWindow.aggregate(onToolWindow, ToolWindow.AggregationPosition.LEFT);
+                                                    toolWindow.aggregate(onToolWindow, AggregationPosition.LEFT);
                                                 } else {
                                                     toolWindow.setAnchor(anchor, 0);
-                                                    toolWindow.aggregate(ToolWindow.AggregationPosition.LEFT);
+                                                    toolWindow.aggregate(AggregationPosition.LEFT);
                                                 }
                                                 break;
                                             case RIGHT :
                                                 if (onToolWindow != null) {
                                                     toolWindow.setAnchor(anchor, anchorIndex != -1 ? anchorIndex + 1 : -1);
-                                                    toolWindow.aggregate(onToolWindow, ToolWindow.AggregationPosition.RIGHT);
+                                                    toolWindow.aggregate(onToolWindow, AggregationPosition.RIGHT);
                                                 } else {
                                                     toolWindow.setAnchor(anchor);
-                                                    toolWindow.aggregate(ToolWindow.AggregationPosition.RIGHT);
+                                                    toolWindow.aggregate(AggregationPosition.RIGHT);
                                                 }
                                                 break;
                                             case BOTTOM:
                                                 if (onToolWindow != null) {
                                                     toolWindow.setAnchor(anchor, anchorIndex != -1 ? anchorIndex + 1 : -1);
-                                                    toolWindow.aggregate(onToolWindow, ToolWindow.AggregationPosition.BOTTOM);
+                                                    toolWindow.aggregate(onToolWindow, AggregationPosition.BOTTOM);
                                                 } else {
                                                     toolWindow.setAnchor(anchor);
-                                                    toolWindow.aggregate(ToolWindow.AggregationPosition.BOTTOM);
+                                                    toolWindow.aggregate(AggregationPosition.BOTTOM);
                                                 }
                                                 break;
                                             case TOP:
                                                 if (onToolWindow != null) {
                                                     toolWindow.setAnchor(anchor, anchorIndex != -1 ? anchorIndex - 1 : -1);
-                                                    toolWindow.aggregate(onToolWindow, ToolWindow.AggregationPosition.TOP);
+                                                    toolWindow.aggregate(onToolWindow, AggregationPosition.TOP);
                                                 } else {
                                                     toolWindow.setAnchor(anchor, 0);
-                                                    toolWindow.aggregate(ToolWindow.AggregationPosition.TOP);
+                                                    toolWindow.aggregate(AggregationPosition.TOP);
                                                 }
                                                 break;
                                         }
@@ -200,27 +200,27 @@ public class ToolWindowDropTarget extends DropTarget {
                                                 switch (dragAnchor)  {
                                                     case LEFT:
                                                         if (onToolWindow != null)
-                                                            toolWindow.aggregate(onToolWindow, ToolWindow.AggregationPosition.LEFT);
+                                                            toolWindow.aggregate(onToolWindow, AggregationPosition.LEFT);
                                                         else
-                                                            toolWindow.aggregate(ToolWindow.AggregationPosition.LEFT);
+                                                            toolWindow.aggregate(AggregationPosition.LEFT);
                                                         break;
                                                     case RIGHT:
                                                         if (onToolWindow != null)
-                                                            toolWindow.aggregate(onToolWindow, ToolWindow.AggregationPosition.RIGHT);
+                                                            toolWindow.aggregate(onToolWindow, AggregationPosition.RIGHT);
                                                         else
-                                                            toolWindow.aggregate(ToolWindow.AggregationPosition.RIGHT);
+                                                            toolWindow.aggregate(AggregationPosition.RIGHT);
                                                         break;
                                                     case BOTTOM:
                                                         if (onToolWindow != null)
-                                                            toolWindow.aggregate(onToolWindow, ToolWindow.AggregationPosition.BOTTOM);
+                                                            toolWindow.aggregate(onToolWindow, AggregationPosition.BOTTOM);
                                                         else
-                                                            toolWindow.aggregate(ToolWindow.AggregationPosition.BOTTOM);
+                                                            toolWindow.aggregate(AggregationPosition.BOTTOM);
                                                         break;
                                                     case TOP:
                                                         if (onToolWindow != null)
-                                                            toolWindow.aggregate(onToolWindow, ToolWindow.AggregationPosition.TOP);
+                                                            toolWindow.aggregate(onToolWindow, AggregationPosition.TOP);
                                                         else
-                                                            toolWindow.aggregate(ToolWindow.AggregationPosition.TOP);
+                                                            toolWindow.aggregate(AggregationPosition.TOP);
                                                         break;
                                                 }
                                             } else

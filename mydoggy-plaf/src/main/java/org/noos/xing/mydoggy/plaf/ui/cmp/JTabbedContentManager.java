@@ -29,16 +29,16 @@ public class JTabbedContentManager extends JTabbedPane {
     static final int BUTTONSIZE = 15;
     static final int WIDTHDELTA = 5;
 
-    private ToolWindowManager toolWindowManager;
-    private ResourceManager resourceManager;
+    protected ToolWindowManager toolWindowManager;
+    protected ResourceManager resourceManager;
 
-    private Map<Accessible, ContentPage> contentPages;
+    protected Map<Accessible, ContentPage> contentPages;
 
-    private JPopupMenu popupMenu;
-    private boolean closeable;
-    private boolean detachable;
+    protected JPopupMenu popupMenu;
+    protected boolean closeable;
+    protected boolean detachable;
 
-    private ByteArrayOutputStream tmpWorkspace = null;
+    protected ByteArrayOutputStream tmpWorkspace = null;
 
 
     public JTabbedContentManager() {
@@ -95,6 +95,7 @@ public class JTabbedContentManager extends JTabbedPane {
         return getContentPage(index).getContentIcon();
     }
 
+
     public void addTab(String title, Icon icon, Component component, String tip, TabbedContentUI tabbedContentUI) {
         insertTab(title, icon, component, tip, getTabCount(), tabbedContentUI);
     }
@@ -117,15 +118,15 @@ public class JTabbedContentManager extends JTabbedPane {
         return popupMenu;
     }
 
+    public boolean isCloseable() {
+        return closeable;
+    }
+
     public void setCloseable(boolean closeable) {
         this.closeable = closeable;
         for (ContentPage contentPage : contentPages.values()) {
             contentPage.setCloseable(closeable);
         }
-    }
-
-    public boolean isCloseable() {
-        return closeable;
     }
 
     public boolean isDetachable() {
@@ -246,7 +247,7 @@ public class JTabbedContentManager extends JTabbedPane {
     }
 
 
-    class MouseOverTabListener extends MouseInputAdapter {
+    protected class MouseOverTabListener extends MouseInputAdapter {
         private int mouseOverTab = -1;
 
         public void mouseClicked(MouseEvent e) {
@@ -308,7 +309,7 @@ public class JTabbedContentManager extends JTabbedPane {
         }
     }
 
-    class TabMoveHandler extends MouseAdapter implements MouseMotionListener {
+    protected class TabMoveHandler extends MouseAdapter implements MouseMotionListener {
         int startIndex = -1;
         private int currentIndex = -1;
 

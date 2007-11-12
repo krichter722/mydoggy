@@ -27,6 +27,7 @@ public interface ContentManager {
 
     /**
      * Returns the content manager ui.
+     *
      * @return the content manager ui.
      * @see org.noos.xing.mydoggy.ContentManagerUI
      * @since 1.1.0
@@ -46,11 +47,11 @@ public interface ContentManager {
      * with a <code>title</code> and/or <code>icon</code>, either of which can be <code>null</code>.
      *
      * @param id
-     *@param title     the title to be displayed in this content
+     * @param title     the title to be displayed in this content
      * @param icon      the icon to be displayed in this content
      * @param component the component to be displayed when this content is selected. @return the a <code>Content</code> object rapresents the content added. @see #removeContent(Content)
-     * @see Content
      * @return a <code>Content</code> instance that rapresents the <code>component</code>
+     * @see Content
      * @since 1.0.0
      */
     Content addContent(String id, String title, Icon icon, Component component);
@@ -60,7 +61,7 @@ public interface ContentManager {
      * with a <code>title</code> and/or <code>icon</code>, either of which can be <code>null</code>.
      *
      * @param id
-     *@param title     the title to be displayed in this content
+     * @param title     the title to be displayed in this content
      * @param icon      the icon to be displayed in this content
      * @param component the component to be displayed when this content is selected.
      * @param tip       the tool tip text @return the a <code>Content</code> object rapresents the content added. @see #removeContent(Content)
@@ -70,8 +71,14 @@ public interface ContentManager {
     Content addContent(String id, String title, Icon icon, Component component, String tip);
 
     /**
-     * 
+     * @since 1.3.2
+     */
+    Content addContent(String id, String title, Icon icon, Component component, String tip, Object... constraints);
+
+    /**
+     * TODO: java doc
      * @param dockable
+     * @since 1.3.2
      */
     Content addContent(Dockable dockable);
 
@@ -98,7 +105,7 @@ public interface ContentManager {
 
     /**
      * Removes all of the contents from this manager.
-     * 
+     *
      * @since 1.1.0
      */
     void removeAllContents();
@@ -130,7 +137,6 @@ public interface ContentManager {
      *
      * @param key key whose associated content is to be returned.
      * @return the content to which this manager maps the specified key
-     *
      * @throws NullPointerException if the key is <tt>null</tt>.
      * @since 1.0.0
      */
@@ -138,6 +144,7 @@ public interface ContentManager {
 
     /**
      * Returns the content that wraps the passed <code>component</code>
+     *
      * @param component the component wrapped by a content.
      * @return the content that wraps the passed <code>component</code>
      * @since 1.2.0

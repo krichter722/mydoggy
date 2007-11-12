@@ -223,7 +223,7 @@ public interface ResourceManager extends Observable {
     void putProperty(String name, String value);
 
     /**
-     * TODO
+     * TODO javadoc
      * @param name
      * @param defualt
      * @return

@@ -98,7 +98,7 @@ public class ContentManagerDropTarget extends DropTarget {
         }
 
         protected boolean isEnabled() {
-            return resourceManager.getBoolean("org.xing.mydoggy.ContentManagerDropTarget.enabled", true);
+            return resourceManager.getBoolean("ContentManagerDropTarget.enabled", true);
         }
     }
 

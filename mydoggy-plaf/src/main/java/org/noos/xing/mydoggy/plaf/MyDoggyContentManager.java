@@ -57,12 +57,16 @@ public class MyDoggyContentManager implements ContentManager {
         return contents.size();
     }
 
+    public Content addContent(String id, String title, Icon icon, Component component) {
+        return addContent(id, title, icon, component, null);
+    }
+
     public Content addContent(String id, String title, Icon icon, Component component, String tip) {
         return addContentInternal(id, title, icon, component, tip, null);
     }
 
-    public Content addContent(String id, String title, Icon icon, Component component) {
-        return addContent(id, title, icon, component, null);
+    public Content addContent(String id, String title, Icon icon, Component component, String tip, Object... constraints) {
+        return addContentInternal(id, title, icon, component, tip, null, constraints);
     }
 
     public Content addContent(Dockable dockable) {
@@ -226,7 +230,7 @@ public class MyDoggyContentManager implements ContentManager {
 
 
     protected Content addContentInternal(String id, String title, Icon icon, Component component, String tip,
-                                         ToolWindow toolWindow) {
+                                         ToolWindow toolWindow, Object... constraints) {
         if (id == null)
             throw new IllegalArgumentException("Key cannot be null.");
         if (component == null)
@@ -246,9 +250,11 @@ public class MyDoggyContentManager implements ContentManager {
                 }
             }
         });
+
         contents.add(content);
         contentMap.put(id, content);
-        plafContentManagerUI.addContent(content);
+        
+        plafContentManagerUI.addContent(content, constraints);
 
         fireContentAdded(content);
 

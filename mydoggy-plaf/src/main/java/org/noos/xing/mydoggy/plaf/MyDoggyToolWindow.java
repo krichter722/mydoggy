@@ -325,8 +325,8 @@ public class MyDoggyToolWindow implements ToolWindow {
 
 
                 if (this.anchor == anchor) {
-                    // TODO: Fire a more simple event
                     this.anchor = anchor;
+                    
                     fireAnchorEvent(null, anchor, index);
                 } else {
                     publicEvent = false;

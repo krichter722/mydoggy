@@ -5,6 +5,7 @@ import info.clearthought.layout.TableLayoutConstraints;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
@@ -577,7 +578,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
         public void propertyChange(PropertyChangeEvent evt) {
             boolean shiftShow = false;
-            ToolWindow.AggregationPosition aggregationPosition = ToolWindow.AggregationPosition.DEFAULT;
+            AggregationPosition aggregationPosition = AggregationPosition.DEFAULT;
             ToolWindow aggregationOnTool = null;
 
             if (evt instanceof UserPropertyChangeEvent) {
@@ -585,7 +586,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 Object[] args = ((Object[]) upce.getUserObject());
 
                 shiftShow = (Boolean) args[0];
-                aggregationPosition = (ToolWindow.AggregationPosition) args[1];
+                aggregationPosition = (AggregationPosition) args[1];
                 aggregationOnTool = (ToolWindow) args[2];
             }
 
@@ -683,7 +684,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                         toolsContainer.addContent(descriptor.getToolWindow().getId(),
                                                   splitPaneContent,
                                                   null,
-                                                  ToolWindow.AggregationPosition.DEFAULT);
+                                                  AggregationPosition.DEFAULT);
                     toolsContainer.addContent(descriptor.getToolWindow().getId(), content, null, aggregationPosition);
 
                     setSplitPaneContent(toolsContainer);
@@ -695,7 +696,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     toolsContainer.addContent(descriptor.getToolWindow().getId(),
                                               content,
                                               null,
-                                              ToolWindow.AggregationPosition.DEFAULT);
+                                              AggregationPosition.DEFAULT);
 
                     setSplitPaneContent(toolsContainer);
                 } else if (content != null)
