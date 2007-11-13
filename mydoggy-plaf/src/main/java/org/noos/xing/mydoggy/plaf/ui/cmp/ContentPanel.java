@@ -172,12 +172,14 @@ public class ContentPanel extends JPanel implements PropertyChangeListener {
                             GraphicsUtil.drawRect(g, toolBounds.x, toolBounds.y,
                                                   toolBounds.width,
                                                   toolBounds.height, 3);
+                            putClientProperty("dragAnchor", null);
                         }
                     } else {
                         putClientProperty("dragAnchor", null);
                     }
-                } else
+                } else {
                     putClientProperty("dragAnchor", null);
+                }
             }
         }
 

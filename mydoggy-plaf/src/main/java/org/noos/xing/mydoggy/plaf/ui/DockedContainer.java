@@ -7,7 +7,6 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowTitleDropTarget;
 
 import javax.swing.*;
 import java.awt.*;
@@ -160,7 +159,6 @@ public class DockedContainer implements ToolWindowContainer {
         // Set TitleBar content
         titleBar.add(titleBarTabs, "1,1");
         titleBar.add(titleBarButtons.getButtonsContainer(), "3,1");
-        titleBar.setDropTarget(new ToolWindowTitleDropTarget(titleBarTabs, toolWindow, descriptor.getManager()));
 
         // Set Component container
         componentContainer = new JPanel();

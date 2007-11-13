@@ -688,7 +688,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
     }
 
-    public class TabbedContentManagerDragGesture extends DragGestureAdapter {
+    class TabbedContentManagerDragGesture extends DragGestureAdapter {
 
         public TabbedContentManagerDragGesture() {
             super(toolWindowManager);
@@ -718,7 +718,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                     );
 
                     setGhostImage(dge.getDragOrigin(), ghostImage);
-                } 
+                } else
+                    releaseLocks();
             } else
                 releaseLocks();
         }
