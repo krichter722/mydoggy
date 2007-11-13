@@ -43,7 +43,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             writer.startDocument();
 
             AttributesImpl mydoggyAttributes = new AttributesImpl();
-            mydoggyAttributes.addAttribute(null, "version", null, null, "1.3.2");
+            mydoggyAttributes.addAttribute(null, "version", null, null, "1.4.0");
             writer.startElement("mydoggy", mydoggyAttributes);
 
             saveToolWindows(writer);
@@ -377,8 +377,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     public class MyDoggyElementParser implements ElementParser {
         public boolean parse(Element element, Object... args) {
             // Validate version
-            if (!"1.3.2".equals(element.getAttribute("version")))
-                throw new IllegalArgumentException("Invalid workspace version. Expected 1.3.2");
+            if (!"1.4.0".equals(element.getAttribute("version")))
+                throw new IllegalArgumentException("Invalid workspace version. Expected 1.4.0");
             return true;
         }
     }

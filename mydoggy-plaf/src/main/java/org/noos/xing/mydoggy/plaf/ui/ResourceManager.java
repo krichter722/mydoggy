@@ -27,7 +27,7 @@ public interface ResourceManager extends Observable {
      * @param clazz the class of the instance to be returned.
      * @param args  the arguments needed to create the instance.
      * @return an instance of class <code>clazz</code> using passed <code>args</code>.
-     * @since 1.3.2
+     * @since 1.4.0
      */
     <T> T createInstance(Class<T> clazz, Object... args);
 
@@ -193,7 +193,7 @@ public interface ResourceManager extends Observable {
      * Returns the map that contains all colors definition.
      *
      * @return the map that contains all colors definition.
-     * @since 1.3.2
+     * @since 1.4.0
      */
     Map<String, Color> getColors();
 
@@ -201,7 +201,7 @@ public interface ResourceManager extends Observable {
      * Returns the map that contains all icons definition.
      *
      * @return the map that contains all icons definition.
-     * @since 1.3.2
+     * @since 1.4.0
      */
     Map<String, Icon> getIcons();
 

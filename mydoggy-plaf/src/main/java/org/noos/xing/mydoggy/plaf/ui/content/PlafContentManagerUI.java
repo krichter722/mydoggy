@@ -44,7 +44,7 @@ public interface PlafContentManagerUI {
      *
      * @param content the content ui part to be added.
      * @param constraints
-     * @since 1.3.2
+     * @since 1.4.0
      */
     void addContent(PlafContentUI content, Object... constraints);
 

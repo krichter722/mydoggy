@@ -1,35 +1,37 @@
 package org.noos.xing.mydoggy.plaf.ui.content;
 
+import org.jdesktop.swingx.MultiSplitLayout;
 import org.jdesktop.swingx.MultiSplitPane;
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.cmp.DesktopContentFrame;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
 import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
-import javax.swing.event.InternalFrameAdapter;
-import javax.swing.event.InternalFrameEvent;
 import java.awt.*;
-import java.awt.event.*;
-import java.beans.*;
+import java.awt.event.InputEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyMultiSplitContentManagerUI implements DesktopContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
+public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
     protected MyDoggyToolWindowManager toolWindowManager;
     protected MyDoggyContentManager contentManager;
     protected ResourceManager resourceManager;
 
     protected MultiSplitPane multiSplitPane;
+    protected MultiSplitLayout.Split multiSplitPaneModelRoot;
     protected boolean closeable, detachable;
     protected boolean installed;
 
@@ -41,7 +43,7 @@ public class MyDoggyMultiSplitContentManagerUI implements DesktopContentManagerU
     protected boolean valueAdjusting;
     protected boolean contentValueAdjusting;
 
-    protected Map<Content, DesktopContentUI> detachedContentUIMap;
+    protected Map<Content, MultiSplitContentUI> detachedContentUIMap;
 
     protected int contentIndex = 0;
 
@@ -70,7 +72,7 @@ public class MyDoggyMultiSplitContentManagerUI implements DesktopContentManagerU
 //            }
     }
 
-    public DesktopContentUI getContentUI(Content content) {
+    public MultiSplitContentUI getContentUI(Content content) {
         if (content.isDetached()) {
             return detachedContentUIMap.get(content);
         } /*else
@@ -140,7 +142,7 @@ public class MyDoggyMultiSplitContentManagerUI implements DesktopContentManagerU
     }
 
     public void addContent(PlafContentUI content, Object... constraints) {
-        addUIForContent(content);
+        addUIForContent(content, constraints);
         content.addUIPropertyChangeListener(this);
     }
 
@@ -215,7 +217,7 @@ public class MyDoggyMultiSplitContentManagerUI implements DesktopContentManagerU
 
     protected void initComponents() {
         if (multiSplitPane == null) {
-            detachedContentUIMap = new Hashtable<Content, DesktopContentUI>();
+            detachedContentUIMap = new Hashtable<Content, MultiSplitContentUI>();
             multiSplitPane = new MultiSplitPane();
         }
     }
@@ -237,8 +239,6 @@ public class MyDoggyMultiSplitContentManagerUI implements DesktopContentManagerU
                     //                System.out.println("SELECTED " + evt.getNewValue());
                 }
             });
-
-            multiSplitPane.addMouseListener(new PopupMouseListener());
         }
         this.contentManagerUIListeners = new EventListenerList();
     }
@@ -253,110 +253,31 @@ public class MyDoggyMultiSplitContentManagerUI implements DesktopContentManagerU
                                       "previousContent", new PreviousContentAction(toolWindowManager));
     }
 
-    protected void addUIForContent(Content content) {
-        JInternalFrame internalFrame = (JInternalFrame) detachedContentUIMap.get(content);
-        if (internalFrame == null) {
-            internalFrame = new DesktopContentFrame(content, content.getTitle(), true, true, true, true);
-            internalFrame.setFrameIcon(content.getIcon());
-            internalFrame.setClosable(closeable);
-            ((DesktopContentFrame)internalFrame).setDetachable(detachable);
+    protected void addUIForContent(Content content, Object... constraints) {
+        if (constraints == null || constraints.length == 0) {
 
-            internalFrame.getContentPane().add(content.getComponent());
-
-            int contentX;
-            int contentY;
-
-            contentY = contentX = 10 + (contentIndex++ * 25);
-            if (contentX > multiSplitPane.getWidth() - 320 || contentY > multiSplitPane.getHeight() - 200) {
-                contentIndex = 0;
-                contentY = contentX = 10;
-            }
-
-            internalFrame.setBounds(contentX, contentY, 320, 200);
-
-            internalFrame.addVetoableChangeListener(new VetoableChangeListener() {
-                public void vetoableChange(PropertyChangeEvent evt) throws PropertyVetoException {
-                    if (JInternalFrame.IS_CLOSED_PROPERTY.equals(evt.getPropertyName())) {
-                        if (Boolean.TRUE.equals(evt.getNewValue())) {
-                            try {
-                                Content content = contentManager.getContentByComponent(
-                                        ((JInternalFrame) evt.getSource()).getContentPane().getComponent(0)
-                                );
-                                fireContentUIRemoving(getContentUI(content));
-                            } catch (Exception ignore) {
-                                throw new PropertyVetoException(ignore.getMessage(), evt);
-                            }
-                        }
-                    }
-                }
-            });
-            internalFrame.addInternalFrameListener(new InternalFrameAdapter() {
-
-                public void internalFrameClosed(InternalFrameEvent e) {
-                    try {
-                        Content content = contentManager.getContentByComponent(e.getInternalFrame().getContentPane().getComponent(0));
-                        contentManager.removeContent(content);
-                    } catch (Exception ignore) {
-                        ignore.printStackTrace();
-                    }
-                }
-            });
-            internalFrame.addPropertyChangeListener(JInternalFrame.IS_SELECTED_PROPERTY, new PropertyChangeListener() {
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (!valueAdjusting && !contentValueAdjusting) {
-
-                        Container container = ((JInternalFrame) evt.getSource()).getContentPane();
-                        if (container.getComponentCount() > 0) {
-                            Component cmp = container.getComponent(0);
-                            for (Content content : contentManager.getContents()) {
-                                if (content.getComponent() == cmp) {
-                                    boolean value = (Boolean) evt.getNewValue();
-                                    if (value) {
-                                        if (lastSelected != null) {
-                                            if (lastSelected.isDetached())
-                                                lastSelected.fireSelected(false);
-                                        }
-                                        lastSelected = (PlafContentUI) content;
-                                    }
-                                    ((PlafContentUI) content).fireSelected((Boolean) evt.getNewValue());
-                                    break;
-                                }
-                            }
-                        }
-
-                    }
-                }
-            });
         } else {
-            internalFrame.getContentPane().add(content.getComponent());
+
         }
-
-        multiSplitPane.add(internalFrame);
-        internalFrame.show();
-        internalFrame.toFront();
-
-        if (content.isSelected())
-            try {
-                internalFrame.setSelected(true);
-            } catch (PropertyVetoException e) {
-                e.printStackTrace();
-            }
 
     }
 
-    protected void fireContentUIRemoving(ContentUI contentUI) {
-        ContentManagerUIEvent event = new ContentManagerUIEvent(this, ContentManagerUIEvent.ActionId.CONTENTUI_REMOVING, contentUI);
-        for (ContentManagerUIListener listener : contentManagerUIListeners.getListeners(ContentManagerUIListener.class)) {
-            if (!listener.contentUIRemoving(event))
-                throw new RuntimeException("Cannot remove Content.");
-        }
-    }
+    protected void add() {
+        // Create two leafs
+        MultiSplitLayout.Leaf leaf = new MultiSplitLayout.Leaf("1");
+        leaf.setWeight(0.5);
+        MultiSplitLayout.Leaf leaf2 = new MultiSplitLayout.Leaf("2");
+        leaf2.setWeight(0.5);
+        List<MultiSplitLayout.Node> children = Arrays.asList(leaf,
+                                                             new MultiSplitLayout.Divider(),
+                                                             leaf2);
 
-    protected void fireContentUIDetached(ContentUI contentUI) {
-        ContentManagerUIEvent event = new ContentManagerUIEvent(this, ContentManagerUIEvent.ActionId.CONTENTUI_DETACHED, contentUI);
-        for (ContentManagerUIListener listener : contentManagerUIListeners.getListeners(ContentManagerUIListener.class)) {
-            listener.contentUIDetached(event);
-        }
+        multiSplitPaneModelRoot = new MultiSplitLayout.Split();
+        multiSplitPaneModelRoot.setRowLayout(false);
+        multiSplitPaneModelRoot.setChildren(children);
+
+        if (!multiSplitPane.getMultiSplitLayout().getFloatingDividers())
+            multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
     }
 
 
@@ -577,49 +498,6 @@ public class MyDoggyMultiSplitContentManagerUI implements DesktopContentManagerU
             }
         }
 
-    }
-
-
-    protected class PopupMouseListener extends MouseAdapter implements ActionListener {
-        protected JPopupMenu popupMenu;
-
-        public PopupMouseListener() {
-            popupMenu = new JPopupMenu();
-        }
-
-        public void mouseClicked(MouseEvent e) {
-            if (SwingUtilities.isRightMouseButton(e)) {
-                popupMenu.removeAll();
-
-                for (Content content : contentManager.getContents()) {
-                    JMenu menu = new JMenu(content.getTitle());
-
-                    JMenuItem detach = new JMenuItem("Detach");
-                    detach.putClientProperty("content", content);
-                    detach.setActionCommand("Detach");
-                    detach.addActionListener(this);
-                    detach.setEnabled(getContentUI(content).isDetachable() && !content.isDetached());
-
-                    menu.add(detach);
-
-                    popupMenu.add(menu);
-                }
-
-                popupMenu.show(multiSplitPane, e.getX(), e.getY());
-            }
-        }
-
-
-        public void actionPerformed(ActionEvent e) {
-            String actionCommand = e.getActionCommand();
-            if ("Detach".equals(actionCommand)) {
-                JComponent c = (JComponent) e.getSource();
-
-                Content content = ((Content) c.getClientProperty("content"));
-                content.setDetached(true);
-                fireContentUIDetached(getContentUI(content));
-            }
-        }
     }
 
 }

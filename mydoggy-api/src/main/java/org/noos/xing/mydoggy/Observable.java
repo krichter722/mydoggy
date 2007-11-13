@@ -9,7 +9,7 @@ import java.beans.PropertyChangeListener;
  *
  * @author David DOLCIMASCOLO
  * @version 1.0 5 nov. 2007 11:40:15
- * @since 1.3.2
+ * @since 1.4.0
  */
 public interface Observable
 {

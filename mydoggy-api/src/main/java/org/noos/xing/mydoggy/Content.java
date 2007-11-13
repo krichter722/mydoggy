@@ -185,7 +185,7 @@ public interface Content extends Dockable {
     /**
      *
      * @return
-     * @since 1.3.2
+     * @since 1.4.0
      */
     Dockable getDockableDelegator();
 

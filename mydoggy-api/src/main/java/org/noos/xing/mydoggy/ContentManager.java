@@ -71,14 +71,14 @@ public interface ContentManager {
     Content addContent(String id, String title, Icon icon, Component component, String tip);
 
     /**
-     * @since 1.3.2
+     * @since 1.4.0
      */
     Content addContent(String id, String title, Icon icon, Component component, String tip, Object... constraints);
 
     /**
      * TODO: java doc
      * @param dockable
-     * @since 1.3.2
+     * @since 1.4.0
      */
     Content addContent(Dockable dockable);
 

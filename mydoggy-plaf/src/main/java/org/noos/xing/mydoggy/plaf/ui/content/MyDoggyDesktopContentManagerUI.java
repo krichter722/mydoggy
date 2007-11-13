@@ -256,8 +256,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                                       "previousContent", new PreviousContentAction(toolWindowManager));
     }
 
-    protected void addUIForContent(Content content) {
+    protected void addUIForContent(Content content, Object... constraints) {
         JInternalFrame internalFrame = (JInternalFrame) detachedContentUIMap.get(content);
+        
         if (internalFrame == null) {
             internalFrame = new DesktopContentFrame(content, content.getTitle(), true, true, true, true);
             internalFrame.setFrameIcon(content.getIcon());
@@ -266,29 +267,38 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
             internalFrame.getContentPane().add(content.getComponent());
 
-            int contentX;
-            int contentY;
+            // Parse constraints
+            if (constraints.length > 0) {
+                if (constraints[0] instanceof Point)  {
+                    Point location = (Point) constraints[0];
 
-            contentY = contentX = 10 + (contentIndex++ * 25);
-            if (contentX > desktopPane.getWidth() - 320 || contentY > desktopPane.getHeight() - 200) {
-                contentIndex = 0;
-                contentY = contentX = 10;
+                    internalFrame.setBounds(location.x, location.y, 320, 200);
+                } else if (constraints[0] instanceof Rectangle)  {
+                    internalFrame.setBounds((Rectangle) constraints[0]);
+                } else
+                    constraints = null;
             }
 
-            internalFrame.setBounds(contentX, contentY, 320, 200);
+            if (constraints == null) {
+                int contentX, contentY;
+                contentY = contentX = 10 + (contentIndex++ * 25);
+                if (contentX > desktopPane.getWidth() - 320 || contentY > desktopPane.getHeight() - 200) {
+                    contentIndex = 0;
+                    contentY = contentX = 10;
+                }    
+                internalFrame.setBounds(contentX, contentY, 320, 200);
+            }
+
 
             internalFrame.addVetoableChangeListener(new VetoableChangeListener() {
                 public void vetoableChange(PropertyChangeEvent evt) throws PropertyVetoException {
                     if (JInternalFrame.IS_CLOSED_PROPERTY.equals(evt.getPropertyName())) {
                         if (Boolean.TRUE.equals(evt.getNewValue())) {
-                            try {
-                                Content content = contentManager.getContentByComponent(
-                                        ((JInternalFrame) evt.getSource()).getContentPane().getComponent(0)
-                                );
-                                fireContentUIRemoving(getContentUI(content));
-                            } catch (Exception ignore) {
-                                throw new PropertyVetoException(ignore.getMessage(), evt);
-                            }
+                            Content content = contentManager.getContentByComponent(
+                                    ((JInternalFrame) evt.getSource()).getContentPane().getComponent(0)
+                            );
+                            if (!fireContentUIRemoving(getContentUI(content)))
+                                throw new PropertyVetoException("Cannot remove.", evt);
                         }
                     }
                 }
@@ -355,12 +365,13 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         return null;
     }
 
-    protected void fireContentUIRemoving(ContentUI contentUI) {
+    protected boolean fireContentUIRemoving(ContentUI contentUI) {
         ContentManagerUIEvent event = new ContentManagerUIEvent(this, ContentManagerUIEvent.ActionId.CONTENTUI_REMOVING, contentUI);
         for (ContentManagerUIListener listener : contentManagerUIListeners.getListeners(ContentManagerUIListener.class)) {
             if (!listener.contentUIRemoving(event))
-                throw new RuntimeException("Cannot remove Content.");
+                return false;
         }
+        return true;
     }
 
     protected void fireContentUIDetached(ContentUI contentUI) {

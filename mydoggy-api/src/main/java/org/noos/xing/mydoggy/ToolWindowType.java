@@ -49,7 +49,7 @@ public enum ToolWindowType {
      * floating windows "out of the frame".
      *
      * @see FloatingLiveTypeDescriptor
-     * @since 1.3.2
+     * @since 1.4.0
      */
     FLOATING_LIVE,
 
@@ -58,7 +58,7 @@ public enum ToolWindowType {
      * The user cannot set directly this type.
      *
      * @see ToolWindow#addToolWindowTab(Dockable)
-     * @since 1.3.2
+     * @since 1.4.0
      */
     EXTERN,
 

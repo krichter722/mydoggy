@@ -7,7 +7,7 @@ import java.awt.*;
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @see ToolWindowType#FLOATING_LIVE
- * @since 1.3.2
+ * @since 1.4.0
  */
 public interface FloatingLiveTypeDescriptor extends ToolWindowTypeDescriptor {
 
@@ -22,7 +22,7 @@ public interface FloatingLiveTypeDescriptor extends ToolWindowTypeDescriptor {
      * @param y the <i>y</i>-coordinate of the new location's
      *          top-left corner in the system's coordinate space
      * @see #getLocation
-     * @since 1.3.2
+     * @since 1.4.0
      */
     void setLocation(int x, int y);
 
@@ -34,7 +34,7 @@ public interface FloatingLiveTypeDescriptor extends ToolWindowTypeDescriptor {
      * @return an instance of <code>Point</code> representing the top-left corner of the component's bounds in
      *         the system coordinate space.
      * @see #setLocation
-     * @since 1.3.2
+     * @since 1.4.0
      */
     Point getLocation();
 
@@ -44,7 +44,7 @@ public interface FloatingLiveTypeDescriptor extends ToolWindowTypeDescriptor {
      * @param width  the new width of this component in pixels
      * @param height the new height of this component in pixels
      * @see #getSize
-     * @since 1.3.2
+     * @since 1.4.0
      */
     void setSize(int width, int height);
 
@@ -59,7 +59,7 @@ public interface FloatingLiveTypeDescriptor extends ToolWindowTypeDescriptor {
      * @return a <code>Dimension</code> object that indicates the
      *         size of this window.
      * @see #setSize
-     * @since 1.3.2
+     * @since 1.4.0
      */
     Dimension getSize();
 
@@ -71,7 +71,7 @@ public interface FloatingLiveTypeDescriptor extends ToolWindowTypeDescriptor {
      *                        <code>false</code> to disable transparent mode.
      * @see #isTransparentMode()
      * @see #setTransparentRatio(float)
-     * @since 1.3.2
+     * @since 1.4.0
      */
     void setTransparentMode(boolean transparentMode);
 
@@ -81,7 +81,7 @@ public interface FloatingLiveTypeDescriptor extends ToolWindowTypeDescriptor {
      * @return <code>true</code> if the trasparent mode is enabled;
      *         <code>false</code> otherwise.
      * @see #setTransparentMode(boolean)
-     * @since 1.3.2
+     * @since 1.4.0
      */
     boolean isTransparentMode();
 
@@ -89,7 +89,7 @@ public interface FloatingLiveTypeDescriptor extends ToolWindowTypeDescriptor {
      * Sets the transparent ratio. Valid range is [0.0, 1.0]
      *
      * @param transparentRatio the transparent ratio.
-     * @since 1.3.2
+     * @since 1.4.0
      */
     void setTransparentRatio(float transparentRatio);
 
@@ -97,7 +97,7 @@ public interface FloatingLiveTypeDescriptor extends ToolWindowTypeDescriptor {
      * Returns the transparent ratio.
      *
      * @return ratio value used to describe the opacity of the window.
-     * @since 1.3.2
+     * @since 1.4.0
      */
     float getTransparentRatio();
 
@@ -106,7 +106,7 @@ public interface FloatingLiveTypeDescriptor extends ToolWindowTypeDescriptor {
      * transparent.
      *
      * @param transparentDelay the transparent delay
-     * @since 1.3.2
+     * @since 1.4.0
      */
     void setTransparentDelay(int transparentDelay);
 
@@ -114,7 +114,7 @@ public interface FloatingLiveTypeDescriptor extends ToolWindowTypeDescriptor {
      * Returns the transparent delay.
      *
      * @return delay in milliseconds.
-     * @since 1.3.2
+     * @since 1.4.0
      */
     int getTransparentDelay();
 
@@ -126,7 +126,7 @@ public interface FloatingLiveTypeDescriptor extends ToolWindowTypeDescriptor {
      * @param  enabled   If <code>true</code>, this mode is
      *         enabled; otherwise this mode is disabled
      * @see #isEnabled
-     * @since 1.3.2
+     * @since 1.4.0
      */
     void setEnabled(boolean enabled);
 
@@ -138,7 +138,7 @@ public interface FloatingLiveTypeDescriptor extends ToolWindowTypeDescriptor {
      * @return <code>true</code> if the mode is enabled,
      *          <code>false</code> otherwise
      * @see #setEnabled
-     * @since 1.3.2
+     * @since 1.4.0
      */
     boolean isEnabled();
 }

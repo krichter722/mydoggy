@@ -18,7 +18,7 @@ public interface ToolWindowTab extends Dockable {
      * Returns the id used to register the tool.
      *
      * @return
-     * @since 1.3.2
+     * @since 1.4.0
      */
     ToolWindow getOwner();
 
@@ -71,7 +71,7 @@ public interface ToolWindowTab extends Dockable {
     /**
      *
      * @return
-     * @since 1.3.2
+     * @since 1.4.0
      */
     Dockable getDockableDelegator();
 }

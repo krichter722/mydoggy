@@ -90,7 +90,7 @@ public interface ToolWindow extends Dockable {
     /**
      * TODO:
      * @param aggregationPosition
-     * @since 1.3.2
+     * @since 1.4.0
      */
     void aggregate(AggregationPosition aggregationPosition);
 
@@ -98,7 +98,7 @@ public interface ToolWindow extends Dockable {
      * TODO:
      * @param toolWindow
      * @param aggregationPosition
-     * @since 1.3.2
+     * @since 1.4.0
      */
     void aggregate(ToolWindow toolWindow, AggregationPosition aggregationPosition);
 
@@ -218,7 +218,7 @@ public interface ToolWindow extends Dockable {
     /**
      * TODO
      * @return
-     * @since 1.3.2
+     * @since 1.4.0
      */
     int getAnchorIndex();
 
@@ -284,7 +284,7 @@ public interface ToolWindow extends Dockable {
      * TODO:
      *
      * @param visible
-     * @since 1.3.2
+     * @since 1.4.0
      */
     void setRepresentativeAnchorButtonVisible(boolean visible);
 
@@ -306,7 +306,7 @@ public interface ToolWindow extends Dockable {
 
     /**
      * TODO
-     * @since 1.3.2
+     * @since 1.4.0
      * @param dockable
      */
     ToolWindowTab addToolWindowTab(Dockable dockable);
@@ -379,7 +379,7 @@ public interface ToolWindow extends Dockable {
 
     /**
      * TODO
-     * @since 1.3.2
+     * @since 1.4.0
      * @param descriptorClass
      * @return
      */
