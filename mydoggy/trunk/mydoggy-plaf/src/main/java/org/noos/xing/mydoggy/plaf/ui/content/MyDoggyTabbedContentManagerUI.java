@@ -375,7 +375,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         contentManagerUIListeners = new EventListenerList();
     }
 
-    protected void addUIForContent(Content content) {
+    protected void addUIForContent(Content content, Object... constaints) {
         if (!showAlwaysTab && tabbedContentManager.getTabCount() == 0 && (contentValueAdjusting || toolWindowManager.getMainContent() == null)) {
             detachedContentUIMap.put(content, new ContentPage(content, tabbedContentManager,
                                                               null, toolWindowManager.getResourceManager()));
@@ -384,11 +384,11 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         } else {
             if (!showAlwaysTab && tabbedContentManager.getParent() == null) {
                 valueAdjusting = true;
-                addTab(contentManager.getContentByComponent(toolWindowManager.getMainContent()));
+                addTab(contentManager.getContentByComponent(toolWindowManager.getMainContent()), constaints);
                 valueAdjusting = false;
             }
 
-            addTab(content);
+            addTab(content, constaints);
             toolWindowManager.setMainContent(tabbedContentManager);
 
             if (!tabbedContentManager.isEnabledAt(tabbedContentManager.getSelectedIndex()))
@@ -396,7 +396,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         }
     }
 
-    protected void addTab(Content content) {
+    protected void addTab(Content content, Object... constaints) {
         tabbedContentManager.addTab(content.getTitle(),
                                     content.getIcon(),
                                     content.getComponent(),

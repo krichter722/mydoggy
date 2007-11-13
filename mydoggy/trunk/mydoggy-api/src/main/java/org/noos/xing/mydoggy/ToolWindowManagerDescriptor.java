@@ -106,7 +106,7 @@ public interface ToolWindowManagerDescriptor extends Observable {
      * TODO
      * @param anchor
      * @param enable
-     * @since 1.3.2
+     * @since 1.4.0
      */
     void setAggregateMode(ToolWindowAnchor anchor, boolean enable);
 
@@ -114,7 +114,7 @@ public interface ToolWindowManagerDescriptor extends Observable {
      * TODO
      * @param anchor
      * @return
-     * @since 1.3.2
+     * @since 1.4.0
      */
     boolean isAggregateMode(ToolWindowAnchor anchor);
 }

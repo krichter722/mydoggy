@@ -82,7 +82,7 @@ public class MyDoggySet {
 
 
     protected void initComponents() {
-        this.frame = new JFrame("MyDoggy-Set 1.3.2 ...");
+        this.frame = new JFrame("MyDoggy-Set 1.4.0 ...");
         this.frame.setSize(640, 480);
         this.frame.setLocation(100, 100);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

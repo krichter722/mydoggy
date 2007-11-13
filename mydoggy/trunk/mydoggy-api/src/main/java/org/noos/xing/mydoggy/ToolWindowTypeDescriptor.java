@@ -37,7 +37,7 @@ public interface ToolWindowTypeDescriptor extends Observable {
      * @param idVisibleOnTitleBar <code>true</code> if the toolwindow id has to be showed on the title bar.
      * tool has type ToolWindowType.DOCKED.<br><code>false</code> otherwise.
      * @see #isIdVisibleOnTitleBar()
-     * @since 1.3.2
+     * @since 1.4.0
      */
     void setIdVisibleOnTitleBar(boolean idVisibleOnTitleBar);
 
@@ -47,7 +47,7 @@ public interface ToolWindowTypeDescriptor extends Observable {
      * tool has type ToolWindowType.DOCKED.<br>
      *         <code>false</code> otherwise.
      * @see #setIdVisibleOnTitleBar(boolean)
-     * @since 1.3.2
+     * @since 1.4.0
      */
     boolean isIdVisibleOnTitleBar();
 }

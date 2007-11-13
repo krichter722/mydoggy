@@ -13,7 +13,7 @@ public interface Dockable extends Observable {
      * Returns the id used to register this dockable.
      *
      * @return dockable id.
-     * @since 1.3.2
+     * @since 1.4.0
      */
     String getId();
     
@@ -22,7 +22,7 @@ public interface Dockable extends Observable {
      *
      * @return the title for the this dockable.
      * @see #setTitle(String)
-     * @since 1.3.2
+     * @since 1.4.0
      */
     String getTitle();
 
@@ -31,7 +31,7 @@ public interface Dockable extends Observable {
      *
      * @param title the new title.
      * @see #getTitle()
-     * @since 1.3.2
+     * @since 1.4.0
      */
     void setTitle(String title);
 
@@ -40,7 +40,7 @@ public interface Dockable extends Observable {
      *
      * @param icon the new icon.
      * @see #getIcon()
-     * @since 1.3.2
+     * @since 1.4.0
      */
     void setIcon(Icon icon);
 
@@ -49,7 +49,7 @@ public interface Dockable extends Observable {
      *
      * @return the icon of this dockable.
      * @see #setIcon(javax.swing.Icon)
-     * @since 1.3.2
+     * @since 1.4.0
      */
     Icon getIcon();
 
@@ -57,7 +57,7 @@ public interface Dockable extends Observable {
      * Returns the dockable component.
      *
      * @return the component of this dockable.
-     * @since 1.3.2
+     * @since 1.4.0
      */
     Component getComponent();
     
