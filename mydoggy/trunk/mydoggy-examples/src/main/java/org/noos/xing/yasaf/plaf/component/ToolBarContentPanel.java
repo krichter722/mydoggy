@@ -1,6 +1,6 @@
 package org.noos.xing.yasaf.plaf.component;
 
-import info.clearthought.layout.TableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +12,7 @@ public class ToolBarContentPanel extends JPanel {
     protected JToolBar toolBar;
 
     public ToolBarContentPanel(Component content) {
-        setLayout(new TableLayout(new double[][]{{-1},{25,3,-1}}));
+        setLayout(new ExtendedTableLayout(new double[][]{{-1},{25,3,-1}}));
         add(toolBar = new JToolBar(), "0,0,r,FULL");
         toolBar.setBorderPainted(false);
         toolBar.setFloatable(false);

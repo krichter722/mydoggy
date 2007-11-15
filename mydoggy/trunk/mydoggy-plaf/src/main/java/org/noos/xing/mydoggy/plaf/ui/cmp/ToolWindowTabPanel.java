@@ -392,7 +392,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         }
 
         public void mouseClicked(MouseEvent e) {
-            if (SwingUtilities.isLeftMouseButton(e)) {
+            if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1) {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         TabButton.this.tab.setSelected(true);

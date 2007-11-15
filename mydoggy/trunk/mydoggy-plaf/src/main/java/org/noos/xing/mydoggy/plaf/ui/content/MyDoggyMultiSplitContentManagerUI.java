@@ -1,11 +1,11 @@
 package org.noos.xing.mydoggy.plaf.ui.content;
 
-import org.jdesktop.swingx.MultiSplitLayout;
-import org.jdesktop.swingx.MultiSplitPane;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitTabDockableContainer;
+import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
 import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -17,9 +17,7 @@ import java.awt.event.InputEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Arrays;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,8 +28,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     protected MyDoggyContentManager contentManager;
     protected ResourceManager resourceManager;
 
-    protected MultiSplitPane multiSplitPane;
-    protected MultiSplitLayout.Split multiSplitPaneModelRoot;
+    protected MultiSplitDockableContainer dockableContainer;
     protected boolean closeable, detachable;
     protected boolean installed;
 
@@ -82,7 +79,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 
 
     public Container getContainer() {
-        return multiSplitPane;
+        return dockableContainer;
     }
 
     public PlafContentManagerUI install(ContentManagerUI oldContentManagerUI, ToolWindowManager manager) {
@@ -95,7 +92,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
         initListeners();
         setupActions();
 
-        toolWindowManager.setMainContent(multiSplitPane);
+        toolWindowManager.setMainContent(dockableContainer);
 
         setPopupMenu(contentManager.getPopupMenu());
 
@@ -194,7 +191,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     }
 
     public void updateUI() {
-        multiSplitPane.updateUI();
+        dockableContainer.updateUI();
     }
 
     public void addContentManagerUIListener(ContentManagerUIListener listener) {
@@ -216,9 +213,9 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 
 
     protected void initComponents() {
-        if (multiSplitPane == null) {
+        if (dockableContainer == null) {
             detachedContentUIMap = new Hashtable<Content, MultiSplitContentUI>();
-            multiSplitPane = new MultiSplitPane();
+            dockableContainer = new MultiSplitTabDockableContainer(toolWindowManager);
         }
     }
 
@@ -245,41 +242,24 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 
     protected void setupActions() {
         // Setup actions
-        SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, multiSplitPane,
+        SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, dockableContainer,
                                       KeyStroke.getKeyStroke(39, InputEvent.ALT_MASK),
                                       "nextContent", new NextContentAction(toolWindowManager));
-        SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, multiSplitPane,
+        SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, dockableContainer,
                                       KeyStroke.getKeyStroke(37, InputEvent.ALT_MASK),
                                       "previousContent", new PreviousContentAction(toolWindowManager));
     }
 
     protected void addUIForContent(Content content, Object... constraints) {
         if (constraints == null || constraints.length == 0) {
-
+            dockableContainer.addContent(content,
+                                         content.getComponent(),
+                                         null,
+                                         AggregationPosition.DEFAULT);
         } else {
-
         }
-
+        SwingUtil.repaint(dockableContainer);
     }
-
-    protected void add() {
-        // Create two leafs
-        MultiSplitLayout.Leaf leaf = new MultiSplitLayout.Leaf("1");
-        leaf.setWeight(0.5);
-        MultiSplitLayout.Leaf leaf2 = new MultiSplitLayout.Leaf("2");
-        leaf2.setWeight(0.5);
-        List<MultiSplitLayout.Node> children = Arrays.asList(leaf,
-                                                             new MultiSplitLayout.Divider(),
-                                                             leaf2);
-
-        multiSplitPaneModelRoot = new MultiSplitLayout.Split();
-        multiSplitPaneModelRoot.setRowLayout(false);
-        multiSplitPaneModelRoot.setChildren(children);
-
-        if (!multiSplitPane.getMultiSplitLayout().getFloatingDividers())
-            multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
-    }
-
 
     protected class ComponentListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
@@ -414,7 +394,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                 final JDialog dialog = new JDialog(parentFrame, false);
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-                Window parentWindow = SwingUtilities.windowForComponent(multiSplitPane);
+                Window parentWindow = SwingUtilities.windowForComponent(dockableContainer);
                 Component component = content.getComponent();
 
 //                JInternalFrame internalFrame = getFrameByComponent(component);

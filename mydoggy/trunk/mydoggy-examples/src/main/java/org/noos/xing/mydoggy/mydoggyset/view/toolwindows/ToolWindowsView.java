@@ -1,10 +1,10 @@
 package org.noos.xing.mydoggy.mydoggyset.view.toolwindows;
 
-import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.yasaf.plaf.view.MapViewContext;
 import org.noos.xing.yasaf.view.View;
 import org.noos.xing.yasaf.view.ViewContext;
-import org.noos.xing.yasaf.plaf.view.MapViewContext;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +24,7 @@ public class ToolWindowsView implements View {
         viewContext.put(ToolWindowManager.class, toolWindowManager);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new TableLayout(new double[][]{{-1}, {-1, 5, -1}}));
+        panel.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1, 5, -1}}));
         panel.add(new ToolWindowTableView(viewContext).getComponent(),
                   "0,0,FULL,FULL");
         panel.add(new PreferencePanelView(viewContext).getComponent(),

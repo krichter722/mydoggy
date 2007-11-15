@@ -1,7 +1,9 @@
 package org.noos.xing.mydoggy.mydoggyset.view.contents;
 
-import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.ContentManagerUI;
+import org.noos.xing.mydoggy.DesktopContentManagerUI;
+import org.noos.xing.mydoggy.TabbedContentManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.plaf.view.PanelViewContainer;
@@ -15,8 +17,6 @@ import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -30,7 +30,7 @@ public class PreferencePanelView extends ComponentView {
     }
 
     protected Component initComponent() {
-        preferencePanel = new JPanel(new TableLayout(new double[][]{{-1}, {20, 3, -1}}));
+        preferencePanel = new JPanel(new ExtendedTableLayout(new double[][]{{-1}, {20, 3, -1}}));
         preferencePanel.setBorder(new TitledBorder("Preferences"));
 
         uisContainer = new PanelViewContainer() {
@@ -68,7 +68,7 @@ public class PreferencePanelView extends ComponentView {
         }
 
         protected Component initComponent() {
-            JPanel panel = new JPanel(new TableLayout(new double[][]{{150, 3, -1}, {-1}}));
+            JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{150, 3, -1}, {-1}}));
 
             uis = new JComboBox(new Object[]{
                     TabbedContentManagerUI.class,

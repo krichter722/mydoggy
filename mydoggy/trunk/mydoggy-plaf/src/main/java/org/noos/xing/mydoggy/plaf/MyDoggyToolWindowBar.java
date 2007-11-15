@@ -2,10 +2,7 @@ package org.noos.xing.mydoggy.plaf;
 
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowType;
-import org.noos.xing.mydoggy.AggregationPosition;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
@@ -656,7 +653,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
                     if (content == null) {
                         DockedContainer dockedContainer = (DockedContainer) descriptor.getToolWindowContainer();
-                        multiSplitDockableContainer.removeContent(dockedContainer.getContentContainer());
+                        multiSplitDockableContainer.removeContent(descriptor.getToolWindow());
                         animate = false;
 
                         if (multiSplitDockableContainer.isEmpty()) {
@@ -664,7 +661,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                             content = null;
                         } else if (multiSplitDockableContainer.getContentCount() == 1) {
                             animate = false;
-                            content = multiSplitDockableContainer.getContents().get(0);
+                            content = multiSplitDockableContainer.getContents().get(0).getComponent();
                             int temp = getSplitDividerLocation();
                             setSplitPaneContent(content);
                             setSplitDividerLocation(temp);
@@ -672,7 +669,6 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     } else {
                         if (manager.getShowingGroup() != null) {
                             multiSplitDockableContainer.addContent(descriptor.getToolWindow(),
-                                                                   descriptor.getToolWindow().getId(),
                                                                    content,
                                                                    aggregationOnTool,
                                                                    aggregationPosition);
@@ -682,13 +678,12 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 } else if (manager.getShowingGroup() != null && content != null) {
                     multiSplitDockableContainer.clear();
                     if (shiftShow)
-                        multiSplitDockableContainer.addContent(null,
-                                                               descriptor.getToolWindow().getId(),
-                                                               splitPaneContent,
-                                                               null,
-                                                               AggregationPosition.DEFAULT);
+                        multiSplitDockableContainer.addContent(
+                                (Dockable) ((JComponent) splitPaneContent).getClientProperty(ToolWindow.class),
+                                splitPaneContent,
+                                null,
+                                AggregationPosition.DEFAULT);
                     multiSplitDockableContainer.addContent(descriptor.getToolWindow(),
-                                                           descriptor.getToolWindow().getId(),
                                                            content,
                                                            null,
                                                            aggregationPosition);
@@ -700,7 +695,6 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 if (manager.getShowingGroup() != null && content != null) {
                     multiSplitDockableContainer.clear();
                     multiSplitDockableContainer.addContent(descriptor.getToolWindow(),
-                                                           descriptor.getToolWindow().getId(),
                                                            content,
                                                            null,
                                                            AggregationPosition.DEFAULT);

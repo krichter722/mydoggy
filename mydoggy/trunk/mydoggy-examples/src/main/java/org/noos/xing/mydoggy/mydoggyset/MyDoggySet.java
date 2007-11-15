@@ -15,6 +15,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.SimpliedTitleBarButtons;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyDesktopContentManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
@@ -142,7 +143,7 @@ public class MyDoggySet {
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);
         typeDescriptor.setTransparentDelay(0);
 
-        JPanel panel = new JPanel(new TableLayout(new double[][]{{20, -1, 20}, {20, -1, 20}}));
+        JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{20, -1, 20}, {20, -1, 20}}));
         panel.add(new JButton("Hello World 2"), "1,1,FULL,FULL");
 
         toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, new JButton("Hello World 1"), ToolWindowAnchor.LEFT);
@@ -218,6 +219,7 @@ public class MyDoggySet {
         floatingTypeDescriptor.setModal(true);
         floatingTypeDescriptor.setAnimating(false);
 
+/*
         ContentManagerUI defaultManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
         TabbedContentManagerUI tabbedContentManagerUI = (TabbedContentManagerUI) defaultManagerUI;
         tabbedContentManagerUI.setShowAlwaysTab(false);
@@ -232,6 +234,8 @@ public class MyDoggySet {
             public void contentUIDetached(ContentManagerUIEvent event) {
             }
         });
+*/
+        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
 
         ToolWindowManagerDescriptor managerDescriptor = toolWindowManager.getToolWindowManagerDescriptor();
         managerDescriptor.setCornerComponent(NORD_WEST, new JLabel("NW"));

@@ -1,6 +1,6 @@
 package org.noos.xing.yasaf.plaf.component;
 
-import info.clearthought.layout.TableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -12,7 +12,7 @@ import java.awt.*;
 public class TitlePanel extends JPanel {
 
     public TitlePanel(String title, Component component) {
-        setLayout(new TableLayout(new double[][]{{-1}, {-1}}));
+        setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         add(component, "0,0,FULL,FULL");
         setBorder(new TitledBorder(title));
     }

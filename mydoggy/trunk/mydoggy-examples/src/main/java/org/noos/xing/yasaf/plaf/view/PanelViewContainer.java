@@ -1,13 +1,11 @@
 package org.noos.xing.yasaf.plaf.view;
 
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.yasaf.view.View;
 import org.noos.xing.yasaf.view.ViewContainer;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
-
-import info.clearthought.layout.TableLayout;
-
 import java.awt.*;
 
 /**
@@ -38,9 +36,9 @@ public class PanelViewContainer implements ViewContainer {
 
     protected void initComponents() {
         if (this.panel != null)
-            this.panel.setLayout(new TableLayout(new double[][]{{-1}, {-1}}));
+            this.panel.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         else
-            this.panel = new JPanel(new TableLayout(new double[][]{{-1}, {-1}}));
+            this.panel = new JPanel(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
     }
     
 }

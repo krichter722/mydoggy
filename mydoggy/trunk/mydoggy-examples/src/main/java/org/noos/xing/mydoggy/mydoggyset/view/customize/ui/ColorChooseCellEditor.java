@@ -1,15 +1,12 @@
 package org.noos.xing.mydoggy.mydoggyset.view.customize.ui;
 
-import org.noos.xing.mydoggy.mydoggyset.view.customize.ui.BasicCellEditor;
-import org.noos.xing.mydoggy.mydoggyset.view.customize.ui.ColorIcon;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.util.EventObject;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-
-import info.clearthought.layout.TableLayout;
+import java.util.EventObject;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -75,7 +72,7 @@ public class ColorChooseCellEditor extends BasicCellEditor {
         };
 
         panel = new JPanel();
-        panel.setLayout(new TableLayout(new double[][]{{-1, 2, 15}, {-1}}));
+        panel.setLayout(new ExtendedTableLayout(new double[][]{{-1, 2, 15}, {-1}}));
         panel.add(editorComponent, "0,0");
         panel.setOpaque(false);
         JButton starter = new JButton("...");

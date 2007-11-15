@@ -466,12 +466,7 @@ public class MyDoggyToolWindow implements ToolWindow {
             return;
 
         synchronized (getLock()) {
-            publicEvent = false;
-            try {
-                firePropertyChangeEvent("maximized.before", this.maximized, maximized);
-            } finally {
-                publicEvent = true;
-            }
+            firePrivateEvent(new PropertyChangeEvent(descriptor, "maximized.before", this.maximized, maximized));
 
             boolean old = this.maximized;
             this.maximized = maximized;
@@ -800,6 +795,13 @@ public class MyDoggyToolWindow implements ToolWindow {
             for (PropertyChangeListener listener : listeners) {
                 listener.propertyChange(publiEvent);
             }
+        }
+    }
+
+    protected void firePrivateEvent(PropertyChangeEvent event) {
+        PropertyChangeListener[] listeners = internalListenerList.getListeners(PropertyChangeListener.class);
+        for (PropertyChangeListener listener : listeners) {
+            listener.propertyChange(event);
         }
     }
 

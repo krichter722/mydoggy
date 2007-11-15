@@ -1,26 +1,17 @@
 package org.noos.xing.mydoggy.tutorial;
 
-import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.DockedTypeDescriptor;
-import org.noos.xing.mydoggy.SlidingTypeDescriptor;
-import org.noos.xing.mydoggy.FloatingTypeDescriptor;
-import org.noos.xing.mydoggy.ToolWindowType;
-import org.noos.xing.mydoggy.ToolWindowActionHandler;
-import org.noos.xing.mydoggy.ContentManager;
-import org.noos.xing.mydoggy.Content;
-import org.noos.xing.mydoggy.TabbedContentManagerUI;
-import org.noos.xing.mydoggy.TabbedContentUI;
-import org.noos.xing.mydoggy.ContentManagerUIListener;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
-import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 
-import java.io.*;
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 public class SampleApp {
     private JFrame frame;
@@ -52,7 +43,7 @@ public class SampleApp {
         this.frame.setLocation(100, 100);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // I love TableLayout. It's great.
-        this.frame.getContentPane().setLayout(new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
+        this.frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
 
         // Store (on close) and load (on start) the toolwindow manager workspace.
         this.frame.addWindowListener(new WindowAdapter() {
