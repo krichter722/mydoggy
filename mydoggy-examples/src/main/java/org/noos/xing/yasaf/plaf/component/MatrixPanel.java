@@ -1,6 +1,6 @@
 package org.noos.xing.yasaf.plaf.component;
 
-import info.clearthought.layout.TableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +35,7 @@ public class MatrixPanel extends JPanel {
             layoutRows[index + 1] = 3;
             index += 2;
         }
-        setLayout(new TableLayout(new double[][]{layoutCols, layoutRows}));
+        setLayout(new ExtendedTableLayout(new double[][]{layoutCols, layoutRows}));
     }
 
     public void addPair(int column, int row, String label, Component component) {

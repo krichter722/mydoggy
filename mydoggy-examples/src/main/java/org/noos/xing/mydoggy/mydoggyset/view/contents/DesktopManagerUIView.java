@@ -1,7 +1,9 @@
 package org.noos.xing.mydoggy.mydoggyset.view.contents;
 
-import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.ContentManagerUI;
+import org.noos.xing.mydoggy.DesktopContentManagerUI;
+import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyDesktopContentManagerUI;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.view.ViewContext;
@@ -25,7 +27,7 @@ public class DesktopManagerUIView extends ComponentView implements ViewContextCh
     }
 
     protected Component initComponent() {
-        JPanel panel = new JPanel(new TableLayout(new double[][]{{-1, 50, -1},{-1, 20, -1}}));
+        JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{-1, 50, -1},{-1, 20, -1}}));
         panel.add(new JLabel("No Pref"), "1,1,FULL,FULL");
 
         return panel;

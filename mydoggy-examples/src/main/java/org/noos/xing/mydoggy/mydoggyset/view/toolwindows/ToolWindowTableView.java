@@ -1,20 +1,18 @@
 package org.noos.xing.mydoggy.mydoggyset.view.toolwindows;
 
-import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.ToolWindowType;
-import org.noos.xing.mydoggy.mydoggyset.view.toolwindows.model.ToolsTableModel;
 import org.noos.xing.mydoggy.mydoggyset.ui.CheckBoxCellRenderer;
+import org.noos.xing.mydoggy.mydoggyset.view.toolwindows.model.ToolsTableModel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.plaf.view.listener.ContextPutListSelectionListener;
 import org.noos.xing.yasaf.view.ViewContext;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
@@ -31,7 +29,7 @@ public class ToolWindowTableView extends ComponentView {
     protected Component initComponent() {
         ToolWindowManager toolWindowManager = viewContext.get(ToolWindowManager.class);
 
-        JPanel toolsPanel = new JPanel(new TableLayout(new double[][]{{-1}, {-1}}));
+        JPanel toolsPanel = new JPanel(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         toolsPanel.setBorder(new TitledBorder("ToolWindows"));
 
         final JTable toolsTable = new JTable(new ToolsTableModel(toolWindowManager));
@@ -92,7 +90,7 @@ public class ToolWindowTableView extends ComponentView {
         });
         indexColumn.setCellEditor(new DefaultCellEditor(indexs));
 
-        toolsPanel.setLayout(new TableLayout(new double[][]{{-1}, {-1}}));
+        toolsPanel.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         toolsPanel.add(new JScrollPane(toolsTable), "0,0,FULL,FULL");
 
         return toolsPanel;

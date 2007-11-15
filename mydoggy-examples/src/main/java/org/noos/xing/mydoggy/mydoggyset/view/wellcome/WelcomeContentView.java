@@ -1,15 +1,16 @@
 package org.noos.xing.mydoggy.mydoggyset.view.wellcome;
 
-import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowGroup;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
+import org.noos.xing.yasaf.plaf.component.JImage;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.view.ViewContext;
 
@@ -30,8 +31,8 @@ public class WelcomeContentView extends ComponentView {
 
     protected Component initComponent() {
         // Setup welcome panel...
-        JPanel panel = new JPanel(new TableLayout(new double[][]{{-1, 100, 5, 160, 3, 100, 5, 160, -1},
-                                                                 {-1, 70, 10, 70, 10, 70, -1}})) {
+        JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{-1, 100, 5, 160, 3, 100, 5, 160, -1},
+                                                                         {-1, 10, 70, 10, 70, 10, 70, 10, -1}})) {
             public void setUI(PanelUI ui) {
                 if (getUI() == null)
                     super.setUI(ui);
@@ -41,42 +42,41 @@ public class WelcomeContentView extends ComponentView {
         panel.setBackground(Colors.blu);
 
         panel.add(renderButton("Manager", ToolWindowManager.class),
-                  "1,1,FULL,FULL");
+                  "1,2,FULL,FULL");
         panel.add(renderLabel("<html>Edit ToolWindowManager </br> properties </html>"),
-                  "3,1,FULL,FULL");
+                  "3,2,FULL,FULL");
 
         panel.add(renderButton("Tools", ToolWindow.class),
-                  "1,3,FULL,FULL");
+                  "1,4,FULL,FULL");
         panel.add(renderLabel("<html>Edit ToolWindows </br> properties</html>"),
-                  "3,3,FULL,FULL");
+                  "3,4,FULL,FULL");
 
         panel.add(renderButton("Contents", Content.class),
-                  "1,5,FULL,FULL");
+                  "1,6,FULL,FULL");
         panel.add(renderLabel("<html>Edit Contents </br> properties</html>"),
-                  "3,5,FULL,FULL");
+                  "3,6,FULL,FULL");
 
         panel.add(renderButton("Groups", ToolWindowGroup.class),
-                  "5,1,FULL,FULL");
+                  "5,2,FULL,FULL");
         panel.add(renderLabel("<html>Edit Groups </br> properties</html>"),
-                  "7,1,FULL,FULL");
+                  "7,2,FULL,FULL");
 
         panel.add(renderButton("ITests", InteractiveTest.class),
-                  "5,3,FULL,FULL");
+                  "5,4,FULL,FULL");
         panel.add(renderLabel("<html>Run Interactive </br> Tests</html>"),
-                  "7,3,FULL,FULL");
+                  "7,4,FULL,FULL");
 
         panel.add(renderButton("Customize", ResourceManager.class),
-                          "5,5,FULL,FULL");
+                  "5,6,FULL,FULL");
         panel.add(renderLabel("<html>Customize MyDoggy</html>"),
-                          "7,5,FULL,FULL");
+                  "7,6,FULL,FULL");
 
         // Setup main panel
-        JPanel main = new JPanel(new TableLayout(new double[][]{{3, -1, 3},{3, 93,5,-1,3}}));
-        main.add(new JLabel(new ImageIcon(
-                this.getClass().getClassLoader().getResource("org/noos/xing/mydoggy/mydoggyset/images/banner.jpg")
-        )), "1,1,FULL,FULL");
+        JPanel main = new JPanel(new ExtendedTableLayout(new double[][]{{3, -1, 3}, {3, 93, 5, -1, 3}}));
+        main.add(new JImage("org/noos/xing/mydoggy/mydoggyset/images/banner.jpg"), "1,1,FULL,FULL");
         main.add(panel, "1,3,FULL,FULL");
-        return main;
+
+        return new JScrollPane(main);
     }
 
     protected JButton renderButton(String text, Object inContextKey) {

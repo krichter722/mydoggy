@@ -1,12 +1,12 @@
 package org.noos.xing.mydoggy.mydoggyset.view.group;
 
-import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindowGroup;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.mydoggyset.ui.CheckBoxCellRenderer;
 import org.noos.xing.mydoggy.mydoggyset.view.group.model.ToolGroupsTableModel;
 import org.noos.xing.mydoggy.mydoggyset.view.group.model.ToolsComboBoxModel;
 import org.noos.xing.mydoggy.mydoggyset.view.group.model.ToolsInGroupTableModel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.plaf.component.ToolBarContentPanel;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
@@ -37,7 +37,7 @@ public class GroupsView implements View {
         viewContext.put(JFrame.class, frame);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new TableLayout(new double[][]{{3, -1, 3, 200, 3}, {3, -1, 3}}));
+        panel.setLayout(new ExtendedTableLayout(new double[][]{{3, -1, 3, 200, 3}, {3, -1, 3}}));
         panel.add(new GroupsTableView(viewContext).getComponent(), "1,1,FULL,FULL");
         panel.add(new ToolsInGroupTableView(viewContext).getComponent(), "3,1,FULL,FULL");
 

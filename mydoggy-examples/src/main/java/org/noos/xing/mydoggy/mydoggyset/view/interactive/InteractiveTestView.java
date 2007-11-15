@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy.mydoggyset.view.interactive;
 
-import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.yasaf.plaf.view.MapViewContext;
 import org.noos.xing.yasaf.view.View;
 import org.noos.xing.yasaf.view.ViewContext;
@@ -27,7 +27,7 @@ public class InteractiveTestView implements View {
         viewContext.put(JFrame.class, frame);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new TableLayout(new double[][]{{-1}, {-1, 3, -1}}));
+        panel.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1, 3, -1}}));
         panel.add(new TestChooserView(viewContext).getComponent(), "0,0,FULL,FULL");
         panel.add(new TestRecordingView(viewContext).getComponent(), "0,2,FULL,FULL");
 

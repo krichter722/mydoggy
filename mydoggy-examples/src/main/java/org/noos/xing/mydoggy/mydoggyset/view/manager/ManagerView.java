@@ -1,11 +1,10 @@
 package org.noos.xing.mydoggy.mydoggyset.view.manager;
 
-import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.PushAwayMode;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.ToolWindowManagerDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.yasaf.plaf.action.ChangeListenerAction;
 import org.noos.xing.yasaf.plaf.action.DynamicAction;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
@@ -25,10 +24,10 @@ import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
@@ -47,7 +46,7 @@ public class ManagerView implements View {
         viewContext.put(ToolWindowManager.class, toolWindowManager);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new TableLayout(new double[][]{{-1}, {150, 3, -1}}));
+        panel.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {150, 3, -1}}));
         panel.add(new ToolWindowManagerDescriptorPrefView(viewContext).getComponent(), "0,0,FULL,FULL");
         panel.add(new PersistencePrefView(viewContext).getComponent(), "0,2,FULL,FULL");
 
@@ -226,7 +225,7 @@ public class ManagerView implements View {
         }
 
         protected Component initComponent() {
-            JPanel panel = new JPanel(new TableLayout(new double[][]{{3,100,3,-1,3},{3,20,3,20,3,20,3,-1,3}}));
+            JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{3,100,3,-1,3},{3,20,3,20,3,20,3,-1,3}}));
             panel.setBorder(new TitledBorder("(Persistence) Worskpace Editor"));
 
             JButton save = new JButton("Save ->");

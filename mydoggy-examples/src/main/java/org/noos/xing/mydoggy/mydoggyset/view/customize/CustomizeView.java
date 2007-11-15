@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy.mydoggyset.view.customize;
 
-import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.mydoggyset.view.customize.model.ColorsTableModel;
 import org.noos.xing.mydoggy.mydoggyset.view.customize.model.IconsTableModel;
@@ -8,6 +7,7 @@ import org.noos.xing.mydoggy.mydoggyset.view.customize.ui.ColorCellRenderer;
 import org.noos.xing.mydoggy.mydoggyset.view.customize.ui.ColorChooseCellEditor;
 import org.noos.xing.mydoggy.mydoggyset.view.customize.ui.IconCellRenderer;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.yasaf.plaf.component.TitlePanel;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.plaf.view.MapViewContext;
@@ -36,7 +36,7 @@ public class CustomizeView implements View {
         viewContext.put(JFrame.class, frame);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new TableLayout(new double[][]{{-1}, {-1, 3, -1}}));
+        panel.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1, 3, -1}}));
         panel.add(new CustomizeColorsView(viewContext).getComponent(), "0,0,FULL,FULL");
         panel.add(new CustomizeIconsView(viewContext).getComponent(), "0,2,FULL,FULL");
 

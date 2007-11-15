@@ -1,11 +1,14 @@
 package org.noos.xing.mydoggy.mydoggyset.view.interactive;
 
-import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.itest.InteractiveTestRunner;
 import org.noos.xing.mydoggy.itest.impl.SingleThreadInteractiveTestRunner;
-import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.*;
+import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveRepresentativeDraggingTest;
+import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveShowToolTest;
+import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveToolTypesTest;
+import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveUniversalDragTest;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.plaf.view.listener.ContextPutItemListener;
@@ -30,7 +33,7 @@ public class TestChooserView extends ComponentView {
     }
 
     protected Component initComponent() {
-        JPanel panel = new JPanel(new TableLayout(new double[][]{{-1}, {20,3,-1}}));
+        JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{-1}, {20,3,-1}}));
         panel.setBorder(new TitledBorder("Choose Interactive Test"));
 
         panel.add(new TestSelectorPanel(viewContext).getComponent(), "0,0,FULL,FULL");
@@ -47,7 +50,7 @@ public class TestChooserView extends ComponentView {
         }
 
         protected Component initComponent() {
-            JPanel panel = new JPanel(new TableLayout(new double[][]{{150,3,-1,3, 100},{-1}}));
+            JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{150,3,-1,3, 100},{-1}}));
 
             JFrame frame = viewContext.get(JFrame.class);
             ToolWindowManager toolWindowManager = viewContext.get(ToolWindowManager.class);
@@ -95,7 +98,7 @@ public class TestChooserView extends ComponentView {
         }
 
         protected Component initComponent() {
-            JPanel panel = new JPanel(new TableLayout(new double[][]{{-1},{-1}}));
+            JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{-1},{-1}}));
             panel.setBorder(new LineBorder(Color.DARK_GRAY));
 
             this.editorPane = new JEditorPane();
