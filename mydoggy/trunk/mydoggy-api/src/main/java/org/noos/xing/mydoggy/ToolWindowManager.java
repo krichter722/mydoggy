@@ -264,5 +264,12 @@ public interface ToolWindowManager {
      */
     ToolWindowManagerListener[] getToolWindowManagerListeners();
 
-    ToolWindowTab getToolWindowTab(Object id);
+    /**
+     * TODO:
+     * @param id
+     * @since 1.4.0
+     * @return
+     */
+    Dockable getDockable(Object id);
+
 }

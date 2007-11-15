@@ -301,15 +301,28 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return twmListeners.getListeners(ToolWindowManagerListener.class);
     }
 
-    public ToolWindowTab getToolWindowTab(Object id) {
-        for (ToolWindow toolWindow : getToolWindows()) {
-            for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
-                if (tab.getId().equals(id)) {
-                    return tab;
+    public Dockable getDockable(Object id) {
+        Dockable result = getToolWindow(id);
+        if (result == null) {
+            // Try tab
+            for (ToolWindow toolWindow : getToolWindows()) {
+                for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+                    if (tab.getId().equals(id)) {
+                        result = tab;
+                        break;
+                    }
                 }
+                if (result != null)
+                    break;
+            }
+
+            if (result == null) {
+                // Try content
+                result = getContentManager().getContent(id);
             }
         }
-        return null;
+
+        return result;
     }
 
     public synchronized void propertyChange(final PropertyChangeEvent evt) {
@@ -748,6 +761,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public void removeIfDockableDelegator(Dockable dockable) {
+        // TODO: can be do better...
         for (ToolWindow toolWindow : getToolWindows()) {
             for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
                 if (tab.getDockableDelegator() == dockable) {

@@ -114,7 +114,7 @@ public class ToolWindowDropTarget extends DropTarget {
                                 // Chech if it was a tab
                                 if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)) {
                                     // Remove from tab
-                                    ToolWindowTab tab = toolWindowManager.getToolWindowTab(
+                                    ToolWindowTab tab = (ToolWindowTab) toolWindowManager.getDockable(
                                             transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)
                                     );
                                     tab.getOwner().removeToolWindowTab(tab);
