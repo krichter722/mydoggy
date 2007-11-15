@@ -12,16 +12,16 @@ public class TestMultiSplitContainer extends TestCase {
 */
 
     protected void setUp() throws Exception {
-//        this.toolsContainer = new MultiSplitContainer(null, JSplitPane.VERTICAL_SPLIT);
+//        this.multiSplitDockableContainer = new MultiSplitContainer(null, JSplitPane.VERTICAL_SPLIT);
     }
 
     public void testInstance() {
-//        assertNotNull(toolsContainer);
-//        assertTrue(toolsContainer.isEmpty());
+//        assertNotNull(multiSplitDockableContainer);
+//        assertTrue(multiSplitDockableContainer.isEmpty());
     }
     
     public void testAddContent() {
-//        toolsContainer.addContent(new JLabel());
-//        assertFalse(toolsContainer.isEmpty());
+//        multiSplitDockableContainer.addContent(new JLabel());
+//        assertFalse(multiSplitDockableContainer.isEmpty());
     }
 }

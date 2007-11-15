@@ -41,7 +41,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     protected JPanel representativeButtonsPanel;
     protected TableLayout representativeButtonsPanelLayout;
     protected JSplitPane splitPane;
-    protected ToolsContainer toolsContainer;
+    protected MultiSplitDockableContainer multiSplitDockableContainer;
     protected ContentPanel contentPanel;
 
     protected int availableTools;
@@ -99,8 +99,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         return splitPane;
     }
 
-    public ToolsContainer getToolsContainer() {
-        return toolsContainer;
+    public MultiSplitDockableContainer getToolsContainer() {
+        return multiSplitDockableContainer;
     }
 
     public void ensureVisible(Component component) {
@@ -160,7 +160,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             orientation = JSplitPane.HORIZONTAL_SPLIT;
         }
 
-        toolsContainer = new ToolsContainer(manager, orientation);
+        multiSplitDockableContainer = new MultiSplitDockableContainer(manager, orientation);
 
         toolScrollBar = new JToolScrollBar(manager.getResourceManager(), orientation, representativeButtonsPanel);
 
@@ -651,54 +651,61 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             Component splitPaneContent = getSplitPaneContent();
             boolean animate = true;
             if (splitPaneContent != null) {
-                if (splitPaneContent instanceof ToolsContainer) {
-                    ToolsContainer toolsContainer = (ToolsContainer) splitPaneContent;
+                if (splitPaneContent instanceof MultiSplitDockableContainer) {
+                    MultiSplitDockableContainer multiSplitDockableContainer = (MultiSplitDockableContainer) splitPaneContent;
 
                     if (content == null) {
                         DockedContainer dockedContainer = (DockedContainer) descriptor.getToolWindowContainer();
-                        toolsContainer.removeContent(dockedContainer.getContentContainer());
+                        multiSplitDockableContainer.removeContent(dockedContainer.getContentContainer());
                         animate = false;
 
-                        if (toolsContainer.isEmpty()) {
+                        if (multiSplitDockableContainer.isEmpty()) {
                             animate = true;
                             content = null;
-                        } else if (toolsContainer.getContentCount() == 1) {
+                        } else if (multiSplitDockableContainer.getContentCount() == 1) {
                             animate = false;
-                            content = toolsContainer.getContents().get(0);
+                            content = multiSplitDockableContainer.getContents().get(0);
                             int temp = getSplitDividerLocation();
                             setSplitPaneContent(content);
                             setSplitDividerLocation(temp);
                         }
                     } else {
                         if (manager.getShowingGroup() != null) {
-                            toolsContainer.addContent(descriptor.getToolWindow().getId(),
-                                                      content,
-                                                      aggregationOnTool,
-                                                      aggregationPosition);
+                            multiSplitDockableContainer.addContent(descriptor.getToolWindow(),
+                                                                   descriptor.getToolWindow().getId(),
+                                                                   content,
+                                                                   aggregationOnTool,
+                                                                   aggregationPosition);
                         } else
                             setSplitPaneContent(content);
                     }
                 } else if (manager.getShowingGroup() != null && content != null) {
-                    toolsContainer.clear();
+                    multiSplitDockableContainer.clear();
                     if (shiftShow)
-                        toolsContainer.addContent(descriptor.getToolWindow().getId(),
-                                                  splitPaneContent,
-                                                  null,
-                                                  AggregationPosition.DEFAULT);
-                    toolsContainer.addContent(descriptor.getToolWindow().getId(), content, null, aggregationPosition);
+                        multiSplitDockableContainer.addContent(null,
+                                                               descriptor.getToolWindow().getId(),
+                                                               splitPaneContent,
+                                                               null,
+                                                               AggregationPosition.DEFAULT);
+                    multiSplitDockableContainer.addContent(descriptor.getToolWindow(),
+                                                           descriptor.getToolWindow().getId(),
+                                                           content,
+                                                           null,
+                                                           aggregationPosition);
 
-                    setSplitPaneContent(toolsContainer);
+                    setSplitPaneContent(multiSplitDockableContainer);
                 } else if (content != null)
                     setSplitPaneContent(content);
             } else {
                 if (manager.getShowingGroup() != null && content != null) {
-                    toolsContainer.clear();
-                    toolsContainer.addContent(descriptor.getToolWindow().getId(),
-                                              content,
-                                              null,
-                                              AggregationPosition.DEFAULT);
+                    multiSplitDockableContainer.clear();
+                    multiSplitDockableContainer.addContent(descriptor.getToolWindow(),
+                                                           descriptor.getToolWindow().getId(),
+                                                           content,
+                                                           null,
+                                                           AggregationPosition.DEFAULT);
 
-                    setSplitPaneContent(toolsContainer);
+                    setSplitPaneContent(multiSplitDockableContainer);
                 } else if (content != null)
                     setSplitPaneContent(content);
             }
