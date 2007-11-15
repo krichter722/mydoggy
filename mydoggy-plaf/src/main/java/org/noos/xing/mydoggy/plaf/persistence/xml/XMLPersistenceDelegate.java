@@ -203,14 +203,17 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         boolean addTabsTag = false;
         for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
             if (tab.getDockableDelegator() != null) {
-                Dockable dockable = (Dockable) tab.getDockableDelegator();
+                Dockable dockable = tab.getDockableDelegator();
 
                 if (!addTabsTag) {
                     addTabsTag = true;
                     writer.startElement("tabs");
                 }
                 AttributesImpl attributes = new AttributesImpl();
-                attributes.addAttribute(null, "toolWindowId", null, null, tab.getDockableDelegator().getId());
+
+                // TODO: dockable cam be a content...
+                attributes.addAttribute(null, "dockableId", null, null, dockable.getId());
+                attributes.addAttribute(null, "selected", null, null, "" + tab.isSelected());
                 writer.dataElement("tab", attributes);
             }
         }
@@ -553,11 +556,12 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     // Compare tabLists
                     for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
                         if (tab.getDockableDelegator() != null) {
-                            String id = tab.getDockableDelegator().getId();
+                            String dockableId = tab.getDockableDelegator().getId();
 
                             for (int j = 0, sizej = tabList.getLength(); j < sizej; j++) {
                                 Element tabElement = (Element) tabList.item(j);
-                                if (id.equals(tabElement.getAttribute("toolWindowId"))) {
+
+                                if (dockableId.equals(tabElement.getAttribute("dockableId"))) {
                                     toolWindow.removeToolWindowTab(tab);
                                     break;
                                 }
@@ -565,12 +569,23 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                         }
                     }
 
+                    ToolWindowTab selectedTab = null;
                     for (int j = 0, sizej = tabList.getLength(); j < sizej; j++) {
                         Element tabElement = (Element) tabList.item(j);
-                        String toolWindowId = tabElement.getAttribute("toolWindowId");
-                        ToolWindow tabTool = toolWindowManager.getToolWindow(toolWindowId);
-                        if (tabTool != null)
-                            toolWindow.addToolWindowTab(tabTool);
+
+                        String dockableId = tabElement.getAttribute("dockableId");
+                        boolean selected = getBoolean(tabElement, "selected", false);
+
+                        Dockable dockable = toolWindowManager.getDockable(dockableId);
+                        if (dockable != null) {
+                            ToolWindowTab tab = toolWindow.addToolWindowTab(dockable);
+                            if (selected)
+                                selectedTab = tab;
+                            tab.setSelected(false);
+                        }
+
+                        if (selectedTab != null)
+                            selectedTab.setSelected(true);
                     }
                 } else {
                     for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
