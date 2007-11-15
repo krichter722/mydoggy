@@ -37,7 +37,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     protected boolean representativeAnchorButtonVisible;
 
     protected java.util.List<ToolWindowTab> toolWindowTabs;
-    protected ToolWindowTab defaultToolWindowTab;
+    protected ToolWindowTab rootTab;
 
     protected ResourceBundle resourceBoundle;
     protected ToolWindowDescriptor descriptor;
@@ -63,9 +63,9 @@ public class MyDoggyToolWindow implements ToolWindow {
         this.resourceBoundle = resourceBundle;
         this.toolWindowTabs = new ArrayList<ToolWindowTab>();
 
-        defaultToolWindowTab = addToolWindowTab(title, component);
+        rootTab = addTabInternal(title, null, component, null, true);
 
-        defaultToolWindowTab.setIcon(icon);
+        rootTab.setIcon(icon);
 
         this.id = id;
         this.index = index;
@@ -406,7 +406,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public Icon getIcon() {
-        return defaultToolWindowTab.getIcon();
+        return rootTab.getIcon();
     }
 
     public void setIcon(Icon icon) {
@@ -415,14 +415,14 @@ public class MyDoggyToolWindow implements ToolWindow {
                 return;
 
             Icon old = this.getIcon();
-            defaultToolWindowTab.setIcon(icon);
+            rootTab.setIcon(icon);
 
             fireIconEvent(old, icon);
         }
     }
 
     public String getTitle() {
-        return defaultToolWindowTab.getTitle();
+        return rootTab.getTitle();
     }
 
     public void setTitle(String title) {
@@ -432,7 +432,7 @@ public class MyDoggyToolWindow implements ToolWindow {
                 return;
 
             String old = this.getTitle();
-            defaultToolWindowTab.setTitle(newTitle);
+            rootTab.setTitle(newTitle);
 
             fireTitleEvent(old, newTitle);
         }
@@ -481,7 +481,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public ToolWindowTab addToolWindowTab(String title, Component component) {
-        return addTabInternal(title, null, component, null);
+        return addTabInternal(title, null, component, null, false);
     }
 
     public ToolWindowTab addToolWindowTab(Dockable dockable) {
@@ -501,7 +501,8 @@ public class MyDoggyToolWindow implements ToolWindow {
                 result = addTabInternal(delegator.getTitle(),
                                         delegator.getIcon(),
                                         delegator.getComponent(),
-                                        delegator);
+                                        delegator,
+                                        false);
 
                 for (ToolWindowTab tab : delegator.getToolWindowTabs()) {
                     if (!tab.getTitle().equals(delegator.getTitle()))
@@ -517,15 +518,14 @@ public class MyDoggyToolWindow implements ToolWindow {
     public boolean removeToolWindowTab(ToolWindowTab toolWindowTab) {
         if (toolWindowTab == null)
             throw new IllegalArgumentException("ToolWindowTab cannot be null.");
+        if (!(toolWindowTab instanceof MyDoggyToolWindowTab))
+            throw new IllegalArgumentException("Invalid ToolWindowTab instance.");
+        if (rootTab == toolWindowTab)
+            throw new IllegalArgumentException("Cannot remove root tab.");
 
         boolean result = toolWindowTabs.remove(toolWindowTab);
         if (result)
             fireToolWindowTabEvent(new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_REMOVED, this, toolWindowTab));
-
-        if (defaultToolWindowTab == toolWindowTab) {
-            if (toolWindowTabs.size() > 0)
-                defaultToolWindowTab = toolWindowTabs.get(0);
-        }
 
         if (toolWindowTab.getDockableDelegator() != null) {
             Dockable dockable = toolWindowTab.getDockableDelegator();
@@ -678,14 +678,14 @@ public class MyDoggyToolWindow implements ToolWindow {
         }
     }
 
-    protected ToolWindowTab addTabInternal(String title, Icon icon, Component component, ToolWindow toolWindow) {
-        ToolWindowTab tab = new MyDoggyToolWindowTab(this, title, icon, component, toolWindow);
+    protected ToolWindowTab addTabInternal(String title, Icon icon, Component component, ToolWindow toolWindow, boolean root) {
+        ToolWindowTab tab = new MyDoggyToolWindowTab(this, root, title, icon, component, toolWindow);
         toolWindowTabs.add(tab);
 
         fireToolWindowTabEvent(new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_ADDED, this, tab));
 
         if (toolWindowTabs.size() == 1)
-            defaultToolWindowTab = tab;
+            rootTab = tab;
 
         return tab;
 
@@ -693,6 +693,7 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     protected void addTabInternal(ToolWindowTab tab) {
         ToolWindowTab newTab = new MyDoggyToolWindowTab(this,
+                                                        false,
                                                         tab.getTitle(),
                                                         tab.getIcon(),
                                                         tab.getComponent(),

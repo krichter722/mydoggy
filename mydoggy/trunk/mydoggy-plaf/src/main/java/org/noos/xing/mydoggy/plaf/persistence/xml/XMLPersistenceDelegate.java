@@ -5,7 +5,7 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.MergePolicyApplier;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.ResetMergePolicy;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.UnionMergePolicy;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ToolsContainer;
+import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -306,8 +306,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     }
 
     protected void saveBar(XMLWriter writer, ToolWindowAnchor anchor) throws SAXException {
-        ToolsContainer toolsContainer = toolWindowManager.getBar(anchor).getToolsContainer();
-        if (toolsContainer.getContentCount() > 0) {
+        MultiSplitDockableContainer multiSplitDockableContainer = toolWindowManager.getBar(anchor).getToolsContainer();
+        if (multiSplitDockableContainer.getContentCount() > 0) {
             AttributesImpl attributes = new AttributesImpl();
             attributes.addAttribute(null, "anchor", null, null, anchor.toString());
             writer.startElement("bar", attributes);
@@ -316,7 +316,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             XMLEncoder encoder = new XMLEncoder(os);
-            encoder.writeObject(toolsContainer.getModel());
+            encoder.writeObject(multiSplitDockableContainer.getModel());
             encoder.flush();
             encoder.close();
 

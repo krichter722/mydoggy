@@ -7,19 +7,18 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabListener;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
 import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
+import org.noos.xing.mydoggy.plaf.ui.look.MultiSplitTabbedPaneUI;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
-import javax.swing.plaf.TabbedPaneUI;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Hashtable;
@@ -54,6 +53,8 @@ public class JTabbedContentManager extends JTabbedPane {
         addMouseListener(tabMoveHandler);
         addMouseMotionListener(mouseInputAdapter);
         addMouseMotionListener(tabMoveHandler);
+
+        setUI(new MultiSplitTabbedPaneUI());
     }
 
 

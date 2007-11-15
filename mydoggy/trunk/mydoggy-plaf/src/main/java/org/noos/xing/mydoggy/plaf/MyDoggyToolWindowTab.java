@@ -14,6 +14,7 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyToolWindowTab implements ToolWindowTab {
+    protected boolean root;
     protected String id;
     protected ToolWindow owner;
     protected String title;
@@ -26,8 +27,10 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
 
     protected EventListenerList listenerList;
 
-    public MyDoggyToolWindowTab(ToolWindow owner, String title, Icon icon, Component component,
+    public MyDoggyToolWindowTab(ToolWindow owner, boolean root,
+                                String title, Icon icon, Component component,
                                 Dockable dockable) {
+        this.root = root;
         this.id = "" + System.nanoTime();
         this.owner = owner;
         this.title = title;
@@ -35,11 +38,11 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         this.component = component;
         this.selected = false;
         this.listenerList = new EventListenerList();
-        this.closeable = true;
+        this.closeable = !root;
         this.dockable = dockable;
 
         if (dockable instanceof ToolWindowTab)
-            ((ToolWindowTab) dockable).addPropertyChangeListener(new TabDelegatorListener());
+            dockable.addPropertyChangeListener(new TabDelegatorListener());
     }
 
 
@@ -112,6 +115,9 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
     }
 
     public void setCloseable(boolean closeable) {
+        if (root)
+            throw new IllegalArgumentException("Cannot change this for root tab.");
+
         if (this.closeable == closeable)
             return;
 

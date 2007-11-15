@@ -106,11 +106,19 @@ public class ToolWindowTitleBarUI extends PanelUI {
 
                     for (Component cmp : panel.getTabContainer().getComponents()) {
                         SwingUtil.registerDragGesture(cmp, dragGesture);
+
+                        for (Component innerCmp : ((Container) cmp).getComponents()) {
+                            SwingUtil.registerDragGesture(innerCmp, dragGesture);
+                        }
                     }
 
                     panel.getTabContainer().addContainerListener(new ContainerListener() {
                         public void componentAdded(ContainerEvent e) {
                             SwingUtil.registerDragGesture(e.getChild(), dragGesture);
+
+                            for (Component innerCmp : ((Container) e.getChild()).getComponents()) {
+                                SwingUtil.registerDragGesture(innerCmp, dragGesture);
+                            }
                         }
 
                         public void componentRemoved(ContainerEvent e) {

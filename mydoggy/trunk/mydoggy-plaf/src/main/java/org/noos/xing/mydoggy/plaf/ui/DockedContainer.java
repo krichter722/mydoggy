@@ -133,7 +133,7 @@ public class DockedContainer implements ToolWindowContainer {
         String id = toolWindow.getId();
 
         // Title Bar
-        ExtendedTableLayout titleBarLayout = new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 2, -2, 3}, {1, 14, 1}}, false);
+        ExtendedTableLayout titleBarLayout = new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 2, -2, 3}, {0, 16, 0}}, false);
         titleBar = (JPanel) resourceManager.createComponent(
                 MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR, descriptor.getManager(),
                 descriptor,
@@ -142,6 +142,7 @@ public class DockedContainer implements ToolWindowContainer {
         titleBar.setLayout(titleBarLayout);
         titleBar.setName("toolWindow.titleBar." + toolWindow.getId());
         titleBar.setEnabled(false);
+        titleBar.setBorder(null);
         titleBar.addMouseListener(titleBarMouseAdapter);
 
         if (descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar())

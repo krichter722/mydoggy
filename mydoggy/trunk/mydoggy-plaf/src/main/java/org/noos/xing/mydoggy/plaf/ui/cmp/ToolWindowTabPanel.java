@@ -2,16 +2,22 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowListener;
+import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLabelUI;
+import javax.swing.plaf.basic.BasicPanelUI;
 import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -23,18 +29,20 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     protected DockedContainer dockedContainer;
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
+    protected ResourceManager resourceManager;
 
     protected JViewport viewport;
     protected JPanel tabContainer;
     protected TableLayout containerLayout;
 
     protected ToolWindowTab selectedTab;
-    protected TabButton selecTabButton;
+    protected Component selecTabButton;
     protected PopupButton popupButton;
 
     public ToolWindowTabPanel(DockedContainer dockedContainer, ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
+        this.resourceManager = descriptor.getResourceManager();
         this.dockedContainer = dockedContainer;
 
         initComponents();
@@ -65,8 +73,9 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     protected void initComponents() {
         setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL, 1, 14}, {0, TableLayout.FILL, 0}}, false));
         setFocusable(false);
+        setBorder(null);
 
-        tabContainer = new JPanel(containerLayout = new TableLayout(new double[][]{{0}, {14}}));
+        tabContainer = new JPanel(containerLayout = new TableLayout(new double[][]{{0}, {16}}));
         tabContainer.setName("toolWindow.tabContainer." + descriptor.getToolWindow().getId());
         tabContainer.setOpaque(false);
         tabContainer.setBorder(null);
@@ -93,8 +102,8 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             final JMenuItem closeAllItem = new JMenuItem(new CloseAllTabAction());
 
             public void update(Component source, JPopupMenu popupMenu) {
-                if (source instanceof TabButton) {
-                    TabButton tabButton = (TabButton) source;
+                if (source.getParent() instanceof TabButton) {
+                    TabButton tabButton = (TabButton) source.getParent();
 
                     int index = 0;
                     if (tabButton.tab.isCloseable()) {
@@ -113,7 +122,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 ToolWindowTab tab;
 
                 public CloseTabAction(ToolWindowTab tab) {
-                    super(descriptor.getResourceManager().getString("@@tool.tab.close"));
+                    super(resourceManager.getString("@@tool.tab.close"));
                     this.tab = tab;
                 }
 
@@ -134,7 +143,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
             class CloseAllTabAction extends AbstractAction {
                 public CloseAllTabAction() {
-                    super(descriptor.getResourceManager().getString("@@tool.tab.closeAll"));
+                    super(resourceManager.getString("@@tool.tab.closeAll"));
                 }
 
                 public void actionPerformed(ActionEvent e) {
@@ -213,10 +222,9 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         int column = containerLayout.getNumColumn();
         containerLayout.insertColumn(column, 0);
         containerLayout.insertColumn(column + 1, -2);
-        containerLayout.insertColumn(column + 2, 10);
+        containerLayout.insertColumn(column + 2, 0);
 
-        TabButton tabButton = new TabButton(tab);
-        tabContainer.add(tabButton, (column + 1) + ",0" + ",c,c");
+        tabContainer.add(new TabButton(tab), (column + 1) + ",0" + ",FULL,FULL");
 
         tab.removePropertyChangeListener(this);
         tab.addPropertyChangeListener(this);
@@ -264,41 +272,97 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         boolean visible = toolWindow.getToolWindowTabs().length > 1;
         popupButton.setVisible(visible);
 
-        ((TableLayout)getLayout()).setColumn(2, visible ? 14 : 0);
+        ((TableLayout) getLayout()).setColumn(2, visible ? 14 : 0);
     }
-    
 
-    public class TabButton extends JLabel implements PropertyChangeListener, MouseListener {
+
+    public class TabButton extends JPanel implements PropertyChangeListener, MouseListener, ActionListener {
         protected ToolWindowTab tab;
+
+        protected TableLayout layout;
+        protected JLabel titleLabel;
+        protected JButton closeButton;
+
         protected boolean pressed;
         protected boolean inside;
         protected boolean selected;
 
         public TabButton(ToolWindowTab tab) {
-            super(tab.getTitle());
+            setLayout(layout = new TableLayout(new double[][]{{-1, 0, 0}, {-1}}));
+
+            setOpaque(false);
+            setFocusable(false);
+            setUI(new BasicPanelUI() {
+                public void update(Graphics g, JComponent c) {
+                    Rectangle bounds = c.getBounds();
+                    bounds.x = bounds.y = 0;
+                    if (tabContainer.getComponentCount() > 1) {
+                        if (selected) {
+                            if (toolWindow.isActive()) {
+                                GraphicsUtil.fillRect(g, bounds,
+                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
+                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
+                                                      new RoundRectangle2D.Double(
+                                                              bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
+                                                      ),
+                                                      GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+                            } else
+                                GraphicsUtil.fillRect(g, bounds,
+                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END),
+                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START),
+                                                      new RoundRectangle2D.Double(
+                                                              bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
+                                                      ),
+                                                      GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+                        }
+                    }
+                    super.update(g, c);
+                }
+            });
+
+            String name = "toolWindow." + tab.getOwner().getId() + ".tab." + tab.getTitle();
+            setName(name);
 
             this.tab = tab;
             this.tab.addPropertyChangeListener(this);
             this.selected = this.pressed = this.inside = false;
 
-            setName("toolWindow." + tab.getOwner().getId() + ".tab." + tab.getTitle());
-            setForeground(descriptor.getResourceManager().getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
-            setOpaque(false);
-            setFocusable(false);
-            setIcon(tab.getIcon());
-            setUI(new BasicLabelUI(){
+            titleLabel = new JLabel(tab.getTitle());
+            titleLabel.setName(name + ".title");
+            titleLabel.setForeground(resourceManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
+            titleLabel.setOpaque(false);
+            titleLabel.setFocusable(false);
+            titleLabel.setIcon(tab.getIcon());
+            titleLabel.setUI(new BasicLabelUI() {
+
                 protected void paintEnabledText(JLabel l, Graphics g, String s, int textX, int textY) {
                     if (pressed && inside)
                         super.paintEnabledText(l, g, s, textX + 1, textY + 1);
                     else
                         super.paintEnabledText(l, g, s, textX, textY);
                 }
-            });
 
-            addMouseListener(dockedContainer.getTitleBarMouseAdapter());
-            addMouseListener(this);
+
+            });
+            titleLabel.addMouseListener(dockedContainer.getTitleBarMouseAdapter());
+            titleLabel.addMouseListener(this);
+            add(titleLabel, "0,0,FULL,FULL");
+
+            closeButton = (JButton) resourceManager.createComponent(
+                    MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON,
+                    descriptor.getManager()
+            );
+            closeButton.setName(name + ".closeButton");
+            closeButton.addActionListener(this);
+            closeButton.setToolTipText(resourceManager.getString("@@tool.tab.close"));
+            closeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.TAB_CLOSE));
+
+            add(closeButton, "2,0,FULL,c");
         }
 
+        public void actionPerformed(ActionEvent e) {
+            toolWindow.removeToolWindowTab(tab);
+        }
 
         public void mousePressed(MouseEvent e) {
             toolWindow.setActive(true);
@@ -342,11 +406,15 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             if ("selected".equals(property)) {
                 if (evt.getNewValue() == Boolean.FALSE) {
                     selecTabButton = null;
-                    TabButton.this.setForeground(descriptor.getResourceManager().getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
+
+                    titleLabel.setForeground(resourceManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
+                    closeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.TAB_CLOSE_INACTIVE));
+                    setButtonsEnabled(false);
+
                     selected = false;
                 } else {
                     selecTabButton = this;
-                    
+
                     // Ensure position
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
@@ -356,20 +424,40 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                         }
                     });
 
-                    TabButton.this.setForeground(descriptor.getResourceManager().getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
+                    titleLabel.setForeground(resourceManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
+                    closeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.TAB_CLOSE));
+                    setButtonsEnabled(true);
                     selected = true;
                 }
+                SwingUtil.repaint(this);
             } else if ("title".equals(property)) {
-                setText((String) evt.getNewValue());
+                titleLabel.setText((String) evt.getNewValue());
                 setName("toolWindow." + toolWindow.getId() + ".tabs." + tab.getTitle());
             } else if ("icon".equals(property)) {
-                setIcon((Icon) evt.getNewValue());
+                titleLabel.setIcon((Icon) evt.getNewValue());
             }
+        }
+
+        public Insets getInsets() {
+            return new Insets(0, 5, 0, 5);
         }
 
         public ToolWindowTab getTab() {
             return tab;
         }
+
+        protected void setButtonsEnabled(boolean enabled) {
+            if (enabled && tabContainer.getComponentCount() > 1 && tab.isCloseable()) {
+                layout.setColumn(1, 3);
+                layout.setColumn(2, 14);
+            } else {
+                layout.setColumn(1, 0);
+                layout.setColumn(2, 0);
+            }
+            revalidate();
+            repaint();
+        }
+
     }
 
     public static class SelectTabAction extends AbstractAction {
@@ -385,11 +473,12 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         }
     }
 
+
     protected class PopupButton extends ToolWindowActiveButton implements ActionListener {
         private JPopupMenu popupMenu;
 
         public PopupButton() {
-            setIcon(descriptor.getResourceManager().getIcon(MyDoggyKeySpace.TOO_WINDOW_TAB_POPUP));
+            setIcon(resourceManager.getIcon(MyDoggyKeySpace.TOO_WINDOW_TAB_POPUP));
             addActionListener(this);
             addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent e) {
@@ -449,7 +538,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     protected class SelectNextTabAction extends AbstractAction {
 
         public SelectNextTabAction() {
-            super(descriptor.getResourceManager().getString("@@tool.tab.selectNext"));
+            super(resourceManager.getString("@@tool.tab.selectNext"));
         }
 
         public void actionPerformed(ActionEvent e) {
@@ -478,7 +567,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     protected class SelectPreviousTabAction extends AbstractAction {
 
         public SelectPreviousTabAction() {
-            super(descriptor.getResourceManager().getString("@@tool.tab.selectPreviuos"));
+            super(resourceManager.getString("@@tool.tab.selectPreviuos"));
         }
 
         public void actionPerformed(ActionEvent e) {
