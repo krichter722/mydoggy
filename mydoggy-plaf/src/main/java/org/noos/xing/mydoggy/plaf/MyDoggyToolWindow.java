@@ -192,7 +192,7 @@ public class MyDoggyToolWindow implements ToolWindow {
             // TODO: add enabledShiftShow mode ...
             descriptor.getManager().enableShiftShow();
             if (!isVisible()) {
-                if (getType() == ToolWindowType.SLIDING)
+                if (getType() == ToolWindowType.SLIDING || getType() == ToolWindowType.FLOATING_LIVE)
                     setType(ToolWindowType.DOCKED);
 
                 setVisibleInternal(true, true, null, aggregationPosition);
@@ -204,9 +204,10 @@ public class MyDoggyToolWindow implements ToolWindow {
                     publicEvent = true;
                 }
 
-                if (getType() == ToolWindowType.SLIDING)
+                if (getType() == ToolWindowType.SLIDING  || getType() == ToolWindowType.FLOATING_LIVE)
                     setType(ToolWindowType.DOCKED);
 
+                publicEvent = false;
                 try {
                     setVisibleInternal(true, true, toolWindow, aggregationPosition);
                 } finally {
