@@ -43,32 +43,32 @@ public class WelcomeContentView extends ComponentView {
 
         panel.add(renderButton("Manager", ToolWindowManager.class),
                   "1,2,FULL,FULL");
-        panel.add(renderLabel("<html>Edit ToolWindowManager </br> properties </html>"),
+        panel.add(renderLabel("<html>Edit <br>ToolWindowManager <br> properties </html>"),
                   "3,2,FULL,FULL");
 
         panel.add(renderButton("Tools", ToolWindow.class),
                   "1,4,FULL,FULL");
-        panel.add(renderLabel("<html>Edit ToolWindows </br> properties</html>"),
+        panel.add(renderLabel("<html>Edit <br>ToolWindows <br> properties</html>"),
                   "3,4,FULL,FULL");
 
         panel.add(renderButton("Contents", Content.class),
                   "1,6,FULL,FULL");
-        panel.add(renderLabel("<html>Edit Contents </br> properties</html>"),
+        panel.add(renderLabel("<html>Edit <br>Contents <br> properties</html>"),
                   "3,6,FULL,FULL");
 
         panel.add(renderButton("Groups", ToolWindowGroup.class),
                   "5,2,FULL,FULL");
-        panel.add(renderLabel("<html>Edit Groups </br> properties</html>"),
+        panel.add(renderLabel("<html>Edit <br>Groups <br> properties</html>"),
                   "7,2,FULL,FULL");
 
         panel.add(renderButton("ITests", InteractiveTest.class),
                   "5,4,FULL,FULL");
-        panel.add(renderLabel("<html>Run Interactive </br> Tests</html>"),
+        panel.add(renderLabel("<html>Run <br>Interactive <br> Tests</html>"),
                   "7,4,FULL,FULL");
 
         panel.add(renderButton("Customize", ResourceManager.class),
                   "5,6,FULL,FULL");
-        panel.add(renderLabel("<html>Customize MyDoggy</html>"),
+        panel.add(renderLabel("<html>Customize <br>MyDoggy</html>"),
                   "7,6,FULL,FULL");
 
         // Setup main panel

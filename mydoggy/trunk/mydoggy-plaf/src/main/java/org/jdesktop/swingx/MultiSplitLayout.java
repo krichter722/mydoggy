@@ -410,7 +410,6 @@ public class MultiSplitLayout implements LayoutManager {
                     Rectangle newSplitChildBounds = boundsWithXandWidth(bounds, x, newWidth);
                     layout2(splitChild, newSplitChildBounds);
                 } else if ((availableWidth > 0.0) && (splitChildWeight > 0.0)) {
-
                     double allocatedWidth = Math.rint(splitChildWeight * extraWidth);
                     double oldWidth = splitChildBounds.getWidth();
                     double newWidth = Math.max(minSplitChildWidth, oldWidth - allocatedWidth);
@@ -427,6 +426,7 @@ public class MultiSplitLayout implements LayoutManager {
                 x = splitChild.getBounds().getMaxX();
             }
         } else {
+            // All changes also for row and check layout1
             int totalHeight = 0;          // sum of the children's heights
             int minWeightedHeight = 0;    // sum of the weighted childrens' min heights
             int totalWeightedHeight = 0;  // sum of the weighted childrens' heights
@@ -443,12 +443,12 @@ public class MultiSplitLayout implements LayoutManager {
             double y = bounds.getY();
             double extraHeight = splitBounds.getHeight() - bounds.getHeight();
             double availableHeight = extraHeight;
-            boolean onlyShrinkWeightedComponents =
-                    (totalWeightedHeight - minWeightedHeight) > extraHeight;
+            boolean onlyShrinkWeightedComponents = (totalWeightedHeight - minWeightedHeight) > extraHeight;
 
             while (splitChildren.hasNext()) {
                 Node splitChild = splitChildren.next();
                 Rectangle splitChildBounds = splitChild.getBounds();
+
                 double minSplitChildHeight = minimumNodeSize(splitChild).getHeight();
                 double splitChildWeight = (onlyShrinkWeightedComponents)
                                           ? splitChild.getWeight()
@@ -457,18 +457,23 @@ public class MultiSplitLayout implements LayoutManager {
                 if (!splitChildren.hasNext()) {
                     double oldHeight = splitChildBounds.getHeight();
                     double newHeight = Math.max(minSplitChildHeight, bounds.getMaxY() - y);
+
                     Rectangle newSplitChildBounds = boundsWithYandHeight(bounds, y, newHeight);
                     layout2(splitChild, newSplitChildBounds);
                     availableHeight -= (oldHeight - splitChild.getBounds().getHeight());
                 } else if ((availableHeight > 0.0) && (splitChildWeight > 0.0)) {
-                    double allocatedHeight = Math.rint(splitChildWeight * extraHeight);
+                    // TODO: switch extraHeight with availableHeight
+                    
+                    double allocatedHeight = Math.rint(splitChildWeight * availableHeight);
                     double oldHeight = splitChildBounds.getHeight();
                     double newHeight = Math.max(minSplitChildHeight, oldHeight - allocatedHeight);
+
                     Rectangle newSplitChildBounds = boundsWithYandHeight(bounds, y, newHeight);
-                    layout2(splitChild, newSplitChildBounds);
+                    layout2(splitChild, newSplitChildBounds);                    
                     availableHeight -= (oldHeight - splitChild.getBounds().getHeight());
                 } else {
                     double existingHeight = splitChildBounds.getHeight();
+
                     Rectangle newSplitChildBounds = boundsWithYandHeight(bounds, y, existingHeight);
                     layout2(splitChild, newSplitChildBounds);
                 }

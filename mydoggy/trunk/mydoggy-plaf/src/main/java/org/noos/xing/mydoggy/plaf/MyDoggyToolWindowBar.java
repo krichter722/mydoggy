@@ -9,6 +9,7 @@ import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToolsOnBarMouseListener;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowBarDropTarget;
+import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -16,7 +17,9 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * @author Angelo De Caro
@@ -140,7 +143,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         splitPane.setName(anchor.toString());
         splitPane.setFocusCycleRoot(true);
 
-        contentPanel = new ContentPanel(manager, anchor);
+        contentPanel = new ContentPanel("toolWindow.container.");
+        contentPanel.setDropTarget(new ToolWindowDropTarget(contentPanel, manager, anchor));
 
         representativeButtonsPanel = (JPanel) manager.getResourceManager().createComponent(MyDoggyKeySpace.ANCHOR_CONTENT_PANE, manager);
         representativeButtonsPanel.setName("toolWindowManager.bar." + anchor.toString());
