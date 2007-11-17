@@ -105,6 +105,9 @@ public class MultiSplitDockableContainer extends JPanel {
 
                 if (oldModel != null) {
                     multiSplitPaneModelRoot = decode(oldModel);
+                    List<MultiSplitLayout.Node> children = multiSplitPaneModelRoot.getChildren();
+                    leaf = (DockableLeaf) children.get(0);
+                    leaf2 = (DockableLeaf) children.get(2);
                 } else {
                     // Create two leafs
                     leaf = new DockableLeaf("1");
@@ -517,6 +520,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
     public void clear() {
         resetRootComponent();
+        multiSplitPane.removeAll();
         entries.clear();
     }
 
