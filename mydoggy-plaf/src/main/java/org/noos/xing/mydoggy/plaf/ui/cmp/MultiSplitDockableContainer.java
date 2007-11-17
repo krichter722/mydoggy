@@ -85,8 +85,8 @@ public class MultiSplitDockableContainer extends JPanel {
         builder.append(dockableId);
 
         if (entries.size() == 0) {
-            removeAll();
-            add(content, "0,0,FULL,FULL");
+            resetRootComponent();
+            setRootComponent(content);
         } else {
             byte[] oldModel = models.get(builder.toString());
 
@@ -97,8 +97,8 @@ public class MultiSplitDockableContainer extends JPanel {
             }
 
             if (entries.size() == 1) {
-                Component previousContent = getComponent(0);
-                remove(previousContent);
+                Component previousContent = getRootComponent();
+                resetRootComponent();
 
                 DockableLeaf leaf = null;
                 DockableLeaf leaf2 = null;
@@ -150,7 +150,7 @@ public class MultiSplitDockableContainer extends JPanel {
                         break;
                 }
 
-                add(multiSplitPane, "0,0,FULL,FULL");
+                setRootComponent(multiSplitPane);
             } else {
                 // Build content to add
                 String leafName = "" + (entries.size() + 1);
@@ -352,7 +352,7 @@ public class MultiSplitDockableContainer extends JPanel {
         entries.remove(dockable);
 
         if (entries.size() == 0) {
-            removeAll();
+            resetRootComponent();
             return;
         }
 
@@ -365,7 +365,7 @@ public class MultiSplitDockableContainer extends JPanel {
             Component c = getWrappedComponent((Container) multiSplitPane.getComponent(0));
             multiSplitPane.removeAll();
 
-            add(c, "0,0,FULL,FULL");
+            setRootComponent(c);
         } else {
             String leafKey = getLeafName(dockable);
             if (leafKey == null)
@@ -516,7 +516,7 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
     public void clear() {
-        removeAll();
+        resetRootComponent();
         entries.clear();
     }
 
@@ -527,6 +527,19 @@ public class MultiSplitDockableContainer extends JPanel {
                 return (MultiSplitLayout.Split) child;
         }
         return null;
+    }
+
+
+    protected Component getRootComponent() {
+        return getComponent(0);
+    }
+
+    protected void setRootComponent(Component component) {
+        add(component, "0,0,FULL,FULL");
+    }
+
+    protected void resetRootComponent() {
+        removeAll();
     }
 
     protected Container getComponentWrapper(Dockable dockable, Component component) {

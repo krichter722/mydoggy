@@ -16,14 +16,16 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ContentPanel extends JPanel implements PropertyChangeListener {
+    protected String parentPrefix;
+
     protected TableLayout layout;
     protected Point mouseLocation;
     protected boolean dragActive;
 
-    public ContentPanel(ToolWindowManager manager, ToolWindowAnchor anchor) {
+    public ContentPanel(String parentPrefix) {
+        this.parentPrefix = parentPrefix;
         setLayout(layout = new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
         setOpaque(false);
-        setDropTarget(new ToolWindowDropTarget(this, manager, anchor));
 
         addPropertyChangeListener("dragStart", this);
         addPropertyChangeListener("dragOver", this);
@@ -55,6 +57,11 @@ public class ContentPanel extends JPanel implements PropertyChangeListener {
     public void setComponent(Component component) {
         removeAll();
         add(component, "1,1,FULL,FULL");
+    }
+
+    public void resetComponent() {
+        removeAll();
+        resetLayout();        
     }
 
     public void paint(Graphics g) {
@@ -116,7 +123,7 @@ public class ContentPanel extends JPanel implements PropertyChangeListener {
                 // Check if the mouse is on a toolwindow
                 Component deepestCmp = SwingUtilities.getDeepestComponentAt(this, mouseLocation.x, mouseLocation.y);
                 if (deepestCmp != null) {
-                    JComponent toolWindowContainer = (JComponent) SwingUtil.getParent(deepestCmp, "toolWindow.container.");
+                    JComponent toolWindowContainer = (JComponent) SwingUtil.getParent(deepestCmp, parentPrefix);
                     if (toolWindowContainer != null) {
 
                         // Ok the mouse is on a toolwindow
