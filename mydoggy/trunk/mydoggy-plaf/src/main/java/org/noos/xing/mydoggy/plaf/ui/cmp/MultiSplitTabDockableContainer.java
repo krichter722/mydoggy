@@ -10,7 +10,6 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
@@ -32,11 +31,15 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
 
 
     protected Container getComponentWrapper(Dockable dockable, Component component) {
-        DockableTabbedPane tabbedPane = new DockableTabbedPane();
+        JTabbedContentManager tabbedPane = new JTabbedContentManager();
+        tabbedPane.setToolWindowManager(toolWindowManager);
+        tabbedPane.setName("dockable.tabbedpane");
         tabbedPane.setFocusCycleRoot(true);
         tabbedPane.addTab(dockable.getTitle(),
                           dockable.getIcon(),
-                          new DockablePanel(dockable, component));
+                          new DockablePanel(dockable, component),
+                          null,
+                          null);
 
         SwingUtil.registerDragGesture(tabbedPane, new TabbedDragGesture(tabbedPane));
 
@@ -49,9 +52,22 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
     }
 
     protected void addToComponentWrapper(Component wrapperSource, Dockable dockable, Component content) {
-        super.addToComponentWrapper(wrapperSource, dockable, content);
+        JTabbedPane tabbedPane = (JTabbedPane) wrapperSource;
+        tabbedPane.addTab(dockable.getTitle(),
+                          dockable.getIcon(),
+                          new DockablePanel(dockable, content));
     }
 
+    protected void removeComponentWrapper(Component wrapperSource, Dockable dockable) {
+        JTabbedPane tabbedPane = (JTabbedPane) wrapperSource;
+        for (int i= 0, size = tabbedPane.getTabCount(); i< size; i++) {
+            if (((DockablePanel) tabbedPane.getComponentAt(i)).dockable == dockable) {
+                tabbedPane.removeTabAt(i);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Cannot find that dockable on the passed tabbedpane");
+    }
 
     protected Component getRootComponent() {
         return contentPanel.getComponent();
@@ -65,12 +81,6 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
         contentPanel.resetComponent();
     }
 
-    protected class DockableTabbedPane extends JTabbedPane {
-
-        public DockableTabbedPane() {
-            setName("dockable.tabbedpane");
-        }
-    }
 
     protected class DockablePanel extends JPanel {
         protected Dockable dockable;
@@ -86,10 +96,11 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
         }
     }
 
-    protected class TabbedDragGesture extends DragGestureAdapter {
-        protected DockableTabbedPane dockableTabbedPane;
 
-        public TabbedDragGesture(DockableTabbedPane dockableTabbedPane) {
+    protected class TabbedDragGesture extends DragGestureAdapter {
+        protected JTabbedPane dockableTabbedPane;
+
+        public TabbedDragGesture(JTabbedPane dockableTabbedPane) {
             super((MyDoggyToolWindowManager) toolWindowManager);
             this.dockableTabbedPane = dockableTabbedPane;
         }
@@ -201,7 +212,7 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
 
             Component deepestCmp = SwingUtilities.getDeepestComponentAt(component, location.x, location.y);
             if (deepestCmp != null) {
-                DockableTabbedPane dockableTabbedPane = (DockableTabbedPane) SwingUtil.getParent(deepestCmp, "dockable.tabbedpane");
+                JTabbedPane dockableTabbedPane = (JTabbedPane) SwingUtil.getParent(deepestCmp, "dockable.tabbedpane");
 
                 if (dockableTabbedPane != null) {
                     onDockable = ((DockablePanel) dockableTabbedPane.getComponentAt(0)).getDockable();
@@ -236,6 +247,7 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
                                            content.getComponent(),
                                            onDockable,
                                            (dragAnchor == null) ? null : AggregationPosition.valueOf(dragAnchor.toString()));
+
                                 dtde.dropComplete(true);
                             } else
                                 dtde.dropComplete(false);

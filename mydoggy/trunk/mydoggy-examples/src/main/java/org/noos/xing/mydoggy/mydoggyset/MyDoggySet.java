@@ -219,12 +219,12 @@ public class MyDoggySet {
         floatingTypeDescriptor.setModal(true);
         floatingTypeDescriptor.setAnimating(false);
 
-/*
+        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
         ContentManagerUI defaultManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
-        TabbedContentManagerUI tabbedContentManagerUI = (TabbedContentManagerUI) defaultManagerUI;
-        tabbedContentManagerUI.setShowAlwaysTab(false);
-        tabbedContentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
-        tabbedContentManagerUI.setTabLayout(TabbedContentManagerUI.TabLayout.WRAP);
+//        TabbedContentManagerUI tabbedContentManagerUI = (TabbedContentManagerUI) defaultManagerUI;
+//        tabbedContentManagerUI.setShowAlwaysTab(false);
+//        tabbedContentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
+//        tabbedContentManagerUI.setTabLayout(TabbedContentManagerUI.TabLayout.WRAP);
 
         defaultManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
             public boolean contentUIRemoving(ContentManagerUIEvent event) {
@@ -234,8 +234,6 @@ public class MyDoggySet {
             public void contentUIDetached(ContentManagerUIEvent event) {
             }
         });
-*/
-        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
 
         ToolWindowManagerDescriptor managerDescriptor = toolWindowManager.getToolWindowManagerDescriptor();
         managerDescriptor.setCornerComponent(NORD_WEST, new JLabel("NW"));

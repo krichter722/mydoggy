@@ -209,9 +209,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     addTabsTag = true;
                     writer.startElement("tabs");
                 }
+                
                 AttributesImpl attributes = new AttributesImpl();
-
-                // TODO: dockable cam be a content...
                 attributes.addAttribute(null, "dockableId", null, null, dockable.getId());
                 attributes.addAttribute(null, "selected", null, null, "" + tab.isSelected());
                 writer.dataElement("tab", attributes);

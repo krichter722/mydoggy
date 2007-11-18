@@ -141,7 +141,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             updateAnchor(g, c,
                          resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
                          resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
-                         toolWindow.isVisible(),    // TODO: check for this, if it behaves correctly
+                         toolWindow.isVisible(),
                          false);
         }
         paint(g, c);

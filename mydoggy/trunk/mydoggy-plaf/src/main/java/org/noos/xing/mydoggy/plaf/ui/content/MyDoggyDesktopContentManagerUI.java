@@ -279,7 +279,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                     constraints = null;
             }
 
-            if (constraints == null) {
+            if (constraints == null || constraints.length == 0) {
                 int contentX, contentY;
                 contentY = contentX = 10 + (contentIndex++ * 25);
                 if (contentX > desktopPane.getWidth() - 320 || contentY > desktopPane.getHeight() - 200) {
@@ -304,7 +304,6 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 }
             });
             internalFrame.addInternalFrameListener(new InternalFrameAdapter() {
-
                 public void internalFrameClosed(InternalFrameEvent e) {
                     try {
                         Content content = contentManager.getContentByComponent(e.getInternalFrame().getContentPane().getComponent(0));
