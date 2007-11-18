@@ -46,6 +46,7 @@ public class InteractiveUniversalDragTest extends MyDoggySetInteractiveTest {
         drag("toolWindow.Tool 3.tab.Title 13", "toolWindowManager.bar." + ToolWindowAnchor.TOP);
 
         showTip("<html>Drag Tool 13 to <br> Tool 3 as a Tab", 1000);
+        // TODO: this drag fails..
         drag("toolWindow.Tool 13.tab.Title 13", "toolWindow.container.Tool 3");
 
 //        showTip("<html>Extract Tool 13", 1000);
