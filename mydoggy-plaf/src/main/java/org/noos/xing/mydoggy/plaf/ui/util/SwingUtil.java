@@ -434,4 +434,18 @@ public class SwingUtil {
         } while(c != null);
         return p;
     }
+
+    public static <T> T getParent(Component c, Class<? extends T> parentClass) {
+        if (c == null || parentClass == null)
+            return null;
+
+        if (parentClass.isInstance(c))
+            return (T) c;
+
+        for (; c != null; c = c.getParent()) {
+            if (parentClass.isInstance(c))
+                return (T) c;
+        }
+        return null;
+    }
 }
