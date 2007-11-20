@@ -22,7 +22,7 @@ public class RobotComponentLookuper implements ComponentLookuper {
     }
 
     public ComponentAdapter lookup() {
-        return new RobotComponentAdapter(robot, roots.get(0));
+        return new RobotComponentAdapter(robot, roots.get(0), 1000);
     }
 
     public ComponentAdapter lookup(String componentName) {
@@ -48,7 +48,7 @@ public class RobotComponentLookuper implements ComponentLookuper {
 
     protected ComponentAdapter lookupInternal(ComponentFilter componentFilter) {
         if (componentFilter == null)
-            return new RobotComponentAdapter(robot, roots.get(0));
+            return createComponentAdapter(roots.get(0));
         for (Container root : roots) {
             Component filteredComponent = findComponentByName(root, componentFilter);
             if (filteredComponent != null)
@@ -80,7 +80,7 @@ public class RobotComponentLookuper implements ComponentLookuper {
     }
 
     protected ComponentAdapter createComponentAdapter(Component component) {
-        return new RobotComponentAdapter(robot, component);
+        return new RobotComponentAdapter(robot, component, 1000);
     }
 
     protected java.util.List<Window> getTopContainers() {

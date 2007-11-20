@@ -20,7 +20,7 @@ public class InteractiveToolTypesTest extends MyDoggySetInteractiveTest {
         restoreWorkspace();
         componentLookuper.lookup()
                 .moveToCenter()
-                .showTip("<html>First : <strong>Docked Mode</strong>", 1000);
+                .showTip("<html>First : <strong>Docked Mode</strong>");
 
         clickOn(getRepresentativeButtonName("Tool 1"));
         moveOn(getToolContainerName("Tool 1"), "<html>This is <strong>Docked Mode</strong>");
@@ -29,7 +29,7 @@ public class InteractiveToolTypesTest extends MyDoggySetInteractiveTest {
         restoreWorkspace();
         componentLookuper.lookup()
                 .moveToCenter()
-                .showTip("<html>Second : <strong>Sliding Mode</strong>", 1000);
+                .showTip("<html>Second : <strong>Sliding Mode</strong>");
         
         clickOn(getRepresentativeButtonName("Tool 1"));
         clickOn("toolWindow.dockButton.Tool 1");

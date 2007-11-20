@@ -23,9 +23,9 @@ public class InteractiveShowToolTest extends MyDoggySetInteractiveTest {
 
         showTip("<html>Let's go to <br>show Tool 3", 1000);
         ComponentAdapter ca = componentLookuper.lookup(new NamedComponentFilter("toolWindow.rb.Tool 3"));
-        ca.moveToCenter(500);
+        ca.moveToCenter();
         showTip("<html>Now : <br>Left Mouse Click", 1000);
-        ca.click(ComponentAdapter.MouseButton.LEFT, 1000);
+        ca.click(ComponentAdapter.MouseButton.LEFT);
 
         // Second
         restoreWorkspace();
@@ -33,13 +33,13 @@ public class InteractiveShowToolTest extends MyDoggySetInteractiveTest {
 
         showTip("<html>Let's go to <br>show Tool 3<br> using the popup menu", 1000);
         ca = componentLookuper.lookup(new NamedComponentFilter("toolWindow.rb.Tool 3"));
-        ca.moveToCenter(1000);
+        ca.moveToCenter();
         showTip("<html>Now : <br>Right Mouse Click", 1000);
-        ca.click(ComponentAdapter.MouseButton.RIGHT, 1000);
+        ca.click(ComponentAdapter.MouseButton.RIGHT);
         ca = componentLookuper.lookup(new NamedComponentFilter("toolWindow.popup.visible.Tool 3"));
-        ca.moveToCenter(1000);
+        ca.moveToCenter();
         showTip("<html>Now : <br>Left Mouse Click", 1000);
-        ca.click(ComponentAdapter.MouseButton.LEFT, 1000);
+        ca.click(ComponentAdapter.MouseButton.LEFT);
 
         restoreWorkspace();
         componentLookuper.lookup().moveToCenter();
@@ -48,7 +48,7 @@ public class InteractiveShowToolTest extends MyDoggySetInteractiveTest {
         clickOnRepresentativeButton("Tool 1");
         clickOnRepresentativeButton("Tool 3", ComponentAdapter.MouseButton.RIGHT);
         componentLookuper.lookup(new NamedComponentFilter("toolWindow.popup.aggregate.Tool 3"))
-                .moveToCenter(500)
+                .moveToCenter()
                 .click(ComponentAdapter.MouseButton.LEFT);
     }
 

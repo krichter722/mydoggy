@@ -7,7 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.PathIterator;
 import java.awt.event.InputEvent;
-import java.util.Arrays;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -17,10 +16,16 @@ public class RobotComponentAdapter implements ComponentAdapter {
     protected Component component;
     protected MouseButton lastMouseButtonPressed;
     protected JBalloonTip balloonTip;
+    protected int delay;
 
-    public RobotComponentAdapter(Robot robot, Component component) {
+    public RobotComponentAdapter(Robot robot, Component component, int delay) {
         this.robot = robot;
         this.component = component;
+        this.delay = delay;
+    }
+
+    public void setDelay(int delay) {
+        this.delay = delay;
     }
 
     public ComponentAdapter moveTo() {
@@ -31,16 +36,12 @@ public class RobotComponentAdapter implements ComponentAdapter {
         return moveTo(component.getWidth() / 2, component.getHeight() / 2);
     }
 
-    public ComponentAdapter moveToCenter(int delay) {
-        moveToCenter();
-        robot.delay(delay);
-        return this;
-    }
-
     public ComponentAdapter moveTo(int x, int y) {
         Point to = new Point(x, y);
         SwingUtilities.convertPointToScreen(to, component);
-        return moveToInternal(to);
+        ComponentAdapter componentAdapter = moveToInternal(to);
+        doDelay();
+        return componentAdapter;
     }
 
     public ComponentAdapter move(Shape shape) {
@@ -67,6 +68,8 @@ public class RobotComponentAdapter implements ComponentAdapter {
             iterator.next();
         }
 
+        doDelay();
+
         return this;
     }
 
@@ -83,24 +86,17 @@ public class RobotComponentAdapter implements ComponentAdapter {
                 robot.mousePress(InputEvent.BUTTON3_MASK);
                 break;
         }
-        return this;
-    }
 
-    public ComponentAdapter press(MouseButton mouseButton, int delay) {
-        press(mouseButton);
-        robot.delay(delay);
+        doDelay();
+
         return this;
     }
 
     public ComponentAdapter release() {
-        return release(lastMouseButtonPressed, 0);
+        return release(lastMouseButtonPressed);
     }
 
-    public ComponentAdapter release(int delay) {
-        return release(lastMouseButtonPressed, delay);
-    }
-
-    public ComponentAdapter release(MouseButton mouseButton, int delay) {
+    public ComponentAdapter release(MouseButton mouseButton) {
         switch (mouseButton) {
             case LEFT:
                 robot.mouseRelease(InputEvent.BUTTON1_MASK);
@@ -112,35 +108,30 @@ public class RobotComponentAdapter implements ComponentAdapter {
                 robot.mouseRelease(InputEvent.BUTTON3_MASK);
                 break;
         }
-        if (delay > 0)
-            robot.delay(delay);
+        doDelay();
         return this;
     }
 
     public ComponentAdapter click(MouseButton mouseButton) {
-        press(mouseButton);
-        release();
-        return this;
-    }
-
-    public ComponentAdapter click(MouseButton mouseButton, int delay) {
-        press(mouseButton);
-        release(delay);
+        int oldDelay = delay;
+        delay = 0;
+        try {
+            press(mouseButton);
+            release();
+        } finally {
+            delay = oldDelay;
+            doDelay();
+        }
         return this;
     }
 
     public ComponentAdapter wheel(int amount) {
         robot.mouseWheel(amount);
+        doDelay();
         return this;
     }
 
-    public ComponentAdapter wheel(int amount, int delay) {
-        robot.mouseWheel(amount);
-        robot.delay(delay);
-        return this;
-    }
-
-    public ComponentAdapter showTip(String message, int delay) {
+    public ComponentAdapter showTip(String message) {
         if (balloonTip == null)
             balloonTip = new JBalloonTip(null);
 
@@ -151,13 +142,13 @@ public class RobotComponentAdapter implements ComponentAdapter {
             Point point = MouseInfo.getPointerInfo().getLocation();
             SwingUtilities.convertPointFromScreen(point, windowAncestor);
             balloonTip.show(point.x, point.y);
-            robot.delay(delay);
+            doDelay();
             balloonTip.setVisible(false);
         }
         return this;
     }
 
-    
+
     protected ComponentAdapter moveToInternal(Point to) {
         Point from = MouseInfo.getPointerInfo().getLocation();
 
@@ -193,6 +184,11 @@ public class RobotComponentAdapter implements ComponentAdapter {
         robot.mouseMove(to.x, to.y);
         
         return this;
+    }
+
+    protected void doDelay() {
+        if (delay > 0)
+            robot.delay(delay);
     }
 
 }
