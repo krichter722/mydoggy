@@ -14,11 +14,11 @@ public interface ComponentAdapter {
         CENTER
     }
 
+    void setDelay(int delay);
+
     ComponentAdapter moveTo();
 
     ComponentAdapter moveToCenter();
-
-    ComponentAdapter moveToCenter(int delay);
 
     ComponentAdapter moveTo(int x, int y);
 
@@ -26,21 +26,14 @@ public interface ComponentAdapter {
 
     ComponentAdapter press(MouseButton mouseButton);
 
-    ComponentAdapter press(MouseButton mouseButton, int delay);
-
     ComponentAdapter release();
 
-    ComponentAdapter release(int delay);
-
-    ComponentAdapter release(MouseButton mouseButton, int delay);
+    ComponentAdapter release(MouseButton mouseButton);
 
     ComponentAdapter click(MouseButton mouseButton);
 
-    ComponentAdapter click(MouseButton mouseButton, int delay);
-
     ComponentAdapter wheel(int amount);
 
-    ComponentAdapter wheel(int amount, int delay);
-
-    ComponentAdapter showTip(String message, int delay);
+    ComponentAdapter showTip(String message);
+    
 }

@@ -248,6 +248,7 @@ public class MyDoggySet {
     protected void customizeToolWindowManager() {
         // CUSTOMIZATION....
 
+/*
         // Customize toolwindow TitleBar ...
         MyDoggyToolWindowManager manager = ((MyDoggyToolWindowManager) toolWindowManager);
         ResourceManager resourceManager = manager.getResourceManager();
@@ -260,7 +261,6 @@ public class MyDoggySet {
             }
         });
 
-/*
         manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START, Color.RED);
         manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END, Color.PINK);
         manager.getResourceManager().putColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START, Color.BLACK);
@@ -327,7 +327,6 @@ public class MyDoggySet {
             }
         });
 
-*/
         // Change title bar buttons dispositions
         myDoggyResourceManager.putInstanceCreator(TitleBarButtons.class,
                                                   new MyDoggyResourceManager.InstanceCreator() {
@@ -340,6 +339,7 @@ public class MyDoggySet {
                                                   }
         );
 
+*/
         // END CUSTOMIZATION....
     }
 
