@@ -165,6 +165,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
 
         public void drop(DropTargetDropEvent dtde) {
             Transferable transferable = dtde.getTransferable();
+
             if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF)) {
                 dtde.acceptDrop(DnDConstants.ACTION_MOVE);
 
@@ -188,7 +189,6 @@ public class ToolWindowBarDropTarget extends DropTarget {
                     } else {
                         boolean oldAggregateMode = toolWindow.isAggregateMode();
                         toolWindow.setAggregateMode(true);
-
                         try {
                             toolWindow.setAnchor(anchor, index);
                         } finally {
@@ -200,8 +200,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
                 } catch (Exception e) {
                     dtde.rejectDrop();
                 }
-            }
-            if (transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {
+            } else if (transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {
 
                 ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
 

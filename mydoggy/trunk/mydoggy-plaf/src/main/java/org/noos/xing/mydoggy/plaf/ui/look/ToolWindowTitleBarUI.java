@@ -387,9 +387,10 @@ public class ToolWindowTitleBarUI extends PanelUI {
 
             // Start Drag
             MyDoggyToolWindowTab toolWindowTab = null;
-            if (dge.getComponent() instanceof ToolWindowTabPanel.TabButton) {
-                ToolWindowTabPanel.TabButton tabButton = (ToolWindowTabPanel.TabButton) dge.getComponent();
-                toolWindowTab = (MyDoggyToolWindowTab) tabButton.getTab();
+            if (SwingUtilities.isDescendingFrom(dge.getComponent(), panel)) {
+                ToolWindowTabPanel.TabButton tabButton = SwingUtil.getParent(dge.getComponent(), ToolWindowTabPanel.TabButton.class);
+                if (tabButton != null)
+                    toolWindowTab = (MyDoggyToolWindowTab) tabButton.getTab();
             }
 
             if (toolWindowTab != null && toolWindowTab.getDockableDelegator() != null) {
