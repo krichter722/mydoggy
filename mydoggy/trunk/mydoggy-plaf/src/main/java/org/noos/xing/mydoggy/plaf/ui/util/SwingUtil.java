@@ -321,18 +321,27 @@ public class SwingUtil {
             }
 
             window.setBounds(targetBounds);
-        } else
-            window.getGraphicsConfiguration().getDevice().setFullScreenWindow(window);
+        } else {
+            GraphicsDevice graphicsDevice = window.getGraphicsConfiguration().getDevice();
+            if (graphicsDevice.isFullScreenSupported())
+                graphicsDevice.setFullScreenWindow(window);
+            else {
+                Rectangle targetBounds = window.getBounds();
+                fullScreenBounds.put(window, targetBounds);
+                window.setBounds(graphicsDevice.getDefaultConfiguration().getBounds());
+            }
+        }
     }
 
     public static void restoreFullScreenWindow(Window window) {
-        GraphicsDevice[] gda = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-        if (gda.length > 1) {
-            Rectangle bounds = fullScreenBounds.get(window);
-            if (bounds != null)
-                window.setBounds(bounds);
-        } else
-            window.getGraphicsConfiguration().getDevice().setFullScreenWindow(null);
+        Rectangle bounds = fullScreenBounds.remove(window);
+        if (bounds !=  null) {
+            window.setBounds(bounds);
+        } else {
+            GraphicsDevice graphicsDevice = window.getGraphicsConfiguration().getDevice();
+            if (graphicsDevice.isFullScreenSupported())
+                graphicsDevice.setFullScreenWindow(null);
+        }
     }
 
     public static int findDisplayedMnemonicIndex(String text, int mnemonic) {
