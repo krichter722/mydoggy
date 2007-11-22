@@ -479,6 +479,39 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         // TODO: fire changing...
     }
 
+    public ToolWindowAnchor getToolWindowAnchor(Point p) {
+        Rectangle b = getBounds();
+
+        if (p.x <= 18 && p.y >= 18 && p.y <= b.height - 18) {
+            return ToolWindowAnchor.LEFT;
+        } else if (p.x >= b.width - 18 && p.y >= 18 && p.y <= b.height - 18) {
+            return ToolWindowAnchor.RIGHT;
+        } else if (p.y <= 18 && p.x >= 18 && p.x <= b.width - 18) {
+            return ToolWindowAnchor.TOP;
+        } else if (p.y >= b.height - 18 && p.x >= 18 && p.x <= b.width - 18) {
+            return ToolWindowAnchor.BOTTOM;
+        }
+        return null;
+    }
+
+    public void removeIfDockableDelegator(Dockable dockable) {
+        // TODO: can do better...
+        for (ToolWindow toolWindow : getToolWindows()) {
+            for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+                if (tab.getDockableDelegator() == dockable) {
+                    toolWindow.removeToolWindowTab(tab);
+                    break;
+                }
+            }
+        }
+        for (Content content : contentManager.getContents()) {
+            if (content.getDockableDelegator() == dockable) {
+                contentManager.removeContent(content);
+                break;
+            }
+        }
+    }
+
 
     protected void initPersistenceDelegate() {
         this.persistenceDelegate = new XMLPersistenceDelegate(this);
@@ -674,10 +707,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    protected void finalize() throws Throwable {
-        System.out.println("FINALIZED");
-        super.finalize();
-    }
 
     void syncPanel(ToolWindowAnchor anchor) {
         boolean revalidate = false;
@@ -752,39 +781,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     void addInternalPropertyChangeListener(String property, PropertyChangeListener propertyChangeListener) {
         propertyChangeSupport.addPropertyChangeListener(property, propertyChangeListener);
-    }
-
-    public ToolWindowAnchor getToolWindowAnchor(Point p) {
-        Rectangle b = getBounds();
-
-        if (p.x <= 18 && p.y >= 18 && p.y <= b.height - 18) {
-            return ToolWindowAnchor.LEFT;
-        } else if (p.x >= b.width - 18 && p.y >= 18 && p.y <= b.height - 18) {
-            return ToolWindowAnchor.RIGHT;
-        } else if (p.y <= 18 && p.x >= 18 && p.x <= b.width - 18) {
-            return ToolWindowAnchor.TOP;
-        } else if (p.y >= b.height - 18 && p.x >= 18 && p.x <= b.width - 18) {
-            return ToolWindowAnchor.BOTTOM;
-        }
-        return null;
-    }
-
-    public void removeIfDockableDelegator(Dockable dockable) {
-        // TODO: can do better...
-        for (ToolWindow toolWindow : getToolWindows()) {
-            for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
-                if (tab.getDockableDelegator() == dockable) {
-                    toolWindow.removeToolWindowTab(tab);
-                    break;
-                }
-            }
-        }
-        for (Content content : contentManager.getContents()) {
-            if (content.getDockableDelegator() == dockable) {
-                contentManager.removeContent(content);
-                break;
-            }
-        }
     }
 
 
