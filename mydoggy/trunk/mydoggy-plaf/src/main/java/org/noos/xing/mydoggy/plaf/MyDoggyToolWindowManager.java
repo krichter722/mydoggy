@@ -25,6 +25,8 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -249,7 +251,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public boolean removeToolWindowGroup(String name) {
         if (name == null)
             return false;
-        
+
         ToolWindowGroup group = toolWindowGroups.remove(name);
         if (group != null) {
             fireRemovedGroupEvent(group);
@@ -259,7 +261,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public boolean removeToolWindowGroup(ToolWindowGroup toolWindowGroup) {
-        return toolWindowGroup != null && removeToolWindowGroup(toolWindowGroup.getName()); 
+        return toolWindowGroup != null && removeToolWindowGroup(toolWindowGroup.getName());
     }
 
     public boolean containsGroup(String name) {
@@ -471,7 +473,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         if (resourceManagerChangeListener == null)
             resourceManagerChangeListener = new ResourceManagerChangeListener();
-        
+
         this.resourceManager = resourceManager;
         resourceManager.addPropertyChangeListener(resourceManagerChangeListener);
         // TODO: fire changing...
@@ -488,9 +490,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         initContentManager();
 
         resourceManager.applyCustomization(MyDoggyKeySpace.TOOL_WINDOW_MANAGER, this);
-
-        ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
-        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 
         // Init data structures
         bars = new MyDoggyToolWindowBar[4];
@@ -577,17 +576,27 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             }
         });
 
-        initShortcut();
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                Component newFocusOwner = (Component) evt.getNewValue();
-                if (newFocusOwner != null && SwingUtilities.isDescendingFrom(newFocusOwner, mainContainer))
-                    lastFocusOwner = newFocusOwner;
-            }
-        });
+
+        initKeyboardFocusManagerListeners();
 
         // Setup DropTarget for main container
         mainContainer.setDropTarget(new ContentManagerDropTarget(mainContainer, this, resourceManager));
+    }
+
+    protected void initKeyboardFocusManagerListeners() {
+        final ShortcutProcessor shortcutProcessor = new ShortcutProcessor(this, this);
+        final FocusOwnerChangeListener focusOwnerChangeListener = new FocusOwnerChangeListener();
+
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(shortcutProcessor);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusOwnerChangeListener);
+
+        anchestor.addWindowListener(new WindowAdapter() {
+            public void windowClosed(WindowEvent e) {
+                KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventPostProcessor(shortcutProcessor);
+                KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("focusOwner", focusOwnerChangeListener);
+            }
+        });
+
     }
 
     protected void initUI(Locale locale) {
@@ -605,10 +614,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             setResourceManager(new MyDoggyResourceManager());
         }
         resourceManager.setLocale(locale);
-    }
-
-    protected void initShortcut() {
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(new ShortcutProcessor(this, this));
     }
 
 
@@ -669,6 +674,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
+    protected void finalize() throws Throwable {
+        System.out.println("FINALIZED");
+        super.finalize();
+    }
 
     void syncPanel(ToolWindowAnchor anchor) {
         boolean revalidate = false;
@@ -875,7 +884,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             boolean force = false;
             if (oldAnchor == null) {
                 oldAnchor = newAnchor;
-                force  = true;
+                force = true;
             }
 
             ToolWindowType toolType = descriptor.getToolWindow().getType();
@@ -907,7 +916,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 //                );
             }
         }
-        
+
     }
 
     protected static class AutoHideChangeListener implements PropertyChangeListener {
@@ -1003,6 +1012,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         public void propertyChange(PropertyChangeEvent evt) {
             SwingUtil.repaint(MyDoggyToolWindowManager.this);
+        }
+    }
+
+    protected class FocusOwnerChangeListener implements PropertyChangeListener {
+        public void propertyChange(PropertyChangeEvent evt) {
+            Component newFocusOwner = (Component) evt.getNewValue();
+            if (newFocusOwner != null && SwingUtilities.isDescendingFrom(newFocusOwner, mainContainer))
+                lastFocusOwner = newFocusOwner;
         }
     }
 

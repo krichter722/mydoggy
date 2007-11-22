@@ -1,12 +1,12 @@
 package org.noos.xing.mydoggy.plaf.ui.util;
 
-import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragGestureRecognizer;
 import java.awt.dnd.DragSource;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
@@ -85,7 +85,7 @@ public class SwingUtil {
     }
 
     public static void registerDragGesture(Component c, DragGesture dragGesture) {
-        DragSource dragSource = DragSource.getDefaultDragSource();
+        DragSource dragSource = new DragSource();
         dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, dragGesture);
         dragSource.addDragSourceMotionListener(dragGesture);
     }
