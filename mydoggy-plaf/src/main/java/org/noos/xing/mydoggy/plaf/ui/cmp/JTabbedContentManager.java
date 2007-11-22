@@ -7,7 +7,6 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabListener;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
 import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
-import org.noos.xing.mydoggy.plaf.ui.look.MultiSplitTabbedPaneUI;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.accessibility.Accessible;
@@ -49,12 +48,12 @@ public class JTabbedContentManager extends JTabbedPane {
 
         MouseInputAdapter mouseInputAdapter = new MouseOverTabListener();
         TabMoveHandler tabMoveHandler = new TabMoveHandler();
+
         addMouseListener(mouseInputAdapter);
         addMouseListener(tabMoveHandler);
+        
         addMouseMotionListener(mouseInputAdapter);
         addMouseMotionListener(tabMoveHandler);
-
-        setUI(new MultiSplitTabbedPaneUI());
     }
 
 

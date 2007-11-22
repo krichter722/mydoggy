@@ -165,6 +165,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         tabbedContentManager.setToolWindowManager(toolWindowManager);
         initListeners();
 
+/*
         setPopupMenu(contentManager.getPopupMenu());
 
         lastSelected = null;
@@ -197,6 +198,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             }
         });
 
+*/
         return this;
     }
 
@@ -364,11 +366,6 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             propertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
             propertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
             propertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
-            propertyChangeSupport.addPropertyChangeListener("selected", new PropertyChangeListener() {
-                public void propertyChange(PropertyChangeEvent evt) {
-                    //                System.out.println("SELECTED " + evt.getNewValue());
-                }
-            });
         }
         SwingUtil.registerDragGesture(tabbedContentManager,
                                       new TabbedContentManagerDragGesture());
