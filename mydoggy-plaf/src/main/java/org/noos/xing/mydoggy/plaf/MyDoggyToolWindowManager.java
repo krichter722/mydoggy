@@ -608,7 +608,15 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                     getBar(descriptor.getToolWindow().getAnchor()).propertyChange(evt);
             }
         });
+        propertyChangeSupport.addPropertyChangeListener("anchestor.closed", new AnchorClosedChangeListener());
 
+        anchestor.addWindowListener(new WindowAdapter() {
+            public void windowClosed(WindowEvent e) {
+                propertyChangeSupport.firePropertyChange(
+                        new PropertyChangeEvent(MyDoggyToolWindowManager.this, "anchestor.closed", true, false)
+                );
+            }
+        });
 
         initKeyboardFocusManagerListeners();
 
@@ -623,13 +631,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(shortcutProcessor);
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusOwnerChangeListener);
 
-        anchestor.addWindowListener(new WindowAdapter() {
-            public void windowClosed(WindowEvent e) {
+        propertyChangeSupport.addPropertyChangeListener("anchestor.closed", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventPostProcessor(shortcutProcessor);
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("focusOwner", focusOwnerChangeListener);
             }
         });
-
     }
 
     protected void initUI(Locale locale) {
@@ -1016,6 +1023,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             Component newFocusOwner = (Component) evt.getNewValue();
             if (newFocusOwner != null && SwingUtilities.isDescendingFrom(newFocusOwner, mainContainer))
                 lastFocusOwner = newFocusOwner;
+        }
+    }
+
+    protected class AnchorClosedChangeListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            for (ToolWindowDescriptor tool : tools.values())
+                tool.getToolWindowContainer().propertyChange(evt);
         }
     }
 
