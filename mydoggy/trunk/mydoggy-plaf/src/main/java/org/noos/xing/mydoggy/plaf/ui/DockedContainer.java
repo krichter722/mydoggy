@@ -176,8 +176,6 @@ public class DockedContainer implements ToolWindowContainer {
             titleBarButtons.getFocusable().setFocusable(true);
             focusRequester = titleBarButtons.getFocusable();
         }
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", new FocusOwnerPropertyChangeListener());
-
         titleBarButtons.configureIcons(ToolWindowType.DOCKED);
     }
 
@@ -223,6 +221,15 @@ public class DockedContainer implements ToolWindowContainer {
             }
         });
 
+        // TODO: make this more safe....
+        final FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener();
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
+        addPropertyChangeListener("anchestor.closed", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
+            }
+        });
+
         descriptor.getDockedTypeDescriptor().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if ("idVisibleOnTitleBar".equals(evt.getPropertyName())) {
@@ -236,7 +243,7 @@ public class DockedContainer implements ToolWindowContainer {
             }
         });
 
-        ((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).addPropertyChangeListener(
+        descriptor.getTypeDescriptor(ToolWindowType.SLIDING).addPropertyChangeListener(
                 new PropertyChangeListener() {
                     public void propertyChange(PropertyChangeEvent evt) {
                         if ("enabled".equals(evt.getPropertyName())) {
@@ -247,7 +254,7 @@ public class DockedContainer implements ToolWindowContainer {
                     }
                 }
         );
-        ((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).addPropertyChangeListener(
+        descriptor.getTypeDescriptor(ToolWindowType.FLOATING).addPropertyChangeListener(
                 new PropertyChangeListener() {
                     public void propertyChange(PropertyChangeEvent evt) {
                         if ("enabled".equals(evt.getPropertyName())) {
