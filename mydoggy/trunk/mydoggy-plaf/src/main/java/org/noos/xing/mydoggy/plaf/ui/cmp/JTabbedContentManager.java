@@ -57,10 +57,6 @@ public class JTabbedContentManager extends JTabbedPane {
     }
 
 
-    public void insertTab(String title, Icon icon, Component component, String tip, int index) {
-        this.insertTab(title, icon, component, tip, index, null);
-    }
-
     public String getToolTipText(MouseEvent event) {
         int index = indexAtLocation(event.getX(), event.getY());
         if (index != -1)
@@ -95,9 +91,12 @@ public class JTabbedContentManager extends JTabbedPane {
         return getContentPage(index).getContentIcon();
     }
 
+    public void addTab(Content content, TabbedContentUI tabbedContentUI) {
+        insertTab(content, tabbedContentUI, null, getTabCount());
+    }
 
-    public void addTab(String title, Icon icon, Component component, String tip, TabbedContentUI tabbedContentUI) {
-        insertTab(title, icon, component, tip, getTabCount(), tabbedContentUI);
+    public void addTab(Content content, TabbedContentUI tabbedContentUI, Component component) {
+        insertTab(content, tabbedContentUI, component, getTabCount());
     }
 
     public void setPopupMenuAt(int index, JPopupMenu popupMenu) {
@@ -141,7 +140,7 @@ public class JTabbedContentManager extends JTabbedPane {
     }
 
     public ContentPage getContentPage(int index) {
-        return getContentPage(index, null);
+        return getContentPage(index, null, null);
     }
 
     public ContentPage getContentPage(Content content) {
@@ -167,31 +166,42 @@ public class JTabbedContentManager extends JTabbedPane {
     }
 
 
-    protected void insertTab(String title, Icon icon, Component component, String tip, int index, TabbedContentUI tabbedContentUI) {
+    protected void insertTab(Content content, ContentUI contentUI, Component component, int index) {
+        String tip = content.getToolTipText();
         if (tip == null)
             tip = "";
-        super.insertTab(title, icon, component, tip, index);
 
-        ContentPage contentPage = getContentPage(index, tabbedContentUI);
-        contentPage.setTitle(title);
-        contentPage.setIcon(icon);
+        if (component == null)
+            component = content.getComponent();
+
+        super.insertTab(content.getTitle(),
+                        content.getIcon(),
+                        component,
+                        tip,
+                        index);
+
+        ContentPage contentPage = getContentPage(index, content, contentUI);
+        contentPage.setTitle(content.getTitle());
+        contentPage.setIcon(content.getIcon());
 
         super.setTitleAt(index, "");
         super.setIconAt(index, getContentPage(index).getContentIcon());
     }
 
-    protected ContentPage getContentPage(int index, TabbedContentUI tabbedContentUI) {
+    protected ContentPage getContentPage(int index, Content content, ContentUI contentUI) {
         Accessible accessible = getAccessibleContext().getAccessibleChild(index);
         ContentPage contentPage = contentPages.get(accessible);
+
         if (contentPage == null) {
-            if (tabbedContentUI == null)
-                contentPage = new ContentPage(this, (AccessibleContext) accessible, resourceManager);
+            if (contentUI == null)
+                contentPage = new ContentPage(content, this, (AccessibleContext) accessible, resourceManager);
             else {
-                contentPage = (ContentPage) tabbedContentUI;
+                contentPage = (ContentPage) contentUI;
                 contentPage.setAccessible((AccessibleContext) accessible);
             }
             contentPages.put(accessible, contentPage);
         }
+
         return contentPage;
     }
 
@@ -378,11 +388,10 @@ public class JTabbedContentManager extends JTabbedPane {
             pane.remove(src);
 
             // Add a new tab
-            pane.insertTab(contentPage.getTitle(),
-                           contentPage.getIcon(), 
-                           comp, tooltip,
-                           dst,
-                           contentPage);
+            pane.insertTab(contentPage.getContent(),
+                           contentPage,
+                           comp,
+                           dst);
         }
 
     }

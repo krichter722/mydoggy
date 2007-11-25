@@ -673,7 +673,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     } else {
                         if (manager.getShowingGroup() != null) {
                             multiSplitDockableContainer.addContent(descriptor.getToolWindow(),
-                                                                   content,
+                                                                   null, content,
                                                                    aggregationOnTool,
                                                                    aggregationPosition);
                         } else
@@ -684,11 +684,11 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     if (shiftShow)
                         multiSplitDockableContainer.addContent(
                                 (Dockable) ((JComponent) splitPaneContent).getClientProperty(ToolWindow.class),
-                                splitPaneContent,
+                                null, splitPaneContent,
                                 null,
                                 AggregationPosition.DEFAULT);
                     multiSplitDockableContainer.addContent(descriptor.getToolWindow(),
-                                                           content,
+                                                           null, content,
                                                            null,
                                                            aggregationPosition);
 
@@ -699,7 +699,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 if (manager.getShowingGroup() != null && content != null) {
                     multiSplitDockableContainer.clear();
                     multiSplitDockableContainer.addContent(descriptor.getToolWindow(),
-                                                           content,
+                                                           null, content,
                                                            null,
                                                            AggregationPosition.DEFAULT);
 
