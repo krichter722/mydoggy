@@ -394,10 +394,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     }
 
     protected void addTab(Content content, Object... constaints) {
-        tabbedContentManager.addTab(content.getTitle(),
-                                    content.getIcon(),
-                                    content.getComponent(),
-                                    content.getToolTipText(),
+        tabbedContentManager.addTab(content, 
                                     detachedContentUIMap.remove(content));
 
         int index = tabbedContentManager.getTabCount() - 1;

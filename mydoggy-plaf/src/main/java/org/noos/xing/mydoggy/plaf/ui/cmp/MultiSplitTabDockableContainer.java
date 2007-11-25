@@ -35,11 +35,9 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
         tabbedPane.setToolWindowManager(toolWindowManager);
         tabbedPane.setName("dockable.tabbedpane");
         tabbedPane.setFocusCycleRoot(true);
-        tabbedPane.addTab(dockable.getTitle(),
-                          dockable.getIcon(),
-                          new DockablePanel(dockable, component),
+        tabbedPane.addTab((Content) dockable,
                           null,
-                          null);
+                          new DockablePanel(dockable, component));
 
         SwingUtil.registerDragGesture(tabbedPane, new TabbedDragGesture(tabbedPane));
 
@@ -51,10 +49,10 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
         return tabbedPane.getComponentAt(0);
     }
 
-    protected void addToComponentWrapper(Component wrapperSource, Dockable dockable, Component content) {
-        JTabbedPane tabbedPane = (JTabbedPane) wrapperSource;
-        tabbedPane.addTab(dockable.getTitle(),
-                          dockable.getIcon(),
+    protected void addToComponentWrapper(Component wrapperSource, Dockable dockable, DockableUI dockableUI, Component content) {
+        JTabbedContentManager tabbedPane = (JTabbedContentManager) wrapperSource;
+        tabbedPane.addTab((Content) dockable,
+                          (TabbedContentUI) dockableUI,
                           new DockablePanel(dockable, content));
     }
 
@@ -238,12 +236,16 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
                 if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) {
                     if (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {
                         try {
-                            Content content = toolWindowManager.getContentManager().getContent(
+                            ContentManager contentManager = toolWindowManager.getContentManager();
+                            Content content = contentManager.getContent(
                                     dtde.getTransferable().getTransferData(MyDoggyTransferable.CONTENT_ID_DF)
                             );
                             if (content != null) {
+                                ContentUI contentUI = contentManager.getContentManagerUI().getContentUI(content);
+
                                 removeContent(content);
                                 addContent(content,
+                                           contentUI,
                                            content.getComponent(),
                                            onDockable,
                                            (dragAnchor == null) ? null : AggregationPosition.valueOf(dragAnchor.toString()));

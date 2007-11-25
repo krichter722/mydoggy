@@ -253,7 +253,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     protected void addUIForContent(Content content, Object... constraints) {
         if (constraints == null || constraints.length == 0) {
             dockableContainer.addContent(content,
-                                         content.getComponent(),
+                                         null, content.getComponent(),
                                          null,
                                          AggregationPosition.DEFAULT);
         } else {
@@ -479,5 +479,9 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
         }
 
     }
+
+
+    
+
 
 }

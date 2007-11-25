@@ -8,7 +8,7 @@ package org.noos.xing.mydoggy;
  * @see TabbedContentUI
  * @see DesktopContentUI
  */
-public interface ContentUI {
+public interface ContentUI extends DockableUI {
 
     /**
      * Returns the Content contropart of this ContentUI.
