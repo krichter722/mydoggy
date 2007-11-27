@@ -61,7 +61,7 @@ public class JBalloonTip extends JPanel {
 
         if (rootPaneContainer != null) {
             layeredPane = rootPaneContainer.getLayeredPane();
-            layeredPane.setLayer(this, JLayeredPane.POPUP_LAYER + 5);
+            layeredPane.setLayer(this, JLayeredPane.DEFAULT_LAYER + 5);
             layeredPane.add(this);
         }
 
@@ -137,7 +137,7 @@ public class JBalloonTip extends JPanel {
             }
             
             layeredPane = rootPaneContainer.getLayeredPane();
-            layeredPane.setLayer(this, JLayeredPane.POPUP_LAYER + 5);
+            layeredPane.setLayer(this, JLayeredPane.DEFAULT_LAYER + 5);
             layeredPane.add(this);
         }
     }

@@ -83,7 +83,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
             sheet.setBounds(point.x, point.y, mainPanel.getWidth(), height);
 
             layeredPane.remove(sheet);
-            layeredPane.setLayer(sheet, JLayeredPane.POPUP_LAYER + 2);
+            layeredPane.setLayer(sheet, JLayeredPane.DEFAULT_LAYER + 2);
             layeredPane.add(sheet);
 
             if (descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isAnimating())
@@ -279,7 +279,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
         sheet.setBounds(point.x, point.y, mainPanel.getWidth(), height);
 
         layeredPane.remove(sheet);
-        layeredPane.setLayer(sheet, JLayeredPane.POPUP_LAYER + 2);
+        layeredPane.setLayer(sheet, JLayeredPane.DEFAULT_LAYER + 2);
         layeredPane.add(sheet);
         layeredPane.validate();
     }

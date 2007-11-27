@@ -523,9 +523,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected void initComponents() {
         this.twmListeners = new EventListenerList();
 
-//        ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
-//        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-
         initContentManager();
 
         resourceManager.applyCustomization(MyDoggyKeySpace.TOOL_WINDOW_MANAGER, this);
