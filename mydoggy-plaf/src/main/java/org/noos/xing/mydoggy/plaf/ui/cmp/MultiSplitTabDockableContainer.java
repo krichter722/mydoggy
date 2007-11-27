@@ -167,6 +167,7 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
         protected ToolWindowManager toolWindowManager;
         protected JComponent component;
 
+        protected JTabbedPane dockableTabbedPane;
         protected Dockable onDockable;
         protected int indexAtLocation;
         protected ToolWindowAnchor dragAnchor;
@@ -213,17 +214,19 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
 
             Component deepestCmp = SwingUtilities.getDeepestComponentAt(component, location.x, location.y);
             if (deepestCmp != null) {
-                JTabbedPane dockableTabbedPane = (JTabbedPane) SwingUtil.getParent(deepestCmp, "dockable.tabbedpane");
+                dockableTabbedPane = (JTabbedPane) SwingUtil.getParent(deepestCmp, "dockable.tabbedpane");
                 if (dockableTabbedPane != null) {
-                    Point locationOnDeepest = SwingUtilities.convertPoint(component, location, deepestCmp);
+                    DockablePanel dockablePanel = SwingUtil.getParent(deepestCmp, DockablePanel.class);
+                    onDockable = SwingUtil.getParent(deepestCmp, DockablePanel.class).getDockable();
 
+                    Point locationOnDeepest = SwingUtilities.convertPoint(component, location, deepestCmp);
                     indexAtLocation = dockableTabbedPane.indexAtLocation(locationOnDeepest.x, locationOnDeepest.y);
-                    onDockable = ((DockablePanel) dockableTabbedPane.getComponentAt(0)).getDockable();
                 } else  {
                     onDockable = null;
                     indexAtLocation = -1;
                 }
             } else {
+                dockableTabbedPane = null;
                 onDockable = null;
                 indexAtLocation = -1;
             }
@@ -250,21 +253,36 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
                                     dtde.getTransferable().getTransferData(MyDoggyTransferable.CONTENT_ID_DF)
                             );
                             if (content != null ) {
+                                boolean rejectDrop = false;
                                 if (content == onDockable) {
-                                    // TODO: continue
+                                    if (indexAtLocation != -1) {
+                                        rejectDrop = true;
+                                    } else {
+                                        for (int i = 0, size = dockableTabbedPane.getTabCount(); i < size; i++) {
+                                            DockablePanel dockablePanel = (DockablePanel) dockableTabbedPane.getComponentAt(i);
+                                            if (dockablePanel.getDockable() == onDockable && i == indexAtLocation) {
+                                                rejectDrop = true;
+                                                break;
+                                            }
+                                        }
+                                    }
                                 }
 
-                                ContentUI contentUI = contentManager.getContentManagerUI().getContentUI(content);
+                                if (rejectDrop) {
+                                    dtde.dropComplete(false);
+                                } else  {
+                                    ContentUI contentUI = contentManager.getContentManagerUI().getContentUI(content);
 
-                                removeContent(content);
-                                addContent(content,
-                                           contentUI,
-                                           content.getComponent(),
-                                           onDockable,
-                                           indexAtLocation, 
-                                           (dragAnchor == null) ? null : AggregationPosition.valueOf(dragAnchor.toString()));
+                                    removeContent(content);
+                                    addContent(content,
+                                               contentUI,
+                                               content.getComponent(),
+                                               onDockable,
+                                               indexAtLocation,
+                                               (dragAnchor == null) ? null : AggregationPosition.valueOf(dragAnchor.toString()));
 
-                                dtde.dropComplete(true);
+                                    dtde.dropComplete(true);
+                                }
                             } else
                                 dtde.dropComplete(false);
                         } catch (Exception e) {
