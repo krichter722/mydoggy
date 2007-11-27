@@ -216,11 +216,18 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
             if (deepestCmp != null) {
                 dockableTabbedPane = (JTabbedPane) SwingUtil.getParent(deepestCmp, "dockable.tabbedpane");
                 if (dockableTabbedPane != null) {
-                    DockablePanel dockablePanel = SwingUtil.getParent(deepestCmp, DockablePanel.class);
-                    onDockable = SwingUtil.getParent(deepestCmp, DockablePanel.class).getDockable();
-
                     Point locationOnDeepest = SwingUtilities.convertPoint(component, location, deepestCmp);
                     indexAtLocation = dockableTabbedPane.indexAtLocation(locationOnDeepest.x, locationOnDeepest.y);
+
+                    DockablePanel dockablePanel = SwingUtil.getParent(deepestCmp, DockablePanel.class);
+                    if (dockablePanel != null)
+                        onDockable = SwingUtil.getParent(deepestCmp, DockablePanel.class).getDockable();
+                    else {
+                        if (indexAtLocation != -1)
+                            onDockable = ((DockablePanel) dockableTabbedPane.getComponentAt(indexAtLocation)).getDockable();
+                        else
+                            onDockable = ((DockablePanel) dockableTabbedPane.getComponentAt(0)).getDockable();
+                    }
                 } else  {
                     onDockable = null;
                     indexAtLocation = -1;
