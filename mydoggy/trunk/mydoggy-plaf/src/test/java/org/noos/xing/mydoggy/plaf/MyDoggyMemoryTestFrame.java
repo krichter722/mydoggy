@@ -84,13 +84,11 @@ public class MyDoggyMemoryTestFrame extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-/*
         try {
             UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-*/
 
         final MyDoggyMemoryTestFrame frame = new MyDoggyMemoryTestFrame();
 		SwingUtilities.invokeLater(new Runnable() {
