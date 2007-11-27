@@ -123,7 +123,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
     protected void initComponents() {
         window = new JModalWindow(dockedContainer.getResourceManager(),
-                                  descriptor.getWindowAnchestor(),
+                                  dockedContainer.getResourceManager().getBoolean("dialog.owner.enabled", true) ?  descriptor.getWindowAnchestor() : null,
                                   null,
                                   false);
         window.setName("toolWindow.floating.window." + toolWindow.getId());
