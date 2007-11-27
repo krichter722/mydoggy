@@ -675,7 +675,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                             multiSplitDockableContainer.addContent(descriptor.getToolWindow(),
                                                                    null, content,
                                                                    aggregationOnTool,
-                                                                   aggregationPosition);
+                                                                   -1, aggregationPosition);
                         } else
                             setSplitPaneContent(content);
                     }
@@ -686,11 +686,11 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                                 (Dockable) ((JComponent) splitPaneContent).getClientProperty(ToolWindow.class),
                                 null, splitPaneContent,
                                 null,
-                                AggregationPosition.DEFAULT);
+                                -1, AggregationPosition.DEFAULT);
                     multiSplitDockableContainer.addContent(descriptor.getToolWindow(),
                                                            null, content,
                                                            null,
-                                                           aggregationPosition);
+                                                           -1, aggregationPosition);
 
                     setSplitPaneContent(multiSplitDockableContainer);
                 } else if (content != null)
@@ -701,7 +701,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     multiSplitDockableContainer.addContent(descriptor.getToolWindow(),
                                                            null, content,
                                                            null,
-                                                           AggregationPosition.DEFAULT);
+                                                           -1, AggregationPosition.DEFAULT);
 
                     setSplitPaneContent(multiSplitDockableContainer);
                 } else if (content != null)

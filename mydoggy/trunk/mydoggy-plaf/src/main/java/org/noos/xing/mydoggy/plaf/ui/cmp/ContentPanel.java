@@ -22,8 +22,15 @@ public class ContentPanel extends JPanel implements PropertyChangeListener {
     protected Point mouseLocation;
     protected boolean dragActive;
 
+    protected int threshold;
+
     public ContentPanel(String parentPrefix) {
+        this(parentPrefix, 20);
+    }
+
+    public ContentPanel(String parentPrefix, int threshold) {
         this.parentPrefix = parentPrefix;
+        this.threshold = threshold;
         setLayout(layout = new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
         setOpaque(false);
 
@@ -68,8 +75,8 @@ public class ContentPanel extends JPanel implements PropertyChangeListener {
         super.paint(g);
 
         if (dragActive && mouseLocation != null) {
-            int xLimit = 20;
-            int yLimit = 20;
+            int xLimit = threshold;
+            int yLimit = threshold;
 
             if (mouseLocation.x <= xLimit && mouseLocation.y > yLimit && mouseLocation.y < getHeight() - yLimit) {
                 layout.setColumn(0, xLimit);
@@ -78,7 +85,7 @@ public class ContentPanel extends JPanel implements PropertyChangeListener {
                 layout.setRow(2, 0);
 
                 g.setColor(Color.BLUE);
-                GraphicsUtil.drawRect(g, 0, 0, xLimit, getHeight(), 3);
+                GraphicsUtil.drawRect(g, 0, 0, 20, getHeight(), 3);
 
                 putProperty("dragToolWindow");
                 putClientProperty("dragAnchor", ToolWindowAnchor.LEFT);
@@ -89,7 +96,7 @@ public class ContentPanel extends JPanel implements PropertyChangeListener {
                 layout.setRow(2, 0);
 
                 g.setColor(Color.BLUE);
-                GraphicsUtil.drawRect(g, 0, 0, getWidth(), yLimit, 3);
+                GraphicsUtil.drawRect(g, 0, 0, getWidth(), 20, 3);
 
                 putProperty("dragToolWindow");
                 putClientProperty("dragAnchor", ToolWindowAnchor.TOP);
@@ -101,7 +108,7 @@ public class ContentPanel extends JPanel implements PropertyChangeListener {
                 layout.setRow(2, 0);
 
                 g.setColor(Color.BLUE);
-                GraphicsUtil.drawRect(g, getWidth() - xLimit, 0, xLimit, getHeight(), 3);
+                GraphicsUtil.drawRect(g, getWidth() - 20, 0, 20, getHeight(), 3);
 
                 putProperty("dragToolWindow");
                 putClientProperty("dragAnchor", ToolWindowAnchor.RIGHT);
@@ -113,7 +120,7 @@ public class ContentPanel extends JPanel implements PropertyChangeListener {
                 layout.setRow(2, 20);
 
                 g.setColor(Color.BLUE);
-                GraphicsUtil.drawRect(g, 0, getHeight() - yLimit, getWidth(), yLimit, 3);
+                GraphicsUtil.drawRect(g, 0, getHeight() - 20, getWidth(), 20, 3);
 
                 putProperty("dragToolWindow");
                 putClientProperty("dragAnchor", ToolWindowAnchor.BOTTOM);

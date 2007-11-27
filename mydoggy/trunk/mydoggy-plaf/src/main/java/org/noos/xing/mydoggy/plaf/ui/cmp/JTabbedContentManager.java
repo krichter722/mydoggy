@@ -99,6 +99,11 @@ public class JTabbedContentManager extends JTabbedPane {
         insertTab(content, tabbedContentUI, component, getTabCount());
     }
 
+    public void addTab(Content content, TabbedContentUI tabbedContentUI, Component component, int index) {
+        insertTab(content, tabbedContentUI, component,
+                  (index < 0) ? getTabCount() : index);
+    }
+
     public void setPopupMenuAt(int index, JPopupMenu popupMenu) {
         checkIndex(index);
         getContentPage(index).setPopupMenu(popupMenu);
