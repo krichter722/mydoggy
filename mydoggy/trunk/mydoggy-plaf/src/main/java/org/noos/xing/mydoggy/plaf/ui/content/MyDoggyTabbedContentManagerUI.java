@@ -590,7 +590,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                     detachedContentUIMap.put(content, contentUI);
                 }
 
-                final JDialog dialog = new JDialog(parentFrame, false);
+                final JDialog dialog = new JDialog(resourceManager.getBoolean("dialog.owner.enabled", true) ?  parentFrame : null,
+                                                   false);
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
                 Window parentWindow = SwingUtilities.windowForComponent(tabbedContentManager);

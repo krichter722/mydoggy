@@ -156,12 +156,12 @@ public class MyDoggyResourceManager implements ResourceManager {
     }
 
     public boolean getBoolean(String name, boolean defualt) {
-        String value = resources.getProperty(name);
-        if (value == null || "".equals(value.trim()))
+        String propertyValue = getProperty(name);
+        if (propertyValue == null || "".equals(propertyValue.trim()))
             return defualt;
 
         try {
-            return Boolean.parseBoolean(value);
+            return Boolean.parseBoolean(propertyValue);
         } catch (Exception e) {
             return defualt;
         }

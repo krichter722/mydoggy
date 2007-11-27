@@ -426,7 +426,8 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (!oldValue && newValue) {
-                final JDialog dialog = new JDialog(parentFrame, false);
+                final JDialog dialog = new JDialog(resourceManager.getBoolean("dialog.owner.enabled", true) ?  parentFrame : null,
+                                                   false);
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
                 Window parentWindow = SwingUtilities.windowForComponent(multiSplitContainer);
