@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf;
 
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -84,12 +85,6 @@ public class MyDoggyMemoryTestFrame extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
         final MyDoggyMemoryTestFrame frame = new MyDoggyMemoryTestFrame();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -142,9 +137,14 @@ class MyDoggyFrame extends JFrame {
 			JPanel pane2 = new JPanel(new BorderLayout());
 			pane2.add(new JComboBox(new String[] { "coucou1", "coucou2", "taratata1", "taratata2" }), BorderLayout.NORTH);
 			pane2.add(new JButton("Tool 2"), BorderLayout.CENTER);
-			ToolWindow tool2 = toolWindowManager.registerToolWindow("2", "Tool 2", null, pane2, ToolWindowAnchor.LEFT);
+			final ToolWindow tool2 = toolWindowManager.registerToolWindow("2", "Tool 2", null, pane2, ToolWindowAnchor.LEFT);
 			tool2.setAvailable(true);
-			tool2.setActive(true);
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    tool2.setType(ToolWindowType.SLIDING);
+                    tool2.setActive(true);
+                }
+            });
 		}
 
 		// tool3 - flashing

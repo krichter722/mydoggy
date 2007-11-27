@@ -115,7 +115,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
             }
 
             layeredPane.remove(sheet);
-            layeredPane.setLayer(sheet, JLayeredPane.POPUP_LAYER + 3);
+            layeredPane.setLayer(sheet, JLayeredPane.DEFAULT_LAYER + 3);
             layeredPane.add(sheet);
 /*
             if (manager.getTypeDescriptor(ToolWindowType.SLIDING).isAnimating())
@@ -462,7 +462,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                             animation.stop();
                     }
 
-                    layeredPane.setLayer(sheet, JLayeredPane.POPUP_LAYER + 4);
+                    layeredPane.setLayer(sheet, JLayeredPane.DEFAULT_LAYER + 4);
                     sheet.setAlphaModeRatio(1.0f);
                 } else {
                     FloatingLiveTypeDescriptor floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
@@ -470,7 +470,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                         timer = new Timer(floatingLiveTypeDescriptor.getTransparentDelay(), this);
                         timer.start();
                     }
-                    layeredPane.setLayer(sheet, JLayeredPane.POPUP_LAYER + 3);
+                    layeredPane.setLayer(sheet, JLayeredPane.DEFAULT_LAYER + 3);
                 }
                 SwingUtil.repaint(layeredPane);
             }
