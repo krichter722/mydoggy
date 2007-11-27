@@ -71,21 +71,35 @@ public class ToolWindowTitleBarUI extends PanelUI {
         animation = new GradientAnimation();
 
         descriptor.getToolWindow().addInternalPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                String propertyName = evt.getPropertyName();
+            public void propertyChange(PropertyChangeEvent e) {
+                String propertyName = e.getPropertyName();
                 if ("flash".equals(propertyName)) {
-                    if (toolWindow.isVisible()) {
-                        flasingDuration = -1;
-                        SwingUtil.repaint(panel);
+                    if (e.getNewValue() == Boolean.TRUE) {
+                        if (toolWindow.isVisible()) {
+                            flasingDuration = -1;
+                            SwingUtil.repaint(panel);
+                        }
+                    } else {
+                        if (flashingTimer != null) {
+                            flashingTimer.stop();
+                            flashingTimer = null;
+                            SwingUtil.repaint(panel);
+                        }
                     }
                 } else if ("flash.duration".equals(propertyName)) {
-                    if (toolWindow.isVisible()) {
-                        flasingDuration = (Integer) evt.getNewValue();
-                        SwingUtil.repaint(panel);
+                    if (e.getNewValue() == Boolean.TRUE) {
+                        if (toolWindow.isVisible()) {
+                            flasingDuration = (Integer) e.getNewValue();
+                            SwingUtil.repaint(panel);
+                        }
+                    } else {
+                        if (flashingTimer != null) {
+                            flashingTimer.stop();
+                            flashingTimer = null;
+                            SwingUtil.repaint(panel);
+                        }
                     }
-                } else if ("active".endsWith(propertyName)) {
-                    toolWindow.setFlashing(false);
-                }
+                } 
             }
         });
     }
@@ -143,7 +157,6 @@ public class ToolWindowTitleBarUI extends PanelUI {
         r.x = r.y = 0;
 
         if (toolWindow.isFlashing()) {
-
             if (flashingState)
                 updateToolWindowTitleBar(g, c,
                                          animBackStart, animBackEnd,

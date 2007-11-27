@@ -7,6 +7,7 @@ import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.DockableUI;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -402,6 +403,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
                 setRootComponent(c);
             }
+            SwingUtil.repaint(this);
 
             multiSplitPaneModelRoot = null;
         } else {
@@ -516,7 +518,6 @@ public class MultiSplitDockableContainer extends JPanel {
                     throw new IllegalArgumentException("Cannot find component on multisplit...");
             }
             repaintMultiSplit();
-
         }
     }
 

@@ -6,6 +6,8 @@ import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabListener;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabEvent;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -99,7 +101,7 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
         protected JTabbedPane dockableTabbedPane;
 
         public TabbedDragGesture(JTabbedPane dockableTabbedPane) {
-            super((MyDoggyToolWindowManager) toolWindowManager);
+            super(toolWindowManager);
             this.dockableTabbedPane = dockableTabbedPane;
         }
 
@@ -122,7 +124,7 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
                                   this);
 
                     // Setup ghostImage
-//                    Icon icon = contantPage.getContentIcon();
+//                 TODO    Icon icon = contantPage.getContentIcon();
                     BufferedImage ghostImage = new BufferedImage(32, 32, BufferedImage.TYPE_INT_RGB);
                     ghostImage.getGraphics().fillRect(0, 0, 32, 32);
 //                    contantPage.getContentIcon().paintIcon(

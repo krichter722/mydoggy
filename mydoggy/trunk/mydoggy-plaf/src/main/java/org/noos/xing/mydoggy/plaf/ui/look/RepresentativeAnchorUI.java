@@ -33,6 +33,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro
@@ -163,16 +164,32 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             toolWindow.setFlashing(false);
             SwingUtil.repaint(label);
         } else if ("flash".equals(propertyName)) {
-            if (!toolWindow.isVisible()) {
-                flasingDuration = -1;
-                SwingUtil.repaint(label);
+            if (e.getNewValue() == Boolean.TRUE) {
+                if (!toolWindow.isVisible()) {
+                    flasingDuration = -1;
+                    SwingUtil.repaint(label);
+                }
+            } else {
+                if (flashingTimer != null) {
+                    flashingTimer.stop();
+                    flashingTimer = null;
+                    SwingUtil.repaint(label);
+                }
             }
         } else if ("flash.duration".equals(propertyName)) {
-            if (!toolWindow.isVisible()) {
-                flasingDuration = (Integer) e.getNewValue();
-                SwingUtil.repaint(label);
+            if (e.getNewValue() == Boolean.TRUE) {
+                if (!toolWindow.isVisible()) {
+                    flasingDuration = (Integer) e.getNewValue();
+                    SwingUtil.repaint(label);
+                }
+            } else {
+                if (flashingTimer != null) {
+                    flashingTimer.stop();
+                    flashingTimer = null;
+                    SwingUtil.repaint(label);
+                }
             }
-        }
+        } 
     }
 
     public ToolWindowDescriptor getDescriptor() {
