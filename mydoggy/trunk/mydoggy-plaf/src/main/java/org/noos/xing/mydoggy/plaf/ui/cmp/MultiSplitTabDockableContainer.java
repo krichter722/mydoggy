@@ -51,7 +51,6 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
 
     protected void addToComponentWrapper(Component wrapperSource, Dockable dockable, DockableUI dockableUI, int aggregationIndexLocation, Component content) {
         JTabbedContentManager tabbedPane = (JTabbedContentManager) wrapperSource;
-        System.out.println("aggregationIndexLocation = " + aggregationIndexLocation);
         tabbedPane.addTab((Content) dockable,
                           (TabbedContentUI) dockableUI,
                           new DockablePanel(dockable, content),
@@ -216,7 +215,7 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
             if (deepestCmp != null) {
                 dockableTabbedPane = (JTabbedPane) SwingUtil.getParent(deepestCmp, "dockable.tabbedpane");
                 if (dockableTabbedPane != null) {
-                    Point locationOnDeepest = SwingUtilities.convertPoint(component, location, deepestCmp);
+                    Point locationOnDeepest = SwingUtilities.convertPoint(component, location, dockableTabbedPane);
                     indexAtLocation = dockableTabbedPane.indexAtLocation(locationOnDeepest.x, locationOnDeepest.y);
 
                     DockablePanel dockablePanel = SwingUtil.getParent(deepestCmp, DockablePanel.class);
@@ -262,7 +261,7 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
                             if (content != null ) {
                                 boolean rejectDrop = false;
                                 if (content == onDockable) {
-                                    if (indexAtLocation != -1) {
+                                    if (indexAtLocation == -1) {
                                         rejectDrop = true;
                                     } else {
                                         for (int i = 0, size = dockableTabbedPane.getTabCount(); i < size; i++) {
