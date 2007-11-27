@@ -512,6 +512,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
+    public void addInternalPropertyChangeListener(String property, PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(property, listener);
+    }
 
     protected void initPersistenceDelegate() {
         this.persistenceDelegate = new XMLPersistenceDelegate(this);
@@ -519,6 +522,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     protected void initComponents() {
         this.twmListeners = new EventListenerList();
+
+        ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
+        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 
         initContentManager();
 
@@ -784,10 +790,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     void resetShiftShow() {
         resetShowingGroup();
-    }
-
-    void addInternalPropertyChangeListener(String property, PropertyChangeListener propertyChangeListener) {
-        propertyChangeSupport.addPropertyChangeListener(property, propertyChangeListener);
     }
 
 

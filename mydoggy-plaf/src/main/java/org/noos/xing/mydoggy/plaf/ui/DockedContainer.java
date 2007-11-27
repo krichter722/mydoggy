@@ -227,6 +227,7 @@ public class DockedContainer implements ToolWindowContainer {
         addPropertyChangeListener("anchestor.closed", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
+                toolWindow.setFlashing(false);
             }
         });
 

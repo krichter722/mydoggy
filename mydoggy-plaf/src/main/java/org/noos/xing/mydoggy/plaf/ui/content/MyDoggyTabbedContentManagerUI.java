@@ -165,7 +165,6 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         tabbedContentManager.setToolWindowManager(toolWindowManager);
         initListeners();
 
-/*
         setPopupMenu(contentManager.getPopupMenu());
 
         lastSelected = null;
@@ -198,7 +197,6 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             }
         });
 
-*/
         return this;
     }
 
