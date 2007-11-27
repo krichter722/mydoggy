@@ -90,7 +90,8 @@ public class MyDoggySet {
         this.frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
 
         MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame, Locale.US, null);
-        myDoggyToolWindowManager.getResourceManager().putProperty("dialog.owner.enabled", "false");
+        // TODO: test for flaoting tool on ubuntu
+//        myDoggyToolWindowManager.getResourceManager().putProperty("dialog.owner.enabled", "false");
 
         this.toolWindowManager = myDoggyToolWindowManager;
         customizeToolWindowManager();
@@ -222,7 +223,7 @@ public class MyDoggySet {
         floatingTypeDescriptor.setModal(true);
         floatingTypeDescriptor.setAnimating(false);
 
-//        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
+        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
         ContentManagerUI defaultManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
 //        TabbedContentManagerUI tabbedContentManagerUI = (TabbedContentManagerUI) defaultManagerUI;
 //        tabbedContentManagerUI.setShowAlwaysTab(false);

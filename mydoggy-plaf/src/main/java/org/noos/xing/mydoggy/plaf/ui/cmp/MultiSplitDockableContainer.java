@@ -63,12 +63,14 @@ public class MultiSplitDockableContainer extends JPanel {
      * @param dockableUI
      * @param content
      * @param aggregationOnDockable
+     * @param aggregationIndexLocation
      * @param aggregationPosition
      */
     public void addContent(Dockable dockable,
                            DockableUI dockableUI,
                            Component content,
                            Dockable aggregationOnDockable,
+                           int aggregationIndexLocation,
                            AggregationPosition aggregationPosition) {
 
         String dockableId = dockable.getId();
@@ -112,7 +114,7 @@ public class MultiSplitDockableContainer extends JPanel {
                     Component componentWrapper = getComponentWrapper(entries.values().iterator().next().dockable, previousContent);
 
                     // The requeste is to add more than one dockable on the same leaf...
-                    addToComponentWrapper(componentWrapper, dockable, dockableUI, content);
+                    addToComponentWrapper(componentWrapper, dockable, dockableUI, aggregationIndexLocation, content);
 
                     resetRootComponent();
                     setRootComponent(componentWrapper);
@@ -179,7 +181,8 @@ public class MultiSplitDockableContainer extends JPanel {
                 // Build content to add
                 String leafName = "" + (entries.size() + 1);
 
-                if (oldModel != null) {
+                if (/*oldModel != null*/false) {
+                    // TODO:
                     multiSplitPaneModelRoot = decode(oldModel);
                 } else {
                     // Modify model
@@ -203,7 +206,7 @@ public class MultiSplitDockableContainer extends JPanel {
                                             addToComponentWrapper(
                                                     multiSplitPane.getMultiSplitLayout().getChildMap().get(leaf.getName()),
                                                     dockable,
-                                                    dockableUI, content
+                                                    dockableUI, aggregationIndexLocation, content
                                             );
 
                                             leaf.addDockable(dockable.getId());
@@ -611,7 +614,7 @@ public class MultiSplitDockableContainer extends JPanel {
         return container.getComponent(0);
     }
 
-    protected void addToComponentWrapper(Component wrapperSource, Dockable dockable, DockableUI dockableUI, Component content) {
+    protected void addToComponentWrapper(Component wrapperSource, Dockable dockable, DockableUI dockableUI, int aggregationIndexLocation, Component content) {
         throw new IllegalStateException("Cannot call this method...");
     }
 

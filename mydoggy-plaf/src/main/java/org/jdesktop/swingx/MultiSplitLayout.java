@@ -464,7 +464,7 @@ public class MultiSplitLayout implements LayoutManager {
                 } else if ((availableHeight > 0.0) && (splitChildWeight > 0.0)) {
                     // TODO: switch extraHeight with availableHeight
                     
-                    double allocatedHeight = Math.rint(splitChildWeight * availableHeight);
+                    double allocatedHeight = Math.rint(splitChildWeight * extraHeight);
                     double oldHeight = splitChildBounds.getHeight();
                     double newHeight = Math.max(minSplitChildHeight, oldHeight - allocatedHeight);
 

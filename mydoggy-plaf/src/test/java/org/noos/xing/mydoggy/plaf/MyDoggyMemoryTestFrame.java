@@ -1,21 +1,14 @@
 package org.noos.xing.mydoggy.plaf;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Frame;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 
 enum MAction {
 	MYDOGGY_SIMPLE("MyDoggy Simple"),
@@ -91,7 +84,15 @@ public class MyDoggyMemoryTestFrame extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		final MyDoggyMemoryTestFrame frame = new MyDoggyMemoryTestFrame();
+/*
+        try {
+            UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+*/
+
+        final MyDoggyMemoryTestFrame frame = new MyDoggyMemoryTestFrame();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				frame.setVisible(true);

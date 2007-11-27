@@ -272,7 +272,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
             multiSplitContainer.addContent(content,
                                          null, content.getComponent(),
                                          null,
-                                         AggregationPosition.DEFAULT);
+                                         -1, AggregationPosition.DEFAULT);
         } else {
         }
         SwingUtil.repaint(multiSplitContainer);
@@ -526,6 +526,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
             final JTabbedContentManager tabbedPane = (JTabbedContentManager) super.getComponentWrapper(dockable, component);
             tabbedPane.addChangeListener(new ChangeListener() {
                 public void stateChanged(ChangeEvent e) {
+/*
                     if (!valueAdjusting && !contentValueAdjusting) {
                         Component selectedComponent = tabbedPane.getSelectedComponent();
                         if (selectedComponent == null)
@@ -545,6 +546,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                         lastSelected = newSelected;
                         newSelected.fireSelected(true);
                     }
+*/
                 }
             });
             tabbedPane.addTabListener(new TabListener() {

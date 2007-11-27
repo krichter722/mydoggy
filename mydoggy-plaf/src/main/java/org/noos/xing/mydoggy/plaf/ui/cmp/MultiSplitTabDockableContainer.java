@@ -6,8 +6,6 @@ import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabListener;
-import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabEvent;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -26,7 +24,7 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
     public MultiSplitTabDockableContainer(MyDoggyToolWindowManager toolWindowManager) {
         super(toolWindowManager, JSplitPane.VERTICAL_SPLIT);
 
-        this.contentPanel = new ContentPanel("dockable.tabbedpane");
+        this.contentPanel = new ContentPanel("dockable.tabbedpane", 10);
         this.contentPanel.setDropTarget(new ContentDropTarget(contentPanel, toolWindowManager));
         add(contentPanel, "0,0,FULL,FULL");
     }
@@ -51,11 +49,13 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
         return tabbedPane.getComponentAt(0);
     }
 
-    protected void addToComponentWrapper(Component wrapperSource, Dockable dockable, DockableUI dockableUI, Component content) {
+    protected void addToComponentWrapper(Component wrapperSource, Dockable dockable, DockableUI dockableUI, int aggregationIndexLocation, Component content) {
         JTabbedContentManager tabbedPane = (JTabbedContentManager) wrapperSource;
+        System.out.println("aggregationIndexLocation = " + aggregationIndexLocation);
         tabbedPane.addTab((Content) dockable,
                           (TabbedContentUI) dockableUI,
-                          new DockablePanel(dockable, content));
+                          new DockablePanel(dockable, content),
+                          aggregationIndexLocation);
     }
 
     protected void removeComponentWrapper(Component wrapperSource, Dockable dockable) {
@@ -168,6 +168,7 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
         protected JComponent component;
 
         protected Dockable onDockable;
+        protected int indexAtLocation;
         protected ToolWindowAnchor dragAnchor;
 
         protected Border oldBorder;
@@ -213,12 +214,18 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
             Component deepestCmp = SwingUtilities.getDeepestComponentAt(component, location.x, location.y);
             if (deepestCmp != null) {
                 JTabbedPane dockableTabbedPane = (JTabbedPane) SwingUtil.getParent(deepestCmp, "dockable.tabbedpane");
-
                 if (dockableTabbedPane != null) {
+                    Point locationOnDeepest = SwingUtilities.convertPoint(component, location, deepestCmp);
+
+                    indexAtLocation = dockableTabbedPane.indexAtLocation(locationOnDeepest.x, locationOnDeepest.y);
                     onDockable = ((DockablePanel) dockableTabbedPane.getComponentAt(0)).getDockable();
+                } else  {
+                    onDockable = null;
+                    indexAtLocation = -1;
                 }
             } else {
                 onDockable = null;
+                indexAtLocation = -1;
             }
         }
 
@@ -242,7 +249,11 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
                             Content content = contentManager.getContent(
                                     dtde.getTransferable().getTransferData(MyDoggyTransferable.CONTENT_ID_DF)
                             );
-                            if (content != null) {
+                            if (content != null ) {
+                                if (content == onDockable) {
+                                    // TODO: continue
+                                }
+
                                 ContentUI contentUI = contentManager.getContentManagerUI().getContentUI(content);
 
                                 removeContent(content);
@@ -250,6 +261,7 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
                                            contentUI,
                                            content.getComponent(),
                                            onDockable,
+                                           indexAtLocation, 
                                            (dragAnchor == null) ? null : AggregationPosition.valueOf(dragAnchor.toString()));
 
                                 dtde.dropComplete(true);
