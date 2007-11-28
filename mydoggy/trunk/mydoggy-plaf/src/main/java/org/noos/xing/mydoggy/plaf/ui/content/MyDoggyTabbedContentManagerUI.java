@@ -545,7 +545,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 dialog.setTitle((String) evt.getNewValue());
             } else {
                 int index = tabbedContentManager.indexOfComponent(content.getComponent());
-                if (index != -1)
+                if (index != -1) 
                     tabbedContentManager.setTitleAt(index, (String) evt.getNewValue());
                 else if (toolWindowManager.getMainContent() != content.getComponent())
                     throw new IllegalStateException();

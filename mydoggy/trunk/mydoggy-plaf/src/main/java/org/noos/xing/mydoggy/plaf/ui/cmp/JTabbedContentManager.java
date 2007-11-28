@@ -66,6 +66,8 @@ public class JTabbedContentManager extends JTabbedPane {
 
     public void setTitleAt(int index, String title) {
         getContentPage(index).setTitle(title);
+        revalidate();
+        repaint();
     }
 
     public String getTitleAt(int index) {
@@ -85,6 +87,8 @@ public class JTabbedContentManager extends JTabbedPane {
     public void setMnemonicAt(int tabIndex, int mnemonic) {
         super.setMnemonicAt(tabIndex, mnemonic);
         getContentPage(tabIndex).setMnemonic(mnemonic);
+        revalidate();
+        repaint();
     }
 
     public Icon getDisabledIconAt(int index) {

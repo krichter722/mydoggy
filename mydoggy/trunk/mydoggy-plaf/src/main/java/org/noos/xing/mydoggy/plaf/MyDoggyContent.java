@@ -190,6 +190,9 @@ public class MyDoggyContent implements PlafContentUI {
     }
 
     public void setTitle(String title) {
+        if (this.title != null && this.title.equals(title))
+            return;
+
         String old = this.title;
         this.title = title;
 
