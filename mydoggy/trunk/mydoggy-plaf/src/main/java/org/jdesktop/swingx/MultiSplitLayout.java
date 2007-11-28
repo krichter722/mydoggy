@@ -373,16 +373,18 @@ public class MultiSplitLayout implements LayoutManager {
 
     private void layoutShrink(Split split, Rectangle bounds) {
         Rectangle splitBounds = split.getBounds();
-        ListIterator<Node> splitChildren = split.getChildren().listIterator();
+
         Node lastWeightedChild = split.lastWeightedChild();
 
         if (split.isRowLayout()) {
             int totalWidth = 0;          // sum of the children's widths
             int minWeightedWidth = 0;    // sum of the weighted childrens' min widths
             int totalWeightedWidth = 0;  // sum of the weighted childrens' widths
+
             for (Node splitChild : split.getChildren()) {
                 int nodeWidth = splitChild.getBounds().width;
                 int nodeMinWidth = Math.min(nodeWidth, minimumNodeSize(splitChild).width);
+                
                 totalWidth += nodeWidth;
                 if (splitChild.getWeight() > 0.0) {
                     minWeightedWidth += nodeMinWidth;
@@ -395,6 +397,7 @@ public class MultiSplitLayout implements LayoutManager {
             double availableWidth = extraWidth;
             boolean onlyShrinkWeightedComponents = (totalWeightedWidth - minWeightedWidth) > extraWidth;
 
+            ListIterator<Node> splitChildren = split.getChildren().listIterator();
             while (splitChildren.hasNext()) {
                 Node splitChild = splitChildren.next();
                 Rectangle splitChildBounds = splitChild.getBounds();
@@ -405,10 +408,13 @@ public class MultiSplitLayout implements LayoutManager {
                                           : (splitChildBounds.getWidth() / (double) totalWidth);
 
                 if (!splitChildren.hasNext()) {
+                    double oldWidth = splitChildBounds.getWidth();
                     double newWidth = Math.max(minSplitChildWidth, bounds.getMaxX() - x);
 
                     Rectangle newSplitChildBounds = boundsWithXandWidth(bounds, x, newWidth);
                     layout2(splitChild, newSplitChildBounds);
+
+                    availableWidth -= (oldWidth - splitChild.getBounds().getWidth());
                 } else if ((availableWidth > 0.0) && (splitChildWeight > 0.0)) {
                     double allocatedWidth = Math.rint(splitChildWeight * extraWidth);
                     double oldWidth = splitChildBounds.getWidth();
@@ -416,7 +422,7 @@ public class MultiSplitLayout implements LayoutManager {
 
                     Rectangle newSplitChildBounds = boundsWithXandWidth(bounds, x, newWidth);
                     layout2(splitChild, newSplitChildBounds);
-
+                    availableWidth -= (oldWidth - splitChild.getBounds().getWidth());
                 } else {
                     double existingWidth = splitChildBounds.getWidth();
 
@@ -430,6 +436,7 @@ public class MultiSplitLayout implements LayoutManager {
             int totalHeight = 0;          // sum of the children's heights
             int minWeightedHeight = 0;    // sum of the weighted childrens' min heights
             int totalWeightedHeight = 0;  // sum of the weighted childrens' heights
+
             for (Node splitChild : split.getChildren()) {
                 int nodeHeight = splitChild.getBounds().height;
                 int nodeMinHeight = Math.min(nodeHeight, minimumNodeSize(splitChild).height);
@@ -441,10 +448,14 @@ public class MultiSplitLayout implements LayoutManager {
             }
 
             double y = bounds.getY();
+            System.out.println("splitBounds = " + splitBounds.getHeight());
+            System.out.println("bounds = " + bounds.getHeight());
             double extraHeight = splitBounds.getHeight() - bounds.getHeight();
+            System.out.println("extraHeight = " + extraHeight);
             double availableHeight = extraHeight;
             boolean onlyShrinkWeightedComponents = (totalWeightedHeight - minWeightedHeight) > extraHeight;
 
+            ListIterator<Node> splitChildren = split.getChildren().listIterator();
             while (splitChildren.hasNext()) {
                 Node splitChild = splitChildren.next();
                 Rectangle splitChildBounds = splitChild.getBounds();
@@ -460,16 +471,17 @@ public class MultiSplitLayout implements LayoutManager {
 
                     Rectangle newSplitChildBounds = boundsWithYandHeight(bounds, y, newHeight);
                     layout2(splitChild, newSplitChildBounds);
+
+
                     availableHeight -= (oldHeight - splitChild.getBounds().getHeight());
                 } else if ((availableHeight > 0.0) && (splitChildWeight > 0.0)) {
-                    // TODO: switch extraHeight with availableHeight
-                    
                     double allocatedHeight = Math.rint(splitChildWeight * extraHeight);
                     double oldHeight = splitChildBounds.getHeight();
                     double newHeight = Math.max(minSplitChildHeight, oldHeight - allocatedHeight);
 
                     Rectangle newSplitChildBounds = boundsWithYandHeight(bounds, y, newHeight);
-                    layout2(splitChild, newSplitChildBounds);                    
+                    layout2(splitChild, newSplitChildBounds);
+
                     availableHeight -= (oldHeight - splitChild.getBounds().getHeight());
                 } else {
                     double existingHeight = splitChildBounds.getHeight();
@@ -477,6 +489,7 @@ public class MultiSplitLayout implements LayoutManager {
                     Rectangle newSplitChildBounds = boundsWithYandHeight(bounds, y, existingHeight);
                     layout2(splitChild, newSplitChildBounds);
                 }
+
                 y = splitChild.getBounds().getMaxY();
             }
         }
@@ -601,6 +614,7 @@ public class MultiSplitLayout implements LayoutManager {
             boolean grow = split.isRowLayout()
                            ? (split.getBounds().width <= bounds.width)
                            : (split.getBounds().height <= bounds.height);
+            System.out.println("grow = " + grow);
 
             if (grow) {
                 layoutGrow(split, bounds);
@@ -644,28 +658,53 @@ public class MultiSplitLayout implements LayoutManager {
             * this if, is identical to the X axis (rowLayout) code below.
             */
             if (split.isRowLayout()) {
+                Rectangle rootBounds = root.getBounds();
+
                 // TODO: apply the same of columns...
                 double x = bounds.getX();
+                int stateCondition = 0;
+                if (x < rootBounds.x) {
+                    stateCondition = 1;
+                } else if (x > rootBounds.x) {
+                    stateCondition = -1;
+                }
+
                 while (splitChildren.hasNext()) {
                     Node splitChild = splitChildren.next();
-                    Divider dividerChild =
-                            (splitChildren.hasNext()) ? (Divider) (splitChildren.next()) : null;
+                    Divider dividerChild = (splitChildren.hasNext()) ? (Divider) (splitChildren.next()) : null;
 
                     double childWidth = 0.0;
                     if (getFloatingDividers()) {
                         childWidth = preferredNodeSize(splitChild).getWidth();
                     } else {
                         if (dividerChild != null) {
-                            childWidth = dividerChild.getBounds().getX() - x;
+                            if (stateCondition == 1)
+                                childWidth = splitChild.bounds.width - 20;
+                            else if (stateCondition == -1) {
+                                childWidth = splitChild.bounds.width + 20;
+                            } else
+                                childWidth = dividerChild.getBounds().getX() - x;
                         } else {
-                            childWidth = split.getBounds().getMaxX() - x;
+                            if (stateCondition == 1)
+                                childWidth = splitChild.bounds.width - 20;
+                            else if (stateCondition == -1) {
+                                childWidth = splitChild.bounds.width + 20;
+                            } else
+                                childWidth = split.getBounds().getMaxX() - x;
                         }
                     }
+
                     childBounds = boundsWithXandWidth(bounds, x, childWidth);
                     layout1(splitChild, childBounds);
 
                     if (getFloatingDividers() && (dividerChild != null)) {
                         double dividerX = childBounds.getMaxX();
+
+                        Rectangle dividerBounds = boundsWithXandWidth(bounds, dividerX, dividerSize);
+                        dividerChild.setBounds(dividerBounds);
+                    } else if (dividerChild != null) {
+                        double dividerX = childBounds.getMaxX();
+
                         Rectangle dividerBounds = boundsWithXandWidth(bounds, dividerX, dividerSize);
                         dividerChild.setBounds(dividerBounds);
                     }
@@ -682,11 +721,11 @@ public class MultiSplitLayout implements LayoutManager {
                 */
 
                 double y = bounds.getY();
-                int s = 0;
+                int stateCondition = 0;
                 if (y < root.getBounds().y) {
-                    s = 1;
+                    stateCondition = 1;
                 } else if (y > root.getBounds().y) {
-                    s = -1;
+                    stateCondition = -1;
                 }
 
                 while (splitChildren.hasNext()) {
@@ -698,16 +737,16 @@ public class MultiSplitLayout implements LayoutManager {
                         childHeight = preferredNodeSize(splitChild).getHeight();
                     } else {
                         if (dividerChild != null) {
-                            if (s == 1)
+                            if (stateCondition == 1)
                                 childHeight = splitChild.bounds.height - 20;
-                            else if (s == -1) {
+                            else if (stateCondition == -1) {
                                 childHeight = splitChild.bounds.height + 20;
                             } else
                                 childHeight = dividerChild.getBounds().getY() - y;
                         } else {
-                            if (s == 1)
+                            if (stateCondition == 1)
                                 childHeight = splitChild.bounds.height - 20;
-                            else if (s == -1) {
+                            else if (stateCondition == -1) {
                                 childHeight = splitChild.bounds.height + 20;
                             } else
                                 childHeight = split.getBounds().getMaxY() - y;
@@ -724,6 +763,7 @@ public class MultiSplitLayout implements LayoutManager {
                         dividerChild.setBounds(dividerBounds);
                     } else if (dividerChild != null) {
                         double dividerY = childBounds.getMaxY();
+
                         Rectangle dividerBounds = boundsWithYandHeight(bounds, dividerY, dividerSize);
                         dividerChild.setBounds(dividerBounds);
                     }
@@ -733,6 +773,7 @@ public class MultiSplitLayout implements LayoutManager {
                     }
                 }
             }
+            
             /* The bounds of the Split node root are set to be just
             * big enough to contain all of its children, but only
             * along the axis it's allocating space on.  That's
@@ -1109,10 +1150,13 @@ public class MultiSplitLayout implements LayoutManager {
         }
 
         public String toString() {
-            int nChildren = getChildren().size();
-            StringBuffer sb = new StringBuffer("MultiSplitLayout.Split");
+            StringBuffer sb = new StringBuffer("Split");
             sb.append(isRowLayout() ? " ROW [" : " COLUMN [");
-            sb.append(nChildren + ((nChildren == 1) ? " child" : " children"));
+
+            for (Node child : children) {
+                sb.append(child).append(" ; ");
+            }
+
             sb.append("] ");
             sb.append(getBounds());
             return sb.toString();
@@ -1170,7 +1214,7 @@ public class MultiSplitLayout implements LayoutManager {
         }
 
         public String toString() {
-            StringBuffer sb = new StringBuffer("MultiSplitLayout.Leaf");
+            StringBuffer sb = new StringBuffer("Leaf");
             sb.append(" \"");
             sb.append(getName());
             sb.append("\"");
@@ -1210,7 +1254,7 @@ public class MultiSplitLayout implements LayoutManager {
         }
 
         public String toString() {
-            return "MultiSplitLayout.Divider " + getBounds().toString();
+            return "Divider " + getBounds().toString();
         }
     }
 
