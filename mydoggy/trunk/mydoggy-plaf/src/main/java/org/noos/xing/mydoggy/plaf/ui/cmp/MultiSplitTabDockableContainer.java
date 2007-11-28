@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 
 import javax.swing.*;
@@ -123,12 +124,12 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
                                   this);
 
                     // Setup ghostImage
-//                 TODO    Icon icon = contantPage.getContentIcon();
-                    BufferedImage ghostImage = new BufferedImage(32, 32, BufferedImage.TYPE_INT_RGB);
-                    ghostImage.getGraphics().fillRect(0, 0, 32, 32);
-//                    contantPage.getContentIcon().paintIcon(
-//                            tabbedContentManager, ghostImage.createGraphics(), 0,0
-//                    );
+                    BufferedImage ghostImage = new BufferedImage(dockablePanel.getWidth(),
+                                                                 dockablePanel.getHeight(), BufferedImage.TYPE_INT_RGB);
+                    dockablePanel.print(ghostImage.getGraphics());
+                    ghostImage = GraphicsUtil.scale(ghostImage,
+                                                    dockablePanel.getWidth() / 4,
+                                                    dockablePanel.getHeight() / 4);
 
                     setGhostImage(dge.getDragOrigin(), ghostImage);
                 } else
