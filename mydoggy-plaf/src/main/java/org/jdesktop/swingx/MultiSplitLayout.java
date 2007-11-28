@@ -644,6 +644,7 @@ public class MultiSplitLayout implements LayoutManager {
             * this if, is identical to the X axis (rowLayout) code below.
             */
             if (split.isRowLayout()) {
+                // TODO: apply the same of columns...
                 double x = bounds.getX();
                 while (splitChildren.hasNext()) {
                     Node splitChild = splitChildren.next();
