@@ -653,7 +653,7 @@ public class MultiSplitDockableContainer extends JPanel {
                 break;
         }
 
-        if (sum > 1.0d) {
+        if (sum != 1.0d) {
             double w = 1.0 / ((children.size() / 2) + 1);
             for (MultiSplitLayout.Node node : children) {
                 node.setBounds(new Rectangle());
@@ -661,6 +661,7 @@ public class MultiSplitDockableContainer extends JPanel {
                     node.setWeight(w);
                 }
             }
+            multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
         }
     }
 
@@ -681,6 +682,7 @@ public class MultiSplitDockableContainer extends JPanel {
                 node.setWeight(w);
             }
         }
+        multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
     }
 
     protected String getLeafName(Dockable dockable) {
