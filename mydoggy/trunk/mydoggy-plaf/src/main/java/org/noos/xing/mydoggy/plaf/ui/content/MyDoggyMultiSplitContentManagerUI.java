@@ -162,7 +162,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
         if (content.isDetached())
             content.setDetached(false);
 
-        multiSplitContainer.removeContent(content);
+        multiSplitContainer.removeDockable(content);
 
         content.removeUIPropertyChangeListener(this);
     }
@@ -269,7 +269,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 
     protected void addUIForContent(Content content, Object... constraints) {
         if (constraints == null || constraints.length == 0) {
-            multiSplitContainer.addContent(content,
+            multiSplitContainer.addDockable(content,
                                          null, content.getComponent(),
                                          null,
                                          -1, AggregationPosition.DEFAULT);
