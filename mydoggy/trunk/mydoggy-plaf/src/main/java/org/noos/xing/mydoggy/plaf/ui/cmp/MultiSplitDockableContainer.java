@@ -667,9 +667,7 @@ public class MultiSplitDockableContainer extends JPanel {
     protected void repaintMultiSplit() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                multiSplitPane.invalidate();
                 multiSplitPane.validate();
-                multiSplitPane.repaint();
                 multiSplitPane.getMultiSplitLayout().setFloatingDividers(false);
             }
         });
