@@ -657,7 +657,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
                     if (content == null) {
 
-                        multiSplitDockableContainer.removeContent(descriptor.getToolWindow());
+                        multiSplitDockableContainer.removeDockable(descriptor.getToolWindow());
                         animate = false;
 
                         if (multiSplitDockableContainer.isEmpty()) {
@@ -672,7 +672,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                         }
                     } else {
                         if (manager.getShowingGroup() != null) {
-                            multiSplitDockableContainer.addContent(descriptor.getToolWindow(),
+                            multiSplitDockableContainer.addDockable(descriptor.getToolWindow(),
                                                                    null, content,
                                                                    aggregationOnTool,
                                                                    -1, aggregationPosition);
@@ -682,12 +682,12 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 } else if (manager.getShowingGroup() != null && content != null) {
                     multiSplitDockableContainer.clear();
                     if (shiftShow)
-                        multiSplitDockableContainer.addContent(
+                        multiSplitDockableContainer.addDockable(
                                 (Dockable) ((JComponent) splitPaneContent).getClientProperty(ToolWindow.class),
                                 null, splitPaneContent,
                                 null,
                                 -1, AggregationPosition.DEFAULT);
-                    multiSplitDockableContainer.addContent(descriptor.getToolWindow(),
+                    multiSplitDockableContainer.addDockable(descriptor.getToolWindow(),
                                                            null, content,
                                                            null,
                                                            -1, aggregationPosition);
@@ -698,7 +698,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             } else {
                 if (manager.getShowingGroup() != null && content != null) {
                     multiSplitDockableContainer.clear();
-                    multiSplitDockableContainer.addContent(descriptor.getToolWindow(),
+                    multiSplitDockableContainer.addDockable(descriptor.getToolWindow(),
                                                            null, content,
                                                            null,
                                                            -1, AggregationPosition.DEFAULT);

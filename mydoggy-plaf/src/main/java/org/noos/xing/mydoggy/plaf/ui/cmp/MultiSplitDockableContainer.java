@@ -66,7 +66,7 @@ public class MultiSplitDockableContainer extends JPanel {
      * @param aggregationIndexLocation
      * @param aggregationPosition
      */
-    public void addContent(Dockable dockable,
+    public void addDockable(Dockable dockable,
                            DockableUI dockableUI,
                            Component content,
                            Dockable aggregationOnDockable,
@@ -370,7 +370,7 @@ public class MultiSplitDockableContainer extends JPanel {
         entries.put(dockable, new DockableEntry(dockable, content, dockableId));
     }
 
-    public void removeContent(Dockable dockable) {
+    public void removeDockable(Dockable dockable) {
         DockableEntry dockableEntry = entries.get(dockable);
         if (dockableEntry == null)
             throw new IllegalArgumentException("Cannot remove that dockable. It's not present into the container.");
@@ -520,6 +520,8 @@ public class MultiSplitDockableContainer extends JPanel {
                 } else
                     throw new IllegalArgumentException("Cannot find component on multisplit...");
             }
+            
+            resetBounds();
             repaintMultiSplit();
         }
     }
@@ -656,7 +658,7 @@ public class MultiSplitDockableContainer extends JPanel {
         if (sum != 1.0d) {
             double w = 1.0 / ((children.size() / 2) + 1);
             for (MultiSplitLayout.Node node : children) {
-                node.setBounds(new Rectangle());
+                node.resetBounds();
                 if (!(node instanceof MultiSplitLayout.Divider)) {
                     node.setWeight(w);
                 }
@@ -668,6 +670,7 @@ public class MultiSplitDockableContainer extends JPanel {
     protected void repaintMultiSplit() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                resetBounds();
                 multiSplitPane.validate();
                 multiSplitPane.getMultiSplitLayout().setFloatingDividers(false);
             }
@@ -677,12 +680,31 @@ public class MultiSplitDockableContainer extends JPanel {
     protected void forceWeight(List<MultiSplitLayout.Node> children) {
         double w = 1.0 / ((children.size() / 2) + 1);
         for (MultiSplitLayout.Node node : children) {
-            node.setBounds(new Rectangle());
+            node.resetBounds();
             if (!(node instanceof MultiSplitLayout.Divider)) {
                 node.setWeight(w);
             }
         }
         multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
+    }
+
+    protected void resetBounds() {
+        // Reset the model bounds... TODO: try to remove this...
+
+        Stack<MultiSplitLayout.Split> stack = new Stack<MultiSplitLayout.Split>();
+        stack.push(multiSplitPaneModelRoot);
+        multiSplitPaneModelRoot.resetBounds();
+        while (!stack.isEmpty()) {
+            MultiSplitLayout.Split split = stack.pop();
+
+            for (MultiSplitLayout.Node child : split.getChildren()) {
+                child.resetBounds();
+
+                if (child instanceof MultiSplitLayout.Split) {
+                    stack.push((MultiSplitLayout.Split) child);
+                }
+            }
+        }
     }
 
     protected String getLeafName(Dockable dockable) {
@@ -730,6 +752,7 @@ public class MultiSplitDockableContainer extends JPanel {
         return null;
     }
 
+    
 
     public class DockableEntry {
         Dockable dockable;

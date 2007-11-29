@@ -280,8 +280,8 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
                                 } else  {
                                     ContentUI contentUI = contentManager.getContentManagerUI().getContentUI(content);
 
-                                    removeContent(content);
-                                    addContent(content,
+                                    removeDockable(content);
+                                    addDockable(content,
                                                contentUI,
                                                content.getComponent(),
                                                onDockable,
