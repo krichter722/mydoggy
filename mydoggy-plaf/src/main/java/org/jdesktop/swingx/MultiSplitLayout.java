@@ -687,7 +687,6 @@ public class MultiSplitLayout implements LayoutManager {
             if (split.isRowLayout()) {
                 Rectangle rootBounds = root.getBounds();
 
-                // TODO: apply the same of columns...
                 double x = bounds.getX();
                 int stateCondition = 0;
                 if (x < rootBounds.x) {

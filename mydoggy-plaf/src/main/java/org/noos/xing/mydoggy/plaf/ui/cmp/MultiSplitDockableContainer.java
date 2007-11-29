@@ -33,6 +33,9 @@ public class MultiSplitDockableContainer extends JPanel {
     protected MultiSplitPane multiSplitPane;
     protected MultiSplitLayout.Split multiSplitPaneModelRoot;
 
+    protected RepaintRunnable repaintRunnable;
+
+    protected boolean storeLayout;
 
     public MultiSplitDockableContainer(MyDoggyToolWindowManager toolWindowManager, int orientation) {
         this.orientation = orientation;
@@ -43,6 +46,8 @@ public class MultiSplitDockableContainer extends JPanel {
         this.multiSplitPane = new MultiSplitPane();
         this.multiSplitPane.setDividerSize(5);
         this.multiSplitPane.setFocusable(false);
+        this.storeLayout = true;
+        this.repaintRunnable = new RepaintRunnable();
 
         this.multiSplitPaneModelRoot = new MultiSplitLayout.Split();
         this.multiSplitPaneModelRoot.setRowLayout(orientation != JSplitPane.VERTICAL_SPLIT);
@@ -55,10 +60,7 @@ public class MultiSplitDockableContainer extends JPanel {
         setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
     }
 
-
     /**
-     * TODO : standardize this method...
-     *
      * @param dockable
      * @param dockableUI
      * @param content
@@ -84,20 +86,23 @@ public class MultiSplitDockableContainer extends JPanel {
                          ((aggregationPosition != null) ? aggregationPosition.toString() : "");
 
         // Store old layout
-        StringBuilder builder = new StringBuilder();
-        for (DockableEntry entry : entries.values()) {
-            builder.append(entry.id);
-        }
-        if (entries.size() > 0)
+        String modelKey = null;
+        if (storeLayout && entries.size() > 0) {
+            StringBuilder builder = new StringBuilder();
+            for (DockableEntry entry : entries.values()) {
+                builder.append(entry.id);
+            }
             models.put(builder.toString(), encode());
+            builder.append(dockableId);
+            modelKey = builder.toString();
+        }
 
-        builder.append(dockableId);
 
         if (entries.size() == 0) {
             resetRootComponent();
             setRootComponent(content);
         } else {
-            byte[] oldModel = models.get(builder.toString());
+            byte[] oldModel = models.get(modelKey);
 
             boolean invalidAggregationPosition = false;
             if (aggregationPosition == AggregationPosition.DEFAULT || aggregationPosition == null) {
@@ -124,7 +129,7 @@ public class MultiSplitDockableContainer extends JPanel {
                     DockableLeaf leaf;
                     DockableLeaf leaf2;
 
-                    if (oldModel != null) {
+                    if (storeLayout && oldModel != null) {
                         multiSplitPaneModelRoot = decode(oldModel);
 
                         List<MultiSplitLayout.Node> children = multiSplitPaneModelRoot.getChildren();
@@ -183,8 +188,7 @@ public class MultiSplitDockableContainer extends JPanel {
                 // Build content to add
                 String leafName = "" + (entries.size() + 1);
 
-                if (/*oldModel != null*/false) {
-                    // TODO:
+                if (storeLayout && oldModel != null) {
                     multiSplitPaneModelRoot = decode(oldModel);
                 } else {
                     // Modify model
@@ -391,11 +395,13 @@ public class MultiSplitDockableContainer extends JPanel {
             throw new IllegalArgumentException("Cannot remove that dockable. It's not present into the container.");
 
         // Store layout
-        StringBuilder builder = new StringBuilder();
-        for (DockableEntry entry : entries.values()) {
-            builder.append(entry.id);
+        if (storeLayout) {
+            StringBuilder builder = new StringBuilder();
+            for (DockableEntry entry : entries.values()) {
+                builder.append(entry.id);
+            }
+            models.put(builder.toString(), encode());
         }
-        models.put(builder.toString(), encode());
         entries.remove(dockable);
 
         if (entries.size() == 0) {
@@ -414,7 +420,7 @@ public class MultiSplitDockableContainer extends JPanel {
                 setRootComponent(getWrappedComponent((Container) getRootComponent()));
             } else {
                 Component c = multiSplitPane.getMultiSplitLayout().getChildMap().get(leafName);
-                multiSplitPane.remove(multiSplitPane.getMultiSplitLayout().getChildMap().get(leafName));
+                multiSplitPane.remove(c);
                 // obtain the component remained.
                 c = getWrappedComponent((Container) multiSplitPane.getComponent(0));
                 multiSplitPane.removeAll();
@@ -603,13 +609,12 @@ public class MultiSplitDockableContainer extends JPanel {
         entries.clear();
     }
 
+    public boolean isStoreLayout() {
+        return storeLayout;
+    }
 
-    protected MultiSplitLayout.Split getFirstSplit(List<MultiSplitLayout.Node> children) {
-        for (MultiSplitLayout.Node child : children) {
-            if (child instanceof MultiSplitLayout.Split)
-                return (MultiSplitLayout.Split) child;
-        }
-        return null;
+    public void setStoreLayout(boolean storeLayout) {
+        this.storeLayout = storeLayout;
     }
 
 
@@ -690,7 +695,7 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
     protected void repaintMultiSplit() {
-        SwingUtilities.invokeLater(new RepaintRunnable(new RuntimeException("I'm here")));
+        SwingUtilities.invokeLater(repaintRunnable);
     }
 
     protected void forceWeight(List<MultiSplitLayout.Node> children) {
@@ -740,6 +745,14 @@ public class MultiSplitDockableContainer extends JPanel {
             }
         }
         return true;
+    }
+
+    protected MultiSplitLayout.Split getFirstSplit(List<MultiSplitLayout.Node> children) {
+        for (MultiSplitLayout.Node child : children) {
+            if (child instanceof MultiSplitLayout.Split)
+                return (MultiSplitLayout.Split) child;
+        }
+        return null;
     }
 
     protected String getLeafName(Dockable dockable) {
@@ -849,6 +862,9 @@ public class MultiSplitDockableContainer extends JPanel {
 
     public class RepaintRunnable implements Runnable {
         protected Exception exception;
+
+        public RepaintRunnable() {
+        }
 
         public RepaintRunnable(Exception exception) {
             this.exception = exception;

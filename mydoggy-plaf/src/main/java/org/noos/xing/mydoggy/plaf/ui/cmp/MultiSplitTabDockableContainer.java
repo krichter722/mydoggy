@@ -24,6 +24,7 @@ public class MultiSplitTabDockableContainer extends MultiSplitDockableContainer 
 
     public MultiSplitTabDockableContainer(MyDoggyToolWindowManager toolWindowManager) {
         super(toolWindowManager, JSplitPane.VERTICAL_SPLIT);
+        setStoreLayout(false);
 
         this.contentPanel = new ContentPanel("dockable.tabbedpane", 10);
         this.contentPanel.setDropTarget(new ContentDropTarget(contentPanel, toolWindowManager));
