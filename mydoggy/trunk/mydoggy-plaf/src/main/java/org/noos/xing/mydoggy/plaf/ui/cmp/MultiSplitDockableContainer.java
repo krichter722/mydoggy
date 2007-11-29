@@ -656,8 +656,8 @@ public class MultiSplitDockableContainer extends JPanel {
         if (sum > 1.0d) {
             double w = 1.0 / ((children.size() / 2) + 1);
             for (MultiSplitLayout.Node node : children) {
+                node.setBounds(new Rectangle());
                 if (!(node instanceof MultiSplitLayout.Divider)) {
-                    node.setBounds(new Rectangle());
                     node.setWeight(w);
                 }
             }
@@ -678,8 +678,8 @@ public class MultiSplitDockableContainer extends JPanel {
     protected void forceWeight(List<MultiSplitLayout.Node> children) {
         double w = 1.0 / ((children.size() / 2) + 1);
         for (MultiSplitLayout.Node node : children) {
+            node.setBounds(new Rectangle());
             if (!(node instanceof MultiSplitLayout.Divider)) {
-                node.setBounds(new Rectangle());
                 node.setWeight(w);
             }
         }
