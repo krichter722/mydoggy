@@ -252,9 +252,21 @@ public class MultiSplitLayout implements LayoutManager {
     }
 
 
-    private Dimension preferredComponentSize(Node node) {
-        Component child = childForNode(node);
-        return (child != null) ? child.getPreferredSize() : new Dimension(0, 0);
+    private Dimension preferredComponentSize(Node node, Rectangle bounds) {
+        Rectangle nodeBounds = node.getBounds();
+        if (nodeBounds.x == 0 && nodeBounds.y == 0 && nodeBounds.width == 0 && nodeBounds.height == 0 && node.getWeight() > 0.0)  {
+            Component child = childForNode(node);
+            if (node.getParent().isRowLayout()) {
+                int width = (int) (bounds.width * node.getWeight());
+                return new Dimension(width, (child != null) ? child.getPreferredSize().height : 0);
+            } else {
+                int height = (int) (bounds.height * node.getWeight());
+                return new Dimension((child != null) ? child.getPreferredSize().width : 0, height);
+            }
+        } else {
+            Component child = childForNode(node);
+            return (child != null) ? child.getPreferredSize() : new Dimension(0, 0);
+        }
 
     }
 
@@ -264,9 +276,9 @@ public class MultiSplitLayout implements LayoutManager {
 
     }
 
-    private Dimension preferredNodeSize(Node root) {
+    private Dimension preferredNodeSize(Node root, Rectangle bounds) {
         if (root instanceof Leaf) {
-            return preferredComponentSize(root);
+            return preferredComponentSize(root, bounds);
         } else if (root instanceof Divider) {
             int dividerSize = getDividerSize();
             return new Dimension(dividerSize, dividerSize);
@@ -277,13 +289,13 @@ public class MultiSplitLayout implements LayoutManager {
             int height = 0;
             if (split.isRowLayout()) {
                 for (Node splitChild : splitChildren) {
-                    Dimension size = preferredNodeSize(splitChild);
+                    Dimension size = preferredNodeSize(splitChild, bounds);
                     width += size.width;
                     height = Math.max(height, size.height);
                 }
             } else {
                 for (Node splitChild : splitChildren) {
-                    Dimension size = preferredNodeSize(splitChild);
+                    Dimension size = preferredNodeSize(splitChild, bounds);
                     width = Math.max(width, size.width);
                     height += size.height;
                 }
@@ -329,7 +341,7 @@ public class MultiSplitLayout implements LayoutManager {
     }
 
     public Dimension preferredLayoutSize(Container parent) {
-        Dimension size = preferredNodeSize(getModel());
+        Dimension size = preferredNodeSize(getModel(), parent.getBounds());
         return sizeWithInsets(parent, size);
     }
 
@@ -675,7 +687,7 @@ public class MultiSplitLayout implements LayoutManager {
 
                     double childWidth = 0.0;
                     if (getFloatingDividers()) {
-                        childWidth = preferredNodeSize(splitChild).getWidth();
+                        childWidth = preferredNodeSize(splitChild, bounds).getWidth();
                     } else {
                         if (dividerChild != null) {
                             if (stateCondition == 1)
@@ -734,7 +746,7 @@ public class MultiSplitLayout implements LayoutManager {
 
                     double childHeight;
                     if (getFloatingDividers()) {
-                        childHeight = preferredNodeSize(splitChild).getHeight();
+                        childHeight = preferredNodeSize(splitChild, bounds).getHeight();
                     } else {
                         if (dividerChild != null) {
                             if (stateCondition == 1)
