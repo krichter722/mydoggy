@@ -540,6 +540,7 @@ public class MultiSplitLayout implements LayoutManager {
 
                 if (!splitChildren.hasNext()) {
                     double newWidth = bounds.getMaxX() - x;
+
                     Rectangle newSplitChildBounds = boundsWithXandWidth(bounds, x, newWidth);
                     layout2(splitChild, newSplitChildBounds);
                 } else if ((availableWidth > 0.0) && (splitChildWeight > 0.0)) {
@@ -547,11 +548,13 @@ public class MultiSplitLayout implements LayoutManager {
                                             ? availableWidth
                                             : Math.rint(splitChildWeight * extraWidth);
                     double newWidth = splitChildBounds.getWidth() + allocatedWidth;
+
                     Rectangle newSplitChildBounds = boundsWithXandWidth(bounds, x, newWidth);
                     layout2(splitChild, newSplitChildBounds);
                     availableWidth -= allocatedWidth;
                 } else {
                     double existingWidth = splitChildBounds.getWidth();
+
                     Rectangle newSplitChildBounds = boundsWithXandWidth(bounds, x, existingWidth);
                     layout2(splitChild, newSplitChildBounds);
                 }
@@ -578,13 +581,12 @@ public class MultiSplitLayout implements LayoutManager {
                 double splitChildWeight = splitChild.getWeight();
 
                 if (!splitChildren.hasNext()) {
-
                     double newHeight = bounds.getMaxY() - y;
+
                     Rectangle newSplitChildBounds = boundsWithYandHeight(bounds, y, newHeight);
                     layout2(splitChild, newSplitChildBounds);
 
                 } else if ((availableHeight > 0.0) && (splitChildWeight > 0.0)) {
-
                     double allocatedHeight = (splitChild.equals(lastWeightedChild))
                                              ? availableHeight
                                              : Math.rint(splitChildWeight * extraHeight);
@@ -595,9 +597,9 @@ public class MultiSplitLayout implements LayoutManager {
                     availableHeight -= allocatedHeight;
                 } else {
                     double existingHeight = splitChildBounds.getHeight();
+
                     Rectangle newSplitChildBounds = boundsWithYandHeight(bounds, y, existingHeight);
                     layout2(splitChild, newSplitChildBounds);
-
                 }
                 y = splitChild.getBounds().getMaxY();
             }
