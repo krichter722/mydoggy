@@ -460,10 +460,7 @@ public class MultiSplitLayout implements LayoutManager {
             }
 
             double y = bounds.getY();
-            System.out.println("splitBounds = " + splitBounds.getHeight());
-            System.out.println("bounds = " + bounds.getHeight());
             double extraHeight = splitBounds.getHeight() - bounds.getHeight();
-            System.out.println("extraHeight = " + extraHeight);
             double availableHeight = extraHeight;
             boolean onlyShrinkWeightedComponents = (totalWeightedHeight - minWeightedHeight) > extraHeight;
 
@@ -626,7 +623,6 @@ public class MultiSplitLayout implements LayoutManager {
             boolean grow = split.isRowLayout()
                            ? (split.getBounds().width <= bounds.width)
                            : (split.getBounds().height <= bounds.height);
-            System.out.println("grow = " + grow);
 
             if (grow) {
                 layoutGrow(split, bounds);
