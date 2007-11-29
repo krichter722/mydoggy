@@ -21,6 +21,8 @@
 
 package org.jdesktop.swingx;
 
+import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer;
+
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -1200,6 +1202,10 @@ public class MultiSplitLayout implements LayoutManager {
             sb.append("] ");
             sb.append(getBounds());
             return sb.toString();
+        }
+
+        public void removeNode(Node node) {
+            children.remove(node);
         }
     }
 
