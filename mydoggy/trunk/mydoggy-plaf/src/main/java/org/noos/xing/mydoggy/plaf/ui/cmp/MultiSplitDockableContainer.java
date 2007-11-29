@@ -67,21 +67,21 @@ public class MultiSplitDockableContainer extends JPanel {
      * @param aggregationPosition
      */
     public void addDockable(Dockable dockable,
-                           DockableUI dockableUI,
-                           Component content,
-                           Dockable aggregationOnDockable,
-                           int aggregationIndexLocation,
-                           AggregationPosition aggregationPosition) {
+                            DockableUI dockableUI,
+                            Component content,
+                            Dockable aggregationOnDockable,
+                            int aggregationIndexLocation,
+                            AggregationPosition aggregationPosition) {
         if (!checkModel())
             System.out.println("Check model fail. addDockable before");
 
         String dockableId = dockable.getId();
 
         if (aggregationOnDockable == null)
-            dockableId = dockableId + ((aggregationPosition != null) ? aggregationPosition.toString()  : "" );
+            dockableId = dockableId + ((aggregationPosition != null) ? aggregationPosition.toString() : "");
         else
             dockableId = dockableId + aggregationOnDockable.getId() +
-                         ((aggregationPosition != null) ? aggregationPosition.toString()  : "" );
+                         ((aggregationPosition != null) ? aggregationPosition.toString() : "");
 
         // Store old layout
         StringBuilder builder = new StringBuilder();
@@ -101,7 +101,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
             boolean invalidAggregationPosition = false;
             if (aggregationPosition == AggregationPosition.DEFAULT || aggregationPosition == null) {
-                invalidAggregationPosition = true; 
+                invalidAggregationPosition = true;
                 aggregationPosition = defaultAggregationPosition;
             }
 
@@ -126,7 +126,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
                     if (oldModel != null) {
                         multiSplitPaneModelRoot = decode(oldModel);
-                        
+
                         List<MultiSplitLayout.Node> children = multiSplitPaneModelRoot.getChildren();
                         leaf = (DockableLeaf) children.get(0);
                         leaf2 = (DockableLeaf) children.get(2);
@@ -212,7 +212,7 @@ public class MultiSplitDockableContainer extends JPanel {
                                             );
 
                                             leaf.addDockable(dockable.getId());
-                                            
+
                                             addCmp = false;
                                         } else {
                                             boolean step1Failed = false;
@@ -281,9 +281,19 @@ public class MultiSplitDockableContainer extends JPanel {
                                                 newSplit.setRowLayout((aggregationPosition == AggregationPosition.LEFT || aggregationPosition == AggregationPosition.RIGHT));
                                                 newSplit.setWeight(leaf.getWeight());
                                                 leaf.getParent().removeNode(leaf);
-                                                newSplit.setChildren(Arrays.asList(leaf,
-                                                                                   new MultiSplitLayout.Divider(),
-                                                                                   newleaf));
+                                                switch (aggregationPosition) {
+                                                    case LEFT:
+                                                    case TOP:
+                                                        newSplit.setChildren(Arrays.asList(newleaf,
+                                                                                           new MultiSplitLayout.Divider(),
+                                                                                           leaf));
+                                                        break;
+                                                    default:
+                                                        newSplit.setChildren(Arrays.asList(leaf,
+                                                                                           new MultiSplitLayout.Divider(),
+                                                                                           newleaf));
+                                                        break;
+                                                }
 
                                                 leaf.setWeight(0.5);
 
@@ -313,7 +323,7 @@ public class MultiSplitDockableContainer extends JPanel {
                             switch (aggregationPosition) {
                                 case LEFT:
                                 case TOP:
-                                    children.add(0, new DockableLeaf(leafName,dockable.getId()));
+                                    children.add(0, new DockableLeaf(leafName, dockable.getId()));
                                     children.add(1, new MultiSplitLayout.Divider());
                                     break;
                                 case RIGHT:
@@ -633,8 +643,8 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
     protected void removeComponentWrapper(Component wrapperSource, Dockable dockable) {
-         throw new IllegalStateException("Cannot call this method...");
-     }
+        throw new IllegalStateException("Cannot call this method...");
+    }
 
     protected byte[] encode() {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -714,20 +724,19 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
     protected boolean checkModel() {
+        if (multiSplitPaneModelRoot == null)
+            return true;
         Stack<MultiSplitLayout.Split> stack = new Stack<MultiSplitLayout.Split>();
         stack.push(multiSplitPaneModelRoot);
-        multiSplitPaneModelRoot.resetBounds();
 
         while (!stack.isEmpty()) {
             MultiSplitLayout.Split split = stack.pop();
 
             for (MultiSplitLayout.Node child : split.getChildren()) {
-                if (child.getParent() == null || child.getParent() != split) {
+                if (child.getParent() == null || child.getParent() != split)
                     return false;
-                }
-                if (child instanceof MultiSplitLayout.Split) {
+                if (child instanceof MultiSplitLayout.Split)
                     stack.push((MultiSplitLayout.Split) child);
-                }
             }
         }
         return true;
@@ -736,7 +745,7 @@ public class MultiSplitDockableContainer extends JPanel {
     protected String getLeafName(Dockable dockable) {
         if (multiSplitPaneModelRoot == null)
             return null;
-        
+
         Stack<MultiSplitLayout.Split> stack = new Stack<MultiSplitLayout.Split>();
         stack.push(multiSplitPaneModelRoot);
 
@@ -778,7 +787,6 @@ public class MultiSplitDockableContainer extends JPanel {
         return null;
     }
 
-    
 
     public class DockableEntry {
         Dockable dockable;
@@ -847,10 +855,10 @@ public class MultiSplitDockableContainer extends JPanel {
         }
 
         public void run() {
-                checkModel();
-                resetBounds();
-                multiSplitPane.validate();
-                multiSplitPane.getMultiSplitLayout().setFloatingDividers(false);
-            }
+            checkModel();
+            resetBounds();
+            multiSplitPane.validate();
+            multiSplitPane.getMultiSplitLayout().setFloatingDividers(false);
         }
+    }
 }
