@@ -27,6 +27,7 @@ public class TextIcon implements Icon, PropertyChangeListener {
     protected int fHeight;
     protected int fDescent;
 
+
     public TextIcon(Component component, String text) {
         this(component, text, ROTATE_DEFAULT, -1);
     }
@@ -43,6 +44,7 @@ public class TextIcon implements Icon, PropertyChangeListener {
         calcDimensions();
         this.component.addPropertyChangeListener(this);
     }
+
 
     public void paintIcon(Component c, Graphics g, int x, int y) {
         g.setColor(foreground != null ? foreground : c.getForeground());
@@ -98,9 +100,14 @@ public class TextIcon implements Icon, PropertyChangeListener {
         }
     }
 
+
     public void setText(String text) {
         this.text = text;
         recalcDimensions();
+    }
+
+    public String getText() {
+        return text;
     }
 
     public Component getComponent() {

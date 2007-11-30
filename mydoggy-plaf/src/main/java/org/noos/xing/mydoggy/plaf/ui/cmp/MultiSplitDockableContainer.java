@@ -102,7 +102,7 @@ public class MultiSplitDockableContainer extends JPanel {
             resetRootComponent();
             setRootComponent(content);
         } else {
-            byte[] oldModel = models.get(modelKey);
+            byte[] oldModel = (modelKey != null) ? models.get(modelKey) : null;
 
             boolean invalidAggregationPosition = false;
             if (aggregationPosition == AggregationPosition.DEFAULT || aggregationPosition == null) {

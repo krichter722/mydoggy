@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -18,6 +19,18 @@ import java.awt.event.MouseEvent;
 public class ContentPage implements TabbedContentUI {
     private JTabbedContentManager tabbedPane;
     private transient ResourceManager resourceManager;
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+//To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+//To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public PropertyChangeListener[] getPropertyChangeListeners() {
+        return new PropertyChangeListener[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
     private Content content;
 
@@ -202,10 +215,6 @@ public class ContentPage implements TabbedContentUI {
                                    (point.getX() > detachIconRect.x && point.getX() < detachIconRect.x + detachIconRect.width)));
     }
 
-    public void setContent(Content content) {
-        this.content = content;
-    }
-
     public boolean isCloseFired(Point point) {
         Point relativeMousePoint = SwingUtilities.convertPoint(tabbedPane, point, getDestination());
         AggregateIcon uiCompositeIcon = getUICompositeIcon();
@@ -214,6 +223,11 @@ public class ContentPage implements TabbedContentUI {
         return (isCloseable() && ((relativeMousePoint.getX() > closeIconRect.x && relativeMousePoint.getX() < closeIconRect.x + closeIconRect.width) ||
                                   (point.getX() > closeIconRect.x && point.getX() < closeIconRect.x + closeIconRect.width)));
     }
+
+    public void setContent(Content content) {
+        this.content = content;
+    }
+
 
     public int getIndex() {
         return tabbedPane.indexOfComponent((Component) accessible.getAccessibleChild(0));

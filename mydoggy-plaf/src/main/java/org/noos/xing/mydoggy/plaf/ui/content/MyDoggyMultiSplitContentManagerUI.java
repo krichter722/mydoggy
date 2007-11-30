@@ -5,20 +5,21 @@ import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitTabDockableContainer;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentPane;
+import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitTabbedContentContainer;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabListener;
-import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabEvent;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
 import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.EventListenerList;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.beans.PropertyChangeEvent;
@@ -47,6 +48,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     protected boolean valueAdjusting;
     protected boolean contentValueAdjusting;
 
+    protected Map<Content, MultiSplitContentUI> contentUIMap;
     protected Map<Content, MultiSplitContentUI> detachedContentUIMap;
 
     protected int contentIndex = 0;
@@ -55,6 +57,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 
 
     public MyDoggyMultiSplitContentManagerUI() {
+        this.contentUIMap = new Hashtable<Content, MultiSplitContentUI>();
         this.closeable = this.detachable = true;
     }
 
@@ -77,11 +80,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     }
 
     public MultiSplitContentUI getContentUI(Content content) {
-        if (content.isDetached()) {
-            return detachedContentUIMap.get(content);
-        } /*else
-            return (DesktopContentUI) getFrameByComponent(content.getComponent());*/
-        return null;
+        return contentUIMap.get(content);
     }
 
     public void addContentManagerUIListener(ContentManagerUIListener listener) {
@@ -232,6 +231,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 
             final PropertyChangeListener focusOwnerPropertyChangeListener = new PropertyChangeListener() {
                 JTabbedContentManager oldManager;
+
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getNewValue() != null) {
                         if (oldManager != null) {
@@ -239,7 +239,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                         }
 
                         JTabbedContentManager tabbedPane = SwingUtil.getParent((Component) evt.getNewValue(), JTabbedContentManager.class);
-                        if (tabbedPane !=  null) {
+                        if (tabbedPane != null) {
                             tabbedPane.putClientProperty("border", tabbedPane.getBorder());
                             tabbedPane.setBorder(new LineBorder(Color.black));
                             oldManager = tabbedPane;
@@ -268,11 +268,13 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     }
 
     protected void addUIForContent(Content content, Object... constraints) {
+        contentUIMap.put(content, new MyDoggyMultiSplitContentUI(content));
+
         if (constraints == null || constraints.length == 0) {
             multiSplitContainer.addDockable(content,
-                                         null, content.getComponent(),
-                                         null,
-                                         -1, AggregationPosition.DEFAULT);
+                                            null, content.getComponent(),
+                                            null,
+                                            -1, AggregationPosition.DEFAULT);
         } else {
         }
         SwingUtil.repaint(multiSplitContainer);
@@ -426,7 +428,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (!oldValue && newValue) {
-                final JDialog dialog = new JDialog(resourceManager.getBoolean("dialog.owner.enabled", true) ?  parentFrame : null,
+                final JDialog dialog = new JDialog(resourceManager.getBoolean("dialog.owner.enabled", true) ? parentFrame : null,
                                                    false);
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -516,14 +518,14 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 
     }
 
-    protected class MultiSplitContainer extends MultiSplitTabDockableContainer {
+    protected class MultiSplitContainer extends MultiSplitTabbedContentContainer {
 
         public MultiSplitContainer(MyDoggyToolWindowManager toolWindowManager) {
             super(toolWindowManager);
         }
 
         protected Container getComponentWrapper(Dockable dockable, Component component) {
-            final JTabbedContentManager tabbedPane = (JTabbedContentManager) super.getComponentWrapper(dockable, component);
+            final JTabbedContentPane tabbedPane = (JTabbedContentPane) super.getComponentWrapper(dockable, component);
             tabbedPane.addChangeListener(new ChangeListener() {
                 public void stateChanged(ChangeEvent e) {
 /*
@@ -549,13 +551,13 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 */
                 }
             });
-            tabbedPane.addTabListener(new TabListener() {
-                public void tabEventFired(TabEvent event) {
+            tabbedPane.addTabbedContentPaneListener(new TabbedContentPaneListener() {
+                public void tabbedContentPaneEventFired(TabbedContentPaneEvent event) {
                     Content content = event.getContent();
                     switch (event.getActionId()) {
                         case ON_CLOSE:
-                            if (fireContentUIRemoving(getContentUI(content)));
-                                contentManager.removeContent(content);
+                            if (fireContentUIRemoving(getContentUI(content))) ;
+                            contentManager.removeContent(content);
                             break;
                         case ON_DETACH:
                             content.setDetached(true);
