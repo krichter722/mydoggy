@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf;
 
 import org.noos.xing.mydoggy.Dockable;
+import org.noos.xing.mydoggy.ContentUI;
 import org.noos.xing.mydoggy.plaf.ui.content.PlafContentUI;
 
 import javax.swing.*;
@@ -183,6 +184,10 @@ public class MyDoggyContent implements PlafContentUI {
 
     public int getMnemonic() {
         return mnemonic;
+    }
+
+    public ContentUI getContentUi() {
+        return contentManager.getContentManagerUI().getContentUI(this);
     }
 
     public String getTitle() {

@@ -51,6 +51,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
 
     public MyDoggyDesktopContentManagerUI() {
+        // TODO: it this also for
         this.closeable = this.detachable = true;
     }
 

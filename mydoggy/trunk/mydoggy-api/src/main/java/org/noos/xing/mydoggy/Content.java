@@ -182,6 +182,8 @@ public interface Content extends Dockable {
      */
     int getMnemonic();
 
+    ContentUI getContentUi();
+
     /**
      *
      * @return

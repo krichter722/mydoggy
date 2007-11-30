@@ -11,8 +11,8 @@ import java.awt.*;
 public class AggregateIcon implements Icon, SwingConstants {
     private int orientation;
 
-    private Icon left;
-    private Icon right;
+    private Icon leftIcon;
+    private Icon rightIcon;
 
     private boolean leftVisible;
     private boolean rightVisible;
@@ -20,12 +20,14 @@ public class AggregateIcon implements Icon, SwingConstants {
     private Rectangle lastPaintedLeftRec;
     private Rectangle lastPaintedRightRec;
 
-    public AggregateIcon(Icon left, Icon right, int orientation) {
-        this.left = left;
-        this.right = right;
+
+    public AggregateIcon(Icon leftIcon, Icon rightIcon, int orientation) {
+        this.leftIcon = leftIcon;
+        this.rightIcon = rightIcon;
         this.orientation = orientation;
         this.leftVisible = this.rightVisible = true;
     }
+
 
     public void paintIcon(Component c, Graphics g, int x, int y) {
         boolean leftVisible = isLeftVisible();
@@ -152,11 +154,19 @@ public class AggregateIcon implements Icon, SwingConstants {
     }
 
     public Icon getLeftIcon() {
-        return left;
+        return leftIcon;
+    }
+
+    public void setLeftIcon(Icon leftIcon) {
+        this.leftIcon = leftIcon;
     }
 
     public Icon getRightIcon() {
-        return right;
+        return rightIcon;
+    }
+
+    public void setRightIcon(Icon rightIcon) {
+        this.rightIcon = rightIcon;
     }
 
     public boolean isLeftVisible() {
