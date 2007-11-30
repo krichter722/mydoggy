@@ -2,6 +2,8 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentUI;
+import org.noos.xing.mydoggy.PersistenceDelegate;
+import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
@@ -12,15 +14,19 @@ import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Comparator;
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class JTabbedContentPane extends JTabbedPane {
+    protected ToolWindowManager toolWindowManager;
     protected ResourceManager resourceManager;
 
     protected Map<Integer, Content> contentMap;
@@ -32,6 +38,8 @@ public class JTabbedContentPane extends JTabbedPane {
 
     protected Icon closeIcon;
     protected Icon detachIcon;
+
+    protected ByteArrayOutputStream tmpWorkspace = null;
 
 
     public JTabbedContentPane() {
@@ -45,6 +53,7 @@ public class JTabbedContentPane extends JTabbedPane {
                                                  closeDetachIcon,
                                                  SwingConstants.HORIZONTAL);
         setFocusable(false);
+        setInheritsPopupMenu(false);
 
         MouseInputAdapter mouseInputAdapter = new MouseOverTabListener();
         addMouseListener(mouseInputAdapter);
@@ -89,9 +98,12 @@ public class JTabbedContentPane extends JTabbedPane {
 
 
     public void setToolWindowManager(MyDoggyToolWindowManager toolWindowManager) {
+        this.toolWindowManager = toolWindowManager;
         this.resourceManager = toolWindowManager.getResourceManager();
 
-        initIcons();
+        detachIcon = resourceManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_DETACH);
+        closeIcon = resourceManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_CLOSE);
+
         this.closeDetachIcon.setLeftIcon(detachIcon);
         this.closeDetachIcon.setRightIcon(closeIcon);
     }
@@ -156,10 +168,6 @@ public class JTabbedContentPane extends JTabbedPane {
         }
     }
 
-    public void setPopupMenuAt(int index, JPopupMenu jPopupMenu) {
-        // TODO
-    }
-
     public Content getContentAt(int index) {
         return contentMap.get(index);
     }
@@ -181,55 +189,79 @@ public class JTabbedContentPane extends JTabbedPane {
     }
 
 
-    protected void initIcons() {
-        detachIcon = resourceManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_DETACH);
-        closeIcon = resourceManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_CLOSE);
-    }
 
-    protected void fireCloseTabEvent(MouseEvent e, Content content, int overTabIndex) {
-        TabbedContentPaneEvent event = new TabbedContentPaneEvent(this, TabbedContentPaneEvent.ActionId.ON_CLOSE, content, e, null, overTabIndex);
+    protected void fireCloseTabEvent(MouseEvent e, Content content) {
+        TabbedContentPaneEvent event = new TabbedContentPaneEvent(this,
+                                                                  TabbedContentPaneEvent.ActionId.ON_CLOSE,
+                                                                  content, e, null);
         for (TabbedContentPaneListener tabListener : getListeners(TabbedContentPaneListener.class))
             tabListener.tabbedContentPaneEventFired(event);
     }
 
-    protected void fireDetachTabEvent(MouseEvent e, Content content, int overTabIndex) {
-        TabbedContentPaneEvent event = new TabbedContentPaneEvent(this, TabbedContentPaneEvent.ActionId.ON_DETACH, content, e, null, overTabIndex);
+    protected void fireDetachTabEvent(MouseEvent e, Content content) {
+        TabbedContentPaneEvent event = new TabbedContentPaneEvent(this,
+                                                                  TabbedContentPaneEvent.ActionId.ON_DETACH,
+                                                                  content, e, null);
         for (TabbedContentPaneListener tabListener : getListeners(TabbedContentPaneListener.class))
             tabListener.tabbedContentPaneEventFired(event);
     }
 
+    protected void fireMaximizeTabEvent(MouseEvent e, Content content) {
+        TabbedContentPaneEvent event = new TabbedContentPaneEvent(this,
+                                                                  TabbedContentPaneEvent.ActionId.ON_MAXIMIZE,
+                                                                  content, e, null);
+        for (TabbedContentPaneListener tabListener : getListeners(TabbedContentPaneListener.class))
+            tabListener.tabbedContentPaneEventFired(event);
+    }
 
+    protected void setMaximized(boolean maximize) {
+        if (maximize) {
+            toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
+            toolWindowManager.getToolWindowGroup().setVisible(false);
+        } else {
+            toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
+                                                             PersistenceDelegate.MergePolicy.UNION);
+            tmpWorkspace = null;
+        }
+    }
+
+    protected boolean isMaximized() {
+        return tmpWorkspace != null;
+    }
+
+
+    protected class TabbedContent {
+        Content content;
+    }
 
     protected class MouseOverTabListener extends MouseInputAdapter {
         protected int mouseOverTab = -1;
-
+        protected JPopupMenu stdPopupMenu;
+       
         public void mouseClicked(MouseEvent e) {
             if (mouseOverTab >= 0 && mouseOverTab < getTabCount()) {
                 Content content = getContentAt(mouseOverTab);
 
                 if (isDetachFired(content.getContentUi(), e.getPoint())) {
-                    fireDetachTabEvent(e, content, mouseOverTab);
+                    fireDetachTabEvent(e, content);
                     return;
                 }
 
                 if (isCloseFired(content.getContentUi(), e.getPoint())) {
-                    fireCloseTabEvent(e, content, mouseOverTab);
+                    fireCloseTabEvent(e, content);
                     return;
                 }
 
                 if (e.getClickCount() == 2) {
-                    // Maximization
-//                    setMaximized(!isMaximized());
+                    fireMaximizeTabEvent(e, content);
                 } else {
-//                    if (SwingUtilities.isRightMouseButton(e)) {
-//                        getContentPage(mouseOverTab).showPopupMenu(
-//                                JTabbedContentManager.this, e, mouseOverTab, popupMenu
-//                        );
-//                    }
+                    if (SwingUtilities.isRightMouseButton(e))
+                        showPopupMenu(e);
                 }
             } else if (SwingUtilities.isRightMouseButton(e)) {
-//                if (popupMenu != null)
-//                    popupMenu.show(JTabbedContentManager.this, e.getX(), e.getY());
+                JPopupMenu popupMenu = getComponentPopupMenu();
+                if (popupMenu != null)
+                    popupMenu.show(JTabbedContentPane.this, e.getX(), e.getY());
             }
         }
 
@@ -284,6 +316,68 @@ public class JTabbedContentPane extends JTabbedPane {
                     return ((JViewport) JTabbedContentPane.this.getComponent(i)).getView();
             }
             return JTabbedContentPane.this;
+        }
+
+        protected void showPopupMenu(final MouseEvent mouseEvent) {
+            final Content contentAt = getContentAt(mouseOverTab);
+            JPopupMenu popupMenu = contentAt.getPopupMenu();
+            if (popupMenu == null)
+                popupMenu = getComponentPopupMenu();
+
+            if (popupMenu == null) {
+                // Init stdPopupMenu
+                stdPopupMenu = new JPopupMenu("Content Page Popup");
+                stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.close")) {
+                    public void actionPerformed(ActionEvent e) {
+                        JTabbedContentPane.this.fireCloseTabEvent(mouseEvent, contentAt);
+                    }
+                })).setEnabled(contentAt.getContentUi().isCloseable());
+
+                stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.closeAll")) {
+                    public void actionPerformed(ActionEvent e) {
+                        for (Content content : toolWindowManager.getContentManager().getContents()) {
+                            if (content.getContentUi().isCloseable())
+                                JTabbedContentPane.this.fireCloseTabEvent(mouseEvent, content);
+                        }
+                    }
+                }));
+
+                stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.closeAllButThis")) {
+                    public void actionPerformed(ActionEvent e) {
+                        for (Content content : toolWindowManager.getContentManager().getContents()) {
+                            if (content != contentAt && content.getContentUi().isCloseable())
+                                JTabbedContentPane.this.fireCloseTabEvent(mouseEvent, content);
+                        }
+                    }
+                }));
+                stdPopupMenu.addSeparator();
+                stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.detach")) {
+                    public void actionPerformed(ActionEvent e) {
+                        JTabbedContentPane.this.fireDetachTabEvent(mouseEvent, contentAt);
+                    }
+                })).setEnabled(contentAt.getContentUi().isDetachable());
+
+                MaximizeAction maximizeAction = new MaximizeAction();
+                stdPopupMenu.add(maximizeAction);
+                maximizeAction.putValue(Action.NAME, JTabbedContentPane.this.isMaximized() ?
+                                                     resourceManager.getString("@@tabbed.page.restore") :
+                                                     resourceManager.getString("@@tabbed.page.maximize")
+                );
+                popupMenu = stdPopupMenu;
+            }
+
+            if (popupMenu != null)
+                popupMenu.show(JTabbedContentPane.this, mouseEvent.getX(), mouseEvent.getY());
+        }
+
+        class MaximizeAction extends AbstractAction {
+            public MaximizeAction() {
+                super(resourceManager.getString("@@tabbed.page.maximize"));
+            }
+
+            public void actionPerformed(ActionEvent e) {
+                JTabbedContentPane.this.setMaximized(!JTabbedContentPane.this.isMaximized());
+            }
         }
 
     }

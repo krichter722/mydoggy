@@ -5,7 +5,6 @@ import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitTabbedContentContainer;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
@@ -230,7 +229,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
             propertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
 
             final PropertyChangeListener focusOwnerPropertyChangeListener = new PropertyChangeListener() {
-                JTabbedContentManager oldManager;
+                JTabbedContentPane oldManager;
 
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getNewValue() != null) {
@@ -238,7 +237,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                             oldManager.setBorder((Border) oldManager.getClientProperty("border"));
                         }
 
-                        JTabbedContentManager tabbedPane = SwingUtil.getParent((Component) evt.getNewValue(), JTabbedContentManager.class);
+                        JTabbedContentPane tabbedPane = SwingUtil.getParent((Component) evt.getNewValue(), JTabbedContentPane.class);
                         if (tabbedPane != null) {
                             tabbedPane.putClientProperty("border", tabbedPane.getBorder());
                             tabbedPane.setBorder(new LineBorder(Color.black));
