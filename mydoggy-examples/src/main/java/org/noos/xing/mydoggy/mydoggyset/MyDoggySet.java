@@ -223,7 +223,7 @@ public class MyDoggySet {
         floatingTypeDescriptor.setModal(true);
         floatingTypeDescriptor.setAnimating(false);
 
-        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
+//        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
         ContentManagerUI defaultManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
 //        TabbedContentManagerUI tabbedContentManagerUI = (TabbedContentManagerUI) defaultManagerUI;
 //        tabbedContentManagerUI.setShowAlwaysTab(false);

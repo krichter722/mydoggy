@@ -12,12 +12,14 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragSourceDragEvent;
 import java.awt.dnd.DragSourceDropEvent;
@@ -279,12 +281,11 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     }
 
     public JPopupMenu getPopupMenu() {
-//        return tabbedContentPane.getPopupMenu();
-        return new JPopupMenu();
+        return tabbedContentPane.getComponentPopupMenu();
     }
 
     public void setPopupMenu(JPopupMenu popupMenu) {
-//        tabbedContentPane.setPopupMenu(popupMenu);
+        tabbedContentPane.setComponentPopupMenu(popupMenu);
     }
 
     public void updateUI() {
@@ -365,7 +366,6 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             propertyChangeSupport.addPropertyChangeListener("mnemonic", new MnemonicListener());
             propertyChangeSupport.addPropertyChangeListener("enabled", new EnabledListener());
             propertyChangeSupport.addPropertyChangeListener("foreground", new ForegroundListener());
-            propertyChangeSupport.addPropertyChangeListener("popupMenu", new PopupMenuListener());
             propertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
             propertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
             propertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
@@ -402,7 +402,6 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
         int index = tabbedContentPane.getTabCount() - 1;
         tabbedContentPane.setDisabledIconAt(index, content.getDisabledIcon());
-// TODO:       tabbedContentPane.setPopupMenuAt(index, content.getPopupMenu());
         int mnemonic = content.getMnemonic();
         if (mnemonic != -1)
             tabbedContentPane.setMnemonicAt(index, mnemonic);
@@ -520,20 +519,6 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 int index = tabbedContentPane.indexOfContent(content);
                 if (index != -1)
                     tabbedContentPane.setForegroundAt(index, (Color) evt.getNewValue());
-                else if (toolWindowManager.getMainContent() != content.getComponent())
-                    throw new IllegalStateException("Invalid content ui state.");
-            }
-        }
-    }
-
-    class PopupMenuListener implements PropertyChangeListener {
-        public void propertyChange(PropertyChangeEvent evt) {
-            Content content = (Content) evt.getSource();
-
-            if (!content.isDetached()) {
-                int index = tabbedContentPane.indexOfContent(content);
-                if (index != -1)
-                    tabbedContentPane.setPopupMenuAt(index, (JPopupMenu) evt.getNewValue());
                 else if (toolWindowManager.getMainContent() != content.getComponent())
                     throw new IllegalStateException("Invalid content ui state.");
             }
@@ -707,12 +692,14 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                                   this);
 
                     // Setup ghostImage
-                    // TODO: change ghost Image
-//                    Icon icon = contantPage.getContentIcon();
-//                    BufferedImage ghostImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
-//                    contantPage.getContentIcon().paintIcon(
-//                            tabbedContentPane, ghostImage.createGraphics(), 0,0
-//                    );
+
+                    Component component = tabbedContentPane.getComponentAt(index);
+                    BufferedImage ghostImage = new BufferedImage(component.getWidth(),
+                                                                 component.getHeight(), BufferedImage.TYPE_INT_RGB);
+                    component.print(ghostImage.getGraphics());
+                    ghostImage = GraphicsUtil.scale(ghostImage,
+                                                    component.getWidth() / 4,
+                                                    component.getHeight() / 4);
 
                     setGhostImage(dge.getDragOrigin(), ghostImage);
                 } else

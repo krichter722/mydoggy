@@ -8,7 +8,9 @@ import java.util.EventObject;
 
 public class TabbedContentPaneEvent extends EventObject {
     public static enum ActionId {
-        ON_CLOSE, ON_DETACH
+        ON_CLOSE,
+        ON_DETACH,
+        ON_MAXIMIZE
     }
 
     private JTabbedContentPane tabbedContentPane;
@@ -16,16 +18,14 @@ public class TabbedContentPaneEvent extends EventObject {
     private Content content;
     private String description;
     private MouseEvent mouseEvent;
-    private int overTabIndex;
 
-    public TabbedContentPaneEvent(JTabbedContentPane source, ActionId actionId, Content content, MouseEvent e, String description, int overTabIndex) {
+    public TabbedContentPaneEvent(JTabbedContentPane source, ActionId actionId, Content content, MouseEvent e, String description) {
         super(source);
         this.tabbedContentPane = source;
         this.actionId = actionId;
         this.content = content;
         this.mouseEvent = e;
         this.description = description;
-        this.overTabIndex = overTabIndex;
     }
 
 
@@ -49,7 +49,4 @@ public class TabbedContentPaneEvent extends EventObject {
         return mouseEvent;
     }
 
-    public int getOverTabIndex() {
-        return overTabIndex;
-    }
 }
