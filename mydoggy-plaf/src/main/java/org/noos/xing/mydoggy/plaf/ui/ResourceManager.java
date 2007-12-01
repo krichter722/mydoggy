@@ -223,11 +223,14 @@ public interface ResourceManager extends Observable {
     void putProperty(String name, String value);
 
     /**
-     * TODO javadoc
-     * @param name
-     * @param defualt
-     * @return
+     * Searches for the property with the specified name in the property list.
+     * The method returns <code>defaultValue</code> if the property is not found.
+     *
+     * @param name the property bame.
+     * @param defaultValue the default value if the property is not found.
+     *
+     * @return the value in this property list with the specified key value.
      */
-    boolean getBoolean(String name, boolean defualt);
+    boolean getBoolean(String name, boolean defaultValue);
 
 }

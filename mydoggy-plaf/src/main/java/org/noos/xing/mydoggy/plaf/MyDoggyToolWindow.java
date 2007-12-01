@@ -159,8 +159,7 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     public void aggregate() {
         try {
-            // TODO: add enabledShiftShow mode ...
-            descriptor.getManager().enableShiftShow();
+            descriptor.getManager().setShowingGroup();
             if (!isVisible()) {
                 switch (anchor)  {
                     case LEFT:
@@ -174,7 +173,7 @@ public class MyDoggyToolWindow implements ToolWindow {
                 }
             }
         } finally {
-            descriptor.getManager().resetShiftShow();
+            descriptor.getManager().resetShowingGroup();
         }
     }
 
@@ -189,8 +188,7 @@ public class MyDoggyToolWindow implements ToolWindow {
                     return;
             }
 
-            // TODO: add enabledShiftShow mode ...
-            descriptor.getManager().enableShiftShow();
+            descriptor.getManager().setShowingGroup();
             if (!isVisible()) {
                 if (getType() == ToolWindowType.SLIDING || getType() == ToolWindowType.FLOATING_LIVE)
                     setType(ToolWindowType.DOCKED);
@@ -218,7 +216,7 @@ public class MyDoggyToolWindow implements ToolWindow {
             }
             lastAggregationPosition = aggregationPosition;
         } finally {
-            descriptor.getManager().resetShiftShow();
+            descriptor.getManager().resetShowingGroup();
         }
     }
 

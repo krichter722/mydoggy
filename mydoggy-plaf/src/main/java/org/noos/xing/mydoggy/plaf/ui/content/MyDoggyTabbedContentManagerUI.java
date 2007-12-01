@@ -64,14 +64,14 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
 
     public void setCloseable(boolean closeable) {
-        for (TabbedContentUI tabbedContentUI : contentUIMap.values()) {
-            tabbedContentUI.setCloseable(closeable);
+        for (ContentUI contentUI : contentUIMap.values()) {
+            contentUI.setCloseable(closeable);
         }
     }
 
     public void setDetachable(boolean detachable) {
-        for (TabbedContentUI tabbedContentUI : contentUIMap.values()) {
-            tabbedContentUI.setDetachable(detachable);
+        for (ContentUI contentUI : contentUIMap.values()) {
+            contentUI.setDetachable(detachable);
         }
     }
 

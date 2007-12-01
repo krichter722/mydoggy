@@ -43,10 +43,10 @@ public interface ContentManager {
     int getContentCount();
 
     /**
-     * Adds a <code>component</code> represented by a unique identifier <code>key</code>
+     * Adds a <code>component</code> represented by a unique identifier <code>id</code>
      * with a <code>title</code> and/or <code>icon</code>, either of which can be <code>null</code>.
      *
-     * @param id
+     * @param id        the content id. It must be unique.
      * @param title     the title to be displayed in this content
      * @param icon      the icon to be displayed in this content
      * @param component the component to be displayed when this content is selected. @return the a <code>Content</code> object rapresents the content added. @see #removeContent(Content)
@@ -57,10 +57,10 @@ public interface ContentManager {
     Content addContent(String id, String title, Icon icon, Component component);
 
     /**
-     * Adds a <code>component</code> represented by a unique identifier <code>key</code>
+     * Adds a <code>component</code> represented by a unique identifier <code>id</code>
      * with a <code>title</code> and/or <code>icon</code>, either of which can be <code>null</code>.
      *
-     * @param id
+     * @param id        the content id. It must be unique.
      * @param title     the title to be displayed in this content
      * @param icon      the icon to be displayed in this content
      * @param component the component to be displayed when this content is selected.
@@ -71,6 +71,16 @@ public interface ContentManager {
     Content addContent(String id, String title, Icon icon, Component component, String tip);
 
     /**
+     * Adds a <code>component</code> represented by a unique identifier <code>id</code>
+     * with a <code>title</code> and/or <code>icon</code>, either of which can be <code>null</code>.
+     *
+     * @param id        the content id. It must be unique.
+     * @param title     the title to be displayed in this content
+     * @param icon      the icon to be displayed in this content
+     * @param component the component to be displayed when this content is selected.
+     * @param tip       the tool tip text @return the a <code>Content</code> object rapresents the content added. @see #removeContent(Content)
+     * @param constraints a constraints used by the underlining ContentManagerUI. For example a location for the DesktopContentManagerUI.
+     * @return a <code>Content</code> instance that rapresents the <code>component</code>
      * @since 1.4.0
      */
     Content addContent(String id, String title, Icon icon, Component component, String tip, Object... constraints);

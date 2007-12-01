@@ -10,7 +10,6 @@ import java.awt.*;
  * 
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.3.0
- * @todo add javadocs...
  */
 public interface ToolWindowTab extends Dockable {
 
@@ -72,6 +71,7 @@ public interface ToolWindowTab extends Dockable {
      *
      * @return
      * @since 1.4.0
+     * @todo add javadocs...
      */
     Dockable getDockableDelegator();
 }

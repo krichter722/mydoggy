@@ -11,7 +11,6 @@ import java.awt.*;
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.0.0
- * @todo add javadocs..
  */
 public interface Content extends Dockable {
 
@@ -182,12 +181,19 @@ public interface Content extends Dockable {
      */
     int getMnemonic();
 
+    /**
+     * Returns the content ui for this content based on the current installed ContentManagerUI.
+     *
+     * @return the content ui instance for this content.  
+     * @since 1.4.0
+     */
     ContentUI getContentUi();
 
     /**
      *
      * @return
      * @since 1.4.0
+     * @todo add javadocs..
      */
     Dockable getDockableDelegator();
 

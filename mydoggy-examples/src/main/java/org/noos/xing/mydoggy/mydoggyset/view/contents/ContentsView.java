@@ -25,10 +25,8 @@ public class ContentsView implements View {
 
         JPanel panel = new JPanel();
         panel.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1, 5, -1}}));
-        panel.add(new PreferencePanelView(viewContext).getComponent(),
-                  "0,0,FULL,FULL");
-        panel.add(new ContentTableView(viewContext).getComponent(),
-                  "0,2,FULL,FULL");
+        panel.add(new PreferencePanelView(viewContext).getComponent(), "0,0,FULL,FULL");
+        panel.add(new ContentTableView(viewContext).getComponent(),    "0,2,FULL,FULL");
 
         return panel;
     }

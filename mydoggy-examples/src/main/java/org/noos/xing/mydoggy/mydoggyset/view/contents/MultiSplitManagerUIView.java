@@ -1,10 +1,11 @@
 package org.noos.xing.mydoggy.mydoggyset.view.contents;
 
-import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ContentManagerUI;
 import org.noos.xing.mydoggy.TabbedContentManagerUI;
 import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.MultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyTabbedContentManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.yasaf.plaf.component.MatrixPanel;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.view.ViewContext;
@@ -23,26 +24,26 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class TabbedManagerUIView extends ComponentView implements ViewContextChangeListener {
+public class MultiSplitManagerUIView extends ComponentView implements ViewContextChangeListener {
     protected ToolWindowManager toolWindowManager;
-    protected TabbedContentManagerUI tabbedContentManagerUI;
+    protected MultiSplitContentManagerUI multiSplitContentManagerUI;
 
     protected JComboBox tabPlaces;
     protected JComboBox tabLayouts;
     protected JCheckBox isShowAlwaysTab;
     boolean valueChanging;
 
-    public TabbedManagerUIView(ViewContext viewContext) {
+    public MultiSplitManagerUIView(ViewContext viewContext) {
         super(viewContext);
         this.toolWindowManager = viewContext.get(ToolWindowManager.class);
 
         ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
-        if (contentManagerUI instanceof TabbedContentManagerUI)
-            this.tabbedContentManagerUI = (TabbedContentManagerUI) contentManagerUI;
+        if (contentManagerUI instanceof MultiSplitContentManagerUI)
+            this.multiSplitContentManagerUI = (MultiSplitContentManagerUI) contentManagerUI;
         else
-            this.tabbedContentManagerUI = new MyDoggyTabbedContentManagerUI();
+            this.multiSplitContentManagerUI = new MyDoggyMultiSplitContentManagerUI();
 
-        tabbedContentManagerUI.addPropertyChangeListener(new PropertyChangeListener() {
+        multiSplitContentManagerUI.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (valueChanging)
                     return;
@@ -126,7 +127,7 @@ public class TabbedManagerUIView extends ComponentView implements ViewContextCha
     public void contextChange(ViewContextChangeEvent evt) {
         if (ContentManagerUI.class.equals(evt.getProperty())) {
             if (evt.getNewValue().equals(TabbedContentManagerUI.class)) {
-                toolWindowManager.getContentManager().setContentManagerUI(tabbedContentManagerUI);
+                toolWindowManager.getContentManager().setContentManagerUI(multiSplitContentManagerUI);
                 viewContext.put(ContentManagerUI.class, this);
             }
         }
