@@ -103,17 +103,19 @@ public interface ToolWindowManagerDescriptor extends Observable {
     int getDividerSize(ToolWindowAnchor anchor);
 
     /**
-     * TODO
-     * @param anchor
-     * @param enable
+     * Sets the aggregate mode for tools on the specified anchor.
+     *
+     * @param anchor the anchor.
+     * @param enable aggregate mode value.
      * @since 1.4.0
      */
     void setAggregateMode(ToolWindowAnchor anchor, boolean enable);
 
     /**
-     * TODO
-     * @param anchor
-     * @return
+     * Returns aggregate mode value for the specified anchor.
+     *
+     * @param anchor the anchor.
+     * @return aggregate mode value.  
      * @since 1.4.0
      */
     boolean isAggregateMode(ToolWindowAnchor anchor);

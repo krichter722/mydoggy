@@ -323,7 +323,7 @@ public class MyDoggyToolWindow implements ToolWindow {
                 boolean tempActive = isActive();
 
 
-                if (this.anchor == anchor) {
+                if (this.anchor == anchor || !isAvailable()) {
                     this.anchor = anchor;
                     
                     fireAnchorEvent(null, anchor, index);
