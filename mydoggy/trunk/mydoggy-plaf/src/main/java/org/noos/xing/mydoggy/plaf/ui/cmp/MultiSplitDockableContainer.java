@@ -710,7 +710,7 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
     protected void resetBounds() {
-        // Reset the model bounds... TODO: try to remove this...
+        // Reset the model bounds...
         if (multiSplitPaneModelRoot == null)
             return;
 

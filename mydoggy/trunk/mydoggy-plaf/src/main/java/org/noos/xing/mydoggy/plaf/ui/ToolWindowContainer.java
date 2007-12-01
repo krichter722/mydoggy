@@ -16,6 +16,8 @@ public interface ToolWindowContainer extends PropertyChangeListener {
 
     void updateUI();
 
+    void uninstall();
+
     void showPopupMenu(Component c, int x, int y);
 
 }

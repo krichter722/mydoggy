@@ -393,6 +393,11 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
 
     protected class AvailableListener implements PropertyChangeListener {
+        protected Map<ToolWindowDescriptor, Integer> rabsPositions;
+
+        public AvailableListener() {
+            rabsPositions = new Hashtable<ToolWindowDescriptor, Integer>();
+        }
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
@@ -418,6 +423,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     // true -> false
                     representativeAnchor = descriptor.getRepresentativeAnchor();
                     if (representativeAnchor != null) {
+                        if (rabsEvent)
+                            rabsPositions.put(descriptor, descriptor.getRepresentativeAnchorIndex());
+
                         removeRepresentativeAnchor(representativeAnchor, descriptor);
                         repaint = true;
                     }
@@ -428,8 +436,11 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
                     representativeAnchor = descriptor.getRepresentativeAnchor(representativeButtonsPanel);
                     if (rabsEvent) {
-                        // TODO: we should remember anchor position before removing it when rabsEvent occurs.
-                        addRepresentativeAnchor(representativeAnchor, -1);
+                        int index = -1;
+                        if (rabsEvent && rabsPositions.containsKey(descriptor))
+                            index = rabsPositions.get(descriptor);
+
+                        addRepresentativeAnchor(representativeAnchor, index);
                     } else
                         addRepresentativeAnchor(representativeAnchor, (Integer) ((UserPropertyChangeEvent) evt).getUserObject());
 

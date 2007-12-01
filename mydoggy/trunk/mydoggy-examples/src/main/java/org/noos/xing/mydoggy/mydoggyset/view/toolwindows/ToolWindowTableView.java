@@ -67,6 +67,9 @@ public class ToolWindowTableView extends ComponentView {
         toolsTable.getColumnModel().getColumn(8).setCellRenderer(new CheckBoxCellRenderer());
         toolsTable.getColumnModel().getColumn(8).setCellEditor(new DefaultCellEditor(booleanEditor));
 
+        toolsTable.getColumnModel().getColumn(9).setCellRenderer(new CheckBoxCellRenderer());
+        toolsTable.getColumnModel().getColumn(9).setCellEditor(new DefaultCellEditor(booleanEditor));
+
         // Index column
         TableColumn indexColumn = toolsTable.getColumnModel().getColumn(7);
         indexColumn.setCellRenderer(new DefaultTableCellRenderer() {

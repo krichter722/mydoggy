@@ -38,7 +38,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     protected PropertyChangeSupport internalPropertyChangeSupport;
     protected EventListenerList contentManagerUIListeners;
 
-    protected PlafContentUI lastSelected;
+    protected PlafContent lastSelected;
 
     protected boolean valueAdjusting;
     protected boolean contentValueAdjusting;
@@ -126,7 +126,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         for (Content content : contentManager.getContents()) {
             if (content.isSelected())
                 selectedContent = content;
-            addContent((PlafContentUI) content);
+            addContent((PlafContent) content);
         }
         contentValueAdjusting = false;
 
@@ -154,7 +154,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     public void unistall() {
         for (Content content : contentManager.getContents()) {
-            removeContent((PlafContentUI) content);
+            removeContent((PlafContent) content);
         }
         this.installed = false;
     }
@@ -163,12 +163,12 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         return installed;
     }
 
-    public void addContent(PlafContentUI content, Object... constraints) {
+    public void addContent(PlafContent content, Object... constraints) {
         addUIForContent(content);
         content.addUIPropertyChangeListener(this);
     }
 
-    public void removeContent(PlafContentUI content) {
+    public void removeContent(PlafContent content) {
         if (content.isDetached())
             content.setDetached(false);
 
@@ -205,7 +205,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 try {
                     valueAdjusting = true;
                     internalFrame.setSelected(selected);
-                    lastSelected = (PlafContentUI) content;
+                    lastSelected = (PlafContent) content;
                     valueAdjusting = false;
                 } catch (PropertyVetoException e) {
                     e.printStackTrace();
@@ -333,9 +333,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                                             if (lastSelected.isDetached())
                                                 lastSelected.fireSelected(false);
                                         }
-                                        lastSelected = (PlafContentUI) content;
+                                        lastSelected = (PlafContent) content;
                                     }
-                                    ((PlafContentUI) content).fireSelected((Boolean) evt.getNewValue());
+                                    ((PlafContent) content).fireSelected((Boolean) evt.getNewValue());
                                     break;
                                 }
                             }
@@ -555,7 +555,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 dialog.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent event) {
                         Component component = dialog.getContentPane().getComponent(0);
-                        PlafContentUI content = (PlafContentUI) contentManager.getContentByComponent(component);
+                        PlafContent content = (PlafContent) contentManager.getContentByComponent(component);
                         content.fireSelected(false);
                         content.setDetached(false);
                     }
@@ -564,7 +564,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 dialog.addWindowFocusListener(new WindowFocusListener() {
                     public void windowGainedFocus(WindowEvent e) {
                         if (!valueAdjusting && !contentValueAdjusting) {
-                            PlafContentUI newSelected = (PlafContentUI) contentManager.getContentByComponent(
+                            PlafContent newSelected = (PlafContent) contentManager.getContentByComponent(
                                     dialog.getContentPane().getComponent(0));
 
                             if (newSelected == lastSelected)

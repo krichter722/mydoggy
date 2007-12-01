@@ -194,7 +194,7 @@ public class MyDoggyToolWindow implements ToolWindow {
                     setType(ToolWindowType.DOCKED);
 
                 setVisibleInternal(true, true, null, aggregationPosition);
-            } else /* TODO: we need a check if (lastAggregationPosition != aggregationPosition)*/ {
+            } else {
                 publicEvent = false;
                 try {
                     setVisible(false);

@@ -2,7 +2,7 @@ package org.noos.xing.mydoggy.plaf;
 
 import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.ContentUI;
-import org.noos.xing.mydoggy.plaf.ui.content.PlafContentUI;
+import org.noos.xing.mydoggy.plaf.ui.content.PlafContent;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -13,7 +13,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyContent implements PlafContentUI {
+public class MyDoggyContent implements PlafContent {
     private transient MyDoggyContentManager contentManager;
 
     private String id;
