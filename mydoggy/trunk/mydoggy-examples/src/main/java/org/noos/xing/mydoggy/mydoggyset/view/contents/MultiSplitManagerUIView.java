@@ -4,7 +4,6 @@ import org.noos.xing.mydoggy.ContentManagerUI;
 import org.noos.xing.mydoggy.TabbedContentManagerUI;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.MultiSplitContentManagerUI;
-import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyTabbedContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.yasaf.plaf.component.MatrixPanel;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
@@ -73,16 +72,13 @@ public class MultiSplitManagerUIView extends ComponentView implements ViewContex
                 TabbedContentManagerUI.TabPlacement.BOTTOM,
                 TabbedContentManagerUI.TabPlacement.RIGHT
         });
-        tabPlaces.setSelectedIndex(
-                ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).getTabPlacement().ordinal()
-        );
         tabPlaces.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     valueChanging = true;
-                    ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).setTabPlacement(
-                            (TabbedContentManagerUI.TabPlacement) tabPlaces.getSelectedItem()
-                    );
+//                    ((MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).setTabPlacement(
+//                            (TabbedContentManagerUI.TabPlacement) tabPlaces.getSelectedItem()
+//                    );
                     valueChanging = false;
                 }
             }
@@ -98,25 +94,22 @@ public class MultiSplitManagerUIView extends ComponentView implements ViewContex
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     valueChanging = true;
-                    ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).setTabLayout(
-                            (TabbedContentManagerUI.TabLayout) tabLayouts.getSelectedItem()
-                    );
+//                    ((MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).setTabLayout(
+//                            (TabbedContentManagerUI.TabLayout) tabLayouts.getSelectedItem()
+//                    );
                     valueChanging = false;
                 }
             }
         });
-        tabLayouts.setSelectedIndex(
-                ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).getTabLayout().ordinal()
-        );
         panel.addPair(0, 1, "Tab Layout : ", tabLayouts);
 
         // isShowAlwaysTab
         isShowAlwaysTab = new JCheckBox();
         isShowAlwaysTab.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).setShowAlwaysTab(
-                        isShowAlwaysTab.isSelected()
-                );
+//                ((MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).setShowAlwaysTab(
+//                        isShowAlwaysTab.isSelected()
+//                );
             }
         });
         panel.addPair(0, 2, "IsShowAlwaysTab : ", isShowAlwaysTab);
@@ -126,9 +119,17 @@ public class MultiSplitManagerUIView extends ComponentView implements ViewContex
 
     public void contextChange(ViewContextChangeEvent evt) {
         if (ContentManagerUI.class.equals(evt.getProperty())) {
-            if (evt.getNewValue().equals(TabbedContentManagerUI.class)) {
+            if (evt.getNewValue().equals(MultiSplitContentManagerUI.class)) {
                 toolWindowManager.getContentManager().setContentManagerUI(multiSplitContentManagerUI);
                 viewContext.put(ContentManagerUI.class, this);
+/* TODO:...
+                tabPlaces.setSelectedIndex(
+                        ((MultiSplitManagerUIView) toolWindowManager.getContentManager().getContentManagerUI()).getTabPlacement().ordinal()
+                );
+                tabLayouts.setSelectedIndex(
+                        ((MultiSplitManagerUIView) toolWindowManager.getContentManager().getContentManagerUI()).getTabLayout().ordinal()
+                );
+*/
             }
         }
     }

@@ -84,7 +84,7 @@ public class TestChooserView extends ComponentView {
             return panel;
         }
 
-        protected void onVisible() {
+        protected void onFirstVisible() {
             tests.setSelectedItem(null);
             tests.setSelectedIndex(0);
         }

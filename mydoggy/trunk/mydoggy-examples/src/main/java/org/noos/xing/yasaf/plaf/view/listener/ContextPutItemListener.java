@@ -18,7 +18,8 @@ public class ContextPutItemListener implements ItemListener {
     }
 
     public void itemStateChanged(ItemEvent e) {
-        viewContext.put(key, e.getItem());
+        if (e.getStateChange() == ItemEvent.SELECTED)
+            viewContext.put(key, e.getItem());
     }
     
 }

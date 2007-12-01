@@ -72,9 +72,6 @@ public class TabbedManagerUIView extends ComponentView implements ViewContextCha
                 TabbedContentManagerUI.TabPlacement.BOTTOM,
                 TabbedContentManagerUI.TabPlacement.RIGHT
         });
-        tabPlaces.setSelectedIndex(
-                ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).getTabPlacement().ordinal()
-        );
         tabPlaces.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -104,9 +101,6 @@ public class TabbedManagerUIView extends ComponentView implements ViewContextCha
                 }
             }
         });
-        tabLayouts.setSelectedIndex(
-                ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).getTabLayout().ordinal()
-        );
         panel.addPair(0, 1, "Tab Layout : ", tabLayouts);
 
         // isShowAlwaysTab
@@ -128,9 +122,14 @@ public class TabbedManagerUIView extends ComponentView implements ViewContextCha
             if (evt.getNewValue().equals(TabbedContentManagerUI.class)) {
                 toolWindowManager.getContentManager().setContentManagerUI(tabbedContentManagerUI);
                 viewContext.put(ContentManagerUI.class, this);
+                tabPlaces.setSelectedIndex(
+                        ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).getTabPlacement().ordinal()
+                );
+                tabLayouts.setSelectedIndex(
+                        ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).getTabLayout().ordinal()
+                );
             }
         }
     }
-
 
 }

@@ -4,8 +4,6 @@ import org.noos.xing.yasaf.view.View;
 import org.noos.xing.yasaf.view.ViewContext;
 
 import java.awt.*;
-import java.awt.event.ComponentListener;
-import java.awt.event.ComponentEvent;
 import java.awt.event.HierarchyListener;
 import java.awt.event.HierarchyEvent;
 
@@ -26,9 +24,9 @@ public abstract class ComponentView implements View {
         this.component = initComponent();
         this.component.addHierarchyListener(new HierarchyListener() {
             public void hierarchyChanged(HierarchyEvent e) {
-                if (e.getChangeFlags() == HierarchyEvent.SHOWING_CHANGED) {
+                if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
                     if (!first) {
-                        onVisible();
+                        onFirstVisible();
                         first = true;
                     }
                 }
@@ -46,7 +44,7 @@ public abstract class ComponentView implements View {
     protected void initListeners() {
     }
 
-    protected void onVisible() {
+    protected void onFirstVisible() {
     }
 
 }

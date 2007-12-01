@@ -29,7 +29,6 @@ import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * @todo finish...
  */
 public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
     protected MyDoggyToolWindowManager toolWindowManager;
@@ -40,7 +39,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     protected boolean closeable, detachable;        // TODO: think of this...
     protected boolean installed;
 
-    protected PropertyChangeSupport propertyChangeSupport;
+    protected PropertyChangeSupport internalPropertyChangeSupport;
     protected EventListenerList contentManagerUIListeners;
 
     protected PlafContentUI lastSelected;
@@ -57,6 +56,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 
 
     public MyDoggyMultiSplitContentManagerUI() {
+        this.contentManagerUIListeners = new EventListenerList();
         this.contentUIMap = new Hashtable<Content, MultiSplitContentUI>();
         this.closeable = this.detachable = true;
     }
@@ -81,15 +81,15 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
-// TODO :
+        contentManagerUIListeners.add(PropertyChangeListener.class, listener);
     }
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {
-// TODO :
+        contentManagerUIListeners.remove(PropertyChangeListener.class, listener);
     }
 
     public PropertyChangeListener[] getPropertyChangeListeners() {
-        return new PropertyChangeListener[0];  // TODO :
+        return contentManagerUIListeners.getListeners(PropertyChangeListener.class);
     }
 
     public void addContentManagerUIListener(ContentManagerUIListener listener) {
@@ -218,7 +218,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 
 
     public void propertyChange(PropertyChangeEvent evt) {
-        propertyChangeSupport.firePropertyChange(evt);
+        internalPropertyChangeSupport.firePropertyChange(evt);
     }
 
 
@@ -230,43 +230,18 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     }
 
     protected void initListeners() {
-        if (propertyChangeSupport == null) {
-            propertyChangeSupport = new PropertyChangeSupport(this);
-            propertyChangeSupport.addPropertyChangeListener("component", new ComponentListener());
-            propertyChangeSupport.addPropertyChangeListener("disabledIcon", new DisabledIconListener());
-            propertyChangeSupport.addPropertyChangeListener("icon", new IconListener());
-            propertyChangeSupport.addPropertyChangeListener("enabled", new EnabledListener());
-            propertyChangeSupport.addPropertyChangeListener("foreground", new ForegroundListener());
-            propertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
-            propertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
-            propertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
-
-            final PropertyChangeListener focusOwnerPropertyChangeListener = new PropertyChangeListener() {
-                JTabbedContentPane oldManager;
-
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (evt.getNewValue() != null) {
-                        if (oldManager != null) {
-                            oldManager.setBorder((Border) oldManager.getClientProperty("border"));
-                        }
-
-                        JTabbedContentPane tabbedPane = SwingUtil.getParent((Component) evt.getNewValue(), JTabbedContentPane.class);
-                        if (tabbedPane != null) {
-                            tabbedPane.putClientProperty("border", tabbedPane.getBorder());
-                            tabbedPane.setBorder(new LineBorder(Color.black));
-                            oldManager = tabbedPane;
-                        }
-                    }
-                }
-            };
-            KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
-            toolWindowManager.addInternalPropertyChangeListener("anchestor.closed", new PropertyChangeListener() {
-                public void propertyChange(PropertyChangeEvent evt) {
-                    KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
-                }
-            });
+        if (internalPropertyChangeSupport == null) {
+            internalPropertyChangeSupport = new PropertyChangeSupport(this);
+            internalPropertyChangeSupport.addPropertyChangeListener("component", new ComponentListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("disabledIcon", new DisabledIconListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("icon", new IconListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("mnemonic", new MnemonicListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("enabled", new EnabledListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("foreground", new ForegroundListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
         }
-        this.contentManagerUIListeners = new EventListenerList();
     }
 
     protected void setupActions() {
@@ -322,19 +297,44 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                 container.removeAll();
                 container.add((Component) evt.getNewValue());
             } else {
-//                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
-//                if (internalFrame != null) {
-//                    Container container = internalFrame.getContentPane();
-//                    container.removeAll();
-//                    container.add((Component) evt.getNewValue());
-//                } else
-//                    throw new IllegalStateException("Invalid content ui state.");
+                for (Component c : multiSplitContainer.getTabbedComponents()) {
+                    if (c instanceof JTabbedContentPane) {
+                        JTabbedContentPane tabbedContentPane = ((JTabbedContentPane)c);
+                        int index = tabbedContentPane.indexOfContent(content);
+                        if (index != -1) {
+                            tabbedContentPane.setComponentAt(index, (Component) evt.getNewValue());
+                            return;
+                        }
+                    }
+                    if (c == content.getComponent()) {
+                        multiSplitContainer.setRootComponent((Component) evt.getNewValue());
+                        return;
+                    }
+                }
+                throw new IllegalStateException("Invalid content ui state.");
             }
         }
     }
 
     protected class DisabledIconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
+            Content content = (Content) evt.getSource();
+
+            if (!content.isDetached()) {
+                for (Component c : multiSplitContainer.getTabbedComponents()) {
+                    if (c instanceof JTabbedContentPane) {
+                        JTabbedContentPane tabbedContentPane = ((JTabbedContentPane)c);
+                        int index = tabbedContentPane.indexOfContent(content);
+                        if (index != -1) {
+                            tabbedContentPane.setDisabledIconAt(index, (Icon) evt.getNewValue());
+                            return;
+                        }
+                    }
+                    if (c == content.getComponent())
+                        return;
+                }
+                throw new IllegalStateException("Invalid content ui state.");
+            }
         }
     }
 
@@ -343,11 +343,41 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
             Content content = (Content) evt.getSource();
 
             if (!content.isDetached()) {
-//                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
-//                if (internalFrame != null)
-//                    internalFrame.setFrameIcon((Icon) evt.getNewValue());
-//                else
-//                    throw new IllegalStateException("Invalid content ui state.");
+                for (Component c : multiSplitContainer.getTabbedComponents()) {
+                    if (c instanceof JTabbedContentPane) {
+                        JTabbedContentPane tabbedContentPane = ((JTabbedContentPane)c);
+                        int index = tabbedContentPane.indexOfContent(content);
+                        if (index != -1) {
+                            tabbedContentPane.setIconAt(index, (Icon) evt.getNewValue());
+                            return;
+                        }
+                    }
+                    if (c == content.getComponent())
+                        return;
+                }
+                throw new IllegalStateException("Invalid content ui state.");
+            }
+        }
+    }
+
+    protected class MnemonicListener implements PropertyChangeListener {
+        public void propertyChange(PropertyChangeEvent evt) {
+            Content content = (Content) evt.getSource();
+
+            if (!content.isDetached()) {
+                for (Component c : multiSplitContainer.getTabbedComponents()) {
+                    if (c instanceof JTabbedContentPane) {
+                        JTabbedContentPane tabbedContentPane = ((JTabbedContentPane)c);
+                        int index = tabbedContentPane.indexOfContent(content);
+                        if (index != -1) {
+                            tabbedContentPane.setMnemonicAt(index, (Integer) evt.getNewValue());
+                            return;
+                        }
+                    }
+                    if (c == content.getComponent())
+                        return;
+                }
+                throw new IllegalStateException("Invalid content ui state.");
             }
         }
     }
@@ -356,12 +386,23 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
-            if (!content.isDetached()) {
-//                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
-//                if (internalFrame != null) {
-//                    internalFrame.setEnabled((Boolean) evt.getNewValue());
-//                } else
-//                    throw new IllegalStateException("Invalid content ui state.");
+            if (content.isDetached()) {
+                Window anchestor = SwingUtilities.windowForComponent(content.getComponent());
+                anchestor.setEnabled((Boolean) evt.getNewValue());
+            } else {
+                for (Component c : multiSplitContainer.getTabbedComponents()) {
+                    if (c instanceof JTabbedContentPane) {
+                        JTabbedContentPane tabbedContentPane = ((JTabbedContentPane)c);
+                        int index = tabbedContentPane.indexOfContent(content);
+                        if (index != -1) {
+                            tabbedContentPane.setEnabledAt(index, (Boolean) evt.getNewValue());
+                            return;
+                        }
+                    }
+                    if (c == content.getComponent())
+                        return;
+                }
+                throw new IllegalStateException("Invalid content ui state.");
             }
         }
     }
@@ -371,11 +412,19 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
             Content content = (Content) evt.getSource();
 
             if (!content.isDetached()) {
-//                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
-//                if (internalFrame != null)
-//                    internalFrame.setForeground((Color) evt.getNewValue());
-//                else
-//                    throw new IllegalStateException("Invalid content ui state.");
+                for (Component c : multiSplitContainer.getTabbedComponents()) {
+                    if (c instanceof JTabbedContentPane) {
+                        JTabbedContentPane tabbedContentPane = ((JTabbedContentPane)c);
+                        int index = tabbedContentPane.indexOfContent(content);
+                        if (index != -1) {
+                            tabbedContentPane.setForegroundAt(index, (Color) evt.getNewValue());
+                            return;
+                        }
+                    }
+                    if (c == content.getComponent())
+                        return;
+                }
+                throw new IllegalStateException("Invalid content ui state.");
             }
         }
     }
@@ -388,11 +437,19 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                 JDialog dialog = (JDialog) SwingUtilities.windowForComponent(content.getComponent());
                 dialog.setTitle((String) evt.getNewValue());
             } else {
-//                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
-//                if (internalFrame != null)
-//                    internalFrame.setTitle((String) evt.getNewValue());
-//                else
-//                    throw new IllegalStateException("Invalid content ui state.");
+                for (Component c : multiSplitContainer.getTabbedComponents()) {
+                    if (c instanceof JTabbedContentPane) {
+                        JTabbedContentPane tabbedContentPane = ((JTabbedContentPane)c);
+                        int index = tabbedContentPane.indexOfContent(content);
+                        if (index != -1) {
+                            tabbedContentPane.setTitleAt(index, (String) evt.getNewValue());
+                            return;
+                        }
+                    }
+                    if (c == content.getComponent())
+                        return;
+                }
+                throw new IllegalStateException("Invalid content ui state.");
             }
         }
     }
@@ -442,6 +499,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                 Window parentWindow = SwingUtilities.windowForComponent(multiSplitContainer);
                 Component component = content.getComponent();
 
+// TODO....               
 //                JInternalFrame internalFrame = getFrameByComponent(component);
 //                if (internalFrame != null) {
 //                    multiSplitPane.remove(internalFrame);
@@ -531,6 +589,12 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
             super(toolWindowManager);
         }
 
+
+        public void setRootComponent(Component component) {
+            super.setRootComponent(component);    
+        }
+
+
         protected Container getComponentWrapper(Dockable dockable, Component component) {
             final JTabbedContentPane tabbedPane = (JTabbedContentPane) super.getComponentWrapper(dockable, component);
             tabbedPane.addChangeListener(new ChangeListener() {
@@ -563,8 +627,8 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                     Content content = event.getContent();
                     switch (event.getActionId()) {
                         case ON_CLOSE:
-                            if (fireContentUIRemoving(getContentUI(content))) ;
-                            contentManager.removeContent(content);
+                            if (fireContentUIRemoving(getContentUI(content)))
+                                contentManager.removeContent(content);
                             break;
                         case ON_DETACH:
                             content.setDetached(true);

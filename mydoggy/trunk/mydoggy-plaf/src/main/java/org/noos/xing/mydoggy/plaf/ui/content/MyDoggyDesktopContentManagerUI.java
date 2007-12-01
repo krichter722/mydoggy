@@ -35,7 +35,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     protected boolean closeable, detachable;
     protected boolean installed;
 
-    protected PropertyChangeSupport propertyChangeSupport;
+    protected PropertyChangeSupport internalPropertyChangeSupport;
     protected EventListenerList contentManagerUIListeners;
 
     protected PlafContentUI lastSelected;
@@ -51,13 +51,14 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
 
     public MyDoggyDesktopContentManagerUI() {
-        // TODO: it this also for
+        this.contentManagerUIListeners = new EventListenerList();
         this.closeable = this.detachable = true;
     }
 
 
     public void setCloseable(boolean closeable) {
         this.closeable = closeable;
+
         if (desktopPane != null)
             for (JInternalFrame frame : desktopPane.getAllFrames()) {
                 frame.setClosable(closeable);
@@ -66,6 +67,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     public void setDetachable(boolean detachable) {
         this.detachable = detachable;
+
         if (desktopPane != null)
             for (JInternalFrame internalFrame : desktopPane.getAllFrames()) {
                 DesktopContentFrame frame = (DesktopContentFrame) internalFrame;
@@ -81,15 +83,15 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
-        // TODO :
+        contentManagerUIListeners.add(PropertyChangeListener.class, listener);
     }
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {
-        // TODO :
+        contentManagerUIListeners.remove(PropertyChangeListener.class, listener);
     }
 
     public PropertyChangeListener[] getPropertyChangeListeners() {
-        return new PropertyChangeListener[0];          // TODO : 
+        return contentManagerUIListeners.getListeners(PropertyChangeListener.class);
     }
 
     public void addContentManagerUIListener(ContentManagerUIListener listener) {
@@ -219,7 +221,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
 
     public void propertyChange(PropertyChangeEvent evt) {
-        propertyChangeSupport.firePropertyChange(evt);
+        internalPropertyChangeSupport.firePropertyChange(evt);
     }
 
 
@@ -233,26 +235,20 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     }
 
     protected void initListeners() {
-        if (propertyChangeSupport == null) {
-            propertyChangeSupport = new PropertyChangeSupport(this);
-            propertyChangeSupport.addPropertyChangeListener("component", new ComponentListener());
-            propertyChangeSupport.addPropertyChangeListener("disabledIcon", new DisabledIconListener());
-            propertyChangeSupport.addPropertyChangeListener("icon", new IconListener());
-            propertyChangeSupport.addPropertyChangeListener("enabled", new EnabledListener());
-            propertyChangeSupport.addPropertyChangeListener("foreground", new ForegroundListener());
-            propertyChangeSupport.addPropertyChangeListener("popupMenu", new PopupMenuListener());
-            propertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
-            propertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
-            propertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
-            propertyChangeSupport.addPropertyChangeListener("selected", new PropertyChangeListener() {
-                public void propertyChange(PropertyChangeEvent evt) {
-                    //                System.out.println("SELECTED " + evt.getNewValue());
-                }
-            });
+        if (internalPropertyChangeSupport == null) {
+            internalPropertyChangeSupport = new PropertyChangeSupport(this);
+            internalPropertyChangeSupport.addPropertyChangeListener("component", new ComponentListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("disabledIcon", new DisabledIconListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("icon", new IconListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("enabled", new EnabledListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("foreground", new ForegroundListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("popupMenu", new PopupMenuListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
 
             desktopPane.addMouseListener(new PopupMouseListener());
         }
-        this.contentManagerUIListeners = new EventListenerList();
     }
 
     protected void setupActions() {
@@ -267,22 +263,22 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     protected void addUIForContent(Content content, Object... constraints) {
         JInternalFrame internalFrame = (JInternalFrame) detachedContentUIMap.get(content);
-        
+
         if (internalFrame == null) {
             internalFrame = new DesktopContentFrame(content, content.getTitle(), true, true, true, true);
             internalFrame.setFrameIcon(content.getIcon());
             internalFrame.setClosable(closeable);
-            ((DesktopContentFrame)internalFrame).setDetachable(detachable);
+            ((DesktopContentFrame) internalFrame).setDetachable(detachable);
 
             internalFrame.getContentPane().add(content.getComponent());
 
             // Parse constraints
             if (constraints.length > 0) {
-                if (constraints[0] instanceof Point)  {
+                if (constraints[0] instanceof Point) {
                     Point location = (Point) constraints[0];
 
                     internalFrame.setBounds(location.x, location.y, 320, 200);
-                } else if (constraints[0] instanceof Rectangle)  {
+                } else if (constraints[0] instanceof Rectangle) {
                     internalFrame.setBounds((Rectangle) constraints[0]);
                 } else
                     constraints = null;
@@ -294,7 +290,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 if (contentX > desktopPane.getWidth() - 320 || contentY > desktopPane.getHeight() - 200) {
                     contentIndex = 0;
                     contentY = contentX = 10;
-                }    
+                }
                 internalFrame.setBounds(contentX, contentY, 320, 200);
             }
 
@@ -360,7 +356,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             try {
                 internalFrame.setSelected(true);
             } catch (PropertyVetoException e) {
-                e.printStackTrace();  
+                e.printStackTrace();
             }
 
     }
@@ -520,7 +516,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (!oldValue && newValue) {
-                final JDialog dialog = new JDialog(resourceManager.getBoolean("dialog.owner.enabled", true) ?  parentFrame : null, 
+                final JDialog dialog = new JDialog(resourceManager.getBoolean("dialog.owner.enabled", true) ? parentFrame : null,
                                                    false);
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -548,7 +544,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
                 if (resourceManager.getTransparencyManager().isServiceAvailable()) {
                     WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(
-                            resourceManager.getTransparencyManager(), 
+                            resourceManager.getTransparencyManager(),
                             getContentUI(content),
                             dialog
                     );

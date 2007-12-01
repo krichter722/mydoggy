@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.content;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
@@ -44,9 +45,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     protected boolean showAlwaysTab;
     protected boolean installed;
 
-    protected PropertyChangeSupport propertyChangeSupport;
+    protected PropertyChangeSupport internalPropertyChangeSupport;
     protected EventListenerList contentManagerUIListeners;
-    protected PropertyChangeSupport propertyChangeListeners;
 
     protected PlafContentUI lastSelected;
 
@@ -57,8 +57,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     protected Map<Content, TabbedContentUI> detachedContentUIMap;
 
     public MyDoggyTabbedContentManagerUI() {
-        this.propertyChangeListeners = new PropertyChangeSupport(this);
-
+        contentManagerUIListeners = new EventListenerList();
         initComponents();
     }
 
@@ -86,7 +85,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         TabPlacement old = getTabPlacement();
         tabbedContentPane.setTabPlacement(tabPlacement.ordinal() + 1);
 
-        propertyChangeListeners.firePropertyChange("tabPlacement", old, tabPlacement);
+        fireContentManagerUIProperty("tabPlacement", old, tabPlacement);
     }
 
     public TabPlacement getTabPlacement() {
@@ -111,7 +110,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         tabbedContentPane.setTabLayoutPolicy(tabLayout.ordinal());
         SwingUtil.repaint(tabbedContentPane);
 
-        propertyChangeListeners.firePropertyChange("tabLayout", old, tabLayout);
+        fireContentManagerUIProperty("tabLayout", old, tabLayout);
     }
 
     public TabLayout getTabLayout() {
@@ -143,18 +142,30 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
-        propertyChangeListeners.addPropertyChangeListener(listener);
+        contentManagerUIListeners.add(PropertyChangeListener.class, listener);
     }
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {
-        propertyChangeListeners.removePropertyChangeListener(listener);
+        contentManagerUIListeners.remove(PropertyChangeListener.class, listener);
     }
 
     public PropertyChangeListener[] getPropertyChangeListeners() {
-        return propertyChangeListeners.getPropertyChangeListeners();
+        return contentManagerUIListeners.getListeners(PropertyChangeListener.class);
     }
 
+    public void addContentManagerUIListener(ContentManagerUIListener listener) {
+        contentManagerUIListeners.add(ContentManagerUIListener.class, listener);
+    }
 
+    public void removeContentManagerUIListener(ContentManagerUIListener listener) {
+        contentManagerUIListeners.remove(ContentManagerUIListener.class, listener);
+    }
+
+    public ContentManagerUIListener[] getContentManagerUiListener() {
+        return contentManagerUIListeners.getListeners(ContentManagerUIListener.class);
+    }
+
+    
     public Container getContainer() {
         return tabbedContentPane;
     }
@@ -292,20 +303,9 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         tabbedContentPane.updateUI();
     }
 
-    public void addContentManagerUIListener(ContentManagerUIListener listener) {
-        contentManagerUIListeners.add(ContentManagerUIListener.class, listener);
-    }
-
-    public void removeContentManagerUIListener(ContentManagerUIListener listener) {
-        contentManagerUIListeners.remove(ContentManagerUIListener.class, listener);
-    }
-
-    public ContentManagerUIListener[] getContentManagerUiListener() {
-        return contentManagerUIListeners.getListeners(ContentManagerUIListener.class);
-    }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        propertyChangeSupport.firePropertyChange(evt);
+        internalPropertyChangeSupport.firePropertyChange(evt);
     }
 
 
@@ -358,21 +358,20 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     }
 
     protected void initListeners() {
-        if (propertyChangeSupport == null) {
-            propertyChangeSupport = new PropertyChangeSupport(this);
-            propertyChangeSupport.addPropertyChangeListener("component", new ComponentListener());
-            propertyChangeSupport.addPropertyChangeListener("disabledIcon", new DisabledIconListener());
-            propertyChangeSupport.addPropertyChangeListener("icon", new IconListener());
-            propertyChangeSupport.addPropertyChangeListener("mnemonic", new MnemonicListener());
-            propertyChangeSupport.addPropertyChangeListener("enabled", new EnabledListener());
-            propertyChangeSupport.addPropertyChangeListener("foreground", new ForegroundListener());
-            propertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
-            propertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
-            propertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
+        if (internalPropertyChangeSupport == null) {
+            internalPropertyChangeSupport = new PropertyChangeSupport(this);
+            internalPropertyChangeSupport.addPropertyChangeListener("component", new ComponentListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("disabledIcon", new DisabledIconListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("icon", new IconListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("mnemonic", new MnemonicListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("enabled", new EnabledListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("foreground", new ForegroundListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
         }
         SwingUtil.registerDragGesture(tabbedContentPane,
                                       new TabbedContentManagerDragGesture());
-        contentManagerUIListeners = new EventListenerList();
     }
 
     protected void addUIForContent(Content content, Object... constaints) {
@@ -426,8 +425,15 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         }
     }
 
+    protected void fireContentManagerUIProperty(String property, Object oldValue, Object newValue) {
+        PropertyChangeEvent event = new PropertyChangeEvent(this, property, oldValue, newValue);
+        for (PropertyChangeListener listener : contentManagerUIListeners.getListeners(PropertyChangeListener.class)) {
+            listener.propertyChange(event);
+        }
+    }
 
-    class ComponentListener implements PropertyChangeListener {
+
+    protected class ComponentListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
             Component oldCmp = (Component) evt.getOldValue();
@@ -452,7 +458,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         }
     }
 
-    class DisabledIconListener implements PropertyChangeListener {
+    protected class DisabledIconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -466,7 +472,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         }
     }
 
-    class IconListener implements PropertyChangeListener {
+    protected class IconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -480,7 +486,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         }
     }
 
-    class MnemonicListener implements PropertyChangeListener {
+    protected class MnemonicListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -494,7 +500,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         }
     }
 
-    class EnabledListener implements PropertyChangeListener {
+    protected class EnabledListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -511,7 +517,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         }
     }
 
-    class ForegroundListener implements PropertyChangeListener {
+    protected class ForegroundListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -525,7 +531,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         }
     }
 
-    class TitleListener implements PropertyChangeListener {
+    protected class TitleListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -542,7 +548,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         }
     }
 
-    class ToolTipTextListener implements PropertyChangeListener {
+    protected class ToolTipTextListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -559,7 +565,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         }
     }
 
-    class DetachedListener implements PropertyChangeListener {
+    protected class DetachedListener implements PropertyChangeListener {
         private Frame parentFrame;
 
         public DetachedListener() {
@@ -669,7 +675,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
     }
 
-    class TabbedContentManagerDragGesture extends DragGestureAdapter {
+    protected class TabbedContentManagerDragGesture extends DragGestureAdapter {
 
         public TabbedContentManagerDragGesture() {
             super(toolWindowManager);
