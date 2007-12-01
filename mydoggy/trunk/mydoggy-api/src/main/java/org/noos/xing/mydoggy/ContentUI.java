@@ -7,7 +7,6 @@ package org.noos.xing.mydoggy;
  * @since 1.1.0
  * @see TabbedContentUI
  * @see DesktopContentUI
- * TODO: add Observable...
  */
 public interface ContentUI extends DockableUI {
 

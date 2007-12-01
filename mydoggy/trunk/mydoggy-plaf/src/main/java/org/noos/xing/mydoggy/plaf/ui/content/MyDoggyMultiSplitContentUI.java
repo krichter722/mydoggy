@@ -9,7 +9,6 @@ import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * TODO: finish property firing...
 */
 public class MyDoggyMultiSplitContentUI implements MultiSplitContentUI {
     protected Content content;
@@ -25,8 +24,9 @@ public class MyDoggyMultiSplitContentUI implements MultiSplitContentUI {
         this.content = content;
         this.listenerList = new EventListenerList();
         this.closable = this.detachable = true;
-
-        // TODO: setup all properties..
+        this.transparentMode = true;
+        this.transparentRatio = 0.7f;
+        this.transparentDelay = 0;
     }
 
     public Content getContent() {
@@ -38,6 +38,9 @@ public class MyDoggyMultiSplitContentUI implements MultiSplitContentUI {
     }
 
     public void setCloseable(boolean closable) {
+        if (this.closable == closable)
+            return;
+
         boolean old = this.closable;
         this.closable = closable;
 
@@ -49,6 +52,9 @@ public class MyDoggyMultiSplitContentUI implements MultiSplitContentUI {
     }
 
     public void setDetachable(boolean detachable) {
+        if (this.detachable == detachable)
+            return;
+
         boolean old = this.detachable;
         this.detachable = detachable;
 
@@ -60,7 +66,13 @@ public class MyDoggyMultiSplitContentUI implements MultiSplitContentUI {
     }
 
     public void setTransparentMode(boolean transparentMode) {
+        if (this.transparentMode == transparentMode)
+            return;
+
+        boolean old = this.transparentMode;
         this.transparentMode = transparentMode;
+
+        fireEvent("transparentMode", old, transparentMode);
     }
 
     public float getTransparentRatio() {
@@ -68,7 +80,13 @@ public class MyDoggyMultiSplitContentUI implements MultiSplitContentUI {
     }
 
     public void setTransparentRatio(float transparentRatio) {
+        if (this.transparentRatio == transparentRatio)
+            return;
+
+        float old = this.transparentRatio;
         this.transparentRatio = transparentRatio;
+
+        fireEvent("transparentRatio", old, transparentRatio);
     }
 
     public int getTransparentDelay() {
@@ -76,7 +94,13 @@ public class MyDoggyMultiSplitContentUI implements MultiSplitContentUI {
     }
 
     public void setTransparentDelay(int transparentDelay) {
+        if (this.transparentDelay == transparentDelay)
+            return;
+
+        int old = this.transparentDelay;
         this.transparentDelay = transparentDelay;
+
+        fireEvent("transparentDelay", old, transparentDelay);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {

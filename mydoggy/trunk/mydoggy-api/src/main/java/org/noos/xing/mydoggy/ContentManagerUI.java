@@ -10,7 +10,7 @@ package org.noos.xing.mydoggy;
  * @see DesktopContentManagerUI
  * @since 1.1.0
  */
-public interface ContentManagerUI<C extends ContentUI> {
+public interface ContentManagerUI<C extends ContentUI> extends Observable {
 
 	/**
 	 * Sets the closeable property of all contents registered to content manager.

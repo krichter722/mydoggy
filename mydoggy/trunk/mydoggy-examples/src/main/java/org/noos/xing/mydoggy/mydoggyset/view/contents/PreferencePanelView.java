@@ -1,8 +1,6 @@
 package org.noos.xing.mydoggy.mydoggyset.view.contents;
 
-import org.noos.xing.mydoggy.ContentManagerUI;
-import org.noos.xing.mydoggy.DesktopContentManagerUI;
-import org.noos.xing.mydoggy.TabbedContentManagerUI;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
@@ -48,7 +46,9 @@ public class PreferencePanelView extends ComponentView {
 
     protected void initListeners() {
         viewContext.addViewContextChangeListener(new TabbedManagerUIView(viewContext));
+        viewContext.addViewContextChangeListener(new MultiSplitManagerUIView(viewContext));
         viewContext.addViewContextChangeListener(new DesktopManagerUIView(viewContext));
+
         viewContext.addViewContextChangeListener(new ViewContextChangeListener() {
             public void contextChange(ViewContextChangeEvent evt) {
                 if (ContentManagerUI.class.equals(evt.getProperty())) {
@@ -72,6 +72,7 @@ public class PreferencePanelView extends ComponentView {
 
             uis = new JComboBox(new Object[]{
                     TabbedContentManagerUI.class,
+                    MultiSplitContentManagerUI.class,
                     DesktopContentManagerUI.class
             });
             uis.addItemListener(new ContextPutItemListener(viewContext, ContentManagerUI.class));
@@ -83,8 +84,16 @@ public class PreferencePanelView extends ComponentView {
         }
 
         protected void onVisible() {
+            // TODO : onVisible has problems with MultiSplitContentManagerUI
             uis.setSelectedItem(null);
-            uis.setSelectedIndex(0);
+            
+            ContentManagerUI contentManagerUI = viewContext.get(ToolWindowManager.class).getContentManager().getContentManagerUI();
+            if (contentManagerUI instanceof TabbedContentManagerUI)
+                uis.setSelectedIndex(0);
+            else if (contentManagerUI instanceof MultiSplitContentManagerUI)
+                uis.setSelectedIndex(1);
+            else if (contentManagerUI instanceof DesktopContentManagerUI)
+                uis.setSelectedIndex(2);
         }
     }
 }

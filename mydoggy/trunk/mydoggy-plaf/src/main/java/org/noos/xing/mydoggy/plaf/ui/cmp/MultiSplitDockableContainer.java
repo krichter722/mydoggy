@@ -711,6 +711,8 @@ public class MultiSplitDockableContainer extends JPanel {
 
     protected void resetBounds() {
         // Reset the model bounds... TODO: try to remove this...
+        if (multiSplitPaneModelRoot == null)
+            return;
 
         Stack<MultiSplitLayout.Split> stack = new Stack<MultiSplitLayout.Split>();
         stack.push(multiSplitPaneModelRoot);

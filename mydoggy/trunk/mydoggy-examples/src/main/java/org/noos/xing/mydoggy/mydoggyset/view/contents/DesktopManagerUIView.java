@@ -3,8 +3,10 @@ package org.noos.xing.mydoggy.mydoggyset.view.contents;
 import org.noos.xing.mydoggy.ContentManagerUI;
 import org.noos.xing.mydoggy.DesktopContentManagerUI;
 import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.MultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyDesktopContentManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.view.ViewContext;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
@@ -23,7 +25,12 @@ public class DesktopManagerUIView extends ComponentView implements ViewContextCh
     public DesktopManagerUIView(ViewContext viewContext) {
         super(viewContext);
         this.toolWindowManager = viewContext.get(ToolWindowManager.class);
-        this.desktopContentManagerUI = new MyDoggyDesktopContentManagerUI();
+
+        ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
+        if (contentManagerUI instanceof DesktopContentManagerUI)
+            this.desktopContentManagerUI = (DesktopContentManagerUI) contentManagerUI;
+        else
+            this.desktopContentManagerUI = new MyDoggyDesktopContentManagerUI();
     }
 
     protected Component initComponent() {

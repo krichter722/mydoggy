@@ -80,10 +80,30 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             return (DesktopContentUI) getFrameByComponent(content.getComponent());
     }
 
-
-    public Container getContainer() {
-        return desktopPane;
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        // TODO :
     }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        // TODO :
+    }
+
+    public PropertyChangeListener[] getPropertyChangeListeners() {
+        return new PropertyChangeListener[0];          // TODO : 
+    }
+
+    public void addContentManagerUIListener(ContentManagerUIListener listener) {
+        contentManagerUIListeners.add(ContentManagerUIListener.class, listener);
+    }
+
+    public void removeContentManagerUIListener(ContentManagerUIListener listener) {
+        contentManagerUIListeners.remove(ContentManagerUIListener.class, listener);
+    }
+
+    public ContentManagerUIListener[] getContentManagerUiListener() {
+        return contentManagerUIListeners.getListeners(ContentManagerUIListener.class);
+    }
+
 
     public PlafContentManagerUI install(ContentManagerUI oldContentManagerUI, ToolWindowManager manager) {
         this.toolWindowManager = (MyDoggyToolWindowManager) manager;
@@ -195,18 +215,6 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     public void updateUI() {
         desktopPane.updateUI();
-    }
-
-    public void addContentManagerUIListener(ContentManagerUIListener listener) {
-        contentManagerUIListeners.add(ContentManagerUIListener.class, listener);
-    }
-
-    public void removeContentManagerUIListener(ContentManagerUIListener listener) {
-        contentManagerUIListeners.remove(ContentManagerUIListener.class, listener);
-    }
-
-    public ContentManagerUIListener[] getContentManagerUiListener() {
-        return contentManagerUIListeners.getListeners(ContentManagerUIListener.class);
     }
 
 

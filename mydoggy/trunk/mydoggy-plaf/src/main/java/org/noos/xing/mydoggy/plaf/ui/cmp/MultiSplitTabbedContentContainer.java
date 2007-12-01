@@ -7,6 +7,7 @@ import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
+import org.jdesktop.swingx.MultiSplitPane;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -32,6 +33,14 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
     }
 
 
+    public Component[] getTabbedComponents() {
+        Component component = contentPanel.getComponent();
+        if (component instanceof MultiSplitPane) {
+            return ((MultiSplitPane)component).getComponents();            
+        } else
+            return new Component[]{component};
+    }
+    
     protected Container getComponentWrapper(Dockable dockable, Component component) {
         JTabbedContentPane tabbedPane = new JTabbedContentPane();
         tabbedPane.setToolWindowManager(toolWindowManager);
@@ -50,11 +59,13 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         return tabbedPane.getComponentAt(0);
     }
 
-    protected void addToComponentWrapper(Component wrapperSource, Dockable dockable, DockableUI dockableUI, int aggregationIndexLocation, Component content) {
+    protected void addToComponentWrapper(Component wrapperSource, Dockable dockable, DockableUI dockableUI,
+                                         int aggregationIndexLocation, Component content) {
         JTabbedContentPane tabbedPane = (JTabbedContentPane) wrapperSource;
         tabbedPane.addTab((Content) dockable,
                           new DockablePanel(dockable, content),
                           aggregationIndexLocation);
+        tabbedPane.setSelectedIndex((aggregationIndexLocation < 0) ? tabbedPane.getTabCount() - 1 : aggregationIndexLocation);
     }
 
     protected void removeComponentWrapper(Component wrapperSource, Dockable dockable) {
@@ -77,6 +88,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
     protected void resetRootComponent() {
         contentPanel.resetComponent();
     }
+
 
 
     protected class DockablePanel extends JPanel {
@@ -256,6 +268,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                             Content content = contentManager.getContent(
                                     dtde.getTransferable().getTransferData(MyDoggyTransferable.CONTENT_ID_DF)
                             );
+                            
                             if (content != null ) {
                                 boolean rejectDrop = false;
                                 if (content == onDockable) {
@@ -313,10 +326,6 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                 component.putClientProperty(name, false);
         }
 
-        protected boolean checkCondition(ToolWindow toolWindow) {
-            return true; // TODO:
-
-        }
     }
 
 }

@@ -44,7 +44,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public final static Object sync = new Object();
 
     protected ToolWindowGroup showingGroup;
-    protected boolean shiftShow;
 
     protected MyDoggyContentManager contentManager;
 
@@ -335,8 +334,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 new RuntimeException("Manager doesn't contain that ToolWindow. [id : " + descriptor.getToolWindow().getId() + "]").printStackTrace();
                 return;
             }
-        } else
-        if (!(source instanceof MyDoggyToolWindowBar) && !(source instanceof MyDoggyToolWindowManagerDescriptor)) {
+        } else if (!(source instanceof MyDoggyToolWindowBar) &&
+                   !(source instanceof MyDoggyToolWindowManagerDescriptor) &&
+                   !(source instanceof MyDoggyToolWindowManager)) {
             new RuntimeException("Illegal Source : " + source).printStackTrace();
             return;
         }
@@ -476,7 +476,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         this.resourceManager = resourceManager;
         resourceManager.addPropertyChangeListener(resourceManagerChangeListener);
-        // TODO: fire changing...
+
+        propertyChange(new PropertyChangeEvent(this, "resourceManager", null, resourceManager));
     }
 
     public ToolWindowAnchor getToolWindowAnchor(Point p) {
@@ -495,7 +496,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public void removeIfDockableDelegator(Dockable dockable) {
-        // TODO: can do better...
         for (ToolWindow toolWindow : getToolWindows()) {
             for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
                 if (tab.getDockableDelegator() == dockable) {
@@ -769,24 +769,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         this.showingGroup = toolWindowGroup;
     }
 
+    void setShowingGroup() {
+        if (showingGroup == null)
+            setShowingGroup(allToolWindowGroup);
+    }
+
     void resetShowingGroup() {
         if (showingGroup == getToolWindowGroup())
             this.showingGroup = null;
-        this.shiftShow = false;
-    }
-
-    boolean isShiftShow() {
-        return shiftShow;
-    }
-
-    void enableShiftShow() {
-        if (showingGroup == null)
-            setShowingGroup(allToolWindowGroup);
-        this.shiftShow = true;
-    }
-
-    void resetShiftShow() {
-        resetShowingGroup();
     }
 
 
