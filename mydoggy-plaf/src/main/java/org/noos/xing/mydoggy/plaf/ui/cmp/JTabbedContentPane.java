@@ -7,6 +7,7 @@ import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
 
@@ -74,7 +75,10 @@ public class JTabbedContentPane extends JTabbedPane {
                 return super.getIconAt(index);
 
             titleIcon.setText(super.getTitleAt(index));
-            titleIcon.setUnderlinedIndex(super.getMnemonicAt(index));
+            titleIcon.setUnderlinedIndex(
+                    SwingUtil.findDisplayedMnemonicIndex(super.getTitleAt(index),
+                                                         getContentAt(index).getMnemonic())
+            );
 
             tabIconTitle.setLeftIcon(super.getIconAt(index));
 
@@ -189,6 +193,10 @@ public class JTabbedContentPane extends JTabbedPane {
         return -1;
     }
 
+    public Object getSelectedContent() {
+        int index = getSelectedIndex();
+        return (index != -1) ? getContentAt(index) : null;
+    }
 
 
     protected void fireCloseTabEvent(MouseEvent e, Content content) {
@@ -254,7 +262,7 @@ public class JTabbedContentPane extends JTabbedPane {
                 }
 
                 if (e.getClickCount() == 2) {
-                    fireMaximizeTabEvent(e, content);
+                    JTabbedContentPane.this.setMaximized(!JTabbedContentPane.this.isMaximized());
                 } else {
                     if (SwingUtilities.isRightMouseButton(e))
                         showPopupMenu(e);

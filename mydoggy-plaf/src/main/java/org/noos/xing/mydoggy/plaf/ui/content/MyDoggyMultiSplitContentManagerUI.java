@@ -7,20 +7,23 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitTabbedContentContainer;
-import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
 import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -42,7 +45,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     protected PropertyChangeSupport internalPropertyChangeSupport;
     protected EventListenerList contentManagerUIListeners;
 
-    protected PlafContentUI lastSelected;
+    protected PlafContent lastSelected;
 
     protected boolean valueAdjusting;
     protected boolean contentValueAdjusting;
@@ -124,7 +127,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
         for (Content content : contentManager.getContents()) {
             if (content.isSelected())
                 selectedContent = content;
-            addContent((PlafContentUI) content);
+            addContent((PlafContent) content);
         }
         contentValueAdjusting = false;
 
@@ -152,7 +155,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 
     public void unistall() {
         for (Content content : contentManager.getContents()) {
-            removeContent((PlafContentUI) content);
+            removeContent((PlafContent) content);
         }
         this.installed = false;
     }
@@ -161,12 +164,12 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
         return installed;
     }
 
-    public void addContent(PlafContentUI content, Object... constraints) {
+    public void addContent(PlafContent content, Object... constraints) {
         addUIForContent(content, constraints);
         content.addUIPropertyChangeListener(this);
     }
 
-    public void removeContent(PlafContentUI content) {
+    public void removeContent(PlafContent content) {
         if (content.isDetached())
             content.setDetached(false);
 
@@ -200,7 +203,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                     if (index != -1) {
                         valueAdjusting = true;
                         tabbedContentPane.setSelectedIndex(index);
-                        lastSelected = (PlafContentUI) content;
+                        lastSelected = (PlafContent) content;
                         valueAdjusting = false;
                         return;
                     }
@@ -241,6 +244,41 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
             internalPropertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
             internalPropertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
             internalPropertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
+
+            final PropertyChangeListener focusOwnerPropertyChangeListener = new PropertyChangeListener() {
+
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if (evt.getNewValue() != null) {
+                        JTabbedContentPane tabbedPane = SwingUtil.getParent((Component) evt.getNewValue(), JTabbedContentPane.class);
+                        if (tabbedPane != null) {
+                            if (!valueAdjusting && !contentValueAdjusting) {
+                                PlafContent newSelected = (PlafContent) tabbedPane.getSelectedContent();
+                                if (newSelected != null) {
+                                    if (newSelected == lastSelected)
+                                        return;
+
+                                    if (lastSelected != null) {
+                                        try {
+                                            lastSelected.fireSelected(false);
+                                        } catch (Exception ignoreIt) {
+                                        }
+                                    }
+
+                                    lastSelected = newSelected;
+                                    newSelected.fireSelected(true);
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
+            toolWindowManager.addInternalPropertyChangeListener("anchestor.closed", new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+                    KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
+                }
+            });
         }
     }
 
@@ -492,85 +530,81 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (!oldValue && newValue) {
-                final JDialog dialog = new JDialog(resourceManager.getBoolean("dialog.owner.enabled", true) ? parentFrame : null,
+                MultiSplitContentUI contentUI = getContentUI(content);
+                detachedContentUIMap.put(content, contentUI);
+
+                final JDialog dialog = new JDialog(resourceManager.getBoolean("dialog.owner.enabled", true) ?  parentFrame : null,
                                                    false);
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
                 Window parentWindow = SwingUtilities.windowForComponent(multiSplitContainer);
                 Component component = content.getComponent();
 
-// TODO....               
-//                JInternalFrame internalFrame = getFrameByComponent(component);
-//                if (internalFrame != null) {
-//                    multiSplitPane.remove(internalFrame);
-//                    detachedContentUIMap.put(content, (DesktopContentUI) internalFrame);
-//                } else
-//                    throw new IllegalStateException("Invalid Content : " + content);
-//
-//                component.setPreferredSize(component.getSize());
-//
-//                dialog.setTitle(content.getTitle());
-//                dialog.getContentPane().add(component);
-//
-//                Point location = parentWindow.getLocation();
-//                location.x += 5;
-//                location.y += 5;
-//                dialog.setLocation(location);
-//
-//                dialog.pack();
-//
-//                if (resourceManager.getTransparencyManager().isServiceAvailable()) {
-//                    WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(
-//                            resourceManager.getTransparencyManager(),
-//                            getContentUI(content),
-//                            dialog
-//                    );
-//                    dialog.addWindowListener(windowTransparencyListener);
-//                    dialog.addWindowFocusListener(windowTransparencyListener);
-//                }
-//
-//                dialog.addWindowListener(new WindowAdapter() {
-//                    public void windowClosing(WindowEvent event) {
-//                        Component component = dialog.getContentPane().getComponent(0);
-//                        PlafContentUI content = (PlafContentUI) contentManager.getContentByComponent(component);
-//                        content.fireSelected(false);
-//                        content.setDetached(false);
-//                    }
-//                });
-//
-//                dialog.addWindowFocusListener(new WindowFocusListener() {
-//                    public void windowGainedFocus(WindowEvent e) {
-//                        if (!valueAdjusting && !contentValueAdjusting) {
-//                            PlafContentUI newSelected = (PlafContentUI) contentManager.getContentByComponent(
-//                                    dialog.getContentPane().getComponent(0));
-//
-//                            if (newSelected == lastSelected)
-//                                return;
-//
-//                            if (lastSelected != null) {
-//                                try {
-//                                    getFrameByComponent(lastSelected.getComponent()).setSelected(false);
-////                                    lastSelected.fireSelected(false);
-//                                } catch (Exception ignoreIt) {
-//                                }
-//                            }
-//
-//                            lastSelected = newSelected;
-//                            newSelected.fireSelected(true);
-//                        }
-//                    }
-//
-//                    public void windowLostFocus(WindowEvent e) {
-//                    }
-//                });
-//
-//                if (parentFrame == null)
-//                    dialog.addWindowFocusListener(new ToFrontWindowFocusListener(dialog));
-//
-//                dialog.toFront();
-//                dialog.setVisible(true);
-//                SwingUtil.repaint(multiSplitPane);
-//                SwingUtil.requestFocus(dialog);
+                multiSplitContainer.removeDockable(content);
+
+                component.setPreferredSize(component.getSize());
+
+                dialog.setTitle(content.getTitle());
+                dialog.getContentPane().add(component);
+
+                Point location = parentWindow.getLocation();
+                location.x += 5;
+                location.y += 5;
+                dialog.setLocation(location);
+
+                dialog.pack();
+
+                // TODO: move to DockablePanel
+                if (resourceManager.getTransparencyManager().isServiceAvailable()) {
+                    WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(
+                            resourceManager.getTransparencyManager(),
+                            getContentUI(content),
+                            dialog
+                    );
+                    dialog.addWindowListener(windowTransparencyListener);
+                    dialog.addWindowFocusListener(windowTransparencyListener);
+                }
+
+                dialog.addWindowListener(new WindowAdapter() {
+                    public void windowClosing(WindowEvent event) {
+                        Component component = dialog.getContentPane().getComponent(0);
+                        PlafContent content = (PlafContent) contentManager.getContentByComponent(component);
+                        content.fireSelected(false);
+                        content.setDetached(false);
+                    }
+                });
+
+                dialog.addWindowFocusListener(new WindowFocusListener() {
+                    public void windowGainedFocus(WindowEvent e) {
+                        if (!valueAdjusting && !contentValueAdjusting) {
+                            PlafContent newSelected = (PlafContent) contentManager.getContentByComponent(
+                                    dialog.getContentPane().getComponent(0));
+
+                            if (newSelected == lastSelected)
+                                return;
+
+                            if (lastSelected != null) {
+                                try {
+                                    lastSelected.fireSelected(false);
+                                } catch (Exception ignoreIt) {
+                                }
+                            }
+
+                            lastSelected = newSelected;
+                            newSelected.fireSelected(true);
+                        }
+                    }
+
+                    public void windowLostFocus(WindowEvent e) {
+                    }
+                });
+
+                if (parentFrame == null)
+                    dialog.addWindowFocusListener(new ToFrontWindowFocusListener(dialog));
+
+                dialog.toFront();
+                dialog.setVisible(true);
+                SwingUtil.requestFocus(dialog);
             } else if (oldValue && !newValue) {
                 Window window = SwingUtilities.windowForComponent(content.getComponent());
                 window.setVisible(false);
@@ -599,27 +633,23 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
             final JTabbedContentPane tabbedPane = (JTabbedContentPane) super.getComponentWrapper(dockable, component);
             tabbedPane.addChangeListener(new ChangeListener() {
                 public void stateChanged(ChangeEvent e) {
-/*
                     if (!valueAdjusting && !contentValueAdjusting) {
-                        Component selectedComponent = tabbedPane.getSelectedComponent();
-                        if (selectedComponent == null)
-                            return;
-                        PlafContentUI newSelected = (PlafContentUI) contentManager.getContentByComponent(selectedComponent);
+                        PlafContent newSelected = (PlafContent) tabbedPane.getSelectedContent();
+                        if (newSelected != null) {
+                            if (newSelected == lastSelected)
+                                return;
 
-                        if (newSelected == lastSelected)
-                            return;
-
-                        if (lastSelected != null) {
-                            try {
-                                lastSelected.fireSelected(false);
-                            } catch (Exception ignoreIt) {
+                            if (lastSelected != null) {
+                                try {
+                                    lastSelected.fireSelected(false);
+                                } catch (Exception ignoreIt) {
+                                }
                             }
-                        }
 
-                        lastSelected = newSelected;
-                        newSelected.fireSelected(true);
+                            lastSelected = newSelected;
+                            newSelected.fireSelected(true);
+                        }
                     }
-*/
                 }
             });
             tabbedPane.addTabbedContentPaneListener(new TabbedContentPaneListener() {

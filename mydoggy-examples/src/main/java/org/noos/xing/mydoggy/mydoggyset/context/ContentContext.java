@@ -13,7 +13,7 @@ import org.noos.xing.mydoggy.mydoggyset.view.group.GroupsView;
 import org.noos.xing.mydoggy.mydoggyset.view.interactive.InteractiveTestView;
 import org.noos.xing.mydoggy.mydoggyset.view.manager.ManagerView;
 import org.noos.xing.mydoggy.mydoggyset.view.toolwindows.ToolWindowsView;
-import org.noos.xing.mydoggy.mydoggyset.view.wellcome.WelcomeContentView;
+import org.noos.xing.mydoggy.mydoggyset.view.welcome.WelcomeContentView;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.yasaf.plaf.view.MapViewContext;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
@@ -31,15 +31,15 @@ public class ContentContext extends MapViewContext {
     private Component groupEditorContentComponent;
     private Component contentsContentComponent;
     private Component managerContentComponent;
-    private Component wellcomeContentComponent;
+    private Component welcomeContentComponent;
     private Component interactiveTestContentComponent;
     private Component customizeContentComponent;
 
     public ContentContext(ToolWindowManager toolWindowManager, JFrame frame) {
         addViewContextChangeListener(MyDoggySet.class, new AddContentAction(toolWindowManager,
-                                                                            "Wellcome", "Wellcome", null,
-                                                                            wellcomeContentComponent = new WelcomeContentView(this).getComponent(),
-                                                                            "Wellcome", (int) 'W'));
+                                                                            "Welcome", "Welcome", null,
+                                                                            welcomeContentComponent = new WelcomeContentView(this).getComponent(),
+                                                                            "Welcome", (int) 'W'));
         addViewContextChangeListener(ToolWindowManager.class, new AddContentAction(toolWindowManager,
                                                                                    "Manager", "Manager", null,
                                                                                    managerContentComponent = new ManagerView(toolWindowManager).getComponent(),
@@ -70,7 +70,7 @@ public class ContentContext extends MapViewContext {
                 SwingUtilities.updateComponentTreeUI(toolsContentComponent);
                 SwingUtilities.updateComponentTreeUI(contentsContentComponent);
                 SwingUtilities.updateComponentTreeUI(managerContentComponent);
-                SwingUtilities.updateComponentTreeUI(wellcomeContentComponent);
+                SwingUtilities.updateComponentTreeUI(welcomeContentComponent);
                 SwingUtilities.updateComponentTreeUI(interactiveTestContentComponent);
                 SwingUtilities.updateComponentTreeUI(customizeContentComponent);
             }

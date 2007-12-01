@@ -46,7 +46,7 @@ public interface PlafContentManagerUI {
      * @param constraints
      * @since 1.4.0
      */
-    void addContent(PlafContentUI content, Object... constraints);
+    void addContent(PlafContent content, Object... constraints);
 
     /**
      * Removes the ui part of a content.
@@ -54,7 +54,7 @@ public interface PlafContentManagerUI {
      * @param content the content ui part to be removed.
      * @since 1.3.1
      */
-    void removeContent(PlafContentUI content);
+    void removeContent(PlafContent content);
 
     /**
      * Returns whether or not the specified content is currently selected.

@@ -114,7 +114,7 @@ public class MyDoggySet {
 
         // Content Menu
         JMenu contentMenu = new JMenu("Content");
-        contentMenu.add(new ViewContextAction("Wellcome", contentContext, MyDoggySet.class));
+        contentMenu.add(new ViewContextAction("Welcome", contentContext, MyDoggySet.class));
         contentMenu.add(new ViewContextAction("Manager", contentContext, ToolWindowManager.class));
         contentMenu.add(new ViewContextAction("ToolWindows", contentContext, ToolWindow.class));
         contentMenu.add(new ViewContextAction("Contents", contentContext, Content.class));

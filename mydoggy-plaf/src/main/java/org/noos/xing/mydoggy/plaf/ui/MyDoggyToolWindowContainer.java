@@ -40,6 +40,9 @@ public class MyDoggyToolWindowContainer implements ToolWindowContainer {
         dockedContainer.updateUI();
     }
 
+    public void uninstall() {        
+    }
+
     public void propertyChange(PropertyChangeEvent evt) {
         dockedContainer.propertyChange(evt);
     }

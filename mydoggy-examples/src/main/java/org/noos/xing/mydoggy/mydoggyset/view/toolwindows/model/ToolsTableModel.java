@@ -8,6 +8,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -19,7 +20,7 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
     public ToolsTableModel(ToolWindowManager windowManager) {
         this.windowManager = windowManager;
         setColumnIdentifiers(new Object[]{
-                "Id", "Title", "Type", "Anchor", "Available", "Visible", "Active", "Index", "Flashing"
+                "Id", "Title", "Type", "Anchor", "Available", "Visible", "Active", "Index", "Flashing", "Rab Visible"
         });
         initToolsListeners();
         updateModel();
@@ -59,6 +60,12 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
             case 8:
                 toolWindows[row].setFlashing((Boolean) aValue);
                 break;
+            case 9:
+                if (toolWindows[row].getType() != ToolWindowType.FLOATING_FREE)
+                    toolWindows[row].setRepresentativeAnchorButtonVisible((Boolean) aValue);
+                else
+                    JOptionPane.showMessageDialog(null, "Cannot modify on FLOATING_FREE tools");
+                break;
         }
         fireTableChanged(new TableModelEvent(this, row));
     }
@@ -92,6 +99,9 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
             case 8:
                 return toolWindows[row].isFlashing();
 
+            case 9:
+                return toolWindows[row].isRepresentativeAnchorButtonVisible();
+            
             default:
                 return toolWindows[row];
         }

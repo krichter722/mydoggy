@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.mydoggyset.view.wellcome;
+package org.noos.xing.mydoggy.mydoggyset.view.welcome;
 
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ToolWindow;
