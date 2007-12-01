@@ -45,10 +45,6 @@ public class PreferencePanelView extends ComponentView {
     }
 
     protected void initListeners() {
-        viewContext.addViewContextChangeListener(new TabbedManagerUIView(viewContext));
-        viewContext.addViewContextChangeListener(new MultiSplitManagerUIView(viewContext));
-        viewContext.addViewContextChangeListener(new DesktopManagerUIView(viewContext));
-
         viewContext.addViewContextChangeListener(new ViewContextChangeListener() {
             public void contextChange(ViewContextChangeEvent evt) {
                 if (ContentManagerUI.class.equals(evt.getProperty())) {
@@ -59,6 +55,7 @@ public class PreferencePanelView extends ComponentView {
             }
         });
     }
+
 
     protected class UIsSelectorView extends ComponentView {
         protected JComboBox uis;
@@ -83,8 +80,11 @@ public class PreferencePanelView extends ComponentView {
             return panel;
         }
 
-        protected void onVisible() {
-            // TODO : onVisible has problems with MultiSplitContentManagerUI
+        protected void onFirstVisible() {
+            viewContext.addViewContextChangeListener(new TabbedManagerUIView(viewContext));
+            viewContext.addViewContextChangeListener(new MultiSplitManagerUIView(viewContext));
+            viewContext.addViewContextChangeListener(new DesktopManagerUIView(viewContext));
+
             uis.setSelectedItem(null);
             
             ContentManagerUI contentManagerUI = viewContext.get(ToolWindowManager.class).getContentManager().getContentManagerUI();

@@ -70,6 +70,8 @@ public class JTabbedContentPane extends JTabbedPane {
     public Icon getIconAt(int index) {
         if (getSelectedIndex() == index) {
             ContentUI contentUI = contentMap.get(index).getContentUi();
+            if (contentUI == null)
+                return super.getIconAt(index);
 
             titleIcon.setText(super.getTitleAt(index));
             titleIcon.setUnderlinedIndex(super.getMnemonicAt(index));
