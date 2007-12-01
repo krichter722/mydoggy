@@ -29,6 +29,7 @@ import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @todo finish...
  */
 public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
     protected MyDoggyToolWindowManager toolWindowManager;
@@ -401,15 +402,22 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
             Content content = (Content) evt.getSource();
 
             if (!content.isDetached()) {
-//                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
-//                if (internalFrame != null) {
-//                    String newToolTip = (String) evt.getNewValue();
-//                    if (newToolTip == null)
-//                        newToolTip = "";
-//
-//                    internalFrame.setToolTipText(newToolTip);
-//                } else
-//                    throw new IllegalStateException("Invalid content ui state.");
+                for (Component c : multiSplitContainer.getTabbedComponents()) {
+                    if (c instanceof JTabbedContentPane) {
+                        JTabbedContentPane tabbedContentPane = ((JTabbedContentPane)c);
+                        int index = tabbedContentPane.indexOfContent(content);
+                        if (index != -1) {
+                            String newToolTip = (String) evt.getNewValue();
+                            if (newToolTip == null)
+                                newToolTip = "";
+                            tabbedContentPane.setToolTipTextAt(index, newToolTip);
+                            return;
+                        }
+                    }
+                    if (c == content.getComponent())
+                        return;
+                }
+                throw new IllegalStateException("Invalid content ui state.");
             }
         }
     }

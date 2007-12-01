@@ -13,6 +13,10 @@ public class MatrixPanel extends JPanel {
     protected int rows;
 
     public MatrixPanel(int columns, int rows) {
+        this(columns, rows, -1);
+    }
+
+    public MatrixPanel(int columns, int rows, int colValue) {
         this.columns = columns;
         this.rows = rows;
 
@@ -23,7 +27,7 @@ public class MatrixPanel extends JPanel {
         for (int i = 0, index = 1; i < columns; i++) {
             layoutCols[index] = -2;
             layoutCols[index + 1] = 3;
-            layoutCols[index + 2] = -1; // TODO: -1 or -2 ???
+            layoutCols[index + 2] = colValue;
             layoutCols[index + 3] = 3;
             index += 4;
         }
@@ -37,6 +41,7 @@ public class MatrixPanel extends JPanel {
         }
         setLayout(new ExtendedTableLayout(new double[][]{layoutCols, layoutRows}));
     }
+
 
     public void addPair(int column, int row, String label, Component component) {
         column = 1 + column * 4;
