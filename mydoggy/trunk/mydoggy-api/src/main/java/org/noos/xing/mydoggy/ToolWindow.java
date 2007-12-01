@@ -88,16 +88,21 @@ public interface ToolWindow extends Dockable {
     void aggregate();
 
     /**
-     * TODO:
-     * @param aggregationPosition
+     * Agggregate this tool to the already visible tools using the specified aggregation position.
+     * This method is usable also when the tool is already visible.
+     *
+     * @param aggregationPosition the position used to aggregate the tool.
      * @since 1.4.0
      */
     void aggregate(AggregationPosition aggregationPosition);
 
     /**
-     * TODO:
-     * @param toolWindow
-     * @param aggregationPosition
+     * Agggregate this tool to the already visible tools using the specified toolwindow as a relative position and
+     * the aggregation position as the position relative to the specified toolwindow.
+     * This method is usable also when the tool is already visible.
+     *
+     * @param toolWindow the toolwindow used as relative position.
+     * @param aggregationPosition the position used to aggregate the tool. 
      * @since 1.4.0
      */
     void aggregate(ToolWindow toolWindow, AggregationPosition aggregationPosition);
@@ -216,8 +221,9 @@ public interface ToolWindow extends Dockable {
     ToolWindowAnchor getAnchor();
 
     /**
-     * TODO
-     * @return
+     * Returns the anchor index.
+     *
+     * @return anchor index.
      * @since 1.4.0
      */
     int getAnchorIndex();
@@ -281,16 +287,18 @@ public interface ToolWindow extends Dockable {
     boolean isMaximized();
 
     /**
-     * TODO:
+     * Enable or disable the representative anchor button. The method throw an exception when it is called
+     * on a tool whose type is FLOATING_FREE.
      *
-     * @param visible
+     * @param visible <tt>true</tt> to enable make visible the representative anchor button, false otherwise.
      * @since 1.4.0
      */
     void setRepresentativeAnchorButtonVisible(boolean visible);
 
     /**
-     *
-     * @return
+     * Returns <tt>true</tt> if the representative anchor button is visible, <tt>false</tt> otherwise.
+     *  
+     * @return <tt>true</tt> if the representative anchor button is visible, <tt>false</tt> otherwise.
      */
     boolean isRepresentativeAnchorButtonVisible();
 

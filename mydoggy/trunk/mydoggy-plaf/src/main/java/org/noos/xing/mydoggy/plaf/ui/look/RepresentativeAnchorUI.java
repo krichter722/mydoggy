@@ -94,7 +94,11 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
     }
 
     public void update(Graphics g, JComponent c) {
-        c.setForeground(resourceManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));  // TODO: move this...
+        if (toolWindow.isAvailable())
+            c.setForeground(resourceManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));  // TODO: move this...
+        else
+            c.setForeground(resourceManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND_NOT_AVAILABLE));  // TODO: move this...
+
 
         if (toolWindow.isFlashing() && !toolWindow.isVisible()) {
 
