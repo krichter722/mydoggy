@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.Content;
-import org.noos.xing.mydoggy.MultiSplitContentUI;
+import org.noos.xing.mydoggy.ContentUI;
 
 import javax.swing.event.EventListenerList;
 import java.beans.PropertyChangeEvent;
@@ -10,7 +10,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
 */
-public class MyDoggyMultiSplitContentUI implements MultiSplitContentUI {
+public class MyDoggyMultiSplitContentUI implements ContentUI {
     protected Content content;
     protected boolean closable;
     protected boolean detachable;
