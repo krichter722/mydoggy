@@ -57,15 +57,23 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
 
     public void setCloseable(boolean closeable) {
+        boolean old = this.closeable;
         this.closeable = closeable;
 
         if (desktopPane != null)
             for (JInternalFrame frame : desktopPane.getAllFrames()) {
                 frame.setClosable(closeable);
             }
+
+        fireContentManagerUIProperty("closeable", old, closeable);
+    }
+
+    public boolean isCloseable() {
+        return closeable;
     }
 
     public void setDetachable(boolean detachable) {
+        boolean old = this.detachable;
         this.detachable = detachable;
 
         if (desktopPane != null)
@@ -73,6 +81,12 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 DesktopContentFrame frame = (DesktopContentFrame) internalFrame;
                 frame.setDetachable(detachable);
             }
+
+        fireContentManagerUIProperty("detachable", old, detachable);
+    }
+
+    public boolean isDetachable() {
+        return detachable;
     }
 
     public DesktopContentUI getContentUI(Content content) {
@@ -108,19 +122,31 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
 
     public PlafContentManagerUI install(ContentManagerUI oldContentManagerUI, ToolWindowManager manager) {
+        // Init managers
         this.toolWindowManager = (MyDoggyToolWindowManager) manager;
         this.contentManager = (MyDoggyContentManager) manager.getContentManager();
         this.resourceManager = toolWindowManager.getResourceManager();
+
         this.contentIndex = 0;
 
-        initComponents();
-        initListeners();
-        setupActions();
-
-        toolWindowManager.setMainContent(desktopPane);
-
+        if (oldContentManagerUI != null) {
+            // Import properties from the old ContentManagerUI
+            this.closeable = oldContentManagerUI.isCloseable();
+            this.detachable = oldContentManagerUI.isDetachable();
+        }
+        // Import properties from the ContentManager
         setPopupMenu(contentManager.getPopupMenu());
 
+        // Init Components
+        initComponents();
+
+        // Init Listeners
+        initListeners();
+
+        // Set the main content with the desktopPane
+        toolWindowManager.setMainContent(desktopPane);
+
+        // Import contents
         contentValueAdjusting = true;
         Content selectedContent = null;
         for (Content content : contentManager.getContents()) {
@@ -131,13 +157,17 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         contentValueAdjusting = false;
 
         if (oldContentManagerUI != null) {
+            // Import listeners from the old ContentManagerUI
+            // TODO: import also PropertyChangeListener ???
             for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
                 addContentManagerUIListener(listener);
             }
         }
 
+        // Now you can consider this manager installed
         this.installed = true;
 
+        // Select the content selected on the previous ContentManagerUI
         final Content selectedContent1 = selectedContent;
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -153,9 +183,12 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     }
 
     public void unistall() {
+        // Remove all contents
         for (Content content : contentManager.getContents()) {
             removeContent((PlafContent) content);
         }
+
+        // Now you can consider this manager uninstalled
         this.installed = false;
     }
 
@@ -164,14 +197,19 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     }
 
     public void addContent(PlafContent content, Object... constraints) {
-        addUIForContent(content);
-        content.addUIPropertyChangeListener(this);
+        // Add the content to the ui...
+        addUIForContent(content, constraints);
+
+        // Register a plaf listener
+        content.addPlafPropertyChangeListener(this);
     }
 
     public void removeContent(PlafContent content) {
+        // If the content is detached, reattach it
         if (content.isDetached())
             content.setDetached(false);
 
+        // Remove from desktopPane
         for (JInternalFrame internalFrame : desktopPane.getAllFrames()) {
             if (internalFrame.getContentPane().getComponent(0) == content.getComponent()) {
                 desktopPane.remove(internalFrame);
@@ -179,7 +217,8 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             }
         }
 
-        content.removeUIPropertyChangeListener(this);
+        // Remove the plaf listener
+        content.removePlafPropertyChangeListener(this);
     }
 
     public JPopupMenu getPopupMenu() {
@@ -196,16 +235,21 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     public void setSelected(Content content, boolean selected) {
         if (content.isDetached()) {
-            SwingUtil.requestFocus(
-                    SwingUtilities.windowForComponent(content.getComponent())
-            );
+            // If the content is detached request the focus for owner window
+            if (selected)
+                // If the content is detached request the focus for owner window
+                SwingUtil.requestFocus(
+                        SwingUtilities.windowForComponent(content.getComponent())
+                );
         } else {
             JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
             if (internalFrame != null)
                 try {
                     valueAdjusting = true;
+
                     internalFrame.setSelected(selected);
                     lastSelected = (PlafContent) content;
+                    
                     valueAdjusting = false;
                 } catch (PropertyVetoException e) {
                     e.printStackTrace();
@@ -227,15 +271,20 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     protected void initComponents() {
         if (desktopPane == null) {
+            /// Init just once
+            
             detachedContentUIMap = new Hashtable<Content, DesktopContentUI>();
             desktopPane = (JDesktopPane) toolWindowManager.getResourceManager().createComponent(
                     MyDoggyKeySpace.DESKTOP_CONTENT_PANE, toolWindowManager
             );
+            setupActions();            
         }
     }
 
     protected void initListeners() {
         if (internalPropertyChangeSupport == null) {
+            /// Init just once
+
             internalPropertyChangeSupport = new PropertyChangeSupport(this);
             internalPropertyChangeSupport.addPropertyChangeListener("component", new ComponentListener());
             internalPropertyChangeSupport.addPropertyChangeListener("disabledIcon", new DisabledIconListener());
@@ -369,6 +418,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         return null;
     }
 
+
     protected boolean fireContentUIRemoving(ContentUI contentUI) {
         ContentManagerUIEvent event = new ContentManagerUIEvent(this, ContentManagerUIEvent.ActionId.CONTENTUI_REMOVING, contentUI);
         for (ContentManagerUIListener listener : contentManagerUIListeners.getListeners(ContentManagerUIListener.class)) {
@@ -382,6 +432,13 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         ContentManagerUIEvent event = new ContentManagerUIEvent(this, ContentManagerUIEvent.ActionId.CONTENTUI_DETACHED, contentUI);
         for (ContentManagerUIListener listener : contentManagerUIListeners.getListeners(ContentManagerUIListener.class)) {
             listener.contentUIDetached(event);
+        }
+    }
+
+    protected void fireContentManagerUIProperty(String property, Object oldValue, Object newValue) {
+        PropertyChangeEvent event = new PropertyChangeEvent(this, property, oldValue, newValue);
+        for (PropertyChangeListener listener : contentManagerUIListeners.getListeners(PropertyChangeListener.class)) {
+            listener.propertyChange(event);
         }
     }
 

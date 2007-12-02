@@ -50,37 +50,103 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     protected boolean valueAdjusting;
     protected boolean contentValueAdjusting;
 
-    protected Map<Content, MultiSplitContentUI> contentUIMap;
-    protected Map<Content, MultiSplitContentUI> detachedContentUIMap;
+    protected Map<Content, TabbedContentUI> contentUIMap;
+    protected Map<Content, TabbedContentUI> detachedContentUIMap;
 
-    protected int contentIndex = 0;
+    protected boolean showAlwaysTab;
+    protected TabLayout tabLayout;
+    protected TabPlacement tabPlacement;
 
     protected JPopupMenu popupMenu;
 
 
     public MyDoggyMultiSplitContentManagerUI() {
         this.contentManagerUIListeners = new EventListenerList();
-        this.contentUIMap = new Hashtable<Content, MultiSplitContentUI>();
+        this.contentUIMap = new Hashtable<Content, TabbedContentUI>();
+        
         this.closeable = this.detachable = true;
+        this.showAlwaysTab = false;
+        this.tabPlacement = TabPlacement.TOP;
+        this.tabLayout = TabLayout.SCROLL;
     }
 
 
     public void setCloseable(boolean closeable) {
+        boolean old = this.closeable;
         this.closeable = closeable;
+
         for (ContentUI contentUI : contentUIMap.values()) {
             contentUI.setCloseable(closeable);
         }
+
+        fireContentManagerUIProperty("closeable", old, closeable);
+    }
+
+    public boolean isCloseable() {
+        return closeable;
     }
 
     public void setDetachable(boolean detachable) {
+        boolean old = this.detachable;
         this.detachable = detachable;
+
         for (ContentUI contentUI : contentUIMap.values()) {
             contentUI.setDetachable(detachable);
         }
+
+        fireContentManagerUIProperty("detachable", old, detachable);
     }
 
-    public MultiSplitContentUI getContentUI(Content content) {
+    public boolean isDetachable() {
+        return detachable;
+    }
+
+    public TabbedContentUI getContentUI(Content content) {
         return contentUIMap.get(content);
+    }
+
+    public void setTabPlacement(TabPlacement tabPlacement) {
+        if (tabPlacement == null || tabPlacement == getTabPlacement())
+            return;
+
+        TabPlacement old = this.tabPlacement;
+        this.tabPlacement = tabPlacement;
+
+        multiSplitContainer.setTabPlacement(tabPlacement);
+
+        fireContentManagerUIProperty("tabPlacement", old, tabPlacement);
+    }
+
+    public TabPlacement getTabPlacement() {
+        return tabPlacement;
+    }
+
+    public void setTabLayout(TabLayout tabLayout) {
+        if (tabLayout == null || tabLayout == getTabLayout())
+            return;
+
+        TabLayout old = this.tabLayout;
+        this.tabLayout = tabLayout;
+
+        multiSplitContainer.setTabLayout(tabLayout);
+
+        fireContentManagerUIProperty("tabLayout", old, tabLayout);
+    }
+
+    public TabLayout getTabLayout() {
+        return tabLayout;
+    }
+
+    public boolean isShowAlwaysTab() {
+        return showAlwaysTab;
+    }
+
+    public void setShowAlwaysTab(boolean showAlwaysTab) {
+        this.showAlwaysTab = showAlwaysTab;
+
+        if (showAlwaysTab) {
+            // TODO: update the main content if is necessary...
+        }
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -109,19 +175,29 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 
 
     public PlafContentManagerUI install(ContentManagerUI oldContentManagerUI, ToolWindowManager manager) {
+        // Init managers
         this.toolWindowManager = (MyDoggyToolWindowManager) manager;
         this.contentManager = (MyDoggyContentManager) manager.getContentManager();
         this.resourceManager = toolWindowManager.getResourceManager();
-        this.contentIndex = 0;
 
-        initComponents();
-        initListeners();
-        setupActions();
-
-        toolWindowManager.setMainContent(multiSplitContainer);
-
+        if (oldContentManagerUI != null) {
+            // Import properties from the old ContentManagerUI
+            this.closeable = oldContentManagerUI.isCloseable();
+            this.detachable = oldContentManagerUI.isDetachable();
+        }
+        // Import properties from the ContentManager
         setPopupMenu(contentManager.getPopupMenu());
 
+        // Init Components
+        initComponents();
+
+        // Init listeners
+        initListeners();
+
+        // Set the main content with the multiSplitContainer
+        toolWindowManager.setMainContent(multiSplitContainer);
+
+        // Import contents
         contentValueAdjusting = true;
         Content selectedContent = null;
         for (Content content : contentManager.getContents()) {
@@ -132,13 +208,17 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
         contentValueAdjusting = false;
 
         if (oldContentManagerUI != null) {
+            // Import listeners from the old ContentManagerUI
+            // TODO: import also PropertyChangeListener ???
             for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
                 addContentManagerUIListener(listener);
             }
         }
 
+        // Now you can consider this manager installed
         this.installed = true;
 
+        // Select the content selected on the previous ContentManagerUI
         final Content selectedContent1 = selectedContent;
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -154,9 +234,12 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     }
 
     public void unistall() {
+        // Remove all contents
         for (Content content : contentManager.getContents()) {
             removeContent((PlafContent) content);
         }
+
+        // Now you can consider this manager uninstalled
         this.installed = false;
     }
 
@@ -165,17 +248,23 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     }
 
     public void addContent(PlafContent content, Object... constraints) {
+        // Add the content to the ui...
         addUIForContent(content, constraints);
-        content.addUIPropertyChangeListener(this);
+
+        // Register a plaf listener
+        content.addPlafPropertyChangeListener(this);
     }
 
     public void removeContent(PlafContent content) {
+        // If the content is detached, reattach it
         if (content.isDetached())
             content.setDetached(false);
 
+        // Remove from multiSplitContainer
         multiSplitContainer.removeDockable(content);
 
-        content.removeUIPropertyChangeListener(this);
+        // Remove the plaf listener
+        content.removePlafPropertyChangeListener(this);
     }
 
     public JPopupMenu getPopupMenu() {
@@ -191,27 +280,35 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     }
 
     public void setSelected(Content content, boolean selected) {
-        if (content.isDetached()) {
-            SwingUtil.requestFocus(
-                    SwingUtilities.windowForComponent(content.getComponent())
-            );
-        } else {
-            for (Component c : multiSplitContainer.getTabbedComponents()) {
-                if (c instanceof JTabbedContentPane) {
-                    JTabbedContentPane tabbedContentPane = ((JTabbedContentPane)c);
-                    int index = tabbedContentPane.indexOfContent(content);
-                    if (index != -1) {
-                        valueAdjusting = true;
-                        tabbedContentPane.setSelectedIndex(index);
-                        lastSelected = (PlafContent) content;
-                        valueAdjusting = false;
-                        return;
+        if (selected) {
+            if (content.isDetached()) {
+                // If the content is detached request the focus for owner window
+                SwingUtil.requestFocus(
+                        SwingUtilities.windowForComponent(content.getComponent())
+                );
+            } else {
+                // Choose the owner tab or check if the content is the main content
+                for (Component c : multiSplitContainer.getTabbedComponents()) {
+                    if (c instanceof JTabbedContentPane) {
+                        JTabbedContentPane tabbedContentPane = ((JTabbedContentPane)c);
+                        int index = tabbedContentPane.indexOfContent(content);
+                        if (index != -1) {
+                            valueAdjusting = true;
+
+                            tabbedContentPane.setSelectedIndex(index);
+                            lastSelected = (PlafContent) content;
+
+                            valueAdjusting = false;
+                            return;
+                        }
                     }
+                    if (c == content.getComponent())
+                        return;
                 }
-                if (c == content.getComponent())
-                    return;
+                throw new IllegalStateException("Invalid content ui state.");
             }
-            throw new IllegalStateException("Invalid content ui state.");
+        } else  {
+            // TODO: should we select another??
         }
     }
 
@@ -227,13 +324,18 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 
     protected void initComponents() {
         if (multiSplitContainer == null) {
-            detachedContentUIMap = new Hashtable<Content, MultiSplitContentUI>();
+            /// Init just once
+
+            detachedContentUIMap = new Hashtable<Content, TabbedContentUI>();
             multiSplitContainer = new MultiSplitContainer(toolWindowManager);
+            setupActions();
         }
     }
 
     protected void initListeners() {
         if (internalPropertyChangeSupport == null) {
+            /// Init just once
+
             internalPropertyChangeSupport = new PropertyChangeSupport(this);
             internalPropertyChangeSupport.addPropertyChangeListener("component", new ComponentListener());
             internalPropertyChangeSupport.addPropertyChangeListener("disabledIcon", new DisabledIconListener());
@@ -292,7 +394,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     }
 
     protected void addUIForContent(Content content, Object... constraints) {
-        MultiSplitContentUI contentUI = new MyDoggyMultiSplitContentUI(content);
+        TabbedContentUI contentUI = new MyDoggyTabbedContentUI(content);
         contentUIMap.put(content, contentUI);
         contentUI.setCloseable(closeable);
         contentUI.setDetachable(detachable);
@@ -306,6 +408,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
         }
         SwingUtil.repaint(multiSplitContainer);
     }
+
 
     protected boolean fireContentUIRemoving(ContentUI contentUI) {
         ContentManagerUIEvent event = new ContentManagerUIEvent(this, ContentManagerUIEvent.ActionId.CONTENTUI_REMOVING, contentUI);
@@ -321,6 +424,13 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
         ContentManagerUIEvent event = new ContentManagerUIEvent(this, ContentManagerUIEvent.ActionId.CONTENTUI_DETACHED, contentUI);
         for (ContentManagerUIListener listener : contentManagerUIListeners.getListeners(ContentManagerUIListener.class)) {
             listener.contentUIDetached(event);
+        }
+    }
+
+    protected void fireContentManagerUIProperty(String property, Object oldValue, Object newValue) {
+        PropertyChangeEvent event = new PropertyChangeEvent(this, property, oldValue, newValue);
+        for (PropertyChangeListener listener : contentManagerUIListeners.getListeners(PropertyChangeListener.class)) {
+            listener.propertyChange(event);
         }
     }
 
@@ -530,7 +640,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (!oldValue && newValue) {
-                MultiSplitContentUI contentUI = getContentUI(content);
+                TabbedContentUI contentUI = getContentUI(content);
                 detachedContentUIMap.put(content, contentUI);
 
                 final JDialog dialog = new JDialog(resourceManager.getBoolean("dialog.owner.enabled", true) ?  parentFrame : null,
@@ -628,13 +738,33 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
             super.setRootComponent(component);    
         }
 
+        public void setTabPlacement(TabPlacement tabPlacement) {
+            for (Component c : multiSplitContainer.getTabbedComponents()) {
+                if (c instanceof JTabbedContentPane) {
+                    JTabbedContentPane tabbedContentPane = ((JTabbedContentPane)c);
+                    tabbedContentPane.setTabPlacement(tabPlacement.ordinal() + 1);
+                }
+            }
+        }
 
+        public void setTabLayout(TabLayout tabLayout) {
+            for (Component c : multiSplitContainer.getTabbedComponents()) {
+                if (c instanceof JTabbedContentPane) {
+                    JTabbedContentPane tabbedContentPane = ((JTabbedContentPane)c);
+                    tabbedContentPane.setTabLayoutPolicy(tabLayout.ordinal());
+                }
+            }
+        }
+
+        
         protected Container getComponentWrapper(Dockable dockable, Component component) {
-            final JTabbedContentPane tabbedPane = (JTabbedContentPane) super.getComponentWrapper(dockable, component);
-            tabbedPane.addChangeListener(new ChangeListener() {
+            final JTabbedContentPane tabbedContentPane = (JTabbedContentPane) super.getComponentWrapper(dockable, component);
+            tabbedContentPane.setTabPlacement(tabPlacement.ordinal() + 1);
+            tabbedContentPane.setTabLayoutPolicy(tabLayout.ordinal());
+            tabbedContentPane.addChangeListener(new ChangeListener() {
                 public void stateChanged(ChangeEvent e) {
                     if (!valueAdjusting && !contentValueAdjusting) {
-                        PlafContent newSelected = (PlafContent) tabbedPane.getSelectedContent();
+                        PlafContent newSelected = (PlafContent) tabbedContentPane.getSelectedContent();
                         if (newSelected != null) {
                             if (newSelected == lastSelected)
                                 return;
@@ -652,7 +782,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                     }
                 }
             });
-            tabbedPane.addTabbedContentPaneListener(new TabbedContentPaneListener() {
+            tabbedContentPane.addTabbedContentPaneListener(new TabbedContentPaneListener() {
                 public void tabbedContentPaneEventFired(TabbedContentPaneEvent event) {
                     Content content = event.getContent();
                     switch (event.getActionId()) {
@@ -668,7 +798,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                 }
             });
 
-            return tabbedPane;
+            return tabbedContentPane;
         }
 
     }

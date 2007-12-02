@@ -42,6 +42,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
     protected JTabbedContentPane tabbedContentPane;
     protected boolean showAlwaysTab;
+    protected boolean closeable, detachable;
     protected boolean installed;
 
     protected PropertyChangeSupport internalPropertyChangeSupport;
@@ -57,20 +58,40 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
     public MyDoggyTabbedContentManagerUI() {
         contentManagerUIListeners = new EventListenerList();
+        this.closeable = this.detachable = true;
+        this.showAlwaysTab = false;
         initComponents();
     }
 
 
     public void setCloseable(boolean closeable) {
+        boolean old = this.closeable;
+        this.closeable = closeable;
+
         for (ContentUI contentUI : contentUIMap.values()) {
             contentUI.setCloseable(closeable);
         }
+        
+        fireContentManagerUIProperty("closeable", old, closeable);
+    }
+
+    public boolean isCloseable() {
+        return closeable;
     }
 
     public void setDetachable(boolean detachable) {
+        boolean old = this.detachable;
+        this.detachable = detachable;
+
         for (ContentUI contentUI : contentUIMap.values()) {
             contentUI.setDetachable(detachable);
         }
+
+        fireContentManagerUIProperty("detachable", old, detachable);
+    }
+
+    public boolean isDetachable() {
+        return detachable;
     }
 
     public TabbedContentUI getContentUI(Content content) {
@@ -165,20 +186,27 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     }
 
     
-    public Container getContainer() {
-        return tabbedContentPane;
-    }
-
     public PlafContentManagerUI install(ContentManagerUI oldContentManagerUI, ToolWindowManager manager) {
+        // Init managers
         this.toolWindowManager = (MyDoggyToolWindowManager) manager;
         this.contentManager = manager.getContentManager();
         this.resourceManager = toolWindowManager.getResourceManager();
+
+        // Notify tabbedContentPane
         this.tabbedContentPane.setToolWindowManager(toolWindowManager);
 
-        initListeners();
-
+        if (oldContentManagerUI != null) {
+            // Import properties from the old ContentManagerUI
+            this.closeable = oldContentManagerUI.isCloseable();
+            this.detachable = oldContentManagerUI.isDetachable();
+        }
+        // Import properties from the ContentManager
         setPopupMenu(contentManager.getPopupMenu());
 
+        // Init listeners
+        initListeners();
+
+        // Import contents
         lastSelected = null;
         Content selectedContent = null;
         contentValueAdjusting = true;
@@ -191,13 +219,17 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         contentValueAdjusting = false;
 
         if (oldContentManagerUI != null) {
+            // Import listeners from the old ContentManagerUI
+            // TODO: import also PropertyChangeListener ???
             for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
                 addContentManagerUIListener(listener);
             }
         }
 
+        // Now you can consider this manager installed
         this.installed = true;
 
+        // Select the content selected on the previous ContentManagerUI
         final Content selectedContent1 = selectedContent;
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -213,11 +245,14 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     }
 
     public void unistall() {
+        // Remove all contents
         contentValueAdjusting = true;
         for (Content content : contentManager.getContents()) {
             removeContent((PlafContent) content);
         }
         contentValueAdjusting = false;
+
+        // Now you can consider this manager uninstalled
         this.installed = false;
     }
 
@@ -226,30 +261,37 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     }
 
     public void addContent(PlafContent content, Object... constraints) {
-        addUIForContent(content);
-        content.addUIPropertyChangeListener(this);
+        // Add the content to the ui...
+        addUIForContent(content, constraints);
+
+        // Register a plaf listener
+        content.addPlafPropertyChangeListener(this);
     }
 
     public void removeContent(PlafContent content) {
+        // If the content is detached, reattach it
         if (content.isDetached())
             content.setDetached(false);
 
+        // Remove from tabbedContentPane
         int index = tabbedContentPane.indexOfContent(content);
         if (index != -1) {
             tabbedContentPane.removeTabAt(index);
-            content.removePropertyChangeListener(this);
         } else if (toolWindowManager.getMainContent() != content.getComponent())
             throw new IllegalStateException("Invalid content ui state.");
 
-        content.removeUIPropertyChangeListener(this);
+        // Remove the plaf listener
+        content.removePlafPropertyChangeListener(this);
 
         if (contentValueAdjusting)
             return;
 
+        // Choose next content to be selected...
         if (tabbedContentPane.getTabCount() == 0) {
             toolWindowManager.resetMainContent();
             lastSelected = null;
         }
+
         if (tabbedContentPane.getTabCount() == 1 && !isShowAlwaysTab()) {
             Content lastContent = contentManager.getSelectedContent();
             if (lastContent == content)
@@ -266,6 +308,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 lastSelected = null;
         }
 
+        // Remove the contentUI part 
         contentUIMap.remove(content);
     }
 
@@ -274,19 +317,27 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     }
 
     public void setSelected(Content content, boolean selected) {
-        if (content.isDetached()) {
-            SwingUtil.requestFocus(
-                    SwingUtilities.windowForComponent(content.getComponent())
-            );
-        } else {
-            int index = tabbedContentPane.indexOfContent(content);
-            if (index != -1) {
-                valueAdjusting = true;
-                tabbedContentPane.setSelectedIndex(index);
-                lastSelected = (PlafContent) content;
-                valueAdjusting = false;
-            } else if (toolWindowManager.getMainContent() != content.getComponent())
-                throw new IllegalStateException("Invalid content ui state.");
+        if (selected) {
+            if (content.isDetached()) {
+                // If the content is detached request the focus for owner window
+                SwingUtil.requestFocus(
+                        SwingUtilities.windowForComponent(content.getComponent())
+                );
+            } else {
+                // Choose the owner tab or check if the content is the main content
+                int index = tabbedContentPane.indexOfContent(content);
+                if (index != -1) {
+                    valueAdjusting = true;
+
+                    tabbedContentPane.setSelectedIndex(index);
+                    lastSelected = (PlafContent) content;
+
+                    valueAdjusting = false;
+                } else if (toolWindowManager.getMainContent() != content.getComponent())
+                    throw new IllegalStateException("Invalid content ui state.");
+            }
+        } else  {
+            // TODO: should we select another??
         }
     }
 
@@ -358,6 +409,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
     protected void initListeners() {
         if (internalPropertyChangeSupport == null) {
+            /// Init just once
             internalPropertyChangeSupport = new PropertyChangeSupport(this);
             internalPropertyChangeSupport.addPropertyChangeListener("component", new ComponentListener());
             internalPropertyChangeSupport.addPropertyChangeListener("disabledIcon", new DisabledIconListener());
@@ -368,9 +420,10 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             internalPropertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
             internalPropertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
             internalPropertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
+
+            SwingUtil.registerDragGesture(tabbedContentPane,
+                                          new TabbedContentManagerDragGesture());
         }
-        SwingUtil.registerDragGesture(tabbedContentPane,
-                                      new TabbedContentManagerDragGesture());
     }
 
     protected void addUIForContent(Content content, Object... constaints) {
@@ -406,6 +459,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         if (content.getForeground() != null)
             tabbedContentPane.setForegroundAt(index, content.getForeground());
     }
+
 
     protected boolean fireContentUIRemoving(ContentUI contentUI) {
         ContentManagerUIEvent event = new ContentManagerUIEvent(this, ContentManagerUIEvent.ActionId.CONTENTUI_REMOVING, contentUI);

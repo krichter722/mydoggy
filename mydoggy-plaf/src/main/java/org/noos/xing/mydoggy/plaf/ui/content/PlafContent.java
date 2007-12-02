@@ -18,10 +18,10 @@ public interface PlafContent extends Content {
      * using the Content interface.
      *
      * @param listener the PropertyChangeListener to be added.
-     * @see #removeUIPropertyChangeListener(java.beans.PropertyChangeListener)
+     * @see #removePlafPropertyChangeListener(java.beans.PropertyChangeListener)
      * @since 1.3.1
      */
-    void addUIPropertyChangeListener(PropertyChangeListener listener);
+    void addPlafPropertyChangeListener(PropertyChangeListener listener);
 
     /**
      * Removes a PropertyChangeListener from the ui listener list. This method
@@ -31,10 +31,10 @@ public interface PlafContent extends Content {
      * If listener is null, no exception is thrown and no action is performed.
      *
      * @param listener the PropertyChangeListener to be removed
-     * @see #addUIPropertyChangeListener(java.beans.PropertyChangeListener) 
+     * @see #addPlafPropertyChangeListener(java.beans.PropertyChangeListener)
      * @since 1.3.1
      */
-    void removeUIPropertyChangeListener(PropertyChangeListener listener);
+    void removePlafPropertyChangeListener(PropertyChangeListener listener);
 
     /**
      * Notify selection.

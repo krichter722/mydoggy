@@ -232,11 +232,11 @@ public class MyDoggyContent implements PlafContent {
     }
 
 
-    public void addUIPropertyChangeListener(PropertyChangeListener listener) {
+    public void addPlafPropertyChangeListener(PropertyChangeListener listener) {
         uiListeners.add(PropertyChangeListener.class, listener);
     }
 
-    public void removeUIPropertyChangeListener(PropertyChangeListener listener) {
+    public void removePlafPropertyChangeListener(PropertyChangeListener listener) {
         uiListeners.remove(PropertyChangeListener.class, listener);
     }
 
