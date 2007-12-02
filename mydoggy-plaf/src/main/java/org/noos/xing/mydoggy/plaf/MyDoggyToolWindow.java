@@ -443,6 +443,9 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     public void setRepresentativeAnchorButtonVisible(boolean visible) {
         synchronized (getLock()) {
+            if (!isAvailable())
+                return;
+
             if (type == ToolWindowType.FLOATING_FREE)
                 throw new IllegalArgumentException("Cannot call this method if the toolwindow has type FLOATING_FREE");
 

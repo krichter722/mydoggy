@@ -148,6 +148,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     }
 
     public void setShowAlwaysTab(boolean showAlwaysTab) {
+        boolean old = this.showAlwaysTab;
         this.showAlwaysTab = showAlwaysTab;
 
         if (showAlwaysTab) {
@@ -159,6 +160,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 toolWindowManager.setMainContent(tabbedContentPane);
             }
         }
+
+        fireContentManagerUIProperty("showAlwaysTab", old, showAlwaysTab);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
