@@ -286,7 +286,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
             case SLIDING:
                 return slidingContainer;
         }
-        throw new IllegalArgumentException("Type not reconized.");
+        throw new IllegalArgumentException("Type not recognized.");
     }
 
     public ToolWindowTypeDescriptor getTypeDescriptor(ToolWindowType type) {
@@ -301,7 +301,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
             case SLIDING:
                 return slidingTypeDescriptor;
         }
-        throw new IllegalStateException("Doen't exist a TypeDescriptor for : " + type);
+        throw new IllegalStateException("Doen't exist a TypeDescriptor for. [type : " + type + "]");
     }
 
     public ToolWindowAnchor getToolWindowAnchor(Point p) {

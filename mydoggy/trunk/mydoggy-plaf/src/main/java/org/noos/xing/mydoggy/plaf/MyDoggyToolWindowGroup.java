@@ -40,7 +40,7 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
             tools.add(toolWindow);
             fireAddedTool(toolWindow);
         } else
-            throw new IllegalArgumentException("This group already containes passed tool window. [tool id : " + toolWindow.getId() + ", group : " + name + "]");
+            throw new IllegalArgumentException("This group already contains passed tool window. [tool id : " + toolWindow.getId() + ", group : " + name + "]");
     }
 
     public boolean removeToolWindow(ToolWindow toolWindow) {

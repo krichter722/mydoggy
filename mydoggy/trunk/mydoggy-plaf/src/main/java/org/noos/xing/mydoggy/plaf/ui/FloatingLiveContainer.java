@@ -157,7 +157,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         if (anchestor instanceof RootPaneContainer) {
             layeredPane = ((RootPaneContainer) anchestor).getLayeredPane();
         } else
-            throw new IllegalStateException("Can stay only on a RootPaneContainer");
+            throw new IllegalStateException("Can stay only on a RootPaneContainer.");
     }
 
     protected void initListeners() {

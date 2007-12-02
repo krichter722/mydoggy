@@ -82,12 +82,12 @@ public class MyDoggyContentManager implements ContentManager {
                                                  (ToolWindow) dockable);
             return content;
         } else
-            throw new IllegalArgumentException("Cannot add that type of dockable.");
+            throw new IllegalArgumentException("Dockable not yet supported");
     }
 
     public boolean removeContent(Content content) {
         if (content == null)
-            throw new IllegalArgumentException("Content cannot be null");
+            throw new IllegalArgumentException("Content cannot be null.");
 
         plafContentManagerUI.removeContent((MyDoggyContent) content);
         boolean result = contents.remove(content);
@@ -131,7 +131,7 @@ public class MyDoggyContentManager implements ContentManager {
             if (content.getComponent() == component)
                 return content;
         }
-        throw new IllegalArgumentException("Cannot found content for component. [cmp : " + component + ']');
+        throw new IllegalArgumentException("Cannot found content for component. [component : " + component + ']');
     }
 
     public Content getSelectedContent() {
@@ -232,12 +232,12 @@ public class MyDoggyContentManager implements ContentManager {
     protected Content addContentInternal(String id, String title, Icon icon, Component component, String tip,
                                          ToolWindow toolWindow, Object... constraints) {
         if (id == null)
-            throw new IllegalArgumentException("Key cannot be null.");
+            throw new IllegalArgumentException("Id cannot be null.");
         if (component == null)
             throw new IllegalArgumentException("Component cannot be null.");
 
         if (contentMap.containsKey(id))
-            throw new IllegalArgumentException("Cannot register content with passed key. An already registered content exists. [key : " + id + "]");
+            throw new IllegalArgumentException("Cannot register content with passed id. An already registered content exists. [id : " + id + "]");
 
         MyDoggyContent content = new MyDoggyContent(this, id, title, icon, component, tip, toolWindow);
         content.addPlafPropertyChangeListener(new PropertyChangeListener() {

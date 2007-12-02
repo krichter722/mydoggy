@@ -17,4 +17,11 @@ public class NamedComponentFilter implements ComponentFilter {
     public boolean filter(Component component) {
         return component.getName()  != null && component.getName().equals(name);
     }
+
+
+    public String toString() {
+        return "NamedComponentFilter{" +
+               "name='" + name + '\'' +
+               '}';
+    }
 }

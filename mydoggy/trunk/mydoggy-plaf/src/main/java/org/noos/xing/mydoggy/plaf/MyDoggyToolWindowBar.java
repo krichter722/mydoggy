@@ -992,7 +992,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     }
                 }
             } else
-                throw new IllegalArgumentException("Invalid Property Name : " + evt.getPropertyName());
+                throw new IllegalArgumentException("Invalid property name. [property : " + evt.getPropertyName() + "]");
         }
     }
 
