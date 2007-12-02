@@ -59,13 +59,13 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         return tabbedPane.getComponentAt(0);
     }
 
-    protected void addToComponentWrapper(Component wrapperSource, Dockable dockable, DockableUI dockableUI,
+    protected void addToComponentWrapper(Component wrapperSource, Dockable dockable,
                                          int aggregationIndexLocation, Component content) {
         JTabbedContentPane tabbedPane = (JTabbedContentPane) wrapperSource;
         tabbedPane.addTab((Content) dockable,
                           new DockablePanel(dockable, content),
                           aggregationIndexLocation);
-        tabbedPane.setSelectedIndex((aggregationIndexLocation < 0) ? tabbedPane.getTabCount() - 1 : aggregationIndexLocation);
+        tabbedPane.setSelectedIndex((aggregationIndexLocation < 0 || aggregationIndexLocation >= tabbedPane.getTabCount()) ? tabbedPane.getTabCount() - 1 : aggregationIndexLocation);
     }
 
     protected void removeComponentWrapper(Component wrapperSource, Dockable dockable) {
@@ -292,8 +292,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
                                     removeDockable(content);
                                     addDockable(content,
-                                               contentUI,
-                                               content.getComponent(),
+                                                content.getComponent(),
                                                onDockable,
                                                indexAtLocation,
                                                (dragAnchor == null) ? null : AggregationPosition.valueOf(dragAnchor.toString()));

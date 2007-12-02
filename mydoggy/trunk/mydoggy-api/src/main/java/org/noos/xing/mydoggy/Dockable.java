@@ -4,8 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
+ * This interface represents the super interface for of all dockable object, i.e. ToolWindow,
+ * ToolWindowTab and Content.
+ *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * @todo add javadocs..
+ * @see ToolWindow
+ * @see ToolWindowTab
+ * @see Content
+ * @since 1.4.0
  */
 public interface Dockable extends Observable {
 

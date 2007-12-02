@@ -158,9 +158,12 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
         if (oldContentManagerUI != null) {
             // Import listeners from the old ContentManagerUI
-            // TODO: import also PropertyChangeListener ???
             for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
                 addContentManagerUIListener(listener);
+            }
+
+            for (PropertyChangeListener listener : oldContentManagerUI.getPropertyChangeListeners()) {
+                addPropertyChangeListener(listener);
             }
         }
 

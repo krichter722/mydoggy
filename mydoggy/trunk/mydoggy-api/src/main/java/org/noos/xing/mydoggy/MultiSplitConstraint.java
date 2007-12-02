@@ -8,15 +8,21 @@ package org.noos.xing.mydoggy;
  */
 public class MultiSplitConstraint {
     private Content content;
+    private int aggregationIndexLocation;
     private AggregationPosition aggregationPosition;
 
-    public MultiSplitConstraint(Content content, AggregationPosition aggregationPosition) {
+    public MultiSplitConstraint(Content content, int aggregationIndexLocation, AggregationPosition aggregationPosition) {
         this.content = content;
+        this.aggregationIndexLocation = aggregationIndexLocation;
         this.aggregationPosition = aggregationPosition;
     }
 
     public Content getContent() {
         return content;
+    }
+
+    public int getAggregationIndexLocation() {
+        return aggregationIndexLocation;
     }
 
     public AggregationPosition getAggregationPosition() {

@@ -206,9 +206,11 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 
         if (oldContentManagerUI != null) {
             // Import listeners from the old ContentManagerUI
-            // TODO: import also PropertyChangeListener ???
             for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
                 addContentManagerUIListener(listener);
+            }
+            for (PropertyChangeListener listener : oldContentManagerUI.getPropertyChangeListeners()) {
+                addPropertyChangeListener(listener);
             }
         }
 
@@ -304,9 +306,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                 }
                 throw new IllegalStateException("Invalid content ui state.");
             }
-        } else  {
-            // TODO: should we select another??
-        }
+        } 
     }
 
     public void updateUI() {
@@ -396,13 +396,22 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
         contentUI.setCloseable(closeable);
         contentUI.setDetachable(detachable);
 
-        if (constraints == null || constraints.length == 0) {
+        if (constraints.length > 0 && constraints[0] instanceof MultiSplitConstraint) {
+            MultiSplitConstraint multiSplitConstraint = (MultiSplitConstraint) constraints[0];
             multiSplitContainer.addDockable(content,
-                                            null, content.getComponent(),
-                                            null,
-                                            -1, AggregationPosition.DEFAULT);
+                                            content.getComponent(),
+                                            multiSplitConstraint.getContent(),
+                                            multiSplitConstraint.getAggregationIndexLocation(), 
+                                            multiSplitConstraint.getAggregationPosition());
         } else {
+            multiSplitContainer.addDockable(content,
+                                            content.getComponent(),
+                                            null,
+                                            -1,
+                                            AggregationPosition.DEFAULT);
         }
+
+
         SwingUtil.repaint(multiSplitContainer);
     }
 

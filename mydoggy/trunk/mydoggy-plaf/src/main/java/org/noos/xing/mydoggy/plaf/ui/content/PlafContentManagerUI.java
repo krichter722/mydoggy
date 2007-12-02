@@ -9,18 +9,20 @@ import javax.swing.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.3.1
- * @todo javadocs...
  */
 public interface PlafContentManagerUI {
 
     /**
      * Configures this manager appropriate for the specified toolwindow manager.
+     * During this phase the new ContentManagerUI imports all properites, and listener from the
+     * old manager and initialize all needed parts. Furthermore all previous registered content
+     * are added.
      *
      * @param manager the component where this UI delegate is being installed
-     * @param oldContentManagerUI
+     * @param oldContentManagerUI the old ContentManagerUI
      * @see #unistall()
      * @since 1.3.1
-     * @return
+     * @return this PlafContentManagerUI. 
      */
     PlafContentManagerUI install(ContentManagerUI oldContentManagerUI, ToolWindowManager manager);
 
@@ -44,7 +46,7 @@ public interface PlafContentManagerUI {
      * Adds the ui part of a content.
      *
      * @param content the content ui part to be added.
-     * @param constraints
+     * @param constraints one or more constraint used to add the ui part of the content.
      * @since 1.4.0
      */
     void addContent(PlafContent content, Object... constraints);
