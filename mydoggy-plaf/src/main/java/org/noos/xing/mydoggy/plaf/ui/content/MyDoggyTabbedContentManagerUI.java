@@ -223,9 +223,11 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
         if (oldContentManagerUI != null) {
             // Import listeners from the old ContentManagerUI
-            // TODO: import also PropertyChangeListener ???
             for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
                 addContentManagerUIListener(listener);
+            }
+            for (PropertyChangeListener listener : oldContentManagerUI.getPropertyChangeListeners()) {
+                addPropertyChangeListener(listener);
             }
         }
 
@@ -339,9 +341,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 } else if (toolWindowManager.getMainContent() != content.getComponent())
                     throw new IllegalStateException("Invalid content ui state.");
             }
-        } else  {
-            // TODO: should we select another??
-        }
+        } 
     }
 
     public JPopupMenu getPopupMenu() {

@@ -64,14 +64,12 @@ public class MultiSplitDockableContainer extends JPanel {
 
     /**
      * @param dockable
-     * @param dockableUI
      * @param content
      * @param aggregationOnDockable
      * @param aggregationIndexLocation
      * @param aggregationPosition
      */
     public void addDockable(Dockable dockable,
-                            DockableUI dockableUI,
                             Component content,
                             Dockable aggregationOnDockable,
                             int aggregationIndexLocation,
@@ -79,25 +77,26 @@ public class MultiSplitDockableContainer extends JPanel {
         if (!checkModel())
             System.out.println("Check model fail. addDockable before");
 
-        String dockableId = dockable.getId();
+        // Build id
+        StringBuilder idBuilder = new StringBuilder();
+        idBuilder.append(dockable.getId());
+        if (aggregationOnDockable != null)
+            idBuilder.append(aggregationOnDockable.getId());
+        if (aggregationPosition != null)
+            idBuilder.append(aggregationPosition.toString());
 
-        // TODO: make this more readable...
-        if (aggregationOnDockable == null)
-            dockableId = dockableId + ((aggregationPosition != null) ? aggregationPosition.toString() : "");
-        else
-            dockableId = dockableId + aggregationOnDockable.getId() +
-                         ((aggregationPosition != null) ? aggregationPosition.toString() : "");
+        String dockableId = idBuilder.toString();
 
         // Store old layout
         String modelKey = null;
         if (storeLayout && entries.size() > 0) {
-            StringBuilder builder = new StringBuilder();
+            idBuilder.setLength(0); 
             for (DockableEntry entry : entries.values()) {
-                builder.append(entry.id);
+                idBuilder.append(entry.id);
             }
-            models.put(builder.toString(), encode());
-            builder.append(dockableId);
-            modelKey = builder.toString();
+            models.put(idBuilder.toString(), encode());
+            idBuilder.append(dockableId);
+            modelKey = idBuilder.toString();
         }
 
 
@@ -126,7 +125,7 @@ public class MultiSplitDockableContainer extends JPanel {
                     Component componentWrapper = getComponentWrapper(entries.values().iterator().next().dockable, previousContent);
 
                     // The requeste is to add more than one dockable on the same leaf...
-                    addToComponentWrapper(componentWrapper, dockable, dockableUI, aggregationIndexLocation, content);
+                    addToComponentWrapper(componentWrapper, dockable, aggregationIndexLocation, content);
 
                     resetRootComponent();
                     setRootComponent(componentWrapper);
@@ -217,7 +216,7 @@ public class MultiSplitDockableContainer extends JPanel {
                                             addToComponentWrapper(
                                                     multiSplitPane.getMultiSplitLayout().getChildMap().get(leaf.getName()),
                                                     dockable,
-                                                    dockableUI, aggregationIndexLocation, content
+                                                    aggregationIndexLocation, content
                                             );
 
                                             leaf.addDockable(dockable.getId());
@@ -682,7 +681,7 @@ public class MultiSplitDockableContainer extends JPanel {
         return container.getComponent(0);
     }
 
-    protected void addToComponentWrapper(Component wrapperSource, Dockable dockable, DockableUI dockableUI, int aggregationIndexLocation, Component content) {
+    protected void addToComponentWrapper(Component wrapperSource, Dockable dockable, int aggregationIndexLocation, Component content) {
         throw new IllegalStateException("Cannot call this method...");
     }
 

@@ -209,7 +209,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     addTabsTag = true;
                     writer.startElement("tabs");
                 }
-                
+
                 AttributesImpl attributes = new AttributesImpl();
                 attributes.addAttribute(null, "dockableId", null, null, dockable.getId());
                 attributes.addAttribute(null, "selected", null, null, "" + tab.isSelected());
@@ -373,10 +373,38 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             }
         }
 
+        public int getInteger(Element element, String name, int defaultValue) {
+            try {
+                String attr = element.getAttribute(name);
+                if (attr != null && !"".equals(attr.trim()))
+                    return Integer.parseInt(attr);
+                else
+                    return defaultValue;
+            } catch (Exception e) {
+                return defaultValue;
+            }
+        }
+
+        public float getFloat(Element element, String name, float defaultValue) {
+            try {
+                String attr = element.getAttribute(name);
+                if (attr != null && !"".equals(attr.trim()))
+                    return Float.parseFloat(attr);
+                else
+                    return defaultValue;
+            } catch (Exception e) {
+                return defaultValue;
+            }
+        }
+
+        public boolean isAttributePresent(Element element, String name) {
+            String attr = element.getAttribute(name);
+            return attr == null || "".equals(attr.trim());
+        }
     }
 
 
-    public class MyDoggyElementParser implements ElementParser {
+    public class MyDoggyElementParser extends ElementParserAdapter {
         public boolean parse(Element element, Object... args) {
             // Validate version
             if (!"1.4.0".equals(element.getAttribute("version")))
@@ -385,39 +413,40 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         }
     }
 
-    public class ToolWindowManagerDescriptorElementParser implements ElementParser {
+    public class ToolWindowManagerDescriptorElementParser extends ElementParserAdapter {
 
         public boolean parse(Element element, Object... args) {
             ToolWindowManagerDescriptor descriptor = toolWindowManager.getToolWindowManagerDescriptor();
-            descriptor.setNumberingEnabled(Boolean.parseBoolean(element.getAttribute("numberingEnabled")));
+            descriptor.setNumberingEnabled(getBoolean(element, "numberingEnabled", true));
             return true;
 
         }
     }
 
-    public class DividerSizeElementParser implements ElementParser {
+    public class DividerSizeElementParser extends ElementParserAdapter {
         public boolean parse(Element element, Object... args) {
             ToolWindowManagerDescriptor descriptor = toolWindowManager.getToolWindowManagerDescriptor();
-            descriptor.setDividerSize(ToolWindowAnchor.LEFT, Integer.parseInt(element.getAttribute("left")));
-            descriptor.setDividerSize(ToolWindowAnchor.RIGHT, Integer.parseInt(element.getAttribute("right")));
-            descriptor.setDividerSize(ToolWindowAnchor.TOP, Integer.parseInt(element.getAttribute("top")));
-            descriptor.setDividerSize(ToolWindowAnchor.BOTTOM, Integer.parseInt(element.getAttribute("bottom")));
+            descriptor.setDividerSize(ToolWindowAnchor.LEFT, getInteger(element, "left", 5));
+            descriptor.setDividerSize(ToolWindowAnchor.RIGHT, getInteger(element, "right", 5));
+            descriptor.setDividerSize(ToolWindowAnchor.TOP, getInteger(element, "top", 5));
+            descriptor.setDividerSize(ToolWindowAnchor.BOTTOM, getInteger(element, "bottom", 5));
             return true;
         }
     }
 
-    public class AggregateModeElementParser implements ElementParser {
+    public class AggregateModeElementParser extends ElementParserAdapter {
         public boolean parse(Element element, Object... args) {
             ToolWindowManagerDescriptor descriptor = toolWindowManager.getToolWindowManagerDescriptor();
-            descriptor.setAggregateMode(ToolWindowAnchor.LEFT, Boolean.parseBoolean(element.getAttribute("left")));
-            descriptor.setAggregateMode(ToolWindowAnchor.RIGHT, Boolean.parseBoolean(element.getAttribute("right")));
-            descriptor.setAggregateMode(ToolWindowAnchor.TOP, Boolean.parseBoolean(element.getAttribute("top")));
-            descriptor.setAggregateMode(ToolWindowAnchor.BOTTOM, Boolean.parseBoolean(element.getAttribute("bottom")));
+            descriptor.setAggregateMode(ToolWindowAnchor.LEFT, getBoolean(element, "left", false));
+            descriptor.setAggregateMode(ToolWindowAnchor.RIGHT, getBoolean(element, "right", false));
+            descriptor.setAggregateMode(ToolWindowAnchor.TOP, getBoolean(element, "top", false));
+            descriptor.setAggregateMode(ToolWindowAnchor.BOTTOM, getBoolean(element, "bottom", false));
             return true;
         }
     }
 
-    public class PushAwayModeElementParser implements ElementParser {
+    public class PushAwayModeElementParser extends ElementParserAdapter {
+
         public boolean parse(Element element, Object... args) {
             ToolWindowManagerDescriptor descriptor = toolWindowManager.getToolWindowManagerDescriptor();
 
@@ -437,10 +466,12 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             }
 
             // Setup pushAwayMode
-            descriptor.setPushAwayMode(PushAwayMode.valueOf(element.getAttribute("pushAwayMode")));
+            if (isAttributePresent(element, "pushAwayMode"))
+                descriptor.setPushAwayMode(PushAwayMode.valueOf(element.getAttribute("pushAwayMode")));
 
             return false;
         }
+        
     }
 
     public class ToolsElementParser extends ElementParserAdapter {
@@ -462,13 +493,13 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 Element dockedType = getElement(tool, "docked");
                 if (dockedType != null) {
                     DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-                    descriptor.setDockLength(Integer.parseInt(dockedType.getAttribute("dockLength")));
-                    descriptor.setPopupMenuEnabled(Boolean.parseBoolean(dockedType.getAttribute("popupMenuEnabled")));
-                    descriptor.setAnimating(Boolean.parseBoolean(dockedType.getAttribute("animating")));
-                    descriptor.setPreviewEnabled(Boolean.parseBoolean(dockedType.getAttribute("previewEnabled")));
-                    descriptor.setPreviewDelay(Integer.parseInt(dockedType.getAttribute("previewDelay")));
-                    descriptor.setPreviewTransparentRatio(Float.parseFloat(dockedType.getAttribute("previewTransparentRatio")));
-                    descriptor.setIdVisibleOnTitleBar(Boolean.parseBoolean(dockedType.getAttribute("idVisibleOnTitleBar")));
+                    descriptor.setDockLength(getInteger(dockedType, "dockLength", 200));
+                    descriptor.setPopupMenuEnabled(getBoolean(dockedType, "popupMenuEnabled", true));
+                    descriptor.setAnimating(getBoolean(dockedType, "animating", true));
+                    descriptor.setPreviewEnabled(getBoolean(dockedType, "previewEnabled", true));
+                    descriptor.setPreviewDelay(getInteger(dockedType, "previewDelay", 0));
+                    descriptor.setPreviewTransparentRatio(getFloat(dockedType, "previewTransparentRatio", 0.7f));
+                    descriptor.setIdVisibleOnTitleBar(getBoolean(dockedType, "idVisibleOnTitleBar", true));
                     descriptor.setHideRepresentativeButtonOnVisible(
                             getBoolean(dockedType, "hideRepresentativeButtonOnVisible", false)
                     );
@@ -477,60 +508,60 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 Element slidingType = getElement(tool, "sliding");
                 if (slidingType != null) {
                     SlidingTypeDescriptor descriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);
-                    descriptor.setEnabled(Boolean.parseBoolean(slidingType.getAttribute("enabled")));
-                    descriptor.setTransparentDelay(Integer.parseInt(slidingType.getAttribute("transparentDelay")));
-                    descriptor.setTransparentMode(Boolean.parseBoolean(slidingType.getAttribute("transparentMode")));
-                    descriptor.setTransparentRatio(Float.parseFloat(slidingType.getAttribute("transparentRatio")));
-                    descriptor.setAnimating(Boolean.parseBoolean(slidingType.getAttribute("animating")));
-                    descriptor.setIdVisibleOnTitleBar(Boolean.parseBoolean(slidingType.getAttribute("idVisibleOnTitleBar")));
+                    descriptor.setEnabled(getBoolean(slidingType, "enabled", true));
+                    descriptor.setTransparentDelay(getInteger(slidingType, "transparentDelay", 0));
+                    descriptor.setTransparentMode(getBoolean(slidingType, "transparentMode", true));
+                    descriptor.setTransparentRatio(getFloat(slidingType, "transparentRatio", 0.7f));
+                    descriptor.setAnimating(getBoolean(slidingType, "animating", true));
+                    descriptor.setIdVisibleOnTitleBar(getBoolean(slidingType, "idVisibleOnTitleBar", true));
                 }
 
                 Element floatingType = getElement(tool, "floating");
                 if (floatingType != null) {
                     FloatingTypeDescriptor descriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
-                    descriptor.setEnabled(Boolean.parseBoolean(floatingType.getAttribute("enabled")));
-                    descriptor.setTransparentDelay(Integer.parseInt(floatingType.getAttribute("transparentDelay")));
-                    descriptor.setTransparentMode(Boolean.parseBoolean(floatingType.getAttribute("transparentMode")));
-                    descriptor.setTransparentRatio(Float.parseFloat(floatingType.getAttribute("transparentRatio")));
-                    descriptor.setModal(Boolean.parseBoolean(floatingType.getAttribute("modal")));
-                    descriptor.setAnimating(Boolean.parseBoolean(floatingType.getAttribute("animating")));
-                    descriptor.setIdVisibleOnTitleBar(Boolean.parseBoolean(floatingType.getAttribute("idVisibleOnTitleBar")));
+                    descriptor.setEnabled(getBoolean(floatingType, "enabled", true));
+                    descriptor.setTransparentDelay(getInteger(floatingType, "transparentDelay", 0));
+                    descriptor.setTransparentMode(getBoolean(floatingType, "transparentMode", true));
+                    descriptor.setTransparentRatio(getFloat(floatingType, "transparentRatio", 0.7f));
+                    descriptor.setModal(getBoolean(floatingType, "modal", false));
+                    descriptor.setAnimating(getBoolean(floatingType, "animating", true));
+                    descriptor.setIdVisibleOnTitleBar(getBoolean(floatingType, "idVisibleOnTitleBar", true));
 
                     Element location = getElement(floatingType, "location");
                     if (location != null)
                         descriptor.setLocation(
-                                Integer.parseInt(location.getAttribute("x")),
-                                Integer.parseInt(location.getAttribute("y"))
+                                getInteger(location, "x", 0),
+                                getInteger(location, "y", 0)
                         );
                     Element dimension = getElement(floatingType, "size");
                     if (dimension != null)
                         descriptor.setSize(
-                                Integer.parseInt(dimension.getAttribute("width")),
-                                Integer.parseInt(dimension.getAttribute("height"))
+                                getInteger(dimension, "width", 100),
+                                getInteger(dimension, "height", 100)
                         );
                 }
 
                 Element floatingLiveType = getElement(tool, "floatingLive");
                 if (floatingLiveType != null) {
                     FloatingLiveTypeDescriptor descriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
-                    descriptor.setEnabled(Boolean.parseBoolean(floatingLiveType.getAttribute("enabled")));
-                    descriptor.setTransparentDelay(Integer.parseInt(floatingLiveType.getAttribute("transparentDelay")));
-                    descriptor.setTransparentMode(Boolean.parseBoolean(floatingLiveType.getAttribute("transparentMode")));
-                    descriptor.setTransparentRatio(Float.parseFloat(floatingLiveType.getAttribute("transparentRatio")));
-                    descriptor.setAnimating(Boolean.parseBoolean(floatingLiveType.getAttribute("animating")));
-                    descriptor.setIdVisibleOnTitleBar(Boolean.parseBoolean(floatingLiveType.getAttribute("idVisibleOnTitleBar")));
+                    descriptor.setEnabled(getBoolean(floatingLiveType, "enabled", true));
+                    descriptor.setTransparentDelay(getInteger(floatingLiveType, "transparentDelay", 0));
+                    descriptor.setTransparentMode(getBoolean(floatingLiveType, "transparentMode", true));
+                    descriptor.setTransparentRatio(getFloat(floatingLiveType, "transparentRatio", 0.7f));
+                    descriptor.setAnimating(getBoolean(floatingLiveType, "animating", true));
+                    descriptor.setIdVisibleOnTitleBar(getBoolean(floatingLiveType, "idVisibleOnTitleBar", true));
 
                     Element location = getElement(floatingType, "location");
                     if (location != null)
                         descriptor.setLocation(
-                                Integer.parseInt(location.getAttribute("x")),
-                                Integer.parseInt(location.getAttribute("y"))
+                                getInteger(location, "x", 0),
+                                getInteger(location, "y", 0)
                         );
                     Element dimension = getElement(floatingType, "size");
                     if (dimension != null)
                         descriptor.setSize(
-                                Integer.parseInt(dimension.getAttribute("width")),
-                                Integer.parseInt(dimension.getAttribute("height"))
+                                getInteger(dimension, "width", 100),
+                                getInteger(dimension, "height", 100)
                         );
                 }
 
@@ -538,10 +569,12 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 if (type != ToolWindowType.EXTERN)
                     toolWindow.setType(type);
 
-                toolWindow.setAutoHide(Boolean.parseBoolean(tool.getAttribute("autoHide")));
-                toolWindow.setAvailable(Boolean.parseBoolean(tool.getAttribute("available")));
-                toolWindow.setIndex(Integer.parseInt(tool.getAttribute("index")));
-                toolWindow.setAggregateMode(Boolean.parseBoolean(tool.getAttribute("aggregateMode")));
+                toolWindow.setAutoHide(getBoolean(tool, "autoHide", false));
+                toolWindow.setAvailable(getBoolean(tool, "available", false));
+                int index = getInteger(tool, "index", -1);
+                if (index != -1)
+                    toolWindow.setIndex(index);
+                toolWindow.setAggregateMode(getBoolean(tool, "aggregateMode", false));
                 if (toolWindow.getType() != ToolWindowType.FLOATING_FREE)
                     toolWindow.setRepresentativeAnchorButtonVisible(
                             getBoolean(tool, "representativeAnchorButtonVisible", true)
@@ -612,8 +645,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
             Collections.sort(toolsByAnchor, new Comparator<Element>() {
                 public int compare(Element o1, Element o2) {
-                    int anchorIndex1 = Integer.parseInt(o1.getAttribute("anchorIndex"));
-                    int anchorIndex2 = Integer.parseInt(o2.getAttribute("anchorIndex"));
+                    int anchorIndex1 = getInteger(o1, "anchorIndex", 0);
+                    int anchorIndex2 = getInteger(o2, "anchorIndex", 0);
 
                     if (anchorIndex1 < anchorIndex2)
                         return -1;
@@ -628,17 +661,23 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             for (Element tool : toolsByAnchor) {
                 ToolWindow toolWindow = toolWindowManager.getToolWindow(tool.getAttribute("id"));
 
-                toolWindow.setAnchor(
-                        ToolWindowAnchor.valueOf(tool.getAttribute("anchor")),
-                        Integer.parseInt(tool.getAttribute("anchorIndex"))
-                );
+                int anchorIndex = getInteger(tool, "anchorIndex", Integer.MIN_VALUE);
+                ToolWindowAnchor toolWindowAnchor = ToolWindowAnchor.LEFT;
+                if (isAttributePresent(tool, "anchor"))
+                    toolWindowAnchor = ToolWindowAnchor.valueOf(tool.getAttribute("anchor"));
+
+                if (anchorIndex == Integer.MIN_VALUE)
+                    toolWindow.setAnchor(toolWindowAnchor);
+                else
+                    toolWindow.setAnchor(toolWindowAnchor,
+                                         anchorIndex);
 
                 mergePolicyApplier.applyToolWindow(toolWindow, tool);
 
-                if (Boolean.parseBoolean(tool.getAttribute("active")))
+                if (getBoolean(tool, "active", false))
                     activeTool = toolWindow;
 
-                if (Boolean.parseBoolean(tool.getAttribute("maximized")))
+                if (getBoolean(tool, "maximized", false))
                     maximizedTool = toolWindow;
             }
 
@@ -651,7 +690,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         }
     }
 
-    public class ContentManagerElementParser implements ElementParser {
+    public class ContentManagerElementParser extends ElementParserAdapter {
 
         public boolean parse(Element element, Object... args) {
             NodeList contents = element.getElementsByTagName("content");
@@ -659,14 +698,14 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             Content selectedContent = null;
             for (int i = 0, size = contents.getLength(); i < size; i++) {
                 Element contentElement = (Element) contents.item(i);
-                Content content = toolWindowManager.getContentManager().getContent(contentElement.getAttribute("key"));
+                Content content = toolWindowManager.getContentManager().getContent(contentElement.getAttribute("id"));
 
                 if (content != null) {
-                    if (Boolean.parseBoolean(contentElement.getAttribute("selected")))
+                    if (getBoolean(contentElement, "selected", false))
                         selectedContent = content;
 
-                    content.setEnabled(Boolean.parseBoolean(contentElement.getAttribute("enabled")));
-                    content.setDetached(Boolean.parseBoolean(contentElement.getAttribute("detached")));
+                    content.setEnabled(getBoolean(contentElement, "enabled", true));
+                    content.setDetached(getBoolean(contentElement, "detached", false));
                 }
             }
 

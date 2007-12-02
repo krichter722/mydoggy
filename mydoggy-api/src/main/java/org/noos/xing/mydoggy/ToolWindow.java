@@ -313,9 +313,11 @@ public interface ToolWindow extends Dockable {
     ToolWindowTab addToolWindowTab(String title, Component component);
 
     /**
-     * TODO
+     * Adds a <code>dockable</code>. A toolwindow tab is created to accommodate the dockable.
+     *
+     * @param dockable the dockable to be accommodated.
+     * @return a <code>ToolWindowTab</code> instance that represents the accommodated dockable.
      * @since 1.4.0
-     * @param dockable
      */
     ToolWindowTab addToolWindowTab(Dockable dockable);
 
@@ -386,10 +388,11 @@ public interface ToolWindow extends Dockable {
     ToolWindowTypeDescriptor getTypeDescriptor(ToolWindowType type);
 
     /**
-     * TODO
+     * This method retrieves the TypeDescriptor for the <code>descriptorClass</code>.
+     *
      * @since 1.4.0
-     * @param descriptorClass
-     * @return
+     * @param descriptorClass the descriptor class.
+     * @return the type descriptor for the <code>descriptorClass</code>.
      */
     <T extends ToolWindowTypeDescriptor> T getTypeDescriptor(Class<T> descriptorClass);
 }

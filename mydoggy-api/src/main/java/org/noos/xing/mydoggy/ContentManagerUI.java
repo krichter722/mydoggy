@@ -13,29 +13,34 @@ package org.noos.xing.mydoggy;
 public interface ContentManagerUI<C extends ContentUI> extends Observable {
 
 	/**
-	 * Sets the closeable property of all contents registered to content manager.
+	 * Set the closeable property. All new ContentUI will obtain this value for their closeable property.
+     * Furthermore sets the closeable property of all contents already registered to content manager.
+     *      
 	 * @param closeable <code>true</code> if all contents can be closed using the ui, <code>false</code> otherwise.
 	 * @since 1.1.0
 	 */
 	void setCloseable(boolean closeable);
 
     /**
-     * TODO:
-     * @return
+     * Returns the closeable property value.
+     * @return the closeable property value.
      * @since 1.4.0
      */
     boolean isCloseable();
 
     /**
-	 * Sets the detachable property of all contents registered to content manager..
+     * Set the detachable property. All new ContentUI will obtain this value for their detachable property.
+     * Furthermore sets the detachable property of all contents already registered to content manager.
+     * 
 	 * @param detachable <code>true</code> if all contents can be detached using the ui, <code>false</code> otherwise.
 	 * @since 1.1.0
 	 */
 	void setDetachable(boolean detachable);
 
     /**
-     *
-     * @return
+     * Returns the detachable property value.
+     *  
+     * @return the detachable property value.
      * @since 1.4.0
      */
     boolean isDetachable();

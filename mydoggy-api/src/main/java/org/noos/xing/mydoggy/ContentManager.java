@@ -86,8 +86,10 @@ public interface ContentManager {
     Content addContent(String id, String title, Icon icon, Component component, String tip, Object... constraints);
 
     /**
-     * TODO: java doc
-     * @param dockable
+     * Adds a <code>dockable</code>. A content is created to accommodate the dockable.
+     *
+     * @param dockable the dockable to be accommodated.
+     * @return a <code>Content</code> instance that represents the accommodated dockable.
      * @since 1.4.0
      */
     Content addContent(Dockable dockable);

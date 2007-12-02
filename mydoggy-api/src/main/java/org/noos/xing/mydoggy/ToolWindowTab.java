@@ -68,10 +68,11 @@ public interface ToolWindowTab extends Dockable {
     void setCloseable(boolean closeable);
 
     /**
-     *
-     * @return
+     * Returns the dockable that this tab is accomodating,  <code>null</code> if no dockable is accomodated.
+     * 
+     * @return the dockable that this tab is accomodating,  <code>null</code> if no dockable is accomodated.
+     * @see ToolWindow#addToolWindowTab(Dockable)
      * @since 1.4.0
-     * @todo add javadocs...
      */
     Dockable getDockableDelegator();
 }

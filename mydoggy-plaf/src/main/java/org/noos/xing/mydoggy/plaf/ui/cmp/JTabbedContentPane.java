@@ -142,7 +142,7 @@ public class JTabbedContentPane extends JTabbedPane {
     }
 
     public void addTab(Content content, Component component, int index) {
-        if (index < 0)
+        if (index < 0 || index >= getTabCount())
             addTab(content, component);
         else {
             String tip = content.getToolTipText();
