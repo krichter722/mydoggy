@@ -88,10 +88,10 @@ public class PreferencePanelView extends ComponentView {
             uis.setSelectedItem(null);
             
             ContentManagerUI contentManagerUI = viewContext.get(ToolWindowManager.class).getContentManager().getContentManagerUI();
-            if (contentManagerUI instanceof TabbedContentManagerUI)
-                uis.setSelectedIndex(0);
-            else if (contentManagerUI instanceof MultiSplitContentManagerUI)
+            if (contentManagerUI instanceof MultiSplitContentManagerUI)
                 uis.setSelectedIndex(1);
+            else if (contentManagerUI instanceof TabbedContentManagerUI)
+                uis.setSelectedIndex(0);
             else if (contentManagerUI instanceof DesktopContentManagerUI)
                 uis.setSelectedIndex(2);
         }

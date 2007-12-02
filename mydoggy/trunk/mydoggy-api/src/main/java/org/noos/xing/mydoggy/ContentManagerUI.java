@@ -19,12 +19,26 @@ public interface ContentManagerUI<C extends ContentUI> extends Observable {
 	 */
 	void setCloseable(boolean closeable);
 
-	/**
+    /**
+     * TODO:
+     * @return
+     * @since 1.4.0
+     */
+    boolean isCloseable();
+
+    /**
 	 * Sets the detachable property of all contents registered to content manager..
 	 * @param detachable <code>true</code> if all contents can be detached using the ui, <code>false</code> otherwise.
 	 * @since 1.1.0
 	 */
 	void setDetachable(boolean detachable);
+
+    /**
+     *
+     * @return
+     * @since 1.4.0
+     */
+    boolean isDetachable();
 
 	/**
 	 * Returns the ui part to which this manager maps the specified <code>content</code>.
