@@ -4,6 +4,8 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
+import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
@@ -26,6 +28,7 @@ import java.awt.dnd.DragSourceDropEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
+import java.awt.event.InputEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -408,6 +411,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         });
 
         this.tabbedContentPane = tabbedContentPane;
+        setupActions();
     }
 
     protected void initListeners() {
@@ -461,6 +465,16 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             tabbedContentPane.setMnemonicAt(index, mnemonic);
         if (content.getForeground() != null)
             tabbedContentPane.setForegroundAt(index, content.getForeground());
+    }
+
+    protected void setupActions() {
+        // Setup actions
+        SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, tabbedContentPane,
+                                      KeyStroke.getKeyStroke(39, InputEvent.ALT_MASK),
+                                      "nextContent", new NextContentAction(toolWindowManager));
+        SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, tabbedContentPane,
+                                      KeyStroke.getKeyStroke(37, InputEvent.ALT_MASK),
+                                      "previousContent", new PreviousContentAction(toolWindowManager));
     }
 
 
