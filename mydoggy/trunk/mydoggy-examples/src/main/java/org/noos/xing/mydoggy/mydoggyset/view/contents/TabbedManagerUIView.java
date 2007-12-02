@@ -17,6 +17,8 @@ import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -26,8 +28,7 @@ import java.beans.PropertyChangeListener;
 public class TabbedManagerUIView extends ComponentView implements ViewContextChangeListener {
     protected ToolWindowManager toolWindowManager;
     protected TabbedContentManagerUI tabbedContentManagerUI;
-
-    protected JComboBox tabPlaces;
+protected JComboBox tabPlaces;
     protected JComboBox tabLayouts;
     protected JCheckBox isShowAlwaysTab;
     boolean valueChanging;
@@ -105,8 +106,8 @@ public class TabbedManagerUIView extends ComponentView implements ViewContextCha
 
         // isShowAlwaysTab
         isShowAlwaysTab = new JCheckBox();
-        isShowAlwaysTab.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
+        isShowAlwaysTab.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).setShowAlwaysTab(
                         isShowAlwaysTab.isSelected()
                 );
@@ -122,12 +123,11 @@ public class TabbedManagerUIView extends ComponentView implements ViewContextCha
             if (evt.getNewValue().equals(TabbedContentManagerUI.class)) {
                 toolWindowManager.getContentManager().setContentManagerUI(tabbedContentManagerUI);
                 viewContext.put(ContentManagerUI.class, this);
-                tabPlaces.setSelectedIndex(
-                        ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).getTabPlacement().ordinal()
-                );
-                tabLayouts.setSelectedIndex(
-                        ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).getTabLayout().ordinal()
-                );
+
+                TabbedContentManagerUI tabbedContentManagerUI = ((TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI());
+                tabPlaces.setSelectedIndex(tabbedContentManagerUI.getTabPlacement().ordinal());
+                tabLayouts.setSelectedIndex(tabbedContentManagerUI.getTabLayout().ordinal());
+                isShowAlwaysTab.setSelected(tabbedContentManagerUI.isShowAlwaysTab());
             }
         }
     }

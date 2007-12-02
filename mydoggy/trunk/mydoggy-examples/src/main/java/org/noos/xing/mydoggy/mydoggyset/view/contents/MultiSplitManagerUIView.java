@@ -17,6 +17,8 @@ import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -105,8 +107,8 @@ public class MultiSplitManagerUIView extends ComponentView implements ViewContex
 
         // isShowAlwaysTab
         isShowAlwaysTab = new JCheckBox();
-        isShowAlwaysTab.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
+        isShowAlwaysTab.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 ((MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).setShowAlwaysTab(
                         isShowAlwaysTab.isSelected()
                 );
@@ -120,15 +122,13 @@ public class MultiSplitManagerUIView extends ComponentView implements ViewContex
     public void contextChange(ViewContextChangeEvent evt) {
         if (ContentManagerUI.class.equals(evt.getProperty())) {
             if (evt.getNewValue().equals(MultiSplitContentManagerUI.class)) {
-                toolWindowManager.getContentManager().setContentManagerUI(multiSplitContentManagerUI);
+                toolWindowManager.getContentManager().setContentManagerUI(this.multiSplitContentManagerUI);
                 viewContext.put(ContentManagerUI.class, this);
 
-                tabPlaces.setSelectedIndex(
-                        ((MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).getTabPlacement().ordinal()
-                );
-                tabLayouts.setSelectedIndex(
-                        ((MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI()).getTabLayout().ordinal()
-                );
+                MultiSplitContentManagerUI multiSplitContentManagerUI = ((MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI());
+                tabPlaces.setSelectedIndex(multiSplitContentManagerUI.getTabPlacement().ordinal());
+                tabLayouts.setSelectedIndex(multiSplitContentManagerUI.getTabLayout().ordinal());
+                isShowAlwaysTab.setSelected(multiSplitContentManagerUI.isShowAlwaysTab());
             }
         }
     }

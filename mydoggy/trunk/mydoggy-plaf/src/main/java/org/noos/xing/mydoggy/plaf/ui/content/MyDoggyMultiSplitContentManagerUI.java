@@ -39,7 +39,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     protected ResourceManager resourceManager;
 
     protected MultiSplitContainer multiSplitContainer;
-    protected boolean closeable, detachable;        // TODO: think of this...
+    protected boolean closeable, detachable;        
     protected boolean installed;
 
     protected PropertyChangeSupport internalPropertyChangeSupport;
@@ -53,7 +53,6 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     protected Map<Content, TabbedContentUI> contentUIMap;
     protected Map<Content, TabbedContentUI> detachedContentUIMap;
 
-    protected boolean showAlwaysTab;
     protected TabLayout tabLayout;
     protected TabPlacement tabPlacement;
 
@@ -65,7 +64,6 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
         this.contentUIMap = new Hashtable<Content, TabbedContentUI>();
         
         this.closeable = this.detachable = true;
-        this.showAlwaysTab = false;
         this.tabPlacement = TabPlacement.TOP;
         this.tabLayout = TabLayout.SCROLL;
     }
@@ -138,15 +136,14 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     }
 
     public boolean isShowAlwaysTab() {
-        return showAlwaysTab;
+        return multiSplitContainer.isUseAlwaysContentWrapper();
     }
 
     public void setShowAlwaysTab(boolean showAlwaysTab) {
-        this.showAlwaysTab = showAlwaysTab;
+        boolean old = isShowAlwaysTab();
+        multiSplitContainer.setUseAlwaysContentWrapper(showAlwaysTab);
 
-        if (showAlwaysTab) {
-            // TODO: update the main content if is necessary...
-        }
+        fireContentManagerUIProperty("showAlwaysTab", old, showAlwaysTab);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {

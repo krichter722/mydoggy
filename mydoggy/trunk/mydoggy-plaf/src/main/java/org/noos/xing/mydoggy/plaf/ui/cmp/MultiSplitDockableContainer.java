@@ -36,6 +36,7 @@ public class MultiSplitDockableContainer extends JPanel {
     protected RepaintRunnable repaintRunnable;
 
     protected boolean storeLayout;
+    protected boolean useAlwaysContentWrapper;
 
     public MultiSplitDockableContainer(MyDoggyToolWindowManager toolWindowManager, int orientation) {
         this.orientation = orientation;
@@ -56,6 +57,7 @@ public class MultiSplitDockableContainer extends JPanel {
         } else
             defaultAggregationPosition = AggregationPosition.BOTTOM;
         this.models = new Hashtable<String, byte[]>();
+        this.useAlwaysContentWrapper = false;
 
         setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
     }
@@ -79,6 +81,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
         String dockableId = dockable.getId();
 
+        // TODO: make this more readable...
         if (aggregationOnDockable == null)
             dockableId = dockableId + ((aggregationPosition != null) ? aggregationPosition.toString() : "");
         else
@@ -100,7 +103,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
         if (entries.size() == 0) {
             resetRootComponent();
-            setRootComponent(content);
+            setRootComponent((useAlwaysContentWrapper) ? getComponentWrapper(dockable, content) : content);
         } else {
             byte[] oldModel = (modelKey != null) ? models.get(modelKey) : null;
 
@@ -111,7 +114,9 @@ public class MultiSplitDockableContainer extends JPanel {
             }
 
             if (entries.size() == 1) {
-                Component previousContent = getRootComponent();
+                Component previousContent = (useAlwaysContentWrapper)
+                                            ? getWrappedComponent((Container) getRootComponent())
+                                            : getRootComponent();
                 resetRootComponent();
 
                 if (aggregationOnDockable != null && (aggregationPosition == null || invalidAggregationPosition)) {
@@ -417,14 +422,25 @@ public class MultiSplitDockableContainer extends JPanel {
             if (leafName == null) {
                 removeComponentWrapper(getRootComponent(),
                                        dockable);
-                setRootComponent(getWrappedComponent((Container) getRootComponent()));
+
+                if (useAlwaysContentWrapper) {
+                    setRootComponent(getComponentWrapper(entries.keySet().iterator().next(),
+                                                         getWrappedComponent((Container) getRootComponent())));
+                } else
+                    setRootComponent(getWrappedComponent((Container) getRootComponent()));
             } else {
                 Component c = multiSplitPane.getMultiSplitLayout().getChildMap().get(leafName);
                 multiSplitPane.remove(c);
-                // obtain the component remained.
-                c = getWrappedComponent((Container) multiSplitPane.getComponent(0));
-                multiSplitPane.removeAll();
 
+                if (useAlwaysContentWrapper) {
+                    c = getComponentWrapper(entries.keySet().iterator().next(),
+                                            getWrappedComponent((Container) multiSplitPane.getComponent(0)));
+                    multiSplitPane.removeAll();
+                } else {
+                    // obtain the component remained.
+                    c = getWrappedComponent((Container) multiSplitPane.getComponent(0));
+                    multiSplitPane.removeAll();
+                }
                 setRootComponent(c);
             }
             SwingUtil.repaint(this);
@@ -615,6 +631,29 @@ public class MultiSplitDockableContainer extends JPanel {
 
     public void setStoreLayout(boolean storeLayout) {
         this.storeLayout = storeLayout;
+    }
+
+    public boolean isUseAlwaysContentWrapper() {
+        return useAlwaysContentWrapper;
+    }
+
+    public void setUseAlwaysContentWrapper(boolean useAlwaysContentWrapper) {
+        if (this.useAlwaysContentWrapper == useAlwaysContentWrapper)
+            return;
+        this.useAlwaysContentWrapper = useAlwaysContentWrapper;
+
+        if (useAlwaysContentWrapper) {
+            if (entries.size() == 1) {
+                setRootComponent(getComponentWrapper(entries.keySet().iterator().next(),
+                                                     getRootComponent()));
+                SwingUtil.repaint(this);
+            }
+        } else {
+            if (entries.size() == 1) {
+                setRootComponent(getWrappedComponent((Container) getRootComponent()));
+                SwingUtil.repaint(this);
+            }
+        }
     }
 
 
