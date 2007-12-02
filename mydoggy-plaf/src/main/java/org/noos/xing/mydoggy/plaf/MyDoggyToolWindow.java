@@ -383,7 +383,7 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     public void setType(ToolWindowType type) {
         if (type == ToolWindowType.EXTERN)
-            throw new IllegalArgumentException("Cannot call this method using that paramenter.");
+            throw new IllegalArgumentException("Invalid type. [type :" + type + "]");
 
         if (this.type == ToolWindowType.EXTERN)
             descriptor.getManager().removeIfDockableDelegator(this);
@@ -447,7 +447,7 @@ public class MyDoggyToolWindow implements ToolWindow {
                 return;
 
             if (type == ToolWindowType.FLOATING_FREE)
-                throw new IllegalArgumentException("Cannot call this method if the toolwindow has type FLOATING_FREE");
+                throw new IllegalArgumentException("Cannot call this method if the toolwindow has type FLOATING_FREE,");
 
             if (this.representativeAnchorButtonVisible == visible)
                 return;
@@ -506,7 +506,7 @@ public class MyDoggyToolWindow implements ToolWindow {
                         addTabInternal(tab);
                 }
             } else
-                throw new IllegalArgumentException("Invalid docable");
+                throw new IllegalArgumentException("Dockable not yet supported,");
 
             return result;
         }
@@ -575,7 +575,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         else if (descriptorClass.isAssignableFrom(FloatingTypeDescriptor.class))
             return (T) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
         else
-            throw new IllegalArgumentException("Cannot reconize the class type");
+            throw new IllegalArgumentException("Cannot recognize the class type. [class : " + descriptorClass + "]");
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {

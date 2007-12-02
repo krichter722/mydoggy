@@ -135,7 +135,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
                 }
             });
         } else
-            throw new IllegalStateException("Can stay only on a RootPaneContainer");
+            throw new IllegalStateException("Can stay only on a RootPaneContainer.");
     }
 
     protected void initListeners() {

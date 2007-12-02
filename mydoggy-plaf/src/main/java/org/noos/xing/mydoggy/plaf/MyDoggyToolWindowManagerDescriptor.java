@@ -182,7 +182,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
             case MOST_RECENT:
                 return this;
             default:
-                throw new IllegalArgumentException("There isn't any manager for mode : " + pushAwayMode);
+                throw new IllegalArgumentException("There isn't any manager for mode. [mode : " + pushAwayMode + "]");
         }
     }
 
@@ -261,7 +261,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
 
     public void append(ToolWindowAnchor... anchors) {
         if (anchors == null)
-            throw new NullPointerException("anchors cannot be null");
+            throw new NullPointerException("anchors cannot be null.");
 
         for (ToolWindowAnchor anchor : anchors) {
             addMostRecentAnchor(anchor);

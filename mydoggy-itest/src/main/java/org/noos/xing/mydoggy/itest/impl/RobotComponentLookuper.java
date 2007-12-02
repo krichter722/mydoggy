@@ -41,7 +41,7 @@ public class RobotComponentLookuper implements ComponentLookuper {
         }
         if (result != null)
             return result;
-        throw new IllegalStateException("Cannot find any components...");
+        throw new IllegalStateException("Cannot find any components using the passed filter [filter : " + componentFilter + "]");
     }
 
 

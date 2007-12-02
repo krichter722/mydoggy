@@ -287,7 +287,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                     slidingTypeDescriptor = new DefaultSlidingTypeDescriptor();
                 return slidingTypeDescriptor;
         }
-        throw new IllegalStateException("Doen't exist a TypeDescriptor for : " + type);
+        throw new IllegalStateException("Doen't exist a TypeDescriptor for. [type :" + type + "]");
     }
 
     public void addToolWindowManagerListener(ToolWindowManagerListener listener) {

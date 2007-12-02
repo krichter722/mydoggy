@@ -67,11 +67,15 @@ public class JModalWindow extends JWindow {
 
 
     public void setModal(boolean modal) {
-        modalToWindow = modal ? getOwner() : null;
+        synchronized (JModalWindow.this) {
+            modalToWindow = modal ? getOwner() : null;
+        }
     }
 
     public boolean isModal() {
-        return modalToWindow != null;
+        synchronized (JModalWindow.this) {
+            return modalToWindow != null;
+        }
     }
 
 
