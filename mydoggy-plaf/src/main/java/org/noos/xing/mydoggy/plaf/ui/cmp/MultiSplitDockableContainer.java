@@ -37,6 +37,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
     protected boolean storeLayout;
     protected boolean useAlwaysContentWrapper;
+    protected boolean jumpResetBounds;
 
     public MultiSplitDockableContainer(MyDoggyToolWindowManager toolWindowManager, int orientation) {
         this.orientation = orientation;
@@ -135,6 +136,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
                     if (storeLayout && oldModel != null) {
                         multiSplitPaneModelRoot = decode(oldModel);
+                        jumpResetBounds = true;
 
                         List<MultiSplitLayout.Node> children = multiSplitPaneModelRoot.getChildren();
                         leaf = (DockableLeaf) children.get(0);
@@ -194,6 +196,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
                 if (storeLayout && oldModel != null) {
                     multiSplitPaneModelRoot = decode(oldModel);
+                    jumpResetBounds = true;
                 } else {
                     // Modify model
 
@@ -564,7 +567,6 @@ public class MultiSplitDockableContainer extends JPanel {
 
             if (!checkModel())
                 System.out.println("Check model fail. removeDockable end");
-            resetBounds();
             repaintMultiSplit();
         }
     }
@@ -602,7 +604,6 @@ public class MultiSplitDockableContainer extends JPanel {
             }
         }
 */
-
         repaintMultiSplit();
     }
 
@@ -704,6 +705,8 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
     protected void validateModel(MultiSplitLayout.Split split) {
+        if  (split == null)
+            return;
         List<MultiSplitLayout.Node> children = split.getChildren();
 
         double sum = 0.0;
@@ -730,10 +733,6 @@ public class MultiSplitDockableContainer extends JPanel {
             }
             multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
         }
-    }
-
-    protected void repaintMultiSplit() {
-        SwingUtilities.invokeLater(repaintRunnable);
     }
 
     protected void forceWeight(List<MultiSplitLayout.Node> children) {
@@ -785,6 +784,10 @@ public class MultiSplitDockableContainer extends JPanel {
             }
         }
         return true;
+    }
+
+    protected void repaintMultiSplit() {
+        SwingUtilities.invokeLater(repaintRunnable);
     }
 
     protected MultiSplitLayout.Split getFirstSplit(List<MultiSplitLayout.Node> children) {
@@ -912,7 +915,10 @@ public class MultiSplitDockableContainer extends JPanel {
 
         public void run() {
             checkModel();
-            resetBounds();
+            if (jumpResetBounds) {
+                jumpResetBounds = false;
+            } else
+                resetBounds();
             multiSplitPane.validate();
             multiSplitPane.getMultiSplitLayout().setFloatingDividers(false);
         }

@@ -34,6 +34,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Hashtable;
 import java.util.Map;
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -74,7 +76,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         for (ContentUI contentUI : contentUIMap.values()) {
             contentUI.setCloseable(closeable);
         }
-        
+
         fireContentManagerUIProperty("closeable", old, closeable);
     }
 
@@ -191,7 +193,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         return contentManagerUIListeners.getListeners(ContentManagerUIListener.class);
     }
 
-    
+
     public PlafContentManagerUI install(ContentManagerUI oldContentManagerUI, ToolWindowManager manager) {
         // Init managers
         this.toolWindowManager = (MyDoggyToolWindowManager) manager;
@@ -344,7 +346,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 } else if (toolWindowManager.getMainContent() != content.getComponent())
                     throw new IllegalStateException("Invalid content ui state.");
             }
-        } 
+        }
     }
 
     public JPopupMenu getPopupMenu() {
@@ -370,7 +372,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         contentUIMap = new Hashtable<Content, TabbedContentUI>();
 
         final JTabbedContentPane tabbedContentPane = new JTabbedContentPane();
-        tabbedContentPane .addChangeListener(new ChangeListener() {
+        tabbedContentPane.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 if (!valueAdjusting && !contentValueAdjusting) {
                     int selectedIndex = tabbedContentPane.getSelectedIndex();
@@ -395,6 +397,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             }
         });
         tabbedContentPane.addTabbedContentPaneListener(new TabbedContentPaneListener() {
+            public ByteArrayOutputStream tmpWorkspace;
+
             public void tabbedContentPaneEventFired(TabbedContentPaneEvent event) {
                 Content content = event.getContent();
                 switch (event.getActionId()) {
@@ -427,6 +431,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             internalPropertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
             internalPropertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
             internalPropertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("maximized", new MaximizedListener());
 
             SwingUtil.registerDragGesture(tabbedContentPane,
                                           new TabbedContentManagerDragGesture());
@@ -435,7 +440,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
     protected void addUIForContent(Content content, Object... constaints) {
         contentUIMap.put(content, new MyDoggyTabbedContentUI(content));
-                
+
         if (!showAlwaysTab && tabbedContentPane.getTabCount() == 0 && (contentValueAdjusting || toolWindowManager.getMainContent() == null)) {
             detachedContentUIMap.put(content, getContentUI(content));
             toolWindowManager.setMainContent(content.getComponent());
@@ -610,7 +615,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 dialog.setTitle((String) evt.getNewValue());
             } else {
                 int index = tabbedContentPane.indexOfContent(content);
-                if (index != -1) 
+                if (index != -1)
                     tabbedContentPane.setTitleAt(index, (String) evt.getNewValue());
                 else if (toolWindowManager.getMainContent() != content.getComponent())
                     throw new IllegalStateException();
@@ -635,6 +640,23 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         }
     }
 
+    protected class MaximizedListener implements PropertyChangeListener {
+        protected ByteArrayOutputStream tmpWorkspace;
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            if ((Boolean) evt.getNewValue()) {
+                toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
+                toolWindowManager.getToolWindowGroup().setVisible(false);
+            } else {
+                if (tmpWorkspace != null) {
+                    toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
+                                                                     PersistenceDelegate.MergePolicy.UNION);
+                    tmpWorkspace = null;
+                }
+            }
+        }
+    }
+
     protected class DetachedListener implements PropertyChangeListener {
         private Frame parentFrame;
 
@@ -653,7 +675,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                     detachedContentUIMap.put(content, contentUI);
                 }
 
-                final JDialog dialog = new JDialog(resourceManager.getBoolean("dialog.owner.enabled", true) ?  parentFrame : null,
+                final JDialog dialog = new JDialog(resourceManager.getBoolean("dialog.owner.enabled", true) ? parentFrame : null,
                                                    false);
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -761,10 +783,10 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             int index = tabbedContentPane.indexAtLocation(origin.x, origin.y);
             if (index != -1) {
                 Content content = tabbedContentPane.getContentAt(index);
-                if (content.getDockableDelegator() !=null) {
+                if (content.getDockableDelegator() != null) {
                     dge.startDrag(Cursor.getDefaultCursor(),
                                   new MyDoggyTransferable(MyDoggyTransferable.CONTENT_ID_DF,
-                                                         content.getId()),
+                                                          content.getId()),
                                   this);
 
                     // Setup ghostImage

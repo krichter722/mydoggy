@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.PersistenceDelegate;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
@@ -22,6 +23,8 @@ import java.awt.event.*;
 import java.beans.*;
 import java.util.Hashtable;
 import java.util.Map;
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -252,7 +255,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
                     internalFrame.setSelected(selected);
                     lastSelected = (PlafContent) content;
-                    
+
                     valueAdjusting = false;
                 } catch (PropertyVetoException e) {
                     e.printStackTrace();
@@ -275,12 +278,12 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     protected void initComponents() {
         if (desktopPane == null) {
             /// Init just once
-            
+
             detachedContentUIMap = new Hashtable<Content, DesktopContentUI>();
             desktopPane = (JDesktopPane) toolWindowManager.getResourceManager().createComponent(
                     MyDoggyKeySpace.DESKTOP_CONTENT_PANE, toolWindowManager
             );
-            setupActions();            
+            setupActions();
         }
     }
 
@@ -298,6 +301,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             internalPropertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
             internalPropertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
             internalPropertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("maximized", new MaximizedListener());
 
             desktopPane.addMouseListener(new PopupMouseListener());
         }
@@ -563,6 +567,35 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         }
     }
 
+    protected class MaximizedListener implements PropertyChangeListener {
+        protected ByteArrayOutputStream tmpWorkspace;
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            Content content = (Content) evt.getSource();
+
+            if ((Boolean) evt.getNewValue()) {
+                toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
+                toolWindowManager.getToolWindowGroup().setVisible(false);
+                try {
+                    ((DesktopContentFrame) getContentUI(content)).setMaximum(true);
+                } catch (PropertyVetoException e) {
+                    e.printStackTrace();                    // TODO:
+                }
+            } else {
+                if (tmpWorkspace != null) {
+                    toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
+                                                                     PersistenceDelegate.MergePolicy.UNION);
+                    try {
+                        ((DesktopContentFrame) getContentUI(content)).setMaximum(false);
+                    } catch (PropertyVetoException e) {
+                        e.printStackTrace();
+                    }
+                    tmpWorkspace = null;
+                }
+            }
+        }
+    }
+
     protected class DetachedListener implements PropertyChangeListener {
         protected Frame parentFrame;
 
@@ -681,13 +714,22 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 for (Content content : contentManager.getContents()) {
                     JMenu menu = new JMenu(content.getTitle());
 
-                    JMenuItem detach = new JMenuItem("Detach");
+                    JMenuItem detach = new JMenuItem(resourceManager.getString("@@tab.content.detach"));
                     detach.putClientProperty("content", content);
                     detach.setActionCommand("Detach");
                     detach.addActionListener(this);
                     detach.setEnabled(getContentUI(content).isDetachable() && !content.isDetached());
-
                     menu.add(detach);
+
+                    JMenuItem maximize = new JMenuItem();
+                    maximize.putClientProperty("content", content);
+                    maximize.setActionCommand("Maximize");
+                    maximize.setText(content.isMaximized() ?
+                                     resourceManager.getString("@@tabbed.page.restore") :
+                                     resourceManager.getString("@@tabbed.page.maximize")
+                    );
+                    maximize.addActionListener(this);
+                    menu.add(maximize);
 
                     popupMenu.add(menu);
                 }
@@ -705,6 +747,11 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 Content content = ((Content) c.getClientProperty("content"));
                 content.setDetached(true);
                 fireContentUIDetached(getContentUI(content));
+            } else if ("Maximize".equals(actionCommand)) {
+                JComponent c = (JComponent) e.getSource();
+
+                Content content = ((Content) c.getClientProperty("content"));
+                content.setMaximized(!content.isMaximized());
             }
         }
     }

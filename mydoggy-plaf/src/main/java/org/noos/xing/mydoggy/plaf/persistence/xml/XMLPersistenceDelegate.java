@@ -399,7 +399,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
         public boolean isAttributePresent(Element element, String name) {
             String attr = element.getAttribute(name);
-            return attr == null || "".equals(attr.trim());
+            return attr != null && !"".equals(attr.trim());
         }
     }
 
