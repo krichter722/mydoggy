@@ -182,6 +182,20 @@ public interface Content extends Dockable {
     int getMnemonic();
 
     /**
+     * TODO
+     * @param maximized
+     * @since 1.4.0
+     */
+    void setMaximized(boolean maximized);
+
+    /**
+     *
+     * @return
+     * @since 1.4.0
+     */
+    boolean isMaximized();
+
+    /**
      * Returns the content ui for this content based on the current installed ContentManagerUI.
      *
      * @return the content ui instance for this content.  

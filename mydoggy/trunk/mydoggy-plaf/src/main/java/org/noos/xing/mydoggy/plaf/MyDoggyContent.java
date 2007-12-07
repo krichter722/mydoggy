@@ -14,24 +14,25 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyContent implements PlafContent {
-    private transient MyDoggyContentManager contentManager;
+    protected transient MyDoggyContentManager contentManager;
 
-    private String id;
-    private String title;
-    private Color foreground;
-    private Icon icon;
-    private Icon disabledIcon;
-    private String toolTipText;
-    private boolean enabled;
-    private transient Component component;
-    private JPopupMenu popupMenu;
-    private boolean detached;
-    private int mnemonic;
-    private boolean selected;
-    private transient Dockable dockableDelegator;
+    protected String id;
+    protected String title;
+    protected Color foreground;
+    protected Icon icon;
+    protected Icon disabledIcon;
+    protected String toolTipText;
+    protected boolean enabled;
+    protected transient Component component;
+    protected JPopupMenu popupMenu;
+    protected boolean detached;
+    protected int mnemonic;
+    protected boolean selected;
+    protected boolean maximized;
+    protected transient Dockable dockableDelegator;
 
-    private EventListenerList uiListeners;
-    private EventListenerList listeners;
+    protected EventListenerList uiListeners;
+    protected EventListenerList listeners;
 
 
     public MyDoggyContent(MyDoggyContentManager contentManager,
@@ -48,6 +49,7 @@ public class MyDoggyContent implements PlafContent {
         this.enabled = true;
         this.mnemonic = -1;
         this.selected = false;
+        this.maximized = false;
         this.dockableDelegator = dockableDelegator;
 
         this.listeners = new EventListenerList();
@@ -162,6 +164,9 @@ public class MyDoggyContent implements PlafContent {
         if (this.detached == detached)
             return;
 
+        if (detached)
+            setMaximized(false);
+
         boolean old = this.detached;
         this.detached = detached;
 
@@ -184,6 +189,20 @@ public class MyDoggyContent implements PlafContent {
 
     public int getMnemonic() {
         return mnemonic;
+    }
+
+    public void setMaximized(boolean maximized) {
+        if (this.maximized == maximized)
+            return;
+
+        boolean old = this.maximized;
+        this.maximized = maximized;
+
+        firePropertyChange("maximized", old, maximized);
+    }
+
+    public boolean isMaximized() {
+        return maximized;
     }
 
     public ContentUI getContentUi() {

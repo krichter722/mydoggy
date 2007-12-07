@@ -199,43 +199,20 @@ public class JTabbedContentPane extends JTabbedPane {
     }
 
 
-    protected void fireCloseTabEvent(MouseEvent e, Content content) {
+    protected void fireCloseTabEvent(Content content) {
         TabbedContentPaneEvent event = new TabbedContentPaneEvent(this,
                                                                   TabbedContentPaneEvent.ActionId.ON_CLOSE,
-                                                                  content, e, null);
+                                                                  content);
         for (TabbedContentPaneListener tabListener : getListeners(TabbedContentPaneListener.class))
             tabListener.tabbedContentPaneEventFired(event);
     }
 
-    protected void fireDetachTabEvent(MouseEvent e, Content content) {
+    protected void fireDetachTabEvent(Content content) {
         TabbedContentPaneEvent event = new TabbedContentPaneEvent(this,
                                                                   TabbedContentPaneEvent.ActionId.ON_DETACH,
-                                                                  content, e, null);
+                                                                  content);
         for (TabbedContentPaneListener tabListener : getListeners(TabbedContentPaneListener.class))
             tabListener.tabbedContentPaneEventFired(event);
-    }
-
-    protected void fireMaximizeTabEvent(MouseEvent e, Content content) {
-        TabbedContentPaneEvent event = new TabbedContentPaneEvent(this,
-                                                                  TabbedContentPaneEvent.ActionId.ON_MAXIMIZE,
-                                                                  content, e, null);
-        for (TabbedContentPaneListener tabListener : getListeners(TabbedContentPaneListener.class))
-            tabListener.tabbedContentPaneEventFired(event);
-    }
-
-    protected void setMaximized(boolean maximize) {
-        if (maximize) {
-            toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
-            toolWindowManager.getToolWindowGroup().setVisible(false);
-        } else {
-            toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                                                             PersistenceDelegate.MergePolicy.UNION);
-            tmpWorkspace = null;
-        }
-    }
-
-    protected boolean isMaximized() {
-        return tmpWorkspace != null;
     }
 
 
@@ -252,17 +229,17 @@ public class JTabbedContentPane extends JTabbedPane {
                 Content content = getContentAt(mouseOverTab);
 
                 if (isDetachFired(content.getContentUi(), e.getPoint())) {
-                    fireDetachTabEvent(e, content);
+                    fireDetachTabEvent(content);
                     return;
                 }
 
                 if (isCloseFired(content.getContentUi(), e.getPoint())) {
-                    fireCloseTabEvent(e, content);
+                    fireCloseTabEvent(content);
                     return;
                 }
 
                 if (e.getClickCount() == 2) {
-                    JTabbedContentPane.this.setMaximized(!JTabbedContentPane.this.isMaximized());
+                    content.setMaximized(!content.isMaximized());
                 } else {
                     if (SwingUtilities.isRightMouseButton(e))
                         showPopupMenu(e);
@@ -338,7 +315,7 @@ public class JTabbedContentPane extends JTabbedPane {
                 stdPopupMenu = new JPopupMenu("Content Page Popup");
                 stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.close")) {
                     public void actionPerformed(ActionEvent e) {
-                        JTabbedContentPane.this.fireCloseTabEvent(mouseEvent, contentAt);
+                        JTabbedContentPane.this.fireCloseTabEvent(contentAt);
                     }
                 })).setEnabled(contentAt.getContentUi().isCloseable());
 
@@ -346,7 +323,7 @@ public class JTabbedContentPane extends JTabbedPane {
                     public void actionPerformed(ActionEvent e) {
                         for (Content content : toolWindowManager.getContentManager().getContents()) {
                             if (content.getContentUi().isCloseable())
-                                JTabbedContentPane.this.fireCloseTabEvent(mouseEvent, content);
+                                JTabbedContentPane.this.fireCloseTabEvent(content);
                         }
                     }
                 }));
@@ -355,20 +332,20 @@ public class JTabbedContentPane extends JTabbedPane {
                     public void actionPerformed(ActionEvent e) {
                         for (Content content : toolWindowManager.getContentManager().getContents()) {
                             if (content != contentAt && content.getContentUi().isCloseable())
-                                JTabbedContentPane.this.fireCloseTabEvent(mouseEvent, content);
+                                JTabbedContentPane.this.fireCloseTabEvent(content);
                         }
                     }
                 }));
                 stdPopupMenu.addSeparator();
                 stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.detach")) {
                     public void actionPerformed(ActionEvent e) {
-                        JTabbedContentPane.this.fireDetachTabEvent(mouseEvent, contentAt);
+                        JTabbedContentPane.this.fireDetachTabEvent(contentAt);
                     }
                 })).setEnabled(contentAt.getContentUi().isDetachable());
 
-                MaximizeAction maximizeAction = new MaximizeAction();
+                MaximizeAction maximizeAction = new MaximizeAction(contentAt);
                 stdPopupMenu.add(maximizeAction);
-                maximizeAction.putValue(Action.NAME, JTabbedContentPane.this.isMaximized() ?
+                maximizeAction.putValue(Action.NAME, contentAt.isMaximized() ?
                                                      resourceManager.getString("@@tabbed.page.restore") :
                                                      resourceManager.getString("@@tabbed.page.maximize")
                 );
@@ -380,12 +357,15 @@ public class JTabbedContentPane extends JTabbedPane {
         }
 
         class MaximizeAction extends AbstractAction {
-            public MaximizeAction() {
+            Content content;
+
+            public MaximizeAction(Content content) {
                 super(resourceManager.getString("@@tabbed.page.maximize"));
+                this.content = content;
             }
 
             public void actionPerformed(ActionEvent e) {
-                JTabbedContentPane.this.setMaximized(!JTabbedContentPane.this.isMaximized());
+                content.setMaximized(!content.isMaximized());
             }
         }
 

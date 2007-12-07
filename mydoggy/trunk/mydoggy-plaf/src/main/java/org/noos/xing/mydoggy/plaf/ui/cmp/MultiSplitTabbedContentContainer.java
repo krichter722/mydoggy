@@ -36,11 +36,11 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
     public Component[] getTabbedComponents() {
         Component component = contentPanel.getComponent();
         if (component instanceof MultiSplitPane) {
-            return ((MultiSplitPane)component).getComponents();            
+            return ((MultiSplitPane) component).getComponents();
         } else
             return new Component[]{component};
     }
-    
+
     protected Container getComponentWrapper(Dockable dockable, Component component) {
         JTabbedContentPane tabbedPane = new JTabbedContentPane();
         tabbedPane.setToolWindowManager(toolWindowManager);
@@ -88,7 +88,6 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
     protected void resetRootComponent() {
         contentPanel.resetComponent();
     }
-
 
 
     protected class DockablePanel extends JPanel {
@@ -237,7 +236,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                         else
                             onDockable = ((DockablePanel) dockableTabbedPane.getComponentAt(0)).getDockable();
                     }
-                } else  {
+                } else {
                     onDockable = null;
                     indexAtLocation = -1;
                 }
@@ -268,8 +267,8 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                             Content content = contentManager.getContent(
                                     dtde.getTransferable().getTransferData(MyDoggyTransferable.CONTENT_ID_DF)
                             );
-                            
-                            if (content != null ) {
+
+                            if (content != null) {
                                 boolean rejectDrop = false;
                                 if (content == onDockable) {
                                     if (indexAtLocation == -1) {
@@ -287,15 +286,15 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
                                 if (rejectDrop) {
                                     dtde.dropComplete(false);
-                                } else  {
+                                } else {
                                     ContentUI contentUI = contentManager.getContentManagerUI().getContentUI(content);
 
                                     removeDockable(content);
                                     addDockable(content,
                                                 content.getComponent(),
-                                               onDockable,
-                                               indexAtLocation,
-                                               (dragAnchor == null) ? null : AggregationPosition.valueOf(dragAnchor.toString()));
+                                                onDockable,
+                                                indexAtLocation,
+                                                (dragAnchor == null) ? null : AggregationPosition.valueOf(dragAnchor.toString()));
 
                                     dtde.dropComplete(true);
                                 }

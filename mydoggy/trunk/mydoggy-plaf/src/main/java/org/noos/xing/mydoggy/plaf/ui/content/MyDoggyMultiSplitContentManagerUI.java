@@ -29,6 +29,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Hashtable;
 import java.util.Map;
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -343,6 +345,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
             internalPropertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
             internalPropertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
             internalPropertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
+            internalPropertyChangeSupport.addPropertyChangeListener("maximized", new MaximizedListener());
 
             final PropertyChangeListener focusOwnerPropertyChangeListener = new PropertyChangeListener() {
 
@@ -629,6 +632,24 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                         return;
                 }
                 throw new IllegalStateException("Invalid content ui state.");
+            }
+        }
+    }
+
+    protected class MaximizedListener implements PropertyChangeListener {
+        protected ByteArrayOutputStream tmpWorkspace;
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            // TODO: must be content sensitive...
+            if ((Boolean) evt.getNewValue()) {
+                toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
+                toolWindowManager.getToolWindowGroup().setVisible(false);
+            } else {
+                if (tmpWorkspace != null) {
+                    toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
+                                                                     PersistenceDelegate.MergePolicy.UNION);
+                    tmpWorkspace = null;
+                }
             }
         }
     }
