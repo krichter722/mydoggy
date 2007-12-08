@@ -198,6 +198,7 @@ public class ToolWindowDropTarget extends DropTarget {
                             Content content = toolWindowManager.getContentManager().getContent(
                                     dtde.getTransferable().getTransferData(MyDoggyTransferable.CONTENT_ID_DF)
                             );
+
                             if (content != null) {
                                 toolWindowManager.getContentManager().removeContent(content);
 
@@ -252,12 +253,12 @@ public class ToolWindowDropTarget extends DropTarget {
                                         } finally {
                                            toolWindow.setAggregateMode(oldAggregateMode);
                                         }
+                                        dtde.dropComplete(true);
                                     }
                                 } else {
-                                    // TODO : Need a tool window for delegation...
+                                    dtde.dropComplete(false);                                    
                                 }
 
-                                dtde.dropComplete(true);
                             } else
                                 dtde.dropComplete(false);
                         } catch (Exception e) {

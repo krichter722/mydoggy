@@ -287,6 +287,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             contentAttributes.addAttribute(null, "detached", null, null, String.valueOf(content.isDetached()));
             contentAttributes.addAttribute(null, "enabled", null, null, String.valueOf(content.isEnabled()));
             contentAttributes.addAttribute(null, "selected", null, null, String.valueOf(content.isSelected()));
+            contentAttributes.addAttribute(null, "maximized", null, null, String.valueOf(content.isMaximized()));
 
             writer.dataElement("content", contentAttributes);
         }
@@ -349,9 +350,6 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
     }
 
-    /**
-     * @todo: extend the usage of this class
-     */
     public abstract class ElementParserAdapter implements ElementParser {
 
         public Element getElement(Element root, String name) {
@@ -696,6 +694,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             NodeList contents = element.getElementsByTagName("content");
 
             Content selectedContent = null;
+            Content maximizedContent = null;
+
             for (int i = 0, size = contents.getLength(); i < size; i++) {
                 Element contentElement = (Element) contents.item(i);
                 Content content = toolWindowManager.getContentManager().getContent(contentElement.getAttribute("id"));
@@ -703,14 +703,22 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 if (content != null) {
                     if (getBoolean(contentElement, "selected", false))
                         selectedContent = content;
+                    if (getBoolean(contentElement, "maximized", false))
+                        maximizedContent = content;
+
 
                     content.setEnabled(getBoolean(contentElement, "enabled", true));
                     content.setDetached(getBoolean(contentElement, "detached", false));
+
+                    content.setMaximized(false);
                 }
             }
 
             if (selectedContent != null)
                 selectedContent.setSelected(true);
+            
+            if (maximizedContent != null)
+                maximizedContent.setMaximized(true);
 
             return false;
         }
