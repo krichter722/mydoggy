@@ -579,7 +579,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 try {
                     ((DesktopContentFrame) getContentUI(content)).setMaximum(true);
                 } catch (PropertyVetoException e) {
-                    e.printStackTrace();                    // TODO:
+                    throw new RuntimeException(e.getMessage(), e);
                 }
             } else {
                 if (tmpWorkspace != null) {
@@ -588,7 +588,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                     try {
                         ((DesktopContentFrame) getContentUI(content)).setMaximum(false);
                     } catch (PropertyVetoException e) {
-                        e.printStackTrace();
+                        throw new RuntimeException(e.getMessage(), e);
                     }
                     tmpWorkspace = null;
                 }

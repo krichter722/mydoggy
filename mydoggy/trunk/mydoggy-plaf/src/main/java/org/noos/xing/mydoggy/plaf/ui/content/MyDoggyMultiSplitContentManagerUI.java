@@ -638,16 +638,40 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 
     protected class MaximizedListener implements PropertyChangeListener {
         protected ByteArrayOutputStream tmpWorkspace;
+        protected boolean valudAdj;
 
         public void propertyChange(PropertyChangeEvent evt) {
-            // TODO: must be content sensitive...
+            if (valudAdj)
+                return;
+            Content content = (Content) evt.getSource();
+
             if ((Boolean) evt.getNewValue()) {
+                if (tmpWorkspace != null) {
+                    // Restore...
+                    multiSplitContainer.setMaximizedDockable(null);
+                    valudAdj = true;
+                    try {
+                        toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
+                                                                         PersistenceDelegate.MergePolicy.UNION);
+                    } finally {
+                        valudAdj = false;
+                    }
+                    tmpWorkspace = null;
+                }
+
                 toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
                 toolWindowManager.getToolWindowGroup().setVisible(false);
+                multiSplitContainer.setMaximizedDockable(content);
             } else {
                 if (tmpWorkspace != null) {
-                    toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                                                                     PersistenceDelegate.MergePolicy.UNION);
+                    multiSplitContainer.setMaximizedDockable(null);
+                    valudAdj = true;
+                    try {
+                        toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
+                                                                         PersistenceDelegate.MergePolicy.UNION);
+                    } finally {
+                        valudAdj = false;
+                    }
                     tmpWorkspace = null;
                 }
             }
@@ -755,6 +779,9 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     }
 
     protected class MultiSplitContainer extends MultiSplitTabbedContentContainer {
+        protected Component oldRoot;
+        protected DockablePanel oldParent;
+        protected Dockable currentMaximizedDockable;
 
         public MultiSplitContainer(MyDoggyToolWindowManager toolWindowManager) {
             super(toolWindowManager);
@@ -762,7 +789,28 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 
 
         public void setRootComponent(Component component) {
-            super.setRootComponent(component);    
+            super.setRootComponent(component);
+        }
+
+
+        public void setMaximizedDockable(Dockable dockable) {
+            if (dockable == null) {
+                if (oldRoot != null) {
+                    oldParent.setComponent(currentMaximizedDockable.getComponent());
+                    setRootComponent(oldRoot);
+
+                    this.oldRoot = null;
+                    this.oldParent = null;
+                    this.currentMaximizedDockable = null;
+                }                
+            } else {
+                this.currentMaximizedDockable = dockable;
+                this.oldRoot = getRootComponent();
+                this.oldParent = (DockablePanel) dockable.getComponent().getParent();
+
+                setRootComponent(getComponentWrapper(dockable, dockable.getComponent()));
+            }
+            SwingUtil.repaint(this);
         }
 
         public void setTabPlacement(TabPlacement tabPlacement) {

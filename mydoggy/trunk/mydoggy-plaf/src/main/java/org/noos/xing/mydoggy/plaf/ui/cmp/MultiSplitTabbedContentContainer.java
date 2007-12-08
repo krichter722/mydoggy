@@ -95,12 +95,17 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
         public DockablePanel(Dockable dockable, Component component) {
             this.dockable = dockable;
+
             setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
             add(component, "0,0,FULL,FULL");
         }
 
         public Dockable getDockable() {
             return dockable;
+        }
+
+        public void setComponent(Component component) {
+            add(component, "0,0,FULL,FULL");
         }
     }
 
