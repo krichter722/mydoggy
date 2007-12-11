@@ -9,8 +9,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
-
 enum MAction {
 	MYDOGGY_SIMPLE("MyDoggy Simple"),
 	MYDOGGY_UNACTIV("MyDoggy Unactiv"),
