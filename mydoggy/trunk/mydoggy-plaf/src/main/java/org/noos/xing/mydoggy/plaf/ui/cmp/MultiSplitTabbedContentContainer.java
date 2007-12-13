@@ -1,21 +1,21 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
+import org.jdesktop.swingx.MultiSplitPane;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
-import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
-import org.jdesktop.swingx.MultiSplitPane;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.dnd.*;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -56,7 +56,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
     protected Component getWrappedComponent(Container container) {
         JTabbedPane tabbedPane = (JTabbedPane) container;
-        return tabbedPane.getComponentAt(0);
+        return ((DockablePanel) tabbedPane.getComponentAt(0)).getComponent(0);
     }
 
     protected void addToComponentWrapper(Component wrapperSource, Dockable dockable,

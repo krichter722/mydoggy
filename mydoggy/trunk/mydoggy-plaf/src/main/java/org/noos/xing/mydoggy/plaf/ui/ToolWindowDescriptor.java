@@ -138,20 +138,20 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
             String labelText = getResourceManager().getUserString(toolWindow.getId());
             String toolRepresentativeAnchorText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
-                                         ? toolWindow.getIndex() + " : " + labelText
-                                         : labelText;
+                                                  ? toolWindow.getIndex() + " : " + labelText
+                                                  : labelText;
 
             switch (anchor) {
-                case BOTTOM :
-                case TOP :
+                case BOTTOM:
+                case TOP:
                     representativeAnchor = new RepresentativeAnchor(toolRepresentativeAnchorText, toolWindow.getIcon(), JLabel.CENTER);
                     break;
-                case LEFT :
+                case LEFT:
                     TextIcon textIcon = new TextIcon(container, toolRepresentativeAnchorText, TextIcon.ROTATE_LEFT);
                     AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolWindow.getIcon(), SwingConstants.VERTICAL);
                     representativeAnchor = new RepresentativeAnchor(compositeIcon, JLabel.CENTER);
                     break;
-                case RIGHT :
+                case RIGHT:
                     textIcon = new TextIcon(container, toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
                     compositeIcon = new AggregateIcon(toolWindow.getIcon(), textIcon, SwingConstants.VERTICAL);
                     representativeAnchor = new RepresentativeAnchor(compositeIcon, JLabel.CENTER);
@@ -204,7 +204,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     }
 
     public void checkIdOnTitleBar() {
-        if (dockedContainer !=  null)  {
+        if (dockedContainer != null) {
             if (isIdVisibleOnTitleBar())
                 dockedContainer.enableIdOnTitleBar();
             else
@@ -361,22 +361,22 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
             String labelText = getResourceManager().getUserString(toolWindow.getId());
             String toolRepresentativeAnchorText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
-                                         ? toolWindow.getIndex() + " : " + labelText
-                                         : labelText;
+                                                  ? toolWindow.getIndex() + " : " + labelText
+                                                  : labelText;
 
             switch (anchor) {
-                case BOTTOM :
-                case TOP :
+                case BOTTOM:
+                case TOP:
                     representativeAnchor.setIcon(toolWindow.getIcon());
                     representativeAnchor.setText(toolRepresentativeAnchorText);
                     break;
-                case LEFT :
+                case LEFT:
                     TextIcon textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getLeftIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_LEFT);
                     AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolWindow.getIcon(), SwingConstants.VERTICAL);
                     representativeAnchor.setText(null);
                     representativeAnchor.setIcon(compositeIcon);
                     break;
-                case RIGHT :
+                case RIGHT:
                     textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getRightIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
                     compositeIcon = new AggregateIcon(toolWindow.getIcon(), textIcon, SwingConstants.VERTICAL);
                     representativeAnchor.setText(null);
@@ -384,6 +384,14 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
                     break;
             }
         }
+    }
+
+    public int getJMenuBarExtraHeight() {
+        JMenuBar jMenuBar = ((RootPaneContainer) getWindowAnchestor()).getRootPane().getJMenuBar();
+
+        if (jMenuBar != null && jMenuBar.isVisible())
+            return jMenuBar.getHeight();
+        return 0;
     }
 
 
