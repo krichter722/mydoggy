@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy.mydoggyset;
 
-import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
@@ -10,13 +9,9 @@ import org.noos.xing.mydoggy.mydoggyset.context.ContentContext;
 import org.noos.xing.mydoggy.mydoggyset.ui.MonitorPanel;
 import org.noos.xing.mydoggy.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.*;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
-import org.noos.xing.mydoggy.plaf.ui.cmp.SimpliedTitleBarButtons;
-import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyDesktopContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
-import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.view.ViewContext;
@@ -108,7 +103,9 @@ public class MyDoggySet {
         JMenu fileMenu = new JMenu("File");
         fileMenu.add(new LoadWorkspaceAction(frame, toolWindowManager));
         fileMenu.add(new StoreWorkspaceAction(frame, toolWindowManager));
+        fileMenu.addSeparator();
         fileMenu.add(new FrameshotAction(frame));
+        fileMenu.add(new FramePieceshotAction(frame));
         fileMenu.addSeparator();
         fileMenu.add(new ExitAction(frame));
 

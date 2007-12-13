@@ -6,11 +6,9 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DragGestureRecognizer;
 import java.awt.dnd.DragSource;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,6 +65,17 @@ public class SwingUtil {
                 component.invalidate();
                 component.validate();
                 component.repaint();
+            }
+        });
+    }
+
+    public static void repaint(final Component component, final Runnable runnable) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                component.invalidate();
+                component.validate();
+                component.repaint();
+                SwingUtilities.invokeLater(runnable);
             }
         });
     }

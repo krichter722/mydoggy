@@ -20,25 +20,32 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
              Cursor.SE_RESIZE_CURSOR, Cursor.SE_RESIZE_CURSOR
             };
 
-    private Cursor lastCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
+    protected Cursor lastCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
 
-    private int dragCursor;
-    private int dragOffsetX;
-    private int dragOffsetY;
-    private int dragWidth;
-    private int dragHeight;
+    protected int dragCursor;
+    protected int dragOffsetX;
+    protected int dragOffsetY;
+    protected int dragWidth;
+    protected int dragHeight;
 
-    private Component floatingContainer;
+    protected Component floatingContainer;
+    protected boolean isWindow;
+
+    protected Dimension minimumSize;
+
 
     public FloatingResizeMouseInputHandler(Component floatingContainer) {
         this.floatingContainer = floatingContainer;
+        this.isWindow = floatingContainer instanceof Window;
+        this.minimumSize = new Dimension(150, 24);
     }
+
 
     public void mousePressed(MouseEvent ev) {
         Point dragWindowOffset = ev.getPoint();
         Component w = (Component) ev.getSource();
 
-        if (floatingContainer instanceof Window)
+        if (isWindow)
             ((Window) floatingContainer).toFront();
 
         dragOffsetX = dragWindowOffset.x;
@@ -74,62 +81,68 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
         if (dragCursor != 0) {
             Rectangle r = floatingContainer.getBounds();
             Rectangle startBounds = new Rectangle(r);
-            Dimension min = floatingContainer.getMinimumSize();
+            Dimension min = minimumSize;
 
             switch (dragCursor) {
                 case Cursor.E_RESIZE_CURSOR:
-                    adjust(r, min, 0, 0, pt.x + (dragWidth - dragOffsetX) -
-                                         r.width, 0);
+                    adjust(r, min,
+                           0, 0,
+                           pt.x + (dragWidth - dragOffsetX) - r.width, 0);
                     break;
                 case Cursor.S_RESIZE_CURSOR:
-                    adjust(r, min, 0, 0, 0, pt.y + (dragHeight - dragOffsetY) -
-                                            r.height);
+                    adjust(r, min, 0,
+                           0, 0,
+                           pt.y + (dragHeight - dragOffsetY) - r.height);
                     break;
                 case Cursor.N_RESIZE_CURSOR:
-                    adjust(r, min, 0, pt.y - dragOffsetY, 0,
+                    adjust(r, min, 0,
+                           pt.y - dragOffsetY, 0,
                            -(pt.y - dragOffsetY));
                     break;
                 case Cursor.W_RESIZE_CURSOR:
-                    adjust(r, min, pt.x - dragOffsetX, 0,
+                    adjust(r, min,
+                           pt.x - dragOffsetX, 0,
                            -(pt.x - dragOffsetX), 0);
                     break;
                 case Cursor.NE_RESIZE_CURSOR:
-                    adjust(r, min, 0, pt.y - dragOffsetY,
-                           pt.x + (dragWidth - dragOffsetX) - r.width,
-                           -(pt.y - dragOffsetY));
+                    adjust(r, min,
+                           0, pt.y - dragOffsetY,
+                           pt.x + (dragWidth - dragOffsetX) - r.width, -(pt.y - dragOffsetY));
                     break;
                 case Cursor.SE_RESIZE_CURSOR:
-                    adjust(r, min, 0, 0,
+                    adjust(r, min,
+                           0, 0,
                            pt.x + (dragWidth - dragOffsetX) - r.width,
                            pt.y + (dragHeight - dragOffsetY) -
                            r.height);
                     break;
                 case Cursor.NW_RESIZE_CURSOR:
-                    adjust(r, min, pt.x - dragOffsetX,
-                           pt.y - dragOffsetY,
-                           -(pt.x - dragOffsetX),
-                           -(pt.y - dragOffsetY));
+                    adjust(r, min,
+                           pt.x - dragOffsetX, pt.y - dragOffsetY,
+                           -(pt.x - dragOffsetX), -(pt.y - dragOffsetY));
                     break;
                 case Cursor.SW_RESIZE_CURSOR:
-                    adjust(r, min, pt.x - dragOffsetX, 0,
-                           -(pt.x - dragOffsetX),
-                           pt.y + (dragHeight - dragOffsetY) - r.height);
+                    adjust(r, min,
+                           pt.x - dragOffsetX, 0,
+                           -(pt.x - dragOffsetX), pt.y + (dragHeight - dragOffsetY) - r.height);
                     break;
                 default:
                     break;
             }
             if (!r.equals(startBounds)) {
-                if (r.width < 150)
-                    r.width = 150;
-                if (r.height < 24)
-                    r.height = 24;
+                if (r.width < minimumSize.width)
+                    r.width = minimumSize.width;
+                if (r.height < minimumSize.height)
+                    r.height = minimumSize.height;
 
                 floatingContainer.setBounds(r);
                 // Defer repaint/validate on mouseReleased unless dynamic
                 // layout is active.
-                if (Toolkit.getDefaultToolkit().isDynamicLayoutActive()) {
+                if (isWindow) {
+                    if (Toolkit.getDefaultToolkit().isDynamicLayoutActive())
+                        floatingContainer.validate();
+                } else
                     floatingContainer.validate();
-                }
             }
         }
     }
@@ -149,11 +162,21 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
     }
 
 
-    private void adjust(Rectangle bounds, Dimension min, int deltaX, int deltaY, int deltaWidth, int deltaHeight) {
+    public Dimension getMinimumSize() {
+        return minimumSize;
+    }
+
+    public void setMinimumSize(Dimension minimumSize) {
+        this.minimumSize = minimumSize;
+    }
+
+    protected void adjust(Rectangle bounds, Dimension min, int deltaX, int deltaY, int deltaWidth, int deltaHeight) {
         bounds.x += deltaX;
         bounds.y += deltaY;
+
         bounds.width += deltaWidth;
         bounds.height += deltaHeight;
+
         if (min != null) {
             if (bounds.width < min.width) {
                 int correction = min.width - bounds.width;
@@ -172,7 +195,7 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
         }
     }
 
-    private int calculateCorner(Component c, int x, int y) {
+    protected int calculateCorner(Component c, int x, int y) {
         int xPosition = calculatePosition(x, c.getWidth());
         int yPosition = calculatePosition(y, c.getHeight());
 
@@ -182,14 +205,14 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
         return yPosition * 5 + xPosition;
     }
 
-    private int getCursor(int corner) {
+    protected int getCursor(int corner) {
         if (corner == -1) {
             return 0;
         }
         return cursorMapping[corner];
     }
 
-    private int calculatePosition(int spot, int width) {
+    protected int calculatePosition(int spot, int width) {
         if (spot < BORDER_DRAG_THICKNESS) {
             return 0;
         }
