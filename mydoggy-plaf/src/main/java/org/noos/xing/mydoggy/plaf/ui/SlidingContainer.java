@@ -1,7 +1,10 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.SlidingTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
@@ -220,7 +223,9 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
             }
 
             protected int calcFirstY() {
-                return descriptor.getManager().getY() + ((descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0) ? 23 : 0);
+                return descriptor.getManager().getY() +
+                       ((descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0) ? 23 : 0) +
+                       descriptor.getJMenuBarExtraHeight();
             }
 
             protected int calcMaxWidth() {
@@ -241,6 +246,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
                 return width;
             }
         });
+
         dockedContainer.addPropertyChangeListener("tempShowed", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
