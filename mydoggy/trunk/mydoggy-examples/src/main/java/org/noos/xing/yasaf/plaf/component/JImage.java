@@ -1,6 +1,7 @@
 package org.noos.xing.yasaf.plaf.component;
 
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -15,6 +16,9 @@ public class JImage extends JComponent {
     protected BufferedImage original;
     protected BufferedImage currentScaled;
     protected Dimension lastSize;
+
+    public JImage() {
+    }
 
     public JImage(String url) {
         try {
@@ -44,5 +48,14 @@ public class JImage extends JComponent {
         } finally {
             scratchGraphics.dispose();
         }
+    }
+
+    public void setImage(BufferedImage image) {
+        this.original = image;
+        SwingUtil.repaint(this);
+    }
+
+    public BufferedImage getImage() {
+        return original;
     }
 }

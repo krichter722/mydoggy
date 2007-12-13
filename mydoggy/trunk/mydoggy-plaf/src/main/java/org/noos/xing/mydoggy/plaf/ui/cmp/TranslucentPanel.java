@@ -41,6 +41,20 @@ public class TranslucentPanel extends JPanel implements TranslucentComponent {
         g2d.setComposite(oldComp);
     }
 
+    protected void paintComponent(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        Composite oldComp = g2d.getComposite();
+
+        float alpha = getAlphaModeEnabled();
+
+        Composite alphaComp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+        g2d.setComposite(alphaComp);
+
+        super.paintComponent(g2d); 
+
+        g2d.setComposite(oldComp);
+    }
+
     public void setAlphaModeRatio(float alpha) {
         if (this.alpha != alpha) {
             assert alpha >= 0 && alpha <= 1.0;

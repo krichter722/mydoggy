@@ -1,13 +1,9 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.awt.geom.Area;
 
 /**
@@ -35,46 +31,6 @@ public class GlassPanel extends JPanel implements ContainerListener {
         addContainerListener(this);
     }
 
-    public void setDraggingImage(Image draggingImage) {
-        setDraggingImage(draggingImage, draggingImage == null ? 0 : draggingImage.getWidth(this));
-    }
-
-    public void setDraggingImage(Image draggingImage, int width) {
-        if (draggingImage != null) {
-            float ratio = (float) draggingImage.getWidth(this) / (float) draggingImage.getHeight(this);
-            this.width = width;
-            height = (int) (width / ratio);
-        }
-
-        this.draggingImage = draggingImage;
-//        this.location = null;
-    }
-
-    public Image getDraggingImage() {
-        return draggingImage;
-    }
-
-
-    public void setPoint(Point location) {
-        this.oldLocation = this.location;
-        this.location = location;
-    }
-
-    public Rectangle getRepaintRect() {
-        if (location == null || oldLocation == null)
-            return getBounds();
-
-        int x = (int) (location.getX() - (width / 2d));
-        int y = (int) (location.getY() - (height / 2d));
-
-        int x2 = (int) (oldLocation.getX() - (width / 2d));
-        int y2 = (int) (oldLocation.getY() - (height / 2d));
-
-        int width = this.width;
-        int height = this.height;
-
-        return new Rectangle(x, y, width, height).union(new Rectangle(x2, y2, width, height));
-    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -126,7 +82,48 @@ public class GlassPanel extends JPanel implements ContainerListener {
         }
     }
 
-    protected GlassPanel mount() {
+
+    public void setDraggingImage(Image draggingImage) {
+        setDraggingImage(draggingImage, draggingImage == null ? 0 : draggingImage.getWidth(this));
+    }
+
+    public void setDraggingImage(Image draggingImage, int width) {
+        if (draggingImage != null) {
+            float ratio = (float) draggingImage.getWidth(this) / (float) draggingImage.getHeight(this);
+            this.width = width;
+            height = (int) (width / ratio);
+        }
+
+        this.draggingImage = draggingImage;
+//        this.location = null;
+    }
+
+    public Image getDraggingImage() {
+        return draggingImage;
+    }
+
+    public void setPoint(Point location) {
+        this.oldLocation = this.location;
+        this.location = location;
+    }
+
+    public Rectangle getRepaintRect() {
+        if (location == null || oldLocation == null)
+            return getBounds();
+
+        int x = (int) (location.getX() - (width / 2d));
+        int y = (int) (location.getY() - (height / 2d));
+
+        int x2 = (int) (oldLocation.getX() - (width / 2d));
+        int y2 = (int) (oldLocation.getY() - (height / 2d));
+
+        int width = this.width;
+        int height = this.height;
+
+        return new Rectangle(x, y, width, height).union(new Rectangle(x2, y2, width, height));
+    }
+
+    public GlassPanel mount() {
         if (rootPaneContainer.getGlassPane() == this)
             return this;
 
@@ -135,7 +132,7 @@ public class GlassPanel extends JPanel implements ContainerListener {
         return this;
     }
 
-    protected void unmount() {
+    public void unmount() {
         if (oldGlassPanel != null)
             rootPaneContainer.setGlassPane(oldGlassPanel);
     }
