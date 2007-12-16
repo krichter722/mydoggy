@@ -101,8 +101,8 @@ public interface ToolWindow extends Dockable {
      * the aggregation position as the position relative to the specified toolwindow.
      * This method is usable also when the tool is already visible.
      *
-     * @param toolWindow the toolwindow used as relative position.
-     * @param aggregationPosition the position used to aggregate the tool. 
+     * @param toolWindow          the toolwindow used as relative position.
+     * @param aggregationPosition the position used to aggregate the tool.
      * @since 1.4.0
      */
     void aggregate(ToolWindow toolWindow, AggregationPosition aggregationPosition);
@@ -116,9 +116,9 @@ public interface ToolWindow extends Dockable {
      * Default value is false.
      *
      * @param aggregateEnabled <tt>true</tt> to translate every call to <code>setVisible(true)</code>
-     *                         to a call to <code>aggregate()</code> method, <tt>false</tt> to disable the translation. 
+     *                         to a call to <code>aggregate()</code> method, <tt>false</tt> to disable the translation.
+     * @see #isAggregateMode()
      * @since 1.3.0
-     * @see #isAggregateMode() 
      */
     void setAggregateMode(boolean aggregateEnabled);
 
@@ -126,8 +126,8 @@ public interface ToolWindow extends Dockable {
      * Returns aggregateEnabled property value.
      *
      * @return the value of aggregateEnabled property.
-     * @since 1.3.0
      * @see #setAggregateMode(boolean)
+     * @since 1.3.0
      */
     boolean isAggregateMode();
 
@@ -138,9 +138,9 @@ public interface ToolWindow extends Dockable {
      *
      * @param flash <code>true</code> to enable flashing mode;
      *              <code>false</code> to disable flashing mode.
-     * @since 1.3.0
      * @see #isFlashing()
-     * @see #setFlashing(int) 
+     * @see #setFlashing(int)
+     * @since 1.3.0
      */
     void setFlashing(boolean flash);
 
@@ -202,8 +202,8 @@ public interface ToolWindow extends Dockable {
      * the same anchor.
      *
      * @param anchor the new anchor.
-     * @param index the position relative to the other tools on the same anchor.
-     *              Use 0 for the first position, -1 for the last position.
+     * @param index  the position relative to the other tools on the same anchor.
+     *               Use 0 for the first position, -1 for the last position.
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
      * @see #getAnchor()
      * @since 1.3.0
@@ -279,7 +279,7 @@ public interface ToolWindow extends Dockable {
     void setMaximized(boolean maximized);
 
     /**
-     * Returns whether the toolwindow is currently maximized.
+     * Returns whether this toolwindow is currently maximized.
      *
      * @return <code>true</code> if this toolwindow is maximized, <code>false</code> otherwise.
      * @since 1.3.0
@@ -297,7 +297,7 @@ public interface ToolWindow extends Dockable {
 
     /**
      * Returns <tt>true</tt> if the representative anchor button is visible, <tt>false</tt> otherwise.
-     *  
+     *
      * @return <tt>true</tt> if the representative anchor button is visible, <tt>false</tt> otherwise.
      */
     boolean isRepresentativeAnchorButtonVisible();
@@ -305,9 +305,9 @@ public interface ToolWindow extends Dockable {
     /**
      * Adds a <code>component</code> represented by a <code>title</code> and no icon.
      *
-     * @param title the title to be displayed in this tab
+     * @param title     the title to be displayed in this tab
      * @param component the component to be displayed when this tab is clicked
-     * @return a ToolWindowTab instance  
+     * @return a ToolWindowTab instance
      * @since 1.3.0
      */
     ToolWindowTab addToolWindowTab(String title, Component component);
@@ -325,16 +325,16 @@ public interface ToolWindow extends Dockable {
      * Removes the specified tab from this toolwindow.
      *
      * @param toolWindowTab the tab to be removed
-     * @see #addToolWindowTab(String, java.awt.Component)
      * @return <tt>true</tt> if this toolwindow contained the specified tab.
+     * @see #addToolWindowTab(String, java.awt.Component)
      * @since 1.3.0
      */
     boolean removeToolWindowTab(ToolWindowTab toolWindowTab);
 
     /**
      * Gets all the tabs in this toolwindow.
-     * 
-     * @return    an array of all the tabs in this toolwindow.
+     *
+     * @return an array of all the tabs in this toolwindow.
      * @since 1.3.0
      */
     ToolWindowTab[] getToolWindowTabs();
@@ -346,10 +346,10 @@ public interface ToolWindow extends Dockable {
      * no exception is thrown and no action is performed.
      *
      * @param listener the toolwindow listener
-     * @since 1.3.0
      * @see ToolWindowListener
      * @see #removeToolWindowListener(ToolWindowListener)
      * @see #getToolWindowListeners()
+     * @since 1.3.0
      */
     void addToolWindowListener(ToolWindowListener listener);
 
@@ -362,8 +362,8 @@ public interface ToolWindow extends Dockable {
      * no exception is thrown and no action is performed.
      *
      * @param listener the toolwindow listener
-     * @since 1.3.0
      * @see #addToolWindowListener(ToolWindowListener)
+     * @since 1.3.0
      */
     void removeToolWindowListener(ToolWindowListener listener);
 
@@ -372,8 +372,8 @@ public interface ToolWindow extends Dockable {
      *
      * @return all of this toolwindowt's <code>ToolWindowListener</code>s
      *         or an empty array if no toolwindow listeners are currently registered
+     * @see #addToolWindowListener(ToolWindowListener)
      * @since 1.3.0
-     * @see #addToolWindowListener(ToolWindowListener) 
      */
     ToolWindowListener[] getToolWindowListeners();
 
@@ -390,9 +390,9 @@ public interface ToolWindow extends Dockable {
     /**
      * This method retrieves the TypeDescriptor for the <code>descriptorClass</code>.
      *
-     * @since 1.4.0
      * @param descriptorClass the descriptor class.
      * @return the type descriptor for the <code>descriptorClass</code>.
+     * @since 1.4.0
      */
     <T extends ToolWindowTypeDescriptor> T getTypeDescriptor(Class<T> descriptorClass);
 }

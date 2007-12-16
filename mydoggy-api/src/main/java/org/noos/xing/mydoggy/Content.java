@@ -139,6 +139,7 @@ public interface Content extends Dockable {
     /**
      * This method is used to detach a content from the main window. When a content is detached
      * it is showed into a separete window.
+     *
      * @param detached true to detach the content, false to reattach the content into the main window
      * @since 1.0.0
      */
@@ -158,7 +159,7 @@ public interface Content extends Dockable {
      * Sets the keyboard mnemonic for accessing this content.
      * The mnemonic is the key which when combined with the look and feel's
      * mouseless modifier (usually Alt) will activate this content by selecting it.
-     * <p>
+     * <p/>
      * A mnemonic must correspond to a single key on the keyboard
      * and should be specified using one of the <code>VK_XXX</code>
      * keycodes defined in <code>java.awt.event.KeyEvent</code>.
@@ -182,15 +183,19 @@ public interface Content extends Dockable {
     int getMnemonic();
 
     /**
-     * TODO
-     * @param maximized
+     * Maximizes this content. A maximized content is resized to
+     * fully fit the main content area.
+     *
+     * @param maximized a boolean, where <code>true</code> maximizes this content and <code>false</code>
+     *                  restores it.
      * @since 1.4.0
      */
     void setMaximized(boolean maximized);
 
     /**
+     * Returns whether this content is currently maximized.
      *
-     * @return
+     * @return <code>true</code> if this content is maximized, <code>false</code> otherwise.
      * @since 1.4.0
      */
     boolean isMaximized();
@@ -198,7 +203,7 @@ public interface Content extends Dockable {
     /**
      * Returns the content ui for this content based on the current installed ContentManagerUI.
      *
-     * @return the content ui instance for this content.  
+     * @return the content ui instance for this content.
      * @since 1.4.0
      */
     ContentUI getContentUi();
