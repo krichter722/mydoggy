@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy.mydoggyset.view.contents;
 
-import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ContentManagerUI;
 import org.noos.xing.mydoggy.TabbedContentManagerUI;
 import org.noos.xing.mydoggy.ToolWindowManager;
@@ -12,13 +11,11 @@ import org.noos.xing.yasaf.view.ViewContextChangeListener;
 import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
 
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -28,7 +25,7 @@ import java.beans.PropertyChangeListener;
 public class TabbedManagerUIView extends ComponentView implements ViewContextChangeListener {
     protected ToolWindowManager toolWindowManager;
     protected TabbedContentManagerUI tabbedContentManagerUI;
-protected JComboBox tabPlaces;
+    protected JComboBox tabPlaces;
     protected JComboBox tabLayouts;
     protected JCheckBox isShowAlwaysTab;
     boolean valueChanging;
@@ -38,7 +35,7 @@ protected JComboBox tabPlaces;
         this.toolWindowManager = viewContext.get(ToolWindowManager.class);
 
         ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
-        if (contentManagerUI instanceof TabbedContentManagerUI)
+        if (contentManagerUI instanceof MyDoggyTabbedContentManagerUI)
             this.tabbedContentManagerUI = (TabbedContentManagerUI) contentManagerUI;
         else
             this.tabbedContentManagerUI = new MyDoggyTabbedContentManagerUI();

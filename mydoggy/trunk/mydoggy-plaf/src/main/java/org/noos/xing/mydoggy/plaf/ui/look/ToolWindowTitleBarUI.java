@@ -24,10 +24,7 @@ import java.awt.*;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragSourceDragEvent;
 import java.awt.dnd.DragSourceDropEvent;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
+import java.awt.event.*;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
@@ -99,7 +96,7 @@ public class ToolWindowTitleBarUI extends PanelUI {
                             SwingUtil.repaint(panel);
                         }
                     }
-                } 
+                }
             }
         });
     }
@@ -113,7 +110,7 @@ public class ToolWindowTitleBarUI extends PanelUI {
         // Drag Gesture
         final ToolWindowTitleBarDragGesture dragGesture = new ToolWindowTitleBarDragGesture(descriptor);
         SwingUtil.registerDragGesture(c, dragGesture);
-        panel.addContainerListener(new ContainerListener() {
+        panel.addContainerListener(new ContainerAdapter() {
             public void componentAdded(ContainerEvent e) {
                 if (e.getChild() instanceof ToolWindowTabPanel) {
                     ToolWindowTabPanel panel = (ToolWindowTabPanel) e.getChild();
@@ -140,9 +137,6 @@ public class ToolWindowTitleBarUI extends PanelUI {
                     });
                     SwingUtil.registerDragGesture(panel.getViewport(), dragGesture);
                 }
-            }
-
-            public void componentRemoved(ContainerEvent e) {
             }
         });
     }

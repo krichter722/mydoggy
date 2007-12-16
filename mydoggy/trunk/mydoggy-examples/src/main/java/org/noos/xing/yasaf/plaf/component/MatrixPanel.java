@@ -51,5 +51,4 @@ public class MatrixPanel extends JPanel {
         add(component, (column + 2) + "," + row + ",FULL,FULL");
     }
 
-
 }

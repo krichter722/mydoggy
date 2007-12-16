@@ -106,6 +106,7 @@ public class MyDoggySet {
         fileMenu.addSeparator();
         fileMenu.add(new FrameshotAction(frame));
         fileMenu.add(new FramePieceshotAction(frame));
+        fileMenu.add(new MagnifierAction(frame));
         fileMenu.addSeparator();
         fileMenu.add(new ExitAction(frame));
 
