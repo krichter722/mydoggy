@@ -39,7 +39,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     protected java.util.List<ToolWindowTab> toolWindowTabs;
     protected ToolWindowTab rootTab;
 
-    protected ResourceBundle resourceBoundle;
+    protected ResourceBundle resourceBundle;
     protected ToolWindowDescriptor descriptor;
 
     protected EventListenerList internalListenerList;
@@ -60,7 +60,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         this.listenerList = new EventListenerList();
 
         this.descriptor = new ToolWindowDescriptor(manager, this, anchestor);
-        this.resourceBoundle = resourceBundle;
+        this.resourceBundle = resourceBundle;
         this.toolWindowTabs = new ArrayList<ToolWindowTab>();
 
         rootTab = addTabInternal(title, null, component, null, true);
@@ -161,7 +161,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         try {
             descriptor.getManager().setShowingGroup();
             if (!isVisible()) {
-                switch (anchor)  {
+                switch (anchor) {
                     case LEFT:
                     case RIGHT:
                         aggregate(AggregationPosition.BOTTOM);
@@ -202,7 +202,7 @@ public class MyDoggyToolWindow implements ToolWindow {
                     publicEvent = true;
                 }
 
-                if (getType() == ToolWindowType.SLIDING  || getType() == ToolWindowType.FLOATING_LIVE)
+                if (getType() == ToolWindowType.SLIDING || getType() == ToolWindowType.FLOATING_LIVE)
                     setType(ToolWindowType.DOCKED);
 
                 publicEvent = false;
@@ -325,7 +325,7 @@ public class MyDoggyToolWindow implements ToolWindow {
 
                 if (this.anchor == anchor || !isAvailable()) {
                     this.anchor = anchor;
-                    
+
                     fireAnchorEvent(null, anchor, index);
                 } else {
                     publicEvent = false;
@@ -426,7 +426,7 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     public void setTitle(String title) {
         synchronized (getLock()) {
-            String newTitle = (resourceBoundle != null) ? resourceBoundle.getString(title) : title;
+            String newTitle = (resourceBundle != null) ? resourceBundle.getString(title) : title;
             if (newTitle != null && newTitle.equals(getTitle()))
                 return;
 
@@ -484,7 +484,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     public ToolWindowTab addToolWindowTab(Dockable dockable) {
         synchronized (getLock()) {
             ToolWindowTab result;
-            
+
             if (dockable instanceof ToolWindow) {
                 descriptor.getManager().removeIfDockableDelegator(dockable);
 
@@ -668,7 +668,7 @@ public class MyDoggyToolWindow implements ToolWindow {
             boolean old = this.visible;
             this.visible = visible;
 
-            if (aggregate) {                
+            if (aggregate) {
                 firePropertyChangeEvent("visible", old, visible, new Object[]{aggregate, aggregationPosition, aggregationOnTool});
             } else
                 firePropertyChangeEvent("visible", old, visible);
