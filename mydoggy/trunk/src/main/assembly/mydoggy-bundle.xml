@@ -1,0 +1,36 @@
+<assembly>
+    <formats>
+        <format>dir</format>
+    </formats>
+
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <fileSets>
+        <fileSet>
+            <directory>mydoggy-api/src/main/java</directory>
+            <outputDirectory>src/main/java</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>mydoggy-plaf/src/main/java</directory>
+            <outputDirectory>src/main/java</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>mydoggy-res/src/main/resources</directory>
+            <outputDirectory>src/main/resources</outputDirectory>
+        </fileSet>
+    </fileSets>
+
+    <files>
+        <file>
+            <source>pom_bundle.xml</source>
+            <outputDirectory>.</outputDirectory>
+            <destName>pom.xml</destName>
+        </file>
+        <file>
+            <source>license/lgpl.txt</source>
+            <outputDirectory>.</outputDirectory>
+            <destName>LICENSE.txt</destName>
+        </file>
+    </files>
+
+</assembly>
