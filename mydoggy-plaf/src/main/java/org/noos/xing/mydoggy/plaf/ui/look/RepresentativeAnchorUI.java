@@ -15,8 +15,8 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TranslucentPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
+import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -33,7 +33,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro
@@ -95,8 +94,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
 
     public void update(Graphics g, JComponent c) {
         if (toolWindow.isAvailable())
-            c.setForeground(resourceManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));  // TODO: move this...
-
+            c.setForeground(resourceManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
 
         if (toolWindow.isFlashing() && !toolWindow.isVisible()) {
 
@@ -191,7 +189,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                     SwingUtil.repaint(label);
                 }
             }
-        } 
+        }
     }
 
     public ToolWindowDescriptor getDescriptor() {
@@ -639,7 +637,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                 }
                 lastAnchor = newAnchor;
             }
-            
+
             updateGhostImage(dsde.getLocation(), updatedGhostImage);
         }
 

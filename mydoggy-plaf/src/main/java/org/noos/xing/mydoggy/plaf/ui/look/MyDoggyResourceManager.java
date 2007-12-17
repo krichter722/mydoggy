@@ -4,7 +4,7 @@ import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTitleBarButtons;
+import org.noos.xing.mydoggy.plaf.ui.cmp.DefaultTitleBarButtons;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
@@ -318,7 +318,7 @@ public class MyDoggyResourceManager implements ResourceManager {
                 result = ResourceBundle.getBundle(bundle, locale, classLoader);
         } catch (Throwable e) {
             e.printStackTrace();
-            result = new DummyResourceBundle();       
+            result = new DummyResourceBundle();
         }
         return result;
     }
@@ -327,7 +327,7 @@ public class MyDoggyResourceManager implements ResourceManager {
         setTransparencyManager(new WindowTransparencyManager());
     }
 
-    protected void fireColorChanged(String key, Color oldValue, Color newValue){
+    protected void fireColorChanged(String key, Color oldValue, Color newValue) {
         PropertyChangeEvent event = new PropertyChangeEvent(this, key, oldValue, newValue);
         for (PropertyChangeListener listener : listenerList.getListeners(PropertyChangeListener.class)) {
             listener.propertyChange(event);
@@ -355,12 +355,12 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     public static class ToolWindowCmpContainerComponentCreator implements ComponentCreator {
 
-         public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
-             JPanel panel = new JPanel();
-             panel.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
-             return panel;
-         }
-     }
+        public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
+            JPanel panel = new JPanel();
+            panel.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
+            return panel;
+        }
+    }
 
     public static class BarSplitPaneComponentCreator implements ComponentCreator {
 
@@ -486,12 +486,12 @@ public class MyDoggyResourceManager implements ResourceManager {
             JPanel panel = (JPanel) component;
             panel.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
         }
-     }
+    }
 
 
     public static class TitleBarButtonsInstanceCreator implements InstanceCreator {
         public Object createComponent(Object... args) {
-           return new ExtendedTitleBarButtons(
+            return new DefaultTitleBarButtons(
                     (ToolWindowDescriptor) args[0],
                     (DockedContainer) args[1]
             );
