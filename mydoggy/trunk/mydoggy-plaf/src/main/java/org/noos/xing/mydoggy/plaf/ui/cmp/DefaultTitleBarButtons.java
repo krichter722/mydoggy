@@ -1,22 +1,20 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
+import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
-
-import info.clearthought.layout.TableLayout;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ExtendedTitleBarButtons implements TitleBarButtons {
+public class DefaultTitleBarButtons implements TitleBarButtons {
     protected ToolWindow toolWindow;
     protected ToolWindowDescriptor descriptor;
     protected transient ResourceManager resourceManager;
@@ -30,7 +28,7 @@ public class ExtendedTitleBarButtons implements TitleBarButtons {
     protected JButton hideButton;
     protected JButton maximizeButton;
 
-    public ExtendedTitleBarButtons(ToolWindowDescriptor toolWindowDescriptor, DockedContainer dockedContainer) {
+    public DefaultTitleBarButtons(ToolWindowDescriptor toolWindowDescriptor, DockedContainer dockedContainer) {
         this.descriptor = toolWindowDescriptor;
         this.toolWindow = toolWindowDescriptor.getToolWindow();
         this.resourceManager = dockedContainer.getResourceManager();
@@ -136,6 +134,7 @@ public class ExtendedTitleBarButtons implements TitleBarButtons {
         });
         dockedContainer.addPropertyChangeListener("maximized.before", new PropertyChangeListener() {
             private boolean flag = false;
+
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getSource() != descriptor)
                     return;
@@ -174,7 +173,7 @@ public class ExtendedTitleBarButtons implements TitleBarButtons {
                     } else
                         floatingButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.FLOATING));
 
-                    if (toolWindow.isMaximized()) 
+                    if (toolWindow.isMaximized())
                         maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MINIMIZE));
                     else
                         maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
@@ -204,18 +203,18 @@ public class ExtendedTitleBarButtons implements TitleBarButtons {
             }
         });
 
-        ((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).addPropertyChangeListener(
+        descriptor.getTypeDescriptor(ToolWindowType.SLIDING).addPropertyChangeListener(
                 new PropertyChangeListener() {
                     public void propertyChange(PropertyChangeEvent evt) {
-                        if ("enabled".equals(evt.getPropertyName())) 
+                        if ("enabled".equals(evt.getPropertyName()))
                             setDockedVisible((Boolean) evt.getNewValue());
                     }
                 }
         );
-        ((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).addPropertyChangeListener(
+        descriptor.getTypeDescriptor(ToolWindowType.FLOATING).addPropertyChangeListener(
                 new PropertyChangeListener() {
                     public void propertyChange(PropertyChangeEvent evt) {
-                        if ("enabled".equals(evt.getPropertyName())) 
+                        if ("enabled".equals(evt.getPropertyName()))
                             setFloatingVisible((Boolean) evt.getNewValue());
                     }
                 }
@@ -299,7 +298,8 @@ public class ExtendedTitleBarButtons implements TitleBarButtons {
                 ToolWindowType type = toolWindow.getType();
                 if (type == ToolWindowType.FLOATING || type == ToolWindowType.FLOATING_FREE) {
                     toolWindow.setType(ToolWindowType.DOCKED);
-                } else if (type == ToolWindowType.DOCKED || type == ToolWindowType.SLIDING || type == ToolWindowType.FLOATING_LIVE) {
+                } else
+                if (type == ToolWindowType.DOCKED || type == ToolWindowType.SLIDING || type == ToolWindowType.FLOATING_LIVE) {
                     toolWindow.setType(descriptor.isFloatingWindow() ? ToolWindowType.FLOATING_FREE : ToolWindowType.FLOATING);
                 }
             } else if ("undock".equals(actionCommnad)) {
@@ -314,6 +314,18 @@ public class ExtendedTitleBarButtons implements TitleBarButtons {
             }
         }
 
+    }
+
+
+    protected class VisibleAction extends AbstractAction {
+
+        public void actionPerformed(ActionEvent e) {
+            ToolWindowActionHandler toolWindowActionHandler = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class).getToolWindowActionHandler();
+            if (toolWindowActionHandler != null)
+                toolWindowActionHandler.onHideButtonClick(toolWindow);
+            else
+                toolWindow.setVisible(false);
+        }
     }
 
 }

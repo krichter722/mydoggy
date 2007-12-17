@@ -35,7 +35,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
     boolean isPopupMenuEnabled();
 
     /**
-     * The user can add specific menu items to the popup menu of the representative anchor button of the tool using
+     * The user can add customized menu items to the popup menu of the representative anchor button of this tool using
      * the result of this method invocation.
      *
      * @return the menu where to add new menu items.
@@ -146,8 +146,9 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * Sets if mydoggy must hide the representative button when the tool become visible and
      * the tool has type ToolWindowType.DOCKED.
      *
-     * @param hideRepresentativeButtonOnVisible <code>true</code> if mydoggy must hide the representative button when the tool become visible and the
-     * tool has type ToolWindowType.DOCKED.<br>
+     * @param hideRepresentativeButtonOnVisible
+     *         <code>true</code> if mydoggy must hide the representative button when the tool become visible and the
+     *         tool has type ToolWindowType.DOCKED.<br>
      *         <code>false</code> otherwise.
      * @since 1.3.1
      */
@@ -155,8 +156,9 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
 
     /**
      * Returns the "hideRepresentativeButtonOnVisible" property value.
+     *
      * @return <code>true</code> if mydoggy must hide the representative button when the tool become visible and the
-     * tool has type ToolWindowType.DOCKED.<br>
+     *         tool has type ToolWindowType.DOCKED.<br>
      *         <code>false</code> otherwise.
      * @since 1.3.1
      */

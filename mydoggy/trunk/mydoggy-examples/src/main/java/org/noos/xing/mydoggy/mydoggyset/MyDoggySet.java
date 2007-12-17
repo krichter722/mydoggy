@@ -333,7 +333,7 @@ public class MyDoggySet {
         myDoggyResourceManager.putInstanceCreator(TitleBarButtons.class,
                                                   new MyDoggyResourceManager.InstanceCreator() {
                                                       public Object createComponent(Object... args) {
-                                                          return new SimpliedTitleBarButtons(
+                                                          return new MenuTitleBarButtons(
                                                                   (ToolWindowDescriptor) args[0],
                                                                   (DockedContainer) args[1]
                                                           );

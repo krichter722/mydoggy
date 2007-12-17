@@ -94,7 +94,6 @@ public class SampleApp {
                                              new JButton("Run Tool"),    // Component
                                              ToolWindowAnchor.LEFT);     // Anchor
 
-
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
             window.setAvailable(true);
@@ -119,6 +118,7 @@ public class SampleApp {
                 JOptionPane.showMessageDialog(frame, "Hello World!!!");
             }
         });
+
         dockedTypeDescriptor.setToolWindowActionHandler(new ToolWindowActionHandler() {
             public void onHideButtonClick(ToolWindow toolWindow) {
                 JOptionPane.showMessageDialog(frame, "Hiding...");
@@ -139,8 +139,8 @@ public class SampleApp {
 
         FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.FLOATING);
         floatingTypeDescriptor.setEnabled(true);
-        floatingTypeDescriptor.setLocation(150,200);
-        floatingTypeDescriptor.setSize(320,200);
+        floatingTypeDescriptor.setLocation(150, 200);
+        floatingTypeDescriptor.setSize(320, 200);
         floatingTypeDescriptor.setModal(false);
         floatingTypeDescriptor.setTransparentMode(true);
         floatingTypeDescriptor.setTransparentRatio(0.2f);
@@ -158,7 +158,7 @@ public class SampleApp {
     }
 
     protected void initContentManager() {
-         JTree treeContent = new JTree();
+        JTree treeContent = new JTree();
 
         ContentManager contentManager = toolWindowManager.getContentManager();
         Content content = contentManager.addContent("Tree Key",
