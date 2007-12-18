@@ -111,8 +111,7 @@ public class MultiSplitDockableContainer extends JPanel {
             multiSplitPane.setModel(leaf);
             multiSplitPane.add((useAlwaysContentWrapper) ? getComponentWrapper(dockable, content) : content, "1");
             setRootComponent(multiSplitPane);
-
-            repaintMultiSplit();
+            SwingUtil.repaint(this);
         } else {
             byte[] oldModel = (modelKey != null) ? models.get(modelKey) : null;
 
@@ -200,7 +199,6 @@ public class MultiSplitDockableContainer extends JPanel {
                     multiSplitPane.add(componentWrapper, "1");
                     multiSplitPane.add(getComponentWrapper(dockable, content), "2");
 
-                    repaintMultiSplit();
                 }
             } else {
                 MultiSplitLayout.Split splitRoot = (MultiSplitLayout.Split) multiSplitPaneModelRoot;
@@ -403,6 +401,7 @@ public class MultiSplitDockableContainer extends JPanel {
                 if (addCmp)
                     multiSplitPane.add(getComponentWrapper(dockable, content), leafName);
             }
+
             if (!checkModel())
                 System.out.println("Check model fail. addDockable end");
 
@@ -953,6 +952,7 @@ public class MultiSplitDockableContainer extends JPanel {
         }
 
         public void run() {
+//            exception.printStackTrace();
             checkModel();
             if (jumpResetBounds) {
                 jumpResetBounds = false;
