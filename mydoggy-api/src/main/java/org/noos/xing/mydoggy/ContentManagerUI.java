@@ -3,7 +3,7 @@ package org.noos.xing.mydoggy;
 /**
  * A ContentManagerUI is an interface to modify the ui behaviours of
  * a content manager. For example this is used to modify the way a content
- * is showed. 
+ * is showed.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @see TabbedContentManagerUI
@@ -12,17 +12,18 @@ package org.noos.xing.mydoggy;
  */
 public interface ContentManagerUI<C extends ContentUI> extends Observable {
 
-	/**
-	 * Set the closeable property. All new ContentUI will obtain this value for their closeable property.
+    /**
+     * Set the closeable property. All new ContentUI will obtain this value for their closeable property.
      * Furthermore sets the closeable property of all contents already registered to content manager.
-     *      
-	 * @param closeable <code>true</code> if all contents can be closed using the ui, <code>false</code> otherwise.
-	 * @since 1.1.0
-	 */
-	void setCloseable(boolean closeable);
+     *
+     * @param closeable <code>true</code> if all contents can be closed using the ui, <code>false</code> otherwise.
+     * @since 1.1.0
+     */
+    void setCloseable(boolean closeable);
 
     /**
      * Returns the closeable property value.
+     *
      * @return the closeable property value.
      * @since 1.4.0
      */
@@ -31,27 +32,28 @@ public interface ContentManagerUI<C extends ContentUI> extends Observable {
     /**
      * Set the detachable property. All new ContentUI will obtain this value for their detachable property.
      * Furthermore sets the detachable property of all contents already registered to content manager.
-     * 
-	 * @param detachable <code>true</code> if all contents can be detached using the ui, <code>false</code> otherwise.
-	 * @since 1.1.0
-	 */
-	void setDetachable(boolean detachable);
+     *
+     * @param detachable <code>true</code> if all contents can be detached using the ui, <code>false</code> otherwise.
+     * @since 1.1.0
+     */
+    void setDetachable(boolean detachable);
 
     /**
      * Returns the detachable property value.
-     *  
+     *
      * @return the detachable property value.
      * @since 1.4.0
      */
     boolean isDetachable();
 
-	/**
-	 * Returns the ui part to which this manager maps the specified <code>content</code>.
-	 * @param content content whose associated ui part is to be returned.
-	 * @return the ui part to which this manager maps the specified <code>content</code>.
-	 * @since 1.1.0
-	 */
-	C getContentUI(Content content);
+    /**
+     * Returns the ui part to which this manager maps the specified <code>content</code>.
+     *
+     * @param content content whose associated ui part is to be returned.
+     * @return the ui part to which this manager maps the specified <code>content</code>.
+     * @since 1.1.0
+     */
+    C getContentUI(Content content);
 
     /**
      * Registers <code>listener</code> so that it will receive events when
