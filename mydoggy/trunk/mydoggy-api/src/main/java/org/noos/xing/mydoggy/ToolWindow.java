@@ -7,6 +7,18 @@ import java.awt.*;
  * support for a particular functionality.
  * This interface is the main entry point to modify tool window properties.
  * Moreover there are methods to make the tool available, visible and active.
+ * A PropertyChangeEvent is fired for the following properties:
+ * <ul>
+ * <li>this tool's index ("index")</li>
+ * <li>this tool's available status ("available")</li>
+ * <li>this tool's visible status ("visible")</li>
+ * <li>this tool's active status ("active")</li>
+ * <li>this tool's anchor ("anchor")</li>
+ * <li>this tool's autoHide ("autoHide")</li>
+ * <li>this tool's type ("type")</li>
+ * <li>this tool's icon ("icon")</li>
+ * <li>this tool's title ("title")</li>
+ * </ul>
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @see org.noos.xing.mydoggy.ToolWindowManager

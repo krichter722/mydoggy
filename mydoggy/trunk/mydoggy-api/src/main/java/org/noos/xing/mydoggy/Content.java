@@ -8,6 +8,19 @@ import java.awt.*;
  * a title, an icon, etc. The visualization of a content depends on specific
  * platform implementation. A platform implementation can use a JTabbedPane
  * or a JDesktopPane for example.
+ * A PropertyChangeEvent is fired for the following properties:
+ * <ul>
+ * <li>this content's title ("title")</li>
+ * <li>this content's foreground ("foreground")</li>
+ * <li>this content's component ("component")</li>
+ * <li>this content's selected status ("selected")</li>
+ * <li>this content's enable status ("enabled")</li>
+ * <li>this content's icon ("icon")</li>
+ * <li>this content's disabledIcon ("disabledIcon")</li>
+ * <li>this content's popupMenu ("popupMenu")</li>
+ * <li>this content's detached ("detached")</li>
+ * <li>this content's toolTipText ("toolTipTexttoolTipText")</li>
+ * </ul>
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.0.0
