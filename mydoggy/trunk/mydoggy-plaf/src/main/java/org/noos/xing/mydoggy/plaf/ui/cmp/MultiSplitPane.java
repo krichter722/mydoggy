@@ -19,23 +19,19 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package org.jdesktop.swingx;
+package org.noos.xing.mydoggy.plaf.ui.cmp;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout.Divider;
+import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout.Node;
+
+import javax.accessibility.AccessibleContext;
+import javax.accessibility.AccessibleRole;
+import javax.swing.*;
+import javax.swing.event.MouseInputAdapter;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
-import javax.accessibility.AccessibleContext;
-import javax.accessibility.AccessibleRole;
-import javax.swing.JPanel;
-import javax.swing.event.MouseInputAdapter;
-
-import org.jdesktop.swingx.MultiSplitLayout.Divider;
-import org.jdesktop.swingx.MultiSplitLayout.Node;
 
 /**
  * <p/>
@@ -338,8 +334,8 @@ public class MultiSplitPane extends JPanel {
             MultiSplitLayout.Divider divider = getMultiSplitLayout().dividerAt(x, y);
             if (divider != null) {
                 cursorID = (divider.isVertical()) ?
-                           Cursor.E_RESIZE_CURSOR :
-                           Cursor.N_RESIZE_CURSOR;
+                        Cursor.E_RESIZE_CURSOR :
+                        Cursor.N_RESIZE_CURSOR;
             }
         }
         setCursor(Cursor.getPredefinedCursor(cursorID));
