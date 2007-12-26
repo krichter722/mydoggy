@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
-import org.jdesktop.swingx.MultiSplitPane;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
@@ -47,7 +46,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         tabbedPane.setName("dockable.tabbedpane");
         tabbedPane.setFocusCycleRoot(true);
         tabbedPane.addTab((Content) dockable,
-                          new DockablePanel(dockable, component));
+                new DockablePanel(dockable, component));
 
         SwingUtil.registerDragGesture(tabbedPane, new TabbedDragGesture(tabbedPane));
 
@@ -63,8 +62,8 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                                          int aggregationIndexLocation, Component content) {
         JTabbedContentPane tabbedPane = (JTabbedContentPane) wrapperSource;
         tabbedPane.addTab((Content) dockable,
-                          new DockablePanel(dockable, content),
-                          aggregationIndexLocation);
+                new DockablePanel(dockable, content),
+                aggregationIndexLocation);
         tabbedPane.setSelectedIndex((aggregationIndexLocation < 0 || aggregationIndexLocation >= tabbedPane.getTabCount()) ? tabbedPane.getTabCount() - 1 : aggregationIndexLocation);
     }
 
@@ -131,18 +130,18 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
                 if (dockable != null) {
                     dge.startDrag(Cursor.getDefaultCursor(),
-                                  new MyDoggyTransferable(MyDoggyTransferable.CONTENT_ID_DF,
-                                                          dockable.getId()),
-                                  this);
+                            new MyDoggyTransferable(MyDoggyTransferable.CONTENT_ID_DF,
+                                    dockable.getId()),
+                            this);
 
                     // Setup ghostImage
                     Component component = dockableTabbedPane.getComponentAt(index);
                     BufferedImage ghostImage = new BufferedImage(component.getWidth(),
-                                                                 component.getHeight(), BufferedImage.TYPE_INT_RGB);
+                            component.getHeight(), BufferedImage.TYPE_INT_RGB);
                     component.print(ghostImage.getGraphics());
                     ghostImage = GraphicsUtil.scale(ghostImage,
-                                                    component.getWidth() / 4,
-                                                    component.getHeight() / 4);
+                            component.getWidth() / 4,
+                            component.getHeight() / 4);
 
                     setGhostImage(dge.getDragOrigin(), ghostImage);
                 } else
@@ -207,7 +206,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
         public void dragEnter(DropTargetDragEvent dtde) {
             if (dtde.getDropAction() == DnDConstants.ACTION_MOVE &&
-                (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF))
+                    (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF))
                     ) {
                 onDockable = null;
 
@@ -296,10 +295,10 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
                                     removeDockable(content);
                                     addDockable(content,
-                                                content.getComponent(),
-                                                onDockable,
-                                                indexAtLocation,
-                                                (dragAnchor == null) ? null : AggregationPosition.valueOf(dragAnchor.toString()));
+                                            content.getComponent(),
+                                            onDockable,
+                                            indexAtLocation,
+                                            (dragAnchor == null) ? null : AggregationPosition.valueOf(dragAnchor.toString()));
 
                                     dtde.dropComplete(true);
                                 }

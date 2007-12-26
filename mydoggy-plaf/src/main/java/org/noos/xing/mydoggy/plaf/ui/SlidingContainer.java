@@ -61,7 +61,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
 
         if (visible) {
             descriptor.checkIdOnTitleBar();
-            titleBarButtons.configureIcons(ToolWindowType.SLIDING);
+            titleBarButtons.toolWindowTypeChanged(ToolWindowType.SLIDING);
 
             // Reset Layout
             TableLayout layout = (TableLayout) sheet.getLayout();
@@ -224,8 +224,8 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
 
             protected int calcFirstY() {
                 return descriptor.getManager().getY() +
-                       ((descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0) ? 23 : 0) +
-                       descriptor.getJMenuBarExtraHeight();
+                        ((descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0) ? 23 : 0) +
+                        descriptor.getJMenuBarExtraHeight();
             }
 
             protected int calcMaxWidth() {
@@ -259,7 +259,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
 
     protected void update() {
         // Reset Layout
-        titleBarButtons.configureIcons(ToolWindowType.SLIDING);
+        titleBarButtons.toolWindowTypeChanged(ToolWindowType.SLIDING);
 
         TableLayout layout = (TableLayout) sheet.getLayout();
         layout.setColumn(0, 0);

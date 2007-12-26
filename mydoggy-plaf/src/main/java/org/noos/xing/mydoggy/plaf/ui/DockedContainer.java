@@ -163,7 +163,7 @@ public class DockedContainer implements ToolWindowContainer {
 
         // Set Component container
         componentContainer = new JPanel();
-        componentContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1},{-1}}));
+        componentContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         componentContainer.setOpaque(false);
         componentContainer.add(descriptor.getComponent(), "0,0,FULL,FULL");
 
@@ -176,7 +176,7 @@ public class DockedContainer implements ToolWindowContainer {
             titleBarButtons.getFocusable().setFocusable(true);
             focusRequester = titleBarButtons.getFocusable();
         }
-        titleBarButtons.configureIcons(ToolWindowType.DOCKED);
+        titleBarButtons.toolWindowTypeChanged(ToolWindowType.DOCKED);
     }
 
     protected void initListeners() {
@@ -187,7 +187,7 @@ public class DockedContainer implements ToolWindowContainer {
                     return;
 
                 if (evt.getNewValue() == ToolWindowType.DOCKED) {
-                    titleBarButtons.configureIcons(ToolWindowType.DOCKED);
+                    titleBarButtons.toolWindowTypeChanged(ToolWindowType.DOCKED);
                 }
 
                 if (evt.getOldValue() == ToolWindowType.EXTERN) {
@@ -212,7 +212,7 @@ public class DockedContainer implements ToolWindowContainer {
                     valueAdj = true;
                     try {
                         descriptor.getManager().getPersistenceDelegate().merge(new ByteArrayInputStream(workspace.toByteArray()),
-                                                                               PersistenceDelegate.MergePolicy.UNION);
+                                PersistenceDelegate.MergePolicy.UNION);
                         workspace = null;
                     } finally {
                         valueAdj = false;
@@ -285,12 +285,12 @@ public class DockedContainer implements ToolWindowContainer {
     protected void enableIdOnTitleBar() {
         TableLayout layout = (TableLayout) titleBar.getLayout();
         layout.setColumn(0,
-                         titleBar
-                                 .getFontMetrics(titleBar.getFont())
-                                 .stringWidth(
-                                         resourceManager.getUserString(toolWindow.getId())
-                                 )
-                         + 12);
+                titleBar
+                        .getFontMetrics(titleBar.getFont())
+                        .stringWidth(
+                                resourceManager.getUserString(toolWindow.getId())
+                        )
+                        + 12);
 
         SwingUtil.repaint(titleBar);
     }
@@ -426,8 +426,8 @@ public class DockedContainer implements ToolWindowContainer {
 
         public void showPopupMenu(Component source, int x, int y) {
             if (source == titleBar ||
-                SwingUtil.hasParent(source, titleBar) ||
-                source instanceof ToolWindowDescriptor.RepresentativeAnchor) {
+                    SwingUtil.hasParent(source, titleBar) ||
+                    source instanceof ToolWindowDescriptor.RepresentativeAnchor) {
 
                 popupMenu.removeAll();
                 popupMenu.add(pinnedMode);
@@ -573,8 +573,8 @@ public class DockedContainer implements ToolWindowContainer {
             aggregate.setVisible(!toolWindow.isVisible());
             aggregateMenu.setVisible(aggregate.isVisible());
             visible.setText(toolWindow.isVisible() ?
-                            resourceManager.getString("@@tool.hide") :
-                            resourceManager.getString("@@tool.show"));
+                    resourceManager.getString("@@tool.hide") :
+                    resourceManager.getString("@@tool.show"));
 
             if (toolWindow.getType() == ToolWindowType.DOCKED) {
                 dockedMode.setVisible(((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled());
@@ -636,8 +636,8 @@ public class DockedContainer implements ToolWindowContainer {
         protected void enableMaximize() {
             maximize.setVisible(toolWindow.isVisible());
             maximize.setText(toolWindow.isMaximized() ?
-                             resourceManager.getString("@@tool.maximize.restore") :
-                             resourceManager.getString("@@tool.maximize"));
+                    resourceManager.getString("@@tool.maximize.restore") :
+                    resourceManager.getString("@@tool.maximize"));
 
         }
     }

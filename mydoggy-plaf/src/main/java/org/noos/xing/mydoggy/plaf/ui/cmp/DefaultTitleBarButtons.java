@@ -47,7 +47,7 @@ public class DefaultTitleBarButtons implements TitleBarButtons {
         return buttonContainer;
     }
 
-    public void configureIcons(ToolWindowType type) {
+    public void toolWindowTypeChanged(ToolWindowType type) {
         switch (type) {
             case DOCKED:
                 setPinVisible(true);
@@ -97,16 +97,16 @@ public class DefaultTitleBarButtons implements TitleBarButtons {
         ActionListener titleBarActionListener = new TitleBarActionListener();
 
         hideButton = renderTitleButton("visible", titleBarActionListener,
-                                       "@@tool.tooltip.hide", MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE,
-                                       null);
+                "@@tool.tooltip.hide", MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE,
+                null);
         maximizeButton = renderTitleButton("maximize", titleBarActionListener, "@@tool.tooltip.maximize", MyDoggyKeySpace.MAXIMIZE_INACTIVE, null);
         pinButton = renderTitleButton("pin", titleBarActionListener, "@@tool.tooltip.unpin", MyDoggyKeySpace.AUTO_HIDE_OFF_INACTIVE, null);
         floatingButton = renderTitleButton("floating", titleBarActionListener,
-                                           "@@tool.tooltip.float", MyDoggyKeySpace.FLOATING_INACTIVE,
-                                           "toolWindow.floatingButton." + toolWindow.getId());
+                "@@tool.tooltip.float", MyDoggyKeySpace.FLOATING_INACTIVE,
+                "toolWindow.floatingButton." + toolWindow.getId());
         dockButton = renderTitleButton("undock", titleBarActionListener,
-                                       "@@tool.tooltip.undock", MyDoggyKeySpace.DOCKED_INACTIVE,
-                                       "toolWindow.dockButton." + toolWindow.getId());
+                "@@tool.tooltip.undock", MyDoggyKeySpace.DOCKED_INACTIVE,
+                "toolWindow.dockButton." + toolWindow.getId());
 
         buttonContainer.add(dockButton, "0,1");
         buttonContainer.add(floatingButton, "2,1");
@@ -317,7 +317,7 @@ public class DefaultTitleBarButtons implements TitleBarButtons {
     }
 
 
-    protected class VisibleAction extends AbstractAction {
+    protected class HideAction extends AbstractAction {
 
         public void actionPerformed(ActionEvent e) {
             ToolWindowActionHandler toolWindowActionHandler = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class).getToolWindowActionHandler();

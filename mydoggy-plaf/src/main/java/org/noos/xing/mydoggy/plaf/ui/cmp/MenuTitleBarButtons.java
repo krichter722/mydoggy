@@ -45,7 +45,7 @@ public class MenuTitleBarButtons implements TitleBarButtons {
         return buttonContainer;
     }
 
-    public void configureIcons(ToolWindowType type) {
+    public void toolWindowTypeChanged(ToolWindowType type) {
     }
 
 
@@ -57,11 +57,11 @@ public class MenuTitleBarButtons implements TitleBarButtons {
         ActionListener titleBarActionListener = new TitleBarActionListener();
 
         hideButton = renderTitleButton("visible", titleBarActionListener,
-                                       "@@tool.tooltip.hide", MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE,
-                                       null);
+                "@@tool.tooltip.hide", MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE,
+                null);
         popupButton = renderTitleButton("showPopup", titleBarActionListener,
-                                        "@@tool.tooltip.showPopup", MyDoggyKeySpace.ACTIONS_POPUP,
-                                        "toolWindow.showPopupButton." + toolWindow.getId());
+                "@@tool.tooltip.showPopup", MyDoggyKeySpace.ACTIONS_POPUP,
+                "toolWindow.showPopupButton." + toolWindow.getId());
 
         buttonContainer.add(popupButton, "0,1");
         buttonContainer.add(hideButton, "2,1");
