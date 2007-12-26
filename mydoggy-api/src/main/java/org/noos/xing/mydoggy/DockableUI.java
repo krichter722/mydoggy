@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy;
 
 /**
- * This interface represents the super interface for of all dockable ui parts,
+ * This interface represents the super interface for of all dockable ui parts.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @see org.noos.xing.mydoggy.TabbedContentUI

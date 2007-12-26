@@ -35,7 +35,7 @@ public class PreviewPanel extends JPanel {
 
     public void setImage(BufferedImage bufferedImage) {
         image.setImage(bufferedImage);
-        
+
         widthModel.setValue(bufferedImage.getWidth());
         heightModel.setValue(bufferedImage.getHeight());
     }
@@ -65,7 +65,7 @@ public class PreviewPanel extends JPanel {
             Image scaledImage = bufferedImage.getScaledInstance(getImageWidth(), getImageHeight(), Image.SCALE_SMOOTH);
             BufferedImage scaled = new BufferedImage(getImageWidth(), getImageHeight(), BufferedImage.TYPE_INT_RGB);
             scaled.getGraphics().drawImage(scaledImage, 0, 0, null);
-            
+
             return scaled;
         }
     }

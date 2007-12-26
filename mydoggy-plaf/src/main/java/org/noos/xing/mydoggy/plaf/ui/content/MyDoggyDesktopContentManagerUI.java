@@ -5,8 +5,8 @@ import org.noos.xing.mydoggy.PersistenceDelegate;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DesktopContentFrame;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
@@ -21,10 +21,10 @@ import javax.swing.event.InternalFrameEvent;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Hashtable;
 import java.util.Map;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -164,10 +164,11 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
                 addContentManagerUIListener(listener);
             }
-
+/*
             for (PropertyChangeListener listener : oldContentManagerUI.getPropertyChangeListeners()) {
                 addPropertyChangeListener(listener);
             }
+*/
         }
 
         // Now you can consider this manager installed
@@ -310,11 +311,11 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     protected void setupActions() {
         // Setup actions
         SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, desktopPane,
-                                      KeyStroke.getKeyStroke(39, InputEvent.ALT_MASK),
-                                      "nextContent", new NextContentAction(toolWindowManager));
+                KeyStroke.getKeyStroke(39, InputEvent.ALT_MASK),
+                "nextContent", new NextContentAction(toolWindowManager));
         SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, desktopPane,
-                                      KeyStroke.getKeyStroke(37, InputEvent.ALT_MASK),
-                                      "previousContent", new PreviousContentAction(toolWindowManager));
+                KeyStroke.getKeyStroke(37, InputEvent.ALT_MASK),
+                "previousContent", new PreviousContentAction(toolWindowManager));
     }
 
     protected void addUIForContent(Content content, Object... constraints) {
@@ -584,7 +585,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             } else {
                 if (tmpWorkspace != null) {
                     toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                                                                     PersistenceDelegate.MergePolicy.UNION);
+                            PersistenceDelegate.MergePolicy.UNION);
                     try {
                         ((DesktopContentFrame) getContentUI(content)).setMaximum(false);
                     } catch (PropertyVetoException e) {
@@ -610,7 +611,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
             if (!oldValue && newValue) {
                 final JDialog dialog = new JDialog(resourceManager.getBoolean("dialog.owner.enabled", true) ? parentFrame : null,
-                                                   false);
+                        false);
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
                 Window parentWindow = SwingUtilities.windowForComponent(desktopPane);
@@ -725,8 +726,8 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                     maximize.putClientProperty("content", content);
                     maximize.setActionCommand("Maximize");
                     maximize.setText(content.isMaximized() ?
-                                     resourceManager.getString("@@tabbed.page.restore") :
-                                     resourceManager.getString("@@tabbed.page.maximize")
+                            resourceManager.getString("@@tabbed.page.restore") :
+                            resourceManager.getString("@@tabbed.page.maximize")
                     );
                     maximize.addActionListener(this);
                     menu.add(maximize);

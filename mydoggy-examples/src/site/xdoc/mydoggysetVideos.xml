@@ -1,0 +1,31 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy-Examples : MyDoggySet - Videos</title>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="MyDoggySet Videos">
+            <p>
+                Here are some video from MyDoggySet.
+            </p>
+
+            <subsection name="Drag a toolwindow everywhere you want...">
+                <p>
+                    This test shows how to drag a toolwindow everywhere you want..."
+                </p>
+                <div align="center">
+                    <object type="application/x-shockwave-flash" width="420" height="300" wmode="transparent"
+                            data="videos/flvplayer.swf?file=dragitest.flv&amp;autoStart=false">
+                        <param name="movie" value="videos/flvplayer.swf?file=video.flv&amp;autoStart=false"/>
+                        <param name="wmode" value="transparent"/>
+                    </object>
+                </div>
+            </subsection>
+
+        </section>
+    </body>
+</document>

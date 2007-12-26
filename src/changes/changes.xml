@@ -7,7 +7,7 @@
     </properties>
 
     <body>
-        <release version="1.3.1" date="2007-05-26" description="Fifth release">
+        <release version="1.4.0" date="2008-01-01" description="Code name : Vittoria">
             <action dev="adecaro" type="update">
                 See Changes of :
                 <![CDATA[
@@ -37,7 +37,37 @@
                     ]]>
             </action>
         </release>
-        <release version="1.3.0" date="2007-05-26" description="Fourth release">
+        <release version="1.3.1" date="2007-05-26" description="Code name : Winnipeg">
+            <action dev="adecaro" type="update">
+                See Changes of :
+                <![CDATA[
+                    <a href="./mydoggy-api/changes-report.html">MyDoggy-Api</a>,
+                    <a href="./mydoggy-plaf/changes-report.html">MyDoggy-Plaf</a>,
+                    <a href="./mydoggy-examples/changes-report.html">MyDoggy-Example</a>.
+                    <br/>
+                    New Features:
+                    <ul>
+                    </ul>
+                    <br/>
+                    Bug Resolved:
+                    <ul>
+                        <li>
+                            Problem with focushandling in DockedContainer : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1765219&group_id=178005&atid=883495">Request ID 1765219</a>
+                        </li>
+                        <li>
+                            TabbedContentManager problem when display icon and title : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1765198&group_id=178005&atid=883495">Request ID 1765198</a>
+                        </li>
+                    </ul>
+                    Feature Requests:
+                    <ul>
+                        <li>
+                            Maximize windows - Handle multiple monitors : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1761886&group_id=178005&atid=883498">Request ID 1761886</a>
+                        </li>
+                    </ul>
+                    ]]>
+            </action>
+        </release>
+        <release version="1.3.0" date="2007-05-26" description="Code name : Turkana">
             <action dev="adecaro" type="update">
                 See Changes of :
                 <![CDATA[
@@ -79,7 +109,7 @@
                     ]]>
             </action>
         </release>
-        <release version="1.2.0" date="2007-04-07" description="Third release">
+        <release version="1.2.0" date="2007-04-07" description="Code name : Zajsan">
             <action dev="adecaro" type="update">
                 See Changes of :
                 <![CDATA[
@@ -118,17 +148,17 @@
                 ]]>.
             </action>
         </release>
-		<release version="1.1.0" date="2007-01-31" description="Second release">
-			<action dev="adecaro" type="update">
-				See Changes of :
-				<![CDATA[
+        <release version="1.1.0" date="2007-01-31" description="Code name : Michigan">
+            <action dev="adecaro" type="update">
+                See Changes of :
+                <![CDATA[
 					<a href="./mydoggy-api/changes-report.html">MyDoggy-Api</a>,
 					<a href="./mydoggy-plaf/changes-report.html">MyDoggy-Plaf</a>,
 					<a href="./mydoggy-examples/changes-report.html">MyDoggy-Example</a>
 				]]>.
-			</action>
-		</release>
-        <release version="1.0.0" date="2006-10-31" description="First release">
+            </action>
+        </release>
+        <release version="1.0.0" date="2006-10-31" description="Code name : Huron">
             <action dev="adecaro" type="add">
                 MyDoggy 1.0.0 released.
             </action>

@@ -25,6 +25,7 @@
         <menu name="Sample App.">
             <item name="MyDoggySet" href="/mydoggy-examples/mydoggyset.html"/>
             <item name="Screenshots" href="/mydoggy-examples/mydoggysetScreenshots.html"/>
+            <item name="Videos" href="/mydoggy-examples/mydoggysetVideos.html"/>
             <item name="Using" href="/mydoggy-examples/mydoggysetUsing.html"/>
         </menu>
 
