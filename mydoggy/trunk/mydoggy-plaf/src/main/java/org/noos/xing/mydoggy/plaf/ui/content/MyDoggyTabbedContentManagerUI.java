@@ -4,38 +4,38 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
-import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentPane;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
-import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
-import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
+import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
+import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragSourceDragEvent;
 import java.awt.dnd.DragSourceDropEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
-import java.awt.event.InputEvent;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Hashtable;
 import java.util.Map;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -231,9 +231,11 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
                 addContentManagerUIListener(listener);
             }
+/*
             for (PropertyChangeListener listener : oldContentManagerUI.getPropertyChangeListeners()) {
                 addPropertyChangeListener(listener);
             }
+*/
         }
 
         // Now you can consider this manager installed
@@ -434,7 +436,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             internalPropertyChangeSupport.addPropertyChangeListener("maximized", new MaximizedListener());
 
             SwingUtil.registerDragGesture(tabbedContentPane,
-                                          new TabbedContentManagerDragGesture());
+                    new TabbedContentManagerDragGesture());
         }
     }
 
@@ -475,11 +477,11 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     protected void setupActions() {
         // Setup actions
         SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, tabbedContentPane,
-                                      KeyStroke.getKeyStroke(39, InputEvent.ALT_MASK),
-                                      "nextContent", new NextContentAction(toolWindowManager));
+                KeyStroke.getKeyStroke(39, InputEvent.ALT_MASK),
+                "nextContent", new NextContentAction(toolWindowManager));
         SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, tabbedContentPane,
-                                      KeyStroke.getKeyStroke(37, InputEvent.ALT_MASK),
-                                      "previousContent", new PreviousContentAction(toolWindowManager));
+                KeyStroke.getKeyStroke(37, InputEvent.ALT_MASK),
+                "previousContent", new PreviousContentAction(toolWindowManager));
     }
 
 
@@ -650,7 +652,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             } else {
                 if (tmpWorkspace != null) {
                     toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                                                                     PersistenceDelegate.MergePolicy.UNION);
+                            PersistenceDelegate.MergePolicy.UNION);
                     tmpWorkspace = null;
                 }
             }
@@ -676,7 +678,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 }
 
                 final JDialog dialog = new JDialog(resourceManager.getBoolean("dialog.owner.enabled", true) ? parentFrame : null,
-                                                   false);
+                        false);
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
                 Window parentWindow = SwingUtilities.windowForComponent(tabbedContentPane);
@@ -785,19 +787,19 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 Content content = tabbedContentPane.getContentAt(index);
                 if (content.getDockableDelegator() != null) {
                     dge.startDrag(Cursor.getDefaultCursor(),
-                                  new MyDoggyTransferable(MyDoggyTransferable.CONTENT_ID_DF,
-                                                          content.getId()),
-                                  this);
+                            new MyDoggyTransferable(MyDoggyTransferable.CONTENT_ID_DF,
+                                    content.getId()),
+                            this);
 
                     // Setup ghostImage
 
                     Component component = tabbedContentPane.getComponentAt(index);
                     BufferedImage ghostImage = new BufferedImage(component.getWidth(),
-                                                                 component.getHeight(), BufferedImage.TYPE_INT_RGB);
+                            component.getHeight(), BufferedImage.TYPE_INT_RGB);
                     component.print(ghostImage.getGraphics());
                     ghostImage = GraphicsUtil.scale(ghostImage,
-                                                    component.getWidth() / 4,
-                                                    component.getHeight() / 4);
+                            component.getWidth() / 4,
+                            component.getHeight() / 4);
 
                     setGhostImage(dge.getDragOrigin(), ghostImage);
                 } else

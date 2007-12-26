@@ -287,7 +287,7 @@ public class MultiSplitLayout implements LayoutManager {
                 }
 
                 Rectangle nodeBounds = root.getBounds();
-                if (split.getParent().isRowLayout()) {
+                if (split.getParent() != null && split.getParent().isRowLayout()) {
                     if (nodeBounds.x == 0 && nodeBounds.y == 0 && nodeBounds.width == 0 && nodeBounds.height == 0 && root.getWeight() > 0.0)
                         width = (int) (bounds.width * split.getWeight());
                 } else
@@ -301,7 +301,7 @@ public class MultiSplitLayout implements LayoutManager {
                 }
 
                 Rectangle nodeBounds = root.getBounds();
-                if (split.getParent().isRowLayout()) {
+                if (split.getParent() != null && split.getParent().isRowLayout()) {
                     if (nodeBounds.x == 0 && nodeBounds.y == 0 && nodeBounds.width == 0 && nodeBounds.height == 0 && root.getWeight() > 0.0)
                         width = (int) (bounds.width * split.getWeight());
                 } else

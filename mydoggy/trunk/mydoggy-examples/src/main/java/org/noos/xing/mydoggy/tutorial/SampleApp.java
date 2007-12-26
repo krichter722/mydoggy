@@ -80,19 +80,19 @@ public class SampleApp {
 
         // Register a Tool.
         toolWindowManager.registerToolWindow("Debug",                      // Id
-                                             "Debug Tool",                 // Title
-                                             null,                         // Icon
-                                             new JButton("Debug Tool"),    // Component
-                                             ToolWindowAnchor.LEFT);       // Anchor
+                "Debug Tool",                 // Title
+                null,                         // Icon
+                new JButton("Debug Tool"),    // Component
+                ToolWindowAnchor.LEFT);       // Anchor
 
         setupDebugTool();
 
         // Register another Tool.
         toolWindowManager.registerToolWindow("Run",                      // Id
-                                             "Run Tool",                 // Title
-                                             null,                       // Icon
-                                             new JButton("Run Tool"),    // Component
-                                             ToolWindowAnchor.LEFT);     // Anchor
+                "Run Tool",                 // Title
+                null,                       // Icon
+                new JButton("Run Tool"),    // Component
+                ToolWindowAnchor.LEFT);     // Anchor
 
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
@@ -131,7 +131,7 @@ public class SampleApp {
         dockedTypeDescriptor.setPreviewTransparentRatio(0.4f);
 
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
-        slidingTypeDescriptor.setEnabled(false);
+        slidingTypeDescriptor.setEnabled(true);
         slidingTypeDescriptor.setTransparentMode(true);
         slidingTypeDescriptor.setTransparentRatio(0.8f);
         slidingTypeDescriptor.setTransparentDelay(0);
@@ -162,9 +162,9 @@ public class SampleApp {
 
         ContentManager contentManager = toolWindowManager.getContentManager();
         Content content = contentManager.addContent("Tree Key",
-                                                    "Tree Title",
-                                                    null,      // An icon
-                                                    treeContent);
+                "Tree Title",
+                null,      // An icon
+                treeContent);
         content.setToolTipText("Tree tip");
 
         setupContentManagerUI();

@@ -109,7 +109,7 @@ public interface ToolWindow extends Dockable {
     void aggregate(AggregationPosition aggregationPosition);
 
     /**
-     * Agggregate this tool to the already visible tools using the specified toolwindow as a relative position and
+     * Aggregate this tool to the already visible tools using the specified toolwindow as a relative position and
      * the aggregation position as the position relative to the specified toolwindow.
      * This method is usable also when the tool is already visible.
      *

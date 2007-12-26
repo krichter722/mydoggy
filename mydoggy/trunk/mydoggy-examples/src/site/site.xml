@@ -18,6 +18,7 @@
             <item name="Introduction" href="index.html"/>
             <item name="MyDoggySet" href="mydoggyset.html">
                 <item name="Screenshots" href="mydoggysetScreenshots.html"/>
+                <item name="Videos" href="mydoggysetVideos.html"/>
                 <item name="Using" href="mydoggysetUsing.html"/>
             </item>
         </menu>

@@ -11,34 +11,64 @@
         <section name="ContentManagerUI">
             <p>
                 A ContentManagerUI is an interface to modify the ui behaviours of a content manager.
-                MyDoggy provides two kind of ContentManagerUI
+                MyDoggy provides three kind of ContentManagerUI...
             </p>
 
-            <ul>
-                <li>
-                    <a href="./apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html">
-                        <code>TabbedContentManagerUI</code>
-                    </a>
-					- This manager rapresents a ui that use a component that lets the user switch between
-					a group of components by clicking on a tab with a given title and/or icon (i.e. JTabbedPane).
-                </li>
-                <li>
-                    <a href="./apidocs/org/noos/xing/mydoggy/DesktopContentManagerUI.html">
-                        <code>DesktopContentManagerUI</code>
-                    </a>
-					- This manager rapresents a ui that use a container to create a multiple-document interface
-					or a virtual desktop.
-                </li>
-            </ul>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <img src="./images/multisplitContentManagerUI.png" alt="MultiSplitContentManager" border="0"
+                                 hspace="18"/>
+                        </td>
+                        <td>
+                            <a href="./apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html">
+                                <code>MultiSplitContentManagerUI</code>
+                            </a>
+                            - This manager rapresents a ui that use a component that lets the user switch between
+                            a group of components by clicking on a tab with a given title and/or icon.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="./images/tabbedContentManagerUI.png" alt="TabbedContentManager" border="0"
+                                 hspace="18"/>
+                        </td>
+                        <td>
+                            <a href="./apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html">
+                                <code>TabbedContentManagerUI</code>
+                            </a>
+                            - This manager rapresents a ui that use a component that lets the user switch between
+                            a group of components by clicking on a tab with a given title and/or icon (i.e.
+                            JTabbedPane).
+                            <p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="./images/desktopContentManagerUI.png" alt="DesktopContentManager" border="0"
+                                 hspace="18"/>
+                        </td>
+                        <td>
+                            <a href="./apidocs/org/noos/xing/mydoggy/DesktopContentManagerUI.html">
+                                <code>DesktopContentManagerUI</code>
+                            </a>
+                            - This manager rapresents a ui that use a container to create a multiple-document interface
+                            or a virtual desktop.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-			<p>
-				If you want to change the ContentManagerUI use the following :
-			</p>
-			<source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">...</a>;
-ContentManager contentManager = toolWindowManager.getContentManager();
-ContentManagerUI contentManagerUI = new <a href="./../mydoggy-plaf/index.html#ContentManageUI">... TODO</a>
-contentManager.setContentManagerUI(contentManagerUI);
-			</source>
+            <p>
+                If you want to change the ContentManagerUI use the following :
+            </p>
+            <source>ToolWindowManager toolWindowManager = new<a href="./../mydoggy-plaf/index.html">...</a>;
+                ContentManager contentManager = toolWindowManager.getContentManager();
+                ContentManagerUI contentManagerUI = new
+                <a href="./../mydoggy-plaf/index.html#ContentManageUI">... TODO</a>
+                contentManager.setContentManagerUI(contentManagerUI);
+            </source>
         </section>
 
         <section name="ContentUI">

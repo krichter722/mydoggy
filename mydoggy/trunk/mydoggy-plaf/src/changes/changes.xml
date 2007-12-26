@@ -7,10 +7,12 @@
     </properties>
 
     <body>
-        <release version="1.3.1" date="2007-04-07" description="Fifth release">
-			<action dev="adecaro" type="update">
-				Module refactored to clean the code and make it more simply to extend.
-			</action>
+        <release version="1.4.0" date="2008-01-01" description="Code name : Vittoria">
+        </release>
+        <release version="1.3.1" date="2007-04-07" description="Code name : Winnipeg">
+            <action dev="adecaro" type="update">
+                Module refactored to clean the code and make it more simply to extend.
+            </action>
             <action dev="adecaro" type="add">
                 Added ResourceManager interface to simplify mydoggy customization.
                 See <![CDATA[<a href="resourceManager.html">this</a>]]>.
@@ -20,22 +22,22 @@
                 you own manager. See <![CDATA[<a href="transparency.html">this</a>]]>.
             </action>
         </release>
-        <release version="1.3.0" date="2007-04-07" description="Fourth release">
-			<action dev="adecaro" type="add">
-				Support for all new features.
-			</action>
+        <release version="1.3.0" date="2007-04-07" description="Code name : Turkana">
+            <action dev="adecaro" type="add">
+                Support for all new features.
+            </action>
         </release>
-        <release version="1.2.0" date="2007-04-07" description="Third release">
-			<action dev="adecaro" type="add">
-				Support for all new features.
-			</action>
+        <release version="1.2.0" date="2007-04-07" description="Code name : Zajsan">
+            <action dev="adecaro" type="add">
+                Support for all new features.
+            </action>
         </release>
-        <release version="1.1.0" date="2006-10-31" description="Second release">
-			<action dev="adecaro" type="add">
-				Support for <![CDATA[<a href="index.html#ContentManageUI"><code>ContentManagerUI</code></a>]]>
-			</action>
+        <release version="1.1.0" date="2006-10-31" description="Code name : Michigan">
+            <action dev="adecaro" type="add">
+                Support for <![CDATA[<a href="index.html#ContentManageUI"><code>ContentManagerUI</code></a>]]>
+            </action>
         </release>
-        <release version="1.0.0" date="2006-10-31" description="First release">
+        <release version="1.0.0" date="2006-10-31" description="Code name : Huron">
             <action dev="adecaro" type="add">
                 MyDoggy 1.0.0 released.
             </action>

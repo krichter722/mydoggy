@@ -20,8 +20,12 @@
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../../../.m2/repository/tablelayout/TableLayout/20020517/TableLayout-20020517.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/tablelayout/TableLayout/20020517/TableLayout-20020517-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/tablelayout/TableLayout/20020517/TableLayout-20020517-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
