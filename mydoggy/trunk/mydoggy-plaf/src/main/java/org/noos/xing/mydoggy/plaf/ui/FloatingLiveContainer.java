@@ -1,7 +1,9 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.FloatingLiveTypeDescriptor;
+import org.noos.xing.mydoggy.SlidingTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
@@ -46,7 +48,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
         if (visible) {
             descriptor.checkIdOnTitleBar();
-            dockedContainer.getTitleBarButtons().configureIcons(ToolWindowType.FLOATING_LIVE);
+            dockedContainer.getTitleBarButtons().toolWindowTypeChanged(ToolWindowType.FLOATING_LIVE);
 
             // Reset Layout
             TableLayout layout = (TableLayout) sheet.getLayout();
@@ -72,12 +74,12 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                         case LEFT:
                         case RIGHT:
                             sheet.setSize(descriptor.getDockedTypeDescriptor().getDockLength(),
-                                          (int) (managerCmp.getHeight() / 1.5));
+                                    (int) (managerCmp.getHeight() / 1.5));
                             break;
                         case TOP:
                         case BOTTOM:
                             sheet.setSize((int) (managerCmp.getWidth() / 1.5),
-                                          descriptor.getDockedTypeDescriptor().getDockLength());
+                                    descriptor.getDockedTypeDescriptor().getDockLength());
                             break;
                     }
                 } else
@@ -85,10 +87,10 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
                 // Set Location
                 if (typeDescriptor.getLocation() == null ||
-                    typeDescriptor.getLocation().x > descriptor.getManager().getWidth() ||
-                    typeDescriptor.getLocation().y > descriptor.getManager().getHeight() ||
-                    typeDescriptor.getLocation().x < 0 ||
-                    typeDescriptor.getLocation().y < 0) {
+                        typeDescriptor.getLocation().x > descriptor.getManager().getWidth() ||
+                        typeDescriptor.getLocation().y > descriptor.getManager().getHeight() ||
+                        typeDescriptor.getLocation().x < 0 ||
+                        typeDescriptor.getLocation().y < 0) {
                     Component managerCmp = descriptor.getManager();
 
                     switch (toolWindow.getAnchor()) {
@@ -97,14 +99,14 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                             break;
                         case RIGHT:
                             sheet.setLocation(managerCmp.getWidth() - 50 - sheet.getWidth(),
-                                              50);
+                                    50);
                             break;
                         case TOP:
                             sheet.setLocation(50, 50);
                             break;
                         case BOTTOM:
                             sheet.setLocation(50,
-                                              managerCmp.getHeight() - 50 - sheet.getHeight());
+                                    managerCmp.getHeight() - 50 - sheet.getHeight());
                             break;
                     }
                 } else
@@ -254,8 +256,8 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
                         Rectangle bounds = descriptor.getManager().getMainContainer().getBounds();
                         bounds = SwingUtilities.convertRectangle(descriptor.getManager().getMainContainer(),
-                                                                 bounds,
-                                                                 descriptor.getManager().getRootPane().getLayeredPane());
+                                bounds,
+                                descriptor.getManager().getRootPane().getLayeredPane());
                         sheet.setBounds(bounds);
                     } else {
                         sheet.setBounds(oldBounds);

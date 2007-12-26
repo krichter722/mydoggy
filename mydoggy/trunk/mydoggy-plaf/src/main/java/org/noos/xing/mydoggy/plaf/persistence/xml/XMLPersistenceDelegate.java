@@ -6,13 +6,13 @@ import org.noos.xing.mydoggy.plaf.persistence.xml.merge.MergePolicyApplier;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.ResetMergePolicy;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.UnionMergePolicy;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer;
+import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-import org.jdesktop.swingx.MultiSplitLayout;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -250,7 +250,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         // Start pushAway
         attributes = new AttributesImpl();
         attributes.addAttribute(null, "pushAwayMode", null, null,
-                                toolWindowManager.getToolWindowManagerDescriptor().getPushAwayMode().toString());
+                toolWindowManager.getToolWindowManagerDescriptor().getPushAwayMode().toString());
         writer.startElement("pushAway", attributes);
 
         // start MOST_RECENT policy
@@ -469,7 +469,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
             return false;
         }
-        
+
     }
 
     public class ToolsElementParser extends ElementParserAdapter {
@@ -668,7 +668,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     toolWindow.setAnchor(toolWindowAnchor);
                 else
                     toolWindow.setAnchor(toolWindowAnchor,
-                                         anchorIndex);
+                            anchorIndex);
 
                 mergePolicyApplier.applyToolWindow(toolWindow, tool);
 
@@ -716,7 +716,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
             if (selectedContent != null)
                 selectedContent.setSelected(true);
-            
+
             if (maximizedContent != null)
                 maximizedContent.setMaximized(true);
 
@@ -733,7 +733,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             if (modelElement != null) {
                 String text = modelElement.getTextContent();
                 XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(text.getBytes()));
-                MultiSplitLayout.Split model = (MultiSplitLayout.Split) decoder.readObject();
+                MultiSplitLayout.Node model = (MultiSplitLayout.Node) decoder.readObject();
 
                 toolWindowManager.getBar(anchor).getToolsContainer().setModel(model);
             }

@@ -11,7 +11,6 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingMoveMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingResizeMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingToolTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import sun.awt.AppContext;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,7 +41,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
     public FloatingContainer(DockedContainer dockedContainer) {
         super(dockedContainer);
-        this.floatingAnimation =  new FloatingAnimation();
+        this.floatingAnimation = new FloatingAnimation();
 
         initComponents();
         initListeners();
@@ -60,7 +59,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
         if (visible) {
             descriptor.checkIdOnTitleBar();
-            titleBarButtons.configureIcons(ToolWindowType.FLOATING);
+            titleBarButtons.toolWindowTypeChanged(ToolWindowType.FLOATING);
 
             window.getContentPane().removeAll();
 
@@ -98,7 +97,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 window.getContentPane().setVisible(true);
                 SwingUtil.repaint(window);
 
-                if (!window.isFocused() && toolWindow.isActive()) 
+                if (!window.isFocused() && toolWindow.isActive())
                     dockedContainer.assignFocus();
             }
         } else {
@@ -109,7 +108,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
             if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isAnimating())
                 floatingAnimation.hide();
-             else {
+            else {
                 window.getContentPane().setVisible(true);
                 window.setVisible(false);
             }
@@ -123,9 +122,9 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
     protected void initComponents() {
         window = new JModalWindow(dockedContainer.getResourceManager(),
-                                  dockedContainer.getResourceManager().getBoolean("dialog.owner.enabled", true) ?  descriptor.getWindowAnchestor() : null,
-                                  null,
-                                  false);
+                dockedContainer.getResourceManager().getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
+                null,
+                false);
         window.setName("toolWindow.floating.window." + toolWindow.getId());
 
         JPanel contentPane = new JPanel(new ExtendedTableLayout(new double[][]{{1, TableLayout.FILL, 1}, {1, TableLayout.FILL, 1}}));
@@ -154,7 +153,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 assert "type".equals(evt.getPropertyName());
                 if (evt.getNewValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING_FREE) {
                     dockedContainer.enableIdOnTitleBar();
-                    
+
                     // Remove
                     window.removeMouseMotionListener(resizeMouseInputHandler);
                     window.removeMouseListener(resizeMouseInputHandler);
@@ -189,7 +188,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 } else {
                     if (!descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar())
                         dockedContainer.disableIdOnTitleBar();
-                                        
+
                     if (settedListener)
                         lastBounds = window.getBounds();
 
@@ -255,9 +254,9 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         addPropertyChangeListener("maximized", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-                    if ((Boolean)evt.getNewValue())
+                    if ((Boolean) evt.getNewValue())
                         SwingUtil.setFullScreen(window);
-                     else
+                    else
                         SwingUtil.restoreFullScreenWindow(window);
                 }
 
@@ -343,9 +342,9 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                         window.getHeight() + (animatingLengthY - lastLenY));
             } else {
                 window.setBounds(window.getX() + (animatingLengthX / 2 - lastLenX / 2),
-                                 window.getY() + (animatingLengthY / 2 - lastLenY / 2),
-                                 window.getWidth() - (animatingLengthX - lastLenX),
-                                 window.getHeight() - (animatingLengthY - lastLenY)
+                        window.getY() + (animatingLengthY / 2 - lastLenY / 2),
+                        window.getWidth() - (animatingLengthX - lastLenX),
+                        window.getHeight() - (animatingLengthY - lastLenY)
                 );
             }
 
@@ -383,8 +382,8 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
             this.originalBounds = window.getBounds();
 //            window.getContentPane().setVisible(false);
             window.setBounds(new Rectangle(originalBounds.x + (originalBounds.width / 2),
-                                           originalBounds.y + (originalBounds.height / 2),
-                                           0, 0));
+                    originalBounds.y + (originalBounds.height / 2),
+                    0, 0));
 
             FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
             window.setModal(typeDescriptor.isModal());

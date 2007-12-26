@@ -13,6 +13,6 @@ public interface TitleBarButtons {
 
     Component getButtonsContainer();
 
-    void configureIcons(ToolWindowType type);
+    void toolWindowTypeChanged(ToolWindowType type);
 
 }
