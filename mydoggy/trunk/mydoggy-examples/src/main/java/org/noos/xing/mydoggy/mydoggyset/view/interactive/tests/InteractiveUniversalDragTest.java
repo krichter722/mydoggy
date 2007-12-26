@@ -15,14 +15,14 @@ public class InteractiveUniversalDragTest extends MyDoggySetInteractiveTest {
     }
 
     public String getName() {
-        return "Drag a Tool everywhere you want...";
+        return "Drag a toolwindow everywhere you want...";
     }
 
     public String getDescription() {
         return "<html>" +
                 "<h2>Test Description</h2>" +
                 "<p>" +
-                "This test shows how to drag a tool everywhere you want..." +
+                "This test shows how to drag a toolwindow everywhere you want..." +
                 "</p>" +
                 "</html>";
     }
@@ -42,15 +42,11 @@ public class InteractiveUniversalDragTest extends MyDoggySetInteractiveTest {
         showTip("<html>Drag Tool 13 to <br>Tool 3 as a Tab", 1000);
         drag("toolWindow.Tool 13.tab.Title 13", "toolWindow.container.Tool 3");
 
-        showTip("<html>Drag Tool 3 to <br> the Top bar", 1000);
+        showTip("<html>Drag Tab Tool 13 to <br> the Top bar", 1000);
         drag("toolWindow.Tool 3.tab.Title 13", "toolWindowManager.bar." + ToolWindowAnchor.TOP);
 
         showTip("<html>Drag Tool 13 to <br> Tool 3 as a Tab", 1000);
         drag("toolWindow.Tool 13.tab.Title 13", "toolWindow.container.Tool 3");
-
-        // TODO:
-//        showTip("<html>Extract Tool 13", 1000);
-//        drag("toolWindow.Tool 3.tab.Title 13", "toolWindow.container.Tool 3");
     }
 
 }
