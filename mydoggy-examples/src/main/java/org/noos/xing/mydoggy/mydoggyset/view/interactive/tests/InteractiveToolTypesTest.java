@@ -11,8 +11,20 @@ import java.awt.*;
 public class InteractiveToolTypesTest extends MyDoggySetInteractiveTest {
 
     public InteractiveToolTypesTest(Container root, ToolWindowManager manager) throws AWTException {
-        super("Show All Tool Window Types",
-              "Show All Tool Window Types", manager, root);
+        super(manager, root);
+    }
+
+    public String getName() {
+        return "Demostrate Tool Window Types...";
+    }
+
+    public String getDescription() {
+        return "<html>" +
+                "<h2>Test Description</h2>" +
+                "<p>" +
+                "This test demostrate all toolwindow Types available..." +
+                "</p>" +
+                "</html>";
     }
 
     public void execute() {
@@ -30,7 +42,7 @@ public class InteractiveToolTypesTest extends MyDoggySetInteractiveTest {
         componentLookuper.lookup()
                 .moveToCenter()
                 .showTip("<html>Second : <strong>Sliding Mode</strong>");
-        
+
         clickOn(getRepresentativeButtonName("Tool 1"));
         clickOn("toolWindow.dockButton.Tool 1");
         moveOn("toolWindow.container.Tool 1", "<html>This is <strong>Sliding Mode</strong>");
