@@ -14,51 +14,71 @@
                 MyDoggy provides three kind of ContentManagerUI...
             </p>
 
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            <img src="./images/multisplitContentManagerUI.png" alt="MultiSplitContentManager" border="0"
-                                 hspace="18"/>
-                        </td>
-                        <td>
-                            <a href="./apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html">
-                                <code>MultiSplitContentManagerUI</code>
-                            </a>
-                            - This manager rapresents a ui that use a component that lets the user switch between
-                            a group of components by clicking on a tab with a given title and/or icon.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <img src="./images/tabbedContentManagerUI.png" alt="TabbedContentManager" border="0"
-                                 hspace="18"/>
-                        </td>
-                        <td>
-                            <a href="./apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html">
-                                <code>TabbedContentManagerUI</code>
-                            </a>
-                            - This manager rapresents a ui that use a component that lets the user switch between
-                            a group of components by clicking on a tab with a given title and/or icon (i.e.
-                            JTabbedPane).
-                            <p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <img src="./images/desktopContentManagerUI.png" alt="DesktopContentManager" border="0"
-                                 hspace="18"/>
-                        </td>
-                        <td>
-                            <a href="./apidocs/org/noos/xing/mydoggy/DesktopContentManagerUI.html">
-                                <code>DesktopContentManagerUI</code>
-                            </a>
-                            - This manager rapresents a ui that use a container to create a multiple-document interface
-                            or a virtual desktop.
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <a name="MyDoggyMultiSplitContentManagerUI"/>
+            <subsection name="MyDoggyMultiSplitContentManagerUI">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./images/multisplitContentManagerUI.png" alt="MultisplitContentManagerUI"
+                                     border="0" hspace="18"/>
+                            </td>
+                            <td>
+                                <p>
+                                    This interface represents a ui that use a component that lets the user switch
+                                    between
+                                    a group of components by clicking on a tab with a given title and/or icon. The
+                                    position of each tab can be customized from the ui or by code.
+                                    <br/>To obtain and set a specific instance use the following (for example):
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
+            <a name="MyDoggyTabbedContentManagerUI"/>
+            <subsection name="MyDoggyTabbedContentManagerUI">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./images/tabbedContentManagerUI.png" alt="TabbedContentManagerUI" border="0"
+                                     hspace="18"/>
+                            </td>
+                            <td>
+                                <p>
+                                    This interface represents a ui that use a component that lets the user switch
+                                    between
+                                    a group of components by clicking on a tab with a given title and/or icon (i.e.
+                                    JTabbedPane).
+                                    <br/>To obtain and set a specific instance use the following (for example):
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
+            <a name="MyDoggyDesktopContentManagerUI"/>
+            <subsection name="MyDoggyDesktopContentManagerUI">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./images/desktopContentManagerUI.png" alt="DesktopContentManagerUI" border="0"
+                                     hspace="18"/>
+                            </td>
+                            <td>
+                                <p>
+                                    This interface represents a ui that use a container to create a multiple-document
+                                    interface
+                                    or a virtual desktop.
+                                    <br/>To obtain and set a specific instance use the following (for example):
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
 
             <p>
                 If you want to change the ContentManagerUI use the following :

@@ -208,7 +208,7 @@
 
             </action>
             <action dev="adecaro" type="update">
-            <![CDATA[
+                <![CDATA[
                 <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowTab.html">
                     <code>ToolWindowTab</code>
                 </a> - Added methods:
@@ -223,6 +223,7 @@
                     </li>
                 </ul>
                 ]]>
+            </action>
             <action dev="adecaro" type="update">
                 <![CDATA[
                 <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">

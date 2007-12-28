@@ -10,17 +10,19 @@ import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.MouseEventDispatcher;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLabelUI;
 import javax.swing.plaf.basic.BasicPanelUI;
 import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
 import java.awt.event.*;
+import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.EventListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -39,15 +41,20 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     protected Component selecTabButton;
     protected PopupButton popupButton;
 
+    protected MouseEventDispatcher mouseEventDispatcher;
+
+
     public ToolWindowTabPanel(DockedContainer dockedContainer, ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
         this.resourceManager = descriptor.getResourceManager();
         this.dockedContainer = dockedContainer;
+        this.mouseEventDispatcher = new MouseEventDispatcher();
 
         initComponents();
         initListeners();
     }
+
 
     public void propertyChange(PropertyChangeEvent evt) {
         String property = evt.getPropertyName();
@@ -67,6 +74,14 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
     public JPanel getTabContainer() {
         return tabContainer;
+    }
+
+    public void addEventDispatcherlListener(EventListener eventListener) {
+        mouseEventDispatcher.addListener(eventListener);
+    }
+
+    public void removeEventDispatcherlListener(EventListener eventListener) {
+        mouseEventDispatcher.removeListener(eventListener);
     }
 
 
@@ -129,7 +144,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 public void actionPerformed(ActionEvent e) {
                     if (tab.isCloseable()) {
                         ToolWindowTabEvent event = new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_REMOVING,
-                                                                          toolWindow, tab);
+                                toolWindow, tab);
                         for (ToolWindowListener listener : toolWindow.getToolWindowListeners()) {
                             boolean result = listener.toolWindowTabRemoving(event);
                             if (!result)
@@ -163,7 +178,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 protected void tryToClose(ToolWindowTab tab) {
                     if (tab != null && tab.isCloseable()) {
                         ToolWindowTabEvent event = new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_REMOVING,
-                                                                          toolWindow, tab);
+                                toolWindow, tab);
 
                         for (ToolWindowListener listener : toolWindow.getToolWindowListeners()) {
                             boolean result = listener.toolWindowTabRemoving(event);
@@ -177,6 +192,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             }
 
         });
+
         toolWindow.addToolWindowListener(new ToolWindowListener() {
             public void toolWindowTabAdded(ToolWindowTabEvent event) {
                 if (tabContainer.getComponentCount() == 0)
@@ -207,7 +223,10 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 checkPopupButton();
             }
         });
+
         viewport.addMouseListener(dockedContainer.getTitleBarMouseAdapter());
+        viewport.addMouseListener(mouseEventDispatcher);
+        viewport.addMouseMotionListener(mouseEventDispatcher);
     }
 
     protected void initTabs() {
@@ -300,25 +319,27 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                         if (selected) {
                             if (toolWindow.isActive()) {
                                 GraphicsUtil.fillRect(g, bounds,
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
-                                                      new RoundRectangle2D.Double(
-                                                              bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
-                                                      ),
-                                                      GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+                                        resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
+                                        resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
+                                        new RoundRectangle2D.Double(
+                                                bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
+                                        ),
+                                        GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
                             } else
                                 GraphicsUtil.fillRect(g, bounds,
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END),
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START),
-                                                      new RoundRectangle2D.Double(
-                                                              bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
-                                                      ),
-                                                      GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+                                        resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END),
+                                        resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START),
+                                        new RoundRectangle2D.Double(
+                                                bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
+                                        ),
+                                        GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
                         }
                     }
                     super.update(g, c);
                 }
             });
+            addMouseListener(mouseEventDispatcher);
+            addMouseMotionListener(mouseEventDispatcher);
 
             String name = "toolWindow." + tab.getOwner().getId() + ".tab." + tab.getTitle();
             setName(name);
@@ -345,6 +366,8 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
             });
             titleLabel.addMouseListener(dockedContainer.getTitleBarMouseAdapter());
+            titleLabel.addMouseListener(mouseEventDispatcher);
+            titleLabel.addMouseMotionListener(mouseEventDispatcher);
             titleLabel.addMouseListener(this);
             add(titleLabel, "0,0,FULL,FULL");
 
