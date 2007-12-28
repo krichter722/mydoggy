@@ -5,34 +5,34 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.*;
 
 import javax.swing.*;
+import javax.swing.event.SwingPropertyChangeSupport;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class DefaultTitleBarButtons implements TitleBarButtons {
+public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons {
     protected ToolWindow toolWindow;
     protected ToolWindowDescriptor descriptor;
     protected transient ResourceManager resourceManager;
     protected DockedContainer dockedContainer;
 
-    protected JPanel buttonContainer;
+    protected TableLayout containerLayout;
+    protected Component focusable;
 
-    protected JButton floatingButton;
-    protected JButton pinButton;
-    protected JButton dockButton;
-    protected JButton hideButton;
-    protected JButton maximizeButton;
+    protected PropertyChangeSupport propertyChangeSupport;
+
 
     public DefaultTitleBarButtons(ToolWindowDescriptor toolWindowDescriptor, DockedContainer dockedContainer) {
         this.descriptor = toolWindowDescriptor;
         this.toolWindow = toolWindowDescriptor.getToolWindow();
         this.resourceManager = dockedContainer.getResourceManager();
         this.dockedContainer = dockedContainer;
+        this.propertyChangeSupport = new SwingPropertyChangeSupport(this);
 
         initComponents();
         initListeners();
@@ -40,284 +40,130 @@ public class DefaultTitleBarButtons implements TitleBarButtons {
 
 
     public Component getFocusable() {
-        return hideButton;
+        return focusable;
     }
 
     public Component getButtonsContainer() {
-        return buttonContainer;
+        return this;
     }
 
     public void toolWindowTypeChanged(ToolWindowType type) {
-        switch (type) {
-            case DOCKED:
-                setPinVisible(true);
-
-                setFloating();
-                setFloatingVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
-
-                setDockedVisible(((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled());
-                setDocked();
-                break;
-            case FLOATING_LIVE:
-                setPinVisible(true);
-                setFloating();
-                setFloatingVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
-                setDockedVisible(((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled());
-                setSliding();
-                break;
-            case SLIDING:
-                setPinVisible(false);
-                setFloatingVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
-                setSliding();
-                break;
-            case FLOATING:
-            case FLOATING_FREE:
-                FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
-
-                if (typeDescriptor.isModal()) {
-                    setPinVisible(false);
-                    setFloatingVisible(false);
-                    setDockedVisible(false);
-                } else {
-                    setPinVisible(true);
-                    setFloatingVisible(true);
-                    setDockedVisible(false);
-                    setFix();
-                }
-                break;
-        }
+        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "type", null, type));
     }
 
-
     protected void initComponents() {
-        buttonContainer = new JPanel(new ExtendedTableLayout(new double[][]{{13, 1, 13, 1, 13, 1, 13, 1, 13}, {1, 14, 1}}, false));
-        buttonContainer.setOpaque(false);
+        setLayout(containerLayout = new ExtendedTableLayout(new double[][]{{0, 0}, {1, 14, 1}}, false));
+        setOpaque(false);
 
-        // Buttons
-        ActionListener titleBarActionListener = new TitleBarActionListener();
-
-        hideButton = renderTitleButton("visible", titleBarActionListener,
-                "@@tool.tooltip.hide", MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE,
-                null);
-        maximizeButton = renderTitleButton("maximize", titleBarActionListener, "@@tool.tooltip.maximize", MyDoggyKeySpace.MAXIMIZE_INACTIVE, null);
-        pinButton = renderTitleButton("pin", titleBarActionListener, "@@tool.tooltip.unpin", MyDoggyKeySpace.AUTO_HIDE_OFF_INACTIVE, null);
-        floatingButton = renderTitleButton("floating", titleBarActionListener,
-                "@@tool.tooltip.float", MyDoggyKeySpace.FLOATING_INACTIVE,
-                "toolWindow.floatingButton." + toolWindow.getId());
-        dockButton = renderTitleButton("undock", titleBarActionListener,
-                "@@tool.tooltip.undock", MyDoggyKeySpace.DOCKED_INACTIVE,
-                "toolWindow.dockButton." + toolWindow.getId());
-
-        buttonContainer.add(dockButton, "0,1");
-        buttonContainer.add(floatingButton, "2,1");
-        buttonContainer.add(pinButton, "4,1");
-        buttonContainer.add(maximizeButton, "6,1");
-        buttonContainer.add(hideButton, "8,1");
+        addTitleBarAction(new DockAction());
+        addTitleBarAction(new FloatingAction());
+        addTitleBarAction(new PinAction());
+        addTitleBarAction(new MaximizeAction());
+        focusable = addTitleBarAction(new HideAction());
     }
 
     protected void initListeners() {
-        dockedContainer.addPropertyChangeListener("autoHide", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getSource() != descriptor)
-                    return;
-
-                boolean newValue = ((Boolean) evt.getNewValue());
-
-                if (newValue) {
-                    pinButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_ON));
-                    pinButton.setToolTipText(resourceManager.getString("@@tool.tooltip.pin"));
-                } else {
-                    pinButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF));
-                    pinButton.setToolTipText(resourceManager.getString("@@tool.tooltip.unpin"));
-                }
-            }
-        });
-        dockedContainer.addPropertyChangeListener("maximized.before", new PropertyChangeListener() {
-            private boolean flag = false;
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getSource() != descriptor)
-                    return;
-
-                if ((Boolean) evt.getNewValue()) {
-                    maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MINIMIZE));
-                    flag = true;
-                } else if (flag) {
-                    maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
-                    flag = false;
-                }
-            }
-        });
-        dockedContainer.addPropertyChangeListener("active", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getSource() != descriptor)
-                    return;
-
-                boolean active = (Boolean) evt.getNewValue();
-
-                if (active) {
-                    if (toolWindow.isAutoHide()) {
-                        pinButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_ON));
-                    } else
-                        pinButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF));
-
-                    hideButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW));
-
-                    if (toolWindow.getType() == ToolWindowType.SLIDING || toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
-                        dockButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.DOCKED));
-                    } else
-                        dockButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.SLIDING));
-
-                    if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-                        floatingButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.FIX));
-                    } else
-                        floatingButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.FLOATING));
-
-                    if (toolWindow.isMaximized())
-                        maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MINIMIZE));
-                    else
-                        maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
-                } else {
-                    if (toolWindow.isAutoHide()) {
-                        pinButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_ON_INACTIVE));
-                    } else
-                        pinButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF_INACTIVE));
-
-                    hideButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE));
-
-                    if (toolWindow.getType() == ToolWindowType.SLIDING || toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
-                        dockButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.DOCKED_INACTIVE));
-                    } else
-                        dockButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.SLIDING_INACTIVE));
-
-                    if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-                        floatingButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.FIX_INACTIVE));
-                    } else
-                        floatingButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.FLOATING_INACTIVE));
-
-                    if (toolWindow.isMaximized())
-                        maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MINIMIZE_INACTIVE));
-                    else
-                        maximizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.MAXIMIZE_INACTIVE));
-                }
-            }
-        });
-
-        descriptor.getTypeDescriptor(ToolWindowType.SLIDING).addPropertyChangeListener(
-                new PropertyChangeListener() {
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        if ("enabled".equals(evt.getPropertyName()))
-                            setDockedVisible((Boolean) evt.getNewValue());
-                    }
-                }
-        );
-        descriptor.getTypeDescriptor(ToolWindowType.FLOATING).addPropertyChangeListener(
-                new PropertyChangeListener() {
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        if ("enabled".equals(evt.getPropertyName()))
-                            setFloatingVisible((Boolean) evt.getNewValue());
-                    }
-                }
-        );
-
     }
 
 
-    protected JButton renderTitleButton(String actionCommand, ActionListener actionListener, String tooltip, String iconId, String name) {
+    protected Component addTitleBarAction(TitleBarAction titleBarAction) {
+        return addTitleBarAction(-1, titleBarAction);
+    }
+
+    protected Component addTitleBarAction(int index, TitleBarAction titleBarAction) {
+        int row;
+        if (index == -1) {
+            double[] oldCols = containerLayout.getColumn();
+
+            double[] newCols;
+            if (oldCols.length == 2) {
+                newCols = new double[]{0, 13, 0};
+                row = 1;
+            } else {
+                newCols = new double[oldCols.length + 2];
+
+                System.arraycopy(oldCols, 0, newCols, 0, oldCols.length);
+                newCols[oldCols.length - 1] = 1;
+                newCols[oldCols.length] = 13;
+                newCols[oldCols.length + 1] = 0;
+                row = oldCols.length;
+            }
+            containerLayout.setColumn(newCols);
+        } else {
+            row = -1;
+        }
+
         JButton button = (JButton) resourceManager.createComponent(
                 MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON,
                 descriptor.getManager()
         );
-        button.setName(name);
-        button.setActionCommand(actionCommand);
-        button.addActionListener(actionListener);
-        button.setToolTipText(resourceManager.getString(tooltip));
-        button.setIcon(resourceManager.getIcon(iconId));
+        button.setAction(titleBarAction);
+        button.setName((String) titleBarAction.getValue("action.name"));
+        titleBarAction.putValue("component", button);
+
+        add(button, row + ",1,FULL,FULL");
 
         return button;
     }
 
-    protected void setPinVisible(boolean visible) {
-        pinButton.setVisible(visible);
-        TableLayout tableLayout = (TableLayout) pinButton.getParent().getLayout();
-        tableLayout.setColumn(4, (visible) ? 13 : 0);
-        tableLayout.setColumn(5, (visible) ? 1 : 0);
-    }
-
-    protected void setFloatingVisible(boolean visible) {
-        floatingButton.setVisible(visible);
-        TableLayout tableLayout = (TableLayout) pinButton.getParent().getLayout();
-        tableLayout.setColumn(2, (visible) ? 13 : 0);
-        tableLayout.setColumn(3, (visible) ? 1 : 0);
-    }
-
-    protected void setDockedVisible(boolean visible) {
-        dockButton.setVisible(visible);
-        TableLayout tableLayout = (TableLayout) pinButton.getParent().getLayout();
-        tableLayout.setColumn(0, (visible) ? 13 : 0);
-        tableLayout.setColumn(1, (visible) ? 1 : 0);
-    }
-
-    protected void setSliding() {
-        dockButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.DOCKED));
-        dockButton.setToolTipText(resourceManager.getString("@@tool.tooltip.dock"));
-    }
-
-    protected void setDocked() {
-        dockButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.SLIDING));
-        dockButton.setToolTipText(resourceManager.getString("@@tool.tooltip.undock"));
-    }
-
-    protected void setFix() {
-        floatingButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.FIX));
-        floatingButton.setToolTipText(resourceManager.getString("@@tool.tooltip.fix"));
-    }
-
-    protected void setFloating() {
-        floatingButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.FLOATING));
-        floatingButton.setToolTipText(resourceManager.getString("@@tool.tooltip.float"));
-    }
-
-
-    protected class TitleBarActionListener implements ActionListener {
-
-        public void actionPerformed(ActionEvent e) {
-            String actionCommnad = e.getActionCommand();
-            if (!"visible".equals(actionCommnad))
-                toolWindow.setActive(true);
-
-            if ("visible".equals(actionCommnad)) {
-                ToolWindowActionHandler toolWindowActionHandler = ((DockedTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.DOCKED)).getToolWindowActionHandler();
-                if (toolWindowActionHandler != null)
-                    toolWindowActionHandler.onHideButtonClick(toolWindow);
-                else
-                    toolWindow.setVisible(false);
-            } else if ("pin".equals(actionCommnad)) {
-                toolWindow.setAutoHide(!toolWindow.isAutoHide());
-            } else if ("floating".equals(actionCommnad)) {
-                ToolWindowType type = toolWindow.getType();
-                if (type == ToolWindowType.FLOATING || type == ToolWindowType.FLOATING_FREE) {
-                    toolWindow.setType(ToolWindowType.DOCKED);
-                } else
-                if (type == ToolWindowType.DOCKED || type == ToolWindowType.SLIDING || type == ToolWindowType.FLOATING_LIVE) {
-                    toolWindow.setType(descriptor.isFloatingWindow() ? ToolWindowType.FLOATING_FREE : ToolWindowType.FLOATING);
+    protected void setVisible(Component component, boolean visible) {
+        for (Component cmp : getComponents()) {
+            if (cmp == component) {
+                if (visible) {
+                    int col = containerLayout.getConstraints(component).col1;
+                    containerLayout.setColumn(col, 13);
+                    if (col != containerLayout.getColumn().length - 1)
+                        containerLayout.setColumn(col + 1, 1);
+                } else {
+                    int col = containerLayout.getConstraints(component).col1;
+                    containerLayout.setColumn(col, 0);
+                    if (col != containerLayout.getColumn().length - 1)
+                        containerLayout.setColumn(col + 1, 0);
                 }
-            } else if ("undock".equals(actionCommnad)) {
-                ToolWindowType type = toolWindow.getType();
-                if (type == ToolWindowType.DOCKED) {
-                    toolWindow.setType(ToolWindowType.SLIDING);
-                } else if (type == ToolWindowType.SLIDING || type == ToolWindowType.FLOATING_LIVE) {
-                    toolWindow.setType(ToolWindowType.DOCKED);
-                }
-            } else if ("maximize".equals(actionCommnad)) {
-                toolWindow.setMaximized(!toolWindow.isMaximized());
             }
         }
 
     }
 
 
-    protected class HideAction extends AbstractAction {
+    protected abstract class TitleBarAction extends AbstractAction implements PropertyChangeListener {
+
+        protected TitleBarAction() {
+            propertyChangeSupport.addPropertyChangeListener(this);
+        }
+
+        protected TitleBarAction(String name, String icon, String tooltip) {
+            putValue("action.name", name);
+            putValue(Action.SMALL_ICON, resourceManager.getIcon(icon));
+            putValue(Action.SHORT_DESCRIPTION, resourceManager.getString(tooltip));
+            propertyChangeSupport.addPropertyChangeListener(this);
+        }
+
+        public void setVisible(boolean visible) {
+            DefaultTitleBarButtons.this.setVisible((Component) getValue("component"), visible);
+        }
+
+    }
+
+    protected class HideAction extends TitleBarAction {
+
+        public HideAction() {
+            super("toolWindow.hideButton." + toolWindow.getId(), MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE, "@@tool.tooltip.hide");
+            dockedContainer.addPropertyChangeListener("active", new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if (evt.getSource() != descriptor)
+                        return;
+
+                    boolean active = (Boolean) evt.getNewValue();
+
+                    if (active) {
+                        putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW));
+                    } else {
+                        putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE));
+                    }
+                }
+            });
+        }
 
         public void actionPerformed(ActionEvent e) {
             ToolWindowActionHandler toolWindowActionHandler = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class).getToolWindowActionHandler();
@@ -326,6 +172,261 @@ public class DefaultTitleBarButtons implements TitleBarButtons {
             else
                 toolWindow.setVisible(false);
         }
+
+        public void propertyChange(PropertyChangeEvent evt) {
+        }
     }
 
+    protected class DockAction extends TitleBarAction {
+
+        public DockAction() {
+            super("toolWindow.dockButton." + toolWindow.getId(), MyDoggyKeySpace.DOCKED_INACTIVE, "@@tool.tooltip.undock");
+            descriptor.getTypeDescriptor(ToolWindowType.SLIDING).addPropertyChangeListener(
+                    new PropertyChangeListener() {
+                        public void propertyChange(PropertyChangeEvent evt) {
+                            if ("enabled".equals(evt.getPropertyName()))
+                                setVisible((Boolean) evt.getNewValue());
+                        }
+                    }
+            );
+            dockedContainer.addPropertyChangeListener("active", new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if (evt.getSource() != descriptor)
+                        return;
+
+                    boolean active = (Boolean) evt.getNewValue();
+
+                    if (active) {
+                        if (toolWindow.getType() == ToolWindowType.SLIDING || toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
+                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.DOCKED));
+                        } else
+                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.SLIDING));
+                    } else {
+                        if (toolWindow.getType() == ToolWindowType.SLIDING || toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
+                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.DOCKED_INACTIVE));
+                        } else
+                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.SLIDING_INACTIVE));
+                    }
+                }
+            });
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            toolWindow.setActive(true);
+
+            ToolWindowType type = toolWindow.getType();
+            if (type == ToolWindowType.DOCKED) {
+                toolWindow.setType(ToolWindowType.SLIDING);
+            } else if (type == ToolWindowType.SLIDING || type == ToolWindowType.FLOATING_LIVE) {
+                toolWindow.setType(ToolWindowType.DOCKED);
+            }
+        }
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            ToolWindowType type = (ToolWindowType) evt.getNewValue();
+            switch (type) {
+                case DOCKED:
+                    putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.SLIDING));
+                    putValue(Action.SHORT_DESCRIPTION, resourceManager.getString("@@tool.tooltip.undock"));
+                    setVisible(((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled());
+                    break;
+                case FLOATING_LIVE:
+                    putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.DOCKED));
+                    putValue(Action.SHORT_DESCRIPTION, resourceManager.getString("@@tool.tooltip.dock"));
+                    setVisible(((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled());
+                    break;
+                case SLIDING:
+                    putValue(Action.SHORT_DESCRIPTION, resourceManager.getString("@@tool.tooltip.dock"));
+                    setVisible(((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled());
+                    break;
+                case FLOATING:
+                case FLOATING_FREE:
+                    setVisible(!((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isModal());
+                    break;
+            }
+        }
+    }
+
+    protected class PinAction extends TitleBarAction {
+
+        public PinAction() {
+            super("toolWindow.pinButton." + toolWindow.getId(), MyDoggyKeySpace.AUTO_HIDE_OFF_INACTIVE, "@@tool.tooltip.unpin");
+            dockedContainer.addPropertyChangeListener("autoHide", new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if (evt.getSource() != descriptor)
+                        return;
+
+                    boolean newValue = ((Boolean) evt.getNewValue());
+
+                    if (newValue) {
+                        putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_ON));
+                        putValue(Action.LONG_DESCRIPTION, resourceManager.getString("@@tool.tooltip.pin"));
+                    } else {
+                        putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF));
+                        putValue(Action.LONG_DESCRIPTION, resourceManager.getString("@@tool.tooltip.unpin"));
+                    }
+                }
+            });
+            dockedContainer.addPropertyChangeListener("active", new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if (evt.getSource() != descriptor)
+                        return;
+
+                    boolean active = (Boolean) evt.getNewValue();
+
+                    if (active) {
+                        if (toolWindow.isAutoHide()) {
+                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_ON));
+                        } else
+                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF));
+                    } else {
+                        if (toolWindow.isAutoHide()) {
+                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_ON_INACTIVE));
+                        } else
+                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF_INACTIVE));
+                    }
+                }
+            });
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            toolWindow.setActive(true);
+            toolWindow.setAutoHide(!toolWindow.isAutoHide());
+        }
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            ToolWindowType type = (ToolWindowType) evt.getNewValue();
+            switch (type) {
+                case DOCKED:
+                case FLOATING_LIVE:
+                    setVisible(true);
+                    break;
+                case SLIDING:
+                    setVisible(false);
+                    break;
+                case FLOATING:
+                case FLOATING_FREE:
+                    setVisible(!((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isModal());
+                    break;
+            }
+        }
+    }
+
+    protected class MaximizeAction extends TitleBarAction {
+
+        public MaximizeAction() {
+            super("toolWindow.maximizeButton." + toolWindow.getId(), MyDoggyKeySpace.MAXIMIZE_INACTIVE, "@@tool.tooltip.maximize");
+            dockedContainer.addPropertyChangeListener("maximized.before", new PropertyChangeListener() {
+                private boolean flag = false;
+
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if (evt.getSource() != descriptor)
+                        return;
+
+                    if ((Boolean) evt.getNewValue()) {
+                        putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.MINIMIZE));
+                        flag = true;
+                    } else if (flag) {
+                        putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
+                        flag = false;
+                    }
+                }
+            });
+            dockedContainer.addPropertyChangeListener("active", new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if (evt.getSource() != descriptor)
+                        return;
+
+                    boolean active = (Boolean) evt.getNewValue();
+
+                    if (active) {
+                        if (toolWindow.isMaximized())
+                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.MINIMIZE));
+                        else
+                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
+                    } else {
+                        if (toolWindow.isMaximized())
+                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.MINIMIZE_INACTIVE));
+                        else
+                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.MAXIMIZE_INACTIVE));
+                    }
+                }
+            });
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            toolWindow.setActive(true);
+
+            toolWindow.setMaximized(!toolWindow.isMaximized());
+        }
+
+        public void propertyChange(PropertyChangeEvent evt) {
+        }
+    }
+
+    protected class FloatingAction extends TitleBarAction {
+
+        public FloatingAction() {
+            super("toolWindow.floatingButton." + toolWindow.getId(), MyDoggyKeySpace.FLOATING_INACTIVE, "@@tool.tooltip.float");
+            descriptor.getTypeDescriptor(ToolWindowType.FLOATING).addPropertyChangeListener(
+                    new PropertyChangeListener() {
+                        public void propertyChange(PropertyChangeEvent evt) {
+                            if ("enabled".equals(evt.getPropertyName()))
+                                setVisible((Boolean) evt.getNewValue());
+                        }
+                    }
+            );
+            dockedContainer.addPropertyChangeListener("active", new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if (evt.getSource() != descriptor)
+                        return;
+
+                    boolean active = (Boolean) evt.getNewValue();
+
+                    if (active) {
+                        if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
+                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.FIX));
+                        } else
+                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.FLOATING));
+                    } else {
+                        if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
+                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.FIX_INACTIVE));
+                        } else
+                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.FLOATING_INACTIVE));
+                    }
+                }
+            });
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            toolWindow.setActive(true);
+
+            ToolWindowType type = toolWindow.getType();
+            if (type == ToolWindowType.FLOATING || type == ToolWindowType.FLOATING_FREE) {
+                toolWindow.setType(ToolWindowType.DOCKED);
+            } else
+            if (type == ToolWindowType.DOCKED || type == ToolWindowType.SLIDING || type == ToolWindowType.FLOATING_LIVE) {
+                toolWindow.setType(descriptor.isFloatingWindow() ? ToolWindowType.FLOATING_FREE : ToolWindowType.FLOATING);
+            }
+        }
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            ToolWindowType type = (ToolWindowType) evt.getNewValue();
+            switch (type) {
+                case DOCKED:
+                case FLOATING_LIVE:
+                    putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.FLOATING));
+                    putValue(Action.SHORT_DESCRIPTION, resourceManager.getString("@@tool.tooltip.float"));
+                    setVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
+                    break;
+                case SLIDING:
+                    setVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
+                    break;
+                case FLOATING:
+                case FLOATING_FREE:
+                    setVisible(!((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isModal());
+                    break;
+            }
+        }
+    }
 }

@@ -12,11 +12,11 @@ public class MatrixPanel extends JPanel {
     protected int columns;
     protected int rows;
 
-    public MatrixPanel(int columns, int rows) {
-        this(columns, rows, -1);
+    public MatrixPanel(int rows, int columns) {
+        this(rows, columns, -1);
     }
 
-    public MatrixPanel(int columns, int rows, int colValue) {
+    public MatrixPanel(int rows, int columns, int colValue) {
         this.columns = columns;
         this.rows = rows;
 
@@ -43,7 +43,7 @@ public class MatrixPanel extends JPanel {
     }
 
 
-    public void addPair(int column, int row, String label, Component component) {
+    public void addEntry(int row, int column, String label, Component component) {
         column = 1 + column * 4;
         row = 1 + row * 2;
 

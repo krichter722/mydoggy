@@ -92,8 +92,8 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     public Component createComponent(String key, ToolWindowManager manager, Object... args) {
         return applyCustomization(key,
-                                  cmpCreators.get(key).createComponent(manager, this, args),
-                                  args);
+                cmpCreators.get(key).createComponent(manager, this, args),
+                args);
     }
 
     public ComponentUI createComponentUI(String key, ToolWindowManager manager, Object... args) {
@@ -108,8 +108,8 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     public void setLocale(Locale locale) {
         this.resourceBundle = initResourceBundle(locale,
-                                                 bundlePath,
-                                                 this.getClass().getClassLoader());
+                bundlePath,
+                this.getClass().getClassLoader());
     }
 
     public void setUserBundle(Locale locale, String bundle, ClassLoader classLoader) {

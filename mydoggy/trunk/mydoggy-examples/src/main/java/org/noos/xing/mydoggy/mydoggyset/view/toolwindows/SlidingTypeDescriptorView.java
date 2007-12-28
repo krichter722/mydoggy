@@ -1,13 +1,15 @@
 package org.noos.xing.mydoggy.mydoggyset.view.toolwindows;
 
-import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.SlidingTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
+import org.noos.xing.yasaf.plaf.action.ChangeListenerAction;
 import org.noos.xing.yasaf.plaf.action.DynamicAction;
 import org.noos.xing.yasaf.plaf.action.ViewContextSource;
-import org.noos.xing.yasaf.plaf.action.ChangeListenerAction;
 import org.noos.xing.yasaf.plaf.bean.ChecBoxSelectionSource;
-import org.noos.xing.yasaf.plaf.bean.ToFloatSource;
 import org.noos.xing.yasaf.plaf.bean.SpinnerValueSource;
+import org.noos.xing.yasaf.plaf.bean.ToFloatSource;
 import org.noos.xing.yasaf.plaf.component.MatrixPanel;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.view.ViewContext;
@@ -29,48 +31,48 @@ public class SlidingTypeDescriptorView extends ComponentView implements ViewCont
     }
 
     protected Component initComponent() {
-        MatrixPanel panel = new MatrixPanel(2, 3);
+        MatrixPanel panel = new MatrixPanel(3, 2);
 
-        panel.addPair(0, 0, "enabled : ", enabled = new JCheckBox());
+        panel.addEntry(0, 0, "enabled : ", enabled = new JCheckBox());
         enabled.setAction(new DynamicAction(SlidingTypeDescriptor.class,
-                                            "enabled",
-                                            new ViewContextSource(viewContext, SlidingTypeDescriptor.class),
-                                            new ChecBoxSelectionSource(enabled)));
+                "enabled",
+                new ViewContextSource(viewContext, SlidingTypeDescriptor.class),
+                new ChecBoxSelectionSource(enabled)));
 
-        panel.addPair(0, 1, "animating : ", animating = new JCheckBox());
+        panel.addEntry(1, 0, "animating : ", animating = new JCheckBox());
         animating.setSelected(true);
         animating.setAction(new DynamicAction(ToolWindowTypeDescriptor.class,
-                                              "animating",
-                                              new ViewContextSource(viewContext, SlidingTypeDescriptor.class),
-                                              new ChecBoxSelectionSource(animating)));
+                "animating",
+                new ViewContextSource(viewContext, SlidingTypeDescriptor.class),
+                new ChecBoxSelectionSource(animating)));
 
-        panel.addPair(0, 2, "idVisibleOnTitleBar : ", idVisibleOnTitleBar = new JCheckBox());
+        panel.addEntry(2, 0, "idVisibleOnTitleBar : ", idVisibleOnTitleBar = new JCheckBox());
         idVisibleOnTitleBar.setAction(new DynamicAction(ToolWindowTypeDescriptor.class,
-                                                       "idVisibleOnTitleBar",
-                                                       new ViewContextSource(viewContext, SlidingTypeDescriptor.class),
-                                                       new ChecBoxSelectionSource(idVisibleOnTitleBar)));
+                "idVisibleOnTitleBar",
+                new ViewContextSource(viewContext, SlidingTypeDescriptor.class),
+                new ChecBoxSelectionSource(idVisibleOnTitleBar)));
 
 
-        panel.addPair(1, 0, "transparentMode : ", transparentMode = new JCheckBox());
+        panel.addEntry(0, 1, "transparentMode : ", transparentMode = new JCheckBox());
         transparentMode.setAction(new DynamicAction(SlidingTypeDescriptor.class,
-                                                    "transparentMode",
-                                                    new ViewContextSource(viewContext, SlidingTypeDescriptor.class),
-                                                    new ChecBoxSelectionSource(transparentMode)));
+                "transparentMode",
+                new ViewContextSource(viewContext, SlidingTypeDescriptor.class),
+                new ChecBoxSelectionSource(transparentMode)));
 
-        panel.addPair(1, 1, "transparentRatio : ", transparentRatio = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 1.0, 0.05)));
+        panel.addEntry(1, 1, "transparentRatio : ", transparentRatio = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 1.0, 0.05)));
         transparentRatio.addChangeListener(
                 new ChangeListenerAction(SlidingTypeDescriptor.class,
-                                         "transparentRatio",
-                                         new ViewContextSource(viewContext, SlidingTypeDescriptor.class),
-                                         new ToFloatSource(new SpinnerValueSource(transparentRatio)))
+                        "transparentRatio",
+                        new ViewContextSource(viewContext, SlidingTypeDescriptor.class),
+                        new ToFloatSource(new SpinnerValueSource(transparentRatio)))
         );
 
-        panel.addPair(1, 2, "transparentDelay : ", transparentDelay = new JSpinner(new SpinnerNumberModel(0, 0, 5000, 500)));
+        panel.addEntry(2, 1, "transparentDelay : ", transparentDelay = new JSpinner(new SpinnerNumberModel(0, 0, 5000, 500)));
         transparentDelay.addChangeListener(
                 new ChangeListenerAction(SlidingTypeDescriptor.class,
-                                         "transparentDelay",
-                                         new ViewContextSource(viewContext, SlidingTypeDescriptor.class),
-                                         new SpinnerValueSource(transparentDelay))
+                        "transparentDelay",
+                        new ViewContextSource(viewContext, SlidingTypeDescriptor.class),
+                        new SpinnerValueSource(transparentDelay))
         );
 
         return panel;
@@ -85,8 +87,8 @@ public class SlidingTypeDescriptorView extends ComponentView implements ViewCont
 
                 enabled.setSelected(descriptor.isEnabled());
                 animating.setSelected(descriptor.isAnimating());
-                idVisibleOnTitleBar.setSelected(descriptor.isIdVisibleOnTitleBar());                
- 
+                idVisibleOnTitleBar.setSelected(descriptor.isIdVisibleOnTitleBar());
+
                 transparentMode.setSelected(descriptor.isTransparentMode());
                 transparentDelay.setValue(descriptor.getTransparentDelay());
                 transparentRatio.setValue(descriptor.getTransparentRatio());

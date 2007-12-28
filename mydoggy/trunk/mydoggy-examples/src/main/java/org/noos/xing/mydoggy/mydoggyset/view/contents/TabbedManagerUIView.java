@@ -60,7 +60,7 @@ public class TabbedManagerUIView extends ComponentView implements ViewContextCha
     protected Component initComponent() {
         this.toolWindowManager = viewContext.get(ToolWindowManager.class);
 
-        MatrixPanel panel = new MatrixPanel(1, 3);
+        MatrixPanel panel = new MatrixPanel(3, 1);
 
         // Tab Placement
         panel.add(new JLabel(), "1,1,r,c");
@@ -81,7 +81,7 @@ public class TabbedManagerUIView extends ComponentView implements ViewContextCha
                 }
             }
         });
-        panel.addPair(0, 0, "Tab Placement : ", tabPlaces);
+        panel.addEntry(0, 0, "Tab Placement : ", tabPlaces);
 
         // Tab Layout
         tabLayouts = new JComboBox(new Object[]{
@@ -99,7 +99,7 @@ public class TabbedManagerUIView extends ComponentView implements ViewContextCha
                 }
             }
         });
-        panel.addPair(0, 1, "Tab Layout : ", tabLayouts);
+        panel.addEntry(1, 0, "Tab Layout : ", tabLayouts);
 
         // isShowAlwaysTab
         isShowAlwaysTab = new JCheckBox();
@@ -110,7 +110,7 @@ public class TabbedManagerUIView extends ComponentView implements ViewContextCha
                 );
             }
         });
-        panel.addPair(0, 2, "IsShowAlwaysTab : ", isShowAlwaysTab);
+        panel.addEntry(2, 0, "IsShowAlwaysTab : ", isShowAlwaysTab);
 
         return panel;
     }

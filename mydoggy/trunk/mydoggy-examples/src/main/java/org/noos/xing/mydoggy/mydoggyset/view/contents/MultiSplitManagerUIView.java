@@ -1,9 +1,9 @@
 package org.noos.xing.mydoggy.mydoggyset.view.contents;
 
 import org.noos.xing.mydoggy.ContentManagerUI;
+import org.noos.xing.mydoggy.MultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.TabbedContentManagerUI;
 import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.MultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.yasaf.plaf.component.MatrixPanel;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
@@ -12,13 +12,11 @@ import org.noos.xing.yasaf.view.ViewContextChangeListener;
 import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
 
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -64,7 +62,7 @@ public class MultiSplitManagerUIView extends ComponentView implements ViewContex
     protected Component initComponent() {
         this.toolWindowManager = viewContext.get(ToolWindowManager.class);
 
-        MatrixPanel panel = new MatrixPanel(1, 3);
+        MatrixPanel panel = new MatrixPanel(3, 1);
 
         // Tab Placement
         panel.add(new JLabel(), "1,1,r,c");
@@ -85,7 +83,7 @@ public class MultiSplitManagerUIView extends ComponentView implements ViewContex
                 }
             }
         });
-        panel.addPair(0, 0, "Tab Placement : ", tabPlaces);
+        panel.addEntry(0, 0, "Tab Placement : ", tabPlaces);
 
         // Tab Layout
         tabLayouts = new JComboBox(new Object[]{
@@ -103,7 +101,7 @@ public class MultiSplitManagerUIView extends ComponentView implements ViewContex
                 }
             }
         });
-        panel.addPair(0, 1, "Tab Layout : ", tabLayouts);
+        panel.addEntry(1, 0, "Tab Layout : ", tabLayouts);
 
         // isShowAlwaysTab
         isShowAlwaysTab = new JCheckBox();
@@ -114,7 +112,7 @@ public class MultiSplitManagerUIView extends ComponentView implements ViewContex
                 );
             }
         });
-        panel.addPair(0, 2, "IsShowAlwaysTab : ", isShowAlwaysTab);
+        panel.addEntry(2, 0, "IsShowAlwaysTab : ", isShowAlwaysTab);
 
         return panel;
     }
