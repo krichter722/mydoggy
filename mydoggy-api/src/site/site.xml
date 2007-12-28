@@ -30,8 +30,6 @@
                 <item name="Using" href="contentManagerUsing.html"/>
             </item>
             <item name="ContentManagerUI" href="contentManagerUI.html">
-                <item name="TabbedUI" href="tabbedContentManagerUI.html"/>
-                <item name="DesktopUI" href="desktopContentManagerUI.html"/>
                 <item name="Using" href="contentManagerUIUsing.html"/>
             </item>
         </menu>

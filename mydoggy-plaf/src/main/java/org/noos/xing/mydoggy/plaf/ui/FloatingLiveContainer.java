@@ -14,7 +14,10 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -150,10 +153,6 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
     protected void initComponents() {
         mainPanel = new JPanel();
         sheet = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
-/*
-        border = new SlidingBorder();
-        slidingAnimation = new SlidingAnimation();
-*/
 
         Window anchestor = descriptor.getWindowAnchestor();
         if (anchestor instanceof RootPaneContainer) {
@@ -164,17 +163,6 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
     protected void initListeners() {
         addPropertyChangeListener("type", new PropertyChangeListener() {
-            ContainerListener listener = new ContainerListener() {
-                public void componentAdded(ContainerEvent e) {
-                    e.getChild().addMouseMotionListener(resizeMouseInputHandler);
-                    e.getChild().addMouseListener(resizeMouseInputHandler);
-                }
-
-                public void componentRemoved(ContainerEvent e) {
-                    e.getChild().removeMouseMotionListener(resizeMouseInputHandler);
-                    e.getChild().removeMouseListener(resizeMouseInputHandler);
-                }
-            };
 
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getSource() != descriptor)
@@ -184,36 +172,24 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                 if (evt.getNewValue() == ToolWindowType.FLOATING_LIVE) {
                     if (layeredPane != null) {
                         dockedContainer.enableIdOnTitleBar();
-                        // Remove
+
+                        // Remove listeners
                         sheet.removeMouseMotionListener(resizeMouseInputHandler);
                         sheet.removeMouseListener(resizeMouseInputHandler);
 
+                        titleBarTabs.removeEventDispatcherlListener(moveMouseInputHandler);
 
-                        titleBarTabs.getViewport().removeMouseMotionListener(moveMouseInputHandler);
-                        titleBarTabs.getViewport().removeMouseListener(moveMouseInputHandler);
-                        for (Component cmp : titleBarTabs.getTabContainer().getComponents()) {
-                            cmp.removeMouseMotionListener(moveMouseInputHandler);
-                            cmp.removeMouseListener(moveMouseInputHandler);
-                        }
-                        titleBarTabs.getTabContainer().removeContainerListener(listener);
+                        titleBar.removeMouseMotionListener(moveMouseInputHandler);
+                        titleBar.removeMouseListener(moveMouseInputHandler);
 
-                        dockedContainer.getTitleBar().removeMouseMotionListener(moveMouseInputHandler);
-                        dockedContainer.getTitleBar().removeMouseListener(moveMouseInputHandler);
-
-                        // Add
+                        // Add listeners
                         sheet.addMouseMotionListener(resizeMouseInputHandler);
                         sheet.addMouseListener(resizeMouseInputHandler);
 
-                        titleBarTabs.getViewport().addMouseMotionListener(moveMouseInputHandler);
-                        titleBarTabs.getViewport().addMouseListener(moveMouseInputHandler);
-                        for (Component cmp : titleBarTabs.getTabContainer().getComponents()) {
-                            cmp.addMouseMotionListener(moveMouseInputHandler);
-                            cmp.addMouseListener(moveMouseInputHandler);
-                        }
-                        titleBarTabs.getTabContainer().addContainerListener(listener);
+                        titleBarTabs.addEventDispatcherlListener(moveMouseInputHandler);
 
-                        dockedContainer.getTitleBar().addMouseMotionListener(moveMouseInputHandler);
-                        dockedContainer.getTitleBar().addMouseListener(moveMouseInputHandler);
+                        titleBar.addMouseMotionListener(moveMouseInputHandler);
+                        titleBar.addMouseListener(moveMouseInputHandler);
 
                         settedListener = true;
                     }
@@ -229,13 +205,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                         sheet.removeMouseMotionListener(resizeMouseInputHandler);
                         sheet.removeMouseListener(resizeMouseInputHandler);
 
-                        titleBarTabs.getViewport().removeMouseMotionListener(moveMouseInputHandler);
-                        titleBarTabs.getViewport().removeMouseListener(moveMouseInputHandler);
-                        for (Component cmp : titleBarTabs.getTabContainer().getComponents()) {
-                            cmp.removeMouseMotionListener(moveMouseInputHandler);
-                            cmp.removeMouseListener(moveMouseInputHandler);
-                        }
-                        titleBarTabs.getTabContainer().removeContainerListener(listener);
+                        titleBarTabs.removeEventDispatcherlListener(moveMouseInputHandler);
 
                         titleBar.removeMouseMotionListener(moveMouseInputHandler);
                         titleBar.removeMouseListener(moveMouseInputHandler);

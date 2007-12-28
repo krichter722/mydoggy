@@ -16,8 +16,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -134,18 +132,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
     protected void initListeners() {
         addPropertyChangeListener("type", new PropertyChangeListener() {
-            ContainerListener listener = new ContainerListener() {
-                public void componentAdded(ContainerEvent e) {
-                    e.getChild().addMouseMotionListener(resizeMouseInputHandler);
-                    e.getChild().addMouseListener(resizeMouseInputHandler);
-                }
-
-                public void componentRemoved(ContainerEvent e) {
-                    e.getChild().removeMouseMotionListener(resizeMouseInputHandler);
-                    e.getChild().removeMouseListener(resizeMouseInputHandler);
-                }
-            };
-
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getSource() != descriptor)
                     return;
@@ -154,32 +140,20 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 if (evt.getNewValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING_FREE) {
                     dockedContainer.enableIdOnTitleBar();
 
-                    // Remove
+                    // Remove listeners
                     window.removeMouseMotionListener(resizeMouseInputHandler);
                     window.removeMouseListener(resizeMouseInputHandler);
 
-                    titleBarTabs.getViewport().removeMouseMotionListener(moveMouseInputHandler);
-                    titleBarTabs.getViewport().removeMouseListener(moveMouseInputHandler);
-                    for (Component cmp : titleBarTabs.getTabContainer().getComponents()) {
-                        cmp.removeMouseMotionListener(moveMouseInputHandler);
-                        cmp.removeMouseListener(moveMouseInputHandler);
-                    }
-                    titleBarTabs.getTabContainer().removeContainerListener(listener);
+                    titleBarTabs.removeEventDispatcherlListener(moveMouseInputHandler);
 
                     titleBar.removeMouseMotionListener(moveMouseInputHandler);
                     titleBar.removeMouseListener(moveMouseInputHandler);
 
-                    // Add
+                    // Add listeners
                     window.addMouseMotionListener(resizeMouseInputHandler);
                     window.addMouseListener(resizeMouseInputHandler);
 
-                    titleBarTabs.getViewport().addMouseMotionListener(moveMouseInputHandler);
-                    titleBarTabs.getViewport().addMouseListener(moveMouseInputHandler);
-                    for (Component cmp : titleBarTabs.getTabContainer().getComponents()) {
-                        cmp.addMouseMotionListener(moveMouseInputHandler);
-                        cmp.addMouseListener(moveMouseInputHandler);
-                    }
-                    titleBarTabs.getTabContainer().addContainerListener(listener);
+                    titleBarTabs.addEventDispatcherlListener(moveMouseInputHandler);
 
                     titleBar.addMouseMotionListener(moveMouseInputHandler);
                     titleBar.addMouseListener(moveMouseInputHandler);
@@ -196,13 +170,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                     window.removeMouseMotionListener(resizeMouseInputHandler);
                     window.removeMouseListener(resizeMouseInputHandler);
 
-                    titleBarTabs.getViewport().removeMouseMotionListener(moveMouseInputHandler);
-                    titleBarTabs.getViewport().removeMouseListener(moveMouseInputHandler);
-                    for (Component cmp : titleBarTabs.getTabContainer().getComponents()) {
-                        cmp.removeMouseMotionListener(moveMouseInputHandler);
-                        cmp.removeMouseListener(moveMouseInputHandler);
-                    }
-                    titleBarTabs.getTabContainer().removeContainerListener(listener);
+                    titleBarTabs.removeEventDispatcherlListener(moveMouseInputHandler);
 
                     titleBar.removeMouseMotionListener(moveMouseInputHandler);
                     titleBar.removeMouseListener(moveMouseInputHandler);
