@@ -25,17 +25,17 @@ import java.awt.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ContentContext extends MapViewContext {
+public class MyDoggySetContext extends MapViewContext {
 
-    private Component toolsContentComponent;
-    private Component groupEditorContentComponent;
-    private Component contentsContentComponent;
-    private Component managerContentComponent;
-    private Component welcomeContentComponent;
-    private Component interactiveTestContentComponent;
-    private Component customizeContentComponent;
+    protected Component toolsContentComponent;
+    protected Component groupEditorContentComponent;
+    protected Component contentsContentComponent;
+    protected Component managerContentComponent;
+    protected Component welcomeContentComponent;
+    protected Component interactiveTestContentComponent;
+    protected Component customizeContentComponent;
 
-    public ContentContext(ToolWindowManager toolWindowManager, JFrame frame) {
+    public MyDoggySetContext(ToolWindowManager toolWindowManager, final JFrame frame) {        
         addViewContextChangeListener(MyDoggySet.class, new AddContentAction(toolWindowManager,
                                                                             "Welcome", "Welcome", null,
                                                                             welcomeContentComponent = new WelcomeContentView(this).getComponent(),
@@ -64,15 +64,24 @@ public class ContentContext extends MapViewContext {
                                                                                  "Customize", "Customize", null,
                                                                                  customizeContentComponent = new CustomizeView(frame, toolWindowManager).getComponent(),
                                                                                  "Customize", (int) 'u'));
+
         addViewContextChangeListener(UIManager.class, new ViewContextChangeListener() {
             public void contextChange(ViewContextChangeEvent evt) {
-                SwingUtilities.updateComponentTreeUI(groupEditorContentComponent);
-                SwingUtilities.updateComponentTreeUI(toolsContentComponent);
-                SwingUtilities.updateComponentTreeUI(contentsContentComponent);
-                SwingUtilities.updateComponentTreeUI(managerContentComponent);
-                SwingUtilities.updateComponentTreeUI(welcomeContentComponent);
-                SwingUtilities.updateComponentTreeUI(interactiveTestContentComponent);
-                SwingUtilities.updateComponentTreeUI(customizeContentComponent);
+                try {
+                    UIManager.setLookAndFeel((String) evt.getNewValue());
+
+                    SwingUtilities.updateComponentTreeUI(frame);
+
+                    SwingUtilities.updateComponentTreeUI(groupEditorContentComponent);
+                    SwingUtilities.updateComponentTreeUI(toolsContentComponent);
+                    SwingUtilities.updateComponentTreeUI(contentsContentComponent);
+                    SwingUtilities.updateComponentTreeUI(managerContentComponent);
+                    SwingUtilities.updateComponentTreeUI(welcomeContentComponent);
+                    SwingUtilities.updateComponentTreeUI(interactiveTestContentComponent);
+                    SwingUtilities.updateComponentTreeUI(customizeContentComponent);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }

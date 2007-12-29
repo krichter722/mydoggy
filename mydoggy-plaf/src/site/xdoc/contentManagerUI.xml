@@ -32,8 +32,8 @@
                                     <br/>To obtain and set a specific instance use the following (for example):
                                 </p>
                                 <source>import org.noos.xing.mydoggy.plaf.ui.content.desktop;
-                                    ...
-                                    contentManager.setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
+...
+contentManager.setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
                                 </source>
                             </td>
                         </tr>
@@ -58,8 +58,8 @@
                                     <br/>To obtain and set a specific instance use the following (for example):
                                 </p>
                                 <source>import org.noos.xing.mydoggy.plaf.ui.content.desktop;
-                                    ...
-                                    contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
+...
+contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
                                 </source>
                             </td>
                         </tr>
@@ -83,8 +83,8 @@
                                     <br/>To obtain and set a specific instance use the following (for example):
                                 </p>
                                 <source>import org.noos.xing.mydoggy.plaf.ui.content.desktop;
-                                    ...
-                                    contentManager.setContentManagerUI(new MyDoggyDesktopContentManagerUI());
+...
+contentManager.setContentManagerUI(new MyDoggyDesktopContentManagerUI());
                                 </source>
                             </td>
                         </tr>
