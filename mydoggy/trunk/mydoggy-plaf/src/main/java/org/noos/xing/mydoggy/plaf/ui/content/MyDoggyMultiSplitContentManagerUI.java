@@ -207,10 +207,10 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
         contentValueAdjusting = false;
 
         if (oldContentManagerUI != null) {
-            // Import listeners from the old ContentManagerUI
-            for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
-                addContentManagerUIListener(listener);
-            }
+            // TODO: Import listeners from the old ContentManagerUI
+//            for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
+//                addContentManagerUIListener(listener);
+//            }
 /*
             for (PropertyChangeListener listener : oldContentManagerUI.getPropertyChangeListeners()) {
                 addPropertyChangeListener(listener);
@@ -388,11 +388,11 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 
     protected void setupActions() {
         SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, multiSplitContainer,
-                KeyStroke.getKeyStroke(39, InputEvent.ALT_MASK),
-                "nextContent", new NextContentAction(toolWindowManager));
+                                      KeyStroke.getKeyStroke(39, InputEvent.ALT_MASK),
+                                      "nextContent", new NextContentAction(toolWindowManager));
         SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, multiSplitContainer,
-                KeyStroke.getKeyStroke(37, InputEvent.ALT_MASK),
-                "previousContent", new PreviousContentAction(toolWindowManager));
+                                      KeyStroke.getKeyStroke(37, InputEvent.ALT_MASK),
+                                      "previousContent", new PreviousContentAction(toolWindowManager));
     }
 
     protected void addUIForContent(Content content, Object... constraints) {
@@ -404,16 +404,16 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
         if (constraints.length > 0 && constraints[0] instanceof MultiSplitConstraint) {
             MultiSplitConstraint multiSplitConstraint = (MultiSplitConstraint) constraints[0];
             multiSplitContainer.addDockable(content,
-                    content.getComponent(),
-                    multiSplitConstraint.getContent(),
-                    multiSplitConstraint.getAggregationIndexLocation(),
-                    multiSplitConstraint.getAggregationPosition());
+                                            content.getComponent(),
+                                            multiSplitConstraint.getContent(),
+                                            multiSplitConstraint.getAggregationIndexLocation(),
+                                            multiSplitConstraint.getAggregationPosition());
         } else {
             multiSplitContainer.addDockable(content,
-                    content.getComponent(),
-                    null,
-                    -1,
-                    AggregationPosition.DEFAULT);
+                                            content.getComponent(),
+                                            null,
+                                            -1,
+                                            AggregationPosition.DEFAULT);
         }
 
 
@@ -654,7 +654,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                     valudAdj = true;
                     try {
                         toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                                PersistenceDelegate.MergePolicy.UNION);
+                                                                         PersistenceDelegate.MergePolicy.UNION);
                     } finally {
                         valudAdj = false;
                     }
@@ -670,7 +670,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                     valudAdj = true;
                     try {
                         toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                                PersistenceDelegate.MergePolicy.UNION);
+                                                                         PersistenceDelegate.MergePolicy.UNION);
                     } finally {
                         valudAdj = false;
                     }
@@ -697,7 +697,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                 detachedContentUIMap.put(content, contentUI);
 
                 final JDialog dialog = new JDialog(resourceManager.getBoolean("dialog.owner.enabled", true) ? parentFrame : null,
-                        false);
+                                                   false);
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
                 Window parentWindow = SwingUtilities.windowForComponent(multiSplitContainer);

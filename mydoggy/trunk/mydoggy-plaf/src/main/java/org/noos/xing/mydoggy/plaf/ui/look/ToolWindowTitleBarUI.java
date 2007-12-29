@@ -96,6 +96,8 @@ public class ToolWindowTitleBarUI extends PanelUI {
                             SwingUtil.repaint(panel);
                         }
                     }
+                } else if ("active".equals(propertyName)) {
+                    toolWindow.setFlashing(false);
                 }
             }
         });

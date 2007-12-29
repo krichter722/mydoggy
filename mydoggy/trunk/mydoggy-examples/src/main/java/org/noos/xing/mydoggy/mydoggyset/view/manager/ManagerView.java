@@ -59,7 +59,7 @@ public class ManagerView implements View {
     public class ToolWindowManagerDescriptorPrefView extends ComponentView implements ViewContextChangeListener {
         private JSpinner leftDividerSize, rightDividerSize, topDividerSize, bottomDividerSize;
         private JCheckBox leftAggregateMode, rightAggregateMode, topAggregateMode, bottomAggregateMode;
-        private JCheckBox numberingEnabled;
+        private JCheckBox numberingEnabled, previewEnabled;
         private JComboBox pushAwayMode;
 
         public ToolWindowManagerDescriptorPrefView(ViewContext viewContext) {
@@ -67,65 +67,71 @@ public class ManagerView implements View {
         }
 
         protected Component initComponent() {
-            MatrixPanel panel = new MatrixPanel(5, 2);
+            MatrixPanel panel = new MatrixPanel(6, 2);
             panel.setBorder(new TitledBorder("ToolWindowManagerDescriptor Preference"));
 
             // Column 0
             panel.addEntry(0, 0, "numberingEnabled : ", numberingEnabled = new JCheckBox());
             numberingEnabled.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
-                    "numberingEnabled",
-                    new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                    new ChecBoxSelectionSource(numberingEnabled)));
-            // Column 1
-            panel.addEntry(1, 0, "DividerSize (LEFT) : ",
-                    leftDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
+                                                         "numberingEnabled",
+                                                         new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
+                                                         new ChecBoxSelectionSource(numberingEnabled)));
+
+            panel.addEntry(1, 0, "previewEnabled : ", previewEnabled = new JCheckBox());
+            previewEnabled.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
+                                                       "previewEnabled",
+                                                       new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
+                                                       new ChecBoxSelectionSource(previewEnabled)));
+
+            panel.addEntry(2, 0, "DividerSize (LEFT) : ",
+                           leftDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
             leftDividerSize.addChangeListener(
                     new ChangeListenerAction(ToolWindowManagerDescriptor.class,
-                            "setDividerSize",
-                            new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                            new AndSource(
-                                    new ConstantSource(ToolWindowAnchor.LEFT),
-                                    new SpinnerValueSource(leftDividerSize)
-                            )
+                                             "setDividerSize",
+                                             new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
+                                             new AndSource(
+                                                     new ConstantSource(ToolWindowAnchor.LEFT),
+                                                     new SpinnerValueSource(leftDividerSize)
+                                             )
                     )
             );
 
-            panel.addEntry(2, 0, "DividerSize (RIGHT) : ",
-                    rightDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
+            panel.addEntry(3, 0, "DividerSize (RIGHT) : ",
+                           rightDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
             rightDividerSize.addChangeListener(
                     new ChangeListenerAction(ToolWindowManagerDescriptor.class,
-                            "setDividerSize",
-                            new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                            new AndSource(
-                                    new ConstantSource(ToolWindowAnchor.RIGHT),
-                                    new SpinnerValueSource(rightDividerSize)
-                            )
+                                             "setDividerSize",
+                                             new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
+                                             new AndSource(
+                                                     new ConstantSource(ToolWindowAnchor.RIGHT),
+                                                     new SpinnerValueSource(rightDividerSize)
+                                             )
                     )
             );
 
-            panel.addEntry(3, 0, "DividerSize (TOP) : ",
-                    topDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
+            panel.addEntry(4, 0, "DividerSize (TOP) : ",
+                           topDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
             topDividerSize.addChangeListener(
                     new ChangeListenerAction(ToolWindowManagerDescriptor.class,
-                            "setDividerSize",
-                            new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                            new AndSource(
-                                    new ConstantSource(ToolWindowAnchor.TOP),
-                                    new SpinnerValueSource(topDividerSize)
-                            )
+                                             "setDividerSize",
+                                             new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
+                                             new AndSource(
+                                                     new ConstantSource(ToolWindowAnchor.TOP),
+                                                     new SpinnerValueSource(topDividerSize)
+                                             )
                     )
             );
 
-            panel.addEntry(4, 0, "DividerSize (BOTTOM) : ",
-                    bottomDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
+            panel.addEntry(5, 0, "DividerSize (BOTTOM) : ",
+                           bottomDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
             bottomDividerSize.addChangeListener(
                     new ChangeListenerAction(ToolWindowManagerDescriptor.class,
-                            "setDividerSize",
-                            new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                            new AndSource(
-                                    new ConstantSource(ToolWindowAnchor.BOTTOM),
-                                    new SpinnerValueSource(bottomDividerSize)
-                            )
+                                             "setDividerSize",
+                                             new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
+                                             new AndSource(
+                                                     new ConstantSource(ToolWindowAnchor.BOTTOM),
+                                                     new SpinnerValueSource(bottomDividerSize)
+                                             )
                     )
             );
 
@@ -146,44 +152,44 @@ public class ManagerView implements View {
 
             panel.addEntry(1, 1, "Agg Mode (LEFT) : ", leftAggregateMode = new JCheckBox());
             leftAggregateMode.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
-                    "setAggregateMode",
-                    new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                    new AndSource(
-                            new ConstantSource(ToolWindowAnchor.LEFT),
-                            new ChecBoxSelectionSource(leftAggregateMode)
-                    )
+                                                          "setAggregateMode",
+                                                          new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
+                                                          new AndSource(
+                                                                  new ConstantSource(ToolWindowAnchor.LEFT),
+                                                                  new ChecBoxSelectionSource(leftAggregateMode)
+                                                          )
             ));
 
             panel.addEntry(2, 1, "Agg Mode (RIGHT) : ", rightAggregateMode = new JCheckBox());
             rightAggregateMode.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
-                    "setAggregateMode",
-                    new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                    new AndSource(
-                            new ConstantSource(ToolWindowAnchor.RIGHT),
-                            new ChecBoxSelectionSource(rightAggregateMode)
-                    )
+                                                           "setAggregateMode",
+                                                           new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
+                                                           new AndSource(
+                                                                   new ConstantSource(ToolWindowAnchor.RIGHT),
+                                                                   new ChecBoxSelectionSource(rightAggregateMode)
+                                                           )
             ));
 
 
             panel.addEntry(3, 1, "Agg Mode (TOP) : ", topAggregateMode = new JCheckBox());
             topAggregateMode.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
-                    "setAggregateMode",
-                    new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                    new AndSource(
-                            new ConstantSource(ToolWindowAnchor.TOP),
-                            new ChecBoxSelectionSource(topAggregateMode)
-                    )
+                                                         "setAggregateMode",
+                                                         new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
+                                                         new AndSource(
+                                                                 new ConstantSource(ToolWindowAnchor.TOP),
+                                                                 new ChecBoxSelectionSource(topAggregateMode)
+                                                         )
             ));
 
 
             panel.addEntry(4, 1, "Agg Mode (BOTTOM) : ", bottomAggregateMode = new JCheckBox());
             bottomAggregateMode.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
-                    "setAggregateMode",
-                    new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                    new AndSource(
-                            new ConstantSource(ToolWindowAnchor.BOTTOM),
-                            new ChecBoxSelectionSource(topAggregateMode)
-                    )
+                                                            "setAggregateMode",
+                                                            new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
+                                                            new AndSource(
+                                                                    new ConstantSource(ToolWindowAnchor.BOTTOM),
+                                                                    new ChecBoxSelectionSource(topAggregateMode)
+                                                            )
             ));
 
             return panel;
@@ -203,6 +209,7 @@ public class ManagerView implements View {
             ToolWindowManagerDescriptor managerDescriptor = (ToolWindowManagerDescriptor) evt.getNewValue();
 
             numberingEnabled.setSelected(managerDescriptor.isNumberingEnabled());
+            previewEnabled.setSelected(managerDescriptor.isPreviewEnabled());
             pushAwayMode.setSelectedItem(managerDescriptor.getPushAwayMode());
 
             leftDividerSize.setValue(managerDescriptor.getDividerSize(ToolWindowAnchor.LEFT));

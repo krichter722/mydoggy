@@ -19,8 +19,9 @@
                 </p>
                 <div align="center">
                     <object type="application/x-shockwave-flash" width="420" height="300" wmode="transparent"
-                            data="videos/flvplayer.swf?file=dragitest.flv&amp;autoStart=false">
-                        <param name="movie" value="videos/flvplayer.swf?file=video.flv&amp;autoStart=false"/>
+                            data="./../videos/flvplayer.swf?file=./../mydoggy-examples/videos/dragitest.flv&autoStart=false">
+                        <param name="movie"
+                               value="./../videos/flvplayer.swf?file=./../mydoggy-examples/videos/dragitest.flv&autoStart=false"/>
                         <param name="wmode" value="transparent"/>
                     </object>
                 </div>

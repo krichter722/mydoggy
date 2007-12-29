@@ -31,6 +31,10 @@ public class MultiSplitConstraint {
         this.aggregationPosition = aggregationPosition;
     }
 
+    public MultiSplitConstraint(AggregationPosition aggregationPosition) {
+        this.aggregationPosition = aggregationPosition;
+    }
+
     public Content getContent() {
         return content;
     }

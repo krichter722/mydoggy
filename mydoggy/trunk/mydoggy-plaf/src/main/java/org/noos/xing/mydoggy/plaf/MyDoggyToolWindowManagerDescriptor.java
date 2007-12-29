@@ -9,7 +9,10 @@ import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Stack;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -19,6 +22,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
     protected MyDoggyToolWindowManager manager;
     protected boolean numberingEnabled;
     protected boolean checkParam = true;
+    protected boolean previewEnabled;
     protected Stack<ToolWindowAnchor> mostRecentStack;
     protected Map<ToolWindowAnchor, Integer> dividerSizes;
     protected Map<ToolWindowAnchor, Boolean> aggregateModes;
@@ -28,7 +32,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
     public MyDoggyToolWindowManagerDescriptor(MyDoggyToolWindowManager manager) {
         this.manager = manager;
         this.pushAwayMode = PushAwayMode.VERTICAL;
-        this.numberingEnabled = true;
+        this.numberingEnabled = this.previewEnabled = true;
         this.listenerList = new EventListenerList();
 
         this.dividerSizes = new Hashtable<ToolWindowAnchor, Integer>();
@@ -196,12 +200,26 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
 
         boolean old = this.numberingEnabled;
         this.numberingEnabled = numberingEnabled;
-        
+
         firePropertyChange("numberingEnabled", old, numberingEnabled);
     }
 
     public boolean isNumberingEnabled() {
         return numberingEnabled;
+    }
+
+    public void setPreviewEnabled(boolean previewEnabled) {
+        if (this.previewEnabled == previewEnabled)
+            return;
+
+        boolean old = this.previewEnabled;
+        this.previewEnabled = previewEnabled;
+
+        firePropertyChange("previewEnabled", old, previewEnabled);
+    }
+
+    public boolean isPreviewEnabled() {
+        return previewEnabled;
     }
 
     public int getDividerSize(ToolWindowAnchor anchor) {
@@ -251,7 +269,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
             if (((Boolean) evt.getNewValue())) {
                 ToolWindowAnchor target = ((ToolWindowDescriptor) evt.getSource()).getToolWindow().getAnchor();
                 addMostRecentAnchor(target);
-                
+
                 if (pushAwayMode == PushAwayMode.MOST_RECENT)
                     forceChangePushAwayMode(PushAwayMode.MOST_RECENT);
             }
@@ -266,7 +284,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         for (ToolWindowAnchor anchor : anchors) {
             addMostRecentAnchor(anchor);
         }
-        
+
         if (pushAwayMode == PushAwayMode.MOST_RECENT)
             forceChangePushAwayMode(PushAwayMode.MOST_RECENT);
     }
@@ -275,7 +293,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         return mostRecentStack.toArray(new ToolWindowAnchor[mostRecentStack.size()]);
     }
 
-  
+
     protected void initMostRecent() {
         this.mostRecentStack = new Stack<ToolWindowAnchor>();
         mostRecentStack.push(TOP);
@@ -329,17 +347,17 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
     }
 
     protected void setSplitCmp(ToolWindowAnchor source, Component cmp) {
-        switch(source) {
-            case LEFT :
+        switch (source) {
+            case LEFT:
                 manager.getBar(source).getSplitPane().setRightComponent(cmp);
                 break;
-            case RIGHT :
+            case RIGHT:
                 manager.getBar(source).getSplitPane().setLeftComponent(cmp);
                 break;
-            case TOP :
+            case TOP:
                 manager.getBar(source).getSplitPane().setBottomComponent(cmp);
                 break;
-            case BOTTOM :
+            case BOTTOM:
                 manager.getBar(source).getSplitPane().setTopComponent(cmp);
                 break;
         }

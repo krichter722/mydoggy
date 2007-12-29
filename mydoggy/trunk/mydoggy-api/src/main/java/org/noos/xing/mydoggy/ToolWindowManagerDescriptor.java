@@ -64,27 +64,39 @@ public interface ToolWindowManagerDescriptor extends Observable {
      * Enable or disable toolwindow index shortcuts.
      *
      * @param numberingEnabled <tt>true</tt> to enabled toolwindow index shortcuts, <tt>false</tt> to disable..
-     * @since 1.3.1
      * @see org.noos.xing.mydoggy.ToolWindow#setIndex(int)
-     * @see #isNumberingEnabled() 
+     * @see #isNumberingEnabled()
+     * @since 1.3.1
      */
     void setNumberingEnabled(boolean numberingEnabled);
 
     /**
      * Returns the activation status of the toolwindow index shortcuts.
      *
-     * @return <tt>true</tt> is the toolwindow index shortcuts are enabled, <tt>false</tt> otherwise. 
-     * @since 1.3.1
+     * @return <tt>true</tt> is the toolwindow index shortcuts are enabled, <tt>false</tt> otherwise.
      * @see #setNumberingEnabled(boolean)
+     * @since 1.3.1
      */
     boolean isNumberingEnabled();
+
+    /**
+     * @param previewEnabled
+     * @since 1.4.0
+     */
+    void setPreviewEnabled(boolean previewEnabled);
+
+    /**
+     * @return
+     * @since 1.4.0
+     */
+    boolean isPreviewEnabled();
 
     /**
      * Sets the size of the border the separate a docked toolwindow from the contenManager for a
      * specific anchor.
      *
      * @param anchor the anchor.
-     * @param size an integer giving the size of the divider in pixels
+     * @param size   an integer giving the size of the divider in pixels
      * @see #getDividerSize(ToolWindowAnchor)
      * @see org.noos.xing.mydoggy.ToolWindowAnchor
      * @since 1.3.1
@@ -115,7 +127,7 @@ public interface ToolWindowManagerDescriptor extends Observable {
      * Returns aggregate mode value for the specified anchor.
      *
      * @param anchor the anchor.
-     * @return aggregate mode value.  
+     * @return aggregate mode value.
      * @since 1.4.0
      */
     boolean isAggregateMode(ToolWindowAnchor anchor);

@@ -90,7 +90,7 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons {
             }
             containerLayout.setColumn(newCols);
         } else {
-            row = -1;
+            throw new IllegalStateException("Not implemented yet!!!");
         }
 
         JButton button = (JButton) resourceManager.createComponent(
@@ -241,7 +241,7 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons {
                     break;
                 case FLOATING:
                 case FLOATING_FREE:
-                    setVisible(!((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isModal());
+                    setVisible(false);
                     break;
             }
         }
@@ -424,7 +424,9 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons {
                     break;
                 case FLOATING:
                 case FLOATING_FREE:
-                    setVisible(!((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isModal());
+                    putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.FIX));
+                    putValue(Action.SHORT_DESCRIPTION, resourceManager.getString("@@tool.tooltip.fix"));
+                    setVisible(true);
                     break;
             }
         }

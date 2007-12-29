@@ -426,7 +426,8 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                         }
                     }
                     firstPreview = false;
-                } else if (dockedTypeDescriptor.isPreviewEnabled()) {
+                } else
+                if (dockedTypeDescriptor.isPreviewEnabled() && descriptor.getManager().getToolWindowManagerDescriptor().isPreviewEnabled()) {
                     Container contentContainer = ((DockedContainer) descriptor.getToolWindowContainer()).getContentContainer();
                     int width = 176;
                     int height = 132;
