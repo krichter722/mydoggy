@@ -12,6 +12,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
+import javax.swing.plaf.TabbedPaneUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -40,6 +41,7 @@ public class JTabbedContentPane extends JTabbedPane {
 
     protected ByteArrayOutputStream tmpWorkspace = null;
 
+    protected MouseInputAdapter mouseInputAdapter;
 
     public JTabbedContentPane() {
         super.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -54,7 +56,7 @@ public class JTabbedContentPane extends JTabbedPane {
         setFocusable(false);
         setInheritsPopupMenu(false);
 
-        MouseInputAdapter mouseInputAdapter = new MouseOverTabListener();
+        mouseInputAdapter = new MouseOverTabListener();
         addMouseListener(mouseInputAdapter);
         addMouseMotionListener(mouseInputAdapter);
     }
@@ -100,6 +102,17 @@ public class JTabbedContentPane extends JTabbedPane {
         }
     }
 
+    public void setUI(TabbedPaneUI ui) {
+        super.setUI(ui);    //To change body of overridden methods use File | Settings | File Templates.
+        setFocusable(false);
+        setInheritsPopupMenu(false);
+
+        removeMouseListener(mouseInputAdapter);
+        removeMouseMotionListener(mouseInputAdapter);
+
+        addMouseListener(mouseInputAdapter);
+        addMouseMotionListener(mouseInputAdapter);
+    }
 
     public void setToolWindowManager(MyDoggyToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
