@@ -33,14 +33,6 @@ public class MyDoggySet {
 
 
     protected void setUp() {
-        // TODO: test other look and fell
-/*
-        try {
-            UIManager.setLookAndFeel(new BernsteinLookAndFeel());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-*/
         initComponents();
         initToolWindowManager();
     }
