@@ -1,6 +1,6 @@
 package org.noos.xing.mydoggy.mydoggyset.action;
 
-import org.noos.xing.mydoggy.mydoggyset.MyDoggySet;
+import org.noos.xing.yasaf.view.ViewContext;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -10,33 +10,16 @@ import java.awt.event.ActionEvent;
 */
 public class ChangeLookAndFeelAction extends AbstractAction {
 
-    public static JMenuItem createLafMenuItem(MyDoggySet myDoggySet, JMenu menu, String label, String laf) {
-        JMenuItem mi = menu.add(new JRadioButtonMenuItem(label));
-        mi.setActionCommand(laf);
-        mi.addActionListener(new ChangeLookAndFeelAction(myDoggySet));
-        mi.setEnabled(isAvailableLookAndFeel(laf));
-        return mi;
-    }
+    protected ViewContext viewContext;
+    protected String laf;
 
-    public static boolean isAvailableLookAndFeel(String laf) {
-        try {
-            Class lnfClass = Class.forName(laf);
-            LookAndFeel newLAF = (LookAndFeel) (lnfClass.newInstance());
-            return newLAF.isSupportedLookAndFeel();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-
-    final MyDoggySet myDoggySet;
-
-    protected ChangeLookAndFeelAction(MyDoggySet myDoggySet) {
+    public ChangeLookAndFeelAction(ViewContext viewContext, String laf) {
         super("ChangeTheme");
-        this.myDoggySet = myDoggySet;
+        this.viewContext = viewContext;
+        this.laf = laf;
     }
 
     public void actionPerformed(ActionEvent e) {
-        myDoggySet.setLookAndFeel(e.getActionCommand());
+        viewContext.put(UIManager.class, laf);
     }
 }
