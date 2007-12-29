@@ -129,8 +129,8 @@ public class MultiSplitDockableContainer extends JPanel {
                         componentWrapper = multiSplitPane.getComponent(0);
                     } else {
                         Component rootLeafCmp = (useAlwaysContentWrapper)
-                                ? getWrappedComponent((Container) multiSplitPane.getComponent(0))
-                                : multiSplitPane.getComponent(0);
+                                                ? getWrappedComponent((Container) multiSplitPane.getComponent(0))
+                                                : multiSplitPane.getComponent(0);
                         multiSplitPane.removeAll();
                         componentWrapper = getComponentWrapper(entries.values().iterator().next().dockable, rootLeafCmp);
                         multiSplitPane.add(componentWrapper, rootLeaf.getName());
@@ -159,14 +159,14 @@ public class MultiSplitDockableContainer extends JPanel {
                             case LEFT:
                             case TOP:
                                 children = Arrays.asList(secondLeaf,
-                                        new MultiSplitLayout.Divider(),
-                                        rootLeaf);
+                                                         new MultiSplitLayout.Divider(),
+                                                         rootLeaf);
                                 break;
                             case RIGHT:
                             case BOTTOM:
                                 children = Arrays.asList(rootLeaf,
-                                        new MultiSplitLayout.Divider(),
-                                        secondLeaf);
+                                                         new MultiSplitLayout.Divider(),
+                                                         secondLeaf);
                                 break;
                         }
 
@@ -189,8 +189,8 @@ public class MultiSplitDockableContainer extends JPanel {
                         componentWrapper = multiSplitPane.getComponent(0);
                     } else {
                         componentWrapper = (useAlwaysContentWrapper)
-                                ? multiSplitPane.getComponent(0)
-                                : getComponentWrapper(entries.values().iterator().next().dockable, multiSplitPane.getComponent(0));
+                                           ? multiSplitPane.getComponent(0)
+                                           : getComponentWrapper(entries.values().iterator().next().dockable, multiSplitPane.getComponent(0));
                     }
                     multiSplitPane.removeAll();
 
@@ -308,13 +308,13 @@ public class MultiSplitDockableContainer extends JPanel {
                                                     case LEFT:
                                                     case TOP:
                                                         newSplit.setChildren(Arrays.asList(newleaf,
-                                                                new MultiSplitLayout.Divider(),
-                                                                leaf));
+                                                                                           new MultiSplitLayout.Divider(),
+                                                                                           leaf));
                                                         break;
                                                     default:
                                                         newSplit.setChildren(Arrays.asList(leaf,
-                                                                new MultiSplitLayout.Divider(),
-                                                                newleaf));
+                                                                                           new MultiSplitLayout.Divider(),
+                                                                                           newleaf));
                                                         break;
                                                 }
 
@@ -372,14 +372,14 @@ public class MultiSplitDockableContainer extends JPanel {
                                 case LEFT:
                                 case TOP:
                                     children = Arrays.asList(leaf,
-                                            new MultiSplitLayout.Divider(),
-                                            multiSplitPaneModelRoot);
+                                                             new MultiSplitLayout.Divider(),
+                                                             multiSplitPaneModelRoot);
                                     break;
                                 case RIGHT:
                                 case BOTTOM:
                                     children = Arrays.asList(multiSplitPaneModelRoot,
-                                            new MultiSplitLayout.Divider(),
-                                            leaf);
+                                                             new MultiSplitLayout.Divider(),
+                                                             leaf);
                                     break;
                             }
                             forceWeight(children);
@@ -435,7 +435,7 @@ public class MultiSplitDockableContainer extends JPanel {
             if (multiSplitPaneModelRoot instanceof DockableLeaf) {
                 DockableLeaf leaf = (DockableLeaf) multiSplitPaneModelRoot;
                 removeComponentWrapper(multiSplitPane.getComponent(0),
-                        dockable);
+                                       dockable);
                 leaf.getDockables().remove(dockable.getId());
 
                 if (!useAlwaysContentWrapper) {
@@ -478,7 +478,7 @@ public class MultiSplitDockableContainer extends JPanel {
                 dockableLeaf.getDockables().remove(dockable.getId());
 
                 removeComponentWrapper(multiSplitPane.getMultiSplitLayout().getChildMap().get(dockableLeaf.getName()),
-                        dockable);
+                                       dockable);
             } else {
                 // There is one dockable on the leaf. We have to rearrange the layout...
                 String leafKey = dockableLeaf.getName();
@@ -525,10 +525,10 @@ public class MultiSplitDockableContainer extends JPanel {
 
                                             if (children.get(0) instanceof MultiSplitLayout.Divider) {
                                                 grenpaChildren.set(grenpaChildren.indexOf(split),
-                                                        children.get(1));
+                                                                   children.get(1));
                                             } else {
                                                 grenpaChildren.set(grenpaChildren.indexOf(split),
-                                                        children.get(0));
+                                                                   children.get(0));
                                             }
                                             grandpa.setChildren(grenpaChildren);
                                             setChild = false;
@@ -603,6 +603,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
             repaintMultiSplit();
         } else if (root instanceof MultiSplitLayout.Split) {
+            // TODO: support multi dockable leaf...
 
             // Scan model
             Stack<MultiSplitLayout.Split> stack = new Stack<MultiSplitLayout.Split>();
@@ -679,13 +680,19 @@ public class MultiSplitDockableContainer extends JPanel {
 
         if (useAlwaysContentWrapper) {
             if (entries.size() == 1) {
-                setRootComponent(getComponentWrapper(entries.keySet().iterator().next(),
-                        getRootComponent()));
+                Component componentWrapper = getComponentWrapper(entries.keySet().iterator().next(),
+                                                                 multiSplitPane.getComponent(0));
+                multiSplitPane.removeAll();
+                multiSplitPane.add(componentWrapper, "0");
+
                 SwingUtil.repaint(this);
             }
         } else {
             if (entries.size() == 1) {
-                setRootComponent(getWrappedComponent((Container) getRootComponent()));
+                Component wrappedComponent = getWrappedComponent((Container) multiSplitPane.getComponent(0));
+                multiSplitPane.removeAll();
+                multiSplitPane.add(wrappedComponent, "0");
+
                 SwingUtil.repaint(this);
             }
         }

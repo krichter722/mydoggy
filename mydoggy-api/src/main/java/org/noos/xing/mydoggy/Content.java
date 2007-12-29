@@ -219,7 +219,7 @@ public interface Content extends Dockable {
      * @return the content ui instance for this content.
      * @since 1.4.0
      */
-    ContentUI getContentUi();
+    ContentUI getContentUI();
 
     /**
      * Returns the dockable that this tab is accomodating,  <code>null</code> if no dockable is accomodated.

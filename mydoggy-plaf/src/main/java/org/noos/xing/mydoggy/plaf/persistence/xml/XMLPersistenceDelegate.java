@@ -229,6 +229,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         // Start toolWindowDescriptorManager
         AttributesImpl attributes = new AttributesImpl();
         attributes.addAttribute(null, "numberingEnabled", null, null, String.valueOf(descriptor.isNumberingEnabled()));
+        attributes.addAttribute(null, "previewEnabled", null, null, String.valueOf(descriptor.isPreviewEnabled()));
         writer.startElement("toolWindowManagerDescriptor", attributes);
 
         // dividerSize element
@@ -250,7 +251,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         // Start pushAway
         attributes = new AttributesImpl();
         attributes.addAttribute(null, "pushAwayMode", null, null,
-                toolWindowManager.getToolWindowManagerDescriptor().getPushAwayMode().toString());
+                                toolWindowManager.getToolWindowManagerDescriptor().getPushAwayMode().toString());
         writer.startElement("pushAway", attributes);
 
         // start MOST_RECENT policy
@@ -416,8 +417,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         public boolean parse(Element element, Object... args) {
             ToolWindowManagerDescriptor descriptor = toolWindowManager.getToolWindowManagerDescriptor();
             descriptor.setNumberingEnabled(getBoolean(element, "numberingEnabled", true));
+            descriptor.setPreviewEnabled(getBoolean(element, "previewEnabled", true));
             return true;
-
         }
     }
 
@@ -668,7 +669,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     toolWindow.setAnchor(toolWindowAnchor);
                 else
                     toolWindow.setAnchor(toolWindowAnchor,
-                            anchorIndex);
+                                         anchorIndex);
 
                 mergePolicyApplier.applyToolWindow(toolWindow, tool);
 

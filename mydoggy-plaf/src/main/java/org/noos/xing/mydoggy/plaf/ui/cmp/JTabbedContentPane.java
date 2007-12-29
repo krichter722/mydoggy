@@ -2,26 +2,24 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentUI;
-import org.noos.xing.mydoggy.PersistenceDelegate;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.Comparator;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -70,7 +68,7 @@ public class JTabbedContentPane extends JTabbedPane {
 
     public Icon getIconAt(int index) {
         if (getSelectedIndex() == index) {
-            ContentUI contentUI = contentMap.get(index).getContentUi();
+            ContentUI contentUI = contentMap.get(index).getContentUI();
             if (contentUI == null)
                 return super.getIconAt(index);
 
@@ -97,7 +95,7 @@ public class JTabbedContentPane extends JTabbedPane {
         Integer[] keys = contentMap.keySet().toArray(new Integer[contentMap.size()]);
         Arrays.sort(keys);
         for (Integer key : keys) {
-            if (key > index) 
+            if (key > index)
                 contentMap.put(key - 1, contentMap.remove(key));
         }
     }
@@ -133,7 +131,7 @@ public class JTabbedContentPane extends JTabbedPane {
 
         if (component == null)
             component = content.getComponent();
-        
+
         addTab(content.getTitle(),
                content.getIcon(),
                component,
@@ -155,7 +153,7 @@ public class JTabbedContentPane extends JTabbedPane {
             Integer[] keys = contentMap.keySet().toArray(new Integer[contentMap.size()]);
             Arrays.sort(keys, new Comparator<Integer>() {
                 public int compare(Integer o1, Integer o2) {
-                    return (o1<o2 ? 1 : (o1.equals(o2) ? 0 : -11));
+                    return (o1 < o2 ? 1 : (o1.equals(o2) ? 0 : -11));
                 }
             });
             for (Integer key : keys) {
@@ -223,17 +221,17 @@ public class JTabbedContentPane extends JTabbedPane {
     protected class MouseOverTabListener extends MouseInputAdapter {
         protected int mouseOverTab = -1;
         protected JPopupMenu stdPopupMenu;
-       
+
         public void mouseClicked(MouseEvent e) {
             if (mouseOverTab >= 0 && mouseOverTab < getTabCount()) {
                 Content content = getContentAt(mouseOverTab);
 
-                if (isDetachFired(content.getContentUi(), e.getPoint())) {
+                if (isDetachFired(content.getContentUI(), e.getPoint())) {
                     fireDetachTabEvent(content);
                     return;
                 }
 
-                if (isCloseFired(content.getContentUi(), e.getPoint())) {
+                if (isCloseFired(content.getContentUI(), e.getPoint())) {
                     fireCloseTabEvent(content);
                     return;
                 }
@@ -285,7 +283,7 @@ public class JTabbedContentPane extends JTabbedPane {
             Rectangle detachIconRect = closeDetachIcon.getLastPaintedLeftRec();
 
             return (contentUI.isDetachable() && ((relativeMousePoint.getX() > detachIconRect.x && relativeMousePoint.getX() < detachIconRect.x + detachIconRect.width) ||
-                                       (point.getX() > detachIconRect.x && point.getX() < detachIconRect.x + detachIconRect.width)));
+                                                 (point.getX() > detachIconRect.x && point.getX() < detachIconRect.x + detachIconRect.width)));
         }
 
         protected boolean isCloseFired(ContentUI contentUI, Point point) {
@@ -293,7 +291,7 @@ public class JTabbedContentPane extends JTabbedPane {
             Rectangle closeIconRect = closeDetachIcon.getLastPaintedRightRec();
 
             return (contentUI.isCloseable() && ((relativeMousePoint.getX() > closeIconRect.x && relativeMousePoint.getX() < closeIconRect.x + closeIconRect.width) ||
-                                      (point.getX() > closeIconRect.x && point.getX() < closeIconRect.x + closeIconRect.width)));
+                                                (point.getX() > closeIconRect.x && point.getX() < closeIconRect.x + closeIconRect.width)));
         }
 
         protected Component getDestination() {
@@ -317,12 +315,12 @@ public class JTabbedContentPane extends JTabbedPane {
                     public void actionPerformed(ActionEvent e) {
                         JTabbedContentPane.this.fireCloseTabEvent(contentAt);
                     }
-                })).setEnabled(contentAt.getContentUi().isCloseable());
+                })).setEnabled(contentAt.getContentUI().isCloseable());
 
                 stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.closeAll")) {
                     public void actionPerformed(ActionEvent e) {
                         for (Content content : toolWindowManager.getContentManager().getContents()) {
-                            if (content.getContentUi().isCloseable())
+                            if (content.getContentUI().isCloseable())
                                 JTabbedContentPane.this.fireCloseTabEvent(content);
                         }
                     }
@@ -331,7 +329,7 @@ public class JTabbedContentPane extends JTabbedPane {
                 stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.closeAllButThis")) {
                     public void actionPerformed(ActionEvent e) {
                         for (Content content : toolWindowManager.getContentManager().getContents()) {
-                            if (content != contentAt && content.getContentUi().isCloseable())
+                            if (content != contentAt && content.getContentUI().isCloseable())
                                 JTabbedContentPane.this.fireCloseTabEvent(content);
                         }
                     }
@@ -341,7 +339,7 @@ public class JTabbedContentPane extends JTabbedPane {
                     public void actionPerformed(ActionEvent e) {
                         JTabbedContentPane.this.fireDetachTabEvent(contentAt);
                     }
-                })).setEnabled(contentAt.getContentUi().isDetachable());
+                })).setEnabled(contentAt.getContentUI().isDetachable());
 
                 MaximizeAction maximizeAction = new MaximizeAction(contentAt);
                 stdPopupMenu.add(maximizeAction);

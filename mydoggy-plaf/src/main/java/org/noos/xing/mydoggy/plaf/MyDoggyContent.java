@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy.plaf;
 
-import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.ContentUI;
+import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.plaf.ui.content.PlafContent;
 
 import javax.swing.*;
@@ -36,7 +36,7 @@ public class MyDoggyContent implements PlafContent {
 
 
     public MyDoggyContent(MyDoggyContentManager contentManager,
-						  String id, String title, Icon icon,
+                          String id, String title, Icon icon,
                           Component component,
                           String toolTipText,
                           Dockable dockableDelegator) {
@@ -205,7 +205,7 @@ public class MyDoggyContent implements PlafContent {
         return maximized;
     }
 
-    public ContentUI getContentUi() {
+    public ContentUI getContentUI() {
         return contentManager.getContentManagerUI().getContentUI(this);
     }
 
@@ -233,7 +233,7 @@ public class MyDoggyContent implements PlafContent {
 
         firePropertyChange("toolTipText", old, toolTipText);
     }
-    
+
     public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
         listeners.add(PropertyChangeListener.class, listener);
     }
@@ -275,5 +275,5 @@ public class MyDoggyContent implements PlafContent {
             listener.propertyChange(event);
         }
     }
-    
+
 }

@@ -3,14 +3,14 @@
         "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
     <properties>
-        <title>MyDoggy : Tutorial - Step 8</title>
+        <title>MyDoggy : Tutorial - Step 9</title>
         <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
     </properties>
 
     <body>
-        <section name="Tutorial - Step 8">
+        <section name="Tutorial - Step 9">
             <p>
-                Now we'll play with a special way of show a tool, the aggregate mode.
+                Now we'll play with new MultiSplitContentManagerUI
             </p>
 
             <source>
@@ -65,6 +65,18 @@
                 <a href="./../mydoggy-plaf/toolwindowManager.html">import
                     org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
                 </a>
+                <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/MultiSplitConstraint.html">import
+                    org.noos.xing.mydoggy.MultiSplitConstraint;
+                </a>
+                <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/AggregationPosition.html">import
+                    org.noos.xing.mydoggy.AggregationPosition;
+                </a>
+                <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/MultiSplitContentManagerUI.html">import
+                    org.noos.xing.mydoggy.MultiSplitContentManagerUI;
+                </a>
+                <a href="./../mydoggy-plaf/contentManagerUI.html">import
+                    org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
+                </a>
 
                 import java.io.*;
                 import javax.swing.*;
@@ -86,12 +98,11 @@
                 ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
                 debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#setActive(boolean)">
                 setActive</a>(true);
-                <strong style="color:green">
 
-                    // Aggregate "Run" tool
-                    ToolWindow runTool = toolWindowManager.getToolWindow("Run");
-                    runTool.aggregate();
-                </strong>
+                // Aggregate "Run" tool
+                ToolWindow runTool = toolWindowManager.getToolWindow("Run");
+                runTool.aggregate();
+
                 frame.setVisible(true);
                 }
                 });
@@ -136,14 +147,13 @@
                 ToolWindowAnchor.LEFT); // Anchor
 
                 <a href="#setupDebugTool">setupDebugTool();</a>
-                <strong style="color:green">
-                    // Register another Tool.
-                    toolWindowManager.registerToolWindow("Run", // Id
-                    "Run Tool", // Title
-                    null, // Icon
-                    new JButton("Run Tool"), // Component
-                    ToolWindowAnchor.LEFT); // Anchor
-                </strong>
+
+                // Register another Tool.
+                toolWindowManager.registerToolWindow("Run", // Id
+                "Run Tool", // Title
+                null, // Icon
+                new JButton("Run Tool"), // Component
+                ToolWindowAnchor.LEFT); // Anchor
 
                 // Made all tools available
                 for (ToolWindow window : toolWindowManager.getToolWindows())
@@ -173,7 +183,7 @@
 
                 dockedTypeDescriptor.<a
                     href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setDockLength(int)">
-                setDockLength</a>(300);
+                setDockLength</a>(100);
                 dockedTypeDescriptor.<a
                     href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPopupMenuEnabled(boolean)">
                 setPopupMenuEnabled</a>(true);
@@ -302,12 +312,20 @@
                 }
                 <a name="setupContentManagerUI"/>
                 protected void setupContentManagerUI() {
-                <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html">
-                    TabbedContentManagerUI
-                </a>
-                contentManagerUI = (TabbedContentManagerUI) toolWindowManager.getContentManager().<a
-                    href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html#getContentManagerUI()">
-                getContentManagerUI</a>();
+                <strong style="color:green">
+                    <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html">ContentManager</a>
+                    contentManager = toolWindowManager.<a
+                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getContentManager()">
+                    getContentManager</a>();
+                    <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/MultiSplitContentManagerUI.html">
+                        MultiSplitContentManagerUI
+                    </a>
+                    contentManagerUI = new MyDoggyMultiSplitContentManagerUI();
+                    contentManager.<a
+                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html#setContentManagerUI(org.noos.xing.mydoggy.ContentManagerUI)">
+                    setContentManagerUI</a>(contentManagerUI);
+                </strong>
+
                 contentManagerUI.<a
                     href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html#setShowAlwaysTab(boolean)">
                 setShowAlwaysTab</a>(true);
@@ -347,6 +365,17 @@
                 contentUI.<a
                     href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentUI.html#setTransparentDelay(int)">
                 setTransparentDelay</a>(1000);
+                <strong style="color:green">
+                    // Now Register two other contents...
+                    contentManager.<a
+                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html#addContent(java.lang.String,java.lang.String,javax.swing.Icon,java.awt.Component,java.lang.String,java.lang.Object...)">
+                    addContent</a>("Tree Key 2", "Tree Title 2", null, new JTree(), null,
+                    new<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/MultiSplitConstraint">
+                    MultiSplitConstraint</a>(contentManager.getContent(0), 0));
+
+                    contentManager.addContent("Tree Key 3", "Tree Title 3", null, new JTree(), null,
+                    new MultiSplitConstraint(AggregationPosition.RIGHT));
+                </strong>
                 }
 
                 public static void main(String[] args) {
@@ -366,8 +395,8 @@
                         <tr>
                             <td>
                                 <div align="center">
-                                    <img align="middle" src="./../images/tutorial/step8.png" alt="Aggregate Tools"
-                                         border="0" hspace="18"/>
+                                    <img align="middle" src="./../images/tutorial/step9.png"
+                                         alt="MultiSplitContentManagerUI" border="0" hspace="18"/>
                                 </div>
                             </td>
                             <td>
@@ -382,8 +411,8 @@
                 </table>
                 <p>
                     Good! Next Step.
-                    <a href="./step9.html">Step9</a>
-                    - Using the new MultiSpitContentManagerUI.
+                    <a href="./step10.html">Step 10</a>
+                    - Aggregate toolwindows in a new powerful way.
                 </p>
             </subsection>
         </section>

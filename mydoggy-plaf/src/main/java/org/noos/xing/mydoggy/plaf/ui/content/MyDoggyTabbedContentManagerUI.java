@@ -336,6 +336,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                         SwingUtilities.windowForComponent(content.getComponent())
                 );
             } else {
+                // TODO: sometime there is an exception especially during the mounthing of MultisplitContentMAnagerUI
                 // Choose the owner tab or check if the content is the main content
                 int index = tabbedContentPane.indexOfContent(content);
                 if (index != -1) {
@@ -436,7 +437,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             internalPropertyChangeSupport.addPropertyChangeListener("maximized", new MaximizedListener());
 
             SwingUtil.registerDragGesture(tabbedContentPane,
-                    new TabbedContentManagerDragGesture());
+                                          new TabbedContentManagerDragGesture());
         }
     }
 
@@ -477,11 +478,11 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     protected void setupActions() {
         // Setup actions
         SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, tabbedContentPane,
-                KeyStroke.getKeyStroke(39, InputEvent.ALT_MASK),
-                "nextContent", new NextContentAction(toolWindowManager));
+                                      KeyStroke.getKeyStroke(39, InputEvent.ALT_MASK),
+                                      "nextContent", new NextContentAction(toolWindowManager));
         SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, tabbedContentPane,
-                KeyStroke.getKeyStroke(37, InputEvent.ALT_MASK),
-                "previousContent", new PreviousContentAction(toolWindowManager));
+                                      KeyStroke.getKeyStroke(37, InputEvent.ALT_MASK),
+                                      "previousContent", new PreviousContentAction(toolWindowManager));
     }
 
 
@@ -652,7 +653,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             } else {
                 if (tmpWorkspace != null) {
                     toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                            PersistenceDelegate.MergePolicy.UNION);
+                                                                     PersistenceDelegate.MergePolicy.UNION);
                     tmpWorkspace = null;
                 }
             }
@@ -678,7 +679,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 }
 
                 final JDialog dialog = new JDialog(resourceManager.getBoolean("dialog.owner.enabled", true) ? parentFrame : null,
-                        false);
+                                                   false);
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
                 Window parentWindow = SwingUtilities.windowForComponent(tabbedContentPane);
@@ -787,19 +788,19 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 Content content = tabbedContentPane.getContentAt(index);
                 if (content.getDockableDelegator() != null) {
                     dge.startDrag(Cursor.getDefaultCursor(),
-                            new MyDoggyTransferable(MyDoggyTransferable.CONTENT_ID_DF,
-                                    content.getId()),
-                            this);
+                                  new MyDoggyTransferable(MyDoggyTransferable.CONTENT_ID_DF,
+                                                          content.getId()),
+                                  this);
 
                     // Setup ghostImage
 
                     Component component = tabbedContentPane.getComponentAt(index);
                     BufferedImage ghostImage = new BufferedImage(component.getWidth(),
-                            component.getHeight(), BufferedImage.TYPE_INT_RGB);
+                                                                 component.getHeight(), BufferedImage.TYPE_INT_RGB);
                     component.print(ghostImage.getGraphics());
                     ghostImage = GraphicsUtil.scale(ghostImage,
-                            component.getWidth() / 4,
-                            component.getHeight() / 4);
+                                                    component.getWidth() / 4,
+                                                    component.getHeight() / 4);
 
                     setGhostImage(dge.getDragOrigin(), ghostImage);
                 } else
