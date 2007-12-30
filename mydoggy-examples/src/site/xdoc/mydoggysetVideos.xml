@@ -13,20 +13,35 @@
                 Here are some video from MyDoggySet.
             </p>
 
-            <subsection name="Drag a toolwindow everywhere you want...">
+            <subsection name="The Universal Drag System...">
+                <a name="universalDrag"/>
                 <p>
-                    This test shows how to drag a toolwindow everywhere you want..."
+                    This test shows how to drag a toolwindow everywhere you want...
                 </p>
                 <div align="center">
                     <object type="application/x-shockwave-flash" width="420" height="300" wmode="transparent"
-                            data="./../videos/flvplayer.swf?file=./../mydoggy-examples/videos/dragitest.flv&autoStart=false">
+                            data="./../videos/flvplayer.swf?file=./../mydoggy-examples/videos/dragitest.flv&amp;autoStart=false">
                         <param name="movie"
-                               value="./../videos/flvplayer.swf?file=./../mydoggy-examples/videos/dragitest.flv&autoStart=false"/>
+                               value="./../videos/flvplayer.swf?file=./../mydoggy-examples/videos/dragitest.flv&amp;autoStart=false"/>
                         <param name="wmode" value="transparent"/>
                     </object>
                 </div>
             </subsection>
 
+            <subsection name="Tool Window Types...">
+                <a name="toolWindowTypes"/>
+                <p>
+                    This test shows all toolwindow Types available...
+                </p>
+                <div align="center">
+                    <object type="application/x-shockwave-flash" width="420" height="300" wmode="transparent"
+                            data="./../videos/flvplayer.swf?file=./../mydoggy-examples/videos/typesitest.flv&amp;autoStart=false">
+                        <param name="movie"
+                               value="./../videos/flvplayer.swf?file=./../mydoggy-examples/videos/typesitest.flv&amp;autoStart=false"/>
+                        <param name="wmode" value="transparent"/>
+                    </object>
+                </div>
+            </subsection>
         </section>
     </body>
 </document>

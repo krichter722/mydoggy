@@ -60,16 +60,16 @@
                         <br/>
                         For C/C++ Configuration Properties :
                         <source>/Od /I "E:\Programmi\Java\jdk1.5.0_07\include\win32" /I "E:\Programmi\Java\jdk1.5.0_07\include"
-                            /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_USRDLL" /D "TRANSPARENCYMANAGER_EXPORTS"
-                            /D "_WINDLL" /Gm /EHsc /RTC1 /MDd /Fo"Debug\\" /Fd"Debug\vc80.pdb"
-                            /W3 /nologo /c /Wp64 /ZI /TP /errorReport:prompt
+/D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_USRDLL" /D "TRANSPARENCYMANAGER_EXPORTS"
+/D "_WINDLL" /Gm /EHsc /RTC1 /MDd /Fo"Debug\\" /Fd"Debug\vc80.pdb"
+/W3 /nologo /c /Wp64 /ZI /TP /errorReport:prompt
                         </source>
                         For Linker Configuration Properties :
                         <source>/OUT:"..\mydoggy\TransparencyManager.dll" /INCREMENTAL /NOLOGO
-                            /LIBPATH:"E:\Programmi\Java\jdk1.5.0_07\lib" /DLL /MANIFEST
-                            /MANIFESTFILE:"Debug\TransparencyManager.dll.intermediate.manifest"
-                            /DEBUG /PDB:"e:\sourceforge\java\prjs\mydoggy\mydoggy\TransparencyManager.pdb"
-                            /SUBSYSTEM:WINDOWS /MACHINE:X86 /ERRORREPORT:PROMPT user32.lib jawt.lib kernel32.lib
+/LIBPATH:"E:\Programmi\Java\jdk1.5.0_07\lib" /DLL /MANIFEST
+/MANIFESTFILE:"Debug\TransparencyManager.dll.intermediate.manifest"
+/DEBUG /PDB:"e:\sourceforge\java\prjs\mydoggy\mydoggy\TransparencyManager.pdb"
+/SUBSYSTEM:WINDOWS /MACHINE:X86 /ERRORREPORT:PROMPT user32.lib jawt.lib kernel32.lib
                         </source>
                     </li>
                 </ul>

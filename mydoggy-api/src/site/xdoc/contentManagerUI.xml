@@ -10,7 +10,10 @@
     <body>
         <section name="ContentManagerUI">
             <p>
-                A ContentManagerUI is an interface to modify the ui behaviours of a content manager.
+                A ContentManagerUI is an interface to modify the ui behaviours of a content manager. See the related
+                <a href="./../mydoggy-plaf/contentManagerUI.html">page</a>
+                in the plaf module for the how-to mount a ContentManagerUI and how implement one by yourself.
+                <br/>
                 MyDoggy provides three kind of ContentManagerUI...
             </p>
 
@@ -84,10 +87,10 @@
                 If you want to change the ContentManagerUI use the following :
             </p>
             <source>ToolWindowManager toolWindowManager = new<a href="./../mydoggy-plaf/index.html">...</a>;
-                ContentManager contentManager = toolWindowManager.getContentManager();
-                ContentManagerUI contentManagerUI = new
-                <a href="./../mydoggy-plaf/index.html#ContentManageUI">... TODO</a>
-                contentManager.setContentManagerUI(contentManagerUI);
+ContentManager contentManager = toolWindowManager.getContentManager();
+ContentManagerUI contentManagerUI = new
+<a href="./../mydoggy-plaf/index.html#ContentManageUI">... TODO</a>
+contentManager.setContentManagerUI(contentManagerUI);
             </source>
         </section>
 

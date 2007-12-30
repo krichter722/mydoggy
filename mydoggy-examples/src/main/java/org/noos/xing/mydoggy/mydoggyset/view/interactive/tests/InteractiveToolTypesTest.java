@@ -15,14 +15,14 @@ public class InteractiveToolTypesTest extends MyDoggySetInteractiveTest {
     }
 
     public String getName() {
-        return "Demostrate Tool Window Types...";
+        return "Tool Window Types...";
     }
 
     public String getDescription() {
         return "<html>" +
                 "<h2>Test Description</h2>" +
                 "<p>" +
-                "This test demostrate all toolwindow Types available..." +
+                "This test shows all toolwindow Types available..." +
                 "</p>" +
                 "</html>";
     }
@@ -32,7 +32,7 @@ public class InteractiveToolTypesTest extends MyDoggySetInteractiveTest {
         restoreWorkspace();
         componentLookuper.lookup()
                 .moveToCenter()
-                .showTip("<html>First : <strong>Docked Mode</strong>");
+                .showTip("<html><strong>Docked Mode</strong>");
 
         clickOn(getRepresentativeButtonName("Tool 1"));
         moveOn(getToolContainerName("Tool 1"), "<html>This is <strong>Docked Mode</strong>");
@@ -41,7 +41,7 @@ public class InteractiveToolTypesTest extends MyDoggySetInteractiveTest {
         restoreWorkspace();
         componentLookuper.lookup()
                 .moveToCenter()
-                .showTip("<html>Second : <strong>Sliding Mode</strong>");
+                .showTip("<html><strong>Sliding Mode</strong>");
 
         clickOn(getRepresentativeButtonName("Tool 1"));
         clickOn("toolWindow.dockButton.Tool 1");
@@ -50,7 +50,7 @@ public class InteractiveToolTypesTest extends MyDoggySetInteractiveTest {
         // FlaotingLive Mode
         restoreWorkspace();
         componentLookuper.lookup().moveToCenter();
-        showTip("<html>Second : <strong>FlaotingLive Mode</strong>", 1000);
+        showTip("<html><strong>FlaotingLive Mode</strong>", 1000);
 
         clickOn(getRepresentativeButtonName("Tool 3"));
         clickOn("toolWindow.titleBar.Tool 3", ComponentAdapter.MouseButton.RIGHT);
@@ -60,7 +60,7 @@ public class InteractiveToolTypesTest extends MyDoggySetInteractiveTest {
         // Flaoting Mode
         restoreWorkspace();
         componentLookuper.lookup().moveToCenter();
-        showTip("<html>Second : <strong>Flaoting Mode</strong>", 1000);
+        showTip("<html><strong>Flaoting Mode</strong>", 1000);
 
         clickOn(getRepresentativeButtonName("Tool 1"));
         clickOn("toolWindow.floatingButton.Tool 1");

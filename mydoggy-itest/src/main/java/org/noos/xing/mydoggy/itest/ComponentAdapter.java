@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy.itest;
 
-import java.awt.geom.Ellipse2D;
 import java.awt.*;
 
 /**
@@ -14,6 +13,13 @@ public interface ComponentAdapter {
         CENTER
     }
 
+    enum Location {
+        RIGHT,
+        LEFT,
+        BOTTOM,
+        TOP
+    }
+
     void setDelay(int delay);
 
     ComponentAdapter moveTo();
@@ -21,6 +27,8 @@ public interface ComponentAdapter {
     ComponentAdapter moveToCenter();
 
     ComponentAdapter moveTo(int x, int y);
+
+    ComponentAdapter moveTo(Location location);
 
     ComponentAdapter move(Shape shape);
 

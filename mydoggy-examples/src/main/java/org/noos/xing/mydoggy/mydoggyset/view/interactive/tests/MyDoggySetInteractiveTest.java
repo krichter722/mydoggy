@@ -1,5 +1,6 @@
 package org.noos.xing.mydoggy.mydoggyset.view.interactive.tests;
 
+import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.itest.ComponentAdapter;
@@ -91,6 +92,22 @@ public abstract class MyDoggySetInteractiveTest extends AbstractInteractiveTest 
     protected ComponentAdapter drag(String from, String to) {
         componentLookuper.lookup(new NamedComponentFilter(from)).moveToCenter().press(ComponentAdapter.MouseButton.LEFT);
         return componentLookuper.lookup(new NamedComponentFilter(to)).moveToCenter().release(ComponentAdapter.MouseButton.LEFT);
+    }
+
+    protected ComponentAdapter drag(String from, String to, AggregationPosition aggregationPosition) {
+        componentLookuper.lookup(new NamedComponentFilter(from)).moveToCenter().press(ComponentAdapter.MouseButton.LEFT);
+        switch (aggregationPosition) {
+            case RIGHT:
+                return componentLookuper.lookup(new NamedComponentFilter(to)).moveTo(ComponentAdapter.Location.RIGHT).release(ComponentAdapter.MouseButton.LEFT);
+            case LEFT:
+                return componentLookuper.lookup(new NamedComponentFilter(to)).moveTo(ComponentAdapter.Location.LEFT).release(ComponentAdapter.MouseButton.LEFT);
+            case TOP:
+                return componentLookuper.lookup(new NamedComponentFilter(to)).moveTo(ComponentAdapter.Location.TOP).release(ComponentAdapter.MouseButton.LEFT);
+            case BOTTOM:
+                return componentLookuper.lookup(new NamedComponentFilter(to)).moveTo(ComponentAdapter.Location.BOTTOM).release(ComponentAdapter.MouseButton.LEFT);
+            default:
+                return drag(from, to);
+        }
     }
 
     protected ComponentAdapter moveToAnchor(String componentName, ToolWindowAnchor anchor) {
