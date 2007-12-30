@@ -58,9 +58,7 @@ public class MyDoggySet {
         MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame, Locale.US, null);
 
         // Apply now all customization if necessary
-//        myDoggyToolWindowManager.getResourceManager().putProperty("dialog.owner.enabled", "false");
-//        myDoggyToolWindowManager.getResourceManager().putProperty(""ContentManagerDropTarget.enabled"", "true");
-        customizeToolWindowManager();
+        customizeToolWindowManager(myDoggyToolWindowManager);
 
         this.toolWindowManager = myDoggyToolWindowManager;
         this.myDoggySetContext = new MyDoggySetContext(toolWindowManager, frame);
@@ -218,8 +216,10 @@ public class MyDoggySet {
         this.frame.getContentPane().add((Component) toolWindowManager, "1,1,");
     }
 
-    protected void customizeToolWindowManager() {
+    protected void customizeToolWindowManager(MyDoggyToolWindowManager myDoggyToolWindowManager) {
         // Add customization here. See the page http://mydoggy.sourceforge.net/mydoggy-plaf/resourceManagerUsing.html
+//        myDoggyToolWindowManager.getResourceManager().putProperty("dialog.owner.enabled", "false");
+//        myDoggyToolWindowManager.getResourceManager().putProperty(""ContentManagerDropTarget.enabled"", "true");
     }
 
     protected void dispose() {

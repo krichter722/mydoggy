@@ -91,6 +91,7 @@ toolWindow.setType(ToolWindowType.FLOATING_FREE);</source>
                         </td>
                     </tr>
                     <tr>
+                        <a name="floatingLive"/>
                         <td>
                             <img src="./images/types/floatingLive.png" alt="floating live" border="0" hspace="18"/>
                         </td>

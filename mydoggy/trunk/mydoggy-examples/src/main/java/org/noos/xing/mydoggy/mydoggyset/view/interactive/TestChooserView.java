@@ -4,7 +4,6 @@ import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.itest.InteractiveTestRunner;
 import org.noos.xing.mydoggy.itest.impl.SingleThreadInteractiveTestRunner;
-import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveRepresentativeDraggingTest;
 import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveShowToolTest;
 import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveToolTypesTest;
 import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveUniversalDragTest;
@@ -59,7 +58,6 @@ public class TestChooserView extends ComponentView {
                 tests = new JComboBox(new Object[]{
                         new InteractiveUniversalDragTest(toolWindowManager, frame),
                         new InteractiveShowToolTest(frame, toolWindowManager),
-                        new InteractiveRepresentativeDraggingTest(frame, toolWindowManager),
                         new InteractiveToolTypesTest(frame, toolWindowManager)
                 });
             } catch (AWTException ignore) {

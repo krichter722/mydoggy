@@ -1,264 +1,170 @@
 <!DOCTYPE document PUBLIC
-        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
-        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+		"-//Apache Software Foundation//DTD XDOC 1.0//EN"
+		"http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
-    <properties>
-        <title>MyDoggy : Tutorial - Step 3</title>
-        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
-    </properties>
+	<properties>
+		<title>MyDoggy : Tutorial - Step 3</title>
+		<author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+	</properties>
 
     <body>
-        <section name="Tutorial - Step 3">
+		<section name="Tutorial - Step 3">
             <p>
-                Now we'll play with
-                <a href="./../mydoggy-api/toolwindowTypes">TypeDesciptors.</a>
+                Now we'll play with <a href="./../mydoggy-api/toolwindowTypes">TypeDesciptors.</a>
             </p>
 
             <source>
-                package org.noos.xing.mydoggy.tutorial;
+package org.noos.xing.mydoggy.tutorial;
 
-                import info.clearthought.layout.TableLayout;
-                <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html">import
-                    org.noos.xing.mydoggy.ToolWindow;
-                </a>
-                <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowAnchor.html">import
-                    org.noos.xing.mydoggy.ToolWindowAnchor;
-                </a>
-                <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html">import
-                    org.noos.xing.mydoggy.ToolWindowManager;
-                </a>
-                <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">import
-                    org.noos.xing.mydoggy.DockedTypeDescriptor;
-                </a>
-                <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">import
-                    org.noos.xing.mydoggy.SlidingTypeDescriptor;
-                </a>
-                <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">import
-                    org.noos.xing.mydoggy.FloatingTypeDescriptor;
-                </a>
-                <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html">import
-                    org.noos.xing.mydoggy.ToolWindowType;
-                </a>
-                <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowActionHandler.html">import
-                    org.noos.xing.mydoggy.ToolWindowActionHandler;
-                </a>
-                <a href="./../mydoggy-plaf/toolwindowManager.html">import
-                    org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-                </a>
+import info.clearthought.layout.TableLayout;
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html">import org.noos.xing.mydoggy.ToolWindow;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowAnchor.html">import org.noos.xing.mydoggy.ToolWindowAnchor;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html">import org.noos.xing.mydoggy.ToolWindowManager;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">import org.noos.xing.mydoggy.DockedTypeDescriptor;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">import org.noos.xing.mydoggy.SlidingTypeDescriptor;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">import org.noos.xing.mydoggy.FloatingTypeDescriptor;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html">import org.noos.xing.mydoggy.ToolWindowType;</a>
+<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowActionHandler.html">import org.noos.xing.mydoggy.ToolWindowActionHandler;</a>                
+<a href="./../mydoggy-plaf/toolwindowManager.html">import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;</a>
 
-                import javax.swing.*;
-                import java.awt.event.ActionEvent;
-                import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-                public class SampleApp {
-                private JFrame frame;
-                private ToolWindowManager toolWindowManager;
+public class SampleApp {
+    private JFrame frame;
+    private ToolWindowManager toolWindowManager;
 
-                protected void setUp() {
-                initComponents();
-                initToolWindowManager();
-                }
+    protected void setUp() {
+        initComponents();
+        initToolWindowManager();
+    }
 
-                protected void start() {
-                SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
+    protected void start() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
                 // Activate "Debug" Tool
                 ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
-                debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#setActive(boolean)">
-                setActive</a>(true);
+                debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#setActive(boolean)">setActive</a>(true);
 
                 frame.setVisible(true);
-                }
-                });
-                }
+            }
+        });
+    }
 
-                protected void initComponents() {
-                // Init the frame
-                this.frame = new JFrame("Sample App...");
-                this.frame.setSize(640, 480);
-                this.frame.setLocation(100, 100);
-                this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    protected void initComponents() {
+        // Init the frame
+        this.frame = new JFrame("Sample App...");
+        this.frame.setSize(640, 480);
+        this.frame.setLocation(100, 100);
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-                // Create a simple JMenuBar
-                JMenuBar menuBar = new JMenuBar();
-                JMenu fileMenu = new JMenu("File");
-                JMenuItem exitMenuItem = new JMenuItem("Exit");
-                exitMenuItem.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+        // Create a simple JMenuBar
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("File");
+        JMenuItem exitMenuItem = new JMenuItem("Exit");
+        exitMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 frame.setVisible(false);
                 frame.dispose();
-                }
-                });
-                fileMenu.add(exitMenuItem);
-                menuBar.add(fileMenu);
-                this.frame.setJMenuBar(menuBar);
+            }
+        });
+        fileMenu.add(exitMenuItem);
+        menuBar.add(fileMenu);
+        this.frame.setJMenuBar(menuBar);
 
-                // Set a layout manager. I love TableLayout. It's powerful.
-                this.frame.getContentPane().setLayout(new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
-                }
+        // Set a layout manager. I love TableLayout. It's powerful.
+        this.frame.getContentPane().setLayout(new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
+    }
 
-                protected void initToolWindowManager() {
-                // Create a new instance of MyDoggyToolWindowManager passing the frame.
-                <a href="./../mydoggy-plaf/toolwindowManager.html">MyDoggyToolWindowManager</a>
-                myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
-                this.toolWindowManager = myDoggyToolWindowManager;
+    protected void initToolWindowManager() {
+        // Create a new instance of MyDoggyToolWindowManager passing the frame.
+        <a href="./../mydoggy-plaf/toolwindowManager.html">MyDoggyToolWindowManager</a> myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
+        this.toolWindowManager = myDoggyToolWindowManager;
 
-                // Register a Tool.
-                toolWindowManager.registerToolWindow("Debug", // Id
-                "Debug Tool", // Title
-                null, // Icon
-                new JButton("Debug Tool"), // Component
-                ToolWindowAnchor.LEFT); // Anchor
-                <strong style="color:green"><a href="#setupDebugTool">setupDebugTool</a>();
-                </strong>
+        // Register a Tool.
+        toolWindowManager.registerToolWindow("Debug",                      // Id
+                                             "Debug Tool",                 // Title
+                                             null,                         // Icon
+                                             new JButton("Debug Tool"),    // Component
+                                             ToolWindowAnchor.LEFT);       // Anchor
+        <strong style="color:green"><a href="#setupDebugTool">setupDebugTool</a>();</strong>
 
-                // Made all tools available
-                for (ToolWindow window : toolWindowManager.getToolWindows())
-                window.setAvailable(true);
+        // Made all tools available
+        for (ToolWindow window : toolWindowManager.getToolWindows())
+            window.setAvailable(true);
 
-                // Add myDoggyToolWindowManager to the frame. MyDoggyToolWindowManager is an extension of a JPanel
-                this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
-                }
+        // Add myDoggyToolWindowManager to the frame. MyDoggyToolWindowManager is an extension of a JPanel
+        this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
+    }
 
-                <strong style="color:green">
-                    <a name="setupDebugTool"/>
-                    protected void setupDebugTool() {
-                    <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html">ToolWindow</a>
-                    debugTool = toolWindowManager.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getToolWindow(java.lang.Object)">
-                    getToolWindow</a>("Debug");
+    <strong style="color:green"><a name="setupDebugTool"/>
+    protected void setupDebugTool() {
+        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html">ToolWindow</a> debugTool = toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getToolWindow(java.lang.Object)">getToolWindow</a>("Debug");
 
-                    <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">
-                        DockedTypeDescriptor
-                    </a>
-                    dockedTypeDescriptor = (DockedTypeDescriptor) debugTool.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#getTypeDescriptor(org.noos.xing.mydoggy.ToolWindowType)">
-                    getTypeDescriptor</a>(<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html#DOCKED">
-                    ToolWindowType.DOCKED</a>);
+        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">DockedTypeDescriptor</a> dockedTypeDescriptor = (DockedTypeDescriptor) debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#getTypeDescriptor(org.noos.xing.mydoggy.ToolWindowType)">getTypeDescriptor</a>(<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html#DOCKED">ToolWindowType.DOCKED</a>);
 
-                    dockedTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setDockLength(int)">
-                    setDockLength</a>(300);
-                    dockedTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPopupMenuEnabled(boolean)">
-                    setPopupMenuEnabled</a>(true);
-                    JMenu toolsMenu = dockedTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#getToolsMenu()">
-                    getToolsMenu</a>();
-                    toolsMenu.add(new AbstractAction("Hello World!!!") {
-                    public void actionPerformed(ActionEvent e) {
-                    JOptionPane.showMessageDialog(frame, "Hello World!!!");
-                    }
-                    });
-                    dockedTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setToolWindowActionHandler(org.noos.xing.mydoggy.ToolWindowActionHandler)">
-                    setToolWindowActionHandler</a>(new ToolWindowActionHandler() {
-                    public void<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowActionHandler.html#onHideButtonClick(org.noos.xing.mydoggy.ToolWindow)">
-                    onHideButtonClick</a>(ToolWindow toolWindow) {
-                    JOptionPane.showMessageDialog(frame, "Hiding...");
-                    toolWindow.setVisible(false);
-                    }
-                    });
-                    dockedTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTypeDescriptor.html#setAnimating(boolean)">
-                    setAnimating(true)</a>;
-                    dockedTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPreviewEnabled(boolean)">
-                    setPreviewEnabled</a>(true);
-                    dockedTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPreviewDelay(int)">
-                    setPreviewDelay</a>(1500);
-                    dockedTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPreviewTransparentRatio(float)">
-                    setPreviewTransparentRatio</a>(0.4f);
+        dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setDockLength(int)">setDockLength</a>(300);
+        dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPopupMenuEnabled(boolean)">setPopupMenuEnabled</a>(true);
+        JMenu toolsMenu = dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#getToolsMenu()">getToolsMenu</a>();
+        toolsMenu.add(new AbstractAction("Hello World!!!") {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame, "Hello World!!!");
+            }
+        });
+        dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setToolWindowActionHandler(org.noos.xing.mydoggy.ToolWindowActionHandler)">setToolWindowActionHandler</a>(new ToolWindowActionHandler() {
+            public void <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowActionHandler.html#onHideButtonClick(org.noos.xing.mydoggy.ToolWindow)">onHideButtonClick</a>(ToolWindow toolWindow) {
+                JOptionPane.showMessageDialog(frame, "Hiding...");
+                toolWindow.setVisible(false);
+            }
+        });
+        dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTypeDescriptor.html#setAnimating(boolean)">setAnimating(true)</a>;
+        dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPreviewEnabled(boolean)">setPreviewEnabled</a>(true);
+        dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPreviewDelay(int)">setPreviewDelay</a>(1500);
+        dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPreviewTransparentRatio(float)">setPreviewTransparentRatio</a>(0.4f);
 
-                    <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">
-                        SlidingTypeDescriptor
-                    </a>
-                    slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#getTypeDescriptor(org.noos.xing.mydoggy.ToolWindowType)">
-                    getTypeDescriptor</a>(<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html#SLIDING">
-                    ToolWindowType.SLIDING</a>);
-                    slidingTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html#setEnabled(boolean)">
-                    setEnabled(false)</a>;
-                    slidingTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html#setTransparentMode(boolean)">
-                    setTransparentMode(true)</a>;
-                    slidingTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html#setTransparentRatio(float)">
-                    setTransparentRatio(0.8f)</a>;
-                    slidingTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html#setTransparentDelay(int)">
-                    setTransparentDelay(0)</a>;
-                    slidingTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTypeDescriptor.html#setAnimating(boolean)">
-                    setAnimating(true)</a>;
+        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">SlidingTypeDescriptor</a> slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#getTypeDescriptor(org.noos.xing.mydoggy.ToolWindowType)">getTypeDescriptor</a>(<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html#SLIDING">ToolWindowType.SLIDING</a>);
+        slidingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html#setEnabled(boolean)">setEnabled(false)</a>;
+        slidingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html#setTransparentMode(boolean)">setTransparentMode(true)</a>;
+        slidingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html#setTransparentRatio(float)">setTransparentRatio(0.8f)</a>;
+        slidingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html#setTransparentDelay(int)">setTransparentDelay(0)</a>;
+        slidingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTypeDescriptor.html#setAnimating(boolean)">setAnimating(true)</a>;
 
-                    <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">
-                        FloatingTypeDescriptor
-                    </a>
-                    floatingTypeDescriptor = (FloatingTypeDescriptor) debugTool.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#getTypeDescriptor(org.noos.xing.mydoggy.ToolWindowType)">
-                    getTypeDescriptor</a>(<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html#FLOATING">
-                    ToolWindowType.FLOATING</a>);
-                    floatingTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setEnabled(boolean)">
-                    setEnabled(true)</a>;
-                    floatingTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setLocation(int, int)">
-                    setLocation(150,200)</a>;
-                    floatingTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setSize(int, int)">
-                    setSize(320,200)</a>;
-                    floatingTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setModal(boolean)">
-                    setModal(false)</a>;
-                    floatingTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setTransparentMode(boolean)">
-                    setTransparentMode(true)</a>;
-                    floatingTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setTransparentRatio(float)">
-                    setTransparentRatio(0.2f)</a>;
-                    floatingTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setTransparentDelay(int)">
-                    setTransparentDelay(1000)</a>;
-                    floatingTypeDescriptor.<a
-                        href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTypeDescriptor.html#setAnimating(boolean)">
-                    setAnimating(true)</a>;
-                    }
-                </strong>
+        <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">FloatingTypeDescriptor</a> floatingTypeDescriptor = (FloatingTypeDescriptor) debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#getTypeDescriptor(org.noos.xing.mydoggy.ToolWindowType)">getTypeDescriptor</a>(<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html#FLOATING">ToolWindowType.FLOATING</a>);
+        floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setEnabled(boolean)">setEnabled(true)</a>;
+        floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setLocation(int, int)">setLocation(150,200)</a>;
+        floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setSize(int, int)">setSize(320,200)</a>;
+        floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setModal(boolean)">setModal(false)</a>;
+        floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setTransparentMode(boolean)">setTransparentMode(true)</a>;
+        floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setTransparentRatio(float)">setTransparentRatio(0.2f)</a>;
+        floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html#setTransparentDelay(int)">setTransparentDelay(1000)</a>;
+        floatingTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowTypeDescriptor.html#setAnimating(boolean)">setAnimating(true)</a>;
+    }
+    </strong>
 
-                public static void main(String[] args) {
-                SampleApp test = new SampleApp();
-                try {
-                test.setUp();
-                test.start();
-                } catch (Exception e) {
-                e.printStackTrace();
-                }
-                }
-                }
-            </source>
+    public static void main(String[] args) {
+        SampleApp test = new SampleApp();
+        try {
+            test.setUp();
+            test.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}</source>
             <subsection name="Result">
                 <table>
                     <tbody>
                         <tr>
                             <td>
                                 <div align="center">
-                                    <img align="middle" src="./../images/tutorial/step3.png" alt="TypeDescriptors"
-                                         border="0" hspace="18"/>
+                                    <img align="middle" src="./../images/tutorial/step3.png" alt="TypeDescriptors" border="0" hspace="18"/>
                                 </div>
                             </td>
                             <td>
                                 <div align="left">
                                     <p>
-                                        This is the effect. The tool width is increased and the icon to set SLIDING type
-                                        is not available.
+                                        This is the effect. The tool width is increased and the icon to set SLIDING type is not available.
                                         But play with TypeDescriptors to see in action all available customizations.
                                     </p>
                                 </div>
@@ -268,9 +174,7 @@
                 </table>
                 <p>
                     <br/>
-                    Good! Next step.
-                    <a href="./step4.html">Step 4</a>
-                    - Add first Content.
+                    Good! Next step. <a href="./step4.html">Step 4</a> - Add first Content.
                 </p>
             </subsection>
         </section>

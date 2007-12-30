@@ -17,21 +17,52 @@
                     <br/>
                     New Features:
                     <ul>
+                        <li>
+                            New <a href="./tutorial/step9.html">MultiSplitContentManagerUI</a> : the manager represents
+                            a ui that use a component that lets the user switch between a group of components by
+                            clicking on a tab with a given title and/or icon. The position of each tab can be customized
+                            from the ui or by code.
+                        </li>
+                        <li>
+                            New <a href="./tutorial/step10.html">ToolWindow Aggregation Mode</a> : a toolwindow can now
+                            be aggregated to an already visible tool specifying that as a relative position and
+                            an aggregation position as the position relative to the specified tool.
+                        </li>
+                        <li>
+                            New <a href="./mydoggy-api/toolwindowTypes.html#floatingLive">FloatingLive</a> ToolWindow Type : this type enables a tool to be floating in the frame
+                            rather than having floating windows "out of the frame". See a demo <a href="./mydoggy-examples/mydoggysetVideos.html#toolWindowTypes">here</a>.
+                        </li>
+                        <li>
+                            A new and powrful drag system. See a demo <a href="./mydoggy-examples/mydoggysetVideos.html#universalDrag">here</a>.
+                        </li>
                     </ul>
                     <br/>
                     Bug Resolved:
                     <ul>
                         <li>
-                            Problem with focushandling in DockedContainer : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1765219&group_id=178005&atid=883495">Request ID 1765219</a>
+                            Disposed frame using MyDoggy is not released from memory : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1836069&group_id=178005&atid=883495">Request ID 1836069</a>
                         </li>
                         <li>
-                            TabbedContentManager problem when display icon and title : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1765198&group_id=178005&atid=883495">Request ID 1765198</a>
+                            Detached windows stay in front of main window : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1834706&group_id=178005&atid=883495">Request ID 1834706</a>
                         </li>
+                        <li>
+                            Exception in Example : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1830628&group_id=178005&atid=883495">Request ID 1830628</a>
+                        </li>
+                        <li>
+                            Catching and ignoring excpetions : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1826077&group_id=178005&atid=883495">Request ID 1826077</a>
+                        </li>
+                        <li>
+                            MyDoggy-Set: Last interactive test does not work : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1825910&group_id=178005&atid=883495">Request ID 1825910</a>
+                        </li>
+                        
                     </ul>
                     Feature Requests:
                     <ul>
                         <li>
-                            Maximize windows - Handle multiple monitors : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1761886&group_id=178005&atid=883498">Request ID 1761886</a>
+                            Minimize and close buttons in the same time : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1852146&group_id=178005&atid=883498">Request ID 1852146</a>
+                        </li>
+                        <li>
+                            Add ability to remove ID display from more descriptors : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1809476&group_id=178005&atid=883498">Request ID 1809476</a>
                         </li>
                     </ul>
                     ]]>

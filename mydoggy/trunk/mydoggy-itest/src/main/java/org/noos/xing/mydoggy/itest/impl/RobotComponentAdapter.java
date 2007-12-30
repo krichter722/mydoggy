@@ -5,8 +5,8 @@ import org.noos.xing.mydoggy.itest.impl.ui.JBalloonTip;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.PathIterator;
 import java.awt.event.InputEvent;
+import java.awt.geom.PathIterator;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -42,6 +42,17 @@ public class RobotComponentAdapter implements ComponentAdapter {
         ComponentAdapter componentAdapter = moveToInternal(to);
         doDelay();
         return componentAdapter;
+    }
+
+    public ComponentAdapter moveTo(Location location) {
+        switch (location) {
+            case LEFT:
+                return moveTo(component.getWidth() - 10, component.getHeight() / 2);
+            case BOTTOM:
+                return moveTo(component.getWidth() / 2, component.getHeight() - 10);
+            default:
+                return moveToCenter();
+        }
     }
 
     public ComponentAdapter move(Shape shape) {
