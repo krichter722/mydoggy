@@ -207,15 +207,13 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
         contentValueAdjusting = false;
 
         if (oldContentManagerUI != null) {
-            // TODO: Import listeners from the old ContentManagerUI
-//            for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
-//                addContentManagerUIListener(listener);
-//            }
-/*
-            for (PropertyChangeListener listener : oldContentManagerUI.getPropertyChangeListeners()) {
-                addPropertyChangeListener(listener);
+            if (resourceManager.getBoolean("ContentManagerUI.ContentManagerUiListener.import", false)) {
+                // Import listeners from the old ContentManagerUI
+                for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
+                    oldContentManagerUI.removeContentManagerUIListener(listener);
+                    addContentManagerUIListener(listener);
+                }
             }
-*/
         }
 
         // Now you can consider this manager installed

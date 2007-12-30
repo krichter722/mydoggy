@@ -46,7 +46,7 @@ public class ManagerView implements View {
         viewContext.put(ToolWindowManager.class, toolWindowManager);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {150, 3, -1}}));
+        panel.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {180, 3, -1}}));
         panel.add(new ToolWindowManagerDescriptorPrefView(viewContext).getComponent(), "0,0,FULL,FULL");
         panel.add(new PersistencePrefView(viewContext).getComponent(), "0,2,FULL,FULL");
 

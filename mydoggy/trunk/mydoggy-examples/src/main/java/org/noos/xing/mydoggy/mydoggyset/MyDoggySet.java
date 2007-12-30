@@ -218,8 +218,25 @@ public class MyDoggySet {
 
     protected void customizeToolWindowManager(MyDoggyToolWindowManager myDoggyToolWindowManager) {
         // Add customization here. See the page http://mydoggy.sourceforge.net/mydoggy-plaf/resourceManagerUsing.html
-//        myDoggyToolWindowManager.getResourceManager().putProperty("dialog.owner.enabled", "false");
-//        myDoggyToolWindowManager.getResourceManager().putProperty(""ContentManagerDropTarget.enabled"", "true");
+/*
+        myDoggyToolWindowManager.getResourceManager().putProperty("dialog.owner.enabled", "false");
+        myDoggyToolWindowManager.getResourceManager().putProperty("ContentManagerDropTarget.enabled", "true");
+*/
+        myDoggyToolWindowManager.getResourceManager().putProperty("ContentManagerUI.ContentManagerUiListener.import", "true");
+
+/*
+        MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) myDoggyToolWindowManager.getResourceManager();
+        myDoggyResourceManager.putInstanceCreator(TitleBarButtons.class,
+                                                  new MyDoggyResourceManager.InstanceCreator() {
+                                                      public Object createComponent(Object... args) {
+                                                          return new MenuTitleBarButtons(
+                                                                  (ToolWindowDescriptor) args[0],
+                                                                  (DockedContainer) args[1]
+                                                          );
+                                                      }
+                                                  }
+        );
+*/
     }
 
     protected void dispose() {

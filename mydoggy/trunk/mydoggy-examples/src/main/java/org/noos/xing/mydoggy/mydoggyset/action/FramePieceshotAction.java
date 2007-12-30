@@ -105,7 +105,7 @@ public class FramePieceshotAction extends AbstractAction implements Runnable {
         protected boolean restore;
 
         public LensPanel() {
-            setBorder(BorderFactory.createEtchedBorder());
+            setBorder(BorderFactory.createLineBorder(Color.BLUE));
             setAlphaModeRatio(0.15f);
             setLayout(new ExtendedTableLayout(new double[][]{{2, -1, 2}, {2, -1, 2}}));
             setFocusable(true);
@@ -129,15 +129,11 @@ public class FramePieceshotAction extends AbstractAction implements Runnable {
             innerPane.setLayout(null);
             innerPane.setOpaque(true);
             innerPane.setBackground(Color.BLUE);
+
             FloatingMoveMouseInputHandler floatingMoveMouseInputHandler = new FloatingMoveMouseInputHandler(this);
             innerPane.addMouseListener(floatingMoveMouseInputHandler);
             innerPane.addMouseMotionListener(floatingMoveMouseInputHandler);
             innerPane.addMouseListener(new PopupMouseInput());
-            innerPane.addKeyListener(new KeyAdapter() {
-                public void keyPressed(KeyEvent e) {
-                    System.out.println("e = " + e);
-                }
-            });
 
             add(innerPane, "1,1,FULL,FULL");
 
@@ -192,6 +188,8 @@ public class FramePieceshotAction extends AbstractAction implements Runnable {
                 if ("store".equals(actionCommand)) {
                     boundsToShot = getBounds();
                     Point location = boundsToShot.getLocation();
+                    if (frame.getJMenuBar() != null && frame.getJMenuBar().isVisible())
+                        location.y+= frame.getJMenuBar().getHeight();
 
                     SwingUtilities.convertPointToScreen(location, frame);
                     boundsToShot.setLocation(location);

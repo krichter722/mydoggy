@@ -14,7 +14,7 @@ public interface PlafContentManagerUI {
 
     /**
      * Configures this manager appropriate for the specified toolwindow manager.
-     * During this phase the new ContentManagerUI imports all properites, and listener from the
+     * During this phase the new ContentManagerUI imports all properties the
      * old manager and initialize all needed parts. Furthermore all previous registered content
      * are added.
      *

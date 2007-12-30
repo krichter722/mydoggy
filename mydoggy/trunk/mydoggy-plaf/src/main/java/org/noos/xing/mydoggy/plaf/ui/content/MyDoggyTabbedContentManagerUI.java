@@ -228,14 +228,13 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
         if (oldContentManagerUI != null) {
             // Import listeners from the old ContentManagerUI
-            for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
-                addContentManagerUIListener(listener);
+            if (resourceManager.getBoolean("ContentManagerUI.ContentManagerUiListener.import", false)) {
+                // Import listeners from the old ContentManagerUI
+                for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
+                    oldContentManagerUI.removeContentManagerUIListener(listener);
+                    addContentManagerUIListener(listener);
+                }
             }
-/*
-            for (PropertyChangeListener listener : oldContentManagerUI.getPropertyChangeListeners()) {
-                addPropertyChangeListener(listener);
-            }
-*/
         }
 
         // Now you can consider this manager installed
@@ -320,7 +319,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 lastSelected = null;
         }
 
-        // Remove the contentUI part 
+        // Remove the contentUI part
         contentUIMap.remove(content);
     }
 
@@ -336,7 +335,6 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                         SwingUtilities.windowForComponent(content.getComponent())
                 );
             } else {
-                // TODO: sometime there is an exception especially during the mounthing of MultisplitContentMAnagerUI
                 // Choose the owner tab or check if the content is the main content
                 int index = tabbedContentPane.indexOfContent(content);
                 if (index != -1) {

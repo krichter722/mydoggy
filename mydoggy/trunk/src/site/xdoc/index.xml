@@ -24,15 +24,20 @@
                         <a href="download.html#usage">MyDoggy Usage</a>
                     </li>
                     <li>
-                        <a href="download.html#mydoggyset">MyDoggySet Usage</a>
-                        <a href="./mydoggy-examples/mydoggyset.html">(WebStart)</a>
+                        <a href="./mydoggy-examples/mydoggyset.html">MyDoggySet (WebStart)</a>
+                        <small>
+                            <a href="./mydoggy-examples/mydoggysetScreenshots.html">Screenshots</a>,
+                            <img src="./images/new.png" alt=""/>
+                            <a href="changes-report.html">Videos</a>
+                        </small>
+                    </li>
+                    <li>
+                        <img src="./images/new.png" alt=""/>
+                        <a href="tutorial/tutorial.html">Tutorial</a>
                     </li>
                     <li>
                         <img src="./images/new.png" alt=""/>
                         <a href="changes-report.html">Changes Report</a>
-                    </li>
-                    <li>
-                        <a href="./mydoggy-examples/mydoggysetScreenshots.html">Screenshots</a>
                     </li>
                     <li>
                         <a href="license.html">License (LGPL)</a>

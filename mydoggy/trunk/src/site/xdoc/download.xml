@@ -81,7 +81,7 @@
                             <td align="left">
                                 <b>Operating System</b>
                             </td>
-                            <td align="left">No minimum requirement. Tested on Windows XP, Ubuntu 6.10.
+                            <td align="left">No minimum requirement. Tested on Windows XP, Ubuntu 7.04.
                             </td>
                         </tr>
                     </tbody>
@@ -186,6 +186,19 @@
 							<td/>
 						</tr>
 
+                        <tr valign="top">
+                            <td>MyDoggy</td>
+                            <td>1.3.1</td>
+                            <td>2007-09-29</td>
+                            <td>Stable</td>
+                            <td>
+                                <em>
+                                    <a href="https://sourceforge.net/project/showfiles.php?group_id=178005&amp;package_id=205132&amp;release_id=542979">
+                                        Download
+                                    </a>
+                                </em>
+                            </td>
+                        </tr>
                         <tr valign="top">
                             <td>MyDoggy</td>
                             <td>1.3.0</td>
