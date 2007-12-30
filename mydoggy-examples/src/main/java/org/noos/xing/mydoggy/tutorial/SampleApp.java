@@ -28,13 +28,12 @@ public class SampleApp {
 
                 // Aggregate "Run" tool
                 ToolWindow runTool = toolWindowManager.getToolWindow("Run");
-                runTool.setFlashing(true);
+                runTool.aggregate();
 
                 // Aggregate "Properties" tool
                 ToolWindow propertiesTool = toolWindowManager.getToolWindow("Properties");
                 propertiesTool.aggregate(AggregationPosition.LEFT);
 
-                propertiesTool.setFlashing(true);
 
                 frame.setVisible(true);
             }
@@ -86,12 +85,14 @@ public class SampleApp {
                                              new JButton("Run Tool"),    // Component
                                              ToolWindowAnchor.LEFT);     // Anchor
 
+
         // Register another Tool.
         toolWindowManager.registerToolWindow("Properties",                      // Id
                                              "Properties Tool",                 // Title
                                              null,                              // Icon
                                              new JButton("Properties Tool"),    // Component
                                              ToolWindowAnchor.LEFT);            // Anchor
+
 
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
@@ -137,8 +138,8 @@ public class SampleApp {
 
         FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.FLOATING);
         floatingTypeDescriptor.setEnabled(true);
-        floatingTypeDescriptor.setLocation(150, 200);
-        floatingTypeDescriptor.setSize(320, 200);
+        floatingTypeDescriptor.setLocation(150,200);
+        floatingTypeDescriptor.setSize(320,200);
         floatingTypeDescriptor.setModal(false);
         floatingTypeDescriptor.setTransparentMode(true);
         floatingTypeDescriptor.setTransparentRatio(0.2f);
@@ -156,7 +157,7 @@ public class SampleApp {
     }
 
     protected void initContentManager() {
-        JTree treeContent = new JTree();
+         JTree treeContent = new JTree();
 
         ContentManager contentManager = toolWindowManager.getContentManager();
         Content content = contentManager.addContent("Tree Key",
@@ -195,10 +196,10 @@ public class SampleApp {
 
         // Now Register two other contents...
         contentManager.addContent("Tree Key 2", "Tree Title 2", null, new JTree(), null,
-                                  new MultiSplitConstraint(contentManager.getContent(0), 0));
+                                 new MultiSplitConstraint(contentManager.getContent(0), 0));
 
         contentManager.addContent("Tree Key 3", "Tree Title 3", null, new JTree(), null,
-                                  new MultiSplitConstraint(AggregationPosition.RIGHT));
+                                 new MultiSplitConstraint(AggregationPosition.RIGHT));
     }
 
     public static void main(String[] args) {

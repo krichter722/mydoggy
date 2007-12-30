@@ -192,10 +192,11 @@ myDoggyResourceManager.putComponentUICreator(MyDoggyKeySpace.TOOL_WINDOW_TITLE_B
                                   </p>
                                   <p>You can use the following code:</p>
                                   <source>
-myDoggyResourceManager.putInstanceCreator(TitleBarButtons.class,
+
+                                      myDoggyResourceManager.putInstanceCreator(TitleBarButtons.class,
                                         new MyDoggyResourceManager.InstanceCreator() {
       public Object createComponent(Object... args) {
-          return new SimpliedTitleBarButtons(
+          return new MenuTitleBarButtons(
                   (ToolWindowDescriptor) args[0],
                   (DockedContainer) args[1]
           );

@@ -42,11 +42,13 @@ public class MyDoggyContentManager implements ContentManager {
         if (this.plafContentManagerUI == contentManagerUI)
             return;
 
-        if (this.plafContentManagerUI != null)
+        if (this.plafContentManagerUI != null) 
             this.plafContentManagerUI.unistall();
 
         PlafContentManagerUI newContentManagerUI = (PlafContentManagerUI) contentManagerUI;
-        this.plafContentManagerUI = newContentManagerUI.install(getContentManagerUI(), toolWindowManager);
+        PlafContentManagerUI old = this.plafContentManagerUI;
+        this.plafContentManagerUI = newContentManagerUI;
+        newContentManagerUI.install((ContentManagerUI) old, toolWindowManager);
     }
 
     public ContentManagerUI getContentManagerUI() {

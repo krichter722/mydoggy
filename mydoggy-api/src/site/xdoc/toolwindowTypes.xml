@@ -91,11 +91,11 @@ toolWindow.setType(ToolWindowType.FLOATING_FREE);</source>
                         </td>
                     </tr>
                     <tr>
-                        <a name="floatingLive"/>
                         <td>
                             <img src="./images/types/floatingLive.png" alt="floating live" border="0" hspace="18"/>
                         </td>
                         <td>
+                            <a name="floatingLive"/>
                             <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
                                 <code>ToolWindowType.FLOATING_LIVE</code>
                             </a>
@@ -129,7 +129,10 @@ toolWindow.setType(ToolWindowType.FLOATING_LIVE);</source>
 
                         <br/>To get a <code>DockedTypeDescriptor</code> instance use the following:
                         <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
-DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);</source>
+DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+// or
+DockedTypeDescriptor dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
+                        </source>
                     </li>
                     <li>
                         <a href="./apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">
@@ -149,7 +152,7 @@ SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow
 
                         <br/>To get a <code>FloatingTypeDescriptor</code> instance use the following:
                         <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
-FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);</source>
+FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);</source>
                     </li>
                 <li>
                     <a href="./apidocs/org/noos/xing/mydoggy/FloatingLiveTypeDescriptor.html">
@@ -159,7 +162,7 @@ FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManag
 
                     <br/>To get a <code>FloatingLiveTypeDescriptor</code> instance use the following:
                     <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
-FloatingLiveTypeDescriptor typeDescriptor = (FloatingLiveTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING_LIVE);</source>
+FloatingLiveTypeDescriptor typeDescriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);</source>
                 </li>
                 </ul>
         </section>

@@ -659,6 +659,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             ToolWindow maximizedTool = null;
             for (Element tool : toolsByAnchor) {
                 ToolWindow toolWindow = toolWindowManager.getToolWindow(tool.getAttribute("id"));
+                if (toolWindow == null)
+                    continue;
 
                 int anchorIndex = getInteger(tool, "anchorIndex", Integer.MIN_VALUE);
                 ToolWindowAnchor toolWindowAnchor = ToolWindowAnchor.LEFT;

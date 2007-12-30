@@ -160,15 +160,13 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         contentValueAdjusting = false;
 
         if (oldContentManagerUI != null) {
-            // Import listeners from the old ContentManagerUI
-            for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
-                addContentManagerUIListener(listener);
+            if (resourceManager.getBoolean("ContentManagerUI.ContentManagerUiListener.import", false)) {
+                // Import listeners from the old ContentManagerUI
+                for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
+                    oldContentManagerUI.removeContentManagerUIListener(listener);
+                    addContentManagerUIListener(listener);
+                }
             }
-/*
-            for (PropertyChangeListener listener : oldContentManagerUI.getPropertyChangeListeners()) {
-                addPropertyChangeListener(listener);
-            }
-*/
         }
 
         // Now you can consider this manager installed
