@@ -64,7 +64,7 @@ public class JTabbedContentPane extends JTabbedPane {
 
     public String getTitleAt(int index) {
         if (getSelectedIndex() == index)
-            return null;
+            return "";
         return super.getTitleAt(index);
     }
 
