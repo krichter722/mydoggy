@@ -744,7 +744,9 @@ public class MultiSplitLayout implements LayoutManager {
 
                 while (splitChildren.hasNext()) {
                     Node splitChild = splitChildren.next();
-                    Divider dividerChild = (splitChildren.hasNext()) ? (Divider) (splitChildren.next()) : null;
+                    Node dividerChild = (splitChildren.hasNext()) ? (splitChildren.next()) : null;
+                    if  (dividerChild != null && !(dividerChild instanceof Divider))
+                        throwInvalidLayout("Expected Divider. [found : " + dividerChild + "]", split);
 
                     double childHeight;
                     if (getFloatingDividers()) {

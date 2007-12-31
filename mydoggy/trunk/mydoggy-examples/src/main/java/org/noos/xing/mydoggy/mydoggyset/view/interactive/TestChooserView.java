@@ -4,8 +4,6 @@ import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.itest.InteractiveTestRunner;
 import org.noos.xing.mydoggy.itest.impl.SingleThreadInteractiveTestRunner;
-import org.noos.xing.mydoggy.mydoggyset.context.MyDoggySetContext;
-import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveDebugTest;
 import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveShowToolTest;
 import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveToolTypesTest;
 import org.noos.xing.mydoggy.mydoggyset.view.interactive.tests.InteractiveUniversalDragTest;
@@ -61,7 +59,6 @@ public class TestChooserView extends ComponentView {
                         new InteractiveUniversalDragTest(frame, toolWindowManager),
                         new InteractiveShowToolTest(frame, toolWindowManager),
                         new InteractiveToolTypesTest(frame, toolWindowManager),
-                        new InteractiveDebugTest(viewContext.get(MyDoggySetContext.class), frame, toolWindowManager), 
 
                 });
             } catch (AWTException ignore) {
