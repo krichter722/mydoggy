@@ -246,7 +246,7 @@ public class MultiSplitLayout implements LayoutManager {
         Rectangle nodeBounds = node.getBounds();
         if (nodeBounds.x == 0 && nodeBounds.y == 0 && nodeBounds.width == 0 && nodeBounds.height == 0 && node.getWeight() > 0.0) {
             Component child = childForNode(node);
-            if (node.getParent().isRowLayout()) {
+            if (node.getParent() != null && node.getParent().isRowLayout()) {
                 int width = (int) (bounds.width * node.getWeight());
                 return new Dimension(width, (child != null) ? child.getPreferredSize().height : 0);
             } else {

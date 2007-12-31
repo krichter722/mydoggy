@@ -36,7 +36,7 @@ public class MultiSplitDockableContainer extends JPanel {
     protected boolean useAlwaysContentWrapper;
     protected boolean jumpResetBounds;
 
-    int counter = 2;
+    protected int leafNameCounter = 0;
 
     public MultiSplitDockableContainer(MyDoggyToolWindowManager toolWindowManager, int orientation) {
         this.orientation = orientation;
@@ -50,13 +50,14 @@ public class MultiSplitDockableContainer extends JPanel {
         this.storeLayout = true;
         this.repaintRunnable = new RepaintRunnable();
 
+        // TODO: it's not necessary
         MultiSplitLayout.Split split = new MultiSplitLayout.Split();
         split.setRowLayout(orientation != JSplitPane.VERTICAL_SPLIT);
         if (split.isRowLayout()) {
             defaultAggregationPosition = AggregationPosition.RIGHT;
         } else
             defaultAggregationPosition = AggregationPosition.BOTTOM;
-        this.multiSplitPaneModelRoot = split;
+        this.multiSplitPaneModelRoot = null;
 
         this.models = new Hashtable<String, byte[]>();
         this.useAlwaysContentWrapper = false;
@@ -104,7 +105,8 @@ public class MultiSplitDockableContainer extends JPanel {
 
         if (entries.size() == 0) {
             // Just one leaf
-            DockableLeaf leaf = new DockableLeaf("1", dockable.getId());
+            DockableLeaf leaf = new DockableLeaf(getNextLeanName(),
+                                                 dockable.getId());
             leaf.setWeight(1.0d);
             multiSplitPaneModelRoot = leaf;
 
@@ -122,9 +124,11 @@ public class MultiSplitDockableContainer extends JPanel {
             }
 
             if (multiSplitPaneModelRoot instanceof DockableLeaf) {
+                // The root is a leaf...
                 DockableLeaf rootLeaf = (DockableLeaf) multiSplitPaneModelRoot;
 
                 if (aggregationOnDockable != null && (aggregationPosition == null || invalidAggregationPosition)) {
+                    // Aggregate to an already registered leaf
                     Component componentWrapper;
 
                     if (rootLeaf.getDockables().size() > 1) {
@@ -138,13 +142,17 @@ public class MultiSplitDockableContainer extends JPanel {
                         multiSplitPane.add(componentWrapper, rootLeaf.getName());
                     }
 
-                    // The requeste is to add more than one dockable on the same leaf...
+                    // The requeste is to add more than one dockable on the same leaf... no need to request a new leaf name
                     addToComponentWrapper(componentWrapper, dockable, aggregationIndexLocation, content);
 
                     repaintMultiSplit();
 
                     rootLeaf.addDockable(dockable.getId());
                 } else {
+                    // Create a new leaf (or load the model
+                    DockableLeaf firstLeaf = rootLeaf;
+                    DockableLeaf secondLeaf = null;          // TODO: get fromm model if it is loaded
+
                     if (storeLayout && oldModel != null) {
                         multiSplitPaneModelRoot = decode(oldModel);
                         multiSplitPaneModelRoot.setParent(null);
@@ -153,7 +161,7 @@ public class MultiSplitDockableContainer extends JPanel {
                         // Create two leafs
                         rootLeaf.setWeight(0.5);
 
-                        DockableLeaf secondLeaf = new DockableLeaf("2");
+                        secondLeaf = new DockableLeaf(getNextLeanName());
                         secondLeaf.setWeight(0.5);
                         secondLeaf.addDockable(dockable.getId());
 
@@ -163,11 +171,11 @@ public class MultiSplitDockableContainer extends JPanel {
                             case TOP:
                                 children = Arrays.asList(secondLeaf,
                                                          new MultiSplitLayout.Divider(),
-                                                         rootLeaf);
+                                                         firstLeaf);
                                 break;
                             case RIGHT:
                             case BOTTOM:
-                                children = Arrays.asList(rootLeaf,
+                                children = Arrays.asList(firstLeaf,
                                                          new MultiSplitLayout.Divider(),
                                                          secondLeaf);
                                 break;
@@ -197,8 +205,8 @@ public class MultiSplitDockableContainer extends JPanel {
                     }
                     multiSplitPane.removeAll();
 
-                    multiSplitPane.add(componentWrapper, "1");
-                    multiSplitPane.add(getComponentWrapper(dockable, content), "2");
+                    multiSplitPane.add(componentWrapper, firstLeaf.getName());
+                    multiSplitPane.add(getComponentWrapper(dockable, content), secondLeaf.getName());
 
                 }
             } else {
@@ -207,9 +215,7 @@ public class MultiSplitDockableContainer extends JPanel {
                 boolean addCmp = true;
 
                 // Build content to add
-//              TODO  String leafName = "" + (entries.size() + 1);
-                String leafName = "" + (++counter);
-
+                String leafName = null;
 
                 if (storeLayout && oldModel != null) {
                     multiSplitPaneModelRoot = decode(oldModel);
@@ -244,6 +250,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
                                             addCmp = false;
                                         } else {
+                                            leafName = getNextLeanName();
                                             boolean step1Failed = false;
 
                                             // Check for concordance to leaf.getParent().isRowLayout and aggregationPosition
@@ -344,6 +351,7 @@ public class MultiSplitDockableContainer extends JPanel {
                         if (!multiSplitPane.getMultiSplitLayout().getFloatingDividers())
                             multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
                     } else {
+                        leafName = getNextLeanName();
                         boolean rowLayout = (aggregationPosition == AggregationPosition.LEFT || aggregationPosition == AggregationPosition.RIGHT);
 
                         if (splitRoot.isRowLayout() == rowLayout) {
@@ -437,7 +445,7 @@ public class MultiSplitDockableContainer extends JPanel {
             multiSplitPaneModelRoot = null;
 
             resetRootComponent();
-            counter = 2;
+            leafNameCounter = 0;
             return;
         }
 
@@ -476,15 +484,13 @@ public class MultiSplitDockableContainer extends JPanel {
                 else
                     multiSplitPane.add(soleLeafCmp, "1");
             }
-
+            leafNameCounter = 1;
+            
             SwingUtil.repaint(this);
         } else {
             DockableLeaf dockableLeaf = getLeaf(dockable);
             if (dockableLeaf == null)
                 throw new IllegalArgumentException("Cannot remove the dockable. Cannot find leaf. [id : "  + dockable.getId() + "]");
-
-            if (dockableLeaf.getNameValue() == counter)
-                counter--;
 
             if (dockableLeaf.getDockables().size() > 1) {
                 // There are more than one dockable on the same leaf
@@ -495,6 +501,8 @@ public class MultiSplitDockableContainer extends JPanel {
                 removeComponentWrapper(multiSplitPane.getMultiSplitLayout().getChildMap().get(dockableLeaf.getName()),
                                        dockable);
             } else {
+                leafNameCounter--;
+
                 // There is one dockable on the leaf. We have to rearrange the layout...
                 String leafKey = dockableLeaf.getName();
                 int leafValue = Integer.parseInt(leafKey);
@@ -841,6 +849,9 @@ public class MultiSplitDockableContainer extends JPanel {
         while (!stack.isEmpty()) {
             MultiSplitLayout.Split split = stack.pop();
 
+            if (split.getChildren().size() <= 2)
+                return false;
+
             for (MultiSplitLayout.Node child : split.getChildren()) {
                 if (child.getParent() == null || child.getParent() != split)
                     return false;
@@ -904,6 +915,9 @@ public class MultiSplitDockableContainer extends JPanel {
         return null;
     }
 
+    protected String getNextLeanName() {
+        return "" + (++leafNameCounter);
+    }
 
     public class DockableEntry {
         Dockable dockable;
