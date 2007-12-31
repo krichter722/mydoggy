@@ -103,6 +103,10 @@ public class MyDoggyTabbedContentUI implements TabbedContentUI {
         fireEvent("transparentDelay", old, transparentDelay);
     }
 
+    public void setConstraints(Object... constraints) {
+        // TODO: implement this
+    }
+
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         listenerList.add(PropertyChangeListener.class, listener);
     }

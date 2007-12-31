@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.mydoggyset.view.interactive;
 
 import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.mydoggyset.context.MyDoggySetContext;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.yasaf.plaf.view.MapViewContext;
 import org.noos.xing.yasaf.view.View;
@@ -15,16 +16,19 @@ import java.awt.*;
 public class InteractiveTestView implements View {
     protected ToolWindowManager toolWindowManager;
     protected JFrame frame;
+    protected ViewContext mydoggySetContext;
 
-    public InteractiveTestView(JFrame frame, ToolWindowManager toolWindowManager) {
+    public InteractiveTestView(ViewContext mydoggySetContext, JFrame frame, ToolWindowManager toolWindowManager) {
         this.frame = frame;
         this.toolWindowManager = toolWindowManager;
+        this.mydoggySetContext = mydoggySetContext;
     }
 
     public Component getComponent() {
         ViewContext viewContext = new MapViewContext();
         viewContext.put(ToolWindowManager.class, toolWindowManager);
         viewContext.put(JFrame.class, frame);
+        viewContext.put(MyDoggySetContext.class, mydoggySetContext);
 
         JPanel panel = new JPanel();
         panel.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1, 3, -1}}));

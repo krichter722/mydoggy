@@ -291,8 +291,6 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                                 if (rejectDrop) {
                                     dtde.dropComplete(false);
                                 } else {
-                                    ContentUI contentUI = contentManager.getContentManagerUI().getContentUI(content);
-
                                     removeDockable(content);
                                     addDockable(content,
                                             content.getComponent(),

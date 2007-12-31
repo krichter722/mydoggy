@@ -11,7 +11,7 @@ import java.awt.*;
  */
 public class InteractiveUniversalDragTest extends MyDoggySetInteractiveTest {
 
-    public InteractiveUniversalDragTest(ToolWindowManager toolWindowManager, Container root) throws AWTException {
+    public InteractiveUniversalDragTest(Container root, ToolWindowManager toolWindowManager) throws AWTException {
         super(toolWindowManager, root);
     }
 

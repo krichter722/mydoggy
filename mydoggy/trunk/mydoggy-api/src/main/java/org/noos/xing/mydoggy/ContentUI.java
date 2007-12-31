@@ -109,4 +109,10 @@ public interface ContentUI extends DockableUI {
      */
     int getTransparentDelay();
 
+    /**
+     *
+     * @param contraints
+     */
+    void setConstraints(Object... contraints);
+
 }

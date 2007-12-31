@@ -58,7 +58,7 @@ public class MyDoggySetContext extends MapViewContext {
                                                                          "Contents", (int) 'C'));
         addViewContextChangeListener(InteractiveTest.class, new AddContentAction(toolWindowManager,
                                                                                  "ITests", "Interactive Tests", null,
-                                                                                 interactiveTestContentComponent = new InteractiveTestView(frame, toolWindowManager).getComponent(),
+                                                                                 interactiveTestContentComponent = new InteractiveTestView(this, frame, toolWindowManager).getComponent(),
                                                                                  "Interactive Tests", (int) 'I'));
         addViewContextChangeListener(ResourceManager.class, new AddContentAction(toolWindowManager,
                                                                                  "Customize", "Customize", null,
