@@ -394,7 +394,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     }
 
     protected void addUIForContent(Content content, Object... constraints) {
-        TabbedContentUI contentUI = new MyDoggyTabbedContentUI(content);
+        TabbedContentUI contentUI = new MyDoggyMultiSplitContentUI(multiSplitContainer, content);
         contentUIMap.put(content, contentUI);
         contentUI.setCloseable(closeable);
         contentUI.setDetachable(detachable);

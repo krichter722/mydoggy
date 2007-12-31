@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.DesktopContentUI;
 
 import javax.swing.*;
+import java.awt.*;
 import java.beans.PropertyVetoException;
 
 /**
@@ -71,6 +72,18 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
 
     public int getTransparentDelay() {
         return transparentDelay;
+    }
+
+    public void setConstraints(Object... constraints) {
+        if (constraints.length > 0) {
+            if (constraints[0] instanceof Point) {
+                Point location = (Point) constraints[0];
+
+                setBounds(location.x, location.y, 320, 200);
+            } else if (constraints[0] instanceof Rectangle) {
+                setBounds((Rectangle) constraints[0]);
+            } 
+        }
     }
 
     public void setTransparentDelay(int transparentDelay) {
