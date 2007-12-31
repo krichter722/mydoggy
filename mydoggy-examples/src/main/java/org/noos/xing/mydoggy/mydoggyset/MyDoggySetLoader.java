@@ -14,7 +14,7 @@ public class MyDoggySetLoader {
 				MyDoggySet myDoggySet = new MyDoggySet();
 				try {
 					myDoggySet.setUp();
-					myDoggySet.start();
+					myDoggySet.start(null);
 				} catch (Exception e) {
 					e.printStackTrace();  
 				}

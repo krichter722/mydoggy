@@ -30,11 +30,13 @@ public class MultiSplitDockableContainer extends JPanel {
     protected MultiSplitPane multiSplitPane;
     protected MultiSplitLayout.Node multiSplitPaneModelRoot;
 
-    protected RepaintRunnable repaintRunnable;
+    protected Runnable repaintRunnable;
 
     protected boolean storeLayout;
     protected boolean useAlwaysContentWrapper;
     protected boolean jumpResetBounds;
+
+    int counter = 2;
 
     public MultiSplitDockableContainer(MyDoggyToolWindowManager toolWindowManager, int orientation) {
         this.orientation = orientation;
@@ -145,6 +147,7 @@ public class MultiSplitDockableContainer extends JPanel {
                 } else {
                     if (storeLayout && oldModel != null) {
                         multiSplitPaneModelRoot = decode(oldModel);
+                        multiSplitPaneModelRoot.setParent(null);
                         jumpResetBounds = true;
                     } else {
                         // Create two leafs
@@ -204,10 +207,13 @@ public class MultiSplitDockableContainer extends JPanel {
                 boolean addCmp = true;
 
                 // Build content to add
-                String leafName = "" + (entries.size() + 1);
+//              TODO  String leafName = "" + (entries.size() + 1);
+                String leafName = "" + (++counter);
+
 
                 if (storeLayout && oldModel != null) {
                     multiSplitPaneModelRoot = decode(oldModel);
+                    multiSplitPaneModelRoot.setParent(null);
                     jumpResetBounds = true;
                 } else {
                     // Modify model
@@ -225,7 +231,7 @@ public class MultiSplitDockableContainer extends JPanel {
                                 if (child instanceof DockableLeaf) {
                                     DockableLeaf leaf = (DockableLeaf) child;
 
-                                    if (aggregationOnDockable == toolWindowManager.getDockable(leaf.getDockable())) {
+                                    if (leaf.getDockables().contains(aggregationOnDockable.getId())) {
                                         if (invalidAggregationPosition) {
                                             // The requeste is to add more than one dockable on the same leaf...
                                             addToComponentWrapper(
@@ -410,9 +416,12 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
     public void removeDockable(Dockable dockable) {
+        if (dockable == null)
+            throw new IllegalArgumentException("Cannot remove dockable. [dockable null]");
+
         DockableEntry dockableEntry = entries.get(dockable);
         if (dockableEntry == null)
-            throw new IllegalArgumentException("Cannot remove that dockable. It's not present into the container.");
+            throw new IllegalArgumentException("Cannot remove the dockable. No Entry for it. [id : "  + dockable.getId() + "]");
 
         // Store layout
         if (storeLayout) {
@@ -428,11 +437,13 @@ public class MultiSplitDockableContainer extends JPanel {
             multiSplitPaneModelRoot = null;
 
             resetRootComponent();
+            counter = 2;
             return;
         }
 
         if (entries.size() == 1) {
             if (multiSplitPaneModelRoot instanceof DockableLeaf) {
+                // TODO: ma quando accade???
                 DockableLeaf leaf = (DockableLeaf) multiSplitPaneModelRoot;
                 removeComponentWrapper(multiSplitPane.getComponent(0),
                                        dockable);
@@ -455,6 +466,7 @@ public class MultiSplitDockableContainer extends JPanel {
                 Component soleLeafCmp = getWrappedComponent((Container) multiSplitPane.getMultiSplitLayout().getChildMap().get(soleLeaf.getName()));
                 soleLeaf.setName("1");
                 multiSplitPaneModelRoot = soleLeaf;
+                multiSplitPaneModelRoot.setParent(null);
                 multiSplitPane.setModel(multiSplitPaneModelRoot);
 
                 multiSplitPane.removeAll();
@@ -469,7 +481,10 @@ public class MultiSplitDockableContainer extends JPanel {
         } else {
             DockableLeaf dockableLeaf = getLeaf(dockable);
             if (dockableLeaf == null)
-                throw new IllegalArgumentException("Cannot remove that dockable. It's not present into the container. Call the admin.");
+                throw new IllegalArgumentException("Cannot remove the dockable. Cannot find leaf. [id : "  + dockable.getId() + "]");
+
+            if (dockableLeaf.getNameValue() == counter)
+                counter--;
 
             if (dockableLeaf.getDockables().size() > 1) {
                 // There are more than one dockable on the same leaf
@@ -520,6 +535,8 @@ public class MultiSplitDockableContainer extends JPanel {
 
                                         if (grandpa == null) {
                                             multiSplitPaneModelRoot = getFirstNotDivider(children);
+                                            multiSplitPaneModelRoot.setParent(null);
+                                            setChild = false;
                                         } else {
                                             List<MultiSplitLayout.Node> grenpaChildren = grandpa.getChildren();
 
@@ -532,7 +549,6 @@ public class MultiSplitDockableContainer extends JPanel {
                                             }
                                             grandpa.setChildren(grenpaChildren);
                                             setChild = false;
-
                                         }
                                     } else {
                                         if (i < children.size())
@@ -599,6 +615,7 @@ public class MultiSplitDockableContainer extends JPanel {
             validateModel(root);
 
             multiSplitPaneModelRoot = root;
+            multiSplitPaneModelRoot.setParent(null);
             multiSplitPane.setModel(multiSplitPaneModelRoot);
 
             repaintMultiSplit();
@@ -636,6 +653,7 @@ public class MultiSplitDockableContainer extends JPanel {
             validateModel(root);
 
             multiSplitPaneModelRoot = root;
+            multiSplitPaneModelRoot.setParent(null);
             multiSplitPane.setModel(multiSplitPaneModelRoot);
 
             repaintMultiSplit();
@@ -814,6 +832,9 @@ public class MultiSplitDockableContainer extends JPanel {
         if (multiSplitPaneModelRoot == null || !(multiSplitPaneModelRoot instanceof MultiSplitLayout.Split))
             return true;
 
+        if (multiSplitPaneModelRoot.getParent() != null)
+            return false;
+
         Stack<MultiSplitLayout.Split> stack = new Stack<MultiSplitLayout.Split>();
         stack.push((MultiSplitLayout.Split) multiSplitPaneModelRoot);
 
@@ -831,7 +852,8 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
     protected void repaintMultiSplit() {
-        SwingUtilities.invokeLater(repaintRunnable);
+//        SwingUtilities.invokeLater(repaintRunnable);
+        SwingUtilities.invokeLater(new DebugRepaintRunnable(new RuntimeException()));
     }
 
     protected MultiSplitLayout.Node getFirstNotDivider(List<MultiSplitLayout.Node> children) {
@@ -940,20 +962,18 @@ public class MultiSplitDockableContainer extends JPanel {
         public void addDockable(String dockableId) {
             dockables.add(dockableId);
         }
+
+        public int getNameValue() {
+            return Integer.parseInt(getName());
+        }
     }
 
     public class RepaintRunnable implements Runnable {
-        protected Exception exception;
 
         public RepaintRunnable() {
         }
 
-        public RepaintRunnable(Exception exception) {
-            this.exception = exception;
-        }
-
         public void run() {
-//            exception.printStackTrace();
             checkModel();
             if (jumpResetBounds) {
                 jumpResetBounds = false;
@@ -966,4 +986,34 @@ public class MultiSplitDockableContainer extends JPanel {
             multiSplitPane.getMultiSplitLayout().setFloatingDividers(false);
         }
     }
+
+    public class DebugRepaintRunnable implements Runnable {
+        protected Exception exception;
+
+        public DebugRepaintRunnable(Exception exception) {
+            this.exception = exception;
+        }
+
+        public void run() {
+//            exception.printStackTrace();
+            try {
+                checkModel();
+                if (jumpResetBounds) {
+                    jumpResetBounds = false;
+                } else
+                    resetBounds();
+
+                multiSplitPane.invalidate();
+                multiSplitPane.validate();
+                multiSplitPane.repaint();
+                multiSplitPane.getMultiSplitLayout().setFloatingDividers(false);
+            } catch (RuntimeException e) {
+                System.out.println("-----------------------------------------------------------------------");
+                exception.printStackTrace();
+                System.out.println("-----------------------------------------------------------------------");
+                throw e;
+            }
+        }
+    }
+
 }
