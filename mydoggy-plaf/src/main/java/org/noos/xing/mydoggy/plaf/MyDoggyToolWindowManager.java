@@ -780,6 +780,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             this.showingGroup = null;
     }
 
+    boolean isShowingGroup() {
+        return showingGroup == allToolWindowGroup;
+    }
+
 
     protected class AvailablePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {

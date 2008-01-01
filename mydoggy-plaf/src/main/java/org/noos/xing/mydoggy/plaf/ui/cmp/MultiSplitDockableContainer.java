@@ -431,6 +431,7 @@ public class MultiSplitDockableContainer extends JPanel {
             for (DockableEntry entry : entries.values()) {
                 builder.append(entry.id);
             }
+//            MultiSplitLayout.printModel(multiSplitPaneModelRoot);
             models.put(builder.toString(), encode());
         }
         entries.remove(dockable);
@@ -604,6 +605,16 @@ public class MultiSplitDockableContainer extends JPanel {
             if (!checkModel())
                 System.out.println("Check model fail. removeDockable end");
             repaintMultiSplit();
+        }
+    }
+
+    public void removeDockable(Dockable dockable, boolean storeLayout) {
+        boolean old = this.storeLayout;
+        this.storeLayout = storeLayout;
+        try {
+            removeDockable(dockable);
+        } finally {
+            this.storeLayout = old;
         }
     }
 
