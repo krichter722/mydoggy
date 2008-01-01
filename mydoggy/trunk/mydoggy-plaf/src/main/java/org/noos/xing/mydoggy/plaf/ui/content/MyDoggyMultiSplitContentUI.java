@@ -19,12 +19,11 @@ public class MyDoggyMultiSplitContentUI extends MyDoggyTabbedContentUI {
         if (constraints.length > 0 && constraints[0] instanceof MultiSplitConstraint) {
             MultiSplitConstraint multiSplitConstraint = (MultiSplitConstraint) constraints[0];
 
-            multiSplitContainer.removeDockable(content);
-            multiSplitContainer.addDockable(content,
-                                            content.getComponent(),
-                                            multiSplitConstraint.getContent(),
-                                            multiSplitConstraint.getAggregationIndexLocation(),
-                                            multiSplitConstraint.getAggregationPosition());
+            multiSplitContainer.setConstraints(content,
+                                               content.getComponent(),
+                                               multiSplitConstraint.getContent(),
+                                               multiSplitConstraint.getAggregationIndexLocation(),
+                                               multiSplitConstraint.getAggregationPosition());
         }
     }
 }
