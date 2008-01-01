@@ -158,22 +158,17 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void aggregate() {
-        try {
-            descriptor.getManager().setShowingGroup();
-            if (!isVisible()) {
-                switch (anchor) {
-                    case LEFT:
-                    case RIGHT:
-                        aggregate(AggregationPosition.BOTTOM);
-                        break;
-                    case TOP:
-                    case BOTTOM:
-                        aggregate(AggregationPosition.RIGHT);
-                        break;
-                }
+        if (!isVisible()) {
+            switch (anchor) {
+                case LEFT:
+                case RIGHT:
+                    aggregate(AggregationPosition.BOTTOM);
+                    break;
+                case TOP:
+                case BOTTOM:
+                    aggregate(AggregationPosition.RIGHT);
+                    break;
             }
-        } finally {
-            descriptor.getManager().resetShowingGroup();
         }
     }
 

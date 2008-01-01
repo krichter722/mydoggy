@@ -25,10 +25,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StreamTokenizer;
-import java.io.StringReader;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 
@@ -1093,6 +1090,10 @@ public class MultiSplitLayout implements LayoutManager {
         public Node previousSibling() {
             return siblingAtOffset(-1);
         }
+
+        public String print() {
+            return "";
+        }
     }
 
     /**
@@ -1184,6 +1185,10 @@ public class MultiSplitLayout implements LayoutManager {
             return weightedChild;
         }
 
+        public void removeNode(Node node) {
+            children.remove(node);
+        }
+
         public String toString() {
             StringBuffer sb = new StringBuffer("Split");
             sb.append(isRowLayout() ? " ROW [" : " COLUMN [");
@@ -1197,8 +1202,16 @@ public class MultiSplitLayout implements LayoutManager {
             return sb.toString();
         }
 
-        public void removeNode(Node node) {
-            children.remove(node);
+        public String print() {
+            StringBuffer sb = new StringBuffer("Split");
+            sb.append(isRowLayout() ? " ROW [" : " COLUMN [");
+
+            for (Node child : children) {
+                sb.append(child.print()).append(" ; ");
+            }
+
+            sb.append("] ");
+            return sb.toString();
         }
     }
 
@@ -1263,6 +1276,14 @@ public class MultiSplitLayout implements LayoutManager {
             sb.append(getBounds());
             return sb.toString();
         }
+
+        public String print() {
+            StringBuffer sb = new StringBuffer("Leaf");
+            sb.append(" \"");
+            sb.append(getName());
+            sb.append("\"");
+            return sb.toString();
+        }
     }
 
 
@@ -1294,6 +1315,10 @@ public class MultiSplitLayout implements LayoutManager {
 
         public String toString() {
             return "Divider " + getBounds().toString();
+        }
+
+        public String print() {
+            return "Divider";
         }
     }
 
@@ -1454,15 +1479,15 @@ public class MultiSplitLayout implements LayoutManager {
     }
 
 
-    private static void printModel(String indent, Node root) {
+    private static void printModel(String indent, Node root, PrintStream printStream) {
         if (root instanceof Split) {
             Split split = (Split) root;
-            System.out.println(indent + split);
-            for (Node child : split.getChildren()) {
-                printModel(indent + "  ", child);
-            }
+            printStream.println(indent + split.print());
+//            for (Node child : split.getChildren()) {
+//                printModel(indent + "  ", child, printStream);
+//            }
         } else {
-            System.out.println(indent + root);
+            printStream.println(indent + root.print());
         }
     }
 
@@ -1470,6 +1495,11 @@ public class MultiSplitLayout implements LayoutManager {
      * Print the tree with enough detail for simple debugging.
      */
     public static void printModel(Node root) {
-        printModel("", root);
+        printModel("", root, System.out);
     }
+
+    public static void printModel(Node root, PrintStream printStream) {
+        printModel("", root, printStream);
+    }
+
 }

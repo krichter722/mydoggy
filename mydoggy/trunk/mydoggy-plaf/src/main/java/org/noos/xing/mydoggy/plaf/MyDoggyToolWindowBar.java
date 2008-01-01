@@ -663,8 +663,8 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     MultiSplitDockableContainer multiSplitDockableContainer = (MultiSplitDockableContainer) splitPaneContent;
 
                     if (content == null) {
-
-                        multiSplitDockableContainer.removeDockable(descriptor.getToolWindow());
+                        multiSplitDockableContainer.removeDockable(descriptor.getToolWindow(),
+                                                                   !visible && !manager.isShowingGroup());
                         animate = false;
 
                         if (multiSplitDockableContainer.isEmpty()) {
