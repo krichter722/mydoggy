@@ -5,7 +5,6 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.ToolWindowType;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,18 +24,6 @@ public class TestTWManagerVisibileTool extends TestCase {
         myDoggyToolWindowManager.setMainContent(new JTree());
 
         registerToolWindow();
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                frame.setSize(640, 480);
-                frame.setLocation(100, 100);
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-                frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
-                frame.getContentPane().add(myDoggyToolWindowManager, "0,0,");
-
-                frame.setVisible(true);
-            }
-        });
     }
 
     protected void tearDown() throws Exception {

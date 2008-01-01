@@ -50,10 +50,7 @@ public class MultiSplitDockableContainer extends JPanel {
         this.storeLayout = true;
         this.repaintRunnable = new RepaintRunnable();
 
-        // TODO: it's not necessary
-        MultiSplitLayout.Split split = new MultiSplitLayout.Split();
-        split.setRowLayout(orientation != JSplitPane.VERTICAL_SPLIT);
-        if (split.isRowLayout()) {
+        if (orientation != JSplitPane.VERTICAL_SPLIT) {
             defaultAggregationPosition = AggregationPosition.RIGHT;
         } else
             defaultAggregationPosition = AggregationPosition.BOTTOM;
@@ -149,48 +146,43 @@ public class MultiSplitDockableContainer extends JPanel {
 
                     rootLeaf.addDockable(dockable.getId());
                 } else {
-                    // Create a new leaf (or load the model
+                    // Create a new leaf...
+
                     DockableLeaf firstLeaf = rootLeaf;
-                    DockableLeaf secondLeaf = null;          // TODO: get fromm model if it is loaded
+                    DockableLeaf secondLeaf = null;
 
-                    if (storeLayout && oldModel != null) {
-                        multiSplitPaneModelRoot = decode(oldModel);
-                        multiSplitPaneModelRoot.setParent(null);
-                        jumpResetBounds = true;
-                    } else {
-                        // Create two leafs
-                        rootLeaf.setWeight(0.5);
+                    // Init two leafs
+                    firstLeaf.setWeight(0.5);
 
-                        secondLeaf = new DockableLeaf(getNextLeanName());
-                        secondLeaf.setWeight(0.5);
-                        secondLeaf.addDockable(dockable.getId());
+                    secondLeaf = new DockableLeaf(getNextLeanName());
+                    secondLeaf.setWeight(0.5);
+                    secondLeaf.addDockable(dockable.getId());
 
-                        List<MultiSplitLayout.Node> children = null;
-                        switch (aggregationPosition) {
-                            case LEFT:
-                            case TOP:
-                                children = Arrays.asList(secondLeaf,
-                                                         new MultiSplitLayout.Divider(),
-                                                         firstLeaf);
-                                break;
-                            case RIGHT:
-                            case BOTTOM:
-                                children = Arrays.asList(firstLeaf,
-                                                         new MultiSplitLayout.Divider(),
-                                                         secondLeaf);
-                                break;
-                        }
-
-                        boolean rowLayout = (aggregationPosition == AggregationPosition.LEFT || aggregationPosition == AggregationPosition.RIGHT);
-
-                        MultiSplitLayout.Split split = new MultiSplitLayout.Split();
-                        split.setRowLayout(rowLayout);
-                        split.setChildren(children);
-                        multiSplitPaneModelRoot = split;
-
-                        if (!multiSplitPane.getMultiSplitLayout().getFloatingDividers())
-                            multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
+                    List<MultiSplitLayout.Node> children = null;
+                    switch (aggregationPosition) {
+                        case LEFT:
+                        case TOP:
+                            children = Arrays.asList(secondLeaf,
+                                                     new MultiSplitLayout.Divider(),
+                                                     firstLeaf);
+                            break;
+                        case RIGHT:
+                        case BOTTOM:
+                            children = Arrays.asList(firstLeaf,
+                                                     new MultiSplitLayout.Divider(),
+                                                     secondLeaf);
+                            break;
                     }
+
+                    boolean rowLayout = (aggregationPosition == AggregationPosition.LEFT || aggregationPosition == AggregationPosition.RIGHT);
+
+                    MultiSplitLayout.Split split = new MultiSplitLayout.Split();
+                    split.setRowLayout(rowLayout);
+                    split.setChildren(children);
+                    multiSplitPaneModelRoot = split;
+
+                    if (!multiSplitPane.getMultiSplitLayout().getFloatingDividers())
+                        multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
 
                     validateModel(multiSplitPaneModelRoot);
                     multiSplitPane.setModel(multiSplitPaneModelRoot);
@@ -210,202 +202,196 @@ public class MultiSplitDockableContainer extends JPanel {
 
                 }
             } else {
+                // Take the root, it's a split
                 MultiSplitLayout.Split splitRoot = (MultiSplitLayout.Split) multiSplitPaneModelRoot;
 
-                boolean addCmp = true;
-
                 // Build content to add
+                boolean addCmp = true;
                 String leafName = null;
 
-                if (storeLayout && oldModel != null) {
-                    multiSplitPaneModelRoot = decode(oldModel);
-                    multiSplitPaneModelRoot.setParent(null);
-                    jumpResetBounds = true;
-                } else {
-                    // Modify model
+                // Modify model
+                if (aggregationOnDockable != null) {
 
-                    if (aggregationOnDockable != null) {
+                    // Search for aggregationOnDockable leaf
+                    Stack<MultiSplitLayout.Split> stack = new Stack<MultiSplitLayout.Split>();
+                    stack.push(splitRoot);
 
-                        // Search for aggregationOnDockable leaf
-                        Stack<MultiSplitLayout.Split> stack = new Stack<MultiSplitLayout.Split>();
-                        stack.push(splitRoot);
+                    while (!stack.isEmpty()) {
+                        MultiSplitLayout.Split split = stack.pop();
 
-                        while (!stack.isEmpty()) {
-                            MultiSplitLayout.Split split = stack.pop();
+                        for (MultiSplitLayout.Node child : split.getChildren()) {
+                            if (child instanceof DockableLeaf) {
+                                DockableLeaf leaf = (DockableLeaf) child;
 
-                            for (MultiSplitLayout.Node child : split.getChildren()) {
-                                if (child instanceof DockableLeaf) {
-                                    DockableLeaf leaf = (DockableLeaf) child;
+                                if (leaf.getDockables().contains(aggregationOnDockable.getId())) {
+                                    if (invalidAggregationPosition) {
+                                        // The requeste is to add more than one dockable on the same leaf...
+                                        addToComponentWrapper(
+                                                multiSplitPane.getMultiSplitLayout().getChildMap().get(leaf.getName()),
+                                                dockable,
+                                                aggregationIndexLocation, content
+                                        );
 
-                                    if (leaf.getDockables().contains(aggregationOnDockable.getId())) {
-                                        if (invalidAggregationPosition) {
-                                            // The requeste is to add more than one dockable on the same leaf...
-                                            addToComponentWrapper(
-                                                    multiSplitPane.getMultiSplitLayout().getChildMap().get(leaf.getName()),
-                                                    dockable,
-                                                    aggregationIndexLocation, content
-                                            );
+                                        leaf.addDockable(dockable.getId());
 
-                                            leaf.addDockable(dockable.getId());
+                                        addCmp = false;
+                                    } else {
+                                        leafName = getNextLeanName();
+                                        boolean step1Failed = false;
 
-                                            addCmp = false;
-                                        } else {
-                                            leafName = getNextLeanName();
-                                            boolean step1Failed = false;
+                                        // Check for concordance to leaf.getParent().isRowLayout and aggregationPosition
+                                        MultiSplitLayout.Split parent = leaf.getParent();
+                                        boolean rowLayout = parent.isRowLayout();
 
-                                            // Check for concordance to leaf.getParent().isRowLayout and aggregationPosition
-                                            MultiSplitLayout.Split parent = leaf.getParent();
-                                            boolean rowLayout = parent.isRowLayout();
-
-                                            List<MultiSplitLayout.Node> parentChildren = parent.getChildren();
-                                            int startIndex = parentChildren.indexOf(leaf);
-                                            if (rowLayout) {
-                                                boolean finalize = false;
-                                                switch (aggregationPosition) {
-                                                    case LEFT:
-                                                        parentChildren.add(startIndex, new DockableLeaf(leafName, dockable.getId()));
-                                                        parentChildren.add(startIndex + 1, new MultiSplitLayout.Divider());
-                                                        finalize = true;
-                                                        break;
-                                                    case RIGHT:
-                                                        parentChildren.add(startIndex + 1, new MultiSplitLayout.Divider());
-                                                        parentChildren.add(startIndex + 2, new DockableLeaf(leafName, dockable.getId()));
-                                                        finalize = true;
-                                                        break;
-                                                    default:
-                                                        step1Failed = true;
-                                                }
-
-                                                if (finalize) {
-                                                    // Set new children
-                                                    forceWeight(parentChildren);
-                                                    parent.setChildren(parentChildren);
-                                                }
-                                            } else {
-                                                boolean finalize = false;
-                                                switch (aggregationPosition) {
-                                                    case TOP:
-                                                        parentChildren.add(startIndex, new DockableLeaf(leafName, dockable.getId()));
-                                                        parentChildren.add(startIndex + 1, new MultiSplitLayout.Divider());
-                                                        finalize = true;
-                                                        break;
-                                                    case BOTTOM:
-                                                        parentChildren.add(startIndex + 1, new MultiSplitLayout.Divider());
-                                                        parentChildren.add(startIndex + 2, new DockableLeaf(leafName, dockable.getId()));
-                                                        finalize = true;
-                                                        break;
-                                                    default:
-                                                        step1Failed = true;
-                                                }
-
-                                                if (finalize) {
-                                                    // Set new children
-                                                    forceWeight(parentChildren);
-                                                    parent.setChildren(parentChildren);
-                                                }
+                                        List<MultiSplitLayout.Node> parentChildren = parent.getChildren();
+                                        int startIndex = parentChildren.indexOf(leaf);
+                                        if (rowLayout) {
+                                            boolean finalize = false;
+                                            switch (aggregationPosition) {
+                                                case LEFT:
+                                                    parentChildren.add(startIndex, new DockableLeaf(leafName, dockable.getId()));
+                                                    parentChildren.add(startIndex + 1, new MultiSplitLayout.Divider());
+                                                    finalize = true;
+                                                    break;
+                                                case RIGHT:
+                                                    parentChildren.add(startIndex + 1, new MultiSplitLayout.Divider());
+                                                    parentChildren.add(startIndex + 2, new DockableLeaf(leafName, dockable.getId()));
+                                                    finalize = true;
+                                                    break;
+                                                default:
+                                                    step1Failed = true;
                                             }
 
+                                            if (finalize) {
+                                                // Set new children
+                                                forceWeight(parentChildren);
+                                                parent.setChildren(parentChildren);
+                                            }
+                                        } else {
+                                            boolean finalize = false;
+                                            switch (aggregationPosition) {
+                                                case TOP:
+                                                    parentChildren.add(startIndex, new DockableLeaf(leafName, dockable.getId()));
+                                                    parentChildren.add(startIndex + 1, new MultiSplitLayout.Divider());
+                                                    finalize = true;
+                                                    break;
+                                                case BOTTOM:
+                                                    parentChildren.add(startIndex + 1, new MultiSplitLayout.Divider());
+                                                    parentChildren.add(startIndex + 2, new DockableLeaf(leafName, dockable.getId()));
+                                                    finalize = true;
+                                                    break;
+                                                default:
+                                                    step1Failed = true;
+                                            }
 
-                                            if (step1Failed) {
-                                                // Create two leafs
-
-                                                MultiSplitLayout.Leaf newleaf = new DockableLeaf(leafName, dockable.getId());
-                                                newleaf.setWeight(0.5);
-
-                                                // Creat the split
-                                                MultiSplitLayout.Split newSplit = new MultiSplitLayout.Split();
-                                                newSplit.setRowLayout((aggregationPosition == AggregationPosition.LEFT || aggregationPosition == AggregationPosition.RIGHT));
-                                                newSplit.setWeight(leaf.getWeight());
-                                                leaf.getParent().removeNode(leaf);
-                                                switch (aggregationPosition) {
-                                                    case LEFT:
-                                                    case TOP:
-                                                        newSplit.setChildren(Arrays.asList(newleaf,
-                                                                                           new MultiSplitLayout.Divider(),
-                                                                                           leaf));
-                                                        break;
-                                                    default:
-                                                        newSplit.setChildren(Arrays.asList(leaf,
-                                                                                           new MultiSplitLayout.Divider(),
-                                                                                           newleaf));
-                                                        break;
-                                                }
-
-                                                leaf.setWeight(0.5);
-
-                                                // Switch the leaf with the new split
-                                                parentChildren.set(startIndex, newSplit);
+                                            if (finalize) {
+                                                // Set new children
+                                                forceWeight(parentChildren);
                                                 parent.setChildren(parentChildren);
                                             }
                                         }
 
-                                        stack.clear();
-                                        break;
+
+                                        if (step1Failed) {
+                                            // Create two leafs
+
+                                            MultiSplitLayout.Leaf newleaf = new DockableLeaf(leafName, dockable.getId());
+                                            newleaf.setWeight(0.5);
+
+                                            // Creat the split
+                                            MultiSplitLayout.Split newSplit = new MultiSplitLayout.Split();
+                                            newSplit.setRowLayout((aggregationPosition == AggregationPosition.LEFT || aggregationPosition == AggregationPosition.RIGHT));
+                                            newSplit.setWeight(leaf.getWeight());
+                                            leaf.getParent().removeNode(leaf);
+                                            switch (aggregationPosition) {
+                                                case LEFT:
+                                                case TOP:
+                                                    newSplit.setChildren(Arrays.asList(newleaf,
+                                                                                       new MultiSplitLayout.Divider(),
+                                                                                       leaf));
+                                                    break;
+                                                default:
+                                                    newSplit.setChildren(Arrays.asList(leaf,
+                                                                                       new MultiSplitLayout.Divider(),
+                                                                                       newleaf));
+                                                    break;
+                                            }
+
+                                            leaf.setWeight(0.5);
+
+                                            // Switch the leaf with the new split
+                                            parentChildren.set(startIndex, newSplit);
+                                            parent.setChildren(parentChildren);
+                                        }
                                     }
-                                } else if (child instanceof MultiSplitLayout.Split) {
-                                    stack.push((MultiSplitLayout.Split) child);
+
+                                    stack.clear();
+                                    break;
                                 }
+                            } else if (child instanceof MultiSplitLayout.Split) {
+                                stack.push((MultiSplitLayout.Split) child);
                             }
                         }
-
-                        if (!multiSplitPane.getMultiSplitLayout().getFloatingDividers())
-                            multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
-                    } else {
-                        leafName = getNextLeanName();
-                        boolean rowLayout = (aggregationPosition == AggregationPosition.LEFT || aggregationPosition == AggregationPosition.RIGHT);
-
-                        if (splitRoot.isRowLayout() == rowLayout) {
-                            List<MultiSplitLayout.Node> children = splitRoot.getChildren();
-
-                            switch (aggregationPosition) {
-                                case LEFT:
-                                case TOP:
-                                    children.add(0, new DockableLeaf(leafName, dockable.getId()));
-                                    children.add(1, new MultiSplitLayout.Divider());
-                                    break;
-                                case RIGHT:
-                                case BOTTOM:
-                                    children.add(new MultiSplitLayout.Divider());
-                                    children.add(new DockableLeaf(leafName, dockable.getId()));
-                                    break;
-                            }
-
-                            forceWeight(children);
-
-                            splitRoot.setChildren(children);
-                        } else {
-                            MultiSplitLayout.Split newRoot = new MultiSplitLayout.Split();
-                            newRoot.setRowLayout(rowLayout);
-
-                            MultiSplitLayout.Leaf leaf = new DockableLeaf(leafName, dockable.getId());
-                            leaf.setWeight(0.5);
-                            multiSplitPaneModelRoot.setWeight(0.5);
-
-                            List<MultiSplitLayout.Node> children = null;
-                            switch (aggregationPosition) {
-                                case LEFT:
-                                case TOP:
-                                    children = Arrays.asList(leaf,
-                                                             new MultiSplitLayout.Divider(),
-                                                             multiSplitPaneModelRoot);
-                                    break;
-                                case RIGHT:
-                                case BOTTOM:
-                                    children = Arrays.asList(multiSplitPaneModelRoot,
-                                                             new MultiSplitLayout.Divider(),
-                                                             leaf);
-                                    break;
-                            }
-                            forceWeight(children);
-                            newRoot.setChildren(children);
-
-                            multiSplitPaneModelRoot = newRoot;
-                        }
-
-                        if (!multiSplitPane.getMultiSplitLayout().getFloatingDividers())
-                            multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
                     }
+
+                    if (!multiSplitPane.getMultiSplitLayout().getFloatingDividers())
+                        multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
+                } else {
+                    leafName = getNextLeanName();
+                    boolean rowLayout = (aggregationPosition == AggregationPosition.LEFT || aggregationPosition == AggregationPosition.RIGHT);
+
+                    if (splitRoot.isRowLayout() == rowLayout) {
+                        List<MultiSplitLayout.Node> children = splitRoot.getChildren();
+
+                        switch (aggregationPosition) {
+                            case LEFT:
+                            case TOP:
+                                children.add(0, new DockableLeaf(leafName, dockable.getId()));
+                                children.add(1, new MultiSplitLayout.Divider());
+                                break;
+                            case RIGHT:
+                            case BOTTOM:
+                                children.add(new MultiSplitLayout.Divider());
+                                children.add(new DockableLeaf(leafName, dockable.getId()));
+                                break;
+                        }
+
+                        forceWeight(children);
+
+                        splitRoot.setChildren(children);
+                    } else {
+                        MultiSplitLayout.Split newRoot = new MultiSplitLayout.Split();
+                        newRoot.setRowLayout(rowLayout);
+
+                        MultiSplitLayout.Leaf leaf = new DockableLeaf(leafName, dockable.getId());
+                        leaf.setWeight(0.5);
+                        multiSplitPaneModelRoot.setWeight(0.5);
+
+                        List<MultiSplitLayout.Node> children = null;
+                        switch (aggregationPosition) {
+                            case LEFT:
+                            case TOP:
+                                children = Arrays.asList(leaf,
+                                                         new MultiSplitLayout.Divider(),
+                                                         multiSplitPaneModelRoot);
+                                break;
+                            case RIGHT:
+                            case BOTTOM:
+                                children = Arrays.asList(multiSplitPaneModelRoot,
+                                                         new MultiSplitLayout.Divider(),
+                                                         leaf);
+                                break;
+                        }
+                        forceWeight(children);
+                        newRoot.setChildren(children);
+
+                        multiSplitPaneModelRoot = newRoot;
+                    }
+
+                    if (!multiSplitPane.getMultiSplitLayout().getFloatingDividers())
+                        multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
                 }
+//                }
 
                 validateModel(multiSplitPaneModelRoot);
                 multiSplitPane.setModel(multiSplitPaneModelRoot);
@@ -417,7 +403,15 @@ public class MultiSplitDockableContainer extends JPanel {
             if (!checkModel())
                 System.out.println("Check model fail. addDockable end");
 
-            repaintMultiSplit();
+            if (storeLayout && oldModel != null) {
+                // Decode stored model
+                MultiSplitLayout.Node decodedModel = decode(oldModel);
+                jumpResetBounds = true;
+                multiSplitPane.getMultiSplitLayout().setFloatingDividers(false);
+
+                setModel(decodedModel);
+            } else
+                repaintMultiSplit();
         }
 
         entries.put(dockable, new DockableEntry(dockable, content, modelId));
@@ -429,7 +423,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
         DockableEntry dockableEntry = entries.get(dockable);
         if (dockableEntry == null)
-            throw new IllegalArgumentException("Cannot remove the dockable. No Entry for it. [id : "  + dockable.getId() + "]");
+            throw new IllegalArgumentException("Cannot remove the dockable. No Entry for it. [id : " + dockable.getId() + "]");
 
         // Store layout
         if (storeLayout) {
@@ -485,12 +479,12 @@ public class MultiSplitDockableContainer extends JPanel {
                     multiSplitPane.add(soleLeafCmp, "1");
             }
             leafNameCounter = 1;
-            
+
             SwingUtil.repaint(this);
         } else {
             DockableLeaf dockableLeaf = getLeaf(dockable);
             if (dockableLeaf == null)
-                throw new IllegalArgumentException("Cannot remove the dockable. Cannot find leaf. [id : "  + dockable.getId() + "]");
+                throw new IllegalArgumentException("Cannot remove the dockable. Cannot find leaf. [id : " + dockable.getId() + "]");
 
             if (dockableLeaf.getDockables().size() > 1) {
                 // There are more than one dockable on the same leaf
@@ -613,6 +607,20 @@ public class MultiSplitDockableContainer extends JPanel {
         }
     }
 
+    public void setConstraints(Dockable dockable,
+                               Component content,
+                               Dockable aggregationOnDockable,
+                               int aggregationIndexLocation,
+                               AggregationPosition aggregationPosition) {
+        boolean old = this.storeLayout;
+        storeLayout = false;
+        try {
+            removeDockable(dockable);
+            addDockable(dockable, content, aggregationOnDockable, aggregationIndexLocation, aggregationPosition);
+        } finally {
+            storeLayout = old;
+        }
+    }
 
     public MultiSplitLayout.Node getModel() {
         return multiSplitPaneModelRoot;
@@ -647,8 +655,8 @@ public class MultiSplitDockableContainer extends JPanel {
                         DockableLeaf currentLeaf = getLeaf(multiSplitPaneModelRoot, leaf.getDockable());
 
                         newChildMap.put(
-                                currentLeaf.getName(),
-                                currentChildMap.get(leaf.getName())
+                                leaf.getName(),
+                                currentChildMap.get(currentLeaf.getName())
                         );
                     } else if (child instanceof MultiSplitLayout.Split) {
                         stack.push((MultiSplitLayout.Split) child);
@@ -837,11 +845,14 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
     protected boolean checkModel() {
-        if (multiSplitPaneModelRoot == null || !(multiSplitPaneModelRoot instanceof MultiSplitLayout.Split))
+        if (multiSplitPaneModelRoot == null)
             return true;
 
         if (multiSplitPaneModelRoot.getParent() != null)
             return false;
+
+        if (!(multiSplitPaneModelRoot instanceof MultiSplitLayout.Split))
+            return true;
 
         Stack<MultiSplitLayout.Split> stack = new Stack<MultiSplitLayout.Split>();
         stack.push((MultiSplitLayout.Split) multiSplitPaneModelRoot);
@@ -863,8 +874,8 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
     protected void repaintMultiSplit() {
-//        SwingUtilities.invokeLater(repaintRunnable);
-        SwingUtilities.invokeLater(new DebugRepaintRunnable(new RuntimeException()));
+        SwingUtilities.invokeLater(repaintRunnable);
+//        SwingUtilities.invokeLater(new DebugRepaintRunnable(new RuntimeException()));
     }
 
     protected MultiSplitLayout.Node getFirstNotDivider(List<MultiSplitLayout.Node> children) {
