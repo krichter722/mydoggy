@@ -41,20 +41,20 @@
                 </table>
             </subsection>
 
-            <subsection name="SampleApp">
+            <subsection name="TutorialSet">
                 <table>
                     <tbody>
                         <tr>
                             <td>
-                                <img src="./images/sampleApp.png" alt="SampleApp" border="0" hspace="18"/>
+                                <img src="./images/tutorialSet.png" alt="TutorialSet" border="0" hspace="18"/>
                             </td>
                             <td>
                                 <p>
-                                    SampleApp is the result of the
+                                    TutorialSet is the result of the
                                     <a href="./../tutorial/tutorial.html">tutorial</a>
                                     based on the
                                     <a href="./../mydoggy-plaf/index.html">default implementation</a>
-                                    of mydoggy.
+                                    of mydoggy api.
                                 </p>
                             </td>
                         </tr>

@@ -13,58 +13,75 @@
                 This tutorial is based on the
                 <a href="./../mydoggy-plaf/index.html">default implementation</a>
                 of mydoggy.
-                We'll build a simple application based on
-                <a href="./../mydoggy-examples/mydoggyset.html">MyDoggySet.</a>
+                We'll build a simple application based called
+                <strong style="color:green">TutorialApp</strong>
                 <br/>
-                For every step, pay attention to code in green that highlights the new code introduced in that step.
+                In every step, pay attention to the code in green that highlights the new code introduced in that step.
             </p>
 
-            <ul>
-                <li>
-                    <a href="./step1.html">Step 1</a>
-                    : A skeleton class called SampleApp.
-                </li>
-                <li>
-                    <a href="./step2.html">Step 2</a>
-                    : Introduce ToolWindowManager with your first ToolWindow.
-                </li>
-                <li>
-                    <a href="./step3.html">Step 3</a>
-                    : Play with TypeDescriptors.
-                </li>
-                <li>
-                    <a href="./step4.html">Step 4</a>
-                    : Add first Content.
-                </li>
-                <li>
-                    <a href="./step5.html">Step 5</a>
-                    : Configure ContentManagerUI.
-                </li>
-                <li>
-                    <a href="./step6.html">Step 6</a>
-                    : Store (on close) and load (on start) the toolwindow manager workspace.
-                </li>
-                <li>
-                    <a href="./step7.html">Step 7</a>
-                    : ToolWindowTabs.
-                </li>
-                <li>
-                    <a href="./step8.html">Step 8</a>
-                    : Add another tool and show them together on the same anchor.
-                </li>
-                <li>
-                    <a href="./step9.html">Step 9</a>
-                    : Using the new MultiSpitContentManagerUI.
-                </li>
-                <li>
-                    <a href="./step10.html">Step 10</a>
-                    : Aggregate toolwindows in a new powerful way.
-                </li>
-                <li>
-                    <a href="./step11.html">Step 11</a>
-                    : Flashing.
-                </li>
-            </ul>
+            <table style="text-align: left;"
+                   border="0" cellpadding="2" cellspacing="2">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>
+                                <img style="width: 201px; height: 162px; float: right;"
+                                     src="./../images/tutorial/step10.png"
+                                     alt="TutorialSet"/>
+                            </p>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>
+                                    <a href="./step1.html">Step 1</a>
+                                    : A skeleton class called TutorialSet.
+                                </li>
+                                <li>
+                                    <a href="./step2.html">Step 2</a>
+                                    : Introduce ToolWindowManager with your first ToolWindow.
+                                </li>
+                                <li>
+                                    <a href="./step3.html">Step 3</a>
+                                    : Play with TypeDescriptors.
+                                </li>
+                                <li>
+                                    <a href="./step4.html">Step 4</a>
+                                    : Add first Content.
+                                </li>
+                                <li>
+                                    <a href="./step5.html">Step 5</a>
+                                    : Configure ContentManagerUI.
+                                </li>
+                                <li>
+                                    <a href="./step6.html">Step 6</a>
+                                    : Store (on close) and load (on start) the toolwindow manager
+                                    workspace.
+                                </li>
+                                <li>
+                                    <a href="./step7.html">Step 7</a>
+                                    : ToolWindowTabs.
+                                </li>
+                                <li>
+                                    <a href="./step8.html">Step 8</a>
+                                    : Add another tool and show them together on the same anchor.
+                                </li>
+                                <li>
+                                    <a href="./step9.html">Step 9</a>
+                                    : Using the new MultiSpitContentManagerUI.
+                                </li>
+                                <li>
+                                    <a href="./step10.html">Step 10</a>
+                                    : Aggregate toolwindows in a new powerful way.
+                                </li>
+                                <li>
+                                    <a href="./step11.html">Step 11</a>
+                                    : Flashing.
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </section>
     </body>
 </document>

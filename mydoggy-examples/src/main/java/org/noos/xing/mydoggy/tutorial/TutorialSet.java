@@ -10,7 +10,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SampleApp {
+public class TutorialSet {
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
 
@@ -203,7 +203,7 @@ public class SampleApp {
     }
 
     public static void main(String[] args) {
-        SampleApp test = new SampleApp();
+        TutorialSet test = new TutorialSet();
         try {
             test.setUp();
             test.start();

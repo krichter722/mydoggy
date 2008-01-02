@@ -1,7 +1,7 @@
 @echo off
 
 ::----------------------------------------------------------------------
-:: SampleApp Startup Script for Windows
+:: TutorialSet Startup Script for Windows
 ::----------------------------------------------------------------------
 
 IF "%MYDOGGY_JDK%" == "" SET MYDOGGY_JDK=%JAVA_HOME%
@@ -12,7 +12,7 @@ SET MYDOGGY_HOME=..
 SET JAVA_EXE=%MYDOGGY_JDK%\jre\bin\java.exe
 IF NOT EXIST "%JAVA_EXE%" goto error
 
-SET MYDOGGYSET_MCN=org.noos.xing.mydoggy.tutorial.SampleApp
+SET MYDOGGYSET_MCN=org.noos.xing.mydoggy.tutorial.TutorialSet
 
 set REQUIRED_MYDOGGYSET_JVM_ARGS=-Dsun.java2d.noddraw=true -Djava.library.path=%MYDOGGY_HOME%\lib\win32
 SET JVM_ARGS=%REQUIRED_MYDOGGYSET_JVM_ARGS%
@@ -33,7 +33,7 @@ goto end
 
 :error
 echo --------------------------------------------------------------------
-echo ERROR: cannot start MyDoggySet.
+echo ERROR: cannot start TutorialSet.
 echo No JDK found to run. Please validate either MYDOGGY_JDK or JAVA_HOME
 echo points to valid installation path.
 echo --------------------------------------------------------------------

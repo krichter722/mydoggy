@@ -53,6 +53,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     protected PropertyChangeSupport internalPropertyChangeSupport;
     protected EventListenerList contentManagerUIListeners;
 
+    protected Content maximizedContent;
     protected PlafContent lastSelected;
 
     protected boolean valueAdjusting;
@@ -256,6 +257,9 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     }
 
     public void unistall() {
+        if (maximizedContent != null)
+            maximizedContent.setMaximized(false);
+
         // Remove all contents
         contentValueAdjusting = true;
         for (Content content : contentManager.getContents()) {
@@ -440,7 +444,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     }
 
     protected void addUIForContent(Content content, Object... constaints) {
-        contentUIMap.put(content, new MyDoggyTabbedContentUI(content));
+        contentUIMap.put(content, new MyDoggyTabbedContentUI(tabbedContentPane, content));
 
         if (!showAlwaysTab && tabbedContentPane.getTabCount() == 0 && (contentValueAdjusting || toolWindowManager.getMainContent() == null)) {
             detachedContentUIMap.put(content, getContentUI(content));
@@ -643,16 +647,41 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
     protected class MaximizedListener implements PropertyChangeListener {
         protected ByteArrayOutputStream tmpWorkspace;
+        protected boolean valudAdj;
 
         public void propertyChange(PropertyChangeEvent evt) {
+            if (valudAdj)
+                return;
+            Content content = (Content) evt.getSource();
+
             if ((Boolean) evt.getNewValue()) {
+                if (tmpWorkspace != null) {
+                    // Restore...
+                    valudAdj = true;
+                    try {
+                        toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
+                                                                         PersistenceDelegate.MergePolicy.UNION);
+                    } finally {
+                        valudAdj = false;
+                    }
+                    tmpWorkspace = null;
+                }
+
                 toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
                 toolWindowManager.getToolWindowGroup().setVisible(false);
+                maximizedContent = content;
             } else {
                 if (tmpWorkspace != null) {
-                    toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                                                                     PersistenceDelegate.MergePolicy.UNION);
+                    valudAdj = true;
+                    try {
+                        toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
+                                                                         PersistenceDelegate.MergePolicy.UNION);
+                        tmpWorkspace = null;
+                    } finally {
+                        valudAdj = false;
+                    }
                     tmpWorkspace = null;
+                    maximizedContent = null;
                 }
             }
         }

@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.TabbedContentUI;
+import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentPane;
 
 import javax.swing.event.EventListenerList;
 import java.beans.PropertyChangeEvent;
@@ -11,6 +12,8 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
 */
 public class MyDoggyTabbedContentUI implements TabbedContentUI {
+    protected JTabbedContentPane tabbedContentPane;
+
     protected Content content;
     protected boolean closable;
     protected boolean detachable;
@@ -20,7 +23,8 @@ public class MyDoggyTabbedContentUI implements TabbedContentUI {
 
     protected EventListenerList listenerList;
 
-    public MyDoggyTabbedContentUI(Content content) {
+    public MyDoggyTabbedContentUI(JTabbedContentPane tabbedContentPane, Content content) {
+        this.tabbedContentPane = tabbedContentPane;
         this.content = content;
         this.listenerList = new EventListenerList();
         this.closable = this.detachable = true;
@@ -104,7 +108,8 @@ public class MyDoggyTabbedContentUI implements TabbedContentUI {
     }
 
     public void setConstraints(Object... constraints) {
-        // TODO: implement this
+        if (constraints.length > 0 && constraints[0] instanceof Integer) 
+            tabbedContentPane.setIndex(content, (Integer) constraints[0]);                           
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
