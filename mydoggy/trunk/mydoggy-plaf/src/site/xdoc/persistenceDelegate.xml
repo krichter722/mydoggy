@@ -10,7 +10,7 @@
     <body>
         <section name="PersistenceDelegate">
             <p>
-                PersistenceDelegate is available since 1.20 and it's an interface that provides useful methods to save
+                PersistenceDelegate is available since 1.2.0 and it's an interface that provides useful methods to save
                 and load the tool window manager's workspace.
                 When you request to save the workspace, all settings of toolwindows, and not only, with relative descriptors are saved.
                 See the specific DTD, relative to the version of mydoggy that you are using, to know all information saved.
@@ -32,6 +32,9 @@
             </p>
             <ul>
                 <li>
+                    1.4.0 <a href="./resources/dtd/persistence_1_4_0.dtd">here</a>.
+                </li>
+                <li>
                     1.3.1 <a href="./resources/dtd/persistence_1_3_1.dtd">here</a>.
                 </li>
                 <li>
@@ -48,10 +51,21 @@
 
             <source xml:space="preserve">
 &lt;?xml version="1.0" standalone="yes"?&gt;
-
-&lt;mydoggy version="1.3.1" pushAwayMode="VERTICAL"&gt;
-    &lt;toolWindowDescriptorManager dividerLeft="3" dividerRight="3" dividerTop="3" dividerBottom="3" numberingEnabled="true"&gt;
-        &lt;pushAway&gt;
+&lt;mydoggy version="1.4.0"&gt;
+    &lt;tools&gt;
+        &lt;tool id="Tool 1" available="true" visible="true" active="true" autoHide="false" anchor="LEFT" anchorIndex="1" type="DOCKED" aggregateMode="false" maximized="false" index="1" representativeAnchorButtonVisible="true"&gt;
+            &lt;descriptors&gt;
+                &lt;docked dockLength="200" popupMenuEnabled="false" animating="true" previewEnabled="true" previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false" idVisibleOnTitleBar="true"/&gt;
+                &lt;sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/&gt;
+                &lt;floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7" enabled="true" animating="true" idVisibleOnTitleBar="true"/&gt;
+                &lt;floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/&gt;
+            &lt;/descriptors&gt;
+        &lt;/tool&gt;
+    &lt;/tools&gt;
+    &lt;toolWindowManagerDescriptor numberingEnabled="true" previewEnabled="true"&gt;
+        &lt;dividerSize left="3" right="3" top="3" bottom="3"/&gt;
+        &lt;aggregateMode left="false" right="false" top="false" bottom="false"/&gt;
+        &lt;pushAway pushAwayMode="VERTICAL"&gt;
             &lt;mode type="MOST_RECENT"&gt;
                 &lt;anchor type="TOP"/&gt;
                 &lt;anchor type="RIGHT"/&gt;
@@ -59,19 +73,19 @@
                 &lt;anchor type="LEFT"/&gt;
             &lt;/mode&gt;
         &lt;/pushAway&gt;
-    &lt;/toolWindowDescriptorManager&gt;
-    &lt;tools&gt;
-        &lt;tool id="Debug" available="true" visible="true" active="true" autoHide="false" anchor="LEFT" type="DOCKED" aggregateMode="false" maximized="false" index="1"&gt;
-            &lt;descriptors&gt;
-                &lt;docked dockLength="300" popupMenuEnabled="true" animating="true" previewEnabled="true" previewDelay="1500" previewTransparentRatio="0.4" hideRepresentativeButtonOnVisible="true" idVisibleOnTitleBar="false"/&gt;
-                &lt;sliding transparentMode="true" transparentDelay="0" transparentRatio="0.8" enabled="true" animating="true"/&gt;
-                &lt;floating modal="false" transparentMode="true" transparentDelay="1000" transparentRatio="0.2" enabled="true" animating="true" x="150" y="200" width="320" height="200"/&gt;
-            &lt;/descriptors&gt;
-        &lt;/tool&gt;
-    &lt;/tools&gt;
+    &lt;/toolWindowManagerDescriptor&gt;
     &lt;contentManager&gt;
-        &lt;content key="Tree Key" detached="false" enabled="true" selected="true"/&gt;
+        &lt;content id="Welcome" detached="false" enabled="true" selected="false" maximized="false"/&gt;
     &lt;/contentManager&gt;
+    &lt;bars&gt;
+        &lt;bar anchor="LEFT"&gt;
+            &lt;model&gt;
+                &lt;![CDATA[
+....
+]]&gt;
+            &lt;/model&gt;
+        &lt;/bar&gt;
+    &lt;/bars&gt;
 &lt;/mydoggy&gt;
             </source>
         </section>

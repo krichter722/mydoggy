@@ -446,7 +446,6 @@ public class MultiSplitDockableContainer extends JPanel {
 
         if (entries.size() == 1) {
             if (multiSplitPaneModelRoot instanceof DockableLeaf) {
-                // TODO: ma quando accade???
                 DockableLeaf leaf = (DockableLeaf) multiSplitPaneModelRoot;
                 removeComponentWrapper(multiSplitPane.getComponent(0),
                                        dockable);
