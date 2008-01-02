@@ -106,7 +106,8 @@
                 <![CDATA[
                 <a href="./apidocs/org/noos/xing/mydoggy/MultiSplitConstraint.html">
                     <code>MultiSplitConstraint</code></br>
-                    TODO
+                    This class is used to give instructions to the MultiSplitContentManagerUI on how to add
+                    a content to the ui.
                 </a>
                 ]]>
             </action>

@@ -47,6 +47,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     protected PropertyChangeSupport internalPropertyChangeSupport;
     protected EventListenerList contentManagerUIListeners;
 
+    protected Content maximizedContent;
     protected PlafContent lastSelected;
 
     protected boolean valueAdjusting;
@@ -235,6 +236,9 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     }
 
     public void unistall() {
+        if (maximizedContent != null)
+            maximizedContent.setMaximized(false);
+
         // Remove all contents
         for (Content content : contentManager.getContents()) {
             removeContent((PlafContent) content);
@@ -403,7 +407,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
             MultiSplitConstraint multiSplitConstraint = (MultiSplitConstraint) constraints[0];
             multiSplitContainer.addDockable(content,
                                             content.getComponent(),
-                                            multiSplitConstraint.getContent(),
+                                            multiSplitConstraint.getAggregationContent(),
                                             multiSplitConstraint.getAggregationIndexLocation(),
                                             multiSplitConstraint.getAggregationPosition());
         } else {
@@ -662,6 +666,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                 toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
                 toolWindowManager.getToolWindowGroup().setVisible(false);
                 multiSplitContainer.setMaximizedDockable(content);
+                maximizedContent = content;
             } else {
                 if (tmpWorkspace != null) {
                     multiSplitContainer.setMaximizedDockable(null);
@@ -673,6 +678,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                         valudAdj = false;
                     }
                     tmpWorkspace = null;
+                    maximizedContent = null;
                 }
             }
         }

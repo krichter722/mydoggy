@@ -44,6 +44,10 @@ public class JTabbedContentPane extends JTabbedPane {
     protected MouseInputAdapter mouseInputAdapter;
 
     public JTabbedContentPane() {
+        this(false);
+    }
+
+    public JTabbedContentPane(boolean enabledDrag) {
         super.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
         this.contentMap = new Hashtable<Integer, Content>();
@@ -59,6 +63,10 @@ public class JTabbedContentPane extends JTabbedPane {
         mouseInputAdapter = new MouseOverTabListener();
         addMouseListener(mouseInputAdapter);
         addMouseMotionListener(mouseInputAdapter);
+
+        if (enabledDrag) {
+            
+        }
     }
 
 
@@ -194,6 +202,17 @@ public class JTabbedContentPane extends JTabbedPane {
 
     public void removeTabbedContentPaneListener(TabbedContentPaneListener listener) {
         listenerList.remove(TabbedContentPaneListener.class, listener);
+    }
+
+    public void setIndex(Content content, Integer newIndex) {
+        if (newIndex < 0 || newIndex >= getTabCount())
+            throw new IllegalArgumentException("Invalid index");
+
+        int index = indexOfContent(content);
+        if (index != -1) {
+            removeTabAt(index);
+            addTab(content, content.getComponent(), newIndex);
+        }
     }
 
     public int indexOfContent(Content content) {

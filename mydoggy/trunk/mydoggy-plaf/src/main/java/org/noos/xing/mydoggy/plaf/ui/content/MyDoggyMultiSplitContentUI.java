@@ -11,7 +11,7 @@ public class MyDoggyMultiSplitContentUI extends MyDoggyTabbedContentUI {
     protected MultiSplitDockableContainer multiSplitContainer;
 
     public MyDoggyMultiSplitContentUI(MultiSplitDockableContainer multiSplitContainer, Content content) {
-        super(content);
+        super(null, content);
         this.multiSplitContainer = multiSplitContainer;
     }
 
@@ -21,7 +21,7 @@ public class MyDoggyMultiSplitContentUI extends MyDoggyTabbedContentUI {
 
             multiSplitContainer.setConstraints(content,
                                                content.getComponent(),
-                                               multiSplitConstraint.getContent(),
+                                               multiSplitConstraint.getAggregationContent(),
                                                multiSplitConstraint.getAggregationIndexLocation(),
                                                multiSplitConstraint.getAggregationPosition());
         }
