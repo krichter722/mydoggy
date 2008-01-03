@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+
+    <properties>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+        <title>MyDoggy - Changes</title>
+    </properties>
+
+    <body>
+        <release version="1.4.0" date="2008-01-01" description="Code name : Vittoria">
+            <action dev="adecaro" type="update">
+                See Changes of :
+                <![CDATA[
+                    <a href="./mydoggy-api/changes-report.html">MyDoggy-Api</a>,
+                    <a href="./mydoggy-plaf/changes-report.html">MyDoggy-Plaf</a>,
+                    <a href="./mydoggy-examples/changes-report.html">MyDoggy-Example</a>.
+                    <br/>
+                    New Features:
+                    <ul>
+                        <li>
+                            New <a href="./tutorial/step9.html">MultiSplitContentManagerUI</a> : the manager represents
+                            a ui that use a component that lets the user switch between a group of components by
+                            clicking on a tab with a given title and/or icon. The position of each tab can be customized
+                            from the ui or by code.
+                        </li>
+                        <li>
+                            New <a href="./tutorial/step10.html">ToolWindow Aggregation Mode</a> : a toolwindow can now
+                            be aggregated to an already visible tool specifying that as a relative position and
+                            an aggregation position as the position relative to the specified tool.
+                        </li>
+                        <li>
+                            New <a href="./mydoggy-api/toolwindowTypes.html#floatingLive">FloatingLive</a> ToolWindow Type : this type enables a tool to be floating in the frame
+                            rather than having floating windows "out of the frame". See a demo <a href="./mydoggy-examples/mydoggysetVideos.html#toolWindowTypes">here</a>.
+                        </li>
+                        <li>
+                            A new and powrful drag system. See a demo <a href="./mydoggy-examples/mydoggysetVideos.html#universalDrag">here</a>.
+                        </li>
+                    </ul>
+                    <br/>
+                    Bug Resolved:
+                    <ul>
+                        <li>
+                            Disposed frame using MyDoggy is not released from memory : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1836069&group_id=178005&atid=883495">Request ID 1836069</a>
+                        </li>
+                        <li>
+                            Detached windows stay in front of main window : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1834706&group_id=178005&atid=883495">Request ID 1834706</a>
+                        </li>
+                        <li>
+                            Exception in Example : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1830628&group_id=178005&atid=883495">Request ID 1830628</a>
+                        </li>
+                        <li>
+                            Catching and ignoring excpetions : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1826077&group_id=178005&atid=883495">Request ID 1826077</a>
+                        </li>
+                        <li>
+                            MyDoggy-Set: Last interactive test does not work : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1825910&group_id=178005&atid=883495">Request ID 1825910</a>
+                        </li>
+                        
+                    </ul>
+                    Feature Requests:
+                    <ul>
+                        <li>
+                            Minimize and close buttons in the same time : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1852146&group_id=178005&atid=883498">Request ID 1852146</a>
+                        </li>
+                        <li>
+                            Add ability to remove ID display from more descriptors : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1809476&group_id=178005&atid=883498">Request ID 1809476</a>
+                        </li>
+                    </ul>
+                    ]]>
+            </action>
+        </release>
+        <release version="1.3.1" date="2007-05-26" description="Code name : Winnipeg">
+            <action dev="adecaro" type="update">
+                See Changes of :
+                <![CDATA[
+                    <a href="./mydoggy-api/changes-report.html">MyDoggy-Api</a>,
+                    <a href="./mydoggy-plaf/changes-report.html">MyDoggy-Plaf</a>,
+                    <a href="./mydoggy-examples/changes-report.html">MyDoggy-Example</a>.
+                    <br/>
+                    New Features:
+                    <ul>
+                    </ul>
+                    <br/>
+                    Bug Resolved:
+                    <ul>
+                        <li>
+                            Problem with focushandling in DockedContainer : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1765219&group_id=178005&atid=883495">Request ID 1765219</a>
+                        </li>
+                        <li>
+                            TabbedContentManager problem when display icon and title : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1765198&group_id=178005&atid=883495">Request ID 1765198</a>
+                        </li>
+                    </ul>
+                    Feature Requests:
+                    <ul>
+                        <li>
+                            Maximize windows - Handle multiple monitors : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1761886&group_id=178005&atid=883498">Request ID 1761886</a>
+                        </li>
+                    </ul>
+                    ]]>
+            </action>
+        </release>
+        <release version="1.3.0" date="2007-05-26" description="Code name : Turkana">
+            <action dev="adecaro" type="update">
+                See Changes of :
+                <![CDATA[
+                    <a href="./mydoggy-api/changes-report.html">MyDoggy-Api</a>,
+                    <a href="./mydoggy-plaf/changes-report.html">MyDoggy-Plaf</a>,
+                    <a href="./mydoggy-examples/changes-report.html">MyDoggy-Example</a>.
+                    <br/>
+                    New Features:
+                    <ul>
+                        <li>
+                            <a href="./mydoggy-api/toolwindowUsing.html#PreviewMode">ToolWindow Preview</a>: if you wait on the representative button of a tool not visible you'll see a transparent preview of the tool of size 151x75. If you move the mouse outside the representative button the preview will become invisible;
+                        </li>
+                        <li>
+                            PushAwayMode.MOST_RECENT : whoever is pressed last toolwindow push away the previous toolwindows. This way the order of opening the toolwindows determine who push who (and you can achieve any "priority" mode by selecting the order of clicks);
+                        </li>
+                        <li>
+                            <a href="./mydoggy-api/toolwindowUsing.html#Flashing">ToolWindow Flashing</a> : Sets the flashing mode. If the flashing mode is enabled then the toolwindow representative button will be flashing until the tool will be made visible. Of if the tool is already visible but not active then the tool's title bar will be flashing until the tool will be made active.
+                        </li>
+                        <li>
+                            Maximize windows : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1725144&amp;group_id=178005&amp;atid=883498">Request ID 1722871</a>
+                        </li>
+                        <li>
+                            Rearrange Windows : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1722871&amp;group_id=178005&amp;atid=883498">Request ID 1725144</a>
+                        </li>
+                        <li>
+                            <a href="./mydoggy-api/toolwindow.html#ToolWindowTab">ToolWindowTab</a> : every toolwindow can be considered as a special JTabbedPane and so it can contain more than one component. Every tab is described by a title, an icon and a component. A tab can be selected or not.
+                        </li>
+                        <li>
+                            <a href="./mydoggy-api/toolwindowManagerUsing.html#CornerComponent">Corner Component</a> : you can add a specified component at the given corner of the toolwindow manager.
+                        </li>
+                    </ul>
+                    <br/>
+                    Bug Resolved:
+                    <ul>
+                        <li>
+                            Alignment of dragged Button wrong : <a href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1734976&amp;group_id=178005&amp;atid=883495">Request ID 1734976</a>
+                        </li>
+                    </ul>
+                    ]]>
+            </action>
+        </release>
+        <release version="1.2.0" date="2007-04-07" description="Code name : Zajsan">
+            <action dev="adecaro" type="update">
+                See Changes of :
+                <![CDATA[
+                    <a href="./mydoggy-api/changes-report.html">MyDoggy-Api</a>,
+                    <a href="./mydoggy-plaf/changes-report.html">MyDoggy-Plaf</a>,
+                    <a href="./mydoggy-examples/changes-report.html">MyDoggy-Example</a>
+                ]]>.
+                New Features:
+                <![CDATA[
+                <ul>
+                    <li>
+                        A <a href="./mydoggy-api/persistenceDelegate.html">Persistence Mechanism</a> to load and store the ToolWindowManager's workspace.
+                    </li>
+                    <li>
+                        <a href="./mydoggy-examples/mydoggysetScreenshots.html#slidingTrasparent">Transparency</a> support for Slidying Mode.
+                        <a href="./mydoggy-examples/mydoggysetScreenshots.html">Screenshots</a>.
+                    </li>
+                    <li>
+                        New <a href="./mydoggy-examples/mydoggysetScreenshots.html#dragdrap">Drag and Drop</a> system for the toolwindow representative buttons. 
+                        <a href="./mydoggy-examples/mydoggysetScreenshots.html">Screenshots</a>.
+                    </li>
+                    <li>
+                        Support for <a href="./mydoggy-api/toolwindowManagerUsing.html#PushAwayMode">PushAway Mode</a> of the ToolWindowManager.
+                        <a href="./mydoggy-examples/mydoggysetScreenshots.html#PushAwayMode">Screenshots</a>.
+                    </li>
+                    <li>
+                        ToolWindow <a href="./mydoggy-api/toolwindowManagerUsing.html#aliasing">aliasing</a> support.
+                    </li>
+                    <li>
+                        New toolwindow's visualization method called <a href="./mydoggy-api/toolwindowUsing.html#aggregate">aggregate</a>.
+                    </li>
+                    <li>
+                        Now you can disable or enable <a href="./mydoggy-api/toolwindowUsing.html#Slidying">Slidying</a> and <a href="./mydoggy-api/toolwindowUsing.html#Floating">Floating</a> mode for the single toolwindow.
+                    </li>
+                </ul>
+                ]]>.
+            </action>
+        </release>
+        <release version="1.1.0" date="2007-01-31" description="Code name : Michigan">
+            <action dev="adecaro" type="update">
+                See Changes of :
+                <![CDATA[
+					<a href="./mydoggy-api/changes-report.html">MyDoggy-Api</a>,
+					<a href="./mydoggy-plaf/changes-report.html">MyDoggy-Plaf</a>,
+					<a href="./mydoggy-examples/changes-report.html">MyDoggy-Example</a>
+				]]>.
+            </action>
+        </release>
+        <release version="1.0.0" date="2006-10-31" description="Code name : Huron">
+            <action dev="adecaro" type="add">
+                MyDoggy 1.0.0 released.
+            </action>
+        </release>
+    </body>
+
+</document>
