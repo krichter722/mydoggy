@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site base_url="http://mydoggy.sourceforge.net/"
+	  store_into="/home/groups/m/my/mydoggy/htdocs/sitemap.xml.gz"
+	  verbose="1">
+
+	<url href="http://mydoggy.sourceforge.net/index.html"
+		 priority="1.0"/>
+	<url href="http://mydoggy.sourceforge.net/mydoggy-examples/mydoggyset.html"
+		 priority="1.0"/>
+	<url href="http://mydoggy.sourceforge.net/download.html"
+		 priority="0.9"/>
+	<url href="http://mydoggy.sourceforge.net/mydoggy-examples/mydoggysetScreenshots.html"
+		 priority="0.8"/>
+	<url href="http://mydoggy.sourceforge.net/contact.html"
+		 priority="0.7"/>
+	<url href="http://mydoggy.sourceforge.net/mydoggy-api/index.html"
+		 priority="0.6"/>
+</site>

@@ -1,0 +1,85 @@
+<assembly>
+    <id>site</id>
+    <formats>
+        <format>dir</format>
+    </formats>
+    
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <fileSets>
+        <fileSet>
+            <directory>target/site</directory>
+            <outputDirectory>site</outputDirectory>
+            <includes/>
+        </fileSet>
+
+        <fileSet>
+            <directory>mydoggy-api/target/site</directory>
+            <outputDirectory>site/mydoggy-api</outputDirectory>
+            <includes/>
+        </fileSet>
+
+        <fileSet>
+            <directory>mydoggy-plaf/target/site</directory>
+            <outputDirectory>site/mydoggy-plaf</outputDirectory>
+            <includes/>
+        </fileSet>
+
+        <fileSet>
+            <directory>mydoggy-examples/target/site</directory>
+            <outputDirectory>site/mydoggy-examples</outputDirectory>
+            <includes/>
+        </fileSet>
+
+        <fileSet>
+            <directory>mydoggy-examples/src/jnlp</directory>
+            <outputDirectory>site/mydoggy-examples/jnlp</outputDirectory>
+            <includes/>
+        </fileSet>
+
+    </fileSets>
+
+    <files>
+        <file>
+            <source>mydoggy-api/target/mydoggy-api-1.4.0.jar</source>
+            <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
+        </file>
+        <file>
+            <source>mydoggy-plaf/target/mydoggy-plaf-1.4.0.jar</source>
+            <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
+        </file>
+        <file>
+            <source>mydoggy-res/target/mydoggy-res-1.4.0.jar</source>
+            <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
+        </file>
+        <file>
+            <source>mydoggy-itest/target/mydoggy-itest-1.4.0.jar</source>
+            <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
+        </file>
+        <file>
+            <source>mydoggy-examples/target/mydoggy-examples-1.4.0.jar</source>
+            <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
+        </file>
+        <file>
+            <source>mydoggy-plaf/src/main/resources/persistence.dtd</source>
+            <outputDirectory>site/mydoggy-plaf/resources/dtd</outputDirectory>
+        </file>
+        <file>
+            <source>mydoggy-plaf/src/main/resources/persistence_1_2_0.dtd</source>
+            <outputDirectory>site/mydoggy-plaf/resources/dtd</outputDirectory>
+        </file>
+        <file>
+            <source>mydoggy-plaf/src/main/resources/persistence_1_3_0.dtd</source>
+            <outputDirectory>site/mydoggy-plaf/resources/dtd</outputDirectory>
+        </file>
+        <file>
+            <source>mydoggy-plaf/src/main/resources/persistence_1_3_1.dtd</source>
+            <outputDirectory>site/mydoggy-plaf/resources/dtd</outputDirectory>
+        </file>
+        <file>
+            <source>mydoggy-plaf/src/main/resources/persistence_1_4_0.dtd</source>
+            <outputDirectory>site/mydoggy-plaf/resources/dtd</outputDirectory>
+        </file>
+    </files>
+
+</assembly>
