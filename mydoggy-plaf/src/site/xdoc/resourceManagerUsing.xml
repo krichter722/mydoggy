@@ -30,10 +30,15 @@ ResourceManager resourceManager = toolWindowManager.getResourceManager();</sourc
                             <td>
                                 <p>You can use the following code:</p>
                                 <source>
-resourceManager.putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START, Color.RED);
-resourceManager.putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END, Color.PINK);
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+
+....
+
+resourceManager.putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START, Color.BLUE);
+resourceManager.putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END, Color.GREEN);
 resourceManager.putColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START, Color.BLACK);
-resourceManager.putColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END, Color.GRAY);</source>
+resourceManager.putColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END, Color.GREEN.darker());
+                                </source>
                             </td>
                         </tr>
                     </tbody>
@@ -49,8 +54,12 @@ resourceManager.putColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END, Color.GRA
                             <td>
                                 <p>You can use the following code:</p>
                                 <source>
-resourceManager.putColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED, Color.BLUE);
-resourceManager.putColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED, Color.LIGHT_GRAY);
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+
+....
+
+resourceManager.putColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED, Color.GREEN);
+resourceManager.putColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED, Color.DARK_GRAY);
                 </source>
                             </td>
                         </tr>
@@ -67,8 +76,12 @@ resourceManager.putColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED, Color.L
                             <td>
                                 <p>You can use the following code:</p>
                                 <source>
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+
+....
+
 resourceManager.putColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START, Color.RED);
-resourceManager.putColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END, Color.PINK);
+resourceManager.putColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END, Color.ORANGE);
                 </source>
                             </td>
                         </tr>
@@ -85,7 +98,12 @@ resourceManager.putColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END, Color.PINK);
                             <td>
                                 <p>You can use the following code:</p>
                                 <source>
-resourceManager.putColor(MyDoggyKeySpace.RAB_FOREGROUND, Color.BLUE);</source>
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+
+....
+                                    
+resourceManager.putColor(MyDoggyKeySpace.RAB_FOREGROUND, Color.BLUE);
+</source>
                             </td>
                         </tr>
                     </tbody>
@@ -107,7 +125,7 @@ resourceManager.putIcon(MyDoggyKeySpace.DOCKED, new Icon(...));
             <source xml:space="preserve">
 MyDoggyToolWindowManager toolWindowManager = new MyDoggyToolWindowManager(...);
 MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) toolWindowManager.getResourceManager();</source>
-
+            
             <subsection name="Change TitleBar UI">
                 <table>
                     <tbody>
@@ -121,6 +139,14 @@ MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) toolWin
                                 </p>
                                 <p>You can use the following code:</p>
                                 <source>
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTitleBarUI;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
+import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
+
+...
+
 myDoggyResourceManager.putComponentUICreator(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR_UI,
                                              new MyDoggyResourceManager.ComponentUICreator() {
 
@@ -192,17 +218,23 @@ myDoggyResourceManager.putComponentUICreator(MyDoggyKeySpace.TOOL_WINDOW_TITLE_B
                                   </p>
                                   <p>You can use the following code:</p>
                                   <source>
+import org.noos.xing.mydoggy.plaf.ui.TitleBarButtons;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
+import org.noos.xing.mydoggy.plaf.ui.cmp.MenuTitleBarButtons;
 
-                                      myDoggyResourceManager.putInstanceCreator(TitleBarButtons.class,
-                                        new MyDoggyResourceManager.InstanceCreator() {
-      public Object createComponent(Object... args) {
-          return new MenuTitleBarButtons(
-                  (ToolWindowDescriptor) args[0],
-                  (DockedContainer) args[1]
-          );
-      }
-  }
-);</source>
+...
+
+myDoggyResourceManager.putInstanceCreator(TitleBarButtons.class,
+            new MyDoggyResourceManager.InstanceCreator() {
+                public Object createComponent(Object... args) {
+                    return new MenuTitleBarButtons(
+                            (ToolWindowDescriptor) args[0],
+                            (DockedContainer) args[1]
+                    );
+                }
+            }
+          );</source>
                               </td>
                           </tr>
                       </tbody>
