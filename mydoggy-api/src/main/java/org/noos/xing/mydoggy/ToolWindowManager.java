@@ -94,6 +94,14 @@ public interface ToolWindowManager {
     void addAlias(ToolWindow toolWindow, Object alias);
 
     /**
+     *
+     * @param toolWindow
+     * @return
+     * @since 1.4.1
+     */
+    Object[] getAliases(ToolWindow toolWindow);
+
+    /**
      * Returns the toolWindow to which this manager maps the specified alias.  Returns
      * <tt>null</tt> if the manager contains no mapping for this alias.
      *

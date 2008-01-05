@@ -31,6 +31,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.*;
+import java.util.List;
 
 /**
  * @author Angelo De Caro
@@ -196,6 +197,15 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         if (tools.containsKey(alias))
             throw new IllegalArgumentException("There is a tool whose id is the passed alias. Cannot add that alias.");
         aliases.put(alias, toolWindow);
+    }
+
+    public Object[] getAliases(ToolWindow toolWindow) {
+        List<Object> result = new ArrayList<Object>();
+        for (Map.Entry<Object, ToolWindow> entry : aliases.entrySet()) {
+            if (entry.getValue() == toolWindow)
+                result.add(entry.getKey());
+        }
+        return result.toArray();
     }
 
     public ToolWindow getToolWindowByAlias(Object alias) {
