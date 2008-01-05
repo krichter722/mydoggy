@@ -22,6 +22,7 @@ public class MyDoggyContentManager implements ContentManager {
 
     protected List<Content> contents;
     protected Map<Object, Content> contentMap;
+    protected Map<Object, Content> aliases;
     protected PlafContentManagerUI plafContentManagerUI;
 
     protected EventListenerList listeners;
@@ -31,6 +32,7 @@ public class MyDoggyContentManager implements ContentManager {
         this.toolWindowManager = windowManager;
         this.contents = new ArrayList<Content>();
         this.contentMap = new Hashtable<Object, Content>();
+        this.aliases = new Hashtable<Object, Content>();
         this.listeners = new EventListenerList();
     }
 
@@ -87,6 +89,12 @@ public class MyDoggyContentManager implements ContentManager {
             throw new IllegalArgumentException("Dockable not yet supported");
     }
 
+    public void addAlias(Content content, Object alias) {
+        if (contentMap.containsKey(alias))
+            throw new IllegalArgumentException("There is a content whose id is the passed alias. Cannot add that alias.");
+        aliases.put(alias, content);
+    }
+
     public boolean removeContent(Content content) {
         if (content == null)
             throw new IllegalArgumentException("Content cannot be null.");
@@ -126,7 +134,10 @@ public class MyDoggyContentManager implements ContentManager {
     }
 
     public Content getContent(Object key) {
-        return contentMap.get(key);
+        Content content = contentMap.get(key);
+        if (content == null)
+            content = aliases.get(key);
+        return content;
     }
 
     public Content getContentByComponent(Component component) {
@@ -239,8 +250,8 @@ public class MyDoggyContentManager implements ContentManager {
         if (component == null)
             throw new IllegalArgumentException("Component cannot be null.");
 
-        if (contentMap.containsKey(id))
-            throw new IllegalArgumentException("Cannot register content with passed id. An already registered content exists. [id : " + id + "]");
+        if (toolWindowManager.getDockable(id) != null)
+            throw new IllegalArgumentException("Cannot register content with passed id. An already registered dockable exists. [id : " + id + "]");
 
         MyDoggyContent content = new MyDoggyContent(this, id, title, icon, component, tip, toolWindow);
         content.addPlafPropertyChangeListener(new PropertyChangeListener() {

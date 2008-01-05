@@ -98,7 +98,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         this.uiClassLoader = uiClassLoader;
 
         this.allToolWindowGroup = new AllToolWindowGroup();
-        this.aliases = new Hashtable<Object, ToolWindow>();
+        this.aliases = new HashMap<Object, ToolWindow>();
         this.propertyChangeSupport = new PropertyChangeSupport(this);
         this.toolWindowManagerDescriptor = new MyDoggyToolWindowManagerDescriptor(this);
         this.toolWindowManagerDescriptor.addPropertyChangeListener(this);
@@ -136,8 +136,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         if (index > 9)
             index = -1;
 
-        if (tools.containsKey(id))
-            throw new IllegalArgumentException("Cannot register tool window with passed id. An already registered tool exists. [id : " + id + "]");
+        if (getDockable(id) != null)
+            throw new IllegalArgumentException("Cannot register tool window with passed id. An already registered dockable exists. [id : " + id + "]");
 
         MyDoggyToolWindow toolWindow = new MyDoggyToolWindow(this,
                                                              anchestor, id,
@@ -157,7 +157,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public void unregisterToolWindow(String id) {
-        ToolWindowDescriptor toolWindowDescriptor = tools.get(id);
+        final ToolWindowDescriptor toolWindowDescriptor = tools.get(id);
 
         if (toolWindowDescriptor != null) {
             removeIfDockableDelegator(toolWindowDescriptor.getToolWindow());
@@ -165,6 +165,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             toolWindowDescriptor.getToolWindow().setAvailable(false);
 
             tools.remove(toolWindowDescriptor.getToolWindow().getId());
+
+            // Remove aliases
+            for (Iterator<ToolWindow> iterator = aliases.values().iterator(); iterator.hasNext();) {
+                ToolWindow toolWindow = iterator.next();
+                if (toolWindow == toolWindowDescriptor.getToolWindow())
+                    iterator.remove();
+            }
 
             fireUnregisteredToolEvent(toolWindowDescriptor.getToolWindow());
         } else
@@ -182,9 +189,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             fireUnregisteredToolEvent(toolWindowDescriptor.getToolWindow());
             it.remove();
         }
+        aliases.clear();
     }
 
     public void addAlias(ToolWindow toolWindow, Object alias) {
+        if (tools.containsKey(alias))
+            throw new IllegalArgumentException("There is a tool whose id is the passed alias. Cannot add that alias.");
         aliases.put(alias, toolWindow);
     }
 
@@ -205,10 +215,16 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return activeToolWindowId;
     }
 
-    public ToolWindow getToolWindow(Object id) {
-        ToolWindowDescriptor descriptor = tools.get(id);
+    public ToolWindow getToolWindow(Object key) {
+        if (key == null)
+            return null;
+        
+        ToolWindowDescriptor descriptor = tools.get(key);
 
-        return (descriptor != null) ? descriptor.getToolWindow() : null;
+        if (descriptor == null) {
+            return aliases.get(key);
+        } else
+            return descriptor.getToolWindow();
     }
 
     public ToolWindow getToolWindow(int index) {
