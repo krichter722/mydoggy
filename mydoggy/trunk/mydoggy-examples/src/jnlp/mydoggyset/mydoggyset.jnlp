@@ -21,4 +21,9 @@
     </resources>
 
     <application-desc main-class="org.noos.xing.mydoggy.mydoggyset.MyDoggySet"/>
+
+    <security>
+        <all-permissions/>
+    </security>
+
 </jnlp>

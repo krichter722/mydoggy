@@ -101,6 +101,7 @@ public interface ToolWindowManager {
      * @return the toolWindow to which this manager maps the specified alias, or
      *	       <tt>null</tt> if the manager contains no mapping for this alias.
      * @since 1.2.0
+     * @deprecated use getToolWindow(Object) instead.
      */
     ToolWindow getToolWindowByAlias(Object alias);
 
@@ -113,15 +114,15 @@ public interface ToolWindowManager {
     Object getActiveToolWindowId();
 
     /**
-     * Returns the tool window to which this manager maps the specified id.
-     * Returns <tt>null</tt> if the manager contains no mapping for this id.
+     * Returns the tool window to which this manager maps the specified key (the key could be the id or
+     * an alias). Returns <tt>null</tt> if the manager contains no mapping for this id.
      *
-     * @param id id of tool window
-     * @return registered tool window with specified id. If there is no registered tool
-     *         window with specified id then the method returns <tt>null</tt>.
+     * @param key the key could be the id or an alias
+     * @return the tool window to which this manager maps the specified key. If there is no registered tool
+     *         then the method returns <tt>null</tt>.
      * @since 1.0.0
      */
-    ToolWindow getToolWindow(Object id);
+    ToolWindow getToolWindow(Object key);
 
     /**
      * Returns the tool window whose index is <code>index</code>.

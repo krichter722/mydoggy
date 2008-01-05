@@ -3,11 +3,11 @@
     <parent>
         <groupId>org.noos.xing</groupId>
         <artifactId>mydoggy</artifactId>
-        <version>1.4.0</version>
+        <version>1.4.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mydoggy-itest</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
     <name>MyDoggy - My Java Docking Framework - Interactive Testing Framework</name>
     <url>http://mydoggy.sourceforge.net</url>
     <description>MyDoggy-ITest is used for interactive testing.</description>

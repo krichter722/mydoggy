@@ -95,6 +95,14 @@ public interface ContentManager {
     Content addContent(Dockable dockable);
 
     /**
+     *
+     * @param content
+     * @param alias
+     * @since 1.4.1
+     */
+    void addAlias(Content content, Object alias);
+
+    /**
      * Removes the content <code>content</code>.
      *
      * @param content content to be removed from this manager, if present.
@@ -144,8 +152,8 @@ public interface ContentManager {
     Content[] getContents();
 
     /**
-     * Returns the content to which this manager maps the specified key.  Returns
-     * <tt>null</tt> if the manager contains no mapping for this key.
+     * Returns the content to which this manager maps the specified key (the key could be the id or
+     * an alias).  Returns <tt>null</tt> if the manager contains no mapping for this key.
      *
      * @param key key whose associated content is to be returned.
      * @return the content to which this manager maps the specified key

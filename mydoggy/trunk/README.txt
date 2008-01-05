@@ -37,7 +37,7 @@ Like Eclipse, MyDoggy supports the concept of "prospective" using mydoggy groups
 Directory Structure
 ===================
 
-mydoggy-1.3.0
+mydoggy-1.4.0
     bin                         - Contains scripts for launching mydoggy examples.
     lib                         - Contains mydoggy jars (
     								mydoggy-api-1.4.0.jar,
