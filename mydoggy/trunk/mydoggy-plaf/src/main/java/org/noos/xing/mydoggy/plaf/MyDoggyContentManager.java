@@ -50,11 +50,11 @@ public class MyDoggyContentManager implements ContentManager {
         PlafContentManagerUI newContentManagerUI = (PlafContentManagerUI) contentManagerUI;
         PlafContentManagerUI old = this.plafContentManagerUI;
         this.plafContentManagerUI = newContentManagerUI;
-        newContentManagerUI.install((ContentManagerUI) old, toolWindowManager);
+        newContentManagerUI.install((ContentManagerUI<ContentUI>) old, toolWindowManager);
     }
 
     public ContentManagerUI getContentManagerUI() {
-        return (ContentManagerUI) plafContentManagerUI;
+        return (ContentManagerUI<ContentUI>) plafContentManagerUI;
     }
 
     public int getContentCount() {
@@ -138,6 +138,15 @@ public class MyDoggyContentManager implements ContentManager {
         if (content == null)
             content = aliases.get(key);
         return content;
+    }
+
+    public Object[] getAliases(Content content) {
+        List<Object> result = new ArrayList<Object>();
+        for (Map.Entry<Object, Content> entry : aliases.entrySet()) {
+            if (entry.getValue() == content)
+                result.add(entry.getKey());
+        }
+        return result.toArray(); 
     }
 
     public Content getContentByComponent(Component component) {

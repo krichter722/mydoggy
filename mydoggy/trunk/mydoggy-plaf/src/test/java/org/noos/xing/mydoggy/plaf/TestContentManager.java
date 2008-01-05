@@ -66,4 +66,19 @@ public class TestContentManager extends TestCase {
         assertTrue(content.getComponent() instanceof JButton);
     }
 
+    public void testAlias() {
+        ContentManager contentManager = toolWindowManager.getContentManager();
+        Content content = contentManager.addContent("key", "title", null, new JButton("Hello World!!!"), "tip");
+
+        assertNotNull(contentManager.getAliases(content));
+        assertEquals(0, contentManager.getAliases(content).length);
+
+        contentManager.addAlias(content, ContentManager.class);
+
+        assertEquals(1, contentManager.getAliases(content).length);
+
+        Content contentByAlias = contentManager.getContent(ContentManager.class);
+
+        assertEquals(content, contentByAlias);
+    }
 }

@@ -103,6 +103,14 @@ public interface ContentManager {
     void addAlias(Content content, Object alias);
 
     /**
+     *
+     * @param content
+     * @return
+     * @since 1.4.1
+     */
+    Object[] getAliases(Content content);
+
+    /**
      * Removes the content <code>content</code>.
      *
      * @param content content to be removed from this manager, if present.
