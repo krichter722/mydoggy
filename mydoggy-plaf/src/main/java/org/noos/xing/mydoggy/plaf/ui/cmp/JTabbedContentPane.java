@@ -160,10 +160,11 @@ public class JTabbedContentPane extends JTabbedPane {
         contentMap.put(getTabCount() - 1, content);
     }
 
-    public void addTab(Content content, Component component, int index) {
-        if (index < 0 || index >= getTabCount())
+    public int addTab(Content content, Component component, int index) {
+        if (index < 0 || index >= getTabCount()) {
             addTab(content, component);
-        else {
+            return getTabCount() - 1; 
+        } else {
             String tip = content.getToolTipText();
             if (tip == null)
                 tip = "";
@@ -189,6 +190,7 @@ public class JTabbedContentPane extends JTabbedPane {
                       index);
 
             contentMap.put(index, content);
+            return index;
         }
     }
 
@@ -265,7 +267,7 @@ public class JTabbedContentPane extends JTabbedPane {
         }
 
         public void mouseClicked(MouseEvent e) {
-            if (mouseOverTab >= 0 && mouseOverTab < getTabCount()) {
+            if (SwingUtilities.isLeftMouseButton(e) && mouseOverTab >= 0 && mouseOverTab < getTabCount()) {
                 if (mouseOverTab == mouseOverTabWhenPressed && !selectionOnPressed)
                     return;
 
