@@ -60,7 +60,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     protected boolean contentValueAdjusting;
 
     protected Map<Content, TabbedContentUI> contentUIMap;
-    protected Map<Content, TabbedContentUI> detachedContentUIMap;
+    protected Map<Content, Integer> detachedContentUIMap;
 
     public MyDoggyTabbedContentManagerUI() {
         contentManagerUIListeners = new EventListenerList();
@@ -312,7 +312,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             if (lastContent == content)
                 lastContent = contentManager.getNextContent();
 
-            detachedContentUIMap.put(lastContent, getContentUI(lastContent));
+            detachedContentUIMap.remove(lastContent);
             toolWindowManager.setMainContent(lastContent.getComponent());
             lastSelected = null;
         } else {
@@ -373,7 +373,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
 
     protected void initComponents() {
-        detachedContentUIMap = new Hashtable<Content, TabbedContentUI>();
+        detachedContentUIMap = new Hashtable<Content, Integer>();
         contentUIMap = new Hashtable<Content, TabbedContentUI>();
 
         final JTabbedContentPane tabbedContentPane = new JTabbedContentPane();
@@ -443,13 +443,14 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         }
     }
 
-    protected void addUIForContent(Content content, Object... constaints) {
+    protected int addUIForContent(Content content, Object... constaints) {
         contentUIMap.put(content, new MyDoggyTabbedContentUI(tabbedContentPane, content));
 
         if (!showAlwaysTab && tabbedContentPane.getTabCount() == 0 && (contentValueAdjusting || toolWindowManager.getMainContent() == null)) {
-            detachedContentUIMap.put(content, getContentUI(content));
+            detachedContentUIMap.remove(content);
             toolWindowManager.setMainContent(content.getComponent());
             lastSelected = (PlafContent) content;
+            return -1;
         } else {
             if (!showAlwaysTab && tabbedContentPane.getParent() == null) {
                 valueAdjusting = true;
@@ -457,24 +458,32 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 valueAdjusting = false;
             }
 
-            addTab(content, constaints);
+            int index = addTab(content, constaints);
             toolWindowManager.setMainContent(tabbedContentPane);
 
             if (!tabbedContentPane.isEnabledAt(tabbedContentPane.getSelectedIndex()))
                 tabbedContentPane.setSelectedIndex(tabbedContentPane.getTabCount() - 1);
+            return index;
         }
     }
 
-    protected void addTab(Content content, Object... constaints) {
-        tabbedContentPane.addTab(content);
+    protected int addTab(Content content, Object... constaints) {
+        int index;
+        if (constaints.length == 1 && constaints[0] instanceof Integer) {
+            index = tabbedContentPane.addTab(content, content.getComponent(), (Integer) constaints[0]);
+        } else {
+            tabbedContentPane.addTab(content);
+            index = tabbedContentPane.getTabCount() - 1;
+        }
 
-        int index = tabbedContentPane.getTabCount() - 1;
         tabbedContentPane.setDisabledIconAt(index, content.getDisabledIcon());
         int mnemonic = content.getMnemonic();
         if (mnemonic != -1)
             tabbedContentPane.setMnemonicAt(index, mnemonic);
         if (content.getForeground() != null)
             tabbedContentPane.setForegroundAt(index, content.getForeground());
+
+        return index;
     }
 
     protected void setupActions() {
@@ -700,10 +709,10 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (!oldValue && newValue) {
-                if (tabbedContentPane.getTabCount() != 0) {
-                    TabbedContentUI contentUI = getContentUI(content);
-                    detachedContentUIMap.put(content, contentUI);
-                }
+                if (tabbedContentPane.getTabCount() != 0)
+                    detachedContentUIMap.put(content, tabbedContentPane.indexOfContent(content));
+                else
+                    detachedContentUIMap.put(content, -1);
 
                 final JDialog dialog = new JDialog(resourceManager.getBoolean("dialog.owner.enabled", true) ? parentFrame : null,
                                                    false);
@@ -790,8 +799,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 window.setVisible(false);
                 window.dispose();
 
-                addUIForContent(content);
-                tabbedContentPane.setSelectedIndex(tabbedContentPane.getTabCount() - 1);
+                tabbedContentPane.setSelectedIndex(addUIForContent(content, detachedContentUIMap.get(content)));
+                detachedContentUIMap.remove(content);
             }
         }
 

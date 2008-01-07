@@ -417,7 +417,7 @@ public class MultiSplitDockableContainer extends JPanel {
         entries.put(dockable, new DockableEntry(dockable, content, modelId));
     }
 
-    public void removeDockable(Dockable dockable) {
+    public Constraint removeDockable(Dockable dockable) {
         if (dockable == null)
             throw new IllegalArgumentException("Cannot remove dockable. [dockable null]");
 
@@ -441,46 +441,38 @@ public class MultiSplitDockableContainer extends JPanel {
 
             resetRootComponent();
             leafNameCounter = 0;
-            return;
+            SwingUtil.repaint(this);
+            return null;
         }
 
         if (entries.size() == 1) {
-            if (multiSplitPaneModelRoot instanceof DockableLeaf) {
-                DockableLeaf leaf = (DockableLeaf) multiSplitPaneModelRoot;
-                removeComponentWrapper(multiSplitPane.getComponent(0),
-                                       dockable);
-                leaf.getDockables().remove(dockable.getId());
+            // the root is a split
+            assert multiSplitPaneModelRoot instanceof MultiSplitLayout.Split;
 
-                if (!useAlwaysContentWrapper) {
-                    Component root = multiSplitPane.getComponent(0);
-                    multiSplitPane.removeAll();
-                    multiSplitPane.add(getWrappedComponent((Container) root), "1");
-                }
-            } else {
-                // the root is a split
+            // remove the component related to dockable
+            multiSplitPane.remove(multiSplitPane.getMultiSplitLayout().getChildMap().get(getLeafName(dockable)));
 
-                // remove the component related to dockable
-                multiSplitPane.remove(multiSplitPane.getMultiSplitLayout().getChildMap().get(getLeafName(dockable)));
+            // retrieve the component related to sole entry in entries
+            Dockable soleDockable = entries.keySet().iterator().next();
+            DockableLeaf soleLeaf = getLeaf(soleDockable);
+            Component soleLeafCmp = getWrappedComponent((Container) multiSplitPane.getMultiSplitLayout().getChildMap().get(soleLeaf.getName()));
+            soleLeaf.setName("1");
+            multiSplitPaneModelRoot = soleLeaf;
+            multiSplitPaneModelRoot.setParent(null);
+            multiSplitPane.setModel(multiSplitPaneModelRoot);
 
-                // retrieve the component related to sole entry in entries
-                Dockable soleDockable = entries.keySet().iterator().next();
-                DockableLeaf soleLeaf = getLeaf(soleDockable);
-                Component soleLeafCmp = getWrappedComponent((Container) multiSplitPane.getMultiSplitLayout().getChildMap().get(soleLeaf.getName()));
-                soleLeaf.setName("1");
-                multiSplitPaneModelRoot = soleLeaf;
-                multiSplitPaneModelRoot.setParent(null);
-                multiSplitPane.setModel(multiSplitPaneModelRoot);
+            multiSplitPane.removeAll();
 
-                multiSplitPane.removeAll();
+            if (useAlwaysContentWrapper)
+                multiSplitPane.add(getComponentWrapper(soleDockable, soleLeafCmp), "1");
+            else
+                multiSplitPane.add(soleLeafCmp, "1");
 
-                if (useAlwaysContentWrapper)
-                    multiSplitPane.add(getComponentWrapper(soleDockable, soleLeafCmp), "1");
-                else
-                    multiSplitPane.add(soleLeafCmp, "1");
-            }
             leafNameCounter = 1;
 
             SwingUtil.repaint(this);
+
+            return new Constraint(soleDockable, defaultAggregationPosition, -1);
         } else {
             DockableLeaf dockableLeaf = getLeaf(dockable);
             if (dockableLeaf == null)
@@ -494,6 +486,8 @@ public class MultiSplitDockableContainer extends JPanel {
 
                 removeComponentWrapper(multiSplitPane.getMultiSplitLayout().getChildMap().get(dockableLeaf.getName()),
                                        dockable);
+//                return new Constraint(dockableLeaf.getName());
+                return null;
             } else {
                 leafNameCounter--;
 
@@ -605,6 +599,7 @@ public class MultiSplitDockableContainer extends JPanel {
                 System.out.println("Check model fail. removeDockable end");
             repaintMultiSplit();
         }
+        return null;
     }
 
     public void removeDockable(Dockable dockable, boolean storeLayout) {
@@ -940,6 +935,7 @@ public class MultiSplitDockableContainer extends JPanel {
         return "" + (++leafNameCounter);
     }
 
+
     public class DockableEntry {
         Dockable dockable;
         Component component;
@@ -1048,6 +1044,30 @@ public class MultiSplitDockableContainer extends JPanel {
                 System.out.println("-----------------------------------------------------------------------");
                 throw e;
             }
+        }
+    }
+
+    public class Constraint {
+        private Dockable aggregationContent;
+        private AggregationPosition aggregationPosition;
+        private int aggregationIndexLocation = -1;
+
+        public Constraint(Dockable aggregationContent, AggregationPosition aggregationPosition, int aggregationIndexLocation) {
+            this.aggregationContent = aggregationContent;
+            this.aggregationPosition = aggregationPosition;
+            this.aggregationIndexLocation = aggregationIndexLocation;
+        }
+
+        public Dockable getAggregationContent() {
+            return aggregationContent;
+        }
+
+        public AggregationPosition getAggregationPosition() {
+            return aggregationPosition;
+        }
+
+        public int getAggregationIndexLocation() {
+            return aggregationIndexLocation;
         }
     }
 
