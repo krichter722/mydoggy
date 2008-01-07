@@ -253,9 +253,22 @@ public class JTabbedContentPane extends JTabbedPane {
     protected class MouseOverTabListener extends MouseInputAdapter {
         protected int mouseOverTab = -1;
         protected JPopupMenu stdPopupMenu;
+        protected boolean selectionOnPressed;
+        protected int mouseOverTabWhenPressed;
+
+        // implements java.awt.event.MouseListener
+        public void mousePressed(MouseEvent e) {
+            if (mouseOverTab >= 0 && mouseOverTab < getTabCount()) {
+                selectionOnPressed = (getSelectedIndex() == mouseOverTab);
+            }
+            mouseOverTabWhenPressed = mouseOverTab;
+        }
 
         public void mouseClicked(MouseEvent e) {
             if (mouseOverTab >= 0 && mouseOverTab < getTabCount()) {
+                if (mouseOverTab == mouseOverTabWhenPressed && !selectionOnPressed)
+                    return;
+
                 Content content = getContentAt(mouseOverTab);
 
                 if (isDetachFired(content.getContentUI(), e.getPoint())) {
