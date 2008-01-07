@@ -267,28 +267,27 @@ public class JTabbedContentPane extends JTabbedPane {
         }
 
         public void mouseClicked(MouseEvent e) {
-            if (SwingUtilities.isLeftMouseButton(e) && mouseOverTab >= 0 && mouseOverTab < getTabCount()) {
+            if (mouseOverTab >= 0 && mouseOverTab < getTabCount()) {
                 if (mouseOverTab == mouseOverTabWhenPressed && !selectionOnPressed)
                     return;
 
                 Content content = getContentAt(mouseOverTab);
 
-                if (isDetachFired(content.getContentUI(), e.getPoint())) {
-                    fireDetachTabEvent(content);
-                    return;
-                }
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    if (isDetachFired(content.getContentUI(), e.getPoint())) {
+                        fireDetachTabEvent(content);
+                        return;
+                    }
 
-                if (isCloseFired(content.getContentUI(), e.getPoint())) {
-                    fireCloseTabEvent(content);
-                    return;
-                }
+                    if (isCloseFired(content.getContentUI(), e.getPoint())) {
+                        fireCloseTabEvent(content);
+                        return;
+                    }
 
-                if (e.getClickCount() == 2) {
-                    content.setMaximized(!content.isMaximized());
-                } else {
-                    if (SwingUtilities.isRightMouseButton(e))
+                    if (e.getClickCount() == 2)
+                        content.setMaximized(!content.isMaximized());
+                } else if (SwingUtilities.isRightMouseButton(e))
                         showPopupMenu(e);
-                }
             } else if (SwingUtilities.isRightMouseButton(e)) {
                 JPopupMenu popupMenu = getComponentPopupMenu();
                 if (popupMenu != null)
