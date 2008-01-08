@@ -722,7 +722,7 @@ public class MultiSplitDockableContainer extends JPanel {
                 Component componentWrapper = getComponentWrapper(entries.keySet().iterator().next(),
                                                                  multiSplitPane.getComponent(0));
                 multiSplitPane.removeAll();
-                multiSplitPane.add(componentWrapper, "0");
+                multiSplitPane.add(componentWrapper, "1");
 
                 SwingUtil.repaint(this);
             }
@@ -730,7 +730,7 @@ public class MultiSplitDockableContainer extends JPanel {
             if (entries.size() == 1) {
                 Component wrappedComponent = getWrappedComponent((Container) multiSplitPane.getComponent(0));
                 multiSplitPane.removeAll();
-                multiSplitPane.add(wrappedComponent, "0");
+                multiSplitPane.add(wrappedComponent, "1");
 
                 SwingUtil.repaint(this);
             }

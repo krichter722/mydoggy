@@ -24,6 +24,7 @@ import java.util.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @todo: load new schema
  */
 public class XMLPersistenceDelegate implements PersistenceDelegate {
     protected MyDoggyToolWindowManager toolWindowManager;
@@ -43,12 +44,13 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             writer.startDocument();
 
             AttributesImpl mydoggyAttributes = new AttributesImpl();
-            mydoggyAttributes.addAttribute(null, "version", null, null, "1.4.0");
+            mydoggyAttributes.addAttribute(null, "version", null, null, "1.4.1");
             writer.startElement("mydoggy", mydoggyAttributes);
 
             saveToolWindows(writer);
             saveToolWindowManagerDescriptor(writer);
             saveContentManager(writer);
+            saveContentManagerUI(writer);
             saveBars(writer);
 
             writer.endElement("mydoggy");
@@ -160,18 +162,28 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         floatingDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(floatingTypeDescriptor.isIdVisibleOnTitleBar()));
 
         Point point = floatingTypeDescriptor.getLocation();
-        if (point != null) {
-            floatingDescriptorAttributes.addAttribute(null, "x", null, null, String.valueOf(point.x));
-            floatingDescriptorAttributes.addAttribute(null, "y", null, null, String.valueOf(point.y));
-        }
-
         Dimension dimension = floatingTypeDescriptor.getSize();
-        if (dimension != null) {
-            floatingDescriptorAttributes.addAttribute(null, "width", null, null, String.valueOf(dimension.width));
-            floatingDescriptorAttributes.addAttribute(null, "height", null, null, String.valueOf(dimension.height));
-        }
+        if (point != null || dimension != null) {
+            writer.startElement("floating", floatingDescriptorAttributes);
 
-        writer.dataElement("floating", floatingDescriptorAttributes);
+            if (point != null) {
+                AttributesImpl attributes = new AttributesImpl();
+                attributes.addAttribute(null, "x", null, null, String.valueOf(point.x));
+                attributes.addAttribute(null, "y", null, null, String.valueOf(point.y));
+                writer.dataElement("location", attributes);
+            }
+
+            if (dimension != null) {
+                AttributesImpl attributes = new AttributesImpl();
+                attributes.addAttribute(null, "width", null, null, String.valueOf(dimension.width));
+                attributes.addAttribute(null, "height", null, null, String.valueOf(dimension.height));
+                writer.dataElement("size", attributes);               
+            }
+
+            writer.endElement("floating");
+        } else
+            writer.dataElement("floating", floatingDescriptorAttributes);
+
 
         // FloatingLiveTypeDescriptor
         FloatingLiveTypeDescriptor floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
@@ -184,18 +196,28 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         floatingLiveDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(floatingLiveTypeDescriptor.isIdVisibleOnTitleBar()));
 
         point = floatingLiveTypeDescriptor.getLocation();
-        if (point != null) {
-            floatingLiveDescriptorAttributes.addAttribute(null, "x", null, null, String.valueOf(point.x));
-            floatingLiveDescriptorAttributes.addAttribute(null, "y", null, null, String.valueOf(point.y));
-        }
-
         dimension = floatingLiveTypeDescriptor.getSize();
-        if (dimension != null) {
-            floatingLiveDescriptorAttributes.addAttribute(null, "width", null, null, String.valueOf(dimension.width));
-            floatingLiveDescriptorAttributes.addAttribute(null, "height", null, null, String.valueOf(dimension.height));
-        }
+        if (point != null || dimension != null) {
+            writer.startElement("floatingLive", floatingDescriptorAttributes);
 
-        writer.dataElement("floatingLive", floatingLiveDescriptorAttributes);
+            if (point != null) {
+                AttributesImpl attributes = new AttributesImpl();
+                attributes.addAttribute(null, "x", null, null, String.valueOf(point.x));
+                attributes.addAttribute(null, "y", null, null, String.valueOf(point.y));
+                writer.dataElement("location", attributes);
+            }
+
+            if (dimension != null) {
+                AttributesImpl attributes = new AttributesImpl();
+                attributes.addAttribute(null, "width", null, null, String.valueOf(dimension.width));
+                attributes.addAttribute(null, "height", null, null, String.valueOf(dimension.height));
+                writer.dataElement("size", attributes);
+            }
+
+            writer.endElement("floatingLive");
+        } else
+            writer.dataElement("floatingLive", floatingLiveDescriptorAttributes);
+
 
         // End descriptors
         writer.endElement("descriptors");
@@ -282,7 +304,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         writer.startElement("contentManager");
 
         for (Content content : toolWindowManager.getContentManager().getContents()) {
-
+            ContentUI contentUI = content.getContentUI();
+            
             AttributesImpl contentAttributes = new AttributesImpl();
             contentAttributes.addAttribute(null, "id", null, null, content.getId());
             contentAttributes.addAttribute(null, "detached", null, null, String.valueOf(content.isDetached()));
@@ -290,11 +313,70 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             contentAttributes.addAttribute(null, "selected", null, null, String.valueOf(content.isSelected()));
             contentAttributes.addAttribute(null, "maximized", null, null, String.valueOf(content.isMaximized()));
 
+            contentAttributes.addAttribute(null, "closeable", null, null, String.valueOf(contentUI.isCloseable()));
+            contentAttributes.addAttribute(null, "detachable", null, null, String.valueOf(contentUI.isDetachable()));
+            contentAttributes.addAttribute(null, "transparentMode", null, null, String.valueOf(contentUI.isTransparentMode()));
+            contentAttributes.addAttribute(null, "transparentDelay", null, null, String.valueOf(contentUI.getTransparentDelay()));
+            contentAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(contentUI.getTransparentRatio()));
+
             writer.dataElement("content", contentAttributes);
         }
 
         // End contentManager
         writer.endElement("contentManager");
+    }
+
+    protected void saveContentManagerUI(XMLWriter writer) throws SAXException {
+        // Start ContentManagerUI
+        writer.startElement("contentManagerUI");
+
+        ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
+        if (contentManagerUI instanceof MultiSplitContentManagerUI) {
+
+            MultiSplitContentManagerUI multiSplitContentManagerUI = (MultiSplitContentManagerUI) contentManagerUI;
+            AttributesImpl attributes = new AttributesImpl();
+            attributes.addAttribute(null, "closeable", null, null, String.valueOf(contentManagerUI.isCloseable()));
+            attributes.addAttribute(null, "detachable", null, null, String.valueOf(contentManagerUI.isDetachable()));
+            attributes.addAttribute(null, "showAlwaysTab", null, null, String.valueOf(multiSplitContentManagerUI.isShowAlwaysTab()));
+            attributes.addAttribute(null, "tabLayout", null, null, multiSplitContentManagerUI.getTabLayout().toString());
+            attributes.addAttribute(null, "tabPlacement", null, null, multiSplitContentManagerUI.getTabPlacement().toString());
+
+            writer.dataElement("MultiSplitContentManagerUI", attributes);
+        } else if (contentManagerUI instanceof TabbedContentManagerUI) {
+            
+            TabbedContentManagerUI tabbedContentManagerUI = (TabbedContentManagerUI) contentManagerUI;
+            AttributesImpl attributes = new AttributesImpl();
+            attributes.addAttribute(null, "closeable", null, null, String.valueOf(contentManagerUI.isCloseable()));
+            attributes.addAttribute(null, "detachable", null, null, String.valueOf(contentManagerUI.isDetachable()));
+            attributes.addAttribute(null, "showAlwaysTab", null, null, String.valueOf(tabbedContentManagerUI.isShowAlwaysTab()));
+            attributes.addAttribute(null, "tabLayout", null, null, tabbedContentManagerUI.getTabLayout().toString());
+            attributes.addAttribute(null, "tabPlacement", null, null, tabbedContentManagerUI.getTabPlacement().toString());
+
+            writer.dataElement("TabbedContentManagerUI", attributes);
+        } else if (contentManagerUI instanceof DesktopContentManagerUI) {
+            DesktopContentManagerUI desktopContentManagerUI = (DesktopContentManagerUI) contentManagerUI;
+            AttributesImpl attributes = new AttributesImpl();
+            attributes.addAttribute(null, "closeable", null, null, String.valueOf(contentManagerUI.isCloseable()));
+            attributes.addAttribute(null, "detachable", null, null, String.valueOf(contentManagerUI.isDetachable()));
+
+            writer.startElement("DesktopContentManagerUI", attributes);
+            for (Content content : toolWindowManager.getContentManager().getContents()) {
+                DesktopContentUI contentUI = (DesktopContentUI) content.getContentUI();
+
+                AttributesImpl contentUIAttributes = new AttributesImpl();
+                contentUIAttributes.addAttribute(null, "id", null, null, content.getId());
+                contentUIAttributes.addAttribute(null, "x", null, null, String.valueOf(contentUI.getLocation().x));
+                contentUIAttributes.addAttribute(null, "y", null, null, String.valueOf(contentUI.getLocation().y));
+                contentUIAttributes.addAttribute(null, "width", null, null, String.valueOf(contentUI.getSize().width));
+                contentUIAttributes.addAttribute(null, "height", null, null, String.valueOf(contentUI.getSize().height));
+
+                writer.dataElement("content", contentUIAttributes);
+            }
+
+            writer.endElement("DesktopContentManagerUI");
+        }
+
+        writer.endElement("contentManagerUI");
     }
 
     protected void saveBars(XMLWriter writer) throws SAXException {
@@ -406,8 +488,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     public class MyDoggyElementParser extends ElementParserAdapter {
         public boolean parse(Element element, Object... args) {
             // Validate version
-            if (!"1.4.0".equals(element.getAttribute("version")))
-                throw new IllegalArgumentException("Invalid workspace version. Expected 1.4.0");
+            if (!"1.4.1".equals(element.getAttribute("version")))
+                throw new IllegalArgumentException("Invalid workspace version. Expected 1.4.1");
             return true;
         }
     }
@@ -550,6 +632,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     descriptor.setAnimating(getBoolean(floatingLiveType, "animating", true));
                     descriptor.setIdVisibleOnTitleBar(getBoolean(floatingLiveType, "idVisibleOnTitleBar", true));
 
+                    // TODO: it's not valid...
                     Element location = getElement(floatingType, "location");
                     if (location != null)
                         descriptor.setLocation(

@@ -386,6 +386,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public void setMainContent(Component content) {
+        if (content == null)
+            resetMainContent();
+        
         mainContainer.setOpaque(false);
         mainContainer.removeAll();
         mainContainer.add(content, "0,0,FULL,FULL");

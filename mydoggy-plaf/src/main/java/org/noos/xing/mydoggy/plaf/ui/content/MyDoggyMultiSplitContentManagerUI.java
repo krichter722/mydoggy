@@ -143,6 +143,9 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     }
 
     public void setShowAlwaysTab(boolean showAlwaysTab) {
+        if (isShowAlwaysTab() == showAlwaysTab)
+            return;
+        
         boolean old = isShowAlwaysTab();
         multiSplitContainer.setUseAlwaysContentWrapper(showAlwaysTab);
 
@@ -235,7 +238,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
         return this;
     }
 
-    public void unistall() {
+    public void uninstall() {
         if (maximizedContent != null)
             maximizedContent.setMaximized(false);
 
@@ -704,7 +707,6 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                                                    false);
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-                Window parentWindow = SwingUtilities.windowForComponent(multiSplitContainer);
                 Component component = content.getComponent();
 
                 multiSplitContainer.removeDockable(content);
@@ -714,11 +716,13 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                 dialog.setTitle(content.getTitle());
                 dialog.getContentPane().add(component);
 
-                Point location = parentWindow.getLocation();
-                location.x += 5;
-                location.y += 5;
-                dialog.setLocation(location);
-
+                if (parentFrame != null) {
+                    Point location = parentFrame.getLocation();
+                    location.translate(5, 5);
+                    dialog.setLocation(location);
+                } else {
+                    SwingUtil.centrePositionOnScreen(dialog);
+                }
                 dialog.pack();
 
                 // TODO: move to DockablePanel
