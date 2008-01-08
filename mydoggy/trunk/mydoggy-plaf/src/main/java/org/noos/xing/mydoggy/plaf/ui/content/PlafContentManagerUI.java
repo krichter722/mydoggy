@@ -20,7 +20,7 @@ public interface PlafContentManagerUI {
      *
      * @param manager the component where this UI delegate is being installed
      * @param oldContentManagerUI the old ContentManagerUI
-     * @see #unistall()
+     * @see #uninstall()
      * @since 1.3.1
      * @return this PlafContentManagerUI. 
      */
@@ -32,7 +32,7 @@ public interface PlafContentManagerUI {
      * @see #install
      * @since 1.3.1
      */
-    void unistall();
+    void uninstall();
 
     /**
      * Returns <tt>true</tt> is the manager is installed, <tt>false</tt> otherwise.

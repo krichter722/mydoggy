@@ -45,7 +45,7 @@ public class MyDoggyContentManager implements ContentManager {
             return;
 
         if (this.plafContentManagerUI != null) 
-            this.plafContentManagerUI.unistall();
+            this.plafContentManagerUI.uninstall();
 
         PlafContentManagerUI newContentManagerUI = (PlafContentManagerUI) contentManagerUI;
         PlafContentManagerUI old = this.plafContentManagerUI;

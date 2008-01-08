@@ -60,6 +60,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
 
     public void setCloseable(boolean closeable) {
+        if (this.closeable == closeable)
+            return;
+
         boolean old = this.closeable;
         this.closeable = closeable;
 
@@ -76,6 +79,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     }
 
     public void setDetachable(boolean detachable) {
+        if (this.detachable == detachable)
+            return;
+
         boolean old = this.detachable;
         this.detachable = detachable;
 
@@ -187,7 +193,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         return this;
     }
 
-    public void unistall() {
+    public void uninstall() {
         // Remove all contents
         for (Content content : contentManager.getContents()) {
             removeContent((PlafContent) content);
@@ -612,7 +618,6 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                         false);
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-                Window parentWindow = SwingUtilities.windowForComponent(desktopPane);
                 Component component = content.getComponent();
 
                 JInternalFrame internalFrame = getFrameByComponent(component);
@@ -627,11 +632,13 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 dialog.setTitle(content.getTitle());
                 dialog.getContentPane().add(component);
 
-                Point location = parentWindow.getLocation();
-                location.x += 5;
-                location.y += 5;
-                dialog.setLocation(location);
-
+                if (parentFrame != null) {
+                    Point location = parentFrame.getLocation();
+                    location.translate(5, 5);
+                    dialog.setLocation(location);
+                } else {
+                    SwingUtil.centrePositionOnScreen(dialog);
+                }
                 dialog.pack();
 
                 if (resourceManager.getTransparencyManager().isServiceAvailable()) {

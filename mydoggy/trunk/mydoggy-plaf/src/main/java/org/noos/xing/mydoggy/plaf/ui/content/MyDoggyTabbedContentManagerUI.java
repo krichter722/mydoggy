@@ -154,6 +154,9 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     }
 
     public void setShowAlwaysTab(boolean showAlwaysTab) {
+        if (this.showAlwaysTab == showAlwaysTab)
+            return;
+        
         boolean old = this.showAlwaysTab;
         this.showAlwaysTab = showAlwaysTab;
 
@@ -164,6 +167,10 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 valueAdjusting = false;
 
                 toolWindowManager.setMainContent(tabbedContentPane);
+            }
+        } else {
+            if (contentManager.getContentCount() == 1) {
+                toolWindowManager.setMainContent(tabbedContentPane.getComponentAt(0));
             }
         }
 
@@ -256,7 +263,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         return this;
     }
 
-    public void unistall() {
+    public void uninstall() {
         if (maximizedContent != null)
             maximizedContent.setMaximized(false);
 
@@ -321,6 +328,9 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 tabbedContentPane.getContentAt(selectedIndex).setSelected(true);
             else
                 lastSelected = null;
+
+            if (tabbedContentPane.getTabCount() == 0)
+                toolWindowManager.resetMainContent();
         }
 
         // Remove the contentUI part
@@ -397,7 +407,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                     }
 
                     lastSelected = newSelected;
-                    newSelected.fireSelected(true);
+                    if (newSelected != null)
+                        newSelected.fireSelected(true);
                 }
             }
         });
@@ -718,15 +729,16 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                                                    false);
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-                Window parentWindow = SwingUtilities.windowForComponent(tabbedContentPane);
                 Component component = content.getComponent();
 
                 int tabIndex = tabbedContentPane.indexOfContent(content);
                 if (tabIndex != -1) {
                     tabbedContentPane.removeTabAt(tabIndex);
+                    if (tabbedContentPane.getTabCount() == 0)
+                        toolWindowManager.resetMainContent();
                 } else {
                     if (tabbedContentPane.getParent() == null)
-                        toolWindowManager.setMainContent(null);
+                        toolWindowManager.resetMainContent();
                     else
                         throw new IllegalStateException("Invalid Content : " + content);
                 }
@@ -736,11 +748,13 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 dialog.setTitle(content.getTitle());
                 dialog.getContentPane().add(component);
 
-                Point location = parentWindow.getLocation();
-                location.x += 5;
-                location.y += 5;
-                dialog.setLocation(location);
-
+                if (parentFrame != null) {
+                    Point location = parentFrame.getLocation();
+                    location.translate(5, 5);
+                    dialog.setLocation(location);
+                } else {
+                    SwingUtil.centrePositionOnScreen(dialog);
+                }
                 dialog.pack();
 
                 // TODO: move to DockablePanel
