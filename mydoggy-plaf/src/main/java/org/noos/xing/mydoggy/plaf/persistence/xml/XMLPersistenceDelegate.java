@@ -632,7 +632,6 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     descriptor.setAnimating(getBoolean(floatingLiveType, "animating", true));
                     descriptor.setIdVisibleOnTitleBar(getBoolean(floatingLiveType, "idVisibleOnTitleBar", true));
 
-                    // TODO: it's not valid...
                     Element location = getElement(floatingType, "location");
                     if (location != null)
                         descriptor.setLocation(

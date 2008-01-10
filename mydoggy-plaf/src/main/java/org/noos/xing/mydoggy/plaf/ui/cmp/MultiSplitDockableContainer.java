@@ -446,33 +446,46 @@ public class MultiSplitDockableContainer extends JPanel {
         }
 
         if (entries.size() == 1) {
-            // the root is a split
-            assert multiSplitPaneModelRoot instanceof MultiSplitLayout.Split;
+            if (multiSplitPaneModelRoot instanceof DockableLeaf) {
+                DockableLeaf leaf = (DockableLeaf) multiSplitPaneModelRoot;
+                removeComponentWrapper(multiSplitPane.getComponent(0),
+                                       dockable);
+                leaf.getDockables().remove(dockable.getId());
 
-            // remove the component related to dockable
-            multiSplitPane.remove(multiSplitPane.getMultiSplitLayout().getChildMap().get(getLeafName(dockable)));
+                if (!useAlwaysContentWrapper) {
+                    Component root = multiSplitPane.getComponent(0);
+                    multiSplitPane.removeAll();
+                    multiSplitPane.add(getWrappedComponent((Container) root), "1");
+                }
+                
+                return null;
+            } else {            // the root is a split
 
-            // retrieve the component related to sole entry in entries
-            Dockable soleDockable = entries.keySet().iterator().next();
-            DockableLeaf soleLeaf = getLeaf(soleDockable);
-            Component soleLeafCmp = getWrappedComponent((Container) multiSplitPane.getMultiSplitLayout().getChildMap().get(soleLeaf.getName()));
-            soleLeaf.setName("1");
-            multiSplitPaneModelRoot = soleLeaf;
-            multiSplitPaneModelRoot.setParent(null);
-            multiSplitPane.setModel(multiSplitPaneModelRoot);
+                // remove the component related to dockable
+                multiSplitPane.remove(multiSplitPane.getMultiSplitLayout().getChildMap().get(getLeafName(dockable)));
 
-            multiSplitPane.removeAll();
+                // retrieve the component related to sole entry in entries
+                Dockable soleDockable = entries.keySet().iterator().next();
+                DockableLeaf soleLeaf = getLeaf(soleDockable);
+                Component soleLeafCmp = getWrappedComponent((Container) multiSplitPane.getMultiSplitLayout().getChildMap().get(soleLeaf.getName()));
+                soleLeaf.setName("1");
+                multiSplitPaneModelRoot = soleLeaf;
+                multiSplitPaneModelRoot.setParent(null);
+                multiSplitPane.setModel(multiSplitPaneModelRoot);
 
-            if (useAlwaysContentWrapper)
-                multiSplitPane.add(getComponentWrapper(soleDockable, soleLeafCmp), "1");
-            else
-                multiSplitPane.add(soleLeafCmp, "1");
+                multiSplitPane.removeAll();
 
-            leafNameCounter = 1;
+                if (useAlwaysContentWrapper)
+                    multiSplitPane.add(getComponentWrapper(soleDockable, soleLeafCmp), "1");
+                else
+                    multiSplitPane.add(soleLeafCmp, "1");
 
-            SwingUtil.repaint(this);
+                leafNameCounter = 1;
 
-            return new Constraint(soleDockable, defaultAggregationPosition, -1);
+                SwingUtil.repaint(this);
+
+                return new Constraint(soleDockable, defaultAggregationPosition, -1);
+            }
         } else {
             DockableLeaf dockableLeaf = getLeaf(dockable);
             if (dockableLeaf == null)
