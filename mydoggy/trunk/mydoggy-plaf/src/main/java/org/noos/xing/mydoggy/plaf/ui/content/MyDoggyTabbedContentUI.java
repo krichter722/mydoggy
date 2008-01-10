@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.TabbedContentUI;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentPane;
 
 import javax.swing.event.EventListenerList;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -20,6 +21,7 @@ public class MyDoggyTabbedContentUI implements TabbedContentUI {
     protected boolean transparentMode;
     protected float transparentRatio;
     protected int transparentDelay;
+    protected Rectangle detachedBounds;
 
     protected EventListenerList listenerList;
 
@@ -110,6 +112,14 @@ public class MyDoggyTabbedContentUI implements TabbedContentUI {
     public void setConstraints(Object... constraints) {
         if (constraints.length > 0 && constraints[0] instanceof Integer) 
             tabbedContentPane.setIndex(content, (Integer) constraints[0]);                           
+    }
+
+    public Rectangle getDetachedBounds() {
+        return detachedBounds;
+    }
+
+    public void setDetachedBounds(Rectangle bounds) {
+        fireEvent("detachedBounds", null, bounds);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {

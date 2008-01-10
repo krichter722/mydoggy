@@ -86,6 +86,14 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
         }
     }
 
+    public Rectangle getDetachedBounds() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void setDetachedBounds(Rectangle bounds) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public void setTransparentDelay(int transparentDelay) {
         this.transparentDelay = transparentDelay;
     }

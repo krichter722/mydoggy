@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowGroup;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
+import org.noos.xing.mydoggy.mydoggyset.context.MyDoggySetContext;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
@@ -32,7 +33,7 @@ public class WelcomeContentView extends ComponentView {
     protected Component initComponent() {
         // Setup welcome panel...
         JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{-1, 100, 5, 160, 3, 100, 5, 160, -1},
-                                                                         {-1, 10, 70, 10, 70, 10, 70, 10, -1}})) {
+                                                                         {-1, 5, 60, 5, 60, 5, 60, 5, 60, 5, -1}})) {
             public void setUI(PanelUI ui) {
                 if (getUI() == null)
                     super.setUI(ui);
@@ -55,6 +56,11 @@ public class WelcomeContentView extends ComponentView {
                   "1,6,FULL,FULL");
         panel.add(renderLabel("<html>Edit <br>Contents <br> properties</html>"),
                   "3,6,FULL,FULL");
+
+        panel.add(renderButton("<html>Nested<br> Tool Manager", MyDoggySetContext.ActionKey.NEST_TOOLMANAGER),
+                  "1,8,FULL,FULL");
+        panel.add(renderLabel("<html>Nested <br>ToolWindowManager</html>"),
+                  "3,8,FULL,FULL");
 
         panel.add(renderButton("Groups", ToolWindowGroup.class),
                   "5,2,FULL,FULL");

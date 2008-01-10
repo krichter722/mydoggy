@@ -1,5 +1,7 @@
 package org.noos.xing.mydoggy;
 
+import java.awt.*;
+
 /**
  * This interface is used to modify the ui behaviours of a single content.
  *
@@ -115,5 +117,19 @@ public interface ContentUI extends DockableUI {
      * @since 1.4.0
      */
     void setConstraints(Object... contraints);
+
+    /**
+     *
+     * @return
+     * @since 1.4.1
+     */
+    Rectangle getDetachedBounds();
+
+    /**
+     *
+     * @param bounds
+     * @since 1.4.1
+     */
+    void setDetachedBounds(Rectangle bounds);
 
 }

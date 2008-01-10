@@ -107,6 +107,7 @@ public class MyDoggySet {
         contentMenu.add(new ViewContextAction("Groups", myDoggySetContext, ToolWindowGroup.class));
         contentMenu.add(new ViewContextAction("ITests", myDoggySetContext, InteractiveTest.class));
         contentMenu.add(new ViewContextAction("Customize", myDoggySetContext, ResourceManager.class));
+        contentMenu.add(new ViewContextAction("Nested Manager", myDoggySetContext, MyDoggySetContext.ActionKey.NEST_TOOLMANAGER));
 
         // L&F Menu
         JMenu lafMenu = new JMenu("Looks");
