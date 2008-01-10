@@ -24,10 +24,7 @@ import java.awt.*;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragSourceDragEvent;
 import java.awt.dnd.DragSourceDropEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -708,7 +705,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     }
 
     protected class DetachedListener implements PropertyChangeListener {
-        private Frame parentFrame;
+        protected Frame parentFrame;
+        protected PropertyChangeSupport contentUIListener;
 
         public DetachedListener() {
             parentFrame = (toolWindowManager.getAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getAnchestor() : null;
@@ -720,6 +718,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (!oldValue && newValue) {
+                ContentUI contentUI = getContentUI(content);
+                
                 if (tabbedContentPane.getTabCount() != 0)
                     detachedContentUIMap.put(content, tabbedContentPane.indexOfContent(content));
                 else
@@ -748,14 +748,19 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 dialog.setTitle(content.getTitle());
                 dialog.getContentPane().add(component);
 
-                if (parentFrame != null) {
-                    Point location = parentFrame.getLocation();
-                    location.translate(5, 5);
-                    dialog.setLocation(location);
+                Rectangle detachedBounds = contentUI.getDetachedBounds();
+                if (detachedBounds != null) {
+                    dialog.setBounds(detachedBounds);
                 } else {
-                    SwingUtil.centrePositionOnScreen(dialog);
+                    if (parentFrame != null) {
+                        Point location = parentFrame.getLocation();
+                        location.translate(5, 5);
+                        dialog.setLocation(location);
+                    } else {
+                        SwingUtil.centrePositionOnScreen(dialog);
+                    }
+                    dialog.pack();
                 }
-                dialog.pack();
 
                 // TODO: move to DockablePanel
                 if (resourceManager.getTransparencyManager().isServiceAvailable()) {
@@ -804,6 +809,18 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
                 if (parentFrame == null)
                     dialog.addWindowFocusListener(new ToFrontWindowFocusListener(dialog));
+
+                // TODO:
+                dialog.addComponentListener(new ComponentAdapter() {
+                    public void componentResized(ComponentEvent e) {
+                    }
+
+                    public void componentMoved(ComponentEvent e) {
+                        super.componentMoved(e);
+                    }
+                });
+
+//                contentUI.addPropertyChangeListener();
 
                 dialog.toFront();
                 dialog.setVisible(true);

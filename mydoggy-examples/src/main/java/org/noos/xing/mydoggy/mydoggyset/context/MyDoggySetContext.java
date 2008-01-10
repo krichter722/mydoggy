@@ -12,6 +12,7 @@ import org.noos.xing.mydoggy.mydoggyset.view.customize.CustomizeView;
 import org.noos.xing.mydoggy.mydoggyset.view.group.GroupsView;
 import org.noos.xing.mydoggy.mydoggyset.view.interactive.InteractiveTestView;
 import org.noos.xing.mydoggy.mydoggyset.view.manager.ManagerView;
+import org.noos.xing.mydoggy.mydoggyset.view.nested.NestedManagerView;
 import org.noos.xing.mydoggy.mydoggyset.view.toolwindows.ToolWindowsView;
 import org.noos.xing.mydoggy.mydoggyset.view.welcome.WelcomeContentView;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
@@ -27,6 +28,10 @@ import java.awt.*;
  */
 public class MyDoggySetContext extends MapViewContext {
 
+    public enum ActionKey {
+        NEST_TOOLMANAGER
+    }
+
     protected Component toolsContentComponent;
     protected Component groupEditorContentComponent;
     protected Component contentsContentComponent;
@@ -34,8 +39,9 @@ public class MyDoggySetContext extends MapViewContext {
     protected Component welcomeContentComponent;
     protected Component interactiveTestContentComponent;
     protected Component customizeContentComponent;
+    protected Component nestedManagerContentComponent;
 
-    public MyDoggySetContext(ToolWindowManager toolWindowManager, final JFrame frame) {        
+    public MyDoggySetContext(ToolWindowManager toolWindowManager, final JFrame frame) {
         addViewContextChangeListener(MyDoggySet.class, new AddContentAction(toolWindowManager,
                                                                             "Welcome", "Welcome", null,
                                                                             welcomeContentComponent = new WelcomeContentView(this).getComponent(),
@@ -65,6 +71,11 @@ public class MyDoggySetContext extends MapViewContext {
                                                                                  customizeContentComponent = new CustomizeView(frame, toolWindowManager).getComponent(),
                                                                                  "Customize", (int) 'u'));
 
+        addViewContextChangeListener(ActionKey.NEST_TOOLMANAGER, new AddContentAction(toolWindowManager,
+                                                                                      "Nested Manager", "Nested Manager", null,
+                                                                                      nestedManagerContentComponent = new NestedManagerView(frame, toolWindowManager).getComponent(),
+                                                                                      "Nested Manager", (int) 'N'));
+
         addViewContextChangeListener(UIManager.class, new ViewContextChangeListener() {
             public void contextChange(ViewContextChangeEvent evt) {
                 try {
@@ -79,6 +90,7 @@ public class MyDoggySetContext extends MapViewContext {
                     SwingUtilities.updateComponentTreeUI(welcomeContentComponent);
                     SwingUtilities.updateComponentTreeUI(interactiveTestContentComponent);
                     SwingUtilities.updateComponentTreeUI(customizeContentComponent);
+                    SwingUtilities.updateComponentTreeUI(nestedManagerContentComponent);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
