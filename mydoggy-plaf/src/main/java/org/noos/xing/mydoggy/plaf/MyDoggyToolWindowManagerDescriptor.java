@@ -23,6 +23,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
     protected boolean numberingEnabled;
     protected boolean checkParam = true;
     protected boolean previewEnabled;
+    protected boolean showUnavailableTools;
     protected Stack<ToolWindowAnchor> mostRecentStack;
     protected Map<ToolWindowAnchor, Integer> dividerSizes;
     protected Map<ToolWindowAnchor, Boolean> aggregateModes;
@@ -33,6 +34,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         this.manager = manager;
         this.pushAwayMode = PushAwayMode.VERTICAL;
         this.numberingEnabled = this.previewEnabled = true;
+        this.showUnavailableTools = false;
         this.listenerList = new EventListenerList();
 
         this.dividerSizes = new Hashtable<ToolWindowAnchor, Integer>();
@@ -246,6 +248,20 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
 
     public boolean isAggregateMode(ToolWindowAnchor anchor) {
         return aggregateModes.get(anchor);
+    }
+
+    public void setShowUnavailableTools(boolean showUnavailableTools) {
+        if (this.showUnavailableTools == showUnavailableTools)
+            return;
+
+        boolean old = this.showUnavailableTools;
+        this.showUnavailableTools = showUnavailableTools;
+
+        firePropertyChange("showUnavailableTools", old, showUnavailableTools);
+    }
+
+    public boolean isShowUnavailableTools() {
+        return showUnavailableTools;
     }
 
 

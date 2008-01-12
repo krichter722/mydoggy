@@ -313,7 +313,7 @@ public class MyDoggyToolWindow implements ToolWindow {
             if (isMaximized())
                 setMaximized(false);
 
-            if (getType() == ToolWindowType.DOCKED || getType() == ToolWindowType.SLIDING) {
+            if (isAvailable() && getType() == ToolWindowType.DOCKED || getType() == ToolWindowType.SLIDING) {
                 boolean tempVisible = isVisible();
                 boolean tempActive = isActive();
 

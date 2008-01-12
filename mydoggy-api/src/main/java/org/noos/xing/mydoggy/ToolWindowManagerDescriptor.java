@@ -131,4 +131,18 @@ public interface ToolWindowManagerDescriptor extends Observable {
      * @since 1.4.0
      */
     boolean isAggregateMode(ToolWindowAnchor anchor);
+
+    /**
+     *
+     * @param show
+     * @since 1.4.1
+     */
+    void setShowUnavailableTools(boolean showUnavailableTools);
+
+    /**
+     *
+     * @return
+     * @since 1.4.1
+     */
+    boolean isShowUnavailableTools();
 }

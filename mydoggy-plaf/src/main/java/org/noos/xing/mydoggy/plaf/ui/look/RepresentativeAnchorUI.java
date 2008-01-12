@@ -95,6 +95,8 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
     public void update(Graphics g, JComponent c) {
         if (toolWindow.isAvailable())
             c.setForeground(resourceManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
+        else
+            c.setForeground(resourceManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
 
         if (toolWindow.isFlashing() && !toolWindow.isVisible()) {
 
@@ -364,6 +366,9 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         }
 
         public void mouseEntered(MouseEvent e) {
+            if (!toolWindow.isAvailable())
+                return;
+
             if (!toolWindow.isVisible()) {
                 if (previewPanel == null) {
                     // TODO: when dockedTypeDescriptor.getPreviewDelay() is grater than 1000 then there is a
@@ -386,6 +391,9 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         }
 
         public void mouseExited(MouseEvent e) {
+            if (!toolWindow.isAvailable())
+                return;
+
             if (e.getX() >= label.getWidth() || e.getX() <= 0 ||
                 e.getY() >= label.getHeight() || e.getY() <= 0)
                 firstPreview = false;

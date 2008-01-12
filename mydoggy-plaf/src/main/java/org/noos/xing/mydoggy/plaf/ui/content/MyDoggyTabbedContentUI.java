@@ -118,8 +118,12 @@ public class MyDoggyTabbedContentUI implements TabbedContentUI {
         return detachedBounds;
     }
 
-    public void setDetachedBounds(Rectangle bounds) {
-        fireEvent("detachedBounds", null, bounds);
+    public void setDetachedBounds(Rectangle detachedBounds) {
+        if ((this.detachedBounds != null && this.detachedBounds.equals(detachedBounds)) || detachedBounds == null)
+            return;
+        
+        this.detachedBounds = detachedBounds;
+        fireEvent("detachedBounds", null, detachedBounds);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {

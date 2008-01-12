@@ -438,6 +438,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
         if (entries.size() == 0) {
             multiSplitPaneModelRoot = null;
+            multiSplitPane.removeAll();
 
             resetRootComponent();
             leafNameCounter = 0;

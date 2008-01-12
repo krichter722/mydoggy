@@ -38,6 +38,15 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library name="swingx-0.9.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib/swingx/dist/swingx-0.9.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntryProperties />
   </component>
   <component name="POM File Configuration" pomFile="file://$MODULE_DIR$/pom.xml" />

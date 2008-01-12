@@ -127,9 +127,9 @@ public interface ContentUI extends DockableUI {
 
     /**
      *
-     * @param bounds
+     * @param detachedBounds
      * @since 1.4.1
      */
-    void setDetachedBounds(Rectangle bounds);
+    void setDetachedBounds(Rectangle detachedBounds);
 
 }
