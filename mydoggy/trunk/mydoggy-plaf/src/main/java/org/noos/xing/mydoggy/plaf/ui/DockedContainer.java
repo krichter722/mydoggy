@@ -737,7 +737,6 @@ public class DockedContainer implements ToolWindowContainer {
 
             Component traverser = component;
             while (traverser.getParent() != null) {
-                System.out.println(traverser);
                 if (traverser.getParent() == container) {
                     return true;
                 }
