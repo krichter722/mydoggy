@@ -90,7 +90,7 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void setDetachedBounds(Rectangle bounds) {
+    public void setDetachedBounds(Rectangle detachedBounds) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

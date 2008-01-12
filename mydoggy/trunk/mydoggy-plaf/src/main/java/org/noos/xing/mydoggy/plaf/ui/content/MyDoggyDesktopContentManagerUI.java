@@ -60,9 +60,6 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
 
     public void setCloseable(boolean closeable) {
-        if (this.closeable == closeable)
-            return;
-
         boolean old = this.closeable;
         this.closeable = closeable;
 
@@ -79,9 +76,6 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     }
 
     public void setDetachable(boolean detachable) {
-        if (this.detachable == detachable)
-            return;
-
         boolean old = this.detachable;
         this.detachable = detachable;
 

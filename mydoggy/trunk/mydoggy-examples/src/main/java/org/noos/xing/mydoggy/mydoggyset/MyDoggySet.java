@@ -1,5 +1,6 @@
 package org.noos.xing.mydoggy.mydoggyset;
 
+import org.jdesktop.swingx.JXDatePicker;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
@@ -139,7 +140,22 @@ public class MyDoggySet {
         JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{20, -1, 20}, {20, -1, 20}}));
         panel.add(new JButton("Hello World 2"), "1,1,FULL,FULL");
 
-        toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, new JButton("Hello World 1"), ToolWindowAnchor.LEFT);
+        final JLabel label = new JLabel();
+        label.setText("Choose Date by selecting below.");
+
+        final JXDatePicker datePicker = new JXDatePicker(System.currentTimeMillis());
+        datePicker.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                label.setText(datePicker.getDate().toString());
+            }
+        });
+
+        JPanel jPanel = new JPanel();
+
+        jPanel.add(label, BorderLayout.NORTH);
+        jPanel.add(datePicker, BorderLayout.CENTER);
+
+        toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, jPanel, ToolWindowAnchor.LEFT);
         toolWindowManager.registerToolWindow("Tool 2", "Title 2", null, panel, ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 3", "Title 3",
                                              SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"),

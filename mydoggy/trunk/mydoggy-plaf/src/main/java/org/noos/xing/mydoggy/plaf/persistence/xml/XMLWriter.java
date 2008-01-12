@@ -257,4 +257,8 @@ public class XMLWriter {
         }
     }
 
+    public void close() throws IOException {
+        flush();
+        output.close();
+    }
 }

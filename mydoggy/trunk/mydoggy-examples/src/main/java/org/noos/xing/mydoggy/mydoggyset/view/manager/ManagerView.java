@@ -59,7 +59,7 @@ public class ManagerView implements View {
     public class ToolWindowManagerDescriptorPrefView extends ComponentView implements ViewContextChangeListener {
         private JSpinner leftDividerSize, rightDividerSize, topDividerSize, bottomDividerSize;
         private JCheckBox leftAggregateMode, rightAggregateMode, topAggregateMode, bottomAggregateMode;
-        private JCheckBox numberingEnabled, previewEnabled;
+        private JCheckBox numberingEnabled, previewEnabled, showUnavailableTools;
         private JComboBox pushAwayMode;
 
         public ToolWindowManagerDescriptorPrefView(ViewContext viewContext) {
@@ -149,8 +149,13 @@ public class ManagerView implements View {
             });
             panel.addEntry(0, 1, "pushAwayMode : ", pushAwayMode);
 
+            panel.addEntry(1, 1, "showUnavailableTools : ", showUnavailableTools = new JCheckBox());
+            showUnavailableTools.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
+                                                             "showUnavailableTools",
+                                                             new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
+                                                             new ChecBoxSelectionSource(showUnavailableTools)));
 
-            panel.addEntry(1, 1, "Agg Mode (LEFT) : ", leftAggregateMode = new JCheckBox());
+            panel.addEntry(2, 1, "Agg Mode (LEFT) : ", leftAggregateMode = new JCheckBox());
             leftAggregateMode.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
                                                           "setAggregateMode",
                                                           new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
@@ -160,7 +165,7 @@ public class ManagerView implements View {
                                                           )
             ));
 
-            panel.addEntry(2, 1, "Agg Mode (RIGHT) : ", rightAggregateMode = new JCheckBox());
+            panel.addEntry(3, 1, "Agg Mode (RIGHT) : ", rightAggregateMode = new JCheckBox());
             rightAggregateMode.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
                                                            "setAggregateMode",
                                                            new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
@@ -171,7 +176,7 @@ public class ManagerView implements View {
             ));
 
 
-            panel.addEntry(3, 1, "Agg Mode (TOP) : ", topAggregateMode = new JCheckBox());
+            panel.addEntry(4, 1, "Agg Mode (TOP) : ", topAggregateMode = new JCheckBox());
             topAggregateMode.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
                                                          "setAggregateMode",
                                                          new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
@@ -182,7 +187,7 @@ public class ManagerView implements View {
             ));
 
 
-            panel.addEntry(4, 1, "Agg Mode (BOTTOM) : ", bottomAggregateMode = new JCheckBox());
+            panel.addEntry(5, 1, "Agg Mode (BOTTOM) : ", bottomAggregateMode = new JCheckBox());
             bottomAggregateMode.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
                                                             "setAggregateMode",
                                                             new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
@@ -210,6 +215,7 @@ public class ManagerView implements View {
 
             numberingEnabled.setSelected(managerDescriptor.isNumberingEnabled());
             previewEnabled.setSelected(managerDescriptor.isPreviewEnabled());
+            showUnavailableTools.setSelected(managerDescriptor.isShowUnavailableTools());
             pushAwayMode.setSelectedItem(managerDescriptor.getPushAwayMode());
 
             leftDividerSize.setValue(managerDescriptor.getDividerSize(ToolWindowAnchor.LEFT));

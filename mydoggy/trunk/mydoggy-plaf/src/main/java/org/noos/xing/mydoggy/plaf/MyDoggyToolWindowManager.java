@@ -614,6 +614,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         AvailablePropertyChangeListener availablePropertyChangeListener = new AvailablePropertyChangeListener();
         propertyChangeSupport.addPropertyChangeListener("available", availablePropertyChangeListener);
         propertyChangeSupport.addPropertyChangeListener("representativeAnchorButtonVisible", availablePropertyChangeListener);
+        propertyChangeSupport.addPropertyChangeListener("showUnavailableTools", new ShowUnavailableToolsPropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("visible", new VisiblePropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("active", new ActivePropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("anchor", new AnchorPropertyChangeListener());
@@ -827,6 +828,20 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
+    protected class ShowUnavailableToolsPropertyChangeListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            for (MyDoggyToolWindowBar bar : bars)
+                bar.propertyChange(evt);
+
+            // Syncronize bars panel
+            syncPanel(LEFT);
+            syncPanel(RIGHT);
+            syncPanel(TOP);
+            syncPanel(BOTTOM);
+        }
+    }
+
     protected class VisiblePropertyChangeListener implements PropertyChangeListener {
         boolean showingGroupValueAdj = false;
 
@@ -916,7 +931,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             ToolWindowType toolType = descriptor.getToolWindow().getType();
             if (toolType == ToolWindowType.FLOATING ||
                 toolType == ToolWindowType.FLOATING_FREE ||
-                toolType == ToolWindowType.FLOATING_LIVE || force) {
+                toolType == ToolWindowType.FLOATING_LIVE ||
+                force || !descriptor.getToolWindow().isAvailable()) {
 
                 PropertyChangeEvent avEvent = new UserPropertyChangeEvent(evt.getSource(), "available", true, false, -1);
                 getBar(oldAnchor).propertyChange(avEvent);

@@ -174,6 +174,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         AvailableListener availableListener = new AvailableListener();
         propertyChangeSupport.addPropertyChangeListener("available", availableListener);
         propertyChangeSupport.addPropertyChangeListener("representativeAnchorButtonVisible", availableListener);
+        propertyChangeSupport.addPropertyChangeListener("showUnavailableTools", new ShowUnavailableToolsListener());
 
         propertyChangeSupport.addPropertyChangeListener("visible.before", new VisibleBeforeListener());
         propertyChangeSupport.addPropertyChangeListener("visible.DOCKED", new VisibleDockedListener());
@@ -285,7 +286,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         return contentPanel.getComponent();
     }
 
-    protected void addRepresentativeAnchor(JLabel representativeAnchor, int index) {
+    protected void addRepresentativeAnchor(JComponent representativeAnchor, int index) {
         availableTools++;
         if (horizontal) {
             int width = representativeAnchor.getPreferredSize().width + 6;
@@ -363,7 +364,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         SwingUtil.repaint(toolScrollBar);
     }
 
-    protected void removeRepresentativeAnchor(JLabel representativeAnchor, ToolWindowDescriptor descriptor) {
+    protected void removeRepresentativeAnchor(JComponent representativeAnchor, ToolWindowDescriptor descriptor) {
         if (representativeAnchor == null)
             return;
 
@@ -418,7 +419,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
                 boolean repaint = false;
 
-                JLabel representativeAnchor = null;
+                JComponent representativeAnchor = null;
                 if (oldAvailable && !newAvailable) {
                     // true -> false
                     representativeAnchor = descriptor.getRepresentativeAnchor();
@@ -454,6 +455,31 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             }
         }
 
+    }
+
+    protected class ShowUnavailableToolsListener implements PropertyChangeListener {
+
+        public ShowUnavailableToolsListener() {
+        }
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (evt.getNewValue() == Boolean.TRUE) {
+                for (ToolWindow tool : manager.getToolsByAnchor(anchor)) {
+                    if (!tool.isAvailable()) {
+                        addRepresentativeAnchor(manager.getDescriptor(tool).getRepresentativeAnchor(representativeButtonsPanel),
+                                                -1);
+                    }
+                }
+            } else {
+                for (ToolWindow tool : manager.getToolsByAnchor(anchor)) {
+                    if (!tool.isAvailable()) {
+                        ToolWindowDescriptor descriptor = manager.getDescriptor(tool);
+                        removeRepresentativeAnchor(descriptor.getRepresentativeAnchor(representativeButtonsPanel),
+                                                   descriptor);
+                    }
+                }
+            }
+        }
     }
 
     protected class ActiveBeforeListener implements PropertyChangeListener {
