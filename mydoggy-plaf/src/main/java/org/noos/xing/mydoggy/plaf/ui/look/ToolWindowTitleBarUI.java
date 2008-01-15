@@ -457,6 +457,10 @@ public class ToolWindowTitleBarUI extends PanelUI {
 
             releaseLocks();
 
+            if  (lastAnchor != null)
+                manager.getBar(lastAnchor).setTempShowed(false);
+
+
             // Finalize drag action...
             cleanupGhostImage();
         }
