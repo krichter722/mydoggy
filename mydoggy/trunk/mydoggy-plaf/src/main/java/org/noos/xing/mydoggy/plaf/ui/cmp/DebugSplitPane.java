@@ -7,7 +7,7 @@ import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
-*/
+ */
 public class DebugSplitPane extends UIFSplitPane {
     private MyDoggyToolWindowBar toolWindowBar;
 
@@ -40,9 +40,12 @@ public class DebugSplitPane extends UIFSplitPane {
 //            if (toolWindowBar != null && toolWindowBar.aa && location == 0)
 //                return;
 
-//            String anchor = (toolWindowBar != null) ? toolWindowBar.getAnchor().toString() : "";
+//        String anchor = (toolWindowBar != null) ? toolWindowBar.getAnchor().toString() : "";
+//        System.out.println("--dividerLocation(" + anchor + ") : " + location);
+//        if (location <= 5) {
+//            new RuntimeException().printStackTrace();
+//        }
 
-//            System.out.println("--dividerLocation(" + anchor + ") : " + location);
 //            if (toolWindowBar != null && toolWindowBar.getAnchor() == ToolWindowAnchor.LEFT)
 //                System.out.println("--dividerLocation : " + location);
         super.setDividerLocation(location);

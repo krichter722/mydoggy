@@ -103,8 +103,12 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         return multiSplitDockableContainer;
     }
 
-    public void ensureVisible(Component component) {
-        toolScrollBar.ensureVisible(component);
+    public void ensureVisible(final Component component) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                toolScrollBar.ensureVisible(component);
+            }
+        });
     }
 
 
