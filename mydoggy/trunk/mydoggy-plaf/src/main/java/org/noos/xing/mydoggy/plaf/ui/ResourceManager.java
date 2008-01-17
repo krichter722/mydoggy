@@ -7,7 +7,6 @@ import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
-import java.beans.PropertyChangeListener;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -211,6 +210,7 @@ public interface ResourceManager extends Observable {
      *
      * @param name the property bame.
      * @return the value in this property list with the specified key value.
+     * @since 1.4.0
      */
     String getProperty(String name);
 
@@ -219,6 +219,7 @@ public interface ResourceManager extends Observable {
      *
      * @param name   property name with which the specified value is to be associated.
      * @param value value to be associated with the specified name.
+     * @since 1.4.0
      */
     void putProperty(String name, String value);
 
@@ -230,7 +231,16 @@ public interface ResourceManager extends Observable {
      * @param defaultValue the default value if the property is not found.
      *
      * @return the value in this property list with the specified key value.
+     * @since 1.4.0
      */
     boolean getBoolean(String name, boolean defaultValue);
 
+    void putObject(Object key, Object value);
+
+    /**
+     *
+     * @param mergePolicyClass
+     * @return 1.4.1
+     */
+    <T> T getObject(Class<T> mergePolicyClass, T defaultValue);
 }

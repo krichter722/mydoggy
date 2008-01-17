@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy.mydoggyset.view.toolwindows;
 
 import org.noos.xing.mydoggy.DockedTypeDescriptor;
-import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import org.noos.xing.yasaf.plaf.action.ChangeListenerAction;
@@ -94,7 +93,7 @@ public class DockedTypeDescriptorView extends ComponentView implements ViewConte
         animating.setSelected(true);
         animating.setAction(new DynamicAction(ToolWindowTypeDescriptor.class,
                 "animating",
-                new ViewContextSource(viewContext, FloatingTypeDescriptor.class),
+                new ViewContextSource(viewContext, DockedTypeDescriptor.class),
                 new ChecBoxSelectionSource(animating)));
         return panel;
     }
