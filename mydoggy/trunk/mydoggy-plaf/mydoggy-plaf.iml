@@ -8,11 +8,12 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library" exported="">
+    <orderEntry type="module-library">
       <library name="junit:junit:3.8.1">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../../../.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar!/" />
@@ -37,17 +38,6 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar://$MODULE_DIR$/../../../../.m2/repository/tablelayout/TableLayout/20020517/TableLayout-20020517-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/looks-2.1.4.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/../lib/looks-2.1.4/src/core" />
         </SOURCES>
       </library>
     </orderEntry>

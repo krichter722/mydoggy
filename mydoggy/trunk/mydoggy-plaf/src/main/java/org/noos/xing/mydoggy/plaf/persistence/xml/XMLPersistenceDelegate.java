@@ -512,6 +512,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 contentUIAttributes.addAttribute(null, "y", null, null, String.valueOf(contentUI.getLocation().y));
                 contentUIAttributes.addAttribute(null, "width", null, null, String.valueOf(contentUI.getSize().width));
                 contentUIAttributes.addAttribute(null, "height", null, null, String.valueOf(contentUI.getSize().height));
+                contentUIAttributes.addAttribute(null, "iconified", null, null, String.valueOf(contentUI.isIconified()));
 
                 writer.dataElement("content", contentUIAttributes);
             }
@@ -1027,15 +1028,21 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                 NodeList contentUIElms = element.getElementsByTagName("content");
                 for (int i = 0, size = contentUIElms.getLength(); i< size; i++) {
-                    Element contentElm = (Element) contentUIElms.item(i);
+                    Element contentUIElm = (Element) contentUIElms.item(i);
 
-                    Content content = contentManager.getContent(contentElm.getAttribute("id"));
+                    Content content = contentManager.getContent(contentUIElm.getAttribute("id"));
                     if (content != null) {
                         DesktopContentUI desktopContentUI = (DesktopContentUI) content.getContentUI();
-                        // TODO: load..
+                        desktopContentUI.setIconified(getBoolean(contentUIElm, "iconified", false));
+                        desktopContentUI.setLocation(
+                                getInteger(contentUIElm, "x", 0),
+                                getInteger(contentUIElm, "y", 0)
+                        );
+                        desktopContentUI.setSize(
+                                getInteger(contentUIElm, "width", 100),
+                                getInteger(contentUIElm, "height", 1000)
+                        );
                     }
-
-
                 }
              }
 
