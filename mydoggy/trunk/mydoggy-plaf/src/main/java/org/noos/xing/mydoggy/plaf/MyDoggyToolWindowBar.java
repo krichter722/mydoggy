@@ -265,10 +265,10 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     splitPane.setDividerLocation(divederLocation);
                     break;
                 case RIGHT:
-                    splitPane.setDividerLocation(splitPane.getWidth() - divederLocation);
+                    splitPane.setDividerLocation(Math.abs(splitPane.getWidth() - divederLocation));
                     break;
                 case BOTTOM:
-                    splitPane.setDividerLocation(splitPane.getHeight() - divederLocation);
+                    splitPane.setDividerLocation(Math.abs(splitPane.getHeight() - divederLocation));
                     break;
             }
     }
@@ -769,6 +769,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 //                    splitAnimation.hide(divederLocation);
                 }
             } else {
+                setSplitDividerLocation(divederLocation);
                 SwingUtil.repaint(splitPane);
             }
         }

@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.*;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.event.SwingPropertyChangeSupport;
@@ -141,6 +142,7 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons {
 
         public void setVisible(boolean visible) {
             DefaultTitleBarButtons.this.setVisible((Component) getValue("component"), visible);
+            SwingUtil.repaint(DefaultTitleBarButtons.this);
         }
 
     }

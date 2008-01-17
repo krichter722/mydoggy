@@ -42,6 +42,7 @@ public class MyDoggySet {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 myDoggySetContext.put(MyDoggySet.class, null);
+                SwingUtil.centrePositionOnScreen(frame);
                 frame.setVisible(true);
 
                 if (runnable != null) {
@@ -69,7 +70,6 @@ public class MyDoggySet {
         // Init the frame
         this.frame = new JFrame("MyDoggy-Set 1.4.0 ...");
         this.frame.setSize(640, 480);
-        this.frame.setLocation(100, 100);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
 

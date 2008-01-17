@@ -116,6 +116,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
                 layeredPane.remove(sheet);
                 sheet.setBorder(null);
                 sheet.removeAll();
+                SwingUtil.repaint(layeredPane);
             }
         }
     }
