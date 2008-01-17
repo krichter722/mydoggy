@@ -10,7 +10,7 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,8 +31,8 @@ public class MyDoggyContentManager implements ContentManager {
     MyDoggyContentManager(MyDoggyToolWindowManager windowManager) {
         this.toolWindowManager = windowManager;
         this.contents = new ArrayList<Content>();
-        this.contentMap = new Hashtable<Object, Content>();
-        this.aliases = new Hashtable<Object, Content>();
+        this.contentMap = new HashMap<Object, Content>();
+        this.aliases = new HashMap<Object, Content>();
         this.listeners = new EventListenerList();
     }
 
