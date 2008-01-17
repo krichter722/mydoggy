@@ -31,6 +31,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -49,6 +50,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
     protected PropertyChangeSupport internalPropertyChangeSupport;
     protected EventListenerList contentManagerUIListeners;
+    protected PropertyChangeListener contentUIListener;
 
     protected Content maximizedContent;
     protected PlafContent lastSelected;
@@ -57,7 +59,6 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     protected boolean contentValueAdjusting;
 
     protected Map<Content, TabbedContentUI> contentUIMap;
-    protected Map<Content, Integer> detachedContentUIMap;
 
     public MyDoggyTabbedContentManagerUI() {
         contentManagerUIListeners = new EventListenerList();
@@ -292,6 +293,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         if (content.isDetached())
             content.setDetached(false);
 
+        content.getContentUI().removePropertyChangeListener(contentUIListener);
+
         // Remove from tabbedContentPane
         int index = tabbedContentPane.indexOfContent(content);
         if (index != -1) {
@@ -316,7 +319,6 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             if (lastContent == content)
                 lastContent = contentManager.getNextContent();
 
-            detachedContentUIMap.remove(lastContent);
             toolWindowManager.setMainContent(lastContent.getComponent());
             lastSelected = null;
         } else {
@@ -380,7 +382,6 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
 
     protected void initComponents() {
-        detachedContentUIMap = new Hashtable<Content, Integer>();
         contentUIMap = new Hashtable<Content, TabbedContentUI>();
 
         final JTabbedContentPane tabbedContentPane = new JTabbedContentPane();
@@ -445,6 +446,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             internalPropertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
             internalPropertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
             internalPropertyChangeSupport.addPropertyChangeListener("maximized", new MaximizedListener());
+            contentUIListener = new ContentUIListener();
 
             SwingUtil.registerDragGesture(tabbedContentPane,
                                           new TabbedContentManagerDragGesture());
@@ -452,10 +454,15 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     }
 
     protected int addUIForContent(Content content, Object... constaints) {
-        contentUIMap.put(content, new MyDoggyTabbedContentUI(tabbedContentPane, content));
+        TabbedContentUI contentUI = contentUIMap.get(content);
+        if (contentUI == null) {
+            contentUI = new MyDoggyTabbedContentUI(tabbedContentPane, content);
+            contentUI.addPropertyChangeListener(contentUIListener);
+        }
+
+        contentUIMap.put(content, contentUI);
 
         if (!showAlwaysTab && tabbedContentPane.getTabCount() == 0 && (contentValueAdjusting || toolWindowManager.getMainContent() == null)) {
-            detachedContentUIMap.remove(content);
             toolWindowManager.setMainContent(content.getComponent());
             lastSelected = (PlafContent) content;
             return -1;
@@ -677,7 +684,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                     valudAdj = true;
                     try {
                         toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                                                                         PersistenceDelegate.MergePolicy.UNION);
+                                                                         resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
+                                                                                                   PersistenceDelegate.MergePolicy.UNION));
                     } finally {
                         valudAdj = false;
                     }
@@ -692,7 +700,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                     valudAdj = true;
                     try {
                         toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                                                                         PersistenceDelegate.MergePolicy.UNION);
+                                                                         resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
+                                                                                                   PersistenceDelegate.MergePolicy.UNION));
                         tmpWorkspace = null;
                     } finally {
                         valudAdj = false;
@@ -707,9 +716,11 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
     protected class DetachedListener implements PropertyChangeListener {
         protected Frame parentFrame;
         protected PropertyChangeSupport contentUIListener;
+        protected Map<Content, Integer> detachedContentUIMap;
 
         public DetachedListener() {
             parentFrame = (toolWindowManager.getAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getAnchestor() : null;
+            detachedContentUIMap = new HashMap<Content, Integer>();
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
@@ -718,7 +729,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (!oldValue && newValue) {
-                ContentUI contentUI = getContentUI(content);
+                final ContentUI contentUI = getContentUI(content);
                 
                 if (tabbedContentPane.getTabCount() != 0)
                     detachedContentUIMap.put(content, tabbedContentPane.indexOfContent(content));
@@ -810,17 +821,14 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 if (parentFrame == null)
                     dialog.addWindowFocusListener(new ToFrontWindowFocusListener(dialog));
 
-                // TODO:
                 dialog.addComponentListener(new ComponentAdapter() {
                     public void componentResized(ComponentEvent e) {
+                        contentUI.setDetachedBounds(dialog.getBounds());
                     }
-
                     public void componentMoved(ComponentEvent e) {
-                        super.componentMoved(e);
+                        contentUI.setDetachedBounds(dialog.getBounds());
                     }
                 });
-
-//                contentUI.addPropertyChangeListener();
 
                 dialog.toFront();
                 dialog.setVisible(true);
@@ -836,6 +844,18 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
         }
 
     }
+
+    protected class ContentUIListener implements PropertyChangeListener {
+
+         public void propertyChange(PropertyChangeEvent evt) {
+             ContentUI contentUI = (ContentUI) evt.getSource();
+
+             if ("detachedBounds".equals(evt.getPropertyName()) && contentUI.getContent().isDetached()) {
+                 Window window = SwingUtilities.windowForComponent(contentUI.getContent().getComponent());
+                 window.setBounds((Rectangle) evt.getNewValue());
+             }
+         }
+     }
 
     protected class TabbedContentManagerDragGesture extends DragGestureAdapter {
 

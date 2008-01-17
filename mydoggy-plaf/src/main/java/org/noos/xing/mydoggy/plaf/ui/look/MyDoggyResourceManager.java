@@ -167,6 +167,17 @@ public class MyDoggyResourceManager implements ResourceManager {
         }
     }
 
+    public void putObject(Object key, Object value) {
+        resources.put(key, value);
+    }
+
+    public <T> T getObject(Class<T> mergePolicyClass, T defaultValue) {
+        Object value = resources.get(mergePolicyClass);
+        if (mergePolicyClass.isInstance(value))
+            return (T) value;
+        return defaultValue;
+    }
+
     public void addPropertyChangeListener(PropertyChangeListener changeListener) {
         listenerList.add(PropertyChangeListener.class, changeListener);
     }

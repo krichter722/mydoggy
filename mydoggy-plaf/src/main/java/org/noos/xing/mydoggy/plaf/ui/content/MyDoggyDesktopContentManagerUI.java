@@ -40,6 +40,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     protected PropertyChangeSupport internalPropertyChangeSupport;
     protected EventListenerList contentManagerUIListeners;
+    protected PropertyChangeListener contentUIListener;
 
     protected PlafContent lastSelected;
 
@@ -309,11 +310,11 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     protected void setupActions() {
         // Setup actions
         SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, desktopPane,
-                KeyStroke.getKeyStroke(39, InputEvent.ALT_MASK),
-                "nextContent", new NextContentAction(toolWindowManager));
+                                      KeyStroke.getKeyStroke(39, InputEvent.ALT_MASK),
+                                      "nextContent", new NextContentAction(toolWindowManager));
         SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, desktopPane,
-                KeyStroke.getKeyStroke(37, InputEvent.ALT_MASK),
-                "previousContent", new PreviousContentAction(toolWindowManager));
+                                      KeyStroke.getKeyStroke(37, InputEvent.ALT_MASK),
+                                      "previousContent", new PreviousContentAction(toolWindowManager));
     }
 
     protected void addUIForContent(Content content, Object... constraints) {
@@ -583,7 +584,8 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             } else {
                 if (tmpWorkspace != null) {
                     toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                            PersistenceDelegate.MergePolicy.UNION);
+                                                                     resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
+                                                                                                   PersistenceDelegate.MergePolicy.UNION));
                     try {
                         ((DesktopContentFrame) getContentUI(content)).setMaximum(false);
                     } catch (PropertyVetoException e) {
@@ -608,8 +610,10 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (!oldValue && newValue) {
+                final ContentUI contentUI = getContentUI(content);
+
                 final JDialog dialog = new JDialog(resourceManager.getBoolean("dialog.owner.enabled", true) ? parentFrame : null,
-                        false);
+                                                   false);
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
                 Component component = content.getComponent();
@@ -683,6 +687,16 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 if (parentFrame == null)
                     dialog.addWindowFocusListener(new ToFrontWindowFocusListener(dialog));
 
+                dialog.addComponentListener(new ComponentAdapter() {
+                    public void componentResized(ComponentEvent e) {
+                        contentUI.setDetachedBounds(dialog.getBounds());
+                    }
+
+                    public void componentMoved(ComponentEvent e) {
+                        contentUI.setDetachedBounds(dialog.getBounds());
+                    }
+                });
+
                 dialog.toFront();
                 dialog.setVisible(true);
                 SwingUtil.repaint(desktopPane);
@@ -699,7 +713,18 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     }
 
+    protected class ContentUIListener implements PropertyChangeListener {
+         public void propertyChange(PropertyChangeEvent evt) {
+             ContentUI contentUI = (ContentUI) evt.getSource();
 
+             if ("detachedBounds".equals(evt.getPropertyName()) && contentUI.getContent().isDetached()) {
+                 Window window = SwingUtilities.windowForComponent(contentUI.getContent().getComponent());
+                 window.setBounds((Rectangle) evt.getNewValue());
+             }
+         }
+     }
+
+    
     protected class PopupMouseListener extends MouseAdapter implements ActionListener {
         protected JPopupMenu popupMenu;
 
@@ -725,8 +750,8 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                     maximize.putClientProperty("content", content);
                     maximize.setActionCommand("Maximize");
                     maximize.setText(content.isMaximized() ?
-                            resourceManager.getString("@@tabbed.page.restore") :
-                            resourceManager.getString("@@tabbed.page.maximize")
+                                     resourceManager.getString("@@tabbed.page.restore") :
+                                     resourceManager.getString("@@tabbed.page.maximize")
                     );
                     maximize.addActionListener(this);
                     menu.add(maximize);

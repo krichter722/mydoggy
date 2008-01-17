@@ -664,7 +664,8 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                     valudAdj = true;
                     try {
                         toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                                                                         PersistenceDelegate.MergePolicy.UNION);
+                                                                         resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
+                                                                                                   PersistenceDelegate.MergePolicy.UNION));
                     } finally {
                         valudAdj = false;
                     }
@@ -681,7 +682,8 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                     valudAdj = true;
                     try {
                         toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                                                                         PersistenceDelegate.MergePolicy.UNION);
+                                                                         resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
+                                                                                                   PersistenceDelegate.MergePolicy.UNION));
                     } finally {
                         valudAdj = false;
                     }
