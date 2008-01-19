@@ -83,7 +83,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected EventListenerList twmListeners;
 
     protected ClassLoader uiClassLoader;
-    protected ResourceManagerChangeListener resourceManagerChangeListener;
+    protected ResourceManagerListener resourceManagerListener;
     protected transient ResourceManager resourceManager;
 
 
@@ -498,13 +498,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     public void setResourceManager(ResourceManager resourceManager) {
         if (this.resourceManager != null)
-            this.resourceManager.removePropertyChangeListener(resourceManagerChangeListener);
+            this.resourceManager.removePropertyChangeListener(resourceManagerListener);
 
-        if (resourceManagerChangeListener == null)
-            resourceManagerChangeListener = new ResourceManagerChangeListener();
+        if (resourceManagerListener == null)
+            resourceManagerListener = new ResourceManagerListener();
 
         this.resourceManager = resourceManager;
-        resourceManager.addPropertyChangeListener(resourceManagerChangeListener);
+        resourceManager.addPropertyChangeListener(resourceManagerListener);
 
         propertyChange(new PropertyChangeEvent(this, "resourceManager", null, resourceManager));
     }
@@ -607,7 +607,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     protected void initGlassPane() {
         RootPaneContainer rootPaneContainer = (RootPaneContainer) anchestor;
-        this.glassPanel = new GlassPanel(rootPaneContainer);
+        this.glassPanel = new GlassPanel(resourceManager, rootPaneContainer);
 //        rootPaneContainer.setGlassPane(this.glassPanel = new GlassPanel(rootPaneContainer));
     }
 
@@ -644,6 +644,11 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             }
         });
         propertyChangeSupport.addPropertyChangeListener("anchestor.closed", new AnchorClosedChangeListener());
+        propertyChangeSupport.addPropertyChangeListener("resourceManager", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                glassPanel.setResourceManager((ResourceManager) evt.getNewValue());
+            }
+        });
 
         anchestor.addWindowListener(new WindowAdapter() {
             public void windowClosed(WindowEvent e) {
@@ -1051,7 +1056,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    protected class ResourceManagerChangeListener implements PropertyChangeListener {
+    protected class ResourceManagerListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             SwingUtil.repaint(MyDoggyToolWindowManager.this);
@@ -1073,7 +1078,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 tool.getToolWindowContainer().propertyChange(evt);
         }
     }
-
 
     static class DummyPropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
