@@ -60,7 +60,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
         }
 
         if (visible) {
-            descriptor.checkIdOnTitleBar();
+            descriptor.setIdOnTitleBar();
             titleBarButtons.toolWindowTypeChanged(ToolWindowType.SLIDING);
 
             // Reset Layout

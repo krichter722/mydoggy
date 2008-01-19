@@ -171,9 +171,9 @@ public class MyDoggyResourceManager implements ResourceManager {
         resources.put(key, value);
     }
 
-    public <T> T getObject(Class<T> mergePolicyClass, T defaultValue) {
-        Object value = resources.get(mergePolicyClass);
-        if (mergePolicyClass.isInstance(value))
+    public <T> T getObject(Class<T> clazz, T defaultValue) {
+        Object value = resources.get(clazz);
+        if (clazz.isInstance(value))
             return (T) value;
         return defaultValue;
     }

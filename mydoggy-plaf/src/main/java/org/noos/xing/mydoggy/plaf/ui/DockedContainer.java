@@ -1,11 +1,13 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
 import info.clearthought.layout.TableLayout;
+import org.noos.common.Question;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
+import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -145,7 +147,7 @@ public class DockedContainer implements ToolWindowContainer {
         titleBar.setBorder(null);
         titleBar.addMouseListener(titleBarMouseAdapter);
 
-        if (descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar())
+        if (descriptor.isIdVisibleOnTitleBar())
             titleBarLayout.setColumn(0, titleBar.getFontMetrics(
                     titleBar.getFont()
             ).stringWidth(resourceManager.getUserString(id)) + 12);
@@ -223,25 +225,14 @@ public class DockedContainer implements ToolWindowContainer {
         });
 
         // TODO: make this more safe....
-        final FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener();
+        final FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener(
+                new ParentOfQuestion(container)
+        );
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
         addPropertyChangeListener("anchestor.closed", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
                 toolWindow.setFlashing(false);
-            }
-        });
-
-        descriptor.getDockedTypeDescriptor().addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if ("idVisibleOnTitleBar".equals(evt.getPropertyName())) {
-                    if ((Boolean) evt.getNewValue()) {
-                        enableIdOnTitleBar();
-                    } else {
-                        disableIdOnTitleBar();
-                    }
-
-                }
             }
         });
 
@@ -695,6 +686,11 @@ public class DockedContainer implements ToolWindowContainer {
     }
 
     protected class FocusOwnerPropertyChangeListener implements PropertyChangeListener {
+        protected Question parentOf;
+
+        public FocusOwnerPropertyChangeListener(Question parentOf) {
+            this.parentOf = parentOf;
+        }
 
         public void propertyChange(PropertyChangeEvent evt) {
             if (!toolWindow.isVisible())
@@ -708,7 +704,7 @@ public class DockedContainer implements ToolWindowContainer {
 
 //            System.out.println(toolWindow.getId() + " - cmp = " + component);
 
-            if (isInternalComponent(component)) {
+            if (parentOf.is(component)) {
                 toolWindow.setActive(true);
                 if (focusRequester == null)
                     focusRequester = component;
@@ -730,20 +726,6 @@ public class DockedContainer implements ToolWindowContainer {
             }
 
             valueAdjusting = false;
-        }
-
-        protected final boolean isInternalComponent(Component component) {
-            if (component == null)
-                return false;
-
-            Component traverser = component;
-            while (traverser.getParent() != null) {
-                if (traverser.getParent() == container) {
-                    return true;
-                }
-                traverser = traverser.getParent();
-            }
-            return false;
         }
 
     }
@@ -779,5 +761,6 @@ public class DockedContainer implements ToolWindowContainer {
         }
 
     }
+
 
 }

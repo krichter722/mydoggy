@@ -642,7 +642,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
             }
 
             if (visible)
-                descriptor.checkIdOnTitleBar();
+                descriptor.setIdOnTitleBar();
 
             Component content = (visible) ? descriptor.getComponent() : null;
             if (content != null) {

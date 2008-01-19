@@ -239,8 +239,8 @@ public interface ResourceManager extends Observable {
 
     /**
      *
-     * @param mergePolicyClass
+     * @param clazz
      * @return 1.4.1
      */
-    <T> T getObject(Class<T> mergePolicyClass, T defaultValue);
+    <T> T getObject(Class<T> clazz, T defaultValue);
 }
