@@ -50,7 +50,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         sheet.remove(content);
 
         if (visible) {
-            descriptor.checkIdOnTitleBar();
+            descriptor.setIdOnTitleBar();
             dockedContainer.getTitleBarButtons().toolWindowTypeChanged(ToolWindowType.FLOATING_LIVE);
 
             // Reset Layout
@@ -171,7 +171,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                 assert "type".equals(evt.getPropertyName());
                 if (evt.getNewValue() == ToolWindowType.FLOATING_LIVE) {
                     if (layeredPane != null) {
-                        dockedContainer.enableIdOnTitleBar();
+                        descriptor.setIdOnTitleBar();
 
                         // Remove listeners
                         sheet.removeMouseMotionListener(resizeMouseInputHandler);

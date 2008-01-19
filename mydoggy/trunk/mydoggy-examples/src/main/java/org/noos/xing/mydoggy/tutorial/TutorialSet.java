@@ -130,7 +130,7 @@ public class TutorialSet {
         dockedTypeDescriptor.setPreviewTransparentRatio(0.4f);
 
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
-        slidingTypeDescriptor.setEnabled(false);
+        slidingTypeDescriptor.setEnabled(true);
         slidingTypeDescriptor.setTransparentMode(true);
         slidingTypeDescriptor.setTransparentRatio(0.8f);
         slidingTypeDescriptor.setTransparentDelay(0);
@@ -146,7 +146,6 @@ public class TutorialSet {
         floatingTypeDescriptor.setTransparentDelay(1000);
         floatingTypeDescriptor.setAnimating(true);
 
-        // Setup Tabs
         initTabs();
     }
 

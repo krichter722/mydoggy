@@ -84,7 +84,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
                 );
             }
         } else if ("idVisibleOnTitleBar".equals(evt.getPropertyName())) {
-            checkIdOnTitleBar();
+            setIdOnTitleBar();
         }
     }
 
@@ -203,7 +203,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         throw new IllegalStateException("ToolWindowDescriptor.isIdVisibleOnTitleBar");
     }
 
-    public void checkIdOnTitleBar() {
+    public void setIdOnTitleBar() {
         if (dockedContainer != null) {
             if (isIdVisibleOnTitleBar())
                 dockedContainer.enableIdOnTitleBar();

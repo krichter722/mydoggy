@@ -56,7 +56,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         content.setFocusCycleRoot(!visible);
 
         if (visible) {
-            descriptor.checkIdOnTitleBar();
+            descriptor.setIdOnTitleBar();
             titleBarButtons.toolWindowTypeChanged(ToolWindowType.FLOATING);
 
             window.getContentPane().removeAll();
@@ -138,7 +138,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
                 assert "type".equals(evt.getPropertyName());
                 if (evt.getNewValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING_FREE) {
-                    dockedContainer.enableIdOnTitleBar();
+                    descriptor.setIdOnTitleBar();
 
                     // Remove listeners
                     window.removeMouseMotionListener(resizeMouseInputHandler);
