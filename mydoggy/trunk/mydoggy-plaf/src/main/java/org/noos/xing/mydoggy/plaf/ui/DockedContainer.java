@@ -226,7 +226,7 @@ public class DockedContainer implements ToolWindowContainer {
 
         // TODO: make this more safe....
         final FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener(
-                new ParentOfQuestion(container)
+                resourceManager.createInstance(ParentOfQuestion.class, container, toolWindow)
         );
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
         addPropertyChangeListener("anchestor.closed", new PropertyChangeListener() {

@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy.plaf.ui.util;
 
-import org.jdesktop.swingx.JXMonthView;
 import org.noos.common.Question;
 
 import java.awt.*;
@@ -23,21 +22,12 @@ public class ParentOfQuestion implements Question {
         if (component == null)
             return false;
 
-//        System.out.println("--------------------------------------------------------");
         Component traverser = component;
         while (traverser.getParent() != null) {
-//            System.out.println("traverser : " + traverser);
-            if (traverser instanceof JXMonthView) {
-                System.out.println("OK");
+            if (traverser.getParent() == parent)
                 return true;
-            }
-            if (traverser.getParent() == parent) {
-//                System.out.println("--------------------------------------------------------");
-                return true;
-            }
             traverser = traverser.getParent();
         }
-//        System.out.println("--------------------------------------------------------");
         return false;
     }
 }
