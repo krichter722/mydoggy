@@ -11,6 +11,7 @@ import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.Colors;
 import org.noos.xing.mydoggy.plaf.ui.util.DummyResourceBundle;
+import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -315,6 +316,7 @@ public class MyDoggyResourceManager implements ResourceManager {
 
         instanceCreators = new Hashtable<Class, InstanceCreator>();
         instanceCreators.put(TitleBarButtons.class, new TitleBarButtonsInstanceCreator());
+        instanceCreators.put(ParentOfQuestion.class, new ParentOfQuestionInstanceCreator());
     }
 
     protected ResourceBundle initResourceBundle(Locale locale, String bundle, ClassLoader classLoader) {
@@ -347,7 +349,9 @@ public class MyDoggyResourceManager implements ResourceManager {
 
 
     public static interface InstanceCreator {
+
         Object createComponent(Object... args);
+        
     }
 
     public static interface ComponentCreator {
@@ -501,11 +505,19 @@ public class MyDoggyResourceManager implements ResourceManager {
 
 
     public static class TitleBarButtonsInstanceCreator implements InstanceCreator {
+
         public Object createComponent(Object... args) {
             return new DefaultTitleBarButtons(
                     (ToolWindowDescriptor) args[0],
                     (DockedContainer) args[1]
             );
+        }
+
+    }
+
+    public static class ParentOfQuestionInstanceCreator implements InstanceCreator {
+        public Object createComponent(Object... args) {
+            return new ParentOfQuestion((Component) args[0]);
         }
     }
 

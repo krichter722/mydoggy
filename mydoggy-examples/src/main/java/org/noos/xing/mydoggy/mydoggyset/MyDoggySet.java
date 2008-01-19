@@ -1,6 +1,8 @@
 package org.noos.xing.mydoggy.mydoggyset;
 
 import org.jdesktop.swingx.JXDatePicker;
+import org.jdesktop.swingx.JXMonthView;
+import org.noos.common.Question;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
@@ -15,6 +17,7 @@ import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.view.ViewContext;
@@ -140,6 +143,7 @@ public class MyDoggySet {
         JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{20, -1, 20}, {20, -1, 20}}));
         panel.add(new JButton("Hello World 2"), "1,1,FULL,FULL");
 
+        // JXDatePicker panel
         final JLabel label = new JLabel();
         label.setText("Choose Date by selecting below.");
 
@@ -150,12 +154,11 @@ public class MyDoggySet {
             }
         });
 
-        JPanel jPanel = new JPanel();
+        JPanel toolOnePanel = new JPanel();
+        toolOnePanel.add(label, BorderLayout.NORTH);
+        toolOnePanel.add(datePicker, BorderLayout.CENTER);
+        toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, toolOnePanel/*new JButton("Hello World 1")*/, ToolWindowAnchor.LEFT);
 
-        jPanel.add(label, BorderLayout.NORTH);
-        jPanel.add(datePicker, BorderLayout.CENTER);
-
-        toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, jPanel/*new JButton("Hello World 1")*/, ToolWindowAnchor.LEFT);
         toolWindowManager.registerToolWindow("Tool 2", "Title 2", null, panel, ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 3", "Title 3",
                                              SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"),
@@ -182,6 +185,7 @@ public class MyDoggySet {
 
         // Setup Tool 1
         ToolWindow toolWindow = toolWindowManager.getToolWindow("Tool 1");
+        toolWindow.setAutoHide(true);
 
         DockedTypeDescriptor dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
         dockedTypeDescriptor.setPopupMenuEnabled(false);
@@ -365,6 +369,11 @@ public class MyDoggySet {
                                                   }
         );
 */
+        myDoggyResourceManager.putInstanceCreator(ParentOfQuestion.class, new MyDoggyResourceManager.InstanceCreator() {
+            public Object createComponent(Object... args) {
+                return new CustomParentOfQuestion((Component) args[0], (ToolWindow) args[1]);
+            }
+        });
     }
 
     protected void dispose() {
@@ -383,5 +392,37 @@ public class MyDoggySet {
         }
     }
 
+    public class CustomParentOfQuestion implements Question {
+        protected Component parent;
+        protected ToolWindow toolWindow;
+
+        public CustomParentOfQuestion(Component parent, ToolWindow toolWindow) {
+            this.parent = parent;
+            this.toolWindow = toolWindow;
+        }
+
+        public boolean is(Object... params) {
+            if (params.length == 0)
+                return false;
+
+            Component component = (Component) params[0];
+            if (component == null)
+                return false;
+
+            Component traverser = component;
+            while (traverser.getParent() != null) {
+                if (traverser instanceof JXMonthView && toolWindow.isActive()) {
+                    System.out.println("OK");
+                    return true;
+                }
+
+                if (traverser.getParent() == parent) {
+                    return true;
+                }
+                traverser = traverser.getParent();
+            }
+            return false;
+        }
+    }
 
 }
