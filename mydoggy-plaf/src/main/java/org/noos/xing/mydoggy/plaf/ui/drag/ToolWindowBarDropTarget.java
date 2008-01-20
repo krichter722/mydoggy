@@ -1,10 +1,12 @@
 package org.noos.xing.mydoggy.plaf.ui.drag;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
-import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -33,7 +35,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
     }
 
 
-    private int showPosition(DropTargetDragEvent dtde, int lastIndex) {
+    protected int showPosition(DropTargetDragEvent dtde, int lastIndex) {
         Point newPosition = dtde.getLocation();
         if (lastPosition != null && lastPosition.equals(newPosition))
             return lastIndex;
@@ -136,7 +138,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
         return index;
     }
 
-    private void hidePosition(boolean repaint) {
+    protected void hidePosition(boolean repaint) {
         for (Component component : container.getComponents()) {
             if (component instanceof SeparatorLabel) {
                 if (component instanceof HorizontalSeparatorLabel) {
@@ -153,10 +155,10 @@ public class ToolWindowBarDropTarget extends DropTarget {
     }
 
 
-    private static class ToolWindowBarDropTargetListener extends DropTargetAdapter {
-        private MyDoggyToolWindowManager manager;
-        private ToolWindowAnchor anchor;
-        private int index;
+    protected static class ToolWindowBarDropTargetListener extends DropTargetAdapter {
+        protected MyDoggyToolWindowManager manager;
+        protected ToolWindowAnchor anchor;
+        protected int index;
 
         public ToolWindowBarDropTargetListener(MyDoggyToolWindowManager manager, ToolWindowAnchor anchor) {
             this.manager = manager;
@@ -167,13 +169,16 @@ public class ToolWindowBarDropTarget extends DropTarget {
             Transferable transferable = dtde.getTransferable();
 
             if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF)) {
-                dtde.acceptDrop(DnDConstants.ACTION_MOVE);
 
                 ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
 
                 try {
                     String toolId = (String) transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_ID_DF);
                     ToolWindow toolWindow = manager.getToolWindow(toolId);
+                    if (toolWindow == null)
+                        return;
+
+                    dtde.acceptDrop(DnDConstants.ACTION_MOVE);
 
                     // Chech if it was a tab
                     if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)) {
@@ -198,6 +203,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
 
                     dtde.dropComplete(true);
                 } catch (Exception e) {
+                    e.printStackTrace();
                     dtde.rejectDrop();
                 }
             } else if (transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {
@@ -207,7 +213,10 @@ public class ToolWindowBarDropTarget extends DropTarget {
                 try {
                     String contentId = (String) transferable.getTransferData(MyDoggyTransferable.CONTENT_ID_DF);
                     Content content = manager.getContentManager().getContent(contentId);
+                    if (content == null)
+                        return;
 
+                    dtde.acceptDrop(DnDConstants.ACTION_MOVE);
                     // Chech if it was a tab
                     if (content.getDockableDelegator() != null) {
                         if (content.getDockableDelegator() instanceof ToolWindow) {
@@ -222,6 +231,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
 
                     dtde.dropComplete(true);
                 } catch (Exception e) {
+                    e.printStackTrace();
                     dtde.rejectDrop();
                 }
             } else
@@ -253,9 +263,13 @@ public class ToolWindowBarDropTarget extends DropTarget {
         public boolean checkEvent(DropTargetDragEvent dtde) {
             Transferable transferable = dtde.getTransferable();
             try {
-                if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) ||
-                    transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF))
-                    return true;
+                if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
+                    if (System.identityHashCode(manager) == (Integer) transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
+                        if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) ||
+                            transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF))
+                            return true;
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 // Impossible
@@ -265,15 +279,16 @@ public class ToolWindowBarDropTarget extends DropTarget {
 
     }
 
-    private static interface SeparatorLabel {
+
+    protected static interface SeparatorLabel {
     }
 
-    private static class VerticalSeparatorLabel extends JPanel implements SeparatorLabel {
+    protected static class VerticalSeparatorLabel extends JPanel implements SeparatorLabel {
         public VerticalSeparatorLabel() {
         }
     }
 
-    private static class HorizontalSeparatorLabel extends JPanel implements SeparatorLabel {
+    protected static class HorizontalSeparatorLabel extends JPanel implements SeparatorLabel {
         public HorizontalSeparatorLabel() {
         }
     }

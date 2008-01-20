@@ -112,7 +112,7 @@ public interface ContentUI extends DockableUI {
     int getTransparentDelay();
 
     /**
-     * TODO: add comments
+     * Set up contraints for the content. This dependes on the spcific ContentManagerUI mounted.
      * @param contraints
      * @since 1.4.0
      */

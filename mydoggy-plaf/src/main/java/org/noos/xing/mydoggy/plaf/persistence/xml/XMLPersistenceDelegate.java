@@ -24,7 +24,6 @@ import java.util.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * @todo: load new schema
  */
 public class XMLPersistenceDelegate implements PersistenceDelegate {
     protected MyDoggyToolWindowManager toolWindowManager;

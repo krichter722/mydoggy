@@ -404,14 +404,14 @@ public class ToolWindowTitleBarUI extends PanelUI {
 
             if (toolWindowTab != null && toolWindowTab.getDockableDelegator() != null) {
                 // TDDO: change..this
-                MyDoggyTransferable transferable = new MyDoggyTransferable();
+                MyDoggyTransferable transferable = new MyDoggyTransferable(manager);
                 transferable.addEntry(MyDoggyTransferable.TOOL_WINDOW_ID_DF, toolWindowTab.getDockableDelegator().getId());
                 transferable.addEntry(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF, toolWindowTab.getId());
 
                 dge.startDrag(Cursor.getDefaultCursor(), transferable, this);
             } else {
                 dge.startDrag(Cursor.getDefaultCursor(),
-                              new MyDoggyTransferable(MyDoggyTransferable.TOOL_WINDOW_ID_DF, toolWindow.getId()),
+                              new MyDoggyTransferable(manager, MyDoggyTransferable.TOOL_WINDOW_ID_DF, toolWindow.getId()),
                               this);
             }
 

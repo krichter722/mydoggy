@@ -3,7 +3,7 @@
         "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
     <properties>
-        <title>MyDoggy-Plaf : ContentManagerUI</title>
+        <title>MyDoggy - My Java Docking Framework (PLAF) : ContentManagerUI</title>
         <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
     </properties>
 

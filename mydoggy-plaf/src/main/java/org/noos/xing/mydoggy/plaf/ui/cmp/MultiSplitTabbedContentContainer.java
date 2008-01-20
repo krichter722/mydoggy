@@ -11,6 +11,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
@@ -130,7 +131,8 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
                 if (dockable != null) {
                     dge.startDrag(Cursor.getDefaultCursor(),
-                                  new MyDoggyTransferable(MyDoggyTransferable.CONTENT_ID_DF,
+                                  new MyDoggyTransferable(manager,
+                                                          MyDoggyTransferable.CONTENT_ID_DF,
                                                           dockable.getId()),
                                   this);
 
@@ -205,9 +207,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         }
 
         public void dragEnter(DropTargetDragEvent dtde) {
-            if (dtde.getDropAction() == DnDConstants.ACTION_MOVE &&
-                (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF))
-                    ) {
+            if (checkEvent(dtde)) {
                 onDockable = null;
 
                 dtde.acceptDrag(dtde.getDropAction());
@@ -221,6 +221,9 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         }
 
         public void dragOver(DropTargetDragEvent dtde) {
+            if (!checkEvent(dtde))
+                return;
+
             Point location = dtde.getLocation();
             component.putClientProperty("dragOver", location);
 
@@ -252,7 +255,8 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         }
 
         public void dropActionChanged(DropTargetDragEvent dtde) {
-            dragEnter(dtde);
+            if (checkEvent(dtde))
+                dragEnter(dtde);
         }
 
         public void dragExit(DropTargetEvent dte) {
@@ -317,6 +321,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
             }
         }
 
+
         protected void putProperty(String name) {
             Boolean value = (Boolean) component.getClientProperty(name);
             if (value != null)
@@ -325,6 +330,20 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                 component.putClientProperty(name, false);
         }
 
+        protected boolean checkEvent(DropTargetDragEvent dtde) {
+            Transferable transferable = dtde.getTransferable();
+            try {
+                if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
+                    if (System.identityHashCode(toolWindowManager) == (Integer) transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
+                        if (transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF))
+                            return true;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
     }
 
 }
