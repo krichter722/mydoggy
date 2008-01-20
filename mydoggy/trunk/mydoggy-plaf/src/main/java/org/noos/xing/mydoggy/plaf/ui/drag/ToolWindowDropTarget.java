@@ -9,12 +9,12 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
-*/
+ */
 public class ToolWindowDropTarget extends DropTarget {
 
     public ToolWindowDropTarget(JComponent component, ToolWindowManager toolWindowManager, ToolWindowAnchor anchor) throws HeadlessException {
@@ -52,11 +52,7 @@ public class ToolWindowDropTarget extends DropTarget {
         }
 
         public void dragEnter(DropTargetDragEvent dtde) {
-            if  (dtde.getDropAction() == DnDConstants.ACTION_MOVE &&
-                 (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) ||
-                  dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF) ||
-                  dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF))
-                 ) {
+            if (checkEvent(dtde)) {
                 onToolWindow = null;
 
                 dtde.acceptDrag(dtde.getDropAction());
@@ -71,6 +67,9 @@ public class ToolWindowDropTarget extends DropTarget {
         }
 
         public void dragOver(DropTargetDragEvent dtde) {
+            if (!checkEvent(dtde))
+                return;
+
             Point location = dtde.getLocation();
             component.putClientProperty("dragOver", location);
 
@@ -88,7 +87,8 @@ public class ToolWindowDropTarget extends DropTarget {
         }
 
         public void dropActionChanged(DropTargetDragEvent dtde) {
-            dragEnter(dtde);
+            if (checkEvent(dtde))
+                dragEnter(dtde);
         }
 
         public void dragExit(DropTargetEvent dte) {
@@ -101,7 +101,7 @@ public class ToolWindowDropTarget extends DropTarget {
         public void drop(DropTargetDropEvent dtde) {
             try {
                 if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) {
-                    if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF))  {
+                    if (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF)) {
                         try {
                             Transferable transferable = dtde.getTransferable();
                             ToolWindow toolWindow = toolWindowManager.getToolWindow(
@@ -127,8 +127,8 @@ public class ToolWindowDropTarget extends DropTarget {
                                 boolean oldAggregateMode = toolWindow.isAggregateMode();
                                 toolWindow.setAggregateMode(true);
                                 try {
-                                    if (dragAnchor != null)   {
-                                        switch (dragAnchor)  {
+                                    if (dragAnchor != null) {
+                                        switch (dragAnchor) {
                                             case LEFT:
                                                 if (onToolWindow != null) {
                                                     toolWindow.setAnchor(anchor, anchorIndex != -1 ? anchorIndex - 1 : -1);
@@ -140,7 +140,7 @@ public class ToolWindowDropTarget extends DropTarget {
                                                     }
                                                 }
                                                 break;
-                                            case RIGHT :
+                                            case RIGHT:
                                                 if (onToolWindow != null) {
                                                     toolWindow.setAnchor(anchor, anchorIndex != -1 ? anchorIndex + 1 : -1);
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.RIGHT);
@@ -193,7 +193,7 @@ public class ToolWindowDropTarget extends DropTarget {
                             e.printStackTrace();
                             dtde.dropComplete(false);
                         }
-                    } else if  (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF))  {
+                    } else if (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {
                         try {
                             Content content = toolWindowManager.getContentManager().getContent(
                                     dtde.getTransferable().getTransferData(MyDoggyTransferable.CONTENT_ID_DF)
@@ -216,8 +216,8 @@ public class ToolWindowDropTarget extends DropTarget {
                                         try {
                                             toolWindow.setAnchor(anchor, anchorIndex);
 
-                                            if (dragAnchor != null)   {
-                                                switch (dragAnchor)  {
+                                            if (dragAnchor != null) {
+                                                switch (dragAnchor) {
                                                     case LEFT:
                                                         if (onToolWindow != null)
                                                             toolWindow.aggregate(onToolWindow, AggregationPosition.LEFT);
@@ -244,19 +244,19 @@ public class ToolWindowDropTarget extends DropTarget {
                                                         break;
                                                 }
                                             } else {
-                                                if (onToolWindow  != null) {
+                                                if (onToolWindow != null) {
                                                     onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
                                                 } else
                                                     toolWindow.aggregate();
                                             }
                                             toolWindow.setActive(true);
                                         } finally {
-                                           toolWindow.setAggregateMode(oldAggregateMode);
+                                            toolWindow.setAggregateMode(oldAggregateMode);
                                         }
                                         dtde.dropComplete(true);
                                     }
                                 } else {
-                                    dtde.dropComplete(false);                                    
+                                    dtde.dropComplete(false);
                                 }
 
                             } else
@@ -277,12 +277,32 @@ public class ToolWindowDropTarget extends DropTarget {
             }
         }
 
+
         protected void putProperty(String name) {
             Boolean value = (Boolean) component.getClientProperty(name);
             if (value != null)
                 component.putClientProperty(name, !value);
             else
                 component.putClientProperty(name, false);
+        }
+
+        protected boolean checkEvent(DropTargetDragEvent dtde) {
+            Transferable transferable = dtde.getTransferable();
+            try {
+                if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
+                    if (System.identityHashCode(toolWindowManager) == (Integer) transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
+                        if (dtde.getDropAction() == DnDConstants.ACTION_MOVE &&
+                            (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) ||
+                             dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF) ||
+                             dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF))
+                                )
+                            return true;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
         }
 
         protected boolean checkCondition(ToolWindow toolWindow) {
@@ -298,7 +318,7 @@ public class ToolWindowDropTarget extends DropTarget {
                     flag = true;
             }
 
-            return  (!flag || visibleNum != 1);
+            return (!flag || visibleNum != 1);
 
         }
     }

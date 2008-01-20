@@ -8,6 +8,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
 
 /**
@@ -39,7 +40,7 @@ public class ContentManagerDropTarget extends DropTarget {
         }
 
         public void dragEnter(DropTargetDragEvent dtde) {
-            if (!isEnabled())
+            if (!checkEvent(dtde))
                 return;
 
             if (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) &&
@@ -100,6 +101,21 @@ public class ContentManagerDropTarget extends DropTarget {
         protected boolean isEnabled() {
             return resourceManager.getBoolean("ContentManagerDropTarget.enabled", false);
         }
+
+        protected boolean checkEvent(DropTargetDragEvent dtde) {
+            Transferable transferable = dtde.getTransferable();
+            try {
+                if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
+                    if (System.identityHashCode(toolWindowManager) == (Integer) transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
+                        return isEnabled();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
     }
 
 }

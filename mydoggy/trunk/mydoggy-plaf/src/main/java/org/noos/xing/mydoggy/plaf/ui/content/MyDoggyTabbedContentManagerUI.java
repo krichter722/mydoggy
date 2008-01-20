@@ -875,7 +875,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 Content content = tabbedContentPane.getContentAt(index);
                 if (content.getDockableDelegator() != null) {
                     dge.startDrag(Cursor.getDefaultCursor(),
-                                  new MyDoggyTransferable(MyDoggyTransferable.CONTENT_ID_DF,
+                                  new MyDoggyTransferable(manager,
+                                                          MyDoggyTransferable.CONTENT_ID_DF,
                                                           content.getId()),
                                   this);
 

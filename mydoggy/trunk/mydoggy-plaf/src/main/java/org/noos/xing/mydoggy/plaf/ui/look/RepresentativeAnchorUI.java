@@ -564,7 +564,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
 
             // Start Drag
             dge.startDrag(Cursor.getDefaultCursor(),
-                          new MyDoggyTransferable(MyDoggyTransferable.TOOL_WINDOW_ID_DF, toolWindow.getId()),
+                          new MyDoggyTransferable(manager, MyDoggyTransferable.TOOL_WINDOW_ID_DF, toolWindow.getId()),
                           this);
 
             // Fire startDrag Event
