@@ -7,6 +7,7 @@ import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -73,6 +74,14 @@ public interface ResourceManager extends Observable {
      * @since 1.3.1
      */
     Icon getIcon(String id);
+
+    /**
+     *
+     * @param id
+     * @return
+     * @since 1.4.1
+     */
+    BufferedImage getBufferedImage(String id); 
 
     /**
      * Associates the specified icon with the specified id. If the manager previously

@@ -67,6 +67,7 @@ public abstract class DragGestureAdapter implements DragGesture {
         return DragAndDropLock.isDragAndDropStarted() && ghostImage != null;
     }
 
+
     protected void releaseLocks() {
         releaseLocksOne();
         releaseLocksTwo();
@@ -79,6 +80,7 @@ public abstract class DragGestureAdapter implements DragGesture {
     protected void releaseLocksTwo() {
         DragAndDropLock.setLocked(false);
     }
+
 
     protected void setGhostImage(Point point, BufferedImage ghostImage) {
         updateGhostImage(point, ghostImage);

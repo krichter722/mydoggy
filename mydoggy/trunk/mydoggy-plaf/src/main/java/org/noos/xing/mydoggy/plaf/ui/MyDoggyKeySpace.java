@@ -43,6 +43,8 @@ public interface MyDoggyKeySpace {
     String TAB_CLOSE = "TAB_CLOSE";
     String TAB_CLOSE_INACTIVE = "TAB_CLOSE_INACTIVE"; 
 
+    String DRAG = "DRAG";
+
     // Representative Anchor Button - Colors
 
     String TOOL_SCROLL_BAR_UI_BCK_START = "TOOL_SCROLL_BAR_UI_BCK_START";

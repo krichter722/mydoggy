@@ -267,6 +267,7 @@ public class MyDoggySet {
 */
         resourceManager.putProperty("ContentManagerUI.ContentManagerUiListener.import", "true");
 //        resourceManager.putProperty("drag.icon.transparency.enabled", "false");
+        resourceManager.putProperty("drag.icon.useDefault", "true");
 
         MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) myDoggyToolWindowManager.getResourceManager();
 
@@ -412,7 +413,6 @@ public class MyDoggySet {
             Component traverser = component;
             while (traverser.getParent() != null) {
                 if (traverser instanceof JXMonthView && toolWindow.isActive()) {
-                    System.out.println("OK");
                     return true;
                 }
 

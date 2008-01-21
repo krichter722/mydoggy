@@ -571,12 +571,17 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             descriptor.getToolBar().propertyChange(new PropertyChangeEvent(label, "startDrag", null, dge));
 
             // Setup ghostImage
-            JComponent representativeAnchor = descriptor.getRepresentativeAnchor();
-            BufferedImage ghostImage = new BufferedImage(representativeAnchor.getWidth(),
-                                                         representativeAnchor.getHeight(),
-                                                         BufferedImage.TYPE_INT_RGB);
-            representativeAnchor.print(ghostImage.createGraphics());
-            setGhostImage(dge.getDragOrigin(), ghostImage);
+            if (resourceManager.getBoolean("drag.icon.useDefault", false)) {
+                setGhostImage(dge.getDragOrigin(),
+                              resourceManager.getBufferedImage(MyDoggyKeySpace.DRAG));
+            } else {
+                JComponent representativeAnchor = descriptor.getRepresentativeAnchor();
+                BufferedImage ghostImage = new BufferedImage(representativeAnchor.getWidth(),
+                                                             representativeAnchor.getHeight(),
+                                                             BufferedImage.TYPE_INT_RGB);
+                representativeAnchor.print(ghostImage.createGraphics());
+                setGhostImage(dge.getDragOrigin(), ghostImage);
+            }
 
             lastAnchor = null;
         }
@@ -592,58 +597,62 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
 
             // Produce updatedGhostImage
             if (newAnchor != lastAnchor) {
-                resetGhostImage();
+                if (!resourceManager.getBoolean("drag.icon.useDefault", false)) {
+                    resetGhostImage();
 
-                if (newAnchor == null) {
-                    updatedGhostImage = ghostImage;
-                    manager.getBar(lastAnchor).setTempShowed(false);
-                } else {
-                    if (manager.getBar(newAnchor).getAvailableTools() == 0)
-                        manager.getBar(newAnchor).setTempShowed(true);
+                    if (newAnchor == null) {
+                        updatedGhostImage = ghostImage;
+                        manager.getBar(lastAnchor).setTempShowed(false);
+                    } else {
+                        if (manager.getBar(newAnchor).getAvailableTools() == 0)
+                            manager.getBar(newAnchor).setTempShowed(true);
 
-                    switch (newAnchor) {
-                        case LEFT:
-                            switch (descriptor.getToolWindow().getAnchor()) {
-                                case LEFT:
-                                    updatedGhostImage = ghostImage;
-                                    break;
-                                case RIGHT:
-                                    updatedGhostImage = GraphicsUtil.rotate(ghostImage, Math.PI);
-                                    break;
-                                default:
-                                    updatedGhostImage = GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI);
-                                    break;
-                            }
-                            break;
-                        case RIGHT:
-                            switch (descriptor.getToolWindow().getAnchor()) {
-                                case LEFT:
-                                    updatedGhostImage = GraphicsUtil.rotate(ghostImage, Math.PI);
-                                    break;
-                                case RIGHT:
-                                    updatedGhostImage = ghostImage;
-                                    break;
-                                default:
-                                    updatedGhostImage = GraphicsUtil.rotate(ghostImage, -1.5 * Math.PI);
-                                    break;
-                            }
-                            break;
-                        case TOP:
-                        case BOTTOM:
-                            switch (descriptor.getToolWindow().getAnchor()) {
-                                case LEFT:
-                                    updatedGhostImage = GraphicsUtil.rotate(ghostImage, -1.5 * Math.PI);
-                                    break;
-                                case RIGHT:
-                                    updatedGhostImage = GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI);
-                                    break;
-                                default:
-                                    updatedGhostImage = ghostImage;
-                                    break;
-                            }
-                            break;
+                        switch (newAnchor) {
+                            case LEFT:
+                                switch (descriptor.getToolWindow().getAnchor()) {
+                                    case LEFT:
+                                        updatedGhostImage = ghostImage;
+                                        break;
+                                    case RIGHT:
+                                        updatedGhostImage = GraphicsUtil.rotate(ghostImage, Math.PI);
+                                        break;
+                                    default:
+                                        updatedGhostImage = GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI);
+                                        break;
+                                }
+                                break;
+                            case RIGHT:
+                                switch (descriptor.getToolWindow().getAnchor()) {
+                                    case LEFT:
+                                        updatedGhostImage = GraphicsUtil.rotate(ghostImage, Math.PI);
+                                        break;
+                                    case RIGHT:
+                                        updatedGhostImage = ghostImage;
+                                        break;
+                                    default:
+                                        updatedGhostImage = GraphicsUtil.rotate(ghostImage, -1.5 * Math.PI);
+                                        break;
+                                }
+                                break;
+                            case TOP:
+                            case BOTTOM:
+                                switch (descriptor.getToolWindow().getAnchor()) {
+                                    case LEFT:
+                                        updatedGhostImage = GraphicsUtil.rotate(ghostImage, -1.5 * Math.PI);
+                                        break;
+                                    case RIGHT:
+                                        updatedGhostImage = GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI);
+                                        break;
+                                    default:
+                                        updatedGhostImage = ghostImage;
+                                        break;
+                                }
+                                break;
+                        }
                     }
-                }
+                } else
+                    updatedGhostImage = ghostImage;
+                    
                 lastAnchor = newAnchor;
             }
 
