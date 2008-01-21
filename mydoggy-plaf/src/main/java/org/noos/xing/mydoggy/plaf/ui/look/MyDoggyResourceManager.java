@@ -14,6 +14,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.DummyResourceBundle;
 import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import javax.swing.plaf.ButtonUI;
@@ -22,8 +23,10 @@ import javax.swing.plaf.LabelUI;
 import javax.swing.plaf.PanelUI;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -36,6 +39,7 @@ public class MyDoggyResourceManager implements ResourceManager {
     protected Properties resources;
 
     protected Map<String, Icon> icons;
+    protected Map<String, BufferedImage> images;
     protected Map<String, Color> colors;
     protected Map<String, ComponentCreator> cmpCreators;
     protected Map<String, ComponentUICreator> cmpUiCreators;
@@ -53,6 +57,7 @@ public class MyDoggyResourceManager implements ResourceManager {
     public MyDoggyResourceManager() {
         this.icons = new Hashtable<String, Icon>();
         this.colors = new Hashtable<String, Color>();
+        this.images = new Hashtable<String, BufferedImage>();
         this.listenerList = new EventListenerList();
 
         loadResources();
@@ -63,6 +68,10 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     public Icon getIcon(String id) {
         return icons.get(id);
+    }
+
+    public BufferedImage getBufferedImage(String id) {
+        return images.get(id);
     }
 
     public Icon putIcon(String id, Icon icon) {
@@ -213,6 +222,7 @@ public class MyDoggyResourceManager implements ResourceManager {
 
         loadIcons();
         loadColors();
+        loadImages();
         loadResourceBundles();
     }
 
@@ -226,6 +236,20 @@ public class MyDoggyResourceManager implements ResourceManager {
                 String iconUrl = resources.getProperty(strKey);
 
                 icons.put(iconKey, loadIcon(iconUrl));
+            }
+        }
+    }
+
+    protected void loadImages() {
+        String prefix = "Image.";
+
+        for (Object key : resources.keySet()) {
+            String strKey = key.toString();
+            if (strKey.startsWith(prefix)) {
+                String imageKey = strKey.substring(prefix.length());
+                String imageUrl = resources.getProperty(strKey);
+
+                images.put(imageKey, loadImage(imageUrl));
             }
         }
     }
@@ -252,6 +276,15 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     protected Icon loadIcon(String url) {
         return SwingUtil.loadIcon(url);
+    }
+
+    protected BufferedImage loadImage(String url) {
+        try {
+            return ImageIO.read(this.getClass().getClassLoader().getResource(url));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     protected Color loadColor(String colorDef) {

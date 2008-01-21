@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.content;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
@@ -882,15 +883,20 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
                     // Setup ghostImage
 
-                    Component component = tabbedContentPane.getComponentAt(index);
-                    BufferedImage ghostImage = new BufferedImage(component.getWidth(),
-                                                                 component.getHeight(), BufferedImage.TYPE_INT_RGB);
-                    component.print(ghostImage.getGraphics());
-                    ghostImage = GraphicsUtil.scale(ghostImage,
-                                                    component.getWidth() / 4,
-                                                    component.getHeight() / 4);
+                    if (resourceManager.getBoolean("drag.icon.useDefault", false)) {
+                        setGhostImage(dge.getDragOrigin(),
+                                      resourceManager.getBufferedImage(MyDoggyKeySpace.DRAG));
+                    } else {
+                        Component component = tabbedContentPane.getComponentAt(index);
+                        BufferedImage ghostImage = new BufferedImage(component.getWidth(),
+                                                                     component.getHeight(), BufferedImage.TYPE_INT_RGB);
+                        component.print(ghostImage.getGraphics());
+                        ghostImage = GraphicsUtil.scale(ghostImage,
+                                                        component.getWidth() / 4,
+                                                        component.getHeight() / 4);
 
-                    setGhostImage(dge.getDragOrigin(), ghostImage);
+                        setGhostImage(dge.getDragOrigin(), ghostImage);
+                    }
                 } else
                     releaseLocks();
             } else

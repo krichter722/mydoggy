@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
@@ -137,15 +138,20 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                                   this);
 
                     // Setup ghostImage
-                    Component component = dockableTabbedPane.getComponentAt(index);
-                    BufferedImage ghostImage = new BufferedImage(component.getWidth(),
-                                                                 component.getHeight(), BufferedImage.TYPE_INT_RGB);
-                    component.print(ghostImage.getGraphics());
-                    ghostImage = GraphicsUtil.scale(ghostImage,
-                                                    component.getWidth() / 4,
-                                                    component.getHeight() / 4);
+                    if (resourceManager.getBoolean("drag.icon.useDefault", false)) {
+                        setGhostImage(dge.getDragOrigin(),
+                                      resourceManager.getBufferedImage(MyDoggyKeySpace.DRAG));
+                    } else {
+                        Component component = dockableTabbedPane.getComponentAt(index);
+                        BufferedImage ghostImage = new BufferedImage(component.getWidth(),
+                                                                     component.getHeight(), BufferedImage.TYPE_INT_RGB);
+                        component.print(ghostImage.getGraphics());
+                        ghostImage = GraphicsUtil.scale(ghostImage,
+                                                        component.getWidth() / 4,
+                                                        component.getHeight() / 4);
 
-                    setGhostImage(dge.getDragOrigin(), ghostImage);
+                        setGhostImage(dge.getDragOrigin(), ghostImage);
+                    }
                 } else
                     releaseLocks();
             } else
