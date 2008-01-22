@@ -427,7 +427,24 @@ public class MyDoggyResourceManager implements ResourceManager {
     public static class BarContentPaneComponentCreator implements ComponentCreator {
 
         public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
-            return new JPanel();
+            return new JPanel();/* {
+                protected void paintComponent(Graphics g) {
+                    TableLayout tableLyout = (TableLayout) getLayout();
+                    int y = 0;
+                    Random random = new Random();
+                    for (int i = 0, sizei = tableLyout.getNumRow(); i < sizei; i++) {
+
+                        int x = 0;
+                        for (int j = 0, sizej = tableLyout.getNumColumn(); j < sizej; j++) {
+                            g.setColor(new Color(random.nextInt(256),random.nextInt(256),random.nextInt(256)));
+                            g.fillRect(x, y, (int) tableLyout.getColumn(j), (int) tableLyout.getRow(i));
+                            x+= tableLyout.getColumn(j);
+                        }
+                        y+= tableLyout.getRow(i);
+                    }
+                    super.paintComponent(g);
+                }
+            };*/
         }
     }
 
