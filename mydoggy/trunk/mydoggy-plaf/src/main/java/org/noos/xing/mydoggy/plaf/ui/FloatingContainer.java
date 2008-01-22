@@ -226,6 +226,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                         SwingUtil.setFullScreen(window);
                     else
                         SwingUtil.restoreFullScreenWindow(window);
+                    SwingUtil.repaint(window);
                 }
 
             }

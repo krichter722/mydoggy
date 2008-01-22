@@ -130,6 +130,9 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
     public int getRepresentativeAnchorIndex(JLabel representativeAnchor) {
         TableLayoutConstraints constraints = representativeButtonsPanelLayout.getConstraints(representativeAnchor);
+        if (constraints == null)
+            return -1;
+        
         if (horizontal)
             return (constraints.col1 / 2) - 1;
         else
@@ -426,12 +429,18 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                 JComponent representativeAnchor = null;
                 if (oldAvailable && !newAvailable) {
                     // true -> false
+                    boolean flag = (manager.getToolWindowManagerDescriptor().isShowUnavailableTools() && descriptor.getToolWindow().getAnchorIndex() != -1);
                     representativeAnchor = descriptor.getRepresentativeAnchor();
-                    if (representativeAnchor != null) {
-                        if (rabsEvent)
-                            rabsPositions.put(descriptor, descriptor.getRepresentativeAnchorIndex());
 
-                        removeRepresentativeAnchor(representativeAnchor, descriptor);
+                    if (representativeAnchor != null) {
+                        if (!flag) {
+                            if (rabsEvent)
+                                rabsPositions.put(descriptor, descriptor.getRepresentativeAnchorIndex());
+
+                            removeRepresentativeAnchor(representativeAnchor, descriptor);
+                        } else
+                            descriptor.updateRepresentativeAnchor();
+                        
                         repaint = true;
                     }
                 } else if (!oldAvailable && newAvailable) {
@@ -439,15 +448,19 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     assert evt instanceof UserPropertyChangeEvent;
                     assert ((UserPropertyChangeEvent) evt).getUserObject() instanceof Integer;
 
-                    representativeAnchor = descriptor.getRepresentativeAnchor(representativeButtonsPanel);
-                    if (rabsEvent) {
-                        int index = -1;
-                        if (rabsEvent && rabsPositions.containsKey(descriptor))
-                            index = rabsPositions.get(descriptor);
+                    boolean flag = (manager.getToolWindowManagerDescriptor().isShowUnavailableTools() && descriptor.getToolWindow().getAnchorIndex() != -1);
 
-                        addRepresentativeAnchor(representativeAnchor, index);
-                    } else
-                        addRepresentativeAnchor(representativeAnchor, (Integer) ((UserPropertyChangeEvent) evt).getUserObject());
+                    representativeAnchor = descriptor.getRepresentativeAnchor(representativeButtonsPanel);
+                    if (!flag) {
+                        if (rabsEvent) {
+                            int index = -1;
+                            if (rabsEvent && rabsPositions.containsKey(descriptor))
+                                index = rabsPositions.get(descriptor);
+
+                            addRepresentativeAnchor(representativeAnchor, index);
+                        } else
+                            addRepresentativeAnchor(representativeAnchor, (Integer) ((UserPropertyChangeEvent) evt).getUserObject());
+                    }
 
                     repaint = true;
                 }
@@ -469,14 +482,14 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getNewValue() == Boolean.TRUE) {
                 for (ToolWindow tool : manager.getToolsByAnchor(anchor)) {
-                    if (!tool.isAvailable()) {
+                    if (!tool.isAvailable() && tool.getType() != ToolWindowType.FLOATING_FREE) {
                         addRepresentativeAnchor(manager.getDescriptor(tool).getRepresentativeAnchor(representativeButtonsPanel),
                                                 -1);
                     }
                 }
             } else {
                 for (ToolWindow tool : manager.getToolsByAnchor(anchor)) {
-                    if (!tool.isAvailable()) {
+                    if (!tool.isAvailable() && tool.getType() != ToolWindowType.FLOATING_FREE) {
                         ToolWindowDescriptor descriptor = manager.getDescriptor(tool);
                         removeRepresentativeAnchor(descriptor.getRepresentativeAnchor(representativeButtonsPanel),
                                                    descriptor);
