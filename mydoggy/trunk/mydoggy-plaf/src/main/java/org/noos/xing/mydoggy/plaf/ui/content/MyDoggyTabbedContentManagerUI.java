@@ -446,7 +446,9 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
             internalPropertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
             internalPropertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
             internalPropertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
-            internalPropertyChangeSupport.addPropertyChangeListener("maximized", new MaximizedListener());
+            MaximizedListener maximizedListener = new MaximizedListener();
+            internalPropertyChangeSupport.addPropertyChangeListener("maximized.before", maximizedListener);
+            internalPropertyChangeSupport.addPropertyChangeListener("maximized", maximizedListener);
             contentUIListener = new ContentUIListener();
 
             SwingUtil.registerDragGesture(tabbedContentPane,
@@ -679,36 +681,40 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 return;
             Content content = (Content) evt.getSource();
 
-            if ((Boolean) evt.getNewValue()) {
-                if (tmpWorkspace != null) {
-                    // Restore...
-                    valudAdj = true;
-                    try {
-                        toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                                                                         resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
-                                                                                                   PersistenceDelegate.MergePolicy.UNION));
-                    } finally {
-                        valudAdj = false;
-                    }
-                    tmpWorkspace = null;
-                }
-
-                toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
-                toolWindowManager.getToolWindowGroup().setVisible(false);
-                maximizedContent = content;
-            } else {
-                if (tmpWorkspace != null) {
-                    valudAdj = true;
-                    try {
-                        toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                                                                         resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
-                                                                                                   PersistenceDelegate.MergePolicy.UNION));
+            if ("maximized.before".equals(evt.getPropertyName())) {
+                if ((Boolean) evt.getNewValue()) {
+                    if (tmpWorkspace != null) {
+                        // Restore...
+                        valudAdj = true;
+                        try {
+                            toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
+                                                                             resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
+                                                                                                       PersistenceDelegate.MergePolicy.UNION));
+                        } finally {
+                            valudAdj = false;
+                        }
                         tmpWorkspace = null;
-                    } finally {
-                        valudAdj = false;
                     }
-                    tmpWorkspace = null;
-                    maximizedContent = null;
+
+                    toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
+                    toolWindowManager.getToolWindowGroup().setVisible(false);
+                    maximizedContent = content;
+                }
+            } else {
+                if (!(Boolean) evt.getNewValue()) {
+                    if (tmpWorkspace != null) {
+                        valudAdj = true;
+                        try {
+                            toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
+                                                                             resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
+                                                                                                       PersistenceDelegate.MergePolicy.UNION));
+                            tmpWorkspace = null;
+                        } finally {
+                            valudAdj = false;
+                        }
+                        tmpWorkspace = null;
+                        maximizedContent = null;
+                    }
                 }
             }
         }
