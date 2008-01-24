@@ -108,7 +108,7 @@ public class MultiSplitDockableContainer extends JPanel {
             multiSplitPaneModelRoot = leaf;
 
             multiSplitPane.setModel(leaf);
-            multiSplitPane.add((useAlwaysContentWrapper) ? getComponentWrapper(dockable, content) : content, "1");
+            multiSplitPane.add((isWrapRequest(dockable)) ? getComponentWrapper(dockable, content) : content, "1");
             setRootComponent(multiSplitPane);
             SwingUtil.repaint(this);
         } else {
@@ -131,9 +131,9 @@ public class MultiSplitDockableContainer extends JPanel {
                     if (rootLeaf.getDockables().size() > 1) {
                         componentWrapper = multiSplitPane.getComponent(0);
                     } else {
-                        Component rootLeafCmp = (useAlwaysContentWrapper)
+                        Component rootLeafCmp = unwrapComponent(multiSplitPane.getComponent(0));/*(isWrapRequest(dockable))
                                                 ? getWrappedComponent((Container) multiSplitPane.getComponent(0))
-                                                : multiSplitPane.getComponent(0);
+                                                : multiSplitPane.getComponent(0);*/
                         multiSplitPane.removeAll();
                         componentWrapper = getComponentWrapper(entries.values().iterator().next().dockable, rootLeafCmp);
                         multiSplitPane.add(componentWrapper, rootLeaf.getName());
@@ -191,14 +191,15 @@ public class MultiSplitDockableContainer extends JPanel {
                     if (rootLeaf.getDockables().size() > 1) {
                         componentWrapper = multiSplitPane.getComponent(0);
                     } else {
-                        componentWrapper = (useAlwaysContentWrapper)
-                                           ? multiSplitPane.getComponent(0)
-                                           : getComponentWrapper(entries.values().iterator().next().dockable, multiSplitPane.getComponent(0));
+                        Dockable delegator = entries.values().iterator().next().dockable;
+                        componentWrapper = (isWrapRequest(delegator)) ?
+                                           getComponentWrapper(delegator, unwrapComponent(multiSplitPane.getComponent(0))) :
+                                           unwrapComponent(multiSplitPane.getComponent(0));
                     }
                     multiSplitPane.removeAll();
 
                     multiSplitPane.add(componentWrapper, firstLeaf.getName());
-                    multiSplitPane.add(getComponentWrapper(dockable, content), secondLeaf.getName());
+                    multiSplitPane.add(isWrapRequest(dockable) ? getComponentWrapper(dockable, content) : content, secondLeaf.getName());
 
                 }
             } else {
@@ -468,7 +469,7 @@ public class MultiSplitDockableContainer extends JPanel {
                 // retrieve the component related to sole entry in entries
                 Dockable soleDockable = entries.keySet().iterator().next();
                 DockableLeaf soleLeaf = getLeaf(soleDockable);
-                Component soleLeafCmp = getWrappedComponent((Container) multiSplitPane.getMultiSplitLayout().getChildMap().get(soleLeaf.getName()));
+                Component soleLeafCmp = unwrapComponent(multiSplitPane.getMultiSplitLayout().getChildMap().get(soleLeaf.getName()));
                 soleLeaf.setName("1");
                 multiSplitPaneModelRoot = soleLeaf;
                 multiSplitPaneModelRoot.setParent(null);
@@ -783,6 +784,14 @@ public class MultiSplitDockableContainer extends JPanel {
 
     protected void removeComponentWrapper(Component wrapperSource, Dockable dockable) {
         throw new IllegalStateException("Cannot call this method...");
+    }
+
+    protected Component unwrapComponent(Component component) {
+        return component;
+    }
+
+    protected boolean isWrapRequest(Dockable dockable) {
+        return useAlwaysContentWrapper;
     }
 
     protected byte[] encode() {

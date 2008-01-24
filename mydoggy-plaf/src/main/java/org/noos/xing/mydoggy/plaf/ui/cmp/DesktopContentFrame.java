@@ -11,11 +11,12 @@ import java.beans.PropertyVetoException;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
 */
 public class DesktopContentFrame extends JInternalFrame implements DesktopContentUI {
-    private boolean detachable;
-    private boolean transparentMode;
-    private float transparentRatio;
-    private int transparentDelay;
-    private Content content;
+    protected boolean detachable;
+    protected boolean transparentMode;
+    protected float transparentRatio;
+    protected int transparentDelay;
+    protected Content content;
+    protected Rectangle detachedBounds;
 
     public DesktopContentFrame(Content content, String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
         super(title, resizable, closable, maximizable, iconifiable);
@@ -38,12 +39,22 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
         }
     }
 
-    public boolean isCloseable() {
-        return isClosable();
+    public Content getContent() {
+        return content;
     }
 
-    public void setCloseable(boolean closeable) {
-        setClosable(closeable);
+    public boolean isCloseable() {
+        return closable;
+    }
+
+    public void setCloseable(boolean closable) {
+        if (this.closable == closable)
+            return;
+
+        boolean old = this.closable;
+        this.closable = closable;
+
+        firePropertyChange("closable", old, closable);
     }
 
     public boolean isDetachable() {
@@ -51,7 +62,13 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
     }
 
     public void setDetachable(boolean detachable) {
+        if (this.detachable == detachable)
+            return;
+
+        boolean old = this.detachable;
         this.detachable = detachable;
+
+        firePropertyChange("detachable", old, detachable);
     }
 
     public boolean isTransparentMode() {
@@ -59,7 +76,13 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
     }
 
     public void setTransparentMode(boolean transparentMode) {
+        if (this.transparentMode == transparentMode)
+            return;
+
+        boolean old = this.transparentMode;
         this.transparentMode = transparentMode;
+
+        firePropertyChange("transparentMode", old, transparentMode);
     }
 
     public float getTransparentRatio() {
@@ -67,11 +90,27 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
     }
 
     public void setTransparentRatio(float transparentRatio) {
+        if (this.transparentRatio == transparentRatio)
+            return;
+
+        float old = this.transparentRatio;
         this.transparentRatio = transparentRatio;
+
+        firePropertyChange("transparentRatio", old, transparentRatio);
     }
 
     public int getTransparentDelay() {
         return transparentDelay;
+    }
+
+    public void setTransparentDelay(int transparentDelay) {
+        if (this.transparentDelay == transparentDelay)
+            return;
+
+        int old = this.transparentDelay;
+        this.transparentDelay = transparentDelay;
+
+        firePropertyChange("transparentDelay", old, transparentDelay);
     }
 
     public void setConstraints(Object... constraints) {
@@ -87,18 +126,15 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
     }
 
     public Rectangle getDetachedBounds() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return detachedBounds;
     }
 
     public void setDetachedBounds(Rectangle detachedBounds) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if ((this.detachedBounds != null && this.detachedBounds.equals(detachedBounds)) || detachedBounds == null)
+            return;
+
+        this.detachedBounds = detachedBounds;
+        firePropertyChange("detachedBounds", null, detachedBounds);
     }
 
-    public void setTransparentDelay(int transparentDelay) {
-        this.transparentDelay = transparentDelay;
-    }
-
-    public Content getContent() {
-        return content;
-    }
 }

@@ -8,7 +8,7 @@ package org.noos.xing.mydoggy;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.1.0
  */
-public interface TabbedContentManagerUI extends ContentManagerUI<TabbedContentUI> {
+public interface TabbedContentManagerUI<E extends TabbedContentUI> extends ContentManagerUI<E> {
 
     /**
      * The tab placement enum used in positioning the component that show tabs.

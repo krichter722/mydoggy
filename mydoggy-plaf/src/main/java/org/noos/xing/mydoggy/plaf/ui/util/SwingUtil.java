@@ -23,6 +23,8 @@ import java.util.Vector;
  * @author Angelo De Caro
  */
 public class SwingUtil {
+    private static Map<Window, Rectangle> fullScreenBounds = new Hashtable<Window, Rectangle>();
+
     private SwingUtil() {
     }
 
@@ -310,7 +312,40 @@ public class SwingUtil {
         return (icon != null) ? icon.getIconHeight() : 0;
     }
 
-    private static Map<Window, Rectangle> fullScreenBounds = new Hashtable<Window, Rectangle>();
+
+    public static Rectangle getVirtualScreenBounds() {
+        Rectangle virtualBounds = new Rectangle();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] gs = ge.getScreenDevices();
+
+        for (GraphicsDevice gd : gs) {
+            GraphicsConfiguration[] gc = gd.getConfigurations();
+            for (GraphicsConfiguration aGc : gc) {
+                virtualBounds = virtualBounds.union(aGc.getBounds());
+            }
+        }
+        return virtualBounds;
+    }
+
+    public static Rectangle validateWindowBounds(Rectangle bounds) {
+        if (bounds == null)
+            return null;
+
+        Rectangle virtualBounds = getVirtualScreenBounds();
+        if (bounds.x < virtualBounds.x)
+            bounds.x = virtualBounds.x;
+
+        if (bounds.x > virtualBounds.getMaxX())
+            bounds.x = (int) virtualBounds.getMaxX() - bounds.width;
+
+        if (bounds.y < virtualBounds.y)
+            bounds.y = virtualBounds.y;
+
+        if (bounds.y > virtualBounds.getMaxY())
+            bounds.y = (int) virtualBounds.getMaxY() - bounds.height;
+
+        return bounds;
+    }
 
     public static void setFullScreen(Window window) {
         GraphicsDevice[] gda = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
@@ -345,7 +380,7 @@ public class SwingUtil {
 
     public static void restoreFullScreenWindow(Window window) {
         Rectangle bounds = fullScreenBounds.remove(window);
-        if (bounds !=  null) {
+        if (bounds != null) {
             window.setBounds(bounds);
         } else {
             GraphicsDevice graphicsDevice = window.getGraphicsConfiguration().getDevice();
@@ -359,15 +394,15 @@ public class SwingUtil {
             return -1;
         }
 
-        char uc = Character.toUpperCase((char)mnemonic);
-        char lc = Character.toLowerCase((char)mnemonic);
+        char uc = Character.toUpperCase((char) mnemonic);
+        char lc = Character.toLowerCase((char) mnemonic);
 
         int uci = text.indexOf(uc);
         int lci = text.indexOf(lc);
 
         if (uci == -1) {
             return lci;
-        } else if(lci == -1) {
+        } else if (lci == -1) {
             return uci;
         } else {
             return (lci < uci) ? lci : uci;
@@ -405,7 +440,8 @@ public class SwingUtil {
             if (is != null)
                 try {
                     is.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                }
         }
     }
 
@@ -421,36 +457,36 @@ public class SwingUtil {
         return event.getPropertyName() + ":\n\t" + event.getSource() + ":\n\t" + event.getOldValue() + ":\n\t" + event.getNewValue();
     }
 
-    public static Point convertPointFromScreen(Point p,Component c) {
+    public static Point convertPointFromScreen(Point p, Component c) {
         Rectangle b;
-        int x,y;
+        int x, y;
 
         do {
-            if(c instanceof JComponent) {
-                x = ((JComponent)c).getX();
-                y = ((JComponent)c).getY();
-            }  else if(c instanceof java.applet.Applet ||
+            if (c instanceof JComponent) {
+                x = ((JComponent) c).getX();
+                y = ((JComponent) c).getY();
+            } else if (c instanceof java.applet.Applet ||
                        c instanceof java.awt.Window) {
                 try {
                     Point pp = c.getLocationOnScreen();
                     x = pp.x;
                     y = pp.y;
                 } catch (IllegalComponentStateException icse) {
-		    x = c.getX();
-		    y = c.getY();
+                    x = c.getX();
+                    y = c.getY();
                 }
             } else {
-		x = c.getX();
-		y = c.getY();
+                x = c.getX();
+                y = c.getY();
             }
 
             p.x -= x;
             p.y -= y;
 
-            if(c instanceof java.awt.Window || c instanceof java.applet.Applet)
+            if (c instanceof java.awt.Window || c instanceof java.applet.Applet)
                 break;
             c = c.getParent();
-        } while(c != null);
+        } while (c != null);
         return p;
     }
 

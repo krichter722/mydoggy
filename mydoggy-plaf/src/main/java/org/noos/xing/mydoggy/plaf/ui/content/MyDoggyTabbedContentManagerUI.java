@@ -766,8 +766,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 dialog.setTitle(content.getTitle());
                 dialog.getContentPane().add(component);
 
-                Rectangle detachedBounds = contentUI.getDetachedBounds();
-                if (detachedBounds != null) {
+                Rectangle detachedBounds = SwingUtil.validateWindowBounds(contentUI.getDetachedBounds());
+                if (detachedBounds != null) {                    
                     dialog.setBounds(detachedBounds);
                 } else {
                     if (parentFrame != null) {

@@ -636,14 +636,19 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 dialog.setTitle(content.getTitle());
                 dialog.getContentPane().add(component);
 
-                if (parentFrame != null) {
-                    Point location = parentFrame.getLocation();
-                    location.translate(5, 5);
-                    dialog.setLocation(location);
+                Rectangle detachedBounds = SwingUtil.validateWindowBounds(contentUI.getDetachedBounds());
+                if (detachedBounds != null) {
+                    dialog.setBounds(detachedBounds);
                 } else {
-                    SwingUtil.centrePositionOnScreen(dialog);
+                    if (parentFrame != null) {
+                        Point location = parentFrame.getLocation();
+                        location.translate(5, 5);
+                        dialog.setLocation(location);
+                    } else {
+                        SwingUtil.centrePositionOnScreen(dialog);
+                    }
+                    dialog.pack();
                 }
-                dialog.pack();
 
                 if (resourceManager.getTransparencyManager().isServiceAvailable()) {
                     WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(
