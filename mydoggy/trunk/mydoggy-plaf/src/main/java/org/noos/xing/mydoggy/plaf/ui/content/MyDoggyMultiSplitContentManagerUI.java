@@ -53,7 +53,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     protected boolean valueAdjusting;
     protected boolean contentValueAdjusting;
 
-    protected Map<Content, TabbedContentUI> contentUIMap;
+    protected Map<Content, MultiSplitContentUI> contentUIMap;
 
     protected TabLayout tabLayout;
     protected TabPlacement tabPlacement;
@@ -63,7 +63,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 
     public MyDoggyMultiSplitContentManagerUI() {
         this.contentManagerUIListeners = new EventListenerList();
-        this.contentUIMap = new Hashtable<Content, TabbedContentUI>();
+        this.contentUIMap = new Hashtable<Content, MultiSplitContentUI>();
 
         this.closeable = this.detachable = true;
         this.tabPlacement = TabPlacement.TOP;
@@ -101,7 +101,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
         return detachable;
     }
 
-    public TabbedContentUI getContentUI(Content content) {
+    public MultiSplitContentUI getContentUI(Content content) {
         return contentUIMap.get(content);
     }
 
@@ -144,7 +144,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     public void setShowAlwaysTab(boolean showAlwaysTab) {
         if (isShowAlwaysTab() == showAlwaysTab)
             return;
-        
+
         boolean old = isShowAlwaysTab();
         multiSplitContainer.setUseAlwaysContentWrapper(showAlwaysTab);
 
@@ -403,12 +403,12 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
     }
 
     protected void addUIForContent(Content content, Object... constraints) {
-        TabbedContentUI contentUI = contentUIMap.get(content);
+        MultiSplitContentUI contentUI = contentUIMap.get(content);
         if (contentUI == null) {
             contentUI = new MyDoggyMultiSplitContentUI(multiSplitContainer, content);
             contentUI.addPropertyChangeListener(contentUIListener);
         }
-        
+
         contentUIMap.put(content, contentUI);
         contentUI.setCloseable(closeable);
         contentUI.setDetachable(detachable);
@@ -695,7 +695,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                         tmpWorkspace = null;
                         maximizedContent = null;
                     }
-            }
+                }
             }
         }
     }
@@ -730,7 +730,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                 dialog.setTitle(content.getTitle());
                 dialog.getContentPane().add(component);
 
-                Rectangle detachedBounds = contentUI.getDetachedBounds();
+                Rectangle detachedBounds = SwingUtil.validateWindowBounds(contentUI.getDetachedBounds());
                 if (detachedBounds != null) {
                     dialog.setBounds(detachedBounds);
                 } else {
@@ -796,6 +796,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                     public void componentResized(ComponentEvent e) {
                         contentUI.setDetachedBounds(dialog.getBounds());
                     }
+
                     public void componentMoved(ComponentEvent e) {
                         contentUI.setDetachedBounds(dialog.getBounds());
                     }
@@ -820,10 +821,10 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
 
         public void propertyChange(PropertyChangeEvent evt) {
             ContentUI contentUI = (ContentUI) evt.getSource();
-            
+
             if ("detachedBounds".equals(evt.getPropertyName()) && contentUI.getContent().isDetached()) {
                 Window window = SwingUtilities.windowForComponent(contentUI.getContent().getComponent());
-                window.setBounds((Rectangle) evt.getNewValue());                
+                window.setBounds((Rectangle) evt.getNewValue());
             }
         }
     }
@@ -926,6 +927,14 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
             return tabbedContentPane;
         }
 
+        protected boolean isWrapRequest(Dockable dockable) {
+            if (getContentCount() == 0) {
+                return useAlwaysContentWrapper;
+            } else if (getContentCount() >= 1) {
+                return (((MultiSplitContentUI) ((Content) dockable).getContentUI()).isShowAlwaysTab());
+            }
+            return useAlwaysContentWrapper;
+        }
     }
 
 }

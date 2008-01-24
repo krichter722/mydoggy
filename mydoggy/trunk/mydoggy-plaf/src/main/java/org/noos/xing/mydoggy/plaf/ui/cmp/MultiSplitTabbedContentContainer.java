@@ -90,6 +90,12 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         contentPanel.resetComponent();
     }
 
+    protected Component unwrapComponent(Component component) {
+        if  (component instanceof JTabbedContentPane) {
+            return getWrappedComponent((Container) component);
+        }
+        return component;
+    }
 
     protected class DockablePanel extends JPanel {
         protected Dockable dockable;
