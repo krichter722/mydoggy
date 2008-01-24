@@ -301,7 +301,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             internalPropertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
             internalPropertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
             internalPropertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
-            internalPropertyChangeSupport.addPropertyChangeListener("maximized", new MaximizedListener());
+            MaximizedListener maximizedListener = new MaximizedListener();
+            internalPropertyChangeSupport.addPropertyChangeListener("maximized.before", maximizedListener);
+            internalPropertyChangeSupport.addPropertyChangeListener("maximized", maximizedListener);
 
             desktopPane.addMouseListener(new PopupMouseListener());
         }
@@ -573,25 +575,29 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
-            if ((Boolean) evt.getNewValue()) {
-                toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
-                toolWindowManager.getToolWindowGroup().setVisible(false);
-                try {
-                    ((DesktopContentFrame) getContentUI(content)).setMaximum(true);
-                } catch (PropertyVetoException e) {
-                    throw new RuntimeException(e.getMessage(), e);
-                }
-            } else {
-                if (tmpWorkspace != null) {
-                    toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                                                                     resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
-                                                                                                   PersistenceDelegate.MergePolicy.UNION));
+            if ("maximized.before".equals(evt.getPropertyName())) {
+                if ((Boolean) evt.getNewValue()) {
+                    toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
+                    toolWindowManager.getToolWindowGroup().setVisible(false);
                     try {
-                        ((DesktopContentFrame) getContentUI(content)).setMaximum(false);
+                        ((DesktopContentFrame) getContentUI(content)).setMaximum(true);
                     } catch (PropertyVetoException e) {
                         throw new RuntimeException(e.getMessage(), e);
                     }
-                    tmpWorkspace = null;
+                }
+            } else {
+                if (!(Boolean) evt.getNewValue()) {
+                    if (tmpWorkspace != null) {
+                        toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
+                                                                         resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
+                                                                                                       PersistenceDelegate.MergePolicy.UNION));
+                        try {
+                            ((DesktopContentFrame) getContentUI(content)).setMaximum(false);
+                        } catch (PropertyVetoException e) {
+                            throw new RuntimeException(e.getMessage(), e);
+                        }
+                        tmpWorkspace = null;
+                    }
                 }
             }
         }

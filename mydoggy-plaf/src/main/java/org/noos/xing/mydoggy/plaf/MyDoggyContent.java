@@ -196,8 +196,10 @@ public class MyDoggyContent implements PlafContent {
             return;
 
         boolean old = this.maximized;
+        if (maximized)
+            firePrivatePropertyChange("maximized.before", false, maximized);
+        
         this.maximized = maximized;
-
         firePropertyChange("maximized", old, maximized);
     }
 
@@ -272,6 +274,14 @@ public class MyDoggyContent implements PlafContent {
         }
 
         for (PropertyChangeListener listener : listeners.getListeners(PropertyChangeListener.class)) {
+            listener.propertyChange(event);
+        }
+    }
+
+    public void firePrivatePropertyChange(String property, Object oldValue, Object newValue) {
+        PropertyChangeEvent event = new PropertyChangeEvent(this, property, oldValue, newValue);
+
+        for (PropertyChangeListener listener : uiListeners.getListeners(PropertyChangeListener.class)) {
             listener.propertyChange(event);
         }
     }

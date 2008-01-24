@@ -351,7 +351,9 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
             internalPropertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
             internalPropertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
             internalPropertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
-            internalPropertyChangeSupport.addPropertyChangeListener("maximized", new MaximizedListener());
+            MaximizedListener maximizedListener = new MaximizedListener();
+            internalPropertyChangeSupport.addPropertyChangeListener("maximized.before", maximizedListener);
+            internalPropertyChangeSupport.addPropertyChangeListener("maximized", maximizedListener);
 
             final PropertyChangeListener focusOwnerPropertyChangeListener = new PropertyChangeListener() {
 
@@ -657,39 +659,43 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                 return;
             Content content = (Content) evt.getSource();
 
-            if ((Boolean) evt.getNewValue()) {
-                if (tmpWorkspace != null) {
-                    // Restore...
-                    multiSplitContainer.setMaximizedDockable(null);
-                    valudAdj = true;
-                    try {
-                        toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                                                                         resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
-                                                                                                   PersistenceDelegate.MergePolicy.UNION));
-                    } finally {
-                        valudAdj = false;
+            if ("maximized.before".equals(evt.getPropertyName())) {
+                if ((Boolean) evt.getNewValue()) {
+                    if (tmpWorkspace != null) {
+                        // Restore...
+                        multiSplitContainer.setMaximizedDockable(null);
+                        valudAdj = true;
+                        try {
+                            toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
+                                                                             resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
+                                                                                                       PersistenceDelegate.MergePolicy.UNION));
+                        } finally {
+                            valudAdj = false;
+                        }
+                        tmpWorkspace = null;
                     }
-                    tmpWorkspace = null;
-                }
 
-                toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
-                toolWindowManager.getToolWindowGroup().setVisible(false);
-                multiSplitContainer.setMaximizedDockable(content);
-                maximizedContent = content;
-            } else {
-                if (tmpWorkspace != null) {
-                    multiSplitContainer.setMaximizedDockable(null);
-                    valudAdj = true;
-                    try {
-                        toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                                                                         resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
-                                                                                                   PersistenceDelegate.MergePolicy.UNION));
-                    } finally {
-                        valudAdj = false;
-                    }
-                    tmpWorkspace = null;
-                    maximizedContent = null;
+                    toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
+                    toolWindowManager.getToolWindowGroup().setVisible(false);
+                    multiSplitContainer.setMaximizedDockable(content);
+                    maximizedContent = content;
                 }
+            } else {
+                if (!(Boolean) evt.getNewValue()) {
+                    if (tmpWorkspace != null) {
+                        multiSplitContainer.setMaximizedDockable(null);
+                        valudAdj = true;
+                        try {
+                            toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
+                                                                             resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
+                                                                                                       PersistenceDelegate.MergePolicy.UNION));
+                        } finally {
+                            valudAdj = false;
+                        }
+                        tmpWorkspace = null;
+                        maximizedContent = null;
+                    }
+            }
             }
         }
     }
