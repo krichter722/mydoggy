@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.DockablePanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitTabbedContentContainer;
@@ -310,6 +311,13 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                             valueAdjusting = false;
                             return;
                         }
+                    } else if (c instanceof DockablePanel) {
+                        DockablePanel dockablePanel = (DockablePanel) c;
+                        if (dockablePanel.getDockable() == content) {
+                            // TODO: request a focus for a component...
+                            lastSelected = (PlafContent) content;
+                            return;
+                        }
                     }
                     if (c == content.getComponent())
                         return;
@@ -544,6 +552,10 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                             tabbedContentPane.setMnemonicAt(index, (Integer) evt.getNewValue());
                             return;
                         }
+                    } else if (c instanceof DockablePanel) {
+                        DockablePanel dockablePanel = (DockablePanel) c;
+                        if (dockablePanel.getDockable() == content)
+                            return;
                     }
                     if (c == content.getComponent())
                         return;
@@ -859,7 +871,7 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                 this.oldRoot = getRootComponent();
                 this.oldParent = (DockablePanel) dockable.getComponent().getParent();
 
-                setRootComponent(getComponentWrapper(dockable, dockable.getComponent()));
+                setRootComponent(getWrapperForComponent(dockable, dockable.getComponent()));
             }
             SwingUtil.repaint(this);
         }
@@ -883,8 +895,59 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
         }
 
 
-        protected Container getComponentWrapper(Dockable dockable, Component component) {
-            final JTabbedContentPane tabbedContentPane = (JTabbedContentPane) super.getComponentWrapper(dockable, component);
+        protected Component getWrapperForComponent(Dockable dockable, Component component) {
+            Component wrapper = super.getWrapperForComponent(dockable, component);
+
+            if (wrapper instanceof JTabbedContentPane) {
+                final JTabbedContentPane tabbedContentPane = (JTabbedContentPane) wrapper;
+
+                // TODO: Semplify...
+                tabbedContentPane.setTabPlacement(tabPlacement.ordinal() + 1);
+                tabbedContentPane.setTabLayoutPolicy(tabLayout.ordinal());
+                tabbedContentPane.addChangeListener(new ChangeListener() {
+                    public void stateChanged(ChangeEvent e) {
+                        if (!valueAdjusting && !contentValueAdjusting) {
+                            PlafContent newSelected = (PlafContent) tabbedContentPane.getSelectedContent();
+                            if (newSelected != null) {
+                                if (newSelected == lastSelected)
+                                    return;
+
+                                if (lastSelected != null) {
+                                    try {
+                                        lastSelected.fireSelected(false);
+                                    } catch (Exception ignoreIt) {
+                                    }
+                                }
+
+                                lastSelected = newSelected;
+                                newSelected.fireSelected(true);
+                            }
+                        }
+                    }
+                });
+                tabbedContentPane.addTabbedContentPaneListener(new TabbedContentPaneListener() {
+                    public void tabbedContentPaneEventFired(TabbedContentPaneEvent event) {
+                        Content content = event.getContent();
+                        switch (event.getActionId()) {
+                            case ON_CLOSE:
+                                if (fireContentUIRemoving(getContentUI(content)))
+                                    contentManager.removeContent(content);
+                                break;
+                            case ON_DETACH:
+                                content.setDetached(true);
+                                fireContentUIDetached(getContentUI(content));
+                                break;
+                        }
+                    }
+                });
+            }
+
+            return wrapper;
+        }
+
+        protected Component forceWrapperForComponent(Dockable dockable, Component component) {
+            final JTabbedContentPane tabbedContentPane = (JTabbedContentPane) super.forceWrapperForComponent(dockable, component);
+
             tabbedContentPane.setTabPlacement(tabPlacement.ordinal() + 1);
             tabbedContentPane.setTabLayoutPolicy(tabLayout.ordinal());
             tabbedContentPane.addChangeListener(new ChangeListener() {
@@ -923,7 +986,6 @@ public class MyDoggyMultiSplitContentManagerUI implements MultiSplitContentManag
                     }
                 }
             });
-
             return tabbedContentPane;
         }
 
