@@ -9,6 +9,8 @@ import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class TutorialSet {
     private JFrame frame;
@@ -72,27 +74,25 @@ public class TutorialSet {
 
         // Register a Tool.
         toolWindowManager.registerToolWindow("Debug",                      // Id
-                                             "Debug Tool",                 // Title
-                                             null,                         // Icon
-                                             new JButton("Debug Tool"),    // Component
-                                             ToolWindowAnchor.LEFT);       // Anchor
+                "Debug Tool",                 // Title
+                null,                         // Icon
+                new JButton("Debug Tool"),    // Component
+                ToolWindowAnchor.LEFT);       // Anchor
 
         setupDebugTool();
         // Register another Tool.
         toolWindowManager.registerToolWindow("Run",                      // Id
-                                             "Run Tool",                 // Title
-                                             null,                       // Icon
-                                             new JButton("Run Tool"),    // Component
-                                             ToolWindowAnchor.LEFT);     // Anchor
-
+                "Run Tool",                 // Title
+                null,                       // Icon
+                new JButton("Run Tool"),    // Component
+                ToolWindowAnchor.LEFT);     // Anchor
 
         // Register another Tool.
         toolWindowManager.registerToolWindow("Properties",                      // Id
-                                             "Properties Tool",                 // Title
-                                             null,                              // Icon
-                                             new JButton("Properties Tool"),    // Component
-                                             ToolWindowAnchor.LEFT);            // Anchor
-
+                "Properties Tool",                 // Title
+                null,                              // Icon
+                new JButton("Properties Tool"),    // Component
+                ToolWindowAnchor.LEFT);            // Anchor
 
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
@@ -138,8 +138,8 @@ public class TutorialSet {
 
         FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.FLOATING);
         floatingTypeDescriptor.setEnabled(true);
-        floatingTypeDescriptor.setLocation(150,200);
-        floatingTypeDescriptor.setSize(320,200);
+        floatingTypeDescriptor.setLocation(150, 200);
+        floatingTypeDescriptor.setSize(320, 200);
         floatingTypeDescriptor.setModal(false);
         floatingTypeDescriptor.setTransparentMode(true);
         floatingTypeDescriptor.setTransparentRatio(0.2f);
@@ -156,15 +156,23 @@ public class TutorialSet {
     }
 
     protected void initContentManager() {
-         JTree treeContent = new JTree();
+        JTree treeContent = new JTree();
 
         ContentManager contentManager = toolWindowManager.getContentManager();
         Content content = contentManager.addContent("Tree Key",
-                                                    "Tree Title",
-                                                    null,      // An icon
-                                                    treeContent);
+                "Tree Title",
+                null,      // An icon
+                treeContent);
         content.setToolTipText("Tree tip");
-
+        content.addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                System.out.println("PropertyChange from content: " +
+                        evt.getPropertyName() + " newValue="
+                        + evt.getNewValue() + ", oldValue=" + evt.getOldValue());
+                new RuntimeException().printStackTrace();
+                System.out.println("---------------------------------------------------------------");
+            }
+        });
         setupContentManagerUI();
     }
 
@@ -195,10 +203,10 @@ public class TutorialSet {
 
         // Now Register two other contents...
         contentManager.addContent("Tree Key 2", "Tree Title 2", null, new JTree(), null,
-                                 new MultiSplitConstraint(contentManager.getContent(0), 0));
+                new MultiSplitConstraint(contentManager.getContent(0), 0));
 
         contentManager.addContent("Tree Key 3", "Tree Title 3", null, new JTree(), null,
-                                 new MultiSplitConstraint(AggregationPosition.RIGHT));
+                new MultiSplitConstraint(AggregationPosition.RIGHT));
     }
 
     public static void main(String[] args) {
