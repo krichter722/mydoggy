@@ -9,8 +9,6 @@ import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 public class TutorialSet {
     private JFrame frame;
@@ -164,15 +162,6 @@ public class TutorialSet {
                 null,      // An icon
                 treeContent);
         content.setToolTipText("Tree tip");
-        content.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                System.out.println("PropertyChange from content: " +
-                        evt.getPropertyName() + " newValue="
-                        + evt.getNewValue() + ", oldValue=" + evt.getOldValue());
-                new RuntimeException().printStackTrace();
-                System.out.println("---------------------------------------------------------------");
-            }
-        });
         setupContentManagerUI();
     }
 

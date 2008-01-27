@@ -187,9 +187,12 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                                                                                               toolWindowManager.getToolWindowManagerDescriptor());
 
                 // Write ContentManagerUI
+                ContentManager contentManager = toolWindowManager.getContentManager();
                 writer.startElement("contentManagerUI");
-                entityWriterProvider.getEntityWriter(toolWindowManager.getContentManager().getContentManagerUI().getClass())
-                        .write(writer, entityWriterProvider, toolWindowManager.getContentManager().getContentManagerUI());
+                entityWriterProvider.getEntityWriter(contentManager.getContentManagerUI().getClass())
+                        .write(writer, entityWriterProvider,
+                               contentManager.getContentManagerUI(),
+                               contentManager);
                 writer.endElement("contentManagerUI");
 
                 // Write ContentManager
