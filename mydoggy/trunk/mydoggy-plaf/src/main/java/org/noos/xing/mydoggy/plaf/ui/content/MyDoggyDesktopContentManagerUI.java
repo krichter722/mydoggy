@@ -95,9 +95,12 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     public DesktopContentUI getContentUI(Content content) {
         if (content.isDetached()) {
-            return detachedContentUIMap.get(content);
+            DesktopContentUI result = detachedContentUIMap.get(content);
+            if (result == null)
+                result = (DesktopContentUI) getFrameByContent(content);
+            return result;
         } else
-            return (DesktopContentUI) getFrameByComponent(content.getComponent());
+            return (DesktopContentUI) getFrameByContent(content);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -248,7 +251,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                         SwingUtilities.windowForComponent(content.getComponent())
                 );
         } else {
-            JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
+            JInternalFrame internalFrame = getFrameByContent(content);
             if (internalFrame != null)
                 try {
                     valueAdjusting = true;
@@ -419,9 +422,10 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
     }
 
-    protected JInternalFrame getFrameByComponent(Component component) {
+    protected JInternalFrame getFrameByContent(Content content) {
         for (JInternalFrame internalFrame : desktopPane.getAllFrames()) {
-            if (internalFrame.getContentPane().getComponent(0) == component)
+            DesktopContentFrame frame = (DesktopContentFrame) internalFrame;
+            if (frame.getContent() == content)
                 return internalFrame;
         }
         return null;
@@ -462,7 +466,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 container.removeAll();
                 container.add((Component) evt.getNewValue());
             } else {
-                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
+                JInternalFrame internalFrame = getFrameByContent(content);
                 if (internalFrame != null) {
                     Container container = internalFrame.getContentPane();
                     container.removeAll();
@@ -483,7 +487,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             Content content = (Content) evt.getSource();
 
             if (!content.isDetached()) {
-                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
+                JInternalFrame internalFrame = getFrameByContent(content);
                 if (internalFrame != null)
                     internalFrame.setFrameIcon((Icon) evt.getNewValue());
                 else
@@ -497,7 +501,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             Content content = (Content) evt.getSource();
 
             if (!content.isDetached()) {
-                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
+                JInternalFrame internalFrame = getFrameByContent(content);
                 if (internalFrame != null) {
                     internalFrame.setEnabled((Boolean) evt.getNewValue());
                 } else
@@ -511,7 +515,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             Content content = (Content) evt.getSource();
 
             if (!content.isDetached()) {
-                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
+                JInternalFrame internalFrame = getFrameByContent(content);
                 if (internalFrame != null)
                     internalFrame.setForeground((Color) evt.getNewValue());
                 else
@@ -525,7 +529,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             Content content = (Content) evt.getSource();
 
             if (!content.isDetached()) {
-                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
+                JInternalFrame internalFrame = getFrameByContent(content);
                 if (internalFrame != null)
                     internalFrame.setComponentPopupMenu((JPopupMenu) evt.getNewValue());
                 else
@@ -542,7 +546,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 JDialog dialog = (JDialog) SwingUtilities.windowForComponent(content.getComponent());
                 dialog.setTitle((String) evt.getNewValue());
             } else {
-                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
+                JInternalFrame internalFrame = getFrameByContent(content);
                 if (internalFrame != null)
                     internalFrame.setTitle((String) evt.getNewValue());
                 else
@@ -556,7 +560,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             Content content = (Content) evt.getSource();
 
             if (!content.isDetached()) {
-                JInternalFrame internalFrame = getFrameByComponent(content.getComponent());
+                JInternalFrame internalFrame = getFrameByContent(content);
                 if (internalFrame != null) {
                     String newToolTip = (String) evt.getNewValue();
                     if (newToolTip == null)
@@ -624,7 +628,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
                 Component component = content.getComponent();
 
-                JInternalFrame internalFrame = getFrameByComponent(component);
+                JInternalFrame internalFrame = getFrameByContent(content);
                 if (internalFrame != null) {
                     desktopPane.remove(internalFrame);
                     detachedContentUIMap.put(content, (DesktopContentUI) internalFrame);
@@ -680,7 +684,7 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
 
                             if (lastSelected != null) {
                                 try {
-                                    getFrameByComponent(lastSelected.getComponent()).setSelected(false);
+                                    getFrameByContent(lastSelected).setSelected(false);
 //                                    lastSelected.fireSelected(false);
                                 } catch (Exception ignoreIt) {
                                 }

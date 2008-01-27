@@ -795,7 +795,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                     public void windowClosing(WindowEvent event) {
                         Component component = dialog.getContentPane().getComponent(0);
                         PlafContent content = (PlafContent) contentManager.getContentByComponent(component);
-                        content.fireSelected(false);
+//                        content.fireSelected(false);
                         content.setDetached(false);
                     }
                 });
@@ -845,7 +845,12 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 window.setVisible(false);
                 window.dispose();
 
-                tabbedContentPane.setSelectedIndex(addUIForContent(content, detachedContentUIMap.get(content)));
+                contentValueAdjusting = true;
+                try {
+                    tabbedContentPane.setSelectedIndex(addUIForContent(content, detachedContentUIMap.get(content)));
+                } finally {
+                    contentValueAdjusting = false;
+                }
                 detachedContentUIMap.remove(content);
             }
         }
