@@ -8,9 +8,9 @@ import java.awt.event.WindowFocusListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ToFrontWindowFocusListener implements WindowFocusListener {
-    long start;
-    long end;
-    private final JDialog dialog;
+    protected long start;
+    protected long end;
+    protected JDialog dialog;
 
     public ToFrontWindowFocusListener(JDialog dialog) {
         this.dialog = dialog;

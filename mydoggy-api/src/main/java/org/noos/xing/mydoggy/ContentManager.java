@@ -176,6 +176,7 @@ public interface ContentManager {
      * @param component the component wrapped by a content.
      * @return the content that wraps the passed <code>component</code>
      * @since 1.2.0
+     * TODO: remove usage
      */
     Content getContentByComponent(Component component);
 

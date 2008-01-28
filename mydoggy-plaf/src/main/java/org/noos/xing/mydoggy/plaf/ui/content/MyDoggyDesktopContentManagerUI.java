@@ -2,20 +2,16 @@ package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.PersistenceDelegate;
-import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
-import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDialog;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DesktopContentFrame;
-import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
-import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
 import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
-import javax.swing.event.EventListenerList;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import java.awt.*;
@@ -29,34 +25,15 @@ import java.util.Map;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
-    protected MyDoggyToolWindowManager toolWindowManager;
-    protected MyDoggyContentManager contentManager;
-    protected ResourceManager resourceManager;
-
+public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI implements DesktopContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
     protected JDesktopPane desktopPane;
-    protected boolean closeable, detachable;
-    protected boolean installed;
-
-    protected PropertyChangeSupport internalPropertyChangeSupport;
-    protected EventListenerList contentManagerUIListeners;
-    protected PropertyChangeListener contentUIListener;
-
-    protected PlafContent lastSelected;
-
-    protected boolean valueAdjusting;
-    protected boolean contentValueAdjusting;
-
     protected Map<Content, DesktopContentUI> detachedContentUIMap;
-
     protected int contentIndex = 0;
-
     protected JPopupMenu popupMenu;
 
 
     public MyDoggyDesktopContentManagerUI() {
-        this.contentManagerUIListeners = new EventListenerList();
-        this.closeable = this.detachable = true;
+        setContentManagerUI(this);
     }
 
 
@@ -72,10 +49,6 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         fireContentManagerUIProperty("closeable", old, closeable);
     }
 
-    public boolean isCloseable() {
-        return closeable;
-    }
-
     public void setDetachable(boolean detachable) {
         boolean old = this.detachable;
         this.detachable = detachable;
@@ -89,10 +62,6 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
         fireContentManagerUIProperty("detachable", old, detachable);
     }
 
-    public boolean isDetachable() {
-        return detachable;
-    }
-
     public DesktopContentUI getContentUI(Content content) {
         if (content.isDetached()) {
             DesktopContentUI result = detachedContentUIMap.get(content);
@@ -101,30 +70,6 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             return result;
         } else
             return (DesktopContentUI) getFrameByContent(content);
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        contentManagerUIListeners.add(PropertyChangeListener.class, listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        contentManagerUIListeners.remove(PropertyChangeListener.class, listener);
-    }
-
-    public PropertyChangeListener[] getPropertyChangeListeners() {
-        return contentManagerUIListeners.getListeners(PropertyChangeListener.class);
-    }
-
-    public void addContentManagerUIListener(ContentManagerUIListener listener) {
-        contentManagerUIListeners.add(ContentManagerUIListener.class, listener);
-    }
-
-    public void removeContentManagerUIListener(ContentManagerUIListener listener) {
-        contentManagerUIListeners.remove(ContentManagerUIListener.class, listener);
-    }
-
-    public ContentManagerUIListener[] getContentManagerUiListener() {
-        return contentManagerUIListeners.getListeners(ContentManagerUIListener.class);
     }
 
 
@@ -432,30 +377,6 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
     }
 
 
-    protected boolean fireContentUIRemoving(ContentUI contentUI) {
-        ContentManagerUIEvent event = new ContentManagerUIEvent(this, ContentManagerUIEvent.ActionId.CONTENTUI_REMOVING, contentUI);
-        for (ContentManagerUIListener listener : contentManagerUIListeners.getListeners(ContentManagerUIListener.class)) {
-            if (!listener.contentUIRemoving(event))
-                return false;
-        }
-        return true;
-    }
-
-    protected void fireContentUIDetached(ContentUI contentUI) {
-        ContentManagerUIEvent event = new ContentManagerUIEvent(this, ContentManagerUIEvent.ActionId.CONTENTUI_DETACHED, contentUI);
-        for (ContentManagerUIListener listener : contentManagerUIListeners.getListeners(ContentManagerUIListener.class)) {
-            listener.contentUIDetached(event);
-        }
-    }
-
-    protected void fireContentManagerUIProperty(String property, Object oldValue, Object newValue) {
-        PropertyChangeEvent event = new PropertyChangeEvent(this, property, oldValue, newValue);
-        for (PropertyChangeListener listener : contentManagerUIListeners.getListeners(PropertyChangeListener.class)) {
-            listener.propertyChange(event);
-        }
-    }
-
-
     protected class ComponentListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
@@ -620,14 +541,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (!oldValue && newValue) {
-                final ContentUI contentUI = getContentUI(content);
+                ContentUI contentUI = getContentUI(content);
 
-                final JDialog dialog = new JDialog(resourceManager.getBoolean("dialog.owner.enabled", true) ? parentFrame : null,
-                                                   false);
-                dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
-                Component component = content.getComponent();
-
+                // Remove the internal frame
                 JInternalFrame internalFrame = getFrameByContent(content);
                 if (internalFrame != null) {
                     desktopPane.remove(internalFrame);
@@ -635,83 +551,9 @@ public class MyDoggyDesktopContentManagerUI implements DesktopContentManagerUI, 
                 } else
                     throw new IllegalStateException("Invalid Content : " + content);
 
-                component.setPreferredSize(component.getSize());
-
-                dialog.setTitle(content.getTitle());
-                dialog.getContentPane().add(component);
-
-                Rectangle detachedBounds = SwingUtil.validateWindowBounds(contentUI.getDetachedBounds());
-                if (detachedBounds != null) {
-                    dialog.setBounds(detachedBounds);
-                } else {
-                    if (parentFrame != null) {
-                        Point location = parentFrame.getLocation();
-                        location.translate(5, 5);
-                        dialog.setLocation(location);
-                    } else {
-                        SwingUtil.centrePositionOnScreen(dialog);
-                    }
-                    dialog.pack();
-                }
-
-                if (resourceManager.getTransparencyManager().isServiceAvailable()) {
-                    WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(
-                            resourceManager.getTransparencyManager(),
-                            getContentUI(content),
-                            dialog
-                    );
-                    dialog.addWindowListener(windowTransparencyListener);
-                    dialog.addWindowFocusListener(windowTransparencyListener);
-                }
-
-                dialog.addWindowListener(new WindowAdapter() {
-                    public void windowClosing(WindowEvent event) {
-                        Component component = dialog.getContentPane().getComponent(0);
-                        PlafContent content = (PlafContent) contentManager.getContentByComponent(component);
-                        content.fireSelected(false);
-                        content.setDetached(false);
-                    }
-                });
-
-                dialog.addWindowFocusListener(new WindowFocusListener() {
-                    public void windowGainedFocus(WindowEvent e) {
-                        if (!valueAdjusting && !contentValueAdjusting) {
-                            PlafContent newSelected = (PlafContent) contentManager.getContentByComponent(
-                                    dialog.getContentPane().getComponent(0));
-
-                            if (newSelected == lastSelected)
-                                return;
-
-                            if (lastSelected != null) {
-                                try {
-                                    getFrameByContent(lastSelected).setSelected(false);
-//                                    lastSelected.fireSelected(false);
-                                } catch (Exception ignoreIt) {
-                                }
-                            }
-
-                            lastSelected = newSelected;
-                            newSelected.fireSelected(true);
-                        }
-                    }
-
-                    public void windowLostFocus(WindowEvent e) {
-                    }
-                });
-
-                if (parentFrame == null)
-                    dialog.addWindowFocusListener(new ToFrontWindowFocusListener(dialog));
-
-                dialog.addComponentListener(new ComponentAdapter() {
-                    public void componentResized(ComponentEvent e) {
-                        contentUI.setDetachedBounds(dialog.getBounds());
-                    }
-
-                    public void componentMoved(ComponentEvent e) {
-                        contentUI.setDetachedBounds(dialog.getBounds());
-                    }
-                });
-
+                // Setup dialog
+                JDialog dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI, parentFrame);
+                dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
                 dialog.toFront();
                 dialog.setVisible(true);
                 SwingUtil.repaint(desktopPane);
