@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.DockablePanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
@@ -764,7 +765,7 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 component.setPreferredSize(component.getSize());
 
                 dialog.setTitle(content.getTitle());
-                dialog.getContentPane().add(component);
+                dialog.getContentPane().add(new DockablePanel(content, component));
 
                 Rectangle detachedBounds = SwingUtil.validateWindowBounds(contentUI.getDetachedBounds());
                 if (detachedBounds != null) {                    
@@ -793,8 +794,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
 
                 dialog.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent event) {
-                        Component component = dialog.getContentPane().getComponent(0);
-                        PlafContent content = (PlafContent) contentManager.getContentByComponent(component);
+                        DockablePanel dockablePanel =  (DockablePanel) dialog.getContentPane().getComponent(0);
+                        PlafContent content = (PlafContent) dockablePanel.getDockable();
 //                        content.fireSelected(false);
                         content.setDetached(false);
                     }
@@ -803,8 +804,8 @@ public class MyDoggyTabbedContentManagerUI implements TabbedContentManagerUI, Pl
                 dialog.addWindowFocusListener(new WindowFocusListener() {
                     public void windowGainedFocus(WindowEvent e) {
                         if (!valueAdjusting && !contentValueAdjusting) {
-                            PlafContent newSelected = (PlafContent) contentManager.getContentByComponent(
-                                    dialog.getContentPane().getComponent(0));
+                            DockablePanel dockablePanel =  (DockablePanel) dialog.getContentPane().getComponent(0);
+                            PlafContent newSelected = (PlafContent) dockablePanel.getDockable();
 
                             if (newSelected == lastSelected)
                                 return;
