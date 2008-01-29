@@ -173,11 +173,9 @@ public class MyDoggySet {
         toolWindowManager.registerToolWindow("Tool 8", "Title 8", null, new JButton("Hello World 8"), ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 9", "Title 9", null, new JButton("Hello World 9"), ToolWindowAnchor.RIGHT);
 
-    JPanel form1 = new JPanel();
-        JTextField field = new JTextField();
-        field.setColumns(10);
-        form1.add(field);
-    form1.setFocusCycleRoot(true); 
+        JPanel form1 = new JPanel();
+        form1.setFocusCycleRoot(true);
+        form1.add(new JTextField(10));
 
         toolWindowManager.registerToolWindow("Tool 10", "Title 10", null, form1/*new JButton("Hello World 10")*/, ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 11", "Title 11", null, new JButton("Hello World 11"), ToolWindowAnchor.RIGHT);

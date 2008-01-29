@@ -129,6 +129,8 @@ public class DockedContainer implements ToolWindowContainer {
         container = (JPanel) resourceManager.createComponent(MyDoggyKeySpace.TOOL_WINDOW_CONTAINER, null);
         container.setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {16, TableLayout.FILL}}, false));
         container.setName("toolWindow.container." + toolWindow.getId());
+        container.setFocusTraversalPolicyProvider(true);
+        container.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
         container.setFocusCycleRoot(true);
         container.putClientProperty(ToolWindow.class, toolWindow);
 
