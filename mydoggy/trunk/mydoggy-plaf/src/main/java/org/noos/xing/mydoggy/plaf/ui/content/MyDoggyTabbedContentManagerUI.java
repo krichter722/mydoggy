@@ -697,8 +697,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                     tabbedContentPane.setSelectedIndex(addUIForContent(content, detachedContentUIMap.get(content)));
                 } finally {
                     contentValueAdjusting = false;
+                    detachedContentUIMap.remove(content);
                 }
-                detachedContentUIMap.remove(content);
             }
         }
 
