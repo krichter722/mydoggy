@@ -732,57 +732,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             }
         }
 
-
-        protected Component getWrapperForComponent(Dockable dockable, Component component) {
-            Component wrapper = super.getWrapperForComponent(dockable, component);
-
-            if (wrapper instanceof JTabbedContentPane) {
-                final JTabbedContentPane tabbedContentPane = (JTabbedContentPane) wrapper;
-
-                // TODO: Semplify...
-                tabbedContentPane.setTabPlacement(tabPlacement.ordinal() + 1);
-                tabbedContentPane.setTabLayoutPolicy(tabLayout.ordinal());
-                tabbedContentPane.addChangeListener(new ChangeListener() {
-                    public void stateChanged(ChangeEvent e) {
-                        if (!valueAdjusting && !contentValueAdjusting) {
-                            PlafContent newSelected = (PlafContent) tabbedContentPane.getSelectedContent();
-                            if (newSelected != null) {
-                                if (newSelected == lastSelected)
-                                    return;
-
-                                if (lastSelected != null) {
-                                    try {
-                                        lastSelected.fireSelected(false);
-                                    } catch (Exception ignoreIt) {
-                                    }
-                                }
-
-                                lastSelected = newSelected;
-                                newSelected.fireSelected(true);
-                            }
-                        }
-                    }
-                });
-                tabbedContentPane.addTabbedContentPaneListener(new TabbedContentPaneListener() {
-                    public void tabbedContentPaneEventFired(TabbedContentPaneEvent event) {
-                        Content content = event.getContent();
-                        switch (event.getActionId()) {
-                            case ON_CLOSE:
-                                if (fireContentUIRemoving(getContentUI(content)))
-                                    contentManager.removeContent(content);
-                                break;
-                            case ON_DETACH:
-                                content.setDetached(true);
-                                fireContentUIDetached(getContentUI(content));
-                                break;
-                        }
-                    }
-                });
-            }
-
-            return wrapper;
-        }
-
         protected Component forceWrapperForComponent(Dockable dockable, Component component) {
             final JTabbedContentPane tabbedContentPane = (JTabbedContentPane) super.forceWrapperForComponent(dockable, component);
 
