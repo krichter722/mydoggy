@@ -130,7 +130,7 @@ public class SlidingMouseInputHandler implements MouseInputListener {
                 JMenuBar menuBar = ((RootPaneContainer) descriptor.getManager().getAnchestor()).getRootPane().getJMenuBar();
 
                 Rectangle containerRect = descriptor.getToolWindowManagerContainer().getBounds();
-                System.out.println("containerRect = " + containerRect);
+//                System.out.println("containerRect = " + containerRect);
 
                 switch (toolWindow.getAnchor()) {
                     case LEFT:

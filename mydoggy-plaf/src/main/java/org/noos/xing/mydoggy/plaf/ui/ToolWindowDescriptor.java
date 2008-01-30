@@ -336,25 +336,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         return ((DockedContainer) getToolWindowContainer()).getContentContainer();
     }
 
-
-    protected void initTypeDescriptors() {
-        floatingTypeDescriptor = (FloatingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING)).cloneMe();
-        floatingTypeDescriptor.addPropertyChangeListener(this);
-
-        floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING_LIVE)).cloneMe();
-        floatingLiveTypeDescriptor.addPropertyChangeListener(this);
-
-        dockedTypeDescriptor = (DockedTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).cloneMe();
-        dockedTypeDescriptor.addPropertyChangeListener(this);
-
-        slidingTypeDescriptor = (SlidingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.SLIDING)).cloneMe();
-        slidingTypeDescriptor.addPropertyChangeListener(this);
-    }
-
-    protected ComponentUI createRepresentativeAnchorUI() {
-        return manager.getResourceManager().createComponentUI(MyDoggyKeySpace.REPRESENTATIVE_ANCHOR_BUTTON_UI, manager, this);
-    }
-
     public void updateRepresentativeAnchor() {
         if (representativeAnchor != null) {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
@@ -396,6 +377,33 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         if (jMenuBar != null && jMenuBar.isVisible())
             return jMenuBar.getHeight();
         return 0;
+    }
+
+    public void hideToolWindow() {
+        ToolWindowActionHandler toolWindowActionHandler = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class).getToolWindowActionHandler();
+        if (toolWindowActionHandler != null)
+            toolWindowActionHandler.onHideButtonClick(toolWindow);
+        else
+            toolWindow.setVisible(false);
+    }
+
+
+    protected void initTypeDescriptors() {
+        floatingTypeDescriptor = (FloatingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING)).cloneMe();
+        floatingTypeDescriptor.addPropertyChangeListener(this);
+
+        floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING_LIVE)).cloneMe();
+        floatingLiveTypeDescriptor.addPropertyChangeListener(this);
+
+        dockedTypeDescriptor = (DockedTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).cloneMe();
+        dockedTypeDescriptor.addPropertyChangeListener(this);
+
+        slidingTypeDescriptor = (SlidingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.SLIDING)).cloneMe();
+        slidingTypeDescriptor.addPropertyChangeListener(this);
+    }
+
+    protected ComponentUI createRepresentativeAnchorUI() {
+        return manager.getResourceManager().createComponentUI(MyDoggyKeySpace.REPRESENTATIVE_ANCHOR_BUTTON_UI, manager, this);
     }
 
 

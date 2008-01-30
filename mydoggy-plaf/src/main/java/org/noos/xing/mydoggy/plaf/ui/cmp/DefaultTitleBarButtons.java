@@ -1,7 +1,10 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.FloatingTypeDescriptor;
+import org.noos.xing.mydoggy.SlidingTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -168,11 +171,7 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons {
         }
 
         public void actionPerformed(ActionEvent e) {
-            ToolWindowActionHandler toolWindowActionHandler = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class).getToolWindowActionHandler();
-            if (toolWindowActionHandler != null)
-                toolWindowActionHandler.onHideButtonClick(toolWindow);
-            else
-                toolWindow.setVisible(false);
+            descriptor.hideToolWindow();
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
@@ -367,6 +366,7 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons {
     }
 
     protected class FloatingAction extends TitleBarAction {
+        protected ToolWindowType oldType;
 
         public FloatingAction() {
             super("toolWindow.floatingButton." + toolWindow.getId(), MyDoggyKeySpace.FLOATING_INACTIVE, "@@tool.tooltip.float");
@@ -378,6 +378,18 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons {
                         }
                     }
             );
+            dockedContainer.addPropertyChangeListener("type", new PropertyChangeListener() {
+
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if (evt.getSource() != descriptor ||
+                        (evt.getNewValue() != ToolWindowType.FLOATING &&
+                        evt.getNewValue() != ToolWindowType.FLOATING_FREE))
+                        return;
+
+                    oldType = (ToolWindowType) evt.getOldValue();
+                }
+            });
+
             dockedContainer.addPropertyChangeListener("active", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getSource() != descriptor)
@@ -404,11 +416,13 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons {
             toolWindow.setActive(true);
 
             ToolWindowType type = toolWindow.getType();
-            if (type == ToolWindowType.FLOATING || type == ToolWindowType.FLOATING_FREE) {
-                toolWindow.setType(ToolWindowType.DOCKED);
-            } else
-            if (type == ToolWindowType.DOCKED || type == ToolWindowType.SLIDING || type == ToolWindowType.FLOATING_LIVE) {
-                toolWindow.setType(descriptor.isFloatingWindow() ? ToolWindowType.FLOATING_FREE : ToolWindowType.FLOATING);
+            switch (type) {
+                case FLOATING:
+                case FLOATING_FREE:
+                    toolWindow.setType(oldType != null ? oldType : ToolWindowType.DOCKED);
+                    break;
+                default:
+                    toolWindow.setType(descriptor.isFloatingWindow() ? ToolWindowType.FLOATING_FREE : ToolWindowType.FLOATING);
             }
         }
 
