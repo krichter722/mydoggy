@@ -415,16 +415,11 @@ public class MyDoggySet {
             if (component == null)
                 return false;
 
-            Component traverser = component;
-            while (traverser.getParent() != null) {
-                if (traverser instanceof JXMonthView && toolWindow.isActive()) {
+            Component cursor = component;
+            while (cursor != null) {
+                if ((cursor instanceof JXMonthView && toolWindow.isActive()) || cursor == parent) 
                     return true;
-                }
-
-                if (traverser.getParent() == parent) {
-                    return true;
-                }
-                traverser = traverser.getParent();
+                cursor = cursor.getParent();
             }
             return false;
         }

@@ -22,11 +22,11 @@ public class ParentOfQuestion implements Question {
         if (component == null)
             return false;
 
-        Component traverser = component;
-        while (traverser.getParent() != null) {
-            if (traverser.getParent() == parent)
+        Component cursor = component;
+        while (cursor != null) {
+            if (cursor == parent)
                 return true;
-            traverser = traverser.getParent();
+            cursor = cursor.getParent();
         }
         return false;
     }
