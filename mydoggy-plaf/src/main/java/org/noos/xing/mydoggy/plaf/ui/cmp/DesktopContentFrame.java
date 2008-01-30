@@ -9,7 +9,7 @@ import java.beans.PropertyVetoException;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
-*/
+ */
 public class DesktopContentFrame extends JInternalFrame implements DesktopContentUI {
     protected boolean detachable;
     protected boolean transparentMode;
@@ -17,6 +17,7 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
     protected int transparentDelay;
     protected Content content;
     protected Rectangle detachedBounds;
+
 
     public DesktopContentFrame(Content content, String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
         super(title, resizable, closable, maximizable, iconifiable);
@@ -26,6 +27,7 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
         this.transparentRatio = 0.8f;
         this.transparentDelay = 1000;
     }
+
 
     public boolean isIconified() {
         return super.isIcon();
@@ -121,7 +123,7 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
                 setBounds(location.x, location.y, 320, 200);
             } else if (constraints[0] instanceof Rectangle) {
                 setBounds((Rectangle) constraints[0]);
-            } 
+            }
         }
     }
 

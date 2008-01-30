@@ -2,7 +2,6 @@ package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.PersistenceDelegate;
-import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDialog;
@@ -76,7 +75,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
     public PlafContentManagerUI install(ContentManagerUI oldContentManagerUI, ToolWindowManager manager) {
         // Init managers
         this.toolWindowManager = (MyDoggyToolWindowManager) manager;
-        this.contentManager = (MyDoggyContentManager) manager.getContentManager();
+        this.contentManager = manager.getContentManager();
         this.resourceManager = toolWindowManager.getResourceManager();
 
         this.contentIndex = 0;
@@ -305,10 +304,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                 public void vetoableChange(PropertyChangeEvent evt) throws PropertyVetoException {
                     if (JInternalFrame.IS_CLOSED_PROPERTY.equals(evt.getPropertyName())) {
                         if (Boolean.TRUE.equals(evt.getNewValue())) {
-                            Content content = contentManager.getContentByComponent(
-                                    ((JInternalFrame) evt.getSource()).getContentPane().getComponent(0)
-                            );
-                            if (!fireContentUIRemoving(getContentUI(content)))
+                            if (!fireContentUIRemoving((ContentUI) evt.getSource()))
                                 throw new PropertyVetoException("Cannot remove.", evt);
                         }
                     }
@@ -317,8 +313,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
             internalFrame.addInternalFrameListener(new InternalFrameAdapter() {
                 public void internalFrameClosed(InternalFrameEvent e) {
                     try {
-                        Content content = contentManager.getContentByComponent(e.getInternalFrame().getContentPane().getComponent(0));
-                        contentManager.removeContent(content);
+                        contentManager.removeContent(((DesktopContentFrame)e.getInternalFrame()).getContent());
                     } catch (Exception ignore) {
                         ignore.printStackTrace();
                     }
