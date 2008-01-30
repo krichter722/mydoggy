@@ -80,7 +80,6 @@ public class FloatingMoveMouseInputHandler implements MouseInputListener {
             windowPt.x += pt.x - dragOffsetX;
             windowPt.y += pt.y - dragOffsetY;
 
-            System.out.println("windowPt = " + windowPt);
             floatingContainer.setLocation(windowPt);
         }
     }

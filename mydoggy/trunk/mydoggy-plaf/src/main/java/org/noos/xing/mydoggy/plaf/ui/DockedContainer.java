@@ -324,10 +324,21 @@ public class DockedContainer implements ToolWindowContainer {
         protected JMenuItem top;
         protected JMenuItem bottom;
 
+        protected ToolWindowType oldType;
+
         public TitleBarMouseAdapter() {
             initPopupMenu();
             descriptor.getToolWindow().addInternalPropertyChangeListener(this);
+            addPropertyChangeListener("type", new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if (evt.getSource() != descriptor ||
+                        (evt.getNewValue() != ToolWindowType.FLOATING &&
+                        evt.getNewValue() != ToolWindowType.FLOATING_FREE))
+                        return;
 
+                    oldType = (ToolWindowType) evt.getOldValue();
+                }
+            });
         }
 
         public void mouseClicked(MouseEvent e) {
@@ -349,11 +360,12 @@ public class DockedContainer implements ToolWindowContainer {
             String actionCommand = e.getActionCommand();
             if ("visible".equals(actionCommand)) {
                 if (toolWindow.isActive()) {
+
                     toolWindow.setActive(false);
-                    toolWindow.setVisible(false);
-                } else if (toolWindow.isVisible())
-                    toolWindow.setVisible(false);
-                else
+                    descriptor.hideToolWindow();
+                } else if (toolWindow.isVisible()) {
+                    descriptor.hideToolWindow();
+                } else
                     toolWindow.setActive(true);
             } else if (actionCommand.startsWith("aggregate")) {
                 if (toolWindow.isActive()) {
@@ -387,8 +399,9 @@ public class DockedContainer implements ToolWindowContainer {
                 if (floatingMode.isSelected()) {
                     toolWindow.setType((descriptor.isFloatingWindow()) ? ToolWindowType.FLOATING_FREE : ToolWindowType.FLOATING);
                     dockedMode.setVisible(!floatingMode.isSelected());
-                } else
-                    toolWindow.setType(ToolWindowType.DOCKED);
+                } else {
+                    toolWindow.setType(oldType != null ? oldType : ToolWindowType.DOCKED);
+                }
             } else if ("floatingLive".equals(actionCommand)) {
                 toolWindow.setType(floatingLiveMode.isSelected() ? ToolWindowType.FLOATING_LIVE : ToolWindowType.DOCKED);
             } else if ("docked".equals(actionCommand)) {
