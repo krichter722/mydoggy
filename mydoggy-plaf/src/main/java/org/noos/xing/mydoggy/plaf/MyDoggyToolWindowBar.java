@@ -428,8 +428,19 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
                 JComponent representativeAnchor = null;
                 if (oldAvailable && !newAvailable) {
-                    // true -> false
-                    boolean flag = (manager.getToolWindowManagerDescriptor().isShowUnavailableTools() && descriptor.getToolWindow().getAnchorIndex() != -1);
+                    boolean flag = false;
+                    if (!rabsEvent) {
+                        assert evt instanceof UserPropertyChangeEvent;
+                        Object[] params = (Object[]) ((UserPropertyChangeEvent) evt).getUserObject();
+
+                        // true -> false
+                        flag = (manager.getToolWindowManagerDescriptor().isShowUnavailableTools() &&
+                                        descriptor.getToolWindow().getAnchorIndex() != -1);
+
+                        if (params[1] == Boolean.TRUE)
+                            flag = false;
+                    }
+
                     representativeAnchor = descriptor.getRepresentativeAnchor();
 
                     if (representativeAnchor != null) {
@@ -445,10 +456,18 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
                     }
                 } else if (!oldAvailable && newAvailable) {
                     // false -> true
-                    assert evt instanceof UserPropertyChangeEvent;
-                    assert ((UserPropertyChangeEvent) evt).getUserObject() instanceof Integer;
+                    Object[] params = null;
+                    boolean flag = false;
+                    if (!rabsEvent) {
+                        assert evt instanceof UserPropertyChangeEvent;
+                        params = (Object[]) ((UserPropertyChangeEvent) evt).getUserObject();
 
-                    boolean flag = (manager.getToolWindowManagerDescriptor().isShowUnavailableTools() && descriptor.getToolWindow().getAnchorIndex() != -1);
+                        flag = (manager.getToolWindowManagerDescriptor().isShowUnavailableTools() &&
+                                        descriptor.getToolWindow().getAnchorIndex() != -1);
+
+                        if (params[1] == Boolean.TRUE)
+                            flag = false;
+                    }
 
                     representativeAnchor = descriptor.getRepresentativeAnchor(representativeButtonsPanel);
                     if (!flag) {
@@ -459,14 +478,15 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
 
                             addRepresentativeAnchor(representativeAnchor, index);
                         } else
-                            addRepresentativeAnchor(representativeAnchor, (Integer) ((UserPropertyChangeEvent) evt).getUserObject());
-                    }
-
+                            addRepresentativeAnchor(representativeAnchor, (Integer) params[0]);
+                    } else
+                        descriptor.updateRepresentativeAnchor();
+                        
                     repaint = true;
                 }
 
                 if (repaint) {
-                    representativeAnchor.setEnabled(newAvailable);
+//                    representativeAnchor.setEnabled(newAvailable);
                     SwingUtil.repaint(representativeButtonsPanel);
                 }
             }

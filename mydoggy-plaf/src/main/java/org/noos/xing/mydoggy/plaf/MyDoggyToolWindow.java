@@ -120,22 +120,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setAvailable(boolean available) {
-        if (this.available == available)
-            return;
-
-        synchronized (getLock()) {
-            if (!available) {
-                if (isActive() && publicEvent)
-                    setActive(false);
-                if (isVisible())
-                    setVisible(false);
-            }
-
-            boolean old = this.available;
-            this.available = available;
-
-            firePropertyChangeEvent("available", old, available, availablePosition);
-        }
+        setAvailableInternal(available, false);
     }
 
     public boolean isVisible() {
@@ -327,13 +312,13 @@ public class MyDoggyToolWindow implements ToolWindow {
 
                     ToolWindowAnchor oldAnchor;
                     try {
-                        setAvailable(false);
+                        setAvailableInternal(false, true);
 
                         oldAnchor = this.anchor;
                         this.anchor = anchor;
 
                         availablePosition = index;
-                        setAvailable(true);
+                        setAvailableInternal(true, true);
                         if (tempActive) {
                             setActive(true);
                         } else if (tempVisible)
@@ -619,6 +604,25 @@ public class MyDoggyToolWindow implements ToolWindow {
         internalListenerList.remove(PropertyChangeListener.class, listener);
     }
 
+
+    protected void setAvailableInternal(boolean available, boolean moveAction) {
+        if (this.available == available)
+            return;
+
+        synchronized (getLock()) {
+            if (!available) {
+                if (isActive() && publicEvent)
+                    setActive(false);
+                if (isVisible())
+                    setVisible(false);
+            }
+
+            boolean old = this.available;
+            this.available = available;
+
+            firePropertyChangeEvent("available", old, available, new Object[]{availablePosition, moveAction});
+        }
+    }
 
     protected void setVisibleInternal(boolean visible, boolean aggregate,
                                       ToolWindow aggregationOnTool, AggregationPosition aggregationPosition) {

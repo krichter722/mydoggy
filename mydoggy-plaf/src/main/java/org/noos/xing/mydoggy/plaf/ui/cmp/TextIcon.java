@@ -100,6 +100,10 @@ public class TextIcon implements Icon, PropertyChangeListener {
         }
     }
 
+    protected void finalize() throws Throwable {
+        component.removePropertyChangeListener(this);
+        super.finalize();
+    }
 
     public void setText(String text) {
         this.text = text;
