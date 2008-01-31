@@ -940,13 +940,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 toolType == ToolWindowType.FLOATING_LIVE ||
                 force || !descriptor.getToolWindow().isAvailable()) {
 
-                PropertyChangeEvent avEvent = new UserPropertyChangeEvent(evt.getSource(), "available", true, false, -1);
+                PropertyChangeEvent avEvent = new UserPropertyChangeEvent(evt.getSource(), "available", true, false, new Object[]{-1, true});
                 getBar(oldAnchor).propertyChange(avEvent);
                 syncPanel(oldAnchor);
 
                 assert evt instanceof UserPropertyChangeEvent;
                 avEvent = new UserPropertyChangeEvent(evt.getSource(), "available", false, true,
-                                                      ((UserPropertyChangeEvent) evt).getUserObject());
+                                                      new Object[]{((UserPropertyChangeEvent) evt).getUserObject(), true});
                 getBar(newAnchor).propertyChange(avEvent);
                 syncPanel(newAnchor);
             }
