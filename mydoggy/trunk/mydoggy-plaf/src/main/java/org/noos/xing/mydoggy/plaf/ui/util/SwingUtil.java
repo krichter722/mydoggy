@@ -368,13 +368,13 @@ public class SwingUtil {
             window.setBounds(targetBounds);
         } else {
             GraphicsDevice graphicsDevice = window.getGraphicsConfiguration().getDevice();
-            if (graphicsDevice.isFullScreenSupported())
-                graphicsDevice.setFullScreenWindow(window);
-            else {
+//            if (graphicsDevice.isFullScreenSupported())
+//                graphicsDevice.setFullScreenWindow(window);
+//            else {
                 Rectangle targetBounds = window.getBounds();
                 fullScreenBounds.put(window, targetBounds);
                 window.setBounds(graphicsDevice.getDefaultConfiguration().getBounds());
-            }
+//            }
         }
     }
 
