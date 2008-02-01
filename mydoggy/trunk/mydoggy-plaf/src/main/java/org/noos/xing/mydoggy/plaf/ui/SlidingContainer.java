@@ -128,18 +128,14 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
         border = new SlidingBorder();
         slidingAnimation = new SlidingAnimation();
 
-        Window anchestor = descriptor.getWindowAnchestor();
-        if (anchestor instanceof RootPaneContainer) {
-            layeredPane = ((RootPaneContainer) anchestor).getLayeredPane();
-
-            anchestor.addComponentListener(new ComponentAdapter() {
-                public void componentResized(ComponentEvent e) {
-                    if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
-                        update();
-                }
-            });
-        } else
-            throw new IllegalStateException("Can stay only on a RootPaneContainer.");
+        RootPaneContainer rootPaneContainer = descriptor.getManager().getRootPaneContainer();
+        layeredPane = rootPaneContainer.getLayeredPane();
+        descriptor.getManager().getParentComponent().addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
+                    update();
+            }
+        });
     }
 
     protected void initListeners() {

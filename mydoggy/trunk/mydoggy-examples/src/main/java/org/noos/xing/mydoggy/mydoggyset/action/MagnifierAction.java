@@ -15,7 +15,7 @@ import java.util.prefs.Preferences;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MagnifierAction extends AbstractAction {
-    protected JFrame frame;
+    protected Component parentComponent;
     protected JFileChooser fileChooser;
     protected Preferences preferences;
     protected LensPanel lensPanel;
@@ -24,9 +24,9 @@ public class MagnifierAction extends AbstractAction {
     protected Rectangle boundsToShot;
 
 
-    public MagnifierAction(JFrame frame) {
+    public MagnifierAction(Component parentComponent) {
         super("Magnifier");
-        this.frame = frame;
+        this.parentComponent = parentComponent;
 
         this.lensPanel = new LensPanel();
 
@@ -47,7 +47,7 @@ public class MagnifierAction extends AbstractAction {
 
     public void actionPerformed(ActionEvent e) {
         lensPanel.mount();
-        SwingUtil.repaint(frame);
+        SwingUtil.repaint(parentComponent);
     }
 
 
@@ -74,7 +74,7 @@ public class MagnifierAction extends AbstractAction {
             addMouseListener(lensMouseInput);
             addMouseWheelListener(lensMouseInput);
 
-            layeredPane = frame.getLayeredPane();
+            layeredPane = ((RootPaneContainer)parentComponent).getLayeredPane();
 
             lensPosition = 0;
             zoomLevel = 0;
@@ -107,8 +107,8 @@ public class MagnifierAction extends AbstractAction {
         }
 
         public void mount() {
-            int x = (frame.getWidth() / 2) - 50;
-            int y = (frame.getHeight() / 2) - 50;
+            int x = (parentComponent.getWidth() / 2) - 50;
+            int y = (parentComponent.getHeight() / 2) - 50;
 
             setBounds(x, y, 171, 171);
 

@@ -4,14 +4,15 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 
 import java.awt.*;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyToolWindowContainer implements ToolWindowContainer {
     protected DockedContainer dockedContainer;
+    protected ResourceManager resourceManager;
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
     protected ToolWindowTabPanel titleBarTabs;
@@ -20,7 +21,7 @@ public class MyDoggyToolWindowContainer implements ToolWindowContainer {
 
     public MyDoggyToolWindowContainer(DockedContainer dockedContainer) {
         this.dockedContainer = dockedContainer;
-        this.dockedContainer = dockedContainer;
+        this.resourceManager = dockedContainer.getResourceManager();
         this.descriptor = dockedContainer.getToolWindowDescriptor();
         this.toolWindow = descriptor.getToolWindow();
         this.titleBarButtons = dockedContainer.getTitleBarButtons();

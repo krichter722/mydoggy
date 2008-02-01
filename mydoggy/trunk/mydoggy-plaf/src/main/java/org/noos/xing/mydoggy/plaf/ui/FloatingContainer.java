@@ -69,8 +69,8 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
                 // Set Size
                 if (typeDescriptor.getSize() == null) {
-                    Window windowAnchestor = descriptor.getWindowAnchestor();
-                    window.setSize(windowAnchestor.getWidth() / 2, (int) (windowAnchestor.getHeight() / 1.5));
+                    Component parentComponent = descriptor.getManager().getParentComponent();
+                    window.setSize(parentComponent.getWidth() / 2, (int) (parentComponent.getHeight() / 1.5));
                 } else {
                     window.setSize(typeDescriptor.getSize());
                 }
@@ -119,10 +119,10 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
 
     protected void initComponents() {
-        window = new JModalWindow(dockedContainer.getResourceManager(),
-                dockedContainer.getResourceManager().getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
-                null,
-                false);
+        window = new JModalWindow(resourceManager,
+                                  resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
+                                  null,
+                                  false);
         window.setName("toolWindow.floating.window." + toolWindow.getId());
 
         JPanel contentPane = new JPanel(new ExtendedTableLayout(new double[][]{{1, TableLayout.FILL, 1}, {1, TableLayout.FILL, 1}}));

@@ -15,11 +15,11 @@ import java.awt.*;
  */
 public class InteractiveTestView implements View {
     protected ToolWindowManager toolWindowManager;
-    protected JFrame frame;
+    protected Component parentComponent;
     protected ViewContext mydoggySetContext;
 
-    public InteractiveTestView(ViewContext mydoggySetContext, JFrame frame, ToolWindowManager toolWindowManager) {
-        this.frame = frame;
+    public InteractiveTestView(ViewContext mydoggySetContext, Component parentComponent, ToolWindowManager toolWindowManager) {
+        this.parentComponent = parentComponent;
         this.toolWindowManager = toolWindowManager;
         this.mydoggySetContext = mydoggySetContext;
     }
@@ -27,7 +27,7 @@ public class InteractiveTestView implements View {
     public Component getComponent() {
         ViewContext viewContext = new MapViewContext();
         viewContext.put(ToolWindowManager.class, toolWindowManager);
-        viewContext.put(JFrame.class, frame);
+        viewContext.put("parentComponent", parentComponent);
         viewContext.put(MyDoggySetContext.class, mydoggySetContext);
 
         JPanel panel = new JPanel();

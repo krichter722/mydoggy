@@ -13,15 +13,15 @@ import java.awt.*;
  */
 public class NestedManagerView implements View {
     protected ToolWindowManager toolWindowManager;
-    protected JFrame frame;
+    protected Component parentComponent;
 
-    public NestedManagerView(JFrame frame, ToolWindowManager toolWindowManager) {
-        this.frame = frame;
+    public NestedManagerView(Component parentComponent, ToolWindowManager toolWindowManager) {
+        this.parentComponent = parentComponent;
         this.toolWindowManager = toolWindowManager;
     }
 
     public Component getComponent() {
-        MyDoggyToolWindowManager nestedToolManager = new MyDoggyToolWindowManager(frame);
+        MyDoggyToolWindowManager nestedToolManager = new MyDoggyToolWindowManager(parentComponent);
 
         // Add a tool
         nestedToolManager.registerToolWindow("Nested Tool 1",

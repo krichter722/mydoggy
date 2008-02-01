@@ -334,7 +334,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             };
 
             KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
-            toolWindowManager.addInternalPropertyChangeListener("anchestor.closed", new PropertyChangeListener() {
+            toolWindowManager.addInternalPropertyChangeListener("parentComponent.closed", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
                 }
@@ -634,7 +634,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         protected Map<Content, MultiSplitDockableContainer.Constraint> detachedContentUIMap;
 
         public DetachedListener() {
-            parentFrame = (toolWindowManager.getAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getAnchestor() : null;
+            parentFrame = (toolWindowManager.getParentComponent() instanceof Frame) ? (Frame) toolWindowManager.getParentComponent() : null;
             detachedContentUIMap = new HashMap<Content, MultiSplitDockableContainer.Constraint>();
         }
 

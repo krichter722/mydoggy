@@ -527,7 +527,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         protected Frame parentFrame;
 
         public DetachedListener() {
-            parentFrame = (toolWindowManager.getAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getAnchestor() : null;
+            parentFrame = (toolWindowManager.getParentComponent() instanceof Frame) ? (Frame) toolWindowManager.getParentComponent() : null;
         }
 
         public void propertyChange(PropertyChangeEvent evt) {

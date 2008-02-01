@@ -154,11 +154,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         mainPanel = new JPanel();
         sheet = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
 
-        Window anchestor = descriptor.getWindowAnchestor();
-        if (anchestor instanceof RootPaneContainer) {
-            layeredPane = ((RootPaneContainer) anchestor).getLayeredPane();
-        } else
-            throw new IllegalStateException("Can stay only on a RootPaneContainer.");
+        layeredPane = descriptor.getManager().getRootPaneContainer().getLayeredPane();
     }
 
     protected void initListeners() {

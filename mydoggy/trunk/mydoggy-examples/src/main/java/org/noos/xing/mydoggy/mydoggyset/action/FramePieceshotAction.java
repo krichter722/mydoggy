@@ -19,7 +19,8 @@ import java.util.prefs.Preferences;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class FramePieceshotAction extends AbstractAction implements Runnable {
-    protected JFrame frame;
+    protected Component parentComponent;
+    protected RootPaneContainer rootPaneContainer;
     protected JFileChooser fileChooser;
     protected Preferences preferences;
     protected LensPanel lensPanel;
@@ -28,9 +29,10 @@ public class FramePieceshotAction extends AbstractAction implements Runnable {
     protected Rectangle boundsToShot;
 
 
-    public FramePieceshotAction(JFrame frame) {
+    public FramePieceshotAction(Component parentComponent) {
         super("FramePieceshot");
-        this.frame = frame;
+        this.parentComponent = parentComponent;
+        this.rootPaneContainer = (RootPaneContainer) parentComponent;
 
         fileChooser = new JFileChooser();
         fileChooser.removeChoosableFileFilter(fileChooser.getAcceptAllFileFilter());
@@ -67,7 +69,7 @@ public class FramePieceshotAction extends AbstractAction implements Runnable {
 
     public void actionPerformed(ActionEvent e) {
         lensPanel.mount();
-        SwingUtil.repaint(frame);
+        SwingUtil.repaint(parentComponent);
     }
 
     public void run() {
@@ -84,7 +86,7 @@ public class FramePieceshotAction extends AbstractAction implements Runnable {
             if (currentDirPath != null)
                 fileChooser.setCurrentDirectory(new File(currentDirPath));
 
-            if (fileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showSaveDialog(parentComponent) == JFileChooser.APPROVE_OPTION) {
                 preferences.put("currentDirPath", fileChooser.getCurrentDirectory().getAbsolutePath());
 
                 // Store
@@ -137,12 +139,12 @@ public class FramePieceshotAction extends AbstractAction implements Runnable {
 
             add(innerPane, "1,1,FULL,FULL");
 
-            layeredPane = frame.getLayeredPane();
+            layeredPane = rootPaneContainer.getLayeredPane();
         }
 
         public void mount() {
-            int x = (frame.getWidth() / 2) - 50;
-            int y = (frame.getHeight() / 2) - 50;
+            int x = (parentComponent.getWidth() / 2) - 50;
+            int y = (parentComponent.getHeight() / 2) - 50;
 
             setBounds(x,y,100,100);
 
@@ -188,13 +190,13 @@ public class FramePieceshotAction extends AbstractAction implements Runnable {
                 if ("store".equals(actionCommand)) {
                     boundsToShot = getBounds();
                     Point location = boundsToShot.getLocation();
-                    if (frame.getJMenuBar() != null && frame.getJMenuBar().isVisible())
-                        location.y+= frame.getJMenuBar().getHeight();
+                    if (rootPaneContainer.getRootPane().getJMenuBar() != null && rootPaneContainer.getRootPane().getJMenuBar().isVisible())
+                        location.y+= rootPaneContainer.getRootPane().getJMenuBar().getHeight();
 
-                    SwingUtilities.convertPointToScreen(location, frame);
+                    SwingUtilities.convertPointToScreen(location, parentComponent);
                     boundsToShot.setLocation(location);
 
-                    boundsToShot = SwingUtilities.computeIntersection(frame.getX(), frame.getY(), frame.getWidth(), frame.getHeight(),
+                    boundsToShot = SwingUtilities.computeIntersection(parentComponent.getX(), parentComponent.getY(), parentComponent.getWidth(), parentComponent.getHeight(),
                                                                       boundsToShot);
 
 

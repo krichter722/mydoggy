@@ -650,7 +650,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         protected Map<Content, Integer> detachedContentUIMap;
 
         public DetachedListener() {
-            parentFrame = (toolWindowManager.getAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getAnchestor() : null;
+            parentFrame = (toolWindowManager.getParentComponent() instanceof Frame) ? (Frame) toolWindowManager.getParentComponent() : null;
             detachedContentUIMap = new HashMap<Content, Integer>();
         }
 

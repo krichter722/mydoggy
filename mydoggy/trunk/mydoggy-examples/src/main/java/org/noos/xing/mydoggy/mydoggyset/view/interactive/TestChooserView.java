@@ -51,14 +51,14 @@ public class TestChooserView extends ComponentView {
         protected Component initComponent() {
             JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{150,3,-1,3, 100},{-1}}));
 
-            JFrame frame = viewContext.get(JFrame.class);
+            Container container = (Container) viewContext.get("parentComponent");
             ToolWindowManager toolWindowManager = viewContext.get(ToolWindowManager.class);
 
             try {
                 tests = new JComboBox(new Object[]{
-                        new InteractiveUniversalDragTest(frame, toolWindowManager),
-                        new InteractiveShowToolTest(frame, toolWindowManager),
-                        new InteractiveToolTypesTest(frame, toolWindowManager),
+                        new InteractiveUniversalDragTest(container, toolWindowManager),
+                        new InteractiveShowToolTest(container, toolWindowManager),
+                        new InteractiveToolTypesTest(container, toolWindowManager),
 
                 });
             } catch (AWTException ignore) {
