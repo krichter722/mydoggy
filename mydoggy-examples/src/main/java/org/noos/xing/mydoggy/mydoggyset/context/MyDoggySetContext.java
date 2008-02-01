@@ -41,7 +41,7 @@ public class MyDoggySetContext extends MapViewContext {
     protected Component customizeContentComponent;
     protected Component nestedManagerContentComponent;
 
-    public MyDoggySetContext(ToolWindowManager toolWindowManager, final JFrame frame) {
+    public MyDoggySetContext(ToolWindowManager toolWindowManager, final Component parentComponent) {
         addViewContextChangeListener(MyDoggySet.class, new AddContentAction(toolWindowManager,
                                                                             "Welcome", "Welcome", null,
                                                                             welcomeContentComponent = new WelcomeContentView(this).getComponent(),
@@ -56,7 +56,7 @@ public class MyDoggySetContext extends MapViewContext {
                                                                             "ToolWindows", (int) 'T'));
         addViewContextChangeListener(ToolWindowGroup.class, new AddContentAction(toolWindowManager,
                                                                                  "Groups", "Group Editor", null,
-                                                                                 groupEditorContentComponent = new GroupsView(frame, toolWindowManager).getComponent(),
+                                                                                 groupEditorContentComponent = new GroupsView(parentComponent, toolWindowManager).getComponent(),
                                                                                  "Groups", (int) 'G'));
         addViewContextChangeListener(Content.class, new AddContentAction(toolWindowManager,
                                                                          "Contents", "Contents", null,
@@ -64,16 +64,16 @@ public class MyDoggySetContext extends MapViewContext {
                                                                          "Contents", (int) 'C'));
         addViewContextChangeListener(InteractiveTest.class, new AddContentAction(toolWindowManager,
                                                                                  "ITests", "Interactive Tests", null,
-                                                                                 interactiveTestContentComponent = new InteractiveTestView(this, frame, toolWindowManager).getComponent(),
+                                                                                 interactiveTestContentComponent = new InteractiveTestView(this, parentComponent, toolWindowManager).getComponent(),
                                                                                  "Interactive Tests", (int) 'I'));
         addViewContextChangeListener(ResourceManager.class, new AddContentAction(toolWindowManager,
                                                                                  "Customize", "Customize", null,
-                                                                                 customizeContentComponent = new CustomizeView(frame, toolWindowManager).getComponent(),
+                                                                                 customizeContentComponent = new CustomizeView(parentComponent, toolWindowManager).getComponent(),
                                                                                  "Customize", (int) 'u'));
 
         addViewContextChangeListener(ActionKey.NEST_TOOLMANAGER, new AddContentAction(toolWindowManager,
                                                                                       "Nested Manager", "Nested Manager", null,
-                                                                                      nestedManagerContentComponent = new NestedManagerView(frame, toolWindowManager).getComponent(),
+                                                                                      nestedManagerContentComponent = new NestedManagerView(parentComponent, toolWindowManager).getComponent(),
                                                                                       "Nested Manager", (int) 'N'));
 
         addViewContextChangeListener(UIManager.class, new ViewContextChangeListener() {
@@ -81,7 +81,7 @@ public class MyDoggySetContext extends MapViewContext {
                 try {
                     UIManager.setLookAndFeel((String) evt.getNewValue());
 
-                    SwingUtilities.updateComponentTreeUI(frame);
+                    SwingUtilities.updateComponentTreeUI(parentComponent);
 
                     SwingUtilities.updateComponentTreeUI(groupEditorContentComponent);
                     SwingUtilities.updateComponentTreeUI(toolsContentComponent);

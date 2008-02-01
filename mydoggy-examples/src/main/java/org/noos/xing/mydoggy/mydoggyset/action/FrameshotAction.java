@@ -15,14 +15,14 @@ import java.util.prefs.Preferences;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class FrameshotAction extends AbstractAction implements Runnable {
-    protected JFrame frame;
+    protected Component parentComponent;
     protected JFileChooser fileChooser;
     protected PreviewPanel previewPanel;
     protected Preferences preferences;
 
-    public FrameshotAction(JFrame frame) {
+    public FrameshotAction(Component parentComponent) {
         super("Frameshot");
-        this.frame = frame;
+        this.parentComponent = parentComponent;
 
         fileChooser = new JFileChooser();
         fileChooser.removeChoosableFileFilter(fileChooser.getAcceptAllFileFilter());
@@ -64,7 +64,7 @@ public class FrameshotAction extends AbstractAction implements Runnable {
 
             // Take the frameshow
             Robot robot = new Robot();
-            BufferedImage image = robot.createScreenCapture(frame.getBounds());
+            BufferedImage image = robot.createScreenCapture(parentComponent.getBounds());
             previewPanel.setImage(image);
 
             // Choose where
@@ -72,7 +72,7 @@ public class FrameshotAction extends AbstractAction implements Runnable {
             if (currentDirPath != null)
                 fileChooser.setCurrentDirectory(new File(currentDirPath));
 
-            if (fileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showSaveDialog(parentComponent) == JFileChooser.APPROVE_OPTION) {
                 preferences.put("currentDirPath", fileChooser.getCurrentDirectory().getAbsolutePath());
 
                 // Store

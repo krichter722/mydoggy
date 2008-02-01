@@ -231,7 +231,7 @@ public class DockedContainer implements ToolWindowContainer {
                 resourceManager.createInstance(ParentOfQuestion.class, container, toolWindow)
         );
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
-        addPropertyChangeListener("anchestor.closed", new PropertyChangeListener() {
+        addPropertyChangeListener("parentComponent.closed", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
                 toolWindow.setFlashing(false);

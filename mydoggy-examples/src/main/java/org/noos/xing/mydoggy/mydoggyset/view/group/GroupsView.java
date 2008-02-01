@@ -24,17 +24,17 @@ import java.awt.*;
 
 public class GroupsView implements View {
     protected ToolWindowManager toolWindowManager;
-    protected JFrame frame;
+    protected Component parentComponent;
 
-    public GroupsView(JFrame frame, ToolWindowManager toolWindowManager) {
+    public GroupsView(Component parentComponent, ToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
-        this.frame = frame;
+        this.parentComponent = parentComponent;
     }
 
     public Component getComponent() {
         ViewContext viewContext = new MapViewContext();
         viewContext.put(ToolWindowManager.class, toolWindowManager);
-        viewContext.put(JFrame.class, frame);
+        viewContext.put("parentComponent", parentComponent);
 
         JPanel panel = new JPanel();
         panel.setLayout(new ExtendedTableLayout(new double[][]{{3, -1, 3, 200, 3}, {3, -1, 3}}));
@@ -81,7 +81,7 @@ public class GroupsView implements View {
         protected void initListeners() {
             viewContext.addViewContextChangeListener(GroupKeySpace.ADD_GROUP, new ViewContextChangeListener() {
                 public void contextChange(ViewContextChangeEvent evt) {
-                    String groupName = JOptionPane.showInputDialog(viewContext.get(JFrame.class), "Group Name");
+                    String groupName = JOptionPane.showInputDialog((Component) viewContext.get("parentComponent"), "Group Name");
                     if (groupName != null)
                         viewContext.get(ToolWindowManager.class).getToolWindowGroup(groupName);
                 }

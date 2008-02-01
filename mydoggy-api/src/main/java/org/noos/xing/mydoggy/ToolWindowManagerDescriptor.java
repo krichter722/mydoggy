@@ -134,7 +134,7 @@ public interface ToolWindowManagerDescriptor extends Observable {
 
     /**
      *
-     * @param show
+     * @param showUnavailableTools
      * @since 1.4.1
      */
     void setShowUnavailableTools(boolean showUnavailableTools);

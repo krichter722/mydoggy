@@ -31,11 +31,19 @@ import java.util.Locale;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggySet {
-    protected JFrame frame;
+public class MyDoggySetApplet extends JApplet {
     protected ToolWindowManager toolWindowManager;
     protected ViewContext myDoggySetContext;
 
+    public void init() {
+        super.init();
+        setUp();
+    }
+
+    public void start() {
+        super.start();
+        start(null);
+    }
 
     public void setUp() {
         initComponents();
@@ -46,8 +54,6 @@ public class MyDoggySet {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 myDoggySetContext.put(MyDoggySet.class, null);
-                SwingUtil.centrePositionOnScreen(frame);
-                frame.setVisible(true);
 
                 if (runnable != null) {
                     Thread t = new Thread(runnable);
@@ -68,19 +74,21 @@ public class MyDoggySet {
 
     protected void initComponents() {
         // Init the frame
-        this.frame = new JFrame("MyDoggy-Set 1.4.0 ...");
-        this.frame.setSize(640, 480);
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
+//        this.frame = new JFrame("MyDoggy-Set 1.4.0 ...");
+//        this.frame.setSize(640, 480);
+//        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        this.frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
+        setSize(640, 480);
+        getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
 
         // Init ToolWindowManager
-        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame, Locale.US, null);
+        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(this, Locale.US, null);
 
         // Apply now all customization if necessary
         customizeToolWindowManager(myDoggyToolWindowManager);
 
         this.toolWindowManager = myDoggyToolWindowManager;
-        this.myDoggySetContext = new MyDoggySetContext(toolWindowManager, frame);
+        this.myDoggySetContext = new MyDoggySetContext(toolWindowManager, this);
         initMenuBar();
     }
 
@@ -89,14 +97,12 @@ public class MyDoggySet {
 
         // File Menu
         JMenu fileMenu = new JMenu("File");
-        fileMenu.add(new LoadWorkspaceAction(frame, toolWindowManager));
-        fileMenu.add(new StoreWorkspaceAction(frame, toolWindowManager));
+        fileMenu.add(new LoadWorkspaceAction(this, toolWindowManager));
+        fileMenu.add(new StoreWorkspaceAction(this, toolWindowManager));
         fileMenu.addSeparator();
-        fileMenu.add(new FrameshotAction(frame));
-        fileMenu.add(new FramePieceshotAction(frame));
-        fileMenu.add(new MagnifierAction(frame));
-        fileMenu.addSeparator();
-        fileMenu.add(new ExitAction(frame));
+        fileMenu.add(new FrameshotAction(this));
+        fileMenu.add(new FramePieceshotAction(this));
+        fileMenu.add(new MagnifierAction(this));
 
         // Content Menu
         JMenu contentMenu = new JMenu("Content");
@@ -127,7 +133,7 @@ public class MyDoggySet {
         menuBar.add(contentMenu);
         menuBar.add(lafMenu);
 
-        this.frame.setJMenuBar(menuBar);
+        setJMenuBar(menuBar);
     }
 
     protected void initToolWindowManager() {
@@ -210,7 +216,7 @@ public class MyDoggySet {
         JMenuItem menuItem = new JMenuItem("Hello World!!!");
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Hello World!!!");
+                JOptionPane.showMessageDialog(MyDoggySetApplet.this, "Hello World!!!");
             }
         });
         dockedTypeDescriptor.getToolsMenu().add(menuItem);
@@ -240,7 +246,7 @@ public class MyDoggySet {
         contentManagerUI.setTabLayout(TabbedContentManagerUI.TabLayout.WRAP);
         contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
             public boolean contentUIRemoving(ContentManagerUIEvent event) {
-                return JOptionPane.showConfirmDialog(frame, "Are you sure?") == JOptionPane.OK_OPTION;
+                return JOptionPane.showConfirmDialog(MyDoggySetApplet.this, "Are you sure?") == JOptionPane.OK_OPTION;
             }
 
             public void contentUIDetached(ContentManagerUIEvent event) {
@@ -255,7 +261,7 @@ public class MyDoggySet {
         managerDescriptor.setCornerComponent(SOUTH_EAST, new JLabel("SE"));
 
         // Add MyDoggyToolWindowManager to frame
-        this.frame.getContentPane().add((Component) toolWindowManager, "1,1,");
+        getContentPane().add((Component) toolWindowManager, "1,1,");
     }
 
     protected void customizeToolWindowManager(MyDoggyToolWindowManager myDoggyToolWindowManager) {
@@ -378,21 +384,6 @@ public class MyDoggySet {
         });
     }
 
-    protected void dispose() {
-        frame.setVisible(false);
-        frame.dispose();
-    }
-
-
-    public static void main(String[] args) {
-        MyDoggySet test = new MyDoggySet();
-        try {
-            test.setUp();
-            test.start(null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public class CustomParentOfQuestion implements Question {
         protected Component parent;
@@ -413,7 +404,7 @@ public class MyDoggySet {
 
             Component cursor = component;
             while (cursor != null) {
-                if ((cursor instanceof JXMonthView && toolWindow.isActive()) || cursor == parent) 
+                if ((cursor instanceof JXMonthView && toolWindow.isActive()) || cursor == parent)
                     return true;
                 cursor = cursor.getParent();
             }

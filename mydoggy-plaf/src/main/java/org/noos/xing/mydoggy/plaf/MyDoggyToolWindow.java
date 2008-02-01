@@ -52,14 +52,15 @@ public class MyDoggyToolWindow implements ToolWindow {
     protected AggregationPosition lastAggregationPosition;
 
 
-    protected MyDoggyToolWindow(MyDoggyToolWindowManager manager, Window anchestor, String id, int index,
+    protected MyDoggyToolWindow(MyDoggyToolWindowManager manager,
+                                Component parentComponent, String id, int index,
                                 ToolWindowAnchor anchor, ToolWindowType type,
                                 String title, Icon icon, Component component,
                                 ResourceBundle resourceBundle) {
         this.internalListenerList = new EventListenerList();
         this.listenerList = new EventListenerList();
 
-        this.descriptor = new ToolWindowDescriptor(manager, this, anchestor);
+        this.descriptor = new ToolWindowDescriptor(manager, this);
         this.resourceBundle = resourceBundle;
         this.toolWindowTabs = new ArrayList<ToolWindowTab>();
 

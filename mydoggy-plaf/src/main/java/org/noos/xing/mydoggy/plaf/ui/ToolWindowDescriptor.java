@@ -19,37 +19,35 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ToolWindowDescriptor implements PropertyChangeListener {
-    private MyDoggyToolWindowManager manager;
-    private MyDoggyToolWindow toolWindow;
+    protected MyDoggyToolWindowManager manager;
+    protected MyDoggyToolWindow toolWindow;
 
-    private Window windowAnchestor;
+//    protected Window windowAnchestor;
 
-    private DockedContainer dockedContainer;
-    private FloatingContainer floatingContainer;
-    private SlidingContainer slidingContainer;
-    private FloatingLiveContainer floatingLiveContainer;
+    protected DockedContainer dockedContainer;
+    protected FloatingContainer floatingContainer;
+    protected SlidingContainer slidingContainer;
+    protected FloatingLiveContainer floatingLiveContainer;
 
-    private Component component;
-    private JLabel representativeAnchor;
+    protected Component component;
+    protected JLabel representativeAnchor;
 
-    private int divederLocation = -1;
-    private int tempDivederLocation;
+    protected int divederLocation = -1;
+    protected int tempDivederLocation;
 
-    private FloatingTypeDescriptor floatingTypeDescriptor;
-    private DockedTypeDescriptor dockedTypeDescriptor;
-    private SlidingTypeDescriptor slidingTypeDescriptor;
-    private FloatingLiveTypeDescriptor floatingLiveTypeDescriptor;
+    protected FloatingTypeDescriptor floatingTypeDescriptor;
+    protected DockedTypeDescriptor dockedTypeDescriptor;
+    protected SlidingTypeDescriptor slidingTypeDescriptor;
+    protected FloatingLiveTypeDescriptor floatingLiveTypeDescriptor;
 
-    private boolean floatingWindow = false;
+    protected boolean floatingWindow = false;
 
     boolean valueAdj = false;
 
 
     public ToolWindowDescriptor(MyDoggyToolWindowManager manager,
-                                MyDoggyToolWindow toolWindow,
-                                Window windowAnchestor) {
+                                MyDoggyToolWindow toolWindow) {
         this.manager = manager;
-        this.windowAnchestor = windowAnchestor;
         this.toolWindow = toolWindow;
 
         toolWindow.addInternalPropertyChangeListener(this);
@@ -263,7 +261,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     }
 
     public Window getWindowAnchestor() {
-        return windowAnchestor;
+        return manager.getParentComponent() instanceof Window ? (Window) manager.getParentComponent() : null; 
     }
 
     public ToolWindowContainer getToolWindowContainer() {
@@ -376,7 +374,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     }
 
     public int getJMenuBarExtraHeight() {
-        JMenuBar jMenuBar = ((RootPaneContainer) getWindowAnchestor()).getRootPane().getJMenuBar();
+        JMenuBar jMenuBar = manager.getRootPane().getJMenuBar();
 
         if (jMenuBar != null && jMenuBar.isVisible())
             return jMenuBar.getHeight();

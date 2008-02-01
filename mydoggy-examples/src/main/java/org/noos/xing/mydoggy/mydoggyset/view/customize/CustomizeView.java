@@ -23,17 +23,17 @@ import java.awt.*;
  */
 public class CustomizeView implements View {
     protected ToolWindowManager toolWindowManager;
-    protected JFrame frame;
+    protected Component parentComponent;
 
-    public CustomizeView(JFrame frame, ToolWindowManager toolWindowManager) {
-        this.frame = frame;
+    public CustomizeView(Component parentComponent, ToolWindowManager toolWindowManager) {
+        this.parentComponent = parentComponent;
         this.toolWindowManager = toolWindowManager;
     }
 
     public Component getComponent() {
         ViewContext viewContext = new MapViewContext();
         viewContext.put(ToolWindowManager.class, toolWindowManager);
-        viewContext.put(JFrame.class, frame);
+        viewContext.put("parentComponent", parentComponent);
 
         JPanel panel = new JPanel();
         panel.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1, 3, -1}}));
