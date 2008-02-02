@@ -32,6 +32,9 @@
             </p>
             <ul>
                 <li>
+                    1.4.1 <a href="./resources/dtd/persistence_1_4_1.dtd">here</a>.
+                </li>
+                <li>
                     1.4.0 <a href="./resources/dtd/persistence_1_4_0.dtd">here</a>.
                 </li>
                 <li>
@@ -51,7 +54,7 @@
 
             <source xml:space="preserve">
 &lt;?xml version="1.0" standalone="yes"?&gt;
-&lt;mydoggy version="1.4.0"&gt;
+&lt;mydoggy version="1.4.1"&gt;
     &lt;tools&gt;
         &lt;tool id="Tool 1" available="true" visible="true" active="true" autoHide="false" anchor="LEFT" anchorIndex="1" type="DOCKED" aggregateMode="false" maximized="false" index="1" representativeAnchorButtonVisible="true"&gt;
             &lt;descriptors&gt;
@@ -74,6 +77,11 @@
             &lt;/mode&gt;
         &lt;/pushAway&gt;
     &lt;/toolWindowManagerDescriptor&gt;
+    &lt;contentManagerUI&gt;
+        &lt;MultiSplitContentManagerUI closeable="true" detachable="true" showAlwaysTab="false" tabLayout="WRAP" tabPlacement="BOTTOM"&gt;
+            &lt;content id="Welcome" showAlwaysTab="false"/&gt;
+        &lt;/MultiSplitContentManagerUI&gt;
+    &lt;/contentManagerUI&gt;
     &lt;contentManager&gt;
         &lt;content id="Welcome" detached="false" enabled="true" selected="false" maximized="false"/&gt;
     &lt;/contentManager&gt;

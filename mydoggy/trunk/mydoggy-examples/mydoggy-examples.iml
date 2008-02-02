@@ -10,6 +10,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
+      <excludeFolder url="file://$MODULE_DIR$/target/maven-archiver" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -45,15 +46,15 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="tablelayout:TableLayout:20020517">
+      <library name="tablelayout:TableLayout:20050920">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/tablelayout/TableLayout/20020517/TableLayout-20020517.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/tablelayout/TableLayout/20050920/TableLayout-20050920.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/tablelayout/TableLayout/20020517/TableLayout-20020517-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/tablelayout/TableLayout/20050920/TableLayout-20050920-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/tablelayout/TableLayout/20020517/TableLayout-20020517-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/tablelayout/TableLayout/20050920/TableLayout-20050920-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

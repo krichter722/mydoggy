@@ -7,6 +7,11 @@
     </properties>
 
     <body>
+        <release version="1.4.1" date="2008-01-01" description="Code name : Magenta">
+            <action dev="adecaro" type="update">
+                Support for all new features.  New content for nested ToolWindowManager.
+            </action>
+        </release>
         <release version="1.4.0" date="2008-01-01" description="Code name : Vittoria">
             <action dev="adecaro" type="update">
                 Support for all new features.  By default MyDoggySet use the new MultiSplitContentManagerUI.
