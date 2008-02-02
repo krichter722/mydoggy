@@ -7,6 +7,78 @@
     </properties>
 
     <body>
+        <release version="1.4.1" date="2008-01-01" description="Code name : Magenta">
+            <action dev="adecaro" type="update">
+                See Changes of :
+                <![CDATA[
+                    <a href="./mydoggy-api/changes-report.html">MyDoggy-Api</a>,
+                    <a href="./mydoggy-plaf/changes-report.html">MyDoggy-Plaf</a>,
+                    <a href="./mydoggy-examples/changes-report.html">MyDoggy-Example</a>.
+                    <br/>
+                    New Features:
+                    <ul>
+                        <li>
+                            Now also the representative anchor buttons of unavailable tools can be showed. See the screenshot here. 
+                        </li>
+                    </ul>
+                    <br/>
+                    Bug Resolved:
+                    <ul>
+                        <li>
+                            Right click on non-selected content tab fires action : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1865256&group_id=178005&atid=883495">Request ID 1865256</a>
+                        </li>
+                        <li>
+                            Restoring detached windows : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1866867&group_id=178005&atid=883495">Request ID 1866867</a>
+                        </li>
+                        <li>
+                            Windows accidentally losing focus : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1866906&group_id=178005&atid=883495">Request ID 1866906</a>
+                        </li>
+                        <li>
+                            Re-Attaching content windows : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1867097&group_id=178005&atid=883495">Request ID 1867097</a>
+                        </li>
+                        <li>
+                            Toolpanels get glued together (split-pane-alike) : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1872768&group_id=178005&atid=883495">Request ID 1872768</a>
+                        </li>
+
+
+                        <li>
+                            Repainting issues on overlapping tools : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1872970&group_id=178005&atid=883495">Request ID 1872970</a>
+                        </li>
+                        <li>
+                            Title of floating toolwindow not painted at proper position. : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1874502&group_id=178005&atid=883495">Request ID 1874502</a>
+                        </li>
+                        <li>
+                            ToolWindow disappears when maximizing floating, un-pinned : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1877094&group_id=178005&atid=883495">Request ID 1877094</a>
+                        </li>
+                        <li>
+                            Repainting problems with floating tool windows : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1877465&group_id=178005&atid=883495">Request ID 1877465</a>
+                        </li>
+
+
+
+                        <li>
+                            PropertyChangeEvent \"selected\" is dist. twice on CP-reatta : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1879855&group_id=178005&atid=883495">Request ID 1879855</a>
+                        </li>
+                        <li>
+                            CycleRoot-issues with floating Toolpanels : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1881720&group_id=178005&atid=883495">Request ID 1881720</a>
+                        </li>
+
+
+                        <li>
+                            Transition from FLOATING > SLIDING : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1881882&group_id=178005&atid=883495">Request ID 1881882</a>
+                        </li>
+                        <li>
+                            Maximizing floating ToolWindow also maximizes the mainwindow : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1882515&group_id=178005&atid=883495">Request ID 1882515</a>
+                        </li>
+                    </ul>
+                    Feature Requests:
+                    <ul>
+                        <li>
+                            Please reintroduce id == Object instead of String : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1863970&group_id=178005&atid=883498">Request ID 1863970</a>
+                        </li>
+                    ]]>
+            </action>
+        </release>
         <release version="1.4.0" date="2008-01-01" description="Code name : Vittoria">
             <action dev="adecaro" type="update">
                 See Changes of :
