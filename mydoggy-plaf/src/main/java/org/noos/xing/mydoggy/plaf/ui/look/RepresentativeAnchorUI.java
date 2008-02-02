@@ -327,6 +327,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                 return;
 
             previewTimer.stop();
+            firstPreview = false;
             actionPerformed(new ActionEvent(previewTimer, 0, "stop"));
 
             if (SwingUtilities.isLeftMouseButton(e)) {
@@ -420,15 +421,14 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             if (e.getSource() == previewTimer) {
                 if ("stop".equals(e.getActionCommand())) {
                     if (previewPanel != null && !firstPreview) {
-                        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(label);
+                        Window windowAnchestor = SwingUtilities.getWindowAncestor(label);
 
-                        if (frame != null) {
+                        if (windowAnchestor != null) {
                             GlassPanel glassPane = descriptor.getManager().getGlassPanel();
                             glassPane.remove(previewPanel);
-                            SwingUtil.repaint(glassPane);
                             glassPane.setVisible(false);
-
-                            SwingUtil.repaint(frame);
+                            SwingUtil.repaint(glassPane);
+                            SwingUtil.repaint(windowAnchestor);
 
                             previewPanel = null;
                         }

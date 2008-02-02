@@ -107,6 +107,7 @@ public interface ContentManager {
 
     /**
      * Returns all aliases associated to the passed content.
+     * 
      * @param content toolwindow whose aliases are to be returned.
      * @return all aliases associated to the passed content.
      * @since 1.4.1

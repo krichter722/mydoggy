@@ -23,6 +23,7 @@ import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro
+ * @todo introduce animation...
  */
 public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
     protected JLayeredPane layeredPane;

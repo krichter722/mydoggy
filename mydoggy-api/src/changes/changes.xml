@@ -7,6 +7,84 @@
     </properties>
 
     <body>
+        <release version="1.4.1" date="2008-01-01" description="Code name : Magenta">
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentManager.html">
+                    <code>ContentManager</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">void addAlias(Content content, Object alias);</code>
+                        Associates the specified content with the specified alias in this manager.
+                        If the manager previously contained a mapping for this alias, the old content is replaced
+                        by the specified content.
+                    </li>
+                    <li>
+                        <code style="color:green">Object[] getAliases(Content content);</code></br>
+                        Returns all aliases associated to the passed content.
+                        </br>
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentManager.html">
+                    <code>ContentManager</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">Rectangle getDetachedBounds();</code>
+                        Returns the bounds of the detached window from the last detached session.
+                    </li>
+                    <li>
+                        <code style="color:green">void setDetachedBounds(Rectangle detachedBounds);</code></br>
+                        Sets the bounds for the next detached session.
+                        </br>
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/MultiSplitContentUI.html">
+                    <code>MultiSplitContentUI</code>
+                </a> - This interface let you modify ui behaviours of a content when a <code>MultiSplitContentManagerUI</code> is used
+                as current <code>ContentManagerUI</code>.
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowManager.html">
+                    <code>ToolWindowManager</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">Object[] getAliases(ToolWindow toolWindow);</code>
+                        Returns all aliases associated to the passed toolwindow.
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowManagerDescriptor.html">
+                    <code>ToolWindowManagerDescriptor</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">void setShowUnavailableTools(boolean showUnavailableTools);</code>
+                        Sets whether or not the representative anchor buttons for unavailable tools are to be showed.
+                    </li>
+                    <li>
+                        <code style="color:green">Returns the value of the property "showUnavailableTools"</code>
+                        Returns the value of the property "showUnavailableTools"
+                    </li>
+                </ul>
+                ]]>
+            </action>
+        </release>
         <release version="1.4.0" date="2008-01-01" description="Code name : Vittoria">
             <action dev="adecaro" type="update">
                 <![CDATA[

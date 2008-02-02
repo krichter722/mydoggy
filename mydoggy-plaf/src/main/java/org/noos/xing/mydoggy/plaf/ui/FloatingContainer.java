@@ -77,8 +77,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
                 // Set Location
                 if (typeDescriptor.getLocation() == null) {
-                    if (content.getX() == 0 || content.getY() == 0)
-                        SwingUtil.centrePositionOnScreen(window);
+                    SwingUtil.centrePositionOnScreen(window);
                 } else
                     window.setLocation(typeDescriptor.getLocation());
             } else {

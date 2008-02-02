@@ -95,6 +95,7 @@ public interface ToolWindowManager {
 
     /**
      * Returns all aliases associated to the passed toolwindow.
+     *
      * @param toolWindow toolwindow whose aliases are to be returned. 
      * @return all aliases associated to the passed toolwindow. 
      * @since 1.4.1
