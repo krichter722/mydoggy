@@ -169,6 +169,9 @@ public class MyDoggyToolWindow implements ToolWindow {
                     return;
             }
 
+            if (isAutoHide())
+                setAutoHide(false);
+
             descriptor.getManager().setShowingGroup();
             if (!isVisible()) {
                 if (getType() == ToolWindowType.SLIDING || getType() == ToolWindowType.FLOATING_LIVE)

@@ -95,18 +95,22 @@ public interface ContentManager {
     Content addContent(Dockable dockable);
 
     /**
+     * Associates the specified content with the specified alias in this manager.
+     * If the manager previously contained a mapping for this alias, the old content is replaced
+     * by the specified content.
      *
-     * @param content
-     * @param alias
+     * @param content content to be associated with the specified alias.
+     * @param alias alias with which the specified toolWindow is to be associated.
      * @since 1.4.1
      */
     void addAlias(Content content, Object alias);
 
     /**
-     *
-     * @param content
-     * @return
+     * Returns all aliases associated to the passed content.
+     * @param content toolwindow whose aliases are to be returned.
+     * @return all aliases associated to the passed content.
      * @since 1.4.1
+     * @see #addAlias(Content, Object) 
      */
     Object[] getAliases(Content content);
 
@@ -161,7 +165,7 @@ public interface ContentManager {
 
     /**
      * Returns the content to which this manager maps the specified key (the key could be the id or
-     * an alias).  Returns <tt>null</tt> if the manager contains no mapping for this key.
+     * an alias). Returns <tt>null</tt> if the manager contains no mapping for this key.
      *
      * @param key key whose associated content is to be returned.
      * @return the content to which this manager maps the specified key

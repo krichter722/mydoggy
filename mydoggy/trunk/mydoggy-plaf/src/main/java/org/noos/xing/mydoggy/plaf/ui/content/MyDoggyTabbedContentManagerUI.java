@@ -34,7 +34,6 @@ import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * @todo: maxime has some problems...
  */
 public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI implements TabbedContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
     protected JTabbedContentPane tabbedContentPane;

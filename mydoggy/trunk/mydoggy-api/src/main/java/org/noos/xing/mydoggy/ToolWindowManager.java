@@ -94,10 +94,11 @@ public interface ToolWindowManager {
     void addAlias(ToolWindow toolWindow, Object alias);
 
     /**
-     *
-     * @param toolWindow
-     * @return
+     * Returns all aliases associated to the passed toolwindow.
+     * @param toolWindow toolwindow whose aliases are to be returned. 
+     * @return all aliases associated to the passed toolwindow. 
      * @since 1.4.1
+     * @see #addAlias(ToolWindow, Object)
      */
     Object[] getAliases(ToolWindow toolWindow);
 

@@ -7,6 +7,7 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.AggregateIcon;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
+import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -138,24 +139,28 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
             String toolRepresentativeAnchorText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
                                                   ? toolWindow.getIndex() + " : " + labelText
                                                   : labelText;
+            Icon toolIcon = toolWindow.isAvailable() || toolWindow.getIcon() == null ? toolWindow.getIcon()
+                            : new ImageIcon(GrayFilter.createDisabledImage(
+                    GraphicsUtil.getImage(representativeAnchor, toolWindow.getIcon()))
+            );
 
             switch (anchor) {
                 case BOTTOM:
                 case TOP:
-                    representativeAnchor = new RepresentativeAnchor(toolRepresentativeAnchorText, toolWindow.getIcon(), JLabel.CENTER);
+                    representativeAnchor = new RepresentativeAnchor(toolRepresentativeAnchorText, toolIcon, JLabel.CENTER);
                     break;
                 case LEFT:
                     TextIcon textIcon = new TextIcon(container, toolRepresentativeAnchorText, TextIcon.ROTATE_LEFT);
-//                    textIcon.setForeground(toolWindow.isAvailable() ? manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND)
-//                                                                    : manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
-                    AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolWindow.getIcon(), SwingConstants.VERTICAL);
+                    textIcon.setForeground(toolWindow.isAvailable() ? manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND)
+                                                                    : manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
+                    AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolIcon, SwingConstants.VERTICAL);
                     representativeAnchor = new RepresentativeAnchor(compositeIcon, JLabel.CENTER);
                     break;
                 case RIGHT:
                     textIcon = new TextIcon(container, toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
-//                    textIcon.setForeground(toolWindow.isAvailable() ? manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND)
-//                                                                    : manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
-                    compositeIcon = new AggregateIcon(toolWindow.getIcon(), textIcon, SwingConstants.VERTICAL);
+                    textIcon.setForeground(toolWindow.isAvailable() ? manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND)
+                                                                    : manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
+                    compositeIcon = new AggregateIcon(toolIcon, textIcon, SwingConstants.VERTICAL);
                     representativeAnchor = new RepresentativeAnchor(compositeIcon, JLabel.CENTER);
                     break;
             }
@@ -180,6 +185,45 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         if (representativeAnchor == null)
             return -1;
         return getToolBar().getRepresentativeAnchorIndex(representativeAnchor);
+    }
+
+    public void updateRepresentativeAnchor() {
+        if (representativeAnchor != null) {
+            ToolWindowAnchor anchor = toolWindow.getAnchor();
+
+            String labelText = getResourceManager().getUserString(toolWindow.getId());
+            String toolRepresentativeAnchorText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
+                                                  ? toolWindow.getIndex() + " : " + labelText
+                                                  : labelText;
+            Icon toolIcon = toolWindow.isAvailable() || toolWindow.getIcon() == null ? toolWindow.getIcon()
+                            : new ImageIcon(GrayFilter.createDisabledImage(
+                    GraphicsUtil.getImage(representativeAnchor, toolWindow.getIcon()))
+            );
+
+            switch (anchor) {
+                case BOTTOM:
+                case TOP:
+                    representativeAnchor.setIcon(toolIcon);
+                    representativeAnchor.setText(toolRepresentativeAnchorText);
+                    break;
+                case LEFT:
+                    TextIcon textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getLeftIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_LEFT);
+                    textIcon.setForeground(toolWindow.isAvailable() ? manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND)
+                                                                    : manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
+                    AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolIcon, SwingConstants.VERTICAL);
+                    representativeAnchor.setText(null);
+                    representativeAnchor.setIcon(compositeIcon);
+                    break;
+                case RIGHT:
+                    textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getRightIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
+                    textIcon.setForeground(toolWindow.isAvailable() ? manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND)
+                                                                    : manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
+                    compositeIcon = new AggregateIcon(toolIcon, textIcon, SwingConstants.VERTICAL);
+                    representativeAnchor.setText(null);
+                    representativeAnchor.setIcon(compositeIcon);
+                    break;
+            }
+        }
     }
 
     public boolean isFloatingWindow() {
@@ -261,7 +305,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     }
 
     public Window getWindowAnchestor() {
-        return manager.getParentComponent() instanceof Window ? (Window) manager.getParentComponent() : null; 
+        return manager.getParentComponent() instanceof Window ? (Window) manager.getParentComponent() : null;
     }
 
     public ToolWindowContainer getToolWindowContainer() {
@@ -336,41 +380,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
     public Component getContentContainer() {
         return ((DockedContainer) getToolWindowContainer()).getContentContainer();
-    }
-
-    public void updateRepresentativeAnchor() {
-        if (representativeAnchor != null) {
-            ToolWindowAnchor anchor = toolWindow.getAnchor();
-
-            String labelText = getResourceManager().getUserString(toolWindow.getId());
-            String toolRepresentativeAnchorText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
-                                                  ? toolWindow.getIndex() + " : " + labelText
-                                                  : labelText;
-
-            switch (anchor) {
-                case BOTTOM:
-                case TOP:
-                    representativeAnchor.setIcon(toolWindow.getIcon());
-                    representativeAnchor.setText(toolRepresentativeAnchorText);
-                    break;
-                case LEFT:
-                    TextIcon textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getLeftIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_LEFT);
-                    textIcon.setForeground(toolWindow.isAvailable() ? manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND)
-                                                                    : manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
-                    AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolWindow.getIcon(), SwingConstants.VERTICAL);
-                    representativeAnchor.setText(null);
-                    representativeAnchor.setIcon(compositeIcon);
-                    break;
-                case RIGHT:
-                    textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getRightIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
-                    textIcon.setForeground(toolWindow.isAvailable() ? manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND)
-                                                                    : manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
-                    compositeIcon = new AggregateIcon(toolWindow.getIcon(), textIcon, SwingConstants.VERTICAL);
-                    representativeAnchor.setText(null);
-                    representativeAnchor.setIcon(compositeIcon);
-                    break;
-            }
-        }
     }
 
     public int getJMenuBarExtraHeight() {

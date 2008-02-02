@@ -257,6 +257,19 @@ public class GraphicsUtil {
         return result;
     }
 
+    public static Image getImage(Component component, Icon icon) {
+        if (icon == null)
+            return null;
+        if (icon instanceof ImageIcon)
+            return ((ImageIcon) icon).getImage();
+        else {
+            BufferedImage bufferedImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(),
+                                                            BufferedImage.TYPE_INT_RGB);
+            icon.paintIcon(component, bufferedImage.getGraphics(), 0, 0);
+            return bufferedImage;
+        }
+    }
+
     public static GraphicsConfiguration getDefaultConfiguration() {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice gd = ge.getDefaultScreenDevice();

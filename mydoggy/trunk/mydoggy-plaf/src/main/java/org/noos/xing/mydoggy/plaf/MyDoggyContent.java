@@ -1,5 +1,6 @@
 package org.noos.xing.mydoggy.plaf;
 
+import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentUI;
 import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.plaf.ui.content.PlafContent;
@@ -194,6 +195,15 @@ public class MyDoggyContent implements PlafContent {
     public void setMaximized(boolean maximized) {
         if (this.maximized == maximized)
             return;
+
+        if (maximized) {
+            for (Content content : contentManager.getContents()) {
+                if (content.isMaximized() && content != this) {
+                    content.setMaximized(false);
+                    return;
+                }
+            }
+        }
 
         boolean old = this.maximized;
         if (maximized)
