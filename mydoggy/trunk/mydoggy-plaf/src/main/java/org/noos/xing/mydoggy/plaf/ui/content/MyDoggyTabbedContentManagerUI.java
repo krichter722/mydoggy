@@ -34,6 +34,7 @@ import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @todo: maxime has some problems...
  */
 public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI implements TabbedContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
     protected JTabbedContentPane tabbedContentPane;
@@ -231,6 +232,11 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
     }
 
     public void addContent(PlafContent content, Object... constraints) {
+        if (maximizedContent != null) {
+            maximizedContent.setMaximized(false);
+            maximizedContent = null;
+        }
+
         // Add the content to the ui...
         addUIForContent(content, constraints);
 

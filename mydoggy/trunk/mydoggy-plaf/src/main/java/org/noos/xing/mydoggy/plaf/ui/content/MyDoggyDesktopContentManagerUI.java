@@ -150,6 +150,11 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
     }
 
     public void addContent(PlafContent content, Object... constraints) {
+        if (maximizedContent != null) {
+            maximizedContent.setMaximized(false);
+            maximizedContent = null;
+        }
+
         // Add the content to the ui...
         addUIForContent(content, constraints);
 
