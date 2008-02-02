@@ -18,7 +18,14 @@
                     New Features:
                     <ul>
                         <li>
-                            Now also the representative anchor buttons of unavailable tools can be showed. See the screenshot here. 
+                            Content aliasing support into the ContentManager interface. 
+                        </li>
+                        <li>
+                            New <code>MultiSplitContentUI</code> interface to modify the ui behaviours of a content when a
+                            <code>MultiSplitContentManagerUIis</code> used as current <code>ContentManagerUI</code>. 
+                        </li>
+                        <li>
+                            Now also the representative anchor buttons for unavailable tools can be showed. See the screenshot here. 
                         </li>
                     </ul>
                     <br/>

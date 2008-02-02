@@ -113,21 +113,24 @@ public interface ContentUI extends DockableUI {
 
     /**
      * Set up contraints for the content. This dependes on the spcific ContentManagerUI mounted.
-     * @param contraints
+     *
+     * @param contraints the constraint to bound the content into the ui.
      * @since 1.4.0
      */
     void setConstraints(Object... contraints);
 
     /**
+     * Returns the bounds of the detached window from the last detached session.
      *
-     * @return
+     * @return the bounds.
      * @since 1.4.1
      */
     Rectangle getDetachedBounds();
 
     /**
+     * Sets the bounds for the next detached session.
      *
-     * @param detachedBounds
+     * @param detachedBounds bounds to be setted.
      * @since 1.4.1
      */
     void setDetachedBounds(Rectangle detachedBounds);

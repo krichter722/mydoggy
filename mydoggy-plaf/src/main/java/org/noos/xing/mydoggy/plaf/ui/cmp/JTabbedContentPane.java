@@ -258,7 +258,6 @@ public class JTabbedContentPane extends JTabbedPane {
         protected boolean selectionOnPressed;
         protected int mouseOverTabWhenPressed;
 
-        // implements java.awt.event.MouseListener
         public void mousePressed(MouseEvent e) {
             if (mouseOverTab >= 0 && mouseOverTab < getTabCount()) {
                 selectionOnPressed = (getSelectedIndex() == mouseOverTab);

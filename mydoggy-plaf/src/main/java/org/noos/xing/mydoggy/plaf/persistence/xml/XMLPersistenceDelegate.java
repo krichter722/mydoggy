@@ -368,6 +368,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             AttributesImpl attributes = new AttributesImpl();
             attributes.addAttribute(null, "numberingEnabled", null, null, String.valueOf(descriptor.isNumberingEnabled()));
             attributes.addAttribute(null, "previewEnabled", null, null, String.valueOf(descriptor.isPreviewEnabled()));
+            attributes.addAttribute(null, "showUnavailableTools", null, null, String.valueOf(descriptor.isShowUnavailableTools()));
             writer.startElement("toolWindowManagerDescriptor", attributes);
 
             // dividerSize element
@@ -490,7 +491,19 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             attributes.addAttribute(null, "tabLayout", null, null, multiSplitContentManagerUI.getTabLayout().toString());
             attributes.addAttribute(null, "tabPlacement", null, null, multiSplitContentManagerUI.getTabPlacement().toString());
 
-            writer.dataElement("MultiSplitContentManagerUI", attributes);
+            writer.startElement("MultiSplitContentManagerUI", attributes);
+            for (Content content : ((ContentManager) params[1]).getContents()) {
+                MultiSplitContentUI contentUI = (MultiSplitContentUI) content.getContentUI();
+
+                AttributesImpl contentUIAttributes = new AttributesImpl();
+                contentUIAttributes.addAttribute(null, "id", null, null, content.getId());
+                contentUIAttributes.addAttribute(null, "showAlwaysTab", null, null, String.valueOf(contentUI.isShowAlwaysTab()));
+
+                writer.dataElement("content", contentUIAttributes);
+            }
+
+            writer.endElement("MultiSplitContentManagerUI");
+
         }
 
     }
@@ -639,6 +652,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             ToolWindowManagerDescriptor descriptor = toolWindowManager.getToolWindowManagerDescriptor();
             descriptor.setNumberingEnabled(getBoolean(element, "numberingEnabled", true));
             descriptor.setPreviewEnabled(getBoolean(element, "previewEnabled", true));
+            descriptor.setShowUnavailableTools(getBoolean(element, "showUnavailableTools", false));
             return true;
         }
     }
@@ -993,6 +1007,19 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 managerUI.setShowAlwaysTab(getBoolean(element, "showAlwaysTab", false));
                 managerUI.setTabLayout(TabbedContentManagerUI.TabLayout.valueOf(element.getAttribute("tabLayout")));
                 managerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.valueOf(element.getAttribute("tabPlacement")));
+
+                ContentManager contentManager = toolWindowManager.getContentManager();
+
+                NodeList contentUIElms = element.getElementsByTagName("content");
+                for (int i = 0, size = contentUIElms.getLength(); i< size; i++) {
+                    Element contentUIElm = (Element) contentUIElms.item(i);
+
+                    Content content = contentManager.getContent(contentUIElm.getAttribute("id"));
+                    if (content != null) {
+                        MultiSplitContentUI multiSplitContentUI = (MultiSplitContentUI) content.getContentUI();
+                        multiSplitContentUI.setShowAlwaysTab(getBoolean(contentUIElm, "showAlwaysTab", true));
+                    }
+                }
              }
 
             return false;

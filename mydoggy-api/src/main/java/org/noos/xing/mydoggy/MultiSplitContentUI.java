@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy;
 
 /**
- * This interface let you modify ui behaviours of a content when a <code>TabbedContentManagerUI</code> is used
+ * This interface let you modify ui behaviours of a content when a <code>MultiSplitContentManagerUI</code> is used
  * as current <code>ContentManagerUI</code>.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -14,7 +14,8 @@ public interface MultiSplitContentUI extends TabbedContentUI {
      * Sets whether or not the ui must show a tab for all contents also
      * when there is just one content.
      *
-     * @param showAlwaysTab
+     * @param showAlwaysTab <tt>true</tt> if the ui must show a tab for all contents also
+     * when there is just one content, <tt>false</tt> otherwise
      * @see #isShowAlwaysTab()
      * @since 1.4.1
      */

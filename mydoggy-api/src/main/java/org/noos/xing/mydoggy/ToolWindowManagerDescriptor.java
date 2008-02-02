@@ -133,16 +133,22 @@ public interface ToolWindowManagerDescriptor extends Observable {
     boolean isAggregateMode(ToolWindowAnchor anchor);
 
     /**
+     * Sets whether or not the representative anchor buttons for unavailable tools are to be showed.
      *
-     * @param showUnavailableTools
+     * @param showUnavailableTools <tt>true</tt> if you want to show the representative anchor buttons
+     * for unavailable tools, <tt>false</tt> otherwise.
      * @since 1.4.1
+     * @see #isShowUnavailableTools()
      */
     void setShowUnavailableTools(boolean showUnavailableTools);
 
     /**
+     * Returns the value of the property "showUnavailableTools"
      *
-     * @return
+     * @return <tt>true</tt> if the representative anchor buttons
+     * for unavailable tools are showed, <tt>false</tt> otherwise.
      * @since 1.4.1
+     * @see #setShowUnavailableTools(boolean) 
      */
     boolean isShowUnavailableTools();
 }
