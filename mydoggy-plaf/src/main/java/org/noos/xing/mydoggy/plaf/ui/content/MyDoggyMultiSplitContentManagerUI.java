@@ -198,6 +198,11 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
     }
 
     public void addContent(PlafContent content, Object... constraints) {
+        if (maximizedContent != null) {
+            maximizedContent.setMaximized(false);
+            maximizedContent = null;
+        }
+
         // Add the content to the ui...
         addUIForContent(content, constraints);
 
@@ -709,7 +714,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                 this.oldRoot = getRootComponent();
                 this.oldParent = (DockablePanel) dockable.getComponent().getParent();
 
-                setRootComponent(getWrapperForComponent(dockable, dockable.getComponent()));
+                setRootComponent(forceWrapperForComponent(dockable, dockable.getComponent()));
             }
             SwingUtil.repaint(this);
         }

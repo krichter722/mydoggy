@@ -374,6 +374,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
 
+    public void removeNotify() {
+        super.removeNotify();
+        propertyChangeSupport.firePropertyChange(
+                new PropertyChangeEvent(MyDoggyToolWindowManager.this, "parentComponent.closed", true, false)
+        );
+    }
+
     public Component getParentComponent() {
         return parentComponent;
     }
