@@ -20,6 +20,70 @@ ResourceManager resourceManager = toolWindowManager.getResourceManager();</sourc
                 Look at this page to understand at what i'm referring when i write TitleBar, ToolWindowTab, etc.. 
             </p>
 
+            <subsection name="Supported properties">
+                <p>
+                   You can use the following code to set a property value:
+                </p>
+                <source>
+resourceManager.putProperty("drag.icon.transparency.enabled", "false");
+</source>
+                <p>
+                    Here is a list of supported properties.
+                </p>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>
+                                Name
+                            </td>
+                            <td>
+                                Type
+                            </td>
+                            <td>
+                                Description
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                drag.icon.transparency.enabled
+                            </td>
+                            <td>
+                                boolean
+                            </td>
+                            <td>
+                                Used to enable or disable the transparency of the drag icon.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                drag.icon.useDefault
+                            </td>
+                            <td>
+                                boolean
+                            </td>
+                            <td>
+                                Used to enable or disable the use of a simple icon instead of a more complex one during
+                                the a drag phase.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                ContentManagerUI.ContentManagerUiListener.import
+                            </td>
+                            <td>
+                                boolean
+                            </td>
+                            <td>
+                                Used to enable or disable the import of all listeners from an unmounting ContentManageUI
+                                to the new mmounted ContentManagerUI.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
+
             <subsection name="Change TitleBar Background Colors">
                 <table>
                     <tbody>
