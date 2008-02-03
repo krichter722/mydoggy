@@ -46,8 +46,9 @@
                         <li>
                             Toolpanels get glued together (split-pane-alike) : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1872768&group_id=178005&atid=883495">Request ID 1872768</a>
                         </li>
-
-
+                        <li>
+                            TableLayout: ArrayIndexOutOfBounce : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1873056&group_id=178005&atid=883495">Request ID 1873056</a>
+                        </li>
                         <li>
                             Repainting issues on overlapping tools : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1872970&group_id=178005&atid=883495">Request ID 1872970</a>
                         </li>
@@ -60,17 +61,15 @@
                         <li>
                             Repainting problems with floating tool windows : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1877465&group_id=178005&atid=883495">Request ID 1877465</a>
                         </li>
-
-
-
+                        <li>
+                            Maximize on contentPanels does not work properly : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1878149&group_id=178005&atid=883495">Request ID 1878149</a>
+                        </li>
                         <li>
                             PropertyChangeEvent \"selected\" is dist. twice on CP-reatta : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1879855&group_id=178005&atid=883495">Request ID 1879855</a>
                         </li>
                         <li>
                             CycleRoot-issues with floating Toolpanels : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1881720&group_id=178005&atid=883495">Request ID 1881720</a>
                         </li>
-
-
                         <li>
                             Transition from FLOATING > SLIDING : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1881882&group_id=178005&atid=883495">Request ID 1881882</a>
                         </li>

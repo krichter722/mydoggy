@@ -388,7 +388,7 @@ public class JTabbedContentPane extends JTabbedPane {
 
                 MaximizeAction maximizeAction = new MaximizeAction(contentAt);
                 stdPopupMenu.add(maximizeAction);
-                maximizeAction.putValue(Action.NAME, contentAt.isMaximized() ?
+                maximizeAction.putValue(Action.NAME, contentAt.isMaximized() || isAContentMaximized() ?
                                                      resourceManager.getString("@@tabbed.page.restore") :
                                                      resourceManager.getString("@@tabbed.page.maximize")
                 );
@@ -397,6 +397,14 @@ public class JTabbedContentPane extends JTabbedPane {
 
             if (popupMenu != null)
                 popupMenu.show(JTabbedContentPane.this, mouseEvent.getX(), mouseEvent.getY());
+        }
+
+        protected boolean isAContentMaximized() {
+            for (Content content : toolWindowManager.getContentManager().getContents())
+                if (content.isMaximized())
+                    return true;
+
+            return false;
         }
 
         class MaximizeAction extends AbstractAction {
