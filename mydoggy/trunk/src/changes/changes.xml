@@ -82,6 +82,7 @@
                         <li>
                             Please reintroduce id == Object instead of String : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1863970&group_id=178005&atid=883498">Request ID 1863970</a>
                         </li>
+                    </ul>
                     ]]>
             </action>
         </release>
