@@ -7,7 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
 
 public class JModalWindow extends JWindow {
     protected ResourceManager resourceManager;
@@ -21,10 +20,10 @@ public class JModalWindow extends JWindow {
         this.resourceManager = resourceManager;
         setFocusableWindowState(true);
         this.returnFocus = returnFocus;
-        if (modal)
-            modalToWindow = owner;
-
         synchronized (JModalWindow.this) {
+            if (modal)
+                modalToWindow = owner;
+
             notifiedModalToWindow = true;
         }
 

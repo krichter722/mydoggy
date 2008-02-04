@@ -2,7 +2,6 @@ package org.noos.xing.mydoggy.mydoggyset.action;
 
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentManager;
-import org.noos.xing.mydoggy.MultiSplitContentUI;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
 import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
@@ -49,10 +48,6 @@ public class AddContentAction implements ActionListener, ViewContextChangeListen
             if (mnemonic != -1)
                 content.setMnemonic(mnemonic);
             content.setSelected(true);
-
-            if (title.equals("Welcome")) {
-                ((MultiSplitContentUI) content.getContentUI()).setShowAlwaysTab(false);
-            }
         }
     }
 
