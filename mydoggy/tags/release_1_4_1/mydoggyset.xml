@@ -1,0 +1,26 @@
+<project name="mydoggyset" basedir="." default="all">
+
+    <target name="init">
+        <delete file="mydoggyset.keystore"/>
+        <genkey alias="mydoggyset"
+                keystore="mydoggyset.keystore"
+                storepass="security"
+                dname="CN=Angelo De Caro, OU=MyDoggy, O=MyDoggy, C=IT"
+                keypass="security"
+                verbose="true"/>
+    </target>
+
+    <target name="sign">
+        <signjar alias="mydoggyset"
+                 keystore="mydoggyset.keystore"
+                 storepass="security"
+                 preservelastmodified="true">
+            <path>
+                <fileset dir="target" includes="**/*.jar"/>
+            </path>
+        </signjar>
+    </target>
+
+    <target name="all" depends="init, sign"/>
+
+</project>

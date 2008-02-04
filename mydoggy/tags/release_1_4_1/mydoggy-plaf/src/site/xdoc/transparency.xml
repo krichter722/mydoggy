@@ -1,0 +1,150 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy - My Java Docking Framework (PLAF) : Transparency</title>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="TransparencyManager">
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <img src="./images/tw_transparency.png" alt="ToolWindow Transparency" border="0" hspace="18"/>
+                        </td>
+                        <td>
+                            <p>
+                                Using the <code>TransparencyManager</code> interface in the package
+                                <code>org.noos.xing.mydoggy.plaf.ui.transparency</code>
+                                mydoggy can manage the transparency of windows.
+                                <br/>
+                                In fact, when a toolwindow (of type FLOATING of FLOATING_FREE) or a detached content losts
+                                the focus, it becomes transparent in a few milliseconds.
+                                <br/>
+                                There are many ways to obtain this useful (at least for me) effect. Following tow examples... 
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section name="TransparencyManager.dll">
+            <p>
+                MyDoggy comes with some c++ code to support transparency of windows. On Windows platform, starting from
+                Windows 2000, you can see the transparency in action for floating toolwindows and for detached contents.
+                <br/>
+                To see this effect you must put the
+                <strong>TransparencyManager.dll</strong>
+                into a system directory.
+                Into the distribution package you can found a pre-compiled dll and sources. But yon can compile it by yourself.
+            </p>
+
+            <subsection name="Build Howto">
+                <p>
+                    Clearly you can use your preferred c++ compiler. Follows two examples...
+                </p>
+                <ul>
+                    <li title="Mingw">
+                        <strong>Mingw</strong> :
+                        In the distribution there is a makefile to build TransparencyManager.dll. Before use mingw32-make check
+                        all variables into the makefile to validate it.
+                    </li>
+                    <li title="Microsoft Visual C++ 2005 Express Edition">
+                        <strong>Microsoft Visual C++ 2005 Express Edition</strong> : 
+                        I have used Microsoft Visual C++ 2005 Express Edition using following properties:
+                        <br/>
+                        <br/>
+                        For C/C++ Configuration Properties :
+                        <source>/Od /I "E:\Programmi\Java\jdk1.5.0_07\include\win32" /I "E:\Programmi\Java\jdk1.5.0_07\include"
+/D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_USRDLL" /D "TRANSPARENCYMANAGER_EXPORTS"
+/D "_WINDLL" /Gm /EHsc /RTC1 /MDd /Fo"Debug\\" /Fd"Debug\vc80.pdb"
+/W3 /nologo /c /Wp64 /ZI /TP /errorReport:prompt
+                        </source>
+                        For Linker Configuration Properties :
+                        <source>/OUT:"..\mydoggy\TransparencyManager.dll" /INCREMENTAL /NOLOGO
+/LIBPATH:"E:\Programmi\Java\jdk1.5.0_07\lib" /DLL /MANIFEST
+/MANIFESTFILE:"Debug\TransparencyManager.dll.intermediate.manifest"
+/DEBUG /PDB:"e:\sourceforge\java\prjs\mydoggy\mydoggy\TransparencyManager.pdb"
+/SUBSYSTEM:WINDOWS /MACHINE:X86 /ERRORREPORT:PROMPT user32.lib jawt.lib kernel32.lib
+                        </source>
+                    </li>
+                </ul>
+
+            </subsection>
+        </section>
+
+        <section name="User Defined TransparencyManager">
+
+            <subsection name="JNA">
+                <p>
+                    JNA provides Java programs easy access to native shared libraries (e.g. DLLs on Windows) without
+                    writing anything but Java code, no JNI or native code is required. This functionality is
+                    comparable to Windows' Platform/Invoke and Python's ctypes. Access is dynamic at runtime without
+                    code generation. <br/>It's a great projects. You can found it at
+                    <a href="https://jna.dev.java.net/">https://jna.dev.java.net/</a><br/>
+                    To use JNA for transparency purpose you can use the following class...
+                </p>
+
+                <source xml:space="preserve">
+import com.sun.jna.examples.WindowUtils;
+
+import java.awt.*;
+import java.util.Map;
+import java.util.WeakHashMap;
+
+public class JNAWindowTransparencyManager implements TransparencyManager&lt;Window&gt; {
+
+    private boolean available;
+    private Map&lt;Window, Float&gt; windowTransparencies;
+
+    public JNAWindowTransparencyManager() {
+        initTransparencyManager();
+    }
+
+    public boolean isServiceAvailable() {
+        return available;
+    }
+
+    public void setAlphaModeRatio(Window component, float transparency) {
+        if (available) {
+            windowTransparencies.put(component, transparency);
+            WindowUtils.setWindowAlpha(component, transparency);
+        }
+    }
+
+    public boolean isAlphaModeEnabled(Window component) {
+        if (available) {
+            Float transparency = windowTransparencies.get(component);
+            return transparency != null &amp;&amp; transparency &gt;= 0.0;
+        }
+        return false;
+    }
+
+    protected void initTransparencyManager() {
+        available = false;
+        try {
+            Class.forName("com.sun.jna.examples.WindowUtils");
+            available = WindowUtils.isWindowAlphaSupported();
+            if (available)
+                this.windowTransparencies = new WeakHashMap&lt;Window, Float&gt;();
+        } catch (ClassNotFoundException e) {}
+    }
+
+}</source>
+
+                <p>
+                    Now to use that custom implementation use the following...
+                </p>
+                <source xml:space="preserve">
+MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(...);
+myDoggyToolWindowManager.getResourceManager().setTransparencyManager(
+        new JNAWindowTransparencyManager()
+);</source>
+            </subsection>
+        </section>
+    </body>
+</document>
