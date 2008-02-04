@@ -6,6 +6,19 @@
     
     <includeBaseDirectory>false</includeBaseDirectory>
 
+    <moduleSets>
+        <moduleSet>
+            <includes>
+                <include>org.noos.xing:mydoggy-examples</include>
+            </includes>
+            <binaries>
+                <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
+                <includeDependencies>true</includeDependencies>
+                <unpack>false</unpack>
+            </binaries>
+        </moduleSet>
+    </moduleSets>
+
     <fileSets>
         <fileSet>
             <directory>target/site</directory>
@@ -78,6 +91,10 @@
         </file>
         <file>
             <source>mydoggy-plaf/src/main/resources/persistence_1_4_0.dtd</source>
+            <outputDirectory>site/mydoggy-plaf/resources/dtd</outputDirectory>
+        </file>
+        <file>
+            <source>mydoggy-plaf/src/main/resources/persistence_1_4_1.dtd</source>
             <outputDirectory>site/mydoggy-plaf/resources/dtd</outputDirectory>
         </file>
     </files>

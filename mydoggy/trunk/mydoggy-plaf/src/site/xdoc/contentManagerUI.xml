@@ -31,7 +31,7 @@
                                     position of each tab can be customized from the ui or by code.
                                     <br/>To obtain and set a specific instance use the following (for example):
                                 </p>
-                                <source>import org.noos.xing.mydoggy.plaf.ui.content.desktop;
+                                <source>import org.noos.xing.mydoggy.plaf.ui.content;
 ...
 contentManager.setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
                                 </source>
@@ -57,7 +57,7 @@ contentManager.setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
                                     JTabbedPane).
                                     <br/>To obtain and set a specific instance use the following (for example):
                                 </p>
-                                <source>import org.noos.xing.mydoggy.plaf.ui.content.desktop;
+                                <source>import org.noos.xing.mydoggy.plaf.ui.content;
 ...
 contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
                                 </source>
@@ -82,7 +82,7 @@ contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
                                     or a virtual desktop.
                                     <br/>To obtain and set a specific instance use the following (for example):
                                 </p>
-                                <source>import org.noos.xing.mydoggy.plaf.ui.content.desktop;
+                                <source>import org.noos.xing.mydoggy.plaf.ui.content;
 ...
 contentManager.setContentManagerUI(new MyDoggyDesktopContentManagerUI());
                                 </source>

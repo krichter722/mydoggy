@@ -27,7 +27,7 @@ CLASSPATH=$CLASSPATH:../lib/mydoggy-plaf-1.4.1.jar
 CLASSPATH=$CLASSPATH:../lib/mydoggy-res-1.4.1.jar
 CLASSPATH=$CLASSPATH:../lib/mydoggy-itest-1.4.1.jar
 CLASSPATH=$CLASSPATH:../lib/mydoggy-examples-1.4.1.jar
-CLASSPATH=$CLASSPATH:../lib/TableLayout-20020517.jar
+CLASSPATH=$CLASSPATH:../lib/TableLayout-20050920.jar
 
 export CLASSPATH
 

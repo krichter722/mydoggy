@@ -30,8 +30,8 @@
             </action>
             <action dev="adecaro" type="update">
                 <![CDATA[
-                <a href="./apidocs/org/noos/xing/mydoggy/ContentManager.html">
-                    <code>ContentManager</code>
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentUI.html">
+                    <code>ContentUI</code>
                 </a> - Added methods:
                 <ul>
                     <li>
