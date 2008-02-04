@@ -68,7 +68,7 @@ public class MyDoggySet {
 
     protected void initComponents() {
         // Init the frame
-        this.frame = new JFrame("MyDoggy-Set 1.4.0 ...");
+        this.frame = new JFrame("MyDoggy-Set 1.4.1 ...");
         this.frame.setSize(640, 480);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
@@ -153,8 +153,7 @@ public class MyDoggySet {
         JPanel toolOnePanel = new JPanel();
         toolOnePanel.add(label, BorderLayout.NORTH);
         toolOnePanel.add(datePicker, BorderLayout.CENTER);
-        toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, toolOnePanel/*new JButton("Hello World 1")*/, ToolWindowAnchor.LEFT);
-
+        toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, toolOnePanel, ToolWindowAnchor.LEFT);
         toolWindowManager.registerToolWindow("Tool 2", "Title 2", null, panel, ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 3", "Title 3",
                                              SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"),
@@ -181,7 +180,6 @@ public class MyDoggySet {
         // Make all available
         for (ToolWindow window : toolWindowManager.getToolWindows()) {
             window.setAvailable(true);
-//            window.getTypeDescriptor(DockedTypeDescriptor.class).setHideRepresentativeButtonOnVisible(true);
         }
 
         // Setup Tool 1
@@ -267,8 +265,10 @@ public class MyDoggySet {
         resourceManager.putProperty("ContentManagerDropTarget.enabled", "true");
 */
         resourceManager.putProperty("ContentManagerUI.ContentManagerUiListener.import", "true");
+/*
         resourceManager.putProperty("drag.icon.transparency.enabled", "false");
         resourceManager.putProperty("drag.icon.useDefault", "true");
+*/
 
         MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) myDoggyToolWindowManager.getResourceManager();
 

@@ -2,191 +2,115 @@
 
 <mydoggy version="1.4.1">
     <tools>
-        <tool id="Tool 1" available="true" visible="false" active="false" autoHide="false" anchor="LEFT" anchorIndex="1"
-              type="DOCKED" aggregateMode="false" maximized="false" index="1">
+        <tool id="Tool 1" available="true" visible="false" active="false" autoHide="true" anchor="LEFT" anchorIndex="1" type="DOCKED" aggregateMode="false" maximized="false" index="1" representativeAnchorButtonVisible="true">
             <descriptors>
-                <docked dockLength="200" popupMenuEnabled="false" animating="true" previewEnabled="true"
-                        previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false"
-                        idVisibleOnTitleBar="true"/>
-                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                         animating="true" idVisibleOnTitleBar="true"/>
-                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7"
-                          enabled="true" animating="true" idVisibleOnTitleBar="true"/>
-                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                              animating="true" idVisibleOnTitleBar="true"/>
+                <docked dockLength="200" popupMenuEnabled="false" animating="true" previewEnabled="true" previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false" idVisibleOnTitleBar="true"/>
+                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
             </descriptors>
         </tool>
-        <tool id="Tool 2" available="true" visible="false" active="false" autoHide="false" anchor="RIGHT"
-              anchorIndex="-1" type="FLOATING_FREE" aggregateMode="false" maximized="false" index="2">
+        <tool id="Tool 2" available="true" visible="false" active="false" autoHide="false" anchor="RIGHT" anchorIndex="-1" type="FLOATING_FREE" aggregateMode="false" maximized="false" index="2" representativeAnchorButtonVisible="false">
             <descriptors>
-                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true"
-                        previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false"
-                        idVisibleOnTitleBar="true"/>
-                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                         animating="true" idVisibleOnTitleBar="true"/>
-                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7"
-                          enabled="true" animating="true" idVisibleOnTitleBar="true" x="100" y="100" width="250"
-                          height="250"/>
-                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                              animating="true" idVisibleOnTitleBar="true"/>
+                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true" previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false" idVisibleOnTitleBar="true"/>
+                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7" enabled="true" animating="true" idVisibleOnTitleBar="true">
+                    <location x="100" y="100"/>
+                    <size width="250" height="250"/>
+                </floating>
+                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
             </descriptors>
         </tool>
-        <tool id="Tool 3" available="true" visible="false" active="false" autoHide="false" anchor="LEFT" anchorIndex="0"
-              type="DOCKED" aggregateMode="false" maximized="false" index="3">
+        <tool id="Tool 3" available="true" visible="false" active="false" autoHide="false" anchor="LEFT" anchorIndex="0" type="DOCKED" aggregateMode="false" maximized="false" index="3" representativeAnchorButtonVisible="true">
             <descriptors>
-                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true"
-                        previewDelay="1500" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false"
-                        idVisibleOnTitleBar="true"/>
-                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="false"
-                         animating="true" idVisibleOnTitleBar="true"/>
-                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7"
-                          enabled="true" animating="true" idVisibleOnTitleBar="true"/>
-                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                              animating="true" idVisibleOnTitleBar="true"/>
+                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true" previewDelay="1500" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false" idVisibleOnTitleBar="true"/>
+                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="false" animating="true" idVisibleOnTitleBar="true"/>
+                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
             </descriptors>
         </tool>
-        <tool id="Tool 4" available="true" visible="false" active="false" autoHide="false" anchor="TOP" anchorIndex="-1"
-              type="FLOATING_FREE" aggregateMode="false" maximized="false" index="4">
+        <tool id="Tool 4" available="true" visible="false" active="false" autoHide="false" anchor="TOP" anchorIndex="-1" type="FLOATING_FREE" aggregateMode="false" maximized="false" index="4" representativeAnchorButtonVisible="false">
             <descriptors>
-                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true"
-                        previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false"
-                        idVisibleOnTitleBar="true"/>
-                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                         animating="true" idVisibleOnTitleBar="true"/>
-                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7"
-                          enabled="true" animating="true" idVisibleOnTitleBar="true"/>
-                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                              animating="true" idVisibleOnTitleBar="true"/>
+                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true" previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false" idVisibleOnTitleBar="true"/>
+                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
             </descriptors>
         </tool>
-        <tool id="Tool 5" available="true" visible="false" active="false" autoHide="false" anchor="TOP" anchorIndex="-1"
-              type="FLOATING_FREE" aggregateMode="false" maximized="false" index="5">
+        <tool id="Tool 5" available="true" visible="false" active="false" autoHide="false" anchor="TOP" anchorIndex="-1" type="FLOATING_FREE" aggregateMode="false" maximized="false" index="5" representativeAnchorButtonVisible="false">
             <descriptors>
-                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true"
-                        previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false"
-                        idVisibleOnTitleBar="true"/>
-                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                         animating="true" idVisibleOnTitleBar="true"/>
-                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7"
-                          enabled="true" animating="true" idVisibleOnTitleBar="true"/>
-                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                              animating="true" idVisibleOnTitleBar="true"/>
+                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true" previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false" idVisibleOnTitleBar="true"/>
+                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
             </descriptors>
         </tool>
-        <tool id="Tool 6" available="true" visible="false" active="false" autoHide="false" anchor="BOTTOM"
-              anchorIndex="0" type="DOCKED" aggregateMode="false" maximized="false" index="6">
+        <tool id="Tool 6" available="true" visible="false" active="false" autoHide="false" anchor="BOTTOM" anchorIndex="0" type="DOCKED" aggregateMode="false" maximized="false" index="6" representativeAnchorButtonVisible="true">
             <descriptors>
-                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true"
-                        previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false"
-                        idVisibleOnTitleBar="true"/>
-                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                         animating="true" idVisibleOnTitleBar="true"/>
-                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7"
-                          enabled="true" animating="true" idVisibleOnTitleBar="true"/>
-                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                              animating="true" idVisibleOnTitleBar="true"/>
+                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true" previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false" idVisibleOnTitleBar="true"/>
+                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
             </descriptors>
         </tool>
-        <tool id="Tool 7" available="true" visible="false" active="false" autoHide="false" anchor="TOP" anchorIndex="0"
-              type="FLOATING" aggregateMode="false" maximized="false" index="7">
+        <tool id="Tool 7" available="true" visible="false" active="false" autoHide="false" anchor="TOP" anchorIndex="0" type="FLOATING" aggregateMode="false" maximized="false" index="7" representativeAnchorButtonVisible="true">
             <descriptors>
-                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true"
-                        previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false"
-                        idVisibleOnTitleBar="true"/>
-                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                         animating="true" idVisibleOnTitleBar="true"/>
-                <floating modal="true" transparentMode="true" transparentDelay="0" transparentRatio="0.7" enabled="true"
-                          animating="false" idVisibleOnTitleBar="true"/>
-                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                              animating="true" idVisibleOnTitleBar="true"/>
+                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true" previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false" idVisibleOnTitleBar="true"/>
+                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floating modal="true" transparentMode="true" transparentDelay="0" transparentRatio="0.7" enabled="true" animating="false" idVisibleOnTitleBar="true"/>
+                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
             </descriptors>
         </tool>
-        <tool id="Tool 8" available="true" visible="false" active="false" autoHide="false" anchor="RIGHT"
-              anchorIndex="5" type="DOCKED" aggregateMode="false" maximized="false" index="8">
+        <tool id="Tool 8" available="true" visible="false" active="false" autoHide="false" anchor="RIGHT" anchorIndex="5" type="DOCKED" aggregateMode="false" maximized="false" index="8" representativeAnchorButtonVisible="true">
             <descriptors>
-                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true"
-                        previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false"
-                        idVisibleOnTitleBar="true"/>
-                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                         animating="true" idVisibleOnTitleBar="true"/>
-                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7"
-                          enabled="true" animating="true" idVisibleOnTitleBar="true"/>
-                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                              animating="true" idVisibleOnTitleBar="true"/>
+                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true" previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false" idVisibleOnTitleBar="true"/>
+                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
             </descriptors>
         </tool>
-        <tool id="Tool 9" available="true" visible="false" active="false" autoHide="false" anchor="RIGHT"
-              anchorIndex="4" type="DOCKED" aggregateMode="false" maximized="false" index="9">
+        <tool id="Tool 9" available="true" visible="false" active="false" autoHide="false" anchor="RIGHT" anchorIndex="4" type="DOCKED" aggregateMode="false" maximized="false" index="9" representativeAnchorButtonVisible="true">
             <descriptors>
-                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true"
-                        previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false"
-                        idVisibleOnTitleBar="true"/>
-                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                         animating="true" idVisibleOnTitleBar="true"/>
-                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7"
-                          enabled="true" animating="true" idVisibleOnTitleBar="true"/>
-                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                              animating="true" idVisibleOnTitleBar="true"/>
+                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true" previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false" idVisibleOnTitleBar="true"/>
+                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
             </descriptors>
         </tool>
-        <tool id="Tool 10" available="true" visible="false" active="false" autoHide="false" anchor="RIGHT"
-              anchorIndex="3" type="DOCKED" aggregateMode="false" maximized="false" index="-1">
+        <tool id="Tool 10" available="true" visible="false" active="false" autoHide="false" anchor="RIGHT" anchorIndex="3" type="DOCKED" aggregateMode="false" maximized="false" index="-1" representativeAnchorButtonVisible="true">
             <descriptors>
-                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true"
-                        previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false"
-                        idVisibleOnTitleBar="true"/>
-                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                         animating="true" idVisibleOnTitleBar="true"/>
-                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7"
-                          enabled="true" animating="true" idVisibleOnTitleBar="true"/>
-                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                              animating="true" idVisibleOnTitleBar="true"/>
+                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true" previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false" idVisibleOnTitleBar="true"/>
+                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
             </descriptors>
         </tool>
-        <tool id="Tool 11" available="true" visible="false" active="false" autoHide="false" anchor="RIGHT"
-              anchorIndex="2" type="DOCKED" aggregateMode="false" maximized="false" index="-1">
+        <tool id="Tool 11" available="true" visible="false" active="false" autoHide="false" anchor="RIGHT" anchorIndex="2" type="DOCKED" aggregateMode="false" maximized="false" index="-1" representativeAnchorButtonVisible="true">
             <descriptors>
-                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true"
-                        previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false"
-                        idVisibleOnTitleBar="true"/>
-                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                         animating="true" idVisibleOnTitleBar="true"/>
-                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7"
-                          enabled="true" animating="true" idVisibleOnTitleBar="true"/>
-                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                              animating="true" idVisibleOnTitleBar="true"/>
+                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true" previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false" idVisibleOnTitleBar="true"/>
+                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
             </descriptors>
         </tool>
-        <tool id="Tool 12" available="true" visible="false" active="false" autoHide="false" anchor="RIGHT"
-              anchorIndex="1" type="DOCKED" aggregateMode="false" maximized="false" index="-1">
+        <tool id="Tool 12" available="true" visible="false" active="false" autoHide="false" anchor="RIGHT" anchorIndex="1" type="DOCKED" aggregateMode="false" maximized="false" index="-1" representativeAnchorButtonVisible="true">
             <descriptors>
-                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true"
-                        previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false"
-                        idVisibleOnTitleBar="true"/>
-                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                         animating="true" idVisibleOnTitleBar="true"/>
-                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7"
-                          enabled="true" animating="true" idVisibleOnTitleBar="true"/>
-                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                              animating="true" idVisibleOnTitleBar="true"/>
+                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true" previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false" idVisibleOnTitleBar="true"/>
+                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
             </descriptors>
         </tool>
-        <tool id="Tool 13" available="true" visible="false" active="false" autoHide="false" anchor="RIGHT"
-              anchorIndex="0" type="DOCKED" aggregateMode="false" maximized="false" index="-1">
+        <tool id="Tool 13" available="true" visible="false" active="false" autoHide="false" anchor="RIGHT" anchorIndex="0" type="DOCKED" aggregateMode="false" maximized="false" index="-1" representativeAnchorButtonVisible="true">
             <descriptors>
-                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true"
-                        previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false"
-                        idVisibleOnTitleBar="true"/>
-                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                         animating="true" idVisibleOnTitleBar="true"/>
-                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7"
-                          enabled="true" animating="true" idVisibleOnTitleBar="true"/>
-                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true"
-                              animating="true" idVisibleOnTitleBar="true"/>
+                <docked dockLength="200" popupMenuEnabled="true" animating="true" previewEnabled="true" previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false" idVisibleOnTitleBar="true"/>
+                <sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
+                <floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/>
             </descriptors>
         </tool>
     </tools>
-    <toolWindowManagerDescriptor numberingEnabled="true" previewEnabled="false">
+    <toolWindowManagerDescriptor numberingEnabled="true" previewEnabled="true" showUnavailableTools="false">
         <dividerSize left="3" right="3" top="3" bottom="3"/>
         <aggregateMode left="false" right="false" top="false" bottom="false"/>
         <pushAway pushAwayMode="VERTICAL">
@@ -198,5 +122,14 @@
             </mode>
         </pushAway>
     </toolWindowManagerDescriptor>
+    <contentManagerUI>
+        <MultiSplitContentManagerUI closeable="true" detachable="true" showAlwaysTab="false" tabLayout="WRAP" tabPlacement="BOTTOM">
+            <content id="Welcome" showAlwaysTab="false"/>
+        </MultiSplitContentManagerUI>
+    </contentManagerUI>
+    <contentManager>
+        <content id="Welcome" detached="false" enabled="true" selected="true" maximized="false" closeable="true" detachable="true" transparentMode="true" transparentDelay="0" transparentRatio="0.7"/>
+    </contentManager>
+    <bars/>
 </mydoggy>
 

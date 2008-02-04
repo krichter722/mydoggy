@@ -26,18 +26,14 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro
  */
 public class SlidingContainer extends MyDoggyToolWindowContainer {
-
     protected SlidingAnimation slidingAnimation;
-
     protected SlidingBorder border;
     protected Container barContainer;
-
     protected JLayeredPane layeredPane;
-
-    protected SlidingMouseInputHandler slidingMouseInputHandler;
-
     protected JPanel mainPanel;
     protected TranslucentPanel sheet;
+
+    protected SlidingMouseInputHandler slidingMouseInputHandler;
 
 
     public SlidingContainer(DockedContainer dockedContainer) {
