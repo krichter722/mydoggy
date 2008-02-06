@@ -13,6 +13,7 @@ public class DockablePanel extends JPanel {
     public DockablePanel(Dockable dockable, Component component) {
         setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         setFocusCycleRoot(true);
+        setFocusable(false);
         add(component, "0,0,FULL,FULL");
         putClientProperty(Dockable.class, dockable);
     }

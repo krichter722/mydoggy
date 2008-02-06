@@ -255,6 +255,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                             valueAdjusting = true;
 
                             tabbedContentPane.setSelectedIndex(index);
+                            SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
                             lastSelected = (PlafContent) content;
 
                             valueAdjusting = false;
@@ -263,7 +264,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                     } else if (c instanceof DockablePanel) {
                         DockablePanel dockablePanel = (DockablePanel) c;
                         if (dockablePanel.getDockable() == content) {
-                            // TODO: request a focus for a component...
+                            SwingUtil.findAndRequestFocus(dockablePanel);
                             lastSelected = (PlafContent) content;
                             return;
                         }
@@ -670,8 +671,13 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                 window.setVisible(false);
                 window.dispose();
 
-                addUIForContent(content, detachedContentUIMap.get(content));
-                content.setSelected(true);
+                try {
+                    addUIForContent(content, detachedContentUIMap.get(content));
+                    content.setSelected(true);
+                    SwingUtil.findAndRequestFocus(content.getComponent());
+                } finally {
+                    detachedContentUIMap.remove(content);
+                }
             }
         }
 
@@ -757,13 +763,18 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
                             if (lastSelected != null) {
                                 try {
-                                    lastSelected.fireSelected(false);
+//                            lastSelected.fireSelected(false);
+                                    lastSelected.setSelected(false);
                                 } catch (Exception ignoreIt) {
                                 }
                             }
 
+                            if (newSelected != null)  {
+//                        newSelected.fireSelected(true);
+                                newSelected.setSelected(true);
+                            }
+
                             lastSelected = newSelected;
-                            newSelected.fireSelected(true);
                         }
                     }
                 }
