@@ -347,6 +347,10 @@ public class SwingUtil {
         return bounds;
     }
 
+    public static void validateWindowBounds(Window window) {
+        window.setBounds(validateWindowBounds(window.getBounds()));
+    }
+
     public static void setFullScreen(Window window) {
         GraphicsDevice[] gda = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
 

@@ -4,7 +4,6 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -167,8 +166,9 @@ public class TutorialSet {
 
     protected void setupContentManagerUI() {
         ContentManager contentManager = toolWindowManager.getContentManager();
-        MultiSplitContentManagerUI contentManagerUI = new MyDoggyMultiSplitContentManagerUI();
-        contentManager.setContentManagerUI(contentManagerUI);
+//        MultiSplitContentManagerUI contentManagerUI = new MyDoggyMultiSplitContentManagerUI();
+//        contentManager.setContentManagerUI(contentManagerUI);
+        TabbedContentManagerUI<TabbedContentUI> contentManagerUI = (TabbedContentManagerUI<TabbedContentUI>) contentManager.getContentManagerUI();
 
         contentManagerUI.setShowAlwaysTab(true);
         contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
@@ -179,7 +179,7 @@ public class TutorialSet {
             }
 
             public void contentUIDetached(ContentManagerUIEvent event) {
-                JOptionPane.showMessageDialog(frame, "Hello World!!!");
+//                JOptionPane.showMessageDialog(frame, "Hello World!!!");
             }
         });
 

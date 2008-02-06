@@ -451,7 +451,7 @@ public class MultiSplitDockableContainer extends JPanel {
                 if (!useAlwaysContentWrapper) {
                     Component root = multiSplitPane.getComponent(0);
                     multiSplitPane.removeAll();
-                    multiSplitPane.add(getComponentFromWrapper((Container) root), "1");
+                    multiSplitPane.add(getComponentFromWrapper(root), "1");
                 }
 
                 return null;
