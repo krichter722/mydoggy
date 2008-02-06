@@ -248,12 +248,19 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         if (content.isDetached())
             content.setDetached(false);
 
+        content.setSelected(false);
+
         content.getContentUI().removePropertyChangeListener(contentUIListener);
 
         // Remove from tabbedContentPane
         int index = tabbedContentPane.indexOfContent(content);
         if (index != -1) {
-            tabbedContentPane.removeTabAt(index);
+            try {
+                valueAdjusting = true;
+                tabbedContentPane.removeTabAt(index);
+            } finally {
+                valueAdjusting = false;
+            }
         } else if (toolWindowManager.getMainContent() != content.getComponent())
             throw new IllegalStateException("Invalid content ui state.");
 
@@ -275,6 +282,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                 lastContent = contentManager.getNextContent();
 
             toolWindowManager.setMainContent(lastContent.getComponent());
+            lastContent.setSelected(true);
             lastSelected = null;
         } else {
             int selectedIndex = tabbedContentPane.getSelectedIndex();
@@ -315,6 +323,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                 } else if (toolWindowManager.getMainContent() != content.getComponent())
                     throw new IllegalStateException("Invalid content ui state.");
             }
+        } else {
+            if (content == lastSelected)
+                lastSelected = null;
         }
     }
 

@@ -57,6 +57,11 @@ public class MyDoggyContent implements PlafContent {
         this.uiListeners = new EventListenerList();
     }
 
+
+    public String toString() {
+        return id;  // TODO: toString
+    }
+
     public String getId() {
         return id;
     }

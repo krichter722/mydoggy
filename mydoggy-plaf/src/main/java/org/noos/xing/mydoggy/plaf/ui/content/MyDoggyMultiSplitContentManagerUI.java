@@ -215,6 +215,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         if (content.isDetached())
             content.setDetached(false);
 
+        content.setSelected(false);
+
         content.getContentUI().removePropertyChangeListener(contentUIListener);
 
         // Remove from multiSplitContainer
@@ -271,6 +273,9 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                 }
                 throw new IllegalStateException("Invalid content ui state.");
             }
+        } else {
+            if (content == lastSelected)
+                lastSelected = null;
         }
     }
 

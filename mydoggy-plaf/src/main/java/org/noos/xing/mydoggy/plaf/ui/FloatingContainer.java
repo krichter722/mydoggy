@@ -80,10 +80,13 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                     SwingUtil.centrePositionOnScreen(window);
                 } else
                     window.setLocation(typeDescriptor.getLocation());
+
+                SwingUtil.validateWindowBounds(window);
             } else {
                 window.setBounds(lastBounds);
                 lastBounds = null;
             }
+
 
             if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isAnimating()) {
                 floatingAnimation.show();

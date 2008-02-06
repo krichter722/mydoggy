@@ -66,6 +66,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
             // Prepare sheet
             sheet.setBorder(BorderFactory.createEtchedBorder());
 
+            // TODO: validate bounds..
             if (lastBounds == null) {
                 FloatingLiveTypeDescriptor typeDescriptor = (FloatingLiveTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
 
