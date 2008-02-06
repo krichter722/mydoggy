@@ -54,7 +54,7 @@ public class JTabbedContentPane extends JTabbedPane {
         this.titleIcon = new TextIcon(this, "", TextIcon.ROTATE_NONE);
         this.tabIconTitle = new AggregateIcon(null, titleIcon, SwingConstants.HORIZONTAL);
         this.closeDetachIcon = new AggregateIcon(detachIcon, closeIcon, SwingConstants.HORIZONTAL);
-        this.selectedTabIcon = new AggregateIcon(tabIconTitle,
+        this.selectedTabIcon = new ExAggregateIcon(tabIconTitle,
                                                  closeDetachIcon,
                                                  SwingConstants.HORIZONTAL);
         setFocusable(false);
@@ -65,7 +65,7 @@ public class JTabbedContentPane extends JTabbedPane {
         addMouseMotionListener(mouseInputAdapter);
 
         if (enabledDrag) {
-            
+            // TODO:
         }
     }
 
@@ -92,6 +92,9 @@ public class JTabbedContentPane extends JTabbedPane {
 
             closeDetachIcon.setLeftVisible(contentUI.isDetachable());
             closeDetachIcon.setRightVisible(contentUI.isCloseable());
+
+            ((ExAggregateIcon) selectedTabIcon).setIndex(index);
+
 
             return selectedTabIcon;
         }
@@ -258,9 +261,10 @@ public class JTabbedContentPane extends JTabbedPane {
         protected boolean selectionOnPressed;
         protected int mouseOverTabWhenPressed;
 
+
         public void mousePressed(MouseEvent e) {
             if (mouseOverTab >= 0 && mouseOverTab < getTabCount()) {
-                selectionOnPressed = (getSelectedIndex() == mouseOverTab);
+                selectionOnPressed = (((ExAggregateIcon) selectedTabIcon).getIndex() == mouseOverTab);
             }
             mouseOverTabWhenPressed = mouseOverTab;
         }
@@ -420,5 +424,21 @@ public class JTabbedContentPane extends JTabbedPane {
             }
         }
 
+    }
+
+    protected class ExAggregateIcon extends AggregateIcon{
+        protected int index;
+
+        public ExAggregateIcon(Icon leftIcon, Icon rightIcon, int orientation) {
+            super(leftIcon, rightIcon, orientation);
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void setIndex(int index) {
+            this.index = index;
+        }
     }
 }

@@ -26,7 +26,12 @@ public class ContentDialog extends JDialog {
                          PlafContent content, ContentUI contentUI,
                          Frame parentFrame) throws HeadlessException {
         super(resourceManager.getBoolean("dialog.owner.enabled", true) ? parentFrame : null, false);
-        
+/*
+        setFocusCycleRoot(true);
+        setFocusTraversalPolicyProvider(true);
+        setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
+*/
+
         this.content = content;
         this.contentUI = contentUI;
 
