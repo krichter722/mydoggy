@@ -274,6 +274,8 @@ public class MyDoggyContentManager implements ContentManager {
                         .append(" ; ")
                         .append(evt.getSource());
                 System.out.println(sb);
+//                new RuntimeException().printStackTrace();
+//                System.out.println("----------------------------------------------------------");
             }
         });
         content.addPlafPropertyChangeListener(new PropertyChangeListener() {

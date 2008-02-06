@@ -508,4 +508,20 @@ public class SwingUtil {
         return null;
     }
 
+    public static Component findAndRequestFocus(Component component) {
+        Container container;
+        if (component instanceof JDialog) {
+            container = ((JDialog)component).getContentPane();
+        } else if (component instanceof Container)
+            container = (Container) component;
+        else
+            return null;
+        
+        Component focusRequester = SwingUtil.findFocusable(container);
+        if (focusRequester == null) {
+            focusRequester = container;
+        }
+        SwingUtil.requestFocus(focusRequester);
+        return focusRequester;
+    }
 }

@@ -40,6 +40,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
     protected boolean showAlwaysTab;
     protected Map<Content, TabbedContentUI> contentUIMap;
 
+    protected Component componentInFocusRequest = null;
+
 
     public MyDoggyTabbedContentManagerUI() {
         setContentManagerUI(this);
@@ -305,6 +307,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
     public void setSelected(Content content, boolean selected) {
         if (selected) {
+            if (lastSelected != null)
+                lastSelected.setSelected(false);
+            
             if (content.isDetached()) {
                 // If the content is detached request the focus for owner window
                 SwingUtil.requestFocus(
@@ -317,6 +322,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                     valueAdjusting = true;
 
                     tabbedContentPane.setSelectedIndex(index);
+                    SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
                     lastSelected = (PlafContent) content;
 
                     valueAdjusting = false;
@@ -365,14 +371,18 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
                     if (lastSelected != null) {
                         try {
-                            lastSelected.fireSelected(false);
+//                            lastSelected.fireSelected(false);
+                            lastSelected.setSelected(false);
                         } catch (Exception ignoreIt) {
                         }
                     }
 
+                    if (newSelected != null)  {
+//                        newSelected.fireSelected(true);
+                        newSelected.setSelected(true);
+                    }
+
                     lastSelected = newSelected;
-                    if (newSelected != null)
-                        newSelected.fireSelected(true);
                 }
             }
         });
@@ -418,6 +428,15 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
             SwingUtil.registerDragGesture(tabbedContentPane,
                                           new TabbedContentManagerDragGesture());
+
+            // TODO: make this more safe....
+            final FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener();
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
+            toolWindowManager.addPropertyChangeListener("parentComponent.closed", new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+                    KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
+                }
+            });
         }
     }
 
@@ -676,33 +695,39 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (!oldValue && newValue) {
-                ContentUI contentUI = getContentUI(content);
+                valueAdjusting = true;
+                try {
+                    ContentUI contentUI = getContentUI(content);
 
-                // Store constraint
-                if (tabbedContentPane.getTabCount() != 0)
-                    detachedContentUIMap.put(content, tabbedContentPane.indexOfContent(content));
-                else
-                    detachedContentUIMap.put(content, -1);
-
-                // Remove content from tab
-                int tabIndex = tabbedContentPane.indexOfContent(content);
-                if (tabIndex != -1) {
-                    tabbedContentPane.removeTabAt(tabIndex);
-                    if (tabbedContentPane.getTabCount() == 0)
-                        toolWindowManager.resetMainContent();
-                } else {
-                    if (tabbedContentPane.getParent() == null)
-                        toolWindowManager.resetMainContent();
+                    // Store constraint
+                    if (tabbedContentPane.getTabCount() != 0)
+                        detachedContentUIMap.put(content, tabbedContentPane.indexOfContent(content));
                     else
-                        throw new IllegalStateException("Invalid Content : " + content);
-                }
+                        detachedContentUIMap.put(content, -1);
 
-                // Setup dialog
-                JDialog dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI, parentFrame);
-                dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
-                dialog.toFront();
-                dialog.setVisible(true);
-                SwingUtil.requestFocus(dialog);
+                    // Remove content from tab
+                    int tabIndex = tabbedContentPane.indexOfContent(content);
+                    if (tabIndex != -1) {
+                        tabbedContentPane.removeTabAt(tabIndex);
+                        if (tabbedContentPane.getTabCount() == 0)
+                            toolWindowManager.resetMainContent();
+                    } else {
+                        if (tabbedContentPane.getParent() == null)
+                            toolWindowManager.resetMainContent();
+                        else
+                            throw new IllegalStateException("Invalid Content : " + content);
+                    }
+
+                    // Setup dialog
+                    JDialog dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI, parentFrame);
+                    dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
+                    dialog.toFront();
+                    dialog.setVisible(true);
+
+                    componentInFocusRequest = SwingUtil.findAndRequestFocus(dialog);
+                } finally {
+                    valueAdjusting = false;
+                }
             } else if (oldValue && !newValue) {
                 Window window = SwingUtilities.windowForComponent(content.getComponent());
                 window.setVisible(false);
@@ -710,7 +735,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
                 contentValueAdjusting = true;
                 try {
-                    tabbedContentPane.setSelectedIndex(addUIForContent(content, detachedContentUIMap.get(content)));
+                    int index = addUIForContent(content, detachedContentUIMap.get(content));
+                    tabbedContentPane.setSelectedIndex(index);
+                    SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
                 } finally {
                     contentValueAdjusting = false;
                     detachedContentUIMap.remove(content);
@@ -794,5 +821,37 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
     }
 
+    protected class FocusOwnerPropertyChangeListener implements PropertyChangeListener {
+
+        public FocusOwnerPropertyChangeListener() {
+        }
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (valueAdjusting)
+                return;
+
+            if (componentInFocusRequest != null) {
+                if  (evt.getNewValue() == componentInFocusRequest)
+                    componentInFocusRequest = null;
+                else
+                    return;                                        
+            }
+
+            if (evt.getNewValue() != null) {
+                Component cursor = (Component) evt.getNewValue();
+                while (cursor != null) {
+                    int index = tabbedContentPane.indexOfComponent(cursor);
+                    if (index != -1) {
+                        Content content = tabbedContentPane.getContentAt(index);
+                        if (!content.isSelected() && !content.isDetached())
+                            content.setSelected(true);
+                        
+                        break;
+                    } 
+                    cursor = cursor.getParent();
+                }
+            }
+        }
+    }
 
 }
