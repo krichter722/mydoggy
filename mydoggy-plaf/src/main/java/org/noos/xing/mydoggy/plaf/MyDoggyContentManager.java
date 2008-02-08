@@ -108,6 +108,10 @@ public class MyDoggyContentManager implements ContentManager {
             fireContentRemoved(content);
         }
 
+        // Choose next content
+        plafContentManagerUI.selectNextContent(content);
+
+        // Restore the delegator
         if (content.getDockableDelegator() != null) {
             Dockable delegator = content.getDockableDelegator();
             if  (delegator instanceof ToolWindow) {
@@ -263,21 +267,6 @@ public class MyDoggyContentManager implements ContentManager {
             throw new IllegalArgumentException("Cannot register content with passed id. An already registered dockable exists. [id : " + id + "]");
 
         MyDoggyContent content = new MyDoggyContent(this, id, title, icon, component, tip, toolWindow);
-        content.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                StringBuffer sb = new StringBuffer("Event : ");
-                sb.append(evt.getPropertyName())
-                        .append(" ; ")
-                        .append(evt.getOldValue())
-                        .append(" -> ")
-                        .append(evt.getNewValue())
-                        .append(" ; ")
-                        .append(evt.getSource());
-                System.out.println(sb);
-//                new RuntimeException().printStackTrace();
-//                System.out.println("----------------------------------------------------------");
-            }
-        });
         content.addPlafPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 assert evt.getSource() instanceof Content;

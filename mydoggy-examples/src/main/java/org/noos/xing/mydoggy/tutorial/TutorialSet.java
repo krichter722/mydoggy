@@ -2,12 +2,15 @@ package org.noos.xing.mydoggy.tutorial;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.event.ContentManagerEvent;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class TutorialSet {
     private JFrame frame;
@@ -156,6 +159,33 @@ public class TutorialSet {
         JTree treeContent = new JTree();
 
         ContentManager contentManager = toolWindowManager.getContentManager();
+        contentManager.addContentManagerListener(new ContentManagerListener() {
+            public void contentAdded(ContentManagerEvent event) {
+                event.getContent().addPropertyChangeListener(new PropertyChangeListener() {
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        StringBuffer sb = new StringBuffer("Event : ");
+                        sb.append(evt.getPropertyName())
+                                .append(" ; ")
+                                .append(evt.getOldValue())
+                                .append(" -> ")
+                                .append(evt.getNewValue())
+                                .append(" ; ")
+                                .append(evt.getSource());
+                        System.out.println(sb);
+//                new RuntimeException().printStackTrace();
+//                System.out.println("----------------------------------------------------------");
+                    }
+                });
+            }
+
+            public void contentRemoved(ContentManagerEvent event) {
+                System.out.println("Content removed " + event);
+            }
+
+            public void contentSelected(ContentManagerEvent event) {
+            }
+        });
+
         Content content = contentManager.addContent("Tree Key",
                 "Tree Title",
                 null,      // An icon
@@ -174,7 +204,6 @@ public class TutorialSet {
         contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
         contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
             public boolean contentUIRemoving(ContentManagerUIEvent event) {
-                System.out.println("event = " + event);
                 return JOptionPane.showConfirmDialog(frame, "Are you sure?") == JOptionPane.OK_OPTION;
             }
 

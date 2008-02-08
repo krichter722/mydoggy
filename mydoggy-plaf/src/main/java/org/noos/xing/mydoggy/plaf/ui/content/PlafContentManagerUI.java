@@ -102,4 +102,10 @@ public interface PlafContentManagerUI {
      */
     void updateUI();
 
+    /**
+     *
+     * @param content
+     * @since 1.4.2
+     */
+    void selectNextContent(Content content);
 }
