@@ -272,31 +272,6 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         if (contentValueAdjusting)
             return;
 
-        // Choose next content to be selected...
-        if (tabbedContentPane.getTabCount() == 0) {
-            toolWindowManager.resetMainContent();
-            lastSelected = null;
-        }
-
-        if (tabbedContentPane.getTabCount() == 1 && !isShowAlwaysTab()) {
-            Content lastContent = contentManager.getSelectedContent();
-            if (lastContent == content)
-                lastContent = contentManager.getNextContent();
-
-            toolWindowManager.setMainContent(lastContent.getComponent());
-            lastContent.setSelected(true);
-            lastSelected = null;
-        } else {
-            int selectedIndex = tabbedContentPane.getSelectedIndex();
-            if (selectedIndex != -1)
-                tabbedContentPane.getContentAt(selectedIndex).setSelected(true);
-            else
-                lastSelected = null;
-
-            if (tabbedContentPane.getTabCount() == 0)
-                toolWindowManager.resetMainContent();
-        }
-
         // Remove the contentUI part
         contentUIMap.remove(content);
     }
@@ -345,6 +320,33 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
     public void updateUI() {
         tabbedContentPane.updateUI();
+    }
+
+    public void selectNextContent(Content content) {
+        // Choose next content to be selected...
+        if (tabbedContentPane.getTabCount() == 0) {
+            toolWindowManager.resetMainContent();
+            lastSelected = null;
+        }
+
+        if (tabbedContentPane.getTabCount() == 1 && !isShowAlwaysTab()) {
+            Content lastContent = contentManager.getSelectedContent();
+            if (lastContent == content)
+                lastContent = contentManager.getNextContent();
+
+            toolWindowManager.setMainContent(lastContent.getComponent());
+            lastContent.setSelected(true);
+            lastSelected = null;
+        } else {
+            int selectedIndex = tabbedContentPane.getSelectedIndex();
+            if (selectedIndex != -1)
+                tabbedContentPane.getContentAt(selectedIndex).setSelected(true);
+            else
+                lastSelected = null;
+
+            if (tabbedContentPane.getTabCount() == 0)
+                toolWindowManager.resetMainContent();
+        }
     }
 
 

@@ -221,6 +221,10 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         desktopPane.updateUI();
     }
 
+    public void selectNextContent(Content content) {
+        // TODO:
+    }
+
 
     public void propertyChange(PropertyChangeEvent evt) {
         internalPropertyChangeSupport.firePropertyChange(evt);

@@ -284,6 +284,10 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         multiSplitContainer.updateUI();
     }
 
+    public void selectNextContent(Content content) {
+        // TODO: implement this.
+    }
+
 
     public void propertyChange(PropertyChangeEvent evt) {
         internalPropertyChangeSupport.firePropertyChange(evt);
