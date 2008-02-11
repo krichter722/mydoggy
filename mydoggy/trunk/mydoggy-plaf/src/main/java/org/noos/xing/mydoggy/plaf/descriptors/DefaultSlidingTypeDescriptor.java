@@ -19,6 +19,7 @@ public class DefaultSlidingTypeDescriptor implements SlidingTypeDescriptor, Prop
     private boolean idVisibleOnTitleBar;
 
     private EventListenerList listenerList;
+    private boolean autoHide;
 
     public DefaultSlidingTypeDescriptor() {
         transparentMode = true;
@@ -26,17 +27,19 @@ public class DefaultSlidingTypeDescriptor implements SlidingTypeDescriptor, Prop
         transparentDelay = 1000;
         enabled = true;
         animating = true;
+        autoHide = true;
         idVisibleOnTitleBar = true;
     }
 
     public DefaultSlidingTypeDescriptor(DefaultSlidingTypeDescriptor parent, int transparentDelay,
                                         float transparentRatio, boolean transparentMode,
-                                        boolean enabled, boolean animating, boolean idVisibleOnTitleBar) {
+                                        boolean enabled, boolean animating, boolean autoHide, boolean idVisibleOnTitleBar) {
         this.transparentDelay = transparentDelay;
         this.transparentRatio = transparentRatio;
         this.transparentMode = transparentMode;
         this.enabled = enabled;
         this.animating = animating;
+        this.autoHide = autoHide;
         this.idVisibleOnTitleBar = idVisibleOnTitleBar;
 
         parent.addPropertyChangeListener(this);
@@ -127,11 +130,22 @@ public class DefaultSlidingTypeDescriptor implements SlidingTypeDescriptor, Prop
         return idVisibleOnTitleBar;
     }
 
+    public void setAutoHide(boolean autoHide) {
+        boolean old = this.autoHide;
+        this.autoHide = autoHide;
+
+        firePropertyChange("autoHide", old, autoHide);
+    }
+
+    public boolean isAutoHide() {
+        return autoHide;
+    }
+
 
     public ToolWindowTypeDescriptor cloneMe() {
         return new DefaultSlidingTypeDescriptor(this,
                                                 transparentDelay, transparentRatio,
-                                                transparentMode, enabled, animating, idVisibleOnTitleBar);
+                                                transparentMode, enabled, animating, this.autoHide, idVisibleOnTitleBar);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

@@ -71,8 +71,8 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
             return ((DockablePanel) tabbedPane.getComponentAt(0)).getComponent();
         } else if (wrapper instanceof DockablePanel) {
             return ((DockablePanel) wrapper).getComponent();
-        }
-        throw new IllegalArgumentException("Invalid wrapper");
+        } else
+            return wrapper;
     }
 
     protected void addToWrapper(Component wrapper, Dockable dockable,

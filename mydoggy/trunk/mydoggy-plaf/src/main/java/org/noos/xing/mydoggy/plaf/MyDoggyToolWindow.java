@@ -53,7 +53,7 @@ public class MyDoggyToolWindow implements ToolWindow {
 
 
     protected MyDoggyToolWindow(MyDoggyToolWindowManager manager,
-                                Component parentComponent, String id, int index,
+                                String id, int index,
                                 ToolWindowAnchor anchor, ToolWindowType type,
                                 String title, Icon icon, Component component,
                                 ResourceBundle resourceBundle) {
@@ -347,10 +347,12 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public boolean isAutoHide() {
-        return autoHide;
+//        return autoHide;
+        return getTypeDescriptor(type).isAutoHide();
     }
 
     public void setAutoHide(boolean autoHide) {
+        // TODO: change
         if (this.autoHide == autoHide)
             return;
 

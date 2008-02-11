@@ -296,11 +296,13 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                 if (index != -1) {
                     valueAdjusting = true;
 
-                    tabbedContentPane.setSelectedIndex(index);
-                    SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
-                    lastSelected = (PlafContent) content;
-
-                    valueAdjusting = false;
+                    try {
+                        tabbedContentPane.setSelectedIndex(index);
+                        SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
+                        lastSelected = (PlafContent) content;
+                    } finally {
+                        valueAdjusting = false;
+                    }
                 } else if (toolWindowManager.getMainContent() != content.getComponent())
                     throw new IllegalStateException("Invalid content ui state.");
             }
@@ -453,6 +455,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
         if (!showAlwaysTab && tabbedContentPane.getTabCount() == 0 && (contentValueAdjusting || toolWindowManager.getMainContent() == null)) {
             toolWindowManager.setMainContent(content.getComponent());
+            // TODO: is this right?
             lastSelected = (PlafContent) content;
             return -1;
         } else {

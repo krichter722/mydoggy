@@ -30,11 +30,13 @@ import java.util.Map;
 public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI implements MultiSplitContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
     protected MultiSplitContainer multiSplitContainer;
     protected Map<Content, MultiSplitContentUI> contentUIMap;
+    protected boolean focusValueAdj = false;
 
     protected TabLayout tabLayout;
     protected TabPlacement tabPlacement;
 
     protected JPopupMenu popupMenu;
+    protected Component componentInFocusRequest;
 
 
     public MyDoggyMultiSplitContentManagerUI() {
@@ -240,6 +242,9 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
     public void setSelected(Content content, boolean selected) {
         if (selected) {
+            if (lastSelected != null)
+                lastSelected.setSelected(false);
+
             if (content.isDetached()) {
                 // If the content is detached request the focus for owner window
                 SwingUtil.requestFocus(
@@ -254,18 +259,30 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                         if (index != -1) {
                             valueAdjusting = true;
 
-                            tabbedContentPane.setSelectedIndex(index);
-                            SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
-                            lastSelected = (PlafContent) content;
+                            try {
+                                tabbedContentPane.setSelectedIndex(index);
+                                if (!focusValueAdj)
+                                    componentInFocusRequest = SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
+                                lastSelected = (PlafContent) content;
+                            } finally {
+                                valueAdjusting = false;
+                            }
 
-                            valueAdjusting = false;
                             return;
                         }
                     } else if (c instanceof DockablePanel) {
                         DockablePanel dockablePanel = (DockablePanel) c;
                         if (dockablePanel.getDockable() == content) {
-                            SwingUtil.findAndRequestFocus(dockablePanel);
-                            lastSelected = (PlafContent) content;
+                            valueAdjusting = true;
+
+                            try {
+                                if (!focusValueAdj)
+                                    componentInFocusRequest = SwingUtil.findAndRequestFocus(dockablePanel);
+                                lastSelected = (PlafContent) content;
+                            } finally {
+                                valueAdjusting = false;
+                            }
+
                             return;
                         }
                     }
@@ -320,34 +337,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             internalPropertyChangeSupport.addPropertyChangeListener("maximized.before", maximizedListener);
             internalPropertyChangeSupport.addPropertyChangeListener("maximized", maximizedListener);
 
-            final PropertyChangeListener focusOwnerPropertyChangeListener = new PropertyChangeListener() {
-
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (evt.getNewValue() != null) {
-                        JTabbedContentPane tabbedPane = SwingUtil.getParent((Component) evt.getNewValue(), JTabbedContentPane.class);
-                        if (tabbedPane != null) {
-                            if (!valueAdjusting && !contentValueAdjusting) {
-                                PlafContent newSelected = (PlafContent) tabbedPane.getSelectedContent();
-                                if (newSelected != null) {
-                                    if (newSelected == lastSelected)
-                                        return;
-
-                                    if (lastSelected != null) {
-                                        try {
-                                            lastSelected.fireSelected(false);
-                                        } catch (Exception ignoreIt) {
-                                        }
-                                    }
-
-                                    lastSelected = newSelected;
-                                    newSelected.fireSelected(true);
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
+            final FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener();
             KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
             toolWindowManager.addInternalPropertyChangeListener("parentComponent.closed", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
@@ -619,9 +609,18 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                         tmpWorkspace = null;
                     }
 
+                    // Save and clear the workspace
                     toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
                     toolWindowManager.getToolWindowGroup().setVisible(false);
+
+                    // TODO : Obtain the focus owner
+                    Component component = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+
+                    // Maximize
                     multiSplitContainer.setMaximizedDockable(content);
+
+                    // Resotre the focus owner
+                    
                     maximizedContent = content;
                 }
             } else {
@@ -659,27 +658,36 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (!oldValue && newValue) {
-                ContentUI contentUI = getContentUI(content);
+                valueAdjusting = true;
+                try {
+                    ContentUI contentUI = getContentUI(content);
 
-                // Remove from multiSpli and store constraint
-                detachedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
+                    // Remove from multiSpli and store constraint
+                    detachedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
 
-                // Setup dialog
-                JDialog dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI, parentFrame);
-                dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
-                dialog.toFront();
-                dialog.setVisible(true);
-                SwingUtil.requestFocus(dialog);
+                    // Setup dialog
+                    JDialog dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI, parentFrame);
+                    dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
+                    dialog.toFront();
+                    dialog.setVisible(true);
+
+                    componentInFocusRequest = SwingUtil.findAndRequestFocus(dialog);
+                } finally {
+                    valueAdjusting = false;
+                }
             } else if (oldValue && !newValue) {
                 Window window = SwingUtilities.windowForComponent(content.getComponent());
                 window.setVisible(false);
                 window.dispose();
 
+                contentValueAdjusting = true;
                 try {
                     addUIForContent(content, detachedContentUIMap.get(content));
                     content.setSelected(true);
+
                     SwingUtil.findAndRequestFocus(content.getComponent());
                 } finally {
+                    contentValueAdjusting = false;
                     detachedContentUIMap.remove(content);
                 }
             }
@@ -699,7 +707,52 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         }
     }
 
+    protected class FocusOwnerPropertyChangeListener implements PropertyChangeListener {
+
+        public FocusOwnerPropertyChangeListener() {
+        }
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (componentInFocusRequest != null) {
+                if (evt.getNewValue() == componentInFocusRequest)
+                    componentInFocusRequest = null;
+                else
+                    return;
+            }
+
+            if (evt.getNewValue() != null) {
+                PlafContent newSelected = null;
+
+                JTabbedContentPane tabbedPane = SwingUtil.getParent((Component) evt.getNewValue(), JTabbedContentPane.class);
+                if (tabbedPane == null) {
+                    DockablePanel dockablePanel = SwingUtil.getParent((Component) evt.getNewValue(), DockablePanel.class);
+                    if (dockablePanel != null)
+                        newSelected = (PlafContent) dockablePanel.getDockable();
+                } else
+                    newSelected = (PlafContent) tabbedPane.getSelectedContent();
+
+                if (newSelected != null && !valueAdjusting && !contentValueAdjusting) {
+                    if (newSelected == lastSelected)
+                        return;
+
+                    if (lastSelected != null)
+                        lastSelected.setSelected(false);
+
+                    focusValueAdj = true;
+                    try {
+                        newSelected.setSelected(true);
+                    } finally {
+                        focusValueAdj = false;
+                    }
+                }
+            }
+        }
+    }
+
+
     protected class MultiSplitContainer extends MultiSplitTabbedContentContainer {
+
+
         protected Component oldRoot;
         protected DockablePanel oldParent;
         protected Dockable currentMaximizedDockable;
@@ -765,20 +818,11 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                             if (newSelected == lastSelected)
                                 return;
 
-                            if (lastSelected != null) {
-                                try {
-//                            lastSelected.fireSelected(false);
-                                    lastSelected.setSelected(false);
-                                } catch (Exception ignoreIt) {
-                                }
-                            }
+                            if (lastSelected != null)
+                                lastSelected.setSelected(false);
 
-                            if (newSelected != null)  {
-//                        newSelected.fireSelected(true);
+                            if (newSelected != null)
                                 newSelected.setSelected(true);
-                            }
-
-                            lastSelected = newSelected;
                         }
                     }
                 }
