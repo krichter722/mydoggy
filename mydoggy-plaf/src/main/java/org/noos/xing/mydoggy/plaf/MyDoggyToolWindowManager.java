@@ -142,7 +142,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             throw new IllegalArgumentException("Cannot register tool window with passed id. An already registered dockable exists. [id : " + id + "]");
 
         MyDoggyToolWindow toolWindow = new MyDoggyToolWindow(this,
-                                                             parentComponent, id,
+                                                             id,
                                                              index,
                                                              anchor,
                                                              ToolWindowType.DOCKED,

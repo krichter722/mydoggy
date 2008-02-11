@@ -23,6 +23,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
 
     private boolean enabled;
     private boolean animating;
+    private boolean autoHide;
     private boolean idVisibleOnTitleBar;
 
     private EventListenerList listenerList;
@@ -34,12 +35,13 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         modal = false;
         enabled = true;
         animating = true;
+        autoHide = false;
         idVisibleOnTitleBar = true;
     }
 
     public DefaultFloatingTypeDescriptor(DefaultFloatingTypeDescriptor parent, Point location, Dimension size,
                                          int transparentDelay, float transparentRatio, boolean useTransparentMode,
-                                         boolean modal, boolean enabled, boolean animating, boolean idVisibleOnTitleBar) {
+                                         boolean modal, boolean enabled, boolean animating, boolean autoHide, boolean idVisibleOnTitleBar) {
         this.location = location;
         this.size = size;
         this.transparentDelay = transparentDelay;
@@ -48,6 +50,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         this.modal = modal;
         this.enabled = enabled;
         this.animating = animating;
+        this.autoHide = autoHide;
         this.idVisibleOnTitleBar = idVisibleOnTitleBar;
 
         parent.addPropertyChangeListener(this);
@@ -182,11 +185,22 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         return idVisibleOnTitleBar;
     }
 
+    public void setAutoHide(boolean autoHide) {
+        boolean old = this.autoHide;
+        this.autoHide = autoHide;
+
+        firePropertyChange("autoHide", old, autoHide);
+    }
+
+    public boolean isAutoHide() {
+        return autoHide;
+    }
+
 
     public ToolWindowTypeDescriptor cloneMe() {
         return new DefaultFloatingTypeDescriptor(this, location, size, transparentDelay,
                                                  transparentRatio, transparentMode,
-                                                 modal, enabled, animating, idVisibleOnTitleBar);
+                                                 modal, enabled, animating, this.autoHide, idVisibleOnTitleBar);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

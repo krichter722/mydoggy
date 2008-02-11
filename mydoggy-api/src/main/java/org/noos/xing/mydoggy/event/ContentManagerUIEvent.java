@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.event;
 
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.ContentManagerUI;
+import org.noos.xing.mydoggy.ContentUI;
 
 import java.util.EventObject;
 
@@ -74,4 +75,11 @@ public class ContentManagerUIEvent extends EventObject {
         return content;
     }
 
+
+    public String toString() {
+        return "ContentManagerUIEvent{" +
+               "actionId=" + actionId +
+               ", content=" + content +
+               '}';
+    }
 }

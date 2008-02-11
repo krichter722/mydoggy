@@ -124,4 +124,12 @@ public class ToolWindowGroupEvent extends EventObject {
     public ToolWindow getToolWindow() {
         return toolWindow;
     }
+
+    public String toString() {
+        return "ToolWindowGroupEvent{" +
+               "actionId=" + actionId +
+               ", toolWindowGroup=" + toolWindowGroup +
+               ", toolWindow=" + toolWindow +
+               '}';
+    }
 }

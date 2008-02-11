@@ -21,6 +21,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     private JMenu toolsMenu;
     private int dockLength;
     private boolean animating;
+    private boolean autoHide;
 
     private boolean previewEnabled;
     private int previewDelay;
@@ -37,6 +38,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.dockLength = 200;
         this.toolWindowActionHandler = null;
         this.animating = true;
+        this.autoHide = false;
         this.previewEnabled = true;
         this.previewDelay = 1000;
         this.previewTransparentRatio = 0.65f;
@@ -47,7 +49,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, ResourceManager resourceManager,
                                        int dockLength, boolean popupMenuEnabled,
                                        ToolWindowActionHandler toolWindowActionHandler, boolean animating,
-                                       boolean previewEnabled, int previewDelay, float previewTransparentRatio,
+                                       boolean autoHide, boolean previewEnabled, int previewDelay, float previewTransparentRatio,
                                        boolean hideRepresentativeButtonOnVisible, boolean idVisibleOnTitleBar) {
         this.resourceManager = resourceManager;
         this.toolsMenu = new JMenu(resourceManager.getString("@@tool.toolsMenu"));
@@ -55,6 +57,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.dockLength = dockLength;
         this.toolWindowActionHandler = toolWindowActionHandler;
         this.animating = animating;
+        this.autoHide = autoHide;
         this.previewEnabled = previewEnabled;
         this.previewDelay = previewDelay;
         this.previewTransparentRatio = previewTransparentRatio;
@@ -159,6 +162,17 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         return idVisibleOnTitleBar;
     }
 
+    public void setAutoHide(boolean autoHide) {
+        boolean old = this.autoHide;
+        this.autoHide = autoHide;
+
+        firePropertyChange("autoHide", old, autoHide);
+    }
+
+    public boolean isAutoHide() {
+        return autoHide;
+    }
+
     public void setPreviewTransparentRatio(float previewTransparentRatio) {
         if (this.previewTransparentRatio == previewTransparentRatio)
             return;
@@ -202,7 +216,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     public ToolWindowTypeDescriptor cloneMe() {
         return new DefaultDockedTypeDescriptor(this, resourceManager, dockLength, popupMenuEnabled,
                                                toolWindowActionHandler, animating,
-                                               previewEnabled, previewDelay, previewTransparentRatio,
+                                               this.autoHide, previewEnabled, previewDelay, previewTransparentRatio,
                                                hideRepresentativeButtonOnVisible, idVisibleOnTitleBar);
     }
 

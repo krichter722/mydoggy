@@ -50,4 +50,24 @@ public interface ToolWindowTypeDescriptor extends Observable {
      * @since 1.4.0
      */
     boolean isIdVisibleOnTitleBar();
+
+    /**
+     * This method is used to set the autoHide property for the tool.
+     *
+     * @param autoHide <code>true</code> to hide the tool when the tool losts focus;
+     *                 <code>false</code> to make inactive the tool when the tool losts focus.
+     * @see #isAutoHide() ()
+     * @since 1.4.2
+     */
+    void setAutoHide(boolean autoHide);
+
+    /**
+     * Returns the autoHide property value of the tool.
+     *
+     * @return autoHide property value.
+     * @see #setAutoHide(boolean)
+     * @since 1.4.2
+     */
+    boolean isAutoHide();
+
 }

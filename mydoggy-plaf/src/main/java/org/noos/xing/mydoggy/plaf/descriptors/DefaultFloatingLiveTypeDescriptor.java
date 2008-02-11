@@ -4,9 +4,9 @@ import org.noos.xing.mydoggy.FloatingLiveTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 
 import javax.swing.event.EventListenerList;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -20,6 +20,7 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
     private int transparentDelay;
     private boolean enabled;
     private boolean animating;
+    private boolean autoHide;
     private boolean idVisibleOnTitleBar;
 
     private EventListenerList listenerList;
@@ -30,12 +31,13 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
         transparentDelay = 1000;
         enabled = true;
         animating = true;
+        autoHide = false;
         idVisibleOnTitleBar = true;
     }
 
     public DefaultFloatingLiveTypeDescriptor(DefaultFloatingLiveTypeDescriptor parent, Point location, Dimension size,
                                              int transparentDelay, float transparentRatio, boolean useTransparentMode,
-                                             boolean enabled, boolean animating, boolean idVisibleOnTitleBar) {
+                                             boolean enabled, boolean animating, boolean autoHide, boolean idVisibleOnTitleBar) {
         this.location = location;
         this.size = size;
         this.transparentDelay = transparentDelay;
@@ -43,6 +45,7 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
         this.transparentMode = useTransparentMode;
         this.enabled = enabled;
         this.animating = animating;
+        this.autoHide = autoHide;
         this.idVisibleOnTitleBar = idVisibleOnTitleBar;
 
         parent.addPropertyChangeListener(this);
@@ -163,11 +166,22 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
         return idVisibleOnTitleBar;
     }
 
+    public void setAutoHide(boolean autoHide) {
+        boolean old = this.autoHide;
+        this.autoHide = autoHide;
+
+        firePropertyChange("autoHide", old, autoHide);
+    }
+
+    public boolean isAutoHide() {
+        return autoHide;
+    }
+
 
     public ToolWindowTypeDescriptor cloneMe() {
         return new DefaultFloatingLiveTypeDescriptor(this, location, size, transparentDelay,
                                                      transparentRatio, transparentMode,
-                                                     enabled, animating, idVisibleOnTitleBar);
+                                                     enabled, animating, this.autoHide, idVisibleOnTitleBar);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

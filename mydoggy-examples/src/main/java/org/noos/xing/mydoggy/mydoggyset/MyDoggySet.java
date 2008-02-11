@@ -5,6 +5,7 @@ import org.jdesktop.swingx.JXMonthView;
 import org.noos.common.Question;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
+import org.noos.xing.mydoggy.event.ContentManagerEvent;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.mydoggyset.action.*;
@@ -26,6 +27,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Locale;
 
 /**
@@ -228,6 +231,35 @@ public class MyDoggySet {
         FloatingTypeDescriptor floatingTypeDescriptor = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class);
         floatingTypeDescriptor.setModal(true);
         floatingTypeDescriptor.setAnimating(false);
+
+        // Setup ContentManager
+        toolWindowManager.getContentManager().addContentManagerListener(new ContentManagerListener() {
+            public void contentAdded(ContentManagerEvent event) {
+                event.getContent().addPropertyChangeListener(new PropertyChangeListener() {
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        StringBuffer sb = new StringBuffer("Event : ");
+                        sb.append(evt.getPropertyName())
+                                .append(" ; ")
+                                .append(evt.getOldValue())
+                                .append(" -> ")
+                                .append(evt.getNewValue())
+                                .append(" ; ")
+                                .append(evt.getSource());
+                        System.out.println(sb);
+//                new RuntimeException().printStackTrace();
+//                System.out.println("----------------------------------------------------------");
+                    }
+                });
+            }
+
+            public void contentRemoved(ContentManagerEvent event) {
+                System.out.println("Content removed " + event);
+            }
+
+            public void contentSelected(ContentManagerEvent event) {
+            }
+        });
+
 
         // Setup ContentManagerUI
         toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());

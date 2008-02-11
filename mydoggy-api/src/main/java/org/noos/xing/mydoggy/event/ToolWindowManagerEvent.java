@@ -116,4 +116,12 @@ public class ToolWindowManagerEvent extends EventObject {
     public ToolWindowGroup getToolWindowGroup() {
         return toolWindowGroup;
     }
+
+    public String toString() {
+        return "ToolWindowManagerEvent{" +
+               "actionId=" + actionId +
+               ", toolWindow=" + toolWindow +
+               ", toolWindowGroup=" + toolWindowGroup +
+               '}';
+    }
 }

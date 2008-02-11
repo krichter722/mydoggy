@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy.event;
 
-import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowTab;
 
 import java.util.EventObject;
 
@@ -91,5 +91,13 @@ public class ToolWindowTabEvent extends EventObject {
      */
     public ToolWindowTab getToolWindowTab() {
         return toolWindowTab;
+    }
+
+    public String toString() {
+        return "ToolWindowTabEvent{" +
+               "actionId=" + actionId +
+               ", toolWindow=" + toolWindow +
+               ", toolWindowTab=" + toolWindowTab +
+               '}';
     }
 }
