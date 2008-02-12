@@ -99,7 +99,11 @@ public class MyDoggyContentManager implements ContentManager {
         if (content == null)
             throw new IllegalArgumentException("Content cannot be null.");
 
-        content.setMaximized(false);
+        for (Content registeredContent : getContents()) {
+            if (registeredContent.isMaximized())
+                registeredContent.setMaximized(false);
+        }
+
         plafContentManagerUI.removeContent((MyDoggyContent) content);
         boolean result = contents.remove(content);
 
@@ -130,7 +134,7 @@ public class MyDoggyContentManager implements ContentManager {
 
     public void removeAllContents() {
         for (int i = 0, size = getContentCount(); i < size; i++)
-            removeContent(i);
+            removeContent(0);
     }
 
     public Content getContent(int index) {

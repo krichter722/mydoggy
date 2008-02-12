@@ -352,6 +352,8 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setAutoHide(boolean autoHide) {
+        getTypeDescriptor(type).setAutoHide(autoHide);
+
         // TODO: change
         if (this.autoHide == autoHide)
             return;

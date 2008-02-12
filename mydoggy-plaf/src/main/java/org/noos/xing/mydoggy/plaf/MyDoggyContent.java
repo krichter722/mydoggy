@@ -31,6 +31,7 @@ public class MyDoggyContent implements PlafContent {
     protected boolean selected;
     protected boolean maximized;
     protected transient Dockable dockableDelegator;
+    protected boolean flash;
 
     protected EventListenerList uiListeners;
     protected EventListenerList listeners;
@@ -52,6 +53,7 @@ public class MyDoggyContent implements PlafContent {
         this.selected = false;
         this.maximized = false;
         this.dockableDelegator = dockableDelegator;
+        this.flash = false;
 
         this.listeners = new EventListenerList();
         this.uiListeners = new EventListenerList();
@@ -68,6 +70,25 @@ public class MyDoggyContent implements PlafContent {
 
     public Component getComponent() {
         return component;
+    }
+
+    public boolean isFlashing() {
+        return flash;
+    }
+
+    public void setFlashing(boolean flash) {
+        if (this.flash == flash)
+            return;
+
+        boolean old = this.flash;
+        this.flash = flash;
+
+        firePropertyChange("flash", old, flash);
+    }
+
+    public void setFlashing(int duration) {
+        this.flash = true;
+        firePropertyChange("flash.duration", null, duration);
     }
 
     public void setComponent(Component component) {
