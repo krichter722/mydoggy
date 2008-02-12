@@ -144,36 +144,6 @@ public interface ToolWindow extends Dockable {
     boolean isAggregateMode();
 
     /**
-     * Sets the flashing mode. If the flashing mode is enabled then the toolwindow representative button
-     * will be flashing until the tool will be made visible. If the tool is visible but not active then
-     * the toolwindow title bar will be flashing until the tool will be made visible.
-     *
-     * @param flash <code>true</code> to enable flashing mode;
-     *              <code>false</code> to disable flashing mode.
-     * @see #isFlashing()
-     * @see #setFlashing(int)
-     * @since 1.3.0
-     */
-    void setFlashing(boolean flash);
-
-    /**
-     * This method is used to enable flashing for a specific duration.
-     *
-     * @param duration the duration of the flashing in millisiconds.
-     * @see #setFlashing(boolean)
-     * @since 1.3.0
-     */
-    void setFlashing(int duration);
-
-    /**
-     * Returns whether the representative button is currently flashing.
-     *
-     * @return <code>true</code> if this the representative button is flashing, <code>false</code> otherwise.
-     * @since 1.3.0
-     */
-    boolean isFlashing();
-
-    /**
      * The method is used to set the active property of the tool.
      * If <code>active</code> is <tt>true</tt> then tool becomes available and visibile if not already was.
      * Moreover the tool grabs the focus from focus owner and becomes active.

@@ -153,6 +153,7 @@ public class TutorialSet {
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
         ToolWindowTab profilingTab = debugTool.addToolWindowTab("Profiling", new JButton("Profiling"));
         profilingTab.setCloseable(true);
+        profilingTab.setFlashing(true);
     }
 
     protected void initContentManager() {

@@ -1,8 +1,8 @@
 package org.noos.xing.mydoggy.plaf;
 
+import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowTab;
-import org.noos.xing.mydoggy.Dockable;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -22,7 +22,8 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
     protected Component component;
     protected boolean selected;
     protected boolean closeable;
-    
+    protected boolean flash;
+
     protected Dockable dockable;
 
     protected EventListenerList listenerList;
@@ -40,6 +41,7 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         this.listenerList = new EventListenerList();
         this.closeable = !root;
         this.dockable = dockable;
+        this.flash = false;
 
         if (dockable != null)
             dockable.addPropertyChangeListener(new DelegatorListener());
@@ -84,6 +86,26 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
 
     public Component getComponent() {
         return component;
+    }
+
+    public boolean isFlashing() {
+        return flash;
+    }
+
+    public void setFlashing(boolean flash) {
+        // TODO if the tool is not visible flash the tool... 
+        if (this.flash == flash)
+            return;
+
+        boolean old = this.flash;
+        this.flash = flash;
+
+        firePropertyChangeEvent("flash", old, flash);
+    }
+
+    public void setFlashing(int duration) {
+        this.flash = true;
+        firePropertyChangeEvent("flash.duration", null, duration);
     }
 
     public void setComponent(Component component) {

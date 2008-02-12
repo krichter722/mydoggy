@@ -66,5 +66,36 @@ public interface Dockable extends Observable {
      * @since 1.4.0
      */
     Component getComponent();
-    
+
+    /**
+     * Sets the flashing mode. For toolwindows if the flashing mode is enabled then the
+     * toolwindow representative button  will be flashing until the tool will be made visible.
+     * If the tool is visible but not active then  the toolwindow title bar will be flashing until the tool
+     * will be made visible.
+     *
+     * @param flash <code>true</code> to enable flashing mode;
+     *              <code>false</code> to disable flashing mode.
+     * @see #isFlashing()
+     * @see #setFlashing(int)
+     * @since 1.4.2
+     */
+    void setFlashing(boolean flash);
+
+    /**
+     * This method is used to enable flashing for a specific duration.
+     *
+     * @param duration the duration of the flashing in millisiconds.
+     * @see #setFlashing(boolean)
+     * @since 1.4.2
+     */
+    void setFlashing(int duration);
+
+    /**
+     * Returns whether flashing is currently enabled.
+     *
+     * @return <code>true</code> if the flashing is currently enabled, <code>false</code> otherwise.
+     * @since 1.4.2
+     */
+    boolean isFlashing();
+
 }

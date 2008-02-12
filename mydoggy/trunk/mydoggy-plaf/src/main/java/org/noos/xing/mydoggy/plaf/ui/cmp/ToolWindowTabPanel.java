@@ -458,6 +458,8 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 setName("toolWindow." + toolWindow.getId() + ".tabs." + tab.getTitle());
             } else if ("icon".equals(property)) {
                 titleLabel.setIcon((Icon) evt.getNewValue());
+            } else if ("flashing".equals(property)) {
+                System.out.println("EHEHEHE");
             }
         }
 
