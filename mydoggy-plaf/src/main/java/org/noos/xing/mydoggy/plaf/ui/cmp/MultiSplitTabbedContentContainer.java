@@ -104,7 +104,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
             throw new IllegalArgumentException("Invalid Wrapper.");
     }
 
-    protected void removeComponentWrapper(Component wrapperSource, Dockable dockable) {
+    protected int removeFromWrapper(Component wrapperSource, Dockable dockable) {
         JTabbedContentPane tabbedPane = (JTabbedContentPane) wrapperSource;
         int index = tabbedPane.indexOfContent((Content) dockable);
         if (index != -1) {
@@ -122,6 +122,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                                                               ((DockablePanel) tabbedPane.getComponentAt(0)).getComponent()));
                 }
             }
+            return index;
         } else
             throw new IllegalArgumentException("Cannot find that dockable on the passed tabbedpane");
     }
