@@ -224,6 +224,14 @@ public class MyDoggyToolWindow implements ToolWindow {
         return flash;
     }
 
+    public void setDetached(boolean detached) {
+        setType(ToolWindowType.FLOATING);   // TODO: add property to resources
+    }
+
+    public boolean isDetached() {
+        return type != ToolWindowType.DOCKED && type != ToolWindowType.SLIDING;
+    }
+
     public void setFlashing(boolean flash) {
         if (flash && isActive())
             return;

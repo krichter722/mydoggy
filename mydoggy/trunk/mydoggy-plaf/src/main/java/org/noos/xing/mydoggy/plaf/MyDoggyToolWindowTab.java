@@ -92,6 +92,14 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         return flash;
     }
 
+    public void setDetached(boolean detached) {
+        // TODO: implement this.
+    }
+
+    public boolean isDetached() {
+        return false;
+    }
+
     public void setFlashing(boolean flash) {
         // TODO if the tool is not visible flash the tool... 
         if (this.flash == flash)
