@@ -98,4 +98,23 @@ public interface Dockable extends Observable {
      */
     boolean isFlashing();
 
+    /**
+     * This method is used to detach a content from the main window. When a content is detached
+     * it is showed into a separete window.
+     *
+     * @param detached true to detach the content, false to reattach the content into the main window
+     * @since 1.4.2
+     */
+    void setDetached(boolean detached);
+
+    /**
+     * Returns whether or not the content is currently detached.
+     *
+     * @return true if the content is detached;
+     *         false otherwise
+     * @see #setDetached(boolean)
+     * @since 1.4.2
+     */
+    boolean isDetached();
+
 }

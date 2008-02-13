@@ -150,25 +150,6 @@ public interface Content extends Dockable {
     JPopupMenu getPopupMenu();
 
     /**
-     * This method is used to detach a content from the main window. When a content is detached
-     * it is showed into a separete window.
-     *
-     * @param detached true to detach the content, false to reattach the content into the main window
-     * @since 1.0.0
-     */
-    void setDetached(boolean detached);
-
-    /**
-     * Returns whether or not the content is currently detached.
-     *
-     * @return true if the content is detached;
-     *         false otherwise
-     * @see #setDetached(boolean)
-     * @since 1.0.0
-     */
-    boolean isDetached();
-
-    /**
      * Sets the keyboard mnemonic for accessing this content.
      * The mnemonic is the key which when combined with the look and feel's
      * mouseless modifier (usually Alt) will activate this content by selecting it.

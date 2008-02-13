@@ -378,7 +378,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                                                 constraint.getAggregationPosition());
             } else if (constraints[0] instanceof MultiSplitContainer.Constraint) {
                 MultiSplitContainer.Constraint constraint = (MultiSplitContainer.Constraint) constraints[0];
-                // TODO: how include it...
                 multiSplitContainer.addDockable(content,
                                                 content.getComponent(),
                                                 constraint);
