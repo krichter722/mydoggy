@@ -733,6 +733,9 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             }
 
             if (evt.getNewValue() != null) {
+                if (SwingUtil.getParent((Component) evt.getNewValue(), "toolWindow.container.") != null)
+                    return;
+
                 PlafContent newSelected = null;
 
                 JTabbedContentPane tabbedPane = SwingUtil.getParent((Component) evt.getNewValue(), JTabbedContentPane.class);
