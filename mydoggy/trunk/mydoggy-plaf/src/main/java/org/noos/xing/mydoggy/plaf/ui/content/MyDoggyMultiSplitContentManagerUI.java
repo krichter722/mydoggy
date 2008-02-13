@@ -368,13 +368,26 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         contentUI.setCloseable(closeable);
         contentUI.setDetachable(detachable);
 
-        if (constraints.length > 0 && constraints[0] instanceof MultiSplitConstraint) {
-            MultiSplitConstraint multiSplitConstraint = (MultiSplitConstraint) constraints[0];
-            multiSplitContainer.addDockable(content,
-                                            content.getComponent(),
-                                            multiSplitConstraint.getAggregationContent(),
-                                            multiSplitConstraint.getAggregationIndexLocation(),
-                                            multiSplitConstraint.getAggregationPosition());
+        if (constraints.length > 0) {
+            if (constraints[0] instanceof MultiSplitConstraint) {
+                MultiSplitConstraint constraint = (MultiSplitConstraint) constraints[0];
+                multiSplitContainer.addDockable(content,
+                                                content.getComponent(),
+                                                constraint.getAggregationContent(),
+                                                constraint.getAggregationIndexLocation(),
+                                                constraint.getAggregationPosition());
+            } else if (constraints[0] instanceof MultiSplitContainer.Constraint) {
+                MultiSplitContainer.Constraint constraint = (MultiSplitContainer.Constraint) constraints[0];
+                // TODO: how include it...
+                multiSplitContainer.addDockable(content,
+                                                content.getComponent(),
+                                                constraint);
+            } else
+                multiSplitContainer.addDockable(content,
+                                                content.getComponent(),
+                                                null,
+                                                -1,
+                                                AggregationPosition.DEFAULT);
         } else {
             multiSplitContainer.addDockable(content,
                                             content.getComponent(),
@@ -853,6 +866,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             }
             return useAlwaysContentWrapper;
         }
+
     }
 
 }
