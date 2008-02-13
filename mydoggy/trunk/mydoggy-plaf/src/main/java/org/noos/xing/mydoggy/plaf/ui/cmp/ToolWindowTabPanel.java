@@ -144,7 +144,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 public void actionPerformed(ActionEvent e) {
                     if (tab.isCloseable()) {
                         ToolWindowTabEvent event = new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_REMOVING,
-                                toolWindow, tab);
+                                                                          toolWindow, tab);
                         for (ToolWindowListener listener : toolWindow.getToolWindowListeners()) {
                             boolean result = listener.toolWindowTabRemoving(event);
                             if (!result)
@@ -178,7 +178,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 protected void tryToClose(ToolWindowTab tab) {
                     if (tab != null && tab.isCloseable()) {
                         ToolWindowTabEvent event = new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_REMOVING,
-                                toolWindow, tab);
+                                                                          toolWindow, tab);
 
                         for (ToolWindowListener listener : toolWindow.getToolWindowListeners()) {
                             boolean result = listener.toolWindowTabRemoving(event);
@@ -306,7 +306,12 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         protected boolean inside;
         protected boolean selected;
 
-        public TabButton(ToolWindowTab tab) {
+        protected Timer flashingTimer;
+        protected int flasingDuration;
+        protected boolean flashingState;
+
+        public TabButton(final ToolWindowTab tab) {
+
             setLayout(layout = new TableLayout(new double[][]{{-1, 0, 0}, {-1}}));
 
             setOpaque(false);
@@ -315,28 +320,75 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 public void update(Graphics g, JComponent c) {
                     Rectangle bounds = c.getBounds();
                     bounds.x = bounds.y = 0;
-                    if (tabContainer.getComponentCount() > 1) {
+                    
+                    if (tab.isFlashing() && toolWindow.isVisible()) {
+                        if (flashingState) {
+                            GraphicsUtil.fillRect(g, bounds,
+                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
+                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
+                                                  new RoundRectangle2D.Double(
+                                                          bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
+                                                  ),
+                                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+                        } else {
+                            GraphicsUtil.fillRect(g, bounds,
+                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
+                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
+                                                  new RoundRectangle2D.Double(
+                                                          bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
+                                                  ),
+                                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+                        }
+
+                        if (flashingTimer == null) {
+                            flashingTimer = new Timer(600, new ActionListener() {
+                                long start = 0;
+
+                                public void actionPerformed(ActionEvent e) {
+                                    Rectangle bounds = TabButton.this.getBounds();
+                                    bounds.x = bounds.y = 0;
+
+                                    if (start == 0)
+                                        start = System.currentTimeMillis();
+
+                                    flashingState = !flashingState;
+
+                                    SwingUtil.repaint(TabButton.this);
+
+                                    if (flasingDuration != -1 && System.currentTimeMillis() - start > flasingDuration)
+                                        tab.setFlashing(false);
+                                }
+                            });
+                            flashingState = true;
+                        }
+                        if (!flashingTimer.isRunning()) {
+                            flashingTimer.start();
+                        }
+                    } else if (tabContainer.getComponentCount() > 1) {
                         if (selected) {
                             if (toolWindow.isActive()) {
                                 GraphicsUtil.fillRect(g, bounds,
-                                        resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
-                                        resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
-                                        new RoundRectangle2D.Double(
-                                                bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
-                                        ),
-                                        GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
+                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
+                                                      new RoundRectangle2D.Double(
+                                                              bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
+                                                      ),
+                                                      GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
                             } else
                                 GraphicsUtil.fillRect(g, bounds,
-                                        resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END),
-                                        resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START),
-                                        new RoundRectangle2D.Double(
-                                                bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
-                                        ),
-                                        GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END),
+                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START),
+                                                      new RoundRectangle2D.Double(
+                                                              bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
+                                                      ),
+                                                      GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
                         }
                     }
+
                     super.update(g, c);
                 }
+
+
             });
             addMouseListener(mouseEventDispatcher);
             addMouseMotionListener(mouseEventDispatcher);
@@ -436,6 +488,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
                     selected = false;
                 } else {
+                    tab.setFlashing(false);
                     selecTabButton = this;
 
                     // Ensure position
@@ -458,8 +511,32 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 setName("toolWindow." + toolWindow.getId() + ".tabs." + tab.getTitle());
             } else if ("icon".equals(property)) {
                 titleLabel.setIcon((Icon) evt.getNewValue());
-            } else if ("flashing".equals(property)) {
-                System.out.println("EHEHEHE");
+            } else if ("flash".equals(property)) {
+                if (evt.getNewValue() == Boolean.TRUE) {
+                    if (!tab.isSelected()) {
+                        flasingDuration = -1;
+                        SwingUtil.repaint(this);
+                    }
+                } else {
+                    if (flashingTimer != null) {
+                        flashingTimer.stop();
+                        flashingTimer = null;
+                        SwingUtil.repaint(this);
+                    }
+                }
+            } else if ("flash.duration".equals(property)) {
+                if (evt.getNewValue() == Boolean.TRUE) {
+                    if (!tab.isSelected()) {
+                        flasingDuration = (Integer) evt.getNewValue();
+                        SwingUtil.repaint(this);
+                    }
+                } else {
+                    if (flashingTimer != null) {
+                        flashingTimer.stop();
+                        flashingTimer = null;
+                        SwingUtil.repaint(this);
+                    }
+                }
             }
         }
 
