@@ -363,7 +363,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             }
         } else if (!(source instanceof MyDoggyToolWindowBar) &&
                    !(source instanceof MyDoggyToolWindowManagerDescriptor) &&
-                   !(source instanceof MyDoggyToolWindowManager)) {
+                   !(source instanceof MyDoggyToolWindowManager) &&
+                   !(source instanceof MyDoggyToolWindowTab)) {
             new RuntimeException("Illegal Source : " + source).printStackTrace();
             return;
         }

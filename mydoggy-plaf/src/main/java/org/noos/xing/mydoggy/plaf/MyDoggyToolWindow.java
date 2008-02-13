@@ -225,7 +225,13 @@ public class MyDoggyToolWindow implements ToolWindow {
     }
 
     public void setDetached(boolean detached) {
-        setType(ToolWindowType.FLOATING);   // TODO: add property to resources
+        String detachedType = descriptor.getResourceManager().getProperty("toolwindow.detached.type");
+        try {
+            setType(ToolWindowType.valueOf(detachedType));
+            ToolWindowType.valueOf(detachedType);
+        } catch (IllegalArgumentException e) {
+            setType(ToolWindowType.FLOATING);
+        }
     }
 
     public boolean isDetached() {
@@ -683,6 +689,17 @@ public class MyDoggyToolWindow implements ToolWindow {
             boolean old = this.visible;
             this.visible = visible;
 
+            for (final ToolWindowTab tab : getToolWindowTabs()) {
+                if (tab.isFlashing()) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            tab.setFlashing(false);
+                            tab.setSelected(true);
+                        }
+                    });
+                }
+            }
+
             if (aggregate) {
                 firePropertyChangeEvent("visible", old, visible, new Object[]{aggregate, aggregationPosition, aggregationOnTool});
             } else
@@ -692,6 +709,11 @@ public class MyDoggyToolWindow implements ToolWindow {
 
     protected ToolWindowTab addTabInternal(String title, Icon icon, Component component, ToolWindow toolWindow, boolean root) {
         ToolWindowTab tab = new MyDoggyToolWindowTab(this, root, title, icon, component, toolWindow);
+        tab.addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                firePrivateEvent(evt);
+            }
+        });
         toolWindowTabs.add(tab);
 
         fireToolWindowTabEvent(new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_ADDED, this, tab));
@@ -764,6 +786,7 @@ public class MyDoggyToolWindow implements ToolWindow {
             fireTypeEvent(oldType, type);
         }
     }
+
 
     protected void firePropertyChangeEvent(String property, Object oldValue, Object newValue) {
         PropertyChangeEvent event = new PropertyChangeEvent(descriptor, property, oldValue, newValue);

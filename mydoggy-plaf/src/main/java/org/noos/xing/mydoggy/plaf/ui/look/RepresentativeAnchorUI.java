@@ -1,11 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.DockedTypeDescriptor;
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
-import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
@@ -98,7 +95,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         else
             c.setForeground(resourceManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
 
-        if (toolWindow.isFlashing() && !toolWindow.isVisible()) {
+        if (isFlashing() && !toolWindow.isVisible()) {
 
             updateAnchor(g, c,
                          flashingAnimBackStart,
@@ -248,6 +245,15 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         }
     }
 
+    protected boolean isFlashing() {
+        boolean result = toolWindow.isFlashing();
+        if (!result)
+            for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+                if (tab.isFlashing())
+                    return true;
+            }
+        return result;
+    }
 
     protected class GradientAnimation extends AbstractAnimation {
 

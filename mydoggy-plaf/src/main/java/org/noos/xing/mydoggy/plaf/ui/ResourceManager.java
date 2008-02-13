@@ -244,6 +244,12 @@ public interface ResourceManager extends Observable {
      */
     boolean getBoolean(String name, boolean defaultValue);
 
+    /**
+     * TODO:
+     * @param key
+     * @param value
+     * @since 1.4.1
+     */
     void putObject(Object key, Object value);
 
     /**
@@ -252,4 +258,5 @@ public interface ResourceManager extends Observable {
      * @return 1.4.1
      */
     <T> T getObject(Class<T> clazz, T defaultValue);
+
 }

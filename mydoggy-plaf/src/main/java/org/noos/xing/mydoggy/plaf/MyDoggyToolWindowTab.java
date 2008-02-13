@@ -93,7 +93,7 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
     }
 
     public void setDetached(boolean detached) {
-        // TODO: implement this.
+        throw new IllegalStateException("This dockable doesn't support detached mode.");
     }
 
     public boolean isDetached() {
@@ -101,6 +101,8 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
     }
 
     public void setFlashing(boolean flash) {
+        if (flash && isSelected())
+            return; 
         // TODO if the tool is not visible flash the tool... 
         if (this.flash == flash)
             return;
