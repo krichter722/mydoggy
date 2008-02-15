@@ -173,7 +173,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                 // Write header
                 AttributesImpl mydoggyAttributes = new AttributesImpl();
-                mydoggyAttributes.addAttribute(null, "version", null, null, "1.4.1");
+                mydoggyAttributes.addAttribute(null, "version", null, null, "1.4.2");
                 writer.startElement("mydoggy", mydoggyAttributes);
 
                 // Write ToolWindows
@@ -657,8 +657,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     public class MyDoggyElementParser extends ElementParserAdapter {
         public boolean parse(Element element, Object... args) {
             // Validate version
-            if (!"1.4.1".equals(element.getAttribute("version")))
-                throw new IllegalArgumentException("Invalid workspace version. Expected 1.4.1");
+            if (!"1.4.2".equals(element.getAttribute("version")))
+                throw new IllegalArgumentException("Invalid workspace version. Expected 1.4.2");
             return true;
         }
     }
