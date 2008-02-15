@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="yes"?>
 
-<mydoggy version="1.4.1">
+<mydoggy version="1.4.2">
     <tools>
         <tool id="Tool 1" available="true" visible="false" active="false" autoHide="true" anchor="LEFT" anchorIndex="1" type="DOCKED" aggregateMode="false" maximized="false" index="1" representativeAnchorButtonVisible="true">
             <descriptors>
