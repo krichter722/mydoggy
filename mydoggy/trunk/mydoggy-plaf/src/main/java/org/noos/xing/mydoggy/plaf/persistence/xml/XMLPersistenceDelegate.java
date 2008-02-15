@@ -7,6 +7,7 @@ import org.noos.xing.mydoggy.plaf.persistence.xml.merge.ResetMergePolicy;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.UnionMergePolicy;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout;
+import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -492,6 +493,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             attributes.addAttribute(null, "tabPlacement", null, null, multiSplitContentManagerUI.getTabPlacement().toString());
 
             writer.startElement("MultiSplitContentManagerUI", attributes);
+
+            writer.startElement("contents");
             for (Content content : ((ContentManager) params[1]).getContents()) {
                 MultiSplitContentUI contentUI = (MultiSplitContentUI) content.getContentUI();
 
@@ -501,6 +504,20 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                 writer.dataElement("content", contentUIAttributes);
             }
+            writer.endElement("contents");
+
+            writer.startElement("layout");
+            MyDoggyMultiSplitContentManagerUI splitContentManagerUI = (MyDoggyMultiSplitContentManagerUI) multiSplitContentManagerUI;
+
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            XMLEncoder encoder = new XMLEncoder(os);
+            encoder.writeObject(splitContentManagerUI.getLayout());
+            encoder.flush();
+            encoder.close();
+
+            String model = os.toString();
+            writer.cdata(model.substring(model.indexOf('\n')));
+            writer.endElement("layout");
 
             writer.endElement("MultiSplitContentManagerUI");
 
@@ -1010,19 +1027,31 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                 ContentManager contentManager = toolWindowManager.getContentManager();
 
-                NodeList contentUIElms = element.getElementsByTagName("content");
-                for (int i = 0, size = contentUIElms.getLength(); i< size; i++) {
-                    Element contentUIElm = (Element) contentUIElms.item(i);
+                // Load contents
+                Element contents = getElement(element, "contents");
+                if (contents != null) {
+                    NodeList contentUIElms = contents.getElementsByTagName("content");
+                    for (int i = 0, size = contentUIElms.getLength(); i< size; i++) {
+                        Element contentUIElm = (Element) contentUIElms.item(i);
 
-                    Content content = contentManager.getContent(contentUIElm.getAttribute("id"));
-                    if (content != null) {
-                        MultiSplitContentUI multiSplitContentUI = (MultiSplitContentUI) content.getContentUI();
-                        multiSplitContentUI.setShowAlwaysTab(getBoolean(contentUIElm, "showAlwaysTab", true));
+                        Content content = contentManager.getContent(contentUIElm.getAttribute("id"));
+                        if (content != null) {
+                            MultiSplitContentUI multiSplitContentUI = (MultiSplitContentUI) content.getContentUI();
+                            multiSplitContentUI.setShowAlwaysTab(getBoolean(contentUIElm, "showAlwaysTab", true));
+                        }
                     }
                 }
+
+                // Load layout
+                Element layout = getElement(element, "layout");
+                MyDoggyMultiSplitContentManagerUI myDoggyMultiSplitContentManagerUI = (MyDoggyMultiSplitContentManagerUI) managerUI;
+
+                String text = layout.getTextContent();
+                XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(text.getBytes()));
+                myDoggyMultiSplitContentManagerUI.setLayout(decoder.readObject());
              }
 
-            return false;
+             return false;
         }
 
     }
