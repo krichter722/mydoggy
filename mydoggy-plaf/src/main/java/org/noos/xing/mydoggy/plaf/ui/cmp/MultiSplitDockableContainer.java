@@ -650,7 +650,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
                                             // Prepare constraint
                                             AggregationPosition position;
-                                            if  (children.get(0) == multiSplitPaneModelRoot) {
+                                            if (children.get(0) == multiSplitPaneModelRoot) {
                                                 position = (split.isRowLayout()) ? AggregationPosition.RIGHT : AggregationPosition.BOTTOM;
                                             } else
                                                 position = (split.isRowLayout()) ? AggregationPosition.LEFT : AggregationPosition.TOP;
@@ -743,7 +743,7 @@ public class MultiSplitDockableContainer extends JPanel {
             if (!checkModel())
                 System.out.println("Check model fail. removeDockable end");
             repaintMultiSplit();
-            
+
             return constraint;
         }
     }
@@ -779,6 +779,36 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
     public void setModel(MultiSplitLayout.Node root) {
+        // Check for contents root
+
+        // TODO: check number of...
+        if (root instanceof DockableLeaf) {
+            DockableLeaf dockableLeaf = (DockableLeaf) root;
+            if (!containsDockable(dockableLeaf) || !(multiSplitPaneModelRoot instanceof DockableLeaf))
+                return;
+        } else if (root instanceof MultiSplitLayout.Split) {
+            if (!(multiSplitPaneModelRoot instanceof MultiSplitLayout.Split))
+                return;
+
+            Stack<MultiSplitLayout.Split> stack = new Stack<MultiSplitLayout.Split>();
+            stack.push((MultiSplitLayout.Split) root);
+            while (!stack.isEmpty()) {
+                MultiSplitLayout.Split split = stack.pop();
+
+                for (MultiSplitLayout.Node child : split.getChildren()) {
+
+                    if (child instanceof MultiSplitLayout.Split) {
+                        stack.push((MultiSplitLayout.Split) child);
+                    } else if (child instanceof DockableLeaf) {
+                        if (!containsDockable((DockableLeaf) child)) 
+                            return;
+                    }
+                }
+            }
+        } else
+            throw new RuntimeException("Invalid model. [model : " + root + "]");
+
+        // Mount new root
         if (root instanceof MultiSplitLayout.Leaf) {
             validateModel(root);
 
@@ -787,16 +817,76 @@ public class MultiSplitDockableContainer extends JPanel {
             multiSplitPane.setModel(multiSplitPaneModelRoot);
 
             repaintMultiSplit();
-        } else if (root instanceof MultiSplitLayout.Split) {
+        } else {
             // TODO: support multi dockable leaf...
 
-            // Scan model
-            Stack<MultiSplitLayout.Split> stack = new Stack<MultiSplitLayout.Split>();
-            stack.push((MultiSplitLayout.Split) root);
-
             Map<String, Component> currentChildMap = multiSplitPane.getMultiSplitLayout().getChildMap();
-            Map<String, Component> newChildMap = new HashMap<String, Component>();
 
+            // First Step: disaggregate...
+            Stack<MultiSplitLayout.Split> stack = new Stack<MultiSplitLayout.Split>();
+            stack.push((MultiSplitLayout.Split) multiSplitPaneModelRoot);
+            while (!stack.isEmpty()) {
+                MultiSplitLayout.Split split = stack.pop();
+
+                for (MultiSplitLayout.Node child : split.getChildren()) {
+                    if (child instanceof DockableLeaf) {
+                        DockableLeaf leaf = (DockableLeaf) child;
+
+                        String[] dockIds = leaf.getDockables().toArray(new String[leaf.getDockables().size()]);
+                        for (String dockId : dockIds) {
+
+                            if (leaf.getDockables().size() == 1)
+                                break;
+                            
+                            Component component = currentChildMap.get(leaf.getName());
+
+                            Dockable dockable = toolWindowManager.getDockable(dockId);
+                            setConstraints(dockable,
+                                           getComponentFromWrapper(component, dockable),
+                                           null,
+                                           -1,
+                                           AggregationPosition.DEFAULT
+                            );
+                        }
+                    } else if (child instanceof MultiSplitLayout.Split) {
+                        stack.push((MultiSplitLayout.Split) child);
+                    }
+                }
+            }
+
+            // Step Two: apply model 1...
+            stack = new Stack<MultiSplitLayout.Split>();
+            stack.push((MultiSplitLayout.Split) root);
+            while (!stack.isEmpty()) {
+                MultiSplitLayout.Split split = stack.pop();
+
+                for (MultiSplitLayout.Node child : split.getChildren()) {
+                    if (child instanceof DockableLeaf) {
+                        DockableLeaf leaf = (DockableLeaf) child;
+
+                        List<String> dockIds = leaf.getDockables();
+                        Dockable masterDockable = toolWindowManager.getDockable(leaf.getDockable());
+                        for (int i = 1; i < dockIds.size(); i++) {
+                            String dockId = dockIds.get(i);
+
+                            Dockable dockable = toolWindowManager.getDockable(dockId);
+                            setConstraints(dockable,
+                                           getComponentFromWrapper(currentChildMap.get(getLeaf(dockable).getName()), dockable),
+                                           masterDockable,
+                                           -1,
+                                           AggregationPosition.DEFAULT
+                            );
+                        }
+                    } else if (child instanceof MultiSplitLayout.Split) {
+                        stack.push((MultiSplitLayout.Split) child);
+                    }
+                }
+            }
+
+            // Step Two: apply model 2...
+            Map<String, Component> newChildMap = new HashMap<String, Component>();
+            stack = new Stack<MultiSplitLayout.Split>();
+            stack.push((MultiSplitLayout.Split) root);
             while (!stack.isEmpty()) {
                 MultiSplitLayout.Split split = stack.pop();
 
@@ -825,8 +915,7 @@ public class MultiSplitDockableContainer extends JPanel {
             multiSplitPane.setModel(multiSplitPaneModelRoot);
 
             repaintMultiSplit();
-        } else
-            throw new RuntimeException("Invalid model. [model : " + root + "]");
+        }
     }
 
 
@@ -922,6 +1011,10 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
     protected int removeFromWrapper(Component wrapperSource, Dockable dockable) {
+        throw new IllegalStateException("Cannot call this method...");
+    }
+
+    protected Component getComponentFromWrapper(Component wrapper, Dockable dockable) {
         throw new IllegalStateException("Cannot call this method...");
     }
 
@@ -1114,12 +1207,30 @@ public class MultiSplitDockableContainer extends JPanel {
                 for (MultiSplitLayout.Node child : split.getChildren()) {
                     if (child == node)
                         return true;
+
+                    if (child instanceof MultiSplitLayout.Split)
+                        stack.push(split);
                 }
             }
         }
         return false;
     }
 
+    protected boolean containsDockable(DockableLeaf leaf) {
+        for (String dockId : leaf.getDockables()) {
+            boolean found = false;
+            for (Dockable dockable : entries.keySet()) {
+                if (dockable.getId().equals(dockId)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+                return false;
+
+        }
+        return true;
+    }
 
     public class DockableEntry {
         Dockable dockable;

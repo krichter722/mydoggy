@@ -399,6 +399,14 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         SwingUtil.repaint(multiSplitContainer);
     }
 
+    public Object getLayout() {
+        return multiSplitContainer.getModel();
+    }
+
+    public void setLayout(Object layout) {
+        multiSplitContainer.setModel((MultiSplitLayout.Node) layout);
+    }
+
 
     protected class ComponentListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
