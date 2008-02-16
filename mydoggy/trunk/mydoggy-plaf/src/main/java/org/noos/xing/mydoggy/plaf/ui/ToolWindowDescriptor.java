@@ -58,32 +58,36 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
 
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("type".equals(evt.getPropertyName())) {
+        final String propertyName = evt.getPropertyName();
+
+        if ("type".equals(propertyName)) {
             if (evt.getOldValue() == ToolWindowType.FLOATING_FREE || evt.getNewValue() == ToolWindowType.FLOATING_FREE)
                 setFloatingWindow(true);
             else if (evt.getOldValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING)
                 setFloatingWindow(false);
             if (evt.getNewValue() == ToolWindowType.EXTERN)
                 resetRepresentativeAnchor();
-        } else if ("index".equals(evt.getPropertyName())) {
+        } else if ("index".equals(propertyName)) {
             updateRepresentativeAnchor();
-        } else if ("numberingEnabled".equals(evt.getPropertyName())) {
+        } else if ("numberingEnabled".equals(propertyName)) {
             updateRepresentativeAnchor();
-        } else if ("icon".equals(evt.getPropertyName())) {
+        } else if ("icon".equals(propertyName)) {
             updateRepresentativeAnchor();
-        } else if ("dockLength".equals(evt.getPropertyName())) {
+        } else if ("dockLength".equals(propertyName)) {
             if (!valueAdj) {
                 this.divederLocation = (Integer) evt.getNewValue();
                 getToolBar(toolWindow.getAnchor()).propertyChange(
                         new PropertyChangeEvent(toolWindow,
-                                                evt.getPropertyName(),
+                                                propertyName,
                                                 evt.getOldValue(),
                                                 evt.getNewValue()
                         )
                 );
             }
-        } else if ("idVisibleOnTitleBar".equals(evt.getPropertyName())) {
+        } else if ("idVisibleOnTitleBar".equals(propertyName)) {
             setIdOnTitleBar();
+        } else if ("autoHide".equals(propertyName)) {
+            manager.propertyChange(new PropertyChangeEvent(this, propertyName, evt.getOldValue(), evt.getNewValue()));
         }
     }
 

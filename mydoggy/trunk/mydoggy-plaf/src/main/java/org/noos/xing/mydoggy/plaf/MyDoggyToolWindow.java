@@ -363,7 +363,7 @@ public class MyDoggyToolWindow implements ToolWindow {
     public boolean isAutoHide() {
         if (type == ToolWindowType.EXTERN)
             return getTypeDescriptor(DockedTypeDescriptor.class).isAutoHide();
-//        return autoHide;
+
         return getTypeDescriptor(type).isAutoHide();
     }
 
@@ -372,16 +372,6 @@ public class MyDoggyToolWindow implements ToolWindow {
             return;
         
         getTypeDescriptor(type).setAutoHide(autoHide);
-
-        // TODO: change
-        if (this.autoHide == autoHide)
-            return;
-
-        synchronized (getLock()) {
-            boolean old = this.autoHide;
-            this.autoHide = autoHide;
-            firePropertyChangeEvent("autoHide", old, autoHide);
-        }
     }
 
     public ToolWindowType getType() {

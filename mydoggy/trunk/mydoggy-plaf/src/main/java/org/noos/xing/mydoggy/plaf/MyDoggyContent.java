@@ -61,7 +61,7 @@ public class MyDoggyContent implements PlafContent {
 
 
     public String toString() {
-        return id;  // TODO: toString
+        return id;  
     }
 
     public String getId() {
