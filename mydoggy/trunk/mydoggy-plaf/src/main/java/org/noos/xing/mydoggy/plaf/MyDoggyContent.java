@@ -77,6 +77,9 @@ public class MyDoggyContent implements PlafContent {
     }
 
     public void setFlashing(boolean flash) {
+        if (flash && isSelected())
+            return;
+
         if (this.flash == flash)
             return;
 
@@ -87,7 +90,11 @@ public class MyDoggyContent implements PlafContent {
     }
 
     public void setFlashing(int duration) {
+        if (isSelected())
+            return;
+
         this.flash = true;
+
         firePropertyChange("flash.duration", null, duration);
     }
 

@@ -238,6 +238,14 @@ public class MyDoggyToolWindow implements ToolWindow {
         return type != ToolWindowType.DOCKED && type != ToolWindowType.SLIDING;
     }
 
+    public void setSelected(boolean selected) {
+        setActive(selected);
+    }
+
+    public boolean isSelected() {
+        return isActive();
+    }
+
     public void setFlashing(boolean flash) {
         if (flash && isActive())
             return;

@@ -1,6 +1,8 @@
 package org.noos.xing.mydoggy.mydoggyset.view.contents.model;
 
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.ContentManagerListener;
+import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
 
 import javax.swing.table.DefaultTableModel;
@@ -19,7 +21,7 @@ public final class ContentsTableModel extends DefaultTableModel implements Prope
         this.windowManager = windowManager;
 
         setColumnIdentifiers(new Object[]{
-                "Title", "Enabled", "Selected", "Detached"
+                "Title", "Enabled", "Selected", "Detached", "Flashing"
         });
         initToolsListeners();
         updateModel();
@@ -39,6 +41,9 @@ public final class ContentsTableModel extends DefaultTableModel implements Prope
                 break;
             case 3 :
                 windowManager.getContentManager().getContent(row).setDetached((Boolean) aValue);
+                break;
+            case 4 :
+                windowManager.getContentManager().getContent(row).setFlashing((Boolean) aValue);
                 break;
         }
     }
@@ -71,7 +76,11 @@ public final class ContentsTableModel extends DefaultTableModel implements Prope
         for (Content content : contents) {
             addRow(new Object[]{
                     content.getTitle(),
-                    content.isEnabled(), content.isSelected(), content.isDetached()
+                    content.isEnabled(),
+                    content.isSelected(),
+                    content.isDetached(),
+                    content.isFlashing(),
+                    content
             });
         }
 
