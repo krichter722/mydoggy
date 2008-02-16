@@ -1,25 +1,101 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.Dockable;
+import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class DockablePanel extends JPanel {
+public class DockablePanel extends JPanel implements PropertyChangeListener, ActionListener {
+    protected Dockable dockable;
+    protected Timer flashingTimer;
+    protected int flasingDuration;
+    protected boolean flashingState;
+    protected long startingTime = 0;
+
+    protected Border flashingBorder = new LineBorder(Color.RED, 3);
 
     public DockablePanel(Dockable dockable, Component component) {
+        this.dockable = dockable;
+
         setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         setFocusCycleRoot(true);
         setFocusable(false);
         add(component, "0,0,FULL,FULL");
-        putClientProperty(Dockable.class, dockable);
+
+        dockable.addPropertyChangeListener(this);
     }
 
+    public void propertyChange(PropertyChangeEvent evt) {
+        final String propertyName = evt.getPropertyName();
+
+        if ("flash".equals(propertyName)) {
+            if (evt.getNewValue() == Boolean.TRUE) {
+                if (!dockable.isSelected()) {
+                    putClientProperty("oldBorder", getBorder());
+                    flasingDuration = -1;
+                    flashingTimer = new Timer(600, this);
+                    flashingTimer.start();
+                }
+            } else {
+                if (flashingTimer != null) {
+                    flashingTimer.stop();
+                    flashingTimer = null;
+                    setBorder((Border) getClientProperty("oldBorder"));
+                }
+            }
+        } else if ("flash.duration".equals(propertyName)) {
+            if (evt.getNewValue() == Boolean.TRUE) {
+                if (!dockable.isSelected()) {
+                    putClientProperty("oldBorder", getBorder());
+                    flasingDuration = (Integer) evt.getNewValue();
+                    flashingTimer = new Timer(600, this);
+                    flashingTimer.start();
+                }
+            } else {
+                if (flashingTimer != null) {
+                    flashingTimer.stop();
+                    flashingTimer = null;
+                    setBorder((Border) getClientProperty("oldBorder"));
+                }
+            }
+        } else if ("selected".equals(propertyName)) {
+            if (evt.getNewValue() == Boolean.TRUE)
+                dockable.setFlashing(false);            
+        }
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if (startingTime == 0)
+            startingTime = System.currentTimeMillis();
+
+        flashingState = !flashingState;
+
+        if (flashingState) {
+            setBorder(flashingBorder);
+        } else {
+            setBorder((Border) getClientProperty("oldBorder"));
+        }
+
+        if (flasingDuration != -1 && System.currentTimeMillis() - startingTime > flasingDuration)
+            dockable.setFlashing(false);
+    }
+
+    public void removeNotify() {
+        dockable.removePropertyChangeListener(this);
+    }
+
+
     public Dockable getDockable() {
-        return (Dockable) getClientProperty(Dockable.class);
+        return dockable;
     }
 
     public Component getComponent() {
@@ -30,6 +106,5 @@ public class DockablePanel extends JPanel {
         removeAll();
         add(component, "0,0,FULL,FULL");
     }
-
-
+    
 }

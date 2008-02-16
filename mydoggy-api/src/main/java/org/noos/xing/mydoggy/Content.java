@@ -104,25 +104,6 @@ public interface Content extends Dockable {
     boolean isEnabled();
 
     /**
-     * Sets whether or not the content is selected.
-     *
-     * @param selected whether or not the content should be selected.
-     * @see #isSelected()
-     * @since 1.0.0
-     */
-    void setSelected(boolean selected);
-
-    /**
-     * Returns whether or not the content is currently selected.
-     *
-     * @return true if the content is selected;
-     *         false otherwise
-     * @see #setSelected(boolean)
-     * @since 1.0.0
-     */
-    boolean isSelected();
-
-    /**
      * Sets the component to <code>component</code>.
      *
      * @param component the component for the content

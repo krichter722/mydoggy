@@ -117,4 +117,23 @@ public interface Dockable extends Observable {
      */
     boolean isDetached();
 
+    /**
+     * Sets whether or not the dockable is selected.
+     *
+     * @param selected whether or not the dockable should be selected.
+     * @see #isSelected()
+     * @since 1.4.2
+     */
+    void setSelected(boolean selected);
+
+    /**
+     * Returns whether or not the dockable is currently selected.
+     *
+     * @return true if the dockable is selected;
+     *         false otherwise
+     * @see #setSelected(boolean)
+     * @since 1.4.2
+     */
+    boolean isSelected();
+
 }

@@ -114,6 +114,9 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
     }
 
     public void setFlashing(int duration) {
+        if (isSelected())
+            return;
+
         this.flash = true;
         firePropertyChangeEvent("flash.duration", null, duration);
     }
