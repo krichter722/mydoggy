@@ -103,7 +103,7 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
     public void setFlashing(boolean flash) {
         if (flash && isSelected())
             return; 
-        // TODO if the tool is not visible flash the tool... 
+
         if (this.flash == flash)
             return;
 
