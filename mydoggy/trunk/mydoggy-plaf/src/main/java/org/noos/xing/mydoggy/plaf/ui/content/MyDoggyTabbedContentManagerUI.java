@@ -333,11 +333,15 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
         if (tabbedContentPane.getTabCount() == 1 && !isShowAlwaysTab()) {
             Content lastContent = contentManager.getSelectedContent();
-            if (lastContent == content)
-                lastContent = contentManager.getNextContent();
 
-            toolWindowManager.setMainContent(lastContent.getComponent());
-            lastContent.setSelected(true);
+            if (lastContent != null) {
+                if (lastContent == content)
+                    lastContent = contentManager.getNextContent();
+
+                toolWindowManager.setMainContent(lastContent.getComponent());
+                lastContent.setSelected(true);
+            }
+
             lastSelected = null;
         } else {
             int selectedIndex = tabbedContentPane.getSelectedIndex();
