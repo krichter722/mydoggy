@@ -16,20 +16,20 @@ import javax.swing.plaf.TabbedPaneUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.ByteArrayOutputStream;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class JTabbedContentPane extends JTabbedPane {
+public class JTabbedContentPane extends JTabbedPane implements PropertyChangeListener {
     protected ToolWindowManager toolWindowManager;
     protected ResourceManager resourceManager;
 
     protected Map<Integer, Content> contentMap;
+    protected Map<Content, Object> flashingContents;
 
     protected Icon selectedTabIcon;
     protected TextIcon titleIcon;
@@ -55,8 +55,10 @@ public class JTabbedContentPane extends JTabbedPane {
         this.tabIconTitle = new AggregateIcon(null, titleIcon, SwingConstants.HORIZONTAL);
         this.closeDetachIcon = new AggregateIcon(detachIcon, closeIcon, SwingConstants.HORIZONTAL);
         this.selectedTabIcon = new ExAggregateIcon(tabIconTitle,
-                                                 closeDetachIcon,
-                                                 SwingConstants.HORIZONTAL);
+                                                   closeDetachIcon,
+                                                   SwingConstants.HORIZONTAL);
+        this.flashingContents = new HashMap<Content, Object>();
+
         setFocusable(false);
         setInheritsPopupMenu(false);
 
@@ -69,6 +71,21 @@ public class JTabbedContentPane extends JTabbedPane {
         }
     }
 
+
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("flash".equals(evt.getPropertyName())) {
+            if (evt.getNewValue() == Boolean.TRUE) {
+                flashingContents.put((Content) evt.getSource(), null);
+                SwingUtil.repaint(this);
+            } else {
+                flashingContents.remove((Content) evt.getSource());
+                SwingUtil.repaint(this);
+            }
+        } else if ("selected".equals(evt.getPropertyName())) {
+            flashingContents.remove((Content) evt.getSource());
+            SwingUtil.repaint(this);
+        }
+    }
 
     public String getTitleAt(int index) {
         if (getSelectedIndex() == index)
@@ -95,13 +112,36 @@ public class JTabbedContentPane extends JTabbedPane {
 
             ((ExAggregateIcon) selectedTabIcon).setIndex(index);
 
-
             return selectedTabIcon;
+        } else if (flashingContents.containsKey(getContentAt(index))) {
+            Content content = getContentAt(index);
+            Object o = flashingContents.get(content);
+            if (o == null) {
+                TextIcon textIcon = new TextIcon(this, super.getTitleAt(index), TextIcon.ROTATE_NONE);
+                textIcon.setUnderlinedIndex(
+                        SwingUtil.findDisplayedMnemonicIndex(super.getTitleAt(index),
+                                                             getContentAt(index).getMnemonic())
+                );
+
+                Icon icon = new AggregateIcon(new AggregateIcon(super.getIconAt(index),
+                                                                textIcon,
+                                                                SwingConstants.HORIZONTAL),
+                                              resourceManager.getIcon("AUTO_HIDE_ON"),
+                                              SwingConstants.HORIZONTAL);
+                flashingContents.put(content, icon);
+                return icon;
+            } else
+                return (Icon) o;
         }
         return super.getIconAt(index);
     }
 
     public void removeTabAt(int index) {
+        Content content = getContentAt(index);
+        if (content == null)
+            throw new IllegalArgumentException("Invalid index location.");
+
+        content.removePropertyChangeListener(this);
         super.removeTabAt(index);
         contentMap.remove(index);
 
@@ -114,7 +154,7 @@ public class JTabbedContentPane extends JTabbedPane {
     }
 
     public void setUI(TabbedPaneUI ui) {
-        super.setUI(ui);    //To change body of overridden methods use File | Settings | File Templates.
+        super.setUI(ui);
         setFocusable(false);
         setInheritsPopupMenu(false);
 
@@ -145,6 +185,8 @@ public class JTabbedContentPane extends JTabbedPane {
                content.getIcon(),
                content.getComponent(),
                tip);
+
+        content.addPropertyChangeListener(this);
         contentMap.put(getTabCount() - 1, content);
     }
 
@@ -160,13 +202,15 @@ public class JTabbedContentPane extends JTabbedPane {
                content.getIcon(),
                component,
                tip);
+
+        content.addPropertyChangeListener(this);
         contentMap.put(getTabCount() - 1, content);
     }
 
     public int addTab(Content content, Component component, int index) {
         if (index < 0 || index >= getTabCount()) {
             addTab(content, component);
-            return getTabCount() - 1; 
+            return getTabCount() - 1;
         } else {
             String tip = content.getToolTipText();
             if (tip == null)
@@ -192,6 +236,7 @@ public class JTabbedContentPane extends JTabbedPane {
                       tip,
                       index);
 
+            content.addPropertyChangeListener(this);
             contentMap.put(index, content);
             return index;
         }
@@ -290,7 +335,7 @@ public class JTabbedContentPane extends JTabbedPane {
                     if (e.getClickCount() == 2)
                         content.setMaximized(!content.isMaximized());
                 } else if (SwingUtilities.isRightMouseButton(e))
-                        showPopupMenu(e);
+                    showPopupMenu(e);
             } else if (SwingUtilities.isRightMouseButton(e)) {
                 JPopupMenu popupMenu = getComponentPopupMenu();
                 if (popupMenu != null)
@@ -426,7 +471,7 @@ public class JTabbedContentPane extends JTabbedPane {
 
     }
 
-    protected class ExAggregateIcon extends AggregateIcon{
+    protected class ExAggregateIcon extends AggregateIcon {
         protected int index;
 
         public ExAggregateIcon(Icon leftIcon, Icon rightIcon, int orientation) {
