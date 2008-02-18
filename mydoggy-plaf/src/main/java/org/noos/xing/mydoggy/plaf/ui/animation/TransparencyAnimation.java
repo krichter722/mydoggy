@@ -33,9 +33,9 @@ public class TransparencyAnimation extends AbstractAnimation {
 
     protected float onAnimating(float animationPercent) {
         if (getAnimationDirection() == Direction.INCOMING) {
-            float animatingLengthX = (animationPercent * (1.0f - alpha));
+            double animatingLengthX = (animationPercent * (1.0f - alpha));
             synchronized(transparencyManager) {
-                transparencyManager.setAlphaModeRatio(component, 1.0f - animatingLengthX);
+                transparencyManager.setAlphaModeRatio(component, 1.0f - (float) animatingLengthX);
             }
         }
         return animationPercent;

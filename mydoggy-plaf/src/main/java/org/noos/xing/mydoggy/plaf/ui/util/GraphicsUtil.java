@@ -200,7 +200,7 @@ public class GraphicsUtil {
         return new Color(newRed, newGreen, newBly);
     }
 
-    public static MutableColor getInterpolatedColor(MutableColor mutableColor, Color from, Color to, float percent) {
+    public static MutableColor getInterpolatedColor(MutableColor mutableColor, Color from, Color to, double percent) {
         int newRed = (int) (percent * Math.abs((from.getRed() - to.getRed())));
 
         if (from.getRed() < to.getRed()) {

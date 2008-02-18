@@ -10,8 +10,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
-      <excludeFolder url="file://$MODULE_DIR$/target/maven-archiver" />
-      <excludeFolder url="file://$MODULE_DIR$/target/surefire-reports" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -29,8 +27,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="mydoggy-api" exported="" />
-    <orderEntry type="module" module-name="mydoggy-res" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="tablelayout:TableLayout:20050920">
         <CLASSES>
@@ -41,6 +37,21 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar://$MODULE_DIR$/../../../../.m2/repository/tablelayout/TableLayout/20050920/TableLayout-20050920-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module" module-name="mydoggy-api" exported="" />
+    <orderEntry type="module" module-name="mydoggy-res" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library name="net.java.dev.timingframework:timingframework:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/net/java/dev/timingframework/timingframework/1.0/timingframework-1.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/net/java/dev/timingframework/timingframework/1.0/timingframework-1.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/net/java/dev/timingframework/timingframework/1.0/timingframework-1.0-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

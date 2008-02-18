@@ -682,11 +682,18 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                 try {
                     ContentUI contentUI = getContentUI(content);
 
+                    // TODO : remove inbounds
+                    Component component = content.getComponent();
+                    Rectangle inBounds = component.getBounds();
+                    inBounds.setLocation(component.getLocationOnScreen());
+
                     // Remove from multiSpli and store constraint
                     detachedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
 
                     // Setup dialog
-                    JDialog dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI, parentFrame);
+                    JDialog dialog = new AnimatedContentDialog(resourceManager, (PlafContent) content,
+                                                       contentUI,
+                                                       parentFrame, inBounds);
                     dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
                     dialog.toFront();
                     dialog.setVisible(true);

@@ -728,7 +728,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                     }
 
                     // Setup dialog
-                    JDialog dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI, parentFrame);
+                    JDialog dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI, 
+                                                       parentFrame);
                     dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
                     dialog.toFront();
                     dialog.setVisible(true);
