@@ -249,6 +249,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         // If the content is detached, reattach it
         if (content.isDetached())
             content.setDetached(false);
+        if (content.isFlashing())
+            content.setFlashing(false);
 
         content.setSelected(false);
 
@@ -257,8 +259,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         // Remove from tabbedContentPane
         int index = tabbedContentPane.indexOfContent(content);
         if (index != -1) {
+            valueAdjusting = true;
             try {
-                valueAdjusting = true;
                 tabbedContentPane.removeTabAt(index);
             } finally {
                 valueAdjusting = false;

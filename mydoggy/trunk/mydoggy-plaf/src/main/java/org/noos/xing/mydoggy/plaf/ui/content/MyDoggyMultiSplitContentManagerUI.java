@@ -216,13 +216,20 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         // If the content is detached, reattach it
         if (content.isDetached())
             content.setDetached(false);
+        if (content.isFlashing())
+            content.setFlashing(false);
 
         content.setSelected(false);
 
         content.getContentUI().removePropertyChangeListener(contentUIListener);
 
-        // Remove from multiSplitContainer
-        multiSplitContainer.removeDockable(content);
+        valueAdjusting = true;
+        try {
+            // Remove from multiSplitContainer
+            multiSplitContainer.removeDockable(content);
+        } finally {
+            valueAdjusting = false;
+        }
 
         // Remove the plaf listener
         content.removePlafPropertyChangeListener(this);
@@ -302,7 +309,10 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
     }
 
     public void selectNextContent(Content content) {
-        // TODO: implement this.
+        if (contentManager.getSelectedContent() == null) {
+            if (contentManager.getContentCount() > 0)
+                contentManager.getContent(0).setSelected(true);
+        }
     }
 
 
@@ -851,8 +861,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                             if (lastSelected != null)
                                 lastSelected.setSelected(false);
 
-                            if (newSelected != null)
-                                newSelected.setSelected(true);
+                            newSelected.setSelected(true);
                         }
                     }
                 }

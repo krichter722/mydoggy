@@ -166,11 +166,20 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         // If the content is detached, reattach it
         if (content.isDetached())
             content.setDetached(false);
+        if (content.isFlashing())
+            content.setFlashing(false);
+
+        content.setSelected(false);
 
         // Remove from desktopPane
         for (JInternalFrame internalFrame : desktopPane.getAllFrames()) {
             if (internalFrame.getContentPane().getComponent(0) == content.getComponent()) {
-                desktopPane.remove(internalFrame);
+                valueAdjusting = true;
+                try {
+                    desktopPane.remove(internalFrame);
+                } finally {
+                    valueAdjusting = false;
+                }
                 break;
             }
         }
@@ -335,17 +344,19 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                         Container container = ((JInternalFrame) evt.getSource()).getContentPane();
                         if (container.getComponentCount() > 0) {
                             Component cmp = container.getComponent(0);
+
                             for (Content content : contentManager.getContents()) {
                                 if (content.getComponent() == cmp) {
                                     boolean value = (Boolean) evt.getNewValue();
                                     if (value) {
                                         if (lastSelected != null) {
                                             if (lastSelected.isDetached())
-                                                lastSelected.fireSelected(false);
+                                                lastSelected.setSelected(false);
                                         }
+                                        content.setSelected(true);
                                         lastSelected = (PlafContent) content;
-                                    }
-                                    ((PlafContent) content).fireSelected((Boolean) evt.getNewValue());
+                                    } else
+                                        content.setSelected(false);
                                     break;
                                 }
                             }
