@@ -90,6 +90,7 @@ public class DockablePanel extends JPanel implements PropertyChangeListener, Act
     }
 
     public void removeNotify() {
+        super.removeNotify();
         dockable.removePropertyChangeListener(this);
     }
 
