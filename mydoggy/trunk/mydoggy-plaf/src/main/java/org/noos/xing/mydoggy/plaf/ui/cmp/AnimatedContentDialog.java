@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ContentUI;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.animation.MoveComponentAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.content.PlafContent;
@@ -18,13 +19,14 @@ import java.awt.event.WindowEvent;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ContentDialog extends JDialog {
+public class AnimatedContentDialog extends JDialog {
     protected PlafContent content;
     protected ContentUI contentUI;
 
-    public ContentDialog(ResourceManager resourceManager,
+    public AnimatedContentDialog(ResourceManager resourceManager,
                          PlafContent content, ContentUI contentUI,
-                         Frame parentFrame) throws HeadlessException {
+                         Frame parentFrame,
+                         Rectangle bounds) throws HeadlessException {
         super(resourceManager.getBoolean("dialog.owner.enabled", true) ? parentFrame : null, false);
 /*
         setFocusCycleRoot(true);
@@ -43,6 +45,9 @@ public class ContentDialog extends JDialog {
         getContentPane().setLayout(new TableLayout(new double[][]{{-1},{-1}}));
         getContentPane().add(component, "0,0,FULL,FULL");
 
+        // Setup bounds
+        setBounds(bounds);
+
         // Init Listener
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new ContentDialogWindowAdapter());
@@ -60,26 +65,23 @@ public class ContentDialog extends JDialog {
             addWindowListener(windowTransparencyListener);
             addWindowFocusListener(windowTransparencyListener);
         }
-
-        // Setup bounds
-        Rectangle detachedBounds = SwingUtil.validateWindowBounds(contentUI.getDetachedBounds());
-        if (detachedBounds != null) {
-            setBounds(detachedBounds);
-        } else {
-            if (parentFrame != null) {
-                Point location = parentFrame.getLocation();
-                location.translate(5, 5);
-                setLocation(location);
-            } else {
-                SwingUtil.centrePositionOnScreen(this);
-            }
-            pack();
-        }
     }
 
     protected class ContentDialogWindowAdapter extends WindowAdapter {
         public void windowClosing(WindowEvent event) {
             content.setDetached(false);
+        }
+    }
+
+    public void setVisible(boolean b) {
+        super.setVisible(b);
+        if (b) {
+            Rectangle detachedBounds = SwingUtil.validateWindowBounds(contentUI.getDetachedBounds());
+            if (detachedBounds != null) {
+                MoveComponentAnimation animation = new MoveComponentAnimation(200f, this);
+                animation.show(detachedBounds);
+                setBounds(detachedBounds);
+            }
         }
     }
 
