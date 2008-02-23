@@ -779,6 +779,9 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
     public void setModel(MultiSplitLayout.Node root) {
+        if (root == null)
+            return;
+        
         // Check for contents root
 
         if (root instanceof DockableLeaf) {
