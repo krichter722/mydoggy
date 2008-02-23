@@ -50,8 +50,13 @@ public class TextIcon implements Icon, PropertyChangeListener {
         g.setColor(foreground != null ? foreground : c.getForeground());
         g.setFont(c.getFont());
 
+        Graphics2D g2D = (Graphics2D) g;
+        g2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                             RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
         switch (rotation) {
             case ROTATE_NONE:
+
                 g.drawString(text, x + kBufferSpace, y + fHeight - fDescent);
 
                 if (underlinedIndex >= 0 && underlinedIndex < text.length() ) {
@@ -68,7 +73,6 @@ public class TextIcon implements Icon, PropertyChangeListener {
                 }
                 break;
             case ROTATE_LEFT:
-                Graphics2D g2D = (Graphics2D) g;
                 g2D.translate(x + fWidth, y + fHeight);
                 g2D.rotate(-NINETY_DEGREES);
                 g2D.drawString(text, kBufferSpace, -fDescent);
@@ -76,7 +80,6 @@ public class TextIcon implements Icon, PropertyChangeListener {
                 g2D.translate(-(x + fWidth), -(y + fHeight));
                 break;
             case ROTATE_RIGHT:
-                g2D = (Graphics2D) g;
                 g2D.translate(x, y);
                 g2D.rotate(NINETY_DEGREES);
                 g2D.drawString(text, kBufferSpace, -fDescent);
