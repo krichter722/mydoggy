@@ -1,5 +1,8 @@
 package org.noos.xing.mydoggy.plaf.persistence.xml;
 
+import org.noos.common.parser.ElementParser;
+import org.noos.common.writer.ElementWriter;
+import org.noos.common.writer.ElementWriterProvider;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.MergePolicyApplier;
@@ -28,15 +31,15 @@ import java.util.*;
  */
 public class XMLPersistenceDelegate implements PersistenceDelegate {
     protected MyDoggyToolWindowManager toolWindowManager;
+    protected ElementParser<Element> masterElementParser;
+    protected ElementWriterProvider<XMLWriter, Class> elementWriterProvider;
 
     protected Map<MergePolicy, MergePolicyApplier> mergePolicyApplierMap;
-    protected Map<String, ElementParser> elementParserMap;
-
-    protected EntityWriterProvider entityWriterProvider;
 
     public XMLPersistenceDelegate(MyDoggyToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
-        this.entityWriterProvider = new DefaultEntityWriterProvider(toolWindowManager);
+        this.masterElementParser = new MasterElementParser();
+        this.elementWriterProvider = new XMLElementWriterProvider(toolWindowManager); 
 
         initMaps();
     }
@@ -44,7 +47,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     public void save(OutputStream outputStream) {
         try {
             XMLWriter writer = new XMLWriter(new OutputStreamWriter(outputStream));
-            entityWriterProvider.getEntityWriter(ToolWindowManager.class).write(writer, entityWriterProvider);
+            elementWriterProvider.getElementWriter(ToolWindowManager.class).write(writer);
             writer.close();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -61,7 +64,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(inputStream);
 
-            parseElement(document.getDocumentElement(), mergePolicyApplierMap.get(mergePolicy));
+            masterElementParser.parse(document.getDocumentElement(), mergePolicyApplierMap.get(mergePolicy));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,100 +76,64 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         mergePolicyApplierMap = new Hashtable<MergePolicy, MergePolicyApplier>();
         mergePolicyApplierMap.put(PersistenceDelegate.MergePolicy.RESET, new ResetMergePolicy());
         mergePolicyApplierMap.put(PersistenceDelegate.MergePolicy.UNION, new UnionMergePolicy());
-
-        elementParserMap = new Hashtable<String, ElementParser>();
-        elementParserMap.put("mydoggy", new MyDoggyElementParser());
-        elementParserMap.put("toolWindowManagerDescriptor", new ToolWindowManagerDescriptorElementParser());
-        elementParserMap.put("aggregateMode", new AggregateModeElementParser());
-        elementParserMap.put("dividerSize", new DividerSizeElementParser());
-        elementParserMap.put("pushAway", new PushAwayModeElementParser());
-        elementParserMap.put("tools", new ToolsElementParser());
-        elementParserMap.put("contentManager", new ContentManagerElementParser());
-        elementParserMap.put("bar", new BarElementParser());
-        elementParserMap.put("MultiSplitContentManagerUI", new MultiSplitContentManagerUIElementParser());
-        elementParserMap.put("TabbedContentManagerUI", new TabbedContentManagerUIElementParser());
-        elementParserMap.put("DesktopContentManagerUI", new DekstopManagerUIElementParser());
     }
 
+    // Writing
 
-    protected void parseElement(Element element, Object... args) {
-        ElementParser elementParser = elementParserMap.get(element.getNodeName());
-        if (elementParser == null || elementParser.parse(element, args)) {
-            NodeList children = element.getChildNodes();
-            for (int i = 0, size = children.getLength(); i < size; i++) {
-                Node node = children.item(i);
-                if (node.getNodeType() == Node.ELEMENT_NODE)
-                    parseElement((Element) node, args);
-            }
-        }
-    }
+    public class XMLElementWriterProvider implements ElementWriterProvider<XMLWriter, Class> {
+        protected Map<Class, ElementWriter<XMLWriter>> elementWriterMap;
 
+        public XMLElementWriterProvider(ToolWindowManager toolWindowManager) {
+            elementWriterMap = new HashMap<Class, ElementWriter<XMLWriter>>();
 
-    public interface EntityWriter {
+            elementWriterMap.put(ToolWindowManager.class, new ToolWindowManagerEntityWriter(toolWindowManager, this));
+            elementWriterMap.put(ToolWindow.class, new ToolWindowEntityWriter());
+            elementWriterMap.put(ToolWindowManagerDescriptor.class, new ToolWindowManagerDescriptorEntityWriter());
+            elementWriterMap.put(ContentManager.class, new ContentManagerEntityWriter());
 
-        void write(XMLWriter writer, EntityWriterProvider entityWriterProvider, Object... params) throws SAXException;
-
-    }
-
-    public interface EntityWriterProvider {
-
-        EntityWriter getEntityWriter(Class clazz);
-
-    }
-
-
-    public class DefaultEntityWriterProvider implements EntityWriterProvider {
-        protected Map<Class, EntityWriter> entityWriterMap;
-
-        public DefaultEntityWriterProvider(ToolWindowManager toolWindowManager) {
-            entityWriterMap = new HashMap<Class, EntityWriter>();
-
-            entityWriterMap.put(ToolWindowManager.class, new ToolWindowManagerEntityWriter(toolWindowManager));
-            entityWriterMap.put(ToolWindow.class, new ToolWindowEntityWriter());
-            entityWriterMap.put(ToolWindowManagerDescriptor.class, new ToolWindowManagerDescriptorEntityWriter());
-            entityWriterMap.put(ContentManager.class, new ContentManagerEntityWriter());
-
-            entityWriterMap.put(TabbedContentManagerUI.class, new TabbedContentManagerUIEntityPWriter());
-            entityWriterMap.put(MultiSplitContentManagerUI.class, new MultiSplitContentManagerUIEntityPWriter());
-            entityWriterMap.put(DesktopContentManagerUI.class, new DesktopContentManagerUIEntityWriter());
-            entityWriterMap.put(ToolWindowAnchor.class, new ToolWindowAnchorEntityWriter());
+            elementWriterMap.put(TabbedContentManagerUI.class, new TabbedContentManagerUIEntityPWriter());
+            elementWriterMap.put(MultiSplitContentManagerUI.class, new MultiSplitContentManagerUIEntityPWriter());
+            elementWriterMap.put(DesktopContentManagerUI.class, new DesktopContentManagerUIEntityWriter());
+            elementWriterMap.put(ToolWindowAnchor.class, new ToolWindowAnchorEntityWriter());
         }
 
-        public EntityWriter getEntityWriter(Class clazz) {
-            EntityWriter entityWriter = entityWriterMap.get(clazz);
-            if (entityWriter == null) {
+        public ElementWriter<XMLWriter> getElementWriter(Class clazz) {
+            ElementWriter<XMLWriter> elementWriter = elementWriterMap.get(clazz);
+            if (elementWriter == null) {
 
                 while (clazz != null) {
 
                     // Check super class
-                    entityWriter = entityWriterMap.get(clazz.getSuperclass());
-                    if (entityWriter != null)
-                        return entityWriter;
+                    elementWriter = elementWriterMap.get(clazz.getSuperclass());
+                    if (elementWriter != null)
+                        return elementWriter;
 
                     // Check interfaces
                     for (Class interfaceClazz : clazz.getInterfaces()) {
-                        entityWriter = entityWriterMap.get(interfaceClazz);
-                        if (entityWriter != null)
-                            return entityWriter;
+                        elementWriter = elementWriterMap.get(interfaceClazz);
+                        if (elementWriter != null)
+                            return elementWriter;
                     }
 
                     clazz = clazz.getSuperclass();
                 }
             }
 
-            return entityWriter;
+            return elementWriter;
         }
 
     }
 
-    public class ToolWindowManagerEntityWriter implements EntityWriter {
+    public class ToolWindowManagerEntityWriter implements ElementWriter<XMLWriter> {
         protected ToolWindowManager manager;
+        protected ElementWriterProvider<XMLWriter, Class> provider;
 
-        public ToolWindowManagerEntityWriter(ToolWindowManager manager) {
+        public ToolWindowManagerEntityWriter(ToolWindowManager manager, ElementWriterProvider<XMLWriter, Class> provider) {
             this.manager = manager;
+            this.provider = provider;
         }
 
-        public void write(XMLWriter writer, EntityWriterProvider entityWriterProvider, Object... params) throws SAXException {
+        public void write(XMLWriter writer, Object... params) {
             try {
                 // Start document
                 writer.startDocument();
@@ -179,33 +146,29 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 // Write ToolWindows
                 writer.startElement("tools");
                 for (ToolWindow toolWindow : toolWindowManager.getToolWindows())
-                    entityWriterProvider.getEntityWriter(ToolWindow.class).write(writer, entityWriterProvider, toolWindow);
+                    provider.getElementWriter(ToolWindow.class).write(writer, toolWindow);
                 writer.endElement("tools");
 
                 // Write ToolWindowManagerDescriptor
-                entityWriterProvider.getEntityWriter(ToolWindowManagerDescriptor.class).write(writer,
-                                                                                              entityWriterProvider,
-                                                                                              toolWindowManager.getToolWindowManagerDescriptor());
+                provider.getElementWriter(ToolWindowManagerDescriptor.class).write(writer,
+                                                                                   toolWindowManager.getToolWindowManagerDescriptor());
 
                 // Write ContentManagerUI
                 ContentManager contentManager = toolWindowManager.getContentManager();
                 writer.startElement("contentManagerUI");
-                entityWriterProvider.getEntityWriter(contentManager.getContentManagerUI().getClass())
-                        .write(writer, entityWriterProvider,
+                provider.getElementWriter(contentManager.getContentManagerUI().getClass())
+                        .write(writer,
                                contentManager.getContentManagerUI(),
                                contentManager);
                 writer.endElement("contentManagerUI");
 
                 // Write ContentManager
-                entityWriterProvider.getEntityWriter(ContentManager.class).write(writer,
-                                                                                 entityWriterProvider,
-                                                                                 toolWindowManager.getContentManager());
+                provider.getElementWriter(ContentManager.class).write(writer,
+                                                                      toolWindowManager.getContentManager());
 
-                
                 // Write ToolWindowAnchor
-                entityWriterProvider.getEntityWriter(ToolWindowAnchor.class).write(writer,
-                                                                                   entityWriterProvider,
-                                                                                   toolWindowManager);
+                provider.getElementWriter(ToolWindowAnchor.class).write(writer,
+                                                                        toolWindowManager);
 
                 // End document
                 writer.endElement("mydoggy");
@@ -221,353 +184,382 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
     }
 
-    public class ToolWindowEntityWriter implements EntityWriter {
+    public class ToolWindowEntityWriter implements ElementWriter<XMLWriter> {
 
-        public void write(XMLWriter writer, EntityWriterProvider entityWriterProvider, Object... params) throws SAXException {
-            ToolWindow toolWindow = (ToolWindow) params[0];
+        public void write(XMLWriter writer, Object... params) {
+            try {
+                ToolWindow toolWindow = (ToolWindow) params[0];
 
-            AttributesImpl toolAttributes = new AttributesImpl();
-            toolAttributes.addAttribute(null, "id", null, null, String.valueOf(toolWindow.getId()));
-            toolAttributes.addAttribute(null, "available", null, null, String.valueOf(toolWindow.isAvailable()));
-            toolAttributes.addAttribute(null, "visible", null, null, String.valueOf(toolWindow.isVisible()));
-            toolAttributes.addAttribute(null, "active", null, null, String.valueOf(toolWindow.isActive()));
-            toolAttributes.addAttribute(null, "autoHide", null, null, String.valueOf(toolWindow.isAutoHide()));
-            toolAttributes.addAttribute(null, "anchor", null, null, String.valueOf(toolWindow.getAnchor()));
-            toolAttributes.addAttribute(null, "anchorIndex", null, null, String.valueOf(toolWindow.getAnchorIndex()));
-            toolAttributes.addAttribute(null, "type", null, null, String.valueOf(toolWindow.getType()));
-            toolAttributes.addAttribute(null, "aggregateMode", null, null, String.valueOf(toolWindow.isAggregateMode()));
-            toolAttributes.addAttribute(null, "maximized", null, null, String.valueOf(toolWindow.isMaximized()));
-            toolAttributes.addAttribute(null, "index", null, null, String.valueOf(toolWindow.getIndex()));
-            toolAttributes.addAttribute(null, "representativeAnchorButtonVisible", null, null, String.valueOf(toolWindow.isRepresentativeAnchorButtonVisible()));
-            writer.startElement("tool", toolAttributes);
+                AttributesImpl toolAttributes = new AttributesImpl();
+                toolAttributes.addAttribute(null, "id", null, null, String.valueOf(toolWindow.getId()));
+                toolAttributes.addAttribute(null, "available", null, null, String.valueOf(toolWindow.isAvailable()));
+                toolAttributes.addAttribute(null, "visible", null, null, String.valueOf(toolWindow.isVisible()));
+                toolAttributes.addAttribute(null, "active", null, null, String.valueOf(toolWindow.isActive()));
+                toolAttributes.addAttribute(null, "autoHide", null, null, String.valueOf(toolWindow.isAutoHide()));
+                toolAttributes.addAttribute(null, "anchor", null, null, String.valueOf(toolWindow.getAnchor()));
+                toolAttributes.addAttribute(null, "anchorIndex", null, null, String.valueOf(toolWindow.getAnchorIndex()));
+                toolAttributes.addAttribute(null, "type", null, null, String.valueOf(toolWindow.getType()));
+                toolAttributes.addAttribute(null, "aggregateMode", null, null, String.valueOf(toolWindow.isAggregateMode()));
+                toolAttributes.addAttribute(null, "maximized", null, null, String.valueOf(toolWindow.isMaximized()));
+                toolAttributes.addAttribute(null, "index", null, null, String.valueOf(toolWindow.getIndex()));
+                toolAttributes.addAttribute(null, "representativeAnchorButtonVisible", null, null, String.valueOf(toolWindow.isRepresentativeAnchorButtonVisible()));
+                writer.startElement("tool", toolAttributes);
 
-            writer.startElement("descriptors");
+                writer.startElement("descriptors");
 
-            // DockedTypeDescriptor
-            DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-            AttributesImpl dockedDescriptorAttributes = new AttributesImpl();
-            dockedDescriptorAttributes.addAttribute(null, "dockLength", null, null, String.valueOf(dockedTypeDescriptor.getDockLength()));
-            dockedDescriptorAttributes.addAttribute(null, "popupMenuEnabled", null, null, String.valueOf(dockedTypeDescriptor.isPopupMenuEnabled()));
-            dockedDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(dockedTypeDescriptor.isAnimating()));
-            dockedDescriptorAttributes.addAttribute(null, "previewEnabled", null, null, String.valueOf(dockedTypeDescriptor.isPreviewEnabled()));
-            dockedDescriptorAttributes.addAttribute(null, "previewDelay", null, null, String.valueOf(dockedTypeDescriptor.getPreviewDelay()));
-            dockedDescriptorAttributes.addAttribute(null, "previewTransparentRatio", null, null, String.valueOf(dockedTypeDescriptor.getPreviewTransparentRatio()));
-            dockedDescriptorAttributes.addAttribute(null, "hideRepresentativeButtonOnVisible", null, null, String.valueOf(dockedTypeDescriptor.isHideRepresentativeButtonOnVisible()));
-            dockedDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(dockedTypeDescriptor.isIdVisibleOnTitleBar()));
-            writer.dataElement("docked", dockedDescriptorAttributes);
+                // DockedTypeDescriptor
+                DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+                AttributesImpl dockedDescriptorAttributes = new AttributesImpl();
+                dockedDescriptorAttributes.addAttribute(null, "dockLength", null, null, String.valueOf(dockedTypeDescriptor.getDockLength()));
+                dockedDescriptorAttributes.addAttribute(null, "popupMenuEnabled", null, null, String.valueOf(dockedTypeDescriptor.isPopupMenuEnabled()));
+                dockedDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(dockedTypeDescriptor.isAnimating()));
+                dockedDescriptorAttributes.addAttribute(null, "previewEnabled", null, null, String.valueOf(dockedTypeDescriptor.isPreviewEnabled()));
+                dockedDescriptorAttributes.addAttribute(null, "previewDelay", null, null, String.valueOf(dockedTypeDescriptor.getPreviewDelay()));
+                dockedDescriptorAttributes.addAttribute(null, "previewTransparentRatio", null, null, String.valueOf(dockedTypeDescriptor.getPreviewTransparentRatio()));
+                dockedDescriptorAttributes.addAttribute(null, "hideRepresentativeButtonOnVisible", null, null, String.valueOf(dockedTypeDescriptor.isHideRepresentativeButtonOnVisible()));
+                dockedDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(dockedTypeDescriptor.isIdVisibleOnTitleBar()));
+                writer.dataElement("docked", dockedDescriptorAttributes);
 
-            // DockedTypeDescriptor
-            SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);
-            AttributesImpl slidingDescriptorAttributes = new AttributesImpl();
-            slidingDescriptorAttributes.addAttribute(null, "transparentMode", null, null, String.valueOf(slidingTypeDescriptor.isTransparentMode()));
-            slidingDescriptorAttributes.addAttribute(null, "transparentDelay", null, null, String.valueOf(slidingTypeDescriptor.getTransparentDelay()));
-            slidingDescriptorAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(slidingTypeDescriptor.getTransparentRatio()));
-            slidingDescriptorAttributes.addAttribute(null, "enabled", null, null, String.valueOf(slidingTypeDescriptor.isEnabled()));
-            slidingDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(slidingTypeDescriptor.isAnimating()));
-            slidingDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(slidingTypeDescriptor.isIdVisibleOnTitleBar()));
-            writer.dataElement("sliding", slidingDescriptorAttributes);
+                // DockedTypeDescriptor
+                SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);
+                AttributesImpl slidingDescriptorAttributes = new AttributesImpl();
+                slidingDescriptorAttributes.addAttribute(null, "transparentMode", null, null, String.valueOf(slidingTypeDescriptor.isTransparentMode()));
+                slidingDescriptorAttributes.addAttribute(null, "transparentDelay", null, null, String.valueOf(slidingTypeDescriptor.getTransparentDelay()));
+                slidingDescriptorAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(slidingTypeDescriptor.getTransparentRatio()));
+                slidingDescriptorAttributes.addAttribute(null, "enabled", null, null, String.valueOf(slidingTypeDescriptor.isEnabled()));
+                slidingDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(slidingTypeDescriptor.isAnimating()));
+                slidingDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(slidingTypeDescriptor.isIdVisibleOnTitleBar()));
+                writer.dataElement("sliding", slidingDescriptorAttributes);
 
-            // FloatingTypeDescriptor
-            FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
-            AttributesImpl floatingDescriptorAttributes = new AttributesImpl();
-            floatingDescriptorAttributes.addAttribute(null, "modal", null, null, String.valueOf(floatingTypeDescriptor.isModal()));
-            floatingDescriptorAttributes.addAttribute(null, "transparentMode", null, null, String.valueOf(floatingTypeDescriptor.isTransparentMode()));
-            floatingDescriptorAttributes.addAttribute(null, "transparentDelay", null, null, String.valueOf(floatingTypeDescriptor.getTransparentDelay()));
-            floatingDescriptorAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(floatingTypeDescriptor.getTransparentRatio()));
-            floatingDescriptorAttributes.addAttribute(null, "enabled", null, null, String.valueOf(floatingTypeDescriptor.isEnabled()));
-            floatingDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(floatingTypeDescriptor.isAnimating()));
-            floatingDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(floatingTypeDescriptor.isIdVisibleOnTitleBar()));
+                // FloatingTypeDescriptor
+                FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
+                AttributesImpl floatingDescriptorAttributes = new AttributesImpl();
+                floatingDescriptorAttributes.addAttribute(null, "modal", null, null, String.valueOf(floatingTypeDescriptor.isModal()));
+                floatingDescriptorAttributes.addAttribute(null, "transparentMode", null, null, String.valueOf(floatingTypeDescriptor.isTransparentMode()));
+                floatingDescriptorAttributes.addAttribute(null, "transparentDelay", null, null, String.valueOf(floatingTypeDescriptor.getTransparentDelay()));
+                floatingDescriptorAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(floatingTypeDescriptor.getTransparentRatio()));
+                floatingDescriptorAttributes.addAttribute(null, "enabled", null, null, String.valueOf(floatingTypeDescriptor.isEnabled()));
+                floatingDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(floatingTypeDescriptor.isAnimating()));
+                floatingDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(floatingTypeDescriptor.isIdVisibleOnTitleBar()));
 
-            Point point = floatingTypeDescriptor.getLocation();
-            Dimension dimension = floatingTypeDescriptor.getSize();
-            if (point != null || dimension != null) {
-                writer.startElement("floating", floatingDescriptorAttributes);
+                Point point = floatingTypeDescriptor.getLocation();
+                Dimension dimension = floatingTypeDescriptor.getSize();
+                if (point != null || dimension != null) {
+                    writer.startElement("floating", floatingDescriptorAttributes);
 
-                if (point != null) {
-                    AttributesImpl attributes = new AttributesImpl();
-                    attributes.addAttribute(null, "x", null, null, String.valueOf(point.x));
-                    attributes.addAttribute(null, "y", null, null, String.valueOf(point.y));
-                    writer.dataElement("location", attributes);
-                }
-
-                if (dimension != null) {
-                    AttributesImpl attributes = new AttributesImpl();
-                    attributes.addAttribute(null, "width", null, null, String.valueOf(dimension.width));
-                    attributes.addAttribute(null, "height", null, null, String.valueOf(dimension.height));
-                    writer.dataElement("size", attributes);
-                }
-
-                writer.endElement("floating");
-            } else
-                writer.dataElement("floating", floatingDescriptorAttributes);
-
-            // FloatingLiveTypeDescriptor
-            FloatingLiveTypeDescriptor floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
-            AttributesImpl floatingLiveDescriptorAttributes = new AttributesImpl();
-            floatingLiveDescriptorAttributes.addAttribute(null, "transparentMode", null, null, String.valueOf(floatingLiveTypeDescriptor.isTransparentMode()));
-            floatingLiveDescriptorAttributes.addAttribute(null, "transparentDelay", null, null, String.valueOf(floatingLiveTypeDescriptor.getTransparentDelay()));
-            floatingLiveDescriptorAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(floatingLiveTypeDescriptor.getTransparentRatio()));
-            floatingLiveDescriptorAttributes.addAttribute(null, "enabled", null, null, String.valueOf(floatingLiveTypeDescriptor.isEnabled()));
-            floatingLiveDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(floatingLiveTypeDescriptor.isAnimating()));
-            floatingLiveDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(floatingLiveTypeDescriptor.isIdVisibleOnTitleBar()));
-
-            point = floatingLiveTypeDescriptor.getLocation();
-            dimension = floatingLiveTypeDescriptor.getSize();
-            if (point != null || dimension != null) {
-                writer.startElement("floatingLive", floatingDescriptorAttributes);
-
-                if (point != null) {
-                    AttributesImpl attributes = new AttributesImpl();
-                    attributes.addAttribute(null, "x", null, null, String.valueOf(point.x));
-                    attributes.addAttribute(null, "y", null, null, String.valueOf(point.y));
-                    writer.dataElement("location", attributes);
-                }
-
-                if (dimension != null) {
-                    AttributesImpl attributes = new AttributesImpl();
-                    attributes.addAttribute(null, "width", null, null, String.valueOf(dimension.width));
-                    attributes.addAttribute(null, "height", null, null, String.valueOf(dimension.height));
-                    writer.dataElement("size", attributes);
-                }
-
-                writer.endElement("floatingLive");
-            } else
-                writer.dataElement("floatingLive", floatingLiveDescriptorAttributes);
-
-            // End descriptors
-            writer.endElement("descriptors");
-
-            boolean addTabsTag = false;
-            for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
-                if (tab.getDockableDelegator() != null) {
-                    Dockable dockable = tab.getDockableDelegator();
-
-                    if (!addTabsTag) {
-                        addTabsTag = true;
-                        writer.startElement("tabs");
+                    if (point != null) {
+                        AttributesImpl attributes = new AttributesImpl();
+                        attributes.addAttribute(null, "x", null, null, String.valueOf(point.x));
+                        attributes.addAttribute(null, "y", null, null, String.valueOf(point.y));
+                        writer.dataElement("location", attributes);
                     }
 
-                    AttributesImpl attributes = new AttributesImpl();
-                    attributes.addAttribute(null, "dockableId", null, null, dockable.getId());
-                    attributes.addAttribute(null, "selected", null, null, "" + tab.isSelected());
-                    writer.dataElement("tab", attributes);
-                }
-            }
+                    if (dimension != null) {
+                        AttributesImpl attributes = new AttributesImpl();
+                        attributes.addAttribute(null, "width", null, null, String.valueOf(dimension.width));
+                        attributes.addAttribute(null, "height", null, null, String.valueOf(dimension.height));
+                        writer.dataElement("size", attributes);
+                    }
 
-            if (addTabsTag)
-                writer.endElement("tabs");
+                    writer.endElement("floating");
+                } else
+                    writer.dataElement("floating", floatingDescriptorAttributes);
 
-            writer.endElement("tool");
-        }
-    }
+                // FloatingLiveTypeDescriptor
+                FloatingLiveTypeDescriptor floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
+                AttributesImpl floatingLiveDescriptorAttributes = new AttributesImpl();
+                floatingLiveDescriptorAttributes.addAttribute(null, "transparentMode", null, null, String.valueOf(floatingLiveTypeDescriptor.isTransparentMode()));
+                floatingLiveDescriptorAttributes.addAttribute(null, "transparentDelay", null, null, String.valueOf(floatingLiveTypeDescriptor.getTransparentDelay()));
+                floatingLiveDescriptorAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(floatingLiveTypeDescriptor.getTransparentRatio()));
+                floatingLiveDescriptorAttributes.addAttribute(null, "enabled", null, null, String.valueOf(floatingLiveTypeDescriptor.isEnabled()));
+                floatingLiveDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(floatingLiveTypeDescriptor.isAnimating()));
+                floatingLiveDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(floatingLiveTypeDescriptor.isIdVisibleOnTitleBar()));
 
-    public class ToolWindowManagerDescriptorEntityWriter implements EntityWriter {
-        public void write(XMLWriter writer, EntityWriterProvider entityWriterProvider, Object... params) throws SAXException {
-            ToolWindowManagerDescriptor descriptor = (ToolWindowManagerDescriptor) params[0];
+                point = floatingLiveTypeDescriptor.getLocation();
+                dimension = floatingLiveTypeDescriptor.getSize();
+                if (point != null || dimension != null) {
+                    writer.startElement("floatingLive", floatingDescriptorAttributes);
 
-            // Start toolWindowDescriptorManager
-            AttributesImpl attributes = new AttributesImpl();
-            attributes.addAttribute(null, "numberingEnabled", null, null, String.valueOf(descriptor.isNumberingEnabled()));
-            attributes.addAttribute(null, "previewEnabled", null, null, String.valueOf(descriptor.isPreviewEnabled()));
-            attributes.addAttribute(null, "showUnavailableTools", null, null, String.valueOf(descriptor.isShowUnavailableTools()));
-            writer.startElement("toolWindowManagerDescriptor", attributes);
+                    if (point != null) {
+                        AttributesImpl attributes = new AttributesImpl();
+                        attributes.addAttribute(null, "x", null, null, String.valueOf(point.x));
+                        attributes.addAttribute(null, "y", null, null, String.valueOf(point.y));
+                        writer.dataElement("location", attributes);
+                    }
 
-            // dividerSize element
-            attributes = new AttributesImpl();
-            attributes.addAttribute(null, "left", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.LEFT)));
-            attributes.addAttribute(null, "right", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.RIGHT)));
-            attributes.addAttribute(null, "top", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.TOP)));
-            attributes.addAttribute(null, "bottom", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.BOTTOM)));
-            writer.dataElement("dividerSize", attributes);
+                    if (dimension != null) {
+                        AttributesImpl attributes = new AttributesImpl();
+                        attributes.addAttribute(null, "width", null, null, String.valueOf(dimension.width));
+                        attributes.addAttribute(null, "height", null, null, String.valueOf(dimension.height));
+                        writer.dataElement("size", attributes);
+                    }
 
-            // aggregateMode element
-            attributes = new AttributesImpl();
-            attributes.addAttribute(null, "left", null, null, String.valueOf(descriptor.isAggregateMode(ToolWindowAnchor.LEFT)));
-            attributes.addAttribute(null, "right", null, null, String.valueOf(descriptor.isAggregateMode(ToolWindowAnchor.RIGHT)));
-            attributes.addAttribute(null, "top", null, null, String.valueOf(descriptor.isAggregateMode(ToolWindowAnchor.TOP)));
-            attributes.addAttribute(null, "bottom", null, null, String.valueOf(descriptor.isAggregateMode(ToolWindowAnchor.BOTTOM)));
-            writer.dataElement("aggregateMode", attributes);
+                    writer.endElement("floatingLive");
+                } else
+                    writer.dataElement("floatingLive", floatingLiveDescriptorAttributes);
 
-            // Start pushAway
-            attributes = new AttributesImpl();
-            attributes.addAttribute(null, "pushAwayMode", null, null,
-                                    toolWindowManager.getToolWindowManagerDescriptor().getPushAwayMode().toString());
-            writer.startElement("pushAway", attributes);
+                // End descriptors
+                writer.endElement("descriptors");
 
-            // start MOST_RECENT policy
-            attributes = new AttributesImpl();
-            attributes.addAttribute(null, "type", null, null, String.valueOf(PushAwayMode.MOST_RECENT));
-            writer.startElement("mode", attributes);
+                boolean addTabsTag = false;
+                for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+                    if (tab.getDockableDelegator() != null) {
+                        Dockable dockable = tab.getDockableDelegator();
 
-            MostRecentDescriptor mostRecentDescriptor = (MostRecentDescriptor) toolWindowManager.getToolWindowManagerDescriptor().getPushAwayModeDescriptor(PushAwayMode.MOST_RECENT);
+                        if (!addTabsTag) {
+                            addTabsTag = true;
+                            writer.startElement("tabs");
+                        }
 
-            for (ToolWindowAnchor toolWindowAnchor : mostRecentDescriptor.getMostRecentAnchors()) {
-                AttributesImpl anchorAttributes = new AttributesImpl();
-                anchorAttributes.addAttribute(null, "type", null, null, String.valueOf(toolWindowAnchor));
-                writer.dataElement("anchor", anchorAttributes);
-            }
-
-            // end MOST_RECENT policy
-            writer.endElement("mode");
-
-            // End pushAway
-            writer.endElement("pushAway");
-
-            // End toolWindowDescriptorManager
-            writer.endElement("toolWindowManagerDescriptor");
-        }
-    }
-
-    public class ContentManagerEntityWriter implements EntityWriter {
-
-        public void write(XMLWriter writer, EntityWriterProvider entityWriterProvider, Object... params) throws SAXException {
-            // Start contentManager
-            writer.startElement("contentManager");
-
-            ContentManager contentManager = (ContentManager) params[0];
-
-            for (Content content : contentManager.getContents()) {
-                ContentUI contentUI = content.getContentUI();
-
-                AttributesImpl contentAttributes = new AttributesImpl();
-                contentAttributes.addAttribute(null, "id", null, null, content.getId());
-                contentAttributes.addAttribute(null, "detached", null, null, String.valueOf(content.isDetached()));
-                contentAttributes.addAttribute(null, "enabled", null, null, String.valueOf(content.isEnabled()));
-                contentAttributes.addAttribute(null, "selected", null, null, String.valueOf(content.isSelected()));
-                contentAttributes.addAttribute(null, "maximized", null, null, String.valueOf(content.isMaximized()));
-
-                contentAttributes.addAttribute(null, "closeable", null, null, String.valueOf(contentUI.isCloseable()));
-                contentAttributes.addAttribute(null, "detachable", null, null, String.valueOf(contentUI.isDetachable()));
-                contentAttributes.addAttribute(null, "transparentMode", null, null, String.valueOf(contentUI.isTransparentMode()));
-                contentAttributes.addAttribute(null, "transparentDelay", null, null, String.valueOf(contentUI.getTransparentDelay()));
-                contentAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(contentUI.getTransparentRatio()));
-
-                writer.startElement("content", contentAttributes);
-
-                Rectangle detachedBounds = contentUI.getDetachedBounds();
-                if (detachedBounds != null) {
-                    AttributesImpl attributes = new AttributesImpl();
-                    attributes.addAttribute(null, "x", null, null, String.valueOf(detachedBounds.x));
-                    attributes.addAttribute(null, "y", null, null, String.valueOf(detachedBounds.y));
-                    attributes.addAttribute(null, "width", null, null, String.valueOf(detachedBounds.width));
-                    attributes.addAttribute(null, "height", null, null, String.valueOf(detachedBounds.height));
-                    writer.dataElement("detachedBounds", attributes);
+                        AttributesImpl attributes = new AttributesImpl();
+                        attributes.addAttribute(null, "dockableId", null, null, dockable.getId());
+                        attributes.addAttribute(null, "selected", null, null, "" + tab.isSelected());
+                        writer.dataElement("tab", attributes);
+                    }
                 }
 
-                writer.endElement("content");
+                if (addTabsTag)
+                    writer.endElement("tabs");
+
+                writer.endElement("tool");
+            } catch (SAXException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public class ToolWindowManagerDescriptorEntityWriter implements ElementWriter<XMLWriter> {
+
+        public void write(XMLWriter writer, Object... params) {
+            try {
+                ToolWindowManagerDescriptor descriptor = (ToolWindowManagerDescriptor) params[0];
+
+                // Start toolWindowDescriptorManager
+                AttributesImpl attributes = new AttributesImpl();
+                attributes.addAttribute(null, "numberingEnabled", null, null, String.valueOf(descriptor.isNumberingEnabled()));
+                attributes.addAttribute(null, "previewEnabled", null, null, String.valueOf(descriptor.isPreviewEnabled()));
+                attributes.addAttribute(null, "showUnavailableTools", null, null, String.valueOf(descriptor.isShowUnavailableTools()));
+                writer.startElement("toolWindowManagerDescriptor", attributes);
+
+                // dividerSize element
+                attributes = new AttributesImpl();
+                attributes.addAttribute(null, "left", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.LEFT)));
+                attributes.addAttribute(null, "right", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.RIGHT)));
+                attributes.addAttribute(null, "top", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.TOP)));
+                attributes.addAttribute(null, "bottom", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.BOTTOM)));
+                writer.dataElement("dividerSize", attributes);
+
+                // aggregateMode element
+                attributes = new AttributesImpl();
+                attributes.addAttribute(null, "left", null, null, String.valueOf(descriptor.isAggregateMode(ToolWindowAnchor.LEFT)));
+                attributes.addAttribute(null, "right", null, null, String.valueOf(descriptor.isAggregateMode(ToolWindowAnchor.RIGHT)));
+                attributes.addAttribute(null, "top", null, null, String.valueOf(descriptor.isAggregateMode(ToolWindowAnchor.TOP)));
+                attributes.addAttribute(null, "bottom", null, null, String.valueOf(descriptor.isAggregateMode(ToolWindowAnchor.BOTTOM)));
+                writer.dataElement("aggregateMode", attributes);
+
+                // Start pushAway
+                attributes = new AttributesImpl();
+                attributes.addAttribute(null, "pushAwayMode", null, null,
+                                        toolWindowManager.getToolWindowManagerDescriptor().getPushAwayMode().toString());
+                writer.startElement("pushAway", attributes);
+
+                // start MOST_RECENT policy
+                attributes = new AttributesImpl();
+                attributes.addAttribute(null, "type", null, null, String.valueOf(PushAwayMode.MOST_RECENT));
+                writer.startElement("mode", attributes);
+
+                MostRecentDescriptor mostRecentDescriptor = (MostRecentDescriptor) toolWindowManager.getToolWindowManagerDescriptor().getPushAwayModeDescriptor(PushAwayMode.MOST_RECENT);
+
+                for (ToolWindowAnchor toolWindowAnchor : mostRecentDescriptor.getMostRecentAnchors()) {
+                    AttributesImpl anchorAttributes = new AttributesImpl();
+                    anchorAttributes.addAttribute(null, "type", null, null, String.valueOf(toolWindowAnchor));
+                    writer.dataElement("anchor", anchorAttributes);
+                }
+
+                // end MOST_RECENT policy
+                writer.endElement("mode");
+
+                // End pushAway
+                writer.endElement("pushAway");
+
+                // End toolWindowDescriptorManager
+                writer.endElement("toolWindowManagerDescriptor");
+            } catch (SAXException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public class ContentManagerEntityWriter implements ElementWriter<XMLWriter> {
+
+        public void write(XMLWriter writer, Object... params) {
+            try {
+// Start contentManager
+                writer.startElement("contentManager");
+
+                ContentManager contentManager = (ContentManager) params[0];
+
+                for (Content content : contentManager.getContents()) {
+                    ContentUI contentUI = content.getContentUI();
+
+                    AttributesImpl contentAttributes = new AttributesImpl();
+                    contentAttributes.addAttribute(null, "id", null, null, content.getId());
+                    contentAttributes.addAttribute(null, "detached", null, null, String.valueOf(content.isDetached()));
+                    contentAttributes.addAttribute(null, "enabled", null, null, String.valueOf(content.isEnabled()));
+                    contentAttributes.addAttribute(null, "selected", null, null, String.valueOf(content.isSelected()));
+                    contentAttributes.addAttribute(null, "maximized", null, null, String.valueOf(content.isMaximized()));
+
+                    contentAttributes.addAttribute(null, "closeable", null, null, String.valueOf(contentUI.isCloseable()));
+                    contentAttributes.addAttribute(null, "detachable", null, null, String.valueOf(contentUI.isDetachable()));
+                    contentAttributes.addAttribute(null, "transparentMode", null, null, String.valueOf(contentUI.isTransparentMode()));
+                    contentAttributes.addAttribute(null, "transparentDelay", null, null, String.valueOf(contentUI.getTransparentDelay()));
+                    contentAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(contentUI.getTransparentRatio()));
+
+                    writer.startElement("content", contentAttributes);
+
+                    Rectangle detachedBounds = contentUI.getDetachedBounds();
+                    if (detachedBounds != null) {
+                        AttributesImpl attributes = new AttributesImpl();
+                        attributes.addAttribute(null, "x", null, null, String.valueOf(detachedBounds.x));
+                        attributes.addAttribute(null, "y", null, null, String.valueOf(detachedBounds.y));
+                        attributes.addAttribute(null, "width", null, null, String.valueOf(detachedBounds.width));
+                        attributes.addAttribute(null, "height", null, null, String.valueOf(detachedBounds.height));
+                        writer.dataElement("detachedBounds", attributes);
+                    }
+
+                    writer.endElement("content");
+                }
+
+                // End contentManager
+                writer.endElement("contentManager");
+            } catch (SAXException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+    }
+
+    public class TabbedContentManagerUIEntityPWriter implements ElementWriter<XMLWriter> {
+
+        public void write(XMLWriter writer, Object... params) {
+            try {
+                TabbedContentManagerUI tabbedContentManagerUI = (TabbedContentManagerUI) params[0];
+
+                AttributesImpl attributes = new AttributesImpl();
+                attributes.addAttribute(null, "closeable", null, null, String.valueOf(tabbedContentManagerUI.isCloseable()));
+                attributes.addAttribute(null, "detachable", null, null, String.valueOf(tabbedContentManagerUI.isDetachable()));
+                attributes.addAttribute(null, "showAlwaysTab", null, null, String.valueOf(tabbedContentManagerUI.isShowAlwaysTab()));
+                attributes.addAttribute(null, "tabLayout", null, null, tabbedContentManagerUI.getTabLayout().toString());
+                attributes.addAttribute(null, "tabPlacement", null, null, tabbedContentManagerUI.getTabPlacement().toString());
+
+                writer.dataElement("TabbedContentManagerUI", attributes);
+            } catch (SAXException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+    }
+
+    public class MultiSplitContentManagerUIEntityPWriter implements ElementWriter<XMLWriter> {
+
+        public void write(XMLWriter writer, Object... params)  {
+            try {
+                MultiSplitContentManagerUI multiSplitContentManagerUI = (MultiSplitContentManagerUI) params[0];
+
+                AttributesImpl attributes = new AttributesImpl();
+                attributes.addAttribute(null, "closeable", null, null, String.valueOf(multiSplitContentManagerUI.isCloseable()));
+                attributes.addAttribute(null, "detachable", null, null, String.valueOf(multiSplitContentManagerUI.isDetachable()));
+                attributes.addAttribute(null, "showAlwaysTab", null, null, String.valueOf(multiSplitContentManagerUI.isShowAlwaysTab()));
+                attributes.addAttribute(null, "tabLayout", null, null, multiSplitContentManagerUI.getTabLayout().toString());
+                attributes.addAttribute(null, "tabPlacement", null, null, multiSplitContentManagerUI.getTabPlacement().toString());
+
+                writer.startElement("MultiSplitContentManagerUI", attributes);
+
+                writer.startElement("contents");
+                for (Content content : ((ContentManager) params[1]).getContents()) {
+                    MultiSplitContentUI contentUI = (MultiSplitContentUI) content.getContentUI();
+
+                    AttributesImpl contentUIAttributes = new AttributesImpl();
+                    contentUIAttributes.addAttribute(null, "id", null, null, content.getId());
+                    contentUIAttributes.addAttribute(null, "showAlwaysTab", null, null, String.valueOf(contentUI.isShowAlwaysTab()));
+
+                    writer.dataElement("content", contentUIAttributes);
+                }
+                writer.endElement("contents");
+
+                writer.startElement("layout");
+                MyDoggyMultiSplitContentManagerUI splitContentManagerUI = (MyDoggyMultiSplitContentManagerUI) multiSplitContentManagerUI;
+
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                XMLEncoder encoder = new XMLEncoder(os);
+                encoder.writeObject(splitContentManagerUI.getLayout());
+                encoder.flush();
+                encoder.close();
+
+                String model = os.toString();
+                writer.cdata(model.substring(model.indexOf('\n')));
+                writer.endElement("layout");
+
+                writer.endElement("MultiSplitContentManagerUI");
+            } catch (SAXException e) {
+                throw new RuntimeException(e);
             }
 
-            // End contentManager
-            writer.endElement("contentManager");
         }
 
     }
 
-    public class TabbedContentManagerUIEntityPWriter implements EntityWriter {
+    public class DesktopContentManagerUIEntityWriter implements ElementWriter<XMLWriter> {
 
-        public void write(XMLWriter writer, EntityWriterProvider entityWriterProvider, Object... params) throws SAXException {
-            TabbedContentManagerUI tabbedContentManagerUI = (TabbedContentManagerUI) params[0];
+        public void write(XMLWriter writer, Object... params) {
+            try {
+                DesktopContentManagerUI desktopContentManagerUI = (DesktopContentManagerUI) params[0];
 
-            AttributesImpl attributes = new AttributesImpl();
-            attributes.addAttribute(null, "closeable", null, null, String.valueOf(tabbedContentManagerUI.isCloseable()));
-            attributes.addAttribute(null, "detachable", null, null, String.valueOf(tabbedContentManagerUI.isDetachable()));
-            attributes.addAttribute(null, "showAlwaysTab", null, null, String.valueOf(tabbedContentManagerUI.isShowAlwaysTab()));
-            attributes.addAttribute(null, "tabLayout", null, null, tabbedContentManagerUI.getTabLayout().toString());
-            attributes.addAttribute(null, "tabPlacement", null, null, tabbedContentManagerUI.getTabPlacement().toString());
+                AttributesImpl attributes = new AttributesImpl();
+                attributes.addAttribute(null, "closeable", null, null, String.valueOf(desktopContentManagerUI.isCloseable()));
+                attributes.addAttribute(null, "detachable", null, null, String.valueOf(desktopContentManagerUI.isDetachable()));
 
-            writer.dataElement("TabbedContentManagerUI", attributes);
-        }
+                writer.startElement("DesktopContentManagerUI", attributes);
+                for (Content content : ((ContentManager) params[1]).getContents()) {
+                    DesktopContentUI contentUI = (DesktopContentUI) content.getContentUI();
 
-    }
+                    AttributesImpl contentUIAttributes = new AttributesImpl();
+                    contentUIAttributes.addAttribute(null, "id", null, null, content.getId());
+                    contentUIAttributes.addAttribute(null, "x", null, null, String.valueOf(contentUI.getLocation().x));
+                    contentUIAttributes.addAttribute(null, "y", null, null, String.valueOf(contentUI.getLocation().y));
+                    contentUIAttributes.addAttribute(null, "width", null, null, String.valueOf(contentUI.getSize().width));
+                    contentUIAttributes.addAttribute(null, "height", null, null, String.valueOf(contentUI.getSize().height));
+                    contentUIAttributes.addAttribute(null, "iconified", null, null, String.valueOf(contentUI.isIconified()));
 
-    public class MultiSplitContentManagerUIEntityPWriter implements EntityWriter {
+                    writer.dataElement("content", contentUIAttributes);
+                }
 
-        public void write(XMLWriter writer, EntityWriterProvider entityWriterProvider, Object... params) throws SAXException {
-            MultiSplitContentManagerUI multiSplitContentManagerUI = (MultiSplitContentManagerUI) params[0];
-
-            AttributesImpl attributes = new AttributesImpl();
-            attributes.addAttribute(null, "closeable", null, null, String.valueOf(multiSplitContentManagerUI.isCloseable()));
-            attributes.addAttribute(null, "detachable", null, null, String.valueOf(multiSplitContentManagerUI.isDetachable()));
-            attributes.addAttribute(null, "showAlwaysTab", null, null, String.valueOf(multiSplitContentManagerUI.isShowAlwaysTab()));
-            attributes.addAttribute(null, "tabLayout", null, null, multiSplitContentManagerUI.getTabLayout().toString());
-            attributes.addAttribute(null, "tabPlacement", null, null, multiSplitContentManagerUI.getTabPlacement().toString());
-
-            writer.startElement("MultiSplitContentManagerUI", attributes);
-
-            writer.startElement("contents");
-            for (Content content : ((ContentManager) params[1]).getContents()) {
-                MultiSplitContentUI contentUI = (MultiSplitContentUI) content.getContentUI();
-
-                AttributesImpl contentUIAttributes = new AttributesImpl();
-                contentUIAttributes.addAttribute(null, "id", null, null, content.getId());
-                contentUIAttributes.addAttribute(null, "showAlwaysTab", null, null, String.valueOf(contentUI.isShowAlwaysTab()));
-
-                writer.dataElement("content", contentUIAttributes);
+                writer.endElement("DesktopContentManagerUI");
+            } catch (SAXException e) {
+                throw new RuntimeException(e);
             }
-            writer.endElement("contents");
-
-            writer.startElement("layout");
-            MyDoggyMultiSplitContentManagerUI splitContentManagerUI = (MyDoggyMultiSplitContentManagerUI) multiSplitContentManagerUI;
-
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            XMLEncoder encoder = new XMLEncoder(os);
-            encoder.writeObject(splitContentManagerUI.getLayout());
-            encoder.flush();
-            encoder.close();
-
-            String model = os.toString();
-            writer.cdata(model.substring(model.indexOf('\n')));
-            writer.endElement("layout");
-
-            writer.endElement("MultiSplitContentManagerUI");
-
         }
 
     }
 
-    public class DesktopContentManagerUIEntityWriter implements EntityWriter {
+    public class ToolWindowAnchorEntityWriter implements ElementWriter<XMLWriter> {
 
-        public void write(XMLWriter writer, EntityWriterProvider entityWriterProvider, Object... params) throws SAXException {
-            DesktopContentManagerUI desktopContentManagerUI = (DesktopContentManagerUI) params[0];
+        public void write(XMLWriter writer, Object... params) {
+            try {
+// Store model for bar
+                writer.startElement("bars");
 
-            AttributesImpl attributes = new AttributesImpl();
-            attributes.addAttribute(null, "closeable", null, null, String.valueOf(desktopContentManagerUI.isCloseable()));
-            attributes.addAttribute(null, "detachable", null, null, String.valueOf(desktopContentManagerUI.isDetachable()));
+                MyDoggyToolWindowManager toolWindowManager = (MyDoggyToolWindowManager) params[0];
 
-            writer.startElement("DesktopContentManagerUI", attributes);
-            for (Content content : ((ContentManager) params[1]).getContents()) {
-                DesktopContentUI contentUI = (DesktopContentUI) content.getContentUI();
+                saveBar(writer, toolWindowManager, ToolWindowAnchor.LEFT);
+                saveBar(writer, toolWindowManager, ToolWindowAnchor.BOTTOM);
+                saveBar(writer, toolWindowManager, ToolWindowAnchor.RIGHT);
+                saveBar(writer, toolWindowManager, ToolWindowAnchor.TOP);
 
-                AttributesImpl contentUIAttributes = new AttributesImpl();
-                contentUIAttributes.addAttribute(null, "id", null, null, content.getId());
-                contentUIAttributes.addAttribute(null, "x", null, null, String.valueOf(contentUI.getLocation().x));
-                contentUIAttributes.addAttribute(null, "y", null, null, String.valueOf(contentUI.getLocation().y));
-                contentUIAttributes.addAttribute(null, "width", null, null, String.valueOf(contentUI.getSize().width));
-                contentUIAttributes.addAttribute(null, "height", null, null, String.valueOf(contentUI.getSize().height));
-                contentUIAttributes.addAttribute(null, "iconified", null, null, String.valueOf(contentUI.isIconified()));
-
-                writer.dataElement("content", contentUIAttributes);
+                writer.endElement("bars");
+            } catch (SAXException e) {
+                throw new RuntimeException(e);
             }
-
-            writer.endElement("DesktopContentManagerUI");
-        }
-
-    }
-
-    public class ToolWindowAnchorEntityWriter implements EntityWriter {
-
-        public void write(XMLWriter writer, EntityWriterProvider entityWriterProvider, Object... params) throws SAXException {
-            // Store model for bar
-            writer.startElement("bars");
-
-            MyDoggyToolWindowManager toolWindowManager = (MyDoggyToolWindowManager) params[0];
-
-            saveBar(writer, toolWindowManager, ToolWindowAnchor.LEFT);
-            saveBar(writer, toolWindowManager, ToolWindowAnchor.BOTTOM);
-            saveBar(writer, toolWindowManager, ToolWindowAnchor.RIGHT);
-            saveBar(writer, toolWindowManager, ToolWindowAnchor.TOP);
-
-            writer.endElement("bars");
         }
 
         protected void saveBar(XMLWriter writer, MyDoggyToolWindowManager toolWindowManager, ToolWindowAnchor anchor) throws SAXException {
@@ -595,14 +587,49 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
     }
 
+    // Parsing
 
-    public interface ElementParser {
+    public class MasterElementParser implements ElementParser<Element> {
+        protected Map<String, ElementParser<Element>> elementParserMap;
 
-        boolean parse(Element element, Object... args);
+        public MasterElementParser() {
+            elementParserMap = new Hashtable<String, ElementParser<Element>>();
+            populateParserMap();
+        }
+
+        public boolean parse(Element element, Object... args) {
+            ElementParser<Element> elementParser = elementParserMap.get(element.getNodeName());
+
+            if (elementParser == null || elementParser.parse(element, args)) {
+                NodeList children = element.getChildNodes();
+
+                for (int i = 0, size = children.getLength(); i < size; i++) {
+                    Node node = children.item(i);
+                    if (node.getNodeType() == Node.ELEMENT_NODE)
+                        parse((Element) node, args);
+                }
+
+            }
+            return false;
+        }
+
+        protected void populateParserMap() {
+            elementParserMap.put("mydoggy", new MyDoggyElementParser());
+            elementParserMap.put("toolWindowManagerDescriptor", new ToolWindowManagerDescriptorElementParser());
+            elementParserMap.put("aggregateMode", new AggregateModeElementParser());
+            elementParserMap.put("dividerSize", new DividerSizeElementParser());
+            elementParserMap.put("pushAway", new PushAwayModeElementParser());
+            elementParserMap.put("tools", new ToolsElementParser());
+            elementParserMap.put("contentManager", new ContentManagerElementParser());
+            elementParserMap.put("bar", new BarElementParser());
+            elementParserMap.put("MultiSplitContentManagerUI", new MultiSplitContentManagerUIElementParser());
+            elementParserMap.put("TabbedContentManagerUI", new TabbedContentManagerUIElementParser());
+            elementParserMap.put("DesktopContentManagerUI", new DekstopManagerUIElementParser());
+        }
 
     }
 
-    public abstract class ElementParserAdapter implements ElementParser {
+    public abstract class ElementParserAdapter implements ElementParser<Element> {
 
         public Element getElement(Element root, String name) {
             NodeList list = root.getElementsByTagName(name);
@@ -652,7 +679,6 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             return attr != null && !"".equals(attr.trim());
         }
     }
-
 
     public class MyDoggyElementParser extends ElementParserAdapter {
         public boolean parse(Element element, Object... args) {
@@ -1031,7 +1057,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 Element contents = getElement(element, "contents");
                 if (contents != null) {
                     NodeList contentUIElms = contents.getElementsByTagName("content");
-                    for (int i = 0, size = contentUIElms.getLength(); i< size; i++) {
+                    for (int i = 0, size = contentUIElms.getLength(); i < size; i++) {
                         Element contentUIElm = (Element) contentUIElms.item(i);
 
                         Content content = contentManager.getContent(contentUIElm.getAttribute("id"));
@@ -1049,9 +1075,9 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 String text = layout.getTextContent();
                 XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(text.getBytes()));
                 myDoggyMultiSplitContentManagerUI.setLayout(decoder.readObject());
-             }
+            }
 
-             return false;
+            return false;
         }
 
     }
@@ -1067,7 +1093,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 managerUI.setShowAlwaysTab(getBoolean(element, "showAlwaysTab", false));
                 managerUI.setTabLayout(TabbedContentManagerUI.TabLayout.valueOf(element.getAttribute("tabLayout")));
                 managerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.valueOf(element.getAttribute("tabPlacement")));
-             }
+            }
 
             return false;
         }
@@ -1085,7 +1111,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 ContentManager contentManager = toolWindowManager.getContentManager();
 
                 NodeList contentUIElms = element.getElementsByTagName("content");
-                for (int i = 0, size = contentUIElms.getLength(); i< size; i++) {
+                for (int i = 0, size = contentUIElms.getLength(); i < size; i++) {
                     Element contentUIElm = (Element) contentUIElms.item(i);
 
                     Content content = contentManager.getContent(contentUIElm.getAttribute("id"));
@@ -1102,7 +1128,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                         );
                     }
                 }
-             }
+            }
 
             return false;
         }
