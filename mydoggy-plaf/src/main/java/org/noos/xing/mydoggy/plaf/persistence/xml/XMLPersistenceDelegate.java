@@ -1,8 +1,7 @@
 package org.noos.xing.mydoggy.plaf.persistence.xml;
 
-import org.noos.common.parser.ElementParser;
-import org.noos.common.writer.ElementWriter;
-import org.noos.common.writer.ElementWriterProvider;
+import org.noos.common.element.ElementParser;
+import org.noos.common.element.ElementWriter;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.MergePolicyApplier;
@@ -32,14 +31,14 @@ import java.util.*;
 public class XMLPersistenceDelegate implements PersistenceDelegate {
     protected MyDoggyToolWindowManager toolWindowManager;
     protected ElementParser<Element> masterElementParser;
-    protected ElementWriterProvider<XMLWriter, Class> elementWriterProvider;
+    protected ElementWriter<XMLWriter> masterElementWriter;
 
     protected Map<MergePolicy, MergePolicyApplier> mergePolicyApplierMap;
 
     public XMLPersistenceDelegate(MyDoggyToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
         this.masterElementParser = new MasterElementParser();
-        this.elementWriterProvider = new XMLElementWriterProvider(toolWindowManager); 
+        this.masterElementWriter = new ToolWindowManagerElementWriter(toolWindowManager);
 
         initMaps();
     }
@@ -47,7 +46,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     public void save(OutputStream outputStream) {
         try {
             XMLWriter writer = new XMLWriter(new OutputStreamWriter(outputStream));
-            elementWriterProvider.getElementWriter(ToolWindowManager.class).write(writer);
+            masterElementWriter.write(writer);
             writer.close();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -80,21 +79,62 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
     // Writing
 
-    public class XMLElementWriterProvider implements ElementWriterProvider<XMLWriter, Class> {
+    public class ToolWindowManagerElementWriter implements ElementWriter<XMLWriter> {
+        protected ToolWindowManager manager;
         protected Map<Class, ElementWriter<XMLWriter>> elementWriterMap;
 
-        public XMLElementWriterProvider(ToolWindowManager toolWindowManager) {
-            elementWriterMap = new HashMap<Class, ElementWriter<XMLWriter>>();
+        public ToolWindowManagerElementWriter(ToolWindowManager manager) {
+            this.manager = manager;
+            this.elementWriterMap = new HashMap<Class, ElementWriter<XMLWriter>>();
+        }
 
-            elementWriterMap.put(ToolWindowManager.class, new ToolWindowManagerEntityWriter(toolWindowManager, this));
-            elementWriterMap.put(ToolWindow.class, new ToolWindowEntityWriter());
-            elementWriterMap.put(ToolWindowManagerDescriptor.class, new ToolWindowManagerDescriptorEntityWriter());
-            elementWriterMap.put(ContentManager.class, new ContentManagerEntityWriter());
+        public void write(XMLWriter writer, Object... params) {
+            try {
+                // Start document
+                writer.startDocument();
 
-            elementWriterMap.put(TabbedContentManagerUI.class, new TabbedContentManagerUIEntityPWriter());
-            elementWriterMap.put(MultiSplitContentManagerUI.class, new MultiSplitContentManagerUIEntityPWriter());
-            elementWriterMap.put(DesktopContentManagerUI.class, new DesktopContentManagerUIEntityWriter());
-            elementWriterMap.put(ToolWindowAnchor.class, new ToolWindowAnchorEntityWriter());
+                // Write header
+                AttributesImpl mydoggyAttributes = new AttributesImpl();
+                mydoggyAttributes.addAttribute(null, "version", null, null, "1.4.2");
+                writer.startElement("mydoggy", mydoggyAttributes);
+
+                // Write ToolWindows
+                writer.startElement("tools");
+                for (ToolWindow toolWindow : toolWindowManager.getToolWindows())
+                    getElementWriter(ToolWindow.class).write(writer, toolWindow);
+                writer.endElement("tools");
+
+                // Write ToolWindowManagerDescriptor
+                getElementWriter(ToolWindowManagerDescriptor.class).write(writer,
+                                                                                   toolWindowManager.getToolWindowManagerDescriptor());
+
+                // Write ContentManagerUI
+                ContentManager contentManager = toolWindowManager.getContentManager();
+                writer.startElement("contentManagerUI");
+                getElementWriter(contentManager.getContentManagerUI().getClass())
+                        .write(writer,
+                               contentManager.getContentManagerUI(),
+                               contentManager);
+                writer.endElement("contentManagerUI");
+
+                // Write ContentManager
+                getElementWriter(ContentManager.class).write(writer,
+                                                                      toolWindowManager.getContentManager());
+
+                // Write ToolWindowAnchor
+                getElementWriter(ToolWindowAnchor.class).write(writer,
+                                                                        toolWindowManager);
+
+                // End document
+                writer.endElement("mydoggy");
+                writer.endDocument();
+
+                writer.flush();
+            } catch (SAXException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         public ElementWriter<XMLWriter> getElementWriter(Class clazz) {
@@ -122,66 +162,17 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             return elementWriter;
         }
 
-    }
 
-    public class ToolWindowManagerEntityWriter implements ElementWriter<XMLWriter> {
-        protected ToolWindowManager manager;
-        protected ElementWriterProvider<XMLWriter, Class> provider;
+        protected void populateWriterMap() {
+            elementWriterMap.put(ToolWindow.class, new ToolWindowEntityWriter());
+            elementWriterMap.put(ToolWindowManagerDescriptor.class, new ToolWindowManagerDescriptorEntityWriter());
+            elementWriterMap.put(ContentManager.class, new ContentManagerEntityWriter());
 
-        public ToolWindowManagerEntityWriter(ToolWindowManager manager, ElementWriterProvider<XMLWriter, Class> provider) {
-            this.manager = manager;
-            this.provider = provider;
+            elementWriterMap.put(TabbedContentManagerUI.class, new TabbedContentManagerUIEntityPWriter());
+            elementWriterMap.put(MultiSplitContentManagerUI.class, new MultiSplitContentManagerUIEntityPWriter());
+            elementWriterMap.put(DesktopContentManagerUI.class, new DesktopContentManagerUIEntityWriter());
+            elementWriterMap.put(ToolWindowAnchor.class, new ToolWindowAnchorEntityWriter());
         }
-
-        public void write(XMLWriter writer, Object... params) {
-            try {
-                // Start document
-                writer.startDocument();
-
-                // Write header
-                AttributesImpl mydoggyAttributes = new AttributesImpl();
-                mydoggyAttributes.addAttribute(null, "version", null, null, "1.4.2");
-                writer.startElement("mydoggy", mydoggyAttributes);
-
-                // Write ToolWindows
-                writer.startElement("tools");
-                for (ToolWindow toolWindow : toolWindowManager.getToolWindows())
-                    provider.getElementWriter(ToolWindow.class).write(writer, toolWindow);
-                writer.endElement("tools");
-
-                // Write ToolWindowManagerDescriptor
-                provider.getElementWriter(ToolWindowManagerDescriptor.class).write(writer,
-                                                                                   toolWindowManager.getToolWindowManagerDescriptor());
-
-                // Write ContentManagerUI
-                ContentManager contentManager = toolWindowManager.getContentManager();
-                writer.startElement("contentManagerUI");
-                provider.getElementWriter(contentManager.getContentManagerUI().getClass())
-                        .write(writer,
-                               contentManager.getContentManagerUI(),
-                               contentManager);
-                writer.endElement("contentManagerUI");
-
-                // Write ContentManager
-                provider.getElementWriter(ContentManager.class).write(writer,
-                                                                      toolWindowManager.getContentManager());
-
-                // Write ToolWindowAnchor
-                provider.getElementWriter(ToolWindowAnchor.class).write(writer,
-                                                                        toolWindowManager);
-
-                // End document
-                writer.endElement("mydoggy");
-                writer.endDocument();
-
-                writer.flush();
-            } catch (SAXException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
     }
 
     public class ToolWindowEntityWriter implements ElementWriter<XMLWriter> {

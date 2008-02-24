@@ -1,4 +1,4 @@
-package org.noos.common.parser;
+package org.noos.common.element;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
