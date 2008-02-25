@@ -40,7 +40,6 @@ public abstract class AbstractAnimation implements ActionListener {
                 float animationPercent = (System.currentTimeMillis() - animationStart) / animationDuration;
                 animationPercent = Math.min(1.0f, animationPercent);
                 try {
-                    System.out.println("EVENT");
                     animationPercent = onAnimating(animationPercent);
                 } finally {
                     if (animationPercent >= 1.0f) {
