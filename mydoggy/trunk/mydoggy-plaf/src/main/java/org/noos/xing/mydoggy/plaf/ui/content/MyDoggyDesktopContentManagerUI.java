@@ -211,19 +211,23 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         } else {
             JInternalFrame internalFrame = getFrameByContent(content);
             if (internalFrame != null)
-                try {
-                    valueAdjusting = true;
+	    {
+			    try {
+				valueAdjusting = true;
 
-                    internalFrame.setSelected(selected);
-                    lastSelected = (PlafContent) content;
+				internalFrame.setSelected(selected);
+				lastSelected = content == lastSelected ? null : (PlafContent) content;
 
-                    valueAdjusting = false;
-                } catch (PropertyVetoException e) {
-                    e.printStackTrace();
-                }
-            else
-                throw new IllegalStateException("Invalid content ui state.");
-        }
+				valueAdjusting = false;
+			    } catch (PropertyVetoException e) {
+				e.printStackTrace();
+			    }
+	    }
+	else if (selected)
+               	throw new IllegalStateException("Invalid content ui state.");
+	else  if (content == lastSelected)
+               		 lastSelected = null;
+	}
     }
 
     public void updateUI() {
@@ -597,7 +601,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
          }
      }
 
-    
+
     protected class PopupMouseListener extends MouseAdapter implements ActionListener {
         protected JPopupMenu popupMenu;
 
