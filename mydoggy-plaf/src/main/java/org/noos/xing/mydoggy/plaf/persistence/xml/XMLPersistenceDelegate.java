@@ -75,6 +75,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         mergePolicyApplierMap = new Hashtable<MergePolicy, MergePolicyApplier>();
         mergePolicyApplierMap.put(PersistenceDelegate.MergePolicy.RESET, new ResetMergePolicy());
         mergePolicyApplierMap.put(PersistenceDelegate.MergePolicy.UNION, new UnionMergePolicy());
+	    // Populate
+	   ((ToolWindowManagerElementWriter) masterElementWriter).populateWriterMap();
     }
 
     // Writing
