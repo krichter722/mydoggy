@@ -366,7 +366,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
     protected void initComponents() {
         contentUIMap = new Hashtable<Content, TabbedContentUI>();
 
-        final JTabbedContentPane tabbedContentPane = new JTabbedContentPane();
+        final JTabbedContentPane tabbedContentPane = new JTabbedContentPane(true);
         tabbedContentPane.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 if (!valueAdjusting && !contentValueAdjusting) {

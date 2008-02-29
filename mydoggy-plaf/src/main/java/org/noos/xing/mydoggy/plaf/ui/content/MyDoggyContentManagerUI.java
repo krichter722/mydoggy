@@ -118,13 +118,13 @@ public abstract class MyDoggyContentManagerUI {
 
                 if (lastSelected != null) {
                     try {
-                        lastSelected.fireSelected(false);
+                        lastSelected.setSelected(false);
                     } catch (Exception ignoreIt) {
                     }
                 }
 
+                newSelected.setSelected(true);
                 lastSelected = newSelected;
-                newSelected.fireSelected(true);
             }
         }
 

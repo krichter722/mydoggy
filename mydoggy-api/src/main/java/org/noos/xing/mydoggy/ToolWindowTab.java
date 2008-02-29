@@ -30,26 +30,7 @@ public interface ToolWindowTab extends Dockable {
     void setComponent(Component component);
 
     /**
-     * Returns whether or not the tan is currently selected.
-     *
-     * @return true if the tab is selected;
-     *         false otherwise
-     * @see #setSelected(boolean)
-     * @since 1.3.0
-     */
-    boolean isSelected();
-
-    /**
-     * Sets whether or not the tab is selected.
-     *
-     * @param selected whether or not the tab should be selected.
-     * @see #isSelected()
-     * @since 1.3.0
-     */
-    void setSelected(boolean selected);
-
-    /**
-     * Returns whether this content could be close using the ui.
+     * Returns whether this tab could be close using the ui.
      *
      * @return <code>true</code> if this content can be closed using the ui, <code>false</code> otherwise.
      * @see #setCloseable(boolean)
@@ -58,7 +39,7 @@ public interface ToolWindowTab extends Dockable {
     boolean isCloseable();
 
     /**
-     * Sets the closeable property of this content.
+     * Sets the closeable property of this tab.
      *
      * @param closeable <code>true</code> if this content can be closed using the ui, <code>false</code> otherwise.
      * @see #isCloseable()

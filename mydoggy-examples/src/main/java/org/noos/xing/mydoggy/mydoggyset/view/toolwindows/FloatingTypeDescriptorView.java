@@ -35,9 +35,9 @@ public class FloatingTypeDescriptorView extends ComponentView implements ViewCon
 
         // Left
         panel.addEntry(0, 0, "enabled : ", enabledBox = new JCheckBox());
-        enabledBox.setAction(new DynamicAction(FloatingTypeDescriptor.class,
+        enabledBox.setAction(new DynamicAction(ToolWindowTypeDescriptor.class,
                 "enabled",
-                new ViewContextSource(viewContext, FloatingTypeDescriptor.class),
+                new ViewContextSource(viewContext, ToolWindowTypeDescriptor.class),
                 new ChecBoxSelectionSource(enabledBox)));
 
         panel.addEntry(1, 0, "modal : ", modal = new JCheckBox());

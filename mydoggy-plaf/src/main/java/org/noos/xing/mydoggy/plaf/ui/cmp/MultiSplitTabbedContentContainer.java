@@ -295,7 +295,6 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                         onDockable = ((DockablePanel) dockableWrapper).getDockable();
                         indexAtLocation = -1;
                     } else {
-                        // TODO: Check this
                         onDockable = null;
                         indexAtLocation = -1;
                     }

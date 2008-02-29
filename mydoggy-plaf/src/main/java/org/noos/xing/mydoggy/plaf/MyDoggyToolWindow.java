@@ -827,7 +827,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         fireEvent(event, publicEvent);
     }
 
-    protected void fireEvent(PropertyChangeEvent event, PropertyChangeEvent publiEvent) {
+    protected void fireEvent(PropertyChangeEvent event, PropertyChangeEvent pblEvent) {
         PropertyChangeListener[] listeners = internalListenerList.getListeners(PropertyChangeListener.class);
         for (PropertyChangeListener listener : listeners) {
             listener.propertyChange(event);
@@ -836,7 +836,7 @@ public class MyDoggyToolWindow implements ToolWindow {
         if (publicEvent) {
             listeners = listenerList.getListeners(PropertyChangeListener.class);
             for (PropertyChangeListener listener : listeners) {
-                listener.propertyChange(publiEvent);
+                listener.propertyChange(pblEvent);
             }
         }
     }

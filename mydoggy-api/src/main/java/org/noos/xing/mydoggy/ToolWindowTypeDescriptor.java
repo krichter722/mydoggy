@@ -70,4 +70,28 @@ public interface ToolWindowTypeDescriptor extends Observable {
      */
     boolean isAutoHide();
 
+    /**
+     * Enables or disables this mode, depending on the value of the
+     * parameter <code>enabled</code>. An enabled mode can used by user.
+     * This Mode is enabled initially by default.
+     *
+     * @param  enabled   If <code>true</code>, this mode is
+     *         enabled; otherwise this mode is disabled
+     * @see #isEnabled
+     * @since 1.4.2
+     */
+    void setEnabled(boolean enabled);
+
+    /**
+     * Determines whether this mode is enabled. An enabled mode
+     * can used by user. This Mode is enabled initially by default.
+     * This mode may be enabled or disabled by
+     * calling its <code>setEnabled</code> method.
+     * @return <code>true</code> if the mode is enabled,
+     *          <code>false</code> otherwise
+     * @see #setEnabled
+     * @since 1.4.2
+     */
+    boolean isEnabled();
+
 }

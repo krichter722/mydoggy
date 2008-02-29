@@ -195,6 +195,15 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         firePropertyChange("animating", old, animating);
     }
 
+    public void setEnabled(boolean enabled) {
+        // TODO: just onet type should be available...
+        throw new RuntimeException("Cannot call this method. This type is always available.");
+    }
+
+    public boolean isEnabled() {
+        return true;
+    }
+
     public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
         if (listenerList == null)
             listenerList = new EventListenerList();

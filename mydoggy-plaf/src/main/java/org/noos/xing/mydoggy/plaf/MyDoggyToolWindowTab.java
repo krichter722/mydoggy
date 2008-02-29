@@ -5,7 +5,6 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowTab;
 
 import javax.swing.*;
-import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -13,7 +12,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyToolWindowTab implements ToolWindowTab {
+public class MyDoggyToolWindowTab extends MyDoggyDockable implements ToolWindowTab {
     protected boolean root;
     protected String id;
     protected ToolWindow owner;
@@ -26,8 +25,6 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
 
     protected Dockable dockable;
 
-    protected EventListenerList listenerList;
-
     public MyDoggyToolWindowTab(ToolWindow owner, boolean root,
                                 String title, Icon icon, Component component,
                                 Dockable dockable) {
@@ -38,7 +35,6 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         this.icon = icon;
         this.component = component;
         this.selected = false;
-        this.listenerList = new EventListenerList();
         this.closeable = !root;
         this.dockable = dockable;
         this.flash = false;
@@ -166,18 +162,6 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
         return dockable;
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        listenerList.add(PropertyChangeListener.class, listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        listenerList.remove(PropertyChangeListener.class, listener);
-    }
-
-    public PropertyChangeListener[] getPropertyChangeListeners() {
-        return listenerList.getListeners(PropertyChangeListener.class);
-    }
-
     public String toString() {
         return "MyDoggyToolWindowTab{" +
                "owner=" + owner +
@@ -187,21 +171,10 @@ public class MyDoggyToolWindowTab implements ToolWindowTab {
                ", selected=" + selected +
                ", closeable=" + closeable +
                ", toolWindow=" + dockable +
-               ", listenerList=" + listenerList +
                '}';
     }
 
     
-    protected void firePropertyChangeEvent(String property, Object oldValue, Object newValue) {
-        PropertyChangeEvent event = new PropertyChangeEvent(this, property, oldValue, newValue);
-
-        PropertyChangeListener[] listeners = listenerList.getListeners(PropertyChangeListener.class);
-        for (PropertyChangeListener listener : listeners) {
-            listener.propertyChange(event);
-        }
-    }
-
-
     protected class DelegatorListener implements PropertyChangeListener  {
 
         public void propertyChange(PropertyChangeEvent evt) {
