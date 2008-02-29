@@ -135,6 +135,14 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         return transparentDelay;
     }
 
+    public void setAddToTaskBar(boolean addToTaskBar) {
+        // TODO:
+    }
+
+    public boolean isAddToTaskBar() {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public void setEnabled(boolean enabled) {
         if (this.enabled == enabled)
             return;

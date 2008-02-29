@@ -35,9 +35,9 @@ public class FloatingLiveTypeDescriptorView extends ComponentView implements Vie
 
         // Left
         panel.addEntry(0, 0, "enabled : ", enabledBox = new JCheckBox());
-        enabledBox.setAction(new DynamicAction(FloatingLiveTypeDescriptor.class,
+        enabledBox.setAction(new DynamicAction(ToolWindowTypeDescriptor.class,
                 "enabled",
-                new ViewContextSource(viewContext, FloatingLiveTypeDescriptor.class),
+                new ViewContextSource(viewContext, ToolWindowTypeDescriptor.class),
                 new ChecBoxSelectionSource(enabledBox)));
 
         panel.addEntry(1, 0, "animating : ", animating = new JCheckBox());

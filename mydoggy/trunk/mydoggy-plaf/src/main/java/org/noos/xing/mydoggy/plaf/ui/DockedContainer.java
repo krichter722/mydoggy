@@ -185,46 +185,8 @@ public class DockedContainer implements ToolWindowContainer {
 
     protected void initListeners() {
         addPropertyChangeListener("active", new ActivePropertyChangeListener());
-        addPropertyChangeListener("type", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getSource() != descriptor)
-                    return;
-
-                if (evt.getNewValue() == ToolWindowType.DOCKED) {
-                    titleBarButtons.toolWindowTypeChanged(ToolWindowType.DOCKED);
-                }
-
-                if (evt.getOldValue() == ToolWindowType.EXTERN) {
-                    setMainComponent(toolWindow.getToolWindowTabs()[0].getComponent());
-                }
-            }
-        });
-        addPropertyChangeListener("maximized.before", new PropertyChangeListener() {
-            ByteArrayOutputStream workspace;
-            boolean valueAdj = false;
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getSource() != descriptor)
-                    return;
-
-                if ((Boolean) evt.getNewValue()) {
-                    descriptor.getManager().getPersistenceDelegate().save(workspace = new ByteArrayOutputStream());
-                } else if (workspace != null) {
-                    if (valueAdj)
-                        return;
-
-                    valueAdj = true;
-                    try {
-                        descriptor.getManager().getPersistenceDelegate().merge(new ByteArrayInputStream(workspace.toByteArray()),
-                                                                               resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
-                                                                                                   PersistenceDelegate.MergePolicy.UNION));
-                        workspace = null;
-                    } finally {
-                        valueAdj = false;
-                    }
-                }
-            }
-        });
+        addPropertyChangeListener("type", new TypePropertyChangeListener());
+        addPropertyChangeListener("maximized.before", new MaximizedBeforePropertyChangeListener());
 
         // TODO: make this more safe....
         final FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener(
@@ -238,17 +200,9 @@ public class DockedContainer implements ToolWindowContainer {
             }
         });
 
-        descriptor.getTypeDescriptor(ToolWindowType.SLIDING).addPropertyChangeListener(
-                new PropertyChangeListener() {
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        if ("enabled".equals(evt.getPropertyName())) {
-                            boolean newValue = (Boolean) evt.getNewValue();
-                            if (!newValue && toolWindow.getType() == ToolWindowType.SLIDING)
-                                toolWindow.setType(ToolWindowType.DOCKED);
-                        }
-                    }
-                }
-        );
+        toolWindow.addToolWindowListener(new DockedToolWindowListener());
+
+        // TODO: should be there???
         descriptor.getTypeDescriptor(ToolWindowType.FLOATING).addPropertyChangeListener(
                 new PropertyChangeListener() {
                     public void propertyChange(PropertyChangeEvent evt) {
@@ -261,8 +215,19 @@ public class DockedContainer implements ToolWindowContainer {
                     }
                 }
         );
+        descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).addPropertyChangeListener(
+                new PropertyChangeListener() {
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        if ("enabled".equals(evt.getPropertyName())) {
+                            boolean newValue = (Boolean) evt.getNewValue();
 
-        toolWindow.addToolWindowListener(new DockedToolWindowListener());
+                            if (!newValue && toolWindow.getType() == ToolWindowType.FLOATING_LIVE)
+                                toolWindow.setType(ToolWindowType.DOCKED);
+                        }
+                    }
+                }
+        );
+
     }
 
     protected void assignFocus() {
@@ -777,5 +742,49 @@ public class DockedContainer implements ToolWindowContainer {
 
     }
 
+    protected class TypePropertyChangeListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (evt.getSource() != descriptor)
+                return;
+
+            if (evt.getNewValue() == ToolWindowType.DOCKED) {
+                titleBarButtons.toolWindowTypeChanged(ToolWindowType.DOCKED);
+            }
+
+            if (evt.getOldValue() == ToolWindowType.EXTERN) {
+                setMainComponent(toolWindow.getToolWindowTabs()[0].getComponent());
+            }
+        }
+
+    }
+
+    protected class MaximizedBeforePropertyChangeListener implements PropertyChangeListener {
+        ByteArrayOutputStream workspace;
+        boolean valueAdj = false;
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (evt.getSource() != descriptor)
+                return;
+
+            if ((Boolean) evt.getNewValue()) {
+                descriptor.getManager().getPersistenceDelegate().save(workspace = new ByteArrayOutputStream());
+            } else if (workspace != null) {
+                if (valueAdj)
+                    return;
+
+                valueAdj = true;
+                try {
+                    descriptor.getManager().getPersistenceDelegate().merge(new ByteArrayInputStream(workspace.toByteArray()),
+                                                                           resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
+                                                                                               PersistenceDelegate.MergePolicy.UNION));
+                    workspace = null;
+                } finally {
+                    valueAdj = false;
+                }
+            }
+        }
+
+    }
 
 }

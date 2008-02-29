@@ -1,42 +1,16 @@
 package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.Content;
-
-import java.beans.PropertyChangeListener;
+import org.noos.xing.mydoggy.plaf.PlafObservable;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.3.1
  */
-public interface PlafContent extends Content {
+public interface PlafContent extends Content, PlafObservable {
 
     /**
-     * Adds a PropertyChangeListener to the ui listener list. The listener is
-     * registered for all bound properties of this class and Content class.
-     * If listener is null, no exception is thrown and no action is performed.
-     * All event fired are received by this listener before the listeners registered
-     * using the Content interface.
-     *
-     * @param listener the PropertyChangeListener to be added.
-     * @see #removePlafPropertyChangeListener(java.beans.PropertyChangeListener)
-     * @since 1.3.1
-     */
-    void addPlafPropertyChangeListener(PropertyChangeListener listener);
-
-    /**
-     * Removes a PropertyChangeListener from the ui listener list. This method
-     * should be used to remove PropertyChangeListeners that were registered
-     * for all bound properties of this class.
-     * <p/>
-     * If listener is null, no exception is thrown and no action is performed.
-     *
-     * @param listener the PropertyChangeListener to be removed
-     * @see #addPlafPropertyChangeListener(java.beans.PropertyChangeListener)
-     * @since 1.3.1
-     */
-    void removePlafPropertyChangeListener(PropertyChangeListener listener);
-
-    /**
+     * TODO: remove this...
      * Notify selection.
      *
      * @param selected <tt>true</tt> is the content must be selected, <tt>false</tt> otherwise.

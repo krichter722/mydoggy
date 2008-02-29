@@ -6,15 +6,12 @@ import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.plaf.ui.content.PlafContent;
 
 import javax.swing.*;
-import javax.swing.event.EventListenerList;
 import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyContent implements PlafContent {
+public class MyDoggyContent extends MyDoggyDockable implements PlafContent {
     protected transient MyDoggyContentManager contentManager;
 
     protected String id;
@@ -32,9 +29,6 @@ public class MyDoggyContent implements PlafContent {
     protected boolean maximized;
     protected transient Dockable dockableDelegator;
     protected boolean flash;
-
-    protected EventListenerList uiListeners;
-    protected EventListenerList listeners;
 
 
     public MyDoggyContent(MyDoggyContentManager contentManager,
@@ -54,9 +48,6 @@ public class MyDoggyContent implements PlafContent {
         this.maximized = false;
         this.dockableDelegator = dockableDelegator;
         this.flash = false;
-
-        this.listeners = new EventListenerList();
-        this.uiListeners = new EventListenerList();
     }
 
 
@@ -86,7 +77,7 @@ public class MyDoggyContent implements PlafContent {
         boolean old = this.flash;
         this.flash = flash;
 
-        firePropertyChange("flash", old, flash);
+        firePropertyChangeEvent("flash", old, flash);
     }
 
     public void setFlashing(int duration) {
@@ -95,7 +86,7 @@ public class MyDoggyContent implements PlafContent {
 
         this.flash = true;
 
-        firePropertyChange("flash.duration", null, duration);
+        firePropertyChangeEvent("flash.duration", null, duration);
     }
 
     public void setComponent(Component component) {
@@ -105,7 +96,7 @@ public class MyDoggyContent implements PlafContent {
         Component old = this.component;
         this.component = component;
 
-        firePropertyChange("component", old, component);
+        firePropertyChangeEvent("component", old, component);
     }
 
     public Icon getDisabledIcon() {
@@ -119,7 +110,7 @@ public class MyDoggyContent implements PlafContent {
         Icon old = this.disabledIcon;
         this.disabledIcon = disabledIcon;
 
-        firePropertyChange("disabledIcon", old, disabledIcon);
+        firePropertyChangeEvent("disabledIcon", old, disabledIcon);
     }
 
     public boolean isEnabled() {
@@ -131,7 +122,7 @@ public class MyDoggyContent implements PlafContent {
             boolean old = this.enabled;
             this.enabled = enabled;
 
-            firePropertyChange("enabled", old, enabled);
+            firePropertyChangeEvent("enabled", old, enabled);
         }
     }
 
@@ -148,7 +139,7 @@ public class MyDoggyContent implements PlafContent {
             this.selected = selected;
             contentManager.getPlafContentManagerUI().setSelected(this, selected);
 
-            firePropertyChange("selected", old, selected);
+            firePropertyChangeEvent("selected", old, selected);
         }
     }
 
@@ -163,7 +154,7 @@ public class MyDoggyContent implements PlafContent {
         Color old = this.foreground;
         this.foreground = foreground;
 
-        firePropertyChange("foreground", old, foreground);
+        firePropertyChangeEvent("foreground", old, foreground);
     }
 
     public Icon getIcon() {
@@ -177,7 +168,7 @@ public class MyDoggyContent implements PlafContent {
         Icon old = this.icon;
         this.icon = icon;
 
-        firePropertyChange("icon", old, icon);
+        firePropertyChangeEvent("icon", old, icon);
     }
 
     public JPopupMenu getPopupMenu() {
@@ -191,7 +182,7 @@ public class MyDoggyContent implements PlafContent {
         JPopupMenu old = this.popupMenu;
         this.popupMenu = popupMenu;
 
-        firePropertyChange("popupMenu", old, popupMenu);
+        firePropertyChangeEvent("popupMenu", old, popupMenu);
     }
 
     public void setDetached(boolean detached) {
@@ -204,7 +195,7 @@ public class MyDoggyContent implements PlafContent {
         boolean old = this.detached;
         this.detached = detached;
 
-        firePropertyChange("detached", old, detached);
+        firePropertyChangeEvent("detached", old, detached);
     }
 
     public boolean isDetached() {
@@ -218,7 +209,7 @@ public class MyDoggyContent implements PlafContent {
         int old = this.mnemonic;
         this.mnemonic = mnemonic;
 
-        firePropertyChange("mnemonic", old, mnemonic);
+        firePropertyChangeEvent("mnemonic", old, mnemonic);
     }
 
     public int getMnemonic() {
@@ -240,10 +231,10 @@ public class MyDoggyContent implements PlafContent {
 
         boolean old = this.maximized;
         if (maximized)
-            firePrivatePropertyChange("maximized.before", false, maximized);
+            firePlafPropertyChangeEvent("maximized.before", false, maximized);
         
         this.maximized = maximized;
-        firePropertyChange("maximized", old, maximized);
+        firePropertyChangeEvent("maximized", old, maximized);
     }
 
     public boolean isMaximized() {
@@ -265,7 +256,7 @@ public class MyDoggyContent implements PlafContent {
         String old = this.title;
         this.title = title;
 
-        firePropertyChange("title", old, title);
+        firePropertyChangeEvent("title", old, title);
     }
 
     public String getToolTipText() {
@@ -276,19 +267,7 @@ public class MyDoggyContent implements PlafContent {
         String old = this.toolTipText;
         this.toolTipText = toolTipText;
 
-        firePropertyChange("toolTipText", old, toolTipText);
-    }
-
-    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
-        listeners.add(PropertyChangeListener.class, listener);
-    }
-
-    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
-        listeners.remove(PropertyChangeListener.class, listener);
-    }
-
-    public synchronized PropertyChangeListener[] getPropertyChangeListeners() {
-        return listeners.getListeners(PropertyChangeListener.class);
+        firePropertyChangeEvent("toolTipText", old, toolTipText);
     }
 
     public Dockable getDockableDelegator() {
@@ -296,37 +275,8 @@ public class MyDoggyContent implements PlafContent {
     }
 
 
-    public void addPlafPropertyChangeListener(PropertyChangeListener listener) {
-        uiListeners.add(PropertyChangeListener.class, listener);
-    }
-
-    public void removePlafPropertyChangeListener(PropertyChangeListener listener) {
-        uiListeners.remove(PropertyChangeListener.class, listener);
-    }
-
     public void fireSelected(boolean selected) {
-        firePropertyChange("selected", !selected, selected);
-    }
-
-
-    public void firePropertyChange(String property, Object oldValue, Object newValue) {
-        PropertyChangeEvent event = new PropertyChangeEvent(this, property, oldValue, newValue);
-
-        for (PropertyChangeListener listener : uiListeners.getListeners(PropertyChangeListener.class)) {
-            listener.propertyChange(event);
-        }
-
-        for (PropertyChangeListener listener : listeners.getListeners(PropertyChangeListener.class)) {
-            listener.propertyChange(event);
-        }
-    }
-
-    public void firePrivatePropertyChange(String property, Object oldValue, Object newValue) {
-        PropertyChangeEvent event = new PropertyChangeEvent(this, property, oldValue, newValue);
-
-        for (PropertyChangeListener listener : uiListeners.getListeners(PropertyChangeListener.class)) {
-            listener.propertyChange(event);
-        }
+        firePropertyChangeEvent("selected", !selected, selected);
     }
 
 }

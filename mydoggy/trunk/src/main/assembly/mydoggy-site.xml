@@ -54,23 +54,23 @@
 
     <files>
         <file>
-            <source>mydoggy-api/target/mydoggy-api-1.4.1.jar</source>
+            <source>mydoggy-api/target/mydoggy-api-1.4.2.jar</source>
             <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
         </file>
         <file>
-            <source>mydoggy-plaf/target/mydoggy-plaf-1.4.1.jar</source>
+            <source>mydoggy-plaf/target/mydoggy-plaf-1.4.2.jar</source>
             <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
         </file>
         <file>
-            <source>mydoggy-res/target/mydoggy-res-1.4.1.jar</source>
+            <source>mydoggy-res/target/mydoggy-res-1.4.2.jar</source>
             <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
         </file>
         <file>
-            <source>mydoggy-itest/target/mydoggy-itest-1.4.1.jar</source>
+            <source>mydoggy-itest/target/mydoggy-itest-1.4.2.jar</source>
             <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
         </file>
         <file>
-            <source>mydoggy-examples/target/mydoggy-examples-1.4.1.jar</source>
+            <source>mydoggy-examples/target/mydoggy-examples-1.4.2.jar</source>
             <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
         </file>
         <file>
@@ -97,6 +97,9 @@
             <source>mydoggy-plaf/src/main/resources/persistence_1_4_1.dtd</source>
             <outputDirectory>site/mydoggy-plaf/resources/dtd</outputDirectory>
         </file>
+        <!--
+        TODO: add 1.4.2 dtd
+        -->
     </files>
 
 </assembly>

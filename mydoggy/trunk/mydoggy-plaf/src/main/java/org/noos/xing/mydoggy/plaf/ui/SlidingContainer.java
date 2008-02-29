@@ -135,14 +135,14 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
     }
 
     protected void initListeners() {
-        dockedContainer.addPropertyChangeListener("anchor", new PropertyChangeListener() {
+        addPropertyChangeListener("anchor", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 ToolWindow evtToolWindow = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
                 if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible() && !evtToolWindow.isVisible())
                     update();
             }
         });
-        dockedContainer.addPropertyChangeListener("type", new PropertyChangeListener() {
+        addPropertyChangeListener("type", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getSource() != descriptor)
                     return;
@@ -161,93 +161,13 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
                 }
             }
         });
-        dockedContainer.addPropertyChangeListener("active", new ActivePropertyChangeListener());
-        dockedContainer.addPropertyChangeListener("maximized", new PropertyChangeListener() {
-            protected Rectangle oldBounds = null;
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (toolWindow.getType() == ToolWindowType.SLIDING) {
-                    if ((Boolean) evt.getNewValue()) {
-                        oldBounds = sheet.getBounds();
-
-                        switch (toolWindow.getAnchor()) {
-                            case LEFT:
-                                sheet.setBounds(
-                                        sheet.getX(),
-                                        sheet.getY(),
-                                        calcMaxWidth(),
-                                        sheet.getHeight()
-                                );
-                                break;
-                            case RIGHT:
-                                sheet.setBounds(
-                                        calcFirstX(),
-                                        sheet.getY(),
-                                        calcMaxWidth(),
-                                        sheet.getHeight()
-                                );
-                                break;
-                            case TOP:
-                                sheet.setBounds(
-                                        sheet.getX(),
-                                        sheet.getY(),
-                                        sheet.getWidth(),
-                                        calcMaxHeight()
-                                );
-                                break;
-                            case BOTTOM:
-                                sheet.setBounds(
-                                        sheet.getX(),
-                                        calcFirstY(),
-                                        sheet.getWidth(),
-                                        calcMaxHeight()
-                                );
-                                break;
-                        }
-                    } else {
-                        sheet.setBounds(oldBounds);
-                    }
-                    SwingUtil.repaint(sheet);
-                }
-            }
-
-            protected int calcFirstX() {
-                return descriptor.getManager().getX() + ((descriptor.getToolBar(ToolWindowAnchor.LEFT).getAvailableTools() > 0) ? 23 : 0);
-            }
-
-            protected int calcFirstY() {
-                return descriptor.getManager().getY() +
-                        ((descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0) ? 23 : 0) +
-                        descriptor.getJMenuBarExtraHeight();
-            }
-
-            protected int calcMaxWidth() {
-                int width = descriptor.getManager().getWidth();
-                if (descriptor.getToolBar(ToolWindowAnchor.LEFT).getAvailableTools() > 0)
-                    width -= 23;
-                if (descriptor.getToolBar(ToolWindowAnchor.RIGHT).getAvailableTools() > 0)
-                    width -= 23;
-                return width;
-            }
-
-            protected int calcMaxHeight() {
-                int width = descriptor.getManager().getHeight();
-                if (descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0)
-                    width -= 23;
-                if (descriptor.getToolBar(ToolWindowAnchor.BOTTOM).getAvailableTools() > 0)
-                    width -= 23;
-                return width;
-            }
-        });
-
-        dockedContainer.addPropertyChangeListener("tempShowed", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
-                    update();
-            }
-        });
+        addPropertyChangeListener("active", new ActivePropertyChangeListener());
+        addPropertyChangeListener("maximized", new MaximizedPropertyChangeListener());
+        addPropertyChangeListener("tempShowed", new TempShowedPropertyChangeListener());
 
         slidingMouseInputHandler = new SlidingMouseInputHandler(descriptor);
+
+        descriptor.getTypeDescriptor(ToolWindowType.SLIDING).addPropertyChangeListener(new SlidingTypePropertyChangeListener());
     }
 
     protected void update() {
@@ -484,4 +404,106 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
             }
         }
     }
+
+    protected class MaximizedPropertyChangeListener implements PropertyChangeListener {
+        protected Rectangle oldBounds = null;
+
+        // TODO: remove constants
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (toolWindow.getType() == ToolWindowType.SLIDING) {
+                if ((Boolean) evt.getNewValue()) {
+                    oldBounds = sheet.getBounds();
+
+                    switch (toolWindow.getAnchor()) {
+                        case LEFT:
+                            sheet.setBounds(
+                                    sheet.getX(),
+                                    sheet.getY(),
+                                    calcMaxWidth(),
+                                    sheet.getHeight()
+                            );
+                            break;
+                        case RIGHT:
+                            sheet.setBounds(
+                                    calcFirstX(),
+                                    sheet.getY(),
+                                    calcMaxWidth(),
+                                    sheet.getHeight()
+                            );
+                            break;
+                        case TOP:
+                            sheet.setBounds(
+                                    sheet.getX(),
+                                    sheet.getY(),
+                                    sheet.getWidth(),
+                                    calcMaxHeight()
+                            );
+                            break;
+                        case BOTTOM:
+                            sheet.setBounds(
+                                    sheet.getX(),
+                                    calcFirstY(),
+                                    sheet.getWidth(),
+                                    calcMaxHeight()
+                            );
+                            break;
+                    }
+                } else {
+                    sheet.setBounds(oldBounds);
+                }
+                SwingUtil.repaint(sheet);
+            }
+        }
+
+        protected int calcFirstX() {
+            return descriptor.getManager().getX() + ((descriptor.getToolBar(ToolWindowAnchor.LEFT).getAvailableTools() > 0) ? 23 : 0);
+        }
+
+        protected int calcFirstY() {
+            return descriptor.getManager().getY() +
+                   ((descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0) ? 23 : 0) +
+                   descriptor.getJMenuBarExtraHeight();
+        }
+
+        protected int calcMaxWidth() {
+            int width = descriptor.getManager().getWidth();
+            if (descriptor.getToolBar(ToolWindowAnchor.LEFT).getAvailableTools() > 0)
+                width -= 23;
+            if (descriptor.getToolBar(ToolWindowAnchor.RIGHT).getAvailableTools() > 0)
+                width -= 23;
+            return width;
+        }
+
+        protected int calcMaxHeight() {
+            int width = descriptor.getManager().getHeight();
+            if (descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0)
+                width -= 23;
+            if (descriptor.getToolBar(ToolWindowAnchor.BOTTOM).getAvailableTools() > 0)
+                width -= 23;
+            return width;
+        }
+
+    }
+
+    protected class SlidingTypePropertyChangeListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            if ("enabled".equals(evt.getPropertyName())) {
+                boolean newValue = (Boolean) evt.getNewValue();
+                if (!newValue && toolWindow.getType() == ToolWindowType.SLIDING)
+                    toolWindow.setType(ToolWindowType.DOCKED);
+            }
+        }
+
+    }
+
+    protected class TempShowedPropertyChangeListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
+                update();
+        }
+
+    }
+
 }

@@ -34,9 +34,9 @@ public class SlidingTypeDescriptorView extends ComponentView implements ViewCont
         MatrixPanel panel = new MatrixPanel(3, 2);
 
         panel.addEntry(0, 0, "enabled : ", enabled = new JCheckBox());
-        enabled.setAction(new DynamicAction(SlidingTypeDescriptor.class,
+        enabled.setAction(new DynamicAction(ToolWindowTypeDescriptor.class,
                 "enabled",
-                new ViewContextSource(viewContext, SlidingTypeDescriptor.class),
+                new ViewContextSource(viewContext, ToolWindowTypeDescriptor.class),
                 new ChecBoxSelectionSource(enabled)));
 
         panel.addEntry(1, 0, "animating : ", animating = new JCheckBox());
