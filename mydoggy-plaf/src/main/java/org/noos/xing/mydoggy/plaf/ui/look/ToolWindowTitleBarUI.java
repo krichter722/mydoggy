@@ -258,7 +258,9 @@ public class ToolWindowTitleBarUI extends PanelUI {
                                   GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
 
             g.setColor(idColor);
-            g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
+            g.drawString(id,
+                         r.x + 2,
+                         r.y + ((r.height - g.getFontMetrics().getHeight()) / 2) + g.getFontMetrics().getAscent());
         }
     }
 
@@ -462,9 +464,8 @@ public class ToolWindowTitleBarUI extends PanelUI {
 
             releaseLocks();
 
-            if  (lastAnchor != null)
+            if (lastAnchor != null)
                 manager.getBar(lastAnchor).setTempShowed(false);
-
 
             // Finalize drag action...
             cleanupGhostImage();

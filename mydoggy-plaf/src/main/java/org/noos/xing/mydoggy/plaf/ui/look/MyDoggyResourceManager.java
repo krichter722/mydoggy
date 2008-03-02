@@ -177,6 +177,18 @@ public class MyDoggyResourceManager implements ResourceManager {
         }
     }
 
+    public float getFloat(String name, float defaultValue) {
+        String propertyValue = getProperty(name);
+        if (propertyValue == null || "".equals(propertyValue.trim()))
+            return defaultValue;
+
+        try {
+            return Float.parseFloat(propertyValue);
+        } catch (Exception e) {
+            return defaultValue;
+        }        
+    }
+
     public void putObject(Object key, Object value) {
         resources.put(key, value);
     }

@@ -89,8 +89,9 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL, 1, 14}, {0, TableLayout.FILL, 0}}, false));
         setFocusable(false);
         setBorder(null);
-
-        tabContainer = new JPanel(containerLayout = new TableLayout(new double[][]{{0}, {16}}));
+        
+        tabContainer = new JPanel(containerLayout = new TableLayout(new double[][]{{0},
+                                                                                   {resourceManager.getFloat("toolwindow.title.fontSize", 12)+4}})); // TODO: 16 -> -2
         tabContainer.setName("toolWindow.tabContainer." + descriptor.getToolWindow().getId());
         tabContainer.setOpaque(false);
         tabContainer.setBorder(null);
@@ -311,7 +312,6 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         protected boolean flashingState;
 
         public TabButton(final ToolWindowTab tab) {
-
             setLayout(layout = new TableLayout(new double[][]{{-1, 0, 0}, {-1}}));
 
             setOpaque(false);
@@ -387,8 +387,6 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
                     super.update(g, c);
                 }
-
-
             });
             addMouseListener(mouseEventDispatcher);
             addMouseMotionListener(mouseEventDispatcher);
@@ -406,8 +404,8 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             titleLabel.setOpaque(false);
             titleLabel.setFocusable(false);
             titleLabel.setIcon(tab.getIcon());
+            titleLabel.setFont(titleLabel.getFont().deriveFont(resourceManager.getFloat("toolwindow.title.fontSize", 12)));
             titleLabel.setUI(new BasicLabelUI() {
-
                 protected void paintEnabledText(JLabel l, Graphics g, String s, int textX, int textY) {
                     if (pressed && inside)
                         super.paintEnabledText(l, g, s, textX + 1, textY + 1);
