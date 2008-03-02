@@ -26,13 +26,18 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
+        <developer>
+            <id>toxtox</id>
+            <name>David Dolcimascolo</name>
+            <email>toxtox@users.sourceforge.net</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
     </developers>
 
     <licenses>
-        <license>
-            <name>LGPL - GNU LESSER GENERAL PUBLIC LICENSE</name>
-            <url>http://www.gnu.org/licenses/lgpl.txt</url>
-        </license>
         <license>
             <name>LGPL - GNU LESSER GENERAL PUBLIC LICENSE</name>
             <url>http://www.gnu.org/licenses/lgpl.txt</url>
