@@ -16,7 +16,7 @@ import java.util.ResourceBundle;
 /**
  * @author Angelo De Caro
  */
-public class MyDoggyToolWindow implements ToolWindow {
+public class MyDoggyToolWindow extends MyDoggyDockable implements ToolWindow {
     static final Object LOCK = new ToolWindowLock();
 
     static class ToolWindowLock {
@@ -747,12 +747,12 @@ public class MyDoggyToolWindow implements ToolWindow {
 
             switch (type) {
                 case SLIDING:
-                    if (!((SlidingTypeDescriptor) getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled())
+                    if (!(getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled())
                         return;
                     break;
                 case FLOATING:
                 case FLOATING_FREE:
-                    if (!((FloatingTypeDescriptor) getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled())
+                    if (!(getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled())
                         return;
                     break;
             }

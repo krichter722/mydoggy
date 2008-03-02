@@ -127,7 +127,8 @@ public class DockedContainer implements ToolWindowContainer {
 
         // Container
         container = (JPanel) resourceManager.createComponent(MyDoggyKeySpace.TOOL_WINDOW_CONTAINER, null);
-        container.setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {16, TableLayout.FILL}}, false));
+        container.setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {resourceManager.getFloat("toolwindow.title.fontSize", 12) + 4,
+                                                                                        TableLayout.FILL}}, false));
         container.setName("toolWindow.container." + toolWindow.getId());
         container.setFocusTraversalPolicyProvider(true);
         container.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
@@ -137,7 +138,8 @@ public class DockedContainer implements ToolWindowContainer {
         String id = toolWindow.getId();
 
         // Title Bar
-        ExtendedTableLayout titleBarLayout = new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 2, -2, 3}, {0, 16, 0}}, false);
+        ExtendedTableLayout titleBarLayout = new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 2, -2, 3},
+                                                                                    {0, resourceManager.getFloat("toolwindow.title.fontSize", 12) + 4, 0}}, false);
         titleBar = (JPanel) resourceManager.createComponent(
                 MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR, descriptor.getManager(),
                 descriptor,
@@ -163,7 +165,7 @@ public class DockedContainer implements ToolWindowContainer {
 
         // Set TitleBar content
         titleBar.add(titleBarTabs, "1,1");
-        titleBar.add(titleBarButtons.getButtonsContainer(), "3,1");
+        titleBar.add(titleBarButtons.getButtonsContainer(), "3,1,right,c");
 
         // Set Component container
         componentContainer = new JPanel();

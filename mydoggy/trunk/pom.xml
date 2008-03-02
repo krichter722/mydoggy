@@ -33,6 +33,10 @@
             <name>LGPL - GNU LESSER GENERAL PUBLIC LICENSE</name>
             <url>http://www.gnu.org/licenses/lgpl.txt</url>
         </license>
+        <license>
+            <name>LGPL - GNU LESSER GENERAL PUBLIC LICENSE</name>
+            <url>http://www.gnu.org/licenses/lgpl.txt</url>
+        </license>
     </licenses>
 
     <modules>
