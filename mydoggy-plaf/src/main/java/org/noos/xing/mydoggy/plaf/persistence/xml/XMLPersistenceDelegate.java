@@ -88,6 +88,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         public ToolWindowManagerElementWriter(ToolWindowManager manager) {
             this.manager = manager;
             this.elementWriterMap = new HashMap<Class, ElementWriter<XMLWriter>>();
+            populateWriterMap();
         }
 
         public void write(XMLWriter writer, Object... params) {
