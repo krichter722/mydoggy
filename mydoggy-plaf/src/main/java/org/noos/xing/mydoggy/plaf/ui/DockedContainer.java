@@ -295,7 +295,7 @@ public class DockedContainer implements ToolWindowContainer {
 
         public TitleBarMouseAdapter() {
             initPopupMenu();
-            descriptor.getToolWindow().addInternalPropertyChangeListener(this);
+            descriptor.getToolWindow().addPlafPropertyChangeListener(this);
             addPropertyChangeListener("type", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getSource() != descriptor ||

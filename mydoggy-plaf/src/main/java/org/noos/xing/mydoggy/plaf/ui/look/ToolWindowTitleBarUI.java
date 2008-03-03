@@ -67,7 +67,7 @@ public class ToolWindowTitleBarUI extends PanelUI {
 
         animation = new GradientAnimation();
 
-        descriptor.getToolWindow().addInternalPropertyChangeListener(new PropertyChangeListener() {
+        descriptor.getToolWindow().addPlafPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent e) {
                 String propertyName = e.getPropertyName();
                 if ("flash".equals(propertyName)) {

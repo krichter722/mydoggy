@@ -271,16 +271,7 @@ public class MyDoggyContentManager implements ContentManager {
             throw new IllegalArgumentException("Cannot register content with passed id. An already registered dockable exists. [id : " + id + "]");
 
         MyDoggyContent content = new MyDoggyContent(this, id, title, icon, component, tip, toolWindow);
-        content.addPlafPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                assert evt.getSource() instanceof Content;
-
-                if ("selected".equals(evt.getPropertyName())) {
-                    if (Boolean.TRUE.equals(evt.getNewValue()))
-                        fireContentSelected((Content) evt.getSource());
-                }
-            }
-        });
+        content.addPlafPropertyChangeListener("selected", new SelectedContentPropertyChangeListener());
 
         contents.add(content);
         contentMap.put(id, content);
@@ -318,6 +309,17 @@ public class MyDoggyContentManager implements ContentManager {
         ContentManagerEvent event = new ContentManagerEvent(this, ContentManagerEvent.ActionId.CONTENT_SELECTED, content);
         for (ContentManagerListener listener : listeners.getListeners(ContentManagerListener.class)) {
             listener.contentSelected(event);
+        }
+    }
+
+
+    protected class SelectedContentPropertyChangeListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            assert evt.getSource() instanceof Content;
+
+            if (Boolean.TRUE.equals(evt.getNewValue()))
+                fireContentSelected((Content) evt.getSource());
         }
     }
 

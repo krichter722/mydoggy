@@ -51,7 +51,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         this.manager = manager;
         this.toolWindow = toolWindow;
 
-        toolWindow.addInternalPropertyChangeListener(this);
+        toolWindow.addPlafPropertyChangeListener(this);
 
         initTypeDescriptors();
     }

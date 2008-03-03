@@ -68,6 +68,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         }
     }
 
+
     public JViewport getViewport() {
         return viewport;
     }
@@ -311,6 +312,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         protected int flasingDuration;
         protected boolean flashingState;
 
+
         public TabButton(final ToolWindowTab tab) {
             setLayout(layout = new TableLayout(new double[][]{{-1, 0, 0}, {-1}}));
 
@@ -433,6 +435,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             add(closeButton, "2,0,FULL,c");
         }
 
+
         public void actionPerformed(ActionEvent e) {
             toolWindow.removeToolWindowTab(tab);
         }
@@ -546,6 +549,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             return tab;
         }
 
+
         protected void setButtonsEnabled(boolean enabled) {
             if (enabled && tabContainer.getComponentCount() > 1 && tab.isCloseable()) {
                 layout.setColumn(1, 3);
@@ -560,22 +564,8 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
     }
 
-    public static class SelectTabAction extends AbstractAction {
-        private ToolWindowTab tab;
-
-        public SelectTabAction(ToolWindowTab tab) {
-            super(tab.getTitle());
-            this.tab = tab;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            tab.setSelected(true);
-        }
-    }
-
-
     protected class PopupButton extends ToolWindowActiveButton implements ActionListener {
-        private JPopupMenu popupMenu;
+        protected JPopupMenu popupMenu;
 
         public PopupButton() {
             setIcon(resourceManager.getIcon(MyDoggyKeySpace.TOO_WINDOW_TAB_POPUP));
@@ -593,7 +583,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             popupMenu.show(this, 10, 10);
         }
 
-        private void initPopup() {
+        protected void initPopup() {
             if (popupMenu == null) {
                 popupMenu = new JPopupMenu("TabPopup");
                 popupMenu.add(new SelectNextTabAction());
@@ -632,6 +622,19 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                     viewport.setViewPosition(new Point(visRect.x, visRect.y));
                     break;
             }
+        }
+    }
+
+    public static class SelectTabAction extends AbstractAction {
+        private ToolWindowTab tab;
+
+        public SelectTabAction(ToolWindowTab tab) {
+            super(tab.getTitle());
+            this.tab = tab;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            tab.setSelected(true);
         }
     }
 

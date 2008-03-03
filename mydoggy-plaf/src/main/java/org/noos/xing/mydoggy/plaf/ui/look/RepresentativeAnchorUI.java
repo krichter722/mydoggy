@@ -215,7 +215,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         c.addMouseListener(adapter);
         c.addMouseMotionListener(adapter);
 
-        descriptor.getToolWindow().addInternalPropertyChangeListener(this);
+        descriptor.getToolWindow().addPlafPropertyChangeListener(this);
     }
 
 
