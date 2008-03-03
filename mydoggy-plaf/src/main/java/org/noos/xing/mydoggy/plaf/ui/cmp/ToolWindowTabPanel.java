@@ -91,7 +91,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         setBorder(null);
         
         tabContainer = new JPanel(containerLayout = new TableLayout(new double[][]{{0},
-                                                                                   {resourceManager.getFloat("toolwindow.title.fontSize", 12)+4}})); // TODO: 16 -> -2
+                                                                                   {resourceManager.getFloat("toolwindow.title.font.size", 12)+4}})); // TODO: 16 -> -2
         tabContainer.setName("toolWindow.tabContainer." + descriptor.getToolWindow().getId());
         tabContainer.setOpaque(false);
         tabContainer.setBorder(null);
@@ -404,7 +404,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
             titleLabel.setOpaque(false);
             titleLabel.setFocusable(false);
             titleLabel.setIcon(tab.getIcon());
-            titleLabel.setFont(titleLabel.getFont().deriveFont(resourceManager.getFloat("toolwindow.title.fontSize", 12)));
+            titleLabel.setFont(titleLabel.getFont().deriveFont(resourceManager.getFloat("toolwindow.title.font.size", 12)));
             titleLabel.setUI(new BasicLabelUI() {
                 protected void paintEnabledText(JLabel l, Graphics g, String s, int textX, int textY) {
                     if (pressed && inside)
