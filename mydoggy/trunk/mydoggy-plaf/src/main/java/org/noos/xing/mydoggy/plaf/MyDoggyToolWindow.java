@@ -42,10 +42,7 @@ public class MyDoggyToolWindow extends MyDoggyDockable implements ToolWindow {
     protected ResourceBundle resourceBundle;
     protected ToolWindowDescriptor descriptor;
 
-    protected EventListenerList internalListenerList;
-    protected EventListenerList listenerList;
-
-    protected boolean publicEvent = true;
+    protected EventListenerList toolWindowListeners;
 
     protected int availablePosition;
 
@@ -57,9 +54,6 @@ public class MyDoggyToolWindow extends MyDoggyDockable implements ToolWindow {
                                 ToolWindowAnchor anchor, ToolWindowType type,
                                 String title, Icon icon, Component component,
                                 ResourceBundle resourceBundle) {
-        this.internalListenerList = new EventListenerList();
-        this.listenerList = new EventListenerList();
-
         this.descriptor = new ToolWindowDescriptor(manager, this);
         this.resourceBundle = resourceBundle;
         this.toolWindowTabs = new ArrayList<ToolWindowTab>();
@@ -421,7 +415,7 @@ public class MyDoggyToolWindow extends MyDoggyDockable implements ToolWindow {
             Icon old = this.getIcon();
             rootTab.setIcon(icon);
 
-            fireIconEvent(old, icon);
+            firePropertyChangeEvent("icon", old, icon);
         }
     }
 
@@ -438,7 +432,7 @@ public class MyDoggyToolWindow extends MyDoggyDockable implements ToolWindow {
             String old = this.getTitle();
             rootTab.setTitle(newTitle);
 
-            fireTitleEvent(old, newTitle);
+            firePropertyChangeEvent("title", old, newTitle);
         }
     }
 
@@ -473,7 +467,7 @@ public class MyDoggyToolWindow extends MyDoggyDockable implements ToolWindow {
             return;
 
         synchronized (getLock()) {
-            firePrivateEvent(new PropertyChangeEvent(descriptor, "maximized.before", this.maximized, maximized));
+            firePlafPropertyChangeEvent(new PropertyChangeEvent(descriptor, "maximized.before", this.maximized, maximized));
 
             boolean old = this.maximized;
             this.maximized = maximized;
@@ -555,15 +549,24 @@ public class MyDoggyToolWindow extends MyDoggyDockable implements ToolWindow {
     }
 
     public void addToolWindowListener(ToolWindowListener listener) {
-        listenerList.add(ToolWindowListener.class, listener);
+        if (toolWindowListeners == null)
+            toolWindowListeners = new EventListenerList();
+
+        toolWindowListeners.add(ToolWindowListener.class, listener);
     }
 
     public void removeToolWindowListener(ToolWindowListener listener) {
-        listenerList.remove(ToolWindowListener.class, listener);
+        if (toolWindowListeners == null)
+            return;
+
+        toolWindowListeners.remove(ToolWindowListener.class, listener);
     }
 
     public ToolWindowListener[] getToolWindowListeners() {
-        return listenerList.getListeners(ToolWindowListener.class);
+        if (toolWindowListeners == null)
+            return new ToolWindowListener[0];
+
+        return toolWindowListeners.getListeners(ToolWindowListener.class);
     }
 
     public ToolWindowTypeDescriptor getTypeDescriptor(ToolWindowType type) {
@@ -583,19 +586,7 @@ public class MyDoggyToolWindow extends MyDoggyDockable implements ToolWindow {
             throw new IllegalArgumentException("Cannot recognize the class type. [class : " + descriptorClass + "]");
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        listenerList.add(PropertyChangeListener.class, listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        listenerList.remove(PropertyChangeListener.class, listener);
-    }
-
-    public PropertyChangeListener[] getPropertyChangeListeners() {
-        return listenerList.getListeners(PropertyChangeListener.class);
-    }
-
-
+    
     public String toString() {
         return "MyDoggyToolWindow{" +
                "id='" + id + '\'' +
@@ -619,14 +610,6 @@ public class MyDoggyToolWindow extends MyDoggyDockable implements ToolWindow {
 
     public ToolWindowDescriptor getDescriptor() {
         return descriptor;
-    }
-
-    public void addInternalPropertyChangeListener(PropertyChangeListener listener) {
-        internalListenerList.add(PropertyChangeListener.class, listener);
-    }
-
-    public void removeInternalPropertyChangeListener(PropertyChangeListener listener) {
-        internalListenerList.remove(PropertyChangeListener.class, listener);
     }
 
 
@@ -714,7 +697,7 @@ public class MyDoggyToolWindow extends MyDoggyDockable implements ToolWindow {
         ToolWindowTab tab = new MyDoggyToolWindowTab(this, root, title, icon, component, toolWindow);
         tab.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                firePrivateEvent(evt);
+                firePlafPropertyChangeEvent(evt);
             }
         });
         toolWindowTabs.add(tab);
@@ -786,7 +769,7 @@ public class MyDoggyToolWindow extends MyDoggyDockable implements ToolWindow {
                 publicEvent = true;
             }
 
-            fireTypeEvent(oldType, type);
+            firePropertyChangeEvent("type", oldType, type);
         }
     }
 
@@ -794,62 +777,29 @@ public class MyDoggyToolWindow extends MyDoggyDockable implements ToolWindow {
     protected void firePropertyChangeEvent(String property, Object oldValue, Object newValue) {
         PropertyChangeEvent event = new PropertyChangeEvent(descriptor, property, oldValue, newValue);
         PropertyChangeEvent publicEvent = new PropertyChangeEvent(this, property, oldValue, newValue);
-        fireEvent(event, publicEvent);
+        
+        firePropertyChangeEvent(event, publicEvent);
     }
 
     protected void firePropertyChangeEvent(String property, Object oldValue, Object newValue, Object userObject) {
         PropertyChangeEvent event = new UserPropertyChangeEvent(descriptor, property, oldValue, newValue, userObject);
         PropertyChangeEvent publicEvent = new UserPropertyChangeEvent(this, property, oldValue, newValue, userObject);
-        fireEvent(event, publicEvent);
+
+        firePropertyChangeEvent(event, publicEvent);
     }
 
     protected void fireAnchorEvent(ToolWindowAnchor oldValue, ToolWindowAnchor newValue, Object userObject) {
         PropertyChangeEvent event = new UserPropertyChangeEvent(descriptor, "anchor", oldValue, newValue, userObject);
         PropertyChangeEvent publicEvent = new UserPropertyChangeEvent(this, "anchor", oldValue, newValue, userObject);
-        fireEvent(event, publicEvent);
-    }
 
-    protected void fireTypeEvent(ToolWindowType oldValue, ToolWindowType newValue) {
-        PropertyChangeEvent event = new PropertyChangeEvent(descriptor, "type", oldValue, newValue);
-        PropertyChangeEvent publicEvent = new PropertyChangeEvent(this, "type", oldValue, newValue);
-        fireEvent(event, publicEvent);
-    }
-
-    protected void fireIconEvent(Icon oldValue, Icon newValue) {
-        PropertyChangeEvent event = new PropertyChangeEvent(descriptor, "icon", oldValue, newValue);
-        PropertyChangeEvent publicEvent = new PropertyChangeEvent(this, "icon", oldValue, newValue);
-        fireEvent(event, publicEvent);
-    }
-
-    protected void fireTitleEvent(String oldValue, String newValue) {
-        PropertyChangeEvent event = new PropertyChangeEvent(descriptor, "title", oldValue, newValue);
-        PropertyChangeEvent publicEvent = new PropertyChangeEvent(this, "title", oldValue, newValue);
-        fireEvent(event, publicEvent);
-    }
-
-    protected void fireEvent(PropertyChangeEvent event, PropertyChangeEvent pblEvent) {
-        PropertyChangeListener[] listeners = internalListenerList.getListeners(PropertyChangeListener.class);
-        for (PropertyChangeListener listener : listeners) {
-            listener.propertyChange(event);
-        }
-
-        if (publicEvent) {
-            listeners = listenerList.getListeners(PropertyChangeListener.class);
-            for (PropertyChangeListener listener : listeners) {
-                listener.propertyChange(pblEvent);
-            }
-        }
-    }
-
-    protected void firePrivateEvent(PropertyChangeEvent event) {
-        PropertyChangeListener[] listeners = internalListenerList.getListeners(PropertyChangeListener.class);
-        for (PropertyChangeListener listener : listeners) {
-            listener.propertyChange(event);
-        }
+        firePropertyChangeEvent(event, publicEvent);
     }
 
     protected void fireToolWindowTabEvent(ToolWindowTabEvent event) {
-        ToolWindowListener[] listeners = internalListenerList.getListeners(ToolWindowListener.class);
+        if (toolWindowListeners == null)
+            return;
+        
+        ToolWindowListener[] listeners = toolWindowListeners.getListeners(ToolWindowListener.class);
         for (ToolWindowListener listener : listeners) {
             switch (event.getActionId()) {
                 case TAB_ADDED:
@@ -858,20 +808,6 @@ public class MyDoggyToolWindow extends MyDoggyDockable implements ToolWindow {
                 case TAB_REMOVED:
                     listener.toolWindowTabRemoved(event);
                     break;
-            }
-        }
-
-        if (publicEvent) {
-            listeners = listenerList.getListeners(ToolWindowListener.class);
-            for (ToolWindowListener listener : listeners) {
-                switch (event.getActionId()) {
-                    case TAB_ADDED:
-                        listener.toolWindowTabAdded(event);
-                        break;
-                    case TAB_REMOVED:
-                        listener.toolWindowTabRemoved(event);
-                        break;
-                }
             }
         }
     }

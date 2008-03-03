@@ -13,4 +13,10 @@ public interface PlafObservable {
 
 	PropertyChangeListener[] getPlafPropertyChangeListeners();
 
+    void addPlafPropertyChangeListener(String propertyName, PropertyChangeListener listener);
+
+    void removePlafPropertyChangeListener(String propertyName, PropertyChangeListener listener);
+
+    PropertyChangeListener[] getPlafPropertyChangeListeners(String propertyName);
+
 }

@@ -90,6 +90,30 @@ public abstract class MyDoggyDockable implements Dockable, PlafObservable {
         return plafChangeSupport.getPropertyChangeListeners();
     }
 
+    public void addPlafPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        if (listener == null)
+            return;
+
+        if (plafChangeSupport == null)
+            plafChangeSupport = initPropertyChangeSupport();
+
+        plafChangeSupport.addPropertyChangeListener(propertyName, listener);
+    }
+
+    public void removePlafPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        if (listener == null || plafChangeSupport == null)
+            return;
+
+        plafChangeSupport.removePropertyChangeListener(propertyName, listener);
+    }
+
+    public PropertyChangeListener[] getPlafPropertyChangeListeners(String propertyName) {
+        if (plafChangeSupport == null)
+            return new PropertyChangeListener[0];
+        
+        return plafChangeSupport.getPropertyChangeListeners(propertyName);
+    }
+
 
     protected PropertyChangeSupport initPropertyChangeSupport() {
         return new PropertyChangeSupport(this);
@@ -121,5 +145,14 @@ public abstract class MyDoggyDockable implements Dockable, PlafObservable {
         if (this.plafChangeSupport != null)
             this.plafChangeSupport.firePropertyChange(property, oldValue, newValue);
     }
+
+    protected void firePropertyChangeEvent(PropertyChangeEvent event, PropertyChangeEvent pblEvent) {
+        if (this.plafChangeSupport != null)
+            this.plafChangeSupport.firePropertyChange(event);
+
+        if (publicEvent && this.publicChangeSupport != null)
+            this.publicChangeSupport.firePropertyChange(pblEvent);
+    }
+
     
 }

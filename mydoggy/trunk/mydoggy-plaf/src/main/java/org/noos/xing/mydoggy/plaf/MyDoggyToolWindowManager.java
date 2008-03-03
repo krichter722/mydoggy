@@ -148,7 +148,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                                                              ToolWindowType.DOCKED,
                                                              title, icon, component,
                                                              null);
-        toolWindow.addInternalPropertyChangeListener(this);
+        toolWindow.addPlafPropertyChangeListener(this);
 
         tools.put(toolWindow.getId(), toolWindow.getDescriptor());
 
