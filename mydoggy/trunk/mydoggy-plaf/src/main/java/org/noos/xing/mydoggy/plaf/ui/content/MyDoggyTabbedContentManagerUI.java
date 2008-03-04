@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDialog;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ContentFrame;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
@@ -151,7 +152,6 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
     }
 
 
-
     public PlafContentManagerUI install(ContentManagerUI oldContentManagerUI, ToolWindowManager manager) {
         // Init managers
         this.toolWindowManager = (MyDoggyToolWindowManager) manager;
@@ -176,6 +176,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         lastSelected = null;
         Content selectedContent = null;
         contentValueAdjusting = true;
+        // TODO: we should import content UI proprs...
         for (Content content : contentManager.getContents()) {
             if (content.isSelected())
                 selectedContent = content;
@@ -286,7 +287,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         if (selected) {
             if (lastSelected != null)
                 lastSelected.setSelected(false);
-            
+
             if (content.isDetached()) {
                 // If the content is detached request the focus for owner window
                 SwingUtil.requestFocus(
@@ -387,7 +388,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                         }
                     }
 
-                    if (newSelected != null)  {
+                    if (newSelected != null) {
 //                        newSelected.fireSelected(true);
                         newSelected.setSelected(true);
                     }
@@ -730,8 +731,14 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                     }
 
                     // Setup dialog
-                    JDialog dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI, 
-                                                       parentFrame);
+                    Window dialog;
+                    if (contentUI.isAddToTaskBar()) {
+                        dialog = new ContentFrame(resourceManager, (PlafContent) content, contentUI,
+                                                  parentFrame);
+                    } else {
+                        dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI,
+                                                   parentFrame);
+                    }
                     dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
                     dialog.toFront();
                     dialog.setVisible(true);
@@ -764,9 +771,13 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         public void propertyChange(PropertyChangeEvent evt) {
             ContentUI contentUI = (ContentUI) evt.getSource();
 
-            if ("detachedBounds".equals(evt.getPropertyName()) && contentUI.getContent().isDetached()) {
-                Window window = SwingUtilities.windowForComponent(contentUI.getContent().getComponent());
-                window.setBounds((Rectangle) evt.getNewValue());
+            if (contentUI.getContent().isDetached()) {
+                if ("detachedBounds".equals(evt.getPropertyName())) {
+                    Window window = SwingUtilities.windowForComponent(contentUI.getContent().getComponent());
+                    window.setBounds((Rectangle) evt.getNewValue());
+                } else if ("addToTaskBar".equals(evt.getPropertyName())) {
+                    // TODO: add to all contentmanager UI
+                }
             }
         }
     }
@@ -843,10 +854,10 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                 return;
 
             if (componentInFocusRequest != null) {
-                if  (evt.getNewValue() == componentInFocusRequest)
+                if (evt.getNewValue() == componentInFocusRequest)
                     componentInFocusRequest = null;
                 else
-                    return;                                        
+                    return;
             }
 
             if (evt.getNewValue() != null) {
@@ -857,9 +868,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                         Content content = tabbedContentPane.getContentAt(index);
                         if (!content.isSelected() && !content.isDetached())
                             content.setSelected(true);
-                        
+
                         break;
-                    } 
+                    }
                     cursor = cursor.getParent();
                 }
             }

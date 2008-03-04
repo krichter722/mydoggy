@@ -50,4 +50,17 @@ public interface Observable {
      * @since 1.4.0
      */
 	PropertyChangeListener[] getPropertyChangeListeners();
+
+    /**
+     *
+     * @param propertyName
+     * @param listener
+     * TODO: add java doc...
+     */
+    void addPropertyChangeListener(String propertyName, PropertyChangeListener listener);
+
+    void removePropertyChangeListener(String propertyName, PropertyChangeListener listener);
+
+    PropertyChangeListener[] getPropertyChangeListeners(String propertyName);
+
 }

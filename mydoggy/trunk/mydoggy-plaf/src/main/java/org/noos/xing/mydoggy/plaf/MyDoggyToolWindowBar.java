@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf;
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
 import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
@@ -24,7 +25,7 @@ import java.util.Map;
 /**
  * @author Angelo De Caro
  */
-public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListener {
+public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements SwingConstants, PropertyChangeListener {
     public static final int VERTICAL_LEFT = TextIcon.ROTATE_LEFT;
     public static final int VERTICAL_RIGHT = TextIcon.ROTATE_RIGHT;
     public static final int HORIZONTAL = TextIcon.ROTATE_NONE;
@@ -53,6 +54,7 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     protected boolean tempShowed;
 
     boolean valueAdjusting = false;
+
 
     MyDoggyToolWindowBar(MyDoggyToolWindowManager manager, JSplitPane splitPane, ToolWindowAnchor anchor) {
         this.manager = manager;
@@ -123,9 +125,10 @@ public class MyDoggyToolWindowBar implements SwingConstants, PropertyChangeListe
     public void setTempShowed(boolean tempShowed) {
         boolean old = this.tempShowed;
         this.tempShowed = tempShowed;
+
         manager.syncPanel(anchor);
 
-        manager.propertyChange(new PropertyChangeEvent(this, "tempShowed", old, tempShowed));
+        firePropertyChangeEvent("tempShowed", old, tempShowed);
     }
 
     public int getRepresentativeAnchorIndex(JLabel representativeAnchor) {

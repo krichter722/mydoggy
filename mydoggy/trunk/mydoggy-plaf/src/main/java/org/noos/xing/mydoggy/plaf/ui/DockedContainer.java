@@ -300,7 +300,7 @@ public class DockedContainer implements ToolWindowContainer {
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getSource() != descriptor ||
                         (evt.getNewValue() != ToolWindowType.FLOATING &&
-                        evt.getNewValue() != ToolWindowType.FLOATING_FREE))
+                         evt.getNewValue() != ToolWindowType.FLOATING_FREE))
                         return;
 
                     oldType = (ToolWindowType) evt.getOldValue();
@@ -779,7 +779,7 @@ public class DockedContainer implements ToolWindowContainer {
                 try {
                     descriptor.getManager().getPersistenceDelegate().merge(new ByteArrayInputStream(workspace.toByteArray()),
                                                                            resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
-                                                                                               PersistenceDelegate.MergePolicy.UNION));
+                                                                                                     PersistenceDelegate.MergePolicy.UNION));
                     workspace = null;
                 } finally {
                     valueAdj = false;

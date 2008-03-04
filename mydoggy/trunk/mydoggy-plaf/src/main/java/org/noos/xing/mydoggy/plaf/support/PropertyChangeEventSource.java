@@ -1,6 +1,4 @@
-package org.noos.xing.mydoggy.plaf;
-
-import org.noos.xing.mydoggy.Dockable;
+package org.noos.xing.mydoggy.plaf.support;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -9,14 +7,16 @@ import java.beans.PropertyChangeSupport;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public abstract class MyDoggyDockable implements Dockable, PlafObservable {
+public class PropertyChangeEventSource {
     protected PropertyChangeSupport publicChangeSupport;
     protected PropertyChangeSupport plafChangeSupport;
     protected boolean publicEvent;
 
-    protected MyDoggyDockable() {
+
+    protected PropertyChangeEventSource() {
         this.publicEvent = true;
     }
+
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         if (listener == null)

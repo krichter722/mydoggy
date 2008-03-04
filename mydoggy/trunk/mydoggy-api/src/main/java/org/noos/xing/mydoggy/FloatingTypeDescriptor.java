@@ -143,7 +143,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
     int getTransparentDelay();
 
     /**
-     * TODO: add also to contentUI
+     * TODO: javadocs
      * @param addToTaskBar
      * @since 1.4.2
      */

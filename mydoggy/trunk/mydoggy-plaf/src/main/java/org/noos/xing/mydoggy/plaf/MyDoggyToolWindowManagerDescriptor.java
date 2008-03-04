@@ -2,10 +2,10 @@ package org.noos.xing.mydoggy.plaf;
 
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
+import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
-import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -17,7 +17,7 @@ import java.util.Stack;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDescriptor, PropertyChangeListener, MostRecentDescriptor {
+public class MyDoggyToolWindowManagerDescriptor extends PropertyChangeEventSource implements ToolWindowManagerDescriptor, PropertyChangeListener, MostRecentDescriptor {
     protected PushAwayMode pushAwayMode;
     protected MyDoggyToolWindowManager manager;
     protected boolean numberingEnabled;
@@ -28,14 +28,12 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
     protected Map<ToolWindowAnchor, Integer> dividerSizes;
     protected Map<ToolWindowAnchor, Boolean> aggregateModes;
 
-    protected EventListenerList listenerList;
 
     public MyDoggyToolWindowManagerDescriptor(MyDoggyToolWindowManager manager) {
         this.manager = manager;
         this.pushAwayMode = PushAwayMode.VERTICAL;
         this.numberingEnabled = this.previewEnabled = true;
         this.showUnavailableTools = false;
-        this.listenerList = new EventListenerList();
 
         this.dividerSizes = new Hashtable<ToolWindowAnchor, Integer>();
         setDividerSize(LEFT, 3);
@@ -176,7 +174,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         // fire changing
         PushAwayMode old = this.pushAwayMode;
         this.pushAwayMode = pushAwayMode;
-        firePropertyChange("pushAwayMode", old, this.pushAwayMode);
+        firePropertyChangeEvent("pushAwayMode", old, this.pushAwayMode);
     }
 
     public PushAwayMode getPushAwayMode() {
@@ -203,7 +201,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         boolean old = this.numberingEnabled;
         this.numberingEnabled = numberingEnabled;
 
-        firePropertyChange("numberingEnabled", old, numberingEnabled);
+        firePropertyChangeEvent("numberingEnabled", old, numberingEnabled);
     }
 
     public boolean isNumberingEnabled() {
@@ -217,7 +215,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         boolean old = this.previewEnabled;
         this.previewEnabled = previewEnabled;
 
-        firePropertyChange("previewEnabled", old, previewEnabled);
+        firePropertyChangeEvent("previewEnabled", old, previewEnabled);
     }
 
     public boolean isPreviewEnabled() {
@@ -234,7 +232,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
             return;
 
         dividerSizes.put(anchor, size);
-        firePropertyChange("dividerSize", new Object[]{anchor, oldSize}, new Object[]{anchor, size});
+        firePropertyChangeEvent("dividerSize", new Object[]{anchor, oldSize}, new Object[]{anchor, size});
     }
 
     public void setAggregateMode(ToolWindowAnchor anchor, boolean enable) {
@@ -243,7 +241,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
             return;
 
         aggregateModes.put(anchor, enable);
-        firePropertyChange("aggregateMode", new Object[]{anchor, oldValue}, new Object[]{anchor, enable});
+        firePropertyChangeEvent("aggregateMode", new Object[]{anchor, oldValue}, new Object[]{anchor, enable});
     }
 
     public boolean isAggregateMode(ToolWindowAnchor anchor) {
@@ -257,7 +255,7 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         boolean old = this.showUnavailableTools;
         this.showUnavailableTools = showUnavailableTools;
 
-        firePropertyChange("showUnavailableTools", old, showUnavailableTools);
+        firePropertyChangeEvent("showUnavailableTools", old, showUnavailableTools);
     }
 
     public boolean isShowUnavailableTools() {
@@ -265,22 +263,8 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
     }
 
 
-    public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-        if (listenerList == null)
-            listenerList = new EventListenerList();
-        listenerList.add(PropertyChangeListener.class, propertyChangeListener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        listenerList.remove(PropertyChangeListener.class, listener);
-    }
-
-    public PropertyChangeListener[] getPropertyChangeListeners() {
-        return listenerList.getListeners(PropertyChangeListener.class);
-    }
-
-
     public void propertyChange(PropertyChangeEvent evt) {
+        // TODO:...
         if ("visible".equals(evt.getPropertyName())) {
             if (((Boolean) evt.getNewValue())) {
                 ToolWindowAnchor target = ((ToolWindowDescriptor) evt.getSource()).getToolWindow().getAnchor();
@@ -388,13 +372,5 @@ public class MyDoggyToolWindowManagerDescriptor implements ToolWindowManagerDesc
         }
     }
 
-
-    protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-        PropertyChangeListener[] listeners = listenerList.getListeners(PropertyChangeListener.class);
-        PropertyChangeEvent event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
-        for (PropertyChangeListener listener : listeners) {
-            listener.propertyChange(event);
-        }
-    }
 
 }

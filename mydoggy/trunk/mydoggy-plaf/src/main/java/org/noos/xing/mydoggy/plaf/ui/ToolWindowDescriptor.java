@@ -87,7 +87,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         } else if ("idVisibleOnTitleBar".equals(propertyName)) {
             setIdOnTitleBar();
         } else if ("autoHide".equals(propertyName)) {
-            manager.propertyChange(new PropertyChangeEvent(this, propertyName, evt.getOldValue(), evt.getNewValue()));
+            getToolWindowContainer().propertyChange(evt);
         }
     }
 

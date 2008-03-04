@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
 import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;
@@ -16,7 +17,6 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.EventListenerList;
 import javax.swing.plaf.ButtonUI;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.LabelUI;
@@ -24,15 +24,13 @@ import javax.swing.plaf.PanelUI;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyResourceManager implements ResourceManager {
+public class MyDoggyResourceManager extends PropertyChangeEventSource implements ResourceManager {
 
     private static final String resourceName = "resources.properties";
 
@@ -52,13 +50,11 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     protected TransparencyManager<Window> transparencyManager;
 
-    protected EventListenerList listenerList;
 
     public MyDoggyResourceManager() {
         this.icons = new Hashtable<String, Icon>();
         this.colors = new Hashtable<String, Color>();
         this.images = new Hashtable<String, BufferedImage>();
-        this.listenerList = new EventListenerList();
 
         loadResources();
         initComponentCreators();
@@ -84,7 +80,7 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     public Color putColor(String id, Color color) {
         Color oldColor = colors.put(id, color);
-        fireColorChanged(id, oldColor, color);
+        firePropertyChangeEvent(id, oldColor, color); // TODO: is this valid ???
         return oldColor;
     }
 
@@ -200,17 +196,6 @@ public class MyDoggyResourceManager implements ResourceManager {
         return defaultValue;
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener changeListener) {
-        listenerList.add(PropertyChangeListener.class, changeListener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener changeListener) {
-        listenerList.remove(PropertyChangeListener.class, changeListener);
-    }
-
-    public PropertyChangeListener[] getPropertyChangeListeners() {
-        return listenerList.getListeners(PropertyChangeListener.class);
-    }
 
     public void putInstanceCreator(Class aClass, InstanceCreator instanceCreator) {
         instanceCreators.put(aClass, instanceCreator);
@@ -383,13 +368,6 @@ public class MyDoggyResourceManager implements ResourceManager {
 
     protected void initTransparencyManager() {
         setTransparencyManager(new WindowTransparencyManager());
-    }
-
-    protected void fireColorChanged(String key, Color oldValue, Color newValue) {
-        PropertyChangeEvent event = new PropertyChangeEvent(this, key, oldValue, newValue);
-        for (PropertyChangeListener listener : listenerList.getListeners(PropertyChangeListener.class)) {
-            listener.propertyChange(event);
-        }
     }
 
 

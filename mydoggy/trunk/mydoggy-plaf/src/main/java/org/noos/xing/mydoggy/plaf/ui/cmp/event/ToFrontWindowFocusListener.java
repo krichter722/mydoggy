@@ -1,6 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp.event;
 
-import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 
@@ -10,10 +10,10 @@ import java.awt.event.WindowFocusListener;
 public class ToFrontWindowFocusListener implements WindowFocusListener {
     protected long start;
     protected long end;
-    protected JDialog dialog;
+    protected Window window;
 
-    public ToFrontWindowFocusListener(JDialog dialog) {
-        this.dialog = dialog;
+    public ToFrontWindowFocusListener(Window window) {
+        this.window = window;
     }
 
     public void windowGainedFocus(WindowEvent e) {
@@ -25,8 +25,8 @@ public class ToFrontWindowFocusListener implements WindowFocusListener {
         long elapsed = end - start;
         //System.out.println(elapsed);
         if (elapsed < 100)
-            dialog.toFront();
+            window.toFront();
 
-        dialog.removeWindowFocusListener(this);
+        window.removeWindowFocusListener(this);
     }
 }

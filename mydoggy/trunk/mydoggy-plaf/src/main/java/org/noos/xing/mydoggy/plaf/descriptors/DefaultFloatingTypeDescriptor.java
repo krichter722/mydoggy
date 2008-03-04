@@ -2,8 +2,8 @@ package org.noos.xing.mydoggy.plaf.descriptors;
 
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
+import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 
-import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -11,7 +11,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
+public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource implements FloatingTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
     private Point location;
     private Dimension size;
 
@@ -25,8 +25,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
     private boolean animating;
     private boolean autoHide;
     private boolean idVisibleOnTitleBar;
-
-    private EventListenerList listenerList;
+    private boolean addToTaskBar;
 
     public DefaultFloatingTypeDescriptor() {
         transparentMode = true;
@@ -37,11 +36,13 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         animating = true;
         autoHide = false;
         idVisibleOnTitleBar = true;
+        addToTaskBar = false;
     }
 
     public DefaultFloatingTypeDescriptor(DefaultFloatingTypeDescriptor parent, Point location, Dimension size,
                                          int transparentDelay, float transparentRatio, boolean useTransparentMode,
-                                         boolean modal, boolean enabled, boolean animating, boolean autoHide, boolean idVisibleOnTitleBar) {
+                                         boolean modal, boolean enabled, boolean animating, boolean autoHide, boolean idVisibleOnTitleBar,
+                                         boolean addToTaskBar) {
         this.location = location;
         this.size = size;
         this.transparentDelay = transparentDelay;
@@ -52,6 +53,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         this.animating = animating;
         this.autoHide = autoHide;
         this.idVisibleOnTitleBar = idVisibleOnTitleBar;
+        this.addToTaskBar = addToTaskBar;
 
         parent.addPropertyChangeListener(this);
     }
@@ -64,7 +66,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         Point old = this.location;
         this.location = newLocation;
 
-        firePropertyChange("location", old, location);
+        firePropertyChangeEvent("location", old, location);
     }
 
     public void setSize(int width, int height) {
@@ -75,7 +77,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         Dimension old = this.size;
         this.size = newSize;
 
-        firePropertyChange("size", old, size);
+        firePropertyChangeEvent("size", old, size);
     }
 
     public Point getLocation() {
@@ -97,7 +99,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         boolean old = this.modal;
         this.modal = modal;
 
-        firePropertyChange("modal", old, modal);
+        firePropertyChangeEvent("modal", old, modal);
     }
 
     public float getTransparentRatio() {
@@ -114,7 +116,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         float old = this.transparentRatio;
         this.transparentRatio = transparentRatio;
 
-        firePropertyChange("transparentRatio", old, transparentRatio);
+        firePropertyChangeEvent("transparentRatio", old, transparentRatio);
     }
 
     public boolean isTransparentMode() {
@@ -128,7 +130,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         boolean old = this.transparentMode;
         this.transparentMode = transparentMode;
 
-        firePropertyChange("transparentMode", old, transparentMode);
+        firePropertyChangeEvent("transparentMode", old, transparentMode);
     }
 
     public int getTransparentDelay() {
@@ -136,11 +138,17 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
     }
 
     public void setAddToTaskBar(boolean addToTaskBar) {
-        // TODO:
+        if (this.addToTaskBar == addToTaskBar)
+            return;
+
+        boolean old = this.addToTaskBar;
+        this.addToTaskBar = addToTaskBar;
+
+        firePropertyChangeEvent("addToTaskBar", old, addToTaskBar);
     }
 
     public boolean isAddToTaskBar() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return addToTaskBar;
     }
 
     public void setEnabled(boolean enabled) {
@@ -150,7 +158,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         boolean old = this.enabled;
         this.enabled = enabled;
 
-        firePropertyChange("enabled", old, enabled);
+        firePropertyChangeEvent("enabled", old, enabled);
     }
 
     public boolean isEnabled() {
@@ -164,7 +172,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         int old = this.transparentDelay;
         this.transparentDelay = transparentDelay;
 
-        firePropertyChange("transparentDelay", old, transparentDelay);
+        firePropertyChangeEvent("transparentDelay", old, transparentDelay);
     }
 
     public boolean isAnimating() {
@@ -177,7 +185,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
 
         boolean old = this.animating;
         this.animating = animating;
-        firePropertyChange("animating", old, animating);
+        firePropertyChangeEvent("animating", old, animating);
     }
 
     public void setIdVisibleOnTitleBar(boolean idVisibleOnTitleBar) {
@@ -186,7 +194,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
 
         boolean old = this.idVisibleOnTitleBar;
         this.idVisibleOnTitleBar = idVisibleOnTitleBar;
-        firePropertyChange("idVisibleOnTitleBar", old, idVisibleOnTitleBar);
+        firePropertyChangeEvent("idVisibleOnTitleBar", old, idVisibleOnTitleBar);
     }
 
     public boolean isIdVisibleOnTitleBar() {
@@ -197,7 +205,7 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
         boolean old = this.autoHide;
         this.autoHide = autoHide;
 
-        firePropertyChange("autoHide", old, autoHide);
+        firePropertyChangeEvent("autoHide", old, autoHide);
     }
 
     public boolean isAutoHide() {
@@ -208,10 +216,12 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
     public ToolWindowTypeDescriptor cloneMe() {
         return new DefaultFloatingTypeDescriptor(this, location, size, transparentDelay,
                                                  transparentRatio, transparentMode,
-                                                 modal, enabled, animating, this.autoHide, idVisibleOnTitleBar);
+                                                 modal, enabled, animating, autoHide,
+                                                 idVisibleOnTitleBar,
+                                                 addToTaskBar);
     }
 
-    public void propertyChange(PropertyChangeEvent evt) {
+    public void propertyChange(PropertyChangeEvent evt) {        
         if ("location".equals(evt.getPropertyName())) {
             Point p = (Point) evt.getNewValue();
             setLocation(p.x, p.y);
@@ -228,32 +238,14 @@ public class DefaultFloatingTypeDescriptor implements FloatingTypeDescriptor, Pr
             setTransparentDelay((Integer) evt.getNewValue());
         } else if ("enabled".equals(evt.getPropertyName())) {
             setEnabled((Boolean) evt.getNewValue());
-        }
-    }
-
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        if (listenerList == null)
-            listenerList = new EventListenerList();
-        listenerList.add(PropertyChangeListener.class, listener);
-    }
-
-    public PropertyChangeListener[] getPropertyChangeListeners() {
-        return listenerList.getListeners(PropertyChangeListener.class);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        listenerList.remove(PropertyChangeListener.class, listener);
-    }
-
-    private void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-        if (listenerList != null) {
-            PropertyChangeEvent event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
-
-            PropertyChangeListener[] listeners = listenerList.getListeners(PropertyChangeListener.class);
-            for (PropertyChangeListener listener : listeners) {
-                listener.propertyChange(event);
-            }
+        } else if ("autoHide".equals(evt.getPropertyName())) {
+            setAutoHide((Boolean) evt.getNewValue());
+        } else if ("animating".equals(evt.getPropertyName())) {
+            setAnimating((Boolean) evt.getNewValue());
+        } else if ("idVisibleOnTitleBar".equals(evt.getPropertyName())) {
+            setIdVisibleOnTitleBar((Boolean) evt.getNewValue());
+        } else if ("addToTaskBar".equals(evt.getPropertyName())) {
+            setAddToTaskBar((Boolean) evt.getNewValue());
         }
     }
 

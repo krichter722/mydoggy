@@ -2,17 +2,15 @@ package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.TabbedContentUI;
+import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentPane;
 
-import javax.swing.event.EventListenerList;
 import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
 */
-public class MyDoggyTabbedContentUI implements TabbedContentUI {
+public class MyDoggyTabbedContentUI extends PropertyChangeEventSource implements TabbedContentUI {
     protected JTabbedContentPane tabbedContentPane;
 
     protected Content content;
@@ -22,17 +20,16 @@ public class MyDoggyTabbedContentUI implements TabbedContentUI {
     protected float transparentRatio;
     protected int transparentDelay;
     protected Rectangle detachedBounds;
-
-    protected EventListenerList listenerList;
+    protected boolean addToTaskBar;
 
     public MyDoggyTabbedContentUI(JTabbedContentPane tabbedContentPane, Content content) {
         this.tabbedContentPane = tabbedContentPane;
         this.content = content;
-        this.listenerList = new EventListenerList();
         this.closable = this.detachable = true;
         this.transparentMode = true;
         this.transparentRatio = 0.7f;
         this.transparentDelay = 0;
+        this.addToTaskBar = true; // TODO: change
     }
 
     public Content getContent() {
@@ -50,7 +47,7 @@ public class MyDoggyTabbedContentUI implements TabbedContentUI {
         boolean old = this.closable;
         this.closable = closable;
 
-        fireEvent("closable", old, closable);
+        firePropertyChangeEvent("closable", old, closable);
     }
 
     public boolean isDetachable() {
@@ -64,7 +61,7 @@ public class MyDoggyTabbedContentUI implements TabbedContentUI {
         boolean old = this.detachable;
         this.detachable = detachable;
 
-        fireEvent("detachable", old, detachable);
+        firePropertyChangeEvent("detachable", old, detachable);
     }
 
     public boolean isTransparentMode() {
@@ -78,7 +75,7 @@ public class MyDoggyTabbedContentUI implements TabbedContentUI {
         boolean old = this.transparentMode;
         this.transparentMode = transparentMode;
 
-        fireEvent("transparentMode", old, transparentMode);
+        firePropertyChangeEvent("transparentMode", old, transparentMode);
     }
 
     public float getTransparentRatio() {
@@ -92,7 +89,7 @@ public class MyDoggyTabbedContentUI implements TabbedContentUI {
         float old = this.transparentRatio;
         this.transparentRatio = transparentRatio;
 
-        fireEvent("transparentRatio", old, transparentRatio);
+        firePropertyChangeEvent("transparentRatio", old, transparentRatio);
     }
 
     public int getTransparentDelay() {
@@ -106,7 +103,7 @@ public class MyDoggyTabbedContentUI implements TabbedContentUI {
         int old = this.transparentDelay;
         this.transparentDelay = transparentDelay;
 
-        fireEvent("transparentDelay", old, transparentDelay);
+        firePropertyChangeEvent("transparentDelay", old, transparentDelay);
     }
 
     public void setConstraints(Object... constraints) {
@@ -123,26 +120,20 @@ public class MyDoggyTabbedContentUI implements TabbedContentUI {
             return;
         
         this.detachedBounds = detachedBounds;
-        fireEvent("detachedBounds", null, detachedBounds);
+        firePropertyChangeEvent("detachedBounds", null, detachedBounds);
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        listenerList.add(PropertyChangeListener.class, listener);
+    public void setAddToTaskBar(boolean addToTaskBar) {
+        if (this.addToTaskBar == addToTaskBar)
+            return;
+
+        boolean old = this.addToTaskBar;
+        this.addToTaskBar = addToTaskBar;
+
+        firePropertyChangeEvent("addToTaskBar", old, addToTaskBar);
     }
 
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        listenerList.remove(PropertyChangeListener.class, listener);
-    }
-
-    public PropertyChangeListener[] getPropertyChangeListeners() {
-        return listenerList.getListeners(PropertyChangeListener.class);
-    }
-
-
-    protected void fireEvent(String property, Object oldValue, Object newValue) {
-        PropertyChangeEvent event = new PropertyChangeEvent(this, property, oldValue, newValue);
-        for (PropertyChangeListener listener : getPropertyChangeListeners()) {
-            listener.propertyChange(event);
-        }
+    public boolean isAddToTaskBar() {
+        return addToTaskBar;
     }
 }

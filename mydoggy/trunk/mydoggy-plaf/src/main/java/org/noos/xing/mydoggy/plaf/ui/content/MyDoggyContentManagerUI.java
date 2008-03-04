@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.content;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 
 import javax.swing.event.EventListenerList;
@@ -15,7 +16,7 @@ import java.beans.PropertyChangeSupport;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public abstract class MyDoggyContentManagerUI {
+public abstract class MyDoggyContentManagerUI extends PropertyChangeEventSource {
     protected ContentManagerUI contentManagerUI;
     protected MyDoggyToolWindowManager toolWindowManager;
     protected ContentManager contentManager;
@@ -49,18 +50,6 @@ public abstract class MyDoggyContentManagerUI {
         return detachable;
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        contentManagerUIListeners.add(PropertyChangeListener.class, listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        contentManagerUIListeners.remove(PropertyChangeListener.class, listener);
-    }
-
-    public PropertyChangeListener[] getPropertyChangeListeners() {
-        return contentManagerUIListeners.getListeners(PropertyChangeListener.class);
-    }
-
     public void addContentManagerUIListener(ContentManagerUIListener listener) {
         contentManagerUIListeners.add(ContentManagerUIListener.class, listener);
     }
@@ -76,6 +65,7 @@ public abstract class MyDoggyContentManagerUI {
     public void setContentManagerUI(ContentManagerUI contentManagerUI) {
         this.contentManagerUI = contentManagerUI;
     }
+
 
     protected boolean fireContentUIRemoving(ContentUI contentUI) {
         ContentManagerUIEvent event = new ContentManagerUIEvent(contentManagerUI, ContentManagerUIEvent.ActionId.CONTENTUI_REMOVING, contentUI);
@@ -95,10 +85,7 @@ public abstract class MyDoggyContentManagerUI {
     }
 
     protected void fireContentManagerUIProperty(String property, Object oldValue, Object newValue) {
-        PropertyChangeEvent event = new PropertyChangeEvent(contentManagerUI, property, oldValue, newValue);
-        for (PropertyChangeListener listener : contentManagerUIListeners.getListeners(PropertyChangeListener.class)) {
-            listener.propertyChange(event);
-        }
+        firePropertyChangeEvent(new PropertyChangeEvent(contentManagerUI, property, oldValue, newValue));
     }
 
     

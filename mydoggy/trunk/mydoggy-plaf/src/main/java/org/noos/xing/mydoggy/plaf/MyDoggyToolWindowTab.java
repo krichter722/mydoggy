@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf;
 import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowTab;
+import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyToolWindowTab extends MyDoggyDockable implements ToolWindowTab {
+public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements ToolWindowTab {
     protected boolean root;
     protected String id;
     protected ToolWindow owner;

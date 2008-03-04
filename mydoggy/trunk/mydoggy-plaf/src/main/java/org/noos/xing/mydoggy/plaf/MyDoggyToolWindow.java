@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
+import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
@@ -16,7 +17,7 @@ import java.util.ResourceBundle;
 /**
  * @author Angelo De Caro
  */
-public class MyDoggyToolWindow extends MyDoggyDockable implements ToolWindow {
+public class MyDoggyToolWindow extends PropertyChangeEventSource implements ToolWindow {
     static final Object LOCK = new ToolWindowLock();
 
     static class ToolWindowLock {

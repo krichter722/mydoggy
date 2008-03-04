@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.PersistenceDelegate;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDialog;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ContentFrame;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DesktopContentFrame;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
 import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
@@ -571,11 +572,18 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                     throw new IllegalStateException("Invalid Content : " + content);
 
                 // Setup dialog
-                JDialog dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI,
-                                                   parentFrame);
+                Window dialog;
+                if (contentUI.isAddToTaskBar()) {
+                    dialog = new ContentFrame(resourceManager, (PlafContent) content, contentUI,
+                                              parentFrame);
+                } else {
+                    dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI,
+                                               parentFrame);
+                }
                 dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
                 dialog.toFront();
                 dialog.setVisible(true);
+
                 SwingUtil.repaint(desktopPane);
                 SwingUtil.requestFocus(dialog);
             } else if (oldValue && !newValue) {
