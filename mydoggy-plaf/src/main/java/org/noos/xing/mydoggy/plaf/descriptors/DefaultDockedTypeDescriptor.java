@@ -3,17 +3,17 @@ package org.noos.xing.mydoggy.plaf.descriptors;
 import org.noos.xing.mydoggy.DockedTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowActionHandler;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
+import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 
 import javax.swing.*;
-import javax.swing.event.EventListenerList;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
+public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource implements DockedTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
     private transient ResourceManager resourceManager;
 
     private ToolWindowActionHandler toolWindowActionHandler;
@@ -28,8 +28,6 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
     private float previewTransparentRatio;
     private boolean hideRepresentativeButtonOnVisible;
     private boolean idVisibleOnTitleBar;
-
-    private EventListenerList listenerList;
 
     public DefaultDockedTypeDescriptor(ResourceManager resourceManager) {
         this.resourceManager = resourceManager;
@@ -64,8 +62,6 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         this.hideRepresentativeButtonOnVisible = hideRepresentativeButtonOnVisible;
         this.idVisibleOnTitleBar = idVisibleOnTitleBar;
 
-        this.listenerList = new EventListenerList();
-
         parent.addPropertyChangeListener(this);
     }
 
@@ -73,7 +69,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         boolean old = this.popupMenuEnabled;
         this.popupMenuEnabled = enabled;
 
-        firePropertyChange("popupMenuEnabled", old, enabled);
+        firePropertyChangeEvent("popupMenuEnabled", old, enabled);
     }
 
     public boolean isPopupMenuEnabled() {
@@ -92,7 +88,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         int old = this.dockLength;
         this.dockLength = dockLength;
 
-        firePropertyChange("dockLength", old, dockLength);
+        firePropertyChangeEvent("dockLength", old, dockLength);
     }
 
     public ToolWindowActionHandler getToolWindowActionHandler() {
@@ -103,7 +99,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         ToolWindowActionHandler old = this.toolWindowActionHandler;
         this.toolWindowActionHandler = toolWindowActionHandler;
 
-        firePropertyChange("toolWindowActionHandler", old, toolWindowActionHandler);
+        firePropertyChangeEvent("toolWindowActionHandler", old, toolWindowActionHandler);
     }
 
     public boolean isPreviewEnabled() {
@@ -116,7 +112,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
 
         boolean old = this.previewEnabled;
         this.previewEnabled = previewEnabled;
-        firePropertyChange("previewEnabled", old, previewEnabled);
+        firePropertyChangeEvent("previewEnabled", old, previewEnabled);
     }
 
     public int getPreviewDelay() {
@@ -129,7 +125,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
 
         int old = this.previewDelay;
         this.previewDelay = previewDelay;
-        firePropertyChange("previewDelay", old, previewDelay);
+        firePropertyChangeEvent("previewDelay", old, previewDelay);
     }
 
     public float getPreviewTransparentRatio() {
@@ -142,7 +138,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
 
         boolean old = this.hideRepresentativeButtonOnVisible;
         this.hideRepresentativeButtonOnVisible = hideRepresentativeButtonOnVisible;
-        firePropertyChange("hideRepresentativeButtonOnVisible", old, hideRepresentativeButtonOnVisible);
+        firePropertyChangeEvent("hideRepresentativeButtonOnVisible", old, hideRepresentativeButtonOnVisible);
     }
 
     public boolean isHideRepresentativeButtonOnVisible() {
@@ -155,7 +151,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
 
         boolean old = this.idVisibleOnTitleBar;
         this.idVisibleOnTitleBar = idVisibleOnTitleBar;
-        firePropertyChange("idVisibleOnTitleBar", old, idVisibleOnTitleBar);
+        firePropertyChangeEvent("idVisibleOnTitleBar", old, idVisibleOnTitleBar);
     }
 
     public boolean isIdVisibleOnTitleBar() {
@@ -166,7 +162,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         boolean old = this.autoHide;
         this.autoHide = autoHide;
 
-        firePropertyChange("autoHide", old, autoHide);
+        firePropertyChangeEvent("autoHide", old, autoHide);
     }
 
     public boolean isAutoHide() {
@@ -179,7 +175,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
 
         float old = this.previewTransparentRatio;
         this.previewTransparentRatio = previewTransparentRatio;
-        firePropertyChange("previewTransparentRatio", old, previewTransparentRatio);
+        firePropertyChangeEvent("previewTransparentRatio", old, previewTransparentRatio);
     }
 
     public boolean isAnimating() {
@@ -192,7 +188,7 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
 
         boolean old = this.animating;
         this.animating = animating;
-        firePropertyChange("animating", old, animating);
+        firePropertyChangeEvent("animating", old, animating);
     }
 
     public void setEnabled(boolean enabled) {
@@ -204,24 +200,6 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
         return true;
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-        if (listenerList == null)
-            listenerList = new EventListenerList();
-        listenerList.add(PropertyChangeListener.class, propertyChangeListener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        if (listenerList == null)
-            return;
-        listenerList.remove(PropertyChangeListener.class, listener);
-    }
-
-    public PropertyChangeListener[] getPropertyChangeListeners() {
-        if (listenerList == null)
-            return new PropertyChangeListener[0];
-        return listenerList.getListeners(PropertyChangeListener.class);
-    }
-
     public ToolWindowTypeDescriptor cloneMe() {
         return new DefaultDockedTypeDescriptor(this, resourceManager, dockLength, popupMenuEnabled,
                                                toolWindowActionHandler, animating,
@@ -231,34 +209,25 @@ public class DefaultDockedTypeDescriptor implements DockedTypeDescriptor, Proper
 
     public void propertyChange(PropertyChangeEvent evt) {
         if ("popupMenuEnabled".equals(evt.getPropertyName())) {
-            this.popupMenuEnabled = (Boolean) evt.getNewValue();
+            setPopupMenuEnabled((Boolean) evt.getNewValue());
         } else if ("dockLength".equals(evt.getPropertyName())) {
-            this.dockLength = (Integer) evt.getNewValue();
+            setDockLength((Integer) evt.getNewValue());
         } else if ("animating".equals(evt.getPropertyName())) {
-            this.animating = (Boolean) evt.getNewValue();
+            setAnimating((Boolean) evt.getNewValue());
         } else if ("toolWindowActionHandler".equals(evt.getPropertyName())) {
-            this.toolWindowActionHandler = (ToolWindowActionHandler) evt.getNewValue();
+            setToolWindowActionHandler((ToolWindowActionHandler) evt.getNewValue());
         } else if ("previewEnabled".equals(evt.getPropertyName())) {
-            this.previewEnabled = (Boolean) evt.getNewValue();
+            setPreviewEnabled((Boolean) evt.getNewValue());
         } else if ("previewDelay".equals(evt.getPropertyName())) {
-            this.previewDelay = (Integer) evt.getNewValue();
+            setPreviewDelay((Integer) evt.getNewValue());
         } else if ("previewTransparentRatio".equals(evt.getPropertyName())) {
-            this.previewTransparentRatio = (Float) evt.getNewValue();
+            setPreviewTransparentRatio((Float) evt.getNewValue());
         } else if ("hideRepresentativeButtonOnVisible".equals(evt.getPropertyName())) {
-            this.hideRepresentativeButtonOnVisible = (Boolean) evt.getNewValue();
+            setHideRepresentativeButtonOnVisible((Boolean) evt.getNewValue());
         } else if ("idVisibleOnTitleBar".equals(evt.getPropertyName())) {
-            this.idVisibleOnTitleBar = (Boolean) evt.getNewValue();
-        }
-    }
-
-
-    private void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-        if (listenerList != null) {
-            PropertyChangeListener[] listeners = listenerList.getListeners(PropertyChangeListener.class);
-            PropertyChangeEvent event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
-            for (PropertyChangeListener listener : listeners) {
-                listener.propertyChange(event);
-            }
+            setIdVisibleOnTitleBar((Boolean) evt.getNewValue());
+        } else if ("autoHide".equals(evt.getPropertyName())) {
+            setAutoHide((Boolean) evt.getNewValue());
         }
     }
 

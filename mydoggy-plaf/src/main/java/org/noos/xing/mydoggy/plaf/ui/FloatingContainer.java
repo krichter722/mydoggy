@@ -6,7 +6,9 @@ import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.animation.AnimationListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.JModalFrame;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JModalWindow;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ModalWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingMoveMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingResizeMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingToolTransparencyListener;
@@ -23,7 +25,7 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro
  */
 public class FloatingContainer extends MyDoggyToolWindowContainer {
-    protected JModalWindow window;
+    protected ModalWindow window;
 
     protected FloatingResizeMouseInputHandler resizeMouseInputHandler;
     protected FloatingMoveMouseInputHandler moveMouseInputHandler;
@@ -77,11 +79,11 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
                 // Set Location
                 if (typeDescriptor.getLocation() == null) {
-                    SwingUtil.centrePositionOnScreen(window);
+                    SwingUtil.centrePositionOnScreen(window.getWindow());
                 } else
                     window.setLocation(typeDescriptor.getLocation());
 
-                SwingUtil.validateWindowBounds(window);
+                SwingUtil.validateWindowBounds(window.getWindow());
             } else {
                 window.setBounds(lastBounds);
                 lastBounds = null;
@@ -95,7 +97,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 window.setModal(typeDescriptor.isModal());
                 window.setVisible(true);
                 window.getContentPane().setVisible(true);
-                SwingUtil.repaint(window);
+                SwingUtil.repaint(window.getWindow());
 
                 if (!window.isFocused() && toolWindow.isActive())
                     dockedContainer.assignFocus();
@@ -121,10 +123,18 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
 
     protected void initComponents() {
-        window = new JModalWindow(resourceManager,
-                                  resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
-                                  null,
-                                  false);
+        if (toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).isAddToTaskBar()) {
+            window = new JModalFrame(toolWindow,
+                                     resourceManager,
+                                     resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
+                                     null,
+                                     false);
+        } else {
+            window = new JModalWindow(resourceManager,
+                                      resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
+                                      null,
+                                      false);
+        }
         window.setName("toolWindow.floating.window." + toolWindow.getId());
 
         JPanel contentPane = new JPanel(new ExtendedTableLayout(new double[][]{{1, TableLayout.FILL, 1}, {1, TableLayout.FILL, 1}}));
@@ -143,8 +153,8 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                     descriptor.setIdOnTitleBar();
 
                     // Remove listeners
-                    window.removeMouseMotionListener(resizeMouseInputHandler);
-                    window.removeMouseListener(resizeMouseInputHandler);
+                    window.getWindow().removeMouseMotionListener(resizeMouseInputHandler);
+                    window.getWindow().removeMouseListener(resizeMouseInputHandler);
 
                     titleBarTabs.removeEventDispatcherlListener(moveMouseInputHandler);
 
@@ -152,8 +162,8 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                     titleBar.removeMouseListener(moveMouseInputHandler);
 
                     // Add listeners
-                    window.addMouseMotionListener(resizeMouseInputHandler);
-                    window.addMouseListener(resizeMouseInputHandler);
+                    window.getWindow().addMouseMotionListener(resizeMouseInputHandler);
+                    window.getWindow().addMouseListener(resizeMouseInputHandler);
 
                     titleBarTabs.addEventDispatcherlListener(moveMouseInputHandler);
 
@@ -169,8 +179,8 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                         lastBounds = window.getBounds();
 
                     // Remove listeners
-                    window.removeMouseMotionListener(resizeMouseInputHandler);
-                    window.removeMouseListener(resizeMouseInputHandler);
+                    window.getWindow().removeMouseMotionListener(resizeMouseInputHandler);
+                    window.getWindow().removeMouseListener(resizeMouseInputHandler);
 
                     titleBarTabs.removeEventDispatcherlListener(moveMouseInputHandler);
 
@@ -225,10 +235,10 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
                     if ((Boolean) evt.getNewValue())
-                        SwingUtil.setFullScreen(window);
+                        SwingUtil.setFullScreen(window.getWindow());
                     else
-                        SwingUtil.restoreFullScreenWindow(window);
-                    SwingUtil.repaint(window);
+                        SwingUtil.restoreFullScreenWindow(window.getWindow());
+                    SwingUtil.repaint(window.getWindow());
                 }
 
             }
@@ -247,15 +257,26 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 }
             }
         });
+        addPropertyChangeListener("addToTaskBar", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (window == null || !window.isVisible()) {
+
+
+                } else {
+
+                }
+
+            }
+        });
 
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
         typeDescriptor.addPropertyChangeListener(this);
 
-        new FloatingToolTransparencyListener(this, descriptor, window);
-        resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window);
-        moveMouseInputHandler = new FloatingMoveMouseInputHandler(window);
+        new FloatingToolTransparencyListener(this, descriptor, window.getWindow());
+        resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window.getWindow());
+        moveMouseInputHandler = new FloatingMoveMouseInputHandler(window.getWindow());
 
-        window.addComponentListener(new ComponentAdapter() {
+        window.getWindow().addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 valueAdjusting = true;
                 try {
@@ -280,7 +301,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 }
             }
         });
-
         floatingAnimation.addAnimationListener(new AnimationListener() {
             public void onFinished() {
                 if (assignFocusOnAnimFinished) {
@@ -313,9 +333,9 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                         window.getHeight() + (animatingLengthY - lastLenY));
             } else {
                 window.setBounds(window.getX() + (animatingLengthX / 2 - lastLenX / 2),
-                        window.getY() + (animatingLengthY / 2 - lastLenY / 2),
-                        window.getWidth() - (animatingLengthX - lastLenX),
-                        window.getHeight() - (animatingLengthY - lastLenY)
+                                 window.getY() + (animatingLengthY / 2 - lastLenY / 2),
+                                 window.getWidth() - (animatingLengthX - lastLenX),
+                                 window.getHeight() - (animatingLengthY - lastLenY)
                 );
             }
 
@@ -331,7 +351,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                     window.getContentPane().setVisible(true);
                     window.setBounds(originalBounds);
 
-                    SwingUtil.repaint(window);
+                    SwingUtil.repaint(window.getWindow());
 
                     if (!window.isFocused() && toolWindow.isActive())
                         dockedContainer.assignFocus();
@@ -353,8 +373,8 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
             this.originalBounds = window.getBounds();
 //            window.getContentPane().setVisible(false);
             window.setBounds(new Rectangle(originalBounds.x + (originalBounds.width / 2),
-                    originalBounds.y + (originalBounds.height / 2),
-                    0, 0));
+                                           originalBounds.y + (originalBounds.height / 2),
+                                           0, 0));
 
             FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
             window.setModal(typeDescriptor.isModal());

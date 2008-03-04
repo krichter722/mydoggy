@@ -135,4 +135,18 @@ public interface ContentUI extends DockableUI {
      */
     void setDetachedBounds(Rectangle detachedBounds);
 
+    /**
+     * TODO: javadocs
+     * @param addToTaskBar
+     * @since 1.4.2
+     */
+    void setAddToTaskBar(boolean addToTaskBar);
+
+    /**
+     *
+     * @return
+     * @since 1.4.2
+     */
+    boolean isAddToTaskBar();
+    
 }

@@ -701,9 +701,14 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                     detachedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
 
                     // Setup dialog
-                    JDialog dialog = new AnimatedContentDialog(resourceManager, (PlafContent) content,
-                                                       contentUI,
-                                                       parentFrame, inBounds);
+                    Window dialog;
+                    if (contentUI.isAddToTaskBar()) {
+                        dialog = new ContentFrame(resourceManager, (PlafContent) content, contentUI,
+                                                  parentFrame);
+                    } else {
+                        dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI,
+                                                   parentFrame);
+                    }
                     dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
                     dialog.toFront();
                     dialog.setVisible(true);
@@ -722,7 +727,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                     addUIForContent(content, detachedContentUIMap.get(content));
                     content.setSelected(true);
 
-                    SwingUtil.findAndRequestFocus(content.getComponent());
+                    componentInFocusRequest = SwingUtil.findAndRequestFocus(content.getComponent());
                 } finally {
                     contentValueAdjusting = false;
                     detachedContentUIMap.remove(content);

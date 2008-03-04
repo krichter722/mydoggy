@@ -17,6 +17,7 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
     protected int transparentDelay;
     protected Content content;
     protected Rectangle detachedBounds;
+    protected boolean addToTaskBar;
 
 
     public DesktopContentFrame(Content content, String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
@@ -139,4 +140,17 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
         firePropertyChange("detachedBounds", null, detachedBounds);
     }
 
+    public void setAddToTaskBar(boolean addToTaskBar) {
+        if (this.addToTaskBar == addToTaskBar)
+            return;
+
+        boolean old = this.addToTaskBar;
+        this.addToTaskBar = addToTaskBar;
+
+        firePropertyChange("addToTaskBar", old, addToTaskBar);
+    }
+
+    public boolean isAddToTaskBar() {
+        return addToTaskBar;
+    }
 }

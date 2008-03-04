@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf;
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentUI;
 import org.noos.xing.mydoggy.Dockable;
+import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.content.PlafContent;
 
 import javax.swing.*;
@@ -11,7 +12,7 @@ import java.awt.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyContent extends MyDoggyDockable implements PlafContent {
+public class MyDoggyContent extends PropertyChangeEventSource implements PlafContent {
     protected transient MyDoggyContentManager contentManager;
 
     protected String id;

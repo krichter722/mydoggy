@@ -37,7 +37,7 @@ public class MyDoggyMultiSplitContentUI extends MyDoggyTabbedContentUI implement
         boolean old = this.showAlwaysTab;
         this.showAlwaysTab = showAlwaysTab;
 
-        fireEvent("showAlwaysTab", old, showAlwaysTab);
+        firePropertyChangeEvent("showAlwaysTab", old, showAlwaysTab);
     }
 
     public boolean isShowAlwaysTab() {

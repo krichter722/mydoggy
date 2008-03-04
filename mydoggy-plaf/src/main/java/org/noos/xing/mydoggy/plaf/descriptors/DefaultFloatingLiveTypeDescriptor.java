@@ -2,8 +2,8 @@ package org.noos.xing.mydoggy.plaf.descriptors;
 
 import org.noos.xing.mydoggy.FloatingLiveTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
+import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 
-import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -11,7 +11,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
+public class DefaultFloatingLiveTypeDescriptor extends PropertyChangeEventSource implements FloatingLiveTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
     private Point location;
     private Dimension size;
 
@@ -23,7 +23,6 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
     private boolean autoHide;
     private boolean idVisibleOnTitleBar;
 
-    private EventListenerList listenerList;
 
     public DefaultFloatingLiveTypeDescriptor() {
         transparentMode = true;
@@ -59,7 +58,7 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
         Point old = this.location;
         this.location = newLocation;
 
-        firePropertyChange("location", old, location);
+        firePropertyChangeEvent("location", old, location);
     }
 
     public void setSize(int width, int height) {
@@ -70,7 +69,7 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
         Dimension old = this.size;
         this.size = newSize;
 
-        firePropertyChange("size", old, size);
+        firePropertyChangeEvent("size", old, size);
     }
 
     public Point getLocation() {
@@ -95,7 +94,7 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
         float old = this.transparentRatio;
         this.transparentRatio = transparentRatio;
 
-        firePropertyChange("transparentRatio", old, transparentRatio);
+        firePropertyChangeEvent("transparentRatio", old, transparentRatio);
     }
 
     public boolean isTransparentMode() {
@@ -109,7 +108,7 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
         boolean old = this.transparentMode;
         this.transparentMode = transparentMode;
 
-        firePropertyChange("transparentMode", old, transparentMode);
+        firePropertyChangeEvent("transparentMode", old, transparentMode);
     }
 
     public int getTransparentDelay() {
@@ -123,7 +122,7 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
         boolean old = this.enabled;
         this.enabled = enabled;
 
-        firePropertyChange("enabled", old, enabled);
+        firePropertyChangeEvent("enabled", old, enabled);
     }
 
     public boolean isEnabled() {
@@ -137,7 +136,7 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
         int old = this.transparentDelay;
         this.transparentDelay = transparentDelay;
 
-        firePropertyChange("transparentDelay", old, transparentDelay);
+        firePropertyChangeEvent("transparentDelay", old, transparentDelay);
     }
 
     public boolean isAnimating() {
@@ -150,7 +149,7 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
 
         boolean old = this.animating;
         this.animating = animating;
-        firePropertyChange("animating", old, animating);
+        firePropertyChangeEvent("animating", old, animating);
     }
 
     public void setIdVisibleOnTitleBar(boolean idVisibleOnTitleBar) {
@@ -159,7 +158,7 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
 
         boolean old = this.idVisibleOnTitleBar;
         this.idVisibleOnTitleBar = idVisibleOnTitleBar;
-        firePropertyChange("idVisibleOnTitleBar", old, idVisibleOnTitleBar);
+        firePropertyChangeEvent("idVisibleOnTitleBar", old, idVisibleOnTitleBar);
     }
 
     public boolean isIdVisibleOnTitleBar() {
@@ -170,7 +169,7 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
         boolean old = this.autoHide;
         this.autoHide = autoHide;
 
-        firePropertyChange("autoHide", old, autoHide);
+        firePropertyChangeEvent("autoHide", old, autoHide);
     }
 
     public boolean isAutoHide() {
@@ -181,7 +180,7 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
     public ToolWindowTypeDescriptor cloneMe() {
         return new DefaultFloatingLiveTypeDescriptor(this, location, size, transparentDelay,
                                                      transparentRatio, transparentMode,
-                                                     enabled, animating, this.autoHide, idVisibleOnTitleBar);
+                                                     enabled, animating, autoHide, idVisibleOnTitleBar);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
@@ -199,32 +198,12 @@ public class DefaultFloatingLiveTypeDescriptor implements FloatingLiveTypeDescri
             setTransparentDelay((Integer) evt.getNewValue());
         } else if ("enabled".equals(evt.getPropertyName())) {
             setEnabled((Boolean) evt.getNewValue());
-        }
-    }
-
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        if (listenerList == null)
-            listenerList = new EventListenerList();
-        listenerList.add(PropertyChangeListener.class, listener);
-    }
-
-    public PropertyChangeListener[] getPropertyChangeListeners() {
-        return listenerList.getListeners(PropertyChangeListener.class);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        listenerList.remove(PropertyChangeListener.class, listener);
-    }
-
-    private void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-        if (listenerList != null) {
-            PropertyChangeEvent event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
-
-            PropertyChangeListener[] listeners = listenerList.getListeners(PropertyChangeListener.class);
-            for (PropertyChangeListener listener : listeners) {
-                listener.propertyChange(event);
-            }
+        } else if ("animating".equals(evt.getPropertyName())) {
+            setAnimating((Boolean) evt.getNewValue());
+        } else if ("autoHide".equals(evt.getPropertyName())) {
+            setAutoHide((Boolean) evt.getNewValue());
+        } else if ("idVisibleOnTitleBar".equals(evt.getPropertyName())) {
+            setIdVisibleOnTitleBar((Boolean) evt.getNewValue());
         }
     }
 

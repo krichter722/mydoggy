@@ -1,5 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
+import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 
@@ -8,19 +9,21 @@ import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 
-public class JModalWindow extends JWindow implements ModalWindow {
+public class JModalFrame extends JFrame implements ModalWindow {
     protected ResourceManager resourceManager;
     protected Window modalToWindow;
     protected boolean notifiedModalToWindow;
     protected Component returnFocus;
 
-    public JModalWindow(ResourceManager resourceManager, Window owner, Component returnFocus, boolean modal) {
-        super(owner);
-        
+    public JModalFrame(Dockable dockable, ResourceManager resourceManager, Window owner, Component returnFocus, boolean modal) {
+        setAlwaysOnTop(owner != null);
+        setUndecorated(true);
+        setTitle(dockable.getTitle());
+
         this.resourceManager = resourceManager;
         setFocusableWindowState(true);
         this.returnFocus = returnFocus;
-        synchronized (JModalWindow.this) {
+        synchronized (JModalFrame.this) {
             if (modal)
                 modalToWindow = owner;
 
@@ -38,7 +41,7 @@ public class JModalWindow extends JWindow implements ModalWindow {
             restoreOwner();
         } else {
             if (!isVisible()) {
-                synchronized (JModalWindow.this) {
+                synchronized (JModalFrame.this) {
                     if ((modalToWindow != null) && notifiedModalToWindow) {
                         modalToWindow.setEnabled(false);
                         notifiedModalToWindow = false;
@@ -46,7 +49,7 @@ public class JModalWindow extends JWindow implements ModalWindow {
                 }
             }
         }
-        
+
         super.setVisible(visible);
     }
 
@@ -64,25 +67,26 @@ public class JModalWindow extends JWindow implements ModalWindow {
         }
     }
 
+
     public Window getWindow() {
         return this;
     }
 
     public void setModal(boolean modal) {
-        synchronized (JModalWindow.this) {
+        synchronized (JModalFrame.this) {
             modalToWindow = modal ? getOwner() : null;
         }
     }
 
     public boolean isModal() {
-        synchronized (JModalWindow.this) {
+        synchronized (JModalFrame.this) {
             return modalToWindow != null;
         }
     }
 
 
     protected void restoreOwner() {
-        synchronized (JModalWindow.this) {
+        synchronized (JModalFrame.this) {
             if ((modalToWindow != null) && !notifiedModalToWindow) {
                 modalToWindow.setEnabled(true);
                 modalToWindow.toFront();

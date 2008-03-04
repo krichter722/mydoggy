@@ -229,7 +229,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public ToolWindow getToolWindow(Object key) {
         if (key == null)
             return null;
-        
+
         ToolWindowDescriptor descriptor = tools.get(key);
 
         if (descriptor == null) {
@@ -402,7 +402,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public void setMainContent(Component content) {
         if (content == null)
             resetMainContent();
-        
+
         mainContainer.setOpaque(false);
         mainContainer.removeAll();
         mainContainer.add(content, "0,0,FULL,FULL");
@@ -626,6 +626,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     protected void initListeners() {
+        // Init PropertyChange listeners
         AvailablePropertyChangeListener availablePropertyChangeListener = new AvailablePropertyChangeListener();
         propertyChangeSupport.addPropertyChangeListener("available", availablePropertyChangeListener);
         propertyChangeSupport.addPropertyChangeListener("representativeAnchorButtonVisible", availablePropertyChangeListener);
@@ -664,6 +665,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             }
         });
 
+        // Init support listener
         if (parentComponent instanceof Window) {
             ((Window) parentComponent).addWindowListener(new WindowAdapter() {
                 public void windowClosed(WindowEvent e) {
@@ -720,24 +722,28 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected JSplitPane addBar(ToolWindowAnchor anchor, int splitPaneOrientation,
                                 String barConstraints, String cornerConstraints) {
         // Initialize bar
-        bars[anchor.ordinal()] = new MyDoggyToolWindowBar(this,
-                                                          renderSplitPane(splitPaneOrientation),
-                                                          anchor);
+        MyDoggyToolWindowBar myDoggyToolWindowBar = new MyDoggyToolWindowBar(this,
+                                                                             renderSplitPane(splitPaneOrientation),
+                                                                             anchor);
+        myDoggyToolWindowBar.addPropertyChangeListener(this);
+        
+        bars[anchor.ordinal()] = myDoggyToolWindowBar;
 
         // Add Bar to Container
-        add(bars[anchor.ordinal()].getToolScrollBar(), barConstraints);
+        add(myDoggyToolWindowBar.getToolScrollBar(), barConstraints);
 
         // Add Corner to Container
         add(resourceManager.createComponent(MyDoggyKeySpace.CORNER_CONTENT_PANE, this),
             cornerConstraints);
 
-        return bars[anchor.ordinal()].getSplitPane();
+        return myDoggyToolWindowBar.getSplitPane();
     }
 
     protected void fireRegisteredToolEvent(ToolWindow toolWindow) {
         ToolWindowManagerEvent event = new ToolWindowManagerEvent(this,
                                                                   ToolWindowManagerEvent.ActionId.TOOL_REGISTERED,
                                                                   toolWindow);
+        
         for (ToolWindowManagerListener listener : twmListeners.getListeners(ToolWindowManagerListener.class)) {
             listener.toolWindowRegistered(event);
         }
@@ -1095,11 +1101,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    static class DummyPropertyChangeListener implements PropertyChangeListener {
-        public void propertyChange(PropertyChangeEvent evt) {
-//            System.out.println("NTW - DUMMY : " + evt);
-        }
-    }
 
     class AllToolWindowGroup extends MyDoggyToolWindowGroup {
 
