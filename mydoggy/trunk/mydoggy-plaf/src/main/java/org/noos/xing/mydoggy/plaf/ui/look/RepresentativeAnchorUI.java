@@ -474,14 +474,14 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                                         (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                                         mainContainer.getY() +
                                         label.getY() +
-                                        (descriptor.getToolBar(TOP).getAvailableTools() != 0 ? 23 : 0)
+                                        (descriptor.getToolBar(TOP).getSize())
                                 );
                                 break;
                             case TOP:
                                 previewPanel.setLocation(
                                         mainContainer.getX() +
                                         label.getX() +
-                                        (descriptor.getToolBar(LEFT).getAvailableTools() != 0 ? 23 : 0),
+                                        (descriptor.getToolBar(LEFT).getSize()),
 
                                         (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                                         mainContainer.getY() +
@@ -492,7 +492,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                                 previewPanel.setLocation(
                                         mainContainer.getX() +
                                         label.getX() +
-                                        (descriptor.getToolBar(LEFT).getAvailableTools() != 0 ? 23 : 0),
+                                        (descriptor.getToolBar(LEFT).getSize()),
 
                                         (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                                         mainContainer.getY() +
@@ -509,7 +509,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                                         (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                                         mainContainer.getY() +
                                         label.getY() +
-                                        (descriptor.getToolBar(TOP).getAvailableTools() != 0 ? 23 : 0)
+                                        (descriptor.getToolBar(TOP).getSize())
                                 );
                                 break;
                         }
@@ -523,7 +523,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                                     (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                                     mainContainer.getY() +
                                     mainContainer.getHeight() -
-                                                              (descriptor.getToolBar(BOTTOM).getAvailableTools() != 0 ? 23 : 0) -
+                                                              (descriptor.getToolBar(BOTTOM).getSize()) -
                                                               previewPanel.getHeight() - 3
                             );
                         }
@@ -534,7 +534,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                             previewPanel.setLocation(
                                     mainContainer.getX() +
                                     mainContainer.getWidth() -
-                                                             (descriptor.getToolBar(RIGHT).getAvailableTools() != 0 ? 23 : 0) -
+                                                             (descriptor.getToolBar(RIGHT).getSize()) -
                                                              previewPanel.getWidth() - 3,
 
                                     previewPanel.getY()

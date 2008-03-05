@@ -255,7 +255,20 @@ public interface ResourceManager extends Observable {
       * @since 1.4.2
      *  TODO: adjust javadoc...
       */
-     float getFloat(String name, float defaultValue);
+    float getFloat(String name, float defaultValue);
+
+    /**
+      * Searches for the property with the specified name in the property list.
+      * The method returns <code>defaultValue</code> if the property is not found.
+      *
+      * @param name the property bame.
+      * @param defaultValue the default value if the property is not found.
+      *
+      * @return the value in this property list with the specified key value.
+      * @since 1.4.2
+     *  TODO: adjust javadoc...
+      */
+    int getInt(String name, int defaultValue);
 
     /**
      * TODO:

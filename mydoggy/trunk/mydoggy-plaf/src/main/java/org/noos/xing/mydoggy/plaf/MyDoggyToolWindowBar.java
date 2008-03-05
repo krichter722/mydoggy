@@ -402,6 +402,10 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
         descriptor.resetRepresentativeAnchor();
     }
 
+    public int getSize() {
+        return (getAvailableTools() > 0) ? 23 : 0;   // move to ResourceManager....
+    }
+
 
     protected class AvailableListener implements PropertyChangeListener {
         protected Map<ToolWindowDescriptor, Integer> rabsPositions;

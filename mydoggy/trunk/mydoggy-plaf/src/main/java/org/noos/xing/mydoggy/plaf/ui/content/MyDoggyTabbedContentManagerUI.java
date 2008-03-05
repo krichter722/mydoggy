@@ -215,18 +215,23 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
     }
 
     public void uninstall() {
-        if (maximizedContent != null)
-            maximizedContent.setMaximized(false);
+        uninstalling = true;
+        try {
+            if (maximizedContent != null)
+                maximizedContent.setMaximized(false);
 
-        // Remove all contents
-        contentValueAdjusting = true;
-        for (Content content : contentManager.getContents()) {
-            removeContent((PlafContent) content);
+            // Remove all contents
+            contentValueAdjusting = true;
+            for (Content content : contentManager.getContents()) {
+                removeContent((PlafContent) content);
+            }
+            contentValueAdjusting = false;
+
+            // Now you can consider this manager uninstalled
+            this.installed = false;
+        } finally {
+            uninstalling = false;
         }
-        contentValueAdjusting = false;
-
-        // Now you can consider this manager uninstalled
-        this.installed = false;
     }
 
     public boolean isInstalled() {
@@ -454,7 +459,12 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
     protected int addUIForContent(Content content, Object... constaints) {
         TabbedContentUI contentUI = contentUIMap.get(content);
         if (contentUI == null) {
-            contentUI = new MyDoggyTabbedContentUI(tabbedContentPane, content);
+            if (!installed) {
+                // TODO: ... This is an import
+                contentUI = new MyDoggyTabbedContentUI(tabbedContentPane, 
+                                                       content);
+            } else
+                contentUI = new MyDoggyTabbedContentUI(tabbedContentPane, content);
             contentUI.addPropertyChangeListener(contentUIListener);
         }
 

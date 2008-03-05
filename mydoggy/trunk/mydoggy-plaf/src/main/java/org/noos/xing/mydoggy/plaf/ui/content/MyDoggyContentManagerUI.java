@@ -24,6 +24,7 @@ public abstract class MyDoggyContentManagerUI extends PropertyChangeEventSource 
 
     protected boolean closeable, detachable;
     protected boolean installed;
+    protected boolean uninstalling;
 
     protected PropertyChangeSupport internalPropertyChangeSupport;
     protected EventListenerList contentManagerUIListeners;

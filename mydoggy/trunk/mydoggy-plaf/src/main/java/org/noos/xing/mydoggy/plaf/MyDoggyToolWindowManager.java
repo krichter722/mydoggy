@@ -39,7 +39,7 @@ import java.util.List;
  * description: MyDoggyToolWindowManager
  */
 public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener {
-    protected static final int COLUMN_LENGTH = 23;
+    protected static final int COLUMN_LENGTH = 23;  // Move to ResourceManager
     protected static final int ROW_LENGTH = 23;
 
     public final static Object sync = new Object();

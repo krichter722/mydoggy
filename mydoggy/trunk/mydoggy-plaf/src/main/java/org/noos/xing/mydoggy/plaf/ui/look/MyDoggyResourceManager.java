@@ -43,6 +43,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     protected Map<String, ComponentUICreator> cmpUiCreators;
     protected Map<String, ComponentCustomizer> cmpCustomizers;
     protected Map<Class, InstanceCreator> instanceCreators;
+    protected Map cache;
 
     protected String bundlePath;
     protected ResourceBundle resourceBundle;
@@ -55,6 +56,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         this.icons = new Hashtable<String, Icon>();
         this.colors = new Hashtable<String, Color>();
         this.images = new Hashtable<String, BufferedImage>();
+        this.cache = new HashMap();
 
         loadResources();
         initComponentCreators();
@@ -159,6 +161,9 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
     public void putProperty(String name, String value) {
         resources.put("Property." + name, value);
+
+        // Clear cache...
+        cache.clear();    // TODO: full clear or partial?
     }
 
     public boolean getBoolean(String name, boolean defaultValue) {
@@ -174,15 +179,35 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     public float getFloat(String name, float defaultValue) {
+        Float result = (Float) cache.get("Float." + name);
+        if (result != null)
+            return result;
+
+        String propertyValue = getProperty(name);
+        if (propertyValue == null || "".equals(propertyValue.trim()))
+            result = defaultValue;
+        else {
+            try {
+                result = Float.parseFloat(propertyValue);
+            } catch (Exception e) {
+                result = defaultValue;
+            }
+        }
+
+        cache.put("Float." + name, result);
+        return result;
+    }
+
+    public int getInt(String name, int defaultValue) {
         String propertyValue = getProperty(name);
         if (propertyValue == null || "".equals(propertyValue.trim()))
             return defaultValue;
 
         try {
-            return Float.parseFloat(propertyValue);
+            return Integer.parseInt(propertyValue);
         } catch (Exception e) {
             return defaultValue;
-        }        
+        }
     }
 
     public void putObject(Object key, Object value) {
