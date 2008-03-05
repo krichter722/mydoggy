@@ -90,9 +90,9 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
         setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL, 1, 14}, {0, TableLayout.FILL, 0}}, false));
         setFocusable(false);
         setBorder(null);
-        
+
         tabContainer = new JPanel(containerLayout = new TableLayout(new double[][]{{0},
-                                                                                   {resourceManager.getFloat("toolwindow.title.font.size", 12)+4}})); // TODO: 16 -> -2
+                                                                                   {resourceManager.getFloat("toolwindow.title.font.size", 12) + 4}})); 
         tabContainer.setName("toolWindow.tabContainer." + descriptor.getToolWindow().getId());
         tabContainer.setOpaque(false);
         tabContainer.setBorder(null);
@@ -322,7 +322,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 public void update(Graphics g, JComponent c) {
                     Rectangle bounds = c.getBounds();
                     bounds.x = bounds.y = 0;
-                    
+
                     if (tab.isFlashing() && toolWindow.isVisible()) {
                         if (flashingState) {
                             GraphicsUtil.fillRect(g, bounds,

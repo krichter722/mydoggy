@@ -456,30 +456,27 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
         }
 
         protected int calcFirstX() {
-            return descriptor.getManager().getX() + ((descriptor.getToolBar(ToolWindowAnchor.LEFT).getAvailableTools() > 0) ? 23 : 0);
+            return descriptor.getManager().getX() +
+                   descriptor.getToolBar(ToolWindowAnchor.LEFT).getSize();
         }
 
         protected int calcFirstY() {
             return descriptor.getManager().getY() +
-                   ((descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0) ? 23 : 0) +
+                   descriptor.getToolBar(ToolWindowAnchor.TOP).getSize() +
                    descriptor.getJMenuBarExtraHeight();
         }
 
         protected int calcMaxWidth() {
             int width = descriptor.getManager().getWidth();
-            if (descriptor.getToolBar(ToolWindowAnchor.LEFT).getAvailableTools() > 0)
-                width -= 23;
-            if (descriptor.getToolBar(ToolWindowAnchor.RIGHT).getAvailableTools() > 0)
-                width -= 23;
+            width -= descriptor.getToolBar(ToolWindowAnchor.LEFT).getSize();
+            width -= descriptor.getToolBar(ToolWindowAnchor.RIGHT).getSize();
             return width;
         }
 
         protected int calcMaxHeight() {
             int width = descriptor.getManager().getHeight();
-            if (descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools() > 0)
-                width -= 23;
-            if (descriptor.getToolBar(ToolWindowAnchor.BOTTOM).getAvailableTools() > 0)
-                width -= 23;
+            width -= descriptor.getToolBar(ToolWindowAnchor.TOP).getSize();
+            width -= descriptor.getToolBar(ToolWindowAnchor.BOTTOM).getSize();
             return width;
         }
 
