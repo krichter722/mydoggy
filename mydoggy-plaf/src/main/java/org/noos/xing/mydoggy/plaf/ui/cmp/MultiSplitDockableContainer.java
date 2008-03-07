@@ -683,7 +683,6 @@ public class MultiSplitDockableContainer extends JPanel {
                                             setChild = false;
                                         }
                                     } else {
-                                        // TODO: constraints are build correctly?
                                         // Remove the divider
                                         if (i < children.size()) {
                                             children.remove(i);

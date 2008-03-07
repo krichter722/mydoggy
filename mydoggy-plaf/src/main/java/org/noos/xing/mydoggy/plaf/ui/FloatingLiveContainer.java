@@ -66,7 +66,6 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
             // Prepare sheet
             sheet.setBorder(BorderFactory.createEtchedBorder());
 
-            // TODO: validate bounds..
             if (lastBounds == null) {
                 FloatingLiveTypeDescriptor typeDescriptor = (FloatingLiveTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
 
@@ -88,6 +87,8 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                     }
                 } else
                     sheet.setSize(typeDescriptor.getSize());
+
+                SwingUtil.validateBounds(sheet, descriptor.getManager().getMainContainer().getBounds());
 
                 // Set Location
                 if (typeDescriptor.getLocation() == null ||
@@ -263,6 +264,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                 lastBounds = null;
             }
         });
+        addPropertyChangeListener("enabled", new TypeEnabledPropertyChangeListener());
 
         sheet.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
@@ -454,5 +456,16 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                 animation.show();
             }
         }
+    }
+
+    protected class TypeEnabledPropertyChangeListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            boolean newValue = (Boolean) evt.getNewValue();
+
+            if (!newValue && toolWindow.getType() == ToolWindowType.FLOATING_LIVE)
+                toolWindow.setType(ToolWindowType.DOCKED);
+        }
+
     }
 }

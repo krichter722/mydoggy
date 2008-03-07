@@ -62,7 +62,7 @@ public class ContentDialog extends JDialog {
         }
 
         // Setup bounds
-        Rectangle detachedBounds = SwingUtil.validateWindowBounds(contentUI.getDetachedBounds());
+        Rectangle detachedBounds = SwingUtil.validateBounds(contentUI.getDetachedBounds());
         if (detachedBounds != null) {
             setBounds(detachedBounds);
         } else {

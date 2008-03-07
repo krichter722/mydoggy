@@ -9,13 +9,4 @@ import org.noos.xing.mydoggy.plaf.PlafObservable;
  */
 public interface PlafContent extends Content, PlafObservable {
 
-    /**
-     * TODO: remove this...
-     * Notify selection.
-     *
-     * @param selected <tt>true</tt> is the content must be selected, <tt>false</tt> otherwise.
-     * @since 1.3.1
-     */
-    void fireSelected(boolean selected);
-    
 }

@@ -264,7 +264,6 @@ public class MyDoggyToolWindowManagerDescriptor extends PropertyChangeEventSourc
 
 
     public void propertyChange(PropertyChangeEvent evt) {
-        // TODO:...
         if ("visible".equals(evt.getPropertyName())) {
             if (((Boolean) evt.getNewValue())) {
                 ToolWindowAnchor target = ((ToolWindowDescriptor) evt.getSource()).getToolWindow().getAnchor();

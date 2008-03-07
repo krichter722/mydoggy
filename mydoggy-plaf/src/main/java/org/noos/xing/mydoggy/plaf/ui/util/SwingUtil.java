@@ -328,28 +328,35 @@ public class SwingUtil {
         return virtualBounds;
     }
 
-    public static Rectangle validateWindowBounds(Rectangle bounds) {
+    public static Rectangle validateBounds(Rectangle bounds, Rectangle referenceBounds) {
         if (bounds == null)
             return null;
 
-        Rectangle virtualBounds = getVirtualScreenBounds();
-        if (bounds.x < virtualBounds.x)
-            bounds.x = virtualBounds.x;
+        if (bounds.x < referenceBounds.x)
+            bounds.x = referenceBounds.x;
 
-        if (bounds.x > virtualBounds.getMaxX())
-            bounds.x = (int) virtualBounds.getMaxX() - bounds.width;
+        if (bounds.x > referenceBounds.getMaxX())
+            bounds.x = (int) referenceBounds.getMaxX() - bounds.width;
 
-        if (bounds.y < virtualBounds.y)
-            bounds.y = virtualBounds.y;
+        if (bounds.y < referenceBounds.y)
+            bounds.y = referenceBounds.y;
 
-        if (bounds.y > virtualBounds.getMaxY())
-            bounds.y = (int) virtualBounds.getMaxY() - bounds.height;
+        if (bounds.y > referenceBounds.getMaxY())
+            bounds.y = (int) referenceBounds.getMaxY() - bounds.height;
 
         return bounds;
     }
 
-    public static void validateWindowBounds(Window window) {
-        window.setBounds(validateWindowBounds(window.getBounds()));
+    public static Rectangle validateBounds(Rectangle bounds) {
+        return validateBounds(bounds, getVirtualScreenBounds());
+    }
+
+    public static void validateBounds(Component component) {
+        component.setBounds(validateBounds(component.getBounds(), getVirtualScreenBounds()));
+    }
+
+    public static void validateBounds(Component component, Rectangle referenceBounds) {
+        component.setBounds(validateBounds(component.getBounds(), referenceBounds));
     }
 
     public static void setFullScreen(Window window) {
