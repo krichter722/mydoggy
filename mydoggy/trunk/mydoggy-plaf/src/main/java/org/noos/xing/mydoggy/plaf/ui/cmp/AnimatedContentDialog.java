@@ -76,7 +76,7 @@ public class AnimatedContentDialog extends JDialog {
     public void setVisible(boolean b) {
         super.setVisible(b);
         if (b) {
-            Rectangle detachedBounds = SwingUtil.validateWindowBounds(contentUI.getDetachedBounds());
+            Rectangle detachedBounds = SwingUtil.validateBounds(contentUI.getDetachedBounds());
             if (detachedBounds != null) {
                 MoveComponentAnimation animation = new MoveComponentAnimation(200f, this);
                 animation.show(detachedBounds);

@@ -283,9 +283,4 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
         return dockableDelegator;
     }
 
-
-    public void fireSelected(boolean selected) {
-        firePropertyChangeEvent("selected", !selected, selected);
-    }
-
 }

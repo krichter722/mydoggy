@@ -203,33 +203,6 @@ public class DockedContainer implements ToolWindowContainer {
         });
 
         toolWindow.addToolWindowListener(new DockedToolWindowListener());
-
-        // TODO: should be there???
-        descriptor.getTypeDescriptor(ToolWindowType.FLOATING).addPropertyChangeListener(
-                new PropertyChangeListener() {
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        if ("enabled".equals(evt.getPropertyName())) {
-                            boolean newValue = (Boolean) evt.getNewValue();
-
-                            if (!newValue && toolWindow.getType() == ToolWindowType.FLOATING)
-                                toolWindow.setType(ToolWindowType.DOCKED);
-                        }
-                    }
-                }
-        );
-        descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).addPropertyChangeListener(
-                new PropertyChangeListener() {
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        if ("enabled".equals(evt.getPropertyName())) {
-                            boolean newValue = (Boolean) evt.getNewValue();
-
-                            if (!newValue && toolWindow.getType() == ToolWindowType.FLOATING_LIVE)
-                                toolWindow.setType(ToolWindowType.DOCKED);
-                        }
-                    }
-                }
-        );
-
     }
 
     protected void assignFocus() {

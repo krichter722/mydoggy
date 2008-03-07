@@ -29,6 +29,7 @@ import java.util.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @todo add more fires  
  */
 public class MyDoggyResourceManager extends PropertyChangeEventSource implements ResourceManager {
 
@@ -82,7 +83,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
     public Color putColor(String id, Color color) {
         Color oldColor = colors.put(id, color);
-        firePropertyChangeEvent(id, oldColor, color); // TODO: is this valid ???
+        firePropertyChangeEvent("color." + id, oldColor, color);
         return oldColor;
     }
 
@@ -163,7 +164,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         resources.put("Property." + name, value);
 
         // Clear cache...
-        cache.clear();    // TODO: full clear or partial?
+        cache.clear(); 
     }
 
     public boolean getBoolean(String name, boolean defaultValue) {

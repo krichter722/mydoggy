@@ -408,7 +408,6 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
     protected class MaximizedPropertyChangeListener implements PropertyChangeListener {
         protected Rectangle oldBounds = null;
 
-        // TODO: remove constants
         public void propertyChange(PropertyChangeEvent evt) {
             if (toolWindow.getType() == ToolWindowType.SLIDING) {
                 if ((Boolean) evt.getNewValue()) {

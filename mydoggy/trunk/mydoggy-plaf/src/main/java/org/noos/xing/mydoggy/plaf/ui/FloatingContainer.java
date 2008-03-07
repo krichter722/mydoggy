@@ -83,7 +83,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 } else
                     window.setLocation(typeDescriptor.getLocation());
 
-                SwingUtil.validateWindowBounds(window.getWindow());
+                SwingUtil.validateBounds(window.getWindow());
             } else {
                 window.setBounds(lastBounds);
                 lastBounds = null;
@@ -268,6 +268,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
             }
         });
+        addPropertyChangeListener("enabled", new TypeEnabledPropertyChangeListener());
 
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
         typeDescriptor.addPropertyChangeListener(this);
@@ -389,6 +390,17 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         protected Direction chooseFinishDirection(Type type) {
             return (type == Type.SHOW) ? Direction.OUTGOING : Direction.INCOMING;
         }
+    }
+
+    protected class TypeEnabledPropertyChangeListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            boolean newValue = (Boolean) evt.getNewValue();
+
+            if (!newValue && toolWindow.getType() == ToolWindowType.FLOATING)
+                toolWindow.setType(ToolWindowType.DOCKED);
+        }
+
     }
 
 }
