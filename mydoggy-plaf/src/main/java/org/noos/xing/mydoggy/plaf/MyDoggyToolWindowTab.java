@@ -159,6 +159,22 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
         firePropertyChangeEvent("closeable", old, closeable);
     }
 
+    public void setMaximized(boolean maximized) {
+        //TODO: 
+    }
+
+    public boolean isMaximized() {
+        return false;
+    }
+
+    public void setMinimzed(boolean minimized) {
+        //  TODO:
+    }
+
+    public boolean isMinimzed() {
+        return false;
+    }
+
     public Dockable getDockableDelegator() {
         return dockable;
     }

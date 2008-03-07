@@ -441,6 +441,14 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         return maximized;
     }
 
+    public void setMinimzed(boolean minimized) {
+        setVisible(minimized);
+    }
+
+    public boolean isMinimzed() {
+        return isVisible();
+    }
+
     public void setRepresentativeAnchorButtonVisible(boolean visible) {
         synchronized (getLock()) {
             if (!isAvailable())
