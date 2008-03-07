@@ -251,24 +251,6 @@ public interface ToolWindow extends Dockable {
     ToolWindowType getType();
 
     /**
-     * Maximizes this toolwindow. A maximized toolwindow is resized to
-     * fully fit the main content area.
-     *
-     * @param maximized a boolean, where <code>true</code> maximizes this toolwindow and <code>false</code>
-     *                  restores it.
-     * @since 1.3.0
-     */
-    void setMaximized(boolean maximized);
-
-    /**
-     * Returns whether this toolwindow is currently maximized.
-     *
-     * @return <code>true</code> if this toolwindow is maximized, <code>false</code> otherwise.
-     * @since 1.3.0
-     */
-    boolean isMaximized();
-
-    /**
      * Enable or disable the representative anchor button. The method throw an exception when it is called
      * on a tool whose type is FLOATING_FREE.
      *

@@ -242,6 +242,14 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
         return maximized;
     }
 
+    public void setMinimzed(boolean minimized) {
+        // TODO:
+    }
+
+    public boolean isMinimzed() {
+        return false;
+    }
+
     public ContentUI getContentUI() {
         return contentManager.getContentManagerUI().getContentUI(this);
     }

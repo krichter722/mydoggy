@@ -254,9 +254,6 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons {
             super("toolWindow.pinButton." + toolWindow.getId(), MyDoggyKeySpace.AUTO_HIDE_OFF_INACTIVE, "@@tool.tooltip.unpin");
             dockedContainer.addPropertyChangeListener("autoHide", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
-                    if (evt.getSource() != descriptor)
-                        return;
-
                     boolean newValue = ((Boolean) evt.getNewValue());
 
                     if (newValue) {

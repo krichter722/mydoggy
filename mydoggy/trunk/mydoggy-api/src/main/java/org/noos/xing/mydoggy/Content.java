@@ -158,24 +158,6 @@ public interface Content extends Dockable {
     int getMnemonic();
 
     /**
-     * Maximizes this content. A maximized content is resized to
-     * fully fit the main content area.
-     *
-     * @param maximized a boolean, where <code>true</code> maximizes this content and <code>false</code>
-     *                  restores it.
-     * @since 1.4.0
-     */
-    void setMaximized(boolean maximized);
-
-    /**
-     * Returns whether this content is currently maximized.
-     *
-     * @return <code>true</code> if this content is maximized, <code>false</code> otherwise.
-     * @since 1.4.0
-     */
-    boolean isMaximized();
-
-    /**
      * Returns the content ui for this content based on the current installed ContentManagerUI.
      *
      * @return the content ui instance for this content.
