@@ -195,6 +195,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
         return descriptor;
     }
 
+
     protected void installListeners(JLabel c) {
         super.installListeners(c);
 
@@ -254,6 +255,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
             }
         return result;
     }
+
 
     protected class GradientAnimation extends AbstractAnimation {
 
@@ -358,7 +360,12 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                     if (toolWindow.isVisible()) {
                         toolWindow.setVisible(false);
                     } else {
-                        toolWindow.setActive(true);
+                        toolWindow.setVisible(true);
+                        SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                toolWindow.setActive(true);
+                            }
+                        });
                     }
                 }
             } else if (SwingUtilities.isRightMouseButton(e)) {
@@ -366,6 +373,7 @@ public class RepresentativeAnchorUI extends MetalLabelUI {
                     descriptor.getToolWindowContainer().showPopupMenu(e.getComponent(), e.getX(), e.getY());
                 }
             }
+
 //            if (label.getBorder() != labelBorder)
             label.setBorder(labelBorder);
             labelBorder.setLineColor(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));

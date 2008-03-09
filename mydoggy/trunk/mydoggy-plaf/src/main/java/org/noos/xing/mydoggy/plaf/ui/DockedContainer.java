@@ -133,6 +133,7 @@ public class DockedContainer implements ToolWindowContainer {
         container.setFocusTraversalPolicyProvider(true);
         container.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
         container.setFocusCycleRoot(true);
+        container.setFocusable(false);
         container.putClientProperty(ToolWindow.class, toolWindow);
 
         String id = toolWindow.getId();
@@ -648,7 +649,7 @@ public class DockedContainer implements ToolWindowContainer {
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            if (!toolWindow.isVisible())
+            if (!toolWindow.isVisible() || valueAdjusting)
                 return;
 
             Component component = (Component) evt.getNewValue();
@@ -657,7 +658,7 @@ public class DockedContainer implements ToolWindowContainer {
 
             valueAdjusting = true;
 
-//            System.out.println(toolWindow.getId() + " - cmp = " + component);
+            System.out.println(toolWindow.getId() + " - cmp = " + component);
 
             if (parentOf.is(component)) {
                 toolWindow.setActive(true);
