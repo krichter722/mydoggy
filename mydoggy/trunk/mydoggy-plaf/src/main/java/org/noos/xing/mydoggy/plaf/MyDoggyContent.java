@@ -11,6 +11,7 @@ import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @todo support for minimized...
  */
 public class MyDoggyContent extends PropertyChangeEventSource implements PlafContent {
     protected transient MyDoggyContentManager contentManager;
@@ -30,6 +31,7 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
     protected boolean maximized;
     protected transient Dockable dockableDelegator;
     protected boolean flash;
+    protected boolean minimized;
 
 
     public MyDoggyContent(MyDoggyContentManager contentManager,
@@ -243,11 +245,16 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
     }
 
     public void setMinimzed(boolean minimized) {
-        // TODO:
+        if (this.minimized == minimized)
+            return;
+
+        boolean old = this.minimized;
+        this.minimized = minimized;
+        firePropertyChangeEvent("minimized", old, minimized);
     }
 
     public boolean isMinimzed() {
-        return false;
+        return minimized;
     }
 
     public ContentUI getContentUI() {

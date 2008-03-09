@@ -24,7 +24,8 @@ public class ContentDialog extends JDialog {
 
     public ContentDialog(ResourceManager resourceManager,
                          PlafContent content, ContentUI contentUI,
-                         Frame parentFrame) throws HeadlessException {
+                         Frame parentFrame,
+                         Rectangle inBounds) throws HeadlessException {
         super(resourceManager.getBoolean("dialog.owner.enabled", true) ? parentFrame : null, false);
 /*
         setFocusCycleRoot(true);
@@ -66,14 +67,18 @@ public class ContentDialog extends JDialog {
         if (detachedBounds != null) {
             setBounds(detachedBounds);
         } else {
-            if (parentFrame != null) {
-                Point location = parentFrame.getLocation();
-                location.translate(5, 5);
-                setLocation(location);
+            if (inBounds != null) {
+                setBounds(inBounds);
             } else {
-                SwingUtil.centrePositionOnScreen(this);
+                if (parentFrame != null) {
+                    Point location = parentFrame.getLocation();
+                    location.translate(5, 5);
+                    setLocation(location);
+                } else {
+                    SwingUtil.centrePositionOnScreen(this);
+                }
             }
-            pack();
+//            pack();
         }
     }
 
