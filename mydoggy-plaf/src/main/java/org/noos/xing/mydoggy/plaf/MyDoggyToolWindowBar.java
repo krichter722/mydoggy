@@ -655,6 +655,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
+            System.out.println("evt = " + SwingUtil.toString(evt));
             boolean shiftShow = false;
             AggregationPosition aggregationPosition = AggregationPosition.DEFAULT;
             ToolWindow aggregationOnTool = null;
