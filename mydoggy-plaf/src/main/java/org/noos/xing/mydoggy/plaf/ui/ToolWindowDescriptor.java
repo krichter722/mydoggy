@@ -387,11 +387,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     }
 
     public int getJMenuBarExtraHeight() {
-        JMenuBar jMenuBar = manager.getRootPane().getJMenuBar();
-
-        if (jMenuBar != null && jMenuBar.isVisible())
-            return jMenuBar.getHeight();
-        return 0;
+        return manager.getJMenuBarExtraHeight();
     }
 
     public void hideToolWindow() {

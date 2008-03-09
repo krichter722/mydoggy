@@ -655,6 +655,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
     protected class MaximizedListener implements PropertyChangeListener {
         protected ByteArrayOutputStream tmpWorkspace;
+        protected Component oldFucusOwner;
         protected boolean valudAdj;
 
         public void propertyChange(PropertyChangeEvent evt) {
@@ -679,6 +680,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
                     toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
                     toolWindowManager.getToolWindowGroup().setVisible(false);
+
+                    oldFucusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+
                     maximizedContent = content;
                 }
             } else {
@@ -695,6 +699,12 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                         }
                         tmpWorkspace = null;
                         maximizedContent = null;
+
+                        // Restore focus owner
+                        if (oldFucusOwner != null) {
+                            SwingUtil.requestFocus(oldFucusOwner);
+                            oldFucusOwner = null;
+                        }
                     }
                 }
             }
@@ -744,10 +754,10 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                     Window dialog;
                     if (contentUI.isAddToTaskBar()) {
                         dialog = new ContentFrame(resourceManager, (PlafContent) content, contentUI,
-                                                  parentFrame);
+                                                  parentFrame, null);
                     } else {
                         dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI,
-                                                   parentFrame);
+                                                   parentFrame, null);
                     }
                     dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
                     dialog.toFront();

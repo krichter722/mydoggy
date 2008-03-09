@@ -23,8 +23,9 @@ public class ContentFrame extends JFrame {
     protected ContentUI contentUI;
 
     public ContentFrame(ResourceManager resourceManager,
-                         PlafContent content, ContentUI contentUI,
-                         Frame parentFrame) throws HeadlessException {
+                        PlafContent content, ContentUI contentUI,
+                        Frame parentFrame,
+                        Rectangle inBounds) throws HeadlessException {
         setAlwaysOnTop(resourceManager.getBoolean("dialog.owner.enabled", true));
 /*
         setFocusCycleRoot(true);
@@ -40,7 +41,7 @@ public class ContentFrame extends JFrame {
         component.setPreferredSize(component.getSize());
 
         setTitle(content.getTitle());
-        getContentPane().setLayout(new TableLayout(new double[][]{{-1},{-1}}));
+        getContentPane().setLayout(new TableLayout(new double[][]{{-1}, {-1}}));
         getContentPane().add(component, "0,0,FULL,FULL");
 
         // Init Listener
@@ -66,15 +67,20 @@ public class ContentFrame extends JFrame {
         if (detachedBounds != null) {
             setBounds(detachedBounds);
         } else {
-            if (parentFrame != null) {
-                Point location = parentFrame.getLocation();
-                location.translate(5, 5);
-                setLocation(location);
+            if (inBounds != null) {
+                setBounds(inBounds);
             } else {
-                SwingUtil.centrePositionOnScreen(this);
+                if (parentFrame != null) {
+                    Point location = parentFrame.getLocation();
+                    location.translate(5, 5);
+                    setLocation(location);
+                } else {
+                    SwingUtil.centrePositionOnScreen(this);
+                }
             }
-            pack();
+//            pack();
         }
+
     }
 
     protected class ContentDialogWindowAdapter extends WindowAdapter {

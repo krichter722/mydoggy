@@ -616,6 +616,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
     protected class MaximizedListener implements PropertyChangeListener {
         protected ByteArrayOutputStream tmpWorkspace;
+        protected Component oldFucusOwner;
         protected boolean valudAdj;
 
         public void propertyChange(PropertyChangeEvent evt) {
@@ -643,8 +644,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                     toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
                     toolWindowManager.getToolWindowGroup().setVisible(false);
 
-                    // TODO : Obtain the focus owner
-                    Component component = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+                    oldFucusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
 
                     // Maximize
                     multiSplitContainer.setMaximizedDockable(content);
@@ -667,6 +667,12 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                         }
                         tmpWorkspace = null;
                         maximizedContent = null;
+
+                        // Restore focus owner
+                        if (oldFucusOwner != null) {
+                            SwingUtil.requestFocus(oldFucusOwner);
+                            oldFucusOwner = null;
+                        }
                     }
                 }
             }
@@ -693,9 +699,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                     ContentUI contentUI = getContentUI(content);
 
                     // TODO : remove inbounds
-                    Component component = content.getComponent();
-                    Rectangle inBounds = component.getBounds();
-                    inBounds.setLocation(component.getLocationOnScreen());
+                    Rectangle inBounds = multiSplitContainer.getBoundsRelativeToScreen(content);
 
                     // Remove from multiSpli and store constraint
                     detachedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
@@ -704,10 +708,10 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                     Window dialog;
                     if (contentUI.isAddToTaskBar()) {
                         dialog = new ContentFrame(resourceManager, (PlafContent) content, contentUI,
-                                                  parentFrame);
+                                                  parentFrame, inBounds);
                     } else {
                         dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI,
-                                                   parentFrame);
+                                                   parentFrame, inBounds);
                     }
                     dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
                     dialog.toFront();
@@ -796,8 +800,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
 
     protected class MultiSplitContainer extends MultiSplitTabbedContentContainer {
-
-
         protected Component oldRoot;
         protected DockablePanel oldParent;
         protected Dockable currentMaximizedDockable;

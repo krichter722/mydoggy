@@ -997,7 +997,7 @@ public class MultiSplitDockableContainer extends JPanel {
             }
         } else {
             if (entries.size() == 1) {
-                Component wrappedComponent = getComponentFromWrapper((Container) multiSplitPane.getComponent(0));
+                Component wrappedComponent = getComponentFromWrapper(multiSplitPane.getComponent(0));
                 multiSplitPane.removeAll();
                 multiSplitPane.add(wrappedComponent, "1");
 
@@ -1005,6 +1005,22 @@ public class MultiSplitDockableContainer extends JPanel {
             }
         }
     }
+
+    public Rectangle getBoundsRelativeToScreen(Dockable dockable) {
+        DockableLeaf leaf = getLeaf(dockable);
+        if (leaf != null) {
+            Rectangle bounds = leaf.getBounds();
+            Point location = bounds.getLocation();
+            SwingUtilities.convertPointToScreen(location, this);
+            bounds.setLocation(location);
+            bounds.y+= toolWindowManager.getJMenuBarExtraHeight();
+
+            return bounds;
+        }
+        
+        return null;
+    }
+
 
     // Methods to manage container root
 
@@ -1020,6 +1036,7 @@ public class MultiSplitDockableContainer extends JPanel {
     protected void resetRootComponent() {
         removeAll();
     }
+
 
     // Methods to manage wrappers
 
@@ -1053,7 +1070,8 @@ public class MultiSplitDockableContainer extends JPanel {
         return useAlwaysContentWrapper;
     }
 
-    // Model related methods 
+
+    // Model related methods
 
     protected byte[] encode() {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -1262,6 +1280,7 @@ public class MultiSplitDockableContainer extends JPanel {
         }
         return true;
     }
+
 
     public class DockableEntry {
         Dockable dockable;

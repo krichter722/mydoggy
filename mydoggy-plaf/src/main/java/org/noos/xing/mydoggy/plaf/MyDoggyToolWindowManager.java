@@ -842,6 +842,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return showingGroup == allToolWindowGroup;
     }
 
+    public int getJMenuBarExtraHeight() {
+        JMenuBar jMenuBar = getRootPane().getJMenuBar();
+
+        if (jMenuBar != null && jMenuBar.isVisible())
+            return jMenuBar.getHeight();
+        return 0;
+    }
+
 
     protected class AvailablePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {

@@ -274,6 +274,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
             MaximizedListener maximizedListener = new MaximizedListener();
             internalPropertyChangeSupport.addPropertyChangeListener("maximized.before", maximizedListener);
             internalPropertyChangeSupport.addPropertyChangeListener("maximized", maximizedListener);
+            internalPropertyChangeSupport.addPropertyChangeListener("minimized", new MinimizedListener());
 
             desktopPane.addMouseListener(new PopupMouseListener());
         }
@@ -516,6 +517,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
 
     protected class MaximizedListener implements PropertyChangeListener {
         protected ByteArrayOutputStream tmpWorkspace;
+        protected Component oldFucusOwner;
 
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
@@ -524,6 +526,8 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                 if ((Boolean) evt.getNewValue()) {
                     toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
                     toolWindowManager.getToolWindowGroup().setVisible(false);
+
+                    oldFucusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
                     try {
                         ((DesktopContentFrame) getContentUI(content)).setMaximum(true);
                     } catch (PropertyVetoException e) {
@@ -542,9 +546,23 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                             throw new RuntimeException(e.getMessage(), e);
                         }
                         tmpWorkspace = null;
+
+                        // Restore focus owner
+                        if (oldFucusOwner != null) {
+                            SwingUtil.requestFocus(oldFucusOwner);
+                            oldFucusOwner = null;
+                        }
                     }
                 }
             }
+        }
+    }
+
+    protected class MinimizedListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            Content content = (Content) evt.getSource();
+            getContentUI(content).setIconified((Boolean) evt.getNewValue());
         }
     }
 
@@ -575,10 +593,10 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                 Window dialog;
                 if (contentUI.isAddToTaskBar()) {
                     dialog = new ContentFrame(resourceManager, (PlafContent) content, contentUI,
-                                              parentFrame);
+                                              parentFrame, null);
                 } else {
                     dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI,
-                                               parentFrame);
+                                               parentFrame, null);
                 }
                 dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
                 dialog.toFront();
