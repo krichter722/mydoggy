@@ -698,7 +698,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                 try {
                     ContentUI contentUI = getContentUI(content);
 
-                    // TODO : remove inbounds
                     Rectangle inBounds = multiSplitContainer.getBoundsRelativeToScreen(content);
 
                     // Remove from multiSpli and store constraint

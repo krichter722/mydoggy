@@ -29,7 +29,7 @@ public class MyDoggyTabbedContentUI extends PropertyChangeEventSource implements
         this.transparentMode = true;
         this.transparentRatio = 0.7f;
         this.transparentDelay = 0;
-        this.addToTaskBar = true; // TODO: change
+        this.addToTaskBar = false;
     }
 
     public Content getContent() {
