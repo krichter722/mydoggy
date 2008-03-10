@@ -13,7 +13,7 @@ import java.awt.*;
  * @see Content
  * @since 1.0.0
  */
-public interface ContentManager {
+public interface ContentManager extends Observable {
 
     /**
      * Sets the content manager ui to <code>contentManagerUI</code>.
@@ -229,6 +229,16 @@ public interface ContentManager {
      * @since 1.0.0
      */
     JPopupMenu getPopupMenu();
+
+    /**
+     * TODO:
+     * @param enabled
+     * @since 1.4.2
+     */
+    void setEnabled(boolean enabled);
+
+    boolean isEnabled();
+
 
     /**
      * Registers <code>listener</code> so that it will receive events when
