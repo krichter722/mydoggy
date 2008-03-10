@@ -791,6 +791,7 @@ public class MultiSplitDockableContainer extends JPanel {
             Stack<MultiSplitLayout.Split> stack = new Stack<MultiSplitLayout.Split>();
             stack.push((MultiSplitLayout.Split) root);
             int dockCounter = 0;
+
             while (!stack.isEmpty()) {
                 MultiSplitLayout.Split split = stack.pop();
 
@@ -805,10 +806,10 @@ public class MultiSplitDockableContainer extends JPanel {
                         dockCounter += dockableLeaf.getDockables().size();
                     }
                 }
-
-                if (dockCounter != entries.size())
-                    return;
             }
+
+            if (dockCounter != entries.size())
+                return;
         } else
             throw new RuntimeException("Invalid model. [model : " + root + "]");
 

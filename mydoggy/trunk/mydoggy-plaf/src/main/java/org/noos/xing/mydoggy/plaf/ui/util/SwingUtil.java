@@ -385,7 +385,10 @@ public class SwingUtil {
 //            else {
                 Rectangle targetBounds = window.getBounds();
                 fullScreenBounds.put(window, targetBounds);
-                window.setBounds(graphicsDevice.getDefaultConfiguration().getBounds());
+                window.setBounds(
+                        GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds()
+                        /*graphicsDevice.getDefaultConfiguration().getBounds()*/
+                );
 //            }
         }
     }

@@ -7,6 +7,7 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.MergePolicyApplier;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.ResetMergePolicy;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.UnionMergePolicy;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ContentPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
@@ -75,8 +76,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         mergePolicyApplierMap = new Hashtable<MergePolicy, MergePolicyApplier>();
         mergePolicyApplierMap.put(PersistenceDelegate.MergePolicy.RESET, new ResetMergePolicy());
         mergePolicyApplierMap.put(PersistenceDelegate.MergePolicy.UNION, new UnionMergePolicy());
-	    // Populate
-	   ((ToolWindowManagerElementWriter) masterElementWriter).populateWriterMap();
+        // Populate
+        ((ToolWindowManagerElementWriter) masterElementWriter).populateWriterMap();
     }
 
     // Writing
@@ -103,16 +104,15 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                 // Write ToolWindows
                 writer.startElement("tools");
-                for (ToolWindow toolWindow : toolWindowManager.getToolWindows())
+                for (ToolWindow toolWindow : manager.getToolWindows())
                     getElementWriter(ToolWindow.class).write(writer, toolWindow);
                 writer.endElement("tools");
 
                 // Write ToolWindowManagerDescriptor
-                getElementWriter(ToolWindowManagerDescriptor.class).write(writer,
-                                                                                   toolWindowManager.getToolWindowManagerDescriptor());
+                getElementWriter(ToolWindowManagerDescriptor.class).write(writer, manager.getToolWindowManagerDescriptor());
 
                 // Write ContentManagerUI
-                ContentManager contentManager = toolWindowManager.getContentManager();
+                ContentManager contentManager = manager.getContentManager();
                 writer.startElement("contentManagerUI");
                 getElementWriter(contentManager.getContentManagerUI().getClass())
                         .write(writer,
@@ -121,12 +121,10 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 writer.endElement("contentManagerUI");
 
                 // Write ContentManager
-                getElementWriter(ContentManager.class).write(writer,
-                                                                      toolWindowManager.getContentManager());
+                getElementWriter(ContentManager.class).write(writer, manager.getContentManager());
 
                 // Write ToolWindowAnchor
-                getElementWriter(ToolWindowAnchor.class).write(writer,
-                                                                        toolWindowManager);
+                getElementWriter(ToolWindowAnchor.class).write(writer, manager);
 
                 // End document
                 writer.endElement("mydoggy");
@@ -354,7 +352,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 // Start pushAway
                 attributes = new AttributesImpl();
                 attributes.addAttribute(null, "pushAwayMode", null, null,
-                                        toolWindowManager.getToolWindowManagerDescriptor().getPushAwayMode().toString());
+                                        descriptor.getPushAwayMode().toString());
                 writer.startElement("pushAway", attributes);
 
                 // start MOST_RECENT policy
@@ -362,7 +360,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 attributes.addAttribute(null, "type", null, null, String.valueOf(PushAwayMode.MOST_RECENT));
                 writer.startElement("mode", attributes);
 
-                MostRecentDescriptor mostRecentDescriptor = (MostRecentDescriptor) toolWindowManager.getToolWindowManagerDescriptor().getPushAwayModeDescriptor(PushAwayMode.MOST_RECENT);
+                MostRecentDescriptor mostRecentDescriptor = (MostRecentDescriptor) descriptor.getPushAwayModeDescriptor(PushAwayMode.MOST_RECENT);
 
                 for (ToolWindowAnchor toolWindowAnchor : mostRecentDescriptor.getMostRecentAnchors()) {
                     AttributesImpl anchorAttributes = new AttributesImpl();
@@ -389,9 +387,12 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         public void write(XMLWriter writer, Object... params) {
             try {
 // Start contentManager
-                writer.startElement("contentManager");
-
                 ContentManager contentManager = (ContentManager) params[0];
+
+                AttributesImpl contentManagerAttributes = new AttributesImpl();
+                contentManagerAttributes.addAttribute(null, "enabled", null, null, String.valueOf(contentManager.isEnabled()));
+
+                writer.startElement("contentManager", contentManagerAttributes);
 
                 for (Content content : contentManager.getContents()) {
                     ContentUI contentUI = content.getContentUI();
@@ -456,7 +457,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
     public class MultiSplitContentManagerUIEntityPWriter implements ElementWriter<XMLWriter> {
 
-        public void write(XMLWriter writer, Object... params)  {
+        public void write(XMLWriter writer, Object... params) {
             try {
                 MultiSplitContentManagerUI multiSplitContentManagerUI = (MultiSplitContentManagerUI) params[0];
 
@@ -540,17 +541,40 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
         public void write(XMLWriter writer, Object... params) {
             try {
-// Store model for bar
-                writer.startElement("bars");
-
                 MyDoggyToolWindowManager toolWindowManager = (MyDoggyToolWindowManager) params[0];
 
-                saveBar(writer, toolWindowManager, ToolWindowAnchor.LEFT);
-                saveBar(writer, toolWindowManager, ToolWindowAnchor.BOTTOM);
-                saveBar(writer, toolWindowManager, ToolWindowAnchor.RIGHT);
-                saveBar(writer, toolWindowManager, ToolWindowAnchor.TOP);
+                if  (toolWindowManager.getContentManager().isEnabled()) {
+                    // Store model for bar
+                    writer.startElement("bars");
 
-                writer.endElement("bars");
+
+                    saveBar(writer, toolWindowManager, ToolWindowAnchor.LEFT);
+                    saveBar(writer, toolWindowManager, ToolWindowAnchor.BOTTOM);
+                    saveBar(writer, toolWindowManager, ToolWindowAnchor.RIGHT);
+                    saveBar(writer, toolWindowManager, ToolWindowAnchor.TOP);
+
+                    writer.endElement("bars");
+                } else {
+                    // Store main content model
+
+                    MultiSplitDockableContainer dockableContainer = (MultiSplitDockableContainer) ((ContentPanel) toolWindowManager.getMainContent()).getComponent();
+                    writer.startElement("mainContainer");
+
+                    writer.startElement("model");
+
+                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+                    XMLEncoder encoder = new XMLEncoder(os);
+                    encoder.writeObject(dockableContainer.getModel());
+                    encoder.flush();
+                    encoder.close();
+
+                    String model = os.toString();
+                    writer.cdata(model.substring(model.indexOf('\n')));
+
+                    writer.endElement("model");
+
+                    writer.endElement("mainContainer");
+                }
             } catch (SAXException e) {
                 throw new RuntimeException(e);
             }
@@ -616,6 +640,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             elementParserMap.put("tools", new ToolsElementParser());
             elementParserMap.put("contentManager", new ContentManagerElementParser());
             elementParserMap.put("bar", new BarElementParser());
+            elementParserMap.put("mainContainer", new MainContainerModelElementParser());
             elementParserMap.put("MultiSplitContentManagerUI", new MultiSplitContentManagerUIElementParser());
             elementParserMap.put("TabbedContentManagerUI", new TabbedContentManagerUIElementParser());
             elementParserMap.put("DesktopContentManagerUI", new DekstopManagerUIElementParser());
@@ -966,6 +991,9 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     public class ContentManagerElementParser extends ElementParserAdapter {
 
         public boolean parse(Element element, Object... args) {
+            ContentManager contentManager = toolWindowManager.getContentManager();
+            contentManager.setEnabled(getBoolean(element, "enabled", true));
+            
             NodeList contents = element.getElementsByTagName("content");
 
             Content selectedContent = null;
@@ -1026,6 +1054,24 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 MultiSplitLayout.Node model = (MultiSplitLayout.Node) decoder.readObject();
 
                 toolWindowManager.getBar(anchor).getToolsContainer().setModel(model);
+            }
+
+            return false;
+        }
+
+    }
+
+    public class MainContainerModelElementParser extends ElementParserAdapter {
+
+        public boolean parse(Element element, Object... args) {
+            Element modelElement = getElement(element, "model");
+            if (modelElement != null) {
+                String text = modelElement.getTextContent();
+                XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(text.getBytes()));
+                MultiSplitLayout.Node model = (MultiSplitLayout.Node) decoder.readObject();
+
+                MultiSplitDockableContainer dockableContainer = (MultiSplitDockableContainer) ((ContentPanel) toolWindowManager.getMainContent()).getComponent();
+                dockableContainer.setModel(model);
             }
 
             return false;
