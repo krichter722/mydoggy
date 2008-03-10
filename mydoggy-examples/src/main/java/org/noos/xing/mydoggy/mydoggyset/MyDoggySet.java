@@ -103,6 +103,8 @@ public class MyDoggySet {
 
         // Content Menu
         JMenu contentMenu = new JMenu("Content");
+        contentMenu.add(new ContentManagerEnabledAction());
+        contentMenu.addSeparator();
         contentMenu.add(new ViewContextAction("Welcome", myDoggySetContext, MyDoggySet.class));
         contentMenu.add(new ViewContextAction("Manager", myDoggySetContext, ToolWindowManager.class));
         contentMenu.add(new ViewContextAction("ToolWindows", myDoggySetContext, ToolWindow.class));
@@ -426,6 +428,7 @@ public class MyDoggySet {
         }
     }
 
+
     public class CustomParentOfQuestion implements Question {
         protected Component parent;
         protected ToolWindow toolWindow;
@@ -453,4 +456,20 @@ public class MyDoggySet {
         }
     }
 
+    public class ContentManagerEnabledAction extends AbstractAction {
+
+        public ContentManagerEnabledAction() {
+            super("Disable ContentManager");
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            ContentManager contentManager = toolWindowManager.getContentManager();
+            contentManager.setEnabled(!contentManager.isEnabled());
+
+            if (contentManager.isEnabled())
+                putValue(AbstractAction.NAME, "Disable ContentManager");
+            else
+                putValue(AbstractAction.NAME, "Enable ContentManager");
+        }
+    }
 }

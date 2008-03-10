@@ -658,7 +658,7 @@ public class DockedContainer implements ToolWindowContainer {
 
             valueAdjusting = true;
 
-            System.out.println(toolWindow.getId() + " - cmp = " + component);
+//            System.out.println(toolWindow.getId() + " - cmp = " + component);
 
             if (parentOf.is(component)) {
                 toolWindow.setActive(true);

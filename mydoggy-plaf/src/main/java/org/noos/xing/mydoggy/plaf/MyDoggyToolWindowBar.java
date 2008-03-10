@@ -135,7 +135,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
         TableLayoutConstraints constraints = representativeButtonsPanelLayout.getConstraints(representativeAnchor);
         if (constraints == null)
             return -1;
-        
+
         if (horizontal)
             return (constraints.col1 / 2) - 1;
         else
@@ -442,7 +442,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
 
                         // true -> false
                         flag = (manager.getToolWindowManagerDescriptor().isShowUnavailableTools() &&
-                                        descriptor.getToolWindow().getAnchorIndex() != -1);
+                                descriptor.getToolWindow().getAnchorIndex() != -1);
 
                         if (params[1] == Boolean.TRUE)
                             flag = false;
@@ -458,7 +458,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
                             removeRepresentativeAnchor(representativeAnchor, descriptor);
                         } else
                             descriptor.updateRepresentativeAnchor();
-                        
+
                         repaint = true;
                     }
                 } else if (!oldAvailable && newAvailable) {
@@ -470,7 +470,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
                         params = (Object[]) ((UserPropertyChangeEvent) evt).getUserObject();
 
                         flag = (manager.getToolWindowManagerDescriptor().isShowUnavailableTools() &&
-                                        descriptor.getToolWindow().getAnchorIndex() != -1);
+                                descriptor.getToolWindow().getAnchorIndex() != -1);
 
                         if (params[1] == Boolean.TRUE)
                             flag = false;
@@ -488,7 +488,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
                             addRepresentativeAnchor(representativeAnchor, (Integer) params[0]);
                     } else
                         descriptor.updateRepresentativeAnchor();
-                        
+
                     repaint = true;
                 }
 
@@ -655,7 +655,14 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            System.out.println("evt = " + SwingUtil.toString(evt));
+            if (manager.getContentManager().isEnabled())
+                enabledContentManagerPropertyChange(evt);
+            else
+                disabledContentManagerPropertyChange(evt);
+        }
+
+
+        public void enabledContentManagerPropertyChange(PropertyChangeEvent evt) {
             boolean shiftShow = false;
             AggregationPosition aggregationPosition = AggregationPosition.DEFAULT;
             ToolWindow aggregationOnTool = null;
@@ -752,8 +759,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
                         if (manager.getShowingGroup() != null) {
                             multiSplitDockableContainer.addDockable(descriptor.getToolWindow(),
                                                                     content,
-                                                                   aggregationOnTool,
-                                                                   -1, aggregationPosition);
+                                                                    aggregationOnTool,
+                                                                    -1, aggregationPosition);
                         } else
                             setSplitPaneContent(content);
                     }
@@ -767,8 +774,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
                                 -1, AggregationPosition.DEFAULT);
                     multiSplitDockableContainer.addDockable(descriptor.getToolWindow(),
                                                             content,
-                                                           null,
-                                                           -1, aggregationPosition);
+                                                            null,
+                                                            -1, aggregationPosition);
 
                     setSplitPaneContent(multiSplitDockableContainer);
                 } else if (content != null)
@@ -778,8 +785,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
                     multiSplitDockableContainer.clear();
                     multiSplitDockableContainer.addDockable(descriptor.getToolWindow(),
                                                             content,
-                                                           null,
-                                                           -1, AggregationPosition.DEFAULT);
+                                                            null,
+                                                            -1, AggregationPosition.DEFAULT);
 
                     setSplitPaneContent(multiSplitDockableContainer);
                 } else if (content != null)
@@ -813,6 +820,25 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
                 setSplitDividerLocation(divederLocation);
                 SwingUtil.repaint(splitPane);
             }
+        }
+
+        public void disabledContentManagerPropertyChange(PropertyChangeEvent evt) {
+            MultiSplitDockableContainer managerDockableContainer = (MultiSplitDockableContainer) ((ContentPanel) manager.getMainContent()).getComponent();
+
+            ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
+            boolean visible = (Boolean) evt.getNewValue();
+
+            if (visible) {
+                DockedContainer container = (DockedContainer) descriptor.getToolWindowContainer();
+
+                managerDockableContainer.addDockable(descriptor.getToolWindow(),
+                                                     container.getContentContainer(),
+                                                     null,
+                                                     -1,
+                                                     AggregationPosition.valueOf(anchor.toString())
+                );
+            } else
+                managerDockableContainer.removeDockable(descriptor.getToolWindow());
         }
 
         protected void setSplitPaneContent(Component content) {
@@ -855,6 +881,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
                 vsdValueAdjusting = false;
             }
         }
+
 
         protected class SplitAnimation extends AbstractAnimation {
             protected int dividerLocation;

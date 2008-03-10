@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
+import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.content.PlafContentManagerUI;
 
 import javax.swing.*;
@@ -16,8 +17,9 @@ import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @todo: add enabled checl...
  */
-public class MyDoggyContentManager implements ContentManager {
+public class MyDoggyContentManager extends PropertyChangeEventSource implements ContentManager {
     protected MyDoggyToolWindowManager toolWindowManager;
 
     protected List<Content> contents;
@@ -26,14 +28,16 @@ public class MyDoggyContentManager implements ContentManager {
     protected PlafContentManagerUI plafContentManagerUI;
 
     protected EventListenerList listeners;
+    protected boolean enabled;
 
 
-    MyDoggyContentManager(MyDoggyToolWindowManager windowManager) {
+    protected MyDoggyContentManager(MyDoggyToolWindowManager windowManager) {
         this.toolWindowManager = windowManager;
         this.contents = new ArrayList<Content>();
         this.contentMap = new HashMap<Object, Content>();
         this.aliases = new HashMap<Object, Content>();
         this.listeners = new EventListenerList();
+        this.enabled = true;
     }
 
 
@@ -50,11 +54,11 @@ public class MyDoggyContentManager implements ContentManager {
         PlafContentManagerUI newContentManagerUI = (PlafContentManagerUI) contentManagerUI;
         PlafContentManagerUI old = this.plafContentManagerUI;
         this.plafContentManagerUI = newContentManagerUI;
-        newContentManagerUI.install((ContentManagerUI<ContentUI>) old, toolWindowManager);
+        newContentManagerUI.install((ContentManagerUI) old, toolWindowManager);
     }
 
     public ContentManagerUI getContentManagerUI() {
-        return (ContentManagerUI<ContentUI>) plafContentManagerUI;
+        return (ContentManagerUI) plafContentManagerUI;
     }
 
     public int getContentCount() {
@@ -229,6 +233,20 @@ public class MyDoggyContentManager implements ContentManager {
         return null;
     }
 
+    public void setEnabled(boolean enabled) {
+        if (this.enabled == enabled)
+            return;
+
+        boolean old = this.enabled;
+        this.enabled = enabled;
+
+        firePropertyChangeEvent("enabled", old, enabled);
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     public void addContentManagerListener(ContentManagerListener listener) {
         listeners.add(ContentManagerListener.class, listener);
     }
@@ -260,6 +278,11 @@ public class MyDoggyContentManager implements ContentManager {
     }
 
 
+    protected void checkEnabled() {
+        if (!isEnabled())
+            throw new IllegalStateException("ContentManager is not enabled!. Enable it before call this method.");
+    }
+
     protected Content addContentInternal(String id, String title, Icon icon, Component component, String tip,
                                          ToolWindow toolWindow, Object... constraints) {
         if (id == null)
@@ -281,14 +304,6 @@ public class MyDoggyContentManager implements ContentManager {
         fireContentAdded(content);
 
         return content;
-    }
-
-    protected void firePropertyChange(String property, Object oldValue, Object newValue) {
-        PropertyChangeEvent event = new PropertyChangeEvent(this, property, oldValue, newValue);
-
-        for (PropertyChangeListener listener : listeners.getListeners(PropertyChangeListener.class)) {
-            listener.propertyChange(event);
-        }
     }
 
     protected void fireContentAdded(Content content) {

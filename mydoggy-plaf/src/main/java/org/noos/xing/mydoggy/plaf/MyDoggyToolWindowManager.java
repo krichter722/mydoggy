@@ -14,11 +14,14 @@ import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ContentPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ShortcutProcessor;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyTabbedContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.drag.ContentManagerDropTarget;
+import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -62,6 +65,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     protected JSplitPane mainSplitPane;
     protected JPanel mainContainer;
+    protected MultiSplitDockableContainer toolDockableContainer;
 
     protected PropertyChangeSupport propertyChangeSupport;
 
@@ -365,7 +369,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                    !(source instanceof MyDoggyToolWindowManagerDescriptor) &&
                    !(source instanceof MyDoggyToolWindowManager) &&
                    !(source instanceof MyDoggyToolWindowTab) &&
-                   !(source instanceof ToolWindowTypeDescriptor)) {
+                   !(source instanceof ToolWindowTypeDescriptor) &&
+                   !(source instanceof ContentManager)) {
             new RuntimeException("Illegal Source : " + source).printStackTrace();
             return;
         }
@@ -397,34 +402,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     public void setUserResourceBundle(Locale locale, String bundle, ClassLoader classLoader) {
         resourceManager.setUserBundle(locale, bundle, classLoader);
-    }
-
-    public void setMainContent(Component content) {
-        if (content == null)
-            resetMainContent();
-
-        mainContainer.setOpaque(false);
-        mainContainer.removeAll();
-        mainContainer.add(content, "0,0,FULL,FULL");
-
-        mainSplitPane.invalidate();
-        mainSplitPane.validate();
-
-        SwingUtil.repaint(mainSplitPane);
-    }
-
-    public void resetMainContent() {
-        mainContainer.removeAll();
-        SwingUtil.repaint(mainSplitPane);
-        mainContainer.setOpaque(true);
-    }
-
-    public Container getMainContainer() {
-        return mainContainer;
-    }
-
-    public Component getMainContent() {
-        return (mainContainer.getComponentCount() == 0) ? null : mainContainer.getComponent(0);
     }
 
     public void setMainSplitPane(ToolWindowAnchor anchor) {
@@ -560,6 +537,36 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
 
+    public void setMainContent(Component content) {
+        if (content == null)
+            resetMainContent();
+
+        mainContainer.setOpaque(false);
+        mainContainer.removeAll();
+        mainContainer.add(content, "0,0,FULL,FULL");
+
+        mainSplitPane.invalidate();
+        mainSplitPane.validate();
+
+        SwingUtil.repaint(mainSplitPane);
+    }
+
+    public void resetMainContent() {
+        mainContainer.removeAll();
+        SwingUtil.repaint(mainSplitPane);
+        mainContainer.setOpaque(true);
+    }
+
+    public Container getMainContainer() {
+        return mainContainer;
+    }
+
+    public Component getMainContent() {
+        return (mainContainer.getComponentCount() == 0) ? null : mainContainer.getComponent(0);
+    }
+
+
+
     protected void initPersistenceDelegate() {
         this.persistenceDelegate = new XMLPersistenceDelegate(this);
     }
@@ -615,8 +622,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     protected void initContentManager() {
-        this.contentManager = new MyDoggyContentManager(this);
-        this.contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
+        contentManager = new MyDoggyContentManager(this);
+        contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
+        contentManager.addPropertyChangeListener(this);
     }
 
     protected void initGlassPane() {
@@ -664,6 +672,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 glassPanel.setResourceManager((ResourceManager) evt.getNewValue());
             }
         });
+        propertyChangeSupport.addPropertyChangeListener("enabled", new ContentMamanagerEnabledChangeListener());
 
         // Init support listener
         if (parentComponent instanceof Window) {
@@ -1107,6 +1116,28 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             for (ToolWindowDescriptor tool : tools.values())
                 tool.getToolWindowContainer().propertyChange(evt);
         }
+    }
+
+    protected class ContentMamanagerEnabledChangeListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (evt.getSource() instanceof ContentManager) {
+                if ((Boolean) evt.getNewValue()) {
+                    setMainContent(null);                    
+                } else {
+                    getToolWindowGroup().setVisible(false);
+
+                    toolDockableContainer = new MultiSplitDockableContainer(MyDoggyToolWindowManager.this, JSplitPane.VERTICAL_SPLIT);
+
+                    ContentPanel contentPanel = new ContentPanel("toolWindow.container.");
+                    contentPanel.setDropTarget(new ToolWindowDropTarget(contentPanel, MyDoggyToolWindowManager.this, BOTTOM));
+                    contentPanel.setComponent(toolDockableContainer);
+
+                    setMainContent(contentPanel);
+                }
+            }
+        }
+
     }
 
 
