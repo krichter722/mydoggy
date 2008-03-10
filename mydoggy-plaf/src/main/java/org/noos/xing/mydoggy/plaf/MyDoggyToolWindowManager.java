@@ -538,17 +538,32 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
 
     public void setMainContent(Component content) {
-        if (content == null)
+        if (content == null) {
             resetMainContent();
 
-        mainContainer.setOpaque(false);
-        mainContainer.removeAll();
-        mainContainer.add(content, "0,0,FULL,FULL");
+            if (oldComp != null) {
+                content = oldComp;
+                oldComp = null;
+            }
+        }
 
-        mainSplitPane.invalidate();
-        mainSplitPane.validate();
+        if (content != null) {
+            mainContainer.setOpaque(false);
+            mainContainer.removeAll();
+            mainContainer.add(content, "0,0,FULL,FULL");
 
-        SwingUtil.repaint(mainSplitPane);
+            mainSplitPane.invalidate();
+            mainSplitPane.validate();
+
+            SwingUtil.repaint(mainSplitPane);
+        }
+    }
+
+    Component oldComp = null;
+
+    public void replaceMainContent(Component component) {
+        oldComp = getMainContent();
+        setMainContent(component);
     }
 
     public void resetMainContent() {
@@ -1133,7 +1148,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                     contentPanel.setDropTarget(new ToolWindowDropTarget(contentPanel, MyDoggyToolWindowManager.this, BOTTOM));
                     contentPanel.setComponent(toolDockableContainer);
 
-                    setMainContent(contentPanel);
+                    replaceMainContent(contentPanel);
                 }
             }
         }
