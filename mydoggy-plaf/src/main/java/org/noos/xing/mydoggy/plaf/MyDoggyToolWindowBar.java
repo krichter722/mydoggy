@@ -655,10 +655,10 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            if (manager.getContentManager().isEnabled())
-                enabledContentManagerPropertyChange(evt);
-            else
+            if (!manager.getContentManager().isEnabled() && manager.dockableMainContentMode)
                 disabledContentManagerPropertyChange(evt);
+            else
+                enabledContentManagerPropertyChange(evt);
         }
 
 

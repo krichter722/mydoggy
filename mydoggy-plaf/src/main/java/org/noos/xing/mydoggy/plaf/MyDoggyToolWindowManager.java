@@ -543,6 +543,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
             if (oldComp != null) {
                 content = oldComp;
+                dockableMainContentMode = false;
                 oldComp = null;
             }
         }
@@ -559,10 +560,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    Component oldComp = null;
 
-    public void replaceMainContent(Component component) {
+    Component oldComp = null;
+    boolean dockableMainContentMode = false;
+
+    public void setDockableMainContentMode(Component component) {
         oldComp = getMainContent();
+        dockableMainContentMode = true;
         setMainContent(component);
     }
 
@@ -1138,6 +1142,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getSource() instanceof ContentManager) {
                 if ((Boolean) evt.getNewValue()) {
+                    getToolWindowGroup().setVisible(false);
+
                     setMainContent(null);                    
                 } else {
                     getToolWindowGroup().setVisible(false);
@@ -1148,7 +1154,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                     contentPanel.setDropTarget(new ToolWindowDropTarget(contentPanel, MyDoggyToolWindowManager.this, BOTTOM));
                     contentPanel.setComponent(toolDockableContainer);
 
-                    replaceMainContent(contentPanel);
+                    setDockableMainContentMode(contentPanel);
                 }
             }
         }
