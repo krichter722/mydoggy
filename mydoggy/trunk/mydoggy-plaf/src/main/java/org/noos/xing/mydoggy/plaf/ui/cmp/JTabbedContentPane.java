@@ -278,6 +278,9 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         return (index != -1) ? getContentAt(index) : null;
     }
 
+    public void setSelectedIndex(int index) {
+        super.setSelectedIndex(index);    //To change body of overridden methods use File | Settings | File Templates.
+    }
 
     protected void fireCloseTabEvent(Content content) {
         TabbedContentPaneEvent event = new TabbedContentPaneEvent(this,

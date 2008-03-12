@@ -306,7 +306,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
                     try {
                         tabbedContentPane.setSelectedIndex(index);
-                        SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
+                        componentInFocusRequest = SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
                         lastSelected = (PlafContent) content;
                     } finally {
                         valueAdjusting = false;
@@ -776,7 +776,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                 try {
                     int index = addUIForContent(content, detachedContentUIMap.get(content));
                     tabbedContentPane.setSelectedIndex(index);
-                    SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
+                    componentInFocusRequest = SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
                 } finally {
                     contentValueAdjusting = false;
                     detachedContentUIMap.remove(content);
