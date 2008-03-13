@@ -178,8 +178,6 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
     public void addTab(Content content) {
         String tip = content.getToolTipText();
-        if (tip == null)
-            tip = "";
 
         addTab(content.getTitle(),
                content.getIcon(),
@@ -192,8 +190,6 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
     public void addTab(Content content, Component component) {
         String tip = content.getToolTipText();
-        if (tip == null)
-            tip = "";
 
         if (component == null)
             component = content.getComponent();
@@ -213,8 +209,6 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             return getTabCount() - 1;
         } else {
             String tip = content.getToolTipText();
-            if (tip == null)
-                tip = "";
 
             if (component == null)
                 component = content.getComponent();
