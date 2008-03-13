@@ -643,10 +643,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
             if (!content.isDetached()) {
                 int index = tabbedContentPane.indexOfContent(content);
                 if (index != -1) {
-                    String newToolTip = (String) evt.getNewValue();
-                    if (newToolTip == null)
-                        newToolTip = "";
-                    tabbedContentPane.setToolTipTextAt(index, newToolTip);
+                    tabbedContentPane.setToolTipTextAt(index, (String) evt.getNewValue());
                 } else if (toolWindowManager.getMainContent() != content.getComponent())
                     throw new IllegalStateException("Invalid content ui state.");
             }

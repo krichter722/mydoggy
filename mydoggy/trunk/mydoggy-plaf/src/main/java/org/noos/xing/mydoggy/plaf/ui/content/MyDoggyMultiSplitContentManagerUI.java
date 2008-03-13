@@ -599,10 +599,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                         JTabbedContentPane tabbedContentPane = ((JTabbedContentPane) c);
                         int index = tabbedContentPane.indexOfContent(content);
                         if (index != -1) {
-                            String newToolTip = (String) evt.getNewValue();
-                            if (newToolTip == null)
-                                newToolTip = "";
-                            tabbedContentPane.setToolTipTextAt(index, newToolTip);
+                            tabbedContentPane.setToolTipTextAt(index, (String) evt.getNewValue());
                             return;
                         }
                     }

@@ -504,11 +504,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
             if (!content.isDetached()) {
                 JInternalFrame internalFrame = getFrameByContent(content);
                 if (internalFrame != null) {
-                    String newToolTip = (String) evt.getNewValue();
-                    if (newToolTip == null)
-                        newToolTip = "";
-
-                    internalFrame.setToolTipText(newToolTip);
+                    internalFrame.setToolTipText((String) evt.getNewValue());
                 } else
                     throw new IllegalStateException("Invalid content ui state.");
             }

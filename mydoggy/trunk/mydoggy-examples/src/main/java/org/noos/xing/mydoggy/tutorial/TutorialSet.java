@@ -194,6 +194,7 @@ public class TutorialSet {
                 null,      // An icon
                 treeContent);
         content.setToolTipText("Tree tip");
+        content.setToolTipText(null);
         setupContentManagerUI();
     }
 
