@@ -15,17 +15,16 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolWindowDropTarget extends DropTarget {
+public class ToolWindowCommonMultiSplitDropTarget extends DropTarget {
 
-    public ToolWindowDropTarget(JComponent component, ToolWindowManager toolWindowManager, ToolWindowAnchor anchor) throws HeadlessException {
+    public ToolWindowCommonMultiSplitDropTarget(JComponent component, ToolWindowManager toolWindowManager) throws HeadlessException {
         super(component,
               DnDConstants.ACTION_MOVE,
-              new ToolWindowDropTargetListener(component, toolWindowManager, anchor));
+              new ToolWindowDropTargetListener(component, toolWindowManager));
     }
 
     public static class ToolWindowDropTargetListener implements DropTargetListener, PropertyChangeListener {
         protected ToolWindowManager toolWindowManager;
-        protected ToolWindowAnchor anchor;
         protected int anchorIndex;
         protected JComponent component;
 
@@ -35,10 +34,9 @@ public class ToolWindowDropTarget extends DropTarget {
         protected Border oldBorder;
         protected Border dragBorder = new LineBorder(Color.BLUE, 3);
 
-        public ToolWindowDropTargetListener(JComponent component, ToolWindowManager toolWindowManager, ToolWindowAnchor anchor) {
+        public ToolWindowDropTargetListener(JComponent component, ToolWindowManager toolWindowManager) {
             this.component = component;
             this.toolWindowManager = toolWindowManager;
-            this.anchor = anchor;
 
             this.component.addPropertyChangeListener("dragAnchor", this);
             this.component.addPropertyChangeListener("dragToolWindow", this);
@@ -133,44 +131,44 @@ public class ToolWindowDropTarget extends DropTarget {
                                         switch (dragAnchor) {
                                             case LEFT:
                                                 if (onToolWindow != null) {
-                                                    toolWindow.setAnchor(anchor, anchorIndex != -1 ? anchorIndex - 1 : -1);
+                                                    toolWindow.setAnchor(dragAnchor, anchorIndex != -1 ? anchorIndex - 1 : -1);
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.LEFT);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.setAnchor(anchor, 0);
+                                                        toolWindow.setAnchor(dragAnchor, 0);
                                                         toolWindow.aggregate(AggregationPosition.LEFT);
                                                     }
                                                 }
                                                 break;
                                             case RIGHT:
                                                 if (onToolWindow != null) {
-                                                    toolWindow.setAnchor(anchor, anchorIndex != -1 ? anchorIndex + 1 : -1);
+                                                    toolWindow.setAnchor(dragAnchor, anchorIndex != -1 ? anchorIndex + 1 : -1);
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.RIGHT);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.setAnchor(anchor);
+                                                        toolWindow.setAnchor(dragAnchor);
                                                         toolWindow.aggregate(AggregationPosition.RIGHT);
                                                     }
                                                 }
                                                 break;
                                             case BOTTOM:
                                                 if (onToolWindow != null) {
-                                                    toolWindow.setAnchor(anchor, anchorIndex != -1 ? anchorIndex + 1 : -1);
+                                                    toolWindow.setAnchor(dragAnchor, anchorIndex != -1 ? anchorIndex + 1 : -1);
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.BOTTOM);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.setAnchor(anchor);
+                                                        toolWindow.setAnchor(dragAnchor);
                                                         toolWindow.aggregate(AggregationPosition.BOTTOM);
                                                     }
                                                 }
                                                 break;
                                             case TOP:
                                                 if (onToolWindow != null) {
-                                                    toolWindow.setAnchor(anchor, anchorIndex != -1 ? anchorIndex - 1 : -1);
+                                                    toolWindow.setAnchor(dragAnchor, anchorIndex != -1 ? anchorIndex - 1 : -1);
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.TOP);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.setAnchor(anchor, 0);
+                                                        toolWindow.setAnchor(dragAnchor, 0);
                                                         toolWindow.aggregate(AggregationPosition.TOP);
                                                     }
                                                 }
@@ -216,7 +214,7 @@ public class ToolWindowDropTarget extends DropTarget {
                                         boolean oldAggregateMode = toolWindow.isAggregateMode();
                                         toolWindow.setAggregateMode(true);
                                         try {
-                                            toolWindow.setAnchor(anchor, anchorIndex);
+                                            toolWindow.setAnchor(dragAnchor, anchorIndex);
 
                                             if (dragAnchor != null) {
                                                 switch (dragAnchor) {
@@ -308,19 +306,7 @@ public class ToolWindowDropTarget extends DropTarget {
         }
 
         protected boolean checkCondition(ToolWindow toolWindow) {
-            if (toolWindow.getAnchor() != anchor)
                 return true;
-
-            int visibleNum = 0;
-            boolean flag = false;
-            for (ToolWindow tool : toolWindowManager.getToolsByAnchor(anchor)) {
-                if (tool.isVisible())
-                    visibleNum++;
-                if (tool == toolWindow)
-                    flag = true;
-            }
-
-            return (!flag || visibleNum != 1);
 
         }
     }

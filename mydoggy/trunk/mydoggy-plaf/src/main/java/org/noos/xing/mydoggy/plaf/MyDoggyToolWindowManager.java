@@ -21,7 +21,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ShortcutProcessor;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyTabbedContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.drag.ContentManagerDropTarget;
-import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowDropTarget;
+import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowCommonMultiSplitDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -691,7 +691,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 glassPanel.setResourceManager((ResourceManager) evt.getNewValue());
             }
         });
-        propertyChangeSupport.addPropertyChangeListener("enabled", new ContentMamanagerEnabledChangeListener());
+        propertyChangeSupport.addPropertyChangeListener("enabled", new ContentMananagerEnabledChangeListener());
 
         // Init support listener
         if (parentComponent instanceof Window) {
@@ -996,7 +996,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             if (toolType == ToolWindowType.FLOATING ||
                 toolType == ToolWindowType.FLOATING_FREE ||
                 toolType == ToolWindowType.FLOATING_LIVE ||
-                force || !descriptor.getToolWindow().isAvailable()) {
+                force ||
+                !descriptor.getToolWindow().isAvailable()) {
 
                 PropertyChangeEvent avEvent = new UserPropertyChangeEvent(evt.getSource(), "available", true, false, new Object[]{-1, true});
                 getBar(oldAnchor).propertyChange(avEvent);
@@ -1137,7 +1138,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    protected class ContentMamanagerEnabledChangeListener implements PropertyChangeListener {
+    protected class ContentMananagerEnabledChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getSource() instanceof ContentManager) {
@@ -1151,7 +1152,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                     toolDockableContainer = new MultiSplitDockableContainer(MyDoggyToolWindowManager.this, JSplitPane.VERTICAL_SPLIT);
 
                     ContentPanel contentPanel = new ContentPanel("toolWindow.container.");
-                    contentPanel.setDropTarget(new ToolWindowDropTarget(contentPanel, MyDoggyToolWindowManager.this, BOTTOM));
+                    contentPanel.setDropTarget(new ToolWindowCommonMultiSplitDropTarget(contentPanel, MyDoggyToolWindowManager.this));
                     contentPanel.setComponent(toolDockableContainer);
 
                     setDockableMainContentMode(contentPanel);

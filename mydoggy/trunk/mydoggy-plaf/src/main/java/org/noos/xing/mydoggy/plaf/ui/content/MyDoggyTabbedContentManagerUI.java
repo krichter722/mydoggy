@@ -867,6 +867,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
+            if (!isContentManagerEnabled())
+                return;
+
             if (valueAdjusting)
                 return;
 

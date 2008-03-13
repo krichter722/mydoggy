@@ -68,6 +68,10 @@ public abstract class MyDoggyContentManagerUI extends PropertyChangeEventSource 
     }
 
 
+    protected boolean isContentManagerEnabled() {
+        return contentManager.isEnabled();
+    }
+
     protected boolean fireContentUIRemoving(ContentUI contentUI) {
         ContentManagerUIEvent event = new ContentManagerUIEvent(contentManagerUI, ContentManagerUIEvent.ActionId.CONTENTUI_REMOVING, contentUI);
 

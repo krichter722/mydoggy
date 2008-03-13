@@ -11,7 +11,7 @@ import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * @todo support for minimized...
+ * @todo add support for minimized to content manager ui...
  */
 public class MyDoggyContent extends PropertyChangeEventSource implements PlafContent {
     protected transient MyDoggyContentManager contentManager;
@@ -247,6 +247,8 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
     public void setMinimzed(boolean minimized) {
         if (this.minimized == minimized)
             return;
+
+        // TODO: should be unmaximized if it's the case....
 
         boolean old = this.minimized;
         this.minimized = minimized;
