@@ -756,7 +756,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
         public void propertyChange(PropertyChangeEvent evt) {
             // TODO: introduce this check...
-            if (!contentManager.isEnabled())
+            if (!isContentManagerEnabled())
                 return;
 
             if (componentInFocusRequest != null) {

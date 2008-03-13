@@ -30,6 +30,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Locale;
+import java.util.Random;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -422,6 +423,8 @@ public class MyDoggySet {
         MyDoggySet test = new MyDoggySet();
         try {
             test.setUp();
+            test.toolWindowManager.getContentManager().setEnabled(false);
+//            test.start(new RandomConstraints(test)); TODO: test with all content manager ui...
             test.start(null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -472,4 +475,131 @@ public class MyDoggySet {
                 putValue(AbstractAction.NAME, "Enable ContentManager");
         }
     }
+
+    public static class RandomConstraints implements Runnable {
+        MyDoggySet myDoggySet;
+
+        public RandomConstraints(MyDoggySet myDoggySet) {
+            this.myDoggySet = myDoggySet;
+        }
+
+        public void run() {
+            try {
+                Random random = new Random();
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        myDoggySet.getMyDoggySetContext().put(ToolWindowManager.class, null);
+                    }
+                });
+                Thread.sleep(2000);
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        myDoggySet.getMyDoggySetContext().put(ToolWindow.class, null);
+                    }
+                });
+                Thread.sleep(2000);
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        myDoggySet.getMyDoggySetContext().put(Content.class, null);
+                    }
+                });
+
+                Thread.sleep(2000);
+                for (int i = 0; i < 200; i++) {
+                    int index = random.nextInt(4);
+                    Content content = null;
+                    switch (index) {
+                        case 0:
+                            content = myDoggySet.getToolWindowManager().getContentManager().getContent("Welcome");
+                            break;
+                        case 1:
+                            content = myDoggySet.getToolWindowManager().getContentManager().getContent("Manager");
+                            break;
+                        case 2:
+                            content = myDoggySet.getToolWindowManager().getContentManager().getContent("Tools");
+                            break;
+                        case 3:
+                            content = myDoggySet.getToolWindowManager().getContentManager().getContent("Contents");
+                            break;
+                    }
+
+
+                    index = random.nextInt(2);
+                    Content contentOn = null;
+                    switch (index) {
+                        case 0:
+                            index = random.nextInt(4);
+                            switch (index) {
+                                case 0:
+                                    contentOn = myDoggySet.getToolWindowManager().getContentManager().getContent("Welcome");
+                                    break;
+                                case 1:
+                                    contentOn = myDoggySet.getToolWindowManager().getContentManager().getContent("Manager");
+                                    break;
+                                case 2:
+                                    contentOn = myDoggySet.getToolWindowManager().getContentManager().getContent("Tools");
+                                    break;
+                                case 3:
+                                    contentOn = myDoggySet.getToolWindowManager().getContentManager().getContent("Contents");
+                                    break;
+                            }
+                            if (contentOn == content)
+                                contentOn = null;
+                            break;
+
+                    }
+
+                    index = random.nextInt(2);
+                    AggregationPosition aggregationPosition = null;
+                    switch (index) {
+                        case 0:
+                            index = random.nextInt(5);
+                            switch (index) {
+                                case 0:
+                                    aggregationPosition = AggregationPosition.BOTTOM;
+                                    break;
+                                case 1:
+                                    aggregationPosition = AggregationPosition.TOP;
+                                    break;
+                                case 2:
+                                    aggregationPosition = AggregationPosition.LEFT;
+                                    break;
+                                case 3:
+                                    aggregationPosition = AggregationPosition.RIGHT;
+                                    break;
+                                case 4:
+                                    aggregationPosition = AggregationPosition.DEFAULT;
+                                    break;
+                            }
+                            if (contentOn == content)
+                                contentOn = null;
+                            break;
+
+                    }
+
+                    MultiSplitConstraint constraint = new MultiSplitConstraint(
+                            contentOn, aggregationPosition
+                    );
+
+                    StringBuffer sb = new StringBuffer();
+                    sb.append("apply(\"").append(content.getId()).append("\",");
+                    if (contentOn != null)
+                        sb.append("\"").append(contentOn.getId()).append("\",");
+                    if (aggregationPosition != null)
+                        sb.append(aggregationPosition);
+                    sb.append(");");
+
+                    System.out.println(sb);
+
+                    content.getContentUI().setConstraints(constraint);
+
+                    Thread.sleep(500);
+                }
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

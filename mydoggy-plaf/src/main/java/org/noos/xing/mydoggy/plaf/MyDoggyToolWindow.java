@@ -160,7 +160,9 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     public void aggregate(ToolWindow toolWindow, AggregationPosition aggregationPosition) {
         try {
             if (toolWindow != null) {
-                if (toolWindow.getAnchor() != anchor || !toolWindow.isVisible())
+                // TODO: is valid descriptor.getManager().getContentManager().isEnabled() 
+                if ((descriptor.getManager().getContentManager().isEnabled() && toolWindow.getAnchor() != anchor) || 
+                    !toolWindow.isVisible())
                     return;
             }
 
@@ -172,7 +174,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                 if (getType() == ToolWindowType.SLIDING || getType() == ToolWindowType.FLOATING_LIVE)
                     setType(ToolWindowType.DOCKED);
 
-                setVisibleInternal(true, true, null, aggregationPosition);
+                setVisibleInternal(true, true, toolWindow, aggregationPosition);
             } else {
                 publicEvent = false;
                 try {
@@ -319,7 +321,8 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             if (isMaximized())
                 setMaximized(false);
 
-            if (isAvailable() && getType() == ToolWindowType.DOCKED || getType() == ToolWindowType.SLIDING) {
+            if (isAvailable() &&
+                (getType() == ToolWindowType.DOCKED || getType() == ToolWindowType.SLIDING)) {
                 boolean tempVisible = isVisible();
                 boolean tempActive = isActive();
 

@@ -304,9 +304,13 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
             representativeButtonsPanelLayout.insertColumn(representativeButtonsPanelLayout.getNumColumn(), representativeButtonsPanelLayout.getNumColumn() > 0 ? 5 : 1);
             representativeButtonsPanelLayout.insertColumn(representativeButtonsPanelLayout.getNumColumn(), width);
 
+            // validate index...
+            int finalCol = (index * 2 + 2);
+            if (finalCol >= representativeButtonsPanelLayout.getNumColumn())
+                index = -1;
+
             if (index >= 0) {
                 Component[] components = representativeButtonsPanel.getComponents();
-                int finalCol = (index * 2 + 2);
 
                 Map<Integer, Double> olds = new Hashtable<Integer, Double>();
                 for (Component component : components) {
@@ -338,10 +342,13 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
             representativeButtonsPanelLayout.insertRow(representativeButtonsPanelLayout.getNumRow(), representativeButtonsPanelLayout.getNumRow() > 0 ? 5 : 1);
             representativeButtonsPanelLayout.insertRow(representativeButtonsPanelLayout.getNumRow(), height);
 
+            // validate index...
+            int finalRow = (index * 2 + 2);
+            if (finalRow >= representativeButtonsPanelLayout.getNumRow())
+                index = -1;
+
             if (index >= 0) {
                 Component[] components = representativeButtonsPanel.getComponents();
-                int finalRow = (index * 2 + 2);
-
 
                 Map<Integer, Double> olds = new Hashtable<Integer, Double>();
                 for (Component component : components) {
@@ -829,13 +836,31 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
             boolean visible = (Boolean) evt.getNewValue();
 
             if (visible) {
+                AggregationPosition aggregationPosition = null;
+                ToolWindow aggregationOnTool  = null;
+
+                if (evt instanceof UserPropertyChangeEvent) {
+                    // Load parameter 
+                    UserPropertyChangeEvent upce = (UserPropertyChangeEvent) evt;
+                    Object[] args = ((Object[]) upce.getUserObject());
+
+                    aggregationPosition = (AggregationPosition) args[1];
+                    aggregationOnTool = (ToolWindow) args[2];
+                } else
+                    aggregationPosition = AggregationPosition.valueOf(anchor.toString());
+
+                if (aggregationOnTool == null)
+                    aggregationPosition = AggregationPosition.valueOf(anchor.toString());
+                
+
+
                 DockedContainer container = (DockedContainer) descriptor.getToolWindowContainer();
 
                 managerDockableContainer.addDockable(descriptor.getToolWindow(),
                                                      container.getContentContainer(),
-                                                     null,
+                                                     aggregationOnTool,
                                                      -1,
-                                                     AggregationPosition.valueOf(anchor.toString())
+                                                     aggregationPosition
                 );
             } else
                 managerDockableContainer.removeDockable(descriptor.getToolWindow());
