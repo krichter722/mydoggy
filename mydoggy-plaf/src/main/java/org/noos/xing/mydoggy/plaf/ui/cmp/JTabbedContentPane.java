@@ -95,7 +95,11 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
     public Icon getIconAt(int index) {
         if (getSelectedIndex() == index) {
-            ContentUI contentUI = contentMap.get(index).getContentUI();
+            Content content = contentMap.get(index);
+            if (content == null)
+                return super.getIconAt(index);
+
+            ContentUI contentUI = content.getContentUI();
             if (contentUI == null)
                 return super.getIconAt(index);
 
