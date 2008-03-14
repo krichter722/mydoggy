@@ -6,7 +6,6 @@ import org.noos.common.Question;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
-import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.mydoggyset.action.*;
 import org.noos.xing.mydoggy.mydoggyset.context.MyDoggySetContext;
@@ -16,7 +15,6 @@ import org.noos.xing.mydoggy.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
-import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -265,6 +263,7 @@ public class MyDoggySet {
 
 
         // Setup ContentManagerUI
+/*
         toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
 
         MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
@@ -279,6 +278,7 @@ public class MyDoggySet {
             public void contentUIDetached(ContentManagerUIEvent event) {
             }
         });
+*/
 
         // Setup Corner Components
         ToolWindowManagerDescriptor managerDescriptor = toolWindowManager.getToolWindowManagerDescriptor();
@@ -424,8 +424,11 @@ public class MyDoggySet {
         try {
             test.setUp();
             test.toolWindowManager.getContentManager().setEnabled(false);
-//            test.start(new RandomConstraints(test)); TODO: test with all content manager ui...
-            test.start(null);
+
+            //TODO: test with all content manager ui...
+//            test.start(new MultiSplitRandomConstraints(test));
+            test.start(new TabbedRandomConstraints(test));
+//            test.start(null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -476,10 +479,10 @@ public class MyDoggySet {
         }
     }
 
-    public static class RandomConstraints implements Runnable {
+    public static class MultiSplitRandomConstraints implements Runnable {
         MyDoggySet myDoggySet;
 
-        public RandomConstraints(MyDoggySet myDoggySet) {
+        public MultiSplitRandomConstraints(MyDoggySet myDoggySet) {
             this.myDoggySet = myDoggySet;
         }
 
@@ -592,6 +595,92 @@ public class MyDoggySet {
                     System.out.println(sb);
 
                     content.getContentUI().setConstraints(constraint);
+
+                    Thread.sleep(500);
+                }
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static class TabbedRandomConstraints implements Runnable {
+        MyDoggySet myDoggySet;
+
+        public TabbedRandomConstraints(MyDoggySet myDoggySet) {
+            this.myDoggySet = myDoggySet;
+        }
+
+        public void run() {
+            try {
+                Random random = new Random();
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        myDoggySet.getMyDoggySetContext().put(ToolWindowManager.class, null);
+                    }
+                });
+                Thread.sleep(2000);
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        myDoggySet.getMyDoggySetContext().put(ToolWindow.class, null);
+                    }
+                });
+                Thread.sleep(2000);
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        myDoggySet.getMyDoggySetContext().put(Content.class, null);
+                    }
+                });
+
+                Thread.sleep(2000);
+                for (int i = 0; i < 200; i++) {
+                    int index = random.nextInt(4);
+                    Content content = null;
+                    switch (index) {
+                        case 0:
+                            content = myDoggySet.getToolWindowManager().getContentManager().getContent("Welcome");
+                            break;
+                        case 1:
+                            content = myDoggySet.getToolWindowManager().getContentManager().getContent("Manager");
+                            break;
+                        case 2:
+                            content = myDoggySet.getToolWindowManager().getContentManager().getContent("Tools");
+                            break;
+                        case 3:
+                            content = myDoggySet.getToolWindowManager().getContentManager().getContent("Contents");
+                            break;
+                    }
+
+
+                    index = random.nextInt(2);
+                    Content contentOn = null;
+                    switch (index) {
+                        case 0:
+                            index = random.nextInt(4);
+                            switch (index) {
+                                case 0:
+                                    contentOn = myDoggySet.getToolWindowManager().getContentManager().getContent("Welcome");
+                                    break;
+                                case 1:
+                                    contentOn = myDoggySet.getToolWindowManager().getContentManager().getContent("Manager");
+                                    break;
+                                case 2:
+                                    contentOn = myDoggySet.getToolWindowManager().getContentManager().getContent("Tools");
+                                    break;
+                                case 3:
+                                    contentOn = myDoggySet.getToolWindowManager().getContentManager().getContent("Contents");
+                                    break;
+                            }
+                            if (contentOn == content)
+                                contentOn = null;
+                            break;
+
+                    }
+
+                    index = random.nextInt(4);
+                    
+                    content.getContentUI().setConstraints(index);
 
                     Thread.sleep(500);
                 }
