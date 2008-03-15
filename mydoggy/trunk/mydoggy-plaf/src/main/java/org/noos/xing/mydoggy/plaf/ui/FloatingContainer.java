@@ -123,7 +123,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
 
     protected void initComponents() {
-        if (toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).isAddToTaskBar()) {
+        if (toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).isAddToTaskBarWhenDetached()) {
             window = new JModalFrame(toolWindow,
                                      resourceManager,
                                      resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,

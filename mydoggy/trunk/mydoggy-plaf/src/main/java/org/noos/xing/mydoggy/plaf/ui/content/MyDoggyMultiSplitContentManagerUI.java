@@ -702,7 +702,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
                     // Setup dialog
                     Window dialog;
-                    if (contentUI.isAddToTaskBar()) {
+                    if (contentUI.isAddToTaskBarWhenDetached()) {
                         dialog = new ContentFrame(resourceManager, (PlafContent) content, contentUI,
                                                   parentFrame, inBounds);
                     } else {

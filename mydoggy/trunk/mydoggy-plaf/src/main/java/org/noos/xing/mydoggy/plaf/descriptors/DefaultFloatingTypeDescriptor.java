@@ -137,7 +137,7 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
         return transparentDelay;
     }
 
-    public void setAddToTaskBar(boolean addToTaskBar) {
+    public void setAddToTaskBarWhenDetached(boolean addToTaskBar) {
         if (this.addToTaskBar == addToTaskBar)
             return;
 
@@ -147,7 +147,7 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
         firePropertyChangeEvent("addToTaskBar", old, addToTaskBar);
     }
 
-    public boolean isAddToTaskBar() {
+    public boolean isAddToTaskBarWhenDetached() {
         return addToTaskBar;
     }
 
@@ -245,7 +245,7 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
         } else if ("idVisibleOnTitleBar".equals(evt.getPropertyName())) {
             setIdVisibleOnTitleBar((Boolean) evt.getNewValue());
         } else if ("addToTaskBar".equals(evt.getPropertyName())) {
-            setAddToTaskBar((Boolean) evt.getNewValue());
+            setAddToTaskBarWhenDetached((Boolean) evt.getNewValue());
         }
     }
 

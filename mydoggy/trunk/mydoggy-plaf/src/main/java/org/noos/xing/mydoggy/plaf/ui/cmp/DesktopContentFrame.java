@@ -140,7 +140,7 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
         firePropertyChange("detachedBounds", null, detachedBounds);
     }
 
-    public void setAddToTaskBar(boolean addToTaskBar) {
+    public void setAddToTaskBarWhenDetached(boolean addToTaskBar) {
         if (this.addToTaskBar == addToTaskBar)
             return;
 
@@ -150,7 +150,7 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
         firePropertyChange("addToTaskBar", old, addToTaskBar);
     }
 
-    public boolean isAddToTaskBar() {
+    public boolean isAddToTaskBarWhenDetached() {
         return addToTaskBar;
     }
 }

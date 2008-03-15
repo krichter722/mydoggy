@@ -123,7 +123,7 @@ public class MyDoggyTabbedContentUI extends PropertyChangeEventSource implements
         firePropertyChangeEvent("detachedBounds", null, detachedBounds);
     }
 
-    public void setAddToTaskBar(boolean addToTaskBar) {
+    public void setAddToTaskBarWhenDetached(boolean addToTaskBar) {
         if (this.addToTaskBar == addToTaskBar)
             return;
 
@@ -133,7 +133,7 @@ public class MyDoggyTabbedContentUI extends PropertyChangeEventSource implements
         firePropertyChangeEvent("addToTaskBar", old, addToTaskBar);
     }
 
-    public boolean isAddToTaskBar() {
+    public boolean isAddToTaskBarWhenDetached() {
         return addToTaskBar;
     }
 }
