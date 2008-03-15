@@ -423,7 +423,7 @@ public class MyDoggySet {
         MyDoggySet test = new MyDoggySet();
         try {
             test.setUp();
-            test.toolWindowManager.getContentManager().setEnabled(false);
+//            test.toolWindowManager.getContentManager().setEnabled(false);
 
             //TODO: test with all content manager ui...
 //            test.start(new MultiSplitRandomConstraints(test));

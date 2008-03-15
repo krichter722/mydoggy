@@ -311,7 +311,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                     } finally {
                         valueAdjusting = false;
                     }
-                } else if (toolWindowManager.getMainContent() != content.getComponent())
+                } else if (isContentManagerEnabled() && toolWindowManager.getMainContent() != content.getComponent())
                     throw new IllegalStateException("Invalid content ui state.");
             }
         } else {
@@ -554,7 +554,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                 int index = tabbedContentPane.indexOfContent(content);
                 if (index != -1)
                     tabbedContentPane.setDisabledIconAt(index, (Icon) evt.getNewValue());
-                else if (toolWindowManager.getMainContent() != content.getComponent())
+                else if (isContentManagerEnabled() && toolWindowManager.getMainContent() != content.getComponent())
                     throw new IllegalStateException("Invalid content ui state.");
             }
         }
@@ -568,7 +568,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                 int index = tabbedContentPane.indexOfContent(content);
                 if (index != -1)
                     tabbedContentPane.setIconAt(index, (Icon) evt.getNewValue());
-                else if (toolWindowManager.getMainContent() != content.getComponent())
+                else if (isContentManagerEnabled() && toolWindowManager.getMainContent() != content.getComponent())
                     throw new IllegalStateException("Invalid content ui state.");
             }
         }
@@ -582,7 +582,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                 int index = tabbedContentPane.indexOfContent(content);
                 if (index != -1)
                     tabbedContentPane.setMnemonicAt(index, (Integer) evt.getNewValue());
-                else if (toolWindowManager.getMainContent() != content.getComponent())
+                else if (isContentManagerEnabled() && toolWindowManager.getMainContent() != content.getComponent())
                     throw new IllegalStateException("Invalid content ui state.");
             }
         }
@@ -599,7 +599,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                 int index = tabbedContentPane.indexOfContent(content);
                 if (index != -1)
                     tabbedContentPane.setEnabledAt(index, (Boolean) evt.getNewValue());
-                else if (toolWindowManager.getMainContent() != content.getComponent())
+                else if (isContentManagerEnabled() && toolWindowManager.getMainContent() != content.getComponent())
                     throw new IllegalStateException("Invalid content ui state.");
             }
         }
@@ -613,7 +613,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                 int index = tabbedContentPane.indexOfContent(content);
                 if (index != -1)
                     tabbedContentPane.setForegroundAt(index, (Color) evt.getNewValue());
-                else if (toolWindowManager.getMainContent() != content.getComponent())
+                else if (isContentManagerEnabled() && toolWindowManager.getMainContent() != content.getComponent())
                     throw new IllegalStateException("Invalid content ui state.");
             }
         }
@@ -630,7 +630,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                 int index = tabbedContentPane.indexOfContent(content);
                 if (index != -1)
                     tabbedContentPane.setTitleAt(index, (String) evt.getNewValue());
-                else if (toolWindowManager.getMainContent() != content.getComponent())
+                else if (isContentManagerEnabled() && toolWindowManager.getMainContent() != content.getComponent())
                     throw new IllegalStateException();
             }
         }
@@ -644,7 +644,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                 int index = tabbedContentPane.indexOfContent(content);
                 if (index != -1) {
                     tabbedContentPane.setToolTipTextAt(index, (String) evt.getNewValue());
-                } else if (toolWindowManager.getMainContent() != content.getComponent())
+                } else if (isContentManagerEnabled() && toolWindowManager.getMainContent() != content.getComponent())
                     throw new IllegalStateException("Invalid content ui state.");
             }
         }

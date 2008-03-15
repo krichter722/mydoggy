@@ -252,7 +252,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         listenerList.remove(TabbedContentPaneListener.class, listener);
     }
 
-    public void setIndex(Content content, Integer newIndex) {
+    public synchronized void setIndex(Content content, Integer newIndex) {
         if (newIndex < 0 || newIndex >= getTabCount())
             throw new IllegalArgumentException("Invalid index");
 
@@ -276,9 +276,10 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         return (index != -1) ? getContentAt(index) : null;
     }
 
-    public void setSelectedIndex(int index) {
-        super.setSelectedIndex(index);    //To change body of overridden methods use File | Settings | File Templates.
-    }
+//    // Used for debug...
+//    public void setSelectedIndex(int index) {
+//        super.setSelectedIndex(index);
+//    }
 
     protected void fireCloseTabEvent(Content content) {
         TabbedContentPaneEvent event = new TabbedContentPaneEvent(this,
