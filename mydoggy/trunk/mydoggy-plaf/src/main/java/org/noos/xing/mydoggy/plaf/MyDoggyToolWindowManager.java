@@ -538,42 +538,32 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
 
     public void setMainContent(Component content) {
-        if (content == null) {
+        if (content == null)
             resetMainContent();
+        else {
+            if (dockableMainContentMode) {
+                oldComp = content;
+            }  else {
+                mainContainer.setOpaque(false);
+                mainContainer.removeAll();
+                mainContainer.add(content, "0,0,FULL,FULL");
 
-            if (oldComp != null) {
-                content = oldComp;
-                dockableMainContentMode = false;
-                oldComp = null;
+                mainSplitPane.invalidate();
+                mainSplitPane.validate();
+
+                SwingUtil.repaint(mainSplitPane);
             }
         }
-
-        if (content != null) {
-            mainContainer.setOpaque(false);
-            mainContainer.removeAll();
-            mainContainer.add(content, "0,0,FULL,FULL");
-
-            mainSplitPane.invalidate();
-            mainSplitPane.validate();
-
-            SwingUtil.repaint(mainSplitPane);
-        }
-    }
-
-
-    Component oldComp = null;
-    boolean dockableMainContentMode = false;
-
-    public void setDockableMainContentMode(Component component) {
-        oldComp = getMainContent();
-        dockableMainContentMode = true;
-        setMainContent(component);
     }
 
     public void resetMainContent() {
-        mainContainer.removeAll();
-        SwingUtil.repaint(mainSplitPane);
-        mainContainer.setOpaque(true);
+        if (dockableMainContentMode) {
+            oldComp = null;
+        } else {
+            mainContainer.removeAll();
+            SwingUtil.repaint(mainSplitPane);
+            mainContainer.setOpaque(true);
+        }
     }
 
     public Container getMainContainer() {
@@ -582,6 +572,26 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     public Component getMainContent() {
         return (mainContainer.getComponentCount() == 0) ? null : mainContainer.getComponent(0);
+    }
+
+    Component oldComp = null;
+    boolean dockableMainContentMode = false;
+
+    public void setDockableMainContentMode(boolean enable) {
+        if (enable) {
+            toolDockableContainer = new MultiSplitDockableContainer(MyDoggyToolWindowManager.this, JSplitPane.VERTICAL_SPLIT);
+
+            ContentPanel contentPanel = new ContentPanel("toolWindow.container.");
+            contentPanel.setDropTarget(new ToolWindowCommonMultiSplitDropTarget(contentPanel, MyDoggyToolWindowManager.this));
+            contentPanel.setComponent(toolDockableContainer);
+
+            oldComp = getMainContent();
+            setMainContent(contentPanel);
+            dockableMainContentMode = true;
+        } else  {
+            dockableMainContentMode = false;
+            setMainContent(oldComp);
+        }
     }
 
 
@@ -1142,21 +1152,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getSource() instanceof ContentManager) {
-                if ((Boolean) evt.getNewValue()) {
-                    getToolWindowGroup().setVisible(false);
-
-                    setMainContent(null);                    
-                } else {
-                    getToolWindowGroup().setVisible(false);
-
-                    toolDockableContainer = new MultiSplitDockableContainer(MyDoggyToolWindowManager.this, JSplitPane.VERTICAL_SPLIT);
-
-                    ContentPanel contentPanel = new ContentPanel("toolWindow.container.");
-                    contentPanel.setDropTarget(new ToolWindowCommonMultiSplitDropTarget(contentPanel, MyDoggyToolWindowManager.this));
-                    contentPanel.setComponent(toolDockableContainer);
-
-                    setDockableMainContentMode(contentPanel);
-                }
+                getToolWindowGroup().setVisible(false);
+                setDockableMainContentMode(!(Boolean) evt.getNewValue());
             }
         }
 
