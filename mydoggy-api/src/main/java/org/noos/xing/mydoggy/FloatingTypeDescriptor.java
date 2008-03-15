@@ -143,16 +143,21 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
     int getTransparentDelay();
 
     /**
-     * TODO: javadocs
-     * @param addToTaskBar
+     * When it sets to <tt>true</tt> then when the toolwindow is in flaoting mode a button
+     * is added to the task bar of your operating system.
+     *
+     * @param addToTaskBarWhenDetached <tt>true</tt> if to the toolwindow is associated a button
+     * into the task bar when it is in floating mode, <tt>false</tt> otherwise.
      * @since 1.4.2
      */
-    void setAddToTaskBar(boolean addToTaskBar);
+    void setAddToTaskBarWhenDetached(boolean addToTaskBarWhenDetached);
 
     /**
+     * Returns the property value of "addToTaskBarWhenDetached"
      *
-     * @return
+     * @return <tt>true</tt> if to the toolwindow is associated a button
+     * into the task bar when it is in floating mode, <tt>false</tt> otherwise. 
      * @since 1.4.2
      */
-    boolean isAddToTaskBar();
+    boolean isAddToTaskBarWhenDetached();
 }

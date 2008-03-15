@@ -231,12 +231,19 @@ public interface ContentManager extends Observable {
     JPopupMenu getPopupMenu();
 
     /**
-     * TODO:
-     * @param enabled
+     * Enables or disables the content manager. If the content manager is disable the whole space
+     * will be available for toolwindows.
+     *
+     * @param enabled <tt>true</tt> to enable the content manager, <tt>false</tt> otherwise.
      * @since 1.4.2
      */
     void setEnabled(boolean enabled);
 
+    /**
+     * Returns if the content manager is enabled.
+     *
+     * @return <tt>true</tt> if the content manager is enabled, <tt>false</tt> otherwise.
+     */
     boolean isEnabled();
 
 

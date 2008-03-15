@@ -50,15 +50,52 @@ public interface Observable {
 	PropertyChangeListener[] getPropertyChangeListeners();
 
     /**
+     * Adds a PropertyChangeListener to the listener list for a specific
+     * property.
+     * If <code>propertyName</code> or <code>listener</code> is <code>null</code>,
+     * no exception is thrown and no action is taken.
      *
-     * @param propertyName
-     * @param listener
-     * TODO: add java doc...
+     * @param propertyName one of the property names listed above
+     * @param listener the property change listener to be added
+     * @see #removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
+     * @see #getPropertyChangeListeners(java.lang.String)
+     * @see #addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
+     * @since 1.4.2
      */
     void addPropertyChangeListener(String propertyName, PropertyChangeListener listener);
 
+    /**
+     * Removes a <code>PropertyChangeListener</code> from the listener
+     * list for a specific property. This method should be used to remove
+     * <code>PropertyChangeListener</code>s
+     * that were registered for a specific bound property.
+     * <p>
+     * If <code>propertyName</code> or <code>listener</code> is <code>null</code>,
+     * no exception is thrown and no action is taken.
+     *
+     * @param propertyName a valid property name
+     * @param listener the PropertyChangeListener to be removed
+     * @see #addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
+     * @see #getPropertyChangeListeners(java.lang.String)
+     * @see #removePropertyChangeListener(java.beans.PropertyChangeListener)
+     * @since 1.4.2
+     */
     void removePropertyChangeListener(String propertyName, PropertyChangeListener listener);
 
+    /**
+     * Returns an array of all the listeners which have been associated
+     * with the named property.
+     *
+     * @param propertyName the property whose associated listeners are to be returned. 
+     * @return all of the <code>PropertyChangeListener</code>s associated with
+     *         the named property; if no such listeners have been added or
+     *         if <code>propertyName</code> is <code>null</code>, an empty
+     *         array is returned
+     * @see #addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
+     * @see #removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
+     * @see #getPropertyChangeListeners
+     * @since 1.4.2
+     */
     PropertyChangeListener[] getPropertyChangeListeners(String propertyName);
 
 }

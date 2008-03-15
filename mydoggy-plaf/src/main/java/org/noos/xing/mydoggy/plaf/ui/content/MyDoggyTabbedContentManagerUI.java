@@ -749,7 +749,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
                     // Setup dialog
                     Window dialog;
-                    if (contentUI.isAddToTaskBar()) {
+                    if (contentUI.isAddToTaskBarWhenDetached()) {
                         dialog = new ContentFrame(resourceManager, (PlafContent) content, contentUI,
                                                   parentFrame, null);
                     } else {

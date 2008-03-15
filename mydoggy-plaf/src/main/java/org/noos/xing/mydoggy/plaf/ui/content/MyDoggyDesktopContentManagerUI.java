@@ -587,7 +587,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
 
                 // Setup dialog
                 Window dialog;
-                if (contentUI.isAddToTaskBar()) {
+                if (contentUI.isAddToTaskBarWhenDetached()) {
                     dialog = new ContentFrame(resourceManager, (PlafContent) content, contentUI,
                                               parentFrame, null);
                 } else {
