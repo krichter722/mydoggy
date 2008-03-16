@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.drag;
 
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -17,12 +17,12 @@ import java.awt.image.BufferedImage;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public abstract class DragGestureAdapter implements DragGesture {
-    protected ToolWindowDescriptor descriptor;
+    protected DockableDescriptor descriptor;
     protected MyDoggyToolWindowManager manager;
     protected BufferedImage ghostImage;
     protected BufferedImage updatedGhostImage;
 
-    protected DragGestureAdapter(ToolWindowDescriptor descriptor) {
+    protected DragGestureAdapter(DockableDescriptor descriptor) {
         this.descriptor = descriptor;
         this.manager = descriptor.getManager();
     }

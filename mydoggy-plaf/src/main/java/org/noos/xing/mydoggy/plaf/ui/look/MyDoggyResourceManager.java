@@ -542,7 +542,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     public static class RepresentativeAnchorButtonComponentUICreator implements ComponentUICreator {
 
         public ComponentUI createComponentUI(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
-            return new RepresentativeAnchorUI((ToolWindowDescriptor) args[0]);
+            return new ToolWindowRepresentativeAnchorUI((ToolWindowDescriptor) args[0]);
         }
     }
 

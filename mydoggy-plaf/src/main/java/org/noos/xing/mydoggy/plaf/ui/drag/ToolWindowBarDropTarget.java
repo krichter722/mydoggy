@@ -6,6 +6,7 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -169,74 +170,15 @@ public class ToolWindowBarDropTarget extends DropTarget {
             Transferable transferable = dtde.getTransferable();
 
             if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF)) {
-
-                ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
-
-                try {
-                    String toolId = (String) transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_ID_DF);
-                    ToolWindow toolWindow = manager.getToolWindow(toolId);
-                    if (toolWindow == null)
-                        return;
-
-                    dtde.acceptDrop(DnDConstants.ACTION_MOVE);
-
-                    // Chech if it was a tab
-                    if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)) {
-                        // Remove from tab
-                        ToolWindowTab tab = (ToolWindowTab) manager.getDockable(
-                                transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)
-                        );
-                        tab.getOwner().removeToolWindowTab(tab);
-
-                        toolWindow = (ToolWindow) tab.getDockableDelegator();
-                        toolWindow.setAnchor(anchor, index);
-                        toolWindow.setActive(true);
-                    } else {
-                        boolean oldAggregateMode = toolWindow.isAggregateMode();
-                        toolWindow.setAggregateMode(true);
-                        try {
-                            toolWindow.setAnchor(anchor, index);
-                        } finally {
-                            toolWindow.setAggregateMode(oldAggregateMode);
-                        }
-                    }
-
-                    dtde.dropComplete(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    dtde.rejectDrop();
-                }
+                dropToolWindow(transferable, dtde);
             } else if (transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {
-
-                ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
-
-                try {
-                    String contentId = (String) transferable.getTransferData(MyDoggyTransferable.CONTENT_ID_DF);
-                    Content content = manager.getContentManager().getContent(contentId);
-                    if (content == null)
-                        return;
-
-                    dtde.acceptDrop(DnDConstants.ACTION_MOVE);
-                    // Chech if it was a tab
-                    if (content.getDockableDelegator() != null) {
-                        if (content.getDockableDelegator() instanceof ToolWindow) {
-                            ToolWindow toolWindow = (ToolWindow) content.getDockableDelegator();
-
-                            manager.getContentManager().removeContent(content);
-
-                            toolWindow.setAnchor(anchor, index);
-                            toolWindow.setActive(true);
-                        }
-                    }
-
-                    dtde.dropComplete(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    dtde.rejectDrop();
-                }
+                dropContent(transferable, dtde);
+            } else if (transferable.isDataFlavorSupported(MyDoggyTransferable.BAR2BAR_DF)) {
+                dropBar2Bar(transferable, dtde);
             } else
                 dtde.rejectDrop();
         }
+
 
         public void dragEnter(DropTargetDragEvent dtde) {
             if (checkEvent(dtde))
@@ -266,7 +208,8 @@ public class ToolWindowBarDropTarget extends DropTarget {
                 if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
                     if (transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_MANAGER).equals(System.identityHashCode(manager))) {
                         if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) ||
-                            transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF))
+                            transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF) ||
+                            transferable.isDataFlavorSupported(MyDoggyTransferable.BAR2BAR_DF))
                             return true;
                     }
                 }
@@ -277,6 +220,95 @@ public class ToolWindowBarDropTarget extends DropTarget {
             return false;
         }
 
+        protected void dropToolWindow(Transferable transferable, DropTargetDropEvent dtde) {
+
+            ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
+
+            try {
+                String toolId = (String) transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_ID_DF);
+                ToolWindow toolWindow = manager.getToolWindow(toolId);
+                if (toolWindow == null)
+                    return;
+
+                dtde.acceptDrop(DnDConstants.ACTION_MOVE);
+
+                // Chech if it was a tab
+                if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)) {
+                    // Remove from tab
+                    ToolWindowTab tab = (ToolWindowTab) manager.getDockable(
+                            transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)
+                    );
+                    tab.getOwner().removeToolWindowTab(tab);
+
+                    toolWindow = (ToolWindow) tab.getDockableDelegator();
+                    toolWindow.setAnchor(anchor, index);
+                    toolWindow.setActive(true);
+                } else {
+                    boolean oldAggregateMode = toolWindow.isAggregateMode();
+                    toolWindow.setAggregateMode(true);
+                    try {
+                        toolWindow.setAnchor(anchor, index);
+                    } finally {
+                        toolWindow.setAggregateMode(oldAggregateMode);
+                    }
+                }
+
+                dtde.dropComplete(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+                dtde.rejectDrop();
+            }
+
+        }
+
+        protected void dropContent(Transferable transferable, DropTargetDropEvent dtde) {
+            ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
+
+            try {
+                String contentId = (String) transferable.getTransferData(MyDoggyTransferable.CONTENT_ID_DF);
+                Content content = manager.getContentManager().getContent(contentId);
+                if (content == null)
+                    return;
+
+                dtde.acceptDrop(DnDConstants.ACTION_MOVE);
+                // Chech if it was a tab
+                if (content.getDockableDelegator() != null) {
+                    if (content.getDockableDelegator() instanceof ToolWindow) {
+                        ToolWindow toolWindow = (ToolWindow) content.getDockableDelegator();
+
+                        manager.getContentManager().removeContent(content);
+
+                        toolWindow.setAnchor(anchor, index);
+                        toolWindow.setActive(true);
+                    }
+                }
+
+                dtde.dropComplete(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+                dtde.rejectDrop();
+            }
+        }
+
+        protected void dropBar2Bar(Transferable transferable, DropTargetDropEvent dtde) {
+            ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
+
+            try {
+                String dockableDescriptorId = (String) transferable.getTransferData(MyDoggyTransferable.BAR2BAR_DF);
+                DockableDescriptor dockableDescriptor = manager.getDockableDescriptor(dockableDescriptorId);
+                if (dockableDescriptor == null)
+                    return;
+
+                dtde.acceptDrop(DnDConstants.ACTION_MOVE);
+
+                dockableDescriptor.setAnchor(anchor, index);
+
+                dtde.dropComplete(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+                dtde.rejectDrop();
+            }
+        }
     }
 
 

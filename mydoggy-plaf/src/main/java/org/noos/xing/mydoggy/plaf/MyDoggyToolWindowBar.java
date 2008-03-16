@@ -296,7 +296,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
         return contentPanel.getComponent();
     }
 
-    protected void addRepresentativeAnchor(JComponent representativeAnchor, int index) {
+    protected void addRepresentativeAnchor(Component representativeAnchor, int index) {
         availableTools++;
         if (horizontal) {
             int width = representativeAnchor.getPreferredSize().width + 6;
@@ -381,7 +381,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
         SwingUtil.repaint(toolScrollBar);
     }
 
-    protected void removeRepresentativeAnchor(JComponent representativeAnchor, ToolWindowDescriptor descriptor) {
+    protected void removeRepresentativeAnchor(Component representativeAnchor,
+                                              DockableDescriptor descriptor) {
         if (representativeAnchor == null)
             return;
 
@@ -415,22 +416,21 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
 
 
     protected class AvailableListener implements PropertyChangeListener {
-        protected Map<ToolWindowDescriptor, Integer> rabsPositions;
+        protected Map<DockableDescriptor, Integer> rabsPositions;
 
         public AvailableListener() {
-            rabsPositions = new Hashtable<ToolWindowDescriptor, Integer>();
+            rabsPositions = new Hashtable<DockableDescriptor, Integer>();
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
+            DockableDescriptor descriptor = (DockableDescriptor) evt.getSource();
 
-            if (descriptor.getToolWindow().getType() != ToolWindowType.FLOATING_FREE &&
-                descriptor.getToolWindow().getType() != ToolWindowType.EXTERN) {
-
+            if (isDockableDescriptorValid(descriptor)) {
                 boolean rabsEvent = evt.getPropertyName().equals("representativeAnchorButtonVisible");
 
                 if (!rabsEvent) {
-                    if (!descriptor.getToolWindow().isRepresentativeAnchorButtonVisible())
+                    if (descriptor.getDockableType() == DockableDescriptor.DockableType.TOOL_WINDOW &&
+                        !((ToolWindow) descriptor.getDockable()).isRepresentativeAnchorButtonVisible())
                         return;
                 }
 
@@ -440,7 +440,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
 
                 boolean repaint = false;
 
-                JComponent representativeAnchor = null;
+                Component representativeAnchor;
                 if (oldAvailable && !newAvailable) {
                     boolean flag = false;
                     if (!rabsEvent) {
@@ -449,7 +449,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
 
                         // true -> false
                         flag = (manager.getToolWindowManagerDescriptor().isShowUnavailableTools() &&
-                                descriptor.getToolWindow().getAnchorIndex() != -1);
+                                descriptor.getRepresentativeAnchorIndex() != -1);
 
                         if (params[1] == Boolean.TRUE)
                             flag = false;
@@ -477,7 +477,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
                         params = (Object[]) ((UserPropertyChangeEvent) evt).getUserObject();
 
                         flag = (manager.getToolWindowManagerDescriptor().isShowUnavailableTools() &&
-                                descriptor.getToolWindow().getAnchorIndex() != -1);
+                                descriptor.getRepresentativeAnchorIndex() != -1);
 
                         if (params[1] == Boolean.TRUE)
                             flag = false;
@@ -506,6 +506,14 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
             }
         }
 
+        protected boolean isDockableDescriptorValid(DockableDescriptor dockableDescriptor) {
+            if (dockableDescriptor.getDockableType() == DockableDescriptor.DockableType.TOOL_WINDOW) {
+                ToolWindow tool = (ToolWindow) dockableDescriptor.getDockable();
+                  return tool.getType() != ToolWindowType.FLOATING_FREE &&
+                         tool.getType() != ToolWindowType.EXTERN;
+            }
+            return true;
+        }
     }
 
     protected class ShowUnavailableToolsListener implements PropertyChangeListener {

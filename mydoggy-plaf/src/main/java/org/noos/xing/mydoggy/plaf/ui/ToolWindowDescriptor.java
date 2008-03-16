@@ -19,7 +19,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolWindowDescriptor implements PropertyChangeListener {
+public class ToolWindowDescriptor implements PropertyChangeListener, DockableDescriptor {
     protected MyDoggyToolWindowManager manager;
     protected MyDoggyToolWindow toolWindow;
 
@@ -98,41 +98,16 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
     }
 
 
-    public Component getComponent() {
-        if (component == null)
-            component = toolWindow.getToolWindowTabs()[0].getComponent();
-        return component;
+    public ToolWindowAnchor getAnchor() {
+        return toolWindow.getAnchor();
     }
 
-    public void setComponent(Component component) {
-        this.component = component;
+    public DockableType getDockableType() {
+        return DockableType.TOOL_WINDOW;
     }
 
-    public int getDividerLocation() {
-        if (divederLocation == -1)
-            this.divederLocation = ((DockedTypeDescriptor) getTypeDescriptor(ToolWindowType.DOCKED)).getDockLength();
-
-        return divederLocation;
-    }
-
-    public void setDividerLocation(int divederLocation) {
-        this.divederLocation = divederLocation;
-
-        DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-        valueAdj = true;
-        try {
-            dockedTypeDescriptor.setDockLength(divederLocation);
-        } finally {
-            valueAdj = false;
-        }
-    }
-
-    public int getTempDivederLocation() {
-        return tempDivederLocation;
-    }
-
-    public void setTempDivederLocation(int tempDivederLocation) {
-        this.tempDivederLocation = tempDivederLocation;
+    public Dockable getDockable() {
+        return toolWindow;
     }
 
     public JLabel getRepresentativeAnchor(Component container) {
@@ -230,6 +205,44 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         }
     }
 
+
+    public Component getComponent() {
+        if (component == null)
+            component = toolWindow.getToolWindowTabs()[0].getComponent();
+        return component;
+    }
+
+    public void setComponent(Component component) {
+        this.component = component;
+    }
+
+    public int getDividerLocation() {
+        if (divederLocation == -1)
+            this.divederLocation = ((DockedTypeDescriptor) getTypeDescriptor(ToolWindowType.DOCKED)).getDockLength();
+
+        return divederLocation;
+    }
+
+    public void setDividerLocation(int divederLocation) {
+        this.divederLocation = divederLocation;
+
+        DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+        valueAdj = true;
+        try {
+            dockedTypeDescriptor.setDockLength(divederLocation);
+        } finally {
+            valueAdj = false;
+        }
+    }
+
+    public int getTempDivederLocation() {
+        return tempDivederLocation;
+    }
+
+    public void setTempDivederLocation(int tempDivederLocation) {
+        this.tempDivederLocation = tempDivederLocation;
+    }
+
     public boolean isFloatingWindow() {
         return floatingWindow;
     }
@@ -298,6 +311,18 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
     public MyDoggyToolWindowBar getToolBar() {
         return manager.getBar(toolWindow.getAnchor());
+    }
+
+    public boolean isPreviewAvailable() {
+        return true;
+    }
+
+    public Component getPreviewComponent() {
+        return ((DockedContainer) getToolWindowContainer()).getContentContainer();
+    }
+
+    public void setAnchor(ToolWindowAnchor anchor, int index) {
+        toolWindow.setAnchor(anchor, index);
     }
 
     public MyDoggyToolWindow getToolWindow() {
@@ -413,11 +438,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
         slidingTypeDescriptor.addPropertyChangeListener(this);
     }
 
-    protected ComponentUI createRepresentativeAnchorUI() {
-        return manager.getResourceManager().createComponentUI(MyDoggyKeySpace.REPRESENTATIVE_ANCHOR_BUTTON_UI, manager, this);
-    }
-
-
     public class RepresentativeAnchor extends JLabel {
 
         public RepresentativeAnchor(Icon image, int horizontalAlignment) {
@@ -435,6 +455,10 @@ public class ToolWindowDescriptor implements PropertyChangeListener {
 
         public void updateUI() {
             firePropertyChange("UI", null, getUI());
+        }
+
+        protected ComponentUI createRepresentativeAnchorUI() {
+            return manager.getResourceManager().createComponentUI(MyDoggyKeySpace.REPRESENTATIVE_ANCHOR_BUTTON_UI, manager, ToolWindowDescriptor.this);
         }
     }
 

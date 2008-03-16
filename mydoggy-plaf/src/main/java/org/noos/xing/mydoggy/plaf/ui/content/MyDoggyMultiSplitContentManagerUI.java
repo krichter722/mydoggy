@@ -3,6 +3,8 @@ package org.noos.xing.mydoggy.plaf.ui.content;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
+import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
@@ -346,6 +348,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             MaximizedListener maximizedListener = new MaximizedListener();
             internalPropertyChangeSupport.addPropertyChangeListener("maximized.before", maximizedListener);
             internalPropertyChangeSupport.addPropertyChangeListener("maximized", maximizedListener);
+            internalPropertyChangeSupport.addPropertyChangeListener("minimized", new MinimizedListener());
 
             final FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener();
             KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
@@ -378,7 +381,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         contentUI.setCloseable(closeable);
         contentUI.setDetachable(detachable);
 
-        if (constraints.length > 0) {
+        if (constraints != null && constraints.length > 0) {
             if (constraints[0] instanceof MultiSplitConstraint) {
                 MultiSplitConstraint constraint = (MultiSplitConstraint) constraints[0];
                 multiSplitContainer.addDockable(content,
@@ -647,7 +650,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                     multiSplitContainer.setMaximizedDockable(content);
 
                     // Resotre the focus owner
-                    
+
                     maximizedContent = content;
                 }
             } else {
@@ -796,6 +799,59 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                 }
             }
         }
+    }
+
+    protected class MinimizedListener implements PropertyChangeListener {
+        protected Map<Content, MultiSplitDockableContainer.Constraint> minimizedContentUIMap;
+
+        public MinimizedListener() {
+            minimizedContentUIMap = new HashMap<Content, MultiSplitDockableContainer.Constraint>();
+        }
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            Content content = (Content) evt.getSource();
+            if ((Boolean) evt.getNewValue()) {
+                content.setSelected(false);
+                content.setMaximized(false);
+
+                DockableDescriptor descriptor = toolWindowManager.getDockableDescriptor(content.getId());
+                if (descriptor == null) {
+                    descriptor = new ContentDescriptor(toolWindowManager, content);
+                    toolWindowManager.putDockableDescriptor(content.getId(), descriptor);
+                }
+
+                // Remove content
+                minimizedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
+
+                // Put on bar
+                toolWindowManager.propertyChange(
+                        new UserPropertyChangeEvent(descriptor, "available", false, true,
+                                                    new Object[]{-1, false}
+                        )
+                );
+            } else {
+                DockableDescriptor descriptor = toolWindowManager.getDockableDescriptor(content.getId());
+
+                // Remove from bar
+                toolWindowManager.propertyChange(
+                        new UserPropertyChangeEvent(descriptor, "available", true, false,
+                                                    new Object[]{-1, false}
+                        )
+                );
+
+                contentValueAdjusting = true;
+                try {
+                    addUIForContent(content, minimizedContentUIMap.get(content));
+                    content.setSelected(true);
+
+                    componentInFocusRequest = SwingUtil.findAndRequestFocus(content.getComponent());
+                } finally {
+                    contentValueAdjusting = false;
+                    minimizedContentUIMap.remove(content);
+                }
+            }
+        }
+
     }
 
 

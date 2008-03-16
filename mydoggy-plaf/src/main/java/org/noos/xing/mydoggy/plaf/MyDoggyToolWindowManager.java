@@ -11,6 +11,7 @@ import org.noos.xing.mydoggy.plaf.descriptors.DefaultSlidingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.persistence.xml.XMLPersistenceDelegate;
 import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
+import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
@@ -58,6 +59,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected Map<Object, ToolWindowDescriptor> tools;
     protected Map<Object, ToolWindowGroup> toolWindowGroups;
     protected Map<Object, ToolWindow> aliases;
+    protected Map<String, DockableDescriptor> dockableDescriptorMap;
 
     protected ToolWindowGroup allToolWindowGroup;
 
@@ -106,6 +108,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         this.allToolWindowGroup = new AllToolWindowGroup();
         this.aliases = new HashMap<Object, ToolWindow>();
+        this.dockableDescriptorMap = new HashMap<String, DockableDescriptor>();
+
         this.propertyChangeSupport = new PropertyChangeSupport(this);
         this.toolWindowManagerDescriptor = new MyDoggyToolWindowManagerDescriptor(this);
         this.toolWindowManagerDescriptor.addPropertyChangeListener(this);
@@ -370,7 +374,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                    !(source instanceof MyDoggyToolWindowManager) &&
                    !(source instanceof MyDoggyToolWindowTab) &&
                    !(source instanceof ToolWindowTypeDescriptor) &&
-                   !(source instanceof ContentManager)) {
+                   !(source instanceof ContentManager) &&
+                   !(source instanceof DockableDescriptor) ) {  // TODO: do better... 
             new RuntimeException("Illegal Source : " + source).printStackTrace();
             return;
         }
@@ -888,12 +893,19 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return 0;
     }
 
+    public DockableDescriptor getDockableDescriptor(String id) {
+        return dockableDescriptorMap.get(id);
+    }
+
+    public void putDockableDescriptor(String id, DockableDescriptor dockableDescriptor) {
+        dockableDescriptorMap.put(id, dockableDescriptor);
+    }
 
     protected class AvailablePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
+            DockableDescriptor descriptor = (DockableDescriptor) evt.getSource();
+            ToolWindowAnchor target = descriptor.getAnchor();
 
-            ToolWindowAnchor target = descriptor.getToolWindow().getAnchor();
             // Notify specific bar
             getBar(target).propertyChange(evt);
 
