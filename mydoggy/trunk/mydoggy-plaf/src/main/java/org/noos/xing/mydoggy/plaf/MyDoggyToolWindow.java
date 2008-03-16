@@ -639,7 +639,8 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             boolean old = this.available;
             this.available = available;
 
-            firePropertyChangeEvent("available", old, available, new Object[]{availablePosition, moveAction});
+            firePropertyChangeEvent("available", old, available,
+                                    new Object[]{availablePosition, moveAction});
         }
     }
 

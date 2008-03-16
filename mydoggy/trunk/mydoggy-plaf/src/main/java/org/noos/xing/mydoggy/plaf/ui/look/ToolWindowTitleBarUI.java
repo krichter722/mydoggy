@@ -418,11 +418,11 @@ public class ToolWindowTitleBarUI extends PanelUI {
             }
 
             // Setup ghostImage
-            if (resourceManager.getBoolean("drag.icon.useDefault", false)) {
+            if (!descriptor.isPreviewAvailable() || resourceManager.getBoolean("drag.icon.useDefault", false)) {
                 setGhostImage(dge.getDragOrigin(),
                               resourceManager.getBufferedImage(MyDoggyKeySpace.DRAG));
             } else {
-                Component contentContainer = ((DockedContainer) descriptor.getToolWindowContainer()).getContentContainer();
+                Component contentContainer = descriptor.getPreviewComponent();
                 BufferedImage ghostImage = new BufferedImage(contentContainer.getWidth(),
                                                              contentContainer.getHeight(), BufferedImage.TYPE_INT_RGB);
                 contentContainer.print(ghostImage.getGraphics());

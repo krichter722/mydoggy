@@ -6,6 +6,7 @@ import org.noos.common.Question;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
+import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.mydoggyset.action.*;
 import org.noos.xing.mydoggy.mydoggyset.context.MyDoggySetContext;
@@ -15,6 +16,7 @@ import org.noos.xing.mydoggy.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -263,7 +265,6 @@ public class MyDoggySet {
 
 
         // Setup ContentManagerUI
-/*
         toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
 
         MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
@@ -278,7 +279,7 @@ public class MyDoggySet {
             public void contentUIDetached(ContentManagerUIEvent event) {
             }
         });
-*/
+
 
         // Setup Corner Components
         ToolWindowManagerDescriptor managerDescriptor = toolWindowManager.getToolWindowManagerDescriptor();
@@ -427,8 +428,8 @@ public class MyDoggySet {
 
             //TODO: test with all content manager ui...
 //            test.start(new MultiSplitRandomConstraints(test));
-            test.start(new TabbedRandomConstraints(test));
-//            test.start(null);
+//            test.start(new TabbedRandomConstraints(test));
+            test.start(null);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -34,10 +34,12 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
     protected Icon selectedTabIcon;
     protected TextIcon titleIcon;
     protected AggregateIcon tabIconTitle;
+    protected AggregateIcon minCloseDetachIcon;
     protected AggregateIcon closeDetachIcon;
 
     protected Icon closeIcon;
     protected Icon detachIcon;
+    protected Icon minimizeIcon;
 
     protected ByteArrayOutputStream tmpWorkspace = null;
 
@@ -54,8 +56,9 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         this.titleIcon = new TextIcon(this, "", TextIcon.ROTATE_NONE);
         this.tabIconTitle = new AggregateIcon(null, titleIcon, SwingConstants.HORIZONTAL);
         this.closeDetachIcon = new AggregateIcon(detachIcon, closeIcon, SwingConstants.HORIZONTAL);
+        this.minCloseDetachIcon = new AggregateIcon(minimizeIcon, closeDetachIcon, SwingConstants.HORIZONTAL);
         this.selectedTabIcon = new ExAggregateIcon(tabIconTitle,
-                                                   closeDetachIcon,
+                                                   minCloseDetachIcon,
                                                    SwingConstants.HORIZONTAL);
         this.flashingContents = new HashMap<Content, Object>();
 
@@ -173,9 +176,11 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         this.toolWindowManager = toolWindowManager;
         this.resourceManager = toolWindowManager.getResourceManager();
 
+        minimizeIcon = resourceManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_MINIMIZE);
         detachIcon = resourceManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_DETACH);
         closeIcon = resourceManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_CLOSE);
 
+        this.minCloseDetachIcon.setLeftIcon(minimizeIcon);
         this.closeDetachIcon.setLeftIcon(detachIcon);
         this.closeDetachIcon.setRightIcon(closeIcon);
     }
@@ -334,6 +339,11 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
                         return;
                     }
 
+                    if (isMinimizedFired(content.getContentUI(), e.getPoint())) {
+                        content.setMinimzed(!content.isMinimzed());
+                        return;
+                    }
+
                     if (e.getClickCount() == 2)
                         content.setMaximized(!content.isMaximized());
                 } else if (SwingUtilities.isRightMouseButton(e))
@@ -373,6 +383,14 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             }
         }
 
+
+        protected boolean isMinimizedFired(ContentUI contentUI, Point point) {
+            Point relativeMousePoint = SwingUtilities.convertPoint(JTabbedContentPane.this, point, getDestination());
+            Rectangle detachIconRect = minCloseDetachIcon.getLastPaintedLeftRec();
+
+            return (/* TODO:contentUI.isDetachable() && */((relativeMousePoint.getX() > detachIconRect.x && relativeMousePoint.getX() < detachIconRect.x + detachIconRect.width) ||
+                                                 (point.getX() > detachIconRect.x && point.getX() < detachIconRect.x + detachIconRect.width)));
+        }
 
         protected boolean isDetachFired(ContentUI contentUI, Point point) {
             Point relativeMousePoint = SwingUtilities.convertPoint(JTabbedContentPane.this, point, getDestination());

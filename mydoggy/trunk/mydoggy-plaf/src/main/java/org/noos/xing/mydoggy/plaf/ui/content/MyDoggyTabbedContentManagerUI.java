@@ -2,6 +2,8 @@ package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
+import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDialog;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentFrame;
@@ -440,6 +442,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
             MaximizedListener maximizedListener = new MaximizedListener();
             internalPropertyChangeSupport.addPropertyChangeListener("maximized.before", maximizedListener);
             internalPropertyChangeSupport.addPropertyChangeListener("maximized", maximizedListener);
+            internalPropertyChangeSupport.addPropertyChangeListener("minimized", new MinimizedListener());
             contentUIListener = new ContentUIListener();
 
             SwingUtil.registerDragGesture(tabbedContentPane,
@@ -797,6 +800,76 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                 }
             }
         }
+    }
+
+    protected class MinimizedListener implements PropertyChangeListener {
+        protected Map<Content, Integer> minimizedContentUIMap;
+
+        public MinimizedListener() {
+            minimizedContentUIMap = new HashMap<Content, Integer>();
+        }
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            Content content = (Content) evt.getSource();
+            if ((Boolean) evt.getNewValue()) {
+                content.setSelected(false);
+                content.setMaximized(false);
+
+                DockableDescriptor descriptor = toolWindowManager.getDockableDescriptor(content.getId());
+                if (descriptor == null) {
+                    descriptor = new ContentDescriptor(toolWindowManager, content);
+                    toolWindowManager.putDockableDescriptor(content.getId(), descriptor);
+                }
+
+                // Remove content
+                // Store constraint
+                if (tabbedContentPane.getTabCount() != 0)
+                    minimizedContentUIMap.put(content, tabbedContentPane.indexOfContent(content));
+                else
+                    minimizedContentUIMap.put(content, -1);
+
+                // Remove content from tab
+                int tabIndex = tabbedContentPane.indexOfContent(content);
+                if (tabIndex != -1) {
+                    tabbedContentPane.removeTabAt(tabIndex);
+                    if (tabbedContentPane.getTabCount() == 0)
+                        toolWindowManager.resetMainContent();
+                } else {
+                    if (tabbedContentPane.getParent() == null)
+                        toolWindowManager.resetMainContent();
+                    else
+                        throw new IllegalStateException("Invalid Content : " + content);
+                }
+
+                // Put on bar
+                toolWindowManager.propertyChange(
+                        new UserPropertyChangeEvent(descriptor, "available", false, true,
+                                                    new Object[]{-1, false}
+                        )
+                );
+            } else {
+                DockableDescriptor descriptor = toolWindowManager.getDockableDescriptor(content.getId());
+
+                // Remove from bar
+                toolWindowManager.propertyChange(
+                        new UserPropertyChangeEvent(descriptor, "available", true, false,
+                                                    new Object[]{-1, false}
+                        )
+                );
+
+                contentValueAdjusting = true;
+                try {
+                    addUIForContent(content, minimizedContentUIMap.get(content));
+                    content.setSelected(true);
+
+                    componentInFocusRequest = SwingUtil.findAndRequestFocus(content.getComponent());
+                } finally {
+                    contentValueAdjusting = false;
+                    minimizedContentUIMap.remove(content);
+                }
+            }
+        }
+
     }
 
     protected class TabbedContentManagerDragGesture extends DragGestureAdapter {
