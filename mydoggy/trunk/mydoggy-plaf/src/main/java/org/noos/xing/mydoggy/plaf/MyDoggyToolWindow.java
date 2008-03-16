@@ -160,7 +160,6 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     public void aggregate(ToolWindow toolWindow, AggregationPosition aggregationPosition) {
         try {
             if (toolWindow != null) {
-                // TODO: is valid descriptor.getManager().getContentManager().isEnabled() 
                 if ((descriptor.getManager().getContentManager().isEnabled() && toolWindow.getAnchor() != anchor) || 
                     !toolWindow.isVisible())
                     return;

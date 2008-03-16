@@ -7,13 +7,32 @@ import java.beans.PropertyChangeSupport;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class PropertyChangeBridge extends PropertyChangeSupport implements PropertyChangeListener {
+public class PropertyChangeBridge implements PropertyChangeListener {
+    protected PropertyChangeSupport bridgePropertyChangeSupport;
 
-    public PropertyChangeBridge(Object sourceBean) {
-        super(sourceBean);
+    public PropertyChangeBridge() {
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        firePropertyChange(evt);
+        if (bridgePropertyChangeSupport != null)
+            bridgePropertyChangeSupport.firePropertyChange(evt);
+    }
+
+    public void addBridgePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        if (bridgePropertyChangeSupport == null)
+            bridgePropertyChangeSupport = new PropertyChangeSupport(this);
+        bridgePropertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+    }
+
+    public void removeBridgePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        if (bridgePropertyChangeSupport == null)
+            bridgePropertyChangeSupport = new PropertyChangeSupport(this);
+        bridgePropertyChangeSupport.removePropertyChangeListener(propertyName, listener);
+    }
+
+    public PropertyChangeListener[] getBridgePropertyChangeListeners(String propertyName) {
+        if (bridgePropertyChangeSupport == null)
+            bridgePropertyChangeSupport = new PropertyChangeSupport(this);
+        return bridgePropertyChangeSupport.getPropertyChangeListeners(propertyName);
     }
 }
