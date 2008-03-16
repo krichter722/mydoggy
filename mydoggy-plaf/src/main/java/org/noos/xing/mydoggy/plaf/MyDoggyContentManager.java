@@ -295,6 +295,7 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
 
         MyDoggyContent content = new MyDoggyContent(this, id, title, icon, component, tip, toolWindow);
         content.addPlafPropertyChangeListener("selected", new SelectedContentPropertyChangeListener());
+        content.addPlafPropertyChangeListener("maximized.before", new SelectedContentPropertyChangeListener());
 
         contents.add(content);
         contentMap.put(id, content);
@@ -338,4 +339,21 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
         }
     }
 
+    protected class MaximizedBeforePropertyChangeListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            assert evt.getSource() instanceof Content;
+            Content source = (Content) evt.getSource();
+
+            if (Boolean.TRUE.equals(evt.getNewValue())) {
+                for (Content content : getContents()) {
+                    if (content.isMaximized() && content != source) {
+                        content.setMaximized(false);
+                        return;
+                    }
+                }
+            }
+            
+        }
+    }
 }

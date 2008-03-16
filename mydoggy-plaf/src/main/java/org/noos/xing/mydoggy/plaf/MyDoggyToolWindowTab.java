@@ -23,6 +23,8 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
     protected boolean selected;
     protected boolean closeable;
     protected boolean flash;
+    protected boolean maximized;
+    protected boolean minimized;
 
     protected Dockable dockable;
 
@@ -39,6 +41,8 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
         this.closeable = !root;
         this.dockable = dockable;
         this.flash = false;
+        this.maximized = false;
+        this.minimized = false;
 
         if (dockable != null)
             dockable.addPropertyChangeListener(new DelegatorListener());
@@ -160,19 +164,29 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
     }
 
     public void setMaximized(boolean maximized) {
-        //TODO: 
+        if (this.maximized == maximized)
+            return;
+
+        boolean old = this.maximized;
+        this.maximized = maximized;
+        firePropertyChangeEvent("maximized", old, maximized);
     }
 
     public boolean isMaximized() {
-        return false;
+        return maximized;
     }
 
     public void setMinimzed(boolean minimized) {
-        //  TODO:
+        if (this.minimized == minimized)
+            return;
+
+        boolean old = this.minimized;
+        this.minimized = minimized;
+        firePropertyChangeEvent("minimized", old, minimized);
     }
 
     public boolean isMinimzed() {
-        return false;
+        return minimized;
     }
 
     public Dockable getDockableDelegator() {

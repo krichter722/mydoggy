@@ -12,6 +12,7 @@ import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MouseEventDispatcher;
+import org.noos.xing.mydoggy.plaf.ui.util.PropertyChangeBridge;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -26,8 +27,9 @@ import java.util.EventListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @todo: implemets maximzied and minimized
  */
-public class ToolWindowTabPanel extends JComponent implements PropertyChangeListener {
+public class ToolWindowTabPanel extends JComponent {
     protected DockedContainer dockedContainer;
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
@@ -43,6 +45,8 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
     protected MouseEventDispatcher mouseEventDispatcher;
 
+    protected PropertyChangeBridge propertyChangeBridge;
+
 
     public ToolWindowTabPanel(DockedContainer dockedContainer, ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
@@ -53,19 +57,6 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
         initComponents();
         initListeners();
-    }
-
-
-    public void propertyChange(PropertyChangeEvent evt) {
-        String property = evt.getPropertyName();
-        if ("selected".equals(property)) {
-            ToolWindowTab tab = (ToolWindowTab) evt.getSource();
-            if (evt.getNewValue() == Boolean.TRUE) {
-                if (selectedTab != null)
-                    selectedTab.setSelected(false);
-                selectedTab = tab;
-            }
-        }
     }
 
 
@@ -87,6 +78,8 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
 
     protected void initComponents() {
+        this.propertyChangeBridge = new PropertyChangeBridge();
+
         setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL, 1, 14}, {0, TableLayout.FILL, 0}}, false));
         setFocusable(false);
         setBorder(null);
@@ -113,6 +106,8 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
     }
 
     protected void initListeners() {
+        propertyChangeBridge.addBridgePropertyChangeListener("selected", new TabSelectedPropertyChangeListener());
+
         dockedContainer.setPopupUpdater(new DockedContainer.PopupUpdater() {
             final JMenuItem nextTabItem = new JMenuItem(new SelectNextTabAction());
             final JMenuItem previousTabItem = new JMenuItem(new SelectPreviousTabAction());
@@ -247,8 +242,8 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
 
         tabContainer.add(new TabButton(tab), (column + 1) + ",0" + ",FULL,FULL");
 
-        tab.removePropertyChangeListener(this);
-        tab.addPropertyChangeListener(this);
+        tab.removePropertyChangeListener(propertyChangeBridge);
+        tab.addPropertyChangeListener(propertyChangeBridge);
 
         SwingUtil.repaint(tabContainer);
     }
@@ -261,7 +256,7 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                 if (tabButton.tab == toolWindowTab) {
                     TableLayoutConstraints constraints = containerLayout.getConstraints(tabButton);
                     tabContainer.remove(tabButton);
-                    tabButton.removePropertyChangeListener(this);
+                    tabButton.removePropertyChangeListener(propertyChangeBridge);
 
                     nextTabCol = constraints.col1;
                     int col = constraints.col1 - 1;
@@ -693,6 +688,18 @@ public class ToolWindowTabPanel extends JComponent implements PropertyChangeList
                     tabs[tabs.length - 1].setSelected(true);
             } else if (tabs.length > 0)
                 tabs[tabs.length - 1].setSelected(true);
+        }
+    }
+
+    protected class TabSelectedPropertyChangeListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            ToolWindowTab tab = (ToolWindowTab) evt.getSource();
+            if (evt.getNewValue() == Boolean.TRUE) {
+                if (selectedTab != null)
+                    selectedTab.setSelected(false);
+                selectedTab = tab;
+            }
         }
     }
 
