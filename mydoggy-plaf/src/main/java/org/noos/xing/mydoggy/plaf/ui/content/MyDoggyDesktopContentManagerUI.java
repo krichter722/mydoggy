@@ -579,6 +579,10 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
 
                 // Remove the internal frame
                 JInternalFrame internalFrame = getFrameByContent(content);
+
+                Rectangle inBounds = toolWindowManager.getBoundsToScreen(internalFrame.getBounds(),
+                                                                         desktopPane);
+
                 if (internalFrame != null) {
                     desktopPane.remove(internalFrame);
                     detachedContentUIMap.put(content, (DesktopContentUI) internalFrame);
@@ -589,10 +593,10 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                 Window dialog;
                 if (contentUI.isAddToTaskBarWhenDetached()) {
                     dialog = new ContentFrame(resourceManager, (PlafContent) content, contentUI,
-                                              parentFrame, null);
+                                              parentFrame, inBounds);
                 } else {
                     dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI,
-                                               parentFrame, null);
+                                               parentFrame, inBounds);
                 }
                 dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
                 dialog.toFront();
@@ -654,6 +658,17 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                     );
                     maximize.addActionListener(this);
                     menu.add(maximize);
+
+                    //  TODO: continue...
+                    JMenuItem minimize = new JMenuItem();
+                    minimize.putClientProperty("content", content);
+                    minimize.setActionCommand("Minimize");
+                    minimize.setText(content.isMaximized() ?
+                                     resourceManager.getString("@@tabbed.page.restore") :
+                                     resourceManager.getString("@@tabbed.page.maximize")
+                    );
+                    minimize.addActionListener(this);
+                    menu.add(minimize);
 
                     popupMenu.add(menu);
                 }

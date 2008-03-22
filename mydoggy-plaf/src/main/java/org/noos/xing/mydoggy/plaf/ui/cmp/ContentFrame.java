@@ -74,6 +74,7 @@ public class ContentFrame extends JFrame {
                     Point location = parentFrame.getLocation();
                     location.translate(5, 5);
                     setLocation(location);
+                    setSize(320, 200);
                 } else {
                     SwingUtil.centrePositionOnScreen(this);
                 }
