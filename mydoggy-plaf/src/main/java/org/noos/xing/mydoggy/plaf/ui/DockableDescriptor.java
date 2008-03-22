@@ -17,11 +17,17 @@ public interface DockableDescriptor {
         TOOL_WINDOW,
         TOOL_WINDOW_TAB,
         CONTENT,
-        OTHER
+        CUSTOM
     }
 
 
+    void setAnchor(ToolWindowAnchor anchor, int index);
+
     ToolWindowAnchor getAnchor();
+
+    void setAvailable(boolean available);
+
+    boolean isAvailable(boolean available);
 
     DockableType getDockableType();
 
@@ -45,10 +51,10 @@ public interface DockableDescriptor {
 
     MyDoggyToolWindowBar getToolBar();
 
-    boolean isPreviewAvailable();
+    MyDoggyToolWindowBar getToolBar(ToolWindowAnchor anchor);
 
-    Component getPreviewComponent();
+    boolean isDragImageAvailable();
 
-    void setAnchor(ToolWindowAnchor anchor, int index);
+    Component getComponentForDragImage();
 
 }

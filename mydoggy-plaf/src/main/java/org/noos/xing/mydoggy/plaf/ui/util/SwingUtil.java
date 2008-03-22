@@ -226,8 +226,12 @@ public class SwingUtil {
     }
 
     public static Icon loadIcon(String urlDef) {
+        return loadIcon(SwingUtil.class.getClassLoader(), urlDef);
+    }
+
+    public static Icon loadIcon(ClassLoader classLoader, String urlDef) {
         try {
-            URL url = SwingUtil.class.getClassLoader().getResource(urlDef);
+            URL url = classLoader.getResource(urlDef);
             if (url == null)
                 throw new IllegalArgumentException("Invalid URL : " + urlDef);
 
@@ -383,12 +387,12 @@ public class SwingUtil {
 //            if (graphicsDevice.isFullScreenSupported())
 //                graphicsDevice.setFullScreenWindow(window);
 //            else {
-                Rectangle targetBounds = window.getBounds();
-                fullScreenBounds.put(window, targetBounds);
-                window.setBounds(
-                        GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds()
-                        /*graphicsDevice.getDefaultConfiguration().getBounds()*/
-                );
+            Rectangle targetBounds = window.getBounds();
+            fullScreenBounds.put(window, targetBounds);
+            window.setBounds(
+                    GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds()
+                    /*graphicsDevice.getDefaultConfiguration().getBounds()*/
+            );
 //            }
         }
     }
@@ -519,20 +523,53 @@ public class SwingUtil {
         return null;
     }
 
+    public static <T> T getParentClientProperty(Component c, Class<? extends T> propertyIdClass) {
+        if (c == null || propertyIdClass == null)
+            return null;
+
+        if (c instanceof JComponent) {
+            T t = (T) ((JComponent) c).getClientProperty(propertyIdClass);
+            if (t != null)
+                return t;
+        }
+
+        for (; c != null; c = c.getParent()) {
+            if (c instanceof JComponent) {
+                T t = (T) ((JComponent) c).getClientProperty(propertyIdClass);
+                if (t != null)
+                    return t;
+            }
+        }
+
+        return null;
+    }
+
     public static Component findAndRequestFocus(Component component) {
         Container container;
         if (component instanceof JDialog) {
-            container = ((JDialog)component).getContentPane();
+            container = ((JDialog) component).getContentPane();
         } else if (component instanceof Container)
             container = (Container) component;
         else
             return null;
-        
+
         Component focusRequester = SwingUtil.findFocusable(container);
         if (focusRequester == null) {
             focusRequester = container;
         }
         SwingUtil.requestFocus(focusRequester);
         return focusRequester;
+    }
+
+    public static Component getComponentWhoseParentIs(Component c, Component p) {
+        if (c == null || p == null)
+            return null;
+
+        while (c != null) {
+            if (c.getParent() == p)
+                return c;
+            c = c.getParent();
+        }
+        return null;
     }
 }

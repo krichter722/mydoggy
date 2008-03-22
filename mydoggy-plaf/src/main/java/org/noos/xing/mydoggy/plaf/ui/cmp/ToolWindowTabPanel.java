@@ -10,6 +10,9 @@ import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureDelegate;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureInitiator;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MouseEventDispatcher;
 import org.noos.xing.mydoggy.plaf.ui.util.PropertyChangeBridge;
@@ -29,7 +32,7 @@ import java.util.EventListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @todo: implemets maximzied and minimized
  */
-public class ToolWindowTabPanel extends JComponent {
+public class ToolWindowTabPanel extends JComponent implements DragGestureInitiator {
     protected DockedContainer dockedContainer;
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
@@ -43,6 +46,7 @@ public class ToolWindowTabPanel extends JComponent {
     protected Component selecTabButton;
     protected PopupButton popupButton;
 
+    protected DragGestureDelegate dragGestureDelegate;
     protected MouseEventDispatcher mouseEventDispatcher;
 
     protected PropertyChangeBridge propertyChangeBridge;
@@ -54,19 +58,17 @@ public class ToolWindowTabPanel extends JComponent {
         this.resourceManager = descriptor.getResourceManager();
         this.dockedContainer = dockedContainer;
         this.mouseEventDispatcher = new MouseEventDispatcher();
+        this.dragGestureDelegate = new DragGestureDelegate();
 
         initComponents();
         initListeners();
     }
 
 
-    public JViewport getViewport() {
-        return viewport;
+    public void setDragGesture(DragGesture dragGesture) {
+        dragGestureDelegate.setDragGesture(dragGesture);
     }
 
-    public JPanel getTabContainer() {
-        return tabContainer;
-    }
 
     public void addEventDispatcherlListener(EventListener eventListener) {
         mouseEventDispatcher.addListener(eventListener);
@@ -205,7 +207,7 @@ public class ToolWindowTabPanel extends JComponent {
             }
 
             public void toolWindowTabRemoved(ToolWindowTabEvent event) {
-                ToolWindowTab nextTab = removeTab(event.getToolWindowTab());
+                ToolWindowTab nextTab = removeTab(event.getToolWindowTab(), true);
 
                 if (event.getToolWindowTab().isSelected()) {
                     ToolWindowTab[] tabs = toolWindow.getToolWindowTabs();
@@ -224,31 +226,38 @@ public class ToolWindowTabPanel extends JComponent {
         viewport.addMouseListener(dockedContainer.getTitleBarMouseAdapter());
         viewport.addMouseListener(mouseEventDispatcher);
         viewport.addMouseMotionListener(mouseEventDispatcher);
+
+        // Register drag gesture
+        SwingUtil.registerDragGesture(viewport, dragGestureDelegate);        
     }
 
     protected void initTabs() {
-        for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+        for (ToolWindowTab tab : toolWindow.getToolWindowTabs())
             addTab(tab);
-        }
 
         checkPopupButton();
     }
 
-    protected void addTab(ToolWindowTab tab) {
+    protected void addTab(TabButton tabButton) {
         int column = containerLayout.getNumColumn();
         containerLayout.insertColumn(column, 0);
         containerLayout.insertColumn(column + 1, -2);
         containerLayout.insertColumn(column + 2, 0);
 
-        tabContainer.add(new TabButton(tab), (column + 1) + ",0" + ",FULL,FULL");
-
-        tab.removePropertyChangeListener(propertyChangeBridge);
-        tab.addPropertyChangeListener(propertyChangeBridge);
+        tabContainer.add(tabButton, (column + 1) + ",0" + ",FULL,FULL");
 
         SwingUtil.repaint(tabContainer);
     }
 
-    protected ToolWindowTab removeTab(ToolWindowTab toolWindowTab) {
+    protected void addTab(ToolWindowTab tab) {
+        TabButton tabButton = new TabButton(tab);
+        tab.removePropertyChangeListener(propertyChangeBridge);
+        tab.addPropertyChangeListener(propertyChangeBridge);
+        
+        addTab(tabButton);
+    }
+
+    protected ToolWindowTab removeTab(ToolWindowTab toolWindowTab, boolean flag) {
         int nextTabCol = -1;
         for (Component component : tabContainer.getComponents()) {
             if (component instanceof TabButton) {
@@ -256,7 +265,9 @@ public class ToolWindowTabPanel extends JComponent {
                 if (tabButton.tab == toolWindowTab) {
                     TableLayoutConstraints constraints = containerLayout.getConstraints(tabButton);
                     tabContainer.remove(tabButton);
-                    tabButton.removePropertyChangeListener(propertyChangeBridge);
+
+                    if (flag)
+                        tabButton.removePropertyChangeListener(propertyChangeBridge);
 
                     nextTabCol = constraints.col1;
                     int col = constraints.col1 - 1;
@@ -292,12 +303,13 @@ public class ToolWindowTabPanel extends JComponent {
     }
 
 
-    public class TabButton extends JPanel implements PropertyChangeListener, MouseListener, ActionListener {
+    protected class TabButton extends JPanel implements PropertyChangeListener, MouseListener, ActionListener {
         protected ToolWindowTab tab;
 
         protected TableLayout layout;
         protected JLabel titleLabel;
         protected JButton closeButton;
+        protected JButton minimizeButton;
 
         protected boolean pressed;
         protected boolean inside;
@@ -309,92 +321,26 @@ public class ToolWindowTabPanel extends JComponent {
 
 
         public TabButton(final ToolWindowTab tab) {
-            setLayout(layout = new TableLayout(new double[][]{{-1, 0, 0}, {-1}}));
+            this.tab = tab;
 
+            putClientProperty(ToolWindowTab.class, tab);
+
+            // Setup Panel
+            setLayout(layout = new TableLayout(new double[][]{{-1, 0, 0, 0, 0}, {-1}}));
             setOpaque(false);
             setFocusable(false);
-            setUI(new BasicPanelUI() {
-                public void update(Graphics g, JComponent c) {
-                    Rectangle bounds = c.getBounds();
-                    bounds.x = bounds.y = 0;
-
-                    if (tab.isFlashing() && toolWindow.isVisible()) {
-                        if (flashingState) {
-                            GraphicsUtil.fillRect(g, bounds,
-                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
-                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
-                                                  new RoundRectangle2D.Double(
-                                                          bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
-                                                  ),
-                                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-                        } else {
-                            GraphicsUtil.fillRect(g, bounds,
-                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
-                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
-                                                  new RoundRectangle2D.Double(
-                                                          bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
-                                                  ),
-                                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-                        }
-
-                        if (flashingTimer == null) {
-                            flashingTimer = new Timer(600, new ActionListener() {
-                                long start = 0;
-
-                                public void actionPerformed(ActionEvent e) {
-                                    Rectangle bounds = TabButton.this.getBounds();
-                                    bounds.x = bounds.y = 0;
-
-                                    if (start == 0)
-                                        start = System.currentTimeMillis();
-
-                                    flashingState = !flashingState;
-
-                                    SwingUtil.repaint(TabButton.this);
-
-                                    if (flasingDuration != -1 && System.currentTimeMillis() - start > flasingDuration)
-                                        tab.setFlashing(false);
-                                }
-                            });
-                            flashingState = true;
-                        }
-                        if (!flashingTimer.isRunning()) {
-                            flashingTimer.start();
-                        }
-                    } else if (tabContainer.getComponentCount() > 1) {
-                        if (selected) {
-                            if (toolWindow.isActive()) {
-                                GraphicsUtil.fillRect(g, bounds,
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
-                                                      new RoundRectangle2D.Double(
-                                                              bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
-                                                      ),
-                                                      GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-                            } else
-                                GraphicsUtil.fillRect(g, bounds,
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END),
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START),
-                                                      new RoundRectangle2D.Double(
-                                                              bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
-                                                      ),
-                                                      GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-                        }
-                    }
-
-                    super.update(g, c);
-                }
-            });
+            setUI(new TabButtonPanelUI());
             addMouseListener(mouseEventDispatcher);
             addMouseMotionListener(mouseEventDispatcher);
-
             String name = "toolWindow." + tab.getOwner().getId() + ".tab." + tab.getTitle();
             setName(name);
 
-            this.tab = tab;
             this.tab.addPropertyChangeListener(this);
             this.selected = this.pressed = this.inside = false;
 
+            // Prepare components
+
+            // Title
             titleLabel = new JLabel(tab.getTitle());
             titleLabel.setName(name + ".title");
             titleLabel.setForeground(resourceManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
@@ -418,21 +364,45 @@ public class ToolWindowTabPanel extends JComponent {
             titleLabel.addMouseListener(this);
             add(titleLabel, "0,0,FULL,FULL");
 
+            // Buttons
             closeButton = (JButton) resourceManager.createComponent(
                     MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON,
                     descriptor.getManager()
             );
             closeButton.setName(name + ".closeButton");
+            closeButton.setActionCommand("close");
             closeButton.addActionListener(this);
             closeButton.setToolTipText(resourceManager.getString("@@tool.tab.close"));
             closeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.TAB_CLOSE));
 
-            add(closeButton, "2,0,FULL,c");
+            minimizeButton = (JButton) resourceManager.createComponent(
+                    MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON,
+                    descriptor.getManager()
+            );
+            minimizeButton.setName(name + ".minimizeButton");
+            minimizeButton.setActionCommand("minimize");
+            minimizeButton.addActionListener(this);
+            minimizeButton.setToolTipText(resourceManager.getString("@@tool.tab.minimize"));
+            minimizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.TAB_MINIMIZE));
+
+            add(minimizeButton, "2,0,FULL,c");
+            add(closeButton, "4,0,FULL,c");
+
+            // Register DragGesture
+            SwingUtil.registerDragGesture(this, dragGestureDelegate);
+            SwingUtil.registerDragGesture(titleLabel, dragGestureDelegate);                    
+            SwingUtil.registerDragGesture(minimizeButton, dragGestureDelegate);
+            SwingUtil.registerDragGesture(closeButton, dragGestureDelegate);
         }
 
 
         public void actionPerformed(ActionEvent e) {
-            toolWindow.removeToolWindowTab(tab);
+            String actionCommand = e.getActionCommand();
+            if ("close".equals(actionCommand)) {
+                toolWindow.removeToolWindowTab(tab);
+            } else {
+                tab.setMinimzed(true);
+            }
         }
 
         public void mousePressed(MouseEvent e) {
@@ -480,6 +450,7 @@ public class ToolWindowTabPanel extends JComponent {
 
                     titleLabel.setForeground(resourceManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
                     closeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.TAB_CLOSE_INACTIVE));
+                    minimizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.TAB_MINIMIZE_INACTIVE));
                     setButtonsEnabled(false);
 
                     selected = false;
@@ -498,6 +469,7 @@ public class ToolWindowTabPanel extends JComponent {
 
                     titleLabel.setForeground(resourceManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
                     closeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.TAB_CLOSE));
+                    minimizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.TAB_MINIMIZE));
                     setButtonsEnabled(true);
                     selected = true;
                 }
@@ -533,6 +505,19 @@ public class ToolWindowTabPanel extends JComponent {
                         SwingUtil.repaint(this);
                     }
                 }
+            } else if ("minimized".equals(property)) {
+                if (evt.getNewValue() == Boolean.TRUE) {
+                    if (tab.isSelected()) {
+                        tab.setSelected(false);
+
+                        // TODO: Select another tab 
+                        toolWindow.getToolWindowTabs()[0].setSelected(true);
+                    }
+
+                    removeTab(tab, false);
+                } else {
+                    addTab(this);
+                }
             }
         }
 
@@ -540,23 +525,112 @@ public class ToolWindowTabPanel extends JComponent {
             return new Insets(0, 5, 0, 5);
         }
 
+
+        public void aclean() {
+            tab.removePropertyChangeListener(this);
+            removeMouseMotionListener(mouseEventDispatcher);
+            removeMouseListener(mouseEventDispatcher);
+        }
+
         public ToolWindowTab getTab() {
             return tab;
         }
 
-
         protected void setButtonsEnabled(boolean enabled) {
-            if (enabled && tabContainer.getComponentCount() > 1 && tab.isCloseable()) {
-                layout.setColumn(1, 3);
+            if (enabled && tabContainer.getComponentCount() > 1) {
+                if (tab.isCloseable()) {
+                    layout.setColumn(3, 1);
+                    layout.setColumn(4, 14);
+                } else {
+                    layout.setColumn(3, 0);
+                    layout.setColumn(4, 0);
+                }
+                layout.setColumn(1, 1);
                 layout.setColumn(2, 14);
             } else {
                 layout.setColumn(1, 0);
                 layout.setColumn(2, 0);
+                layout.setColumn(3, 0);
+                layout.setColumn(4, 0);
             }
             revalidate();
             repaint();
         }
 
+
+        protected class TabButtonPanelUI extends BasicPanelUI {
+
+            public void update(Graphics g, JComponent c) {
+                Rectangle bounds = c.getBounds();
+                bounds.x = bounds.y = 0;
+
+                if (tab.isFlashing() && toolWindow.isVisible()) {
+                    if (flashingState) {
+                        GraphicsUtil.fillRect(g, bounds,
+                                              resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
+                                              resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
+                                              new RoundRectangle2D.Double(
+                                                      bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
+                                              ),
+                                              GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+                    } else {
+                        GraphicsUtil.fillRect(g, bounds,
+                                              resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
+                                              resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
+                                              new RoundRectangle2D.Double(
+                                                      bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
+                                              ),
+                                              GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+                    }
+
+                    if (flashingTimer == null) {
+                        flashingTimer = new Timer(600, new ActionListener() {
+                            long start = 0;
+
+                            public void actionPerformed(ActionEvent e) {
+                                Rectangle bounds = TabButton.this.getBounds();
+                                bounds.x = bounds.y = 0;
+
+                                if (start == 0)
+                                    start = System.currentTimeMillis();
+
+                                flashingState = !flashingState;
+
+                                SwingUtil.repaint(TabButton.this);
+
+                                if (flasingDuration != -1 && System.currentTimeMillis() - start > flasingDuration)
+                                    tab.setFlashing(false);
+                            }
+                        });
+                        flashingState = true;
+                    }
+                    if (!flashingTimer.isRunning()) {
+                        flashingTimer.start();
+                    }
+                } else if (tabContainer.getComponentCount() > 1) {
+                    if (selected) {
+                        if (toolWindow.isActive()) {
+                            GraphicsUtil.fillRect(g, bounds,
+                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
+                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
+                                                  new RoundRectangle2D.Double(
+                                                          bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
+                                                  ),
+                                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+                        } else
+                            GraphicsUtil.fillRect(g, bounds,
+                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END),
+                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START),
+                                                  new RoundRectangle2D.Double(
+                                                          bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
+                                                  ),
+                                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+                    }
+                }
+
+                super.update(g, c);
+            }
+        }
     }
 
     protected class PopupButton extends ToolWindowActiveButton implements ActionListener {
@@ -595,43 +669,6 @@ public class ToolWindowTabPanel extends JComponent {
 
     }
 
-    protected class WheelScroller implements MouseWheelListener {
-        public void mouseWheelMoved(MouseWheelEvent e) {
-            switch (e.getWheelRotation()) {
-                case 1:
-                    Rectangle visRect = viewport.getViewRect();
-                    Rectangle bounds = tabContainer.getBounds();
-
-                    visRect.x += e.getUnitsToScroll() * 2;
-                    if (visRect.x + visRect.width >= bounds.width)
-                        visRect.x = bounds.width - visRect.width;
-
-                    viewport.setViewPosition(new Point(visRect.x, visRect.y));
-                    break;
-                case -1:
-                    visRect = viewport.getViewRect();
-
-                    visRect.x += e.getUnitsToScroll() * 2;
-                    if (visRect.x < 0)
-                        visRect.x = 0;
-                    viewport.setViewPosition(new Point(visRect.x, visRect.y));
-                    break;
-            }
-        }
-    }
-
-    public static class SelectTabAction extends AbstractAction {
-        private ToolWindowTab tab;
-
-        public SelectTabAction(ToolWindowTab tab) {
-            super(tab.getTitle());
-            this.tab = tab;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            tab.setSelected(true);
-        }
-    }
 
     protected class SelectNextTabAction extends AbstractAction {
 
@@ -690,6 +727,46 @@ public class ToolWindowTabPanel extends JComponent {
                 tabs[tabs.length - 1].setSelected(true);
         }
     }
+
+    protected class SelectTabAction extends AbstractAction {
+        private ToolWindowTab tab;
+
+        public SelectTabAction(ToolWindowTab tab) {
+            super(tab.getTitle());
+            this.tab = tab;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            tab.setSelected(true);
+        }
+    }
+
+    protected class WheelScroller implements MouseWheelListener {
+
+        public void mouseWheelMoved(MouseWheelEvent e) {
+            switch (e.getWheelRotation()) {
+                case 1:
+                    Rectangle visRect = viewport.getViewRect();
+                    Rectangle bounds = tabContainer.getBounds();
+
+                    visRect.x += e.getUnitsToScroll() * 2;
+                    if (visRect.x + visRect.width >= bounds.width)
+                        visRect.x = bounds.width - visRect.width;
+
+                    viewport.setViewPosition(new Point(visRect.x, visRect.y));
+                    break;
+                case -1:
+                    visRect = viewport.getViewRect();
+
+                    visRect.x += e.getUnitsToScroll() * 2;
+                    if (visRect.x < 0)
+                        visRect.x = 0;
+                    viewport.setViewPosition(new Point(visRect.x, visRect.y));
+                    break;
+            }
+        }
+    }
+
 
     protected class TabSelectedPropertyChangeListener implements PropertyChangeListener {
 

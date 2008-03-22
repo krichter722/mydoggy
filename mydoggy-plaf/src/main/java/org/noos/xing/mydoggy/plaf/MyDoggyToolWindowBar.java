@@ -30,9 +30,6 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
     public static final int VERTICAL_RIGHT = TextIcon.ROTATE_RIGHT;
     public static final int HORIZONTAL = TextIcon.ROTATE_NONE;
 
-    private static final double[] COLUMNS = {2, 19, 2};
-    private static final double[] ROWS = COLUMNS;
-
     protected MyDoggyToolWindowManager manager;
 
     protected ToolWindowAnchor anchor;
@@ -131,7 +128,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
         firePropertyChangeEvent("tempShowed", old, tempShowed);
     }
 
-    public int getRepresentativeAnchorIndex(JLabel representativeAnchor) {
+    public int getRepresentativeAnchorIndex(Component representativeAnchor) {
         TableLayoutConstraints constraints = representativeButtonsPanelLayout.getConstraints(representativeAnchor);
         if (constraints == null)
             return -1;
@@ -163,11 +160,11 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
 
         if (anchor == ToolWindowAnchor.LEFT || anchor == ToolWindowAnchor.RIGHT) {
             horizontal = false;
-            representativeButtonsPanel.setLayout(representativeButtonsPanelLayout = new ExtendedTableLayout(new double[][]{COLUMNS, {0}}));
+            representativeButtonsPanel.setLayout(representativeButtonsPanelLayout = new ExtendedTableLayout(new double[][]{MyDoggyToolWindowManager.COLUMNS, {0}}));
             orientation = JSplitPane.VERTICAL_SPLIT;
         } else if (anchor == ToolWindowAnchor.TOP || anchor == ToolWindowAnchor.BOTTOM) {
             horizontal = true;
-            representativeButtonsPanel.setLayout(representativeButtonsPanelLayout = new ExtendedTableLayout(new double[][]{{0}, ROWS}));
+            representativeButtonsPanel.setLayout(representativeButtonsPanelLayout = new ExtendedTableLayout(new double[][]{{0}, MyDoggyToolWindowManager.ROWS}));
             orientation = JSplitPane.HORIZONTAL_SPLIT;
         }
 
@@ -227,6 +224,41 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
                             splitPane.setDividerSize((Integer) values[1]);
                     }
                 }
+            }
+        });
+
+        manager.getResourceManager().addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                String propertyName = evt.getPropertyName();
+
+                switch (anchor) {
+                    case LEFT:
+                    case RIGHT:
+                        if (propertyName.equals(MyDoggyKeySpace.TOOL_WINDOW_VERTICAL_BAR_LENGTH)) {
+                            int oldValue = Integer.valueOf((String) evt.getOldValue()) - 4;
+                            int newValue = Integer.valueOf((String) evt.getNewValue()) - 4;
+
+                            for (int i = 0, size = representativeButtonsPanelLayout.getNumColumn(); i< size; i++) {
+                                if (representativeButtonsPanelLayout.getColumn(i) == oldValue)
+                                    representativeButtonsPanelLayout.setColumn(i, newValue);
+                            }
+                        }
+                        break;
+                    case TOP:
+                    case BOTTOM:
+                        if (propertyName.equals(MyDoggyKeySpace.TOOL_WINDOW_HORIZONTAL_BAR_LENGTH)) {
+                            int oldValue = Integer.valueOf((String) evt.getOldValue()) - 4;
+                            int newValue = Integer.valueOf((String) evt.getNewValue()) - 4;
+
+                            for (int i = 0, size = representativeButtonsPanelLayout.getNumRow(); i< size; i++) {
+                                if (representativeButtonsPanelLayout.getRow(i) == oldValue)
+                                    representativeButtonsPanelLayout.setRow(i, newValue);
+                            }
+                        }
+                        break;
+                }
+
+                SwingUtil.repaint(representativeButtonsPanel);
             }
         });
     }
@@ -331,9 +363,9 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
                     }
                 }
                 representativeButtonsPanelLayout.setColumn(finalCol, width);
-                representativeButtonsPanel.add(representativeAnchor, (index * 2 + 2) + ",1,");
+                representativeButtonsPanel.add(representativeAnchor, (index * 2 + 2) + ",1");
             } else
-                representativeButtonsPanel.add(representativeAnchor, (representativeButtonsPanelLayout.getNumColumn() - 1) + ",1,");
+                representativeButtonsPanel.add(representativeAnchor, (representativeButtonsPanelLayout.getNumColumn() - 1) + ",1");
         } else {
             int height = Math.max(representativeAnchor.getHeight(),
                                   Math.max(representativeAnchor.getPreferredSize().height,
@@ -509,8 +541,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
         protected boolean isDockableDescriptorValid(DockableDescriptor dockableDescriptor) {
             if (dockableDescriptor.getDockableType() == DockableDescriptor.DockableType.TOOL_WINDOW) {
                 ToolWindow tool = (ToolWindow) dockableDescriptor.getDockable();
-                  return tool.getType() != ToolWindowType.FLOATING_FREE &&
-                         tool.getType() != ToolWindowType.EXTERN;
+                return tool.getType() != ToolWindowType.FLOATING_FREE &&
+                       tool.getType() != ToolWindowType.EXTERN;
             }
             return true;
         }
@@ -845,7 +877,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
 
             if (visible) {
                 AggregationPosition aggregationPosition = null;
-                ToolWindow aggregationOnTool  = null;
+                ToolWindow aggregationOnTool = null;
 
                 if (evt instanceof UserPropertyChangeEvent) {
                     // Load parameter 
@@ -859,7 +891,6 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
 
                 if (aggregationOnTool == null)
                     aggregationPosition = AggregationPosition.valueOf(anchor.toString());
-                
 
 
                 DockedContainer container = (DockedContainer) descriptor.getToolWindowContainer();
@@ -1084,38 +1115,46 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
     protected class TitleListener extends IndexListener {
     }
 
+    static int len;
 
     protected class DragListener implements PropertyChangeListener {
-        protected int len;
 
         public void propertyChange(PropertyChangeEvent evt) {
             if ("startDrag".equals(evt.getPropertyName())) {
-                Component cmp = (Component) evt.getSource();
+                Component cmp = SwingUtil.getComponentWhoseParentIs((Component) evt.getSource(), representativeButtonsPanel);
                 TableLayout layout = (TableLayout) representativeButtonsPanel.getLayout();
                 switch (anchor) {
                     case LEFT:
                     case RIGHT:
                         len = cmp.getHeight();
+                        System.out.println("lenH = " + len);
                         layout.setRow(layout.getConstraints(cmp).row1, 0);
                         break;
                     case TOP:
                     case BOTTOM:
                         len = cmp.getWidth();
+                        System.out.println("lenW = " + len);
                         layout.setColumn(layout.getConstraints(cmp).col1, 0);
                         break;
                 }
                 SwingUtil.repaint(representativeButtonsPanel);
             } else if ("endDrag".equals(evt.getPropertyName())) {
                 for (Component cmp : representativeButtonsPanel.getComponents()) {
-                    if (cmp == evt.getSource()) {
+                    Component source = SwingUtil.getComponentWhoseParentIs((Component) evt.getSource(), representativeButtonsPanel);
+
+                    if (cmp == source) {
                         TableLayout layout = (TableLayout) representativeButtonsPanel.getLayout();
                         switch (anchor) {
                             case LEFT:
                             case RIGHT:
+                                System.out.println("layout.getConstraints(cmp).row1 = " + layout.getConstraints(cmp).row1);
+                                System.out.println("len = " + len);
                                 layout.setRow(layout.getConstraints(cmp).row1, len);
                                 break;
                             case TOP:
                             case BOTTOM:
+                                System.out.println("layout.getConstraints(cmp).col1 = " + layout.getConstraints(cmp).col1);
+                                System.out.println("len = " + len);
                                 layout.setColumn(layout.getConstraints(cmp).col1, len);
                                 break;
                         }

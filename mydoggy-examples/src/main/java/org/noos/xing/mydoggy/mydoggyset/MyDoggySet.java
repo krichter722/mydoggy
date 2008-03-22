@@ -1,5 +1,6 @@
 package org.noos.xing.mydoggy.mydoggyset;
 
+import info.clearthought.layout.TableLayout;
 import org.jdesktop.swingx.JXDatePicker;
 import org.jdesktop.swingx.JXMonthView;
 import org.noos.common.Question;
@@ -14,11 +15,15 @@ import org.noos.xing.mydoggy.mydoggyset.ui.LookAndFeelMenuItem;
 import org.noos.xing.mydoggy.mydoggyset.ui.MonitorPanel;
 import org.noos.xing.mydoggy.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.CustomDockableDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
+import org.noos.xing.mydoggy.plaf.ui.util.StringUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.view.ViewContext;
@@ -39,6 +44,7 @@ public class MyDoggySet {
     protected JFrame frame;
     protected ToolWindowManager toolWindowManager;
     protected ViewContext myDoggySetContext;
+    protected DockableDescriptor memoryMonitorDescriptor;
 
 
     public void setUp() {
@@ -52,6 +58,7 @@ public class MyDoggySet {
                 myDoggySetContext.put(MyDoggySet.class, null);
                 SwingUtil.centrePositionOnScreen(frame);
                 frame.setVisible(true);
+                memoryMonitorDescriptor.setAvailable(true);
 
                 if (runnable != null) {
                     Thread t = new Thread(runnable);
@@ -283,10 +290,55 @@ public class MyDoggySet {
 
         // Setup Corner Components
         ToolWindowManagerDescriptor managerDescriptor = toolWindowManager.getToolWindowManagerDescriptor();
-        managerDescriptor.setCornerComponent(NORD_WEST, new JLabel("NW"));
-        managerDescriptor.setCornerComponent(SOUTH_WEST, new JLabel("SW"));
-        managerDescriptor.setCornerComponent(NORD_EAST, new JLabel("NE"));
-        managerDescriptor.setCornerComponent(SOUTH_EAST, new JLabel("SE"));
+
+        JButton nwButton = new JButton(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/plus.png"));
+        nwButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ResourceManager resourceManager = ((MyDoggyToolWindowManager) toolWindowManager).getResourceManager();
+                resourceManager.putProperty(
+                                MyDoggyKeySpace.TOOL_WINDOW_HORIZONTAL_BAR_LENGTH,
+                                String.valueOf(resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_HORIZONTAL_BAR_LENGTH, 23) + 1)
+                        );
+            }
+        });
+
+        JButton swButton = new JButton(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/minus.png"));
+        swButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ResourceManager resourceManager = ((MyDoggyToolWindowManager) toolWindowManager).getResourceManager();
+                resourceManager.putProperty(
+                                MyDoggyKeySpace.TOOL_WINDOW_HORIZONTAL_BAR_LENGTH,
+                                String.valueOf(resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_HORIZONTAL_BAR_LENGTH, 23) - 1)
+                        );
+            }
+        });
+
+        JButton neButton = new JButton(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/plus.png"));
+        neButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ResourceManager resourceManager = ((MyDoggyToolWindowManager) toolWindowManager).getResourceManager();
+                resourceManager.putProperty(
+                                MyDoggyKeySpace.TOOL_WINDOW_VERTICAL_BAR_LENGTH,
+                                String.valueOf(resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_VERTICAL_BAR_LENGTH, 23) + 1)
+                        );
+            }
+        });
+
+        JButton seButton = new JButton(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/minus.png"));
+        seButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ResourceManager resourceManager = ((MyDoggyToolWindowManager) toolWindowManager).getResourceManager();
+                resourceManager.putProperty(
+                                MyDoggyKeySpace.TOOL_WINDOW_VERTICAL_BAR_LENGTH,
+                                String.valueOf(resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_VERTICAL_BAR_LENGTH, 23) - 1)
+                        );
+            }
+        });
+
+        managerDescriptor.setCornerComponent(NORD_WEST, nwButton);
+        managerDescriptor.setCornerComponent(SOUTH_WEST, swButton);
+        managerDescriptor.setCornerComponent(NORD_EAST, neButton);
+        managerDescriptor.setCornerComponent(SOUTH_EAST, seButton);
 
         // Add MyDoggyToolWindowManager to frame
         this.frame.getContentPane().add((Component) toolWindowManager, "1,1,");
@@ -412,7 +464,9 @@ public class MyDoggySet {
                 return new CustomParentOfQuestion((Component) args[0], (ToolWindow) args[1]);
             }
         });
-    }
+
+
+        memoryMonitorDescriptor = new MemoryMonitorDockableDescriptor(myDoggyToolWindowManager, ToolWindowAnchor.BOTTOM);    }
 
     protected void dispose() {
         frame.setVisible(false);
@@ -692,4 +746,96 @@ public class MyDoggySet {
         }
     }
 
+    public static class MemoryMonitorDockableDescriptor extends CustomDockableDescriptor {
+        RepresentativeAnchorUIDragGesture dragGesture = new RepresentativeAnchorUIDragGesture(this);
+
+        public MemoryMonitorDockableDescriptor(MyDoggyToolWindowManager manager, ToolWindowAnchor anchor) {
+            super(manager, anchor);
+        }
+
+        public void updateRepresentativeAnchor() {
+        }
+
+        public JComponent getRepresentativeAnchor(Component container) {
+            if (representativeAnchor == null) {
+                representativeAnchor = new MemoryMonitorPanel(anchor);
+            }
+            return representativeAnchor;
+        }
+
+
+        public class MemoryMonitorPanel extends JPanel {
+            int sleepTime;
+
+            public MemoryMonitorPanel(ToolWindowAnchor anchor) {
+                sleepTime = 1000;
+
+                final JProgressBar memoryUsage = new JProgressBar();
+                memoryUsage.setStringPainted(true);
+
+                JButton gc = new JButton(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/gc.png"));
+                gc.setBorderPainted(true);
+                gc.setFocusable(false);
+                gc.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+                gc.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        System.gc();
+                    }
+                });
+
+                Thread memoryThread = new Thread(new Runnable() {
+                    public void run() {
+                        while (true) {
+                            String grabbed = StringUtil.bytes2MBytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+                            String total = StringUtil.bytes2MBytes(Runtime.getRuntime().totalMemory());
+
+                            memoryUsage.setMaximum(Integer.parseInt(total));
+                            memoryUsage.setValue(Integer.parseInt(grabbed));
+
+                            memoryUsage.setString(grabbed + " MB of " + total + " MB");
+                            try {
+                                Thread.sleep(sleepTime);
+                            } catch (InterruptedException e) {
+                            }
+                        }
+                    }
+                });
+                memoryThread.setDaemon(true);
+                memoryThread.setPriority(Thread.MIN_PRIORITY);
+                memoryThread.start();
+
+                switch (anchor) {
+                    case BOTTOM:
+                    case TOP:
+                        memoryUsage.setOrientation(SwingConstants.HORIZONTAL);
+                        setLayout(new TableLayout(new double[][]{{120, 1, 17}, {-1}}));
+                        add(memoryUsage, "0,0,FULL,FULL");
+                        add(gc, "2,0,FULL,FULL");
+                        break;
+                    case LEFT:
+                        memoryUsage.setOrientation(SwingConstants.VERTICAL);
+                        setLayout(new TableLayout(new double[][]{{-1},{120, 1, 17}}));
+                        add(memoryUsage, "0,0,FULL,FULL");
+                        add(gc, "0,2,FULL,FULL");
+                        break;
+                    case RIGHT:
+                        memoryUsage.setOrientation(SwingConstants.VERTICAL);
+                        setLayout(new TableLayout(new double[][]{{-1},{17, 1, 120}}));
+                        add(gc, "0,0,FULL,FULL");
+                        add(memoryUsage, "0,2,FULL,FULL");
+                        break;
+                }
+
+                registerDragGesture(memoryUsage, dragGesture);
+                registerDragGesture(gc, dragGesture);
+                registerDragGesture(this, dragGesture);
+            }
+
+            public void setSleepTime(int sleepTime) {
+                this.sleepTime = sleepTime;
+            }
+
+        }
+
+    }
 }

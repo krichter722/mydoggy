@@ -701,5 +701,4 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI {
 
     }
 
-
 }
