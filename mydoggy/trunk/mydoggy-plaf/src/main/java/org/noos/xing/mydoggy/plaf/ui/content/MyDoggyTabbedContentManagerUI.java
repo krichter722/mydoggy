@@ -731,6 +731,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                 try {
                     ContentUI contentUI = getContentUI(content);
 
+                    Rectangle inBounds = toolWindowManager.getBoundsToScreen(content.getComponent().getBounds(),
+                                                                             content.getComponent().getParent());
+
                     // Store constraint
                     if (tabbedContentPane.getTabCount() != 0)
                         detachedContentUIMap.put(content, tabbedContentPane.indexOfContent(content));
@@ -754,10 +757,10 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                     Window dialog;
                     if (contentUI.isAddToTaskBarWhenDetached()) {
                         dialog = new ContentFrame(resourceManager, (PlafContent) content, contentUI,
-                                                  parentFrame, null);
+                                                  parentFrame, inBounds);
                     } else {
                         dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI,
-                                                   parentFrame, null);
+                                                   parentFrame, inBounds);
                     }
                     dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
                     dialog.toFront();

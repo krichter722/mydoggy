@@ -602,6 +602,15 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
+    public Rectangle getBoundsToScreen(Rectangle bounds, Component ref) {
+        Point location = bounds.getLocation();
+        SwingUtilities.convertPointToScreen(location, ref);
+        bounds.setLocation(location);
+        bounds.y+= getJMenuBarExtraHeight();
+
+        return bounds;
+
+    }
 
 
     protected void initPersistenceDelegate() {

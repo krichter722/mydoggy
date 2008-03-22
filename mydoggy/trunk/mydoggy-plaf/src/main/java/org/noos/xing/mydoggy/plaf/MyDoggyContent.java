@@ -10,7 +10,6 @@ import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * @todo add support for minimized to content manager ui...
  */
 public class MyDoggyContent extends PropertyChangeEventSource implements PlafContent {
     protected transient MyDoggyContentManager contentManager;
