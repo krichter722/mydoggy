@@ -161,10 +161,12 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     public void putProperty(String name, String value) {
-        resources.put("Property." + name, value);
+        Object old = resources.put("Property." + name, value);
 
         // Clear cache...
-        cache.clear(); 
+        cache.clear();
+
+        firePropertyChangeEvent(name, old, value);
     }
 
     public boolean getBoolean(String name, boolean defaultValue) {

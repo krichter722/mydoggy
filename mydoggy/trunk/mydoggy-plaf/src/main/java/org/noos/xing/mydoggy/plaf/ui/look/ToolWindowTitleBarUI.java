@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.look;
 
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
@@ -9,9 +10,9 @@ import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureInitiator;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
@@ -24,7 +25,10 @@ import java.awt.*;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragSourceDragEvent;
 import java.awt.dnd.DragSourceDropEvent;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ContainerAdapter;
+import java.awt.event.ContainerEvent;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
@@ -114,30 +118,9 @@ public class ToolWindowTitleBarUI extends PanelUI {
         SwingUtil.registerDragGesture(c, dragGesture);
         panel.addContainerListener(new ContainerAdapter() {
             public void componentAdded(ContainerEvent e) {
-                if (e.getChild() instanceof ToolWindowTabPanel) {
-                    ToolWindowTabPanel panel = (ToolWindowTabPanel) e.getChild();
-
-                    for (Component cmp : panel.getTabContainer().getComponents()) {
-                        SwingUtil.registerDragGesture(cmp, dragGesture);
-
-                        for (Component innerCmp : ((Container) cmp).getComponents()) {
-                            SwingUtil.registerDragGesture(innerCmp, dragGesture);
-                        }
-                    }
-
-                    panel.getTabContainer().addContainerListener(new ContainerListener() {
-                        public void componentAdded(ContainerEvent e) {
-                            SwingUtil.registerDragGesture(e.getChild(), dragGesture);
-
-                            for (Component innerCmp : ((Container) e.getChild()).getComponents()) {
-                                SwingUtil.registerDragGesture(innerCmp, dragGesture);
-                            }
-                        }
-
-                        public void componentRemoved(ContainerEvent e) {
-                        }
-                    });
-                    SwingUtil.registerDragGesture(panel.getViewport(), dragGesture);
+                if (e.getChild() instanceof DragGestureInitiator) {
+                    DragGestureInitiator dragGestureInitiator = (DragGestureInitiator) e.getChild();
+                    dragGestureInitiator.setDragGesture(dragGesture);
                 }
             }
         });
@@ -399,9 +382,7 @@ public class ToolWindowTitleBarUI extends PanelUI {
             // Start Drag
             MyDoggyToolWindowTab toolWindowTab = null;
             if (SwingUtilities.isDescendingFrom(dge.getComponent(), panel)) {
-                ToolWindowTabPanel.TabButton tabButton = SwingUtil.getParent(dge.getComponent(), ToolWindowTabPanel.TabButton.class);
-                if (tabButton != null)
-                    toolWindowTab = (MyDoggyToolWindowTab) tabButton.getTab();
+                toolWindowTab = (MyDoggyToolWindowTab) SwingUtil.getParentClientProperty(dge.getComponent(), ToolWindowTab.class);
             }
 
             if (toolWindowTab != null && toolWindowTab.getDockableDelegator() != null) {
@@ -418,11 +399,11 @@ public class ToolWindowTitleBarUI extends PanelUI {
             }
 
             // Setup ghostImage
-            if (!descriptor.isPreviewAvailable() || resourceManager.getBoolean("drag.icon.useDefault", false)) {
+            if (!descriptor.isDragImageAvailable() || resourceManager.getBoolean("drag.icon.useDefault", false)) {
                 setGhostImage(dge.getDragOrigin(),
                               resourceManager.getBufferedImage(MyDoggyKeySpace.DRAG));
             } else {
-                Component contentContainer = descriptor.getPreviewComponent();
+                Component contentContainer = descriptor.getComponentForDragImage();
                 BufferedImage ghostImage = new BufferedImage(contentContainer.getWidth(),
                                                              contentContainer.getHeight(), BufferedImage.TYPE_INT_RGB);
                 contentContainer.print(ghostImage.getGraphics());

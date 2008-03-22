@@ -92,6 +92,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected ClassLoader uiClassLoader;
     protected ResourceManagerListener resourceManagerListener;
     protected transient ResourceManager resourceManager;
+    protected static double[] COLUMNS;
+    protected static double[] ROWS;
 
 
     public MyDoggyToolWindowManager(Component parentComponent) {
@@ -363,19 +365,20 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     public synchronized void propertyChange(final PropertyChangeEvent evt) {
         Object source = evt.getSource();
-        if (source instanceof ToolWindowDescriptor) {
-            ToolWindowDescriptor descriptor = (ToolWindowDescriptor) source;
-            if (!tools.containsValue(descriptor)) {
-                new RuntimeException("Manager doesn't contain that ToolWindow. [id : " + descriptor.getToolWindow().getId() + "]").printStackTrace();
-                return;
+        if (source instanceof DockableDescriptor) {
+            DockableDescriptor descriptor = (DockableDescriptor) source;
+            if (descriptor.getDockableType() != DockableDescriptor.DockableType.CUSTOM) {
+                if (getDockable(descriptor.getDockable().getId()) != descriptor.getDockable()) {
+                    new RuntimeException("Manager doesn't contain that ToolWindow. [id : " + descriptor.getDockable().getId() + "]").printStackTrace();
+                    return;
+                }
             }
         } else if (!(source instanceof MyDoggyToolWindowBar) &&
                    !(source instanceof MyDoggyToolWindowManagerDescriptor) &&
                    !(source instanceof MyDoggyToolWindowManager) &&
                    !(source instanceof MyDoggyToolWindowTab) &&
                    !(source instanceof ToolWindowTypeDescriptor) &&
-                   !(source instanceof ContentManager) &&
-                   !(source instanceof DockableDescriptor) ) {  // TODO: do better... 
+                   !(source instanceof ContentManager) ) {
             new RuntimeException("Illegal Source : " + source).printStackTrace();
             return;
         }
@@ -755,6 +758,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             setResourceManager(new MyDoggyResourceManager());
         }
         resourceManager.setLocale(locale);
+
+        // Init constants
+        MyDoggyToolWindowManager.COLUMNS = new double[]{2, resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_HORIZONTAL_BAR_LENGTH, 23) - 4, 2};
+        MyDoggyToolWindowManager.ROWS = new double[]{2, resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_VERTICAL_BAR_LENGTH, 23) - 4, 2};
     }
 
 
@@ -831,7 +838,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 revalidate = true;
             } else
             if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getColumn(0) == 0) {
-                contentPaneLayout.setColumn(0, COLUMN_LENGTH);
+                contentPaneLayout.setColumn(0,
+                                            resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_HORIZONTAL_BAR_LENGTH, COLUMN_LENGTH));
                 revalidate = true;
             }
         } else if (anchor == RIGHT) {
@@ -840,7 +848,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 revalidate = true;
             } else
             if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getColumn(2) == 0) {
-                contentPaneLayout.setColumn(2, COLUMN_LENGTH);
+                contentPaneLayout.setColumn(2,
+                                            resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_HORIZONTAL_BAR_LENGTH, COLUMN_LENGTH));
                 revalidate = true;
             }
         } else if (anchor == TOP) {
@@ -849,7 +858,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 revalidate = true;
             } else
             if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getRow(0) == 0) {
-                contentPaneLayout.setRow(0, ROW_LENGTH);
+                contentPaneLayout.setRow(0,
+                                         resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_VERTICAL_BAR_LENGTH, ROW_LENGTH));
                 revalidate = true;
             }
         } else if (anchor == BOTTOM) {
@@ -858,7 +868,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 revalidate = true;
             } else
             if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getRow(2) == 0) {
-                contentPaneLayout.setRow(2, ROW_LENGTH);
+                contentPaneLayout.setRow(2,
+                                         resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_VERTICAL_BAR_LENGTH, ROW_LENGTH));
                 revalidate = true;
             }
         }
@@ -1140,6 +1151,25 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected class ResourceManagerListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
+            String propertyName = evt.getPropertyName();
+            if (propertyName.equals(MyDoggyKeySpace.TOOL_WINDOW_HORIZONTAL_BAR_LENGTH)) {
+                int col = resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_HORIZONTAL_BAR_LENGTH, 23);
+                COLUMNS[1] =  col - 4;
+
+                if (contentPaneLayout.getRow(0) != 0)
+                    contentPaneLayout.setRow(0, col);
+                if (contentPaneLayout.getRow(2) != 0)
+                    contentPaneLayout.setRow(2, col);
+            } else if (propertyName.equals(MyDoggyKeySpace.TOOL_WINDOW_VERTICAL_BAR_LENGTH)) {
+                int row = resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_VERTICAL_BAR_LENGTH, 23);
+                ROWS[1] = row - 4;
+
+                if (contentPaneLayout.getColumn(0) != 0)
+                    contentPaneLayout.setColumn(0, row);
+                if (contentPaneLayout.getColumn(2) != 0)
+                    contentPaneLayout.setColumn(2, row);
+            }
+
             SwingUtil.repaint(MyDoggyToolWindowManager.this);
         }
     }

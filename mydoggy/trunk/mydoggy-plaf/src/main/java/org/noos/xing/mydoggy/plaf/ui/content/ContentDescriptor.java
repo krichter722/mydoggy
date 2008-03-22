@@ -34,11 +34,49 @@ public class ContentDescriptor implements DockableDescriptor {
         this.manager = manager;
         this.content = content;
         this.anchor = ToolWindowAnchor.LEFT;
+        this.anchorIndex = -1;
     }
 
 
     public ToolWindowAnchor getAnchor() {
         return anchor;
+    }
+
+    public void setAnchor(ToolWindowAnchor anchor, int index) {
+        manager.propertyChange(
+                new UserPropertyChangeEvent(this, "available", true, false,
+                                            new Object[]{-1, false}
+                )
+        );
+
+        this.anchor = anchor;
+        this.anchorIndex = index;
+
+        manager.propertyChange(
+                new UserPropertyChangeEvent(this, "available", false, true,
+                                            new Object[]{anchorIndex, false}
+                )
+        );
+    }
+
+    public void setAvailable(boolean available) {
+        if (available) {
+            manager.propertyChange(
+                    new UserPropertyChangeEvent(this, "available", false, true,
+                                                new Object[]{anchorIndex, false}
+                    )
+            );
+        } else {
+            manager.propertyChange(
+                    new UserPropertyChangeEvent(this, "available", true, false,
+                                                new Object[]{-1, false}
+                    )
+            );
+        }
+    }
+
+    public boolean isAvailable(boolean available) {
+        return false;   // TODO: should be implemented
     }
 
     public DockableType getDockableType() {
@@ -95,7 +133,7 @@ public class ContentDescriptor implements DockableDescriptor {
 
     public int getRepresentativeAnchorIndex() {
         if (representativeAnchor == null)
-            return -1;
+            return anchorIndex;
         
         return getToolBar().getRepresentativeAnchorIndex(representativeAnchor);
     }
@@ -145,29 +183,16 @@ public class ContentDescriptor implements DockableDescriptor {
         return manager.getBar(getAnchor());
     }
 
-    public boolean isPreviewAvailable() {
+    public MyDoggyToolWindowBar getToolBar(ToolWindowAnchor anchor) {
+        return manager.getBar(anchor);
+    }
+
+    public boolean isDragImageAvailable() {
         return false;
     }
 
-    public Component getPreviewComponent() {
+    public Component getComponentForDragImage() {
         return null;
-    }
-
-    public void setAnchor(ToolWindowAnchor anchor, int index) {
-        manager.propertyChange(
-                new UserPropertyChangeEvent(this, "available", true, false,
-                                            new Object[]{-1, false}
-                )
-        );
-
-        this.anchor = anchor;
-        this.anchorIndex = index;
-
-        manager.propertyChange(
-                new UserPropertyChangeEvent(this, "available", false, true,
-                                            new Object[]{anchorIndex, false}
-                )
-        );
     }
 
 

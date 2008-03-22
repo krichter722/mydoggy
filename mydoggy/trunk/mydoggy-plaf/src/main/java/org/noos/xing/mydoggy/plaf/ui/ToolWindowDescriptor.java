@@ -102,6 +102,14 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         return toolWindow.getAnchor();
     }
 
+    public void setAvailable(boolean available) {
+        toolWindow.setAvailable(available);
+    }
+
+    public boolean isAvailable(boolean available) {
+        return toolWindow.isAvailable();
+    }
+
     public DockableType getDockableType() {
         return DockableType.TOOL_WINDOW;
     }
@@ -313,11 +321,11 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         return manager.getBar(toolWindow.getAnchor());
     }
 
-    public boolean isPreviewAvailable() {
+    public boolean isDragImageAvailable() {
         return true;
     }
 
-    public Component getPreviewComponent() {
+    public Component getComponentForDragImage() {
         return ((DockedContainer) getToolWindowContainer()).getContentContainer();
     }
 

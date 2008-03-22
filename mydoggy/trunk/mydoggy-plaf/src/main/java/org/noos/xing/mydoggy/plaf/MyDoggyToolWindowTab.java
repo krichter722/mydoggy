@@ -140,6 +140,9 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
         if (this.selected == selected)
             return;
 
+        if (selected && isMinimzed())
+            setMinimzed(false);
+
         boolean old = this.selected;
         this.selected = selected;
         

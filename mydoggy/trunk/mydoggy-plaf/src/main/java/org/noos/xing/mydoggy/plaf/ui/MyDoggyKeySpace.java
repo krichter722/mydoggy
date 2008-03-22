@@ -42,7 +42,10 @@ public interface MyDoggyKeySpace {
     String TOOL_SCROLL_BAR_RIGHT = "TOOL_SCROLL_BAR_RIGHT";
 
     String TAB_CLOSE = "TAB_CLOSE";
-    String TAB_CLOSE_INACTIVE = "TAB_CLOSE_INACTIVE"; 
+    String TAB_CLOSE_INACTIVE = "TAB_CLOSE_INACTIVE";
+    String TAB_MINIMIZE = "TAB_MINIMIZE";
+    String TAB_MINIMIZE_INACTIVE = "TAB_MINIMIZE_INACTIVE";
+
 
     String DRAG = "DRAG";
 
@@ -101,4 +104,9 @@ public interface MyDoggyKeySpace {
     String DESKTOP_CONTENT_PANE = "DESKTOP_CONTENT_PANE";
 
     String MULTI_SPLIT_CONTAINER_SPLIT = "MULTI_SPLIT_CONTAINER_SPLIT";
+
+    // Properties
+
+    String TOOL_WINDOW_VERTICAL_BAR_LENGTH = "toolwindowbar.vertical.length";
+    String TOOL_WINDOW_HORIZONTAL_BAR_LENGTH = "toolwindowbar.horizontal.length";
 }

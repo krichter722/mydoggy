@@ -14,7 +14,7 @@ public class MyDoggyTransferable implements Transferable, ClipboardOwner {
     public static final DataFlavor TOOL_WINDOW_ID_DF = new DataFlavor("String/toolWindowId", "toolWindowId");
     public static final DataFlavor TOOL_WINDOW_TAB_ID_DF = new DataFlavor("String/toolWindowTabId", "toolWindowTabId");
     public static final DataFlavor CONTENT_ID_DF = new DataFlavor("String/contentId", "contentId");
-    public static final DataFlavor BAR2BAR_DF = new DataFlavor("String/bar2bar", "bar2bar");
+    public static final DataFlavor BAR2BAR_DF = new DataFlavor("String/bar2bar", "bar2bar");    // TODO: rename
 
     protected Map<DataFlavor, Object> map;
     protected List<DataFlavor> supportedFlavors;
