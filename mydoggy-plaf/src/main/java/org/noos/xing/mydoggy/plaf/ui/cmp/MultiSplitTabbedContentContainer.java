@@ -43,8 +43,8 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
     }
 
 
-    protected Component getWrapperForComponent(Dockable dockable, Component component) {
-        if (isWrapRequest(dockable)) {
+    protected Component getWrapperForComponent(Dockable dockable, Component component, Action action) {
+        if (isWrapRequest(dockable, action)) {
             return forceWrapperForComponent(dockable, component);
         } else {
             Component wrapper = new DockablePanel(dockable, component);
@@ -122,14 +122,15 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
             if (tabbedPane.getTabCount() == 1) {
                 Dockable lastDockable = tabbedPane.getContentAt(0);
-                if (!isWrapRequest(tabbedPane.getContentAt(0))) {
+                if (!isWrapRequest(tabbedPane.getContentAt(0), Action.REMOVE_DOCK)) {
                     // remove the wrap represented by tabbedPane
 
                     String leafName = getLeafName(lastDockable);
                     multiSplitPane.remove(multiSplitPane.getMultiSplitLayout().getChildMap().get(leafName));
                     multiSplitPane.add(leafName,
                                        getWrapperForComponent(lastDockable,
-                                                              ((DockablePanel) tabbedPane.getComponentAt(0)).getComponent()));
+                                                              ((DockablePanel) tabbedPane.getComponentAt(0)).getComponent(),
+                                                              Action.REMOVE_DOCK));
                 }
             }
             return index;
