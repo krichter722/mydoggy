@@ -76,12 +76,11 @@ public interface ResourceManager extends Observable {
     Icon getIcon(String id);
 
     /**
-     *
      * @param id
      * @return
      * @since 1.4.1
      */
-    BufferedImage getBufferedImage(String id); 
+    BufferedImage getBufferedImage(String id);
 
     /**
      * Associates the specified icon with the specified id. If the manager previously
@@ -226,7 +225,7 @@ public interface ResourceManager extends Observable {
     /**
      * Associates the specified value with the specified property name.
      *
-     * @param name   property name with which the specified value is to be associated.
+     * @param name  property name with which the specified value is to be associated.
      * @param value value to be associated with the specified name.
      * @since 1.4.0
      */
@@ -236,51 +235,50 @@ public interface ResourceManager extends Observable {
      * Searches for the property with the specified name in the property list.
      * The method returns <code>defaultValue</code> if the property is not found.
      *
-     * @param name the property bame.
+     * @param name         the property name.
      * @param defaultValue the default value if the property is not found.
-     *
      * @return the value in this property list with the specified key value.
      * @since 1.4.0
      */
     boolean getBoolean(String name, boolean defaultValue);
 
     /**
-      * Searches for the property with the specified name in the property list.
-      * The method returns <code>defaultValue</code> if the property is not found.
-      *
-      * @param name the property bame.
-      * @param defaultValue the default value if the property is not found.
-      *
-      * @return the value in this property list with the specified key value.
-      * @since 1.4.2
-     *  TODO: adjust javadoc...
-      */
+     * Searches for the property with the specified name in the property list.
+     * The method returns <code>defaultValue</code> if the property is not found.
+     *
+     * @param name         the property name.
+     * @param defaultValue the default value if the property is not found.
+     * @return the value in this property list with the specified key value.
+     * @since 1.4.2
+     */
     float getFloat(String name, float defaultValue);
 
     /**
-      * Searches for the property with the specified name in the property list.
-      * The method returns <code>defaultValue</code> if the property is not found.
-      *
-      * @param name the property bame.
-      * @param defaultValue the default value if the property is not found.
-      *
-      * @return the value in this property list with the specified key value.
-      * @since 1.4.2
-     *  TODO: adjust javadoc...
-      */
+     * Searches for the property with the specified name in the property list.
+     * The method returns <code>defaultValue</code> if the property is not found.
+     *
+     * @param name         the property name.
+     * @param defaultValue the default value if the property is not found.
+     * @return the value in this property list with the specified key value.
+     * @since 1.4.2
+     */
     int getInt(String name, int defaultValue);
 
     /**
-     * TODO:
-     * @param key
-     * @param value
+     * Associates the specified value with the specified key.
+     *
+     * @param key key with which the specified value is to be associated.
+     * @param value value to be associated with the specified name.
      * @since 1.4.1
      */
     void putObject(Object key, Object value);
 
     /**
+     * Searches for the object with the specified class in the property list.
+     * The method returns <code>defaultValue</code> if the object is not found.
      *
-     * @param clazz
+     * @param clazz         the object class.
+     * @param defaultValue  the default value if the object is not found.
      * @return 1.4.1
      */
     <T> T getObject(Class<T> clazz, T defaultValue);
