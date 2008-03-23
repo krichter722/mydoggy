@@ -292,7 +292,7 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
                 }
             }
 
-        return null;
+        return toolWindow.getToolWindowTabs()[0];
     }
 
     protected void checkPopupButton() {
@@ -507,15 +507,11 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
                 }
             } else if ("minimized".equals(property)) {
                 if (evt.getNewValue() == Boolean.TRUE) {
-                    if (tab.isSelected()) {
-                        tab.setSelected(false);
-
-                        // TODO: Select another tab 
-                        toolWindow.getToolWindowTabs()[0].setSelected(true);
-                    }
-
-                    removeTab(tab, false);
+                    ToolWindowTab nextTab = removeTab(tab, false);
+                    if (nextTab != null)
+                        nextTab.setSelected(true);
                 } else {
+                    // TODO: add to the old position....
                     addTab(this);
                 }
             }

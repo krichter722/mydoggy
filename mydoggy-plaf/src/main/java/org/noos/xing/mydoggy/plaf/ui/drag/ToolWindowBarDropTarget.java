@@ -173,7 +173,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
                 dropToolWindow(transferable, dtde);
             } else if (transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {
                 dropContent(transferable, dtde);
-            } else if (transferable.isDataFlavorSupported(MyDoggyTransferable.BAR2BAR_DF)) {
+            } else if (transferable.isDataFlavorSupported(MyDoggyTransferable.CUSTOM_DESCRIPTOR_ID)) {
                 dropBar2Bar(transferable, dtde);
             } else
                 dtde.rejectDrop();
@@ -209,7 +209,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
                     if (transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_MANAGER).equals(System.identityHashCode(manager))) {
                         if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) ||
                             transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF) ||
-                            transferable.isDataFlavorSupported(MyDoggyTransferable.BAR2BAR_DF))
+                            transferable.isDataFlavorSupported(MyDoggyTransferable.CUSTOM_DESCRIPTOR_ID))
                             return true;
                     }
                 }
@@ -294,7 +294,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
             ((ToolWindowBarDropTarget) dtde.getDropTargetContext().getDropTarget()).hidePosition(true);
 
             try {
-                String dockableDescriptorId = (String) transferable.getTransferData(MyDoggyTransferable.BAR2BAR_DF);
+                String dockableDescriptorId = (String) transferable.getTransferData(MyDoggyTransferable.CUSTOM_DESCRIPTOR_ID);
                 DockableDescriptor dockableDescriptor = manager.getDockableDescriptor(dockableDescriptorId);
                 if (dockableDescriptor == null)
                     return;

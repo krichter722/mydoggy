@@ -70,7 +70,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         addMouseMotionListener(mouseInputAdapter);
 
         if (enabledDrag) {
-            // TODO:
+            // TODO: enabled drag
         }
     }
 
@@ -386,26 +386,26 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
         protected boolean isMinimizedFired(ContentUI contentUI, Point point) {
             Point relativeMousePoint = SwingUtilities.convertPoint(JTabbedContentPane.this, point, getDestination());
-            Rectangle detachIconRect = minCloseDetachIcon.getLastPaintedLeftRec();
+            Rectangle iconBounds = minCloseDetachIcon.getLastPaintedLeftRec();
 
-            return (/* TODO:contentUI.isDetachable() && */((relativeMousePoint.getX() > detachIconRect.x && relativeMousePoint.getX() < detachIconRect.x + detachIconRect.width) ||
-                                                 (point.getX() > detachIconRect.x && point.getX() < detachIconRect.x + detachIconRect.width)));
+            return (/* TODO:contentUI.isDetachable() && */((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
+                                                 (point.getX() > iconBounds.x && point.getX() < iconBounds.x + iconBounds.width)));
         }
 
         protected boolean isDetachFired(ContentUI contentUI, Point point) {
             Point relativeMousePoint = SwingUtilities.convertPoint(JTabbedContentPane.this, point, getDestination());
-            Rectangle detachIconRect = closeDetachIcon.getLastPaintedLeftRec();
+            Rectangle iconBounds = closeDetachIcon.getLastPaintedLeftRec();
 
-            return (contentUI.isDetachable() && ((relativeMousePoint.getX() > detachIconRect.x && relativeMousePoint.getX() < detachIconRect.x + detachIconRect.width) ||
-                                                 (point.getX() > detachIconRect.x && point.getX() < detachIconRect.x + detachIconRect.width)));
+            return (contentUI.isDetachable() && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
+                                                 (point.getX() > iconBounds.x && point.getX() < iconBounds.x + iconBounds.width)));
         }
 
         protected boolean isCloseFired(ContentUI contentUI, Point point) {
             Point relativeMousePoint = SwingUtilities.convertPoint(JTabbedContentPane.this, point, getDestination());
-            Rectangle closeIconRect = closeDetachIcon.getLastPaintedRightRec();
+            Rectangle iconsBounds = closeDetachIcon.getLastPaintedRightRec();
 
-            return (contentUI.isCloseable() && ((relativeMousePoint.getX() > closeIconRect.x && relativeMousePoint.getX() < closeIconRect.x + closeIconRect.width) ||
-                                                (point.getX() > closeIconRect.x && point.getX() < closeIconRect.x + closeIconRect.width)));
+            return (contentUI.isCloseable() && ((relativeMousePoint.getX() > iconsBounds.x && relativeMousePoint.getX() < iconsBounds.x + iconsBounds.width) ||
+                                                (point.getX() > iconsBounds.x && point.getX() < iconsBounds.x + iconsBounds.width)));
         }
 
         protected Component getDestination() {

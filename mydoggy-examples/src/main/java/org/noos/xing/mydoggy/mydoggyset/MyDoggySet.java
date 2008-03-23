@@ -747,7 +747,6 @@ public class MyDoggySet {
     }
 
     public static class MemoryMonitorDockableDescriptor extends CustomDockableDescriptor {
-        RepresentativeAnchorUIDragGesture dragGesture = new RepresentativeAnchorUIDragGesture(this);
 
         public MemoryMonitorDockableDescriptor(MyDoggyToolWindowManager manager, ToolWindowAnchor anchor) {
             super(manager, anchor);
@@ -826,9 +825,9 @@ public class MyDoggySet {
                         break;
                 }
 
-                registerDragGesture(memoryUsage, dragGesture);
-                registerDragGesture(gc, dragGesture);
-                registerDragGesture(this, dragGesture);
+                registerDragGesture(memoryUsage);
+                registerDragGesture(gc);
+                registerDragGesture(this);
             }
 
             public void setSleepTime(int sleepTime) {

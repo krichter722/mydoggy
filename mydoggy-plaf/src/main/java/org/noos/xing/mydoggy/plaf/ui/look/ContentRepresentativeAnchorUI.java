@@ -1,14 +1,11 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
 import org.noos.xing.mydoggy.Dockable;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
-import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
+import org.noos.xing.mydoggy.plaf.ui.drag.RepresentativeAnchorDragGesture;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -16,12 +13,7 @@ import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.metal.MetalLabelUI;
 import java.awt.*;
-import java.awt.dnd.DragGestureEvent;
-import java.awt.dnd.DragSourceDragEvent;
-import java.awt.dnd.DragSourceDropEvent;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
 
 /**
  * @author Angelo De Caro
@@ -53,7 +45,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI {
         c.setBorder(labelBorder);
         c.setForeground(resourceManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
 
-        SwingUtil.registerDragGesture(c, new RepresentativeAnchorUIDragGesture(descriptor));
+        SwingUtil.registerDragGesture(c, new RepresentativeAnchorDragGesture(descriptor, label));
     }
 
     public void uninstallUI(JComponent c) {
@@ -151,144 +143,6 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI {
         }
 
         public void mouseDragged(MouseEvent e) {
-        }
-
-    }
-
-    protected class RepresentativeAnchorUIDragGesture extends DragGestureAdapter {
-        private ToolWindowAnchor lastAnchor;
-
-        public RepresentativeAnchorUIDragGesture(DockableDescriptor descriptor) {
-            super(descriptor);
-        }
-
-        public void dragGestureRecognized(DragGestureEvent dge) {
-            // Acquire locks
-            acquireLocks();
-
-            // Start Drag
-            dge.startDrag(Cursor.getDefaultCursor(),
-                          new MyDoggyTransferable(manager,
-                                                  MyDoggyTransferable.BAR2BAR_DF,
-                                                  dockable.getId()),
-                          this);
-
-            // Fire startDrag Event
-            descriptor.getToolBar().propertyChange(new PropertyChangeEvent(label, "startDrag", null, dge));
-
-            // Setup ghostImage
-            if (resourceManager.getBoolean("drag.icon.useDefault", false)) {
-                setGhostImage(dge.getDragOrigin(),
-                              resourceManager.getBufferedImage(MyDoggyKeySpace.DRAG));
-            } else {
-                JComponent representativeAnchor = descriptor.getRepresentativeAnchor();
-                BufferedImage ghostImage = new BufferedImage(representativeAnchor.getWidth(),
-                                                             representativeAnchor.getHeight(),
-                                                             BufferedImage.TYPE_INT_RGB);
-                representativeAnchor.print(ghostImage.createGraphics());
-                setGhostImage(dge.getDragOrigin(), ghostImage);
-            }
-
-            lastAnchor = null;
-        }
-
-        public void dragMouseMoved(DragSourceDragEvent dsde) {
-            if (!checkStatus())
-                return;
-
-            // Obtain anchor for location
-            ToolWindowAnchor newAnchor = manager.getToolWindowAnchor(
-                    SwingUtil.convertPointFromScreen(dsde.getLocation(), manager)
-            );
-
-            // Produce updatedGhostImage
-            if (newAnchor != lastAnchor) {
-                if (!resourceManager.getBoolean("drag.icon.useDefault", false)) {
-                    resetGhostImage();
-
-                    if (newAnchor == null) {
-                        updatedGhostImage = ghostImage;
-                        manager.getBar(lastAnchor).setTempShowed(false);
-                    } else {
-                        if (manager.getBar(newAnchor).getAvailableTools() == 0)
-                            manager.getBar(newAnchor).setTempShowed(true);
-
-                        switch (newAnchor) {
-                            case LEFT:
-                                switch (descriptor.getAnchor()) {
-                                    case LEFT:
-                                        updatedGhostImage = ghostImage;
-                                        break;
-                                    case RIGHT:
-                                        updatedGhostImage = GraphicsUtil.rotate(ghostImage, Math.PI);
-                                        break;
-                                    default:
-                                        updatedGhostImage = GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI);
-                                        break;
-                                }
-                                break;
-                            case RIGHT:
-                                switch (descriptor.getAnchor()) {
-                                    case LEFT:
-                                        updatedGhostImage = GraphicsUtil.rotate(ghostImage, Math.PI);
-                                        break;
-                                    case RIGHT:
-                                        updatedGhostImage = ghostImage;
-                                        break;
-                                    default:
-                                        updatedGhostImage = GraphicsUtil.rotate(ghostImage, -1.5 * Math.PI);
-                                        break;
-                                }
-                                break;
-                            case TOP:
-                            case BOTTOM:
-                                switch (descriptor.getAnchor()) {
-                                    case LEFT:
-                                        updatedGhostImage = GraphicsUtil.rotate(ghostImage, -1.5 * Math.PI);
-                                        break;
-                                    case RIGHT:
-                                        updatedGhostImage = GraphicsUtil.rotate(ghostImage, 1.5 * Math.PI);
-                                        break;
-                                    default:
-                                        updatedGhostImage = ghostImage;
-                                        break;
-                                }
-                                break;
-                        }
-                    }
-                } else
-                    updatedGhostImage = ghostImage;
-
-                lastAnchor = newAnchor;
-            }
-
-            updateGhostImage(dsde.getLocation(), updatedGhostImage);
-        }
-
-        public void dragDropEnd(DragSourceDropEvent dsde) {
-            if (!checkStatus())
-                return;
-
-            releaseLocksOne();
-
-            // Restore graphics
-            if (lastAnchor != null)
-                manager.getBar(lastAnchor).setTempShowed(false);
-            else {
-                manager.getBar(LEFT).setTempShowed(false);
-                manager.getBar(RIGHT).setTempShowed(false);
-                manager.getBar(TOP).setTempShowed(false);
-                manager.getBar(BOTTOM).setTempShowed(false);
-            }
-
-            // Fire endDrag event
-            descriptor.getToolBar().propertyChange(new PropertyChangeEvent(label, "endDrag", null, dsde));
-
-            // cleanup glassPane
-            cleanupGhostImage();
-            lastAnchor = null;
-
-            releaseLocksTwo();
         }
 
     }

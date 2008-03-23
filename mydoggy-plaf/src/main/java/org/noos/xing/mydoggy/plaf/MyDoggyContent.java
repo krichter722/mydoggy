@@ -221,6 +221,9 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
         if (this.maximized == maximized)
             return;
 
+        if (isMinimzed())
+            setMinimzed(false);        
+
         boolean old = this.maximized;
         if (maximized)
             firePlafPropertyChangeEvent("maximized.before", false, maximized);
@@ -237,7 +240,8 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
         if (this.minimized == minimized)
             return;
 
-        // TODO: should be unmaximized if it's the case....
+        if (isMaximized())
+            setMaximized(false);
 
         boolean old = this.minimized;
         this.minimized = minimized;

@@ -921,6 +921,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         dockableDescriptorMap.put(id, dockableDescriptor);
     }
 
+    public void setTempShowed(boolean tempShowed) {
+        getBar(LEFT).setTempShowed(tempShowed);
+        getBar(RIGHT).setTempShowed(tempShowed);
+        getBar(TOP).setTempShowed(tempShowed);
+        getBar(BOTTOM).setTempShowed(tempShowed);
+    }
+
     protected class AvailablePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             DockableDescriptor descriptor = (DockableDescriptor) evt.getSource();
