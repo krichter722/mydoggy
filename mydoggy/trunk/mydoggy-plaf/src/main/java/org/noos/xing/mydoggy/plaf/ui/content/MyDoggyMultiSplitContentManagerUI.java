@@ -947,13 +947,24 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             return tabbedContentPane;
         }
 
-        protected boolean isWrapRequest(Dockable dockable) {
-            if (getContentCount() == 0) {
-                return useAlwaysContentWrapper;
-            } else if (getContentCount() >= 1) {
-                return (((MultiSplitContentUI) ((Content) dockable).getContentUI()).isShowAlwaysTab());
+        protected boolean isWrapRequest(Dockable dockable, Action action) {
+            switch (action) {
+                case ADD_DOCK:
+                    if (getContentCount() == 0) {
+                        return useAlwaysContentWrapper;
+                    } else if (getContentCount() >= 1) {
+                        return (((MultiSplitContentUI) ((Content) dockable).getContentUI()).isShowAlwaysTab());
+                    }
+                    return useAlwaysContentWrapper;
+                case REMOVE_DOCK:
+                    if (getContentCount() <= 1) {
+                        return useAlwaysContentWrapper;
+                    } else if (getContentCount() > 1) {
+                        return (((MultiSplitContentUI) ((Content) dockable).getContentUI()).isShowAlwaysTab());
+                    }
+                    return useAlwaysContentWrapper;
             }
-            return useAlwaysContentWrapper;
+            return useAlwaysContentWrapper;                    
         }
 
     }

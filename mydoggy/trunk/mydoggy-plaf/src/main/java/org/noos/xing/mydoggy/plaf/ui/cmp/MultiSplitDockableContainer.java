@@ -19,6 +19,11 @@ import java.util.List;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MultiSplitDockableContainer extends JPanel {
+    public enum Action {
+        ADD_DOCK,
+        REMOVE_DOCK
+    }
+
     protected MyDoggyToolWindowManager toolWindowManager;
     protected ResourceManager resourceManager;
 
@@ -108,7 +113,7 @@ public class MultiSplitDockableContainer extends JPanel {
             multiSplitPaneModelRoot = leaf;
 
             multiSplitPane.setModel(leaf);
-            multiSplitPane.add(getWrapperForComponent(dockable, content), "1");
+            multiSplitPane.add(getWrapperForComponent(dockable, content, Action.ADD_DOCK), "1");
             setRootComponent(multiSplitPane);
             SwingUtil.repaint(this);
         } else {
@@ -190,12 +195,12 @@ public class MultiSplitDockableContainer extends JPanel {
                         wrapper = multiSplitPane.getComponent(0);
                     } else {
                         Dockable delegator = entries.values().iterator().next().dockable;
-                        wrapper = getWrapperForComponent(delegator, getComponentFromWrapper(multiSplitPane.getComponent(0)));
+                        wrapper = getWrapperForComponent(delegator, getComponentFromWrapper(multiSplitPane.getComponent(0)), Action.ADD_DOCK);
                     }
                     multiSplitPane.removeAll();
 
                     multiSplitPane.add(wrapper, firstLeaf.getName());
-                    multiSplitPane.add(getWrapperForComponent(dockable, content), secondLeaf.getName());
+                    multiSplitPane.add(getWrapperForComponent(dockable, content, Action.ADD_DOCK), secondLeaf.getName());
 
                 }
             } else {
@@ -393,7 +398,7 @@ public class MultiSplitDockableContainer extends JPanel {
                 multiSplitPane.setModel(multiSplitPaneModelRoot);
 
                 if (addCmp)
-                    multiSplitPane.add(getWrapperForComponent(dockable, content), leafName);
+                    multiSplitPane.add(getWrapperForComponent(dockable, content, Action.ADD_DOCK), leafName);
             }
 
             if (!checkModel())
@@ -456,7 +461,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
                                     parent.setChildren(nodes);
 
-                                    multiSplitPane.add(getWrapperForComponent(dockable, component),
+                                    multiSplitPane.add(getWrapperForComponent(dockable, component, Action.ADD_DOCK),
                                                        dockableLeaf.getName());
                                     break;
                                 case BOTTOM:
@@ -471,7 +476,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
                                     parent.setChildren(nodes);
 
-                                    multiSplitPane.add(getWrapperForComponent(dockable, component),
+                                    multiSplitPane.add(getWrapperForComponent(dockable, component, Action.ADD_DOCK),
                                                        dockableLeaf.getName());
                                     break;
                             }
@@ -525,6 +530,7 @@ public class MultiSplitDockableContainer extends JPanel {
                 int index = removeFromWrapper(multiSplitPane.getComponent(0), dockable);
                 leaf.getDockables().remove(dockable.getId());
 
+                // TODO: modify this..
                 if (!useAlwaysContentWrapper) {
                     Component root = multiSplitPane.getComponent(0);
                     multiSplitPane.removeAll();
@@ -573,7 +579,7 @@ public class MultiSplitDockableContainer extends JPanel {
                 // Update the pane
                 multiSplitPane.setModel(multiSplitPaneModelRoot);
                 multiSplitPane.removeAll();
-                multiSplitPane.add(getWrapperForComponent(leftDockable, LeftLeafCmp), "1");
+                multiSplitPane.add(getWrapperForComponent(leftDockable, LeftLeafCmp, Action.REMOVE_DOCK), "1");
 
                 // Finalize
                 leafNameCounter = 1;
@@ -990,7 +996,8 @@ public class MultiSplitDockableContainer extends JPanel {
         if (useAlwaysContentWrapper) {
             if (entries.size() == 1) {
                 Component componentWrapper = getWrapperForComponent(entries.keySet().iterator().next(),
-                                                                    multiSplitPane.getComponent(0));
+                                                                    multiSplitPane.getComponent(0),
+                                                                    null);  // TODO: how to set this
                 multiSplitPane.removeAll();
                 multiSplitPane.add(componentWrapper, "1");
 
@@ -1041,7 +1048,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
     // Methods to manage wrappers
 
-    protected Component getWrapperForComponent(Dockable dockable, Component component) {
+    protected Component getWrapperForComponent(Dockable dockable, Component component, Action action) {
         return new DockablePanel(dockable, component);
     }
 
@@ -1067,7 +1074,7 @@ public class MultiSplitDockableContainer extends JPanel {
         throw new IllegalStateException("Cannot call this method...");
     }
 
-    protected boolean isWrapRequest(Dockable dockable) {
+    protected boolean isWrapRequest(Dockable dockable, Action action) {
         return useAlwaysContentWrapper;
     }
 
