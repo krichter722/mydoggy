@@ -789,21 +789,6 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
     }
 
-    protected class ContentUIListener implements PropertyChangeListener {
-
-        public void propertyChange(PropertyChangeEvent evt) {
-            ContentUI contentUI = (ContentUI) evt.getSource();
-
-            if (contentUI.getContent().isDetached()) {
-                if ("detachedBounds".equals(evt.getPropertyName())) {
-                    Window window = SwingUtilities.windowForComponent(contentUI.getContent().getComponent());
-                    window.setBounds((Rectangle) evt.getNewValue());
-                } else if ("addToTaskBar".equals(evt.getPropertyName())) {
-                    // TODO: add to all contentmanager UI
-                }
-            }
-        }
-    }
 
     protected class MinimizedListener implements PropertyChangeListener {
         protected Map<Content, Integer> minimizedContentUIMap;

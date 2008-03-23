@@ -530,7 +530,6 @@ public class MultiSplitDockableContainer extends JPanel {
                 int index = removeFromWrapper(multiSplitPane.getComponent(0), dockable);
                 leaf.getDockables().remove(dockable.getId());
 
-                // TODO: modify this..
                 if (!useAlwaysContentWrapper) {
                     Component root = multiSplitPane.getComponent(0);
                     multiSplitPane.removeAll();
@@ -997,7 +996,7 @@ public class MultiSplitDockableContainer extends JPanel {
             if (entries.size() == 1) {
                 Component componentWrapper = getWrapperForComponent(entries.keySet().iterator().next(),
                                                                     multiSplitPane.getComponent(0),
-                                                                    null);  // TODO: how to set this
+                                                                    Action.REMOVE_DOCK);
                 multiSplitPane.removeAll();
                 multiSplitPane.add(componentWrapper, "1");
 

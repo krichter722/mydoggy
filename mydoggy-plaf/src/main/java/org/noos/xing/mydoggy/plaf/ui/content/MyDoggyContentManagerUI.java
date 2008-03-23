@@ -5,8 +5,13 @@ import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDialog;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ContentFrame;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
+import javax.swing.*;
 import javax.swing.event.EventListenerList;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.beans.PropertyChangeEvent;
@@ -124,4 +129,46 @@ public abstract class MyDoggyContentManagerUI extends PropertyChangeEventSource 
         }
     }
     
+    protected class ContentUIListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            ContentUI contentUI = (ContentUI) evt.getSource();
+
+            if (contentUI.getContent().isDetached()) {
+                if ("detachedBounds".equals(evt.getPropertyName())) {
+                    Window window = SwingUtilities.windowForComponent(contentUI.getContent().getComponent());
+                    window.setBounds((Rectangle) evt.getNewValue());
+                } else if ("addToTaskBar".equals(evt.getPropertyName())) {
+                    Content content = contentUI.getContent();
+                    Window oldWindow = SwingUtilities.windowForComponent(contentUI.getContent().getComponent());
+                    Frame parentFrame = (toolWindowManager.getParentComponent() instanceof Frame) ? (Frame) toolWindowManager.getParentComponent() : null;
+                    Component focusOwner = oldWindow.getFocusOwner();
+
+                    // Init new window
+                    Window dialog;
+                    if ((Boolean) evt.getNewValue()) {
+                        dialog = new ContentFrame(resourceManager,
+                                                  (PlafContent) content, contentUI,
+                                                  parentFrame, oldWindow.getBounds());
+                    } else {
+                        dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI,
+                                                   parentFrame, oldWindow.getBounds());
+                    }
+
+                    dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
+                    dialog.toFront();
+
+                    // Dispose old
+                    oldWindow.setVisible(false);
+                    oldWindow.dispose();
+
+                    // Show new
+                    dialog.setVisible(true);
+
+                    if (focusOwner != null)
+                        SwingUtil.requestFocus(focusOwner);
+                }
+            }
+        }
+    }
 }

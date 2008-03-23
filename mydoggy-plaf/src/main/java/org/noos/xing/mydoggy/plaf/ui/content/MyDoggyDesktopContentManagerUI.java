@@ -580,10 +580,11 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                 // Remove the internal frame
                 JInternalFrame internalFrame = getFrameByContent(content);
 
-                Rectangle inBounds = toolWindowManager.getBoundsToScreen(internalFrame.getBounds(),
-                                                                         desktopPane);
-
+                Rectangle inBounds;
                 if (internalFrame != null) {
+                    inBounds = toolWindowManager.getBoundsToScreen(internalFrame.getBounds(),
+                                                                             desktopPane);
+
                     desktopPane.remove(internalFrame);
                     detachedContentUIMap.put(content, (DesktopContentUI) internalFrame);
                 } else
@@ -615,17 +616,6 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         }
 
     }
-
-    protected class ContentUIListener implements PropertyChangeListener {
-         public void propertyChange(PropertyChangeEvent evt) {
-             ContentUI contentUI = (ContentUI) evt.getSource();
-
-             if ("detachedBounds".equals(evt.getPropertyName()) && contentUI.getContent().isDetached()) {
-                 Window window = SwingUtilities.windowForComponent(contentUI.getContent().getComponent());
-                 window.setBounds((Rectangle) evt.getNewValue());
-             }
-         }
-     }
 
 
     protected class PopupMouseListener extends MouseAdapter implements ActionListener {

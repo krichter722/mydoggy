@@ -740,18 +740,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
     }
 
-    protected class ContentUIListener implements PropertyChangeListener {
-
-        public void propertyChange(PropertyChangeEvent evt) {
-            ContentUI contentUI = (ContentUI) evt.getSource();
-
-            if ("detachedBounds".equals(evt.getPropertyName()) && contentUI.getContent().isDetached()) {
-                Window window = SwingUtilities.windowForComponent(contentUI.getContent().getComponent());
-                window.setBounds((Rectangle) evt.getNewValue());
-            }
-        }
-    }
-
     protected class FocusOwnerPropertyChangeListener implements PropertyChangeListener {
 
         public FocusOwnerPropertyChangeListener() {
