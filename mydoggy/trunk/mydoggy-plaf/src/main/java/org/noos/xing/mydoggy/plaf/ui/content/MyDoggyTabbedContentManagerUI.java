@@ -76,6 +76,17 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         fireContentManagerUIProperty("detachable", old, detachable);
     }
 
+    public void setMinimizable(boolean minimizable) {
+        boolean old = this.minimizable;
+        this.minimizable = minimizable;
+
+        for (ContentUI contentUI : contentUIMap.values()) {
+            contentUI.setMinimizable(minimizable);
+        }
+
+        fireContentManagerUIProperty("minimizable", old, minimizable);
+    }
+
     public TabbedContentUI getContentUI(Content content) {
         return contentUIMap.get(content);
     }
@@ -167,6 +178,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
             // Import properties from the old ContentManagerUI
             this.closeable = oldContentManagerUI.isCloseable();
             this.detachable = oldContentManagerUI.isDetachable();
+            this.minimizable = oldContentManagerUI.isMinimizable();
         }
         // Import properties from the ContentManager
         setPopupMenu(contentManager.getPopupMenu());
@@ -464,10 +476,11 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         if (contentUI == null) {
             if (!installed) {
                 // TODO: ... This is an import
-                contentUI = new MyDoggyTabbedContentUI(tabbedContentPane, 
+                contentUI = new MyDoggyTabbedContentUI(this, tabbedContentPane,
                                                        content);
             } else
-                contentUI = new MyDoggyTabbedContentUI(tabbedContentPane, content);
+                contentUI = new MyDoggyTabbedContentUI(this, tabbedContentPane,
+                                                       content);
             contentUI.addPropertyChangeListener(contentUIListener);
         }
 

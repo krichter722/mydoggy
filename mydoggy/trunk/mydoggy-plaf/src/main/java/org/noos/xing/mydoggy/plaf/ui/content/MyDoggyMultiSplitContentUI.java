@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.ContentManagerUI;
 import org.noos.xing.mydoggy.MultiSplitConstraint;
 import org.noos.xing.mydoggy.MultiSplitContentUI;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer;
@@ -12,8 +13,9 @@ public class MyDoggyMultiSplitContentUI extends MyDoggyTabbedContentUI implement
     protected MultiSplitDockableContainer multiSplitContainer;
     protected boolean showAlwaysTab;
 
-    public MyDoggyMultiSplitContentUI(MultiSplitDockableContainer multiSplitContainer, Content content) {
-        super(null, content);
+    public MyDoggyMultiSplitContentUI(ContentManagerUI contentManagerUI, MultiSplitDockableContainer multiSplitContainer, Content content) {
+        super(contentManagerUI, null, content);
+        
         this.multiSplitContainer = multiSplitContainer;
         this.showAlwaysTab = true;
     }

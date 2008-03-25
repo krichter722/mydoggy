@@ -195,6 +195,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 toolAttributes.addAttribute(null, "maximized", null, null, String.valueOf(toolWindow.isMaximized()));
                 toolAttributes.addAttribute(null, "index", null, null, String.valueOf(toolWindow.getIndex()));
                 toolAttributes.addAttribute(null, "representativeAnchorButtonVisible", null, null, String.valueOf(toolWindow.isRepresentativeAnchorButtonVisible()));
+                toolAttributes.addAttribute(null, "flashing", null, null, String.valueOf(toolWindow.isFlashing()));
                 writer.startElement("tool", toolAttributes);
 
                 writer.startElement("descriptors");
@@ -306,6 +307,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                         AttributesImpl attributes = new AttributesImpl();
                         attributes.addAttribute(null, "dockableId", null, null, dockable.getId());
                         attributes.addAttribute(null, "selected", null, null, "" + tab.isSelected());
+                        attributes.addAttribute(null, "maximized", null, null, "" + tab.isMaximized());
+                        attributes.addAttribute(null, "minimized", null, null, "" + tab.isMinimzed());
+                        attributes.addAttribute(null, "closeable", null, null, "" + tab.isCloseable());
+                        attributes.addAttribute(null, "detached", null, null, "" + tab.isDetached());
+                        attributes.addAttribute(null, "flashing", null, null, String.valueOf(tab.isFlashing()));
                         writer.dataElement("tab", attributes);
                     }
                 }
@@ -403,6 +409,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     contentAttributes.addAttribute(null, "enabled", null, null, String.valueOf(content.isEnabled()));
                     contentAttributes.addAttribute(null, "selected", null, null, String.valueOf(content.isSelected()));
                     contentAttributes.addAttribute(null, "maximized", null, null, String.valueOf(content.isMaximized()));
+                    contentAttributes.addAttribute(null, "minimized", null, null, String.valueOf(content.isMinimzed()));
+                    contentAttributes.addAttribute(null, "flashing", null, null, String.valueOf(content.isFlashing()));
 
                     contentAttributes.addAttribute(null, "closeable", null, null, String.valueOf(contentUI.isCloseable()));
                     contentAttributes.addAttribute(null, "detachable", null, null, String.valueOf(contentUI.isDetachable()));
@@ -875,6 +883,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     toolWindow.setRepresentativeAnchorButtonVisible(
                             getBoolean(tool, "representativeAnchorButtonVisible", true)
                     );
+                toolWindow.setFlashing(getBoolean(tool, "flashing", false));
 
                 // Load tabs
                 Element tabs = getElement(tool, "tabs");
@@ -907,9 +916,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                         Dockable dockable = toolWindowManager.getDockable(dockableId);
                         if (dockable != null) {
                             ToolWindowTab tab = toolWindow.addToolWindowTab(dockable);
+
                             if (selected)
                                 selectedTab = tab;
                             tab.setSelected(false);
+                            // TODO: load other properties...                            
                         }
 
                         if (selectedTab != null)
@@ -1012,6 +1023,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     content.setEnabled(getBoolean(contentElement, "enabled", true));
                     content.setDetached(getBoolean(contentElement, "detached", false));
                     content.setMaximized(false);
+                    content.setMaximized(getBoolean(contentElement, "minimized", false));
+                    content.setFlashing(getBoolean(contentElement, "flashing", false));
 
                     ContentUI contentUI = content.getContentUI();
                     contentUI.setCloseable(getBoolean(contentElement, "closeable", true));

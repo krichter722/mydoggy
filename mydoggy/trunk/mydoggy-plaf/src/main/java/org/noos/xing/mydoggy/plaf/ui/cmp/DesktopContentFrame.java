@@ -18,6 +18,7 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
     protected Content content;
     protected Rectangle detachedBounds;
     protected boolean addToTaskBar;
+    protected boolean minimizable;
 
 
     public DesktopContentFrame(Content content, String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
@@ -72,6 +73,20 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
         this.detachable = detachable;
 
         firePropertyChange("detachable", old, detachable);
+    }
+
+    public boolean isMinimizable() {
+        return minimizable;
+    }
+
+    public void setMinimizable(boolean minimizable) {
+        if (this.minimizable == minimizable)
+            return;
+
+        boolean old = this.minimizable;
+        this.minimizable = minimizable;
+
+        firePropertyChange("minimizable", old, minimizable);
     }
 
     public boolean isTransparentMode() {

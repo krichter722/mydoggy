@@ -72,6 +72,17 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         fireContentManagerUIProperty("detachable", old, detachable);
     }
 
+    public void setMinimizable(boolean minimizable) {
+        boolean old = this.minimizable;
+        this.minimizable = minimizable;
+
+        for (ContentUI contentUI : contentUIMap.values()) {
+            contentUI.setMinimizable(minimizable);
+        }
+
+        fireContentManagerUIProperty("minimizable", old, minimizable);
+    }
+
     public MultiSplitContentUI getContentUI(Content content) {
         return contentUIMap.get(content);
     }
@@ -133,6 +144,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             // Import properties from the old ContentManagerUI
             this.closeable = oldContentManagerUI.isCloseable();
             this.detachable = oldContentManagerUI.isDetachable();
+            this.minimizable = oldContentManagerUI.isMinimizable();
         }
         // Import properties from the ContentManager
         setPopupMenu(contentManager.getPopupMenu());
@@ -373,7 +385,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
     protected void addUIForContent(Content content, Object... constraints) {
         MultiSplitContentUI contentUI = contentUIMap.get(content);
         if (contentUI == null) {
-            contentUI = new MyDoggyMultiSplitContentUI(multiSplitContainer, content);
+            contentUI = new MyDoggyMultiSplitContentUI(this, multiSplitContainer, content);
             contentUI.addPropertyChangeListener(contentUIListener);
         }
 

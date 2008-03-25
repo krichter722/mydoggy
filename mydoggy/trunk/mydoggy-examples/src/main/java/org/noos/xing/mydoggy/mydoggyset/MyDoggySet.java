@@ -287,6 +287,7 @@ public class MyDoggySet {
             }
         });
 
+//        contentManagerUI.setMinimizable(false);
 
         // Setup Corner Components
         ToolWindowManagerDescriptor managerDescriptor = toolWindowManager.getToolWindowManagerDescriptor();

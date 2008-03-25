@@ -47,6 +47,23 @@ public interface ContentManagerUI<C extends ContentUI> extends Observable {
     boolean isDetachable();
 
     /**
+     * Returns whether this content could be minimized using the ui.
+     *
+     * @return <code>true</code> if this content can be minimized using the ui, <code>false</code> otherwise.
+     * @since 1.4.2
+     */
+    boolean isMinimizable();
+
+    /**
+     * Sets the minimizable property of this content.
+     *
+     * @param minimizable <code>true</code> if this content can be minimized using the ui, <code>false</code> otherwise.
+     * @since 1.4.2
+     * @see #isDetachable()
+     */
+    void setMinimizable(boolean minimizable);
+
+    /**
      * Returns the ui part to which this manager maps the specified <code>content</code>.
      *
      * @param content content whose associated ui part is to be returned.
