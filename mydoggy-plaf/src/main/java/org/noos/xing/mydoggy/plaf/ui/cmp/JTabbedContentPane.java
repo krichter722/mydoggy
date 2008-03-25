@@ -114,6 +114,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
             tabIconTitle.setLeftIcon(super.getIconAt(index));
 
+            minCloseDetachIcon.setLeftVisible(contentUI.isMinimizable());
             closeDetachIcon.setLeftVisible(contentUI.isDetachable());
             closeDetachIcon.setRightVisible(contentUI.isCloseable());
 
@@ -388,7 +389,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             Point relativeMousePoint = SwingUtilities.convertPoint(JTabbedContentPane.this, point, getDestination());
             Rectangle iconBounds = minCloseDetachIcon.getLastPaintedLeftRec();
 
-            return (/* TODO:contentUI.isDetachable() && */((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
+            return (contentUI.isMinimizable() && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
                                                  (point.getX() > iconBounds.x && point.getX() < iconBounds.x + iconBounds.width)));
         }
 

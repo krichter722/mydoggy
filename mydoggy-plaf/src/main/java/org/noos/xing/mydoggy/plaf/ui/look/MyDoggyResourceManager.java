@@ -141,11 +141,19 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     public String getString(String key) {
-        return resourceBundle.getString(key);
+        try {
+            return resourceBundle.getString(key);
+        } catch (Exception e) {
+            return key;
+        }
     }
 
     public String getUserString(String key) {
-        return (userResourceBundle != null) ? userResourceBundle.getString(key) : key;
+        try {
+            return (userResourceBundle != null) ? userResourceBundle.getString(key) : key;
+        } catch (Exception e) {
+            return key;
+        }
     }
 
     public Map<String, Color> getColors() {

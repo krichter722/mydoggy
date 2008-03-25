@@ -56,6 +56,23 @@ public interface ContentUI extends DockableUI {
 	void setDetachable(boolean detachable);
 
     /**
+     * Returns whether this content could be minimized using the ui.
+     *
+     * @return <code>true</code> if this content can be minimized using the ui, <code>false</code> otherwise.
+     * @since 1.4.2
+     */
+    boolean isMinimizable();
+
+    /**
+     * Sets the minimizable property of this content.
+     *
+     * @param minimizable <code>true</code> if this content can be minimized using the ui, <code>false</code> otherwise.
+     * @since 1.4.2
+     * @see #isDetachable()
+     */
+    void setMinimizable(boolean minimizable);
+
+    /**
      * Sets the transparent mode. If the transparent mode is enabled then when
      * the content is detached and the window containing the content losts
      * the focus then the window becomes transparent. This facility is os-dependent.

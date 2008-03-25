@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.ContentManagerUI;
 import org.noos.xing.mydoggy.TabbedContentUI;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentPane;
@@ -21,16 +22,21 @@ public class MyDoggyTabbedContentUI extends PropertyChangeEventSource implements
     protected int transparentDelay;
     protected Rectangle detachedBounds;
     protected boolean addToTaskBar;
+    protected boolean minimizable;
+    
 
-    public MyDoggyTabbedContentUI(JTabbedContentPane tabbedContentPane, Content content) {
+    public MyDoggyTabbedContentUI(ContentManagerUI contentManagerUI, JTabbedContentPane tabbedContentPane, Content content) {
         this.tabbedContentPane = tabbedContentPane;
         this.content = content;
-        this.closable = this.detachable = true;
+        this.closable = contentManagerUI.isCloseable();
+        this.detachable = contentManagerUI.isDetachable();
+        this.minimizable = contentManagerUI.isMinimizable();
         this.transparentMode = true;
         this.transparentRatio = 0.7f;
         this.transparentDelay = 0;
         this.addToTaskBar = false;
     }
+
 
     public Content getContent() {
         return content;
@@ -62,6 +68,20 @@ public class MyDoggyTabbedContentUI extends PropertyChangeEventSource implements
         this.detachable = detachable;
 
         firePropertyChangeEvent("detachable", old, detachable);
+    }
+
+    public boolean isMinimizable() {
+        return minimizable;
+    }
+
+    public void setMinimizable(boolean minimizable) {
+        if (this.minimizable == minimizable)
+            return;
+
+        boolean old = this.minimizable;
+        this.minimizable = minimizable;
+
+        firePropertyChangeEvent("minimizable", old, minimizable);
     }
 
     public boolean isTransparentMode() {

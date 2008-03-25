@@ -27,7 +27,7 @@ public abstract class MyDoggyContentManagerUI extends PropertyChangeEventSource 
     protected ContentManager contentManager;
     protected ResourceManager resourceManager;
 
-    protected boolean closeable, detachable;
+    protected boolean closeable, detachable, minimizable;
     protected boolean installed;
     protected boolean uninstalling;
 
@@ -44,7 +44,7 @@ public abstract class MyDoggyContentManagerUI extends PropertyChangeEventSource 
 
     public MyDoggyContentManagerUI() {
         contentManagerUIListeners = new EventListenerList();
-        this.closeable = this.detachable = true;
+        this.closeable = this.detachable = this.minimizable = true;
     }
 
 
@@ -54,6 +54,10 @@ public abstract class MyDoggyContentManagerUI extends PropertyChangeEventSource 
 
     public boolean isDetachable() {
         return detachable;
+    }
+
+    public boolean isMinimizable() {
+        return minimizable;
     }
 
     public void addContentManagerUIListener(ContentManagerUIListener listener) {

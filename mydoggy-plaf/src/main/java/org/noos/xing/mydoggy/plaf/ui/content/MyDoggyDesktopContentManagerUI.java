@@ -62,6 +62,19 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         fireContentManagerUIProperty("detachable", old, detachable);
     }
 
+    public void setMinimizable(boolean minimizable) {
+        boolean old = this.minimizable;
+        this.minimizable = minimizable;
+
+        if (desktopPane != null)
+            for (JInternalFrame internalFrame : desktopPane.getAllFrames()) {
+                DesktopContentFrame frame = (DesktopContentFrame) internalFrame;
+                frame.setMinimizable(minimizable);
+            }
+
+        fireContentManagerUIProperty("minimizable", old, minimizable);
+    }
+
     public DesktopContentUI getContentUI(Content content) {
         if (content.isDetached()) {
             DesktopContentUI result = detachedContentUIMap.get(content);
@@ -85,6 +98,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
             // Import properties from the old ContentManagerUI
             this.closeable = oldContentManagerUI.isCloseable();
             this.detachable = oldContentManagerUI.isDetachable();
+            this.minimizable = oldContentManagerUI.isMinimizable(); 
         }
         // Import properties from the ContentManager
         setPopupMenu(contentManager.getPopupMenu());
@@ -294,6 +308,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         JInternalFrame internalFrame = (JInternalFrame) detachedContentUIMap.get(content);
 
         if (internalFrame == null) {
+            // TODO: import minimizable from contentmanagerUI...
             internalFrame = new DesktopContentFrame(content, content.getTitle(), true, true, true, true);
             internalFrame.setFrameIcon(content.getIcon());
             internalFrame.setClosable(closeable);
@@ -658,6 +673,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                                      resourceManager.getString("@@tabbed.page.maximize")
                     );
                     minimize.addActionListener(this);
+                    minimize.setEnabled(getContentUI(content).isMinimizable() && !content.isMinimzed());
                     menu.add(minimize);
 
                     popupMenu.add(menu);
