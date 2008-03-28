@@ -677,7 +677,7 @@ public class DockedContainer implements ToolWindowContainer {
             } else {
                 descriptor.getToolBar().deactiveTool(toolWindow);
 
-                if (toolWindow.isAutoHide())
+                if (toolWindow.isAutoHide() && toolWindow.getType() != ToolWindowType.EXTERN)
                     toolWindow.setVisible(false);
             }
 

@@ -266,36 +266,41 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
     }
 
     public void removeContent(PlafContent content) {
-        // If the content is detached, reattach it
-        if (content.isDetached())
-            content.setDetached(false);
-        if (content.isFlashing())
-            content.setFlashing(false);
+        try {
+            // If the content is detached, reattach it
+            if (content.isDetached())
+                content.setDetached(false);
+            if (content.isFlashing())
+                content.setFlashing(false);
 
-        content.setSelected(false);
+            content.setSelected(false);
 
-        content.getContentUI().removePropertyChangeListener(contentUIListener);
+            content.getContentUI().removePropertyChangeListener(contentUIListener);
 
-        // Remove from tabbedContentPane
-        int index = tabbedContentPane.indexOfContent(content);
-        if (index != -1) {
-            valueAdjusting = true;
-            try {
-                tabbedContentPane.removeTabAt(index);
-            } finally {
-                valueAdjusting = false;
-            }
-        } else if (toolWindowManager.getMainContent() != content.getComponent())
-            throw new IllegalStateException("Invalid content ui state.");
+            // Remove from tabbedContentPane
+            int index = tabbedContentPane.indexOfContent(content);
+            if (index != -1) {
+                valueAdjusting = true;
+                try {
+                    tabbedContentPane.removeTabAt(index);
+                } finally {
+                    valueAdjusting = false;
+                }
+            } else if (toolWindowManager.getMainContent() != content.getComponent())
+                throw new IllegalStateException("Invalid content ui state.");
 
-        // Remove the plaf listener
-        content.removePlafPropertyChangeListener(this);
+            // Remove the plaf listener
+            content.removePlafPropertyChangeListener(this);
 
-        if (contentValueAdjusting)
-            return;
+        } finally {
+            if (contentValueAdjusting)
+                return;
 
-        // Remove the contentUI part
-        contentUIMap.remove(content);
+            // Remove the contentUI part
+            contentUIMap.remove(content);
+            if (lastSelected == content)
+                lastSelected = null;
+        }
     }
 
     public boolean isSelected(Content content) {

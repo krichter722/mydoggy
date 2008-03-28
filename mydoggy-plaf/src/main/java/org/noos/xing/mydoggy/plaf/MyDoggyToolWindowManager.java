@@ -696,7 +696,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         propertyChangeSupport.addPropertyChangeListener("maximized.before", maximizedChangeListener);
         propertyChangeSupport.addPropertyChangeListener("index", new IndexChangeListener());
         propertyChangeSupport.addPropertyChangeListener("icon", new IconChangeListener());
-        propertyChangeSupport.addPropertyChangeListener("title", new TitleChangeListener());
         propertyChangeSupport.addPropertyChangeListener("numberingEnabled", new NumberingEnabledChangeListener());
         propertyChangeSupport.addPropertyChangeListener("tempShowed", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
@@ -1120,15 +1119,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
 
             descriptor.propertyChange(evt);
-            getBar(descriptor.getToolWindow().getAnchor()).propertyChange(evt);
-        }
-    }
-
-    protected class TitleChangeListener implements PropertyChangeListener {
-        public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
-
-            descriptor.getToolWindowContainer().propertyChange(evt);
             getBar(descriptor.getToolWindow().getAnchor()).propertyChange(evt);
         }
     }
