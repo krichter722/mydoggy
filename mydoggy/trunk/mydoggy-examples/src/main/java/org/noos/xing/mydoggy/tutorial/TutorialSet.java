@@ -154,6 +154,7 @@ public class TutorialSet {
 
     protected void initTabs() {
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
+        debugTool.setTitle("Hello ");
         ToolWindowTab profilingTab = debugTool.addToolWindowTab("Profiling", new JButton("Profiling"));
         profilingTab.setCloseable(true);
     }

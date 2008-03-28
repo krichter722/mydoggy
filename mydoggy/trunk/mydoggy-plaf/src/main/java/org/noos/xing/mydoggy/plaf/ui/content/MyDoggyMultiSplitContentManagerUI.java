@@ -228,25 +228,32 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
     public void removeContent(PlafContent content) {
         // If the content is detached, reattach it
-        if (content.isDetached())
-            content.setDetached(false);
-        if (content.isFlashing())
-            content.setFlashing(false);
-
-        content.setSelected(false);
-
-        content.getContentUI().removePropertyChangeListener(contentUIListener);
-
-        valueAdjusting = true;
         try {
-            // Remove from multiSplitContainer
-            multiSplitContainer.removeDockable(content);
-        } finally {
-            valueAdjusting = false;
-        }
+            if (content.isDetached())
+                content.setDetached(false);
+            if (content.isFlashing())
+                content.setFlashing(false);
 
-        // Remove the plaf listener
-        content.removePlafPropertyChangeListener(this);
+            content.setSelected(false);
+
+            content.getContentUI().removePropertyChangeListener(contentUIListener);
+
+            valueAdjusting = true;
+            try {
+                // Remove from multiSplitContainer
+                multiSplitContainer.removeDockable(content);
+            } finally {
+                valueAdjusting = false;
+            }
+
+            // Remove the plaf listener
+            content.removePlafPropertyChangeListener(this);
+        } finally {
+            // Remove the contentUI part
+            contentUIMap.remove(content);
+            if (lastSelected == content)
+                lastSelected = null;
+        }
     }
 
     public JPopupMenu getPopupMenu() {
