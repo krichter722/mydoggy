@@ -13,10 +13,7 @@ import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureDelegate;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureInitiator;
-import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
-import org.noos.xing.mydoggy.plaf.ui.util.MouseEventDispatcher;
-import org.noos.xing.mydoggy.plaf.ui.util.PropertyChangeBridge;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.*;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLabelUI;
@@ -32,7 +29,7 @@ import java.util.EventListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @todo: implemets maximzied and minimized
  */
-public class ToolWindowTabPanel extends JComponent implements DragGestureInitiator {
+public class ToolWindowTabPanel extends JComponent implements DragGestureInitiator, Cleaner {
     protected DockedContainer dockedContainer;
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
@@ -60,10 +57,16 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
         this.mouseEventDispatcher = new MouseEventDispatcher();
         this.dragGestureDelegate = new DragGestureDelegate();
 
+        descriptor.getCleaner().addCleaner(this);
+
         initComponents();
         initListeners();
     }
 
+
+    public void cleanup() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 
     public void setDragGesture(DragGesture dragGesture) {
         dragGestureDelegate.setDragGesture(dragGesture);
@@ -80,7 +83,8 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
 
 
     protected void initComponents() {
-        this.propertyChangeBridge = new PropertyChangeBridge();
+        propertyChangeBridge = new PropertyChangeBridge();
+        descriptor.getCleaner().addCleaner(propertyChangeBridge);  // TODO: do better...
 
         setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL, 1, 14}, {0, TableLayout.FILL, 0}}, false));
         setFocusable(false);
@@ -192,36 +196,7 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
 
         });
 
-        toolWindow.addToolWindowListener(new ToolWindowListener() {
-            public void toolWindowTabAdded(ToolWindowTabEvent event) {
-                if (tabContainer.getComponentCount() == 0)
-                    initTabs();
-                else
-                    addTab(event.getToolWindowTab());
-
-                checkPopupButton();
-            }
-
-            public boolean toolWindowTabRemoving(ToolWindowTabEvent event) {
-                return true;
-            }
-
-            public void toolWindowTabRemoved(ToolWindowTabEvent event) {
-                ToolWindowTab nextTab = removeTab(event.getToolWindowTab(), true);
-
-                if (event.getToolWindowTab().isSelected()) {
-                    ToolWindowTab[] tabs = toolWindow.getToolWindowTabs();
-                    if (tabs.length > 0) {
-                        if (nextTab != null)
-                            nextTab.setSelected(true);
-                        else
-                            tabs[0].setSelected(true);
-                    }
-                }
-
-                checkPopupButton();
-            }
-        });
+        toolWindow.addToolWindowListener(new TabToolWindowListener());
 
         viewport.addMouseListener(dockedContainer.getTitleBarMouseAdapter());
         viewport.addMouseListener(mouseEventDispatcher);
@@ -292,7 +267,7 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
                 }
             }
 
-        return toolWindow.getToolWindowTabs()[0];
+        return (toolWindow.getToolWindowTabs().length != 0) ? toolWindow.getToolWindowTabs()[0] : null;
     }
 
     protected void checkPopupButton() {
@@ -303,7 +278,54 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
     }
 
 
-    protected class TabButton extends JPanel implements PropertyChangeListener, MouseListener, ActionListener {
+    protected class TabToolWindowListener implements ToolWindowListener, Cleaner {
+
+        public TabToolWindowListener() {
+            descriptor.getCleaner().addCleaner(this);
+        }
+
+        public void cleanup() {
+            descriptor.getToolWindow().removeToolWindowListener(this);
+        }
+
+        public void toolWindowTabAdded(ToolWindowTabEvent event) {
+            if (tabContainer.getComponentCount() == 0)
+                initTabs();
+            else
+                addTab(event.getToolWindowTab());
+
+            checkPopupButton();
+        }
+
+        public boolean toolWindowTabRemoving(ToolWindowTabEvent event) {
+            return true;
+        }
+
+        public void toolWindowTabRemoved(ToolWindowTabEvent event) {
+            ToolWindowTab nextTab = removeTab(event.getToolWindowTab(), true);
+
+            if (event.getToolWindowTab().isSelected()) {
+                ToolWindowTab[] tabs = toolWindow.getToolWindowTabs();
+                if (tabs.length > 0) {
+                    if (nextTab != null)
+                        nextTab.setSelected(true);
+                    else
+                        tabs[0].setSelected(true);
+                } else {
+                    selectedTab = null;
+                    selecTabButton = null;
+                }
+            }
+
+            checkPopupButton();
+        }
+
+    }
+
+    protected class TabButton extends JPanel implements PropertyChangeListener,
+                                                        MouseListener,
+                                                        ActionListener,
+                                                        ToolWindowListener {
         protected ToolWindowTab tab;
 
         protected TableLayout layout;
@@ -322,6 +344,8 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
 
         public TabButton(final ToolWindowTab tab) {
             this.tab = tab;
+
+            toolWindow.addToolWindowListener(this);
 
             putClientProperty(ToolWindowTab.class, tab);
 
@@ -521,11 +545,32 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
             return new Insets(0, 5, 0, 5);
         }
 
+        public void toolWindowTabAdded(ToolWindowTabEvent event) {
+        }
 
-        public void aclean() {
+        public boolean toolWindowTabRemoving(ToolWindowTabEvent event) {
+            return true;
+        }
+
+        public void toolWindowTabRemoved(ToolWindowTabEvent event) {
+            toolWindow.removeToolWindowListener(this);
+
             tab.removePropertyChangeListener(this);
+
             removeMouseMotionListener(mouseEventDispatcher);
             removeMouseListener(mouseEventDispatcher);
+
+            putClientProperty(ToolWindowTab.class, null);
+
+            titleLabel.removeMouseListener(dockedContainer.getTitleBarMouseAdapter());
+            titleLabel.removeMouseListener(mouseEventDispatcher);
+            titleLabel.removeMouseMotionListener(mouseEventDispatcher);
+            titleLabel.removeMouseListener(this);
+
+            if (selectedTab == tab)
+                selectedTab = null;
+
+            //  TODO: cleanup timer...
         }
 
         public ToolWindowTab getTab() {
@@ -665,7 +710,6 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
 
     }
 
-
     protected class SelectNextTabAction extends AbstractAction {
 
         public SelectNextTabAction() {
@@ -762,7 +806,6 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
             }
         }
     }
-
 
     protected class TabSelectedPropertyChangeListener implements PropertyChangeListener {
 

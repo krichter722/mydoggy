@@ -14,6 +14,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.TranslucentPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.drag.RepresentativeAnchorDragGesture;
+import org.noos.xing.mydoggy.plaf.ui.util.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -32,7 +33,7 @@ import java.beans.PropertyChangeEvent;
 /**
  * @author Angelo De Caro
  */
-public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI {
+public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cleaner {
     protected JComponent label;
 
     protected LineBorder labelBorder;
@@ -65,6 +66,8 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI {
 
         this.dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
         this.dockedTypeDescriptor.addPropertyChangeListener(this);
+
+        descriptor.getCleaner().addCleaner(this);
     }
 
 
@@ -81,10 +84,10 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI {
 
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
-
-        toolWindow.removePropertyChangeListener(this);
         c.removeMouseListener(adapter);
         c.removeMouseMotionListener(adapter);
+
+        cleanup();
     }
 
     public void update(Graphics g, JComponent c) {
@@ -189,10 +192,13 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI {
         }
     }
 
-    public ToolWindowDescriptor getDescriptor() {
-        return descriptor;
+    public void cleanup() {
+        toolWindow.getTypeDescriptor(ToolWindowType.DOCKED).removePropertyChangeListener(this);
+        descriptor.getToolWindow().removePlafPropertyChangeListener(this);
+        
+        descriptor = null;
+        toolWindow = null;
     }
-
 
     protected void installListeners(JLabel c) {
         super.installListeners(c);
@@ -321,7 +327,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI {
     }
 
     protected class RepresentativeAnchorMouseAdapter extends MouseInputAdapter implements ActionListener {
-        Timer previewTimer;
+        Timer previewTimer; // TODO: cleanup
         boolean firstPreview = true;
 
         public RepresentativeAnchorMouseAdapter() {

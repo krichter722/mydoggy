@@ -47,6 +47,23 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         initListeners();
     }
 
+
+    public void cleanup() {
+
+        // Remove listeners
+        if (window != null) {
+            window.getWindow().removeMouseMotionListener(resizeMouseInputHandler);
+            window.getWindow().removeMouseListener(resizeMouseInputHandler);
+        }
+
+        titleBarTabs.removeEventDispatcherlListener(moveMouseInputHandler);
+
+        titleBar.removeMouseMotionListener(moveMouseInputHandler);
+        titleBar.removeMouseListener(moveMouseInputHandler);
+
+        descriptor.getTypeDescriptor(ToolWindowType.FLOATING).removePropertyChangeListener(this);
+    }
+
     public void setVisible(boolean visible) {
         synchronized (floatingAnimation) {
             if (floatingAnimation.isAnimating()) {
@@ -259,19 +276,15 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         });
         addPropertyChangeListener("addToTaskBar", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
+                // TODO:
                 if (window == null || !window.isVisible()) {
-
-
                 } else {
-
                 }
-
             }
         });
         addPropertyChangeListener("enabled", new TypeEnabledPropertyChangeListener());
 
-        FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
-        typeDescriptor.addPropertyChangeListener(this);
+        descriptor.getTypeDescriptor(ToolWindowType.FLOATING).addPropertyChangeListener(this);
 
         new FloatingToolTransparencyListener(this, descriptor, window.getWindow());
         resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window.getWindow());

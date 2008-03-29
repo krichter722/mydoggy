@@ -2,10 +2,10 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
-import org.noos.xing.mydoggy.SlidingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.*;
+import org.noos.xing.mydoggy.plaf.ui.util.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -19,7 +19,7 @@ import java.beans.PropertyChangeSupport;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons {
+public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, Cleaner {
     protected ToolWindow toolWindow;
     protected ToolWindowDescriptor descriptor;
     protected transient ResourceManager resourceManager;
@@ -38,10 +38,17 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons {
         this.dockedContainer = dockedContainer;
         this.propertyChangeSupport = new SwingPropertyChangeSupport(this);
 
+        descriptor.getCleaner().addCleaner(this);
+
         initComponents();
         initListeners();
     }
 
+
+    public void cleanup() {
+        descriptor = null;
+        toolWindow = null;
+    }
 
     public Component getFocusable() {
         return focusable;
@@ -229,16 +236,16 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons {
                 case DOCKED:
                     putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.SLIDING));
                     putValue(Action.SHORT_DESCRIPTION, resourceManager.getString("@@tool.tooltip.undock"));
-                    setVisible(((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled());
+                    setVisible(descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isEnabled());
                     break;
                 case FLOATING_LIVE:
                     putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.DOCKED));
                     putValue(Action.SHORT_DESCRIPTION, resourceManager.getString("@@tool.tooltip.dock"));
-                    setVisible(((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled());
+                    setVisible(descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isEnabled());
                     break;
                 case SLIDING:
                     putValue(Action.SHORT_DESCRIPTION, resourceManager.getString("@@tool.tooltip.dock"));
-                    setVisible(((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled());
+                    setVisible(descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isEnabled());
                     break;
                 case FLOATING:
                 case FLOATING_FREE:

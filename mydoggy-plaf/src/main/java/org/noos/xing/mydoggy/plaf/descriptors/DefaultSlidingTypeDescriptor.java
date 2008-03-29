@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.descriptors;
 import org.noos.xing.mydoggy.SlidingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -29,7 +30,8 @@ public class DefaultSlidingTypeDescriptor extends PropertyChangeEventSource impl
         idVisibleOnTitleBar = true;
     }
 
-    public DefaultSlidingTypeDescriptor(DefaultSlidingTypeDescriptor parent, int transparentDelay,
+    public DefaultSlidingTypeDescriptor(ToolWindowDescriptor toolWindowDescriptor,
+                                        DefaultSlidingTypeDescriptor parent, int transparentDelay,
                                         float transparentRatio, boolean transparentMode,
                                         boolean enabled, boolean animating, boolean autoHide, boolean idVisibleOnTitleBar) {
         this.transparentDelay = transparentDelay;
@@ -41,6 +43,8 @@ public class DefaultSlidingTypeDescriptor extends PropertyChangeEventSource impl
         this.idVisibleOnTitleBar = idVisibleOnTitleBar;
 
         parent.addPropertyChangeListener(this);
+
+        toolWindowDescriptor.getCleaner().addCleaner(this);
     }
 
     public float getTransparentRatio() {
@@ -140,8 +144,9 @@ public class DefaultSlidingTypeDescriptor extends PropertyChangeEventSource impl
     }
 
 
-    public ToolWindowTypeDescriptor cloneMe() {
-        return new DefaultSlidingTypeDescriptor(this,
+    public ToolWindowTypeDescriptor cloneMe(ToolWindowDescriptor toolWindowDescriptor) {
+        return new DefaultSlidingTypeDescriptor(toolWindowDescriptor,
+                                                this,
                                                 transparentDelay, transparentRatio,
                                                 transparentMode, enabled, animating,
                                                 autoHide,

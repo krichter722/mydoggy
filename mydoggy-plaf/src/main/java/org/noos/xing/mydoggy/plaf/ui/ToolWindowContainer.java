@@ -1,22 +1,21 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
+import org.noos.xing.mydoggy.plaf.ui.util.Cleaner;
+
 import java.awt.*;
+import java.beans.PropertyChangeListener;
 
 
 /**
  * @author Angelo De Caro
  */
-public interface ToolWindowContainer extends PropertyChangeListener {
+public interface ToolWindowContainer extends PropertyChangeListener, Cleaner {
 
     ResourceManager getResourceManager();
 
     void addPropertyChangeListener(String property, PropertyChangeListener listener);
 
     void updateUI();
-
-    void uninstall();
 
     void showPopupMenu(Component c, int x, int y);
 

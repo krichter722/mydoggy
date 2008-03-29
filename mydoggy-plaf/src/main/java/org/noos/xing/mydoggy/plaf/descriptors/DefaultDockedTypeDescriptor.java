@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.ToolWindowActionHandler;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
@@ -44,7 +45,9 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         this.idVisibleOnTitleBar = true;
     }
 
-    public DefaultDockedTypeDescriptor(DefaultDockedTypeDescriptor parent, ResourceManager resourceManager,
+    public DefaultDockedTypeDescriptor(ToolWindowDescriptor toolWindowDescriptor,
+                                       DefaultDockedTypeDescriptor parent,
+                                       ResourceManager resourceManager,
                                        int dockLength, boolean popupMenuEnabled,
                                        ToolWindowActionHandler toolWindowActionHandler, boolean animating,
                                        boolean autoHide, boolean previewEnabled, int previewDelay, float previewTransparentRatio,
@@ -63,6 +66,8 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         this.idVisibleOnTitleBar = idVisibleOnTitleBar;
 
         parent.addPropertyChangeListener(this);
+
+        toolWindowDescriptor.getCleaner().addCleaner(this);
     }
 
     public void setPopupMenuEnabled(boolean enabled) {
@@ -200,11 +205,18 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         return true;
     }
 
-    public ToolWindowTypeDescriptor cloneMe() {
-        return new DefaultDockedTypeDescriptor(this, resourceManager, dockLength, popupMenuEnabled,
-                                               toolWindowActionHandler, animating,
-                                               this.autoHide, previewEnabled, previewDelay, previewTransparentRatio,
-                                               hideRepresentativeButtonOnVisible, idVisibleOnTitleBar);
+    public ToolWindowTypeDescriptor cloneMe(ToolWindowDescriptor toolWindowDescriptor) {
+        return new DefaultDockedTypeDescriptor(toolWindowDescriptor,
+                                               this,
+                                               resourceManager,
+                                               dockLength,
+                                               popupMenuEnabled,
+                                               toolWindowActionHandler,
+                                               animating,
+                                               this.autoHide, previewEnabled,
+                                               previewDelay, previewTransparentRatio,
+                                               hideRepresentativeButtonOnVisible,
+                                               idVisibleOnTitleBar);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

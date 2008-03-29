@@ -247,6 +247,12 @@ public class ToolWindowDescriptor implements Cleaner, PropertyChangeListener, Do
 
 
     public void cleanup() {
+        toolWindow.removingFlag = true;
+
+        for (ToolWindowTab toolWindowTab : toolWindow.getToolWindowTabs()) {
+            toolWindow.removeToolWindowTab(toolWindowTab);            
+        }
+
         // Clean listener added to toolwindow
         toolWindow.removePlafPropertyChangeListener(this);
 
@@ -255,6 +261,9 @@ public class ToolWindowDescriptor implements Cleaner, PropertyChangeListener, Do
         floatingLiveTypeDescriptor.removePropertyChangeListener(this);
         dockedTypeDescriptor.removePropertyChangeListener(this);
         slidingTypeDescriptor.removePropertyChangeListener(this);
+
+        if (representativeAnchor != null)
+            representativeAnchor.putClientProperty(ToolWindowDescriptor.class, null);
     }
 
 
@@ -325,43 +334,6 @@ public class ToolWindowDescriptor implements Cleaner, PropertyChangeListener, Do
             else
                 dockedContainer.disableIdOnTitleBar();
         }
-    }
-
-    /**
-     * TODO: remove this method...
-     */
-    public void unregister() {
-        // Clean listener added to toolwindow
-        toolWindow.removePlafPropertyChangeListener(this);
-
-        // Clean conteinars
-        if (dockedContainer != null) {
-            dockedContainer.uninstall();
-            slidingContainer.uninstall();
-            floatingContainer.uninstall();
-            floatingLiveContainer.uninstall();
-
-/*
-            dockedContainer = null;
-            slidingContainer = null;
-            floatingContainer = null;
-            floatingLiveContainer = null;
-*/
-        }
-
-        // Clean TypeDescriptors
-        floatingTypeDescriptor.removePropertyChangeListener(this);
-        floatingLiveTypeDescriptor.removePropertyChangeListener(this);
-        dockedTypeDescriptor.removePropertyChangeListener(this);
-        slidingTypeDescriptor.removePropertyChangeListener(this);
-
-/*
-        floatingTypeDescriptor = null;
-        floatingLiveTypeDescriptor = null;
-        dockedTypeDescriptor = null;
-        slidingTypeDescriptor = null;
-*/
-
     }
 
     public void updateUI() {
@@ -476,16 +448,16 @@ public class ToolWindowDescriptor implements Cleaner, PropertyChangeListener, Do
 
     
     protected void initTypeDescriptors() {
-        floatingTypeDescriptor = (FloatingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING)).cloneMe();
+        floatingTypeDescriptor = (FloatingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING)).cloneMe(this);
         floatingTypeDescriptor.addPropertyChangeListener(this);
 
-        floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING_LIVE)).cloneMe();
+        floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING_LIVE)).cloneMe(this);
         floatingLiveTypeDescriptor.addPropertyChangeListener(this);
 
-        dockedTypeDescriptor = (DockedTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).cloneMe();
+        dockedTypeDescriptor = (DockedTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).cloneMe(this);
         dockedTypeDescriptor.addPropertyChangeListener(this);
 
-        slidingTypeDescriptor = (SlidingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.SLIDING)).cloneMe();
+        slidingTypeDescriptor = (SlidingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.SLIDING)).cloneMe(this);
         slidingTypeDescriptor.addPropertyChangeListener(this);
     }
 
