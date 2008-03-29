@@ -28,11 +28,14 @@ public final class ContentsTableModel extends DefaultTableModel implements Prope
     }
 
     public boolean isCellEditable(int row, int column) {
-        return column != 0;
+        return true;
     }
 
     public void setValueAt(Object aValue, int row, int column) {
         switch (column) {
+            case 0 :
+                windowManager.getContentManager().getContent(row).setTitle((String) aValue);
+                break;
             case 1 :
                 windowManager.getContentManager().getContent(row).setEnabled((Boolean) aValue);
                 break;

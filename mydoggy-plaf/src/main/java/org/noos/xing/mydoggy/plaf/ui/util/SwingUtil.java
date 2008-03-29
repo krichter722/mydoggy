@@ -573,4 +573,13 @@ public class SwingUtil {
         return null;
     }
 
+    public static void setWindowTitle(Component component, String title) {
+        Window window = SwingUtilities.windowForComponent(component);
+        if (window instanceof Dialog) {
+            ((Dialog) window).setTitle(title);
+        } else if (window instanceof Frame) {
+            ((Frame) window).setTitle(title);
+        } else
+            throw new IllegalArgumentException("Cannot set title for that component");
+    }
 }

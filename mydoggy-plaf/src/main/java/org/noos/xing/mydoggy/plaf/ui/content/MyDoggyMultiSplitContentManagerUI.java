@@ -591,8 +591,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             Content content = (Content) evt.getSource();
 
             if (content.isDetached()) {
-                JDialog dialog = (JDialog) SwingUtilities.windowForComponent(content.getComponent());
-                dialog.setTitle((String) evt.getNewValue());
+                SwingUtil.setWindowTitle(content.getComponent(), (String) evt.getNewValue());
             } else {
                 for (Component c : multiSplitContainer.getTabbedComponents()) {
                     if (c instanceof JTabbedContentPane) {
