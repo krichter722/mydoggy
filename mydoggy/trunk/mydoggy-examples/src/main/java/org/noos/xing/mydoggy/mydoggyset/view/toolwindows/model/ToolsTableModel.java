@@ -8,7 +8,6 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -129,6 +128,7 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
             }
 
             public void toolWindowUnregistered(ToolWindowManagerEvent event) {
+                updateModel();
                 event.getToolWindow().removePropertyChangeListener(ToolsTableModel.this);
             }
 
@@ -138,6 +138,7 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
             public void toolWindowGroupRemoved(ToolWindowManagerEvent event) {
             }
         });
+        
         ToolWindow[] toolWindows = windowManager.getToolWindows();
         for (ToolWindow toolWindow : toolWindows) {
             toolWindow.addPropertyChangeListener(this);

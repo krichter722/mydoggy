@@ -84,7 +84,7 @@ public class FloatingLiveTypeDescriptorView extends ComponentView implements Vie
 
     public void contextChange(ViewContextChangeEvent evt) {
         if (ToolWindowTypeDescriptor.class.equals(evt.getProperty())) {
-            if (evt.getNewValue().equals(FloatingLiveTypeDescriptor.class)) {
+            if (FloatingLiveTypeDescriptor.class.equals(evt.getNewValue())) {
                 ToolWindow toolWindow = viewContext.get(ToolWindow.class);
                 FloatingLiveTypeDescriptor descriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
                 viewContext.put(FloatingLiveTypeDescriptor.class, descriptor);

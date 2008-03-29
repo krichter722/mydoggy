@@ -80,7 +80,7 @@ public class SlidingTypeDescriptorView extends ComponentView implements ViewCont
 
     public void contextChange(ViewContextChangeEvent evt) {
         if (ToolWindowTypeDescriptor.class.equals(evt.getProperty())) {
-            if (evt.getNewValue().equals(SlidingTypeDescriptor.class)) {
+            if (SlidingTypeDescriptor.class.equals(evt.getNewValue())) {
                 ToolWindow toolWindow = viewContext.get(ToolWindow.class);
                 SlidingTypeDescriptor descriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);
                 viewContext.put(SlidingTypeDescriptor.class, descriptor);

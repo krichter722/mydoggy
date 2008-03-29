@@ -7,6 +7,7 @@ import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
+import org.noos.xing.mydoggy.plaf.ui.util.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -75,8 +76,11 @@ public class DockedContainer implements ToolWindowContainer {
 
 
     public void uninstall() {
+        // Clean components
         Component cmp = descriptor.getComponent();
         cmp.removeMouseListener(titleBarMouseAdapter);
+
+        // Clean listeners
     }
 
     public void removePropertyChangeListener(String property, PropertyChangeListener listener) {
@@ -590,11 +594,18 @@ public class DockedContainer implements ToolWindowContainer {
         }
     }
 
-    protected class DockedToolWindowListener implements ToolWindowListener, PropertyChangeListener {
+    protected class DockedToolWindowListener implements Cleaner, ToolWindowListener, PropertyChangeListener {
 
         public DockedToolWindowListener() {
             for (ToolWindowTab tab : toolWindow.getToolWindowTabs())
                 tab.addPropertyChangeListener(this);
+        }
+
+        public void cleanup() {
+            toolWindow.removeToolWindowListener(this);
+
+            for (ToolWindowTab tab : toolWindow.getToolWindowTabs())
+                tab.removePropertyChangeListener(this);
         }
 
         public boolean toolWindowTabRemoving(ToolWindowTabEvent event) {
@@ -641,11 +652,18 @@ public class DockedContainer implements ToolWindowContainer {
         }
     }
 
-    protected class FocusOwnerPropertyChangeListener implements PropertyChangeListener {
+    protected class FocusOwnerPropertyChangeListener implements PropertyChangeListener, Cleaner {
         protected Question parentOf;
+
 
         public FocusOwnerPropertyChangeListener(Question parentOf) {
             this.parentOf = parentOf;
+            descriptor.getCleaner().addCleaner(this);
+        }
+
+
+        public void cleanup() {
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("focusOwner", this);
         }
 
         public void propertyChange(PropertyChangeEvent evt) {

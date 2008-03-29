@@ -816,10 +816,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                 content.setMaximized(false);
 
                 DockableDescriptor descriptor = toolWindowManager.getDockableDescriptor(content.getId());
-                if (descriptor == null) {
+                if (descriptor == null)
                     descriptor = new ContentDescriptor(toolWindowManager, content);
-                    toolWindowManager.putDockableDescriptor(content.getId(), descriptor);
-                }
 
                 // Remove content
                 // Store constraint
