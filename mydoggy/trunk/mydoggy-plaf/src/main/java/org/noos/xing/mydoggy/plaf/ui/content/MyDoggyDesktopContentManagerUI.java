@@ -500,8 +500,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
             Content content = (Content) evt.getSource();
 
             if (content.isDetached()) {
-                JDialog dialog = (JDialog) SwingUtilities.windowForComponent(content.getComponent());
-                dialog.setTitle((String) evt.getNewValue());
+                SwingUtil.setWindowTitle(content.getComponent(), (String) evt.getNewValue());
             } else {
                 JInternalFrame internalFrame = getFrameByContent(content);
                 if (internalFrame != null)

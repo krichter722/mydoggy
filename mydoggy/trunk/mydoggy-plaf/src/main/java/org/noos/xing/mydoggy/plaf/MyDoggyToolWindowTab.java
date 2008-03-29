@@ -204,6 +204,7 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
                ", component=" + component +
                ", selected=" + selected +
                ", closeable=" + closeable +
+               ", maximized=" + maximized +
                ", toolWindow=" + dockable +
                '}';
     }
@@ -220,7 +221,7 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
             } else if ("icon".equals(propertyName)) {
                 setIcon((Icon) evt.getNewValue());
             } else if ("title".equals(propertyName)) {
-                setIcon((Icon) evt.getNewValue());
+                setTitle((String) evt.getNewValue());
             } else if ("closeable".equals(propertyName)) {
                 setCloseable((Boolean) evt.getNewValue());
             }

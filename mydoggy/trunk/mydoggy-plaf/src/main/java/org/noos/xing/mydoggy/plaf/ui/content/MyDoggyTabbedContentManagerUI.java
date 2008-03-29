@@ -293,6 +293,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
             content.removePlafPropertyChangeListener(this);
 
         } finally {
+            // TODO: check this...
             if (contentValueAdjusting)
                 return;
 
@@ -645,8 +646,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
             Content content = (Content) evt.getSource();
 
             if (content.isDetached()) {
-                JDialog dialog = (JDialog) SwingUtilities.windowForComponent(content.getComponent());
-                dialog.setTitle((String) evt.getNewValue());
+                SwingUtil.setWindowTitle(content.getComponent(), (String) evt.getNewValue());
             } else {
                 int index = tabbedContentPane.indexOfContent(content);
                 if (index != -1)
