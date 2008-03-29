@@ -757,9 +757,8 @@ public class MyDoggySet {
         }
 
         public JComponent getRepresentativeAnchor(Component container) {
-            if (representativeAnchor == null) {
+            if (representativeAnchor == null)
                 representativeAnchor = new MemoryMonitorPanel(anchor);
-            }
             return representativeAnchor;
         }
 

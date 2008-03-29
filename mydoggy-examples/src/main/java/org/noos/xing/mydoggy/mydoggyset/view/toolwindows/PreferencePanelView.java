@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.mydoggyset.view.toolwindows;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
+import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.plaf.view.PanelViewContainer;
 import org.noos.xing.yasaf.plaf.view.listener.ContextPutItemListener;
@@ -46,6 +47,7 @@ public class PreferencePanelView extends ComponentView {
     }
 
     protected void initListeners() {
+        viewContext.addViewContextChangeListener(new NullTypeDescriptorView(viewContext));
         viewContext.addViewContextChangeListener(new DockedTypeDescriptorView(viewContext));
         viewContext.addViewContextChangeListener(new SlidingTypeDescriptorView(viewContext));
         viewContext.addViewContextChangeListener(new FloatingTypeDescriptorView(viewContext));
@@ -56,11 +58,13 @@ public class PreferencePanelView extends ComponentView {
                 if (ToolWindow.class.equals(evt.getProperty())) {
                     ToolWindow toolWindow = (ToolWindow) evt.getNewValue();
 
-                    preferencePanel.setBorder(new TitledBorder("Preference : " + toolWindow.getId()));
+                    if (toolWindow != null)
+                        preferencePanel.setBorder(new TitledBorder("Preference : " + toolWindow.getId()));
+                    else
+                        preferencePanel.setBorder(new TitledBorder("Preference : "));
                 } else if (ToolWindowTypeDescriptor.class.equals(evt.getProperty())) {
-                    if (evt.getNewValue() instanceof View) {
+                    if (evt.getNewValue() instanceof View)
                         typeDescriptorContainer.plugView((View) evt.getNewValue());
-                    }
                 }
             }
         });
@@ -74,10 +78,10 @@ public class PreferencePanelView extends ComponentView {
         }
 
         protected Component initComponent() {
-            JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{150, 3, -1}, {-1}}));
+            JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{150, 3, -1, 5 , 50}, {-1}}));
 
             types = new JComboBox(new Object[]{
-                    null,
+                    "<none>",
                     DockedTypeDescriptor.class,
                     SlidingTypeDescriptor.class,
                     FloatingTypeDescriptor.class,
@@ -88,22 +92,27 @@ public class PreferencePanelView extends ComponentView {
 
             panel.add(new JLabel("Type Descriptor : "), "0,0,r,FULL");
             panel.add(types, "2,0,FULL,FULL");
+            panel.add(new JButton(new ViewContextAction("Remove", null, viewContext, "remove", ToolWindow.class)),
+                     "4,0,FULL,FULL");
 
             return panel;
         }
 
         protected void initListeners() {
-            viewContext.addViewContextChangeListener(new ViewContextChangeListener() {
-                public void contextChange(ViewContextChangeEvent evt) {
-                    if (ToolWindow.class.equals(evt.getProperty())) {
-                        types.setSelectedIndex(0);
-                        types.setSelectedIndex(1);
-                    }
-                }
-            });
             viewContext.addViewContextChangeListener(ToolWindow.class, new ViewContextChangeListener() {
                 public void contextChange(ViewContextChangeEvent evt) {
+                    types.setSelectedIndex(0);
+                    if (evt.getNewValue() != null)
+                        types.setSelectedIndex(1);
                     types.setEnabled(evt.getNewValue() != null);
+                }
+            });
+            viewContext.addViewContextChangeListener("remove", new ViewContextChangeListener() {
+                public void contextChange(ViewContextChangeEvent evt) {
+                    evt.getViewContext().get(ToolWindowManager.class).unregisterToolWindow(
+                        evt.getViewContext().get(ToolWindow.class).getId()
+                    );
+                    evt.getViewContext().put(ToolWindow.class, null);
                 }
             });
         }

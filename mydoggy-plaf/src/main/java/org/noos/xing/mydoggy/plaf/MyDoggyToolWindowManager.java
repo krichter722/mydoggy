@@ -178,8 +178,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         if (toolWindowDescriptor != null) {
             removeIfDockableDelegator(toolWindowDescriptor.getToolWindow());
-            toolWindowDescriptor.unregister();
             toolWindowDescriptor.getToolWindow().setAvailable(false);
+            toolWindowDescriptor.unregister();
 
             tools.remove(toolWindowDescriptor.getToolWindow().getId());
 
@@ -929,15 +929,15 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         dockableDescriptorMap.put(id, dockableDescriptor);
     }
 
+    public void removeDockableDescriptor(String id) {
+        dockableDescriptorMap.remove(id);
+    }
+
     public void setTempShowed(boolean tempShowed) {
         getBar(LEFT).setTempShowed(tempShowed);
         getBar(RIGHT).setTempShowed(tempShowed);
         getBar(TOP).setTempShowed(tempShowed);
         getBar(BOTTOM).setTempShowed(tempShowed);
-    }
-
-    public void addFocusOwnerPropertyChangeListener(PropertyChangeListener focusOwnerPropertyChangeListener) {
-        //To change body of created methods use File | Settings | File Templates.
     }
 
 

@@ -249,6 +249,9 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             // Remove the plaf listener
             content.removePlafPropertyChangeListener(this);
         } finally {
+            // Clean desccriptor for minimization
+            toolWindowManager.removeDockableDescriptor(content.getId());
+
             // Remove the contentUI part
             contentUIMap.remove(content);
             if (lastSelected == content)
@@ -821,10 +824,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                 content.setMaximized(false);
 
                 DockableDescriptor descriptor = toolWindowManager.getDockableDescriptor(content.getId());
-                if (descriptor == null) {
+                if (descriptor == null)
                     descriptor = new ContentDescriptor(toolWindowManager, content);
-                    toolWindowManager.putDockableDescriptor(content.getId(), descriptor);
-                }
 
                 // Remove content
                 minimizedContentUIMap.put(content, multiSplitContainer.removeDockable(content));

@@ -7,7 +7,9 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.AggregateIcon;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
+import org.noos.xing.mydoggy.plaf.ui.util.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.ToolWindowCleaner;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -19,11 +21,10 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolWindowDescriptor implements PropertyChangeListener, DockableDescriptor {
+public class ToolWindowDescriptor implements Cleaner, PropertyChangeListener, DockableDescriptor {
     protected MyDoggyToolWindowManager manager;
     protected MyDoggyToolWindow toolWindow;
-
-//    protected Window windowAnchestor;
+    protected ToolWindowCleaner cleaner;
 
     protected DockedContainer dockedContainer;
     protected FloatingContainer floatingContainer;
@@ -48,8 +49,13 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
 
     public ToolWindowDescriptor(MyDoggyToolWindowManager manager,
                                 MyDoggyToolWindow toolWindow) {
+        //  Init manager and toolwindw
         this.manager = manager;
         this.toolWindow = toolWindow;
+
+        // Init cleaner
+        this.cleaner = new ToolWindowCleaner(manager, toolWindow);
+        cleaner.addCleaner(this);
 
         toolWindow.addPlafPropertyChangeListener(this);
 
@@ -211,6 +217,46 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         }
     }
 
+    public MyDoggyToolWindowManager getManager() {
+        return manager;
+    }
+
+    public MyDoggyToolWindowBar getToolBar(ToolWindowAnchor anchor) {
+        return manager.getBar(anchor);
+    }
+
+    public MyDoggyToolWindowBar getToolBar() {
+        return manager.getBar(toolWindow.getAnchor());
+    }
+
+    public boolean isDragImageAvailable() {
+        return true;
+    }
+
+    public Component getComponentForDragImage() {
+        return ((DockedContainer) getToolWindowContainer()).getContentContainer();
+    }
+
+    public void setAnchor(ToolWindowAnchor anchor, int index) {
+        toolWindow.setAnchor(anchor, index);
+    }
+
+    public ResourceManager getResourceManager() {
+            return manager.getResourceManager();
+     }
+
+
+    public void cleanup() {
+        // Clean listener added to toolwindow
+        toolWindow.removePlafPropertyChangeListener(this);
+
+        // Clean TypeDescriptors
+        floatingTypeDescriptor.removePropertyChangeListener(this);
+        floatingLiveTypeDescriptor.removePropertyChangeListener(this);
+        dockedTypeDescriptor.removePropertyChangeListener(this);
+        slidingTypeDescriptor.removePropertyChangeListener(this);
+    }
+
 
     public Component getComponent() {
         if (component == null)
@@ -281,16 +327,41 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         }
     }
 
-
+    /**
+     * TODO: remove this method...
+     */
     public void unregister() {
-        toolWindow.removePropertyChangeListener(this);
+        // Clean listener added to toolwindow
+        toolWindow.removePlafPropertyChangeListener(this);
 
+        // Clean conteinars
         if (dockedContainer != null) {
             dockedContainer.uninstall();
             slidingContainer.uninstall();
             floatingContainer.uninstall();
             floatingLiveContainer.uninstall();
+
+/*
+            dockedContainer = null;
+            slidingContainer = null;
+            floatingContainer = null;
+            floatingLiveContainer = null;
+*/
         }
+
+        // Clean TypeDescriptors
+        floatingTypeDescriptor.removePropertyChangeListener(this);
+        floatingLiveTypeDescriptor.removePropertyChangeListener(this);
+        dockedTypeDescriptor.removePropertyChangeListener(this);
+        slidingTypeDescriptor.removePropertyChangeListener(this);
+
+/*
+        floatingTypeDescriptor = null;
+        floatingLiveTypeDescriptor = null;
+        dockedTypeDescriptor = null;
+        slidingTypeDescriptor = null;
+*/
+
     }
 
     public void updateUI() {
@@ -304,31 +375,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
 
         if (getRepresentativeAnchor() != null)
             getRepresentativeAnchor().updateUI();
-    }
-
-
-    public MyDoggyToolWindowManager getManager() {
-        return manager;
-    }
-
-    public MyDoggyToolWindowBar getToolBar(ToolWindowAnchor anchor) {
-        return manager.getBar(anchor);
-    }
-
-    public MyDoggyToolWindowBar getToolBar() {
-        return manager.getBar(toolWindow.getAnchor());
-    }
-
-    public boolean isDragImageAvailable() {
-        return true;
-    }
-
-    public Component getComponentForDragImage() {
-        return ((DockedContainer) getToolWindowContainer()).getContentContainer();
-    }
-
-    public void setAnchor(ToolWindowAnchor anchor, int index) {
-        toolWindow.setAnchor(anchor, index);
     }
 
     public MyDoggyToolWindow getToolWindow() {
@@ -400,11 +446,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         return null;
     }
 
-    public ResourceManager getResourceManager() {
-        return manager.getResourceManager();
-    }
-
-
     public DockedTypeDescriptor getDockedTypeDescriptor() {
         return dockedTypeDescriptor;
     }
@@ -429,7 +470,11 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
             toolWindow.setVisible(false);
     }
 
+    public ToolWindowCleaner getCleaner() {
+        return cleaner;
+    }
 
+    
     protected void initTypeDescriptors() {
         floatingTypeDescriptor = (FloatingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING)).cloneMe();
         floatingTypeDescriptor.addPropertyChangeListener(this);
@@ -443,6 +488,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         slidingTypeDescriptor = (SlidingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.SLIDING)).cloneMe();
         slidingTypeDescriptor.addPropertyChangeListener(this);
     }
+
 
     public class RepresentativeAnchor extends JLabel {
 

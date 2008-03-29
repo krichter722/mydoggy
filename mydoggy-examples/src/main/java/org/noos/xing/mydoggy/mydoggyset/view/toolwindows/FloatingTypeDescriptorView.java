@@ -90,7 +90,7 @@ public class FloatingTypeDescriptorView extends ComponentView implements ViewCon
 
     public void contextChange(ViewContextChangeEvent evt) {
         if (ToolWindowTypeDescriptor.class.equals(evt.getProperty())) {
-            if (evt.getNewValue().equals(FloatingTypeDescriptor.class)) {
+            if (FloatingTypeDescriptor.class.equals(evt.getNewValue())) {
                 ToolWindow toolWindow = viewContext.get(ToolWindow.class);
                 FloatingTypeDescriptor descriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
                 viewContext.put(FloatingTypeDescriptor.class, descriptor);

@@ -47,6 +47,14 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
         this.available = false;
     }
 
+    public CustomDockableDescriptor(MyDoggyToolWindowManager manager, ToolWindowAnchor anchor, String id) {
+        this.manager = manager;
+        this.anchor = anchor;
+        this.anchorIndex = -1;
+        this.id = id;
+        this.manager.putDockableDescriptor(id, this);
+        this.available = false;
+    }
 
     public void setAnchor(ToolWindowAnchor anchor, int index) {
         setAvailable(false);

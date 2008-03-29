@@ -1,8 +1,10 @@
 package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.ContentManagerListener;
 import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.event.ContentManagerEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.CustomDockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
@@ -21,21 +23,35 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ContentDescriptor extends CustomDockableDescriptor implements PropertyChangeListener {
+public class ContentDescriptor extends CustomDockableDescriptor implements PropertyChangeListener, ContentManagerListener {
     protected Content content;
 
 
     public ContentDescriptor(MyDoggyToolWindowManager manager, Content content) {
-        super(manager, ToolWindowAnchor.LEFT);
+        super(manager, ToolWindowAnchor.LEFT, content.getId());
         this.content = content;
         this.anchor = ToolWindowAnchor.LEFT;
 
-        content.addPropertyChangeListener(this);   // how to remove this????
+        content.addPropertyChangeListener(this);
+        manager.getContentManager().addContentManagerListener(this);
     }
 
 
     public void propertyChange(PropertyChangeEvent evt) {
         updateRepresentativeAnchor();
+    }
+
+    public void contentAdded(ContentManagerEvent event) {
+    }
+
+    public void contentRemoved(ContentManagerEvent event) {
+        if (event.getContent() == content) {
+            content.removePropertyChangeListener(this);
+            manager.getContentManager().removeContentManagerListener(this);
+        }
+    }
+
+    public void contentSelected(ContentManagerEvent event) {
     }
 
     public DockableType getDockableType() {
