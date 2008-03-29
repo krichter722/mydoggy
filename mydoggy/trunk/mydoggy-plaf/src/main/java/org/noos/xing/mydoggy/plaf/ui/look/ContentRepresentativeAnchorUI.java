@@ -91,7 +91,6 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI {
 // TODO       descriptor.getToolWindow().addPlafPropertyChangeListener(this);
     }
 
-
     protected void updateAnchor(Graphics g, JComponent c,
                                 Color backgroundStart, Color backgroundEnd,
                                 boolean active, boolean flashing) {
@@ -146,6 +145,5 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI {
         }
 
     }
-
 
 }

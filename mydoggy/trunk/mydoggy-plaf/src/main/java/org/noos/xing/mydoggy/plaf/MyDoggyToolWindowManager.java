@@ -96,6 +96,11 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected static double[] ROWS;
 
 
+    // Support for content manager disabling
+    protected Component oldMainContent = null;
+    protected boolean dockableMainContentMode = false;
+
+
     public MyDoggyToolWindowManager(Component parentComponent) {
         this(parentComponent, Locale.getDefault(), null);
     }
@@ -550,7 +555,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             resetMainContent();
         else {
             if (dockableMainContentMode) {
-                oldComp = content;
+                oldMainContent = content;
             }  else {
                 mainContainer.setOpaque(false);
                 mainContainer.removeAll();
@@ -566,7 +571,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     public void resetMainContent() {
         if (dockableMainContentMode) {
-            oldComp = null;
+            oldMainContent = null;
         } else {
             mainContainer.removeAll();
             SwingUtil.repaint(mainSplitPane);
@@ -582,9 +587,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return (mainContainer.getComponentCount() == 0) ? null : mainContainer.getComponent(0);
     }
 
-    Component oldComp = null;
-    boolean dockableMainContentMode = false;
-
     public void setDockableMainContentMode(boolean enable) {
         if (enable) {
             toolDockableContainer = new MultiSplitDockableContainer(MyDoggyToolWindowManager.this, JSplitPane.VERTICAL_SPLIT);
@@ -593,12 +595,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             contentPanel.setDropTarget(new ToolWindowCommonMultiSplitDropTarget(contentPanel, MyDoggyToolWindowManager.this));
             contentPanel.setComponent(toolDockableContainer);
 
-            oldComp = getMainContent();
+            oldMainContent = getMainContent();
             setMainContent(contentPanel);
             dockableMainContentMode = true;
         } else  {
             dockableMainContentMode = false;
-            setMainContent(oldComp);
+            setMainContent(oldMainContent);
         }
     }
 
@@ -745,8 +747,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         propertyChangeSupport.addPropertyChangeListener("parentComponent.closed", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventPostProcessor(shortcutProcessor);
-                KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("focusOwner", focusOwnerChangeListener);
+                KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+                keyboardFocusManager.removeKeyEventPostProcessor(shortcutProcessor);
+
+                for (PropertyChangeListener listener : keyboardFocusManager.getPropertyChangeListeners("focusOwner")) {
+                    if (listener.getClass().getPackage().getName().startsWith(
+                            MyDoggyToolWindowManager.this.getClass().getPackage().getName()))
+                        keyboardFocusManager.removePropertyChangeListener("focusOwner", listener);
+                }
             }
         });
     }
@@ -904,6 +912,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return showingGroup == allToolWindowGroup;
     }
 
+
     public int getJMenuBarExtraHeight() {
         JMenuBar jMenuBar = getRootPane().getJMenuBar();
 
@@ -926,6 +935,11 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         getBar(TOP).setTempShowed(tempShowed);
         getBar(BOTTOM).setTempShowed(tempShowed);
     }
+
+    public void addFocusOwnerPropertyChangeListener(PropertyChangeListener focusOwnerPropertyChangeListener) {
+        //To change body of created methods use File | Settings | File Templates.
+    }
+
 
     protected class AvailablePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {

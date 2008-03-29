@@ -65,11 +65,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
                 setFloatingWindow(true);
             else if (evt.getOldValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING)
                 setFloatingWindow(false);
-/*
-             TODO: removed because type listener cannot do if the rep acnhro is null..
-            if (evt.getNewValue() == ToolWindowType.EXTERN)
-                resetRepresentativeAnchor();
-*/
         } else if ("index".equals(propertyName)) {
             updateRepresentativeAnchor();
         } else if ("numberingEnabled".equals(propertyName)) {
