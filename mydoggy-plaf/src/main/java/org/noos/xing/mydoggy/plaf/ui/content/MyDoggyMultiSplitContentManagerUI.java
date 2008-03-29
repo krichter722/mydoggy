@@ -369,13 +369,9 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             internalPropertyChangeSupport.addPropertyChangeListener("maximized", maximizedListener);
             internalPropertyChangeSupport.addPropertyChangeListener("minimized", new MinimizedListener());
 
-            final FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener();
-            KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
-            toolWindowManager.addInternalPropertyChangeListener("parentComponent.closed", new PropertyChangeListener() {
-                public void propertyChange(PropertyChangeEvent evt) {
-                    KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
-                }
-            });
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(
+                    "focusOwner", new FocusOwnerPropertyChangeListener());
+
             contentUIListener = new ContentUIListener();
         }
     }
@@ -589,6 +585,10 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
     protected class TitleListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
+
+            // TODO: add this check
+            if (content.isMinimzed())
+                return;
 
             if (content.isDetached()) {
                 SwingUtil.setWindowTitle(content.getComponent(), (String) evt.getNewValue());
@@ -847,7 +847,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
                 contentValueAdjusting = true;
                 try {
-                    addUIForContent(content, minimizedContentUIMap.get(content));
+                    addUIForContent(content,
+                                    minimizedContentUIMap.get(content));
                     content.setSelected(true);
 
                     componentInFocusRequest = SwingUtil.findAndRequestFocus(content.getComponent());

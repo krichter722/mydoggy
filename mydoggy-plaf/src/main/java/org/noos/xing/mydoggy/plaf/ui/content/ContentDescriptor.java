@@ -15,11 +15,13 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.LabelUI;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ContentDescriptor extends CustomDockableDescriptor {
+public class ContentDescriptor extends CustomDockableDescriptor implements PropertyChangeListener {
     protected Content content;
 
 
@@ -27,8 +29,14 @@ public class ContentDescriptor extends CustomDockableDescriptor {
         super(manager, ToolWindowAnchor.LEFT);
         this.content = content;
         this.anchor = ToolWindowAnchor.LEFT;
+
+        content.addPropertyChangeListener(this);   // how to remove this????
     }
 
+
+    public void propertyChange(PropertyChangeEvent evt) {
+        updateRepresentativeAnchor();
+    }
 
     public DockableType getDockableType() {
         return DockableType.CONTENT;

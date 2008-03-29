@@ -466,14 +466,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
             SwingUtil.registerDragGesture(tabbedContentPane,
                                           new TabbedContentManagerDragGesture());
 
-            // TODO: make this more safe....
-            final FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener();
-            KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
-            toolWindowManager.addPropertyChangeListener("parentComponent.closed", new PropertyChangeListener() {
-                public void propertyChange(PropertyChangeEvent evt) {
-                    KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
-                }
-            });
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(
+                    "focusOwner", new FocusOwnerPropertyChangeListener());
         }
     }
 

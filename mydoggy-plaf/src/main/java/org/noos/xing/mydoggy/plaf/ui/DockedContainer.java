@@ -191,14 +191,14 @@ public class DockedContainer implements ToolWindowContainer {
         addPropertyChangeListener("type", new TypePropertyChangeListener());
         addPropertyChangeListener("maximized.before", new MaximizedBeforePropertyChangeListener());
 
-        // TODO: make this more safe....
-        final FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener(
-                resourceManager.createInstance(ParentOfQuestion.class, container, toolWindow)
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(
+                "focusOwner",
+                new FocusOwnerPropertyChangeListener(
+                        resourceManager.createInstance(ParentOfQuestion.class, container, toolWindow))
         );
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
+
         addPropertyChangeListener("parentComponent.closed", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("focusOwner", focusOwnerPropertyChangeListener);
                 toolWindow.setFlashing(false);
             }
         });
