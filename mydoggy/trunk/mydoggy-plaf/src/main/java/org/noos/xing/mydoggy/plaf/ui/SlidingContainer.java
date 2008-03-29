@@ -11,6 +11,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TranslucentPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.SlidingBorder;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.SlidingMouseInputHandler;
+import org.noos.xing.mydoggy.plaf.ui.util.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -25,8 +26,9 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro
  */
-public class SlidingContainer extends MyDoggyToolWindowContainer {
+public class SlidingContainer extends MyDoggyToolWindowContainer implements Cleaner{
     protected SlidingAnimation slidingAnimation;
+
     protected SlidingBorder border;
     protected Container barContainer;
     protected JLayeredPane layeredPane;
@@ -43,6 +45,15 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
         initListeners();
     }
 
+
+    public void cleanup() {
+        if (sheet != null) {
+            sheet.removeMouseMotionListener(slidingMouseInputHandler);
+            sheet.removeMouseListener(slidingMouseInputHandler);
+        }
+        
+        layeredPane = null;
+    }
 
     public void setVisible(boolean visible, Container barContainer) {
         this.barContainer = barContainer;
@@ -126,12 +137,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
 
         RootPaneContainer rootPaneContainer = descriptor.getManager().getRootPaneContainer();
         layeredPane = rootPaneContainer.getLayeredPane();
-        descriptor.getManager().getParentComponent().addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
-                    update();
-            }
-        });
+        descriptor.getManager().getParentComponent().addComponentListener(new ComponentResizer());
     }
 
     protected void initListeners() {
@@ -481,7 +487,15 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
 
     }
 
-    protected class SlidingTypePropertyChangeListener implements PropertyChangeListener {
+    protected class SlidingTypePropertyChangeListener implements PropertyChangeListener, Cleaner {
+
+        public SlidingTypePropertyChangeListener() {
+            descriptor.getCleaner().addCleaner(this);
+        }
+
+        public void cleanup() {
+            descriptor.getTypeDescriptor(ToolWindowType.SLIDING).removePropertyChangeListener(this);
+        }
 
         public void propertyChange(PropertyChangeEvent evt) {
             if ("enabled".equals(evt.getPropertyName())) {
@@ -502,4 +516,20 @@ public class SlidingContainer extends MyDoggyToolWindowContainer {
 
     }
 
+    protected class ComponentResizer extends ComponentAdapter implements Cleaner {
+
+        public ComponentResizer() {
+            descriptor.getCleaner().addCleaner(this);
+        }
+
+        public void cleanup() {
+            descriptor.getManager().getParentComponent().removeComponentListener(this);
+        }
+
+        public void componentResized(ComponentEvent e) {
+            if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
+                update();
+        }
+
+    }
 }

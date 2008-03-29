@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.descriptors;
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -39,7 +40,8 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
         addToTaskBar = false;
     }
 
-    public DefaultFloatingTypeDescriptor(DefaultFloatingTypeDescriptor parent, Point location, Dimension size,
+    public DefaultFloatingTypeDescriptor(ToolWindowDescriptor toolWindowDescriptor,
+                                         DefaultFloatingTypeDescriptor parent, Point location, Dimension size,
                                          int transparentDelay, float transparentRatio, boolean useTransparentMode,
                                          boolean modal, boolean enabled, boolean animating, boolean autoHide, boolean idVisibleOnTitleBar,
                                          boolean addToTaskBar) {
@@ -56,6 +58,8 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
         this.addToTaskBar = addToTaskBar;
 
         parent.addPropertyChangeListener(this);
+
+        toolWindowDescriptor.getCleaner().addCleaner(this);
     }
 
     public void setLocation(int x, int y) {
@@ -213,8 +217,9 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
     }
 
 
-    public ToolWindowTypeDescriptor cloneMe() {
-        return new DefaultFloatingTypeDescriptor(this, location, size, transparentDelay,
+    public ToolWindowTypeDescriptor cloneMe(ToolWindowDescriptor toolWindowDescriptor) {
+        return new DefaultFloatingTypeDescriptor(toolWindowDescriptor,
+                                                 this, location, size, transparentDelay,
                                                  transparentRatio, transparentMode,
                                                  modal, enabled, animating, autoHide,
                                                  idVisibleOnTitleBar,

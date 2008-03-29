@@ -582,4 +582,5 @@ public class SwingUtil {
         } else
             throw new IllegalArgumentException("Cannot set title for that component");
     }
+
 }

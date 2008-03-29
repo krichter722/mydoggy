@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
  */
 public class MyDoggyToolWindow extends PropertyChangeEventSource implements ToolWindow {
     static final Object LOCK = new ToolWindowLock();
+    public boolean removingFlag;
 
     static class ToolWindowLock {
     }
@@ -71,6 +72,8 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         setIcon(icon);
         this.available = this.active = this.visible = this.maximized = this.aggregateEnabled = false;
         this.representativeAnchorButtonVisible = true;
+
+        descriptor.getCleaner().addCleaner(this);
     }
 
 
@@ -527,7 +530,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             throw new IllegalArgumentException("ToolWindowTab cannot be null.");
         if (!(toolWindowTab instanceof MyDoggyToolWindowTab))
             throw new IllegalArgumentException("Invalid ToolWindowTab instance.");
-        if (rootTab == toolWindowTab)
+        if (rootTab == toolWindowTab && !removingFlag)
             throw new IllegalArgumentException("Cannot remove root tab.");
 
         boolean result = toolWindowTabs.remove(toolWindowTab);
@@ -552,6 +555,9 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             }
         }
 
+        if (rootTab == toolWindowTab && removingFlag)
+            rootTab = null;
+        
         return result;
     }
 

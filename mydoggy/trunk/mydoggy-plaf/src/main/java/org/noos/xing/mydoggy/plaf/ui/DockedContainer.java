@@ -8,6 +8,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.Cleaner;
+import org.noos.xing.mydoggy.plaf.ui.util.CleanerPropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -16,14 +17,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 /**
  * @author Angelo De Caro
  */
-public class DockedContainer implements ToolWindowContainer {
+public class DockedContainer implements ToolWindowContainer, Cleaner {
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
     protected transient ResourceManager resourceManager;
@@ -36,7 +36,7 @@ public class DockedContainer implements ToolWindowContainer {
 
     protected TitleBarMouseAdapter titleBarMouseAdapter;
 
-    protected PropertyChangeSupport propertyChangeSupport;
+    protected CleanerPropertyChangeSupport propertyChangeSupport;
 
     protected Component focusRequester;
     protected PopupUpdater popupUpdater;
@@ -48,11 +48,19 @@ public class DockedContainer implements ToolWindowContainer {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
         this.resourceManager = descriptor.getResourceManager();
+        descriptor.getCleaner().addCleaner(this);
 
         initComponents();
         initListeners();
     }
 
+
+    public void cleanup() {
+        container.putClientProperty(ToolWindow.class, null);
+        container.removeAll();
+
+        popupUpdater = null;
+    }
 
     public void updateUI() {
         SwingUtilities.updateComponentTreeUI(getContentContainer());
@@ -74,14 +82,6 @@ public class DockedContainer implements ToolWindowContainer {
         propertyChangeSupport.firePropertyChange(evt);
     }
 
-
-    public void uninstall() {
-        // Clean components
-        Component cmp = descriptor.getComponent();
-        cmp.removeMouseListener(titleBarMouseAdapter);
-
-        // Clean listeners
-    }
 
     public void removePropertyChangeListener(String property, PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(property, listener);
@@ -125,7 +125,8 @@ public class DockedContainer implements ToolWindowContainer {
 
 
     protected void initComponents() {
-        propertyChangeSupport = new PropertyChangeSupport(this);
+        propertyChangeSupport = new CleanerPropertyChangeSupport(this);
+        descriptor.getCleaner().addCleaner(propertyChangeSupport);  // TODO: do better...
 
         titleBarMouseAdapter = new TitleBarMouseAdapter();
 
@@ -249,7 +250,7 @@ public class DockedContainer implements ToolWindowContainer {
     }
 
 
-    protected class TitleBarMouseAdapter extends MouseAdapter implements ActionListener, PropertyChangeListener {
+    protected class TitleBarMouseAdapter extends MouseAdapter implements Cleaner, ActionListener, PropertyChangeListener {
         protected JPopupMenu popupMenu;
 
         protected JMenuItem visible;
@@ -272,7 +273,10 @@ public class DockedContainer implements ToolWindowContainer {
         protected ToolWindowType oldType;
 
         public TitleBarMouseAdapter() {
+            descriptor.getCleaner().addCleaner(this);
+
             initPopupMenu();
+
             descriptor.getToolWindow().addPlafPropertyChangeListener(this);
             addPropertyChangeListener("type", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
@@ -284,6 +288,11 @@ public class DockedContainer implements ToolWindowContainer {
                     oldType = (ToolWindowType) evt.getOldValue();
                 }
             });
+        }
+
+
+        public void cleanup() {
+            descriptor.getToolWindow().removePlafPropertyChangeListener(this);
         }
 
         public void mouseClicked(MouseEvent e) {
@@ -529,21 +538,21 @@ public class DockedContainer implements ToolWindowContainer {
                             resourceManager.getString("@@tool.show"));
 
             if (toolWindow.getType() == ToolWindowType.DOCKED) {
-                dockedMode.setVisible(((SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING)).isEnabled());
-                floatingMode.setVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
+                dockedMode.setVisible(descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isEnabled());
+                floatingMode.setVisible(descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isEnabled());
                 floatingLiveMode.setState(false);
-                floatingLiveMode.setVisible(((FloatingLiveTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE)).isEnabled());
+                floatingLiveMode.setVisible(descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).isEnabled());
             } else if (toolWindow.getType() == ToolWindowType.SLIDING) {
-                floatingMode.setVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
+                floatingMode.setVisible(descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isEnabled());
                 floatingLiveMode.setState(false);
-                floatingLiveMode.setVisible(((FloatingLiveTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE)).isEnabled());
+                floatingLiveMode.setVisible(descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).isEnabled());
             } else if (toolWindow.getType() == ToolWindowType.FLOATING) {
                 floatingLiveMode.setState(false);
-                floatingLiveMode.setVisible(((FloatingLiveTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE)).isEnabled());
+                floatingLiveMode.setVisible(descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).isEnabled());
             } else if (toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
                 dockedMode.setState(false);
                 floatingMode.setState(false);
-                floatingMode.setVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
+                floatingMode.setVisible(descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isEnabled());
             }
         }
 
@@ -597,6 +606,8 @@ public class DockedContainer implements ToolWindowContainer {
     protected class DockedToolWindowListener implements Cleaner, ToolWindowListener, PropertyChangeListener {
 
         public DockedToolWindowListener() {
+            descriptor.getCleaner().addCleaner(this);
+            
             for (ToolWindowTab tab : toolWindow.getToolWindowTabs())
                 tab.addPropertyChangeListener(this);
         }
@@ -655,12 +666,11 @@ public class DockedContainer implements ToolWindowContainer {
     protected class FocusOwnerPropertyChangeListener implements PropertyChangeListener, Cleaner {
         protected Question parentOf;
 
-
         public FocusOwnerPropertyChangeListener(Question parentOf) {
             this.parentOf = parentOf;
+
             descriptor.getCleaner().addCleaner(this);
         }
-
 
         public void cleanup() {
             KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("focusOwner", this);

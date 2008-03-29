@@ -14,16 +14,17 @@ import java.util.List;
 public class ToolWindowCleaner implements Cleaner, ToolWindowManagerListener {
     protected ToolWindowManager manager;
     protected ToolWindow toolWindow;
-    protected List<Cleaner> cleaners;
+    protected List<Cleaner> toolWindowCleaners;
 
     public ToolWindowCleaner(ToolWindowManager manager, ToolWindow toolWindow) {
         this.manager = manager;
         this.toolWindow = toolWindow;
+        manager.addToolWindowManagerListener(this);
     }
 
     public void cleanup() {
-        if (cleaners != null)
-            for (Cleaner cleaner : cleaners) {
+        if (toolWindowCleaners != null)
+            for (Cleaner cleaner : toolWindowCleaners) {
                 cleaner.cleanup();
             }
 
@@ -34,7 +35,8 @@ public class ToolWindowCleaner implements Cleaner, ToolWindowManagerListener {
     }
 
     public void toolWindowUnregistered(ToolWindowManagerEvent event) {
-        cleanup();
+        if (event.getToolWindow() == toolWindow)
+            cleanup();
     }
 
     public void toolWindowGroupAdded(ToolWindowManagerEvent event) {
@@ -44,8 +46,8 @@ public class ToolWindowCleaner implements Cleaner, ToolWindowManagerListener {
     }
 
     public void addCleaner(Cleaner cleaner) {
-        if (cleaners == null)
-            cleaners = new ArrayList<Cleaner>();
-        cleaners.add(cleaner);
+        if (toolWindowCleaners == null)
+            toolWindowCleaners = new ArrayList<Cleaner>();
+        toolWindowCleaners.add(cleaner);
     }
 }

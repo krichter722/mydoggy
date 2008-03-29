@@ -45,6 +45,20 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
     }
 
 
+    public void cleanup() {
+        layeredPane = null;
+
+        sheet.removeMouseMotionListener(resizeMouseInputHandler);
+        sheet.removeMouseListener(resizeMouseInputHandler);
+
+        titleBarTabs.removeEventDispatcherlListener(moveMouseInputHandler);
+
+        titleBar.removeMouseMotionListener(moveMouseInputHandler);
+        titleBar.removeMouseListener(moveMouseInputHandler);
+
+        descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).removePropertyChangeListener(this);
+    }
+
     public void setVisible(boolean visible) {
         Component content = dockedContainer.getContentContainer();
         sheet.remove(content);
@@ -292,8 +306,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
             }
         });
 
-        FloatingLiveTypeDescriptor typeDescriptor = (FloatingLiveTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
-        typeDescriptor.addPropertyChangeListener(this);
+        descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).addPropertyChangeListener(this);
 
         resizeMouseInputHandler = new FloatingResizeMouseInputHandler(sheet);
         moveMouseInputHandler = new FloatingMoveMouseInputHandler(sheet);

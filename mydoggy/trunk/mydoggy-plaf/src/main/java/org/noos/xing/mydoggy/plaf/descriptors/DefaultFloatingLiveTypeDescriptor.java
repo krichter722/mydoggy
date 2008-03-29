@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.descriptors;
 import org.noos.xing.mydoggy.FloatingLiveTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -34,7 +35,8 @@ public class DefaultFloatingLiveTypeDescriptor extends PropertyChangeEventSource
         idVisibleOnTitleBar = true;
     }
 
-    public DefaultFloatingLiveTypeDescriptor(DefaultFloatingLiveTypeDescriptor parent, Point location, Dimension size,
+    public DefaultFloatingLiveTypeDescriptor(ToolWindowDescriptor toolWindowDescriptor,
+                                             DefaultFloatingLiveTypeDescriptor parent, Point location, Dimension size,
                                              int transparentDelay, float transparentRatio, boolean useTransparentMode,
                                              boolean enabled, boolean animating, boolean autoHide, boolean idVisibleOnTitleBar) {
         this.location = location;
@@ -48,6 +50,9 @@ public class DefaultFloatingLiveTypeDescriptor extends PropertyChangeEventSource
         this.idVisibleOnTitleBar = idVisibleOnTitleBar;
 
         parent.addPropertyChangeListener(this);
+
+        toolWindowDescriptor.getCleaner().addCleaner(this);
+        
     }
 
     public void setLocation(int x, int y) {
@@ -177,8 +182,9 @@ public class DefaultFloatingLiveTypeDescriptor extends PropertyChangeEventSource
     }
 
 
-    public ToolWindowTypeDescriptor cloneMe() {
-        return new DefaultFloatingLiveTypeDescriptor(this, location, size, transparentDelay,
+    public ToolWindowTypeDescriptor cloneMe(ToolWindowDescriptor toolWindowDescriptor) {
+        return new DefaultFloatingLiveTypeDescriptor(toolWindowDescriptor,
+                                                     this, location, size, transparentDelay,
                                                      transparentRatio, transparentMode,
                                                      enabled, animating, autoHide, idVisibleOnTitleBar);
     }
