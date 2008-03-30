@@ -36,7 +36,7 @@ public abstract class MyDoggyContentManagerUI extends PropertyChangeEventSource 
     protected PropertyChangeListener contentUIListener;
     
     protected Content maximizedContent;
-    protected PlafContent lastSelected;
+    protected Content lastSelected;
 
     protected boolean valueAdjusting;
     protected boolean contentValueAdjusting;
@@ -104,15 +104,15 @@ public abstract class MyDoggyContentManagerUI extends PropertyChangeEventSource 
 
     
     protected class ContentDialogFocusListener implements WindowFocusListener {
-        protected PlafContent plafContent;
+        protected Content content;
 
-        public ContentDialogFocusListener(PlafContent plafContent) {
-            this.plafContent = plafContent;
+        public ContentDialogFocusListener(Content content) {
+            this.content = content;
         }
 
         public void windowGainedFocus(WindowEvent e) {
             if (!valueAdjusting && !contentValueAdjusting) {
-                PlafContent newSelected = plafContent;
+                Content newSelected = content;
 
                 if (newSelected == lastSelected)
                     return;
@@ -152,14 +152,15 @@ public abstract class MyDoggyContentManagerUI extends PropertyChangeEventSource 
                     Window dialog;
                     if ((Boolean) evt.getNewValue()) {
                         dialog = new ContentFrame(resourceManager,
-                                                  (PlafContent) content, contentUI,
+                                                  content, contentUI,
                                                   parentFrame, oldWindow.getBounds());
                     } else {
-                        dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI,
+                        dialog = new ContentDialog(resourceManager,
+                                                   content, contentUI,
                                                    parentFrame, oldWindow.getBounds());
                     }
 
-                    dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
+                    dialog.addWindowFocusListener(new ContentDialogFocusListener(content));
                     dialog.toFront();
 
                     // Dispose old

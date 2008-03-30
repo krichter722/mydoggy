@@ -24,6 +24,7 @@ import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyTabbedContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.drag.ContentManagerDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowCommonMultiSplitDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.util.DockableManager2ToolWindowManagerWrapper;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -342,6 +343,30 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     public ToolWindowManagerListener[] getToolWindowManagerListeners() {
         return twmListeners.getListeners(ToolWindowManagerListener.class);
+    }
+
+    public void addDockableManagerListener(DockableManagerListener listener) {
+        addToolWindowManagerListener(new DockableManager2ToolWindowManagerWrapper(listener));
+    }
+
+    public void removeDockableManagerListener(DockableManagerListener listener) {
+        for (ToolWindowManagerListener managerListener : getToolWindowManagerListeners()) {
+            if (managerListener instanceof DockableManager2ToolWindowManagerWrapper) {
+                if (((DockableManager2ToolWindowManagerWrapper)managerListener).getListener() == listener) {
+                    removeToolWindowManagerListener(managerListener);
+                }
+            }
+        }
+    }
+
+    public DockableManagerListener[] getDockableManagerListeners() {
+        List<DockableManagerListener> listeners = new ArrayList<DockableManagerListener>();
+        for (ToolWindowManagerListener managerListener : getToolWindowManagerListeners()) {
+            if (managerListener instanceof DockableManager2ToolWindowManagerWrapper) {
+                listeners.add(((DockableManager2ToolWindowManagerWrapper) managerListener).getListener());
+            }
+        }
+        return listeners.toArray(new DockableManagerListener[listeners.size()]);
     }
 
     public Dockable getDockable(Object id) {

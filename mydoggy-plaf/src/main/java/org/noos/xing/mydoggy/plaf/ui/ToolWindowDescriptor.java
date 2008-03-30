@@ -7,9 +7,9 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.AggregateIcon;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
-import org.noos.xing.mydoggy.plaf.ui.util.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
-import org.noos.xing.mydoggy.plaf.ui.util.ToolWindowCleaner;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.CleanerAggregator;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.ToolWindowCleaner;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -21,10 +21,10 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolWindowDescriptor implements Cleaner, PropertyChangeListener, DockableDescriptor {
+public class ToolWindowDescriptor implements PropertyChangeListener, DockableDescriptor {
     protected MyDoggyToolWindowManager manager;
     protected MyDoggyToolWindow toolWindow;
-    protected ToolWindowCleaner cleaner;
+    protected CleanerAggregator cleaner;
 
     protected DockedContainer dockedContainer;
     protected FloatingContainer floatingContainer;
@@ -54,8 +54,7 @@ public class ToolWindowDescriptor implements Cleaner, PropertyChangeListener, Do
         this.toolWindow = toolWindow;
 
         // Init cleaner
-        this.cleaner = new ToolWindowCleaner(manager, toolWindow);
-        cleaner.addCleaner(this);
+        this.cleaner = new ToolWindowDescriptorCleaner(manager, toolWindow);
 
         toolWindow.addPlafPropertyChangeListener(this);
 
@@ -246,27 +245,6 @@ public class ToolWindowDescriptor implements Cleaner, PropertyChangeListener, Do
      }
 
 
-    public void cleanup() {
-        toolWindow.removingFlag = true;
-
-        for (ToolWindowTab toolWindowTab : toolWindow.getToolWindowTabs()) {
-            toolWindow.removeToolWindowTab(toolWindowTab);            
-        }
-
-        // Clean listener added to toolwindow
-        toolWindow.removePlafPropertyChangeListener(this);
-
-        // Clean TypeDescriptors
-        floatingTypeDescriptor.removePropertyChangeListener(this);
-        floatingLiveTypeDescriptor.removePropertyChangeListener(this);
-        dockedTypeDescriptor.removePropertyChangeListener(this);
-        slidingTypeDescriptor.removePropertyChangeListener(this);
-
-        if (representativeAnchor != null)
-            representativeAnchor.putClientProperty(ToolWindowDescriptor.class, null);
-    }
-
-
     public Component getComponent() {
         if (component == null)
             component = toolWindow.getToolWindowTabs()[0].getComponent();
@@ -442,7 +420,7 @@ public class ToolWindowDescriptor implements Cleaner, PropertyChangeListener, Do
             toolWindow.setVisible(false);
     }
 
-    public ToolWindowCleaner getCleaner() {
+    public CleanerAggregator getCleaner() {
         return cleaner;
     }
 
@@ -461,6 +439,38 @@ public class ToolWindowDescriptor implements Cleaner, PropertyChangeListener, Do
         slidingTypeDescriptor.addPropertyChangeListener(this);
     }
 
+
+    class ToolWindowDescriptorCleaner extends ToolWindowCleaner {
+
+        public ToolWindowDescriptorCleaner(ToolWindowManager manager, ToolWindow toolWindow) {
+            super(manager, toolWindow);
+        }
+
+        public void cleanup() {
+            super.cleanup();
+            
+            ToolWindowDescriptor.this.toolWindow.removingFlag = true;
+
+            for (ToolWindowTab toolWindowTab : toolWindow.getToolWindowTabs()) {
+                toolWindow.removeToolWindowTab(toolWindowTab);
+            }
+
+            // Clean listener added to toolwindow
+            ToolWindowDescriptor.this.toolWindow.removePlafPropertyChangeListener(ToolWindowDescriptor.this);
+
+            // Clean TypeDescriptors
+            floatingTypeDescriptor.removePropertyChangeListener(ToolWindowDescriptor.this);
+            floatingLiveTypeDescriptor.removePropertyChangeListener(ToolWindowDescriptor.this);
+            dockedTypeDescriptor.removePropertyChangeListener(ToolWindowDescriptor.this);
+            slidingTypeDescriptor.removePropertyChangeListener(ToolWindowDescriptor.this);
+
+            if (representativeAnchor != null)
+                representativeAnchor.putClientProperty(ToolWindowDescriptor.class, null);
+
+            ToolWindowDescriptor.this.toolWindow = null;
+            ToolWindowDescriptor.this.manager = null;
+        }
+    }
 
     public class RepresentativeAnchor extends JLabel {
 

@@ -49,6 +49,10 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
     }
 
 
+    public ToolWindow getDockableManager() {
+        return owner;
+    }
+
     public ToolWindow getOwner() {
         return owner;
     }

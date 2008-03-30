@@ -231,7 +231,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
 				valueAdjusting = true;
 
 				internalFrame.setSelected(selected);
-				lastSelected = content == lastSelected ? null : (PlafContent) content;
+				lastSelected = content == lastSelected ? null : content;
 
 				valueAdjusting = false;
 			    } catch (PropertyVetoException e) {
@@ -375,7 +375,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                                                 lastSelected.setSelected(false);
                                         }
                                         content.setSelected(true);
-                                        lastSelected = (PlafContent) content;
+                                        lastSelected = content;
                                     } else
                                         content.setSelected(false);
                                     break;
@@ -607,13 +607,13 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                 // Setup dialog
                 Window dialog;
                 if (contentUI.isAddToTaskBarWhenDetached()) {
-                    dialog = new ContentFrame(resourceManager, (PlafContent) content, contentUI,
+                    dialog = new ContentFrame(resourceManager, content, contentUI,
                                               parentFrame, inBounds);
                 } else {
-                    dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI,
+                    dialog = new ContentDialog(resourceManager, content, contentUI,
                                                parentFrame, inBounds);
                 }
-                dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
+                dialog.addWindowFocusListener(new ContentDialogFocusListener(content));
                 dialog.toFront();
                 dialog.setVisible(true);
 

@@ -13,7 +13,7 @@ import java.awt.*;
  * @see Content
  * @since 1.0.0
  */
-public interface ContentManager extends Observable {
+public interface ContentManager extends DockableManager, Observable {
 
     /**
      * Sets the content manager ui to <code>contentManagerUI</code>.

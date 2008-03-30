@@ -38,7 +38,9 @@ import java.util.Map;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI implements TabbedContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
+public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI implements TabbedContentManagerUI,
+                                                                                      PlafContentManagerUI,
+                                                                                      PropertyChangeListener {
     protected JTabbedContentPane tabbedContentPane;
     protected boolean showAlwaysTab;
     protected Map<Content, TabbedContentUI> contentUIMap;
@@ -243,6 +245,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
             // Now you can consider this manager uninstalled
             this.installed = false;
+
+            removeListeners();
         } finally {
             uninstalling = false;
         }
@@ -327,7 +331,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                     try {
                         tabbedContentPane.setSelectedIndex(index);
                         componentInFocusRequest = SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
-                        lastSelected = (PlafContent) content;
+                        lastSelected = content;
                     } finally {
                         valueAdjusting = false;
                     }
@@ -400,7 +404,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                     if (selectedIndex == -1)
                         return;
 
-                    PlafContent newSelected = (PlafContent) tabbedContentPane.getContentAt(selectedIndex);
+                    Content newSelected = tabbedContentPane.getContentAt(selectedIndex);
 
                     if (newSelected == lastSelected)
                         return;
@@ -444,6 +448,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         setupActions();
     }
 
+    // TODO: can use cleaner
+    FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener;
     protected void initListeners() {
         if (internalPropertyChangeSupport == null) {
             /// Init just once
@@ -466,9 +472,16 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
             SwingUtil.registerDragGesture(tabbedContentPane,
                                           new TabbedContentManagerDragGesture());
 
-            KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(
-                    "focusOwner", new FocusOwnerPropertyChangeListener());
         }
+
+        // TODO: attention when keyboard manage change...
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(
+                "focusOwner", focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener());
+    }
+
+    protected void removeListeners() {
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(
+                "focusOwner", focusOwnerPropertyChangeListener);
     }
 
     protected int addUIForContent(Content content, Object... constaints) {
@@ -489,7 +502,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         if (!showAlwaysTab && tabbedContentPane.getTabCount() == 0 && (contentValueAdjusting || toolWindowManager.getMainContent() == null)) {
             toolWindowManager.setMainContent(content.getComponent());
             // TODO: is this right?
-            lastSelected = (PlafContent) content;
+            lastSelected = content;
             return -1;
         } else {
             if (!showAlwaysTab && tabbedContentPane.getParent() == null) {
@@ -768,13 +781,15 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                     // Setup dialog
                     Window dialog;
                     if (contentUI.isAddToTaskBarWhenDetached()) {
-                        dialog = new ContentFrame(resourceManager, (PlafContent) content, contentUI,
+                        dialog = new ContentFrame(resourceManager,
+                                                  content, contentUI,
                                                   parentFrame, inBounds);
                     } else {
-                        dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI,
+                        dialog = new ContentDialog(resourceManager,
+                                                   content, contentUI,
                                                    parentFrame, inBounds);
                     }
-                    dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
+                    dialog.addWindowFocusListener(new ContentDialogFocusListener(content));
                     dialog.toFront();
                     dialog.setVisible(true);
 

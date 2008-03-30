@@ -13,7 +13,14 @@ import java.awt.*;
  * @see Content
  * @since 1.4.0
  */
-public interface Dockable extends Observable {
+public interface Dockable<M extends DockableManager> extends Observable {
+
+    /**
+     *
+     * @return
+     * @todo continue...
+     */
+    M getDockableManager();
 
     /**
      * Returns the id used to register this dockable.

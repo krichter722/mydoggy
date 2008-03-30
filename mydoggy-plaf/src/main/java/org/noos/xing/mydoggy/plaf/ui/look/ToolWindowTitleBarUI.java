@@ -17,6 +17,7 @@ import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.Cleaner;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -37,7 +38,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro
  */
-public class ToolWindowTitleBarUI extends PanelUI {
+public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
     protected ToolWindow toolWindow;
     protected ToolWindowDescriptor descriptor;
     protected ResourceManager resourceManager;
@@ -66,9 +67,7 @@ public class ToolWindowTitleBarUI extends PanelUI {
         animBackStart = new MutableColor(resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START));
         animBackEnd = new MutableColor(0, 0, 0);
         animTextColor = new MutableColor(0, 0, 0);
-
         flashingAnimation = new GradientAnimation(700f);
-
         animation = new GradientAnimation();
 
         descriptor.getToolWindow().addPlafPropertyChangeListener(new PropertyChangeListener() {
@@ -104,7 +103,8 @@ public class ToolWindowTitleBarUI extends PanelUI {
                     toolWindow.setFlashing(false);
                 }
             }
-        });
+        });        
+        descriptor.getCleaner().addCleaner(this);
     }
 
 
@@ -129,6 +129,17 @@ public class ToolWindowTitleBarUI extends PanelUI {
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
         uninstallDefaults(c);
+
+        cleanup();
+    }
+
+    public void cleanup() {
+        flashingAnimation.stop();
+        animation.stop();
+        
+        toolWindow = null;
+        descriptor = null;
+        resourceManager = null;
     }
 
     public void update(Graphics g, JComponent c) {

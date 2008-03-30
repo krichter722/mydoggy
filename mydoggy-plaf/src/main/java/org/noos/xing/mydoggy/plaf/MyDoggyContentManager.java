@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.content.PlafContentManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.util.DockableManager2ContentManagerWrapper;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -259,6 +260,30 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
         return listeners.getListeners(ContentManagerListener.class);
     }
 
+    public void addDockableManagerListener(DockableManagerListener listener) {
+        addContentManagerListener(new DockableManager2ContentManagerWrapper(listener));
+    }
+
+    public void removeDockableManagerListener(DockableManagerListener listener) {
+        for (ContentManagerListener managerListener : getContentManagerListeners()) {
+            if (managerListener instanceof DockableManager2ContentManagerWrapper) {
+                if (((DockableManager2ContentManagerWrapper)managerListener).getListener() == listener) {
+                    removeContentManagerListener(managerListener);
+                }
+            }
+        }
+    }
+
+    public DockableManagerListener[] getDockableManagerListeners() {
+        List<DockableManagerListener> listeners = new ArrayList<DockableManagerListener>();
+        for (ContentManagerListener managerListener : getContentManagerListeners()) {
+            if (managerListener instanceof DockableManager2ContentManagerWrapper) {
+                listeners.add(((DockableManager2ContentManagerWrapper) managerListener).getListener());
+            }
+        }
+        return listeners.toArray(new DockableManagerListener[listeners.size()]);
+    }
+
 
     public void updateUI() {
         for (Content content : contents) {
@@ -295,7 +320,7 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
 
         MyDoggyContent content = new MyDoggyContent(this, id, title, icon, component, tip, toolWindow);
         content.addPlafPropertyChangeListener("selected", new SelectedContentPropertyChangeListener());
-        content.addPlafPropertyChangeListener("maximized.before", new SelectedContentPropertyChangeListener());
+        content.addPlafPropertyChangeListener("maximized.before", new MaximizedBeforePropertyChangeListener());
 
         contents.add(content);
         contentMap.put(id, content);

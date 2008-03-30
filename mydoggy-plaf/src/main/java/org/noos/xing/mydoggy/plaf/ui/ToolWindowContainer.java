@@ -1,6 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
-import org.noos.xing.mydoggy.plaf.ui.util.Cleaner;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.Cleaner;
 
 import java.awt.*;
 import java.beans.PropertyChangeListener;

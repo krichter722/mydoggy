@@ -2,15 +2,12 @@ package org.noos.xing.mydoggy.mydoggyset.multisplit;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.event.ContentManagerEvent;
-import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 public class MemoryLeakTester {
     private JFrame frame;
@@ -63,7 +60,7 @@ public class MemoryLeakTester {
         MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
         this.toolWindowManager = myDoggyToolWindowManager;
 
-        JButton button = new JButton("Debug Tool");
+        JButton button = new JButton("Unregister Tool");
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 toolWindowManager.unregisterToolWindow("Debug");
@@ -134,70 +131,34 @@ public class MemoryLeakTester {
     }
 
     protected void initContentManager() {
-        JTree treeContent = new JTree();
-
         ContentManager contentManager = toolWindowManager.getContentManager();
-        contentManager.addContentManagerListener(new ContentManagerListener() {
-            public void contentAdded(ContentManagerEvent event) {
-                event.getContent().addPropertyChangeListener(new PropertyChangeListener() {
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        StringBuffer sb = new StringBuffer("Event : ");
-                        sb.append(evt.getPropertyName())
-                                .append(" ; ")
-                                .append(evt.getOldValue())
-                                .append(" -> ")
-                                .append(evt.getNewValue())
-                                .append(" ; ")
-                                .append(evt.getSource());
-                        System.out.println(sb);
-//                new RuntimeException().printStackTrace();
-//                System.out.println("----------------------------------------------------------");
-                    }
-                });
-            }
 
-            public void contentRemoved(ContentManagerEvent event) {
-                System.out.println("Content removed " + event);
-            }
-
-            public void contentSelected(ContentManagerEvent event) {
+        JButton button = new JButton("Remove Content");
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                toolWindowManager.getContentManager().removeContent(0);
             }
         });
 
         Content content = contentManager.addContent("Tree Key",
                 "Tree Title",
                 null,      // An icon
-                treeContent);
+                button);
         content.setToolTipText("Tree tip");
         content.setToolTipText(null);
+
         setupContentManagerUI();
     }
 
     protected void setupContentManagerUI() {
         ContentManager contentManager = toolWindowManager.getContentManager();
-//        MultiSplitContentManagerUI contentManagerUI = new MyDoggyMultiSplitContentManagerUI();
-//        contentManager.setContentManagerUI(contentManagerUI);
-        TabbedContentManagerUI<TabbedContentUI> contentManagerUI = (TabbedContentManagerUI<TabbedContentUI>) contentManager.getContentManagerUI();
 
-        contentManagerUI.setShowAlwaysTab(true);
-        contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
-        contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
-            public boolean contentUIRemoving(ContentManagerUIEvent event) {
-                return JOptionPane.showConfirmDialog(frame, "Are you sure?") == JOptionPane.OK_OPTION;
-            }
+//        TabbedContentManagerUI managerUI = (TabbedContentManagerUI) contentManager.getContentManagerUI();
+//        managerUI.setShowAlwaysTab(true);
 
-            public void contentUIDetached(ContentManagerUIEvent event) {
-//                JOptionPane.showMessageDialog(frame, "Hello World!!!");
-            }
-        });
-
-        TabbedContentUI contentUI = contentManagerUI.getContentUI(toolWindowManager.getContentManager().getContent(0));
-
-        contentUI.setCloseable(true);
-        contentUI.setDetachable(true);
-        contentUI.setTransparentMode(true);
-        contentUI.setTransparentRatio(0.7f);
-        contentUI.setTransparentDelay(1000);
+        contentManager.setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
+        MultiSplitContentManagerUI managerUI = (MultiSplitContentManagerUI) contentManager.getContentManagerUI();
+        managerUI.setShowAlwaysTab(true);
     }
 
     public static void main(String[] args) {

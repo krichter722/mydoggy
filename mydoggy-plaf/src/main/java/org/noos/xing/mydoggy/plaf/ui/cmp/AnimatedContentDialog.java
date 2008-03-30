@@ -1,12 +1,12 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import info.clearthought.layout.TableLayout;
+import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentUI;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.animation.MoveComponentAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
-import org.noos.xing.mydoggy.plaf.ui.content.PlafContent;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -20,13 +20,13 @@ import java.awt.event.WindowEvent;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class AnimatedContentDialog extends JDialog {
-    protected PlafContent content;
+    protected Content content;
     protected ContentUI contentUI;
 
     public AnimatedContentDialog(ResourceManager resourceManager,
-                         PlafContent content, ContentUI contentUI,
-                         Frame parentFrame,
-                         Rectangle bounds) throws HeadlessException {
+                                 Content content, ContentUI contentUI,
+                                 Frame parentFrame,
+                                 Rectangle bounds) throws HeadlessException {
         super(resourceManager.getBoolean("dialog.owner.enabled", true) ? parentFrame : null, false);
 /*
         setFocusCycleRoot(true);
@@ -42,7 +42,7 @@ public class AnimatedContentDialog extends JDialog {
         component.setPreferredSize(component.getSize());
 
         setTitle(content.getTitle());
-        getContentPane().setLayout(new TableLayout(new double[][]{{-1},{-1}}));
+        getContentPane().setLayout(new TableLayout(new double[][]{{-1}, {-1}}));
         getContentPane().add(component, "0,0,FULL,FULL");
 
         // Setup bounds

@@ -11,8 +11,8 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TranslucentPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.SlidingBorder;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.SlidingMouseInputHandler;
-import org.noos.xing.mydoggy.plaf.ui.util.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.Cleaner;
 
 import javax.swing.*;
 import java.awt.*;
