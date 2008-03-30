@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy.plaf.support;
 
-import org.noos.xing.mydoggy.plaf.ui.util.Cleaner;
-import org.noos.xing.mydoggy.plaf.ui.util.CleanerPropertyChangeSupport;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.Cleaner;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.CleanerPropertyChangeSupport;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

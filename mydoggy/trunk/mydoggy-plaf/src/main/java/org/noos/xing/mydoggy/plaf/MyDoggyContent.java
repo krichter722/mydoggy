@@ -1,9 +1,12 @@
 package org.noos.xing.mydoggy.plaf;
 
+import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.ContentUI;
 import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.content.PlafContent;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.CleanerAggregator;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.ContentCleaner;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,6 +34,8 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
     protected boolean flash;
     protected boolean minimized;
 
+    protected CleanerAggregator cleanerAggregator;
+
 
     public MyDoggyContent(MyDoggyContentManager contentManager,
                           String id, String title, Icon icon,
@@ -49,11 +54,15 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
         this.maximized = false;
         this.dockableDelegator = dockableDelegator;
         this.flash = false;
+
+        cleanerAggregator = new ContentCleaner(contentManager, this);
+        cleanerAggregator.addCleaner(this);
     }
 
+    
 
-    public String toString() {
-        return id;  
+    public ContentManager getDockableManager() {
+        return contentManager;
     }
 
     public String getId() {
@@ -285,4 +294,7 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
         return dockableDelegator;
     }
 
+    public String toString() {
+        return id;
+    }
 }

@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
@@ -137,7 +136,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
     public PlafContentManagerUI install(ContentManagerUI oldContentManagerUI, ToolWindowManager manager) {
         // Init managers
         this.toolWindowManager = (MyDoggyToolWindowManager) manager;
-        this.contentManager = (MyDoggyContentManager) manager.getContentManager();
+        this.contentManager = manager.getContentManager();
         this.resourceManager = toolWindowManager.getResourceManager();
 
         if (oldContentManagerUI != null) {
@@ -205,6 +204,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             removeContent((PlafContent) content);
         }
 
+        removeListeners();
+        
         // Now you can consider this manager uninstalled
         this.installed = false;
     }
@@ -227,15 +228,21 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
     }
 
     public void removeContent(PlafContent content) {
-        // If the content is detached, reattach it
         try {
+            // Check content status
             if (content.isDetached())
                 content.setDetached(false);
+            if (content.isMaximized())
+                content.setMaximized(false);
+            if (content.isMinimzed())
+                content.setMinimzed(false);
             if (content.isFlashing())
                 content.setFlashing(false);
 
+            // deselecte the content
             content.setSelected(false);
 
+            // Remove
             content.getContentUI().removePropertyChangeListener(contentUIListener);
 
             valueAdjusting = true;
@@ -245,9 +252,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             } finally {
                 valueAdjusting = false;
             }
-
-            // Remove the plaf listener
-            content.removePlafPropertyChangeListener(this);
         } finally {
             // Clean desccriptor for minimization
             toolWindowManager.removeDockableDescriptor(content.getId());
@@ -294,7 +298,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                                 tabbedContentPane.setSelectedIndex(index);
                                 if (!focusValueAdj)
                                     componentInFocusRequest = SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
-                                lastSelected = (PlafContent) content;
+                                lastSelected = content;
                             } finally {
                                 valueAdjusting = false;
                             }
@@ -309,7 +313,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                             try {
                                 if (!focusValueAdj)
                                     componentInFocusRequest = SwingUtil.findAndRequestFocus(dockablePanel);
-                                lastSelected = (PlafContent) content;
+                                lastSelected = content;
                             } finally {
                                 valueAdjusting = false;
                             }
@@ -353,6 +357,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         }
     }
 
+    // TODO: do better...
+    FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener;
     protected void initListeners() {
         if (internalPropertyChangeSupport == null) {
             /// Init just once
@@ -372,11 +378,17 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             internalPropertyChangeSupport.addPropertyChangeListener("maximized", maximizedListener);
             internalPropertyChangeSupport.addPropertyChangeListener("minimized", new MinimizedListener());
 
-            KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(
-                    "focusOwner", new FocusOwnerPropertyChangeListener());
-
             contentUIListener = new ContentUIListener();
         }
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(
+                "focusOwner", focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener());
+
+    }
+
+
+    protected void removeListeners() {
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(
+                "focusOwner", focusOwnerPropertyChangeListener);
     }
 
     protected void setupActions() {
@@ -727,13 +739,15 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                     // Setup dialog
                     Window dialog;
                     if (contentUI.isAddToTaskBarWhenDetached()) {
-                        dialog = new ContentFrame(resourceManager, (PlafContent) content, contentUI,
+                        dialog = new ContentFrame(resourceManager,
+                                                  content, contentUI,
                                                   parentFrame, inBounds);
                     } else {
-                        dialog = new ContentDialog(resourceManager, (PlafContent) content, contentUI,
+                        dialog = new ContentDialog(resourceManager,
+                                                   content, contentUI,
                                                    parentFrame, inBounds);
                     }
-                    dialog.addWindowFocusListener(new ContentDialogFocusListener((PlafContent) content));
+                    dialog.addWindowFocusListener(new ContentDialogFocusListener(content));
                     dialog.toFront();
                     dialog.setVisible(true);
 
@@ -782,15 +796,15 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                 if (SwingUtil.getParent((Component) evt.getNewValue(), "toolWindow.container.") != null)
                     return;
 
-                PlafContent newSelected = null;
+                Dockable newSelected = null;
 
                 JTabbedContentPane tabbedPane = SwingUtil.getParent((Component) evt.getNewValue(), JTabbedContentPane.class);
                 if (tabbedPane == null) {
                     DockablePanel dockablePanel = SwingUtil.getParent((Component) evt.getNewValue(), DockablePanel.class);
                     if (dockablePanel != null)
-                        newSelected = (PlafContent) dockablePanel.getDockable();
+                        newSelected = dockablePanel.getDockable();
                 } else
-                    newSelected = (PlafContent) tabbedPane.getSelectedContent();
+                    newSelected = (Dockable) tabbedPane.getSelectedContent();
 
                 if (newSelected != null && !valueAdjusting && !contentValueAdjusting) {
                     if (newSelected == lastSelected)
@@ -862,7 +876,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
     }
 
-
     protected class MultiSplitContainer extends MultiSplitTabbedContentContainer {
         protected Component oldRoot;
         protected DockablePanel oldParent;
@@ -877,45 +890,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             super.setRootComponent(component);
         }
 
-
-        public void setMaximizedDockable(Dockable dockable) {
-            if (dockable == null) {
-                if (oldRoot != null) {
-                    oldParent.setComponent(currentMaximizedDockable.getComponent());
-                    setRootComponent(oldRoot);
-
-                    this.oldRoot = null;
-                    this.oldParent = null;
-                    this.currentMaximizedDockable = null;
-                }
-            } else {
-                this.currentMaximizedDockable = dockable;
-                this.oldRoot = getRootComponent();
-                this.oldParent = (DockablePanel) dockable.getComponent().getParent();
-
-                setRootComponent(forceWrapperForComponent(dockable, dockable.getComponent()));
-            }
-            SwingUtil.repaint(this);
-        }
-
-        public void setTabPlacement(TabPlacement tabPlacement) {
-            for (Component c : multiSplitContainer.getTabbedComponents()) {
-                if (c instanceof JTabbedContentPane) {
-                    JTabbedContentPane tabbedContentPane = ((JTabbedContentPane) c);
-                    tabbedContentPane.setTabPlacement(tabPlacement.ordinal() + 1);
-                }
-            }
-        }
-
-        public void setTabLayout(TabLayout tabLayout) {
-            for (Component c : multiSplitContainer.getTabbedComponents()) {
-                if (c instanceof JTabbedContentPane) {
-                    JTabbedContentPane tabbedContentPane = ((JTabbedContentPane) c);
-                    tabbedContentPane.setTabLayoutPolicy(tabLayout.ordinal());
-                }
-            }
-        }
-
         protected Component forceWrapperForComponent(Dockable dockable, Component component) {
             final JTabbedContentPane tabbedContentPane = (JTabbedContentPane) super.forceWrapperForComponent(dockable, component);
 
@@ -924,7 +898,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             tabbedContentPane.addChangeListener(new ChangeListener() {
                 public void stateChanged(ChangeEvent e) {
                     if (!valueAdjusting && !contentValueAdjusting) {
-                        PlafContent newSelected = (PlafContent) tabbedContentPane.getSelectedContent();
+                        Content newSelected = (Content) tabbedContentPane.getSelectedContent();
                         if (newSelected != null) {
                             if (newSelected == lastSelected)
                                 return;
@@ -972,8 +946,47 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                     }
                     return useAlwaysContentWrapper;
             }
-            return useAlwaysContentWrapper;                    
+            return useAlwaysContentWrapper;
         }
+
+        public void setMaximizedDockable(Dockable dockable) {
+            if (dockable == null) {
+                if (oldRoot != null) {
+                    oldParent.setComponent(currentMaximizedDockable.getComponent());
+                    setRootComponent(oldRoot);
+
+                    this.oldRoot = null;
+                    this.oldParent = null;
+                    this.currentMaximizedDockable = null;
+                }
+            } else {
+                this.currentMaximizedDockable = dockable;
+                this.oldRoot = getRootComponent();
+                this.oldParent = (DockablePanel) dockable.getComponent().getParent();
+
+                setRootComponent(forceWrapperForComponent(dockable, dockable.getComponent()));
+            }
+            SwingUtil.repaint(this);
+        }
+
+        public void setTabPlacement(TabPlacement tabPlacement) {
+            for (Component c : multiSplitContainer.getTabbedComponents()) {
+                if (c instanceof JTabbedContentPane) {
+                    JTabbedContentPane tabbedContentPane = ((JTabbedContentPane) c);
+                    tabbedContentPane.setTabPlacement(tabPlacement.ordinal() + 1);
+                }
+            }
+        }
+
+        public void setTabLayout(TabLayout tabLayout) {
+            for (Component c : multiSplitContainer.getTabbedComponents()) {
+                if (c instanceof JTabbedContentPane) {
+                    JTabbedContentPane tabbedContentPane = ((JTabbedContentPane) c);
+                    tabbedContentPane.setTabLayoutPolicy(tabLayout.ordinal());
+                }
+            }
+        }
+
 
     }
 

@@ -1,6 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.Dockable;
+import org.noos.xing.mydoggy.DockableManagerListener;
+import org.noos.xing.mydoggy.event.DockableManagerEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 
 import javax.swing.*;
@@ -14,15 +16,18 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class DockablePanel extends JPanel implements PropertyChangeListener, ActionListener {
+public class DockablePanel extends JPanel implements PropertyChangeListener,
+                                                     ActionListener,
+                                                     DockableManagerListener {
+    protected static Border flashingBorder = new LineBorder(Color.RED, 3);
+
     protected Dockable dockable;
     protected Timer flashingTimer;
     protected int flasingDuration;
     protected boolean flashingState;
     protected long startingTime = 0;
 
-    protected Border flashingBorder = new LineBorder(Color.RED, 3);
-
+    
     public DockablePanel(Dockable dockable, Component component) {
         this.dockable = dockable;
 
@@ -32,7 +37,10 @@ public class DockablePanel extends JPanel implements PropertyChangeListener, Act
         add(component, "0,0,FULL,FULL");
 
         dockable.addPropertyChangeListener(this);
+
+        dockable.getDockableManager().addDockableManagerListener(this);
     }
+
 
     public void propertyChange(PropertyChangeEvent evt) {
         final String propertyName = evt.getPropertyName();
@@ -94,6 +102,15 @@ public class DockablePanel extends JPanel implements PropertyChangeListener, Act
         dockable.removePropertyChangeListener(this);
     }
 
+    public void dockableAdded(DockableManagerEvent event) {
+    }
+
+    public void dockableRemoved(DockableManagerEvent event) {
+        if (event.getDockable() == dockable) {
+            this.dockable.removePropertyChangeListener(this);
+            this.dockable = null;
+        }
+    }
 
     public Dockable getDockable() {
         return dockable;

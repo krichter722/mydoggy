@@ -16,7 +16,7 @@ import java.awt.*;
  * @see ToolWindowManagerListener
  * @since 1.0.0
  */
-public interface ToolWindowManager {
+public interface ToolWindowManager extends DockableManager {
 
     /**
      * Returns the instance of <code>ContentManager</code> that manages main window contents.

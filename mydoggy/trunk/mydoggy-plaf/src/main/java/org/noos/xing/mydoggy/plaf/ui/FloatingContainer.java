@@ -13,6 +13,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingMoveMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingResizeMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingToolTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.Cleaner;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,6 +55,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         if (window != null) {
             window.getWindow().removeMouseMotionListener(resizeMouseInputHandler);
             window.getWindow().removeMouseListener(resizeMouseInputHandler);
+            window.getWindow().dispose(); 
         }
 
         titleBarTabs.removeEventDispatcherlListener(moveMouseInputHandler);
@@ -290,31 +292,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window.getWindow());
         moveMouseInputHandler = new FloatingMoveMouseInputHandler(window.getWindow());
 
-        window.getWindow().addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                valueAdjusting = true;
-                try {
-                    ((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).setSize(
-                            window.getWidth(),
-                            window.getHeight()
-                    );
-                } finally {
-                    valueAdjusting = false;
-                }
-            }
-
-            public void componentMoved(ComponentEvent e) {
-                valueAdjusting = true;
-                try {
-                    ((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).setLocation(
-                            window.getX(),
-                            window.getY()
-                    );
-                } finally {
-                    valueAdjusting = false;
-                }
-            }
-        });
+        window.getWindow().addComponentListener(new WindowComponentAdapter());
         floatingAnimation.addAnimationListener(new AnimationListener() {
             public void onFinished() {
                 if (assignFocusOnAnimFinished) {
@@ -416,4 +394,38 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
     }
 
+    protected class WindowComponentAdapter extends ComponentAdapter implements Cleaner {
+
+        public WindowComponentAdapter() {
+            descriptor.getCleaner().addCleaner(this);
+        }
+
+        public void cleanup() {
+            window.getWindow().removeComponentListener(this);
+        }
+
+        public void componentResized(ComponentEvent e) {
+                valueAdjusting = true;
+                try {
+                    ((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).setSize(
+                            window.getWidth(),
+                            window.getHeight()
+                    );
+                } finally {
+                    valueAdjusting = false;
+                }
+            }
+
+            public void componentMoved(ComponentEvent e) {
+                valueAdjusting = true;
+                try {
+                    ((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).setLocation(
+                            window.getX(),
+                            window.getY()
+                    );
+                } finally {
+                    valueAdjusting = false;
+                }
+            }
+        }
 }

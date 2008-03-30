@@ -2,6 +2,8 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.DesktopContentUI;
+import org.noos.xing.mydoggy.DockableManagerListener;
+import org.noos.xing.mydoggy.event.DockableManagerEvent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +12,8 @@ import java.beans.PropertyVetoException;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class DesktopContentFrame extends JInternalFrame implements DesktopContentUI {
+public class DesktopContentFrame extends JInternalFrame implements DesktopContentUI,
+                                                                   DockableManagerListener {
     protected boolean detachable;
     protected boolean transparentMode;
     protected float transparentRatio;
@@ -21,13 +24,18 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
     protected boolean minimizable;
 
 
-    public DesktopContentFrame(Content content, String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
+    public DesktopContentFrame(Content content,
+                               String title,
+                               boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
+        // TODO: rewrite constructor...
         super(title, resizable, closable, maximizable, iconifiable);
         this.content = content;
         this.detachable = true;
         this.transparentMode = true;
         this.transparentRatio = 0.8f;
         this.transparentDelay = 1000;
+
+        content.getDockableManager().addDockableManagerListener(this);
     }
 
 
@@ -167,5 +175,12 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
 
     public boolean isAddToTaskBarWhenDetached() {
         return addToTaskBar;
+    }
+
+    public void dockableAdded(DockableManagerEvent event) {
+    }
+
+    public void dockableRemoved(DockableManagerEvent event) {
+        content = null;
     }
 }

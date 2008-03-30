@@ -25,7 +25,7 @@ import java.awt.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.0.0
  */
-public interface Content extends Dockable {
+public interface Content extends Dockable<ContentManager> {
 
     /**
      * Sets the foreground color <code>foreground</code> which can be

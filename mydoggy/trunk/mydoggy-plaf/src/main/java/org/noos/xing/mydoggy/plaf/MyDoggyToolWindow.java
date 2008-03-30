@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.util.DockableManager2ToolWindowWrapper;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -76,6 +77,10 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         descriptor.getCleaner().addCleaner(this);
     }
 
+    
+    public ToolWindowManager getDockableManager() {
+        return descriptor.getManager();
+    }
 
     public String getId() {
         return id;
@@ -584,6 +589,30 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             return new ToolWindowListener[0];
 
         return toolWindowListeners.getListeners(ToolWindowListener.class);
+    }
+
+    public void addDockableManagerListener(DockableManagerListener listener) {
+        addToolWindowListener(new DockableManager2ToolWindowWrapper(listener));
+    }
+
+    public void removeDockableManagerListener(DockableManagerListener listener) {
+        for (ToolWindowListener managerListener : getToolWindowListeners()) {
+            if (managerListener instanceof DockableManager2ToolWindowWrapper) {
+                if (((DockableManager2ToolWindowWrapper)managerListener).getListener() == listener) {
+                    removeToolWindowListener(managerListener);
+                }
+            }
+        }
+    }
+
+    public DockableManagerListener[] getDockableManagerListeners() {
+        java.util.List<DockableManagerListener> listeners = new ArrayList<DockableManagerListener>();
+        for (ToolWindowListener managerListener : getToolWindowListeners()) {
+            if (managerListener instanceof DockableManager2ToolWindowWrapper) {
+                listeners.add(((DockableManager2ToolWindowWrapper) managerListener).getListener());
+            }
+        }
+        return listeners.toArray(new DockableManagerListener[listeners.size()]);
     }
 
     public ToolWindowTypeDescriptor getTypeDescriptor(ToolWindowType type) {

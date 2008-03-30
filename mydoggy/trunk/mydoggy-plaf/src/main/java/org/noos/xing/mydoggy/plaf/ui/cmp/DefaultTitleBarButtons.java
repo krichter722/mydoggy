@@ -5,8 +5,8 @@ import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.*;
-import org.noos.xing.mydoggy.plaf.ui.util.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.Cleaner;
 
 import javax.swing.*;
 import javax.swing.event.SwingPropertyChangeSupport;
@@ -48,6 +48,8 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
     public void cleanup() {
         descriptor = null;
         toolWindow = null;
+        dockedContainer = null;
+        resourceManager = null;
     }
 
     public Component getFocusable() {

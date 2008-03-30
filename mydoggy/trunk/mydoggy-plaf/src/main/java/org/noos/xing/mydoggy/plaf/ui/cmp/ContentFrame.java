@@ -1,11 +1,11 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import info.clearthought.layout.TableLayout;
+import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentUI;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
-import org.noos.xing.mydoggy.plaf.ui.content.PlafContent;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -19,11 +19,11 @@ import java.awt.event.WindowEvent;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ContentFrame extends JFrame {
-    protected PlafContent content;
+    protected Content content;
     protected ContentUI contentUI;
 
     public ContentFrame(ResourceManager resourceManager,
-                        PlafContent content, ContentUI contentUI,
+                        Content content, ContentUI contentUI,
                         Frame parentFrame,
                         Rectangle inBounds) throws HeadlessException {
         setAlwaysOnTop(resourceManager.getBoolean("dialog.owner.enabled", true));

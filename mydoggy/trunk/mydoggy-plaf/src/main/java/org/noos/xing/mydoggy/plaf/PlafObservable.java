@@ -7,16 +7,19 @@ import java.beans.PropertyChangeListener;
  */
 public interface PlafObservable {
 
+
     void addPlafPropertyChangeListener(PropertyChangeListener listener);
 
     void removePlafPropertyChangeListener(PropertyChangeListener listener);
 
 	PropertyChangeListener[] getPlafPropertyChangeListeners();
 
+
     void addPlafPropertyChangeListener(String propertyName, PropertyChangeListener listener);
 
     void removePlafPropertyChangeListener(String propertyName, PropertyChangeListener listener);
 
     PropertyChangeListener[] getPlafPropertyChangeListeners(String propertyName);
+
 
 }

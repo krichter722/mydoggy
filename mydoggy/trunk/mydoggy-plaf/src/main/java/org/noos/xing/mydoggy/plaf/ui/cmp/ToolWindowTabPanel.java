@@ -13,7 +13,13 @@ import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureDelegate;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureInitiator;
-import org.noos.xing.mydoggy.plaf.ui.util.*;
+import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.MouseEventDispatcher;
+import org.noos.xing.mydoggy.plaf.ui.util.PropertyChangeBridge;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.Cleaner;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.CleanerAggregator;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.DefaultCleanerAggregator;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLabelUI;
@@ -47,6 +53,7 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
     protected MouseEventDispatcher mouseEventDispatcher;
 
     protected PropertyChangeBridge propertyChangeBridge;
+    protected CleanerAggregator cleanerAggregator;
 
 
     public ToolWindowTabPanel(DockedContainer dockedContainer, ToolWindowDescriptor descriptor) {
@@ -56,6 +63,7 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
         this.dockedContainer = dockedContainer;
         this.mouseEventDispatcher = new MouseEventDispatcher();
         this.dragGestureDelegate = new DragGestureDelegate();
+        this.cleanerAggregator = new DefaultCleanerAggregator();
 
         descriptor.getCleaner().addCleaner(this);
 
@@ -65,7 +73,15 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
 
 
     public void cleanup() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        cleanerAggregator.cleanup();
+
+        toolWindow = null;
+        descriptor = null;
+        resourceManager = null;
+        dockedContainer = null;
+
+        selectedTab = null;
+        selecTabButton = null;
     }
 
     public void setDragGesture(DragGesture dragGesture) {
@@ -281,7 +297,7 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
     protected class TabToolWindowListener implements ToolWindowListener, Cleaner {
 
         public TabToolWindowListener() {
-            descriptor.getCleaner().addCleaner(this);
+            cleanerAggregator.addCleaner(this);
         }
 
         public void cleanup() {
@@ -553,8 +569,7 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
         }
 
         public void toolWindowTabRemoved(ToolWindowTabEvent event) {
-            toolWindow.removeToolWindowListener(this);
-
+            tab.getOwner().removeToolWindowListener(this);
             tab.removePropertyChangeListener(this);
 
             removeMouseMotionListener(mouseEventDispatcher);
@@ -562,7 +577,7 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
 
             putClientProperty(ToolWindowTab.class, null);
 
-            titleLabel.removeMouseListener(dockedContainer.getTitleBarMouseAdapter());
+// TODO: reenable...           titleLabel.removeMouseListener(dockedContainer.getTitleBarMouseAdapter());
             titleLabel.removeMouseListener(mouseEventDispatcher);
             titleLabel.removeMouseMotionListener(mouseEventDispatcher);
             titleLabel.removeMouseListener(this);
@@ -571,6 +586,7 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
                 selectedTab = null;
 
             //  TODO: cleanup timer...
+            tab = null;
         }
 
         public ToolWindowTab getTab() {
