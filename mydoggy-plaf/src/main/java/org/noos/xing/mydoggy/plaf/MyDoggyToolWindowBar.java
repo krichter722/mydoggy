@@ -731,8 +731,12 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
                     poss.put(descriptor, descriptor.getRepresentativeAnchorIndex());
                     removeRepresentativeAnchor(descriptor.getRepresentativeAnchor(), descriptor);
                 } else {
-                    assert poss.containsKey(descriptor);
-                    addRepresentativeAnchor(descriptor.getRepresentativeAnchor(representativeButtonsPanel), poss.get(descriptor));
+                    int index = -1;
+                    if (poss.containsKey(descriptor))
+                        index = poss.get(descriptor);
+
+                    addRepresentativeAnchor(descriptor.getRepresentativeAnchor(representativeButtonsPanel), 
+                                            index);
                 }
             }
 

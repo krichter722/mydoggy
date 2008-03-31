@@ -26,11 +26,10 @@ public class TutorialSet {
             public void run() {
                 // Activate "Debug" Tool
                 ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
-                debugTool.setActive(true);
-                
-                debugTool.getToolWindowTabs()[1].setFlashing(true);
+                debugTool.setVisible(true);
+//
+//                debugTool.getToolWindowTabs()[1].setFlashing(true);
 
-/*
                 // Aggregate "Run" tool
                 ToolWindow runTool = toolWindowManager.getToolWindow("Run");
                 runTool.aggregate();
@@ -39,7 +38,6 @@ public class TutorialSet {
                 ToolWindow propertiesTool = toolWindowManager.getToolWindow("Properties");
                 propertiesTool.aggregate(AggregationPosition.LEFT);
 
-*/
                 frame.setVisible(true);
             }
         });

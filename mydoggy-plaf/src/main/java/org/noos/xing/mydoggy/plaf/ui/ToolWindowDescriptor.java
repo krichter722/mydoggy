@@ -91,6 +91,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
             setIdOnTitleBar();
         } else if ("autoHide".equals(propertyName)) {
             getToolWindowContainer().propertyChange(evt);
+        } else if ("hideRepresentativeButtonOnVisible".equals(propertyName)) {
+            toolWindow.setRepresentativeAnchorButtonVisible(!(Boolean) evt.getNewValue());
         }
     }
 
