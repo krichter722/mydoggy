@@ -16,6 +16,7 @@ public class XMLWriter {
 
     protected int elementLevel = 0;
     protected Writer output;
+    protected XMLCharacterEncoder xmlCharacterEncoder;
     protected final Attributes EMPTY_ATTS = new AttributesImpl();
 
     protected Object state = SEEN_NOTHING;
@@ -54,6 +55,7 @@ public class XMLWriter {
     public void startDocument() throws SAXException {
         reset();
         write("<?xml version=\"1.0\" standalone=\"yes\"?>\n\n");
+        xmlCharacterEncoder = new XMLCharacterEncoder(output);
     }
 
     public void endDocument() throws SAXException {
@@ -205,39 +207,42 @@ public class XMLWriter {
             write(' ');
             writeName(atts.getLocalName(i));
             write("=\"");
+            write(atts.getValue(i));
+/*
             char ch[] = atts.getValue(i).toCharArray();
             writeEsc(ch, 0, ch.length, true);
+*/
             write('"');
         }
     }
 
     protected void writeEsc(char ch[], int start, int length, boolean isAttVal) throws SAXException {
         for (int i = start; i < start + length; i++) {
-            switch (ch[i]) {
-                case '&':
-                    write("&amp;");
-                    break;
-                case '<':
+            switch(ch[i]) {
+                case '<' :
                     write("&lt;");
                     break;
-                case '>':
+                case '>' :
                     write("&gt;");
                     break;
-                case '\"':
+/*
+                case '\'' :
+                    write("&apos;");
+                    break;
+*/
+                case '\"' :
                     if (isAttVal) {
                         write("&quot;");
                     } else {
                         write('\"');
                     }
                     break;
-                default:
-                    if (ch[i] > '\u007f') {
-                        write("&#");
-                        write(Integer.toString(ch[i]));
-                        write(';');
-                    } else {
-                        write(ch[i]);
-                    }
+               case '&' :
+                    write("&amp;");
+                    break;
+                default :
+                    write(ch[i]);
+                    break;
             }
         }
     }
@@ -261,4 +266,6 @@ public class XMLWriter {
         flush();
         output.close();
     }
+
+
 }
