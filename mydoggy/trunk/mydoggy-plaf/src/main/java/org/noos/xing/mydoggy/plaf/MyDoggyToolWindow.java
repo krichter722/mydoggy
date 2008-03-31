@@ -415,11 +415,14 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
     public Icon getIcon() {
-        return rootTab.getIcon();
+        return (rootTab != null) ? rootTab.getIcon() : null;
     }
 
     public void setIcon(Icon icon) {
         synchronized (getLock()) {
+            if (toolWindowTabs.size() == 0)
+                return;
+
             if (getIcon() == icon)
                 return;
 
@@ -431,11 +434,14 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
     public String getTitle() {
-        return rootTab.getTitle();
+        return (rootTab != null) ? rootTab.getTitle() : null;
     }
 
     public void setTitle(String title) {
         synchronized (getLock()) {
+            if (toolWindowTabs.size() == 0)
+                return;
+
             String newTitle = (resourceBundle != null) ? resourceBundle.getString(title) : title;
             if (newTitle != null && newTitle.equals(getTitle()))
                 return;
@@ -535,8 +541,8 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             throw new IllegalArgumentException("ToolWindowTab cannot be null.");
         if (!(toolWindowTab instanceof MyDoggyToolWindowTab))
             throw new IllegalArgumentException("Invalid ToolWindowTab instance.");
-        if (rootTab == toolWindowTab && !removingFlag)
-            throw new IllegalArgumentException("Cannot remove root tab.");
+//        if (rootTab == toolWindowTab && !removingFlag)
+//            throw new IllegalArgumentException("Cannot remove root tab.");
 
         boolean result = toolWindowTabs.remove(toolWindowTab);
         if (result)
@@ -560,8 +566,13 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             }
         }
 
-        if (rootTab == toolWindowTab && removingFlag)
+        if (rootTab == toolWindowTab && toolWindowTabs.size() > 0)
+            rootTab = toolWindowTabs.get(0);
+        else
             rootTab = null;
+
+        if (toolWindowTabs.size() == 0)
+            setAvailable(false);
         
         return result;
     }
@@ -662,6 +673,9 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     protected void setAvailableInternal(boolean available, boolean moveAction) {
         if (this.available == available)
             return;
+
+        if (available && toolWindowTabs.size() == 0)
+            return; // TODO: should throw an exception...
 
         synchronized (getLock()) {
             if (!available) {

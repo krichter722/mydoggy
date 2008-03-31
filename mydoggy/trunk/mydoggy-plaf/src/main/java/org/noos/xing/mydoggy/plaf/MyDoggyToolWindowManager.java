@@ -178,18 +178,29 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         final ToolWindowDescriptor toolWindowDescriptor = tools.get(id);
 
         if (toolWindowDescriptor != null) {
+            // Check for delegator
             removeIfDockableDelegator(toolWindowDescriptor.getToolWindow());
+
+            // Make unavailable
             toolWindowDescriptor.getToolWindow().setAvailable(false);
 
+            // remove tabs
+            ToolWindow toolWindow = toolWindowDescriptor.getToolWindow();
+            for (ToolWindowTab toolWindowTab : toolWindowDescriptor.getToolWindow().getToolWindowTabs()) {
+                toolWindow.removeToolWindowTab(toolWindowTab);
+            }
+
+            // Remove from the list
             tools.remove(toolWindowDescriptor.getToolWindow().getId());
 
             // Remove aliases
             for (Iterator<ToolWindow> iterator = aliases.values().iterator(); iterator.hasNext();) {
-                ToolWindow toolWindow = iterator.next();
-                if (toolWindow == toolWindowDescriptor.getToolWindow())
+                ToolWindow aliasedToolWindow = iterator.next();
+                if (aliasedToolWindow == toolWindow)
                     iterator.remove();
             }
 
+            // Fire event
             fireUnregisteredToolEvent(toolWindowDescriptor.getToolWindow());
         } else
             throw new IllegalArgumentException("Doesn't exist a tool window with passed id. [id : " + id + "]");
