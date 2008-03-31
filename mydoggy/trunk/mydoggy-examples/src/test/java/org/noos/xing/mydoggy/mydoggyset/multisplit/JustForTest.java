@@ -1,11 +1,13 @@
 package org.noos.xing.mydoggy.mydoggyset.multisplit;
 
+import org.noos.xing.mydoggy.plaf.persistence.xml.XMLCharacterEncoder;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -13,7 +15,21 @@ import java.awt.event.ItemListener;
 public class JustForTest {
 
     public static void main(String[] args) {
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//            Writer writer = new OutputStreamWriter(byteArrayOutputStream);
 
+            XMLCharacterEncoder encoder = new XMLCharacterEncoder(
+                    byteArrayOutputStream, "UTF-8"
+            );
+            encoder.write("&<HE>lp\u5386\u53F2\u62BD\u53D6");
+            encoder.flush();
+            System.out.println(byteArrayOutputStream.toString());
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+/*
         final JFrame root = new JFrame("Root");
         root.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         final JButton button = new JButton("Hello");
@@ -37,6 +53,7 @@ public class JustForTest {
         root.setVisible(true);
 
 //        JWindow window = new JWindow();
+*/
     }
 
 
