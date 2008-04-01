@@ -544,6 +544,10 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
 //        if (rootTab == toolWindowTab && !removingFlag)
 //            throw new IllegalArgumentException("Cannot remove root tab.");
 
+        // TODO: Deactive the tab
+        toolWindowTab.setFlashing(false);
+
+
         boolean result = toolWindowTabs.remove(toolWindowTab);
         if (result)
             fireToolWindowTabEvent(new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_REMOVED, this, toolWindowTab));

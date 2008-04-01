@@ -469,6 +469,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
             if (representativeAnchor != null)
                 representativeAnchor.putClientProperty(ToolWindowDescriptor.class, null);
 
+            toolWindow = null;
+            manager = null;
             ToolWindowDescriptor.this.toolWindow = null;
             ToolWindowDescriptor.this.manager = null;
         }

@@ -59,31 +59,24 @@ public class DragGestureDelegate implements DragGesture {
     protected class DummyDragGesture implements DragGesture {
 
         public void dragGestureRecognized(DragGestureEvent dge) {
-            //To change body of implemented methods use File | Settings | File Templates.
         }
 
         public void dragMouseMoved(DragSourceDragEvent dsde) {
-            //To change body of implemented methods use File | Settings | File Templates.
         }
 
         public void dragEnter(DragSourceDragEvent dsde) {
-            //To change body of implemented methods use File | Settings | File Templates.
         }
 
         public void dragOver(DragSourceDragEvent dsde) {
-            //To change body of implemented methods use File | Settings | File Templates.
         }
 
         public void dropActionChanged(DragSourceDragEvent dsde) {
-            //To change body of implemented methods use File | Settings | File Templates.
         }
 
         public void dragExit(DragSourceEvent dse) {
-            //To change body of implemented methods use File | Settings | File Templates.
         }
 
         public void dragDropEnd(DragSourceDropEvent dsde) {
-            //To change body of implemented methods use File | Settings | File Templates.
         }
     }
 
