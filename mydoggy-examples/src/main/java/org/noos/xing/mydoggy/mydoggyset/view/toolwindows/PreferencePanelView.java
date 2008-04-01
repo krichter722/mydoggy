@@ -78,7 +78,7 @@ public class PreferencePanelView extends ComponentView {
         }
 
         protected Component initComponent() {
-            JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{150, 3, -1, 5 , 50}, {-1}}));
+            JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{150, 3, -1, 5 , 100}, {-1}}));
 
             types = new JComboBox(new Object[]{
                     "<none>",

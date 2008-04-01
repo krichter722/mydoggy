@@ -16,9 +16,13 @@ import java.awt.*;
 public interface Dockable<M extends DockableManager> extends Observable {
 
     /**
+     * Returns the DockableManager associated with this dockable.
      *
-     * @return
-     * @todo continue...
+     * @return the DockableManager associated with this dockable.
+     * @since 1.4.2
+     * @see org.noos.xing.mydoggy.ToolWindowManager
+     * @see org.noos.xing.mydoggy.ToolWindow
+     * @see org.noos.xing.mydoggy.ContentManager
      */
     M getDockableManager();
 

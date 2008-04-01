@@ -6,10 +6,13 @@ import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.mydoggyset.ui.CheckBoxCellRenderer;
 import org.noos.xing.mydoggy.mydoggyset.view.toolwindows.model.ToolsTableModel;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.yasaf.plaf.action.ViewContextAction;
+import org.noos.xing.yasaf.plaf.component.ToolBarContentPanel;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.plaf.view.listener.ContextPutListSelectionListener;
 import org.noos.xing.yasaf.view.ViewContext;
+import org.noos.xing.yasaf.view.ViewContextChangeListener;
+import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -28,9 +31,6 @@ public class ToolWindowTableView extends ComponentView {
 
     protected Component initComponent() {
         ToolWindowManager toolWindowManager = viewContext.get(ToolWindowManager.class);
-
-        JPanel toolsPanel = new JPanel(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
-        toolsPanel.setBorder(new TitledBorder("ToolWindows"));
 
         final JTable toolsTable = new JTable(new ToolsTableModel(toolWindowManager));
         toolsTable.getTableHeader().setReorderingAllowed(false);
@@ -93,9 +93,20 @@ public class ToolWindowTableView extends ComponentView {
         });
         indexColumn.setCellEditor(new DefaultCellEditor(indexs));
 
-        toolsPanel.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
-        toolsPanel.add(new JScrollPane(toolsTable), "0,0,FULL,FULL");
+        ToolBarContentPanel toolBarContentPanel = new ToolBarContentPanel(new JScrollPane(toolsTable));
+        toolBarContentPanel.setBorder(new TitledBorder("ToolWindows"));
+        toolBarContentPanel.getToolBar().add(new ViewContextAction("Remove All",
+                                                                   viewContext,
+                                                                   "removeAll"));
 
-        return toolsPanel;
+        return toolBarContentPanel;
+    }
+
+    protected void initListeners() {
+        viewContext.addViewContextChangeListener("removeAll", new ViewContextChangeListener() {
+            public void contextChange(ViewContextChangeEvent evt) {
+                evt.getViewContext().get(ToolWindowManager.class).unregisterAllToolWindow();
+            }
+        });
     }
 }

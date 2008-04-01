@@ -209,17 +209,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public void unregisterAllToolWindow() {
-        // TODO: rewrite this...
-        for (Iterator<ToolWindowDescriptor> it = tools.values().iterator(); it.hasNext();) {
-            ToolWindowDescriptor toolWindowDescriptor = it.next();
-
-            removeIfDockableDelegator(toolWindowDescriptor.getToolWindow());
-//            toolWindowDescriptor.unregister();
-            toolWindowDescriptor.getToolWindow().setAvailable(false);
-
-            fireUnregisteredToolEvent(toolWindowDescriptor.getToolWindow());
-            it.remove();
+        // Remove all tools
+        for (ToolWindow toolWindow : getToolWindows()) {
+            unregisterToolWindow(toolWindow.getId());
         }
+
+        // Final cleans
         aliases.clear();
     }
 
