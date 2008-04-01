@@ -134,9 +134,15 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
     }
 
     public void cleanup() {
+        // Stop animations and time
         flashingAnimation.stop();
         animation.stop();
-        
+
+        if (flashingTimer != null)
+            flashingTimer.stop();
+
+        // Clean reference
+        flashingTimer = null;
         toolWindow = null;
         descriptor = null;
         resourceManager = null;
@@ -377,6 +383,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
 
         public ToolWindowTitleBarDragGesture(ToolWindowDescriptor descriptor) {
             super(descriptor);
+            descriptor.getCleaner().addCleaner(this);
         }
 
         public void dragGestureRecognized(DragGestureEvent dge) {

@@ -229,7 +229,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
     public void removeContent(PlafContent content) {
         try {
-            // Check content status
+            // TODO: where should i add these checks?... Check content status
             if (content.isDetached())
                 content.setDetached(false);
             if (content.isMaximized())

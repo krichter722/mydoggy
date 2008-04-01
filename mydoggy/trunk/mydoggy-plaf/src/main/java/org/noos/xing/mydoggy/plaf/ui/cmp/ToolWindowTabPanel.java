@@ -82,6 +82,7 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
 
         selectedTab = null;
         selecTabButton = null;
+        dragGestureDelegate = null;
     }
 
     public void setDragGesture(DragGesture dragGesture) {
@@ -577,7 +578,7 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
 
             putClientProperty(ToolWindowTab.class, null);
 
-// TODO: reenable...           titleLabel.removeMouseListener(dockedContainer.getTitleBarMouseAdapter());
+            titleLabel.removeMouseListener(dockedContainer.getTitleBarMouseAdapter());
             titleLabel.removeMouseListener(mouseEventDispatcher);
             titleLabel.removeMouseMotionListener(mouseEventDispatcher);
             titleLabel.removeMouseListener(this);
@@ -587,6 +588,10 @@ public class ToolWindowTabPanel extends JComponent implements DragGestureInitiat
 
             //  TODO: cleanup timer...
             tab = null;
+
+            if (flashingTimer != null)
+                flashingTimer.stop();
+            flashingTimer = null;
         }
 
         public ToolWindowTab getTab() {

@@ -19,9 +19,11 @@ import java.beans.PropertyChangeListener;
 public class DockablePanel extends JPanel implements PropertyChangeListener,
                                                      ActionListener,
                                                      DockableManagerListener {
+
     protected static Border flashingBorder = new LineBorder(Color.RED, 3);
 
     protected Dockable dockable;
+
     protected Timer flashingTimer;
     protected int flasingDuration;
     protected boolean flashingState;
@@ -109,6 +111,10 @@ public class DockablePanel extends JPanel implements PropertyChangeListener,
         if (event.getDockable() == dockable) {
             this.dockable.removePropertyChangeListener(this);
             this.dockable = null;
+
+            if (flashingTimer != null)
+                flashingTimer.stop();
+            flashingTimer = null;
         }
     }
 

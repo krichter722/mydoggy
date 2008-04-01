@@ -198,6 +198,10 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         
         descriptor = null;
         toolWindow = null;
+
+        if (flashingTimer != null)
+            flashingTimer.stop();
+        flashingTimer = null;
     }
 
     protected void installListeners(JLabel c) {

@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.Cleaner;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,11 +17,12 @@ import java.awt.image.BufferedImage;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public abstract class DragGestureAdapter implements DragGesture {
+public abstract class DragGestureAdapter implements DragGesture, Cleaner {
     protected DockableDescriptor descriptor;
     protected MyDoggyToolWindowManager manager;
     protected BufferedImage ghostImage;
     protected BufferedImage updatedGhostImage;
+
 
     protected DragGestureAdapter(DockableDescriptor descriptor) {
         this.descriptor = descriptor;
@@ -29,6 +31,12 @@ public abstract class DragGestureAdapter implements DragGesture {
 
     protected DragGestureAdapter(MyDoggyToolWindowManager manager) {
         this.manager = manager;
+    }
+
+
+    public void cleanup() {
+        descriptor = null;
+        manager = null;
     }
 
     public void dragGestureRecognized(DragGestureEvent dge) {

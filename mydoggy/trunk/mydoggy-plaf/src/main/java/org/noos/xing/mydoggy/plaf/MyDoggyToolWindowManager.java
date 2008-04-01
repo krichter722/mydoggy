@@ -181,11 +181,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             // Check for delegator
             removeIfDockableDelegator(toolWindowDescriptor.getToolWindow());
 
-            // Make unavailable
-            toolWindowDescriptor.getToolWindow().setAvailable(false);
+            ToolWindow toolWindow = toolWindowDescriptor.getToolWindow();
+
+            // Deactivate the tool
+            toolWindow.setFlashing(false);
+            toolWindow.setAvailable(false);
 
             // remove tabs
-            ToolWindow toolWindow = toolWindowDescriptor.getToolWindow();
             for (ToolWindowTab toolWindowTab : toolWindowDescriptor.getToolWindow().getToolWindowTabs()) {
                 toolWindow.removeToolWindowTab(toolWindowTab);
             }
