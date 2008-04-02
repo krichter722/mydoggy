@@ -151,6 +151,9 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         contentPanel.resetComponent();
     }
 
+    protected boolean isWrapper(Component component) {
+        return component instanceof JTabbedContentPane; 
+    }
 
     protected class TabbedDragGesture extends DragGestureAdapter {
         protected JTabbedContentPane dockableTabbedPane;

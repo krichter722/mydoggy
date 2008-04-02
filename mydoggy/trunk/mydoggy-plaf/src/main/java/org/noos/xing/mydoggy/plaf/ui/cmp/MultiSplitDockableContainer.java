@@ -513,6 +513,12 @@ public class MultiSplitDockableContainer extends JPanel {
         entries.remove(dockable);
 
         if (entries.size() == 0) {
+            DockableLeaf dockableLeaf = getLeaf(dockable);
+            Component cmp = multiSplitPane.getMultiSplitLayout().getChildMap().get(dockableLeaf.getName());
+
+            if (isWrapper(cmp))
+                removeFromWrapper(cmp, dockable);
+
             multiSplitPaneModelRoot = null;
             multiSplitPane.removeAll();
 
@@ -543,13 +549,21 @@ public class MultiSplitDockableContainer extends JPanel {
                 // the root is a split
 
                 // remove the component related to dockable
-                multiSplitPane.remove(multiSplitPane.getMultiSplitLayout().getChildMap().get(getLeafName(dockable)));
+                Component component = multiSplitPane.getMultiSplitLayout().getChildMap().get(getLeafName(dockable));
+                if (isWrapper(component))
+                    removeFromWrapper(component, dockable);
+                multiSplitPane.remove(component);
 
                 // retrieve the component related to sole entry in entries
                 Dockable leftDockable = entries.keySet().iterator().next();
                 DockableLeaf leftLeaf = getLeaf(leftDockable);
-                Component LeftLeafCmp = getComponentFromWrapper(multiSplitPane.getMultiSplitLayout().getChildMap().get(leftLeaf.getName()));
+
+                Component masterLeftLeafCmp = multiSplitPane.getMultiSplitLayout().getChildMap().get(leftLeaf.getName());
+                Component leftLeafCmp = getComponentFromWrapper(masterLeftLeafCmp);
                 leftLeaf.setName("1");
+
+                if (isWrapper(masterLeftLeafCmp))
+                    removeFromWrapper(masterLeftLeafCmp, leftDockable);
 
                 // Update the model
                 AggregationPosition constraintAggPosition = AggregationPosition.DEFAULT;
@@ -578,7 +592,7 @@ public class MultiSplitDockableContainer extends JPanel {
                 // Update the pane
                 multiSplitPane.setModel(multiSplitPaneModelRoot);
                 multiSplitPane.removeAll();
-                multiSplitPane.add(getWrapperForComponent(leftDockable, LeftLeafCmp, Action.REMOVE_DOCK), "1");
+                multiSplitPane.add(getWrapperForComponent(leftDockable, leftLeafCmp, Action.REMOVE_DOCK), "1");
 
                 // Finalize
                 leafNameCounter = 1;
@@ -614,12 +628,14 @@ public class MultiSplitDockableContainer extends JPanel {
                 // There is one dockable on the leaf. We have to rearrange the layout...
                 String leafKey = dockableLeaf.getName();
                 int leafValue = Integer.parseInt(leafKey);
-                Container contentContainer = (Container) multiSplitPane.getMultiSplitLayout().getChildMap().get(leafKey);
+                Component component = multiSplitPane.getMultiSplitLayout().getChildMap().get(leafKey);
 
                 // Remove content
-                if (contentContainer != null) {
-                    // Remove the contentContainer from the multiSplitPane 
-                    multiSplitPane.remove(contentContainer);
+                if (component != null) {
+                    // Remove the component from the multiSplitPane
+                    if (isWrapper(component))
+                        removeFromWrapper(component, dockable);
+                    multiSplitPane.remove(component);
 
                     // Update model
 
@@ -1075,6 +1091,10 @@ public class MultiSplitDockableContainer extends JPanel {
 
     protected boolean isWrapRequest(Dockable dockable, Action action) {
         return useAlwaysContentWrapper;
+    }
+
+    protected boolean isWrapper(Component component) {
+        return false;
     }
 
 

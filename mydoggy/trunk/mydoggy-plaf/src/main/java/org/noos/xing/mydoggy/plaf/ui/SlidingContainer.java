@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.SlidingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
@@ -12,7 +13,6 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.TranslucentPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.SlidingBorder;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.SlidingMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.plaf.ui.util.cleaner.Cleaner;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,7 +71,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
         if (visible) {
             descriptor.setIdOnTitleBar();
-            titleBarButtons.toolWindowTypeChanged(ToolWindowType.SLIDING);
+            titleBarButtons.setType(ToolWindowType.SLIDING);
 
             // Reset Layout
             TableLayout layout = (TableLayout) sheet.getLayout();
@@ -181,7 +181,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
     protected void update() {
         // Reset Layout
-        titleBarButtons.toolWindowTypeChanged(ToolWindowType.SLIDING);
+        titleBarButtons.setType(ToolWindowType.SLIDING);
 
         TableLayout layout = (TableLayout) sheet.getLayout();
         layout.setColumn(0, 0);

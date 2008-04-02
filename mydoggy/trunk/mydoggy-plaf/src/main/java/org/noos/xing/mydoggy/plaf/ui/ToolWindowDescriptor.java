@@ -4,12 +4,12 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowBar;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.cleaner.CleanerAggregator;
+import org.noos.xing.mydoggy.plaf.cleaner.DefaultCleanerAggregator;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.AggregateIcon;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
-import org.noos.xing.mydoggy.plaf.ui.util.cleaner.CleanerAggregator;
-import org.noos.xing.mydoggy.plaf.ui.util.cleaner.DefaultCleanerAggregator;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -110,7 +110,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         toolWindow.setAvailable(available);
     }
 
-    public boolean isAvailable(boolean available) {
+    public boolean isAvailable() {
         return toolWindow.isAvailable();
     }
 

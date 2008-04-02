@@ -27,7 +27,7 @@ public interface DockableDescriptor {
 
     void setAvailable(boolean available);
 
-    boolean isAvailable(boolean available);
+    boolean isAvailable();
 
     DockableType getDockableType();
 

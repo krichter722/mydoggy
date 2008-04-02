@@ -1,6 +1,6 @@
-package org.noos.xing.mydoggy.plaf.ui.util;
+package org.noos.xing.mydoggy.plaf.support;
 
-import org.noos.xing.mydoggy.plaf.ui.util.cleaner.Cleaner;
+import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import sun.awt.EventListenerAggregate;
 
 import java.beans.IndexedPropertyChangeEvent;
@@ -11,14 +11,7 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * TODO: update java doc...
- * This is a utility class that can be used by beans that support bound
- * properties.  You can use an instance of this class as a member field
- * of your bean and delegate various work to it.
- * <p/>
- * This class is serializable.  When it is serialized it will save
- * (and restore) any listeners that are themselves serializable.  Any
- * non-serializable listeners will be skipped during serialization.
+ * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
     protected Hashtable<String, CleanablePropertyChangeSupport> children;
@@ -147,8 +140,7 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
                         Arrays.asList(support.getPropertyChangeListeners()));
             }
         }
-        return (PropertyChangeListener[]) (returnList.toArray(
-                new PropertyChangeListener[0]));
+        return (returnList.toArray(new PropertyChangeListener[returnList.size()]));
     }
 
     public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {

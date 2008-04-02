@@ -7,18 +7,14 @@ import org.noos.xing.mydoggy.ToolWindowListener;
 import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
-import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
-import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
-import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
+import org.noos.xing.mydoggy.plaf.support.PropertyChangeBridge;
+import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureDelegate;
-import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureInitiator;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MouseEventDispatcher;
-import org.noos.xing.mydoggy.plaf.ui.util.PropertyChangeBridge;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.plaf.ui.util.cleaner.Cleaner;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLabelUI;
@@ -34,7 +30,7 @@ import java.util.EventListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @todo: implemets maximzied and minimized
  */
-public class ToolWindowTabPanel extends JComponent implements DragGestureInitiator, Cleaner {
+public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Cleaner {
     protected DockedContainer dockedContainer;
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;

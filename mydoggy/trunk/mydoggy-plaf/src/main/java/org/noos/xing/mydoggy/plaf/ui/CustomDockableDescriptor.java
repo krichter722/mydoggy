@@ -57,6 +57,9 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
     }
 
     public void setAnchor(ToolWindowAnchor anchor, int index) {
+        if (!isAvailable())
+            return;
+
         setAvailable(false);
 
         this.anchor = anchor;
@@ -89,7 +92,7 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
         this.available = available;
     }
 
-    public boolean isAvailable(boolean available) {
+    public boolean isAvailable() {
         return available;
     }
 

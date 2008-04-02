@@ -49,7 +49,7 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
         if (this.plafContentManagerUI == contentManagerUI)
             return;
 
-        if (this.plafContentManagerUI != null) 
+        if (this.plafContentManagerUI != null)
             this.plafContentManagerUI.uninstall();
 
         PlafContentManagerUI newContentManagerUI = (PlafContentManagerUI) contentManagerUI;
@@ -105,32 +105,34 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
             throw new IllegalArgumentException("Content cannot be null.");
 
         // Deactivate content
-
-        // TODO: is this corrent....i can remove a content using api also when another content is currently maximized...
-        for (Content registeredContent : getContents()) {
-            if (registeredContent.isMaximized())
-                registeredContent.setMaximized(false);
-        }
-
         content.setFlashing(false);
+        content.setMaximized(false);
+        content.setSelected(false);
 
+        // Remove content from ui manager
         plafContentManagerUI.removeContent((MyDoggyContent) content);
+
+        // Remove from manager
         boolean result = contents.remove(content);
-
         if (result) {
-            contentMap.remove(content.getId());
-            fireContentRemoved(content);
-        }
+            try {
+                contentMap.remove(content.getId());
 
-        // Choose next content
-        plafContentManagerUI.selectNextContent(content);
+                fireContentRemoved(content);
 
-        // Restore the delegator
-        if (content.getDockableDelegator() != null) {
-            Dockable delegator = content.getDockableDelegator();
-            if  (delegator instanceof ToolWindow) {
-                ToolWindow toolWindow = (ToolWindow) delegator;
-                toolWindow.setType(ToolWindowType.DOCKED);
+                // Choose next content
+                plafContentManagerUI.selectNextContent(content);
+
+                // Restore the delegator
+                if (content.getDockableDelegator() != null) {
+                    Dockable delegator = content.getDockableDelegator();
+                    if (delegator instanceof ToolWindow) {
+                        ToolWindow toolWindow = (ToolWindow) delegator;
+                        toolWindow.setType(ToolWindowType.DOCKED);  // TODO: Remember old type
+                    }
+                }
+            } finally {
+                ((MyDoggyContent) content).cleanup();
             }
         }
 
@@ -164,7 +166,7 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
             if (entry.getValue() == content)
                 result.add(entry.getKey());
         }
-        return result.toArray(); 
+        return result.toArray();
     }
 
     public Content getContentByComponent(Component component) {
@@ -272,7 +274,7 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
     public void removeDockableManagerListener(DockableManagerListener listener) {
         for (ContentManagerListener managerListener : getContentManagerListeners()) {
             if (managerListener instanceof DockableManager2ContentManagerWrapper) {
-                if (((DockableManager2ContentManagerWrapper)managerListener).getListener() == listener) {
+                if (((DockableManager2ContentManagerWrapper) managerListener).getListener() == listener) {
                     removeContentManagerListener(managerListener);
                 }
             }
@@ -329,7 +331,7 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
 
         contents.add(content);
         contentMap.put(id, content);
-        
+
         plafContentManagerUI.addContent(content, constraints);
 
         fireContentAdded(content);
@@ -383,7 +385,7 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
                     }
                 }
             }
-            
+
         }
     }
 }

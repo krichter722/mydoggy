@@ -197,7 +197,6 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
     }
 
     public void setEnabled(boolean enabled) {
-        // TODO: just onet type should be available...
         throw new RuntimeException("Cannot call this method. This type is always available.");
     }
 

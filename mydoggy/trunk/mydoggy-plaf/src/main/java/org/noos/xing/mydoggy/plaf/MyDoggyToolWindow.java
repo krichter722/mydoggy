@@ -56,7 +56,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                                 ToolWindowAnchor anchor, ToolWindowType type,
                                 String title, Icon icon, Component component,
                                 ResourceBundle resourceBundle) {
-        this.descriptor = new ToolWindowDescriptor(manager, this);
+        this.descriptor = (ToolWindowDescriptor) manager.createDescriptor(this);
         this.resourceBundle = resourceBundle;
         this.toolWindowTabs = new ArrayList<ToolWindowTab>();
 
@@ -125,19 +125,13 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
     public boolean isVisible() {
-        if (getType() == ToolWindowType.EXTERN) {
-            for (ToolWindow tool : descriptor.getManager().getToolWindows()) {
-                for (ToolWindowTab tab : tool.getToolWindowTabs()) {
-                    if (tab.getDockableDelegator() == this) {
-                        return tool.isVisible() && tab.isSelected();
-                    }
-                }
-            }
-            for (Content content : descriptor.getManager().getContentManager().getContents()) {
-                if (content.getDockableDelegator() == this) {
-                    return content.isSelected();
-                }
-            }
+        if (type == ToolWindowType.EXTERN) {
+            Dockable delegator = descriptor.getManager().getDockableWrapper(this);
+            if  (delegator instanceof ToolWindowTab) {
+                ToolWindowTab toolWindowTab = (ToolWindowTab) delegator;
+                return toolWindowTab.isSelected() && toolWindowTab.getOwner().isVisible();
+            } else
+                return delegator.isSelected();
         }
 
         return visible;
@@ -282,6 +276,15 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
     public boolean isActive() {
+        if (type == ToolWindowType.EXTERN) {
+            Dockable delegator = descriptor.getManager().getDockableWrapper(this);
+            if  (delegator instanceof ToolWindowTab) {
+                ToolWindowTab toolWindowTab = (ToolWindowTab) delegator;
+                return toolWindowTab.isSelected() && toolWindowTab.getOwner().isActive();                
+            } else
+                return delegator.isSelected();
+        }
+
         return active;
     }
 
@@ -301,6 +304,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             this.active = active;
 
             firePropertyChangeEvent("active", old, active);
+            firePropertyChangeEvent("selected", old, active);
         }
     }
 
@@ -872,10 +876,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
     protected void fireAnchorEvent(ToolWindowAnchor oldValue, ToolWindowAnchor newValue, Object userObject) {
-        PropertyChangeEvent event = new UserPropertyChangeEvent(descriptor, "anchor", oldValue, newValue, userObject);
-        PropertyChangeEvent publicEvent = new UserPropertyChangeEvent(this, "anchor", oldValue, newValue, userObject);
-
-        firePropertyChangeEvent(event, publicEvent);
+        firePropertyChangeEvent("anchor", oldValue, newValue, userObject);
     }
 
     protected void fireToolWindowTabEvent(ToolWindowTabEvent event) {
