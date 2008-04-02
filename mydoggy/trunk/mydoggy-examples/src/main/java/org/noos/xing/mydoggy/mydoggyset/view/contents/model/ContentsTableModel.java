@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy.mydoggyset.view.contents.model;
 
-import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentManagerListener;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
@@ -27,6 +26,10 @@ public final class ContentsTableModel extends DefaultTableModel implements Prope
         updateModel();
     }
 
+    public int getRowCount() {
+        return (windowManager != null) ? windowManager.getContentManager().getContentCount() : 0;
+    }
+
     public boolean isCellEditable(int row, int column) {
         return true;
     }
@@ -48,6 +51,23 @@ public final class ContentsTableModel extends DefaultTableModel implements Prope
             case 4 :
                 windowManager.getContentManager().getContent(row).setFlashing((Boolean) aValue);
                 break;
+        }
+    }
+
+    public Object getValueAt(int row, int column) {
+        switch (column) {
+            case 0 :
+                return windowManager.getContentManager().getContent(row).getTitle();
+            case 1 :
+                return windowManager.getContentManager().getContent(row).isEnabled();
+            case 2 :
+                return windowManager.getContentManager().getContent(row).isSelected();
+            case 3 :
+                return windowManager.getContentManager().getContent(row).isDetached();
+            case 4 :
+                return windowManager.getContentManager().getContent(row).isFlashing();
+            default:   
+                return windowManager.getContentManager().getContent(row);
         }
     }
 
@@ -73,20 +93,6 @@ public final class ContentsTableModel extends DefaultTableModel implements Prope
     }
 
     protected void updateModel() {
-        getDataVector().clear();
-
-        Content[] contents = windowManager.getContentManager().getContents();
-        for (Content content : contents) {
-            addRow(new Object[]{
-                    content.getTitle(),
-                    content.isEnabled(),
-                    content.isSelected(),
-                    content.isDetached(),
-                    content.isFlashing(),
-                    content
-            });
-        }
-
         fireTableDataChanged();
     }
 

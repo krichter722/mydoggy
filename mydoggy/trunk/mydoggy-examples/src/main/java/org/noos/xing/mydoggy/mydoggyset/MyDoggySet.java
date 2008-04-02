@@ -199,8 +199,14 @@ public class MyDoggySet {
         ToolWindow toolWindow = toolWindowManager.getToolWindow("Tool 1");
         toolWindow.setAutoHide(true);
 
+/*
+        toolWindow.getTypeDescriptor(SlidingTypeDescriptor.class).setEnabled(false);
+        toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).setEnabled(false);
+        toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setEnabled(false);
+*/
+
         DockedTypeDescriptor dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
-        dockedTypeDescriptor.setPopupMenuEnabled(false);
+//        dockedTypeDescriptor.setPopupMenuEnabled(false);
         dockedTypeDescriptor.setDockLength(200);
 
         // Setup Tool 2
