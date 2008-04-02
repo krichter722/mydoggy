@@ -178,32 +178,38 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         final ToolWindowDescriptor toolWindowDescriptor = tools.get(id);
 
         if (toolWindowDescriptor != null) {
-            // Check for delegator
-            removeIfDockableDelegator(toolWindowDescriptor.getToolWindow());
+            try {
+                ToolWindow toolWindow = toolWindowDescriptor.getToolWindow();
 
-            ToolWindow toolWindow = toolWindowDescriptor.getToolWindow();
+                // Check for delegator
+                removeIfDockableDelegator(toolWindow);
 
-            // Deactivate the tool
-            toolWindow.setFlashing(false);
-            toolWindow.setAvailable(false);
+                // Deactivate the tool
+                toolWindow.setFlashing(false);
+                toolWindow.setMaximized(false);
+                toolWindow.setAvailable(false);
 
-            // remove tabs
-            for (ToolWindowTab toolWindowTab : toolWindowDescriptor.getToolWindow().getToolWindowTabs()) {
-                toolWindow.removeToolWindowTab(toolWindowTab);
+                // Remove tabs
+                for (ToolWindowTab toolWindowTab : toolWindowDescriptor.getToolWindow().getToolWindowTabs()) {
+                    toolWindow.removeToolWindowTab(toolWindowTab);
+                }
+
+                // Remove from the list
+                tools.remove(toolWindowDescriptor.getToolWindow().getId());
+
+                // Remove aliases
+                for (Iterator<ToolWindow> iterator = aliases.values().iterator(); iterator.hasNext();) {
+                    ToolWindow aliasedToolWindow = iterator.next();
+                    if (aliasedToolWindow == toolWindow)
+                        iterator.remove();
+                }
+
+                // Fire event
+                fireUnregisteredToolEvent(toolWindowDescriptor.getToolWindow());
+            } finally {
+                // Clean
+                toolWindowDescriptor.getCleaner().cleanup();
             }
-
-            // Remove from the list
-            tools.remove(toolWindowDescriptor.getToolWindow().getId());
-
-            // Remove aliases
-            for (Iterator<ToolWindow> iterator = aliases.values().iterator(); iterator.hasNext();) {
-                ToolWindow aliasedToolWindow = iterator.next();
-                if (aliasedToolWindow == toolWindow)
-                    iterator.remove();
-            }
-
-            // Fire event
-            fireUnregisteredToolEvent(toolWindowDescriptor.getToolWindow());
         } else
             throw new IllegalArgumentException("Doesn't exist a tool window with passed id. [id : " + id + "]");
     }
@@ -562,19 +568,26 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public void removeIfDockableDelegator(Dockable dockable) {
+        // Search for a tab...
         for (ToolWindow toolWindow : getToolWindows()) {
+
             for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
                 if (tab.getDockableDelegator() == dockable) {
                     toolWindow.removeToolWindowTab(tab);
                     break;
                 }
             }
+
         }
+
+        // Search for a content...
         for (Content content : contentManager.getContents()) {
+
             if (content.getDockableDelegator() == dockable) {
                 contentManager.removeContent(content);
                 break;
             }
+            
         }
     }
 

@@ -46,8 +46,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
 
     public void cleanup() {
-        layeredPane = null;
-
+        // Remove Listeners
         sheet.removeMouseMotionListener(resizeMouseInputHandler);
         sheet.removeMouseListener(resizeMouseInputHandler);
 
@@ -57,6 +56,10 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         titleBar.removeMouseListener(moveMouseInputHandler);
 
         descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).removePropertyChangeListener(this);
+
+        // Finalize
+        layeredPane = null;
+        super.cleanup();
     }
 
     public void setVisible(boolean visible) {

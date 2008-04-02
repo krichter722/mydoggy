@@ -4,6 +4,8 @@ import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.CleanerAggregator;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.DefaultCleanerAggregator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,6 +30,9 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
 
     protected Dockable dockable;
 
+    protected CleanerAggregator cleanerAggregator;
+
+
     public MyDoggyToolWindowTab(ToolWindow owner, boolean root,
                                 String title, Icon icon, Component component,
                                 Dockable dockable) {
@@ -46,6 +51,8 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
 
         if (dockable != null)
             dockable.addPropertyChangeListener(new DelegatorListener());
+
+        cleanerAggregator = new DefaultCleanerAggregator();
     }
 
 
@@ -158,9 +165,6 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
     }
 
     public void setCloseable(boolean closeable) {
-        if (root)
-            throw new IllegalArgumentException("Cannot change this for root tab.");
-
         if (this.closeable == closeable)
             return;
 
@@ -200,6 +204,7 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
         return dockable;
     }
 
+
     public String toString() {
         return "MyDoggyToolWindowTab{" +
                "owner=" + owner +
@@ -213,7 +218,17 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
                '}';
     }
 
-    
+    public void cleanup() {
+        cleanerAggregator.cleanup();
+        super.cleanup();
+    }
+
+
+    public CleanerAggregator getCleaner() {
+        return cleanerAggregator;
+    }
+
+
     protected class DelegatorListener implements PropertyChangeListener  {
 
         public void propertyChange(PropertyChangeEvent evt) {

@@ -20,7 +20,6 @@ import java.util.ResourceBundle;
  */
 public class MyDoggyToolWindow extends PropertyChangeEventSource implements ToolWindow {
     static final Object LOCK = new ToolWindowLock();
-    public boolean removingFlag;
 
     static class ToolWindowLock {
     }
@@ -73,8 +72,6 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         setIcon(icon);
         this.available = this.active = this.visible = this.maximized = this.aggregateEnabled = false;
         this.representativeAnchorButtonVisible = true;
-
-        descriptor.getCleaner().addCleaner(this);
     }
 
     
@@ -541,26 +538,36 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             throw new IllegalArgumentException("ToolWindowTab cannot be null.");
         if (!(toolWindowTab instanceof MyDoggyToolWindowTab))
             throw new IllegalArgumentException("Invalid ToolWindowTab instance.");
-//        if (rootTab == toolWindowTab && !removingFlag)
-//            throw new IllegalArgumentException("Cannot remove root tab.");
 
-        // TODO: Deactive the tab
+        // Deactive the tab
         toolWindowTab.setFlashing(false);
+        toolWindowTab.setMaximized(false);
 
-
+        // Remove the tab
         boolean result = toolWindowTabs.remove(toolWindowTab);
-        if (result)
-            fireToolWindowTabEvent(new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_REMOVED, this, toolWindowTab));
+        if (result) {
+            try {
+                fireToolWindowTabEvent(new ToolWindowTabEvent(this,
+                                                              ToolWindowTabEvent.ActionId.TAB_REMOVED,
+                                                              this,
+                                                              toolWindowTab));
+            } finally {
+                // Clean tab
+                ((MyDoggyToolWindowTab) toolWindowTab).cleanup();
+            }
 
+        }
+
+        // Check for a delegator...
         if (toolWindowTab.getDockableDelegator() != null) {
             Dockable dockable = toolWindowTab.getDockableDelegator();
 
             if (dockable instanceof ToolWindow) {
+                // Restore the toolwindow
                 ToolWindow toolWindow = (ToolWindow) dockable;
                 toolWindow.setType(ToolWindowType.DOCKED);
 
                 for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
-
                     for (ToolWindowTab fromTab : getToolWindowTabs()) {
                         if (fromTab.getDockableDelegator() == tab) {
                             removeToolWindowTab(fromTab);
@@ -570,10 +577,13 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             }
         }
 
-        if (rootTab == toolWindowTab && toolWindowTabs.size() > 0)
-            rootTab = toolWindowTabs.get(0);
-        else
-            rootTab = null;
+        // Finilize
+        if (rootTab == toolWindowTab)  {
+            if (toolWindowTabs.size() > 0)
+                rootTab = toolWindowTabs.get(0);
+            else
+                rootTab = null;
+        }
 
         if (toolWindowTabs.size() == 0)
             setAvailable(false);
@@ -664,6 +674,14 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                '}';
     }
 
+    public void cleanup() {
+        super.cleanup();
+
+        // Remove listeners...
+        for (ToolWindowListener listener : getToolWindowListeners()) {
+            removeToolWindowListener(listener);
+        }
+    }
 
     public final Object getLock() {
         return LOCK;
@@ -679,7 +697,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             return;
 
         if (available && toolWindowTabs.size() == 0)
-            return; // TODO: should throw an exception...
+            throw new IllegalStateException("Cannot make available the tool. No tabs available.");
 
         synchronized (getLock()) {
             if (!available) {

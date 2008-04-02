@@ -17,6 +17,7 @@ public abstract class MyDoggyToolWindowContainer implements ToolWindowContainer 
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
 
+    // TODO: introduce interfacess...
     protected ToolWindowTabPanel titleBarTabs;
     protected Component titleBar;
     protected TitleBarButtons titleBarButtons;
@@ -55,5 +56,17 @@ public abstract class MyDoggyToolWindowContainer implements ToolWindowContainer 
 
     public void showPopupMenu(Component c, int x, int y) {
         dockedContainer.showPopupMenu(c, x, y);
+    }
+
+    public void cleanup() {
+        // Finalize
+        dockedContainer = null;
+        resourceManager = null;
+        descriptor = null;
+        toolWindow = null;
+
+        titleBar = null;
+        titleBarTabs = null;
+        titleBarButtons = null;
     }
 }

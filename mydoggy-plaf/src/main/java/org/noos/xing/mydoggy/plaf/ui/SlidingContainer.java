@@ -47,12 +47,15 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
 
     public void cleanup() {
+        // Remove listeners
         if (sheet != null) {
             sheet.removeMouseMotionListener(slidingMouseInputHandler);
             sheet.removeMouseListener(slidingMouseInputHandler);
         }
-        
+
+        // Finalize
         layeredPane = null;
+        super.cleanup();
     }
 
     public void setVisible(boolean visible, Container barContainer) {
@@ -468,7 +471,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         protected int calcFirstY() {
             return descriptor.getManager().getY() +
                    descriptor.getToolBar(ToolWindowAnchor.TOP).getSize() +
-                   descriptor.getJMenuBarExtraHeight();
+                   descriptor.getManager().getJMenuBarExtraHeight();
         }
 
         protected int calcMaxWidth() {
@@ -490,7 +493,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
     protected class SlidingTypePropertyChangeListener implements PropertyChangeListener, Cleaner {
 
         public SlidingTypePropertyChangeListener() {
-            descriptor.getCleaner().addCleaner(this);
+            descriptor.getCleaner().addBefore(SlidingContainer.this, this);
         }
 
         public void cleanup() {
@@ -519,7 +522,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
     protected class ComponentResizer extends ComponentAdapter implements Cleaner {
 
         public ComponentResizer() {
-            descriptor.getCleaner().addCleaner(this);
+            descriptor.getCleaner().addBefore(SlidingContainer.this, this);
         }
 
         public void cleanup() {

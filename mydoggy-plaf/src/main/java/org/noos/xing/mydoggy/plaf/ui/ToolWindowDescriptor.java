@@ -9,7 +9,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.AggregateIcon;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.cleaner.CleanerAggregator;
-import org.noos.xing.mydoggy.plaf.ui.util.cleaner.ToolWindowCleaner;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.DefaultCleanerAggregator;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -54,10 +54,9 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         this.toolWindow = toolWindow;
 
         // Init cleaner
-        this.cleaner = new ToolWindowDescriptorCleaner(manager, toolWindow);
+        this.cleaner = new ToolWindowDescriptorCleaner();
 
-        toolWindow.addPlafPropertyChangeListener(this);
-
+        initListeners();
         initTypeDescriptors();
     }
 
@@ -170,6 +169,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
     }
 
     public void resetRepresentativeAnchor() {
+        if (representativeAnchor != null)
+            representativeAnchor.putClientProperty(ToolWindowDescriptor.class, null);
         representativeAnchor = null;
     }
 
@@ -248,8 +249,10 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
 
 
     public Component getComponent() {
-        if (component == null)
-            component = toolWindow.getToolWindowTabs()[0].getComponent();
+        if (component == null) {
+            if (toolWindow.getToolWindowTabs().length > 0)
+                component = toolWindow.getToolWindowTabs()[0].getComponent();
+        }
         return component;
     }
 
@@ -383,21 +386,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         throw new IllegalStateException("Doen't exist a TypeDescriptor for. [type : " + type + "]");
     }
 
-    public ToolWindowAnchor getToolWindowAnchor(Point p) {
-        Rectangle b = getManager().getBounds();
-
-        if (p.x <= 18 && p.y >= 18 && p.y <= b.height - 18) {
-            return ToolWindowAnchor.LEFT;
-        } else if (p.x >= b.width - 18 && p.y >= 18 && p.y <= b.height - 18) {
-            return ToolWindowAnchor.RIGHT;
-        } else if (p.y <= 18 && p.x >= 18 && p.x <= b.width - 18) {
-            return ToolWindowAnchor.TOP;
-        } else if (p.y >= b.height - 18 && p.x >= 18 && p.x <= b.width - 18) {
-            return ToolWindowAnchor.BOTTOM;
-        }
-        return null;
-    }
-
     public DockedTypeDescriptor getDockedTypeDescriptor() {
         return dockedTypeDescriptor;
     }
@@ -408,10 +396,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
 
     public Component getContentContainer() {
         return ((DockedContainer) getToolWindowContainer()).getContentContainer();
-    }
-
-    public int getJMenuBarExtraHeight() {
-        return manager.getJMenuBarExtraHeight();
     }
 
     public void hideToolWindow() {
@@ -426,7 +410,11 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         return cleaner;
     }
 
-    
+
+    protected void initListeners() {
+        toolWindow.addPlafPropertyChangeListener(this);
+    }
+
     protected void initTypeDescriptors() {
         floatingTypeDescriptor = (FloatingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.FLOATING)).cloneMe(this);
         floatingTypeDescriptor.addPropertyChangeListener(this);
@@ -442,23 +430,13 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
     }
 
 
-    class ToolWindowDescriptorCleaner extends ToolWindowCleaner {
-
-        public ToolWindowDescriptorCleaner(ToolWindowManager manager, ToolWindow toolWindow) {
-            super(manager, toolWindow);
-        }
+    protected class ToolWindowDescriptorCleaner extends DefaultCleanerAggregator {
 
         public void cleanup() {
             super.cleanup();
             
-            ToolWindowDescriptor.this.toolWindow.removingFlag = true;
-
-            for (ToolWindowTab toolWindowTab : toolWindow.getToolWindowTabs()) {
-                toolWindow.removeToolWindowTab(toolWindowTab);
-            }
-
             // Clean listener added to toolwindow
-            ToolWindowDescriptor.this.toolWindow.removePlafPropertyChangeListener(ToolWindowDescriptor.this);
+            toolWindow.removePlafPropertyChangeListener(ToolWindowDescriptor.this);
 
             // Clean TypeDescriptors
             floatingTypeDescriptor.removePropertyChangeListener(ToolWindowDescriptor.this);
@@ -466,13 +444,15 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
             dockedTypeDescriptor.removePropertyChangeListener(ToolWindowDescriptor.this);
             slidingTypeDescriptor.removePropertyChangeListener(ToolWindowDescriptor.this);
 
-            if (representativeAnchor != null)
-                representativeAnchor.putClientProperty(ToolWindowDescriptor.class, null);
+            // Clean Representative Anchor
+            resetRepresentativeAnchor();
 
+            // Clean listeners...
+            toolWindow.cleanup();
+
+            // Finalizy clean
             toolWindow = null;
             manager = null;
-            ToolWindowDescriptor.this.toolWindow = null;
-            ToolWindowDescriptor.this.manager = null;
         }
     }
 
