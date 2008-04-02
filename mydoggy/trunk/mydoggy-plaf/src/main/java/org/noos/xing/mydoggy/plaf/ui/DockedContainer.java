@@ -7,12 +7,10 @@ import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
+import org.noos.xing.mydoggy.plaf.ui.util.CleanablePropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.cleaner.Cleaner;
-import org.noos.xing.mydoggy.plaf.ui.util.cleaner.CleanerAggregator;
-import org.noos.xing.mydoggy.plaf.ui.util.cleaner.CleanerPropertyChangeSupport;
-import org.noos.xing.mydoggy.plaf.ui.util.cleaner.DefaultCleanerAggregator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,21 +36,18 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
     protected TitleBarMouseAdapter titleBarMouseAdapter;
 
-    protected CleanerPropertyChangeSupport propertyChangeSupport;
+    protected CleanablePropertyChangeSupport propertyChangeSupport;
 
     protected Component focusRequester;
     protected PopupUpdater popupUpdater;
 
     boolean valueAdjusting;
 
-    protected CleanerAggregator cleanerAggregator;
-
 
     public DockedContainer(ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
         this.resourceManager = descriptor.getResourceManager();
-        this.cleanerAggregator = new DefaultCleanerAggregator();
 
         descriptor.getCleaner().addCleaner(this);
 
@@ -62,11 +57,11 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
 
     public void cleanup() {
-        cleanerAggregator.cleanup();
-
+        // Clean components
         container.putClientProperty(ToolWindow.class, null);
         container.removeAll();
 
+        // Finalize
         popupUpdater = null;
         toolWindow = null;
         descriptor = null;
@@ -136,8 +131,8 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
 
     protected void initComponents() {
-        propertyChangeSupport = new CleanerPropertyChangeSupport(this);
-        descriptor.getCleaner().addCleaner(propertyChangeSupport);  // TODO: do better...
+        propertyChangeSupport = new CleanablePropertyChangeSupport(this);
+        descriptor.getCleaner().addCleaner(propertyChangeSupport);
 
         titleBarMouseAdapter = new TitleBarMouseAdapter();
 
@@ -284,7 +279,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         protected ToolWindowType oldType;
 
         public TitleBarMouseAdapter() {
-            cleanerAggregator.addCleaner(this);
+            descriptor.getCleaner().addBefore(DockedContainer.this, this);
 
             initPopupMenu();
 
@@ -617,8 +612,8 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
     protected class DockedToolWindowListener implements Cleaner, ToolWindowListener, PropertyChangeListener {
 
         public DockedToolWindowListener() {
-            cleanerAggregator.addCleaner(this);
-            
+            descriptor.getCleaner().addBefore(DockedContainer.this, this);
+
             for (ToolWindowTab tab : toolWindow.getToolWindowTabs())
                 tab.addPropertyChangeListener(this);
         }
@@ -679,7 +674,8 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
         public FocusOwnerPropertyChangeListener(Question parentOf) {
             this.parentOf = parentOf;
-            cleanerAggregator.addCleaner(this);
+
+            descriptor.getCleaner().addBefore(DockedContainer.this, this);
         }
 
         public void cleanup() {

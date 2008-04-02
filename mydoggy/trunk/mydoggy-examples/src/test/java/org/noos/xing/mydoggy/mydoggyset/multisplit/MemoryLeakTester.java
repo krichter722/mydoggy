@@ -22,8 +22,16 @@ public class MemoryLeakTester {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 // Activate "Debug" Tool
+/*
                 ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
                 debugTool.setActive(true);
+
+                ToolWindow profileTool = toolWindowManager.getToolWindow("Profile");
+                profileTool.aggregate();
+
+                ToolWindow memoryTool = toolWindowManager.getToolWindow("Memory");
+                memoryTool.aggregate(AggregationPosition.RIGHT);
+*/
 
                 frame.setVisible(true);
             }
@@ -63,13 +71,25 @@ public class MemoryLeakTester {
         JButton button = new JButton("Unregister Tool");
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                toolWindowManager.unregisterToolWindow("Debug");
+                toolWindowManager.unregisterAllToolWindow();
             }
         });
 
         // Register a Tool.
         toolWindowManager.registerToolWindow("Debug",                      // Id
                 "Debug Tool",                 // Title
+                null,                         // Icon
+                button,    // Component
+                ToolWindowAnchor.LEFT);       // Anchor
+
+        toolWindowManager.registerToolWindow("Profile",                      // Id
+                "Profile Tool",                 // Title
+                null,                         // Icon
+                button,    // Component
+                ToolWindowAnchor.LEFT);       // Anchor
+
+        toolWindowManager.registerToolWindow("Memory",                      // Id
+                "Memory Tool",                 // Title
                 null,                         // Icon
                 button,    // Component
                 ToolWindowAnchor.LEFT);       // Anchor

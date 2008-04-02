@@ -952,7 +952,7 @@ public class MultiSplitDockableContainer extends JPanel {
         multiSplitPaneModelRoot.setParent(null);
         multiSplitPane.setModel(multiSplitPaneModelRoot);
 
-        repaintMultiSplit();
+        repaintMultiSplit(false);
     }
 
 
@@ -1192,6 +1192,11 @@ public class MultiSplitDockableContainer extends JPanel {
 //        SwingUtilities.invokeLater(new DebugRepaintRunnable(new RuntimeException()));
     }
 
+    protected void repaintMultiSplit(boolean resetBounds) {
+        SwingUtilities.invokeLater(new RepaintRunnable2(resetBounds));
+
+    }
+
     protected MultiSplitLayout.Node getFirstNotDivider(List<MultiSplitLayout.Node> children) {
         for (MultiSplitLayout.Node child : children) {
             if (!(child instanceof MultiSplitLayout.Divider))
@@ -1362,6 +1367,25 @@ public class MultiSplitDockableContainer extends JPanel {
             if (jumpResetBounds) {
                 jumpResetBounds = false;
             } else
+                resetBounds();
+
+            multiSplitPane.invalidate();
+            multiSplitPane.validate();
+            multiSplitPane.repaint();
+            multiSplitPane.getMultiSplitLayout().setFloatingDividers(false);
+        }
+    }
+
+    public class RepaintRunnable2 implements Runnable {
+        protected boolean reset;
+
+        public RepaintRunnable2(boolean reset) {
+            this.reset = reset;
+        }
+
+        public void run() {
+            checkModel();
+            if (reset)
                 resetBounds();
 
             multiSplitPane.invalidate();

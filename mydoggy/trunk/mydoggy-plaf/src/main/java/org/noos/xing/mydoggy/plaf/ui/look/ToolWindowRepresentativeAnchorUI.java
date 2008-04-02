@@ -193,15 +193,18 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     }
 
     public void cleanup() {
+        // Remove listeners
         toolWindow.getTypeDescriptor(ToolWindowType.DOCKED).removePropertyChangeListener(this);
         descriptor.getToolWindow().removePlafPropertyChangeListener(this);
-        
-        descriptor = null;
-        toolWindow = null;
 
+        // Release timers
         if (flashingTimer != null)
             flashingTimer.stop();
         flashingTimer = null;
+
+        // Finalize
+        descriptor = null;
+        toolWindow = null;
     }
 
     protected void installListeners(JLabel c) {
@@ -330,13 +333,17 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
     }
 
-    protected class RepresentativeAnchorMouseAdapter extends MouseInputAdapter implements ActionListener {
-        Timer previewTimer; // TODO: cleanup
-        boolean firstPreview = true;
+    protected class RepresentativeAnchorMouseAdapter extends MouseInputAdapter implements ActionListener, Cleaner {
+        protected Timer previewTimer;
+        protected boolean firstPreview = true;
+
 
         public RepresentativeAnchorMouseAdapter() {
             previewTimer = new Timer(0, this);
+            
+            descriptor.getCleaner().addBefore(ToolWindowRepresentativeAnchorUI.this, this);
         }
+
 
         public void mouseClicked(MouseEvent e) {
             if (!toolWindow.isAvailable())
@@ -568,6 +575,16 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
             }
         }
 
+        public void cleanup() {
+            // Stop preview
+            actionPerformed(new ActionEvent(previewTimer, 0, "stop"));
+
+            // Clean timers
+            if (previewTimer != null) {
+                previewTimer.stop();
+                previewTimer = null;
+            }
+        }
     }
 
     protected class ToolWindowRepresentativeAnchorDragGesture extends RepresentativeAnchorDragGesture {

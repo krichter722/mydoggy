@@ -50,7 +50,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
 
     public void cleanup() {
-
         // Remove listeners
         if (window != null) {
             window.getWindow().removeMouseMotionListener(resizeMouseInputHandler);
@@ -64,6 +63,9 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         titleBar.removeMouseListener(moveMouseInputHandler);
 
         descriptor.getTypeDescriptor(ToolWindowType.FLOATING).removePropertyChangeListener(this);
+        
+        // Finalize
+        super.cleanup();
     }
 
     public void setVisible(boolean visible) {

@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.util;
 
 import org.noos.xing.mydoggy.plaf.ui.util.cleaner.Cleaner;
-import org.noos.xing.mydoggy.plaf.ui.util.cleaner.CleanerPropertyChangeSupport;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -10,7 +9,7 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class PropertyChangeBridge implements PropertyChangeListener, Cleaner {
-    protected CleanerPropertyChangeSupport bridgePropertyChangeSupport;
+    protected CleanablePropertyChangeSupport bridgePropertyChangeSupport;
 
     public PropertyChangeBridge() {
     }
@@ -27,19 +26,19 @@ public class PropertyChangeBridge implements PropertyChangeListener, Cleaner {
 
     public void addBridgePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         if (bridgePropertyChangeSupport == null)
-            bridgePropertyChangeSupport = new CleanerPropertyChangeSupport(this);
+            bridgePropertyChangeSupport = new CleanablePropertyChangeSupport(this);
         bridgePropertyChangeSupport.addPropertyChangeListener(propertyName, listener);
     }
 
     public void removeBridgePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         if (bridgePropertyChangeSupport == null)
-            bridgePropertyChangeSupport = new CleanerPropertyChangeSupport(this);
+            bridgePropertyChangeSupport = new CleanablePropertyChangeSupport(this);
         bridgePropertyChangeSupport.removePropertyChangeListener(propertyName, listener);
     }
 
     public PropertyChangeListener[] getBridgePropertyChangeListeners(String propertyName) {
         if (bridgePropertyChangeSupport == null)
-            bridgePropertyChangeSupport = new CleanerPropertyChangeSupport(this);
+            bridgePropertyChangeSupport = new CleanablePropertyChangeSupport(this);
         return bridgePropertyChangeSupport.getPropertyChangeListeners(propertyName);
     }
 }

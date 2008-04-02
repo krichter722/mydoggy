@@ -106,7 +106,7 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
 
         // Deactivate content
 
-        // TODO: is this corrent....i can remove a content using api also when a content is currently maximized...
+        // TODO: is this corrent....i can remove a content using api also when another content is currently maximized...
         for (Content registeredContent : getContents()) {
             if (registeredContent.isMaximized())
                 registeredContent.setMaximized(false);

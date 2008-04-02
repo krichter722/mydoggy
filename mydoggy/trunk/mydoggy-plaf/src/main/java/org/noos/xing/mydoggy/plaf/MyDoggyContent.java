@@ -297,4 +297,9 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
     public String toString() {
         return id;
     }
+
+    public void cleanup() {
+        super.cleanup();
+        contentManager = null;
+    }
 }

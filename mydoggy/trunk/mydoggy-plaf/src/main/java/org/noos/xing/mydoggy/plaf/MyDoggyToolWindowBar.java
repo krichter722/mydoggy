@@ -800,8 +800,15 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
                             animate = true;
                             content = null;
                         } else if (multiSplitDockableContainer.getContentCount() == 1) {
+                            // Remove last dockable on container...
                             animate = false;
+                            
+                            MultiSplitDockableContainer.DockableEntry dockableEntry = multiSplitDockableContainer.getContents().get(0);
                             content = multiSplitDockableContainer.getContents().get(0).getComponent();
+                            multiSplitDockableContainer.removeDockable(dockableEntry.getDockable(),
+                                                                       !visible && !manager.isShowingGroup());
+
+                            // Put the component on the new location...
                             int temp = getSplitDividerLocation();
                             setSplitPaneContent(content);
                             setSplitDividerLocation(temp);

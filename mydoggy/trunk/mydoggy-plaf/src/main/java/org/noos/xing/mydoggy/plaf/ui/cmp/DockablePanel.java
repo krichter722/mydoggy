@@ -109,8 +109,9 @@ public class DockablePanel extends JPanel implements PropertyChangeListener,
 
     public void dockableRemoved(DockableManagerEvent event) {
         if (event.getDockable() == dockable) {
-            this.dockable.removePropertyChangeListener(this);
-            this.dockable = null;
+            dockable.getDockableManager().addDockableManagerListener(this);
+            dockable.removePropertyChangeListener(this);
+            dockable = null;
 
             if (flashingTimer != null)
                 flashingTimer.stop();

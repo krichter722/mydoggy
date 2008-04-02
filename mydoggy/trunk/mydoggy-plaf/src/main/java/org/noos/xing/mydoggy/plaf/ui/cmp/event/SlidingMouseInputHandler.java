@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp.event;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.util.cleaner.Cleaner;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
@@ -12,7 +13,7 @@ import java.awt.event.MouseEvent;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class SlidingMouseInputHandler implements MouseInputListener {
+public class SlidingMouseInputHandler implements MouseInputListener, Cleaner {
     static final int BORDER_DRAG_THICKNESS = 5;
     static final int CORNER_DRAG_WIDTH = 16;
 
@@ -45,20 +46,28 @@ public class SlidingMouseInputHandler implements MouseInputListener {
             0, 0, 0, 0, 0
     };
 
-    private Cursor lastCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
+    protected Cursor lastCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
 
-    private int dragCursor;
-    private int dragOffsetX;
-    private int dragOffsetY;
-    private int dragWidth;
-    private int dragHeight;
+    protected int dragCursor;
+    protected int dragOffsetX;
+    protected int dragOffsetY;
+    protected int dragWidth;
+    protected int dragHeight;
 
-    private ToolWindowDescriptor descriptor;
-    private ToolWindow toolWindow;
+    protected ToolWindowDescriptor descriptor;
+    protected ToolWindow toolWindow;
+
 
     public SlidingMouseInputHandler(ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
+        descriptor.getCleaner().addCleaner(this);
+    }
+
+
+    public void cleanup() {
+        descriptor = null;
+        toolWindow = null;        
     }
 
     public void mousePressed(MouseEvent ev) {
@@ -224,7 +233,7 @@ public class SlidingMouseInputHandler implements MouseInputListener {
     }
 
 
-    private void adjust(Rectangle bounds, Dimension min, int deltaX, int deltaY, int deltaWidth, int deltaHeight) {
+    protected void adjust(Rectangle bounds, Dimension min, int deltaX, int deltaY, int deltaWidth, int deltaHeight) {
         bounds.x += deltaX;
         bounds.y += deltaY;
         bounds.width += deltaWidth;
@@ -247,7 +256,7 @@ public class SlidingMouseInputHandler implements MouseInputListener {
         }
     }
 
-    private int calculateCorner(Component c, int x, int y) {
+    protected int calculateCorner(Component c, int x, int y) {
         int xPosition = calculatePosition(x, c.getWidth());
         int yPosition = calculatePosition(y, c.getHeight());
 
@@ -257,7 +266,7 @@ public class SlidingMouseInputHandler implements MouseInputListener {
         return yPosition * 5 + xPosition;
     }
 
-    private int getCursor(Component c, int corner) {
+    protected int getCursor(Component c, int corner) {
         if (corner == -1)
             return 0;
 
@@ -290,7 +299,7 @@ public class SlidingMouseInputHandler implements MouseInputListener {
         return 0;
     }
 
-    private int calculatePosition(int spot, int width) {
+    protected int calculatePosition(int spot, int width) {
         if (spot < BORDER_DRAG_THICKNESS)
             return 0;
 
