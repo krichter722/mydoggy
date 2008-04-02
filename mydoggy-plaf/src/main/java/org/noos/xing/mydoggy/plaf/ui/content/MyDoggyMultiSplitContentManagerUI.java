@@ -2,7 +2,6 @@ package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
@@ -205,7 +204,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         }
 
         removeListeners();
-        
+
         // Now you can consider this manager uninstalled
         this.installed = false;
     }
@@ -229,30 +228,25 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
     public void removeContent(PlafContent content) {
         try {
-            // TODO: where should i add these checks?... Check content status
-            if (content.isDetached())
-                content.setDetached(false);
-            if (content.isMaximized())
-                content.setMaximized(false);
-            if (content.isMinimzed())
-                content.setMinimzed(false);
-            if (content.isFlashing())
-                content.setFlashing(false);
-
-            // deselecte the content
-            content.setSelected(false);
-
-            // Remove
-            content.getContentUI().removePropertyChangeListener(contentUIListener);
-
-            valueAdjusting = true;
-            try {
-                // Remove from multiSplitContainer
-                multiSplitContainer.removeDockable(content);
-            } finally {
-                valueAdjusting = false;
+            if (content.isDetached()) {
+                propertyChange(new PropertyChangeEvent(content, "detached.dispose", true, false));
+            } else if (content.isMinimzed()) {
+                toolWindowManager.getDockableDescriptor(content.getId()).setAvailable(false);
+            } else {
+                // Remove component
+                valueAdjusting = true;
+                try {
+                    // Remove from multiSplitContainer
+                    multiSplitContainer.removeDockable(content);
+                } finally {
+                    valueAdjusting = false;
+                }
             }
         } finally {
+            // Remove listeners
+            content.getContentUI().removePropertyChangeListener(contentUIListener);
+            content.removePlafPropertyChangeListener(this);
+
             // Clean desccriptor for minimization
             toolWindowManager.removeDockableDescriptor(content.getId());
 
@@ -359,6 +353,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
     // TODO: do better...
     FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener;
+
     protected void initListeners() {
         if (internalPropertyChangeSupport == null) {
             /// Init just once
@@ -372,7 +367,9 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             internalPropertyChangeSupport.addPropertyChangeListener("foreground", new ForegroundListener());
             internalPropertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
             internalPropertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
-            internalPropertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
+            DetachedListener detachedListener = new DetachedListener();
+            internalPropertyChangeSupport.addPropertyChangeListener("detached.dispose", detachedListener);
+            internalPropertyChangeSupport.addPropertyChangeListener("detached", detachedListener);
             MaximizedListener maximizedListener = new MaximizedListener();
             internalPropertyChangeSupport.addPropertyChangeListener("maximized.before", maximizedListener);
             internalPropertyChangeSupport.addPropertyChangeListener("maximized", maximizedListener);
@@ -726,49 +723,56 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             boolean oldValue = (Boolean) evt.getOldValue();
             boolean newValue = (Boolean) evt.getNewValue();
 
-            if (!oldValue && newValue) {
-                valueAdjusting = true;
-                try {
-                    ContentUI contentUI = getContentUI(content);
-
-                    Rectangle inBounds = multiSplitContainer.getBoundsRelativeToScreen(content);
-
-                    // Remove from multiSpli and store constraint
-                    detachedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
-
-                    // Setup dialog
-                    Window dialog;
-                    if (contentUI.isAddToTaskBarWhenDetached()) {
-                        dialog = new ContentFrame(resourceManager,
-                                                  content, contentUI,
-                                                  parentFrame, inBounds);
-                    } else {
-                        dialog = new ContentDialog(resourceManager,
-                                                   content, contentUI,
-                                                   parentFrame, inBounds);
-                    }
-                    dialog.addWindowFocusListener(new ContentDialogFocusListener(content));
-                    dialog.toFront();
-                    dialog.setVisible(true);
-
-                    componentInFocusRequest = SwingUtil.findAndRequestFocus(dialog);
-                } finally {
-                    valueAdjusting = false;
-                }
-            } else if (oldValue && !newValue) {
+            if ("detached.dispose".equals(evt.getPropertyName())) {
                 Window window = SwingUtilities.windowForComponent(content.getComponent());
                 window.setVisible(false);
                 window.dispose();
+                detachedContentUIMap.remove(content);
+            } else {
+                if (!oldValue && newValue) {
+                    valueAdjusting = true;
+                    try {
+                        ContentUI contentUI = getContentUI(content);
 
-                contentValueAdjusting = true;
-                try {
-                    addUIForContent(content, detachedContentUIMap.get(content));
-                    content.setSelected(true);
+                        Rectangle inBounds = multiSplitContainer.getBoundsRelativeToScreen(content);
 
-                    componentInFocusRequest = SwingUtil.findAndRequestFocus(content.getComponent());
-                } finally {
-                    contentValueAdjusting = false;
-                    detachedContentUIMap.remove(content);
+                        // Remove from multiSpli and store constraint
+                        detachedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
+
+                        // Setup dialog
+                        Window dialog;
+                        if (contentUI.isAddToTaskBarWhenDetached()) {
+                            dialog = new ContentFrame(resourceManager,
+                                                      content, contentUI,
+                                                      parentFrame, inBounds);
+                        } else {
+                            dialog = new ContentDialog(resourceManager,
+                                                       content, contentUI,
+                                                       parentFrame, inBounds);
+                        }
+                        dialog.addWindowFocusListener(new ContentDialogFocusListener(content));
+                        dialog.toFront();
+                        dialog.setVisible(true);
+
+                        componentInFocusRequest = SwingUtil.findAndRequestFocus(dialog);
+                    } finally {
+                        valueAdjusting = false;
+                    }
+                } else if (oldValue && !newValue) {
+                    Window window = SwingUtilities.windowForComponent(content.getComponent());
+                    window.setVisible(false);
+                    window.dispose();
+
+                    contentValueAdjusting = true;
+                    try {
+                        addUIForContent(content, detachedContentUIMap.get(content));
+                        content.setSelected(true);
+
+                        componentInFocusRequest = SwingUtil.findAndRequestFocus(content.getComponent());
+                    } finally {
+                        contentValueAdjusting = false;
+                        detachedContentUIMap.remove(content);
+                    }
                 }
             }
         }
@@ -839,26 +843,18 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
                 DockableDescriptor descriptor = toolWindowManager.getDockableDescriptor(content.getId());
                 if (descriptor == null)
-                    descriptor = new ContentDescriptor(toolWindowManager, content);
+                    descriptor = toolWindowManager.createDescriptor(content);
 
                 // Remove content
                 minimizedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
 
                 // Put on bar
-                toolWindowManager.propertyChange(
-                        new UserPropertyChangeEvent(descriptor, "available", false, true,
-                                                    new Object[]{-1, false}
-                        )
-                );
+                descriptor.setAvailable(true);
             } else {
                 DockableDescriptor descriptor = toolWindowManager.getDockableDescriptor(content.getId());
 
                 // Remove from bar
-                toolWindowManager.propertyChange(
-                        new UserPropertyChangeEvent(descriptor, "available", true, false,
-                                                    new Object[]{-1, false}
-                        )
-                );
+                descriptor.setAvailable(false);
 
                 contentValueAdjusting = true;
                 try {

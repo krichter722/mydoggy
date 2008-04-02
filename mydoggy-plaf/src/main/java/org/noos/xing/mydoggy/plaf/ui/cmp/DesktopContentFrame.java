@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.ContentManagerUI;
 import org.noos.xing.mydoggy.DesktopContentUI;
 import org.noos.xing.mydoggy.DockableManagerListener;
 import org.noos.xing.mydoggy.event.DockableManagerEvent;
@@ -24,13 +25,14 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
     protected boolean minimizable;
 
 
-    public DesktopContentFrame(Content content,
-                               String title,
-                               boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
-        // TODO: rewrite constructor...
-        super(title, resizable, closable, maximizable, iconifiable);
+    public DesktopContentFrame(ContentManagerUI contentManagerUI, Content content, String title) {
+        super(title, true, true, true, true);
         this.content = content;
-        this.detachable = true;
+
+        this.closable = contentManagerUI.isCloseable();
+        this.detachable = contentManagerUI.isDetachable();
+        this.minimizable = contentManagerUI.isMinimizable();
+
         this.transparentMode = true;
         this.transparentRatio = 0.8f;
         this.transparentDelay = 1000;

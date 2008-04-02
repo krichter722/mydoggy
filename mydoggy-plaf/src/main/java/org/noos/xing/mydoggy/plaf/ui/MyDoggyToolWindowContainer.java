@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
 import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -17,9 +16,8 @@ public abstract class MyDoggyToolWindowContainer implements ToolWindowContainer 
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
 
-    // TODO: introduce interfacess...
-    protected ToolWindowTabPanel titleBarTabs;
     protected Component titleBar;
+    protected TitleBarTabs titleBarTabs;
     protected TitleBarButtons titleBarButtons;
 
 

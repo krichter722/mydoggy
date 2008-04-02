@@ -4,13 +4,13 @@ import info.clearthought.layout.TableLayout;
 import org.noos.common.Question;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
+import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
+import org.noos.xing.mydoggy.plaf.support.CleanablePropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
-import org.noos.xing.mydoggy.plaf.ui.util.CleanablePropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.plaf.ui.util.cleaner.Cleaner;
 
 import javax.swing.*;
 import java.awt.*;
@@ -89,10 +89,6 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
     }
 
 
-    public void removePropertyChangeListener(String property, PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener(property, listener);
-    }
-
     public ToolWindowDescriptor getToolWindowDescriptor() {
         return descriptor;
     }
@@ -105,7 +101,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         return titleBarButtons;
     }
 
-    public ToolWindowTabPanel getTitleBarTabs() {
+    public TitleBarTabs getTitleBarTabs() {
         return titleBarTabs;
     }
 
@@ -177,7 +173,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
         // Set TitleBar content
         titleBar.add(titleBarTabs, "1,1");
-        titleBar.add(titleBarButtons.getButtonsContainer(), "3,1,right,c");
+        titleBar.add(titleBarButtons.getComponent(), "3,1,right,c");
 
         // Set Component container
         componentContainer = new JPanel();
@@ -194,7 +190,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
             titleBarButtons.getFocusable().setFocusable(true);
             focusRequester = titleBarButtons.getFocusable();
         }
-        titleBarButtons.toolWindowTypeChanged(ToolWindowType.DOCKED);
+        titleBarButtons.setType(ToolWindowType.DOCKED);
     }
 
     protected void initListeners() {
@@ -759,7 +755,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
                 return;
 
             if (evt.getNewValue() == ToolWindowType.DOCKED) {
-                titleBarButtons.toolWindowTypeChanged(ToolWindowType.DOCKED);
+                titleBarButtons.setType(ToolWindowType.DOCKED);
             }
 
             if (evt.getOldValue() == ToolWindowType.EXTERN) {

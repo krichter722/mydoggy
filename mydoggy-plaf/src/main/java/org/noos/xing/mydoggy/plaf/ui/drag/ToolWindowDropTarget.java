@@ -176,14 +176,15 @@ public class ToolWindowDropTarget extends DropTarget {
                                                 }
                                                 break;
                                         }
+                                        toolWindow.setActive(true);
                                     } else {
                                         if (onToolWindow != null && toolWindow != onToolWindow) {
                                             onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
                                         } else {
                                             toolWindow.aggregate();
+                                            toolWindow.setActive(true);
                                         }
                                     }
-                                    toolWindow.setActive(true);
                                 } finally {
                                     toolWindow.setAggregateMode(oldAggregateMode);
                                 }
@@ -245,13 +246,15 @@ public class ToolWindowDropTarget extends DropTarget {
                                                             toolWindow.aggregate(AggregationPosition.TOP);
                                                         break;
                                                 }
+                                                toolWindow.setActive(true);
                                             } else {
                                                 if (onToolWindow != null) {
                                                     onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
-                                                } else
+                                                } else {
                                                     toolWindow.aggregate();
+                                                    toolWindow.setActive(true);
+                                                }
                                             }
-                                            toolWindow.setActive(true);
                                         } finally {
                                             toolWindow.setAggregateMode(oldAggregateMode);
                                         }

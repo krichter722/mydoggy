@@ -6,4 +6,5 @@ package org.noos.xing.mydoggy.plaf.ui.drag;
 public interface DragGestureInitiator {
 
     void setDragGesture(DragGesture dragGesture);
+    
 }

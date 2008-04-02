@@ -7,12 +7,10 @@ import java.awt.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public interface TitleBarButtons {
+public interface TitleBarButtons extends ComponentWrapper {
 
     Component getFocusable();
 
-    Component getButtonsContainer();
-
-    void toolWindowTypeChanged(ToolWindowType type);
+    void setType(ToolWindowType type);
 
 }

@@ -3,9 +3,9 @@ package org.noos.xing.mydoggy.plaf;
 import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowTab;
+import org.noos.xing.mydoggy.plaf.cleaner.CleanerAggregator;
+import org.noos.xing.mydoggy.plaf.cleaner.DefaultCleanerAggregator;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
-import org.noos.xing.mydoggy.plaf.ui.util.cleaner.CleanerAggregator;
-import org.noos.xing.mydoggy.plaf.ui.util.cleaner.DefaultCleanerAggregator;
 
 import javax.swing.*;
 import java.awt.*;

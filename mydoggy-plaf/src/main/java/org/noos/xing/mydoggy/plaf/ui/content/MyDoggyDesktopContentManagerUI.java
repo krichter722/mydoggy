@@ -98,7 +98,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
             // Import properties from the old ContentManagerUI
             this.closeable = oldContentManagerUI.isCloseable();
             this.detachable = oldContentManagerUI.isDetachable();
-            this.minimizable = oldContentManagerUI.isMinimizable(); 
+            this.minimizable = oldContentManagerUI.isMinimizable();
         }
         // Import properties from the ContentManager
         setPopupMenu(contentManager.getPopupMenu());
@@ -178,29 +178,38 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
     }
 
     public void removeContent(PlafContent content) {
-        // If the content is detached, reattach it
-        if (content.isDetached())
-            content.setDetached(false);
-        if (content.isFlashing())
-            content.setFlashing(false);
-
-        content.setSelected(false);
-
-        // Remove from desktopPane
-        for (JInternalFrame internalFrame : desktopPane.getAllFrames()) {
-            if (internalFrame.getContentPane().getComponent(0) == content.getComponent()) {
-                valueAdjusting = true;
-                try {
-                    desktopPane.remove(internalFrame);
-                } finally {
-                    valueAdjusting = false;
+        try {
+            if (content.isDetached()) {
+                propertyChange(new PropertyChangeEvent(content, "detached.dispose", true, false));
+            } else if (content.isMinimzed()) {
+                toolWindowManager.getDockableDescriptor(content.getId()).setAvailable(false);
+            } else {
+                // Remove component
+                for (JInternalFrame internalFrame : desktopPane.getAllFrames()) {
+                    if (internalFrame.getContentPane().getComponent(0) == content.getComponent()) {
+                        valueAdjusting = true;
+                        try {
+                            desktopPane.remove(internalFrame);
+                        } finally {
+                            valueAdjusting = false;
+                        }
+                        break;
+                    }
                 }
-                break;
-            }
-        }
 
-        // Remove the plaf listener
-        content.removePlafPropertyChangeListener(this);
+            }
+        } finally {
+            // Remove listeners
+            content.getContentUI().removePropertyChangeListener(contentUIListener);
+            content.removePlafPropertyChangeListener(this);
+
+            // Clean desccriptor for minimization
+            toolWindowManager.removeDockableDescriptor(content.getId());
+
+            // Remove the contentUI part
+            if (lastSelected == content)
+                lastSelected = null;
+        }
     }
 
     public JPopupMenu getPopupMenu() {
@@ -225,24 +234,22 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                 );
         } else {
             JInternalFrame internalFrame = getFrameByContent(content);
-            if (internalFrame != null)
-	    {
-			    try {
-				valueAdjusting = true;
+            if (internalFrame != null) {
+                try {
+                    valueAdjusting = true;
 
-				internalFrame.setSelected(selected);
-				lastSelected = content == lastSelected ? null : content;
+                    internalFrame.setSelected(selected);
+                    lastSelected = content == lastSelected ? null : content;
 
-				valueAdjusting = false;
-			    } catch (PropertyVetoException e) {
-				e.printStackTrace();
-			    }
-	    }
-	else if (selected)
-               	throw new IllegalStateException("Invalid content ui state.");
-	else  if (content == lastSelected)
-               		 lastSelected = null;
-	}
+                    valueAdjusting = false;
+                } catch (PropertyVetoException e) {
+                    e.printStackTrace();
+                }
+            } else if (selected)
+                throw new IllegalStateException("Invalid content ui state.");
+            else if (content == lastSelected)
+                lastSelected = null;
+        }
     }
 
     public void updateUI() {
@@ -284,7 +291,9 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
             internalPropertyChangeSupport.addPropertyChangeListener("popupMenu", new PopupMenuListener());
             internalPropertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
             internalPropertyChangeSupport.addPropertyChangeListener("toolTipText", new ToolTipTextListener());
-            internalPropertyChangeSupport.addPropertyChangeListener("detached", new DetachedListener());
+            DetachedListener detachedListener = new DetachedListener();
+            internalPropertyChangeSupport.addPropertyChangeListener("detached.dispose", detachedListener);
+            internalPropertyChangeSupport.addPropertyChangeListener("detached", detachedListener);
             MaximizedListener maximizedListener = new MaximizedListener();
             internalPropertyChangeSupport.addPropertyChangeListener("maximized.before", maximizedListener);
             internalPropertyChangeSupport.addPropertyChangeListener("maximized", maximizedListener);
@@ -308,8 +317,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         JInternalFrame internalFrame = (JInternalFrame) detachedContentUIMap.get(content);
 
         if (internalFrame == null) {
-            // TODO: import minimizable from contentmanagerUI...
-            internalFrame = new DesktopContentFrame(content, content.getTitle(), true, true, true, true);
+            internalFrame = new DesktopContentFrame(this, content, content.getTitle());
             internalFrame.setFrameIcon(content.getIcon());
             internalFrame.setClosable(closeable);
             ((DesktopContentFrame) internalFrame).setDetachable(detachable);
@@ -352,7 +360,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
             internalFrame.addInternalFrameListener(new InternalFrameAdapter() {
                 public void internalFrameClosed(InternalFrameEvent e) {
                     try {
-                        contentManager.removeContent(((DesktopContentFrame)e.getInternalFrame()).getContent());
+                        contentManager.removeContent(((DesktopContentFrame) e.getInternalFrame()).getContent());
                     } catch (Exception ignore) {
                         ignore.printStackTrace();
                     }
@@ -549,7 +557,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                     if (tmpWorkspace != null) {
                         toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
                                                                          resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
-                                                                                                       PersistenceDelegate.MergePolicy.UNION));
+                                                                                                   PersistenceDelegate.MergePolicy.UNION));
                         try {
                             ((DesktopContentFrame) getContentUI(content)).setMaximum(false);
                         } catch (PropertyVetoException e) {
@@ -571,6 +579,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
     protected class MinimizedListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
+            // TODO: update
             Content content = (Content) evt.getSource();
             getContentUI(content).setIconified((Boolean) evt.getNewValue());
         }
@@ -587,45 +596,52 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
             Content content = (Content) evt.getSource();
             boolean oldValue = (Boolean) evt.getOldValue();
             boolean newValue = (Boolean) evt.getNewValue();
-
-            if (!oldValue && newValue) {
-                ContentUI contentUI = getContentUI(content);
-
-                // Remove the internal frame
-                JInternalFrame internalFrame = getFrameByContent(content);
-
-                Rectangle inBounds;
-                if (internalFrame != null) {
-                    inBounds = toolWindowManager.getBoundsToScreen(internalFrame.getBounds(),
-                                                                             desktopPane);
-
-                    desktopPane.remove(internalFrame);
-                    detachedContentUIMap.put(content, (DesktopContentUI) internalFrame);
-                } else
-                    throw new IllegalStateException("Invalid Content : " + content);
-
-                // Setup dialog
-                Window dialog;
-                if (contentUI.isAddToTaskBarWhenDetached()) {
-                    dialog = new ContentFrame(resourceManager, content, contentUI,
-                                              parentFrame, inBounds);
-                } else {
-                    dialog = new ContentDialog(resourceManager, content, contentUI,
-                                               parentFrame, inBounds);
-                }
-                dialog.addWindowFocusListener(new ContentDialogFocusListener(content));
-                dialog.toFront();
-                dialog.setVisible(true);
-
-                SwingUtil.repaint(desktopPane);
-                SwingUtil.requestFocus(dialog);
-            } else if (oldValue && !newValue) {
+            
+            if ("detached.dispose".equals(evt.getPropertyName())) {
                 Window window = SwingUtilities.windowForComponent(content.getComponent());
                 window.setVisible(false);
                 window.dispose();
+                detachedContentUIMap.remove(content);
+            } else {
+                if (!oldValue && newValue) {
+                    ContentUI contentUI = getContentUI(content);
 
-                addUIForContent(content);
-                content.setSelected(true);
+                    // Remove the internal frame
+                    JInternalFrame internalFrame = getFrameByContent(content);
+
+                    Rectangle inBounds;
+                    if (internalFrame != null) {
+                        inBounds = toolWindowManager.getBoundsToScreen(internalFrame.getBounds(),
+                                                                       desktopPane);
+
+                        desktopPane.remove(internalFrame);
+                        detachedContentUIMap.put(content, (DesktopContentUI) internalFrame);
+                    } else
+                        throw new IllegalStateException("Invalid Content : " + content);
+
+                    // Setup dialog
+                    Window dialog;
+                    if (contentUI.isAddToTaskBarWhenDetached()) {
+                        dialog = new ContentFrame(resourceManager, content, contentUI,
+                                                  parentFrame, inBounds);
+                    } else {
+                        dialog = new ContentDialog(resourceManager, content, contentUI,
+                                                   parentFrame, inBounds);
+                    }
+                    dialog.addWindowFocusListener(new ContentDialogFocusListener(content));
+                    dialog.toFront();
+                    dialog.setVisible(true);
+
+                    SwingUtil.repaint(desktopPane);
+                    SwingUtil.requestFocus(dialog);
+                } else if (oldValue && !newValue) {
+                    Window window = SwingUtilities.windowForComponent(content.getComponent());
+                    window.setVisible(false);
+                    window.dispose();
+
+                    addUIForContent(content);
+                    content.setSelected(true);
+                }
             }
         }
 

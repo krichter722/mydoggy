@@ -4,9 +4,9 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.plaf.ui.util.cleaner.Cleaner;
 
 import javax.swing.*;
 import javax.swing.event.SwingPropertyChangeSupport;
@@ -56,11 +56,11 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
         return focusable;
     }
 
-    public Component getButtonsContainer() {
+    public Component getComponent() {
         return this;
     }
 
-    public void toolWindowTypeChanged(ToolWindowType type) {
+    public void setType(ToolWindowType type) {
         propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "type", null, type));
     }
 
@@ -439,10 +439,10 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
                 case FLOATING_LIVE:
                     putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.FLOATING));
                     putValue(Action.SHORT_DESCRIPTION, resourceManager.getString("@@tool.tooltip.float"));
-                    setVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
+                    setVisible(descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isEnabled());
                     break;
                 case SLIDING:
-                    setVisible(((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).isEnabled());
+                    setVisible(descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isEnabled());
                     break;
                 case FLOATING:
                 case FLOATING_FREE:

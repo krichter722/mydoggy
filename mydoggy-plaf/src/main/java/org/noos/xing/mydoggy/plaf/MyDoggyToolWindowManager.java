@@ -20,6 +20,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ShortcutProcessor;
+import org.noos.xing.mydoggy.plaf.ui.content.ContentDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyTabbedContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.drag.ContentManagerDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowCommonMultiSplitDropTarget;
@@ -984,6 +985,34 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         getBar(RIGHT).setTempShowed(tempShowed);
         getBar(TOP).setTempShowed(tempShowed);
         getBar(BOTTOM).setTempShowed(tempShowed);
+    }
+
+    public DockableDescriptor createDescriptor(Dockable dockable) {
+        if (dockable instanceof ToolWindow)
+            return new ToolWindowDescriptor(this, (MyDoggyToolWindow) dockable);
+        else if (dockable instanceof Content)
+            return new ContentDescriptor(this, (Content) dockable);
+        throw new IllegalArgumentException("Invalid dockable. [dockable : " + dockable + "]");       
+    }
+
+    public Dockable getDockableWrapper(Dockable dockable) {
+        // Search for a tab...
+        for (ToolWindow toolWindow : getToolWindows()) {
+            for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+                if (tab.getDockableDelegator() == dockable) {
+                    return tab;
+                }
+            }
+        }
+
+        // Search for a content...
+        for (Content content : contentManager.getContents()) {
+            if (content.getDockableDelegator() == dockable) {
+                return content;
+            }
+        }
+
+        return null;
     }
 
 
