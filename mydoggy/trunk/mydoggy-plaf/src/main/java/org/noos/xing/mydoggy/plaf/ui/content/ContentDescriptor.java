@@ -1,10 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.Content;
-import org.noos.xing.mydoggy.ContentManagerListener;
 import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.event.ContentManagerEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.CustomDockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
@@ -23,8 +21,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ContentDescriptor extends CustomDockableDescriptor implements PropertyChangeListener,
-                                                                           ContentManagerListener {
+public class ContentDescriptor extends CustomDockableDescriptor implements PropertyChangeListener {
     protected Content content;
 
 
@@ -34,26 +31,11 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
         this.anchor = ToolWindowAnchor.LEFT;
 
         content.addPropertyChangeListener(this);
-        manager.getContentManager().addContentManagerListener(this);
     }
 
 
     public void propertyChange(PropertyChangeEvent evt) {
         updateRepresentativeAnchor();
-    }
-
-    public void contentAdded(ContentManagerEvent event) {
-    }
-
-    public void contentRemoved(ContentManagerEvent event) {
-        if (event.getContent() == content) {
-            content.removePropertyChangeListener(this);
-            manager.getContentManager().removeContentManagerListener(this);
-            content = null;
-        }
-    }
-
-    public void contentSelected(ContentManagerEvent event) {
     }
 
     public DockableType getDockableType() {
@@ -150,7 +132,6 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
         getCleaner().cleanup();
 
         content.removePropertyChangeListener(this);
-        manager.getContentManager().removeContentManagerListener(this);
 
         content = null;
         manager = null;

@@ -9,7 +9,7 @@ public interface ViewContext extends Serializable {
 
     Object get(Object key);
 
-    <T> T get(Class<T> a);
+    <T> T get(Class<T> key);
 
     Object put(Object key, Object value);
 

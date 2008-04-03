@@ -27,8 +27,8 @@ public class MapViewContext implements ViewContext {
         return context.get(key);
     }
 
-    public <T> T get(Class<T> a) {
-        return (T) context.get(a);
+    public <T> T get(Class<T> key) {
+        return (T) context.get(key);
     }
 
     public Object put(Object key, Object value) {

@@ -38,6 +38,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
     protected JPopupMenu popupMenu;
     protected Component componentInFocusRequest;
 
+    protected FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener;
+
 
     public MyDoggyMultiSplitContentManagerUI() {
         setContentManagerUI(this);
@@ -274,7 +276,10 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
             if (lastSelected != null)
                 lastSelected.setSelected(false);
 
-            if (content.isDetached()) {
+            if (content.isMinimzed()) {
+                content.setMinimzed(false);                
+                content.setSelected(true);
+            } else if (content.isDetached()) {
                 // If the content is detached request the focus for owner window
                 SwingUtil.requestFocus(
                         SwingUtilities.windowForComponent(content.getComponent())
@@ -351,9 +356,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         }
     }
 
-    // TODO: do better...
-    FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener;
-
     protected void initListeners() {
         if (internalPropertyChangeSupport == null) {
             /// Init just once
@@ -377,6 +379,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
             contentUIListener = new ContentUIListener();
         }
+
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(
                 "focusOwner", focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener());
 
@@ -456,6 +459,9 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
+            if (content.isMinimzed())
+                return;
+
             if (content.isDetached()) {
                 RootPaneContainer rootPaneContainer = (RootPaneContainer) SwingUtilities.windowForComponent(content.getComponent());
                 Container container = rootPaneContainer.getContentPane();
@@ -485,6 +491,9 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
+            if (content.isMinimzed())
+                return;
+
             if (!content.isDetached()) {
                 for (Component c : multiSplitContainer.getTabbedComponents()) {
                     if (c instanceof JTabbedContentPane) {
@@ -507,6 +516,9 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
+            if (content.isMinimzed())
+                return;
+
             if (!content.isDetached()) {
                 for (Component c : multiSplitContainer.getTabbedComponents()) {
                     if (c instanceof JTabbedContentPane) {
@@ -528,6 +540,9 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
     protected class MnemonicListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
+
+            if (content.isMinimzed())
+                return;
 
             if (!content.isDetached()) {
                 for (Component c : multiSplitContainer.getTabbedComponents()) {
@@ -555,6 +570,9 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
+            if (content.isMinimzed())
+                return;
+
             if (content.isDetached()) {
                 Window anchestor = SwingUtilities.windowForComponent(content.getComponent());
                 anchestor.setEnabled((Boolean) evt.getNewValue());
@@ -580,6 +598,9 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
+            if (content.isMinimzed())
+                return;
+
             if (!content.isDetached()) {
                 for (Component c : multiSplitContainer.getTabbedComponents()) {
                     if (c instanceof JTabbedContentPane) {
@@ -602,7 +623,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
-            // TODO: add this check
             if (content.isMinimzed())
                 return;
 
@@ -629,6 +649,9 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
     protected class ToolTipTextListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
+
+            if (content.isMinimzed())
+                return;
 
             if (!content.isDetached()) {
                 for (Component c : multiSplitContainer.getTabbedComponents()) {

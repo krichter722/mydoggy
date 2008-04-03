@@ -1138,13 +1138,11 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
                     case LEFT:
                     case RIGHT:
                         len = cmp.getHeight();
-                        System.out.println("lenH = " + len);
                         layout.setRow(layout.getConstraints(cmp).row1, 0);
                         break;
                     case TOP:
                     case BOTTOM:
                         len = cmp.getWidth();
-                        System.out.println("lenW = " + len);
                         layout.setColumn(layout.getConstraints(cmp).col1, 0);
                         break;
                 }
@@ -1158,14 +1156,10 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
                         switch (anchor) {
                             case LEFT:
                             case RIGHT:
-                                System.out.println("layout.getConstraints(cmp).row1 = " + layout.getConstraints(cmp).row1);
-                                System.out.println("len = " + len);
                                 layout.setRow(layout.getConstraints(cmp).row1, len);
                                 break;
                             case TOP:
                             case BOTTOM:
-                                System.out.println("layout.getConstraints(cmp).col1 = " + layout.getConstraints(cmp).col1);
-                                System.out.println("len = " + len);
                                 layout.setColumn(layout.getConstraints(cmp).col1, len);
                                 break;
                         }

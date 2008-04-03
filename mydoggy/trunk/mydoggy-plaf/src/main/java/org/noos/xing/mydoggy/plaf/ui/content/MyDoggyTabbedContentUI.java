@@ -25,7 +25,9 @@ public class MyDoggyTabbedContentUI extends PropertyChangeEventSource implements
     protected boolean minimizable;
     
 
-    public MyDoggyTabbedContentUI(ContentManagerUI contentManagerUI, JTabbedContentPane tabbedContentPane, Content content) {
+    public MyDoggyTabbedContentUI(ContentManagerUI contentManagerUI,
+                                  JTabbedContentPane tabbedContentPane,
+                                  Content content) {
         this.tabbedContentPane = tabbedContentPane;
         this.content = content;
         this.closable = contentManagerUI.isCloseable();
