@@ -20,7 +20,7 @@ public final class ContentsTableModel extends DefaultTableModel implements Prope
         this.windowManager = windowManager;
 
         setColumnIdentifiers(new Object[]{
-                "Title", "Enabled", "Selected", "Detached", "Flashing"
+                "Title", "Enabled", "Selected", "Detached", "Flashing", "AddToTaskBar"
         });
         initToolsListeners();
         updateModel();
@@ -51,6 +51,9 @@ public final class ContentsTableModel extends DefaultTableModel implements Prope
             case 4 :
                 windowManager.getContentManager().getContent(row).setFlashing((Boolean) aValue);
                 break;
+            case 5 :
+                windowManager.getContentManager().getContent(row).getContentUI().setAddToTaskBarWhenDetached((Boolean) aValue);
+                break;
         }
     }
 
@@ -66,7 +69,9 @@ public final class ContentsTableModel extends DefaultTableModel implements Prope
                 return windowManager.getContentManager().getContent(row).isDetached();
             case 4 :
                 return windowManager.getContentManager().getContent(row).isFlashing();
-            default:   
+            case 5 :
+                return windowManager.getContentManager().getContent(row).getContentUI().isAddToTaskBarWhenDetached();
+            default:
                 return windowManager.getContentManager().getContent(row);
         }
     }

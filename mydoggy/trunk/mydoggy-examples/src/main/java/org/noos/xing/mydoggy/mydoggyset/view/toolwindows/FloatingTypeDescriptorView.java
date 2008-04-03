@@ -23,7 +23,7 @@ import java.awt.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class FloatingTypeDescriptorView extends ComponentView implements ViewContextChangeListener {
-    private JCheckBox enabledBox, modal, animating, idVisibleOnTitleBar, transparentMode;
+    private JCheckBox enabledBox, modal, animating, idVisibleOnTitleBar, transparentMode, addToTaskBar;
     private JSpinner transparentDelay, transparentRatio;
 
     public FloatingTypeDescriptorView(ViewContext viewContext) {
@@ -84,6 +84,12 @@ public class FloatingTypeDescriptorView extends ComponentView implements ViewCon
                         new ViewContextSource(viewContext, FloatingTypeDescriptor.class),
                         new ToFloatSource(new SpinnerValueSource(transparentRatio)))
         );
+
+        panel.addEntry(3, 1, "addToTaskBar : ", addToTaskBar = new JCheckBox());
+        addToTaskBar.setAction(new DynamicAction(FloatingTypeDescriptor.class,
+                "addToTaskBar",
+                new ViewContextSource(viewContext, FloatingTypeDescriptor.class),
+                new ChecBoxSelectionSource(addToTaskBar)));
 
         return panel;
     }

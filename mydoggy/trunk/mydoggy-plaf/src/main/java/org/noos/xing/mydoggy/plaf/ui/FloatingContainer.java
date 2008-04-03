@@ -30,6 +30,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
     protected FloatingResizeMouseInputHandler resizeMouseInputHandler;
     protected FloatingMoveMouseInputHandler moveMouseInputHandler;
+    protected WindowComponentAdapter windowComponentAdapter;
 
     protected boolean settedListener = false;
     protected boolean valueAdjusting = false;
@@ -54,7 +55,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         if (window != null) {
             window.getWindow().removeMouseMotionListener(resizeMouseInputHandler);
             window.getWindow().removeMouseListener(resizeMouseInputHandler);
-            window.getWindow().dispose(); 
+            window.getWindow().dispose();
         }
 
         titleBarTabs.removeEventDispatcherlListener(moveMouseInputHandler);
@@ -63,7 +64,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         titleBar.removeMouseListener(moveMouseInputHandler);
 
         descriptor.getTypeDescriptor(ToolWindowType.FLOATING).removePropertyChangeListener(this);
-        
+
         // Finalize
         super.cleanup();
     }
@@ -280,9 +281,78 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         });
         addPropertyChangeListener("addToTaskBar", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                // TODO:
-                if (window == null || !window.isVisible()) {
+                if (window.isVisible()) {
+                    ModalWindow oldWindow = window;
+
+                    // Clean
+                    Component focusOwner = oldWindow.getWindow().getFocusOwner();
+                    oldWindow.setVisible(false);
+                    oldWindow.getWindow().removeMouseMotionListener(resizeMouseInputHandler);
+                    oldWindow.getWindow().removeMouseListener(resizeMouseInputHandler);
+                    oldWindow.getWindow().removeComponentListener(windowComponentAdapter);
+
+                    // Init new window
+                    if ((Boolean) evt.getNewValue()) {
+                        window = new JModalFrame(toolWindow,
+                                                 resourceManager,
+                                                 resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
+                                                 null,
+                                                 false);
+                    } else {
+                        window = new JModalWindow(resourceManager,
+                                                  resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
+                                                  null,
+                                                  false);
+                    }
+                    window.setBounds(oldWindow.getBounds());
+                    window.setName("toolWindow.floating.window." + toolWindow.getId());
+                    window.setContentPane(oldWindow.getContentPane());
+                    resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window.getWindow());
+                    moveMouseInputHandler = new FloatingMoveMouseInputHandler(window.getWindow());
+                    window.getWindow().addMouseMotionListener(resizeMouseInputHandler);
+                    window.getWindow().addMouseListener(resizeMouseInputHandler);
+                    window.getWindow().addComponentListener(windowComponentAdapter);
+
+                    // Dispose old
+                    oldWindow.getWindow().dispose();
+
+                    // Show new
+                    window.setVisible(true);
+
+                    if (focusOwner != null)
+                        SwingUtil.requestFocus(focusOwner);
                 } else {
+                    ModalWindow oldWindow = window;
+
+                    // Clean old window
+                    oldWindow.getWindow().removeComponentListener(windowComponentAdapter);
+                    oldWindow.getWindow().removeMouseMotionListener(resizeMouseInputHandler);
+                    oldWindow.getWindow().removeMouseListener(resizeMouseInputHandler);
+
+                    // Prepare for new
+                    if ((Boolean) evt.getNewValue()) {
+                        window = new JModalFrame(toolWindow,
+                                                 resourceManager,
+                                                 resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
+                                                 null,
+                                                 false);
+                    } else {
+                        window = new JModalWindow(resourceManager,
+                                                  resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
+                                                  null,
+                                                  false);
+                    }
+
+                    window.setName("toolWindow.floating.window." + toolWindow.getId());
+                    window.setContentPane(oldWindow.getContentPane());
+                    resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window.getWindow());
+                    moveMouseInputHandler = new FloatingMoveMouseInputHandler(window.getWindow());
+                    window.getWindow().addMouseMotionListener(resizeMouseInputHandler);
+                    window.getWindow().addMouseListener(resizeMouseInputHandler);
+                    window.getWindow().addComponentListener(new WindowComponentAdapter());
+
+                    // Finalize clean
+                    oldWindow.getWindow().dispose();
                 }
             }
         });
@@ -294,7 +364,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window.getWindow());
         moveMouseInputHandler = new FloatingMoveMouseInputHandler(window.getWindow());
 
-        window.getWindow().addComponentListener(new WindowComponentAdapter());
+        window.getWindow().addComponentListener(windowComponentAdapter = new WindowComponentAdapter());
         floatingAnimation.addAnimationListener(new AnimationListener() {
             public void onFinished() {
                 if (assignFocusOnAnimFinished) {
@@ -407,27 +477,27 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         }
 
         public void componentResized(ComponentEvent e) {
-                valueAdjusting = true;
-                try {
-                    ((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).setSize(
-                            window.getWidth(),
-                            window.getHeight()
-                    );
-                } finally {
-                    valueAdjusting = false;
-                }
-            }
-
-            public void componentMoved(ComponentEvent e) {
-                valueAdjusting = true;
-                try {
-                    ((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).setLocation(
-                            window.getX(),
-                            window.getY()
-                    );
-                } finally {
-                    valueAdjusting = false;
-                }
+            valueAdjusting = true;
+            try {
+                ((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).setSize(
+                        window.getWidth(),
+                        window.getHeight()
+                );
+            } finally {
+                valueAdjusting = false;
             }
         }
+
+        public void componentMoved(ComponentEvent e) {
+            valueAdjusting = true;
+            try {
+                ((FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING)).setLocation(
+                        window.getX(),
+                        window.getY()
+                );
+            } finally {
+                valueAdjusting = false;
+            }
+        }
+    }
 }
