@@ -18,6 +18,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
+import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
@@ -624,6 +625,16 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         }
 
         public boolean parse(Element element, Object... args) {
+            try {
+                // TODO: change property...
+                toolWindowManager.putClientProperty("persistence.delegate", this);
+                return parseTree(element, args);
+            } finally {
+                toolWindowManager.putClientProperty("persistence.delegate", null);
+            }
+        }
+
+        public boolean parseTree(Element element, Object... args) {
             ElementParser<Element> elementParser = elementParserMap.get(element.getNodeName());
 
             if (elementParser == null || elementParser.parse(element, args)) {
@@ -634,10 +645,10 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     if (node.getNodeType() == Node.ELEMENT_NODE)
                         parse((Element) node, args);
                 }
-
             }
             return false;
         }
+
 
         protected void populateParserMap() {
             elementParserMap.put("mydoggy", new MyDoggyElementParser());
@@ -708,6 +719,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     }
 
     public class MyDoggyElementParser extends ElementParserAdapter {
+
         public boolean parse(Element element, Object... args) {
             // Validate version
             if (!"1.4.2".equals(element.getAttribute("version")))
@@ -725,6 +737,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             descriptor.setShowUnavailableTools(getBoolean(element, "showUnavailableTools", false));
             return true;
         }
+
     }
 
     public class DividerSizeElementParser extends ElementParserAdapter {
@@ -1058,15 +1071,19 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     public class BarElementParser extends ElementParserAdapter {
 
         public boolean parse(Element element, Object... args) {
-            ToolWindowAnchor anchor = ToolWindowAnchor.valueOf(element.getAttribute("anchor"));
+            final ToolWindowAnchor anchor = ToolWindowAnchor.valueOf(element.getAttribute("anchor"));
 
             Element modelElement = getElement(element, "model");
             if (modelElement != null) {
                 String text = modelElement.getTextContent();
                 XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(text.getBytes()));
-                MultiSplitLayout.Node model = (MultiSplitLayout.Node) decoder.readObject();
+                final MultiSplitLayout.Node model = (MultiSplitLayout.Node) decoder.readObject();
 
-                toolWindowManager.getBar(anchor).getToolsContainer().setModel(model);
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        toolWindowManager.getBar(anchor).getToolsContainer().setModel(model);
+                    }
+                });
             }
 
             return false;
@@ -1081,10 +1098,14 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             if (modelElement != null) {
                 String text = modelElement.getTextContent();
                 XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(text.getBytes()));
-                MultiSplitLayout.Node model = (MultiSplitLayout.Node) decoder.readObject();
+                final MultiSplitLayout.Node model = (MultiSplitLayout.Node) decoder.readObject();
 
-                MultiSplitDockableContainer dockableContainer = (MultiSplitDockableContainer) ((ContentPanel) toolWindowManager.getMainContent()).getComponent();
-                dockableContainer.setModel(model);
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        MultiSplitDockableContainer dockableContainer = (MultiSplitDockableContainer) ((ContentPanel) toolWindowManager.getMainContent()).getComponent();
+                        dockableContainer.setModel(model);
+                    }
+                });
             }
 
             return false;
