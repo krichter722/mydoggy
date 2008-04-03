@@ -78,8 +78,14 @@ public class ContentDialog extends JDialog {
                     SwingUtil.centrePositionOnScreen(this);
                 }
             }
-//            pack();
         }
+    }
+
+    public void dispose() {
+        super.dispose();
+        
+        content = null;
+        contentUI = null;
     }
 
     protected class ContentDialogWindowAdapter extends WindowAdapter {
@@ -91,11 +97,16 @@ public class ContentDialog extends JDialog {
     protected class ContentDialogComponentAdapter extends ComponentAdapter {
 
         public void componentResized(ComponentEvent e) {
-            contentUI.setDetachedBounds(getBounds());
+            if (isActive() && isVisible()) {
+                contentUI.setDetachedBounds(getBounds());
+            }
         }
 
         public void componentMoved(ComponentEvent e) {
-            contentUI.setDetachedBounds(getBounds());
+            if (isActive() && isVisible()) {
+                contentUI.setDetachedBounds(getBounds());
+            }
         }
+
     }
 }

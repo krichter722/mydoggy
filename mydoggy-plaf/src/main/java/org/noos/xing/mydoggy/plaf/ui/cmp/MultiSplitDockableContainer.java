@@ -145,7 +145,7 @@ public class MultiSplitDockableContainer extends JPanel {
                     // The requeste is to add more than one dockable on the same leaf... no need to request a new leaf name
                     addToWrapper(componentWrapper, dockable, aggregationIndexLocation, content);
 
-                    repaintMultiSplit();
+                    repaintMultiSplit(toolWindowManager.getClientProperty("persistence.delegate") !=null);
 
                     rootLeaf.addDockable(dockable.getId());
                 } else {
@@ -406,13 +406,17 @@ public class MultiSplitDockableContainer extends JPanel {
 
             if (storeLayout && oldModel != null) {
                 // Decode stored model
-                MultiSplitLayout.Node decodedModel = decode(oldModel);
-                jumpResetBounds = true;
+                final MultiSplitLayout.Node decodedModel = decode(oldModel);
+//                jumpResetBounds = true;
                 multiSplitPane.getMultiSplitLayout().setFloatingDividers(false);
 
-                setModel(decodedModel);
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        setModel(decodedModel);
+                    }
+                });
             } else
-                repaintMultiSplit();
+                repaintMultiSplit(toolWindowManager.getClientProperty("persistence.delegate") == null);
         }
 
         entries.put(dockable, new DockableEntry(dockable, content, modelId));
@@ -483,7 +487,7 @@ public class MultiSplitDockableContainer extends JPanel {
                             entries.put(dockable, new DockableEntry(dockable, component, null));
 
                             validateModel(multiSplitPaneModelRoot);
-                            repaintMultiSplit();
+                            repaintMultiSplit(toolWindowManager.getClientProperty("persistence.delegate") !=null);
                         }
                     }
 
@@ -762,7 +766,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
             if (!checkModel())
                 System.out.println("Check model fail. removeDockable end");
-            repaintMultiSplit();
+            repaintMultiSplit(toolWindowManager.getClientProperty("persistence.delegate") !=null);
 
             return constraint;
         }
@@ -801,7 +805,7 @@ public class MultiSplitDockableContainer extends JPanel {
     public void setModel(MultiSplitLayout.Node root) {
         if (root == null)
             return;
-        
+
         // Check for contents root
 
         if (root instanceof DockableLeaf) {
@@ -919,6 +923,7 @@ public class MultiSplitDockableContainer extends JPanel {
                     }
                 }
             }
+            
             // Step Two: apply model 2...Isomorphing
             Map<String, Component> newChildMap = new HashMap<String, Component>();
             stack = new Stack<MultiSplitLayout.Split>();
@@ -1205,11 +1210,6 @@ public class MultiSplitDockableContainer extends JPanel {
             }
         }
         return true;
-    }
-
-    protected void repaintMultiSplit() {
-        SwingUtilities.invokeLater(repaintRunnable);
-//        SwingUtilities.invokeLater(new DebugRepaintRunnable(new RuntimeException()));
     }
 
     protected void repaintMultiSplit(boolean resetBounds) {

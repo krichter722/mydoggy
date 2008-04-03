@@ -443,8 +443,12 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         return multiSplitContainer.getModel();
     }
 
-    public void setLayout(Object layout) {
-        multiSplitContainer.setModel((MultiSplitLayout.Node) layout);
+    public void setLayout(final Object layout) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                multiSplitContainer.setModel((MultiSplitLayout.Node) layout);
+            }
+        });
     }
 
 
