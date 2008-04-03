@@ -116,8 +116,10 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
         boolean result = contents.remove(content);
         if (result) {
             try {
+                // Clean internal map
                 contentMap.remove(content.getId());
 
+                // Fire remove event
                 fireContentRemoved(content);
 
                 // Choose next content
@@ -128,10 +130,11 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
                     Dockable delegator = content.getDockableDelegator();
                     if (delegator instanceof ToolWindow) {
                         ToolWindow toolWindow = (ToolWindow) delegator;
-                        toolWindow.setType(ToolWindowType.DOCKED);  // TODO: Remember old type
+                        toolWindow.setType(ToolWindowType.DOCKED);  // TODO (-): Remember old type
                     }
                 }
             } finally {
+                // clean the content
                 ((MyDoggyContent) content).cleanup();
             }
         }

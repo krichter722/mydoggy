@@ -160,6 +160,7 @@ public abstract class MyDoggyContentManagerUI extends PropertyChangeEventSource 
                                                    parentFrame, oldWindow.getBounds());
                     }
 
+                    dialog.setBounds(oldWindow.getBounds());
                     dialog.addWindowFocusListener(new ContentDialogFocusListener(content));
                     dialog.toFront();
 

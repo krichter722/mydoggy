@@ -39,7 +39,7 @@ public class ContentTableView extends ComponentView {
 
         JCheckBox booleanEditor = new JCheckBox();
         booleanEditor.setHorizontalAlignment(SwingConstants.CENTER);
-        for (int i = 1; i < 5; i++) {
+        for (int i = 1; i < 6; i++) {
             contentsTable.getColumnModel().getColumn(i).setCellRenderer(new CheckBoxCellRenderer());
             contentsTable.getColumnModel().getColumn(i).setCellEditor(new DefaultCellEditor(booleanEditor));
         }
