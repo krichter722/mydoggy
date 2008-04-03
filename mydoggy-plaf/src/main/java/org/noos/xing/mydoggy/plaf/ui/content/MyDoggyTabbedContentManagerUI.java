@@ -46,6 +46,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
     protected Component componentInFocusRequest = null;
 
+    protected FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener;
+
 
     public MyDoggyTabbedContentManagerUI() {
         setContentManagerUI(this);
@@ -446,8 +448,6 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         setupActions();
     }
 
-    // TODO: can use cleaner
-    FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener;
 
     protected void initListeners() {
         if (internalPropertyChangeSupport == null) {
@@ -475,7 +475,6 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
         }
 
-        // TODO: attention when keyboard manage change...
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(
                 "focusOwner", focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener());
     }
@@ -824,7 +823,6 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
     }
 
-
     protected class MinimizedListener implements PropertyChangeListener {
         protected Map<Content, Integer> minimizedContentUIMap;
 
@@ -884,6 +882,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         }
 
     }
+
 
     protected class TabbedContentManagerDragGesture extends DragGestureAdapter {
 

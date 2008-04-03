@@ -35,8 +35,6 @@ public class MultiSplitDockableContainer extends JPanel {
     protected MultiSplitPane multiSplitPane;
     protected MultiSplitLayout.Node multiSplitPaneModelRoot;
 
-    protected Runnable repaintRunnable;
-
     protected boolean storeLayout;
     protected boolean useAlwaysContentWrapper;
     protected boolean jumpResetBounds;
@@ -53,7 +51,6 @@ public class MultiSplitDockableContainer extends JPanel {
         this.multiSplitPane.setDividerSize(5);
         this.multiSplitPane.setFocusable(false);
         this.storeLayout = true;
-        this.repaintRunnable = new RepaintRunnable();
 
         if (orientation != JSplitPane.VERTICAL_SPLIT) {
             defaultAggregationPosition = AggregationPosition.RIGHT;
@@ -1213,7 +1210,7 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
     protected void repaintMultiSplit(boolean resetBounds) {
-        SwingUtilities.invokeLater(new RepaintRunnable2(resetBounds));
+        SwingUtilities.invokeLater(new RepaintRunnable(resetBounds));
 
     }
 
@@ -1378,28 +1375,9 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
     public class RepaintRunnable implements Runnable {
-
-        public RepaintRunnable() {
-        }
-
-        public void run() {
-            checkModel();
-            if (jumpResetBounds) {
-                jumpResetBounds = false;
-            } else
-                resetBounds();
-
-            multiSplitPane.invalidate();
-            multiSplitPane.validate();
-            multiSplitPane.repaint();
-            multiSplitPane.getMultiSplitLayout().setFloatingDividers(false);
-        }
-    }
-
-    public class RepaintRunnable2 implements Runnable {
         protected boolean reset;
 
-        public RepaintRunnable2(boolean reset) {
+        public RepaintRunnable(boolean reset) {
             this.reset = reset;
         }
 

@@ -194,8 +194,13 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
                content.getComponent(),
                tip);
 
+        int index = getTabCount() - 1;
+        setForegroundAt(index, content.getForeground());
+        setDisabledIconAt(index, content.getDisabledIcon());
+        setMnemonicAt(index, content.getMnemonic());
+
         content.addPropertyChangeListener(this);
-        contentMap.put(getTabCount() - 1, content);
+        contentMap.put(index, content);
     }
 
     public void addTab(Content content, Component component) {
@@ -209,8 +214,13 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
                component,
                tip);
 
+        int index = getTabCount() - 1;
+        setForegroundAt(index, content.getForeground());
+        setDisabledIconAt(index, content.getDisabledIcon());
+        setMnemonicAt(index, content.getMnemonic());
+
         content.addPropertyChangeListener(this);
-        contentMap.put(getTabCount() - 1, content);
+        contentMap.put(index, content);
     }
 
     public int addTab(Content content, Component component, int index) {
@@ -239,6 +249,10 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
                       component,
                       tip,
                       index);
+
+            setForegroundAt(index, content.getForeground());
+            setDisabledIconAt(index, content.getDisabledIcon());
+            setMnemonicAt(index, content.getMnemonic());
 
             content.addPropertyChangeListener(this);
             contentMap.put(index, content);
