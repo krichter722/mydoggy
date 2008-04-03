@@ -209,7 +209,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 fireUnregisteredToolEvent(toolWindowDescriptor.getToolWindow());
             } finally {
                 // Clean
-                toolWindowDescriptor.getCleaner().cleanup();
+                toolWindowDescriptor.cleanup();
             }
         } else
             throw new IllegalArgumentException("Doesn't exist a tool window with passed id. [id : " + id + "]");
@@ -977,7 +977,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public void removeDockableDescriptor(String id) {
-        dockableDescriptorMap.remove(id);
+        DockableDescriptor descriptor = dockableDescriptorMap.remove(id);
+        if (descriptor != null)
+            descriptor.cleanup();
     }
 
     public void setTempShowed(boolean tempShowed) {

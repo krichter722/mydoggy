@@ -5,6 +5,8 @@ import org.noos.xing.mydoggy.ToolWindowAnchor;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.LEFT;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowBar;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.cleaner.CleanerAggregator;
+import org.noos.xing.mydoggy.plaf.cleaner.DefaultCleanerAggregator;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
@@ -32,6 +34,7 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
     protected int anchorIndex;
 
     protected DragGesture dragGesture;
+    protected CleanerAggregator cleaner;
 
 
     public CustomDockableDescriptor(MyDoggyToolWindowManager manager) {
@@ -55,6 +58,7 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
         this.manager.putDockableDescriptor(id, this);
         this.available = false;
     }
+
 
     public void setAnchor(ToolWindowAnchor anchor, int index) {
         if (!isAvailable())
@@ -141,6 +145,18 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
 
     public Component getComponentForDragImage() {
         return null;
+    }
+
+    public void cleanup() {
+        getCleaner().cleanup();
+        
+        manager = null;
+    }
+
+    public CleanerAggregator getCleaner() {
+        if (cleaner == null)
+            cleaner = new DefaultCleanerAggregator();
+        return cleaner;
     }
 
 

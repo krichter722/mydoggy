@@ -22,7 +22,6 @@ import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * @todo add flashing capabilities...
  */
 public class ContentDescriptor extends CustomDockableDescriptor implements PropertyChangeListener,
                                                                            ContentManagerListener {
@@ -147,6 +146,15 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
         }
     }
 
+    public void cleanup() {
+        getCleaner().cleanup();
+
+        content.removePropertyChangeListener(this);
+        manager.getContentManager().removeContentManagerListener(this);
+
+        content = null;
+        manager = null;
+    }
 
     public boolean isDragImageAvailable() {
         return false;
