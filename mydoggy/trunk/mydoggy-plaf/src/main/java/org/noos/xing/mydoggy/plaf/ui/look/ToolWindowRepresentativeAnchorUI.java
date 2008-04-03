@@ -207,6 +207,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         toolWindow = null;
     }
 
+
     protected void installListeners(JLabel c) {
         super.installListeners(c);
 
@@ -229,7 +230,6 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
         descriptor.getToolWindow().addPlafPropertyChangeListener(this);
     }
-
 
     protected void updateAnchor(Graphics g, JComponent c,
                                 Color backgroundStart, Color backgroundEnd,
@@ -330,7 +330,6 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         protected Direction chooseFinishDirection(Type type) {
             return (type == Type.SHOW) ? Direction.OUTGOING : Direction.INCOMING;
         }
-
     }
 
     protected class RepresentativeAnchorMouseAdapter extends MouseInputAdapter implements ActionListener, Cleaner {

@@ -4,6 +4,8 @@ import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowBar;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
+import org.noos.xing.mydoggy.plaf.cleaner.CleanerAggregator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +13,7 @@ import java.awt.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public interface DockableDescriptor {
+public interface DockableDescriptor extends Cleaner {
 
     enum DockableType {
         TOOL_WINDOW,
@@ -57,4 +59,5 @@ public interface DockableDescriptor {
 
     Component getComponentForDragImage();
 
+    CleanerAggregator getCleaner();
 }

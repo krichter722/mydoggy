@@ -247,6 +247,10 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
             return manager.getResourceManager();
      }
 
+    public void cleanup() {
+        getCleaner().cleanup();
+    }
+    
 
     public Component getComponent() {
         if (component == null) {
