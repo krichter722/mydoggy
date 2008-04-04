@@ -127,6 +127,9 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     public boolean isVisible() {
         if (type == ToolWindowType.EXTERN) {
             Dockable delegator = descriptor.getManager().getDockableWrapper(this);
+            if (delegator == null)
+                return visible;
+
             if (delegator instanceof ToolWindowTab) {
                 ToolWindowTab toolWindowTab = (ToolWindowTab) delegator;
                 return toolWindowTab.isSelected() && toolWindowTab.getOwner().isVisible();
@@ -278,6 +281,9 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     public boolean isActive() {
         if (type == ToolWindowType.EXTERN) {
             Dockable delegator = descriptor.getManager().getDockableWrapper(this);
+            if (delegator == null)
+                return active;
+
             if  (delegator instanceof ToolWindowTab) {
                 ToolWindowTab toolWindowTab = (ToolWindowTab) delegator;
                 return toolWindowTab.isSelected() && toolWindowTab.getOwner().isActive();                

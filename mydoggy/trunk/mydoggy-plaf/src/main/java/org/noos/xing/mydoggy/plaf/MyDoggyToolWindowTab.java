@@ -29,6 +29,7 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
     protected boolean minimized;
 
     protected Dockable dockable;
+    protected PropertyChangeListener delegatorListener;
 
     protected CleanerAggregator cleanerAggregator;
 
@@ -49,8 +50,10 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
         this.maximized = false;
         this.minimized = false;
 
-        if (dockable != null)
-            dockable.addPropertyChangeListener(new DelegatorListener());
+        if (dockable != null) {
+            dockable.addPropertyChangeListener(delegatorListener = new DelegatorListener());
+            addPropertyChangeListener(new DelegateListener());
+        }
 
         cleanerAggregator = new DefaultCleanerAggregator();
     }
@@ -219,6 +222,9 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
     }
 
     public void cleanup() {
+        if (dockable != null)
+            dockable.removePropertyChangeListener(delegatorListener);
+
         cleanerAggregator.cleanup();
         super.cleanup();
     }
@@ -243,8 +249,21 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
                 setTitle((String) evt.getNewValue());
             } else if ("closeable".equals(propertyName)) {
                 setCloseable((Boolean) evt.getNewValue());
+            } else if ("flash".equals(propertyName)) {
+                setFlashing((Boolean) evt.getNewValue());
             }
         }
         
     }
+
+    protected class DelegateListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            String propertyName = evt.getPropertyName();
+            if ("flash".equals(propertyName))  {
+                dockable.setFlashing((Boolean) evt.getNewValue());
+            } 
+        }
+    }
+
 }
