@@ -147,7 +147,7 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
                     popupMenu.add(new JSeparator(), index);
 
                     nextTabItem.setEnabled(enableByTabsCount);
-                    previousTabItem.setEnabled(enableByTabsCount);                    
+                    previousTabItem.setEnabled(enableByTabsCount);
                 }
             }
 
@@ -392,6 +392,24 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
             titleLabel.setIcon(tab.getIcon());
             titleLabel.setFont(titleLabel.getFont().deriveFont(resourceManager.getFloat("toolwindow.title.font.size", 12)));
             titleLabel.setUI(new BasicLabelUI() {
+
+                public void update(Graphics g, JComponent c) {
+                    if (tab.isFlashing() && toolWindow.isVisible()) {
+                        if (flashingState) {
+                            titleLabel.setForeground(resourceManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
+                        } else {
+                            titleLabel.setForeground(resourceManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
+                        }
+                    } else {
+                        if (selected)
+                            titleLabel.setForeground(resourceManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
+                        else
+                            titleLabel.setForeground(resourceManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
+                    }
+
+                    super.update(g, c);
+                }
+
                 protected void paintEnabledText(JLabel l, Graphics g, String s, int textX, int textY) {
                     if (pressed && inside)
                         super.paintEnabledText(l, g, s, textX + 1, textY + 1);
@@ -433,7 +451,7 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
 
             // Register DragGesture
             SwingUtil.registerDragGesture(this, dragGestureDelegate);
-            SwingUtil.registerDragGesture(titleLabel, dragGestureDelegate);                    
+            SwingUtil.registerDragGesture(titleLabel, dragGestureDelegate);
             SwingUtil.registerDragGesture(minimizeButton, dragGestureDelegate);
             SwingUtil.registerDragGesture(closeButton, dragGestureDelegate);
         }
@@ -629,13 +647,15 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
                                               ),
                                               GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
                     } else {
-                        GraphicsUtil.fillRect(g, bounds,
-                                              resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
-                                              resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
-                                              new RoundRectangle2D.Double(
-                                                      bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
-                                              ),
-                                              GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+                        if (toolWindow.isActive()) {
+                            GraphicsUtil.fillRect(g, bounds,
+                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
+                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
+                                                  new RoundRectangle2D.Double(
+                                                          bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
+                                                  ),
+                                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+                        }
                     }
 
                     if (flashingTimer == null) {
@@ -672,14 +692,7 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
                                                           bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
                                                   ),
                                                   GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-                        } else
-                            GraphicsUtil.fillRect(g, bounds,
-                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END),
-                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START),
-                                                  new RoundRectangle2D.Double(
-                                                          bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
-                                                  ),
-                                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
+                        } 
                     }
                 }
 

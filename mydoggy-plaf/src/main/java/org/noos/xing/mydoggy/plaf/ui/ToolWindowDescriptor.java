@@ -310,6 +310,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
                 return toolWindow.getTypeDescriptor(ToolWindowType.FLOATING).isIdVisibleOnTitleBar();
             case FLOATING_LIVE:
                 return toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).isIdVisibleOnTitleBar();
+            case EXTERN:
+                return true;
         }
         throw new IllegalStateException("ToolWindowDescriptor.isIdVisibleOnTitleBar");
     }

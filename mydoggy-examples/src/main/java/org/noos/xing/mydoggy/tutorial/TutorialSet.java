@@ -32,11 +32,12 @@ public class TutorialSet {
 
                 // Aggregate "Run" tool
                 ToolWindow runTool = toolWindowManager.getToolWindow("Run");
-                runTool.aggregate();
+                debugTool.addToolWindowTab(runTool);
+                runTool.setFlashing(true);
 
                 // Aggregate "Properties" tool
                 ToolWindow propertiesTool = toolWindowManager.getToolWindow("Properties");
-                propertiesTool.aggregate(AggregationPosition.LEFT);
+//                propertiesTool.aggregate(AggregationPosition.LEFT);
 
                 frame.setVisible(true);
             }
