@@ -230,7 +230,10 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
     }
 
     public void setSelected(Content content, boolean selected) {
-        if (content.isDetached()) {
+        if (content.isMinimzed()) {
+            content.setMinimzed(false);
+            content.setSelected(true);
+        } else if (content.isDetached()) {
             // If the content is detached request the focus for owner window
             if (selected)
                 // If the content is detached request the focus for owner window
@@ -428,6 +431,9 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
+            if (content.isMinimzed())
+                return;
+
             if (content.isDetached()) {
                 RootPaneContainer rootPaneContainer = (RootPaneContainer) SwingUtilities.windowForComponent(content.getComponent());
                 Container container = rootPaneContainer.getContentPane();
@@ -454,6 +460,9 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
+            if (content.isMinimzed())
+                return;
+
             if (!content.isDetached()) {
                 JInternalFrame internalFrame = getFrameByContent(content);
                 if (internalFrame != null)
@@ -467,6 +476,9 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
     protected class EnabledListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
+
+            if (content.isMinimzed())
+                return;
 
             if (!content.isDetached()) {
                 JInternalFrame internalFrame = getFrameByContent(content);
@@ -482,6 +494,9 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
+            if (content.isMinimzed())
+                return;
+
             if (!content.isDetached()) {
                 JInternalFrame internalFrame = getFrameByContent(content);
                 if (internalFrame != null)
@@ -496,6 +511,9 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
+            if (content.isMinimzed())
+                return;
+
             if (!content.isDetached()) {
                 JInternalFrame internalFrame = getFrameByContent(content);
                 if (internalFrame != null)
@@ -509,6 +527,9 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
     protected class TitleListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
+
+            if (content.isMinimzed())
+                return;
 
             if (content.isDetached()) {
                 SwingUtil.setWindowTitle(content.getComponent(), (String) evt.getNewValue());
@@ -525,6 +546,9 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
     protected class ToolTipTextListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
+
+            if (content.isMinimzed())
+                return;
 
             if (!content.isDetached()) {
                 JInternalFrame internalFrame = getFrameByContent(content);
@@ -631,7 +655,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
             Content content = (Content) evt.getSource();
             boolean oldValue = (Boolean) evt.getOldValue();
             boolean newValue = (Boolean) evt.getNewValue();
-            
+
             if ("detached.dispose".equals(evt.getPropertyName())) {
                 Window window = SwingUtilities.windowForComponent(content.getComponent());
                 window.setVisible(false);

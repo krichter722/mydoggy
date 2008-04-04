@@ -317,7 +317,10 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
             if (lastSelected != null)
                 lastSelected.setSelected(false);
 
-            if (content.isDetached()) {
+            if (content.isMinimzed()) {
+                content.setMinimzed(false);
+                content.setSelected(true);
+            } else if (content.isDetached()) {
                 // If the content is detached request the focus for owner window
                 SwingUtil.requestFocus(
                         SwingUtilities.windowForComponent(content.getComponent())
@@ -556,6 +559,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
             Component oldCmp = (Component) evt.getOldValue();
             Component newCmp = (Component) evt.getNewValue();
 
+            if (content.isMinimzed())
+                return;
+
             if (content.isDetached()) {
                 RootPaneContainer rootPaneContainer = (RootPaneContainer) SwingUtilities.windowForComponent(content.getComponent());
                 Container container = rootPaneContainer.getContentPane();
@@ -579,6 +585,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
+            if (content.isMinimzed())
+                return;
+
             if (!content.isDetached()) {
                 int index = tabbedContentPane.indexOfContent(content);
                 if (index != -1)
@@ -592,6 +601,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
     protected class IconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
+
+            if (content.isMinimzed())
+                return;
 
             if (!content.isDetached()) {
                 int index = tabbedContentPane.indexOfContent(content);
@@ -607,6 +619,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
+            if (content.isMinimzed())
+                return;
+
             if (!content.isDetached()) {
                 int index = tabbedContentPane.indexOfContent(content);
                 if (index != -1)
@@ -620,6 +635,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
     protected class EnabledListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
+
+            if (content.isMinimzed())
+                return;
 
             if (content.isDetached()) {
                 Window anchestor = SwingUtilities.windowForComponent(content.getComponent());
@@ -638,6 +656,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
+            if (content.isMinimzed())
+                return;
+
             if (!content.isDetached()) {
                 int index = tabbedContentPane.indexOfContent(content);
                 if (index != -1)
@@ -651,6 +672,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
     protected class TitleListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
+
+            if (content.isMinimzed())
+                return;
 
             if (content.isDetached()) {
                 SwingUtil.setWindowTitle(content.getComponent(), (String) evt.getNewValue());
@@ -667,6 +691,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
     protected class ToolTipTextListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
+
+            if (content.isMinimzed())
+                return;
 
             if (!content.isDetached()) {
                 int index = tabbedContentPane.indexOfContent(content);
