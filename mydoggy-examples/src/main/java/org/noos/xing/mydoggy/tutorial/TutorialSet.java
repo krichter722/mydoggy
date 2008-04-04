@@ -32,7 +32,7 @@ public class TutorialSet {
 
                 // Aggregate "Run" tool
                 ToolWindow runTool = toolWindowManager.getToolWindow("Run");
-                debugTool.addToolWindowTab(runTool);
+                debugTool.addToolWindowTab(runTool)/*.setFlashing(true)*/;
                 runTool.setFlashing(true);
 
                 // Aggregate "Properties" tool
