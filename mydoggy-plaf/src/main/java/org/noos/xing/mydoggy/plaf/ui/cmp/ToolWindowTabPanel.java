@@ -28,7 +28,7 @@ import java.util.EventListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * @todo: implemets maximzied and minimized
+ * @todo: implemets maximzied
  */
 public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Cleaner {
     protected DockedContainer dockedContainer;
@@ -271,7 +271,8 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
 
         SwingUtil.repaint(tabContainer);
 
-        if (nextTabCol != -1)
+        ToolWindowTab firstTab = null;
+        if (nextTabCol != -1) {
             for (Component component : tabContainer.getComponents()) {
                 if (component instanceof TabButton) {
                     TabButton tabButton = (TabButton) component;
@@ -279,10 +280,13 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
 
                     if (constraints.col1 == nextTabCol)
                         return tabButton.tab;
+
+                    if (constraints.col1 == 2)
+                        firstTab = tabButton.tab;
                 }
             }
-
-        return (toolWindow.getToolWindowTabs().length != 0) ? toolWindow.getToolWindowTabs()[0] : null;
+        }
+        return firstTab;
     }
 
     protected void checkPopupButton() {

@@ -27,8 +27,8 @@ public class TutorialSet {
                 // Activate "Debug" Tool
                 ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
                 debugTool.setVisible(true);
-//
-//                debugTool.getToolWindowTabs()[1].setFlashing(true);
+
+                debugTool.getToolWindowTabs()[1].setFlashing(true);
 
                 // Aggregate "Run" tool
                 ToolWindow runTool = toolWindowManager.getToolWindow("Run");
