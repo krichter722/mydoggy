@@ -487,7 +487,6 @@ public class MyDoggySet {
             test.setUp();
 //            test.toolWindowManager.getContentManager().setEnabled(false);
 
-            //TODO: test with all content manager ui...
 //            test.start(new MultiSplitRandomConstraints(test));
 //            test.start(new TabbedRandomConstraints(test));
             test.start(null);
