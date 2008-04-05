@@ -18,7 +18,6 @@ import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * @todo: add enabled check...
  */
 public class MyDoggyContentManager extends PropertyChangeEventSource implements ContentManager {
     protected MyDoggyToolWindowManager toolWindowManager;

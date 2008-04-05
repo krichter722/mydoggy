@@ -572,7 +572,6 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
                     if (nextTab != null)
                         nextTab.setSelected(true);
                 } else {
-                    // TODO: add to the old position....
                     addTab(this);
                 }
             }

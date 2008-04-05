@@ -193,7 +193,6 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         lastSelected = null;
         Content selectedContent = null;
         contentValueAdjusting = true;
-        // TODO: we should import content UI proprs...
         for (Content content : contentManager.getContents()) {
             if (content.isSelected())
                 selectedContent = content;
@@ -491,7 +490,6 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         TabbedContentUI contentUI = contentUIMap.get(content);
         if (contentUI == null) {
             if (!installed) {
-                // TODO: ... This is an import
                 contentUI = new MyDoggyTabbedContentUI(this, tabbedContentPane,
                                                        content);
             } else

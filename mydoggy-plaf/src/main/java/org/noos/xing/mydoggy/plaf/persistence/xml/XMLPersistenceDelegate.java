@@ -116,6 +116,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 // Write header
                 AttributesImpl mydoggyAttributes = new AttributesImpl();
                 mydoggyAttributes.addAttribute(null, "version", null, null, "1.4.2");
+                mydoggyAttributes.addAttribute(null, "contentManagerEnabled", null, null,
+                                               String.valueOf(manager.getContentManager().isEnabled()));
                 writer.startElement("mydoggy", mydoggyAttributes);
 
                 // Write ToolWindows
@@ -422,10 +424,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 // Start contentManager
                 ContentManager contentManager = context.get(ContentManager.class);
 
-                AttributesImpl contentManagerAttributes = new AttributesImpl();
-                contentManagerAttributes.addAttribute(null, "enabled", null, null, String.valueOf(contentManager.isEnabled()));
-
-                writer.startElement("contentManager", contentManagerAttributes);
+                writer.startElement("contentManager");
 
                 for (Content content : contentManager.getContents()) {
                     ContentUI contentUI = content.getContentUI();
@@ -755,6 +754,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             // Validate version
             if (!"1.4.2".equals(element.getAttribute("version")))
                 throw new IllegalArgumentException("Invalid workspace version. Expected 1.4.2");
+
+            // Sets content manager enable property...
+            ContentManager contentManager = context.get(ToolWindowManager.class).getContentManager();
+            contentManager.setEnabled(getBoolean(element, "contentManagerEnabled", true));
+
             return true;
         }
     }
@@ -1067,9 +1071,6 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     public class ContentManagerElementParser extends ElementParserAdapter {
 
         public boolean parse(Element element, Context context) {
-            ContentManager contentManager = context.get(ToolWindowManager.class).getContentManager();
-            contentManager.setEnabled(getBoolean(element, "enabled", true));
-            
             NodeList contents = element.getElementsByTagName("content");
 
             Content selectedContent = null;
