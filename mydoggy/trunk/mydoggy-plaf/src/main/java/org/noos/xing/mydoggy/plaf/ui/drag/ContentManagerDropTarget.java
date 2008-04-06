@@ -20,8 +20,8 @@ public class ContentManagerDropTarget extends DropTarget {
                                     ToolWindowManager toolWindowManager,
                                     ResourceManager resourceManager) throws HeadlessException {
         super(component,
-                DnDConstants.ACTION_MOVE,
-                new ContentManagerDropTargetListener(toolWindowManager, resourceManager, component));
+              DnDConstants.ACTION_MOVE,
+              new ContentManagerDropTargetListener(toolWindowManager, resourceManager, component));
     }
 
     public static class ContentManagerDropTargetListener implements DropTargetListener {
@@ -44,7 +44,7 @@ public class ContentManagerDropTarget extends DropTarget {
                 return;
 
             if (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) &&
-                    dtde.getDropAction() == DnDConstants.ACTION_MOVE) {
+                dtde.getDropAction() == DnDConstants.ACTION_MOVE) {
 
                 dtde.acceptDrag(dtde.getDropAction());
                 if (component.getBorder() != dragBorder)
@@ -86,7 +86,6 @@ public class ContentManagerDropTarget extends DropTarget {
                         } else
                             dtde.dropComplete(false);
                     } catch (Exception e) {
-                        e.printStackTrace();
                         dtde.dropComplete(false);
                     }
                 } else
@@ -111,7 +110,6 @@ public class ContentManagerDropTarget extends DropTarget {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
             }
             return false;
         }

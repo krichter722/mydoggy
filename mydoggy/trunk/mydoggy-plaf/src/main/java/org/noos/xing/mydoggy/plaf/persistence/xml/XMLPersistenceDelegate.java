@@ -10,6 +10,7 @@ import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.MergePolicyApplier;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.ResetMergePolicy;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.UnionMergePolicy;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout;
@@ -656,11 +657,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
         public boolean parse(Element element, Context context) {
             try {
-                // TODO: (-) change property...
-                context.get(MyDoggyToolWindowManager.class).putClientProperty("persistence.delegate", this);
+                context.get(MyDoggyToolWindowManager.class).putClientProperty(MyDoggyKeySpace.PERSISTENCE_DELEGATE_PARSING, this);
+
                 return parseTree(element, context);
             } finally {
-                context.get(MyDoggyToolWindowManager.class).putClientProperty("persistence.delegate", null);
+                context.get(MyDoggyToolWindowManager.class).putClientProperty(MyDoggyKeySpace.PERSISTENCE_DELEGATE_PARSING, null);
             }
         }
 

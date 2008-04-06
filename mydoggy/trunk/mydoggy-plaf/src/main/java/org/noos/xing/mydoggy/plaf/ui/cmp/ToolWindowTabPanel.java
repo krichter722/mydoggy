@@ -358,7 +358,7 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
         protected boolean selected;
 
         protected Timer flashingTimer;
-        protected int flasingDuration;
+        protected int flasingDuration = -1;
         protected boolean flashingState;
 
 

@@ -109,4 +109,5 @@ public interface MyDoggyKeySpace {
 
     String TOOL_WINDOW_VERTICAL_BAR_LENGTH = "toolwindowbar.vertical.length";
     String TOOL_WINDOW_HORIZONTAL_BAR_LENGTH = "toolwindowbar.horizontal.length";
+    String PERSISTENCE_DELEGATE_PARSING = "PERSISTENCE_DELEGATE_PARSING"; 
 }

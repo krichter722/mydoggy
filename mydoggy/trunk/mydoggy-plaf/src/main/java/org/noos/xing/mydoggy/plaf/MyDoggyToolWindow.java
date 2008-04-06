@@ -768,14 +768,29 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             boolean old = this.visible;
             this.visible = visible;
 
-            for (final ToolWindowTab tab : getToolWindowTabs()) {
-                if (tab.isFlashing()) {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            tab.setFlashing(false);
-                            tab.setSelected(true);
-                        }
-                    });
+            if (visible) {
+                ToolWindowTab selectedTab = null;
+                ToolWindowTab nonSelectedTab = null;
+                for (final ToolWindowTab tab : getToolWindowTabs()) {
+                    if (tab.isSelected())
+                        selectedTab = tab;
+                    else if (nonSelectedTab == null)
+                        nonSelectedTab = tab;
+                }
+                if (selectedTab == null) {
+                    if (nonSelectedTab != null) {
+                        final ToolWindowTab tab = nonSelectedTab;
+                        SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                tab.setSelected(true);
+                            }
+                        });
+                    } else
+                        SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                toolWindowTabs.get(0).setSelected(true);
+                            }
+                        });
                 }
             }
 

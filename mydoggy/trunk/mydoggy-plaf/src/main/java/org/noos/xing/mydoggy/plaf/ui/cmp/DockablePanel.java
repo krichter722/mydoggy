@@ -25,7 +25,7 @@ public class DockablePanel extends JPanel implements PropertyChangeListener,
     protected Dockable dockable;
 
     protected Timer flashingTimer;
-    protected int flasingDuration;
+    protected int flasingDuration = -1;
     protected boolean flashingState;
     protected long startingTime = 0;
 

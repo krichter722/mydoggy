@@ -68,6 +68,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
         animBackEnd = new MutableColor(0, 0, 0);
         animTextColor = new MutableColor(0, 0, 0);
         flashingAnimation = new GradientAnimation(700f);
+        flasingDuration = -1;
         animation = new GradientAnimation();
 
         descriptor.getToolWindow().addPlafPropertyChangeListener(new PropertyChangeListener() {
