@@ -61,6 +61,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         this.resourceManager = descriptor.getResourceManager();
 
         this.flashingAnimation = new GradientAnimation();
+        this.flasingDuration = -1;
         this.flashingAnimBackStart = new MutableColor(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
         this.flashingAnimBackEnd = new MutableColor(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
 
@@ -158,10 +159,10 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                 labelBorder.setLineColor(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
 
                 descriptor.getToolBar().ensureVisible(label);
+                toolWindow.setFlashing(false);
             } else
                 labelBorder.setLineColor(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER));
 
-            toolWindow.setFlashing(false);
             SwingUtil.repaint(label);
         } else if ("flash".equals(propertyName)) {
             if (e.getNewValue() == Boolean.TRUE) {

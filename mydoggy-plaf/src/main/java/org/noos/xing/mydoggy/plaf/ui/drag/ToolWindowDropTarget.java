@@ -203,9 +203,9 @@ public class ToolWindowDropTarget extends DropTarget {
                             );
 
                             if (content != null) {
-                                toolWindowManager.getContentManager().removeContent(content);
-
                                 if (content.getDockableDelegator() != null) {
+                                    toolWindowManager.getContentManager().removeContent(content);
+
                                     Dockable delegator = content.getDockableDelegator();
 
                                     if (delegator instanceof ToolWindow) {

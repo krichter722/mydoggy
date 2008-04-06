@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -142,7 +143,7 @@ public class MultiSplitDockableContainer extends JPanel {
                     // The requeste is to add more than one dockable on the same leaf... no need to request a new leaf name
                     addToWrapper(componentWrapper, dockable, aggregationIndexLocation, content);
 
-                    repaintMultiSplit(toolWindowManager.getClientProperty("persistence.delegate") !=null);
+                    repaintMultiSplit(toolWindowManager.getClientProperty(MyDoggyKeySpace.PERSISTENCE_DELEGATE_PARSING) !=null);
 
                     rootLeaf.addDockable(dockable.getId());
                 } else {
@@ -413,7 +414,7 @@ public class MultiSplitDockableContainer extends JPanel {
                     }
                 });
             } else
-                repaintMultiSplit(toolWindowManager.getClientProperty("persistence.delegate") == null);
+                repaintMultiSplit(toolWindowManager.getClientProperty(MyDoggyKeySpace.PERSISTENCE_DELEGATE_PARSING) == null);
         }
 
         entries.put(dockable, new DockableEntry(dockable, content, modelId));
@@ -484,7 +485,7 @@ public class MultiSplitDockableContainer extends JPanel {
                             entries.put(dockable, new DockableEntry(dockable, component, null));
 
                             validateModel(multiSplitPaneModelRoot);
-                            repaintMultiSplit(toolWindowManager.getClientProperty("persistence.delegate") !=null);
+                            repaintMultiSplit(toolWindowManager.getClientProperty(MyDoggyKeySpace.PERSISTENCE_DELEGATE_PARSING) !=null);
                         }
                     }
 
@@ -763,7 +764,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
             if (!checkModel())
                 System.out.println("Check model fail. removeDockable end");
-            repaintMultiSplit(toolWindowManager.getClientProperty("persistence.delegate") !=null);
+            repaintMultiSplit(toolWindowManager.getClientProperty(MyDoggyKeySpace.PERSISTENCE_DELEGATE_PARSING) !=null);
 
             return constraint;
         }

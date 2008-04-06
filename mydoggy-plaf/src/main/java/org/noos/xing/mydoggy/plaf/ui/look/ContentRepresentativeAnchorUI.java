@@ -51,6 +51,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         this.flashingAnimation = new GradientAnimation();
         this.flashingAnimBackStart = new MutableColor(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
         this.flashingAnimBackEnd = new MutableColor(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+        this.flasingDuration = -1;
 
         dockable.addPropertyChangeListener(this);
         descriptor.getCleaner().addCleaner(this);

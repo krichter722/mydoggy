@@ -357,8 +357,8 @@ public class MyDoggySet {
         // Add customization here. See the page http://mydoggy.sourceforge.net/mydoggy-plaf/resourceManagerUsing.html
 /*
         resourceManager.putProperty("dialog.owner.enabled", "false");
-        resourceManager.putProperty("ContentManagerDropTarget.enabled", "true");
 */
+        resourceManager.putProperty("ContentManagerDropTarget.enabled", "true");
         resourceManager.putProperty("ContentManagerUI.ContentManagerUiListener.import", "true");
 /*
         resourceManager.putProperty("drag.icon.transparency.enabled", "false");
