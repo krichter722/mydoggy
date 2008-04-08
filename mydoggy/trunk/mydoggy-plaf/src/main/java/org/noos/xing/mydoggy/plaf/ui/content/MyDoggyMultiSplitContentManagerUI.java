@@ -812,7 +812,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            // TODO: introduce this check...
             if (!isContentManagerEnabled())
                 return;
 

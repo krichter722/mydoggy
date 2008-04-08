@@ -31,7 +31,7 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
     protected PropertyChangeSupport propertyChangeSupport;
 
 
-    public DefaultTitleBarButtons(ToolWindowDescriptor toolWindowDescriptor, // TODO: move to DockableDescriptor 
+    public DefaultTitleBarButtons(ToolWindowDescriptor toolWindowDescriptor,  
                                   ToolWindowContainer dockedContainer) {
         this.descriptor = toolWindowDescriptor;
         this.toolWindow = toolWindowDescriptor.getToolWindow();
