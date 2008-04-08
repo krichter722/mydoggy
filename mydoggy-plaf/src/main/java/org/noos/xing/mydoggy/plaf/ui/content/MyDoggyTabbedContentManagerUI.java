@@ -289,10 +289,6 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                     throw new IllegalStateException("Invalid content ui state.");
             }
         } finally {
-            // TODO: check this...
-            if (contentValueAdjusting)
-                return;
-
             // Remove listeners
             content.getContentUI().removePropertyChangeListener(contentUIListener);
             content.removePlafPropertyChangeListener(this);
@@ -502,8 +498,6 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
         if (!showAlwaysTab && tabbedContentPane.getTabCount() == 0 && (contentValueAdjusting || toolWindowManager.getMainContent() == null)) {
             toolWindowManager.setMainContent(content.getComponent());
-            // TODO: is this right?
-            lastSelected = content;
             return -1;
         } else {
             if (!showAlwaysTab && tabbedContentPane.getParent() == null) {
