@@ -6,9 +6,9 @@ import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
-import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowContainer;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
@@ -57,7 +57,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
     protected AbstractAnimation flashingAnimation;
 
 
-    public ToolWindowTitleBarUI(ToolWindowDescriptor descriptor, DockedContainer dockedContainer) {
+    public ToolWindowTitleBarUI(ToolWindowDescriptor descriptor, ToolWindowContainer dockedContainer) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
         this.resourceManager = descriptor.getResourceManager();

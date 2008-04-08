@@ -1,6 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
-import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.common.context.Context;
+import org.noos.common.object.ObjectCreator;
+import org.noos.common.object.ObjectCustomizer;
 import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
@@ -29,7 +31,7 @@ import java.util.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * @todo add more fires  
+ * @todo add more fires
  */
 public class MyDoggyResourceManager extends PropertyChangeEventSource implements ResourceManager {
 
@@ -40,10 +42,10 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     protected Map<String, Icon> icons;
     protected Map<String, BufferedImage> images;
     protected Map<String, Color> colors;
-    protected Map<String, ComponentCreator> cmpCreators;
-    protected Map<String, ComponentUICreator> cmpUiCreators;
-    protected Map<String, ComponentCustomizer> cmpCustomizers;
-    protected Map<Class, InstanceCreator> instanceCreators;
+    protected Map<String, ObjectCreator<Component>> cmpCreators;
+    protected Map<String, ObjectCreator<ComponentUI>> cmpUiCreators;
+    protected Map<String, ObjectCustomizer<Component>> cmpCustomizers;
+    protected Map<Class, ObjectCreator> instanceCreators;
     protected Map cache;
 
     protected String bundlePath;
@@ -65,12 +67,29 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
 
-    public Icon getIcon(String id) {
-        return icons.get(id);
+    public <T> T createInstance(Class<T> clazz, Context context) {
+        return (T) instanceCreators.get(clazz).create(context);
     }
 
-    public BufferedImage getBufferedImage(String id) {
-        return images.get(id);
+    public Component createComponent(String key, Context context) {
+        return applyCustomization(key,
+                                  cmpCreators.get(key).create(context),
+                                  context);
+    }
+
+    public ComponentUI createComponentUI(String key, Context context) {
+        return cmpUiCreators.get(key).create(context);
+    }
+
+    public Component applyCustomization(String key, Component component, Context context) {
+        if (cmpCustomizers.containsKey(key))
+            cmpCustomizers.get(key).customize(component, context);
+        return component;
+    }
+
+
+    public Icon getIcon(String id) {
+        return icons.get(id);
     }
 
     public Icon putIcon(String id, Icon icon) {
@@ -95,30 +114,15 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         this.transparencyManager = transparencyManager;
     }
 
-    public <T> T createInstance(Class<T> clazz, Object... args) {
-        return (T) instanceCreators.get(clazz).createComponent(args);
+    public BufferedImage getBufferedImage(String id) {
+        return images.get(id);
     }
 
-    public Component createComponent(String key, ToolWindowManager manager, Object... args) {
-        return applyCustomization(key,
-                cmpCreators.get(key).createComponent(manager, this, args),
-                args);
-    }
-
-    public ComponentUI createComponentUI(String key, ToolWindowManager manager, Object... args) {
-        return cmpUiCreators.get(key).createComponentUI(manager, this, args);
-    }
-
-    public Component applyCustomization(String key, Component component, Object... args) {
-        if (cmpCustomizers.containsKey(key))
-            cmpCustomizers.get(key).applyCustomization(component, this, args);
-        return component;
-    }
 
     public void setLocale(Locale locale) {
         this.resourceBundle = initResourceBundle(locale,
-                bundlePath,
-                this.getClass().getClassLoader());
+                                                 bundlePath,
+                                                 this.getClass().getClassLoader());
     }
 
     public void setUserBundle(Locale locale, String bundle, ClassLoader classLoader) {
@@ -156,6 +160,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         }
     }
 
+
     public Map<String, Color> getColors() {
         return colors;
     }
@@ -163,6 +168,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     public Map<String, Icon> getIcons() {
         return icons;
     }
+
 
     public String getProperty(String name) {
         return resources.getProperty("Property." + name);
@@ -233,19 +239,19 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
 
-    public void putInstanceCreator(Class aClass, InstanceCreator instanceCreator) {
+    public void putInstanceCreator(Class aClass, ObjectCreator instanceCreator) {
         instanceCreators.put(aClass, instanceCreator);
     }
 
-    public void putComponentCreator(String key, ComponentCreator componentCreator) {
+    public void putComponentCreator(String key, ObjectCreator<Component> componentCreator) {
         cmpCreators.put(key, componentCreator);
     }
 
-    public void putComponentCustomizer(String key, ComponentCustomizer componentCustomizer) {
+    public void putComponentCustomizer(String key, ObjectCustomizer<Component> componentCustomizer) {
         cmpCustomizers.put(key, componentCustomizer);
     }
 
-    public void putComponentUICreator(String key, ComponentUICreator componentUICreator) {
+    public void putComponentUICreator(String key, ObjectCreator<ComponentUI> componentUICreator) {
         cmpUiCreators.put(key, componentUICreator);
     }
 
@@ -356,7 +362,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     protected void initComponentCreators() {
-        cmpCreators = new Hashtable<String, ComponentCreator>();
+        cmpCreators = new Hashtable<String, ObjectCreator<Component>>();
         cmpCreators.put(MyDoggyKeySpace.ANCHOR_SPLIT_PANE, new BarSplitPaneComponentCreator());
         cmpCreators.put(MyDoggyKeySpace.ANCHOR_CONTENT_PANE, new BarContentPaneComponentCreator());
         cmpCreators.put(MyDoggyKeySpace.CORNER_CONTENT_PANE, new CornerContentPaneComponentCreator());
@@ -366,21 +372,21 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         cmpCreators.put(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON, new ToolWindowTitleButtonComponentCreator());
         cmpCreators.put(MyDoggyKeySpace.TOOL_SCROLL_BAR_ARROW, new ToolScrollBarArrowComponentCreator());
         cmpCreators.put(MyDoggyKeySpace.TOOL_WINDOW_CONTAINER, new ToolWindowCmpContainerComponentCreator());
-        cmpCreators.put(MyDoggyKeySpace.MULTI_SPLIT_CONTAINER_SPLIT, new ComponentCreator() {
-            public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
-                return new JSplitPane((Integer) args[0]);
+        cmpCreators.put(MyDoggyKeySpace.MULTI_SPLIT_CONTAINER_SPLIT, new ObjectCreator<Component>() {
+            public Component create(Context context) {
+                return new JSplitPane((Integer) context.get("newOrientation"));
             }
         });
 
-        cmpUiCreators = new Hashtable<String, ComponentUICreator>();
+        cmpUiCreators = new Hashtable<String, ObjectCreator<ComponentUI>>();
         cmpUiCreators.put(MyDoggyKeySpace.REPRESENTATIVE_ANCHOR_BUTTON_UI, new RepresentativeAnchorButtonComponentUICreator());
         cmpUiCreators.put(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR_UI, new ToolWindowTitleBarComponentUICreator());
 
-        cmpCustomizers = new Hashtable<String, ComponentCustomizer>();
+        cmpCustomizers = new Hashtable<String, ObjectCustomizer<Component>>();
         cmpCustomizers.put(MyDoggyKeySpace.TOOL_WINDOW_MANAGER, new MyDoggyManagerPanelComponentCustomizer());
         cmpCustomizers.put(MyDoggyKeySpace.TOOL_WINDOW_CONTAINER, new ToolWindowCmpContainerComponentCustomizer());
 
-        instanceCreators = new Hashtable<Class, InstanceCreator>();
+        instanceCreators = new Hashtable<Class, ObjectCreator>();
         instanceCreators.put(TitleBarButtons.class, new TitleBarButtonsInstanceCreator());
         instanceCreators.put(ParentOfQuestion.class, new ParentOfQuestionInstanceCreator());
     }
@@ -407,39 +413,19 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
 
-    public static interface InstanceCreator {
+    public static class ToolWindowCmpContainerComponentCreator implements ObjectCreator<Component> {
 
-        Object createComponent(Object... args);
-        
-    }
-
-    public static interface ComponentCreator {
-        Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args);
-    }
-
-    public static interface ComponentUICreator {
-        ComponentUI createComponentUI(ToolWindowManager manager, ResourceManager resourceManager, Object... args);
-    }
-
-    public static interface ComponentCustomizer {
-
-        void applyCustomization(Component component, ResourceManager resourceManager, Object... args);
-    }
-
-
-    public static class ToolWindowCmpContainerComponentCreator implements ComponentCreator {
-
-        public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
+        public Component create(Context context) {
             JPanel panel = new JPanel();
             panel.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
             return panel;
         }
     }
 
-    public static class BarSplitPaneComponentCreator implements ComponentCreator {
+    public static class BarSplitPaneComponentCreator implements ObjectCreator<Component> {
 
-        public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
-            JSplitPane splitPane = new DebugSplitPane((Integer) args[0]);
+        public Component create(Context context) {
+            JSplitPane splitPane = new DebugSplitPane((Integer) context.get("newOrientation"));
             splitPane.setBorder(null);
             splitPane.setContinuousLayout(true);
             splitPane.setDividerSize(0);
@@ -450,9 +436,9 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         }
     }
 
-    public static class BarContentPaneComponentCreator implements ComponentCreator {
+    public static class BarContentPaneComponentCreator implements ObjectCreator<Component> {
 
-        public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
+        public Component create(Context context) {
             return new JPanel();/* {
                 protected void paintComponent(Graphics g) {
                     TableLayout tableLyout = (TableLayout) getLayout();
@@ -474,25 +460,25 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         }
     }
 
-    public static class CornerContentPaneComponentCreator implements ComponentCreator {
+    public static class CornerContentPaneComponentCreator implements ObjectCreator<Component> {
 
-        public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
+        public Component create(Context context) {
             return new JPanel();
         }
     }
 
-    public static class DesktopContentPaneComponentCreator implements ComponentCreator {
+    public static class DesktopContentPaneComponentCreator implements ObjectCreator<Component> {
 
-        public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
+        public Component create(Context context) {
             JDesktopPane desktopPane = new JDesktopPane();
             desktopPane.setDesktopManager(new ContentDesktopManager());
             return desktopPane;
         }
     }
 
-    public static class ToolWindowTitleBarComponentCreator implements ComponentCreator {
+    public static class ToolWindowTitleBarComponentCreator implements ObjectCreator<Component> {
 
-        public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
+        public Component create(Context context) {
             JPanel titleBar = new JPanel() {
                 public void setUI(PanelUI ui) {
                     if (ui instanceof ToolWindowTitleBarUI)
@@ -500,16 +486,16 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
                 }
             };
             titleBar.setBorder(null);
-            titleBar.setUI(
-                    (PanelUI) resourceManager.createComponentUI(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR_UI, manager, args)
+            titleBar.setUI((PanelUI) context.get(ResourceManager.class)
+                    .createComponentUI(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR_UI, context)
             );
             return titleBar;
         }
     }
 
-    public static class ToolWindowTitleButtonComponentCreator implements ComponentCreator {
+    public static class ToolWindowTitleButtonComponentCreator implements ObjectCreator<Component> {
 
-        public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
+        public Component create(Context context) {
             JButton button = new ToolWindowActiveButton();
             button.setUI((ButtonUI) BasicButtonUI.createUI(button));
             return button;
@@ -517,18 +503,20 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
     }
 
-    public static class MyDoggyManagerMainContainerComponentCreator implements ComponentCreator {
+    public static class MyDoggyManagerMainContainerComponentCreator implements ObjectCreator<Component> {
 
-        public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
+        public Component create(Context context) {
             JPanel panel = new JPanel();
             panel.setBackground(Color.GRAY);
             return panel;
         }
     }
 
-    public static class ToolScrollBarArrowComponentCreator implements ComponentCreator {
+    public static class ToolScrollBarArrowComponentCreator implements ObjectCreator<Component> {
 
-        public Component createComponent(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
+        public Component create(Context context) {
+            ResourceManager resourceManager = context.get(ResourceManager.class);
+
             JLabel label = new JLabel() {
                 public void setUI(LabelUI ui) {
                     if (ui instanceof ToolScrollBarArrowUI)
@@ -542,59 +530,65 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
             label.setOpaque(false);
             label.setFocusable(false);
             label.setBackground(Colors.orange);
-            label.setIcon(resourceManager.getIcon((String) args[0]));
+            label.setIcon(resourceManager.getIcon((String) context.get("icon")));
 
             return label;
         }
     }
 
 
-    public static class RepresentativeAnchorButtonComponentUICreator implements ComponentUICreator {
+    public static class RepresentativeAnchorButtonComponentUICreator implements ObjectCreator<ComponentUI> {
 
-        public ComponentUI createComponentUI(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
-            return new ToolWindowRepresentativeAnchorUI((ToolWindowDescriptor) args[0]);
+        public ComponentUI create(Context context) {
+            return new ToolWindowRepresentativeAnchorUI(context.get(ToolWindowDescriptor.class));
         }
     }
 
-    public static class ToolWindowTitleBarComponentUICreator implements ComponentUICreator {
+    public static class ToolWindowTitleBarComponentUICreator implements ObjectCreator<ComponentUI> {
 
-        public ComponentUI createComponentUI(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
-            return new ToolWindowTitleBarUI((ToolWindowDescriptor) args[0], (DockedContainer) args[1]);
+        public ComponentUI create(Context context) {
+            return new ToolWindowTitleBarUI(context.get(ToolWindowDescriptor.class),
+                                            context.get(ToolWindowContainer.class));
         }
     }
 
 
-    public static class MyDoggyManagerPanelComponentCustomizer implements ComponentCustomizer {
+    public static class MyDoggyManagerPanelComponentCustomizer implements ObjectCustomizer<Component> {
 
-        public void applyCustomization(Component component, ResourceManager resourceManager, Object... args) {
+        public Component customize(Component component, Context context) {
 //            component.setBackground(Color.black);
+            return component;
         }
     }
 
-    public static class ToolWindowCmpContainerComponentCustomizer implements ComponentCustomizer {
+    public static class ToolWindowCmpContainerComponentCustomizer implements ObjectCustomizer<Component> {
 
-        public void applyCustomization(Component component, ResourceManager resourceManager, Object... args) {
+        public Component customize(Component component, Context context) {
             JPanel panel = (JPanel) component;
             panel.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
+            
+            return panel;
         }
     }
 
 
-    public static class TitleBarButtonsInstanceCreator implements InstanceCreator {
+    public static class TitleBarButtonsInstanceCreator implements ObjectCreator {
 
-        public Object createComponent(Object... args) {
+        public Object create(Context context) {
             return new DefaultTitleBarButtons(
-                    (ToolWindowDescriptor) args[0],
-                    (DockedContainer) args[1]
+                    context.get(ToolWindowDescriptor.class),
+                    context.get(ToolWindowContainer.class)
             );
         }
 
     }
 
-    public static class ParentOfQuestionInstanceCreator implements InstanceCreator {
-        public Object createComponent(Object... args) {
-            return new ParentOfQuestion((Component) args[0]);
+    public static class ParentOfQuestionInstanceCreator implements ObjectCreator {
+
+        public Object create(Context context) {
+            return new ParentOfQuestion(context.get(Component.class));
         }
+
     }
 
 }

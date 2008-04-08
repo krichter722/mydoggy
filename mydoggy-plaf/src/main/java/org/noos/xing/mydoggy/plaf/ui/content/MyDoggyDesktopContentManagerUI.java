@@ -278,7 +278,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
 
             detachedContentUIMap = new Hashtable<Content, DesktopContentUI>();
             desktopPane = (JDesktopPane) toolWindowManager.getResourceManager().createComponent(
-                    MyDoggyKeySpace.DESKTOP_CONTENT_PANE, toolWindowManager
+                    MyDoggyKeySpace.DESKTOP_CONTENT_PANE, toolWindowManager.getContext()
             );
             setupActions();
         }

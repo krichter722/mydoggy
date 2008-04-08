@@ -4,6 +4,8 @@ import info.clearthought.layout.TableLayout;
 import org.jdesktop.swingx.JXDatePicker;
 import org.jdesktop.swingx.JXMonthView;
 import org.noos.common.Question;
+import org.noos.common.context.Context;
+import org.noos.common.object.ObjectCreator;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
@@ -466,9 +468,10 @@ public class MyDoggySet {
                                                   }
         );
 */
-        myDoggyResourceManager.putInstanceCreator(ParentOfQuestion.class, new MyDoggyResourceManager.InstanceCreator() {
-            public Object createComponent(Object... args) {
-                return new CustomParentOfQuestion((Component) args[0], (ToolWindow) args[1]);
+        myDoggyResourceManager.putInstanceCreator(ParentOfQuestion.class, new ObjectCreator() {
+            public Object create(Context context) {
+                return new CustomParentOfQuestion(context.get(Component.class),
+                                                  context.get(ToolWindow.class));
             }
         });
 

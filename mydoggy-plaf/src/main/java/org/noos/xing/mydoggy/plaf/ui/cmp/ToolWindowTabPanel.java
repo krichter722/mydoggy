@@ -428,7 +428,7 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
             // Buttons
             closeButton = (JButton) resourceManager.createComponent(
                     MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON,
-                    descriptor.getManager()
+                    descriptor.getManager().getContext()
             );
             closeButton.setName(name + ".closeButton");
             closeButton.setActionCommand("close");
@@ -438,8 +438,8 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
 
             minimizeButton = (JButton) resourceManager.createComponent(
                     MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON,
-                    descriptor.getManager()
-            );
+                    descriptor.getManager().getContext(
+)            );
             minimizeButton.setName(name + ".minimizeButton");
             minimizeButton.setActionCommand("minimize");
             minimizeButton.addActionListener(this);

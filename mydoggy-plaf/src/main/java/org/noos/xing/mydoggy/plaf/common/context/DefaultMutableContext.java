@@ -15,6 +15,17 @@ public class DefaultMutableContext implements MutableContext {
         this.map = new HashMap();
     }
 
+    public DefaultMutableContext(Object... entries) {
+        this();
+        if (entries.length % 2 == 0) {
+            for (int i = 0; i < entries.length; i += 2) {
+                map.put(entries[i], entries[i + 1]);
+            }
+        } else
+            throw new IllegalArgumentException("Invalid number of arguments. It must be even");
+
+    }
+
     public void put(Object key, Object value) {
         map.put(key, value);
     }

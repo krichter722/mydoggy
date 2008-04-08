@@ -1,9 +1,11 @@
 package org.noos.xing.mydoggy.plaf;
 
 import info.clearthought.layout.TableLayout;
+import org.noos.common.context.MutableContext;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
+import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultDockedTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultFloatingLiveTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultFloatingTypeDescriptor;
@@ -671,7 +673,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         initContentManager();
 
-        resourceManager.applyCustomization(MyDoggyKeySpace.TOOL_WINDOW_MANAGER, this);
+        resourceManager.applyCustomization(MyDoggyKeySpace.TOOL_WINDOW_MANAGER, this, getContext());
 
         // Init data structures
         bars = new MyDoggyToolWindowBar[4];
@@ -696,7 +698,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         addBar(TOP, JSplitPane.VERTICAL_SPLIT, "1,0", "2,2,FULL,FULL");
         addBar(BOTTOM, JSplitPane.VERTICAL_SPLIT, "1,2", "0,2,FULL,FULL");
 
-        mainContainer = (JPanel) resourceManager.createComponent(MyDoggyKeySpace.TOOL_WINDOW_MANAGER_CONTENT_CONTAINER, this);
+        mainContainer = (JPanel) resourceManager.createComponent(MyDoggyKeySpace.TOOL_WINDOW_MANAGER_CONTENT_CONTAINER, getContext());
         mainContainer.setName("toolWindowManager.mainContainer");
         mainContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         mainContainer.setFocusCycleRoot(true);
@@ -829,7 +831,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
 
     protected JSplitPane renderSplitPane(int orientation) {
-        return (JSplitPane) resourceManager.createComponent(MyDoggyKeySpace.ANCHOR_SPLIT_PANE, this, orientation);
+        return (JSplitPane) resourceManager.createComponent(MyDoggyKeySpace.ANCHOR_SPLIT_PANE,
+                                                            getContext("newOrientation", orientation));
     }
 
     protected JSplitPane addBar(ToolWindowAnchor anchor, int splitPaneOrientation,
@@ -846,7 +849,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         add(myDoggyToolWindowBar.getToolScrollBar(), barConstraints);
 
         // Add Corner to Container
-        add(resourceManager.createComponent(MyDoggyKeySpace.CORNER_CONTENT_PANE, this),
+        add(resourceManager.createComponent(MyDoggyKeySpace.CORNER_CONTENT_PANE, getContext()),
             cornerConstraints);
 
         return myDoggyToolWindowBar.getSplitPane();
@@ -1017,6 +1020,21 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return null;
     }
 
+    public MutableContext getContext() {
+        DefaultMutableContext context = new DefaultMutableContext();
+        context.put(ToolWindowManager.class, this);
+        context.put(ResourceManager.class, getResourceManager());
+        
+        return context;
+    }
+
+    public MutableContext getContext(Object... entries) {
+        DefaultMutableContext context = new DefaultMutableContext(entries);
+        context.put(ToolWindowManager.class, this);
+        context.put(ResourceManager.class, getResourceManager());
+
+        return context;
+    }
 
     protected class AvailablePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
