@@ -153,7 +153,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
         contentPanel = new ContentPanel("toolWindow.container.");
         contentPanel.setDropTarget(new ToolWindowDropTarget(contentPanel, manager, anchor));
 
-        representativeButtonsPanel = (JPanel) manager.getResourceManager().createComponent(MyDoggyKeySpace.ANCHOR_CONTENT_PANE, manager);
+        representativeButtonsPanel = (JPanel) manager.getResourceManager().createComponent(MyDoggyKeySpace.ANCHOR_CONTENT_PANE, manager.getContext());
         representativeButtonsPanel.setName("toolWindowManager.bar." + anchor.toString());
         representativeButtonsPanel.setFocusable(false);
         representativeButtonsPanel.setFocusCycleRoot(true);

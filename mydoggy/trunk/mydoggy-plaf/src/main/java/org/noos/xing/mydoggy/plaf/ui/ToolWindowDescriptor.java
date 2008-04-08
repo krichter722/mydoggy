@@ -482,7 +482,9 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         }
 
         protected ComponentUI createRepresentativeAnchorUI() {
-            return manager.getResourceManager().createComponentUI(MyDoggyKeySpace.REPRESENTATIVE_ANCHOR_BUTTON_UI, manager, ToolWindowDescriptor.this);
+            return manager.getResourceManager().createComponentUI(MyDoggyKeySpace.REPRESENTATIVE_ANCHOR_BUTTON_UI,
+                                                                  manager.getContext(ToolWindowDescriptor.class,
+                                                                                     ToolWindowDescriptor.this));
         }
     }
 

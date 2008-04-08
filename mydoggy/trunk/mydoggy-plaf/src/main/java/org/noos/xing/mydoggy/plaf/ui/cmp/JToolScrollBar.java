@@ -1,8 +1,9 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -165,7 +166,10 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
     }
 
     protected Component renderArrow(ResourceManager resourceManager, Direction direction, String iconName) {
-        JLabel label =  (JLabel) resourceManager.createComponent(MyDoggyKeySpace.TOOL_SCROLL_BAR_ARROW, null, iconName);
+        JLabel label =  (JLabel) resourceManager.createComponent(MyDoggyKeySpace.TOOL_SCROLL_BAR_ARROW,
+                                                                 new DefaultMutableContext("icon", iconName,
+                                                                                           ResourceManager.class,
+                                                                                           resourceManager));
         label.addMouseListener(new ArrowListener(direction));
         return label;
     }

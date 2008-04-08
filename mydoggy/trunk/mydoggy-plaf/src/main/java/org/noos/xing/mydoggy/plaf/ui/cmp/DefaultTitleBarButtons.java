@@ -23,7 +23,7 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
     protected ToolWindow toolWindow;
     protected ToolWindowDescriptor descriptor;
     protected transient ResourceManager resourceManager;
-    protected DockedContainer dockedContainer;
+    protected ToolWindowContainer dockedContainer;
 
     protected TableLayout containerLayout;
     protected Component focusable;
@@ -31,7 +31,8 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
     protected PropertyChangeSupport propertyChangeSupport;
 
 
-    public DefaultTitleBarButtons(ToolWindowDescriptor toolWindowDescriptor, DockedContainer dockedContainer) {
+    public DefaultTitleBarButtons(ToolWindowDescriptor toolWindowDescriptor, // TODO: move to DockableDescriptor 
+                                  ToolWindowContainer dockedContainer) {
         this.descriptor = toolWindowDescriptor;
         this.toolWindow = toolWindowDescriptor.getToolWindow();
         this.resourceManager = dockedContainer.getResourceManager();
@@ -108,7 +109,7 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
 
         JButton button = (JButton) resourceManager.createComponent(
                 MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON,
-                descriptor.getManager()
+                descriptor.getManager().getContext()
         );
         button.setAction(titleBarAction);
         button.setName((String) titleBarAction.getValue("action.name"));

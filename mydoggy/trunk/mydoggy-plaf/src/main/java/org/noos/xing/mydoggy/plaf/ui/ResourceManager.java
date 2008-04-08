@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
+import org.noos.common.context.Context;
 import org.noos.xing.mydoggy.Observable;
-import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 
 import javax.swing.*;
@@ -25,44 +25,42 @@ public interface ResourceManager extends Observable {
      * Returns an instance of class <code>clazz</code> using passed <code>args</code>.
      *
      * @param clazz the class of the instance to be returned.
-     * @param args  the arguments needed to create the instance.
+     * @param context a context where retrieve arguments.
      * @return an instance of class <code>clazz</code> using passed <code>args</code>.
      * @since 1.4.0
      */
-    <T> T createInstance(Class<T> clazz, Object... args);
+    <T> T createInstance(Class<T> clazz, Context context);
 
     /**
      * Create the component using the rule specified by the key param.
      *
      * @param key     key whose associated rule is used to create the component.
-     * @param manager the toolwindow manager
-     * @param args    any arguments used to create the component.
+     * @param context a context where retrieve arguments.
      * @return the component created using the rule specified by the key param.
      * @since 1.3.1
      */
-    Component createComponent(String key, ToolWindowManager manager, Object... args);
+    Component createComponent(String key, Context context);
 
     /**
      * Create the component ui using the rule specified by the key param.
      *
      * @param key     key whose associated rule is used to create the component.
-     * @param manager the toolwindow manager
-     * @param args    any arguments used to create the component ui.
+     * @param context a context where retrieve arguments.
      * @return the component ui created using the rule specified by the key param.
      * @since 1.3.1
      */
-    ComponentUI createComponentUI(String key, ToolWindowManager manager, Object... args);
+    ComponentUI createComponentUI(String key, Context context);
 
     /**
      * Apply the customization using the rule specified by the key param.
      *
      * @param key       key whose associated rule is used to customize the component.
      * @param component the component to be customized.
-     * @param args      any arguments used to customize the component.
+     * @param context a context where retrieve arguments.
      * @return the component customized.
      * @since 1.3.1
      */
-    Component applyCustomization(String key, Component component, Object... args);
+    Component applyCustomization(String key, Component component, Context context);
 
     /**
      * Returns the icon to which this manager maps the specified id.  Returns
@@ -74,13 +72,6 @@ public interface ResourceManager extends Observable {
      * @since 1.3.1
      */
     Icon getIcon(String id);
-
-    /**
-     * @param id
-     * @return
-     * @since 1.4.1
-     */
-    BufferedImage getBufferedImage(String id);
 
     /**
      * Associates the specified icon with the specified id. If the manager previously
@@ -134,6 +125,14 @@ public interface ResourceManager extends Observable {
      * @since 1.3.1
      */
     void setTransparencyManager(TransparencyManager<Window> transparencyManager);
+
+    /**
+     * TODO:
+     * @param id
+     * @return
+     * @since 1.4.1
+     */
+    BufferedImage getBufferedImage(String id);
 
     /**
      * Sets the locale of this manager used for the internationalization of the relative toolwindow manager.

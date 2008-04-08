@@ -5,6 +5,7 @@ import org.noos.common.Question;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
+import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
 import org.noos.xing.mydoggy.plaf.support.CleanablePropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
@@ -133,7 +134,8 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         titleBarMouseAdapter = new TitleBarMouseAdapter();
 
         // Container
-        container = (JPanel) resourceManager.createComponent(MyDoggyKeySpace.TOOL_WINDOW_CONTAINER, null);
+        container = (JPanel) resourceManager.createComponent(MyDoggyKeySpace.TOOL_WINDOW_CONTAINER,
+                                                             descriptor.getManager().getContext());
         container.setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {resourceManager.getFloat("toolwindow.title.font.size", 12) + 4,
                                                                                         TableLayout.FILL}}, false));
         container.setName("toolWindow.container." + toolWindow.getId());
@@ -149,9 +151,9 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         ExtendedTableLayout titleBarLayout = new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 2, -2, 3},
                                                                                     {0, resourceManager.getFloat("toolwindow.title.font.size", 12) + 4, 0}}, false);
         titleBar = (JPanel) resourceManager.createComponent(
-                MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR, descriptor.getManager(),
-                descriptor,
-                this
+                MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR,
+                descriptor.getManager().getContext(ToolWindowDescriptor.class, descriptor,
+                                                   ToolWindowContainer.class, this)
         );
         titleBar.setLayout(titleBarLayout);
         titleBar.setName("toolWindow.titleBar." + toolWindow.getId());
@@ -169,7 +171,10 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         toolWindow.getToolWindowTabs()[0].setSelected(true);
 
         // Buttons
-        titleBarButtons = resourceManager.createInstance(TitleBarButtons.class, descriptor, this);
+        titleBarButtons = resourceManager.createInstance(TitleBarButtons.class,
+                                                         new DefaultMutableContext(ToolWindowDescriptor.class, descriptor,
+                                                                                   ToolWindowContainer.class, this
+                                                                                   ));
 
         // Set TitleBar content
         titleBar.add(titleBarTabs, "1,1");
@@ -201,7 +206,9 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(
                 "focusOwner",
                 new FocusOwnerPropertyChangeListener(
-                        resourceManager.createInstance(ParentOfQuestion.class, container, toolWindow))
+                        resourceManager.createInstance(ParentOfQuestion.class,
+                                                       new DefaultMutableContext(ToolWindow.class, toolWindow,
+                                                                                 Component.class, container)))
         );
 
         addPropertyChangeListener("parentComponent.closed", new PropertyChangeListener() {
