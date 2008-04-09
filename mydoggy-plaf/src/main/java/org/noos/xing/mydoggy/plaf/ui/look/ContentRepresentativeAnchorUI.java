@@ -288,7 +288,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
 
         public void mouseClicked(MouseEvent e) {
             if (SwingUtilities.isLeftMouseButton(e)) {
-                dockable.setMinimzed(false);
+                dockable.setMinimized(false);
             } else if (SwingUtilities.isRightMouseButton(e)) {
             }
 

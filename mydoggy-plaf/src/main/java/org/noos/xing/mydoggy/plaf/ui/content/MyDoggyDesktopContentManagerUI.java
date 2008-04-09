@@ -79,7 +79,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
     }
 
     public DesktopContentUI getContentUI(Content content) {
-        if (content.isDetached() || content.isMinimzed()) {
+        if (content.isDetached() || content.isMinimized()) {
             DesktopContentUI result = detachedContentUIMap.get(content);
             if (result == null)
                 result = (DesktopContentUI) getFrameByContent(content);
@@ -184,7 +184,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         try {
             if (content.isDetached()) {
                 propertyChange(new PropertyChangeEvent(content, "detached.dispose", true, false));
-            } else if (content.isMinimzed()) {
+            } else if (content.isMinimized()) {
                 toolWindowManager.getDockableDescriptor(content.getId()).setAvailable(false);
             } else {
                 // Remove component
@@ -230,8 +230,8 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
     }
 
     public void setSelected(Content content, boolean selected) {
-        if (content.isMinimzed()) {
-            content.setMinimzed(false);
+        if (content.isMinimized()) {
+            content.setMinimized(false);
             content.setSelected(true);
         } else if (content.isDetached()) {
             // If the content is detached request the focus for owner window
@@ -431,7 +431,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
-            if (content.isMinimzed())
+            if (content.isMinimized())
                 return;
 
             if (content.isDetached()) {
@@ -460,7 +460,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
-            if (content.isMinimzed())
+            if (content.isMinimized())
                 return;
 
             if (!content.isDetached()) {
@@ -477,7 +477,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
-            if (content.isMinimzed())
+            if (content.isMinimized())
                 return;
 
             if (!content.isDetached()) {
@@ -494,7 +494,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
-            if (content.isMinimzed())
+            if (content.isMinimized())
                 return;
 
             if (!content.isDetached()) {
@@ -511,7 +511,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
-            if (content.isMinimzed())
+            if (content.isMinimized())
                 return;
 
             if (!content.isDetached()) {
@@ -528,7 +528,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
-            if (content.isMinimzed())
+            if (content.isMinimized())
                 return;
 
             if (content.isDetached()) {
@@ -547,7 +547,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
-            if (content.isMinimzed())
+            if (content.isMinimized())
                 return;
 
             if (!content.isDetached()) {
@@ -728,7 +728,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                     detach.setEnabled(getContentUI(content).isDetachable() && !content.isDetached());
                     menu.add(detach);
 
-                    if (content.isMaximized() || content.isMinimzed()) {
+                    if (content.isMaximized() || content.isMinimized()) {
                         JMenuItem maximize = new JMenuItem();
                         maximize.putClientProperty(Content.class, content);
                         maximize.setActionCommand(content.isMaximized() ? "Maximize" : "Minimize");
@@ -748,7 +748,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                         minimize.setActionCommand("Minimize");
                         minimize.setText(resourceManager.getString("@@tabbed.page.minimize"));
                         minimize.addActionListener(this);
-                        minimize.setEnabled(getContentUI(content).isMinimizable() && !content.isMinimzed());
+                        minimize.setEnabled(getContentUI(content).isMinimizable() && !content.isMinimized());
                         menu.add(minimize);
                     }
 
@@ -777,7 +777,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                 JComponent c = (JComponent) e.getSource();
 
                 Content content = ((Content) c.getClientProperty(Content.class));
-                content.setMinimzed(!content.isMinimzed());
+                content.setMinimized(!content.isMinimized());
             }
         }
     }

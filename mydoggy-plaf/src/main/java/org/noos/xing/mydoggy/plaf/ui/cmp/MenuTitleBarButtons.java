@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
-import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowContainer;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
 import javax.swing.*;
@@ -16,7 +16,7 @@ import java.beans.PropertyChangeListener;
 public class MenuTitleBarButtons extends DefaultTitleBarButtons {
 
 
-    public MenuTitleBarButtons(ToolWindowDescriptor toolWindowDescriptor, DockedContainer dockedContainer) {
+    public MenuTitleBarButtons(ToolWindowDescriptor toolWindowDescriptor, ToolWindowContainer dockedContainer) {
         super(toolWindowDescriptor, dockedContainer);
     }
 

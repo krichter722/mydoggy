@@ -153,7 +153,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
     void setAddToTaskBar(boolean addToTaskBar);
 
     /**
-     * Returns the property value of "addToTaskBarWhenDetached"
+     * Returns the property value of "addToTaskBarWhenDetached".
      *
      * @return <tt>true</tt> if to the toolwindow is associated a button
      * into the task bar when it is in floating mode, <tt>false</tt> otherwise. 

@@ -7,7 +7,197 @@
     </properties>
 
     <body>
-        <release version="1.4.1" date="2008-01-01" description="Code name : Magenta">
+        <release version="1.4.2" date="2008-04-15" description="Code name : Ontario">
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentManager.html">
+                    <code>ContentManager</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">void setEnabled(boolean enabled);</code>
+                        Enables or disables the content manager. If the content manager is disable the whole space
+                        will be available for toolwindows.
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentManagerUI.html">
+                    <code>ContentManagerUI</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">boolean isMinimizable();</code>
+                        Returns whether this content manager permits the contents to be minimized using the ui.
+                    </li>
+                    <li>
+                        <code style="color:green">void setMinimizable(boolean minimizable);</code></br>
+                        Sets the minimizable property of this manager.
+                        </br>
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ContentUI.html">
+                    <code>ContentUI</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">boolean isMinimizable();</code>
+                        Returns whether this content could be minimized using the ui.
+                    </li>
+                    <li>
+                        <code style="color:green">void setMinimizable(boolean minimizable);</code></br>
+                        Sets the minimizable property of this content.
+                        </br>
+                    </li>
+                    <li>
+                        <code style="color:green">void setAddToTaskBarWhenDetached(boolean addToTaskBarWhenDetached);</code>
+                        When it sets to <tt>true</tt> then when the content is detached a button
+                        is added to the task bar of your operating system.
+                    </li>
+                    <li>
+                        <code style="color:green">boolean isAddToTaskBarWhenDetached();</code></br>
+                        Returns the property value of "addToTaskBarWhenDetached".
+                        </br>
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/Dockable.html">
+                    <code>Dockable</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">M getDockableManager();</code>
+                        Returns the DockableManager associated with this dockable.
+                    </li>
+                    <li>
+                        <code style="color:green">void setFlashing(boolean flash);</code></br>
+                        Sets the flashing mode.
+                        </br>
+                    </li>
+                    <li>
+                        <code style="color:green">void setFlashing(int duration);</code>
+                        This method is used to enable flashing for a specific duration.
+                    </li>
+                    <li>
+                        <code style="color:green">boolean isFlashing();</code></br>
+                        Returns whether flashing is currently enabled.
+                        </br>
+                    </li>
+
+                    <li>
+                        <code style="color:green">void setDetached(boolean detached);</code>
+                        This method is used to detach a dockable from its position.
+                    </li>
+                    <li>
+                        <code style="color:green">boolean isDetached();</code></br>
+                        Returns whether or not the dockable is currently detached.
+                        </br>
+                    </li>
+
+                    <li>
+                        <code style="color:green">void setSelected(boolean selected);</code>
+                        Sets whether or not the dockable is selected.
+                    </li>
+                    <li>
+                        <code style="color:green">boolean isSelected();</code></br>
+                        Returns whether or not the dockable is currently selected.
+                        </br>
+                    </li>
+
+                    <li>
+                        <code style="color:green">void setMaximized(boolean maximized);</code>
+                        Maximizes this dockable. A maximized dockable is resized to fully fit the related area.
+                    </li>
+                    <li>
+                        <code style="color:green">boolean isMaximized();</code></br>
+                        Returns whether this dockable is currently maximized.
+                        </br>
+                    </li>
+
+                    <li>
+                        <code style="color:green">void setMinimized(boolean minimized);</code>
+                        Minimizes this dockable. A minimized dockable is a dockable not visible but available.
+                    </li>
+                    <li>
+                        <code style="color:green">boolean isMinimized();;</code></br>
+                        Returns whether this dockable is currently minimized.
+                        </br>
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/DockableManager.html">
+                    <code>DockableManager</code>
+                </a> - This is a markup interface for all Dockable Manager.
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">
+                    <code>FloatingTypeDescriptor</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">void setAddToTaskBar(boolean addToTaskBar);</code>
+                        When it sets to <tt>true</tt> then when the toolwindow is in flaoting mode a button
+                        is added to the task bar of your operating system.
+                    </li>
+                    <li>
+                        <code style="color:green">boolean isAddToTaskBar();</code></br>
+                        Returns the property value of "addToTaskBarWhenDetached".
+                        </br>
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/Observable.html">
+                    <code>Observable</code>
+                </a> - Support for single property change listeners.
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowTypeDescriptor.html">
+                    <code>ToolWindowTypeDescriptor</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">void setAutoHide(boolean autoHide);</code>
+                        This method is used to set the autoHide property for the tool.
+                    </li>
+                    <li>
+                        <code style="color:green">boolean isAutoHide();</code></br>
+                        Returns the autoHide property value of the tool.
+                        </br>
+                    </li>
+                    <li>
+                        <code style="color:green">void setEnabled(boolean enabled);</code>
+                        Enables or disables this mode, depending on the value of the
+                        parameter <code>enabled</code>. An enabled mode can used by user.                        
+                    </li>
+                    <li>
+                        <code style="color:green">boolean isEnabled();</code></br>
+                        Determines whether this mode is enabled.
+                        </br>
+                    </li>
+                </ul>
+                ]]>
+            </action>
+        </release>
+        <release version="1.4.1" date="2008-02-04" description="Code name : Magenta">
             <action dev="adecaro" type="update">
                 <![CDATA[
                 <a href="./apidocs/org/noos/xing/mydoggy/ContentManager.html">
@@ -85,7 +275,7 @@
                 ]]>
             </action>
         </release>
-        <release version="1.4.0" date="2008-01-01" description="Code name : Vittoria">
+        <release version="1.4.0" date="2008-01-03" description="Code name : Vittoria">
             <action dev="adecaro" type="update">
                 <![CDATA[
                 <a href="./apidocs/org/noos/xing/mydoggy/Content.html">
@@ -279,7 +469,7 @@
                         Sets the aggregate mode for tools on the specified anchor.
                     </li>
                     <li>
-                        <code style="color:green">boolean isAggregateMode(ToolWindowAnchor anchor);</code>                        
+                        <code style="color:green">boolean isAggregateMode(ToolWindowAnchor anchor);</code>
                         Returns aggregate mode value for the specified anchor.
                     </li>
                 </ul>
@@ -342,7 +532,7 @@
 
             </action>
         </release>
-        <release version="1.3.1" date="2007-05-26" description="Code name : Winnipeg">
+        <release version="1.3.1" date="2007-09-29" description="Code name : Winnipeg">
             <action dev="adecaro" type="update">
                 <![CDATA[
                 <a href="./apidocs/org/noos/xing/mydoggy/Content.html">
@@ -481,7 +671,7 @@
                 ]]>
             </action>
         </release>
-        <release version="1.3.0" date="2007-05-26" description="Code name : Turkana">
+        <release version="1.3.0" date="2007-06-16" description="Code name : Turkana">
             <action dev="adecaro" type="update">
                 <![CDATA[
                 <a href="./apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">
@@ -644,7 +834,7 @@
                         <code style="color:green">void addToolWindowListener(ToolWindowListener listener);</code>
                         </br>
                         Adds the specified toolwindow listener to receive toolwindow events from
-                        this tool.                        
+                        this tool.
                     </li>
                 </ul>
                 ]]>
@@ -671,7 +861,7 @@
                         <code style="color:green">PushAwayModeDescriptor getPushAwayModeDescriptor(PushAwayMode pushAwayMode);</code>
                         </br>
                         Returns the PushAwayModeDescriptor for the passed push away mode if
-                        it is supported, null otherwise.                        
+                        it is supported, null otherwise.
                     </li>
                     <li>
                         <code style="color:green">void setCornerComponent(Corner corner, Component component);</code>
@@ -883,7 +1073,7 @@
                 ]]>
             </action>
         </release>
-        <release version="1.1.0" date="2007-01-31" description="Code name : Michigan">
+        <release version="1.1.0" date="2007-01-08" description="Code name : Michigan">
             <action dev="adecaro" type="add">
                 <![CDATA[
                 <a href="./apidocs/org/noos/xing/mydoggy/ContentManagerUI.html">
@@ -961,7 +1151,7 @@
 				]]>
             </action>
         </release>
-        <release version="1.0.0" date="2006-10-31" description="Code name : Huron">
+        <release version="1.0.0" date="2006-11-06" description="Code name : Huron">
             <action dev="adecaro" type="add">
                 MyDoggy 1.0.0 released.
             </action>

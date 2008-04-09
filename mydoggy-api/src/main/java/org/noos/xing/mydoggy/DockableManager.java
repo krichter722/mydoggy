@@ -1,6 +1,8 @@
 package org.noos.xing.mydoggy;
 
 /**
+ * This is a markup interface for all Dockable Manager.
+ *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.4.2
  */
