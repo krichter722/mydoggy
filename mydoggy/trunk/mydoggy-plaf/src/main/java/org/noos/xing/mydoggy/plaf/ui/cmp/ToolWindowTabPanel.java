@@ -462,7 +462,7 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
             if ("close".equals(actionCommand)) {
                 toolWindow.removeToolWindowTab(tab);
             } else {
-                tab.setMinimzed(true);
+                tab.setMinimized(true);
             }
         }
 

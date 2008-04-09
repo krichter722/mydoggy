@@ -273,7 +273,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         try {
             if (content.isDetached()) {
                 propertyChange(new PropertyChangeEvent(content, "detached.dispose", true, false));
-            } else if (content.isMinimzed()) {
+            } else if (content.isMinimized()) {
                 toolWindowManager.getDockableDescriptor(content.getId()).setAvailable(false);
             } else {
                 // Remove from tabbedContentPane
@@ -312,8 +312,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
             if (lastSelected != null)
                 lastSelected.setSelected(false);
 
-            if (content.isMinimzed()) {
-                content.setMinimzed(false);
+            if (content.isMinimized()) {
+                content.setMinimized(false);
                 content.setSelected(true);
             } else if (content.isDetached()) {
                 // If the content is detached request the focus for owner window
@@ -551,7 +551,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
             Component oldCmp = (Component) evt.getOldValue();
             Component newCmp = (Component) evt.getNewValue();
 
-            if (content.isMinimzed())
+            if (content.isMinimized())
                 return;
 
             if (content.isDetached()) {
@@ -577,7 +577,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
-            if (content.isMinimzed())
+            if (content.isMinimized())
                 return;
 
             if (!content.isDetached()) {
@@ -594,7 +594,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
-            if (content.isMinimzed())
+            if (content.isMinimized())
                 return;
 
             if (!content.isDetached()) {
@@ -611,7 +611,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
-            if (content.isMinimzed())
+            if (content.isMinimized())
                 return;
 
             if (!content.isDetached()) {
@@ -628,7 +628,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
-            if (content.isMinimzed())
+            if (content.isMinimized())
                 return;
 
             if (content.isDetached()) {
@@ -648,7 +648,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
-            if (content.isMinimzed())
+            if (content.isMinimized())
                 return;
 
             if (!content.isDetached()) {
@@ -665,7 +665,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
-            if (content.isMinimzed())
+            if (content.isMinimized())
                 return;
 
             if (content.isDetached()) {
@@ -684,7 +684,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
-            if (content.isMinimzed())
+            if (content.isMinimized())
                 return;
 
             if (!content.isDetached()) {

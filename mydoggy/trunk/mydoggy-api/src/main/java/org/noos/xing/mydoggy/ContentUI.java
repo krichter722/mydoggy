@@ -163,7 +163,7 @@ public interface ContentUI extends DockableUI {
     void setAddToTaskBarWhenDetached(boolean addToTaskBarWhenDetached);
 
     /**
-     * Returns the property value of "addToTaskBarWhenDetached"
+     * Returns the property value of "addToTaskBarWhenDetached".
      *
      * @return <tt>true</tt> if to the content is associated a button
      * into the task bar when it is detached, <tt>false</tt> otherwise. 

@@ -392,11 +392,10 @@ public class MyDoggySet {
 
 /*
         myDoggyResourceManager.putComponentUICreator(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR_UI,
-                                                     new MyDoggyResourceManager.ComponentUICreator() {
-
-                                                         public ComponentUI createComponentUI(ToolWindowManager manager, ResourceManager resourceManager, Object... args) {
-                                                             return new ToolWindowTitleBarUI((ToolWindowDescriptor) args[0],
-                                                                                             (DockedContainer) args[1]) {
+                                                     new ObjectCreator<ComponentUI>() {
+                                                         public ComponentUI create(Context context) {
+                                                             return new ToolWindowTitleBarUI(context.get(ToolWindowDescriptor.class) ,
+                                                                                             context.get(ToolWindowContainer.class)) {
                                                                  protected void updateToolWindowTitleBar(Graphics g, JComponent c, Color backgroundStart, Color backgroundEnd, Color idBackgroundColor, Color idColor) {
                                                                      Rectangle r = c.getBounds();
                                                                      r.x = r.y = 0;
@@ -442,32 +441,18 @@ public class MyDoggySet {
                                                              };
                                                          }
                                                      });
-*/
-/*
+
         myDoggyResourceManager.putInstanceCreator(TitleBarButtons.class,
-                                                  new MyDoggyResourceManager.InstanceCreator() {
-                                                      public Object createComponent(Object... args) {
+                                                  new ObjectCreator() {
+                                                      public Object create(Context context) {
                                                           return new MenuTitleBarButtons(
-                                                                  (ToolWindowDescriptor) args[0],
-                                                                  (DockedContainer) args[1]
+                                                                  context.get(ToolWindowDescriptor.class),
+                                                                  context.get(ToolWindowContainer.class)
                                                           );
                                                       }
-                                                  }
-        );
+                                                  });
 */
 
-/*
-        myDoggyResourceManager.putInstanceCreator(TitleBarButtons.class,
-                                                  new MyDoggyResourceManager.InstanceCreator() {
-                                                      public Object createComponent(Object... args) {
-                                                          return new MenuTitleBarButtons(
-                                                                  (ToolWindowDescriptor) args[0],
-                                                                  (DockedContainer) args[1]
-                                                          );
-                                                      }
-                                                  }
-        );
-*/
         myDoggyResourceManager.putInstanceCreator(ParentOfQuestion.class, new ObjectCreator() {
             public Object create(Context context) {
                 return new CustomParentOfQuestion(context.get(Component.class),
@@ -476,7 +461,8 @@ public class MyDoggySet {
         });
 
 
-        memoryMonitorDescriptor = new MemoryMonitorDockableDescriptor(myDoggyToolWindowManager, ToolWindowAnchor.BOTTOM);    }
+        memoryMonitorDescriptor = new MemoryMonitorDockableDescriptor(myDoggyToolWindowManager, ToolWindowAnchor.BOTTOM);
+    }
 
     protected void dispose() {
         frame.setVisible(false);

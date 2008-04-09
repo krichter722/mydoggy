@@ -501,7 +501,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
                     }
 
                     if (isMinimizedFired(content.getContentUI(), e.getPoint())) {
-                        content.setMinimzed(!content.isMinimzed());
+                        content.setMinimized(!content.isMinimized());
                         return;
                     }
 

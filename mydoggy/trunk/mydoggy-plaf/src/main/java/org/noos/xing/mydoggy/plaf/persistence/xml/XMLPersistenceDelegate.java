@@ -337,7 +337,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                         attributes.addAttribute(null, "dockableId", null, null, dockable.getId());
                         attributes.addAttribute(null, "selected", null, null, String.valueOf(tab.isSelected()));
                         attributes.addAttribute(null, "maximized", null, null, String.valueOf(tab.isMaximized()));
-                        attributes.addAttribute(null, "minimized", null, null, String.valueOf(tab.isMinimzed()));
+                        attributes.addAttribute(null, "minimized", null, null, String.valueOf(tab.isMinimized()));
                         attributes.addAttribute(null, "closeable", null, null, String.valueOf(tab.isCloseable()));
                         attributes.addAttribute(null, "detached", null, null, String.valueOf(tab.isDetached()));
                         attributes.addAttribute(null, "flashing", null, null, String.valueOf(tab.isFlashing()));
@@ -436,7 +436,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     contentAttributes.addAttribute(null, "enabled", null, null, String.valueOf(content.isEnabled()));
                     contentAttributes.addAttribute(null, "selected", null, null, String.valueOf(content.isSelected()));
                     contentAttributes.addAttribute(null, "maximized", null, null, String.valueOf(content.isMaximized()));
-                    contentAttributes.addAttribute(null, "minimized", null, null, String.valueOf(content.isMinimzed()));
+                    contentAttributes.addAttribute(null, "minimized", null, null, String.valueOf(content.isMinimized()));
                     contentAttributes.addAttribute(null, "flashing", null, null, String.valueOf(content.isFlashing()));
 
                     contentAttributes.addAttribute(null, "closeable", null, null, String.valueOf(contentUI.isCloseable()));
@@ -987,7 +987,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                             tab.setMaximized(false);
                             tab.setCloseable(getBoolean(tabElement, "closeable", true));
                             tab.setFlashing(getBoolean(tabElement, "flashing", false));
-                            tab.setMinimzed(getBoolean(tabElement, "minimized", false));
+                            tab.setMinimized(getBoolean(tabElement, "minimized", false));
                         }
                     }
 

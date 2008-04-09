@@ -1,4 +1,4 @@
-MyDoggy - My Java Docking Framework 1.4.1 (http://mydoggy.sourceforge.net/)
+MyDoggy - My Java Docking Framework 1.4.2 (http://mydoggy.sourceforge.net/)
 
 CONTENTS
 ========
@@ -37,15 +37,15 @@ Like Eclipse, MyDoggy supports the concept of "prospective" using mydoggy groups
 Directory Structure
 ===================
 
-mydoggy-1.4.1
+mydoggy-1.4.2
     bin                         - Contains scripts for launching mydoggy examples.
     lib                         - Contains mydoggy jars (
-    								mydoggy-api-1.4.1.jar,
-    								mydoggy-plaf-1.4.1.jar,
-    								mydoggy-res-1.4.1.jar,
+    								mydoggy-api-1.4.2.jar,
+    								mydoggy-plaf-1.4.2.jar,
+    								mydoggy-res-1.4.2.jar,
     							    TableLayout-20020517.jar,
-    							    mydoggy-examples-1.4.1.jar,
-    								mydoggy-itest-1.4.1.jar,
+    							    mydoggy-examples-1.4.2.jar,
+    								mydoggy-itest-1.4.2.jar,
     							    junit-3.8.1.jar.
     							    <other libs>
         win32                   - Contains TransparencyManager.dll
@@ -97,6 +97,29 @@ use the forums or the support section at sourceforge.net.
 Changes
 =======
 
+- For 1.4.2
+
+    New Features:
+
+    -- Now you can disable the ContentManager. All the free space can be used by toolwindows.
+    -- Now can minimize content and toolwindow tab to save space.
+    -- Now you can add a button in the task bar for flaoting toolwindow and detached content.
+
+    Bug Resolved:
+
+    -- Persistence of ToolWindows in the same anchor : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1934334&group_id=178005&atid=883495">Request ID 1934334</a>
+    -- Unicode persistence problem : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1930078&group_id=178005&atid=883495">Request ID 1930078</a>
+    -- Impossible to hide all representative buttons : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1929666&group_id=178005&atid=883495">Request ID 1929666</a>
+    -- Aggregate Problem : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1929563&group_id=178005&atid=883495">Request ID 1929563</a>
+    -- ClassCastException when changing title of a Content : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1928021&group_id=178005&atid=883495">Request ID 1928021</a>
+    -- ContentPanel tool tips rendered when there is no tool tip : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1913433&group_id=178005&atid=883495">Request ID 1913433</a>
+    -- Pin/Unpin-Button does not repaint : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1909629&group_id=178005&atid=883495">Request ID 1909629</a>
+    -- Content positioning : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1891428&group_id=178005&atid=883495">Request ID 1891428</a>
+    -- ContextManager.removeAll() fails : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1891396&group_id=178005&atid=883495">Request ID 1891396</a>
+    -- Resetting detached/floating panels to visible area : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1887116&group_id=178005&atid=883495">Request ID 1887116</a>
+    -- Deselect-Event after Removal-Event : <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1887095&group_id=178005&atid=883495">Request ID 1887095</a>
+
+
 - For 1.4.1
 
     New Features:
@@ -105,7 +128,6 @@ Changes
     -- New <code>MultiSplitContentUI</code> interface to modify the ui behaviours of a content when a
        <code>MultiSplitContentManagerUIis</code> used as current <code>ContentManagerUI</code>.
     -- Now also the representative anchor buttons for unavailable tools can be showed. See the screenshot here.
-
 
     Bug Resolved:
 
