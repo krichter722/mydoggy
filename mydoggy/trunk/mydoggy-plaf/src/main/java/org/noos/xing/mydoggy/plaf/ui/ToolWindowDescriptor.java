@@ -122,7 +122,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         return toolWindow;
     }
 
-    public JLabel getRepresentativeAnchor(Component container) {
+    public JLabel getRepresentativeAnchor(Component parent) {
         if (representativeAnchor == null) {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
@@ -141,14 +141,14 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
                     representativeAnchor = new RepresentativeAnchor(toolRepresentativeAnchorText, toolIcon, JLabel.CENTER);
                     break;
                 case LEFT:
-                    TextIcon textIcon = new TextIcon(container, toolRepresentativeAnchorText, TextIcon.ROTATE_LEFT);
+                    TextIcon textIcon = new TextIcon(parent, toolRepresentativeAnchorText, TextIcon.ROTATE_LEFT);
                     textIcon.setForeground(toolWindow.isAvailable() ? manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND)
                                                                     : manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
                     AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolIcon, SwingConstants.VERTICAL);
                     representativeAnchor = new RepresentativeAnchor(compositeIcon, JLabel.CENTER);
                     break;
                 case RIGHT:
-                    textIcon = new TextIcon(container, toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
+                    textIcon = new TextIcon(parent, toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
                     textIcon.setForeground(toolWindow.isAvailable() ? manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND)
                                                                     : manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
                     compositeIcon = new AggregateIcon(toolIcon, textIcon, SwingConstants.VERTICAL);
@@ -174,7 +174,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         representativeAnchor = null;
     }
 
-    public int getRepresentativeAnchorIndex() {
+    public int getAnchorIndex() {
         if (representativeAnchor == null)
             return -1;
         return getToolBar().getRepresentativeAnchorIndex(representativeAnchor);

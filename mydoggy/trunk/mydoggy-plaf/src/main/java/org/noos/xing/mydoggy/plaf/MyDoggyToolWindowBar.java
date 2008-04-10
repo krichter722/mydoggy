@@ -507,7 +507,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
                         // true -> false
                         flag = (manager.getToolWindowManagerDescriptor().isShowUnavailableTools() &&
-                                descriptor.getRepresentativeAnchorIndex() != -1);
+                                descriptor.getAnchorIndex() != -1);
 
                         if (params[1] == Boolean.TRUE)
                             flag = false;
@@ -518,7 +518,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                     if (representativeAnchor != null) {
                         if (!flag) {
                             if (rabsEvent)
-                                rabsPositions.put(descriptor, descriptor.getRepresentativeAnchorIndex());
+                                rabsPositions.put(descriptor, descriptor.getAnchorIndex());
 
                             removeRepresentativeAnchor(representativeAnchor, descriptor);
                         } else
@@ -535,7 +535,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                         params = (Object[]) ((UserPropertyChangeEvent) evt).getUserObject();
 
                         flag = (manager.getToolWindowManagerDescriptor().isShowUnavailableTools() &&
-                                descriptor.getRepresentativeAnchorIndex() != -1);
+                                descriptor.getAnchorIndex() != -1);
 
                         if (params[1] == Boolean.TRUE)
                             flag = false;
@@ -753,7 +753,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
             if (descriptor.getDockedTypeDescriptor().isHideRepresentativeButtonOnVisible()) {
                 if (visible) {
-                    poss.put(descriptor, descriptor.getRepresentativeAnchorIndex());
+                    poss.put(descriptor, descriptor.getAnchorIndex());
                     removeRepresentativeAnchor(descriptor.getRepresentativeAnchor(), descriptor);
                 } else {
                     int index = -1;

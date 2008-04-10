@@ -46,7 +46,7 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
         return content;
     }
 
-    public JComponent getRepresentativeAnchor(Component container) {
+    public JComponent getRepresentativeAnchor(Component parent) {
         if (representativeAnchor == null) {
             ToolWindowAnchor anchor = getAnchor();
 
@@ -59,13 +59,13 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
                     representativeAnchor = new RepresentativeAnchorLabel(labelText, toolIcon, JLabel.CENTER);
                     break;
                 case LEFT:
-                    TextIcon textIcon = new TextIcon(container, labelText, TextIcon.ROTATE_LEFT);
+                    TextIcon textIcon = new TextIcon(parent, labelText, TextIcon.ROTATE_LEFT);
                     textIcon.setForeground(manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND));
                     AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolIcon, SwingConstants.VERTICAL);
                     representativeAnchor = new RepresentativeAnchorLabel(compositeIcon, JLabel.CENTER);
                     break;
                 case RIGHT:
-                    textIcon = new TextIcon(container, labelText, TextIcon.ROTATE_RIGHT);
+                    textIcon = new TextIcon(parent, labelText, TextIcon.ROTATE_RIGHT);
                     textIcon.setForeground(manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND));
                     compositeIcon = new AggregateIcon(toolIcon, textIcon, SwingConstants.VERTICAL);
                     representativeAnchor = new RepresentativeAnchorLabel(compositeIcon, JLabel.CENTER);
@@ -89,7 +89,7 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
         representativeAnchor = null;
     }
 
-    public int getRepresentativeAnchorIndex() {
+    public int getAnchorIndex() {
         if (representativeAnchor == null)
             return anchorIndex;
         

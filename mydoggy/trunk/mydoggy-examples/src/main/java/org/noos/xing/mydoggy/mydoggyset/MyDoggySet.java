@@ -750,7 +750,7 @@ public class MyDoggySet {
         public void updateRepresentativeAnchor() {
         }
 
-        public JComponent getRepresentativeAnchor(Component container) {
+        public JComponent getRepresentativeAnchor(Component parent) {
             if (representativeAnchor == null)
                 representativeAnchor = new MemoryMonitorPanel(anchor);
             return representativeAnchor;
