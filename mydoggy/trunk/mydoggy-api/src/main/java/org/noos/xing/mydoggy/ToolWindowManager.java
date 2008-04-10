@@ -237,9 +237,10 @@ public interface ToolWindowManager extends DockableManager {
     Dockable getDockable(Object id);
 
     /**
-     * TODO:
-     * @param anchor
-     * @return
+     * Returns the instance of ToolWindowBar related to the specified anchor.
+     *
+     * @param anchor for which the related instance of ToolWindowBar is to be returned.
+     * @return the instance of ToolWindowBar related to the specified anchor. 
      * @since 1.4.2
      */
     ToolWindowBar getToolWindowBar(ToolWindowAnchor anchor);

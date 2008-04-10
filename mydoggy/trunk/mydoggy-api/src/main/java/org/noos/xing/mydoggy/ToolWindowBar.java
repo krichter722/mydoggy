@@ -1,15 +1,28 @@
 package org.noos.xing.mydoggy;
 
 /**
+ * This interface is used to modify all toolwindow anchor related properties.
+ *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.4.2
+ * @see org.noos.xing.mydoggy.ToolWindowAnchor
+ * @see org.noos.xing.mydoggy.ToolWindowManager#getToolWindowBar(ToolWindowAnchor) 
  */
 public interface ToolWindowBar extends Observable {
 
     /**
-     * TODO
-     * @return
+     * Returns the toolwindow manager related to this bar.
+     * 
+     * @return the toolwindow manager related to this bar.
+     */
+    ToolWindowManager getToolWindowManager();
+
+    /**
+     * Returns the reference anchor.
+     * 
+     * @return the reference anchor.
      * @since 1.4.2
+     * @see org.noos.xing.mydoggy.ToolWindowAnchor
      */
     ToolWindowAnchor getAnchor();
 

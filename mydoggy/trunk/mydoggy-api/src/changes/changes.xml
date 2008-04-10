@@ -142,6 +142,13 @@
                 </a> - This is a markup interface for all Dockable Manager.
                 ]]>
             </action>
+            <action dev="adecaro" type="add">
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowBar.html">
+                    <code>ToolWindowBar</code>
+                </a> - This interface is used to modify all toolwindow anchor related properties.
+                ]]>
+            </action>
             <action dev="adecaro" type="update">
                 <![CDATA[
                 <a href="./apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">
