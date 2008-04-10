@@ -73,6 +73,10 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     }
 
 
+    public ToolWindowManager getToolWindowManager() {
+        return manager;
+    }
+
     public ToolWindowAnchor getAnchor() {
         return anchor;
     }
