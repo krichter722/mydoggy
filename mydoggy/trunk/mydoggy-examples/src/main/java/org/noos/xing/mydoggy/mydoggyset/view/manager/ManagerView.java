@@ -1,17 +1,12 @@
 package org.noos.xing.mydoggy.mydoggyset.view.manager;
 
-import org.noos.xing.mydoggy.PushAwayMode;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.ToolWindowManagerDescriptor;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.yasaf.plaf.action.ChangeListenerAction;
 import org.noos.xing.yasaf.plaf.action.DynamicAction;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.plaf.action.ViewContextSource;
-import org.noos.xing.yasaf.plaf.bean.AndSource;
 import org.noos.xing.yasaf.plaf.bean.ChecBoxSelectionSource;
-import org.noos.xing.yasaf.plaf.bean.ConstantSource;
 import org.noos.xing.yasaf.plaf.bean.SpinnerValueSource;
 import org.noos.xing.yasaf.plaf.component.MatrixPanel;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
@@ -36,6 +31,12 @@ import java.io.ByteArrayOutputStream;
  */
 public class ManagerView implements View {
     protected ToolWindowManager toolWindowManager;
+    protected enum ToolBarKey {
+        LEFT_TOOLBAR,
+        RIGHT_TOOLBAR,
+        TOP_TOOLBAR,
+        BOTTOM_TOOLBAR
+    }
 
     public ManagerView(ToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
@@ -44,6 +45,10 @@ public class ManagerView implements View {
     public Component getComponent() {
         ViewContext viewContext = new MapViewContext();
         viewContext.put(ToolWindowManager.class, toolWindowManager);
+        viewContext.put(ToolBarKey.BOTTOM_TOOLBAR, toolWindowManager.getToolWindowBar(ToolWindowAnchor.BOTTOM));
+        viewContext.put(ToolBarKey.LEFT_TOOLBAR, toolWindowManager.getToolWindowBar(ToolWindowAnchor.LEFT));
+        viewContext.put(ToolBarKey.RIGHT_TOOLBAR, toolWindowManager.getToolWindowBar(ToolWindowAnchor.RIGHT));
+        viewContext.put(ToolBarKey.TOP_TOOLBAR, toolWindowManager.getToolWindowBar(ToolWindowAnchor.TOP));
 
         JPanel panel = new JPanel();
         panel.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {180, 3, -1}}));
@@ -86,52 +91,40 @@ public class ManagerView implements View {
             panel.addEntry(2, 0, "DividerSize (LEFT) : ",
                            leftDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
             leftDividerSize.addChangeListener(
-                    new ChangeListenerAction(ToolWindowManagerDescriptor.class,
+                    new ChangeListenerAction(ToolWindowBar.class,
                                              "setDividerSize",
-                                             new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                                             new AndSource(
-                                                     new ConstantSource(ToolWindowAnchor.LEFT),
-                                                     new SpinnerValueSource(leftDividerSize)
-                                             )
+                                             new ViewContextSource(viewContext, ToolBarKey.LEFT_TOOLBAR),
+                                             new SpinnerValueSource(leftDividerSize)
                     )
             );
 
             panel.addEntry(3, 0, "DividerSize (RIGHT) : ",
                            rightDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
             rightDividerSize.addChangeListener(
-                    new ChangeListenerAction(ToolWindowManagerDescriptor.class,
+                    new ChangeListenerAction(ToolWindowBar.class,
                                              "setDividerSize",
-                                             new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                                             new AndSource(
-                                                     new ConstantSource(ToolWindowAnchor.RIGHT),
-                                                     new SpinnerValueSource(rightDividerSize)
-                                             )
+                                             new ViewContextSource(viewContext, ToolBarKey.RIGHT_TOOLBAR),
+                                             new SpinnerValueSource(rightDividerSize)
                     )
             );
 
             panel.addEntry(4, 0, "DividerSize (TOP) : ",
                            topDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
             topDividerSize.addChangeListener(
-                    new ChangeListenerAction(ToolWindowManagerDescriptor.class,
+                    new ChangeListenerAction(ToolWindowBar.class,
                                              "setDividerSize",
-                                             new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                                             new AndSource(
-                                                     new ConstantSource(ToolWindowAnchor.TOP),
-                                                     new SpinnerValueSource(topDividerSize)
-                                             )
+                                             new ViewContextSource(viewContext, ToolBarKey.TOP_TOOLBAR),
+                                             new SpinnerValueSource(topDividerSize)
                     )
             );
 
             panel.addEntry(5, 0, "DividerSize (BOTTOM) : ",
                            bottomDividerSize = new JSpinner(new SpinnerNumberModel(5, 0, 20, 1)));
             bottomDividerSize.addChangeListener(
-                    new ChangeListenerAction(ToolWindowManagerDescriptor.class,
+                    new ChangeListenerAction(ToolWindowBar.class,
                                              "setDividerSize",
-                                             new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                                             new AndSource(
-                                                     new ConstantSource(ToolWindowAnchor.BOTTOM),
-                                                     new SpinnerValueSource(bottomDividerSize)
-                                             )
+                                             new ViewContextSource(viewContext, ToolBarKey.BOTTOM_TOOLBAR),
+                                             new SpinnerValueSource(bottomDividerSize)
                     )
             );
 
@@ -156,45 +149,33 @@ public class ManagerView implements View {
                                                              new ChecBoxSelectionSource(showUnavailableTools)));
 
             panel.addEntry(2, 1, "Agg Mode (LEFT) : ", leftAggregateMode = new JCheckBox());
-            leftAggregateMode.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
+            leftAggregateMode.setAction(new DynamicAction(ToolWindowBar.class,
                                                           "setAggregateMode",
-                                                          new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                                                          new AndSource(
-                                                                  new ConstantSource(ToolWindowAnchor.LEFT),
+                                                          new ViewContextSource(viewContext, ToolBarKey.LEFT_TOOLBAR),
                                                                   new ChecBoxSelectionSource(leftAggregateMode)
-                                                          )
             ));
 
             panel.addEntry(3, 1, "Agg Mode (RIGHT) : ", rightAggregateMode = new JCheckBox());
-            rightAggregateMode.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
+            rightAggregateMode.setAction(new DynamicAction(ToolWindowBar.class,
                                                            "setAggregateMode",
-                                                           new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                                                           new AndSource(
-                                                                   new ConstantSource(ToolWindowAnchor.RIGHT),
+                                                           new ViewContextSource(viewContext, ToolBarKey.RIGHT_TOOLBAR),
                                                                    new ChecBoxSelectionSource(rightAggregateMode)
-                                                           )
             ));
 
 
             panel.addEntry(4, 1, "Agg Mode (TOP) : ", topAggregateMode = new JCheckBox());
-            topAggregateMode.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
+            topAggregateMode.setAction(new DynamicAction(ToolWindowBar.class,
                                                          "setAggregateMode",
-                                                         new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                                                         new AndSource(
-                                                                 new ConstantSource(ToolWindowAnchor.TOP),
+                                                         new ViewContextSource(viewContext, ToolBarKey.TOP_TOOLBAR),
                                                                  new ChecBoxSelectionSource(topAggregateMode)
-                                                         )
             ));
 
 
             panel.addEntry(5, 1, "Agg Mode (BOTTOM) : ", bottomAggregateMode = new JCheckBox());
-            bottomAggregateMode.setAction(new DynamicAction(ToolWindowManagerDescriptor.class,
+            bottomAggregateMode.setAction(new DynamicAction(ToolWindowBar.class,
                                                             "setAggregateMode",
-                                                            new ViewContextSource(viewContext, ToolWindowManagerDescriptor.class),
-                                                            new AndSource(
-                                                                    new ConstantSource(ToolWindowAnchor.BOTTOM),
+                                                            new ViewContextSource(viewContext, ToolBarKey.BOTTOM_TOOLBAR),
                                                                     new ChecBoxSelectionSource(topAggregateMode)
-                                                            )
             ));
 
             return panel;
@@ -218,15 +199,15 @@ public class ManagerView implements View {
             showUnavailableTools.setSelected(managerDescriptor.isShowUnavailableTools());
             pushAwayMode.setSelectedItem(managerDescriptor.getPushAwayMode());
 
-            leftDividerSize.setValue(managerDescriptor.getDividerSize(ToolWindowAnchor.LEFT));
-            rightDividerSize.setValue(managerDescriptor.getDividerSize(ToolWindowAnchor.RIGHT));
-            topDividerSize.setValue(managerDescriptor.getDividerSize(ToolWindowAnchor.TOP));
-            bottomDividerSize.setValue(managerDescriptor.getDividerSize(ToolWindowAnchor.BOTTOM));
+            leftDividerSize.setValue(((ToolWindowBar) evt.getViewContext().get(ToolBarKey.LEFT_TOOLBAR)).getDividerSize());
+            rightDividerSize.setValue(((ToolWindowBar) evt.getViewContext().get(ToolBarKey.RIGHT_TOOLBAR)).getDividerSize());
+            topDividerSize.setValue(((ToolWindowBar) evt.getViewContext().get(ToolBarKey.TOP_TOOLBAR)).getDividerSize());
+            bottomDividerSize.setValue(((ToolWindowBar) evt.getViewContext().get(ToolBarKey.BOTTOM_TOOLBAR)).getDividerSize());
 
-            leftAggregateMode.setSelected(managerDescriptor.isAggregateMode(ToolWindowAnchor.LEFT));
-            rightAggregateMode.setSelected(managerDescriptor.isAggregateMode(ToolWindowAnchor.RIGHT));
-            topAggregateMode.setSelected(managerDescriptor.isAggregateMode(ToolWindowAnchor.TOP));
-            bottomAggregateMode.setSelected(managerDescriptor.isAggregateMode(ToolWindowAnchor.BOTTOM));
+            leftAggregateMode.setSelected(((ToolWindowBar) evt.getViewContext().get(ToolBarKey.LEFT_TOOLBAR)).isAggregateMode());
+            rightAggregateMode.setSelected(((ToolWindowBar) evt.getViewContext().get(ToolBarKey.RIGHT_TOOLBAR)).isAggregateMode());
+            topAggregateMode.setSelected(((ToolWindowBar) evt.getViewContext().get(ToolBarKey.TOP_TOOLBAR)).isAggregateMode());
+            bottomAggregateMode.setSelected(((ToolWindowBar) evt.getViewContext().get(ToolBarKey.BOTTOM_TOOLBAR)).isAggregateMode());
         }
     }
 

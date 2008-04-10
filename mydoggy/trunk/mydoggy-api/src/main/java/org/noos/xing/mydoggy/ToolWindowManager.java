@@ -225,6 +225,26 @@ public interface ToolWindowManager extends DockableManager {
     boolean containsGroup(String name);
 
     /**
+     * Returns the dockable to which this manager maps the specified id.
+     * Returns <tt>null</tt> if the manager contains no mapping for this id.
+     *
+     * @param id id of dockable.
+     * @return registered dockable with specified id. If there is no registered
+     *         dockable with specified id then the method returns <tt>null</tt>.
+     * @see org.noos.xing.mydoggy.Dockable
+     * @since 1.4.0
+     */
+    Dockable getDockable(Object id);
+
+    /**
+     * TODO:
+     * @param anchor
+     * @return
+     * @since 1.4.2
+     */
+    ToolWindowBar getToolWindowBar(ToolWindowAnchor anchor);
+
+    /**
      * Returns the template type descrptor for <code>type</code>.
      * Any modifications to those templates will be reflected on all registered tool windows.
      *
@@ -274,17 +294,5 @@ public interface ToolWindowManager extends DockableManager {
      * @since 1.0.0
      */
     ToolWindowManagerListener[] getToolWindowManagerListeners();
-
-    /**
-     * Returns the dockable to which this manager maps the specified id.
-     * Returns <tt>null</tt> if the manager contains no mapping for this id.
-     *
-     * @param id id of dockable.
-     * @return registered dockable with specified id. If there is no registered
-     *         dockable with specified id then the method returns <tt>null</tt>.
-     * @see org.noos.xing.mydoggy.Dockable
-     * @since 1.4.0
-     */
-    Dockable getDockable(Object id);
 
 }

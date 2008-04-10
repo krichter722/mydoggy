@@ -194,8 +194,6 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                         try {
                             internalFrame.removePropertyChangeListener(contentUIListener);
                             desktopPane.remove(internalFrame);
-
-                            // TODO: clean internalFrame...
                         } finally {
                             valueAdjusting = false;
                         }

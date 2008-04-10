@@ -350,6 +350,34 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         throw new IllegalStateException("Doen't exist a TypeDescriptor for. [type :" + type + "]");
     }
 
+    public Dockable getDockable(Object id) {
+        Dockable result = getToolWindow(id);
+        if (result == null) {
+            // Try tab
+            for (ToolWindow toolWindow : getToolWindows()) {
+                for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+                    if (tab.getId().equals(id)) {
+                        result = tab;
+                        break;
+                    }
+                }
+                if (result != null)
+                    break;
+            }
+
+            if (result == null) {
+                // Try content
+                result = getContentManager().getContent(id);
+            }
+        }
+
+        return result;
+    }
+
+    public ToolWindowBar getToolWindowBar(ToolWindowAnchor anchor) {
+        return getBar(anchor);
+    }
+
     public void addToolWindowManagerListener(ToolWindowManagerListener listener) {
         twmListeners.add(ToolWindowManagerListener.class, listener);
     }
@@ -386,29 +414,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return listeners.toArray(new DockableManagerListener[listeners.size()]);
     }
 
-    public Dockable getDockable(Object id) {
-        Dockable result = getToolWindow(id);
-        if (result == null) {
-            // Try tab
-            for (ToolWindow toolWindow : getToolWindows()) {
-                for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
-                    if (tab.getId().equals(id)) {
-                        result = tab;
-                        break;
-                    }
-                }
-                if (result != null)
-                    break;
-            }
-
-            if (result == null) {
-                // Try content
-                result = getContentManager().getContent(id);
-            }
-        }
-
-        return result;
-    }
 
     public synchronized void propertyChange(final PropertyChangeEvent evt) {
         Object source = evt.getSource();

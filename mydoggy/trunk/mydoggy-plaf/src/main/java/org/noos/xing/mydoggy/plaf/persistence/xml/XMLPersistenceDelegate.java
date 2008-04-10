@@ -122,12 +122,12 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 writer.startElement("mydoggy", mydoggyAttributes);
 
                 // Write ToolWindows
-                writer.startElement("tools");
+                writer.startElement("toolWindows");
                 for (ToolWindow toolWindow : manager.getToolWindows()) {
                     context.put(ToolWindow.class, toolWindow);
                     getElementWriter(ToolWindow.class).write(writer, context);
                 }
-                writer.endElement("tools");
+                writer.endElement("toolWindows");
 
                 // Write ToolWindowManagerDescriptor
                 context.put(ToolWindowManagerDescriptor.class, manager.getToolWindowManagerDescriptor());
@@ -218,7 +218,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 toolAttributes.addAttribute(null, "index", null, null, String.valueOf(toolWindow.getIndex()));
                 toolAttributes.addAttribute(null, "representativeAnchorButtonVisible", null, null, String.valueOf(toolWindow.isRepresentativeAnchorButtonVisible()));
                 toolAttributes.addAttribute(null, "flashing", null, null, String.valueOf(toolWindow.isFlashing()));
-                writer.startElement("tool", toolAttributes);
+                writer.startElement("toolWindow", toolAttributes);
 
                 writer.startElement("descriptors");
 
@@ -349,7 +349,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 if (addTabsTag)
                     writer.endElement("tabs");
 
-                writer.endElement("tool");
+                writer.endElement("toolWindow");
             } catch (SAXException e) {
                 throw new RuntimeException(e);
             }
@@ -368,22 +368,6 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 attributes.addAttribute(null, "previewEnabled", null, null, String.valueOf(descriptor.isPreviewEnabled()));
                 attributes.addAttribute(null, "showUnavailableTools", null, null, String.valueOf(descriptor.isShowUnavailableTools()));
                 writer.startElement("toolWindowManagerDescriptor", attributes);
-
-                // dividerSize element
-                attributes = new AttributesImpl();
-                attributes.addAttribute(null, "left", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.LEFT)));
-                attributes.addAttribute(null, "right", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.RIGHT)));
-                attributes.addAttribute(null, "top", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.TOP)));
-                attributes.addAttribute(null, "bottom", null, null, String.valueOf(descriptor.getDividerSize(ToolWindowAnchor.BOTTOM)));
-                writer.dataElement("dividerSize", attributes);
-
-                // aggregateMode element
-                attributes = new AttributesImpl();
-                attributes.addAttribute(null, "left", null, null, String.valueOf(descriptor.isAggregateMode(ToolWindowAnchor.LEFT)));
-                attributes.addAttribute(null, "right", null, null, String.valueOf(descriptor.isAggregateMode(ToolWindowAnchor.RIGHT)));
-                attributes.addAttribute(null, "top", null, null, String.valueOf(descriptor.isAggregateMode(ToolWindowAnchor.TOP)));
-                attributes.addAttribute(null, "bottom", null, null, String.valueOf(descriptor.isAggregateMode(ToolWindowAnchor.BOTTOM)));
-                writer.dataElement("aggregateMode", attributes);
 
                 // Start pushAway
                 attributes = new AttributesImpl();
@@ -427,6 +411,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                 writer.startElement("contentManager");
 
+                // write contents
+                writer.startElement("contents");
                 for (Content content : contentManager.getContents()) {
                     ContentUI contentUI = content.getContentUI();
 
@@ -460,6 +446,23 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     }
 
                     writer.endElement("content");
+                }
+                writer.endElement("contents");
+
+                if (!contentManager.isEnabled()) {
+                    MultiSplitDockableContainer dockableContainer = (MultiSplitDockableContainer) ((ContentPanel) toolWindowManager.getMainContent()).getComponent();
+                    writer.startElement("layout");
+
+                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+                    XMLEncoder encoder = new XMLEncoder(os);
+                    encoder.writeObject(dockableContainer.getModel());
+                    encoder.flush();
+                    encoder.close();
+
+                    String model = os.toString();
+                    writer.cdata(model.substring(model.indexOf('\n')));
+
+                    writer.endElement("layout");
                 }
 
                 // End contentManager
@@ -555,6 +558,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 attributes.addAttribute(null, "minimizable", null, null, String.valueOf(desktopContentManagerUI.isMinimizable()));
 
                 writer.startElement("DesktopContentManagerUI", attributes);
+
+                writer.startElement("contents");
                 for (Content content : context.get(ContentManager.class).getContents()) {
                     DesktopContentUI contentUI = (DesktopContentUI) content.getContentUI();
 
@@ -568,6 +573,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                     writer.dataElement("content", contentUIAttributes);
                 }
+                writer.endElement("contents");
 
                 writer.endElement("DesktopContentManagerUI");
             } catch (SAXException e) {
@@ -583,51 +589,33 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             try {
                 MyDoggyToolWindowManager toolWindowManager = (MyDoggyToolWindowManager) context.get(ToolWindowManager.class);
 
-                if  (toolWindowManager.getContentManager().isEnabled()) {
-                    // Store model for bar
-                    writer.startElement("bars");
+                // Save bars
+                writer.startElement("toolWindowBars");
 
+                // Save single bar
+                saveBar(writer, toolWindowManager, ToolWindowAnchor.LEFT);
+                saveBar(writer, toolWindowManager, ToolWindowAnchor.BOTTOM);
+                saveBar(writer, toolWindowManager, ToolWindowAnchor.RIGHT);
+                saveBar(writer, toolWindowManager, ToolWindowAnchor.TOP);
 
-                    saveBar(writer, toolWindowManager, ToolWindowAnchor.LEFT);
-                    saveBar(writer, toolWindowManager, ToolWindowAnchor.BOTTOM);
-                    saveBar(writer, toolWindowManager, ToolWindowAnchor.RIGHT);
-                    saveBar(writer, toolWindowManager, ToolWindowAnchor.TOP);
-
-                    writer.endElement("bars");
-                } else {
-                    // Store main content model
-
-                    MultiSplitDockableContainer dockableContainer = (MultiSplitDockableContainer) ((ContentPanel) toolWindowManager.getMainContent()).getComponent();
-                    writer.startElement("mainContainer");
-
-                    writer.startElement("model");
-
-                    ByteArrayOutputStream os = new ByteArrayOutputStream();
-                    XMLEncoder encoder = new XMLEncoder(os);
-                    encoder.writeObject(dockableContainer.getModel());
-                    encoder.flush();
-                    encoder.close();
-
-                    String model = os.toString();
-                    writer.cdata(model.substring(model.indexOf('\n')));
-
-                    writer.endElement("model");
-
-                    writer.endElement("mainContainer");
-                }
+                writer.endElement("toolWindowBars");
             } catch (SAXException e) {
                 throw new RuntimeException(e);
             }
         }
 
         protected void saveBar(XMLWriter writer, MyDoggyToolWindowManager toolWindowManager, ToolWindowAnchor anchor) throws SAXException {
+            ToolWindowBar toolWindowBar = toolWindowManager.getToolWindowBar(anchor);
+            AttributesImpl attributes = new AttributesImpl();
+            attributes.addAttribute(null, "anchor", null, null, anchor.toString());
+            attributes.addAttribute(null, "dividerSize", null, null, String.valueOf(toolWindowBar.getDividerSize()));
+            attributes.addAttribute(null, "aggregateMode", null, null, String.valueOf(toolWindowBar.isAggregateMode()));
+            writer.startElement("toolWindowBar", attributes);
+
+            // Check for model
             MultiSplitDockableContainer multiSplitDockableContainer = toolWindowManager.getBar(anchor).getToolsContainer();
             if (multiSplitDockableContainer.getContentCount() > 0) {
-                AttributesImpl attributes = new AttributesImpl();
-                attributes.addAttribute(null, "anchor", null, null, anchor.toString());
-                writer.startElement("bar", attributes);
-
-                writer.startElement("model");
+                writer.startElement("layout");
 
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
                 XMLEncoder encoder = new XMLEncoder(os);
@@ -638,9 +626,10 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 String model = os.toString();
                 writer.cdata(model.substring(model.indexOf('\n')));
 
-                writer.endElement("model");
-                writer.endElement("bar");
+                writer.endElement("layout");
             }
+
+            writer.endElement("toolWindowBar");
         }
 
     }
@@ -684,13 +673,10 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         protected void populateParserMap() {
             elementParserMap.put("mydoggy", new MyDoggyElementParser());
             elementParserMap.put("toolWindowManagerDescriptor", new ToolWindowManagerDescriptorElementParser());
-            elementParserMap.put("aggregateMode", new AggregateModeElementParser());
-            elementParserMap.put("dividerSize", new DividerSizeElementParser());
             elementParserMap.put("pushAway", new PushAwayModeElementParser());
-            elementParserMap.put("tools", new ToolsElementParser());
+            elementParserMap.put("toolWindows", new ToolsElementParser());
             elementParserMap.put("contentManager", new ContentManagerElementParser());
-            elementParserMap.put("bar", new BarElementParser());
-            elementParserMap.put("mainContainer", new MainContainerModelElementParser());
+            elementParserMap.put("toolWindowBar", new ToolWindowBarElementParser());
             elementParserMap.put("MultiSplitContentManagerUI", new MultiSplitContentManagerUIElementParser());
             elementParserMap.put("TabbedContentManagerUI", new TabbedContentManagerUIElementParser());
             elementParserMap.put("DesktopContentManagerUI", new DekstopManagerUIElementParser());
@@ -778,32 +764,6 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
     }
 
-    public class DividerSizeElementParser extends ElementParserAdapter {
-        public boolean parse(Element element, Context context) {
-            ToolWindowManagerDescriptor descriptor = context.get(ToolWindowManager.class).getToolWindowManagerDescriptor();
-
-            descriptor.setDividerSize(ToolWindowAnchor.LEFT, getInteger(element, "left", 5));
-            descriptor.setDividerSize(ToolWindowAnchor.RIGHT, getInteger(element, "right", 5));
-            descriptor.setDividerSize(ToolWindowAnchor.TOP, getInteger(element, "top", 5));
-            descriptor.setDividerSize(ToolWindowAnchor.BOTTOM, getInteger(element, "bottom", 5));
-            return true;
-        }
-    }
-
-    public class AggregateModeElementParser extends ElementParserAdapter {
-
-        public boolean parse(Element element, Context context) {
-            ToolWindowManagerDescriptor descriptor = context.get(ToolWindowManager.class).getToolWindowManagerDescriptor();
-
-            descriptor.setAggregateMode(ToolWindowAnchor.LEFT, getBoolean(element, "left", false));
-            descriptor.setAggregateMode(ToolWindowAnchor.RIGHT, getBoolean(element, "right", false));
-            descriptor.setAggregateMode(ToolWindowAnchor.TOP, getBoolean(element, "top", false));
-            descriptor.setAggregateMode(ToolWindowAnchor.BOTTOM, getBoolean(element, "bottom", false));
-            return true;
-        }
-
-    }
-
     public class PushAwayModeElementParser extends ElementParserAdapter {
 
         public boolean parse(Element element, Context context) {
@@ -839,7 +799,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         public boolean parse(Element element, Context context) {
             mergePolicyApplier = context.get(MergePolicyApplier.class);
 
-            NodeList tools = element.getElementsByTagName("tool");
+            NodeList tools = element.getElementsByTagName("toolWindow");
 
             for (int i = 0, size = tools.getLength(); i < size; i++) {
                 Element tool = (Element) tools.item(i);
@@ -1071,12 +1031,13 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
     public class ContentManagerElementParser extends ElementParserAdapter {
 
-        public boolean parse(Element element, Context context) {
+        public boolean parse(Element element, final Context context) {
             NodeList contents = element.getElementsByTagName("content");
 
             Content selectedContent = null;
             Content maximizedContent = null;
 
+            // load contents properties
             for (int i = 0, size = contents.getLength(); i < size; i++) {
                 Element contentElement = (Element) contents.item(i);
                 Content content = context.get(ToolWindowManager.class).getContentManager().getContent(contentElement.getAttribute("id"));
@@ -1120,16 +1081,37 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             if (maximizedContent != null)
                 maximizedContent.setMaximized(true);
 
+            // Load layout
+            Element modelElement = getElement(element, "layout");
+            if (modelElement != null && !toolWindowManager.getContentManager().isEnabled()) {
+                String text = modelElement.getTextContent();
+                XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(text.getBytes()));
+                final MultiSplitLayout.Node model = (MultiSplitLayout.Node) decoder.readObject();
+
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        MultiSplitDockableContainer dockableContainer = (MultiSplitDockableContainer) ((ContentPanel) context.get(MyDoggyToolWindowManager.class).getMainContent()).getComponent();
+                        dockableContainer.setModel(model);
+                    }
+                });
+            }
+
             return false;
         }
     }
 
-    public class BarElementParser extends ElementParserAdapter {
+    public class ToolWindowBarElementParser extends ElementParserAdapter {
 
         public boolean parse(Element element, final Context context) {
             final ToolWindowAnchor anchor = ToolWindowAnchor.valueOf(element.getAttribute("anchor"));
 
-            Element modelElement = getElement(element, "model");
+            // load toolWindowBar properties
+            ToolWindowBar toolWindowBar = context.get(ToolWindowManager.class).getToolWindowBar(anchor);
+            toolWindowBar.setDividerSize(getInteger(element, "left", 3));
+            toolWindowBar.setAggregateMode(getBoolean(element, "aggregateMode", false));
+
+            // load layout TODO: can be better...
+            Element modelElement = getElement(element, "layout");
             if (modelElement != null) {
                 String text = modelElement.getTextContent();
                 XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(text.getBytes()));
