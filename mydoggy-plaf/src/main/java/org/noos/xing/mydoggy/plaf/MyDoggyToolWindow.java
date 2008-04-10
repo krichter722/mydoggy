@@ -319,7 +319,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
     public int getAnchorIndex() {
-        return descriptor.getRepresentativeAnchorIndex();
+        return descriptor.getAnchorIndex();
     }
 
     public void setAnchor(ToolWindowAnchor anchor) {
@@ -329,7 +329,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     public void setAnchor(ToolWindowAnchor anchor, int index) {
         synchronized (getLock()) {
             if (this.anchor == anchor &&
-                (index == getDescriptor().getRepresentativeAnchorIndex() || index == -2))
+                (index == getDescriptor().getAnchorIndex() || index == -2))
                 return;
 
             if (isMaximized())

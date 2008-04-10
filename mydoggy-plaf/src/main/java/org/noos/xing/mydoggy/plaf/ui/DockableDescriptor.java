@@ -23,26 +23,27 @@ public interface DockableDescriptor extends Cleaner {
     }
 
 
-    void setAnchor(ToolWindowAnchor anchor, int index);
-
-    ToolWindowAnchor getAnchor();
-
-    void setAvailable(boolean available);
-
-    boolean isAvailable();
-
     DockableType getDockableType();
 
     Dockable getDockable();
 
 
+    void setAnchor(ToolWindowAnchor anchor, int index);
+
+    ToolWindowAnchor getAnchor();
+
+    int getAnchorIndex();
+
+    void setAvailable(boolean available);
+
+    boolean isAvailable();
+
+
     JComponent getRepresentativeAnchor();
 
-    int getRepresentativeAnchorIndex();
+    JComponent getRepresentativeAnchor(Component parent);
 
     void updateRepresentativeAnchor();
-
-    JComponent getRepresentativeAnchor(Component container);
 
     void resetRepresentativeAnchor();
 
@@ -55,9 +56,11 @@ public interface DockableDescriptor extends Cleaner {
 
     MyDoggyToolWindowBar getToolBar(ToolWindowAnchor anchor);
 
+    CleanerAggregator getCleaner();
+
+
     boolean isDragImageAvailable();
 
     Component getComponentForDragImage();
 
-    CleanerAggregator getCleaner();
 }

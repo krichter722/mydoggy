@@ -60,6 +60,14 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
     }
 
 
+    public DockableType getDockableType() {
+        return DockableType.CUSTOM;
+    }
+
+    public Dockable getDockable() {
+        return null;
+    }
+
     public void setAnchor(ToolWindowAnchor anchor, int index) {
         if (!isAvailable())
             return;
@@ -74,6 +82,13 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
 
     public ToolWindowAnchor getAnchor() {
         return anchor;
+    }
+
+    public int getAnchorIndex() {
+        if (representativeAnchor == null)
+            return anchorIndex;
+
+        return getToolBar().getRepresentativeAnchorIndex(representativeAnchor);
     }
 
     public void setAvailable(boolean available) {
@@ -100,13 +115,6 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
         return available;
     }
 
-    public DockableType getDockableType() {
-        return DockableType.CUSTOM;
-    }
-
-    public Dockable getDockable() {
-        return null;
-    }
 
     public JComponent getRepresentativeAnchor() {
         return representativeAnchor;
@@ -116,12 +124,6 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
         representativeAnchor = null;
     }
 
-    public int getRepresentativeAnchorIndex() {
-        if (representativeAnchor == null)
-            return anchorIndex;
-
-        return getToolBar().getRepresentativeAnchorIndex(representativeAnchor);
-    }
 
     public ResourceManager getResourceManager() {
         return manager.getResourceManager();
@@ -139,6 +141,12 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
         return manager.getBar(anchor);
     }
 
+    public CleanerAggregator getCleaner() {
+        if (cleaner == null)
+            cleaner = new DefaultCleanerAggregator();
+        return cleaner;
+    }
+
     public boolean isDragImageAvailable() {
         return false;
     }
@@ -147,16 +155,11 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
         return null;
     }
 
+
     public void cleanup() {
         getCleaner().cleanup();
         
         manager = null;
-    }
-
-    public CleanerAggregator getCleaner() {
-        if (cleaner == null)
-            cleaner = new DefaultCleanerAggregator();
-        return cleaner;
     }
 
 
