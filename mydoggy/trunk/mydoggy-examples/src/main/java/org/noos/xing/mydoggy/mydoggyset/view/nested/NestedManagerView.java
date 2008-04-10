@@ -24,11 +24,14 @@ public class NestedManagerView implements View {
         MyDoggyToolWindowManager nestedToolManager = new MyDoggyToolWindowManager(parentComponent);
 
         // Add a tool
-        nestedToolManager.registerToolWindow("Nested Tool 1",
+        
+        ToolWindow toolWindow = nestedToolManager.registerToolWindow("Nested Tool 1",
                                              "Nested Tool 1",
                                              null,
                                              new JButton("Nested Hello World 1"),
-                                             ToolWindowAnchor.LEFT).setAvailable(true);
+                                             ToolWindowAnchor.RIGHT);
+        toolWindow.setAvailable(true);
+        toolWindow.setType(ToolWindowType.SLIDING);
 
         // Setup contents
 

@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp.event;
 
 import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
+import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
@@ -141,16 +141,15 @@ public class SlidingMouseInputHandler implements MouseInputListener, Cleaner {
                 Rectangle containerRect = descriptor.getToolWindowManagerContainer().getBounds();
 //                System.out.println("containerRect = " + containerRect);
 
+                // TODO: remove five...
                 switch (toolWindow.getAnchor()) {
                     case LEFT:
                         if (r.width < 5)
                             r.width = 5;
 
                         int maxWidth = containerRect.width;
-                        if (descriptor.getToolBar(ToolWindowAnchor.RIGHT).getAvailableTools() > 0)
-                            maxWidth -= 46;
-                        else
-                            maxWidth -= 23;
+                        maxWidth -= descriptor.getToolBar(LEFT).getSize();
+                        maxWidth -= descriptor.getToolBar(RIGHT).getSize();
 
                         if (r.width > maxWidth)
                             r.width = maxWidth;
@@ -159,20 +158,23 @@ public class SlidingMouseInputHandler implements MouseInputListener, Cleaner {
                         if (r.width < 5)
                             r.width = 5;
 
-                        int toolsOnLeft = descriptor.getToolBar(ToolWindowAnchor.LEFT).getAvailableTools();
-
                         // Min y
-                        int minX = containerRect.x + (toolsOnLeft > 0 ? 23 : 0);
+                        int minX = containerRect.x + descriptor.getToolBar(LEFT).getSize();
                         if (r.x < minX)
                             r.x = minX;
 
                         // Max y
-                        int maxX = (containerRect.x + containerRect.width) - 5 - 23;
+                        int maxX = (containerRect.x + containerRect.width)
+                                   - 5
+                                   - descriptor.getToolBar(RIGHT).getSize();
                         if (r.x > maxX)
                             r.x = maxX;
 
                         // Max height
-                        maxWidth = containerRect.width - (toolsOnLeft > 0 ? 46 : 23);
+                        maxWidth = containerRect.width;
+                        maxWidth -= descriptor.getToolBar(RIGHT).getSize();
+                        maxWidth -= descriptor.getToolBar(LEFT).getSize();
+                        
                         if (r.width > maxWidth)
                             r.width = maxWidth;
 
@@ -182,8 +184,9 @@ public class SlidingMouseInputHandler implements MouseInputListener, Cleaner {
                             r.height = 5;
 
                         // Max width
-                        int diff = descriptor.getToolBar(ToolWindowAnchor.BOTTOM).getAvailableTools() > 0 ? 46 : 23;
-                        int maxHeight = containerRect.height - diff;
+                        int maxHeight = containerRect.height;
+                        maxHeight -= descriptor.getToolBar(TOP).getSize();
+                        maxHeight -= descriptor.getToolBar(BOTTOM).getSize();
                         if (r.height > maxHeight)
                             r.height = maxHeight;
 
@@ -192,21 +195,25 @@ public class SlidingMouseInputHandler implements MouseInputListener, Cleaner {
                         if (r.height < 5)
                             r.height = 5;
 
-                        int toolsOnTop = descriptor.getToolBar(ToolWindowAnchor.TOP).getAvailableTools();
                         int diffMenu = (menuBar != null) ? menuBar.getHeight() : 0;
 
                         // Min y
-                        int minY = containerRect.y + (toolsOnTop > 0 ? 23 : 0) + diffMenu;
+                        int minY = containerRect.y + descriptor.getToolBar(TOP).getSize() + diffMenu;
                         if (r.y < minY)
                             r.y = minY;
 
                         // Max y
-                        int maxY = (containerRect.y + containerRect.height) - 5 - 23 + diffMenu;
+                        int maxY = (containerRect.y + containerRect.height)
+                                   - 5
+                                   - descriptor.getToolBar(BOTTOM).getSize()
+                                   + diffMenu;
                         if (r.y > maxY)
                             r.y = maxY;
 
                         // Max height
-                        maxHeight = containerRect.height - (toolsOnTop > 0 ? 46 : 23);
+                        maxHeight = containerRect.height;
+                        maxHeight -= descriptor.getToolBar(TOP).getSize();
+                        maxHeight -= descriptor.getToolBar(BOTTOM).getSize();
                         if (r.height > maxHeight)
                             r.height = maxHeight;
 

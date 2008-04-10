@@ -80,14 +80,17 @@ public interface ToolWindowManagerDescriptor extends Observable {
     boolean isNumberingEnabled();
 
     /**
-     * TODO:...
-     * @param previewEnabled
+     * Enables or disables tool window previews.
+     *
+     * @param previewEnabled <tt>true</tt> to enable previews, <tt>false</tt> otherwise.
      * @since 1.4.0
      */
     void setPreviewEnabled(boolean previewEnabled);
 
     /**
-     * @return
+     * Returns <tt>true</tt> if previews are enabled, <tt>false</tt> otherwise.
+     *
+     * @return <tt>true</tt> if previews are enabled, <tt>false</tt> otherwise.
      * @since 1.4.0
      */
     boolean isPreviewEnabled();
