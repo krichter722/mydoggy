@@ -5,6 +5,7 @@ import org.noos.common.context.MutableContext;
 import org.noos.common.element.ElementParser;
 import org.noos.common.element.ElementWriter;
 import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowBar;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.MergePolicyApplier;
@@ -587,16 +588,16 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
         public void write(XMLWriter writer, Context context) {
             try {
-                MyDoggyToolWindowManager toolWindowManager = (MyDoggyToolWindowManager) context.get(ToolWindowManager.class);
+                ToolWindowManager toolWindowManager = context.get(ToolWindowManager.class);
 
                 // Save bars
                 writer.startElement("toolWindowBars");
 
                 // Save single bar
-                saveBar(writer, toolWindowManager, ToolWindowAnchor.LEFT);
-                saveBar(writer, toolWindowManager, ToolWindowAnchor.BOTTOM);
-                saveBar(writer, toolWindowManager, ToolWindowAnchor.RIGHT);
-                saveBar(writer, toolWindowManager, ToolWindowAnchor.TOP);
+                saveBar(writer, (MyDoggyToolWindowBar) toolWindowManager.getToolWindowBar(ToolWindowAnchor.LEFT));
+                saveBar(writer, (MyDoggyToolWindowBar) toolWindowManager.getToolWindowBar(ToolWindowAnchor.BOTTOM));
+                saveBar(writer, (MyDoggyToolWindowBar) toolWindowManager.getToolWindowBar(ToolWindowAnchor.RIGHT));
+                saveBar(writer, (MyDoggyToolWindowBar) toolWindowManager.getToolWindowBar(ToolWindowAnchor.TOP));
 
                 writer.endElement("toolWindowBars");
             } catch (SAXException e) {
@@ -604,22 +605,21 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             }
         }
 
-        protected void saveBar(XMLWriter writer, MyDoggyToolWindowManager toolWindowManager, ToolWindowAnchor anchor) throws SAXException {
-            ToolWindowBar toolWindowBar = toolWindowManager.getToolWindowBar(anchor);
+        protected void saveBar(XMLWriter writer, MyDoggyToolWindowBar toolWindowBar) throws SAXException {
+
             AttributesImpl attributes = new AttributesImpl();
-            attributes.addAttribute(null, "anchor", null, null, anchor.toString());
+            attributes.addAttribute(null, "anchor", null, null, toolWindowBar.getAnchor().toString());
             attributes.addAttribute(null, "dividerSize", null, null, String.valueOf(toolWindowBar.getDividerSize()));
             attributes.addAttribute(null, "aggregateMode", null, null, String.valueOf(toolWindowBar.isAggregateMode()));
             writer.startElement("toolWindowBar", attributes);
 
             // Check for model
-            MultiSplitDockableContainer multiSplitDockableContainer = toolWindowManager.getBar(anchor).getToolsContainer();
-            if (multiSplitDockableContainer.getContentCount() > 0) {
+            if (toolWindowBar.getToolWindows().length > 0) {
                 writer.startElement("layout");
 
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
                 XMLEncoder encoder = new XMLEncoder(os);
-                encoder.writeObject(multiSplitDockableContainer.getModel());
+                encoder.writeObject(toolWindowBar.getLayout());
                 encoder.flush();
                 encoder.close();
 
@@ -1110,16 +1110,15 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             toolWindowBar.setDividerSize(getInteger(element, "left", 3));
             toolWindowBar.setAggregateMode(getBoolean(element, "aggregateMode", false));
 
-            // load layout TODO: can be better...
-            Element modelElement = getElement(element, "layout");
-            if (modelElement != null) {
-                String text = modelElement.getTextContent();
-                XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(text.getBytes()));
-                final MultiSplitLayout.Node model = (MultiSplitLayout.Node) decoder.readObject();
+            Element layoutElement = getElement(element, "layout");
+            if (layoutElement != null) {
+                String layoutAsText = layoutElement.getTextContent();
+                XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(layoutAsText.getBytes()));
+                final MultiSplitLayout.Node layout = (MultiSplitLayout.Node) decoder.readObject();
 
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        context.get(MyDoggyToolWindowManager.class).getBar(anchor).getToolsContainer().setModel(model);
+                        ((MyDoggyToolWindowBar) context.get(ToolWindowManager.class).getToolWindowBar(anchor)).setLayout(layout);
                     }
                 });
             }

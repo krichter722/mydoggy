@@ -302,10 +302,10 @@ public class MyDoggyToolWindowManagerDescriptor extends PropertyChangeEventSourc
     }
 
     protected void setSplit(ToolWindowAnchor source, ToolWindowAnchor target) {
-        setSplitCmp(source, manager.getBar(target).getSplitPane());
+        setSplitComponent(source, manager.getBar(target).getSplitPane());
     }
 
-    protected void setSplitCmp(ToolWindowAnchor source, Component cmp) {
+    protected void setSplitComponent(ToolWindowAnchor source, Component cmp) {
         switch (source) {
             case LEFT:
                 manager.getBar(source).getSplitPane().setRightComponent(cmp);

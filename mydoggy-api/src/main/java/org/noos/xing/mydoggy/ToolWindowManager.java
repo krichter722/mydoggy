@@ -154,7 +154,7 @@ public interface ToolWindowManager extends DockableManager {
 
     /**
      * Returns an array of the toolwindows, registered into this manager,
-     * anchored on passed anchor.
+     * with the specified anchor.
      *
      * @param anchor anchor which toolwindows are anchored.
      * @return an array of the toolwindows, registered into this manager,

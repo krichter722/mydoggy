@@ -63,4 +63,11 @@ public interface ToolWindowBar extends Observable {
      */
     boolean isAggregateMode();
 
+    /**
+     * Returns an array of the toolwindows attached on this bar.
+     *
+     * @return an array of the toolwindows attached on this bar.
+     * @since 1.4.2
+     */
+    ToolWindow[] getToolWindows();
 }
