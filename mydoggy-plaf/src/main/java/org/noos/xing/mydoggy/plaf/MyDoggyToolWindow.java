@@ -727,7 +727,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
 
     protected void setVisibleInternal(boolean visible, boolean aggregate,
                                       ToolWindow aggregationOnTool, AggregationPosition aggregationPosition) {
-        if ((aggregateEnabled || descriptor.getManager().getToolWindowManagerDescriptor().isAggregateMode(anchor)) &&
+        if ((aggregateEnabled || descriptor.getManager().getToolWindowBar(anchor).isAggregateMode()) &&
             visible &&
             !aggregate &&
             getType() == ToolWindowType.DOCKED)

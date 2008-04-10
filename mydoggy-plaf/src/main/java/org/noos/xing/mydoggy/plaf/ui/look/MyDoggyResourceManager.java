@@ -31,7 +31,6 @@ import java.util.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * @todo add more fires
  */
 public class MyDoggyResourceManager extends PropertyChangeEventSource implements ResourceManager {
 

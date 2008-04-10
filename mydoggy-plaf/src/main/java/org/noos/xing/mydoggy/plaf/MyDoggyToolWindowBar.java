@@ -25,14 +25,17 @@ import java.util.Map;
 /**
  * @author Angelo De Caro
  */
-public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements SwingConstants, PropertyChangeListener {
+public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements ToolWindowBar,
+                                                                               SwingConstants,
+                                                                               PropertyChangeListener {
     public static final int VERTICAL_LEFT = TextIcon.ROTATE_LEFT;
     public static final int VERTICAL_RIGHT = TextIcon.ROTATE_RIGHT;
     public static final int HORIZONTAL = TextIcon.ROTATE_NONE;
 
     protected MyDoggyToolWindowManager manager;
-
     protected ToolWindowAnchor anchor;
+    protected int dividerSize;
+    protected boolean aggregateMode;
 
     // Bar Components
     protected JToolScrollBar toolScrollBar;
@@ -60,12 +63,49 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
             ((DebugSplitPane) splitPane).setToolWindowBar(this);
         this.anchor = anchor;
         this.availableTools = 0;
+        this.dividerSize = 3;
 
         initComponents();
         initListeners();
 
         if (anchor == ToolWindowAnchor.LEFT || anchor == ToolWindowAnchor.TOP)
             setSplitDividerLocation(0);
+    }
+
+
+    public ToolWindowAnchor getAnchor() {
+        return anchor;
+    }
+
+    public int getDividerSize() {
+        return dividerSize;
+    }
+
+    public void setDividerSize(int size) {
+        if (this.dividerSize == size)
+            return;
+
+        if (size < 1)
+            throw new IllegalArgumentException("Size cannot be lesser than 1");
+
+        int old = this.dividerSize;
+        this.dividerSize = size;
+
+        firePropertyChangeEvent("dividerSize", old, size);
+    }
+
+    public void setAggregateMode(boolean enable) {
+        if (this.aggregateMode == enable)
+            return;
+
+        boolean old = this.aggregateMode;
+        this.aggregateMode = enable;
+
+        firePropertyChangeEvent("aggregateMode", old, enable);
+    }
+
+    public boolean isAggregateMode() {
+        return aggregateMode;
     }
 
 
@@ -90,9 +130,6 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
         return representativeButtonsPanel;
     }
 
-    public ToolWindowAnchor getAnchor() {
-        return anchor;
-    }
 
     public JSplitPane getSplitPane() {
         return splitPane;
@@ -212,20 +249,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
         DragListener dragListener = new DragListener();
         propertyChangeSupport.addPropertyChangeListener("startDrag", dragListener);
         propertyChangeSupport.addPropertyChangeListener("endDrag", dragListener);
-
         propertyChangeSupport.addPropertyChangeListener("maximized", new MaximizedListener());
-
-        manager.getToolWindowManagerDescriptor().addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if ("dividerSize".equals(evt.getPropertyName())) {
-                    Object[] values = (Object[]) evt.getNewValue();
-                    if (values[0].equals(anchor)) {
-                        if (splitPane.getDividerSize() > 0)
-                            splitPane.setDividerSize((Integer) values[1]);
-                    }
-                }
-            }
-        });
+        addPropertyChangeListener("dividerSize", new DividerSizeListener());
 
         manager.getResourceManager().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
@@ -443,8 +468,9 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
     }
 
     public int getSize() {
-        return (getAvailableTools() > 0) ? 23 : 0;   // move to ResourceManager....
+        return (getAvailableTools() > 0) ? 23 : 0;   // TODO: move to ResourceManager....
     }
+
 
 
     protected class AvailableListener implements PropertyChangeListener {
@@ -597,7 +623,6 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
             toolWindowDescriptor.getToolWindowContainer().propertyChange(evt);
         }
     }
-
 
     protected class TypeListener extends AvailableListener {
 
@@ -853,7 +878,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
 
             if (animate) {
                 if (content != null) {
-                    splitPane.setDividerSize(manager.getToolWindowManagerDescriptor().getDividerSize(anchor));
+                    splitPane.setDividerSize(getDividerSize());
                     if (manager.getShowingGroup() == null &&
                         descriptor.getTypeDescriptor(ToolWindowType.DOCKED).isAnimating()) {
                         splitAnimation.show(divederLocation);
@@ -1126,7 +1151,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
     protected class TitleListener extends IndexListener {
     }
 
-    static int len;
+    static int len;     // TODO: adjust
 
     protected class DragListener implements PropertyChangeListener {
 
@@ -1196,6 +1221,15 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements S
                     SwingUtil.repaintNow(splitPane);
                 }
             }
+        }
+
+    }
+
+    protected class DividerSizeListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (splitPane.getDividerSize() > 0)
+                splitPane.setDividerSize((Integer) evt.getNewValue());
         }
 
     }

@@ -25,8 +25,6 @@ public class MyDoggyToolWindowManagerDescriptor extends PropertyChangeEventSourc
     protected boolean previewEnabled;
     protected boolean showUnavailableTools;
     protected Stack<ToolWindowAnchor> mostRecentStack;
-    protected Map<ToolWindowAnchor, Integer> dividerSizes;
-    protected Map<ToolWindowAnchor, Boolean> aggregateModes;
 
 
     public MyDoggyToolWindowManagerDescriptor(MyDoggyToolWindowManager manager) {
@@ -34,18 +32,6 @@ public class MyDoggyToolWindowManagerDescriptor extends PropertyChangeEventSourc
         this.pushAwayMode = PushAwayMode.VERTICAL;
         this.numberingEnabled = this.previewEnabled = true;
         this.showUnavailableTools = false;
-
-        this.dividerSizes = new Hashtable<ToolWindowAnchor, Integer>();
-        setDividerSize(LEFT, 3);
-        setDividerSize(RIGHT, 3);
-        setDividerSize(TOP, 3);
-        setDividerSize(BOTTOM, 3);
-
-        this.aggregateModes = new Hashtable<ToolWindowAnchor, Boolean>();
-        setAggregateMode(LEFT, false);
-        setAggregateMode(RIGHT, false);
-        setAggregateMode(TOP, false);
-        setAggregateMode(BOTTOM, false);
 
         initMostRecent();
     }
@@ -220,32 +206,6 @@ public class MyDoggyToolWindowManagerDescriptor extends PropertyChangeEventSourc
 
     public boolean isPreviewEnabled() {
         return previewEnabled;
-    }
-
-    public int getDividerSize(ToolWindowAnchor anchor) {
-        return dividerSizes.get(anchor);
-    }
-
-    public void setDividerSize(ToolWindowAnchor anchor, int size) {
-        Integer oldSize = dividerSizes.get(anchor);
-        if (oldSize != null && oldSize.equals(size))
-            return;
-
-        dividerSizes.put(anchor, size);
-        firePropertyChangeEvent("dividerSize", new Object[]{anchor, oldSize}, new Object[]{anchor, size});
-    }
-
-    public void setAggregateMode(ToolWindowAnchor anchor, boolean enable) {
-        Boolean oldValue = aggregateModes.get(anchor);
-        if (oldValue != null && oldValue.equals(enable))
-            return;
-
-        aggregateModes.put(anchor, enable);
-        firePropertyChangeEvent("aggregateMode", new Object[]{anchor, oldValue}, new Object[]{anchor, enable});
-    }
-
-    public boolean isAggregateMode(ToolWindowAnchor anchor) {
-        return aggregateModes.get(anchor);
     }
 
     public void setShowUnavailableTools(boolean showUnavailableTools) {

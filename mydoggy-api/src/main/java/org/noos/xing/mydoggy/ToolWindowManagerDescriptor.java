@@ -80,6 +80,7 @@ public interface ToolWindowManagerDescriptor extends Observable {
     boolean isNumberingEnabled();
 
     /**
+     * TODO:...
      * @param previewEnabled
      * @since 1.4.0
      */
@@ -90,47 +91,6 @@ public interface ToolWindowManagerDescriptor extends Observable {
      * @since 1.4.0
      */
     boolean isPreviewEnabled();
-
-    /**
-     * Sets the size of the border the separate a docked toolwindow from the contenManager for a
-     * specific anchor.
-     *
-     * @param anchor the anchor.
-     * @param size   an integer giving the size of the divider in pixels
-     * @see #getDividerSize(ToolWindowAnchor)
-     * @see org.noos.xing.mydoggy.ToolWindowAnchor
-     * @since 1.3.1
-     */
-    void setDividerSize(ToolWindowAnchor anchor, int size);
-
-    /**
-     * Returns the size of the border the separate a docked toolwindow from the contenManager for the
-     * specified anchor.
-     *
-     * @param anchor the anchor.
-     * @return the size of the border
-     * @see #setDividerSize(ToolWindowAnchor, int)
-     * @since 1.3.1
-     */
-    int getDividerSize(ToolWindowAnchor anchor);
-
-    /**
-     * Sets the aggregate mode for tools on the specified anchor.
-     *
-     * @param anchor the anchor.
-     * @param enable aggregate mode value.
-     * @since 1.4.0
-     */
-    void setAggregateMode(ToolWindowAnchor anchor, boolean enable);
-
-    /**
-     * Returns aggregate mode value for the specified anchor.
-     *
-     * @param anchor the anchor.
-     * @return aggregate mode value.
-     * @since 1.4.0
-     */
-    boolean isAggregateMode(ToolWindowAnchor anchor);
 
     /**
      * Sets whether or not the representative anchor buttons for unavailable tools are to be showed.
