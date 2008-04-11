@@ -487,50 +487,53 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                         previewPanel.setAlphaModeRatio(dockedTypeDescriptor.getPreviewTransparentRatio());
                         previewPanel.setSize(width + 4, height + 4);
 
-                        Container mainContainer = descriptor.getManager();
+                        Rectangle containerRect = SwingUtilities.convertRectangle(descriptor.getManager(),
+                                                                                  descriptor.getManager().getBounds(),
+                                                                                  descriptor.getManager().getRootPaneContainer().getContentPane());
+
                         switch (descriptor.getToolWindow().getAnchor()) {
                             case LEFT:
                                 previewPanel.setLocation(
-                                        mainContainer.getX() +
+                                        containerRect.x +
                                         label.getX() + label.getWidth() + 3,
 
                                         (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                                        mainContainer.getY() +
+                                        containerRect.y +
                                         label.getY() +
                                         (descriptor.getToolBar(TOP).getSize())
                                 );
                                 break;
                             case TOP:
                                 previewPanel.setLocation(
-                                        mainContainer.getX() +
+                                        containerRect.x +
                                         label.getX() +
                                         (descriptor.getToolBar(LEFT).getSize()),
 
                                         (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                                        mainContainer.getY() +
+                                        containerRect.y +
                                         label.getY() + label.getHeight() + 3
                                 );
                                 break;
                             case BOTTOM:
                                 previewPanel.setLocation(
-                                        mainContainer.getX() +
+                                        containerRect.x +
                                         label.getX() +
                                         (descriptor.getToolBar(LEFT).getSize()),
 
                                         (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                                        mainContainer.getY() +
-                                        mainContainer.getHeight() -
+                                        containerRect.y +
+                                        containerRect.height -
                                                                   previewPanel.getHeight() - 26
                                 );
                                 break;
                             case RIGHT:
                                 previewPanel.setLocation(
-                                        mainContainer.getX() +
-                                        mainContainer.getWidth() -
+                                        containerRect.x +
+                                        containerRect.width -
                                                                  previewPanel.getWidth() - 26,
 
                                         (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                                        mainContainer.getY() +
+                                        containerRect.y +
                                         label.getY() +
                                         (descriptor.getToolBar(TOP).getSize())
                                 );
@@ -538,25 +541,25 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                         }
 
                         if (previewPanel.getY() + previewPanel.getHeight() >
-                            mainContainer.getY() + mainContainer.getHeight() - 26) {
+                            containerRect.getY() + containerRect.getHeight() - 26) {
 
                             previewPanel.setLocation(
                                     previewPanel.getX(),
 
                                     (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                                    mainContainer.getY() +
-                                    mainContainer.getHeight() -
+                                    containerRect.y +
+                                    containerRect.height -
                                                               (descriptor.getToolBar(BOTTOM).getSize()) -
                                                               previewPanel.getHeight() - 3
                             );
                         }
 
                         if (previewPanel.getX() + previewPanel.getWidth() >
-                            mainContainer.getX() + mainContainer.getWidth() - 26) {
+                            containerRect.x + containerRect.getWidth() - 26) {
 
                             previewPanel.setLocation(
-                                    mainContainer.getX() +
-                                    mainContainer.getWidth() -
+                                    containerRect.x +
+                                    containerRect.width -
                                                              (descriptor.getToolBar(RIGHT).getSize()) -
                                                              previewPanel.getWidth() - 3,
 

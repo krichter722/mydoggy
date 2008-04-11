@@ -67,7 +67,7 @@ public class SlidingMouseInputHandler implements MouseInputListener, Cleaner {
 
     public void cleanup() {
         descriptor = null;
-        toolWindow = null;        
+        toolWindow = null;
     }
 
     public void mousePressed(MouseEvent ev) {
@@ -138,8 +138,10 @@ public class SlidingMouseInputHandler implements MouseInputListener, Cleaner {
             if (!r.equals(startBounds)) {
                 JMenuBar menuBar = descriptor.getManager().getRootPane().getJMenuBar();
 
-                Rectangle containerRect = descriptor.getToolWindowManagerContainer().getBounds();
-//                System.out.println("containerRect = " + containerRect);
+                Container managerContainer = descriptor.getToolWindowManagerContainer();
+                Rectangle containerRect = SwingUtilities.convertRectangle(managerContainer,
+                                                                          managerContainer.getBounds(),
+                                                                          descriptor.getManager().getRootPaneContainer().getContentPane());
 
                 // TODO: remove five...
                 switch (toolWindow.getAnchor()) {
@@ -174,7 +176,7 @@ public class SlidingMouseInputHandler implements MouseInputListener, Cleaner {
                         maxWidth = containerRect.width;
                         maxWidth -= descriptor.getToolBar(RIGHT).getSize();
                         maxWidth -= descriptor.getToolBar(LEFT).getSize();
-                        
+
                         if (r.width > maxWidth)
                             r.width = maxWidth;
 
