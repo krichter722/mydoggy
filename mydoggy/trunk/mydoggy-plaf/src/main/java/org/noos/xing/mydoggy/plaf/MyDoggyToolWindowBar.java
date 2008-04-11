@@ -192,7 +192,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     public int getSize() {
         return (getAvailableTools() > 0)
                ? manager.getResourceManager().getInt((horizontal) ? "toolwindowbar.horizontal.length" : "toolwindowbar.vertical.length", 23)
-               : 0;   // TODO: move to ResourceManager....
+               : 0; 
     }
 
 
