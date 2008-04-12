@@ -401,8 +401,6 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
             if (!toolWindow.isVisible()) {
                 if (previewPanel == null) {
-                    // TODO: when dockedTypeDescriptor.getPreviewDelay() is grater than 1000 then there is a
-                    // a delay of 1000 ms in addition...BOH!!
                     previewTimer.setInitialDelay(
                             dockedTypeDescriptor.getPreviewDelay()
                     );

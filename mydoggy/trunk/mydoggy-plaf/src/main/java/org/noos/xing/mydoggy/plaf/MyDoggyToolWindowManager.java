@@ -33,8 +33,6 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -443,14 +441,18 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     public void removeNotify() {
         super.removeNotify();
-        // TODO: rething this
+
         propertyChangeSupport.firePropertyChange(
-                new PropertyChangeEvent(MyDoggyToolWindowManager.this, "parentComponent.closed", true, false)
+                new PropertyChangeEvent(MyDoggyToolWindowManager.this, "manager.component.notify", true, false)
         );
     }
 
     public void addNotify() {
         super.addNotify();
+
+        propertyChangeSupport.firePropertyChange(
+                new PropertyChangeEvent(MyDoggyToolWindowManager.this, "manager.component.notify", false, true)
+        );
 
 /*
         TODO: (-) introduce level
@@ -752,7 +754,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     protected void initGlassPane() {
-        RootPaneContainer rootPaneContainer = (RootPaneContainer) parentComponent;
         this.glassPanel = new GlassPanel(resourceManager, rootPaneContainer);
 //        rootPaneContainer.setGlassPane(this.glassPanel = new GlassPanel(rootPaneContainer));
     }
@@ -789,24 +790,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                     getBar(descriptor.getToolWindow().getAnchor()).propertyChange(evt);
             }
         });
-        propertyChangeSupport.addPropertyChangeListener("parentComponent.closed", new AnchorClosedChangeListener());
+        propertyChangeSupport.addPropertyChangeListener("manager.component.notify", new AnchestorClosedChangeListener());
         propertyChangeSupport.addPropertyChangeListener("resourceManager", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 glassPanel.setResourceManager((ResourceManager) evt.getNewValue());
             }
         });
         propertyChangeSupport.addPropertyChangeListener("enabled", new ContentMananagerEnabledChangeListener());
-
-        // Init support listener
-        if (parentComponent instanceof Window) {
-            ((Window) parentComponent).addWindowListener(new WindowAdapter() {
-                public void windowClosed(WindowEvent e) {
-                    propertyChangeSupport.firePropertyChange(
-                            new PropertyChangeEvent(MyDoggyToolWindowManager.this, "parentComponent.closed", true, false)
-                    );
-                }
-            });
-        }
 
         initKeyboardFocusManagerListeners();
 
@@ -815,21 +805,24 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     protected void initKeyboardFocusManagerListeners() {
-        final ShortcutProcessor shortcutProcessor = new ShortcutProcessor(this, this);
-        final FocusOwnerChangeListener focusOwnerChangeListener = new FocusOwnerChangeListener();
+        propertyChangeSupport.addPropertyChangeListener("manager.component.notify", new PropertyChangeListener() {
+            final ShortcutProcessor shortcutProcessor = new ShortcutProcessor(MyDoggyToolWindowManager.this,
+                                                                              MyDoggyToolWindowManager.this);
+            final FocusOwnerChangeListener focusOwnerChangeListener = new FocusOwnerChangeListener();
 
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(shortcutProcessor);
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusOwnerChangeListener);
-
-        propertyChangeSupport.addPropertyChangeListener("parentComponent.closed", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-                keyboardFocusManager.removeKeyEventPostProcessor(shortcutProcessor);
+                if (!(Boolean)evt.getNewValue()) {
+                    keyboardFocusManager.removeKeyEventPostProcessor(shortcutProcessor);
 
-                for (PropertyChangeListener listener : keyboardFocusManager.getPropertyChangeListeners("focusOwner")) {
-                    if (listener.getClass().getPackage().getName().startsWith(
-                            MyDoggyToolWindowManager.this.getClass().getPackage().getName()))
-                        keyboardFocusManager.removePropertyChangeListener("focusOwner", listener);
+                    for (PropertyChangeListener listener : keyboardFocusManager.getPropertyChangeListeners("focusOwner")) {
+                        if (listener.getClass().getPackage().getName().startsWith(
+                                MyDoggyToolWindowManager.this.getClass().getPackage().getName()))
+                            keyboardFocusManager.removePropertyChangeListener("focusOwner", listener);
+                    }
+                } else {
+                    keyboardFocusManager.addKeyEventPostProcessor(shortcutProcessor);
+                    keyboardFocusManager.addPropertyChangeListener("focusOwner", focusOwnerChangeListener);
                 }
             }
         });
@@ -1320,7 +1313,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    protected class AnchorClosedChangeListener implements PropertyChangeListener {
+    protected class AnchestorClosedChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             for (ToolWindowDescriptor tool : tools.values())
