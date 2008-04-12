@@ -16,7 +16,6 @@ public class XMLWriter {
 
     protected int elementLevel = 0;
     protected Writer output;
-    protected XMLCharacterEncoder xmlCharacterEncoder;
     protected final Attributes EMPTY_ATTS = new AttributesImpl();
 
     protected Object state = SEEN_NOTHING;
@@ -55,7 +54,6 @@ public class XMLWriter {
     public void startDocument() throws SAXException {
         reset();
         write("<?xml version=\"1.0\" standalone=\"yes\"?>\n\n");
-        xmlCharacterEncoder = new XMLCharacterEncoder(output);
     }
 
     public void endDocument() throws SAXException {
