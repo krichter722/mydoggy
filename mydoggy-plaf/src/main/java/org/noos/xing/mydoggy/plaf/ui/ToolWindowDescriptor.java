@@ -143,14 +143,14 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
                 case LEFT:
                     TextIcon textIcon = new TextIcon(parent, toolRepresentativeAnchorText, TextIcon.ROTATE_LEFT);
                     textIcon.setForeground(toolWindow.isAvailable() ? manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND)
-                                                                    : manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
+                                           : manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
                     AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolIcon, SwingConstants.VERTICAL);
                     representativeAnchor = new RepresentativeAnchor(compositeIcon, JLabel.CENTER);
                     break;
                 case RIGHT:
                     textIcon = new TextIcon(parent, toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
                     textIcon.setForeground(toolWindow.isAvailable() ? manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND)
-                                                                    : manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
+                                           : manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
                     compositeIcon = new AggregateIcon(toolIcon, textIcon, SwingConstants.VERTICAL);
                     representativeAnchor = new RepresentativeAnchor(compositeIcon, JLabel.CENTER);
                     break;
@@ -202,7 +202,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
                 case LEFT:
                     TextIcon textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getLeftIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_LEFT);
                     textIcon.setForeground(toolWindow.isAvailable() ? manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND)
-                                                                    : manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
+                                           : manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
                     AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolIcon, SwingConstants.VERTICAL);
                     representativeAnchor.setText(null);
                     representativeAnchor.setIcon(compositeIcon);
@@ -210,7 +210,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
                 case RIGHT:
                     textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getRightIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
                     textIcon.setForeground(toolWindow.isAvailable() ? manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND)
-                                                                    : manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
+                                           : manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
                     compositeIcon = new AggregateIcon(toolIcon, textIcon, SwingConstants.VERTICAL);
                     representativeAnchor.setText(null);
                     representativeAnchor.setIcon(compositeIcon);
@@ -244,13 +244,13 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
     }
 
     public ResourceManager getResourceManager() {
-            return manager.getResourceManager();
-     }
+        return manager.getResourceManager();
+    }
 
     public void cleanup() {
         getCleaner().cleanup();
     }
-    
+
 
     public Component getComponent() {
         if (component == null) {
@@ -342,8 +342,10 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         return toolWindow;
     }
 
-    public Container getToolWindowManagerContainer() {
-        return manager;
+    public Rectangle getToolWindowManagerContainerBounds() {
+        return SwingUtilities.convertRectangle(manager,
+                                               manager.getBounds(),
+                                               manager.getRootPaneContainer().getContentPane());
     }
 
     public Window getWindowAnchestor() {
@@ -440,7 +442,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
 
         public void cleanup() {
             super.cleanup();
-            
+
             // Clean listener added to toolwindow
             toolWindow.removePlafPropertyChangeListener(ToolWindowDescriptor.this);
 

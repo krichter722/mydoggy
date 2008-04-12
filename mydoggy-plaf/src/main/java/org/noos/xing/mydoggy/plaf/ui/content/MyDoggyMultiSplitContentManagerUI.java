@@ -285,6 +285,11 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                         SwingUtilities.windowForComponent(content.getComponent())
                 );
             } else {
+                // Restore an eventually maximized content
+                Content maximizedContent = getMaximizedContent();
+                if (maximizedContent != null)
+                    maximizedContent.setMaximized(false);
+
                 // Choose the owner tab or check if the content is the main content
                 for (Component c : multiSplitContainer.getTabbedComponents()) {
                     if (c instanceof JTabbedContentPane) {

@@ -120,52 +120,11 @@
             </mode>
         </pushAway>
     </toolWindowManagerDescriptor>
-    <contentManagerUI>
-        <MultiSplitContentManagerUI closeable="true" detachable="true" minimizable="true" showAlwaysTab="false" tabLayout="WRAP" tabPlacement="BOTTOM">
-            <contents>
-                <content id="Welcome" showAlwaysTab="true"/>
-            </contents>
-            <layout>
-                <![CDATA[
-<java version="1.6.0_05" class="java.beans.XMLDecoder">
- <object class="org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer$DockableLeaf">
-  <void property="bounds">
-   <object class="java.awt.Rectangle">
-    <int>0</int>
-    <int>0</int>
-    <int>584</int>
-    <int>383</int>
-   </object>
-  </void>
-  <void property="dockables">
-   <object class="java.util.ArrayList">
-    <void method="add">
-     <string>Welcome</string>
-    </void>
-   </object>
-  </void>
-  <void property="name">
-   <string>1</string>
-  </void>
-  <void property="weight">
-   <double>1.0</double>
-  </void>
- </object>
-</java>
-]]>
-            </layout>
-        </MultiSplitContentManagerUI>
-    </contentManagerUI>
-    <contentManager>
-        <contents>
-            <content id="Welcome" detached="false" enabled="true" selected="true" maximized="false" minimized="false" flashing="false" closeable="true" detachable="true" minimizable="true" transparentMode="true" transparentDelay="0" transparentRatio="0.7" addToTaskBarWhenDetached="false"></content>
-        </contents>
-    </contentManager>
     <toolWindowBars>
-        <toolWindowBar anchor="LEFT" dividerSize="3" aggregateMode="false"></toolWindowBar>
-        <toolWindowBar anchor="BOTTOM" dividerSize="3" aggregateMode="false"></toolWindowBar>
-        <toolWindowBar anchor="RIGHT" dividerSize="3" aggregateMode="false"></toolWindowBar>
-        <toolWindowBar anchor="TOP" dividerSize="3" aggregateMode="false"></toolWindowBar>
+        <toolWindowBar anchor="LEFT" dividerSize="3" aggregateMode="false"/>
+        <toolWindowBar anchor="BOTTOM" dividerSize="3" aggregateMode="false"/>
+        <toolWindowBar anchor="RIGHT" dividerSize="3" aggregateMode="false"/>
+        <toolWindowBar anchor="TOP" dividerSize="3" aggregateMode="false"/>
     </toolWindowBars>
 </mydoggy>
 

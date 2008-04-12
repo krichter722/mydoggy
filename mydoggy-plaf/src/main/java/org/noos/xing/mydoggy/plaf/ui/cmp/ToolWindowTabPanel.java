@@ -28,7 +28,7 @@ import java.util.EventListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * @todo: implemets maximzied
+ * @todo: (-) implemets maximzied
  */
 public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Cleaner {
     protected DockedContainer dockedContainer;

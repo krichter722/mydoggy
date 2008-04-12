@@ -57,7 +57,7 @@ public class MyDoggySet {
     public void start(final Runnable runnable) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                myDoggySetContext.put(MyDoggySetContext.ActionKey.NEST_TOOLMANAGER/*MyDoggySet.class*/, null);
+                myDoggySetContext.put(MyDoggySet.class, null);
                 SwingUtil.centrePositionOnScreen(frame);
                 frame.setVisible(true);
                 memoryMonitorDescriptor.setAvailable(true);

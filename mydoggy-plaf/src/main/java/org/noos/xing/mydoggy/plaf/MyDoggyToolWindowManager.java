@@ -443,9 +443,27 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     public void removeNotify() {
         super.removeNotify();
+        // TODO: rething this
         propertyChangeSupport.firePropertyChange(
                 new PropertyChangeEvent(MyDoggyToolWindowManager.this, "parentComponent.closed", true, false)
         );
+    }
+
+    public void addNotify() {
+        super.addNotify();
+
+/*
+        TODO: (-) introduce level
+        int level = 0;
+        Component mydoggyParent = this;
+        while (true) {
+            mydoggyParent = SwingUtil.getParent(mydoggyParent.getParent(), MyDoggyToolWindowManager.class);
+            if (mydoggyParent == null)
+                break;
+            level++;
+        }
+        getResourceManager().putProperty("layer.level", String.valueOf(level * 5));
+*/
     }
 
     public Component getParentComponent() {
