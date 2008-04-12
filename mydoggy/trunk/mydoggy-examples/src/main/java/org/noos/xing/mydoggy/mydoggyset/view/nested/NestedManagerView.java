@@ -22,6 +22,7 @@ public class NestedManagerView implements View {
 
     public Component getComponent() {
         MyDoggyToolWindowManager nestedToolManager = new MyDoggyToolWindowManager(parentComponent);
+        nestedToolManager.setName("Nested ToolWindowManager");
 
         // Add a tool
         

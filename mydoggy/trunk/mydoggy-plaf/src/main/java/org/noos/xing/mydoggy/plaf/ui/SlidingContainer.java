@@ -64,10 +64,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         Component content = dockedContainer.getContentContainer();
         sheet.remove(content);
 
-        synchronized (slidingAnimation) {
-            if (slidingAnimation.isAnimating())
-                slidingAnimation.stop();
-        }
+        slidingAnimation.stop();
 
         if (visible) {
             descriptor.setIdOnTitleBar();
@@ -140,7 +137,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
         RootPaneContainer rootPaneContainer = descriptor.getManager().getRootPaneContainer();
         layeredPane = rootPaneContainer.getLayeredPane();
-        descriptor.getManager().getParentComponent().addComponentListener(new ComponentResizer());
+        descriptor.getManager().addComponentListener(new ComponentResizer());
     }
 
     protected void initListeners() {
@@ -464,28 +461,28 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         }
 
         protected int calcFirstX() {
-            return descriptor.getManager().getX() +
+            return descriptor.getToolWindowManagerContainerBounds().x +
                    descriptor.getToolBar(ToolWindowAnchor.LEFT).getSize();
         }
 
         protected int calcFirstY() {
-            return descriptor.getManager().getY() +
+            return descriptor.getToolWindowManagerContainerBounds().y +
                    descriptor.getToolBar(ToolWindowAnchor.TOP).getSize() +
                    descriptor.getManager().getJMenuBarExtraHeight();
         }
 
         protected int calcMaxWidth() {
-            int width = descriptor.getManager().getWidth();
+            int width = descriptor.getToolWindowManagerContainerBounds().width;
             width -= descriptor.getToolBar(ToolWindowAnchor.LEFT).getSize();
             width -= descriptor.getToolBar(ToolWindowAnchor.RIGHT).getSize();
             return width;
         }
 
         protected int calcMaxHeight() {
-            int width = descriptor.getManager().getHeight();
-            width -= descriptor.getToolBar(ToolWindowAnchor.TOP).getSize();
-            width -= descriptor.getToolBar(ToolWindowAnchor.BOTTOM).getSize();
-            return width;
+            int height = descriptor.getToolWindowManagerContainerBounds().height;
+            height -= descriptor.getToolBar(ToolWindowAnchor.TOP).getSize();
+            height -= descriptor.getToolBar(ToolWindowAnchor.BOTTOM).getSize();
+            return height;
         }
 
     }
@@ -526,13 +523,12 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         }
 
         public void cleanup() {
-            descriptor.getManager().getParentComponent().removeComponentListener(this);
+            descriptor.getManager().removeComponentListener(this);
         }
 
         public void componentResized(ComponentEvent e) {
             if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
                 update();
         }
-
     }
 }

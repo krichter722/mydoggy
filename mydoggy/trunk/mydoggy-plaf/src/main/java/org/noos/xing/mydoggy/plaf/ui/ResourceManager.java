@@ -127,9 +127,12 @@ public interface ResourceManager extends Observable {
     void setTransparencyManager(TransparencyManager<Window> transparencyManager);
 
     /**
-     * TODO:
-     * @param id
-     * @return
+     * Returns the buffered image to which this manager maps the specified id.  Returns
+     * <tt>null</tt> if the manager contains no mapping for this id.
+     *
+     * @param id id whose associated buffered image is to be returned.
+     * @return the buffered image to which this manager maps the specified id, or
+     *         <tt>null</tt> if the manager contains no mapping for this id.
      * @since 1.4.1
      */
     BufferedImage getBufferedImage(String id);

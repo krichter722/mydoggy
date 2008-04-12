@@ -76,6 +76,14 @@ public abstract class MyDoggyContentManagerUI extends PropertyChangeEventSource 
         this.contentManagerUI = contentManagerUI;
     }
 
+    public Content getMaximizedContent() {
+        for (Content content : contentManager.getContents()) {
+            if (content.isMaximized())
+                return content;
+        }
+        return null;
+    }
+
 
     protected boolean isContentManagerEnabled() {
         return contentManager.isEnabled();

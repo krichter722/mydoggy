@@ -251,9 +251,9 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                 } catch (PropertyVetoException e) {
                     e.printStackTrace();
                 }
-            } else if (selected)
+            } else if (selected) {
                 throw new IllegalStateException("Invalid content ui state.");
-            else if (content == lastSelected)
+            } else if (content == lastSelected)
                 lastSelected = null;
         }
     }
