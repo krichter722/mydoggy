@@ -137,10 +137,8 @@ public class SlidingMouseInputHandler implements MouseInputListener, Cleaner {
 
             if (!r.equals(startBounds)) {
                 JMenuBar menuBar = descriptor.getManager().getRootPane().getJMenuBar();
-
                 Rectangle containerRect = descriptor.getToolWindowManagerContainerBounds();
 
-                // TODO: remove five...
                 switch (toolWindow.getAnchor()) {
                     case LEFT:
                         if (r.width < 5)

@@ -38,6 +38,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
     protected TitleBarMouseAdapter titleBarMouseAdapter;
 
     protected CleanablePropertyChangeSupport propertyChangeSupport;
+    protected PropertyChangeListener focusListener;
 
     protected Component focusRequester;
     protected PopupUpdater popupUpdater;
@@ -174,7 +175,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         titleBarButtons = resourceManager.createInstance(TitleBarButtons.class,
                                                          new DefaultMutableContext(ToolWindowDescriptor.class, descriptor,
                                                                                    ToolWindowContainer.class, this
-                                                                                   ));
+                                                         ));
 
         // Set TitleBar content
         titleBar.add(titleBarTabs, "1,1");
@@ -199,23 +200,27 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
     }
 
     protected void initListeners() {
+        focusListener = new FocusOwnerPropertyChangeListener(
+                                    resourceManager.createInstance(ParentOfQuestion.class,
+                                                                   new DefaultMutableContext(ToolWindow.class, toolWindow,
+                                                                                             Component.class, container)));
+
         addPropertyChangeListener("active", new ActivePropertyChangeListener());
         addPropertyChangeListener("type", new TypePropertyChangeListener());
         addPropertyChangeListener("maximized.before", new MaximizedBeforePropertyChangeListener());
-
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(
-                "focusOwner",
-                new FocusOwnerPropertyChangeListener(
-                        resourceManager.createInstance(ParentOfQuestion.class,
-                                                       new DefaultMutableContext(ToolWindow.class, toolWindow,
-                                                                                 Component.class, container)))
-        );
-
-        addPropertyChangeListener("parentComponent.closed", new PropertyChangeListener() {
+        addPropertyChangeListener("manager.component.notify", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                toolWindow.setFlashing(false);
+                if (!(Boolean) evt.getNewValue())
+                    toolWindow.setFlashing(false);
+                else {
+                    KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+                    keyboardFocusManager.removePropertyChangeListener("focusOwner",focusListener);
+                    keyboardFocusManager.addPropertyChangeListener("focusOwner",focusListener);
+                }
             }
         });
+
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner",focusListener);
 
         toolWindow.addToolWindowListener(new DockedToolWindowListener());
     }

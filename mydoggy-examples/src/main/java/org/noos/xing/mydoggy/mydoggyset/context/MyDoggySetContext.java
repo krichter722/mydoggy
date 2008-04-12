@@ -71,7 +71,6 @@ public class MyDoggySetContext extends MapViewContext {
                                                                                  customizeContentComponent = new CustomizeView(parentComponent, toolWindowManager).getComponent(),
                                                                                  "Customize", (int) 'u'));
 
-//     TODO: readd after profiling...
         addViewContextChangeListener(ActionKey.NEST_TOOLMANAGER, new AddContentAction(toolWindowManager,
                                                                                       "Nested Manager", "Nested Manager", null,
                                                                                       nestedManagerContentComponent = new NestedManagerView(parentComponent, toolWindowManager).getComponent(),
