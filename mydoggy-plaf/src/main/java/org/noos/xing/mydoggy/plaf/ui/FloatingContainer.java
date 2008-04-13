@@ -93,7 +93,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
                 // Set Size
                 if (typeDescriptor.getSize() == null) {
-                    Component parentComponent = descriptor.getManager().getParentComponent();
+                    Component parentComponent = descriptor.getManager().getWindowAnchestor();
                     window.setSize(parentComponent.getWidth() / 2, (int) (parentComponent.getHeight() / 1.5));
                 } else {
                     window.setSize(typeDescriptor.getSize());

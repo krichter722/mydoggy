@@ -135,8 +135,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         border = new SlidingBorder();
         slidingAnimation = new SlidingAnimation();
 
-        RootPaneContainer rootPaneContainer = descriptor.getManager().getRootPaneContainer();
-        layeredPane = rootPaneContainer.getLayeredPane();
+        layeredPane = descriptor.getManager().getLayeredPane();
         descriptor.getManager().addComponentListener(new ComponentResizer());
     }
 
@@ -170,7 +169,14 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         addPropertyChangeListener("active", new ActivePropertyChangeListener());
         addPropertyChangeListener("maximized", new MaximizedPropertyChangeListener());
         addPropertyChangeListener("tempShowed", new TempShowedPropertyChangeListener());
-
+        addPropertyChangeListener("manager.window.anchestor", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getNewValue() != null) {
+                    layeredPane = descriptor.getManager().getLayeredPane();
+                }
+            }
+        });
+        
         slidingMouseInputHandler = new SlidingMouseInputHandler(descriptor);
 
         descriptor.getTypeDescriptor(ToolWindowType.SLIDING).addPropertyChangeListener(new SlidingTypePropertyChangeListener());

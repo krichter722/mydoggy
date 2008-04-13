@@ -55,7 +55,7 @@ public class TutorialSet {
 
     protected void initToolWindowManager() {
         // Create a new instance of MyDoggyToolWindowManager passing the frame.
-        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
+        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
         this.toolWindowManager = myDoggyToolWindowManager;
 
         // Register a Tool.
@@ -96,7 +96,7 @@ public class TutorialSet {
                     debugTool.setAvailable(false);
 
                     // Init new manager
-                    MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
+                    MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
 
                     // Import debug tool...but tabs???
                     myDoggyToolWindowManager.registerToolWindow(

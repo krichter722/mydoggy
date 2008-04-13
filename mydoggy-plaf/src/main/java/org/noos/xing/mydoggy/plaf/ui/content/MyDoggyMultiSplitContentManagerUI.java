@@ -746,7 +746,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         protected Map<Content, MultiSplitDockableContainer.Constraint> detachedContentUIMap;
 
         public DetachedListener() {
-            parentFrame = (toolWindowManager.getParentComponent() instanceof Frame) ? (Frame) toolWindowManager.getParentComponent() : null;
+            parentFrame = (toolWindowManager.getWindowAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAnchestor() : null;
             detachedContentUIMap = new HashMap<Content, MultiSplitDockableContainer.Constraint>();
         }
 

@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.applet.Applet;
 import java.awt.*;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
@@ -581,6 +582,17 @@ public class SwingUtil {
             ((Frame) window).setTitle(title);
         } else
             throw new IllegalArgumentException("Cannot set title for that component");
+    }
+
+    public static Component getWindowAncestor(Component c) {
+        for (Container p = c.getParent(); p != null; p = p.getParent()) {
+            if (p instanceof Window) {
+                return p;
+            } else if (p instanceof Applet) {
+                return p;
+            }
+        }
+        return null;
     }
 
 }

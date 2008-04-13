@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 import org.noos.xing.mydoggy.*;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -15,7 +16,8 @@ public class TestDockedTypeDescriptor extends TestCase {
 
     protected void setUp() throws Exception {
         frame = new JFrame("test");
-        toolWindowManager = new MyDoggyToolWindowManager(frame);
+        toolWindowManager = new MyDoggyToolWindowManager();
+        frame.add((Component) toolWindowManager);
     }
 
     protected void tearDown() throws Exception {
