@@ -34,7 +34,7 @@ public class GroupsView implements View {
     public Component getComponent() {
         ViewContext viewContext = new MapViewContext();
         viewContext.put(ToolWindowManager.class, toolWindowManager);
-        viewContext.put("parentComponent", parentComponent);
+        viewContext.put("windowAnchestor", parentComponent);
 
         JPanel panel = new JPanel();
         panel.setLayout(new ExtendedTableLayout(new double[][]{{3, -1, 3, 200, 3}, {3, -1, 3}}));
@@ -81,7 +81,7 @@ public class GroupsView implements View {
         protected void initListeners() {
             viewContext.addViewContextChangeListener(GroupKeySpace.ADD_GROUP, new ViewContextChangeListener() {
                 public void contextChange(ViewContextChangeEvent evt) {
-                    String groupName = JOptionPane.showInputDialog((Component) viewContext.get("parentComponent"), "Group Name");
+                    String groupName = JOptionPane.showInputDialog((Component) viewContext.get("windowAnchestor"), "Group Name");
                     if (groupName != null)
                         viewContext.get(ToolWindowManager.class).getToolWindowGroup(groupName);
                 }

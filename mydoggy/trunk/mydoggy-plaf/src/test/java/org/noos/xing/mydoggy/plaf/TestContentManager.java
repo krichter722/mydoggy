@@ -6,6 +6,7 @@ import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.ToolWindowManager;
 
 import javax.swing.*;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -23,8 +24,8 @@ public class TestContentManager extends TestCase {
 
     protected void setUp() throws Exception {
         frame = new JFrame("test");
-        toolWindowManager = new MyDoggyToolWindowManager(frame);
-
+        toolWindowManager = new MyDoggyToolWindowManager();
+        frame.add((Component) toolWindowManager);
     }
 
     protected void tearDown() throws Exception {

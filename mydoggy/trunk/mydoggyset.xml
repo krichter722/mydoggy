@@ -1,6 +1,6 @@
-<project name="mydoggyset" basedir="." default="all">
+<project name="mydoggyset" basedir="." default="allSign">
 
-    <target name="init">
+    <target name="initSign">
         <delete file="mydoggyset.keystore"/>
         <genkey alias="mydoggyset"
                 keystore="mydoggyset.keystore"
@@ -21,6 +21,6 @@
         </signjar>
     </target>
 
-    <target name="all" depends="init, sign"/>
+    <target name="allSign" depends="initSign, sign"/>
 
 </project>

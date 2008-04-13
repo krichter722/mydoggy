@@ -108,7 +108,7 @@ class MyDoggyFrame extends JFrame {
 	}
 
 	private void initComponents() {
-		final MyDoggyToolWindowManager toolWindowManager = new MyDoggyToolWindowManager(this);
+		final MyDoggyToolWindowManager toolWindowManager = new MyDoggyToolWindowManager();
 		toolWindowManager.setMainContent(new JLabel("Content"));
 
 		if (!MAction.MYDOGGY_SIMPLE.equals(act)) {

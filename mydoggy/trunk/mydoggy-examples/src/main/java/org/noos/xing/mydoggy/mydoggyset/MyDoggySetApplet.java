@@ -84,7 +84,7 @@ public class MyDoggySetApplet extends JApplet {
         getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
 
         // Init ToolWindowManager
-        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(this, Locale.US, null);
+        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(Locale.US, null);
 
         // Apply now all customization if necessary
         customizeToolWindowManager(myDoggyToolWindowManager);

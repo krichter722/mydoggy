@@ -33,7 +33,7 @@ public class CustomizeView implements View {
     public Component getComponent() {
         ViewContext viewContext = new MapViewContext();
         viewContext.put(ToolWindowManager.class, toolWindowManager);
-        viewContext.put("parentComponent", parentComponent);
+        viewContext.put("windowAnchestor", parentComponent);
 
         JPanel panel = new JPanel();
         panel.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1, 3, -1}}));

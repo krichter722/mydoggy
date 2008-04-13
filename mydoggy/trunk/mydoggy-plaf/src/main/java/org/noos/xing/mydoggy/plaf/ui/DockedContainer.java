@@ -208,14 +208,14 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         addPropertyChangeListener("active", new ActivePropertyChangeListener());
         addPropertyChangeListener("type", new TypePropertyChangeListener());
         addPropertyChangeListener("maximized.before", new MaximizedBeforePropertyChangeListener());
-        addPropertyChangeListener("manager.component.notify", new PropertyChangeListener() {
+        addPropertyChangeListener("manager.window.anchestor", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                if (!(Boolean) evt.getNewValue())
-                    toolWindow.setFlashing(false);
-                else {
+                if (evt.getNewValue() != null) {
                     KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
                     keyboardFocusManager.removePropertyChangeListener("focusOwner",focusListener);
                     keyboardFocusManager.addPropertyChangeListener("focusOwner",focusListener);
+                } else {
+                    toolWindow.setFlashing(false);
                 }
             }
         });

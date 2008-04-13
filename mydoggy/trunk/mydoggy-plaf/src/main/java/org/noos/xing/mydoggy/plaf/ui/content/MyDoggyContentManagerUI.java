@@ -153,7 +153,7 @@ public abstract class MyDoggyContentManagerUI extends PropertyChangeEventSource 
                 } else if ("addToTaskBar".equals(evt.getPropertyName())) {
                     Content content = contentUI.getContent();
                     Window oldWindow = SwingUtilities.windowForComponent(contentUI.getContent().getComponent());
-                    Frame parentFrame = (toolWindowManager.getParentComponent() instanceof Frame) ? (Frame) toolWindowManager.getParentComponent() : null;
+                    Frame parentFrame = (toolWindowManager.getWindowAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAnchestor() : null;
                     Component focusOwner = oldWindow.getFocusOwner();
 
                     // Init new window

@@ -19,11 +19,14 @@ public class TestTWManagerVisibileTool extends TestCase {
 
     protected void setUp() throws Exception {
         frame = new JFrame("test");
-        final MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
+        final MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
+        frame.add(myDoggyToolWindowManager);
+
         this.toolWindowManager = myDoggyToolWindowManager;
         myDoggyToolWindowManager.setMainContent(new JTree());
 
         registerToolWindow();
+        frame.setVisible(true);
     }
 
     protected void tearDown() throws Exception {
@@ -78,22 +81,6 @@ public class TestTWManagerVisibileTool extends TestCase {
         assertFalse(window.isActive());
     }
 
-    public void testSetVisibileTrueSliding() {
-        ToolWindow window = toolWindowManager.getToolWindow("id");
-        window.setType(ToolWindowType.SLIDING);
-
-        assertFalse(window.isAvailable());
-        assertFalse(window.isVisible());
-        assertFalse(window.isActive());
-
-        window.setVisible(true);
-
-        assertTrue(window.isAvailable());
-        assertTrue(window.isVisible());
-        assertFalse(window.isActive());
-
-        window.setVisible(false);
-    }
 
     public void testSetVisibileFalseSliding() {
         ToolWindow window = toolWindowManager.getToolWindow("id");

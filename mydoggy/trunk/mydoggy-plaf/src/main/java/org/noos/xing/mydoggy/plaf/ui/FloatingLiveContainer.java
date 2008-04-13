@@ -172,8 +172,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
     protected void initComponents() {
         mainPanel = new JPanel();
         sheet = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
-
-        layeredPane = descriptor.getManager().getRootPaneContainer().getLayeredPane();
+        layeredPane = descriptor.getManager().getLayeredPane();
     }
 
     protected void initListeners() {
@@ -282,6 +281,13 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
             }
         });
         addPropertyChangeListener("enabled", new TypeEnabledPropertyChangeListener());
+        addPropertyChangeListener("manager.window.anchestor", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getNewValue() != null) {
+                    layeredPane = descriptor.getManager().getLayeredPane();
+                }
+            }
+        });
 
         sheet.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {

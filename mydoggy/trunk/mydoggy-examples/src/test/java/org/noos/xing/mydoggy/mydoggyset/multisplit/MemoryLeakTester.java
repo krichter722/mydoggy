@@ -65,7 +65,7 @@ public class MemoryLeakTester {
 
     protected void initToolWindowManager() {
         // Create a new instance of MyDoggyToolWindowManager passing the frame.
-        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
+        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
         this.toolWindowManager = myDoggyToolWindowManager;
 
         JButton button = new JButton("Unregister Tool");

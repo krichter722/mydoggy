@@ -485,9 +485,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                         previewPanel.setAlphaModeRatio(dockedTypeDescriptor.getPreviewTransparentRatio());
                         previewPanel.setSize(width + 4, height + 4);
 
-                        Rectangle containerRect = SwingUtilities.convertRectangle(descriptor.getManager(),
-                                                                                  descriptor.getManager().getBounds(),
-                                                                                  descriptor.getManager().getRootPaneContainer().getContentPane());
+                        Rectangle containerRect = descriptor.getToolWindowManagerContainerBounds();
 
                         switch (descriptor.getToolWindow().getAnchor()) {
                             case LEFT:
