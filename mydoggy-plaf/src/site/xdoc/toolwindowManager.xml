@@ -15,15 +15,13 @@
                 <br/>
                 To obtain an instance use the following (for example):
             </p>
+            <source>ToolWindowManager toolWindowManager = new MyDoggyToolWindowManager();
+            </source>
+            <p>or</p>
             <source>ToolWindowManager toolWindowManager = new MyDoggyToolWindowManager(
-              frame,      // A window implementing the RootPaneContainer interface
               Locale.getDefault() // A Locale instance
 );
             </source>
-            <p>
-                A window implementing the <code>RootPaneContainer</code> interface is required because
-				<code>MyDoggyToolWindowManager</code> uses the glass pane for the <code>ToolWindowType.SLIDING</code> type.
-            </p>
             <p>
                 MyDoggyToolWindowManager is implemented like a JPanel so you can use it like any other component.
                 <br/>
@@ -31,9 +29,15 @@
             </p>
             <source>JFrame frame = new JFrame("MyDoggy-Set...");
 ...
-MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
+MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
 ...
 frame.getContentPane().add(myDoggyToolWindowManager);</source>
+            <p>
+                To enable all toolwindow types (Sliding, Floating Live, etc.), MyDoggyToolWindowManager
+                must be have as window ancestor an object implementing the <code>RootPaneContainer</code> interface
+                (i.e. JFrame, JWindow, JApplet, ...).
+            </p>
+
         </section>
     </body>
 </document>

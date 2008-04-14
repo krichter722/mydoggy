@@ -71,6 +71,9 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
     }
 
     public void setPopupMenuEnabled(boolean enabled) {
+        if (this.popupMenuEnabled == enabled)
+            return;
+
         boolean old = this.popupMenuEnabled;
         this.popupMenuEnabled = enabled;
 
@@ -90,6 +93,10 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
     }
 
     public void setDockLength(int dockLength) {
+        if (this.dockLength == dockLength || dockLength <= 0)
+            return;
+        System.out.println("dockLength = " + dockLength);
+
         int old = this.dockLength;
         this.dockLength = dockLength;
 
