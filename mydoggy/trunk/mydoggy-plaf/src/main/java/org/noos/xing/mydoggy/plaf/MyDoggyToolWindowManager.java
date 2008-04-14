@@ -1095,6 +1095,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         boolean showingGroupValueAdj = false;
 
         public void propertyChange(PropertyChangeEvent evt) {
+            // Request by email: MyDoggy and IntelliJ IDEA GUI Editor
             SwingUtil.revalidate(MyDoggyToolWindowManager.this);
 
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();

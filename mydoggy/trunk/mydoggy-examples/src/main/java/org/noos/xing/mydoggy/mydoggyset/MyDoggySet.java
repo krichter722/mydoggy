@@ -149,7 +149,7 @@ public class MyDoggySet {
         // Setup type descriptor templates...
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);
         typeDescriptor.setTransparentDelay(0);
-
+                                 
         // Register tools
         JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{20, -1, 20}, {20, -1, 20}}));
         panel.add(new JButton("Hello World 2"), "1,1,FULL,FULL");
@@ -197,17 +197,13 @@ public class MyDoggySet {
             window.setAvailable(true);
         }
 
+        ToolWindow toolWindow;
+        DockedTypeDescriptor dockedTypeDescriptor;
+
         // Setup Tool 1
-        ToolWindow toolWindow = toolWindowManager.getToolWindow("Tool 1");
+        toolWindow = toolWindowManager.getToolWindow("Tool 1");
         toolWindow.setAutoHide(true);
-
-/*
-        toolWindow.getTypeDescriptor(SlidingTypeDescriptor.class).setEnabled(false);
-        toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).setEnabled(false);
-        toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setEnabled(false);
-*/
-
-        DockedTypeDescriptor dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
+        dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
 //        dockedTypeDescriptor.setPopupMenuEnabled(false);
         dockedTypeDescriptor.setDockLength(200);
 

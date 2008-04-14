@@ -27,11 +27,9 @@ public class ContentFrame extends JFrame {
                         Frame parentFrame,
                         Rectangle inBounds) throws HeadlessException {
         setAlwaysOnTop(resourceManager.getBoolean("dialog.owner.enabled", true));
-/*
-        setFocusCycleRoot(true);
-        setFocusTraversalPolicyProvider(true);
-        setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
-*/
+//        setFocusCycleRoot(true);
+//        setFocusTraversalPolicyProvider(true);
+//        setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
 
         this.content = content;
         this.contentUI = contentUI;

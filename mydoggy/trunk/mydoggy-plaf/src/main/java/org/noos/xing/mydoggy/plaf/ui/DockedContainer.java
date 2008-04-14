@@ -143,7 +143,8 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         container.setFocusTraversalPolicyProvider(true);
         container.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
         container.setFocusCycleRoot(true);
-        container.setFocusable(false);
+//        container.setFocusable(false);
+        
         container.putClientProperty(ToolWindow.class, toolWindow);
 
         String id = toolWindow.getId();
