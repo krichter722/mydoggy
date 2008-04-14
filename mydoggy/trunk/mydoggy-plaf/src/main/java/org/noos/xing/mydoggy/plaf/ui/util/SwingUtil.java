@@ -72,6 +72,15 @@ public class SwingUtil {
         });
     }
 
+    public static void revalidate(final Component component) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                component.invalidate();
+                component.validate();
+            }
+        });
+    }
+
     public static void repaint(final Component component, final Runnable runnable) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

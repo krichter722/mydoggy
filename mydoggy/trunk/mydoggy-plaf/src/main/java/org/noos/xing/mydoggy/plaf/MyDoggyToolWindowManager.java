@@ -1095,6 +1095,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         boolean showingGroupValueAdj = false;
 
         public void propertyChange(PropertyChangeEvent evt) {
+            SwingUtil.revalidate(MyDoggyToolWindowManager.this);
+
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
 
             // Fire "visible.before" to all bars
