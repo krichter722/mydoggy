@@ -321,21 +321,22 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
         JInternalFrame internalFrame = (JInternalFrame) detachedContentUIMap.get(content);
 
         if (internalFrame == null) {
-            internalFrame = new DesktopContentFrame(this, content, content.getTitle());
-            internalFrame.setFrameIcon(content.getIcon());
-            internalFrame.setClosable(closeable);
-            ((DesktopContentFrame) internalFrame).setDetachable(detachable);
+            DesktopContentFrame desktopContentFrame = new DesktopContentFrame(this, content, content.getTitle());
+            desktopContentFrame.setFrameIcon(content.getIcon());
+            desktopContentFrame.setClosable(closeable);
+            desktopContentFrame.setDetachable(detachable);
+            desktopContentFrame.setMinimizable(minimizable);
 
-            internalFrame.getContentPane().add(content.getComponent());
+            desktopContentFrame.getContentPane().add(content.getComponent());
 
             // Parse constraints
             if (constraints.length > 0) {
                 if (constraints[0] instanceof Point) {
                     Point location = (Point) constraints[0];
 
-                    internalFrame.setBounds(location.x, location.y, 320, 200);
+                    desktopContentFrame.setBounds(location.x, location.y, 320, 200);
                 } else if (constraints[0] instanceof Rectangle) {
-                    internalFrame.setBounds((Rectangle) constraints[0]);
+                    desktopContentFrame.setBounds((Rectangle) constraints[0]);
                 } else
                     constraints = null;
             }
@@ -347,11 +348,10 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                     contentIndex = 0;
                     contentY = contentX = 10;
                 }
-                internalFrame.setBounds(contentX, contentY, 320, 200);
+                desktopContentFrame.setBounds(contentX, contentY, 320, 200);
             }
 
-
-            internalFrame.addVetoableChangeListener(new VetoableChangeListener() {
+            desktopContentFrame.addVetoableChangeListener(new VetoableChangeListener() {
                 public void vetoableChange(PropertyChangeEvent evt) throws PropertyVetoException {
                     if (JInternalFrame.IS_CLOSED_PROPERTY.equals(evt.getPropertyName())) {
                         if (Boolean.TRUE.equals(evt.getNewValue())) {
@@ -361,7 +361,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                     }
                 }
             });
-            internalFrame.addInternalFrameListener(new InternalFrameAdapter() {
+            desktopContentFrame.addInternalFrameListener(new InternalFrameAdapter() {
                 public void internalFrameClosed(InternalFrameEvent e) {
                     try {
                         contentManager.removeContent(((DesktopContentFrame) e.getInternalFrame()).getContent());
@@ -370,7 +370,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                     }
                 }
             });
-            internalFrame.addPropertyChangeListener(JInternalFrame.IS_SELECTED_PROPERTY, new PropertyChangeListener() {
+            desktopContentFrame.addPropertyChangeListener(JInternalFrame.IS_SELECTED_PROPERTY, new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (!valueAdjusting && !contentValueAdjusting) {
 
@@ -398,6 +398,8 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                     }
                 }
             });
+            
+            internalFrame = desktopContentFrame;
         } else {
             internalFrame.getContentPane().add(content.getComponent());
         }

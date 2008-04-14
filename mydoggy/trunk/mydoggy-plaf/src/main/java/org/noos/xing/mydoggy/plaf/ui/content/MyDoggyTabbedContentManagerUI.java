@@ -487,9 +487,13 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         if (contentUI == null) {
             contentUI = new MyDoggyTabbedContentUI(this, tabbedContentPane, content);
             contentUI.addPropertyChangeListener(contentUIListener);
+            contentUI.setCloseable(closeable);
+            contentUI.setDetachable(detachable);
+            contentUI.setMinimizable(minimizable);
+
+            contentUIMap.put(content, contentUI);
         }
 
-        contentUIMap.put(content, contentUI);
 
         if (!showAlwaysTab && tabbedContentPane.getTabCount() == 0 && (contentValueAdjusting || toolWindowManager.getMainContent() == null)) {
             toolWindowManager.setMainContent(content.getComponent());
@@ -769,6 +773,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                 Window window = SwingUtilities.windowForComponent(content.getComponent());
                 window.setVisible(false);
                 window.dispose();
+                
                 detachedContentUIMap.remove(content);
             } else {
                 if (!oldValue && newValue) {
