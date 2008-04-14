@@ -410,11 +410,13 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
         if (contentUI == null) {
             contentUI = new MyDoggyMultiSplitContentUI(this, multiSplitContainer, content);
             contentUI.addPropertyChangeListener(contentUIListener);
+            contentUI.setCloseable(closeable);
+            contentUI.setDetachable(detachable);
+            contentUI.setMinimizable(minimizable);
+
+            contentUIMap.put(content, contentUI);
         }
 
-        contentUIMap.put(content, contentUI);
-        contentUI.setCloseable(closeable);
-        contentUI.setDetachable(detachable);
 
         if (constraints != null && constraints.length > 0) {
             if (constraints[0] instanceof MultiSplitConstraint) {
