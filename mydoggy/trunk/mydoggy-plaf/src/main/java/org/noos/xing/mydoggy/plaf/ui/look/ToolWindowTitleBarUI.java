@@ -373,7 +373,6 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
     }
 
     protected class ToolWindowTitleBarDragGesture extends DragGestureAdapter {
-        protected BufferedImage ghostImage;
         protected JComponent lastOverCmp = null;
         protected Border oldBorder = null;
 

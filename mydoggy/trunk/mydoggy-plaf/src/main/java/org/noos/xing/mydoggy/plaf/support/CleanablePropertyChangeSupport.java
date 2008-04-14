@@ -39,7 +39,8 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
         }
     }
 
-    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+    
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
         if (listener == null) {
             return;
         }
@@ -51,33 +52,14 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
             addPropertyChangeListener(proxy.getPropertyName(),
                                       (PropertyChangeListener) proxy.getListener());
         } else {
-            if (listeners == null) {
+            if (listeners == null)
                 listeners = new EventListenerAggregate(PropertyChangeListener.class);
-            }
+
             listeners.add(listener);
         }
     }
 
-    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
-        if (listener == null) {
-            return;
-        }
-
-        if (listener instanceof PropertyChangeListenerProxy) {
-            PropertyChangeListenerProxy proxy =
-                    (PropertyChangeListenerProxy) listener;
-            // Call two argument remove method.
-            removePropertyChangeListener(proxy.getPropertyName(),
-                                         (PropertyChangeListener) proxy.getListener());
-        } else {
-            if (listeners == null) {
-                return;
-            }
-            listeners.remove(listener);
-        }
-    }
-
-    public synchronized PropertyChangeListener[] getPropertyChangeListeners() {
+    public PropertyChangeListener[] getPropertyChangeListeners() {
         List<EventListener> returnList = new ArrayList<EventListener>();
 
         // Add all the PropertyChangeListeners
@@ -87,9 +69,7 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
 
         // Add all the PropertyChangeListenerProxys
         if (children != null) {
-            Iterator<String> iterator = children.keySet().iterator();
-            while (iterator.hasNext()) {
-                String key = iterator.next();
+            for (String key : children.keySet()) {
                 CleanablePropertyChangeSupport child = children.get(key);
                 PropertyChangeListener[] childListeners = child.getPropertyChangeListeners();
                 for (int index = childListeners.length - 1; index >= 0; index--) {
@@ -100,12 +80,36 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
         return returnList.toArray(new PropertyChangeListener[returnList.size()]);
     }
 
-    public synchronized void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        if (listener == null) {
+            return;
+        }
+
+        if (listener instanceof PropertyChangeListenerProxy) {
+            PropertyChangeListenerProxy proxy = (PropertyChangeListenerProxy) listener;
+            // Call two argument remove method.
+            removePropertyChangeListener(proxy.getPropertyName(), (PropertyChangeListener) proxy.getListener());
+        } else {
+            if (listeners == null) {
+                return;
+            }
+            listeners.remove(listener);
+        }
+    }
+
+    public void removePropertyChangeListeners() {
+        for (PropertyChangeListener listener : getPropertyChangeListeners()) {
+            removePropertyChangeListener(listener);
+        }
+    }
+
+
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         if (listener == null || propertyName == null) {
             return;
         }
         if (children == null) {
-            children = new java.util.Hashtable<String, CleanablePropertyChangeSupport>();
+            children = new Hashtable<String, CleanablePropertyChangeSupport>();
         }
         CleanablePropertyChangeSupport child = children.get(propertyName);
         if (child == null) {
@@ -115,21 +119,7 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
         child.addPropertyChangeListener(listener);
     }
 
-    public synchronized void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-        if (listener == null || propertyName == null) {
-            return;
-        }
-        if (children == null) {
-            return;
-        }
-        CleanablePropertyChangeSupport child = children.get(propertyName);
-        if (child == null) {
-            return;
-        }
-        child.removePropertyChangeListener(listener);
-    }
-
-    public synchronized PropertyChangeListener[] getPropertyChangeListeners(String propertyName) {
+    public PropertyChangeListener[] getPropertyChangeListeners(String propertyName) {
         ArrayList<PropertyChangeListener> returnList = new ArrayList<PropertyChangeListener>();
 
         if (children != null && propertyName != null) {
@@ -143,76 +133,30 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
         return (returnList.toArray(new PropertyChangeListener[returnList.size()]));
     }
 
-    public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-        if (oldValue != null && newValue != null && oldValue.equals(newValue)) {
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        if (listener == null || propertyName == null) {
             return;
         }
-        firePropertyChange(new PropertyChangeEvent(source, propertyName,
-                                                   oldValue, newValue));
-    }
-
-    public void firePropertyChange(String propertyName, int oldValue, int newValue) {
-        if (oldValue == newValue) {
+        if (children == null) {
             return;
         }
-        firePropertyChange(propertyName, new Integer(oldValue), new Integer(newValue));
-    }
-
-    public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {
-        if (oldValue == newValue) {
+        CleanablePropertyChangeSupport child = children.get(propertyName);
+        if (child == null) {
             return;
         }
-        firePropertyChange(propertyName, Boolean.valueOf(oldValue), Boolean.valueOf(newValue));
+        child.removePropertyChangeListener(listener);
     }
 
-    public void firePropertyChange(PropertyChangeEvent evt) {
-        Object oldValue = evt.getOldValue();
-        Object newValue = evt.getNewValue();
-        String propertyName = evt.getPropertyName();
-        if (oldValue != null && newValue != null && oldValue.equals(newValue)) {
+    public void removePropertyChangeListeners(String propertyName) {
+        CleanablePropertyChangeSupport child = children.get(propertyName);
+        if (child == null)
             return;
-        }
 
-        if (listeners != null) {
-            Object[] list = listeners.getListenersInternal();
-            for (int i = 0; i < list.length; i++) {
-                PropertyChangeListener target = (PropertyChangeListener) list[i];
-                target.propertyChange(evt);
-            }
-        }
-
-        if (children != null && propertyName != null) {
-            CleanablePropertyChangeSupport child = null;
-            child = children.get(propertyName);
-            if (child != null) {
-                child.firePropertyChange(evt);
-            }
-        }
+        child.removePropertyChangeListeners();
     }
 
-    public void fireIndexedPropertyChange(String propertyName, int index, Object oldValue, Object newValue) {
-        firePropertyChange(new IndexedPropertyChangeEvent
-                (source, propertyName, oldValue, newValue, index));
-    }
 
-    public void fireIndexedPropertyChange(String propertyName, int index, int oldValue, int newValue) {
-        if (oldValue == newValue) {
-            return;
-        }
-        fireIndexedPropertyChange(propertyName, index,
-                                  new Integer(oldValue),
-                                  new Integer(newValue));
-    }
-
-    public void fireIndexedPropertyChange(String propertyName, int index, boolean oldValue, boolean newValue) {
-        if (oldValue == newValue) {
-            return;
-        }
-        fireIndexedPropertyChange(propertyName, index, Boolean.valueOf(oldValue),
-                                  Boolean.valueOf(newValue));
-    }
-
-    public synchronized boolean hasListeners(String propertyName) {
+    public boolean hasListeners(String propertyName) {
         if (listeners != null && !listeners.isEmpty()) {
             // there is a generic listener
             return true;
@@ -225,5 +169,43 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
         }
         return false;
     }
+
+
+    public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+        if (oldValue != null && newValue != null && oldValue.equals(newValue))
+            return;
+
+        firePropertyChange(new PropertyChangeEvent(source, propertyName, oldValue, newValue));
+    }
+
+    public void firePropertyChange(PropertyChangeEvent evt) {
+        Object oldValue = evt.getOldValue();
+        Object newValue = evt.getNewValue();
+        String propertyName = evt.getPropertyName();
+        if (oldValue != null && newValue != null && oldValue.equals(newValue))
+            return;
+
+        if (listeners != null) {
+            Object[] listeners = this.listeners.getListenersInternal();
+            for (Object listener : listeners) {
+                PropertyChangeListener target = (PropertyChangeListener) listener;
+                target.propertyChange(evt);
+            }
+        }
+
+        if (children != null && propertyName != null) {
+            CleanablePropertyChangeSupport child;
+            child = children.get(propertyName);
+            if (child != null) {
+                child.firePropertyChange(evt);
+            }
+        }
+    }
+
+    public void fireIndexedPropertyChange(String propertyName, int index, Object oldValue, Object newValue) {
+        firePropertyChange(new IndexedPropertyChangeEvent
+                (source, propertyName, oldValue, newValue, index));
+    }
+
 
 }
