@@ -485,12 +485,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
     protected int addUIForContent(Content content, Object... constaints) {
         TabbedContentUI contentUI = contentUIMap.get(content);
         if (contentUI == null) {
-            if (!installed) {
-                contentUI = new MyDoggyTabbedContentUI(this, tabbedContentPane,
-                                                       content);
-            } else
-                contentUI = new MyDoggyTabbedContentUI(this, tabbedContentPane,
-                                                       content);
+            contentUI = new MyDoggyTabbedContentUI(this, tabbedContentPane, content);
             contentUI.addPropertyChangeListener(contentUIListener);
         }
 

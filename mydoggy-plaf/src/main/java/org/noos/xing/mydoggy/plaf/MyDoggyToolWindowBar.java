@@ -31,7 +31,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     public static final int VERTICAL_LEFT = TextIcon.ROTATE_LEFT;
     public static final int VERTICAL_RIGHT = TextIcon.ROTATE_RIGHT;
     public static final int HORIZONTAL = TextIcon.ROTATE_NONE;
-    protected static int dragComponentLength;
+    static int dragComponentLength;
 
     protected MyDoggyToolWindowManager manager;
     protected ToolWindowAnchor anchor;
@@ -210,11 +210,13 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
         if (anchor == ToolWindowAnchor.LEFT || anchor == ToolWindowAnchor.RIGHT) {
             horizontal = false;
-            representativeButtonsPanel.setLayout(representativeButtonsPanelLayout = new ExtendedTableLayout(new double[][]{MyDoggyToolWindowManager.COLUMNS, {0}}));
+            representativeButtonsPanel.setLayout(representativeButtonsPanelLayout = new ExtendedTableLayout(
+                    new double[][]{manager.COLUMNS, {0}}));
             orientation = JSplitPane.VERTICAL_SPLIT;
         } else if (anchor == ToolWindowAnchor.TOP || anchor == ToolWindowAnchor.BOTTOM) {
             horizontal = true;
-            representativeButtonsPanel.setLayout(representativeButtonsPanelLayout = new ExtendedTableLayout(new double[][]{{0}, MyDoggyToolWindowManager.ROWS}));
+            representativeButtonsPanel.setLayout(representativeButtonsPanelLayout = new ExtendedTableLayout(
+                    new double[][]{{0}, manager.ROWS}));
             orientation = JSplitPane.HORIZONTAL_SPLIT;
         }
 

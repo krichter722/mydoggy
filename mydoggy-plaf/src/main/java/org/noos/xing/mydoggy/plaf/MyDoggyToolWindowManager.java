@@ -50,6 +50,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     public final static Object sync = new Object();
 
+    protected double[] COLUMNS;
+    protected double[] ROWS;
+
     protected ToolWindowGroup showingGroup;
 
     protected MyDoggyContentManager contentManager;
@@ -94,9 +97,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected ClassLoader uiClassLoader;
     protected ResourceManagerListener resourceManagerListener;
     protected transient ResourceManager resourceManager;
-    protected static double[] COLUMNS;
-    protected static double[] ROWS;
-
 
     // Support for content manager disabling
     protected Component oldMainContent = null;
@@ -438,6 +438,18 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public void removeNotify() {
         super.removeNotify();
 
+        // Restore all detached ddckable...
+        for (ToolWindow toolWindow : getToolWindows()) {
+            if (toolWindow.getType() == ToolWindowType.FLOATING && toolWindow.isVisible()) {
+                toolWindow.setVisible(false);
+            }
+        }
+
+        for (Content content : getContentManager().getContents()) {
+            content.setDetached(false);
+        }
+
+        // Fire event
         propertyChangeSupport.firePropertyChange(
                 new PropertyChangeEvent(MyDoggyToolWindowManager.this, "manager.window.anchestor",
                                         windowAnchestor,
@@ -448,6 +460,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public void addNotify() {
         super.addNotify();
 
+        // Load ancestor
         windowAnchestor = SwingUtil.getWindowAncestor(this);
         // Check root pane container
         if (!(windowAnchestor instanceof RootPaneContainer)) {
@@ -857,8 +870,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         resourceManager.setLocale(locale);
 
         // Init constants
-        MyDoggyToolWindowManager.COLUMNS = new double[]{2, resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_VERTICAL_BAR_LENGTH, COLUMN_LENGTH) - 4, 2};
-        MyDoggyToolWindowManager.ROWS = new double[]{2, resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_HORIZONTAL_BAR_LENGTH, ROW_LENGTH) - 4, 2};
+        COLUMNS = new double[]{2, resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_VERTICAL_BAR_LENGTH, COLUMN_LENGTH) - 4, 2};
+        ROWS = new double[]{2, resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_HORIZONTAL_BAR_LENGTH, ROW_LENGTH) - 4, 2};
     }
 
 

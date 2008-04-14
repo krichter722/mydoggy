@@ -393,7 +393,7 @@ public class SwingUtil {
 
             window.setBounds(targetBounds);
         } else {
-            GraphicsDevice graphicsDevice = window.getGraphicsConfiguration().getDevice();
+//            GraphicsDevice graphicsDevice = window.getGraphicsConfiguration().getDevice();
 //            if (graphicsDevice.isFullScreenSupported())
 //                graphicsDevice.setFullScreenWindow(window);
 //            else {
