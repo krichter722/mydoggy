@@ -16,7 +16,7 @@ public class JModalWindow extends JWindow implements ModalWindow {
 
     public JModalWindow(ResourceManager resourceManager, Window owner, Component returnFocus, boolean modal) {
         super(owner);
-        
+
         this.resourceManager = resourceManager;
         setFocusableWindowState(true);
         this.returnFocus = returnFocus;
