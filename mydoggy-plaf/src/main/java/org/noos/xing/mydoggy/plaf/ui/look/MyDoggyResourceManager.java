@@ -183,15 +183,23 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     public boolean getBoolean(String name, boolean defaultValue) {
+        Boolean result = (Boolean) cache.get("Bool." + name);
+        if (result != null)
+            return result;
+
         String propertyValue = getProperty(name);
         if (propertyValue == null || "".equals(propertyValue.trim()))
-            return defaultValue;
-
-        try {
-            return Boolean.parseBoolean(propertyValue);
-        } catch (Exception e) {
-            return defaultValue;
+            result = defaultValue;
+        else {
+            try {
+                result = Boolean.parseBoolean(propertyValue);
+            } catch (Exception e) {
+                result = defaultValue;
+            }
         }
+
+        cache.put("Bool." + name, result);
+        return result;
     }
 
     public float getFloat(String name, float defaultValue) {
@@ -215,15 +223,23 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     public int getInt(String name, int defaultValue) {
+        Integer result = (Integer) cache.get("Int." + name);
+        if (result != null)
+            return result;
+
         String propertyValue = getProperty(name);
         if (propertyValue == null || "".equals(propertyValue.trim()))
-            return defaultValue;
-
-        try {
-            return Integer.parseInt(propertyValue);
-        } catch (Exception e) {
-            return defaultValue;
+            result = defaultValue;
+        else {
+            try {
+                result = Integer.parseInt(propertyValue);
+            } catch (Exception e) {
+                result = defaultValue;
+            }
         }
+
+        cache.put("Int." + name, result);
+        return result;
     }
 
     public void putObject(Object key, Object value) {

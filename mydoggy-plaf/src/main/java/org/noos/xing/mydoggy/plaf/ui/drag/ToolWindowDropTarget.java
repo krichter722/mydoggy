@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.drag;
 
 import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -17,14 +18,16 @@ import java.beans.PropertyChangeListener;
  */
 public class ToolWindowDropTarget extends DropTarget {
 
-    public ToolWindowDropTarget(JComponent component, ToolWindowManager toolWindowManager, ToolWindowAnchor anchor) throws HeadlessException {
+    public ToolWindowDropTarget(JComponent component, 
+                                MyDoggyToolWindowManager toolWindowManager,
+                                ToolWindowAnchor anchor) throws HeadlessException {
         super(component,
               DnDConstants.ACTION_MOVE,
               new ToolWindowDropTargetListener(component, toolWindowManager, anchor));
     }
 
     public static class ToolWindowDropTargetListener implements DropTargetListener, PropertyChangeListener {
-        protected ToolWindowManager toolWindowManager;
+        protected MyDoggyToolWindowManager toolWindowManager;
         protected ToolWindowAnchor anchor;
         protected int anchorIndex;
         protected JComponent component;
@@ -35,7 +38,9 @@ public class ToolWindowDropTarget extends DropTarget {
         protected Border oldBorder;
         protected Border dragBorder = new LineBorder(Color.BLUE, 3);
 
-        public ToolWindowDropTargetListener(JComponent component, ToolWindowManager toolWindowManager, ToolWindowAnchor anchor) {
+        public ToolWindowDropTargetListener(JComponent component,
+                                            MyDoggyToolWindowManager toolWindowManager,
+                                            ToolWindowAnchor anchor) {
             this.component = component;
             this.toolWindowManager = toolWindowManager;
             this.anchor = anchor;
@@ -179,7 +184,8 @@ public class ToolWindowDropTarget extends DropTarget {
                                         toolWindow.setActive(true);
                                     } else {
                                         if (onToolWindow != null && toolWindow != onToolWindow) {
-                                            onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
+                                            if (toolWindowManager.getResourceManager().getBoolean("drag.toolwindow.asTab", true))
+                                                onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
                                         } else {
                                             toolWindow.aggregate();
                                             toolWindow.setActive(true);
