@@ -21,22 +21,25 @@ public class FloatingMoveMouseInputHandler implements MouseInputListener {
              Cursor.SE_RESIZE_CURSOR, Cursor.SE_RESIZE_CURSOR
             };
 
-    private boolean isMovingWindow;
-    private int dragCursor;
-    private int dragOffsetX;
-    private int dragOffsetY;
+    protected boolean isMovingWindow;
+    protected int dragCursor;
+    protected int dragOffsetX;
+    protected int dragOffsetY;
 
-    private Component floatingContainer;
+    protected Component floatingContainer;
+    protected Window floatingWindow;
 
     public FloatingMoveMouseInputHandler(Component floatingContainer) {
         this.floatingContainer = floatingContainer;
+        if (floatingContainer instanceof Window)
+            floatingWindow = (Window) floatingContainer;
     }
 
     public void mousePressed(MouseEvent ev) {
         Component w = (Component) ev.getSource();
         if (w != null) {
-            if (floatingContainer instanceof Window)
-                ((Window) floatingContainer).toFront();
+            if (floatingWindow != null)
+                floatingWindow.toFront();
 
             Point dragWindowOffset = ev.getPoint();
             Point convertedDragWindowOffset = SwingUtilities.convertPoint(w,
@@ -79,6 +82,13 @@ public class FloatingMoveMouseInputHandler implements MouseInputListener {
 
             windowPt.x += pt.x - dragOffsetX;
             windowPt.y += pt.y - dragOffsetY;
+
+            if (floatingWindow != null) {
+                // Check bounds
+                Rectangle maxBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+                if (windowPt.y < maxBounds.y)
+                    windowPt.y = maxBounds.y;                         
+            }
 
             floatingContainer.setLocation(windowPt);
         }
