@@ -4,6 +4,7 @@ import info.clearthought.layout.TableLayout;
 import org.noos.common.Question;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManagerDescriptor;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
 import org.noos.xing.mydoggy.plaf.support.CleanablePropertyChangeSupport;
@@ -693,6 +694,10 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
         public void propertyChange(PropertyChangeEvent evt) {
             if (!toolWindow.isVisible() || valueAdjusting)
+                return;
+
+            // TODO: implement better...
+            if (((MyDoggyToolWindowManagerDescriptor) descriptor.getManager().getToolWindowManagerDescriptor()).checkParam)
                 return;
 
             Component component = (Component) evt.getNewValue();

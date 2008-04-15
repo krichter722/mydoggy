@@ -21,7 +21,7 @@ public class MyDoggyToolWindowManagerDescriptor extends PropertyChangeEventSourc
     protected PushAwayMode pushAwayMode;
     protected MyDoggyToolWindowManager manager;
     protected boolean numberingEnabled;
-    protected boolean checkParam = true;
+    public boolean checkParam = true;
     protected boolean previewEnabled;
     protected boolean showUnavailableTools;
     protected Stack<ToolWindowAnchor> mostRecentStack;
