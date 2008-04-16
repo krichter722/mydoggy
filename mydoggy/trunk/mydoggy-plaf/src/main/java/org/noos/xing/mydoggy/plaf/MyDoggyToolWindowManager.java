@@ -11,6 +11,7 @@ import org.noos.xing.mydoggy.plaf.descriptors.DefaultFloatingLiveTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultFloatingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultSlidingTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.persistence.xml.XMLPersistenceDelegate;
+import org.noos.xing.mydoggy.plaf.support.CleanablePropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
@@ -35,7 +36,6 @@ import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.*;
 import java.util.List;
 
@@ -45,9 +45,6 @@ import java.util.List;
  * description: MyDoggyToolWindowManager
  */
 public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener {
-    protected static final int COLUMN_LENGTH = 23;  // TODO: Move to key space
-    protected static final int ROW_LENGTH = 23;
-
     public final static Object sync = new Object();
 
     protected ToolWindowGroup showingGroup;
@@ -71,7 +68,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected JPanel mainContainer;
     protected MultiSplitDockableContainer toolDockableContainer;
 
-    protected PropertyChangeSupport propertyChangeSupport;
+    protected CleanablePropertyChangeSupport propertyChangeSupport;
 
     protected Object activeToolWindowId;
 
@@ -111,7 +108,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         this.aliases = new HashMap<Object, ToolWindow>();
         this.dockableDescriptorMap = new HashMap<String, DockableDescriptor>();
 
-        this.propertyChangeSupport = new PropertyChangeSupport(this);
+        this.propertyChangeSupport = new CleanablePropertyChangeSupport(this);
         this.toolWindowManagerDescriptor = new MyDoggyToolWindowManagerDescriptor(this);
         this.toolWindowManagerDescriptor.addPropertyChangeListener(this);
 
@@ -604,17 +601,18 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public ToolWindowAnchor getToolWindowAnchor(Point p) {
         Rectangle b = getBounds();
 
-        int verticalLength = resourceManager.getInt("toolwindowbar.vertical.length", COLUMN_LENGTH);
-        int horizontalLength = resourceManager.getInt("toolwindowbar.horizontal.length", ROW_LENGTH);
+        int leftLength = getBar(LEFT).getLength();
+        int rightLength = getBar(RIGHT).getLength();
+        int topLength = getBar(TOP).getLength();
+        int bottomLength = getBar(BOTTOM).getLength();
 
-
-        if (p.x <= verticalLength && p.y >= horizontalLength && p.y <= b.height - horizontalLength) {
+        if (p.x <= leftLength && p.y >= topLength && p.y <= b.height - bottomLength) {
             return ToolWindowAnchor.LEFT;
-        } else if (p.x >= b.width - verticalLength && p.y >= horizontalLength && p.y <= b.height - horizontalLength) {
+        } else if (p.x >= b.width - rightLength && p.y >= topLength && p.y <= b.height - bottomLength) {
             return ToolWindowAnchor.RIGHT;
-        } else if (p.y <= horizontalLength && p.x >= verticalLength && p.x <= b.width - verticalLength) {
+        } else if (p.y <= topLength && p.x >= leftLength && p.x <= b.width - rightLength) {
             return ToolWindowAnchor.TOP;
-        } else if (p.y >= b.height - horizontalLength && p.x >= verticalLength && p.x <= b.width - verticalLength) {
+        } else if (p.y >= b.height - bottomLength && p.x >= leftLength && p.x <= b.width - rightLength) {
             return ToolWindowAnchor.BOTTOM;
         }
         return null;
@@ -730,7 +728,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         tools = new LinkedHashMap<Object, ToolWindowDescriptor>();
         toolWindowGroups = new ResolvableHashtable<Object, ToolWindowGroup>(new ResolvableHashtable.Resolver<ToolWindowGroup>() {
             public ToolWindowGroup get(Object key) {
-                ToolWindowGroup group = new MyDoggyToolWindowGroup(MyDoggyToolWindowManager.this, key.toString());
+                ToolWindowGroup group = new MyDoggyToolWindowGroup(MyDoggyToolWindowManager.this, key.toString(), false);
                 toolWindowGroups.put(key, group);
                 fireAddedGroupEvent(group);
 
@@ -1350,10 +1348,23 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     protected class ContentMananagerEnabledChangeListener implements PropertyChangeListener {
 
-        public void propertyChange(PropertyChangeEvent evt) {
+        public void propertyChange(final PropertyChangeEvent evt) {
             if (evt.getSource() instanceof ContentManager) {
-//                getToolWindowGroup().setVisible(false);
+/*  TODO support request from Elvis...
+                final MyDoggyToolWindowGroup group = new MyDoggyToolWindowGroup(MyDoggyToolWindowManager.this, "temp");
+                for (ToolWindow toolWindow : getToolWindows()) {
+                    if (toolWindow.isVisible() && toolWindow.getType() == ToolWindowType.DOCKED)
+                        group.addToolWindow(toolWindow);
+                }
+
+                group.setVisible(false);
+*/
+
                 setDockableMainContentMode(!(Boolean) evt.getNewValue());
+
+/*
+                group.setVisible(true);
+*/
             }
         }
 
@@ -1363,7 +1374,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     class AllToolWindowGroup extends MyDoggyToolWindowGroup {
 
         AllToolWindowGroup() {
-            super(MyDoggyToolWindowManager.this, "all");
+            super(MyDoggyToolWindowManager.this, "all", false);
         }
 
         public void addToolWindow(ToolWindow toolWindow) {

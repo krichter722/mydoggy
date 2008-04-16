@@ -245,9 +245,16 @@ public interface ResourceManager extends Observable {
     boolean getBoolean(String name, boolean defaultValue);
 
     /**
-     * TODO
-     * @param name
-     * @param value
+     * Associates a string representing the specified boolean value with the
+     * specified name. The associated string is the
+     * one that would be returned if the boolean value were passed to
+     * {@link Boolean#toString(boolean)}.
+     *
+     * @param name name with which the string form of value is to be associated.
+     * @param value value whose string form is to be associated with key.
+     * @throws NullPointerException if <tt>key</tt> is <tt>null</tt>.
+     * @see #getBoolean(String, boolean)
+     * @since 1.4.2
      */
     void putBoolean(String name, boolean value);
 
@@ -263,9 +270,16 @@ public interface ResourceManager extends Observable {
     float getFloat(String name, float defaultValue);
 
     /**
-     * TODO:
-     * @param name
-     * @param value
+     * Associates a string representing the specified float value with the
+     * specified name.  The associated string is the
+     * one that would be returned if the float value were passed to
+     * {@link Float#toString(float)}.
+     *
+     * @param name name with which the string form of value is to be associated.
+     * @param value value whose string form is to be associated with key.
+     * @throws NullPointerException if <tt>key</tt> is <tt>null</tt>.
+     * @see #getFloat(String, float)
+     * @since 1.4.2
      */
     void putFloat(String name, float value);
 
@@ -281,9 +295,16 @@ public interface ResourceManager extends Observable {
     int getInt(String name, int defaultValue);
 
     /**
-     * TODO
-     * @param name
-     * @param value
+     * Associates a string representing the specified int value with the
+     * specified name. The associated string is the
+     * one that would be returned if the int value were passed to
+     * {@link Integer#toString(int)}.
+     *
+     * @param name name with which the string form of value is to be associated.
+     * @param value value whose string form is to be associated with key.
+     * @throws NullPointerException if <tt>key</tt> is <tt>null</tt>.
+     * @see #getInt(String, int)
+     * @since 1.4.2
      */
     void putInt(String name, int value);
 

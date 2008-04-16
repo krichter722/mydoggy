@@ -84,15 +84,17 @@ public interface ToolWindowBar extends Observable {
     JPopupMenu getPopupMenu();
 
     /**
-     * TODO                        
-     * @param length
+     * Sets the length in pixel of the bar.
+     *
+     * @param length length in pixel of the bar.
      * @since 1.4.2
      */
     void setLength(int length);
 
     /**
+     * Returns the length in pixel of the bar.
      *
-     * @return
+     * @return the length in pixel of the bar
      * @since 1.4.2
      */
     int getLength();
