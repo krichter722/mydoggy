@@ -17,14 +17,16 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
     protected List<ToolWindow> tools;
     protected EventListenerList listenerList;
     protected boolean implicit;
+    protected boolean tempGroup;
 
 
-    protected MyDoggyToolWindowGroup(MyDoggyToolWindowManager manager, String name) {
+    protected MyDoggyToolWindowGroup(MyDoggyToolWindowManager manager, String name, boolean tempGroup) {
         this.manager = manager;
         this.name = name;
         this.tools = new ArrayList<ToolWindow>();
         this.listenerList = new EventListenerList();
         this.implicit = false;
+        this.tempGroup = tempGroup;
     }
 
 
@@ -70,8 +72,7 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
     }
 
     public void setVisible(final boolean visible) {
-        if (manager.containsGroup(name)) {
-
+        if (tempGroup || manager.containsGroup(name)) {
             synchronized (MyDoggyToolWindowManager.sync) {
 
                 boolean doAction = false;

@@ -46,11 +46,9 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
         }
 
         if (listener instanceof PropertyChangeListenerProxy) {
-            PropertyChangeListenerProxy proxy =
-                    (PropertyChangeListenerProxy) listener;
+            PropertyChangeListenerProxy proxy = (PropertyChangeListenerProxy) listener;
             // Call two argument add method.
-            addPropertyChangeListener(proxy.getPropertyName(),
-                                      (PropertyChangeListener) proxy.getListener());
+            addPropertyChangeListener(proxy.getPropertyName(), (PropertyChangeListener) proxy.getListener());
         } else {
             if (listeners == null)
                 listeners = new EventListenerAggregate(PropertyChangeListener.class);

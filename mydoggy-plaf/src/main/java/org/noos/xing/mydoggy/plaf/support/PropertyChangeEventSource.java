@@ -23,6 +23,7 @@ public class PropertyChangeEventSource implements Cleaner {
         if (publicChangeSupport != null)
             publicChangeSupport.cleanup();
         publicChangeSupport = null;
+        
         if (plafChangeSupport != null)
             plafChangeSupport.cleanup();
         plafChangeSupport = null;

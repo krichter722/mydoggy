@@ -174,6 +174,9 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     public void putProperty(String name, String value) {
+        if (name == null)
+            throw new NullPointerException("name must be not null.");
+
         Object old = resources.put("Property." + name, value);
 
         // Clear cache...

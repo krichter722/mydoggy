@@ -59,7 +59,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     boolean valueAdjusting = false;
 
 
-    MyDoggyToolWindowBar(MyDoggyToolWindowManager manager, JSplitPane splitPane, ToolWindowAnchor anchor) {
+    public MyDoggyToolWindowBar(MyDoggyToolWindowManager manager, JSplitPane splitPane, ToolWindowAnchor anchor) {
         this.manager = manager;
         this.splitPane = splitPane;
         if (splitPane instanceof DebugSplitPane)
@@ -67,8 +67,11 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         this.anchor = anchor;
         this.availableTools = 0;
         this.dividerSize = 3;
-        this.length = 23; // TODO: load from resourcemanager
-
+        this.length = manager.getResourceManager().getInt(
+                "toolwindowbar." +  anchor.toString().toLowerCase() + ".length",
+                23
+        );
+        
         initComponents();
         initListeners();
 
@@ -220,9 +223,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     }
 
     public int getSize() {
-        return (getAvailableTools() > 0)
-               ? manager.getResourceManager().getInt((horizontal) ? "toolwindowbar.horizontal.length" : "toolwindowbar.vertical.length", 23)
-               : 0;
+        return (getAvailableTools() > 0) ? getLength() : 0;
     }
 
 

@@ -4,7 +4,6 @@ import info.clearthought.layout.TableLayout;
 import org.noos.common.Question;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManagerDescriptor;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
 import org.noos.xing.mydoggy.plaf.support.CleanablePropertyChangeSupport;
@@ -144,7 +143,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         container.setFocusTraversalPolicyProvider(true);
         container.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
         container.setFocusCycleRoot(true);
-//        container.setFocusable(false);
+        container.setFocusable(false);
         
         container.putClientProperty(ToolWindow.class, toolWindow);
 
@@ -696,17 +695,13 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
             if (!toolWindow.isVisible() || valueAdjusting)
                 return;
 
-            // TODO: implement better...
-            if (((MyDoggyToolWindowManagerDescriptor) descriptor.getManager().getToolWindowManagerDescriptor()).checkParam)
-                return;
-
             Component component = (Component) evt.getNewValue();
             if (component == null) return;
             if (component instanceof JRootPane) return;
 
             valueAdjusting = true;
 
-//            System.out.println(toolWindow.getId() + " - cmp = " + component);
+            System.out.println(toolWindow.getId() + " - cmp = " + component);
 
             if (parentOf.is(component)) {
                 toolWindow.setActive(true);

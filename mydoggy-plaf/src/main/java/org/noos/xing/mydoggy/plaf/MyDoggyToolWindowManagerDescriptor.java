@@ -21,7 +21,6 @@ public class MyDoggyToolWindowManagerDescriptor extends PropertyChangeEventSourc
     protected PushAwayMode pushAwayMode;
     protected MyDoggyToolWindowManager manager;
     protected boolean numberingEnabled;
-    public boolean checkParam;
     protected boolean previewEnabled;
     protected boolean showUnavailableTools;
     protected Stack<ToolWindowAnchor> mostRecentStack;
@@ -32,131 +31,16 @@ public class MyDoggyToolWindowManagerDescriptor extends PropertyChangeEventSourc
         this.pushAwayMode = PushAwayMode.VERTICAL;
         this.numberingEnabled = this.previewEnabled = true;
         this.showUnavailableTools = false;
-        this.checkParam = false;
 
         initMostRecent();
     }
 
+
     public void setPushAwayMode(PushAwayMode pushAwayMode) {
-        if (this.pushAwayMode == pushAwayMode && checkParam)
+        if (this.pushAwayMode == pushAwayMode)
             return;
 
-        // Change mode
-        int leftSplitLocation = manager.getBar(LEFT).getSplitDividerLocation();
-        int rightSplitLocation = manager.getBar(RIGHT).getSplitDividerLocation();
-        int topSplitLocation = manager.getBar(TOP).getSplitDividerLocation();
-        int bottomSplitLocation = manager.getBar(BOTTOM).getSplitDividerLocation();
-
-        manager.getBar(LEFT).getSplitPane().setRightComponent(null);
-        manager.getBar(RIGHT).getSplitPane().setLeftComponent(null);
-        manager.getBar(TOP).getSplitPane().setBottomComponent(null);
-        manager.getBar(BOTTOM).getSplitPane().setTopComponent(null);
-
-        switch (pushAwayMode) {
-            case HORIZONTAL:
-                manager.getBar(LEFT).getSplitPane().setRightComponent(manager.getBar(RIGHT).getSplitPane());
-                manager.getBar(RIGHT).getSplitPane().setLeftComponent(manager.getBar(TOP).getSplitPane());
-                manager.getBar(TOP).getSplitPane().setBottomComponent(manager.getBar(BOTTOM).getSplitPane());
-
-                manager.getBar(LEFT).getSplitPane().setResizeWeight(0d);
-                manager.getBar(BOTTOM).getSplitPane().setResizeWeight(1d);
-                manager.getBar(TOP).getSplitPane().setResizeWeight(0d);
-                manager.getBar(RIGHT).getSplitPane().setResizeWeight(1d);
-
-                manager.add(manager.getBar(LEFT).getSplitPane(), "1,1,FULL,FULL");
-
-                manager.setMainSplitPane(BOTTOM);
-
-                SwingUtil.repaintNow(manager);
-                manager.getBar(LEFT).setSplitDividerLocation(leftSplitLocation);
-                SwingUtil.repaintNow(manager.getBar(LEFT).getSplitPane());
-                manager.getBar(RIGHT).setSplitDividerLocation(rightSplitLocation);
-                SwingUtil.repaintNow(manager.getBar(RIGHT).getSplitPane());
-                manager.getBar(TOP).setSplitDividerLocation(topSplitLocation);
-                SwingUtil.repaintNow(manager.getBar(TOP).getSplitPane());
-                manager.getBar(BOTTOM).setSplitDividerLocation(bottomSplitLocation);
-                SwingUtil.repaintNow(manager.getBar(BOTTOM).getSplitPane());
-                break;
-            case VERTICAL:
-                manager.getBar(BOTTOM).getSplitPane().setTopComponent(manager.getBar(TOP).getSplitPane());
-                manager.getBar(TOP).getSplitPane().setBottomComponent(manager.getBar(LEFT).getSplitPane());
-                manager.getBar(LEFT).getSplitPane().setRightComponent(manager.getBar(RIGHT).getSplitPane());
-
-                manager.getBar(LEFT).getSplitPane().setResizeWeight(0d);
-                manager.getBar(BOTTOM).getSplitPane().setResizeWeight(1d);
-                manager.getBar(TOP).getSplitPane().setResizeWeight(0d);
-                manager.getBar(RIGHT).getSplitPane().setResizeWeight(1d);
-
-                manager.add(manager.getBar(BOTTOM).getSplitPane(), "1,1,FULL,FULL");
-
-                manager.setMainSplitPane(RIGHT);
-
-                SwingUtil.repaintNow(manager);
-                manager.getBar(BOTTOM).setSplitDividerLocation(bottomSplitLocation);
-                SwingUtil.repaintNow(manager.getBar(BOTTOM).getSplitPane());
-                manager.getBar(TOP).setSplitDividerLocation(topSplitLocation);
-                SwingUtil.repaintNow(manager.getBar(TOP).getSplitPane());
-                manager.getBar(LEFT).setSplitDividerLocation(leftSplitLocation);
-                SwingUtil.repaintNow(manager.getBar(LEFT).getSplitPane());
-                manager.getBar(RIGHT).setSplitDividerLocation(rightSplitLocation);
-                SwingUtil.repaintNow(manager.getBar(RIGHT).getSplitPane());
-                break;
-            case ANTICLOCKWISE:
-                manager.getBar(LEFT).getSplitPane().setRightComponent(manager.getBar(BOTTOM).getSplitPane());
-                manager.getBar(BOTTOM).getSplitPane().setTopComponent(manager.getBar(RIGHT).getSplitPane());
-                manager.getBar(RIGHT).getSplitPane().setLeftComponent(manager.getBar(TOP).getSplitPane());
-
-                manager.getBar(RIGHT).getSplitPane().setResizeWeight(1d);
-                manager.getBar(LEFT).getSplitPane().setResizeWeight(0d);
-                manager.getBar(BOTTOM).getSplitPane().setResizeWeight(1d);
-                manager.getBar(TOP).getSplitPane().setResizeWeight(0d);
-
-                manager.add(manager.getBar(LEFT).getSplitPane(), "1,1,FULL,FULL");
-
-                manager.setMainSplitPane(TOP);
-
-                SwingUtil.repaintNow(manager);
-                manager.getBar(LEFT).setSplitDividerLocation(leftSplitLocation);
-                SwingUtil.repaintNow(manager.getBar(LEFT).getSplitPane());
-                manager.getBar(BOTTOM).setSplitDividerLocation(bottomSplitLocation);
-                SwingUtil.repaintNow(manager.getBar(BOTTOM).getSplitPane());
-                manager.getBar(RIGHT).setSplitDividerLocation(rightSplitLocation);
-                SwingUtil.repaintNow(manager.getBar(RIGHT).getSplitPane());
-                manager.getBar(TOP).setSplitDividerLocation(topSplitLocation);
-                SwingUtil.repaintNow(manager.getBar(TOP).getSplitPane());
-                break;
-            case MOST_RECENT:
-                setSplit(mostRecentStack.get(3), mostRecentStack.get(2));
-                setSplit(mostRecentStack.get(2), mostRecentStack.get(1));
-                setSplit(mostRecentStack.get(1), mostRecentStack.get(0));
-
-                manager.getBar(RIGHT).getSplitPane().setResizeWeight(1d);
-                manager.getBar(LEFT).getSplitPane().setResizeWeight(0d);
-                manager.getBar(BOTTOM).getSplitPane().setResizeWeight(1d);
-                manager.getBar(TOP).getSplitPane().setResizeWeight(0d);
-
-                manager.add(manager.getBar(mostRecentStack.get(3)).getSplitPane(), "1,1,FULL,FULL");
-
-                manager.setMainSplitPane(mostRecentStack.get(0));
-
-                Map<ToolWindowAnchor, Integer> tmp = new Hashtable<ToolWindowAnchor, Integer>();
-                tmp.put(LEFT, leftSplitLocation);
-                tmp.put(RIGHT, rightSplitLocation);
-                tmp.put(BOTTOM, bottomSplitLocation);
-                tmp.put(TOP, topSplitLocation);
-
-                // Repaint
-                SwingUtil.repaintNow(manager);
-                manager.getBar(mostRecentStack.get(3)).setSplitDividerLocation(tmp.get(mostRecentStack.get(3)));
-                SwingUtil.repaintNow(manager.getBar(mostRecentStack.get(3)).getSplitPane());
-                manager.getBar(mostRecentStack.get(2)).setSplitDividerLocation(tmp.get(mostRecentStack.get(2)));
-                SwingUtil.repaintNow(manager.getBar(mostRecentStack.get(2)).getSplitPane());
-                manager.getBar(mostRecentStack.get(1)).setSplitDividerLocation(tmp.get(mostRecentStack.get(1)));
-                SwingUtil.repaintNow(manager.getBar(mostRecentStack.get(1)).getSplitPane());
-                manager.getBar(mostRecentStack.get(0)).setSplitDividerLocation(tmp.get(mostRecentStack.get(0)));
-                SwingUtil.repaintNow(manager.getBar(mostRecentStack.get(0)).getSplitPane());
-                break;
-        }
+        changePushAwayMode(pushAwayMode);
 
         // fire changing
         PushAwayMode old = this.pushAwayMode;
@@ -231,7 +115,7 @@ public class MyDoggyToolWindowManagerDescriptor extends PropertyChangeEventSourc
                 addMostRecentAnchor(target);
 
                 if (pushAwayMode == PushAwayMode.MOST_RECENT)
-                    forceChangePushAwayMode(PushAwayMode.MOST_RECENT);
+                    changePushAwayMode(PushAwayMode.MOST_RECENT);
             }
         }
     }
@@ -246,7 +130,7 @@ public class MyDoggyToolWindowManagerDescriptor extends PropertyChangeEventSourc
         }
 
         if (pushAwayMode == PushAwayMode.MOST_RECENT)
-            forceChangePushAwayMode(PushAwayMode.MOST_RECENT);
+            changePushAwayMode(PushAwayMode.MOST_RECENT);
     }
 
     public ToolWindowAnchor[] getMostRecentAnchors() {
@@ -290,6 +174,128 @@ public class MyDoggyToolWindowManagerDescriptor extends PropertyChangeEventSourc
         }
     }
 
+    protected void changePushAwayMode(PushAwayMode pushAwayMode) {
+        // Change mode
+        int leftSplitLocation = manager.getBar(LEFT).getSplitDividerLocation();
+        int rightSplitLocation = manager.getBar(RIGHT).getSplitDividerLocation();
+        int topSplitLocation = manager.getBar(TOP).getSplitDividerLocation();
+        int bottomSplitLocation = manager.getBar(BOTTOM).getSplitDividerLocation();
+
+        manager.getBar(LEFT).getSplitPane().setRightComponent(null);
+        manager.getBar(RIGHT).getSplitPane().setLeftComponent(null);
+        manager.getBar(TOP).getSplitPane().setBottomComponent(null);
+        manager.getBar(BOTTOM).getSplitPane().setTopComponent(null);
+
+        switch (pushAwayMode) {
+            case HORIZONTAL:
+                manager.getBar(LEFT).getSplitPane().setRightComponent(manager.getBar(RIGHT).getSplitPane());
+                manager.getBar(RIGHT).getSplitPane().setLeftComponent(manager.getBar(TOP).getSplitPane());
+                manager.getBar(TOP).getSplitPane().setBottomComponent(manager.getBar(BOTTOM).getSplitPane());
+
+                manager.getBar(LEFT).getSplitPane().setResizeWeight(0d);
+                manager.getBar(BOTTOM).getSplitPane().setResizeWeight(1d);
+                manager.getBar(TOP).getSplitPane().setResizeWeight(0d);
+                manager.getBar(RIGHT).getSplitPane().setResizeWeight(1d);
+
+                manager.add(manager.getBar(LEFT).getSplitPane(), "1,1,FULL,FULL");
+
+                manager.setMainSplitPane(BOTTOM);
+
+                SwingUtil.repaintNow(manager);
+                manager.getBar(LEFT).setSplitDividerLocation(leftSplitLocation);
+                SwingUtil.repaintNow(manager.getBar(LEFT).getSplitPane());
+                manager.getBar(RIGHT).setSplitDividerLocation(rightSplitLocation);
+                SwingUtil.repaintNow(manager.getBar(RIGHT).getSplitPane());
+                manager.getBar(TOP).setSplitDividerLocation(topSplitLocation);
+                SwingUtil.repaintNow(manager.getBar(TOP).getSplitPane());
+                manager.getBar(BOTTOM).setSplitDividerLocation(bottomSplitLocation);
+                SwingUtil.repaintNow(manager.getBar(BOTTOM).getSplitPane());
+                break;
+
+            case VERTICAL:
+                manager.getBar(BOTTOM).getSplitPane().setTopComponent(manager.getBar(TOP).getSplitPane());
+                manager.getBar(TOP).getSplitPane().setBottomComponent(manager.getBar(LEFT).getSplitPane());
+                manager.getBar(LEFT).getSplitPane().setRightComponent(manager.getBar(RIGHT).getSplitPane());
+
+                manager.getBar(LEFT).getSplitPane().setResizeWeight(0d);
+                manager.getBar(BOTTOM).getSplitPane().setResizeWeight(1d);
+                manager.getBar(TOP).getSplitPane().setResizeWeight(0d);
+                manager.getBar(RIGHT).getSplitPane().setResizeWeight(1d);
+
+                manager.add(manager.getBar(BOTTOM).getSplitPane(), "1,1,FULL,FULL");
+
+                manager.setMainSplitPane(RIGHT);
+
+                SwingUtil.repaintNow(manager);
+                manager.getBar(BOTTOM).setSplitDividerLocation(bottomSplitLocation);
+                SwingUtil.repaintNow(manager.getBar(BOTTOM).getSplitPane());
+                manager.getBar(TOP).setSplitDividerLocation(topSplitLocation);
+                SwingUtil.repaintNow(manager.getBar(TOP).getSplitPane());
+                manager.getBar(LEFT).setSplitDividerLocation(leftSplitLocation);
+                SwingUtil.repaintNow(manager.getBar(LEFT).getSplitPane());
+                manager.getBar(RIGHT).setSplitDividerLocation(rightSplitLocation);
+                SwingUtil.repaintNow(manager.getBar(RIGHT).getSplitPane());
+                break;
+
+            case ANTICLOCKWISE:
+                manager.getBar(LEFT).getSplitPane().setRightComponent(manager.getBar(BOTTOM).getSplitPane());
+                manager.getBar(BOTTOM).getSplitPane().setTopComponent(manager.getBar(RIGHT).getSplitPane());
+                manager.getBar(RIGHT).getSplitPane().setLeftComponent(manager.getBar(TOP).getSplitPane());
+
+                manager.getBar(RIGHT).getSplitPane().setResizeWeight(1d);
+                manager.getBar(LEFT).getSplitPane().setResizeWeight(0d);
+                manager.getBar(BOTTOM).getSplitPane().setResizeWeight(1d);
+                manager.getBar(TOP).getSplitPane().setResizeWeight(0d);
+
+                manager.add(manager.getBar(LEFT).getSplitPane(), "1,1,FULL,FULL");
+
+                manager.setMainSplitPane(TOP);
+
+                SwingUtil.repaintNow(manager);
+                manager.getBar(LEFT).setSplitDividerLocation(leftSplitLocation);
+                SwingUtil.repaintNow(manager.getBar(LEFT).getSplitPane());
+                manager.getBar(BOTTOM).setSplitDividerLocation(bottomSplitLocation);
+                SwingUtil.repaintNow(manager.getBar(BOTTOM).getSplitPane());
+                manager.getBar(RIGHT).setSplitDividerLocation(rightSplitLocation);
+                SwingUtil.repaintNow(manager.getBar(RIGHT).getSplitPane());
+                manager.getBar(TOP).setSplitDividerLocation(topSplitLocation);
+                SwingUtil.repaintNow(manager.getBar(TOP).getSplitPane());
+                break;
+
+            case MOST_RECENT:
+                setSplit(mostRecentStack.get(3), mostRecentStack.get(2));
+                setSplit(mostRecentStack.get(2), mostRecentStack.get(1));
+                setSplit(mostRecentStack.get(1), mostRecentStack.get(0));
+
+                manager.getBar(RIGHT).getSplitPane().setResizeWeight(1d);
+                manager.getBar(LEFT).getSplitPane().setResizeWeight(0d);
+                manager.getBar(BOTTOM).getSplitPane().setResizeWeight(1d);
+                manager.getBar(TOP).getSplitPane().setResizeWeight(0d);
+
+                manager.add(manager.getBar(mostRecentStack.get(3)).getSplitPane(), "1,1,FULL,FULL");
+
+                manager.setMainSplitPane(mostRecentStack.get(0));
+
+                Map<ToolWindowAnchor, Integer> tmp = new Hashtable<ToolWindowAnchor, Integer>();
+                tmp.put(LEFT, leftSplitLocation);
+                tmp.put(RIGHT, rightSplitLocation);
+                tmp.put(BOTTOM, bottomSplitLocation);
+                tmp.put(TOP, topSplitLocation);
+
+                // Repaint
+                SwingUtil.repaintNow(manager);
+                manager.getBar(mostRecentStack.get(3)).setSplitDividerLocation(tmp.get(mostRecentStack.get(3)));
+                SwingUtil.repaintNow(manager.getBar(mostRecentStack.get(3)).getSplitPane());
+                manager.getBar(mostRecentStack.get(2)).setSplitDividerLocation(tmp.get(mostRecentStack.get(2)));
+                SwingUtil.repaintNow(manager.getBar(mostRecentStack.get(2)).getSplitPane());
+                manager.getBar(mostRecentStack.get(1)).setSplitDividerLocation(tmp.get(mostRecentStack.get(1)));
+                SwingUtil.repaintNow(manager.getBar(mostRecentStack.get(1)).getSplitPane());
+                manager.getBar(mostRecentStack.get(0)).setSplitDividerLocation(tmp.get(mostRecentStack.get(0)));
+                SwingUtil.repaintNow(manager.getBar(mostRecentStack.get(0)).getSplitPane());
+                break;
+        }
+    }
+
     protected void mrCheckForAnchor(ToolWindowAnchor target) {
         boolean found = false;
         for (ToolWindowAnchor toolWindowAnchor : mostRecentStack) {
@@ -320,15 +326,6 @@ public class MyDoggyToolWindowManagerDescriptor extends PropertyChangeEventSourc
             case BOTTOM:
                 manager.getBar(source).getSplitPane().setTopComponent(cmp);
                 break;
-        }
-    }
-
-    protected void forceChangePushAwayMode(PushAwayMode pushAwayMode) {
-        checkParam = false;
-        try {
-            setPushAwayMode(pushAwayMode);
-        } finally {
-            checkParam = true;
         }
     }
 
