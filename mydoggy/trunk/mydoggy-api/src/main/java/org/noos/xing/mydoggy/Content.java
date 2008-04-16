@@ -125,7 +125,7 @@ public interface Content extends Dockable<ContentManager> {
      * Returns the popup menu.
      *
      * @return the popup menu.
-     * @see #setComponent(java.awt.Component)
+     * @see #setPopupMenu(javax.swing.JPopupMenu)
      * @since 1.0.0
      */
     JPopupMenu getPopupMenu();

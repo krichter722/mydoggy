@@ -245,6 +245,13 @@ public interface ResourceManager extends Observable {
     boolean getBoolean(String name, boolean defaultValue);
 
     /**
+     * TODO
+     * @param name
+     * @param value
+     */
+    void putBoolean(String name, boolean value);
+
+    /**
      * Searches for the property with the specified name in the property list.
      * The method returns <code>defaultValue</code> if the property is not found.
      *
@@ -256,6 +263,13 @@ public interface ResourceManager extends Observable {
     float getFloat(String name, float defaultValue);
 
     /**
+     * TODO:
+     * @param name
+     * @param value
+     */
+    void putFloat(String name, float value);
+
+    /**
      * Searches for the property with the specified name in the property list.
      * The method returns <code>defaultValue</code> if the property is not found.
      *
@@ -265,6 +279,13 @@ public interface ResourceManager extends Observable {
      * @since 1.4.2
      */
     int getInt(String name, int defaultValue);
+
+    /**
+     * TODO
+     * @param name
+     * @param value
+     */
+    void putInt(String name, int value);
 
     /**
      * Associates the specified value with the specified key.

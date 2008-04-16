@@ -1,5 +1,7 @@
 package org.noos.xing.mydoggy;
 
+import javax.swing.*;
+
 /**
  * This interface is used to modify all toolwindow anchor related properties.
  *
@@ -62,6 +64,38 @@ public interface ToolWindowBar extends Observable {
      * @since 1.4.2
      */
     boolean isAggregateMode();
+
+    /**
+     * Sets the popup menu to <code>popupMenu</code>.
+     *
+     * @param popupMenu the popup menu for the bar.
+     * @see #getPopupMenu()
+     * @since 1.4.2
+     */
+    void setPopupMenu(JPopupMenu popupMenu);
+
+    /**
+     * Returns the popup menu.
+     *
+     * @return the popup menu.
+     * @see #setPopupMenu(javax.swing.JPopupMenu)
+     * @since 1.4.2
+     */
+    JPopupMenu getPopupMenu();
+
+    /**
+     * TODO                        
+     * @param length
+     * @since 1.4.2
+     */
+    void setLength(int length);
+
+    /**
+     *
+     * @return
+     * @since 1.4.2
+     */
+    int getLength();
 
     /**
      * Returns an array of the toolwindows attached on this bar.

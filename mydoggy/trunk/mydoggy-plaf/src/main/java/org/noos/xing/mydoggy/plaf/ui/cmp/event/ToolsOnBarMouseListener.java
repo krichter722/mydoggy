@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp.event;
 
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowBar;
 import org.noos.xing.mydoggy.ToolWindowManager;
 
 import javax.swing.*;
@@ -14,37 +15,45 @@ import java.awt.event.MouseEvent;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ToolsOnBarMouseListener extends MouseAdapter implements ActionListener {
-    private ToolWindowManager toolWindowManager;
-    private ToolWindowAnchor anchor;
+    protected ToolWindowManager toolWindowManager;
+    protected ToolWindowBar toolWindowBar;
+    protected ToolWindowAnchor anchor;
 
-    private JPopupMenu popupMenu;
+    protected JPopupMenu popupMenu;
 
-    public ToolsOnBarMouseListener(ToolWindowManager toolWindowManager, ToolWindowAnchor anchor) {
+
+    public ToolsOnBarMouseListener(ToolWindowManager toolWindowManager, ToolWindowBar toolWindowBar) {
         this.toolWindowManager = toolWindowManager;
-        this.anchor = anchor;
-        initPopupMenu();
+        this.toolWindowBar = toolWindowBar;
+        this.anchor = toolWindowBar.getAnchor();
     }
+
 
     public void mouseClicked(MouseEvent e) {
         if (SwingUtilities.isRightMouseButton(e)) {
+            if (toolWindowBar.getPopupMenu() != null) {
+                toolWindowBar.getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
+            } else {
+                initPopupMenu();
+                
+                popupMenu.removeAll();
 
-            popupMenu.removeAll();
+                ToolWindow[] tools = toolWindowManager.getToolsByAnchor(anchor);
+                if (tools.length > 0) {
 
-            ToolWindow[] tools = toolWindowManager.getToolsByAnchor(anchor);
-            if (tools.length > 0) {
+                    for (ToolWindow tool : tools) {
+                        if (tool.isAvailable()) {
+                            JMenuItem showTool = new JMenuItem();
+                            showTool.setText(tool.getId());
+                            showTool.setActionCommand("tool.visible." + tool.getId());
+                            showTool.addActionListener(this);
 
-                for (ToolWindow tool : tools) {
-                    if (tool.isAvailable()) {
-                        JMenuItem showTool = new JMenuItem();
-                        showTool.setText(tool.getId());
-                        showTool.setActionCommand("tool.visible." + tool.getId());
-                        showTool.addActionListener(this);
-
-                        popupMenu.add(showTool);
+                            popupMenu.add(showTool);
+                        }
                     }
+                    if (popupMenu.getComponentCount() > 0)
+                        popupMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
-                if (popupMenu.getComponentCount() > 0)
-                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
             }
         }
     }
@@ -58,8 +67,10 @@ public class ToolsOnBarMouseListener extends MouseAdapter implements ActionListe
     }
 
     protected void initPopupMenu() {
-        popupMenu = new JPopupMenu("ToolWindowBarContainerPopupMenu");
-        popupMenu.setLightWeightPopupEnabled(false);
+        if (popupMenu == null) {
+            popupMenu = new JPopupMenu("ToolWindowBarContainerPopupMenu");
+            popupMenu.setLightWeightPopupEnabled(false);
+        }            
     }
 
 }

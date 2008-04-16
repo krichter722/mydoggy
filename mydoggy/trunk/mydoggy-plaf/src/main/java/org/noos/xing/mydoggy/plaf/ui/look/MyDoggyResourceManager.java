@@ -202,6 +202,12 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         return result;
     }
 
+    public void putBoolean(String name, boolean value) {
+        putProperty(name, String.valueOf(value));
+
+        cache.put("Bool." + name, value);
+    }
+
     public float getFloat(String name, float defaultValue) {
         Float result = (Float) cache.get("Float." + name);
         if (result != null)
@@ -222,6 +228,12 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         return result;
     }
 
+    public void putFloat(String name, float value) {
+        putProperty(name, String.valueOf(value));
+
+        cache.put("Float." + name, value);
+    }
+
     public int getInt(String name, int defaultValue) {
         Integer result = (Integer) cache.get("Int." + name);
         if (result != null)
@@ -240,6 +252,12 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
         cache.put("Int." + name, result);
         return result;
+    }
+
+    public void putInt(String name, int value) {
+        putProperty(name, String.valueOf(value));
+        
+        cache.put("Int." + name, value);
     }
 
     public void putObject(Object key, Object value) {
