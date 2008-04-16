@@ -1,5 +1,6 @@
 package org.noos.xing.mydoggy.plaf.support;
 
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 
 import java.beans.PropertyChangeEvent;
@@ -135,7 +136,7 @@ public class PropertyChangeEventSource implements Cleaner {
         if (this.plafChangeSupport != null)
             this.plafChangeSupport.firePropertyChange(event);
 
-        if (publicEvent && this.publicChangeSupport != null)
+        if (MyDoggyToolWindowManager.firePublic && publicEvent && this.publicChangeSupport != null)
             this.publicChangeSupport.firePropertyChange(event);
     }
 
@@ -143,7 +144,7 @@ public class PropertyChangeEventSource implements Cleaner {
         if (this.plafChangeSupport != null)
             this.plafChangeSupport.firePropertyChange(property, oldValue, newValue);
 
-        if (publicEvent && this.publicChangeSupport != null)
+        if (MyDoggyToolWindowManager.firePublic && publicEvent && this.publicChangeSupport != null)
             this.publicChangeSupport.firePropertyChange(property, oldValue, newValue);
     }
 
@@ -162,7 +163,7 @@ public class PropertyChangeEventSource implements Cleaner {
         if (this.plafChangeSupport != null && event != null)
             this.plafChangeSupport.firePropertyChange(event);
 
-        if (publicEvent && this.publicChangeSupport != null)
+        if (MyDoggyToolWindowManager.firePublic && publicEvent && this.publicChangeSupport != null)
             this.publicChangeSupport.firePropertyChange(pblEvent);
     }
 

@@ -732,7 +732,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 public void propertyChange(PropertyChangeEvent evt) {
                     int dividerLocation = getSplitDividerLocation();
 
-                    if (splitAnimation.isAnimating() || vsdValueAdjusting || dividerLocation == 0)
+                    if (splitAnimation.isAnimating() || vsdValueAdjusting || dividerLocation <= 5)
                         return;
 
                     for (ToolWindow toolWindow : manager.getToolsByAnchor(anchor)) {
