@@ -273,6 +273,9 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
     }
 
     public void setDividerLocation(int divederLocation) {
+        if (divederLocation <= 0)
+            return;
+        
         this.divederLocation = divederLocation;
 
         DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);

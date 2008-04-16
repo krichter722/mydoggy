@@ -727,11 +727,11 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
     protected class TabbedDragSourceListener implements DragSourceListener {
         public void dragEnter(DragSourceDragEvent e) {
-            e.getDragSourceContext().setCursor(DragSource.DefaultMoveDrop);
+//            e.getDragSourceContext().setCursor(DragSource.DefaultMoveDrop);
         }
 
         public void dragExit(DragSourceEvent e) {
-            e.getDragSourceContext().setCursor(DragSource.DefaultMoveNoDrop);
+//            e.getDragSourceContext().setCursor(DragSource.DefaultMoveNoDrop);
             lineRect.setRect(0, 0, 0, 0);
             toolWindowManager.getGlassPanel().setPoint(new Point(-1000, -1000));
             toolWindowManager.getGlassPanel().repaint();
@@ -748,9 +748,9 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
             if (getTabAreaBound().contains(tabPt) && targetIdx >= 0 &&
                 targetIdx != dragTabIndex && targetIdx != dragTabIndex + 1) {
-                e.getDragSourceContext().setCursor(DragSource.DefaultMoveDrop);
+//                e.getDragSourceContext().setCursor(DragSource.DefaultMoveDrop);
             } else {
-                e.getDragSourceContext().setCursor(DragSource.DefaultMoveNoDrop);
+//                e.getDragSourceContext().setCursor(DragSource.DefaultMoveNoDrop);
             }
         }
 

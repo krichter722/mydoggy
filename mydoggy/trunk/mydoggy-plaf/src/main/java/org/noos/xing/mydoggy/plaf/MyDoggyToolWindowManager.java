@@ -45,6 +45,9 @@ import java.util.List;
  * description: MyDoggyToolWindowManager
  */
 public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener {
+
+    public static boolean firePublic = true;
+
     public final static Object sync = new Object();
 
     protected ToolWindowGroup showingGroup;
@@ -409,8 +412,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             DockableDescriptor descriptor = (DockableDescriptor) source;
             if (descriptor.getDockableType() != DockableDescriptor.DockableType.CUSTOM) {
                 if (getDockable(descriptor.getDockable().getId()) != descriptor.getDockable()) {
-                    new RuntimeException("Manager doesn't contain that ToolWindow. [id : " + descriptor.getDockable().getId() + "]").printStackTrace();
-                    return;
+                    throw new RuntimeException("Manager doesn't contain that ToolWindow. [id : " + descriptor.getDockable().getId() + "]");
                 }
             }
         } else if (!(source instanceof MyDoggyToolWindowBar) &&
@@ -419,12 +421,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                    !(source instanceof MyDoggyToolWindowTab) &&
                    !(source instanceof ToolWindowTypeDescriptor) &&
                    !(source instanceof ContentManager)) {
-            new RuntimeException("Illegal Source : " + source).printStackTrace();
-            return;
+            throw new RuntimeException("Illegal Source : " + source);
         }
 
 //        System.out.println(SwingUtil.toString(evt));
-
         propertyChangeSupport.firePropertyChange(evt);
     }
 
@@ -1350,21 +1350,34 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         public void propertyChange(final PropertyChangeEvent evt) {
             if (evt.getSource() instanceof ContentManager) {
-/*  TODO support request from Elvis...
-                final MyDoggyToolWindowGroup group = new MyDoggyToolWindowGroup(MyDoggyToolWindowManager.this, "temp");
+//TODO (+) support request from Elvis...                
+
+                final MyDoggyToolWindowGroup group = new MyDoggyToolWindowGroup(MyDoggyToolWindowManager.this, "temp", true);
                 for (ToolWindow toolWindow : getToolWindows()) {
                     if (toolWindow.isVisible() && toolWindow.getType() == ToolWindowType.DOCKED)
                         group.addToolWindow(toolWindow);
                 }
 
-                group.setVisible(false);
-*/
+                if (group.getToolsWindow().length > 0) {
 
-                setDockableMainContentMode(!(Boolean) evt.getNewValue());
-
-/*
-                group.setVisible(true);
-*/
+                    PropertyChangeListener listener =  new PropertyChangeListener() {
+                            public void propertyChange(PropertyChangeEvent evt) {
+                                System.out.println("ERORRE :" + SwingUtil.toString(evt));
+                            }
+                        };
+                    try {
+                        group.getToolsWindow()[0].addPropertyChangeListener(listener);
+    
+                        firePublic = false;
+                        group.setVisible(false);
+                        setDockableMainContentMode(!(Boolean) evt.getNewValue());
+                        group.setVisible(true);
+                    } finally {
+                        firePublic = true;
+                        group.getToolsWindow()[0].removePropertyChangeListener( listener);
+                    }
+                } else
+                    setDockableMainContentMode(!(Boolean) evt.getNewValue());
             }
         }
 
