@@ -1352,7 +1352,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getSource() instanceof ContentManager) {
-                getToolWindowGroup().setVisible(false);
+//                getToolWindowGroup().setVisible(false);
                 setDockableMainContentMode(!(Boolean) evt.getNewValue());
             }
         }

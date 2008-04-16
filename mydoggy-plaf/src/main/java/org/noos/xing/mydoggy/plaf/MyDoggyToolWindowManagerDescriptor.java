@@ -21,7 +21,7 @@ public class MyDoggyToolWindowManagerDescriptor extends PropertyChangeEventSourc
     protected PushAwayMode pushAwayMode;
     protected MyDoggyToolWindowManager manager;
     protected boolean numberingEnabled;
-    public boolean checkParam = true;
+    public boolean checkParam;
     protected boolean previewEnabled;
     protected boolean showUnavailableTools;
     protected Stack<ToolWindowAnchor> mostRecentStack;
@@ -32,6 +32,7 @@ public class MyDoggyToolWindowManagerDescriptor extends PropertyChangeEventSourc
         this.pushAwayMode = PushAwayMode.VERTICAL;
         this.numberingEnabled = this.previewEnabled = true;
         this.showUnavailableTools = false;
+        this.checkParam = false;
 
         initMostRecent();
     }
