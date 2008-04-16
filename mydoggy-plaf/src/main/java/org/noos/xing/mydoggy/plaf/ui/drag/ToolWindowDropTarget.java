@@ -134,6 +134,22 @@ public class ToolWindowDropTarget extends DropTarget {
                                 boolean oldAggregateMode = toolWindow.isAggregateMode();
                                 toolWindow.setAggregateMode(true);
                                 try {
+                                    if (dragAnchor == null && onToolWindow != null && toolWindow != onToolWindow) {
+                                        if (!toolWindowManager.getResourceManager().getBoolean("drag.toolwindow.asTab", true)) {
+                                            // Choose drag anchor ...
+                                            switch (onToolWindow.getAnchor()) {
+                                                case LEFT:
+                                                case RIGHT:
+                                                    dragAnchor = ToolWindowAnchor.TOP;
+                                                    break;
+                                                case TOP:
+                                                case BOTTOM:
+                                                    dragAnchor = ToolWindowAnchor.LEFT;
+                                                    break;
+                                            }
+                                        }
+                                    }
+                                                                        
                                     if (dragAnchor != null) {
                                         switch (dragAnchor) {
                                             case LEFT:
@@ -184,8 +200,8 @@ public class ToolWindowDropTarget extends DropTarget {
                                         toolWindow.setActive(true);
                                     } else {
                                         if (onToolWindow != null && toolWindow != onToolWindow) {
-                                            if (toolWindowManager.getResourceManager().getBoolean("drag.toolwindow.asTab", true))
-                                                onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
+                                            onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
+                                            onToolWindow.setActive(true);
                                         } else {
                                             toolWindow.aggregate();
                                             toolWindow.setActive(true);
@@ -256,6 +272,7 @@ public class ToolWindowDropTarget extends DropTarget {
                                             } else {
                                                 if (onToolWindow != null) {
                                                     onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
+                                                    onToolWindow.setActive(true);
                                                 } else {
                                                     toolWindow.aggregate();
                                                     toolWindow.setActive(true);

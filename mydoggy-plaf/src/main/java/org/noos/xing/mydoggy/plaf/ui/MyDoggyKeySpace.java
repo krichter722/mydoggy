@@ -106,8 +106,11 @@ public interface MyDoggyKeySpace {
     String MULTI_SPLIT_CONTAINER_SPLIT = "MULTI_SPLIT_CONTAINER_SPLIT";
 
     // Properties
+    String TWB_LEFT_LENGTH = "toolwindowbar.left.length";
+    String TWB_RIGHT_LENGTH = "toolwindowbar.right.length";
+    String TWB_TOP_LENGTH = "toolwindowbar.top.length";
+    String TWB_BOTTOM_LENGTH = "toolwindowbar.bottom.length";
 
-    String TOOL_WINDOW_VERTICAL_BAR_LENGTH = "toolwindowbar.vertical.length";
-    String TOOL_WINDOW_HORIZONTAL_BAR_LENGTH = "toolwindowbar.horizontal.length";
-    String PERSISTENCE_DELEGATE_PARSING = "PERSISTENCE_DELEGATE_PARSING"; 
+
+    String PERSISTENCE_DELEGATE_PARSING = "PERSISTENCE_DELEGATE_PARSING";
 }

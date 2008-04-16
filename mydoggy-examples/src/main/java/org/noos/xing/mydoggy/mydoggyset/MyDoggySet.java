@@ -19,7 +19,6 @@ import org.noos.xing.mydoggy.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.CustomDockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
@@ -299,44 +298,36 @@ public class MyDoggySet {
         JButton nwButton = new JButton(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/plus.png"));
         nwButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ResourceManager resourceManager = ((MyDoggyToolWindowManager) toolWindowManager).getResourceManager();
-                resourceManager.putProperty(
-                                MyDoggyKeySpace.TOOL_WINDOW_HORIZONTAL_BAR_LENGTH,
-                                String.valueOf(resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_HORIZONTAL_BAR_LENGTH, 23) + 1)
-                        );
+                int length = toolWindowManager.getToolWindowBar(ToolWindowAnchor.TOP).getLength() + 1;
+                toolWindowManager.getToolWindowBar(ToolWindowAnchor.BOTTOM).setLength(length);
+                toolWindowManager.getToolWindowBar(ToolWindowAnchor.TOP).setLength(length);
             }
         });
 
         JButton swButton = new JButton(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/minus.png"));
         swButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ResourceManager resourceManager = ((MyDoggyToolWindowManager) toolWindowManager).getResourceManager();
-                resourceManager.putProperty(
-                                MyDoggyKeySpace.TOOL_WINDOW_HORIZONTAL_BAR_LENGTH,
-                                String.valueOf(resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_HORIZONTAL_BAR_LENGTH, 23) - 1)
-                        );
+                int length = toolWindowManager.getToolWindowBar(ToolWindowAnchor.TOP).getLength() - 1;
+                toolWindowManager.getToolWindowBar(ToolWindowAnchor.BOTTOM).setLength(length);
+                toolWindowManager.getToolWindowBar(ToolWindowAnchor.TOP).setLength(length);
             }
         });
 
         JButton neButton = new JButton(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/plus.png"));
         neButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ResourceManager resourceManager = ((MyDoggyToolWindowManager) toolWindowManager).getResourceManager();
-                resourceManager.putProperty(
-                                MyDoggyKeySpace.TOOL_WINDOW_VERTICAL_BAR_LENGTH,
-                                String.valueOf(resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_VERTICAL_BAR_LENGTH, 23) + 1)
-                        );
+                int length = toolWindowManager.getToolWindowBar(ToolWindowAnchor.LEFT).getLength() + 1;
+                toolWindowManager.getToolWindowBar(ToolWindowAnchor.LEFT).setLength(length);
+                toolWindowManager.getToolWindowBar(ToolWindowAnchor.RIGHT).setLength(length);
             }
         });
 
         JButton seButton = new JButton(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/minus.png"));
         seButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ResourceManager resourceManager = ((MyDoggyToolWindowManager) toolWindowManager).getResourceManager();
-                resourceManager.putProperty(
-                                MyDoggyKeySpace.TOOL_WINDOW_VERTICAL_BAR_LENGTH,
-                                String.valueOf(resourceManager.getInt(MyDoggyKeySpace.TOOL_WINDOW_VERTICAL_BAR_LENGTH, 23) - 1)
-                        );
+                int length = toolWindowManager.getToolWindowBar(ToolWindowAnchor.LEFT).getLength() - 1;
+                toolWindowManager.getToolWindowBar(ToolWindowAnchor.LEFT).setLength(length);
+                toolWindowManager.getToolWindowBar(ToolWindowAnchor.RIGHT).setLength(length);
             }
         });
 
@@ -362,7 +353,8 @@ public class MyDoggySet {
         resourceManager.putProperty("drag.icon.transparency.enabled", "false");
         resourceManager.putProperty("drag.icon.useDefault", "true");
 */
-        resourceManager.putProperty("drag.toolwindow.asTab", "true");
+        // TODO: tab draggind don'
+        resourceManager.putBoolean("drag.toolwindow.asTab", true);
 
         MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) myDoggyToolWindowManager.getResourceManager();
 

@@ -205,11 +205,10 @@ public class XMLWriter {
             write(' ');
             writeName(atts.getLocalName(i));
             write("=\"");
-            write(atts.getValue(i));
-/*
+
             char ch[] = atts.getValue(i).toCharArray();
             writeEsc(ch, 0, ch.length, true);
-*/
+
             write('"');
         }
     }
@@ -235,11 +234,17 @@ public class XMLWriter {
                         write('\"');
                     }
                     break;
-               case '&' :
+                case '&' :
                     write("&amp;");
                     break;
                 default :
-                    write(ch[i]);
+                    if (ch[i] > '\u007f') {
+                        write("&#");
+                        write(Integer.toString(ch[i]));
+                        write(';');
+                    } else {
+                        write(ch[i]);
+                    }
                     break;
             }
         }
