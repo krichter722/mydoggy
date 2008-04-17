@@ -140,7 +140,7 @@ public class TutorialSet {
 
             public void contentUIDetached(ContentManagerUIEvent event) {
             }
-            
+
         });
     }
 

@@ -171,7 +171,7 @@ public class XMLWriter {
         state = SEEN_ELEMENT;
 
         write("<![CDATA[");
-        write(s);
+        writeCDATAEsc(s.toCharArray(), 0, s.length());
         write("]]>");
     }
 
@@ -246,6 +246,18 @@ public class XMLWriter {
                         write(ch[i]);
                     }
                     break;
+            }
+        }
+    }
+
+    protected void writeCDATAEsc(char ch[], int start, int length) throws SAXException {
+        for (int i = start; i < start + length; i++) {
+            if (ch[i] > '\u007f') {
+                write("&#");
+                write(Integer.toString(ch[i]));
+                write(';');
+            } else {
+                write(ch[i]);
             }
         }
     }
