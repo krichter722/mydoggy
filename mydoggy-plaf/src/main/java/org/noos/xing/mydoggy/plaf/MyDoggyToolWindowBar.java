@@ -942,8 +942,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 } else
                     aggregationPosition = AggregationPosition.valueOf(anchor.toString());
 
-                if (aggregationOnTool == null)
-                    aggregationPosition = AggregationPosition.valueOf(anchor.toString());
+//                if (aggregationOnTool == null)
+//                    aggregationPosition = AggregationPosition.valueOf(anchor.toString());
 
 
                 DockedContainer container = (DockedContainer) descriptor.getToolWindowContainer();
@@ -956,6 +956,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 );
             } else
                 managerDockableContainer.removeDockable(descriptor.getToolWindow());
+
+            SwingUtil.repaint(managerDockableContainer);
         }
 
         protected void setSplitPaneContent(Component content) {
