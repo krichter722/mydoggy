@@ -121,7 +121,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         initListeners();
     }
 
-    
+
     public ContentManager getContentManager() {
         return contentManager;
     }
@@ -941,7 +941,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTempShowed() && contentPaneLayout.getColumn(0) != 0) {
                 contentPaneLayout.setColumn(0, 0);
                 revalidate = true;
-            } else if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getColumn(0) == 0) {
+            } else
+            if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getColumn(0) == 0) {
                 contentPaneLayout.setColumn(0, getBar(LEFT).getLength());
                 revalidate = true;
             }
@@ -949,7 +950,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTempShowed() && contentPaneLayout.getColumn(2) != 0) {
                 contentPaneLayout.setColumn(2, 0);
                 revalidate = true;
-            } else if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getColumn(2) == 0) {
+            } else
+            if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getColumn(2) == 0) {
                 contentPaneLayout.setColumn(2, getBar(RIGHT).getLength());
                 revalidate = true;
             }
@@ -957,7 +959,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTempShowed() && contentPaneLayout.getRow(0) != 0) {
                 contentPaneLayout.setRow(0, 0);
                 revalidate = true;
-            } else if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getRow(0) == 0) {
+            } else
+            if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getRow(0) == 0) {
                 contentPaneLayout.setRow(0, getBar(TOP).getLength());
                 revalidate = true;
             }
@@ -965,7 +968,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTempShowed() && contentPaneLayout.getRow(2) != 0) {
                 contentPaneLayout.setRow(2, 0);
                 revalidate = true;
-            } else if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getRow(2) == 0) {
+            } else
+            if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getRow(2) == 0) {
                 contentPaneLayout.setRow(2, getBar(BOTTOM).getLength());
                 revalidate = true;
             }
@@ -993,6 +997,15 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return showingGroup == allToolWindowGroup;
     }
 
+
+    public boolean isWindowFocused() {
+//        return (windowAnchestor instanceof Window) ? ((Window) windowAnchestor).isFocused() : windowAnchestor.isfo
+        Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        if (focusOwner != null)
+            return SwingUtil.getWindowAncestor(focusOwner) == windowAnchestor;
+
+        return false;
+    }
 
     public int getJMenuBarExtraHeight() {
         JMenuBar jMenuBar = getRootPane().getJMenuBar();
@@ -1066,6 +1079,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         return context;
     }
+
 
     protected class AvailablePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
@@ -1309,7 +1323,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowBar bar = (ToolWindowBar) evt.getSource();
             switch (bar.getAnchor()) {
-                case LEFT :
+                case LEFT:
                     if (contentPaneLayout.getColumn(0) != 0)
                         contentPaneLayout.setColumn(0, bar.getLength());
                     break;
@@ -1317,7 +1331,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                     if (contentPaneLayout.getColumn(2) != 0)
                         contentPaneLayout.setColumn(2, bar.getLength());
                     break;
-                case TOP :
+                case TOP:
                     if (contentPaneLayout.getRow(0) != 0)
                         contentPaneLayout.setRow(0, bar.getLength());
                     break;
@@ -1360,21 +1374,21 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
                 if (group.getToolsWindow().length > 0) {
 
-                    PropertyChangeListener listener =  new PropertyChangeListener() {
-                            public void propertyChange(PropertyChangeEvent evt) {
-                                System.out.println("ERORRE :" + SwingUtil.toString(evt));
-                            }
-                        };
+                    PropertyChangeListener listener = new PropertyChangeListener() {
+                        public void propertyChange(PropertyChangeEvent evt) {
+                            System.out.println("ERORRE :" + SwingUtil.toString(evt));
+                        }
+                    };
                     try {
                         group.getToolsWindow()[0].addPropertyChangeListener(listener);
-    
+
                         firePublic = false;
                         group.setVisible(false);
                         setDockableMainContentMode(!(Boolean) evt.getNewValue());
                         group.setVisible(true);
                     } finally {
                         firePublic = true;
-                        group.getToolsWindow()[0].removePropertyChangeListener( listener);
+                        group.getToolsWindow()[0].removePropertyChangeListener(listener);
                     }
                 } else
                     setDockableMainContentMode(!(Boolean) evt.getNewValue());

@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp.event;
 
 import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -10,10 +10,10 @@ import java.awt.event.KeyEvent;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class ShortcutProcessor implements KeyEventPostProcessor {
-    protected ToolWindowManager manager;
+    protected MyDoggyToolWindowManager manager;
     protected Container root;
 
-    public ShortcutProcessor(ToolWindowManager manager, Container root) {
+    public ShortcutProcessor(MyDoggyToolWindowManager manager, Container root) {
         this.manager = manager;
         this.root = root;
     }
@@ -21,7 +21,10 @@ public class ShortcutProcessor implements KeyEventPostProcessor {
     public boolean postProcessKeyEvent(KeyEvent e) {
         switch (e.getID()) {
             case KeyEvent.KEY_TYPED:
-                if (e.isAltDown() && Character.isDigit(e.getKeyChar())) {
+                if (e.isAltDown() &&
+                    Character.isDigit(e.getKeyChar()) &&
+                    manager.isWindowFocused()) {
+
                     if (manager.getToolWindowManagerDescriptor().isNumberingEnabled()) {
                         int index = Character.getNumericValue(e.getKeyChar());
 
