@@ -687,6 +687,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public void setDockableMainContentMode(boolean enable) {
         if (enable) {
             toolDockableContainer = new MultiSplitDockableContainer(MyDoggyToolWindowManager.this, JSplitPane.VERTICAL_SPLIT);
+            toolDockableContainer.setStoreLayout(false);
 
             ContentPanel contentPanel = new ContentPanel("toolWindow.container.");
             contentPanel.setDropTarget(new ToolWindowCommonMultiSplitDropTarget(contentPanel, MyDoggyToolWindowManager.this));
@@ -1364,7 +1365,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         public void propertyChange(final PropertyChangeEvent evt) {
             if (evt.getSource() instanceof ContentManager) {
-//TODO (+) support request from Elvis...                
+//TODO (+) support request from Elvis...there are focus problem...                
 
                 final MyDoggyToolWindowGroup group = new MyDoggyToolWindowGroup(MyDoggyToolWindowManager.this, "temp", true);
                 for (ToolWindow toolWindow : getToolWindows()) {
