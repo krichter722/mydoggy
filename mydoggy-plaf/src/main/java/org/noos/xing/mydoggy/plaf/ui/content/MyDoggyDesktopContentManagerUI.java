@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.content;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.PersistenceDelegate;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDialog;
@@ -188,12 +189,14 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                 toolWindowManager.getDockableDescriptor(content.getId()).setAvailable(false);
             } else {
                 // Remove component
+                // TODO: avoid to compare componenet
                 for (JInternalFrame internalFrame : desktopPane.getAllFrames()) {
                     if (internalFrame.getContentPane().getComponent(0) == content.getComponent()) {
                         valueAdjusting = true;
                         try {
                             internalFrame.removePropertyChangeListener(contentUIListener);
                             desktopPane.remove(internalFrame);
+                            ((Cleaner) internalFrame).cleanup();
                         } finally {
                             valueAdjusting = false;
                         }
@@ -243,6 +246,9 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
             if (internalFrame != null) {
                 try {
                     valueAdjusting = true;
+
+                    if (internalFrame.isSelected() && selected && lastSelected  != null)
+                        lastSelected.setSelected(false);
 
                     internalFrame.setSelected(selected);
                     lastSelected = content == lastSelected ? null : content;
@@ -373,40 +379,40 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
             desktopContentFrame.addPropertyChangeListener(JInternalFrame.IS_SELECTED_PROPERTY, new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (!valueAdjusting && !contentValueAdjusting) {
+                        ContentUI contentUI = (ContentUI) evt.getSource();
+                        if (contentUI != null) {
+                            Content content = contentUI.getContent();
+                            if (content == null)
+                                return;
 
-                        Container container = ((JInternalFrame) evt.getSource()).getContentPane();
-                        if (container.getComponentCount() > 0) {
-                            Component cmp = container.getComponent(0);
-
-                            for (Content content : contentManager.getContents()) {
-                                if (content.getComponent() == cmp) {
-                                    boolean value = (Boolean) evt.getNewValue();
-                                    if (value) {
-                                        if (lastSelected != null) {
-                                            if (lastSelected.isDetached())
-                                                lastSelected.setSelected(false);
-                                        }
-                                        content.setSelected(true);
-                                        lastSelected = content;
-                                    } else
-                                        content.setSelected(false);
-                                    break;
+                            boolean value = (Boolean) evt.getNewValue();
+                            if (value) {
+                                if (lastSelected != null) {
+                                    if (lastSelected.isDetached())
+                                        lastSelected.setSelected(false);
                                 }
-                            }
+                                content.setSelected(true);
+                                lastSelected = content;
+                            } else
+                                content.setSelected(false);
                         }
-
                     }
                 }
             });
-            
+
             internalFrame = desktopContentFrame;
         } else {
             internalFrame.getContentPane().add(content.getComponent());
         }
 
         desktopPane.add(internalFrame);
-        internalFrame.show();
-        internalFrame.toFront();
+        contentValueAdjusting = true;
+        try {
+            internalFrame.show();
+            internalFrame.toFront();
+        } finally {
+            contentValueAdjusting = false;
+        }
 
         if (content.isSelected())
             try {
