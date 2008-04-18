@@ -3,8 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentManagerUI;
 import org.noos.xing.mydoggy.DesktopContentUI;
-import org.noos.xing.mydoggy.DockableManagerListener;
-import org.noos.xing.mydoggy.event.DockableManagerEvent;
+import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,8 +12,7 @@ import java.beans.PropertyVetoException;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class DesktopContentFrame extends JInternalFrame implements DesktopContentUI,
-                                                                   DockableManagerListener {
+public class DesktopContentFrame extends JInternalFrame implements DesktopContentUI, Cleaner {
     protected boolean detachable;
     protected boolean transparentMode;
     protected float transparentRatio;
@@ -36,8 +34,6 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
         this.transparentMode = true;
         this.transparentRatio = 0.8f;
         this.transparentDelay = 1000;
-
-        content.getDockableManager().addDockableManagerListener(this);
     }
 
 
@@ -179,10 +175,7 @@ public class DesktopContentFrame extends JInternalFrame implements DesktopConten
         return addToTaskBar;
     }
 
-    public void dockableAdded(DockableManagerEvent event) {
-    }
-
-    public void dockableRemoved(DockableManagerEvent event) {
+    public void cleanup() {
         content = null;
     }
 }
