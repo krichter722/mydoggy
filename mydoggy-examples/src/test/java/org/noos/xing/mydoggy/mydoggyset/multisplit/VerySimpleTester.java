@@ -10,6 +10,7 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.XMLEncoder;
 
 public class VerySimpleTester {
     private JFrame frame;
@@ -24,6 +25,11 @@ public class VerySimpleTester {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 frame.setVisible(true);
+
+                XMLEncoder e = new XMLEncoder(System.out); 
+                e.writeObject(frame);
+                e.flush();
+                e.close();
             }
         });
     }
