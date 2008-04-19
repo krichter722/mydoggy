@@ -21,15 +21,13 @@ import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI implements MultiSplitContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
+public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<MultiSplitContentUI> implements MultiSplitContentManagerUI, PlafContentManagerUI, PropertyChangeListener {
     protected MultiSplitContainer multiSplitContainer;
-    protected Map<Content, MultiSplitContentUI> contentUIMap;
     protected boolean focusValueAdj = false;
 
     protected TabLayout tabLayout;
@@ -44,48 +42,10 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
     public MyDoggyMultiSplitContentManagerUI() {
         setContentManagerUI(this);
 
-        this.contentUIMap = new Hashtable<Content, MultiSplitContentUI>();
         this.tabPlacement = TabPlacement.TOP;
         this.tabLayout = TabLayout.SCROLL;
     }
 
-
-    public void setCloseable(boolean closeable) {
-        boolean old = this.closeable;
-        this.closeable = closeable;
-
-        for (ContentUI contentUI : contentUIMap.values()) {
-            contentUI.setCloseable(closeable);
-        }
-
-        fireContentManagerUIProperty("closeable", old, closeable);
-    }
-
-    public void setDetachable(boolean detachable) {
-        boolean old = this.detachable;
-        this.detachable = detachable;
-
-        for (ContentUI contentUI : contentUIMap.values()) {
-            contentUI.setDetachable(detachable);
-        }
-
-        fireContentManagerUIProperty("detachable", old, detachable);
-    }
-
-    public void setMinimizable(boolean minimizable) {
-        boolean old = this.minimizable;
-        this.minimizable = minimizable;
-
-        for (ContentUI contentUI : contentUIMap.values()) {
-            contentUI.setMinimizable(minimizable);
-        }
-
-        fireContentManagerUIProperty("minimizable", old, minimizable);
-    }
-
-    public MultiSplitContentUI getContentUI(Content content) {
-        return contentUIMap.get(content);
-    }
 
     public void setTabPlacement(TabPlacement tabPlacement) {
         if (tabPlacement == null || tabPlacement == getTabPlacement())
@@ -197,65 +157,24 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
     }
 
     public void uninstall() {
-        if (maximizedContent != null)
-            maximizedContent.setMaximized(false);
-
-        // Remove all contents
-        for (Content content : contentManager.getContents()) {
-            removeContent((PlafContent) content);
-        }
-
-        removeListeners();
-
-        // Now you can consider this manager uninstalled
-        this.installed = false;
-    }
-
-    public boolean isInstalled() {
-        return installed;
-    }
-
-    public void addContent(PlafContent content, Object... constraints) {
-        if (maximizedContent != null) {
-            maximizedContent.setMaximized(false);
-            maximizedContent = null;
-        }
-
-        // Add the content to the ui...
-        addUIForContent(content, constraints);
-
-        // Register a plaf listener
-        content.addPlafPropertyChangeListener(this);
-    }
-
-    public void removeContent(PlafContent content) {
+        uninstalling = true;
         try {
-            if (content.isDetached()) {
-                propertyChange(new PropertyChangeEvent(content, "detached.dispose", true, false));
-            } else if (content.isMinimized()) {
-                toolWindowManager.getDockableDescriptor(content.getId()).setAvailable(false);
-            } else {
-                // Remove component
-                valueAdjusting = true;
-                try {
-                    // Remove from multiSplitContainer
-                    multiSplitContainer.removeDockable(content);
-                } finally {
-                    valueAdjusting = false;
-                }
+            if (maximizedContent != null)
+                maximizedContent.setMaximized(false);
+
+            // Remove all contents
+            contentValueAdjusting = true;
+            for (Content content : contentManager.getContents()) {
+                removeContent((PlafContent) content);
             }
+            contentValueAdjusting = false;
+
+            removeListeners();
+
+            // Now you can consider this manager uninstalled
+            this.installed = false;
         } finally {
-            // Remove listeners
-            content.getContentUI().removePropertyChangeListener(contentUIListener);
-            content.removePlafPropertyChangeListener(this);
-
-            // Clean desccriptor for minimization
-            toolWindowManager.removeDockableDescriptor(content.getId());
-
-            // Remove the contentUI part
-            contentUIMap.remove(content);
-            if (lastSelected == content)
-                lastSelected = null;
+            uninstalling = false;
         }
     }
 
@@ -265,10 +184,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
     public void setPopupMenu(JPopupMenu popupMenu) {
         this.popupMenu = popupMenu;
-    }
-
-    public boolean isSelected(Content content) {
-        return content == lastSelected;
     }
 
     public void setSelected(Content content, boolean selected) {
@@ -348,11 +263,19 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
     }
 
 
-    public void propertyChange(PropertyChangeEvent evt) {
-        internalPropertyChangeSupport.firePropertyChange(evt);
+    public Object getLayout() {
+        return multiSplitContainer.getModel();
     }
 
+    public void setLayout(final Object layout) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                multiSplitContainer.setModel((MultiSplitLayout.Node) layout);
+            }
+        });
+    }
 
+    
     protected void initComponents() {
         if (multiSplitContainer == null) {
             /// Init just once
@@ -390,7 +313,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
     }
 
-
     protected void removeListeners() {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(
                 "focusOwner", focusOwnerPropertyChangeListener);
@@ -405,7 +327,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
                                       "previousContent", new PreviousContentAction(toolWindowManager));
     }
 
-    protected void addUIForContent(Content content, Object... constraints) {
+    protected Object addUIForContent(Content content, Object... constraints) {
         MultiSplitContentUI contentUI = contentUIMap.get(content);
         if (contentUI == null) {
             contentUI = new MyDoggyMultiSplitContentUI(this, multiSplitContainer, content);
@@ -447,21 +369,22 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
 
         SwingUtil.repaint(multiSplitContainer);
+
+        return null;
     }
 
-    public Object getLayout() {
-        return multiSplitContainer.getModel();
+    protected void removeUIForContent(Content content) {
+        // Remove component
+        valueAdjusting = true;
+        try {
+            // Remove from multiSplitContainer
+            multiSplitContainer.removeDockable(content);
+        } finally {
+            valueAdjusting = false;
+        }
     }
 
-    public void setLayout(final Object layout) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                multiSplitContainer.setModel((MultiSplitLayout.Node) layout);
-            }
-        });
-    }
-
-
+    
     protected class ComponentListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
@@ -891,8 +814,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI i
 
                 contentValueAdjusting = true;
                 try {
-                    addUIForContent(content,
-                                    minimizedContentUIMap.get(content));
+                    addUIForContent(content, minimizedContentUIMap.get(content));
                     content.setSelected(true);
 
                     componentInFocusRequest = SwingUtil.findAndRequestFocus(content.getComponent());

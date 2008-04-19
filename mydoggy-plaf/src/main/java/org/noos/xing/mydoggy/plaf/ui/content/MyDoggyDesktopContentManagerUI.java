@@ -19,69 +19,19 @@ import java.beans.PropertyChangeSupport;
 import java.beans.PropertyVetoException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.Hashtable;
-import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI implements DesktopContentManagerUI,
-                                                                                       PlafContentManagerUI,
-                                                                                       PropertyChangeListener {
+public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<DesktopContentUI> implements DesktopContentManagerUI,
+                                                                                                         PlafContentManagerUI {
     protected JDesktopPane desktopPane;
-    protected Map<Content, DesktopContentUI> contentUIMap;
-//    protected Map<Content, DesktopContentUI> detachedContentUIMap;
     protected int contentIndex = 0;
     protected JPopupMenu popupMenu;
 
 
     public MyDoggyDesktopContentManagerUI() {
         setContentManagerUI(this);
-
-        this.contentUIMap = new Hashtable<Content, DesktopContentUI>();
-    }
-
-
-    public void setCloseable(boolean closeable) {
-        boolean old = this.closeable;
-        this.closeable = closeable;
-
-        if (desktopPane != null)
-            for (JInternalFrame frame : desktopPane.getAllFrames()) {
-                frame.setClosable(closeable);
-            }
-
-        fireContentManagerUIProperty("closeable", old, closeable);
-    }
-
-    public void setDetachable(boolean detachable) {
-        boolean old = this.detachable;
-        this.detachable = detachable;
-
-        if (desktopPane != null) {
-            for (DesktopContentUI desktopContentUI : contentUIMap.values()) {
-                desktopContentUI.setDetachable(detachable);
-            }
-        }
-
-        fireContentManagerUIProperty("detachable", old, detachable);
-    }
-
-    public void setMinimizable(boolean minimizable) {
-        boolean old = this.minimizable;
-        this.minimizable = minimizable;
-
-        if (desktopPane != null) {
-            for (DesktopContentUI desktopContentUI : contentUIMap.values()) {
-                desktopContentUI.setMinimizable(minimizable);
-            }
-        }
-
-        fireContentManagerUIProperty("minimizable", old, minimizable);
-    }
-
-    public DesktopContentUI getContentUI(Content content) {
-        return contentUIMap.get(content);
     }
 
 
@@ -150,63 +100,22 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
     }
 
     public void uninstall() {
-        // Remove all contents
-        for (Content content : contentManager.getContents()) {
-            removeContent((PlafContent) content);
-        }
-
-        // Now you can consider this manager uninstalled
-        this.installed = false;
-    }
-
-    public boolean isInstalled() {
-        return installed;
-    }
-
-    public void addContent(PlafContent content, Object... constraints) {
-        if (maximizedContent != null) {
-            maximizedContent.setMaximized(false);
-            maximizedContent = null;
-        }
-
-        // Add the content to the ui...
-        addUIForContent(content, constraints);
-
-        // Register a plaf listener
-        content.addPlafPropertyChangeListener(this);
-    }
-
-    public void removeContent(PlafContent content) {
+        uninstalling = true;
         try {
-            if (content.isDetached()) {
-                propertyChange(new PropertyChangeEvent(content, "detached.dispose", true, false));
-            } else if (content.isMinimized()) {
-                toolWindowManager.getDockableDescriptor(content.getId()).setAvailable(false);
-            } else {
-                // Remove component
-                MyDoggyDesktopContentUI desktopContentUI = (MyDoggyDesktopContentUI) content.getContentUI();
-                JInternalFrame internalFrame = desktopContentUI.getInternalFrame();
+            if (maximizedContent != null)
+                maximizedContent.setMaximized(false);
 
-                valueAdjusting = true;
-                try {
-                    internalFrame.removePropertyChangeListener(contentUIListener);
-                    desktopPane.remove(internalFrame);
-                    desktopContentUI.cleanup();
-                } finally {
-                    valueAdjusting = false;
-                }
+            // Remove all contents
+            contentValueAdjusting = true;
+            for (Content content : contentManager.getContents()) {
+                removeContent((PlafContent) content);
             }
+            contentValueAdjusting = false;
+
+            // Now you can consider this manager uninstalled
+            this.installed = false;
         } finally {
-            // Remove listeners
-            content.removePlafPropertyChangeListener(this);
-
-            // Clean desccriptor for minimization
-            toolWindowManager.removeDockableDescriptor(content.getId());
-
-            // Remove the contentUI part
-            contentUIMap.remove(content);
-            if (lastSelected == content)
-                lastSelected = null;
+            uninstalling = false;
         }
     }
 
@@ -216,10 +125,6 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
 
     public void setPopupMenu(JPopupMenu popupMenu) {
         this.popupMenu = popupMenu;
-    }
-
-    public boolean isSelected(Content content) {
-        return content == lastSelected;
     }
 
     public void setSelected(Content content, boolean selected) {
@@ -239,7 +144,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                 try {
                     valueAdjusting = true;
 
-                    if (internalFrame.isSelected() && selected && lastSelected  != null)
+                    if (internalFrame.isSelected() && selected && lastSelected != null)
                         lastSelected.setSelected(false);
 
                     internalFrame.setSelected(selected);
@@ -261,10 +166,6 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
     }
 
     public void selectNextContent(Content content) {
-    }
-
-    public void propertyChange(PropertyChangeEvent evt) {
-        internalPropertyChangeSupport.firePropertyChange(evt);
     }
 
 
@@ -313,13 +214,13 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
                                       "previousContent", new PreviousContentAction(toolWindowManager));
     }
 
-    protected void addUIForContent(final Content content, Object... constraints) {
+    protected Object addUIForContent(final Content content, Object... constraints) {
         DesktopContentUI desktopContentUI = contentUIMap.get(content);
         JInternalFrame internalFrame;
 
         if (desktopContentUI == null) {
             MyDoggyDesktopContentUI myDoggyDesktopContentUI = new MyDoggyDesktopContentUI(contentManager,
-                                                                                          this, 
+                                                                                          this,
                                                                                           content);
 
             internalFrame = myDoggyDesktopContentUI.getInternalFrame();
@@ -361,13 +262,30 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI impl
             contentValueAdjusting = false;
         }
 
-        if (content.isSelected())
+        if (content.isSelected()) {
             try {
                 internalFrame.setSelected(true);
             } catch (PropertyVetoException e) {
                 e.printStackTrace();
             }
+        }
 
+        return null;
+    }
+
+    protected void removeUIForContent(Content content) {
+        // Remove component
+        MyDoggyDesktopContentUI desktopContentUI = (MyDoggyDesktopContentUI) content.getContentUI();
+        JInternalFrame internalFrame = desktopContentUI.getInternalFrame();
+
+        valueAdjusting = true;
+        try {
+            internalFrame.removePropertyChangeListener(contentUIListener);
+            desktopPane.remove(internalFrame);
+            desktopContentUI.cleanup();
+        } finally {
+            valueAdjusting = false;
+        }
     }
 
     protected JInternalFrame getInternalFrame(Content content) {

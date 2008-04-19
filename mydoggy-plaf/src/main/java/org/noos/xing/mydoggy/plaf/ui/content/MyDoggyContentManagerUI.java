@@ -17,15 +17,18 @@ import java.awt.event.WindowFocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public abstract class MyDoggyContentManagerUI extends PropertyChangeEventSource {
+public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends PropertyChangeEventSource implements PropertyChangeListener {
     protected ContentManagerUI contentManagerUI;
     protected MyDoggyToolWindowManager toolWindowManager;
     protected ContentManager contentManager;
     protected ResourceManager resourceManager;
+    protected Map<Content, T> contentUIMap;
 
     protected boolean closeable, detachable, minimizable;
     protected boolean installed;
@@ -45,19 +48,57 @@ public abstract class MyDoggyContentManagerUI extends PropertyChangeEventSource 
     public MyDoggyContentManagerUI() {
         contentManagerUIListeners = new EventListenerList();
         this.closeable = this.detachable = this.minimizable = true;
+        this.contentUIMap = new Hashtable<Content,T>();
     }
 
 
+    public void setCloseable(boolean closeable) {
+        boolean old = this.closeable;
+        this.closeable = closeable;
+
+        for (ContentUI contentUI : contentUIMap.values()) {
+            contentUI.setCloseable(closeable);
+        }
+
+        fireContentManagerUIProperty("closeable", old, closeable);
+    }
+
     public boolean isCloseable() {
         return closeable;
+    }
+
+    public void setDetachable(boolean detachable) {
+        boolean old = this.detachable;
+        this.detachable = detachable;
+
+        for (ContentUI contentUI : contentUIMap.values()) {
+            contentUI.setDetachable(detachable);
+        }
+
+        fireContentManagerUIProperty("detachable", old, detachable);
     }
 
     public boolean isDetachable() {
         return detachable;
     }
 
+    public void setMinimizable(boolean minimizable) {
+        boolean old = this.minimizable;
+        this.minimizable = minimizable;
+
+        for (ContentUI contentUI : contentUIMap.values()) {
+            contentUI.setMinimizable(minimizable);
+        }
+
+        fireContentManagerUIProperty("minimizable", old, minimizable);
+    }
+
     public boolean isMinimizable() {
         return minimizable;
+    }
+
+    public T getContentUI(Content content) {
+        return contentUIMap.get(content);
     }
 
     public void addContentManagerUIListener(ContentManagerUIListener listener) {
@@ -72,18 +113,73 @@ public abstract class MyDoggyContentManagerUI extends PropertyChangeEventSource 
         return contentManagerUIListeners.getListeners(ContentManagerUIListener.class);
     }
 
-    public void setContentManagerUI(ContentManagerUI contentManagerUI) {
+    public void propertyChange(PropertyChangeEvent evt) {
+        internalPropertyChangeSupport.firePropertyChange(evt);
+    }
+
+
+    public boolean isInstalled() {
+        return installed;
+    }
+
+    public void addContent(PlafContent content, Object... constraints) {
+        if (maximizedContent != null) {
+            maximizedContent.setMaximized(false);
+            maximizedContent = null;
+        }
+
+        // Add the content to the ui...
+        addUIForContent(content, constraints);
+
+        // Register a plaf listener
+        content.addPlafPropertyChangeListener(this);
+    }
+
+    public void removeContent(PlafContent content) {
+        try {
+            if (content.isDetached()) {
+                propertyChange(new PropertyChangeEvent(content, "detached.dispose", true, false));
+            } else if (content.isMinimized()) {
+                toolWindowManager.getDockableDescriptor(content.getId()).setAvailable(false);
+            } else {
+                removeUIForContent(content);
+            }
+        } finally {
+            // Remove listeners
+            content.getContentUI().removePropertyChangeListener(contentUIListener);
+            content.removePlafPropertyChangeListener(this);
+
+            // Clean desccriptor for minimization
+            toolWindowManager.removeDockableDescriptor(content.getId());
+
+            // Remove the contentUI part
+            contentUIMap.remove(content);
+            if (lastSelected == content)
+                lastSelected = null;
+        }
+    }
+
+    public boolean isSelected(Content content) {
+        return content == lastSelected;
+    }
+
+
+    protected abstract Object addUIForContent(Content content, Object[] constraints);
+
+    protected abstract void removeUIForContent(Content content);
+
+
+    protected void setContentManagerUI(ContentManagerUI contentManagerUI) {
         this.contentManagerUI = contentManagerUI;
     }
 
-    public Content getMaximizedContent() {
+    protected Content getMaximizedContent() {
         for (Content content : contentManager.getContents()) {
             if (content.isMaximized())
                 return content;
         }
         return null;
     }
-
 
     protected boolean isContentManagerEnabled() {
         return contentManager.isEnabled();
