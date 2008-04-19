@@ -31,18 +31,15 @@ import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI implements TabbedContentManagerUI,
-                                                                                      PlafContentManagerUI,
-                                                                                      PropertyChangeListener {
+public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<TabbedContentUI> implements TabbedContentManagerUI,
+                                                                                                       PlafContentManagerUI {
     protected JTabbedContentPane tabbedContentPane;
     protected boolean showAlwaysTab;
-    protected Map<Content, TabbedContentUI> contentUIMap;
 
     protected Component componentInFocusRequest = null;
 
@@ -56,43 +53,6 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         initComponents();
     }
 
-
-    public void setCloseable(boolean closeable) {
-        boolean old = this.closeable;
-        this.closeable = closeable;
-
-        for (ContentUI contentUI : contentUIMap.values()) {
-            contentUI.setCloseable(closeable);
-        }
-
-        fireContentManagerUIProperty("closeable", old, closeable);
-    }
-
-    public void setDetachable(boolean detachable) {
-        boolean old = this.detachable;
-        this.detachable = detachable;
-
-        for (ContentUI contentUI : contentUIMap.values()) {
-            contentUI.setDetachable(detachable);
-        }
-
-        fireContentManagerUIProperty("detachable", old, detachable);
-    }
-
-    public void setMinimizable(boolean minimizable) {
-        boolean old = this.minimizable;
-        this.minimizable = minimizable;
-
-        for (ContentUI contentUI : contentUIMap.values()) {
-            contentUI.setMinimizable(minimizable);
-        }
-
-        fireContentManagerUIProperty("minimizable", old, minimizable);
-    }
-
-    public TabbedContentUI getContentUI(Content content) {
-        return contentUIMap.get(content);
-    }
 
     public void setTabPlacement(TabPlacement tabPlacement) {
         if (tabPlacement == null || tabPlacement == getTabPlacement())
@@ -243,68 +203,13 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
             }
             contentValueAdjusting = false;
 
+            removeListeners();
+
             // Now you can consider this manager uninstalled
             this.installed = false;
-
-            removeListeners();
         } finally {
             uninstalling = false;
         }
-    }
-
-    public boolean isInstalled() {
-        return installed;
-    }
-
-    public void addContent(PlafContent content, Object... constraints) {
-        if (maximizedContent != null) {
-            maximizedContent.setMaximized(false);
-            maximizedContent = null;
-        }
-
-        // Add the content to the ui...
-        addUIForContent(content, constraints);
-
-        // Register a plaf listener
-        content.addPlafPropertyChangeListener(this);
-    }
-
-    public void removeContent(PlafContent content) {
-        try {
-            if (content.isDetached()) {
-                propertyChange(new PropertyChangeEvent(content, "detached.dispose", true, false));
-            } else if (content.isMinimized()) {
-                toolWindowManager.getDockableDescriptor(content.getId()).setAvailable(false);
-            } else {
-                // Remove from tabbedContentPane
-                int index = tabbedContentPane.indexOfContent(content);
-                if (index != -1) {
-                    valueAdjusting = true;
-                    try {
-                        tabbedContentPane.removeTabAt(index);
-                    } finally {
-                        valueAdjusting = false;
-                    }
-                } else if (toolWindowManager.getMainContent() != content.getComponent())
-                    throw new IllegalStateException("Invalid content ui state.");
-            }
-        } finally {
-            // Remove listeners
-            content.getContentUI().removePropertyChangeListener(contentUIListener);
-            content.removePlafPropertyChangeListener(this);
-
-            // Clean desccriptor for minimization
-            toolWindowManager.removeDockableDescriptor(content.getId());
-
-            // Remove the contentUI part
-            contentUIMap.remove(content);
-            if (lastSelected == content)
-                lastSelected = null;
-        }
-    }
-
-    public boolean isSelected(Content content) {
-        return content == lastSelected;
     }
 
     public void setSelected(Content content, boolean selected) {
@@ -386,14 +291,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
     }
 
 
-    public void propertyChange(PropertyChangeEvent evt) {
-        internalPropertyChangeSupport.firePropertyChange(evt);
-    }
-
-
     protected void initComponents() {
-        contentUIMap = new Hashtable<Content, TabbedContentUI>();
-
         final JTabbedContentPane tabbedContentPane = new JTabbedContentPane(true);
         tabbedContentPane.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -446,7 +344,6 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
         setupActions();
     }
 
-
     protected void initListeners() {
         if (internalPropertyChangeSupport == null) {
             /// Init just once
@@ -482,7 +379,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                 "focusOwner", focusOwnerPropertyChangeListener);
     }
 
-    protected int addUIForContent(Content content, Object... constaints) {
+    protected Object addUIForContent(Content content, Object... constaints) {
         TabbedContentUI contentUI = contentUIMap.get(content);
         if (contentUI == null) {
             contentUI = new MyDoggyTabbedContentUI(this, tabbedContentPane, content);
@@ -510,8 +407,23 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
             if (!tabbedContentPane.isEnabledAt(tabbedContentPane.getSelectedIndex()))
                 tabbedContentPane.setSelectedIndex(tabbedContentPane.getTabCount() - 1);
+
             return index;
         }
+    }
+
+    protected void removeUIForContent(Content content) {
+        // Remove from tabbedContentPane
+        int index = tabbedContentPane.indexOfContent(content);
+        if (index != -1) {
+            valueAdjusting = true;
+            try {
+                tabbedContentPane.removeTabAt(index);
+            } finally {
+                valueAdjusting = false;
+            }
+        } else if (toolWindowManager.getMainContent() != content.getComponent())
+            throw new IllegalStateException("Invalid content ui state.");
     }
 
     protected int addTab(Content content, Object... constaints) {
@@ -773,7 +685,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
                 Window window = SwingUtilities.windowForComponent(content.getComponent());
                 window.setVisible(false);
                 window.dispose();
-                
+
                 detachedContentUIMap.remove(content);
             } else {
                 if (!oldValue && newValue) {
@@ -829,7 +741,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI imple
 
                     contentValueAdjusting = true;
                     try {
-                        int index = addUIForContent(content, detachedContentUIMap.get(content));
+                        int index = (Integer) addUIForContent(content, detachedContentUIMap.get(content));
                         tabbedContentPane.setSelectedIndex(index);
                         componentInFocusRequest = SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
                     } finally {

@@ -764,6 +764,7 @@ public class MultiSplitDockableContainer extends JPanel {
 
             if (!checkModel())
                 System.out.println("Check model fail. removeDockable end");
+
             repaintMultiSplit(toolWindowManager.getClientProperty(MyDoggyKeySpace.PERSISTENCE_DELEGATE_PARSING) !=null);
 
             return constraint;
