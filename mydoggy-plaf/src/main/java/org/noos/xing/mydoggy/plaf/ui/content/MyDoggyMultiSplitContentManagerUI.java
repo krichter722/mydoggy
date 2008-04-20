@@ -218,11 +218,12 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                             try {
                                 tabbedContentPane.setSelectedIndex(index);
                                 if (!focusValueAdj)
-                                    componentInFocusRequest = SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
+                                    componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
                                 else {
+                                    // TODO: should add to other manager??
                                     SwingUtilities.invokeLater(new Runnable() {
                                         public void run() {
-                                            componentInFocusRequest = SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
+                                            componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
                                         }
                                     });
                                 }
@@ -234,13 +235,20 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                             return;
                         }
                     } else if (c instanceof DockablePanel) {
-                        DockablePanel dockablePanel = (DockablePanel) c;
+                        final DockablePanel dockablePanel = (DockablePanel) c;
                         if (dockablePanel.getDockable() == content) {
                             valueAdjusting = true;
 
                             try {
                                 if (!focusValueAdj)
-                                    componentInFocusRequest = SwingUtil.findAndRequestFocus(dockablePanel);
+                                    componentInFocusRequest = findAndRequestFocus(dockablePanel);
+                                else {
+                                    SwingUtilities.invokeLater(new Runnable() {
+                                        public void run() {
+                                            componentInFocusRequest = findAndRequestFocus(dockablePanel);
+                                        }
+                                    });
+                                }
                                 lastSelected = content;
                             } finally {
                                 valueAdjusting = false;
@@ -720,7 +728,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                         dialog.toFront();
                         dialog.setVisible(true);
 
-                        componentInFocusRequest = SwingUtil.findAndRequestFocus(dialog);
+                        componentInFocusRequest = findAndRequestFocus(dialog);
                     } finally {
                         valueAdjusting = false;
                     }
@@ -734,7 +742,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                         addUIForContent(content, detachedContentUIMap.get(content));
                         content.setSelected(true);
 
-                        componentInFocusRequest = SwingUtil.findAndRequestFocus(content.getComponent());
+                        componentInFocusRequest = findAndRequestFocus(content.getComponent());
                     } finally {
                         contentValueAdjusting = false;
                         detachedContentUIMap.remove(content);
@@ -826,7 +834,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                     addUIForContent(content, minimizedContentUIMap.get(content));
                     content.setSelected(true);
 
-                    componentInFocusRequest = SwingUtil.findAndRequestFocus(content.getComponent());
+                    componentInFocusRequest = findAndRequestFocus(content.getComponent());
                 } finally {
                     contentValueAdjusting = false;
                     minimizedContentUIMap.remove(content);

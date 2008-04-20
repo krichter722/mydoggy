@@ -7,22 +7,18 @@ import java.awt.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
 */
-public class ParentOfQuestion implements Question {
+public class ParentOfQuestion implements Question<Component, Boolean> {
     protected Component parent;
 
     public ParentOfQuestion(Component parent) {
         this.parent = parent;
     }
 
-    public boolean is(Object... params) {
-        if (params.length == 0)
+    public Boolean getAnswer(Component param) {
+        if (param == null)
             return false;
 
-        Component component = (Component) params[0];
-        if (component == null)
-            return false;
-
-        Component cursor = component;
+        Component cursor = param;
         while (cursor != null) {
             if (cursor == parent)
                 return true;
@@ -30,4 +26,5 @@ public class ParentOfQuestion implements Question {
         }
         return false;
     }
+
 }

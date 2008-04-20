@@ -233,7 +233,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
                     try {
                         tabbedContentPane.setSelectedIndex(index);
-                        componentInFocusRequest = SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
+                        componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
                         lastSelected = content;
                     } finally {
                         valueAdjusting = false;
@@ -730,7 +730,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                         dialog.toFront();
                         dialog.setVisible(true);
 
-                        componentInFocusRequest = SwingUtil.findAndRequestFocus(dialog);
+                        componentInFocusRequest = findAndRequestFocus(dialog);
                     } finally {
                         valueAdjusting = false;
                     }
@@ -743,7 +743,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                     try {
                         int index = (Integer) addUIForContent(content, detachedContentUIMap.get(content));
                         tabbedContentPane.setSelectedIndex(index);
-                        componentInFocusRequest = SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
+                        componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
                     } finally {
                         contentValueAdjusting = false;
                         detachedContentUIMap.remove(content);
@@ -804,7 +804,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                     addUIForContent(content, minimizedContentUIMap.get(content));
                     content.setSelected(true);
 
-                    componentInFocusRequest = SwingUtil.findAndRequestFocus(content.getComponent());
+                    componentInFocusRequest = findAndRequestFocus(content.getComponent());
                 } finally {
                     contentValueAdjusting = false;
                     minimizedContentUIMap.remove(content);

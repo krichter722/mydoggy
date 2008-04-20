@@ -679,9 +679,9 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
     }
 
     protected class FocusOwnerPropertyChangeListener implements PropertyChangeListener, Cleaner {
-        protected Question parentOf;
+        protected Question<Component, Boolean> parentOf;
 
-        public FocusOwnerPropertyChangeListener(Question parentOf) {
+        public FocusOwnerPropertyChangeListener(Question<Component, Boolean> parentOf) {
             this.parentOf = parentOf;
 
             descriptor.getCleaner().addBefore(DockedContainer.this, this);
@@ -703,7 +703,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
 //            System.out.println(toolWindow.getId() + " - cmp = " + component);
 
-            if (parentOf.is(component)) {
+            if (parentOf.getAnswer(component)) {
                 toolWindow.setActive(true);
                 if (focusRequester == null)
                     focusRequester = component;

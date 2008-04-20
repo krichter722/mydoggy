@@ -3,8 +3,8 @@ package org.noos.common;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public interface Question {
+public interface Question<P, R> {
 
-    boolean is(Object... params);
+    R getAnswer(P param);
     
 }
