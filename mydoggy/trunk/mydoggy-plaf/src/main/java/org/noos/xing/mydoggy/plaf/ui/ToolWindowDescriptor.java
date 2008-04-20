@@ -9,6 +9,7 @@ import org.noos.xing.mydoggy.plaf.cleaner.DefaultCleanerAggregator;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.AggregateIcon;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
+import org.noos.xing.mydoggy.plaf.ui.util.FindFocusableQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 
 import javax.swing.*;
@@ -248,6 +249,10 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         return manager.getResourceManager();
     }
 
+    public CleanerAggregator getCleaner() {
+            return cleaner;
+        }
+
     public void cleanup() {
         getCleaner().cleanup();
     }
@@ -418,8 +423,9 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
             toolWindow.setVisible(false);
     }
 
-    public CleanerAggregator getCleaner() {
-        return cleaner;
+    public Component findFocusable(Component cmp) {
+        // TODO: optimize calls
+        return manager.getResourceManager().getObject(FindFocusableQuestion.class, null).getAnswer(cmp);
     }
 
 

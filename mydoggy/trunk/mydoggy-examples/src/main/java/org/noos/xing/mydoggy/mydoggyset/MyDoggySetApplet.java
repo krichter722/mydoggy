@@ -388,7 +388,7 @@ public class MyDoggySetApplet extends JApplet {
     }
 
 
-    public class CustomParentOfQuestion implements Question {
+    public class CustomParentOfQuestion implements Question<Component, Boolean> {
         protected Component parent;
         protected ToolWindow toolWindow;
 
@@ -397,15 +397,11 @@ public class MyDoggySetApplet extends JApplet {
             this.toolWindow = toolWindow;
         }
 
-        public boolean is(Object... params) {
-            if (params.length == 0)
+        public Boolean getAnswer(Component param) {
+            if (param == null)
                 return false;
 
-            Component component = (Component) params[0];
-            if (component == null)
-                return false;
-
-            Component cursor = component;
+            Component cursor = param;
             while (cursor != null) {
                 if ((cursor instanceof JXMonthView && toolWindow.isActive()) || cursor == parent)
                     return true;
@@ -413,6 +409,7 @@ public class MyDoggySetApplet extends JApplet {
             }
             return false;
         }
+
     }
 
 }

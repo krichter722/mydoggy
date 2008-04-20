@@ -185,6 +185,24 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
         return contentManager.isEnabled();
     }
 
+    protected Component findAndRequestFocus(Component component) {
+        Container container;
+        if (component instanceof JDialog) {
+            container = ((JDialog) component).getContentPane();
+        } else if (component instanceof Container)
+            container = (Container) component;
+        else
+            return null;
+
+        Component focusRequester = SwingUtil.findFocusable(container);
+        System.out.println("focusRequester = " + focusRequester);
+        if (focusRequester == null) {
+            focusRequester = container;
+        }
+        SwingUtil.requestFocus(focusRequester);
+        return focusRequester;
+    }
+
     protected boolean fireContentUIRemoving(ContentUI contentUI) {
         ContentManagerUIEvent event = new ContentManagerUIEvent(contentManagerUI, ContentManagerUIEvent.ActionId.CONTENTUI_REMOVING, contentUI);
 
