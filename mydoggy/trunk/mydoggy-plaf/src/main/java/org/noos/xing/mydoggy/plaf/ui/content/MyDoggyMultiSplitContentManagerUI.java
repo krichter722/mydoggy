@@ -142,16 +142,18 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         this.installed = true;
 
         // Select the content selected on the previous ContentManagerUI
-        final Content selectedContent1 = selectedContent;
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                if (selectedContent1 != null)
-                    selectedContent1.setSelected(true);
-                else if (contentManager.getContentCount() > 0) {
-                    contentManager.getContent(0).setSelected(true);
+        if (oldContentManagerUI != null) {  // TODO: add this check...
+            final Content selectedContent1 = selectedContent;
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    if (selectedContent1 != null)
+                        selectedContent1.setSelected(true);
+                    else if (contentManager.getContentCount() > 0) {
+                        contentManager.getContent(0).setSelected(true);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         return this;
     }
@@ -186,9 +188,9 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         this.popupMenu = popupMenu;
     }
 
-    public void setSelected(Content content, boolean selected) {
+    public synchronized void setSelected(Content content, boolean selected) {
         if (selected) {
-            if (lastSelected != null)
+             if (lastSelected != null)
                 lastSelected.setSelected(false);
 
             if (content.isMinimized()) {
@@ -208,8 +210,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 // Choose the owner tab or check if the content is the main content
                 for (Component c : multiSplitContainer.getTabbedComponents()) {
                     if (c instanceof JTabbedContentPane) {
-                        JTabbedContentPane tabbedContentPane = ((JTabbedContentPane) c);
-                        int index = tabbedContentPane.indexOfContent(content);
+                        final JTabbedContentPane tabbedContentPane = ((JTabbedContentPane) c);
+                        final int index = tabbedContentPane.indexOfContent(content);
                         if (index != -1) {
                             valueAdjusting = true;
 
@@ -217,6 +219,13 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                                 tabbedContentPane.setSelectedIndex(index);
                                 if (!focusValueAdj)
                                     componentInFocusRequest = SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
+                                else {
+                                    SwingUtilities.invokeLater(new Runnable() {
+                                        public void run() {
+                                            componentInFocusRequest = SwingUtil.findAndRequestFocus(tabbedContentPane.getComponentAt(index));
+                                        }
+                                    });
+                                }
                                 lastSelected = content;
                             } finally {
                                 valueAdjusting = false;

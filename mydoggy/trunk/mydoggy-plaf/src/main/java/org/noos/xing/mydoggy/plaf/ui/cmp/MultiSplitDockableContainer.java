@@ -143,7 +143,7 @@ public class MultiSplitDockableContainer extends JPanel {
                     // The requeste is to add more than one dockable on the same leaf... no need to request a new leaf name
                     addToWrapper(componentWrapper, dockable, aggregationIndexLocation, content);
 
-                    repaintMultiSplit(toolWindowManager.getClientProperty(MyDoggyKeySpace.PERSISTENCE_DELEGATE_PARSING) !=null);
+                    repaintMultiSplit(toolWindowManager.getClientProperty(MyDoggyKeySpace.PERSISTENCE_DELEGATE_PARSING) != null);
 
                     rootLeaf.addDockable(dockable.getId());
                 } else {
@@ -485,7 +485,7 @@ public class MultiSplitDockableContainer extends JPanel {
                             entries.put(dockable, new DockableEntry(dockable, component, null));
 
                             validateModel(multiSplitPaneModelRoot);
-                            repaintMultiSplit(toolWindowManager.getClientProperty(MyDoggyKeySpace.PERSISTENCE_DELEGATE_PARSING) !=null);
+                            repaintMultiSplit(toolWindowManager.getClientProperty(MyDoggyKeySpace.PERSISTENCE_DELEGATE_PARSING) != null);
                         }
                     }
 
@@ -765,17 +765,17 @@ public class MultiSplitDockableContainer extends JPanel {
             if (!checkModel())
                 System.out.println("Check model fail. removeDockable end");
 
-            repaintMultiSplit(toolWindowManager.getClientProperty(MyDoggyKeySpace.PERSISTENCE_DELEGATE_PARSING) !=null);
+            repaintMultiSplit(toolWindowManager.getClientProperty(MyDoggyKeySpace.PERSISTENCE_DELEGATE_PARSING) == null);
 
             return constraint;
         }
     }
 
-    public void removeDockable(Dockable dockable, boolean storeLayout) {
+    public Constraint removeDockable(Dockable dockable, boolean storeLayout) {
         boolean old = this.storeLayout;
         this.storeLayout = storeLayout;
         try {
-            removeDockable(dockable);
+            return removeDockable(dockable);
         } finally {
             this.storeLayout = old;
         }
