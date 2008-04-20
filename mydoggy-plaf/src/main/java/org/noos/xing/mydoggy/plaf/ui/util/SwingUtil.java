@@ -271,8 +271,12 @@ public class SwingUtil {
     }
 
     public static Component findFocusable(Component cmp) {
-        if (cmp.isFocusable() && !(cmp instanceof JPanel) && !(cmp instanceof JLabel) && !(cmp instanceof JScrollPane)
-            && !(cmp instanceof JViewport))
+        // TODO: move to question....
+        if (cmp.isFocusable() && !(cmp instanceof JPanel) &&
+            !(cmp instanceof JLabel) &&
+            !(cmp instanceof JScrollPane) &&
+            !(cmp instanceof JViewport) &&
+            !(cmp instanceof JToolBar) )
             return cmp;
 
         if (cmp instanceof Container) {
@@ -564,6 +568,7 @@ public class SwingUtil {
             return null;
 
         Component focusRequester = SwingUtil.findFocusable(container);
+        System.out.println("focusRequester = " + focusRequester);
         if (focusRequester == null) {
             focusRequester = container;
         }
