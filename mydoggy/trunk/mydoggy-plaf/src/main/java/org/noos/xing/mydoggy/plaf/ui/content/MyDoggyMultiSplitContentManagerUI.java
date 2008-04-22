@@ -119,8 +119,10 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         toolWindowManager.setMainContent(multiSplitContainer);
 
         // Import contents
-        contentValueAdjusting = true;
+        lastSelected = null;
         Content selectedContent = null;
+
+        contentValueAdjusting = true;
         for (Content content : contentManager.getContents()) {
             if (content.isSelected())
                 selectedContent = content;
@@ -142,7 +144,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         this.installed = true;
 
         // Select the content selected on the previous ContentManagerUI
-        if (oldContentManagerUI != null) {  // TODO: add this check...
+        if (oldContentManagerUI != null) { 
             final Content selectedContent1 = selectedContent;
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
@@ -220,7 +222,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                                 if (!focusValueAdj)
                                     componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
                                 else {
-                                    // TODO: should add to other manager??
                                     SwingUtilities.invokeLater(new Runnable() {
                                         public void run() {
                                             componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
@@ -688,7 +689,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         protected Map<Content, MultiSplitDockableContainer.Constraint> detachedContentUIMap;
 
         public DetachedListener() {
-            parentFrame = (toolWindowManager.getWindowAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAnchestor() : null;
             detachedContentUIMap = new HashMap<Content, MultiSplitDockableContainer.Constraint>();
         }
 
@@ -714,6 +714,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                         detachedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
 
                         // Setup dialog
+                        Frame parentFrame = (toolWindowManager.getWindowAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAnchestor() : null;
+
                         Window dialog;
                         if (contentUI.isAddToTaskBarWhenDetached()) {
                             dialog = new ContentFrame(resourceManager,
@@ -867,7 +869,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 public void stateChanged(ChangeEvent e) {
                     if (!valueAdjusting && !contentValueAdjusting) {
                         Content newSelected = (Content) tabbedContentPane.getSelectedContent();
-                        if (newSelected != null) {
+                        if (newSelected != null && !newSelected.isMinimized()) {
                             if (newSelected == lastSelected)
                                 return;
 

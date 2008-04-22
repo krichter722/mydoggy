@@ -22,6 +22,7 @@ public class ContentDialog extends JDialog {
     protected Content content;
     protected ContentUI contentUI;
 
+
     public ContentDialog(ResourceManager resourceManager,
                          Content content, ContentUI contentUI,
                          Frame parentFrame,
@@ -86,6 +87,31 @@ public class ContentDialog extends JDialog {
         contentUI = null;
     }
 
+    public void setLocation(int x, int y) {
+        super.setLocation(x, y);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public void setLocation(Point p) {
+        super.setLocation(p);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public void setBounds(int x, int y, int width, int height) {
+        super.setBounds(x, y, width, height);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public void setBounds(Rectangle r) {
+        System.out.println("setBounds r = " + r);
+        super.setBounds(r);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public void setSize(int width, int height) {
+        super.setSize(width, height);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public void setSize(Dimension d) {
+        super.setSize(d);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
     protected class ContentDialogWindowAdapter extends WindowAdapter {
         public void windowClosing(WindowEvent event) {
             content.setDetached(false);
@@ -96,12 +122,14 @@ public class ContentDialog extends JDialog {
 
         public void componentResized(ComponentEvent e) {
             if (isActive() && isVisible()) {
+                System.out.println("componentResized getBounds() = " + getBounds());
                 contentUI.setDetachedBounds(getBounds());
             }
         }
 
         public void componentMoved(ComponentEvent e) {
             if (isActive() && isVisible()) {
+                System.out.println("componentMoved getBounds() = " + getBounds());
                 contentUI.setDetachedBounds(getBounds());
             }
         }

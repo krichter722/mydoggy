@@ -22,6 +22,7 @@ public class ContentFrame extends JFrame {
     protected Content content;
     protected ContentUI contentUI;
 
+
     public ContentFrame(ResourceManager resourceManager,
                         Content content, ContentUI contentUI,
                         Frame parentFrame,
@@ -82,6 +83,15 @@ public class ContentFrame extends JFrame {
 
     }
 
+
+    public void dispose() {
+        super.dispose();
+
+        content = null;
+        contentUI = null;
+    }
+
+    
     protected class ContentDialogWindowAdapter extends WindowAdapter {
         public void windowClosing(WindowEvent event) {
             content.setDetached(false);
