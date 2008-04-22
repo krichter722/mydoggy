@@ -80,7 +80,7 @@ public class TutorialSet {
     <a name="initToolWindowManager"/>
     protected void initToolWindowManager() {
         // Create a new instance of MyDoggyToolWindowManager passing the frame.
-        <a href="./../mydoggy-plaf/toolwindowManager.html">MyDoggyToolWindowManager</a> myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
+        <a href="./../mydoggy-plaf/toolwindowManager.html">MyDoggyToolWindowManager</a> myDoggyToolWindowManager = new MyDoggyToolWindowManager();
         this.toolWindowManager = myDoggyToolWindowManager;
 
         // Register a Tool.

@@ -3,16 +3,14 @@
 		"http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
 	<properties>
-		<title>MyDoggy - My Java Docking Framework : Tutorial - Step 9</title>
+		<title>MyDoggy - My Java Docking Framework : Tutorial - Step 12</title>
 		<author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
 	</properties>
 
     <body>
-		<section name="Tutorial - Step 9">
+		<section name="Tutorial - Step 12">
             <p>
-                Now we'll play with the
-                <a href="./../mydoggy-api/contentManagerUI.html">MultiSplitContentManagerUI</a>
-                interface.
+                Now we will disable the ContentManager so the whole space will be available for toolwindows. 
             </p>
 
             <source>
@@ -60,9 +58,13 @@ public class TutorialSet {
                 ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
                 debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#setActive(boolean)">setActive</a>(true);
 
-                // Aggregate "Run" tool    
+                // Aggregate "Run" tool
                 ToolWindow runTool = toolWindowManager.getToolWindow("Run");
-                runTool.aggregate();
+                runTool.aggregate(AggregationPosition.TOP);
+
+                // Aggregate "Properties" tool
+                ToolWindow propertiesTool = toolWindowManager.getToolWindow("Properties");
+                propertiesTool.aggregate(AggregationPosition.RIGHT);
 
                 frame.setVisible(true);
             }
@@ -107,13 +109,19 @@ public class TutorialSet {
                                              ToolWindowAnchor.LEFT);       // Anchor
 
         <a href="#setupDebugTool">setupDebugTool();</a>
-
         // Register another Tool.
         toolWindowManager.registerToolWindow("Run",                      // Id
                                              "Run Tool",                 // Title
                                              null,                       // Icon
                                              new JButton("Run Tool"),    // Component
                                              ToolWindowAnchor.LEFT);     // Anchor
+
+        // Register another Tool.
+        toolWindowManager.registerToolWindow("Properties",                      // Id
+                                             "Properties Tool",                 // Title
+                                             null,                              // Icon
+                                             new JButton("Properties Tool"),    // Component
+                                             ToolWindowAnchor.LEFT);            // Anchor
 
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
@@ -131,7 +139,7 @@ public class TutorialSet {
 
         <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">DockedTypeDescriptor</a> dockedTypeDescriptor = (DockedTypeDescriptor) debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#getTypeDescriptor(org.noos.xing.mydoggy.ToolWindowType)">getTypeDescriptor</a>(<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowType.html#DOCKED">ToolWindowType.DOCKED</a>);
 
-        dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setDockLength(int)">setDockLength</a>(100);
+        dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setDockLength(int)">setDockLength</a>(300);
         dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#setPopupMenuEnabled(boolean)">setPopupMenuEnabled</a>(true);
         JMenu toolsMenu = dockedTypeDescriptor.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html#getToolsMenu()">getToolsMenu</a>();
         toolsMenu.add(new AbstractAction("Hello World!!!") {
@@ -188,14 +196,15 @@ public class TutorialSet {
         content.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/Content.html#setToolTipText(java.lang.String)">setToolTipText</a>("Tree tip");
 
         <a href="setupContentManagerUI">setupContentManagerUI</a>();
+        <strong style="color:green">
+        contentManager.setEnabled(false);
+        </strong>
     }
     <a name="setupContentManagerUI"/>
     protected void setupContentManagerUI() {
-        <strong style="color:green">
         <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html">ContentManager</a> contentManager = toolWindowManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindowManager.html#getContentManager()">getContentManager</a>();
         <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/MultiSplitContentManagerUI.html">MultiSplitContentManagerUI</a> contentManagerUI = new MyDoggyMultiSplitContentManagerUI();
         contentManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html#setContentManagerUI(org.noos.xing.mydoggy.ContentManagerUI)">setContentManagerUI</a>(contentManagerUI);
-        </strong>
 
         contentManagerUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html#setShowAlwaysTab(boolean)">setShowAlwaysTab</a>(true);
         contentManagerUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html#setTabPlacement(org.noos.xing.mydoggy.TabbedContentManagerUI.TabPlacement.BOTTOM)">setTabPlacement</a>(TabbedContentManagerUI.TabPlacement.BOTTOM);
@@ -216,14 +225,13 @@ public class TutorialSet {
         contentUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentUI.html#setTransparentMode(boolean)">setTransparentMode</a>(true);
         contentUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentUI.html#setTransparentRatio(float)">setTransparentRatio</a>(0.7f);
         contentUI.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentUI.html#setTransparentDelay(int)">setTransparentDelay</a>(1000);
-        <strong style="color:green">
+
         // Now Register two other contents...
         contentManager.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ContentManager.html#addContent(java.lang.String,java.lang.String,javax.swing.Icon,java.awt.Component,java.lang.String,java.lang.Object...)">addContent</a>("Tree Key 2", "Tree Title 2", null, new JTree(), null,
                                  new <a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/MultiSplitConstraint">MultiSplitConstraint</a>(contentManager.getContent(0), 0));
 
         contentManager.addContent("Tree Key 3", "Tree Title 3", null, new JTree(), null,
                                  new MultiSplitConstraint(AggregationPosition.RIGHT));
-        </strong>
     }
 
     public static void main(String[] args) {
@@ -242,14 +250,13 @@ public class TutorialSet {
                         <tr>
                             <td>
                                 <div align="center">
-                                    <img align="middle" src="./../images/tutorial/step9.png" alt="MultiSplitContentManagerUI" border="0" hspace="18"/>
+                                    <img align="middle" src="./../images/tutorial/step12.png" alt="ContentManager disabled" border="0" hspace="18"/>
                                 </div>
                             </td>
                             <td>
                                 <div align="left">
                                     <p>
-                                        This is the effect. With this manager, contents can be arranged in a new
-                                        powerful way.
+                                        This is the effect, now the whole space will be available for toolwindows.
                                     </p>
                                 </div>
                             </td>
@@ -257,7 +264,10 @@ public class TutorialSet {
                     </tbody>
                 </table>
                 <p>
-                    Good! Next Step. <a href="./step10.html">Step 10</a> - Aggregate toolwindows in a new powerful way.
+                    Good! We are now at the end of this tutorial. I hope this has been useful, if not please
+                    help me to improve this tutorial and mydoggy. See
+                    <a href="./../contact.html">contant</a>
+                    section.
                 </p>
             </subsection>
         </section>

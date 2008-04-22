@@ -101,7 +101,7 @@ public class TutorialSet {
 
     protected void initToolWindowManager() {
         // Create a new instance of MyDoggyToolWindowManager passing the frame.
-        <a href="./../mydoggy-plaf/toolwindowManager.html">MyDoggyToolWindowManager</a> myDoggyToolWindowManager = new MyDoggyToolWindowManager(frame);
+        <a href="./../mydoggy-plaf/toolwindowManager.html">MyDoggyToolWindowManager</a> myDoggyToolWindowManager = new MyDoggyToolWindowManager();
         this.toolWindowManager = myDoggyToolWindowManager;
 
         // Register a Tool.
@@ -119,12 +119,6 @@ public class TutorialSet {
                                              new JButton("Run Tool"),    // Component
                                              ToolWindowAnchor.LEFT);     // Anchor
 
-        // Register another Tool.
-        toolWindowManager.registerToolWindow("Properties",                      // Id
-                                             "Properties Tool",                 // Title
-                                             null,                              // Icon
-                                             new JButton("Properties Tool"),    // Component
-                                             ToolWindowAnchor.LEFT);            // Anchor
         <strong style="color:green">
         // Register another Tool.
         toolWindowManager.registerToolWindow("Properties",                      // Id
@@ -277,10 +271,7 @@ public class TutorialSet {
                     </tbody>
                 </table>
                 <p>
-                    Good! We are now at the end of this tutorial. I hope this has been useful, if not please
-                    help me to improve this tutorial and mydoggy. See
-                    <a href="./../contact.html">contant</a>
-                    section.
+                    Good! Next Step. <a href="./step12.html">Step 12</a> - Work with a disabled ContentManager...
                 </p>
             </subsection>
         </section>

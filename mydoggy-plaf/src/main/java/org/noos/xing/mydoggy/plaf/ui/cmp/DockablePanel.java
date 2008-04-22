@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.DockableManagerListener;
+import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.event.DockableManagerEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 
@@ -24,14 +25,16 @@ public class DockablePanel extends JPanel implements PropertyChangeListener,
 
     protected Dockable dockable;
 
+    protected boolean flashingEnabled;
     protected Timer flashingTimer;
-    protected int flasingDuration = -1;
+    protected int flashingDuration = -1;
     protected boolean flashingState;
     protected long startingTime = 0;
 
     
     public DockablePanel(Dockable dockable, Component component) {
         this.dockable = dockable;
+        this.flashingEnabled = !(dockable instanceof ToolWindow);
 
         setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         setFocusCycleRoot(true);
@@ -48,10 +51,13 @@ public class DockablePanel extends JPanel implements PropertyChangeListener,
         final String propertyName = evt.getPropertyName();
 
         if ("flash".equals(propertyName)) {
+            if (!flashingEnabled)
+                return;
+
             if (evt.getNewValue() == Boolean.TRUE) {
                 if (!dockable.isSelected()) {
                     putClientProperty("oldBorder", getBorder());
-                    flasingDuration = -1;
+                    flashingDuration = -1;
                     flashingTimer = new Timer(600, this);
                     flashingTimer.start();
                 }
@@ -63,10 +69,13 @@ public class DockablePanel extends JPanel implements PropertyChangeListener,
                 }
             }
         } else if ("flash.duration".equals(propertyName)) {
+            if (!flashingEnabled)
+                return;
+
             if (evt.getNewValue() == Boolean.TRUE) {
                 if (!dockable.isSelected()) {
                     putClientProperty("oldBorder", getBorder());
-                    flasingDuration = (Integer) evt.getNewValue();
+                    flashingDuration = (Integer) evt.getNewValue();
                     flashingTimer = new Timer(600, this);
                     flashingTimer.start();
                 }
@@ -95,12 +104,13 @@ public class DockablePanel extends JPanel implements PropertyChangeListener,
             setBorder((Border) getClientProperty("oldBorder"));
         }
 
-        if (flasingDuration != -1 && System.currentTimeMillis() - startingTime > flasingDuration)
+        if (flashingDuration != -1 && System.currentTimeMillis() - startingTime > flashingDuration)
             dockable.setFlashing(false);
     }
 
     public void removeNotify() {
         super.removeNotify();
+        
         dockable.removePropertyChangeListener(this);
     }
 
@@ -131,5 +141,5 @@ public class DockablePanel extends JPanel implements PropertyChangeListener,
         removeAll();
         add(component, "0,0,FULL,FULL");
     }
-    
+
 }
