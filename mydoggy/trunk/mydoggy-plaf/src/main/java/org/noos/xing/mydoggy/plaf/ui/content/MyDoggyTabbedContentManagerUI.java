@@ -215,7 +215,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    public void setSelected(Content content, boolean selected) {
+    public synchronized void setSelected(Content content, boolean selected) {
         if (selected) {
             if (lastSelected != null)
                 lastSelected.setSelected(false);
@@ -679,8 +679,6 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
-            boolean oldValue = (Boolean) evt.getOldValue();
-            boolean newValue = (Boolean) evt.getNewValue();
 
             if ("detached.dispose".equals(evt.getPropertyName())) {
                 Window window = SwingUtilities.windowForComponent(content.getComponent());
@@ -689,7 +687,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
                 detachedContentUIMap.remove(content);
             } else {
-                if (!oldValue && newValue) {
+                if ((Boolean) evt.getNewValue()) {
                     valueAdjusting = true;
                     try {
                         ContentUI contentUI = getContentUI(content);
@@ -737,7 +735,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                     } finally {
                         valueAdjusting = false;
                     }
-                } else if (oldValue && !newValue) {
+                } else {
                     Window window = SwingUtilities.windowForComponent(content.getComponent());
                     window.setVisible(false);
                     window.dispose();

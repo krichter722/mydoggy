@@ -694,8 +694,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
-            boolean oldValue = (Boolean) evt.getOldValue();
-            boolean newValue = (Boolean) evt.getNewValue();
 
             if ("detached.dispose".equals(evt.getPropertyName())) {
                 Window window = SwingUtilities.windowForComponent(content.getComponent());
@@ -703,7 +701,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 window.dispose();
                 detachedContentUIMap.remove(content);
             } else {
-                if (!oldValue && newValue) {
+                if ((Boolean) evt.getNewValue()) {
                     valueAdjusting = true;
                     try {
                         ContentUI contentUI = getContentUI(content);
@@ -734,7 +732,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                     } finally {
                         valueAdjusting = false;
                     }
-                } else if (oldValue && !newValue) {
+                } else {
                     Window window = SwingUtilities.windowForComponent(content.getComponent());
                     window.setVisible(false);
                     window.dispose();

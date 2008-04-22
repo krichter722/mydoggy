@@ -131,38 +131,40 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         this.popupMenu = popupMenu;
     }
 
-    public void setSelected(Content content, boolean selected) {
-        if (content.isMinimized()) {
-            content.setMinimized(false);
-            content.setSelected(true);
-        } else if (content.isDetached()) {
-            // If the content is detached request the focus for owner window
-            if (selected)
+    public synchronized void setSelected(Content content, boolean selected) {
+        if (selected) {
+            if (lastSelected != null)
+               lastSelected.setSelected(false);
+
+            if (content.isMinimized()) {
+                content.setMinimized(false);
+                content.setSelected(true);
+            } else if (content.isDetached()) {
                 // If the content is detached request the focus for owner window
                 SwingUtil.requestFocus(
                         SwingUtilities.windowForComponent(content.getComponent())
                 );
+            } else {
+                JInternalFrame internalFrame = getInternalFrame(content);
+                if (internalFrame != null) {
+                    try {
+                        valueAdjusting = true;
+
+                        internalFrame.setSelected(selected);
+                        lastSelected = content == lastSelected ? null : content;
+
+                        valueAdjusting = false;
+                    } catch (PropertyVetoException e) {
+                        e.printStackTrace();
+                    }
+                } else
+                    throw new IllegalStateException("Invalid content ui state.");
+            }
         } else {
-            JInternalFrame internalFrame = getInternalFrame(content);
-            if (internalFrame != null) {
-                try {
-                    valueAdjusting = true;
-
-                    if (internalFrame.isSelected() && selected && lastSelected != null)
-                        lastSelected.setSelected(false);
-
-                    internalFrame.setSelected(selected);
-                    lastSelected = content == lastSelected ? null : content;
-
-                    valueAdjusting = false;
-                } catch (PropertyVetoException e) {
-                    e.printStackTrace();
-                }
-            } else if (selected) {
-                throw new IllegalStateException("Invalid content ui state.");
-            } else if (content == lastSelected)
+            if (content == lastSelected)
                 lastSelected = null;
         }
+
     }
 
     public void updateUI() {
@@ -520,15 +522,13 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
 
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
-            boolean oldValue = (Boolean) evt.getOldValue();
-            boolean newValue = (Boolean) evt.getNewValue();
 
             if ("detached.dispose".equals(evt.getPropertyName())) {
                 Window window = SwingUtilities.windowForComponent(content.getComponent());
                 window.setVisible(false);
                 window.dispose();
             } else {
-                if (!oldValue && newValue) {
+                if ((Boolean) evt.getNewValue()) {
                     ContentUI contentUI = getContentUI(content);
 
                     // Remove the internal frame
@@ -560,7 +560,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
 
                     SwingUtil.repaint(desktopPane);
                     SwingUtil.requestFocus(dialog);
-                } else if (oldValue && !newValue) {
+                } else {
                     Window window = SwingUtilities.windowForComponent(content.getComponent());
                     window.setVisible(false);
                     window.dispose();
