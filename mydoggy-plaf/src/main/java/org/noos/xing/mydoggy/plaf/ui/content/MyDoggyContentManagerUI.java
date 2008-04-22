@@ -195,7 +195,6 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
             return null;
 
         Component focusRequester = SwingUtil.findFocusable(container);
-        System.out.println("focusRequester = " + focusRequester);
         if (focusRequester == null) {
             focusRequester = container;
         }

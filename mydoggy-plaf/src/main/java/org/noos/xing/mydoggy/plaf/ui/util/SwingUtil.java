@@ -13,7 +13,6 @@ import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
@@ -114,16 +113,6 @@ public class SwingUtil {
 
     public static boolean isLeftToRight(Component c) {
         return c != null && c.getComponentOrientation().isLeftToRight();
-    }
-
-    public static void invokeAndWait(Runnable runnable) {
-        try {
-            SwingUtilities.invokeAndWait(runnable);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
     }
 
     public static void dispatchEvent(Object src, AWTEvent event) {
@@ -247,27 +236,24 @@ public class SwingUtil {
 
             return new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
         } catch (Throwable e) {
-            e.printStackTrace();
+            throw new RuntimeException("Cannot load icon : "  + e.getMessage(), e);
         }
-        return null;
     }
 
     public static Image loadImage(String url) {
         try {
             return Toolkit.getDefaultToolkit().getImage(SwingUtil.class.getClassLoader().getResource(url));
         } catch (Throwable e) {
-            e.printStackTrace();
+            throw new RuntimeException("Cannot load image : "  + e.getMessage(), e);
         }
-        return null;
     }
 
     public static BufferedImage loadImageIO(String url) {
         try {
             return ImageIO.read(SwingUtil.class.getClassLoader().getResource(url));
         } catch (Throwable e) {
-            e.printStackTrace();
+            throw new RuntimeException("Cannot load buffered image : "  + e.getMessage(), e);
         }
-        return null;
     }
 
     public static Component findFocusable(Component cmp) {
@@ -452,11 +438,11 @@ public class SwingUtil {
             if (resource == null) {
                 File file = new File(resourceName);
                 if (file.exists())
-                    resource = file.toURL();
+                    resource = file.toURI().toURL();
                 else {
                     file = new File(System.getProperty("user.home") + File.separator + resourceName);
                     if (file.exists())
-                        resource = file.toURL();
+                        resource = file.toURI().toURL();
                     else
                         throw new RuntimeException("Cannot find resource property file called " + resourceName + ".");
                 }
@@ -491,13 +477,12 @@ public class SwingUtil {
     }
 
     public static Point convertPointFromScreen(Point p, Component c) {
-        Rectangle b;
         int x, y;
 
         do {
             if (c instanceof JComponent) {
-                x = ((JComponent) c).getX();
-                y = ((JComponent) c).getY();
+                x = c.getX();
+                y = c.getY();
             } else if (c instanceof java.applet.Applet ||
                        c instanceof java.awt.Window) {
                 try {
@@ -568,7 +553,6 @@ public class SwingUtil {
             return null;
 
         Component focusRequester = SwingUtil.findFocusable(container);
-        System.out.println("focusRequester = " + focusRequester);
         if (focusRequester == null) {
             focusRequester = container;
         }

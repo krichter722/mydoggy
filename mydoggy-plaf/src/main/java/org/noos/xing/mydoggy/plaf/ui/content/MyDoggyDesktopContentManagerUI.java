@@ -62,8 +62,10 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         toolWindowManager.setMainContent(desktopPane);
 
         // Import contents
-        contentValueAdjusting = true;
+        lastSelected = null;
         Content selectedContent = null;
+
+        contentValueAdjusting = true;
         for (Content content : contentManager.getContents()) {
             if (content.isSelected())
                 selectedContent = content;
@@ -85,16 +87,18 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         this.installed = true;
 
         // Select the content selected on the previous ContentManagerUI
-        final Content selectedContent1 = selectedContent;
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                if (selectedContent1 != null)
-                    selectedContent1.setSelected(true);
-                else if (contentManager.getContentCount() > 0) {
-                    contentManager.getContent(0).setSelected(true);
+        if (oldContentManagerUI != null) {
+            final Content selectedContent1 = selectedContent;
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    if (selectedContent1 != null)
+                        selectedContent1.setSelected(true);
+                    else if (contentManager.getContentCount() > 0) {
+                        contentManager.getContent(0).setSelected(true);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         return this;
     }
@@ -510,10 +514,8 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
     }
 
     protected class DetachedListener implements PropertyChangeListener {
-        protected Frame parentFrame;
 
         public DetachedListener() {
-            parentFrame = (toolWindowManager.getWindowAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAnchestor() : null;
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
@@ -542,6 +544,8 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
                         throw new IllegalStateException("Invalid Content : " + content);
 
                     // Setup dialog
+                    Frame parentFrame = (toolWindowManager.getWindowAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAnchestor() : null;
+
                     Window dialog;
                     if (contentUI.isAddToTaskBarWhenDetached()) {
                         dialog = new ContentFrame(resourceManager, content, contentUI,

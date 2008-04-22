@@ -258,11 +258,7 @@ public class MyDoggyDesktopContentUI extends PropertyChangeEventSource implement
     protected void initInternalFrameListeners() {
         internalFrame.addInternalFrameListener(new InternalFrameAdapter() {
             public void internalFrameClosed(InternalFrameEvent e) {
-                try {
-                    contentManager.removeContent(content);
-                } catch (Exception ignore) {
-                    ignore.printStackTrace();   // TODO: check this...
-                }
+                contentManager.removeContent(content);
             }
         });
 
