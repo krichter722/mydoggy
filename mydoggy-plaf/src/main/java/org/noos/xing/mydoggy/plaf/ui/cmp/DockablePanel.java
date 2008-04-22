@@ -1,8 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
+import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.DockableManagerListener;
-import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.event.DockableManagerEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 
@@ -34,7 +34,7 @@ public class DockablePanel extends JPanel implements PropertyChangeListener,
     
     public DockablePanel(Dockable dockable, Component component) {
         this.dockable = dockable;
-        this.flashingEnabled = !(dockable instanceof ToolWindow);
+        this.flashingEnabled = dockable instanceof Content;
 
         setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         setFocusCycleRoot(true);
@@ -119,7 +119,7 @@ public class DockablePanel extends JPanel implements PropertyChangeListener,
 
     public void dockableRemoved(DockableManagerEvent event) {
         if (event.getDockable() == dockable) {
-            dockable.getDockableManager().addDockableManagerListener(this);
+            dockable.getDockableManager().removeDockableManagerListener(this);
             dockable.removePropertyChangeListener(this);
             dockable = null;
 
