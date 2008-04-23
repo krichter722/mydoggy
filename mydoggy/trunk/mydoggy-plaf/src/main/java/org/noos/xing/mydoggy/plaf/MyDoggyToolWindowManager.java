@@ -4,6 +4,7 @@ import info.clearthought.layout.TableLayout;
 import org.noos.common.context.MutableContext;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
+import org.noos.xing.mydoggy.event.ContentManagerEvent;
 import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
 import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultDockedTypeDescriptor;
@@ -770,6 +771,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         contentManager = new MyDoggyContentManager(this);
         contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
         contentManager.addPropertyChangeListener(this);
+        contentManager.addContentManagerListener(new InternalContentMananagerListener());
     }
 
     protected void initGlassPane() {
@@ -1081,6 +1083,23 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return context;
     }
 
+    public void ensureContentVisible(Content content) {
+        // Check if any toolwindow is maximized and restore it
+        for (ToolWindowDescriptor t : tools.values()) {
+            if (t.getToolWindow().isMaximized() && !t.isFloatingWindow() && !t.getToolWindow().isDetached()) {
+                t.getToolWindow().setMaximized(false);
+            }
+        }
+
+        // Is content area large enough?
+        if (mainContainer.getWidth() < 50 || mainContainer.getHeight() < 50) {
+            // If not, reset split panes to equal divisions
+            mainSplitPane.setDividerLocation(0.5);
+            for (int i = 0; i < bars.length; i++) {
+                bars[i].getSplitPane().setDividerLocation(0.5);
+            }
+        }
+    }
 
     protected class AvailablePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
@@ -1394,6 +1413,20 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 } else
                     setDockableMainContentMode(!(Boolean) evt.getNewValue());
             }
+        }
+
+    }
+
+    protected class InternalContentMananagerListener implements ContentManagerListener {
+
+        public void contentAdded(ContentManagerEvent event) {
+            ensureContentVisible(event.getContent());
+        }
+
+        public void contentRemoved(ContentManagerEvent event) {
+        }
+
+        public void contentSelected(ContentManagerEvent event) {
         }
 
     }
