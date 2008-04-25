@@ -811,7 +811,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             if (content == null && descriptor.getToolWindow().isVisible())
                 return;
 
-            int divederLocation = descriptor.getDividerLocation();
+            int divederLocation = Math.max(descriptor.getDividerLocation(),
+                                           descriptor.getDockedTypeDescriptor().getMinimumDockLength());
 
             if (getSplitDividerLocation() != 0) {
                 for (ToolWindow toolWindow : manager.getToolsByAnchor(anchor)) {

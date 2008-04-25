@@ -26,7 +26,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro
  */
-public class SlidingContainer extends MyDoggyToolWindowContainer implements Cleaner{
+public class SlidingContainer extends MyDoggyToolWindowContainer implements Cleaner {
     protected SlidingAnimation slidingAnimation;
 
     protected SlidingBorder border;
@@ -176,7 +176,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
                 }
             }
         });
-        
+
         slidingMouseInputHandler = new SlidingMouseInputHandler(descriptor);
 
         descriptor.getTypeDescriptor(ToolWindowType.SLIDING).addPropertyChangeListener(new SlidingTypePropertyChangeListener());
@@ -216,7 +216,8 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
     }
 
     protected void resize() {
-        int length = descriptor.getDividerLocation();
+        int length = Math.max(descriptor.getDividerLocation(),
+                              descriptor.getDockedTypeDescriptor().getMinimumDockLength());
         if (length == -1)
             length = 200;
 

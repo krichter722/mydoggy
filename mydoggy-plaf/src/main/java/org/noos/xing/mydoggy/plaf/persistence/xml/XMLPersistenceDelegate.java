@@ -228,6 +228,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                 AttributesImpl dockedDescriptorAttributes = new AttributesImpl();
                 dockedDescriptorAttributes.addAttribute(null, "dockLength", null, null, String.valueOf(dockedTypeDescriptor.getDockLength()));
+                dockedDescriptorAttributes.addAttribute(null, "minimumDockLength", null, null, String.valueOf(dockedTypeDescriptor.getMinimumDockLength()));
                 dockedDescriptorAttributes.addAttribute(null, "popupMenuEnabled", null, null, String.valueOf(dockedTypeDescriptor.isPopupMenuEnabled()));
                 dockedDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(dockedTypeDescriptor.isAnimating()));
                 dockedDescriptorAttributes.addAttribute(null, "previewEnabled", null, null, String.valueOf(dockedTypeDescriptor.isPreviewEnabled()));
@@ -813,6 +814,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 if (dockedType != null) {
                     DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
                     descriptor.setDockLength(getInteger(dockedType, "dockLength", 200));
+                    descriptor.setMinimumDockLength(getInteger(dockedType, "minimumDockLength", 100));
                     descriptor.setPopupMenuEnabled(getBoolean(dockedType, "popupMenuEnabled", true));
                     descriptor.setAnimating(getBoolean(dockedType, "animating", true));
                     descriptor.setPreviewEnabled(getBoolean(dockedType, "previewEnabled", true));
