@@ -7,8 +7,7 @@ package org.noos.xing.mydoggy;
  * @see org.noos.xing.mydoggy.ToolWindowType#SLIDING
  * @since 1.2.0
  */
-public interface SlidingTypeDescriptor extends ToolWindowTypeDescriptor
-{
+public interface SlidingTypeDescriptor extends ToolWindowTypeDescriptor {
 
     /**
      * Sets the transparent mode. If the transparent mode is enabled then when the toolwindow's content

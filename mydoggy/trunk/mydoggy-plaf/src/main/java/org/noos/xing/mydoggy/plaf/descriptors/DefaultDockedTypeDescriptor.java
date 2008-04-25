@@ -29,6 +29,7 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
     private float previewTransparentRatio;
     private boolean hideRepresentativeButtonOnVisible;
     private boolean idVisibleOnTitleBar;
+    private int minimumDockLength;
 
     public DefaultDockedTypeDescriptor(ResourceManager resourceManager) {
         this.resourceManager = resourceManager;
@@ -43,6 +44,7 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         this.previewTransparentRatio = 0.65f;
         this.hideRepresentativeButtonOnVisible = false;
         this.idVisibleOnTitleBar = true;
+        this.minimumDockLength = 100;
     }
 
     public DefaultDockedTypeDescriptor(ToolWindowDescriptor toolWindowDescriptor,
@@ -51,7 +53,7 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
                                        int dockLength, boolean popupMenuEnabled,
                                        ToolWindowActionHandler toolWindowActionHandler, boolean animating,
                                        boolean autoHide, boolean previewEnabled, int previewDelay, float previewTransparentRatio,
-                                       boolean hideRepresentativeButtonOnVisible, boolean idVisibleOnTitleBar) {
+                                       boolean hideRepresentativeButtonOnVisible, boolean idVisibleOnTitleBar, int minimumDockLength) {
         this.resourceManager = resourceManager;
         this.toolsMenu = new JMenu(resourceManager.getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = popupMenuEnabled;
@@ -64,6 +66,7 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         this.previewTransparentRatio = previewTransparentRatio;
         this.hideRepresentativeButtonOnVisible = hideRepresentativeButtonOnVisible;
         this.idVisibleOnTitleBar = idVisibleOnTitleBar;
+        this.minimumDockLength = minimumDockLength;
 
         parent.addPropertyChangeListener(this);
 
@@ -100,6 +103,20 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         this.dockLength = dockLength;
 
         firePropertyChangeEvent("dockLength", old, dockLength);
+    }
+
+    public void setMinimumDockLength(int minimumDockLength) {
+        if (this.minimumDockLength == minimumDockLength)
+            return;
+
+        int old = this.minimumDockLength;
+        this.minimumDockLength = minimumDockLength;
+        
+        firePropertyChangeEvent("minimumDockLength", old, minimumDockLength);
+    }
+
+    public int getMinimumDockLength() {
+        return minimumDockLength;
     }
 
     public ToolWindowActionHandler getToolWindowActionHandler() {
@@ -221,7 +238,8 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
                                                this.autoHide, previewEnabled,
                                                previewDelay, previewTransparentRatio,
                                                hideRepresentativeButtonOnVisible,
-                                               idVisibleOnTitleBar);
+                                               idVisibleOnTitleBar,
+                                               minimumDockLength);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

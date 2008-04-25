@@ -48,11 +48,11 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * Sets the width or heigth, based on anchor of tool window, of the dock panel.
      * This value is used by DOCKED and SLIDING tool window type.
      *
-     * @param length dock panel length.
+     * @param dockLength
      * @see #getDockLength()
      * @since 1.0.0
      */
-    void setDockLength(int length);
+    void setDockLength(int dockLength);
 
     /**
      * Returns the dock panel length.
@@ -62,6 +62,18 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * @since 1.0.0
      */
     int getDockLength();
+
+    /**
+     * TDOO
+     * @param minimumDockLength
+     */
+    void setMinimumDockLength(int minimumDockLength);
+
+    /**
+     * TODO:
+     * @return
+     */
+    int getMinimumDockLength();
 
     /**
      * Returns the ToolWindowActionHandler instance or null if it is not present.
