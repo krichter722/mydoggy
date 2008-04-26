@@ -472,6 +472,14 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         return isVisible();
     }
 
+    public void ensureVisible() {
+        if (!isMinimized() && isVisible()) {
+            DockedTypeDescriptor descriptor = getTypeDescriptor(DockedTypeDescriptor.class);
+            if (descriptor.getDockLength() < descriptor.getMinimumDockLength())
+                descriptor.setDockLength(descriptor.getMinimumDockLength());
+        }
+    }
+
     public void setRepresentativeAnchorButtonVisible(boolean visible) {
         synchronized (getLock()) {
             if (!isAvailable())

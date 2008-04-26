@@ -181,4 +181,9 @@ public interface Dockable<M extends DockableManager> extends Observable {
      */
     boolean isMinimized();
 
+    /**
+     * TODO
+     * @since 1.4.2
+     */
+    void ensureVisible();
 }

@@ -520,13 +520,7 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
                     selecTabButton = this;
 
                     // Ensure position
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            Rectangle cellBounds = getBounds();
-                            cellBounds.x -= viewport.getViewPosition().x;
-                            viewport.scrollRectToVisible(cellBounds);
-                        }
-                    });
+                    ensureVisible();
 
                     titleLabel.setForeground(resourceManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
                     closeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.TAB_CLOSE));
@@ -574,6 +568,8 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
                 } else {
                     addTab(this);
                 }
+            } else if ("ensureVisible".equals(property)) {
+                ensureVisible();                
             }
         }
 
@@ -626,6 +622,15 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
             repaint();
         }
 
+        protected void ensureVisible() {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    Rectangle cellBounds = getBounds();
+                    cellBounds.x -= viewport.getViewPosition().x;
+                    viewport.scrollRectToVisible(cellBounds);
+                }
+            });
+        }
 
         protected class TabButtonPanelUI extends BasicPanelUI {
 
