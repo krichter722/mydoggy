@@ -204,7 +204,8 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
     }
 
     public void ensureVisible() {
-        // TODO: implement this...
+        if (!isMinimized())
+            firePlafPropertyChangeEvent("ensureVisible", null, this);
     }
 
     public Dockable getDockableDelegator() {
