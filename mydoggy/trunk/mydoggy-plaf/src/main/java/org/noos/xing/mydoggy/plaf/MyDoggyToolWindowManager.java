@@ -1101,6 +1101,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
+
     protected class AvailablePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             DockableDescriptor descriptor = (DockableDescriptor) evt.getSource();
@@ -1417,18 +1418,26 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     }
 
-    protected class InternalContentMananagerListener implements ContentManagerListener {
+    protected class InternalContentMananagerListener implements ContentManagerListener,
+                                                                PropertyChangeListener {
 
         public void contentAdded(ContentManagerEvent event) {
-            ensureContentVisible(event.getContent());
+            MyDoggyContent content = (MyDoggyContent) event.getContent();
+            ensureContentVisible(content);
+            content.addPlafPropertyChangeListener("ensureVisible", this);
         }
 
         public void contentRemoved(ContentManagerEvent event) {
+            MyDoggyContent content = (MyDoggyContent) event.getContent();
+            content.removePlafPropertyChangeListener(this);            
         }
 
         public void contentSelected(ContentManagerEvent event) {
         }
 
+        public void propertyChange(PropertyChangeEvent evt) {
+            ensureContentVisible((Content) evt.getNewValue());
+        }
     }
 
 

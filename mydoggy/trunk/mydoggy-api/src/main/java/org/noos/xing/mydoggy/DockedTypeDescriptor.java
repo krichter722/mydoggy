@@ -66,12 +66,14 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
     /**
      * TDOO
      * @param minimumDockLength
+     * @since 1.4.2
      */
     void setMinimumDockLength(int minimumDockLength);
 
     /**
      * TODO:
      * @return
+     * @since 1.4.2
      */
     int getMinimumDockLength();
 

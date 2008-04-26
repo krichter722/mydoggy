@@ -203,6 +203,10 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
         return minimized;
     }
 
+    public void ensureVisible() {
+        // TODO: implement this...
+    }
+
     public Dockable getDockableDelegator() {
         return dockable;
     }
