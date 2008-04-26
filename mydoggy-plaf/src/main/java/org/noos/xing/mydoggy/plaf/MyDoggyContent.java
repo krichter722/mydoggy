@@ -254,7 +254,8 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
     }
 
     public void ensureVisible() {
-        firePlafPropertyChangeEvent("ensureVisible", null, this);
+        if (!isMinimized())
+            firePlafPropertyChangeEvent("ensureVisible", null, this);
     }
 
     public ContentUI getContentUI() {

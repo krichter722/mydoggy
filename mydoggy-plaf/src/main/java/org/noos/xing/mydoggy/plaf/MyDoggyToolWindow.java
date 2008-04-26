@@ -469,11 +469,11 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
     public boolean isMinimized() {
-        return isVisible();
+        return !isVisible();
     }
 
     public void ensureVisible() {
-        if (!isMinimized() && isVisible()) {
+        if (isVisible()) {
             DockedTypeDescriptor descriptor = getTypeDescriptor(DockedTypeDescriptor.class);
             if (descriptor.getDockLength() < descriptor.getMinimumDockLength())
                 descriptor.setDockLength(descriptor.getMinimumDockLength());
