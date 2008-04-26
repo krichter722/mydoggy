@@ -182,7 +182,8 @@ public interface Dockable<M extends DockableManager> extends Observable {
     boolean isMinimized();
 
     /**
-     * TODO
+     * Used to ensure that the dockable is visible. The behaviour dependes on the specific dockable
+     * (ToolWindow, Content, ToolWindowTab).
      * @since 1.4.2
      */
     void ensureVisible();

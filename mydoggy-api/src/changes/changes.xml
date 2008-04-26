@@ -128,8 +128,14 @@
                         Minimizes this dockable. A minimized dockable is a dockable not visible but available.
                     </li>
                     <li>
-                        <code style="color:green">boolean isMinimized();;</code></br>
+                        <code style="color:green">boolean isMinimized();</code></br>
                         Returns whether this dockable is currently minimized.
+                        </br>
+                    </li>
+                    <li>
+                        <code style="color:green">void ensureVisible();</code></br>
+                        Used to ensure that the dockable is visible. The behaviour dependes on the specific dockable
+                        (ToolWindow, Content, ToolWindowTab).
                         </br>
                     </li>
                 </ul>
@@ -198,6 +204,23 @@
                     <li>
                         <code style="color:green">boolean isEnabled();</code></br>
                         Determines whether this mode is enabled.
+                        </br>
+                    </li>
+                </ul>
+                ]]>
+            </action>
+            <action dev="adecaro" type="update">
+                <!-- TODO -->
+                <![CDATA[
+                <a href="./apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">
+                    <code>DockedTypeDescriptor</code>
+                </a> - Added methods:
+                <ul>
+                    <li>
+                        <code style="color:green">void setMinimumDockLength(int minimumDockLength);</code>
+                    </li>
+                    <li>
+                        <code style="color:green">int getMinimumDockLength();</code></br>
                         </br>
                     </li>
                 </ul>
