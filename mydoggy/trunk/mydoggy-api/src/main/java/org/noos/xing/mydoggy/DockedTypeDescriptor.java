@@ -64,15 +64,18 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
     int getDockLength();
 
     /**
-     * TDOO
-     * @param minimumDockLength
+     * Sets the minimum dock length. This information is used every time a toolwindow (in docked or sliding mode)
+     * is showed.
+     *
+     * @param minimumDockLength the minimum dock length.
      * @since 1.4.2
      */
     void setMinimumDockLength(int minimumDockLength);
 
     /**
-     * TODO:
-     * @return
+     * Returns the minimum dock length used during toolwindow showing.
+     *
+     * @return the minimum dock length.
      * @since 1.4.2
      */
     int getMinimumDockLength();

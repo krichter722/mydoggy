@@ -1404,6 +1404,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                         group.getToolsWindow()[0].addPropertyChangeListener(listener);
 
                         firePublic = false;
+                        
                         group.setVisible(false);
                         setDockableMainContentMode(!(Boolean) evt.getNewValue());
                         group.setVisible(true);
