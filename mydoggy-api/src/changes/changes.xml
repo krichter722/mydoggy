@@ -210,7 +210,6 @@
                 ]]>
             </action>
             <action dev="adecaro" type="update">
-                <!-- TODO -->
                 <![CDATA[
                 <a href="./apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">
                     <code>DockedTypeDescriptor</code>
@@ -218,10 +217,13 @@
                 <ul>
                     <li>
                         <code style="color:green">void setMinimumDockLength(int minimumDockLength);</code>
+                        - Sets the minimum dock length. This information is used every time a toolwindow (in docked or sliding mode)
+                        is showed.
                     </li>
                     <li>
                         <code style="color:green">int getMinimumDockLength();</code></br>
                         </br>
+                        - Returns the minimum dock length used during toolwindow showing.
                     </li>
                 </ul>
                 ]]>
