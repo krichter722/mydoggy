@@ -1,0 +1,96 @@
+        <!ELEMENT mydoggy (tools|toolWindowManagerDescriptor|contentManager|bars)*>
+        <!ATTLIST mydoggy
+                version CDATA #REQUIRED>
+        <!ELEMENT tools (tool)*>
+        <!ELEMENT tool (descriptors)*>
+        <!ATTLIST tool
+                active CDATA #REQUIRED
+                aggregateMode CDATA #REQUIRED
+                anchor CDATA #REQUIRED
+                anchorIndex CDATA #REQUIRED
+                autoHide CDATA #REQUIRED
+                available CDATA #REQUIRED
+                id CDATA #REQUIRED
+                index CDATA #REQUIRED
+                maximized CDATA #REQUIRED
+                representativeAnchorButtonVisible CDATA #REQUIRED
+                type CDATA #REQUIRED
+                visible CDATA #REQUIRED>
+        <!ELEMENT descriptors (docked|sliding|floating|floatingLive)*>
+        <!ELEMENT docked (#PCDATA)>
+        <!ATTLIST docked
+                animating CDATA #REQUIRED
+                dockLength CDATA #REQUIRED
+                hideRepresentativeButtonOnVisible CDATA #REQUIRED
+                idVisibleOnTitleBar CDATA #REQUIRED
+                popupMenuEnabled CDATA #REQUIRED
+                previewDelay CDATA #REQUIRED
+                previewEnabled CDATA #REQUIRED
+                previewTransparentRatio CDATA #REQUIRED>
+        <!ELEMENT sliding (#PCDATA)>
+        <!ATTLIST sliding
+                animating CDATA #REQUIRED
+                enabled CDATA #REQUIRED
+                idVisibleOnTitleBar CDATA #REQUIRED
+                transparentDelay CDATA #REQUIRED
+                transparentMode CDATA #REQUIRED
+                transparentRatio CDATA #REQUIRED>
+        <!ELEMENT floating (#PCDATA)>
+        <!ATTLIST floating
+                animating CDATA #REQUIRED
+                enabled CDATA #REQUIRED
+                height CDATA #IMPLIED
+                idVisibleOnTitleBar CDATA #REQUIRED
+                modal CDATA #REQUIRED
+                transparentDelay CDATA #REQUIRED
+                transparentMode CDATA #REQUIRED
+                transparentRatio CDATA #REQUIRED
+                width CDATA #IMPLIED
+                x CDATA #IMPLIED
+                y CDATA #IMPLIED>
+        <!ELEMENT floatingLive (#PCDATA)>
+        <!ATTLIST floatingLive
+                animating CDATA #REQUIRED
+                enabled CDATA #REQUIRED
+                idVisibleOnTitleBar CDATA #REQUIRED
+                transparentDelay CDATA #REQUIRED
+                transparentMode CDATA #REQUIRED
+                transparentRatio CDATA #REQUIRED>
+        <!ELEMENT toolWindowManagerDescriptor (dividerSize|aggregateMode|pushAway)*>
+        <!ATTLIST toolWindowManagerDescriptor
+                numberingEnabled CDATA #REQUIRED
+                previewEnabled CDATA #REQUIRED>
+        <!ELEMENT dividerSize (#PCDATA)>
+        <!ATTLIST dividerSize
+                left CDATA #REQUIRED
+                right CDATA #REQUIRED
+                top CDATA #REQUIRED
+                bottom CDATA #REQUIRED>
+        <!ELEMENT aggregateMode (#PCDATA)>
+        <!ATTLIST aggregateMode
+                left CDATA #REQUIRED
+                right CDATA #REQUIRED
+                top CDATA #REQUIRED
+                bottom CDATA #REQUIRED>
+        <!ELEMENT pushAway (mode)*>
+        <!ATTLIST pushAway
+                pushAwayMode CDATA #REQUIRED>
+        <!ELEMENT mode (anchor)*>
+        <!ATTLIST mode
+                type CDATA #REQUIRED>
+        <!ELEMENT anchor (#PCDATA)>
+        <!ATTLIST anchor
+                type CDATA #REQUIRED>
+        <!ELEMENT contentManager (content)*>
+        <!ELEMENT content (#PCDATA)>
+        <!ATTLIST content
+                id CDATA #REQUIRED
+                detached CDATA #REQUIRED
+                enabled CDATA #REQUIRED
+                selected CDATA #REQUIRED
+                maximized CDATA #REQUIRED>
+        <!ELEMENT bars (bar)*>
+        <!ELEMENT bar (model)*>
+        <!ATTLIST bar
+                anchor CDATA #REQUIRED>
+        <!ELEMENT model (#PCDATA)>

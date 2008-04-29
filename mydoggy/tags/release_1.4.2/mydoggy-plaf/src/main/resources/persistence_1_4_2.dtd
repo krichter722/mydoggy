@@ -1,0 +1,153 @@
+        <!ELEMENT mydoggy (toolWindows|toolWindowManagerDescriptor|contentManagerUI|contentManager|toolWindowBars)*>
+        <!ATTLIST mydoggy
+                version CDATA #REQUIRED
+                contentManagerEnabled CDATA #REQUIRED>
+        <!ELEMENT toolWindows (toolWindow)*>
+        <!ELEMENT toolWindow (descriptors)*>
+        <!ATTLIST toolWindow
+                active CDATA #REQUIRED
+                aggregateMode CDATA #REQUIRED
+                anchor CDATA #REQUIRED
+                anchorIndex CDATA #REQUIRED
+                autoHide CDATA #REQUIRED
+                available CDATA #REQUIRED
+                flashing CDATA #REQUIRED
+                id CDATA #REQUIRED
+                index CDATA #REQUIRED
+                maximized CDATA #REQUIRED
+                representativeAnchorButtonVisible CDATA #REQUIRED
+                type CDATA #REQUIRED
+                visible CDATA #REQUIRED>
+        <!ELEMENT descriptors (docked|sliding|floating|floatingLive)*>
+        <!ELEMENT docked (#PCDATA)>
+        <!ATTLIST docked
+                animating CDATA #REQUIRED
+                autoHide CDATA #REQUIRED
+                dockLength CDATA #REQUIRED
+                hideRepresentativeButtonOnVisible CDATA #REQUIRED
+                idVisibleOnTitleBar CDATA #REQUIRED
+                popupMenuEnabled CDATA #REQUIRED
+                previewDelay CDATA #REQUIRED
+                previewEnabled CDATA #REQUIRED
+                previewTransparentRatio CDATA #REQUIRED>
+        <!ELEMENT sliding (#PCDATA)>
+        <!ATTLIST sliding
+                animating CDATA #REQUIRED
+                autoHide CDATA #REQUIRED
+                enabled CDATA #REQUIRED
+                idVisibleOnTitleBar CDATA #REQUIRED
+                transparentDelay CDATA #REQUIRED
+                transparentMode CDATA #REQUIRED
+                transparentRatio CDATA #REQUIRED>
+        <!ELEMENT floating (location|size)*>
+        <!ATTLIST floating
+                addToTaskBar CDATA #REQUIRED
+                animating CDATA #REQUIRED
+                autoHide CDATA #REQUIRED
+                enabled CDATA #REQUIRED
+                idVisibleOnTitleBar CDATA #REQUIRED
+                modal CDATA #REQUIRED
+                transparentDelay CDATA #REQUIRED
+                transparentMode CDATA #REQUIRED
+                transparentRatio CDATA #REQUIRED>
+        <!ELEMENT floatingLive (#PCDATA)>
+        <!ATTLIST floatingLive
+                animating CDATA #REQUIRED
+                autoHide CDATA #REQUIRED
+                enabled CDATA #REQUIRED
+                idVisibleOnTitleBar CDATA #REQUIRED
+                transparentDelay CDATA #REQUIRED
+                transparentMode CDATA #REQUIRED
+                transparentRatio CDATA #REQUIRED>
+        <!ELEMENT location (#PCDATA)>
+        <!ATTLIST location
+                x CDATA #REQUIRED
+                y CDATA #REQUIRED>
+        <!ELEMENT size (#PCDATA)>
+        <!ATTLIST size
+                width CDATA #REQUIRED
+                height CDATA #REQUIRED>
+        <!ELEMENT toolWindowManagerDescriptor (pushAway)*>
+        <!ATTLIST toolWindowManagerDescriptor
+                numberingEnabled CDATA #REQUIRED
+                previewEnabled CDATA #REQUIRED
+                showUnavailableTools CDATA #REQUIRED>
+        <!ELEMENT pushAway (mode)*>
+        <!ATTLIST pushAway
+                pushAwayMode CDATA #REQUIRED>
+        <!ELEMENT mode (anchor)*>
+        <!ATTLIST mode
+                type CDATA #REQUIRED>
+        <!ELEMENT anchor (#PCDATA)>
+        <!ATTLIST anchor
+                type CDATA #REQUIRED>
+        <!ELEMENT contentManagerUI (MultiSplitContentManagerUI,TabbedContentManagerUI)*>
+        <!ELEMENT MultiSplitContentManagerUI (contents|layout)*>
+        <!ATTLIST MultiSplitContentManagerUI
+                closeable CDATA #REQUIRED
+                detachable CDATA #REQUIRED
+                minimizable CDATA #REQUIRED
+                showAlwaysTab CDATA #REQUIRED
+                tabLayout CDATA #REQUIRED
+                tabPlacement CDATA #REQUIRED>
+        <!ELEMENT TabbedContentManagerUI (#PCDATA)>
+        <!ATTLIST TabbedContentManagerUI
+                closeable CDATA #REQUIRED
+                detachable CDATA #REQUIRED
+                minimizable CDATA #REQUIRED
+                showAlwaysTab CDATA #REQUIRED
+                tabLayout CDATA #REQUIRED
+                tabPlacement CDATA #REQUIRED>
+        <!ELEMENT DesktopContentManagerUI (desktopContents)*>
+        <!ATTLIST DesktopContentManagerUI
+                closeable CDATA #REQUIRED
+                detachable CDATA #REQUIRED
+                minimizable CDATA #REQUIRED>
+        <!ELEMENT contents (content)*>
+        <!ELEMENT content (#PCDATA)>
+        <!ATTLIST content
+                addToTaskBarWhenDetached CDATA #IMPLIED
+                closeable CDATA #IMPLIED
+                detachable CDATA #IMPLIED
+                detached CDATA #IMPLIED
+                enabled CDATA #IMPLIED
+                flashing CDATA #IMPLIED
+                id CDATA #REQUIRED
+                maximized CDATA #IMPLIED
+                minimizable CDATA #IMPLIED
+                minimized CDATA #IMPLIED
+                selected CDATA #IMPLIED
+                showAlwaysTab CDATA #IMPLIED
+                transparentDelay CDATA #IMPLIED
+                transparentMode CDATA #IMPLIED
+                transparentRatio CDATA #IMPLIED>
+        <!ELEMENT desktopContents (content)*>
+        <!ELEMENT desktopContent (#PCDATA)>
+        <!ATTLIST desktopContent
+                addToTaskBarWhenDetached CDATA #IMPLIED
+                closeable CDATA #IMPLIED
+                detachable CDATA #IMPLIED
+                detached CDATA #IMPLIED
+                enabled CDATA #IMPLIED
+                flashing CDATA #IMPLIED
+                height CDATA #IMPLIED
+                iconified CDATA #IMPLIED
+                id CDATA #REQUIRED
+                maximized CDATA #IMPLIED
+                minimizable CDATA #IMPLIED
+                minimized CDATA #IMPLIED
+                selected CDATA #IMPLIED
+                transparentDelay CDATA #IMPLIED
+                transparentMode CDATA #IMPLIED
+                transparentRatio CDATA #IMPLIED
+                width CDATA #IMPLIED
+                x CDATA #IMPLIED
+                y CDATA #IMPLIED>
+        <!ELEMENT layout (#PCDATA)>
+        <!ELEMENT contentManager (contents|layout)*>
+        <!ELEMENT toolWindowBars (toolWindowBar)*>
+        <!ELEMENT toolWindowBar (layout)*>
+        <!ATTLIST toolWindowBar
+                aggregateMode CDATA #REQUIRED
+                anchor CDATA #REQUIRED
+                dividerSize CDATA #REQUIRED>
