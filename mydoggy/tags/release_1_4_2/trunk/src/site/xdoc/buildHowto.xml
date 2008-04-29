@@ -1,0 +1,35 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy - My Java Docking Framework : Build Howto</title>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="Build Howto">
+            <p>
+                MyDoggy is build using Maven-2. So first you have to download Maven-2 from
+                <a href="http://maven.apache.org">http://maven.apache.org</a>.
+                <br/>
+                The POM declares a few dependencies which are hosted on any publicly available Maven Repository.
+                <br/>
+                You then should be ready to build MyDoggy.
+                <br/>
+                To build MyDoggy for JDK5 simply call :
+            </p>
+            <source>mvn clean package install</source>
+            <p>
+                <br/>
+                To build the binary and the source distribution simply call :
+            </p>
+            <source>mvn -Ddistro clean package install assembly:assembly</source>
+            <p>
+                <br/>
+                To build the site simply call :
+            </p>
+            <source>mvn -Dsite clean package site assembly:assembly</source>
+        </section>
+    </body>
+</document>
