@@ -2,7 +2,7 @@ package org.noos.xing.mydoggy.plaf.descriptors;
 
 import org.noos.xing.mydoggy.FloatingLiveTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
-import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
+import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
 import java.awt.*;

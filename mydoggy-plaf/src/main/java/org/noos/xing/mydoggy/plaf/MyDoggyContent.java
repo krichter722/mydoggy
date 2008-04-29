@@ -3,7 +3,6 @@ package org.noos.xing.mydoggy.plaf;
 import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.ContentUI;
 import org.noos.xing.mydoggy.Dockable;
-import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.content.PlafContent;
 
 import javax.swing.*;

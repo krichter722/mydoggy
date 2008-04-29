@@ -4,7 +4,7 @@ import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.ContentUI;
 import org.noos.xing.mydoggy.DesktopContentUI;
-import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
+import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 
 import javax.swing.*;
 import javax.swing.event.InternalFrameAdapter;

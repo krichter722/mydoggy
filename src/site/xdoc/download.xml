@@ -39,7 +39,7 @@
                         <tr valign="top">
                             <td>MyDoggy</td>
                             <td>1.4.2</td>
-                            <td>2008-04-15</td>
+                            <td>2008-04-29</td>
                             <td>Stable</td>
                             <td>
                                 <em>
@@ -74,14 +74,14 @@
                             <td align="left">
                                 <b>Disk</b>
                             </td>
-                            <td align="left">The distro is approximately 5MB, but the core jars are approximately 0.5MB
+                            <td align="left">The distro is approximately 5MB, but the core jars are approximately 0.7MB
                             </td>
                         </tr>
                         <tr class="a">
                             <td align="left">
                                 <b>Operating System</b>
                             </td>
-                            <td align="left">No minimum requirement. Tested on Windows XP, Ubuntu 7.04.
+                            <td align="left">No minimum requirement. Tested on Windows XP, Ubuntu 8.04.
                             </td>
                         </tr>
                     </tbody>
@@ -138,7 +138,7 @@
                     <li>In the same dialog, make sure that
                         <tt>JAVA_HOME</tt>
                         is set to the location of your JDK, eg.
-                        <tt>C:\Program Files\Java\jdk1.5.0_14</tt>
+                        <tt>C:\Program Files\Java\jdk1.5.0_15</tt>
                     </li>
                     <li>Run
                         <tt>mydoggyset</tt>
@@ -159,7 +159,7 @@
                     <li>In the same dialog, make sure that
                         <tt>JAVA_HOME</tt>
                         is set to the location of your JDK, eg.
-                        <tt>/usr/java/jdk1.5.0_14</tt>
+                        <tt>/usr/lib/jvm/java-6-openjdk</tt>
                     </li>
                     <li>Run
                         <tt>./mydoggyset.sh</tt>
