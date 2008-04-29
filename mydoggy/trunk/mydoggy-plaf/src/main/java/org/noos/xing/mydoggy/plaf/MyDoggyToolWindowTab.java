@@ -5,7 +5,6 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.plaf.cleaner.CleanerAggregator;
 import org.noos.xing.mydoggy.plaf.cleaner.DefaultCleanerAggregator;
-import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 
 import javax.swing.*;
 import java.awt.*;

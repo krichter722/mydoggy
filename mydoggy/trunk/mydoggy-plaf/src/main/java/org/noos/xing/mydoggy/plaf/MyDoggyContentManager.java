@@ -2,7 +2,6 @@ package org.noos.xing.mydoggy.plaf;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
-import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.content.PlafContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.util.DockableManager2ContentManagerWrapper;
 

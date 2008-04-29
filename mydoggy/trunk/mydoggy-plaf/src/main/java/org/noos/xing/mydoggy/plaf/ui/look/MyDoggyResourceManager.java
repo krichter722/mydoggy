@@ -3,7 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.look;
 import org.noos.common.context.Context;
 import org.noos.common.object.ObjectCreator;
 import org.noos.common.object.ObjectCustomizer;
-import org.noos.xing.mydoggy.plaf.support.PropertyChangeEventSource;
+import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;

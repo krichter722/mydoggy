@@ -47,7 +47,7 @@ import java.util.List;
  */
 public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener {
 
-    public static boolean firePublic = true;
+    protected static boolean firePublic = true;
 
     public final static Object sync = new Object();
 
@@ -1385,7 +1385,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         public void propertyChange(final PropertyChangeEvent evt) {
             if (evt.getSource() instanceof ContentManager) {
-//TODO (+) support request from Elvis...there are focus problem...                
+                //TODO (+) support request from Elvis...there are focus problem...                
 
                 final MyDoggyToolWindowGroup group = new MyDoggyToolWindowGroup(MyDoggyToolWindowManager.this, "temp", true);
                 for (ToolWindow toolWindow : getToolWindows()) {
@@ -1395,13 +1395,15 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
                 if (group.getToolsWindow().length > 0) {
 
+/*
                     PropertyChangeListener listener = new PropertyChangeListener() {
                         public void propertyChange(PropertyChangeEvent evt) {
                             System.out.println("ERORRE :" + SwingUtil.toString(evt));
                         }
                     };
+*/
                     try {
-                        group.getToolsWindow()[0].addPropertyChangeListener(listener);
+//                        group.getToolsWindow()[0].addPropertyChangeListener(listener);
 
                         firePublic = false;
                         
@@ -1410,7 +1412,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                         group.setVisible(true);
                     } finally {
                         firePublic = true;
-                        group.getToolsWindow()[0].removePropertyChangeListener(listener);
+//                        group.getToolsWindow()[0].removePropertyChangeListener(listener);
                     }
                 } else
                     setDockableMainContentMode(!(Boolean) evt.getNewValue());
