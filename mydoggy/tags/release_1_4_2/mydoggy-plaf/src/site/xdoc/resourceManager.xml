@@ -1,0 +1,50 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy - My Java Docking Framework (PLAF) : ResourceManager</title>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="ResourceManager">
+            The ResourceManager interface is used to customize not only icons, colors and internationalization but also
+            ui components creation, with relative customization, and transparency manager.<br/>
+
+            The default implementation is provided by the class
+            <code>org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager</code><br/>
+            There are two ways to modify the ResourceManager reference used by mydoggy.
+            <ul>
+                <li>
+                    Changing the value of the property "ResourceManager.class" into the "mydoggyplaf.properties" file
+                    that you can found into mydoggy-res module. Note that this file is loaded by MyDoggyToolWindowManager
+                    during the execution of the method <code>initUI()</code>.
+                </li>
+                <li>
+                    Using this code...
+                    <source xml:space="preserve">
+MyDoggyToolWindowManager toolWindowManager = new MyDoggyToolWindowManager(...);
+toolWindowManager.setResourceManager(new ...);</source>
+                </li>
+            </ul>
+        </section>
+
+        <section name="MyDoggyResourceManager">
+            The default implementation, for ResourceManager interface, is provided by the class
+            <code>org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager</code><br/>
+            This class looks for a file called "resource.properties" in the classloader space. This file contains colors,
+            icons and bundle declaration. But you can also change this declaration using specific methods like
+            <code>putIcon(...)</code><br/>
+            Here is an example of resource.properties file...
+            <source xml:space="preserve">
+Icon.TOOL_SCROLL_BAR_LEFT = org/noos/xing/mydoggy/plaf/ui/icons/arrowLeft.png
+Icon.TOOL_SCROLL_BAR_RIGHT = org/noos/xing/mydoggy/plaf/ui/icons/arrowRight.png
+
+Color.RAB_MOUSE_IN_BORDER = black
+Color.TWTB_ID_BACKGROUND_FLASHING_0 = 183,200,232
+
+ResourceBundle = org/noos/xing/mydoggy/plaf/ui/messages/messages</source>
+        </section>
+    </body>
+</document>
