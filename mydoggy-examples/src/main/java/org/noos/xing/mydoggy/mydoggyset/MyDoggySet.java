@@ -253,6 +253,7 @@ public class MyDoggySet {
             public void contentAdded(ContentManagerEvent event) {
                 event.getContent().addPropertyChangeListener(new PropertyChangeListener() {
                     public void propertyChange(PropertyChangeEvent evt) {
+/*
                         StringBuffer sb = new StringBuffer("Event : ");
                         sb.append(evt.getPropertyName())
                                 .append(" ; ")
@@ -262,6 +263,7 @@ public class MyDoggySet {
                                 .append(" ; ")
                                 .append(evt.getSource());
                         System.out.println(sb);
+*/
 //                new RuntimeException().printStackTrace();
 //                System.out.println("----------------------------------------------------------");
                     }
@@ -269,7 +271,7 @@ public class MyDoggySet {
             }
 
             public void contentRemoved(ContentManagerEvent event) {
-                System.out.println("Content removed " + event);
+//                System.out.println("Content removed " + event);
             }
 
             public void contentSelected(ContentManagerEvent event) {
@@ -349,14 +351,14 @@ public class MyDoggySet {
         // Add customization here. See the page http://mydoggy.sourceforge.net/mydoggy-plaf/resourceManagerUsing.html
 /*
         resourceManager.putProperty("dialog.owner.enabled", "false");
-*/
         resourceManager.putProperty("ContentManagerDropTarget.enabled", "true");
+*/
         resourceManager.putProperty("ContentManagerUI.ContentManagerUiListener.import", "true");
 /*
         resourceManager.putProperty("drag.icon.transparency.enabled", "false");
         resourceManager.putProperty("drag.icon.useDefault", "true");
-*/
         resourceManager.putBoolean("drag.toolwindow.asTab", true);
+*/
 
         MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) myDoggyToolWindowManager.getResourceManager();
 

@@ -57,20 +57,19 @@
 
             <source xml:space="preserve">
 &lt;?xml version="1.0" standalone="yes"?&gt;
-&lt;mydoggy version="1.4.1"&gt;
-    &lt;tools&gt;
-        &lt;tool id="Tool 1" available="true" visible="true" active="true" autoHide="false" anchor="LEFT" anchorIndex="1" type="DOCKED" aggregateMode="false" maximized="false" index="1" representativeAnchorButtonVisible="true"&gt;
+
+&lt;mydoggy version="1.4.2" contentManagerEnabled="true"&gt;
+    &lt;toolWindows&gt;
+        &lt;toolWindow id="Tool 1" available="true" visible="false" active="false" autoHide="true" anchor="LEFT" anchorIndex="1" type="DOCKED" aggregateMode="false" maximized="false" index="1" representativeAnchorButtonVisible="true" flashing="false"&gt;
             &lt;descriptors&gt;
-                &lt;docked dockLength="200" popupMenuEnabled="false" animating="true" previewEnabled="true" previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false" idVisibleOnTitleBar="true"/&gt;
-                &lt;sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/&gt;
-                &lt;floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7" enabled="true" animating="true" idVisibleOnTitleBar="true"/&gt;
-                &lt;floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true"/&gt;
+                &lt;docked dockLength="200" minimumDockLength="100" popupMenuEnabled="true" animating="true" previewEnabled="true" previewDelay="1000" previewTransparentRatio="0.65" hideRepresentativeButtonOnVisible="false" idVisibleOnTitleBar="true" autoHide="true"/&gt;
+                &lt;sliding transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true" autoHide="true"/&gt;
+                &lt;floating modal="false" transparentMode="true" transparentDelay="0" transparentRatio="0.7" enabled="true" animating="true" idVisibleOnTitleBar="true" autoHide="false" addToTaskBar="false"/&gt;
+                &lt;floatingLive transparentMode="true" transparentDelay="1000" transparentRatio="0.5" enabled="true" animating="true" idVisibleOnTitleBar="true" autoHide="false"/&gt;
             &lt;/descriptors&gt;
-        &lt;/tool&gt;
-    &lt;/tools&gt;
-    &lt;toolWindowManagerDescriptor numberingEnabled="true" previewEnabled="true"&gt;
-        &lt;dividerSize left="3" right="3" top="3" bottom="3"/&gt;
-        &lt;aggregateMode left="false" right="false" top="false" bottom="false"/&gt;
+        &lt;/toolWindow&gt;
+    &lt;/toolWindows&gt;
+    &lt;toolWindowManagerDescriptor numberingEnabled="true" previewEnabled="true" showUnavailableTools="false"&gt;
         &lt;pushAway pushAwayMode="VERTICAL"&gt;
             &lt;mode type="MOST_RECENT"&gt;
                 &lt;anchor type="TOP"/&gt;
@@ -81,22 +80,52 @@
         &lt;/pushAway&gt;
     &lt;/toolWindowManagerDescriptor&gt;
     &lt;contentManagerUI&gt;
-        &lt;MultiSplitContentManagerUI closeable="true" detachable="true" showAlwaysTab="false" tabLayout="WRAP" tabPlacement="BOTTOM"&gt;
-            &lt;content id="Welcome" showAlwaysTab="false"/&gt;
+        &lt;MultiSplitContentManagerUI closeable="true" detachable="true" minimizable="true" showAlwaysTab="false" tabLayout="WRAP" tabPlacement="BOTTOM"&gt;
+            &lt;contents&gt;
+                &lt;content id="Welcome" showAlwaysTab="true"/&gt;
+            &lt;/contents&gt;
+            &lt;layout&gt;
+                &lt;![CDATA[
+&lt;java version="1.6.0_06" class="java.beans.XMLDecoder"&gt;
+ &lt;object class="org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer$DockableLeaf"&gt;
+  &lt;void property="bounds"&gt;
+   &lt;object class="java.awt.Rectangle"&gt;
+    &lt;int&gt;0&lt;/int&gt;
+    &lt;int&gt;0&lt;/int&gt;
+    &lt;int&gt;584&lt;/int&gt;
+    &lt;int&gt;384&lt;/int&gt;
+   &lt;/object&gt;
+  &lt;/void&gt;
+  &lt;void property="dockables"&gt;
+   &lt;object class="java.util.ArrayList"&gt;
+    &lt;void method="add"&gt;
+     &lt;string&gt;Welcome&lt;/string&gt;
+    &lt;/void&gt;
+   &lt;/object&gt;
+  &lt;/void&gt;
+  &lt;void property="name"&gt;
+   &lt;string&gt;1&lt;/string&gt;
+  &lt;/void&gt;
+  &lt;void property="weight"&gt;
+   &lt;double&gt;1.0&lt;/double&gt;
+  &lt;/void&gt;
+ &lt;/object&gt;
+&lt;/java&gt;
+]]&gt;
+            &lt;/layout&gt;
         &lt;/MultiSplitContentManagerUI&gt;
     &lt;/contentManagerUI&gt;
     &lt;contentManager&gt;
-        &lt;content id="Welcome" detached="false" enabled="true" selected="false" maximized="false"/&gt;
+        &lt;contents&gt;
+            &lt;content id="Welcome" detached="false" enabled="true" selected="true" maximized="false" minimized="false" flashing="false" closeable="true" detachable="true" minimizable="true" transparentMode="true" transparentDelay="0" transparentRatio="0.7" addToTaskBarWhenDetached="false"/&gt;
+        &lt;/contents&gt;
     &lt;/contentManager&gt;
-    &lt;bars&gt;
-        &lt;bar anchor="LEFT"&gt;
-            &lt;model&gt;
-                &lt;![CDATA[
-....
-]]&gt;
-            &lt;/model&gt;
-        &lt;/bar&gt;
-    &lt;/bars&gt;
+    &lt;toolWindowBars&gt;
+        &lt;toolWindowBar anchor="LEFT" dividerSize="3" aggregateMode="false"/&gt;
+        &lt;toolWindowBar anchor="BOTTOM" dividerSize="3" aggregateMode="false"/&gt;
+        &lt;toolWindowBar anchor="RIGHT" dividerSize="3" aggregateMode="false"/&gt;
+        &lt;toolWindowBar anchor="TOP" dividerSize="3" aggregateMode="false"/&gt;
+    &lt;/toolWindowBars&gt;
 &lt;/mydoggy&gt;
             </source>
         </section>

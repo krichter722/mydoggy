@@ -426,7 +426,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
 
 //        System.out.println(SwingUtil.toString(evt));
-        propertyChangeSupport.firePropertyChange(evt);
+        boolean fired = propertyChangeSupport.firePropertyChange(evt);
+/*
+        if (fired && source instanceof MyDoggyToolWindowTab) {
+            System.out.println("fired when tab ");
+        }
+*/
     }
 
 
