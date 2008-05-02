@@ -10,7 +10,6 @@ import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -810,11 +809,15 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
 
     protected ToolWindowTab addTabInternal(String title, Icon icon, Component component, ToolWindow toolWindow, boolean root) {
         ToolWindowTab tab = new MyDoggyToolWindowTab(this, root, title, icon, component, toolWindow);
+/*      TODO: check this....
         tab.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                firePlafPropertyChangeEvent(evt);
+                System.out.println("evt.getPropertyName() = " + evt.getPropertyName());
+                if (!"icon".equals(evt.getPropertyName()))
+                    firePlafPropertyChangeEvent(evt);
             }
         });
+*/
         toolWindowTabs.add(tab);
 
         fireToolWindowTabEvent(new ToolWindowTabEvent(this, ToolWindowTabEvent.ActionId.TAB_ADDED, this, tab));

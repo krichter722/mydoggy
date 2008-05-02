@@ -80,6 +80,17 @@ resourceManager.putProperty("drag.icon.transparency.enabled", "false");
                                 to the new mmounted ContentManagerUI.
                             </td>
                         </tr>
+                        <tr>
+                            <td>
+                                drag.toolwindow.asTab
+                            </td>
+                            <td>
+                                boolean
+                            </td>
+                            <td>
+                                Used to enable or disable dragging of toolwindows as tabs.
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </subsection>

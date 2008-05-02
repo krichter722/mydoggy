@@ -176,18 +176,21 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
         firePropertyChange(new PropertyChangeEvent(source, propertyName, oldValue, newValue));
     }
 
-    public void firePropertyChange(PropertyChangeEvent evt) {
+    public boolean firePropertyChange(PropertyChangeEvent evt) {
         Object oldValue = evt.getOldValue();
         Object newValue = evt.getNewValue();
         String propertyName = evt.getPropertyName();
         if (oldValue != null && newValue != null && oldValue.equals(newValue))
-            return;
+            return false;
 
+
+        boolean fired = false;
         if (listeners != null) {
             Object[] listeners = this.listeners.getListenersInternal();
             for (Object listener : listeners) {
                 PropertyChangeListener target = (PropertyChangeListener) listener;
                 target.propertyChange(evt);
+                fired = true;
             }
         }
 
@@ -195,9 +198,11 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
             CleanablePropertyChangeSupport child;
             child = children.get(propertyName);
             if (child != null) {
-                child.firePropertyChange(evt);
+                if (child.firePropertyChange(evt))
+                    fired = true;
             }
         }
+        return fired;
     }
 
     public void fireIndexedPropertyChange(String propertyName, int index, Object oldValue, Object newValue) {
