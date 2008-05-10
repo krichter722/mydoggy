@@ -31,7 +31,8 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
 
     public void dragGestureRecognized(DragGestureEvent dge) {
         // Acquire locks
-        acquireLocks();
+        if (!acquireLocks())
+            return;
 
         // Start Drag
         dge.startDrag(Cursor.getDefaultCursor(),
@@ -164,5 +165,9 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
                                        MyDoggyTransferable.CUSTOM_DESCRIPTOR_ID,
                                        descriptor.getDockable().getId()
         );
+    }
+
+    protected boolean isDragEnabled() {
+        return true;
     }
 }

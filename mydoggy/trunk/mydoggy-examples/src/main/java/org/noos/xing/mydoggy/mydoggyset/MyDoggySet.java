@@ -351,6 +351,7 @@ public class MyDoggySet {
         // Add customization here. See the page http://mydoggy.sourceforge.net/mydoggy-plaf/resourceManagerUsing.html
 /*
         resourceManager.putProperty("dialog.owner.enabled", "false");
+        resourceManager.putProperty("dialog.owner.enabled", "false");
         resourceManager.putProperty("ContentManagerDropTarget.enabled", "true");
 */
         resourceManager.putProperty("ContentManagerUI.ContentManagerUiListener.import", "true");
@@ -359,6 +360,7 @@ public class MyDoggySet {
         resourceManager.putProperty("drag.icon.useDefault", "true");
         resourceManager.putBoolean("drag.toolwindow.asTab", true);
 */
+        resourceManager.putBoolean("drag.enabled", false);
 
         MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) myDoggyToolWindowManager.getResourceManager();
 

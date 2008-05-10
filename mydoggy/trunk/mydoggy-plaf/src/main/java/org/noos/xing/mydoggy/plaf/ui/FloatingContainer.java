@@ -260,27 +260,8 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                     oldWindow.getWindow().removeMouseListener(resizeMouseInputHandler);
                     oldWindow.getWindow().removeComponentListener(windowComponentAdapter);
 
-                    // Init new window
-                    if ((Boolean) evt.getNewValue()) {
-                        window = new JModalFrame(toolWindow,
-                                                 resourceManager,
-                                                 resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
-                                                 null,
-                                                 false);
-                    } else {
-                        window = new JModalWindow(resourceManager,
-                                                  resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
-                                                  null,
-                                                  false);
-                    }
-                    window.setBounds(oldWindow.getBounds());
-                    window.setName("toolWindow.floating.window." + toolWindow.getId());
-                    window.setContentPane(oldWindow.getContentPane());
-                    resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window.getWindow());
-                    moveMouseInputHandler = new FloatingMoveMouseInputHandler(window.getWindow());
-                    window.getWindow().addMouseMotionListener(resizeMouseInputHandler);
-                    window.getWindow().addMouseListener(resizeMouseInputHandler);
-                    window.getWindow().addComponentListener(windowComponentAdapter);
+                    // Reinit window
+                    reinitWindow(evt, oldWindow);
 
                     // Dispose old
                     oldWindow.getWindow().dispose();
@@ -299,27 +280,8 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                     oldWindow.getWindow().removeMouseListener(resizeMouseInputHandler);
 
                     // Prepare for new
-                    if ((Boolean) evt.getNewValue()) {
-                        window = new JModalFrame(toolWindow,
-                                                 resourceManager,
-                                                 resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
-                                                 null,
-                                                 false);
-                    } else {
-                        window = new JModalWindow(resourceManager,
-                                                  resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
-                                                  null,
-                                                  false);
-                    }
-
-                    window.setName("toolWindow.floating.window." + toolWindow.getId());
-                    window.setContentPane(oldWindow.getContentPane());
-                    resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window.getWindow());
-                    moveMouseInputHandler = new FloatingMoveMouseInputHandler(window.getWindow());
-                    window.getWindow().addMouseMotionListener(resizeMouseInputHandler);
-                    window.getWindow().addMouseListener(resizeMouseInputHandler);
-                    window.getWindow().addComponentListener(new WindowComponentAdapter());
-
+                    reinitWindow(evt, oldWindow);
+                    
                     // Finalize clean
                     oldWindow.getWindow().dispose();
                 }
@@ -369,6 +331,30 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
         if (!settedListener)
             initWindowListeners();
+    }
+
+    protected void reinitWindow(PropertyChangeEvent evt, ModalWindow oldWindow) {
+        // Init new window
+        if ((Boolean) evt.getNewValue()) {
+            window = new JModalFrame(toolWindow,
+                                     resourceManager,
+                                     resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
+                                     null,
+                                     false);
+        } else {
+            window = new JModalWindow(resourceManager,
+                                      resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
+                                      null,
+                                      false);
+        }
+        window.setBounds(oldWindow.getBounds());
+        window.setName("toolWindow.floating.window." + toolWindow.getId());
+        window.setContentPane(oldWindow.getContentPane());
+        resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window.getWindow());
+        moveMouseInputHandler = new FloatingMoveMouseInputHandler(window.getWindow());
+        window.getWindow().addMouseMotionListener(resizeMouseInputHandler);
+        window.getWindow().addMouseListener(resizeMouseInputHandler);
+        window.getWindow().addComponentListener(windowComponentAdapter);
     }
 
     protected void initWindowListeners() {
