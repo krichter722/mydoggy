@@ -1,14 +1,16 @@
 package org.noos.xing.mydoggy.plaf.support;
 
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
-import sun.awt.EventListenerAggregate;
 
 import java.beans.IndexedPropertyChangeEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeListenerProxy;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.List;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -16,13 +18,13 @@ import java.util.*;
 public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
     protected Hashtable<String, CleanablePropertyChangeSupport> children;
     protected Object source;
-    protected EventListenerAggregate listeners;
+    protected List<PropertyChangeListener> listeners;
 
 
     public CleanablePropertyChangeSupport(Object sourceBean) {
-        if (sourceBean == null) {
+        if (sourceBean == null)
             throw new NullPointerException();
-        }
+
         source = sourceBean;
     }
 
@@ -39,7 +41,7 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
         }
     }
 
-    
+
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         if (listener == null) {
             return;
@@ -51,18 +53,18 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
             addPropertyChangeListener(proxy.getPropertyName(), (PropertyChangeListener) proxy.getListener());
         } else {
             if (listeners == null)
-                listeners = new EventListenerAggregate(PropertyChangeListener.class);
+                listeners = new ArrayList<PropertyChangeListener>();
 
             listeners.add(listener);
         }
     }
 
     public PropertyChangeListener[] getPropertyChangeListeners() {
-        List<EventListener> returnList = new ArrayList<EventListener>();
+        List<PropertyChangeListener> returnList = new ArrayList<PropertyChangeListener>();
 
         // Add all the PropertyChangeListeners
         if (listeners != null) {
-            returnList.addAll(Arrays.asList(listeners.getListenersInternal()));
+            returnList.addAll(listeners);
         }
 
         // Add all the PropertyChangeListenerProxys
@@ -103,17 +105,18 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
 
 
     public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-        if (listener == null || propertyName == null) {
+        if (listener == null || propertyName == null)
             return;
-        }
-        if (children == null) {
+
+        if (children == null)
             children = new Hashtable<String, CleanablePropertyChangeSupport>();
-        }
+
         CleanablePropertyChangeSupport child = children.get(propertyName);
         if (child == null) {
             child = new CleanablePropertyChangeSupport(source);
             children.put(propertyName, child);
         }
+
         child.addPropertyChangeListener(listener);
     }
 
@@ -121,27 +124,22 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
         ArrayList<PropertyChangeListener> returnList = new ArrayList<PropertyChangeListener>();
 
         if (children != null && propertyName != null) {
-            CleanablePropertyChangeSupport support =
-                    children.get(propertyName);
-            if (support != null) {
-                returnList.addAll(
-                        Arrays.asList(support.getPropertyChangeListeners()));
-            }
+            CleanablePropertyChangeSupport support = children.get(propertyName);
+            if (support != null)
+                returnList.addAll(Arrays.asList(support.getPropertyChangeListeners()));
         }
+
         return (returnList.toArray(new PropertyChangeListener[returnList.size()]));
     }
 
     public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-        if (listener == null || propertyName == null) {
+        if (listener == null || propertyName == null || children == null)
             return;
-        }
-        if (children == null) {
-            return;
-        }
+
         CleanablePropertyChangeSupport child = children.get(propertyName);
-        if (child == null) {
+        if (child == null)
             return;
-        }
+
         child.removePropertyChangeListener(listener);
     }
 
@@ -159,6 +157,7 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
             // there is a generic listener
             return true;
         }
+        
         if (children != null && propertyName != null) {
             CleanablePropertyChangeSupport child = children.get(propertyName);
             if (child != null && child.listeners != null) {
@@ -166,6 +165,7 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
             }
         }
         return false;
+
     }
 
 
@@ -186,10 +186,8 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
 
         boolean fired = false;
         if (listeners != null) {
-            Object[] listeners = this.listeners.getListenersInternal();
-            for (Object listener : listeners) {
-                PropertyChangeListener target = (PropertyChangeListener) listener;
-                target.propertyChange(evt);
+            for (PropertyChangeListener listener : listeners) {
+                listener.propertyChange(evt);
                 fired = true;
             }
         }
