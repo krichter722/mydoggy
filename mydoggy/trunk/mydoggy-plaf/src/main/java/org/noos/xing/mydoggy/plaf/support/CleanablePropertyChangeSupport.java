@@ -157,7 +157,7 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
             // there is a generic listener
             return true;
         }
-        
+
         if (children != null && propertyName != null) {
             CleanablePropertyChangeSupport child = children.get(propertyName);
             if (child != null && child.listeners != null) {
@@ -186,8 +186,10 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
 
         boolean fired = false;
         if (listeners != null) {
-            for (PropertyChangeListener listener : listeners) {
-                listener.propertyChange(evt);
+            Object[] listeners = this.listeners.toArray();
+            for (Object listener : listeners) {
+                PropertyChangeListener target = (PropertyChangeListener) listener;
+                target.propertyChange(evt);
                 fired = true;
             }
         }
