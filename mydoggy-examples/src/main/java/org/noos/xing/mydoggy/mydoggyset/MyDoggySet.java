@@ -359,8 +359,8 @@ public class MyDoggySet {
         resourceManager.putProperty("drag.icon.transparency.enabled", "false");
         resourceManager.putProperty("drag.icon.useDefault", "true");
         resourceManager.putBoolean("drag.toolwindow.asTab", true);
-*/
         resourceManager.putBoolean("drag.enabled", false);
+*/
 
         MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) myDoggyToolWindowManager.getResourceManager();
 

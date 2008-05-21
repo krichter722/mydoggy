@@ -221,6 +221,19 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
     void setAutoHide(boolean autoHide);
 
     /**
+     * TODO
+     * @param lockedOnAnchor
+     * @since 1.4.3
+     */
+    void setLockedOnAnchor(boolean lockedOnAnchor);
+
+    /**
+     *
+     * @since 1.4.3
+     */
+    boolean isLockedOnAnchor();
+
+    /**
      * Returns the autoHide property value of the tool.
      *
      * @return autoHide property value.

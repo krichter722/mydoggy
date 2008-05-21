@@ -572,27 +572,58 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         }
 
         protected void enableMoveToItem() {
-            ToolWindowAnchor anchor = toolWindow.getAnchor();
-            if (anchor == ToolWindowAnchor.LEFT) {
+            if (toolWindow.isLockedOnAnchor()) {
+                ToolWindowAnchor[] anchors = descriptor.getDockedTypeDescriptor().getLockingAnchors();
+
+                if (anchors.length == 0) {
+                    moveTo.setVisible(false);
+                    return;
+                }
+
                 left.setVisible(false);
-                right.setVisible(true);
-                top.setVisible(true);
-                bottom.setVisible(true);
-            } else if (anchor == ToolWindowAnchor.RIGHT) {
-                left.setVisible(true);
                 right.setVisible(false);
-                top.setVisible(true);
-                bottom.setVisible(true);
-            } else if (anchor == ToolWindowAnchor.BOTTOM) {
-                left.setVisible(true);
-                right.setVisible(true);
-                top.setVisible(true);
-                bottom.setVisible(false);
-            } else if (anchor == ToolWindowAnchor.TOP) {
-                left.setVisible(true);
-                right.setVisible(true);
                 top.setVisible(false);
-                bottom.setVisible(true);
+                bottom.setVisible(false);
+
+                for (ToolWindowAnchor anchor : anchors) {
+                    switch (anchor) {
+                        case LEFT :
+                            left.setVisible(true);
+                            break;
+                        case RIGHT:
+                            right.setVisible(true);
+                            break;
+                        case TOP :
+                            top.setVisible(true);
+                            break;
+                        case BOTTOM:
+                            bottom.setVisible(true);
+                            break;
+                    }
+                }
+            } else {
+                ToolWindowAnchor anchor = toolWindow.getAnchor();
+                if (anchor == ToolWindowAnchor.LEFT) {
+                    left.setVisible(false);
+                    right.setVisible(true);
+                    top.setVisible(true);
+                    bottom.setVisible(true);
+                } else if (anchor == ToolWindowAnchor.RIGHT) {
+                    left.setVisible(true);
+                    right.setVisible(false);
+                    top.setVisible(true);
+                    bottom.setVisible(true);
+                } else if (anchor == ToolWindowAnchor.BOTTOM) {
+                    left.setVisible(true);
+                    right.setVisible(true);
+                    top.setVisible(true);
+                    bottom.setVisible(false);
+                } else if (anchor == ToolWindowAnchor.TOP) {
+                    left.setVisible(true);
+                    right.setVisible(true);
+                    top.setVisible(false);
+                    bottom.setVisible(true);
+                }
             }
         }
 

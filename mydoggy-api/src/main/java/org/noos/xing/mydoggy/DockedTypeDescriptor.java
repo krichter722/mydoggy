@@ -180,4 +180,10 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * @since 1.3.1
      */
     boolean isHideRepresentativeButtonOnVisible();
-}
+
+    /**
+     * TODO
+     * @param anchor
+     * @since 1.4.3
+     */
+s}

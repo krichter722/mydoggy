@@ -35,6 +35,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     protected boolean maximized;
     protected boolean aggregateEnabled;
     protected boolean representativeAnchorButtonVisible;
+    protected boolean lockedOnAnchor;
 
     protected java.util.List<ToolWindowTab> toolWindowTabs;
     protected ToolWindowTab rootTab;
@@ -318,7 +319,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
 
     public int getAnchorIndex() {
         return descriptor.getAnchorIndex();
-    }
+    }       
 
     public void setAnchor(ToolWindowAnchor anchor) {
         setAnchor(anchor, -2);
@@ -328,6 +329,9 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         synchronized (getLock()) {
             if (this.anchor == anchor &&
                 (index == getDescriptor().getAnchorIndex() || index == -2))
+                return;
+
+            if (isLockedOnAnchor() && !descriptor.getDockedTypeDescriptor().containsLockingAnchor(anchor))
                 return;
 
             if (isMaximized())
@@ -390,6 +394,20 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             return;
         
         getTypeDescriptor(type).setAutoHide(autoHide);
+    }
+
+    public void setLockedOnAnchor(boolean lockedOnAnchor) {
+        if (this.lockedOnAnchor == lockedOnAnchor)
+            return;
+
+        boolean old = this.lockedOnAnchor;
+        this.lockedOnAnchor = lockedOnAnchor;
+
+        firePropertyChangeEvent("lockedOnAnchor", old, lockedOnAnchor);
+    }
+
+    public boolean isLockedOnAnchor() {
+        return lockedOnAnchor;
     }
 
     public ToolWindowType getType() {
