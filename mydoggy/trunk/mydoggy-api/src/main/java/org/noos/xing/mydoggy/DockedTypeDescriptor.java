@@ -186,4 +186,28 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * @param anchor
      * @since 1.4.3
      */
-s}
+    void addLockingAnchor(ToolWindowAnchor anchor);
+
+    /**
+     * TODO
+     * @param anchor
+     * @since 1.4.3
+     */
+    void removeLockingAnchor(ToolWindowAnchor anchor);
+
+    /**
+     * TODO
+     * @return
+     * @since 1.4.3
+     */
+    ToolWindowAnchor[] getLockingAnchors();
+
+    /**
+     * TODO
+     * @param anchor
+     * @return
+     * @since 1.4.3
+     */
+    boolean containsLockingAnchor(ToolWindowAnchor anchor);
+    
+}
