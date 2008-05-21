@@ -2,8 +2,6 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -24,6 +22,7 @@ public class ContentPanel extends JPanel implements PropertyChangeListener {
 
     protected int threshold;
 
+
     public ContentPanel(String parentPrefix) {
         this(parentPrefix, 20);
     }
@@ -40,36 +39,6 @@ public class ContentPanel extends JPanel implements PropertyChangeListener {
         addPropertyChangeListener("dragEnd", this);
     }
 
-    public void propertyChange(PropertyChangeEvent evt) {
-        String propertyName = evt.getPropertyName();
-        if ("dragStart".equals(propertyName)) {
-            dragActive = true;
-        } else if ("dragOver".equals(propertyName)) {
-            mouseLocation = (Point) evt.getNewValue();
-        } else if ("dragExit".equals(propertyName)) {
-            mouseLocation = null;
-            resetLayout();
-        } else if ("dragEnd".equals(propertyName)) {
-            mouseLocation = null;
-            dragActive = false;
-            resetLayout();
-        }
-        SwingUtil.repaint(this);
-    }
-
-    public Component getComponent() {
-        return (getComponentCount() == 0) ? null : getComponent(0);
-    }
-
-    public void setComponent(Component component) {
-        removeAll();
-        add(component, "1,1,FULL,FULL");
-    }
-
-    public void resetComponent() {
-        removeAll();
-        resetLayout();        
-    }
 
     public void paint(Graphics g) {
         super.paint(g);
@@ -85,7 +54,7 @@ public class ContentPanel extends JPanel implements PropertyChangeListener {
                 layout.setRow(2, 0);
 
                 g.setColor(Color.BLUE);
-                GraphicsUtil.drawRect(g, 0, 0, 20, getHeight(), 3);
+                drawRect(g, 0, 0, 20, getHeight());
 
                 putProperty("dragToolWindow");
                 putClientProperty("dragAnchor", ToolWindowAnchor.LEFT);
@@ -96,7 +65,7 @@ public class ContentPanel extends JPanel implements PropertyChangeListener {
                 layout.setRow(2, 0);
 
                 g.setColor(Color.BLUE);
-                GraphicsUtil.drawRect(g, 0, 0, getWidth(), 20, 3);
+                drawRect(g, 0, 0, getWidth(), 20);
 
                 putProperty("dragToolWindow");
                 putClientProperty("dragAnchor", ToolWindowAnchor.TOP);
@@ -108,7 +77,7 @@ public class ContentPanel extends JPanel implements PropertyChangeListener {
                 layout.setRow(2, 0);
 
                 g.setColor(Color.BLUE);
-                GraphicsUtil.drawRect(g, getWidth() - 20, 0, 20, getHeight(), 3);
+                drawRect(g, getWidth() - 20, 0, 20, getHeight());
 
                 putProperty("dragToolWindow");
                 putClientProperty("dragAnchor", ToolWindowAnchor.RIGHT);
@@ -120,7 +89,7 @@ public class ContentPanel extends JPanel implements PropertyChangeListener {
                 layout.setRow(2, 20);
 
                 g.setColor(Color.BLUE);
-                GraphicsUtil.drawRect(g, 0, getHeight() - 20, getWidth(), 20, 3);
+                drawRect(g, 0, getHeight() - 20, getWidth(), 20);
 
                 putProperty("dragToolWindow");
                 putClientProperty("dragAnchor", ToolWindowAnchor.BOTTOM);
@@ -149,43 +118,43 @@ public class ContentPanel extends JPanel implements PropertyChangeListener {
 
                         if (inToolLocation.x <= xLimit && inToolLocation.y > yLimit && inToolLocation.y < toolBounds.height - yLimit) {
                             g.setColor(Color.BLUE);
-                            GraphicsUtil.drawRect(g, toolBounds.x,
+                            drawRect(g, toolBounds.x,
                                                   toolBounds.y,
                                                   xLimit,
-                                                  toolBounds.height, 3);
+                                                  toolBounds.height);
 
                             putClientProperty("dragAnchor", ToolWindowAnchor.LEFT);
                         } else
                         if (inToolLocation.y <= yLimit && inToolLocation.x > xLimit && inToolLocation.x < toolBounds.width - xLimit) {
                             g.setColor(Color.BLUE);
-                            GraphicsUtil.drawRect(g, toolBounds.x,
+                            drawRect(g, toolBounds.x,
                                                   toolBounds.y,
                                                   toolBounds.width,
-                                                  yLimit, 3);
+                                                  yLimit);
 
                             putClientProperty("dragAnchor", ToolWindowAnchor.TOP);
                         } else if (inToolLocation.x >= toolBounds.width - xLimit && inToolLocation.y > yLimit && inToolLocation.y < toolBounds.height - yLimit) {
                             g.setColor(Color.BLUE);
-                            GraphicsUtil.drawRect(g, toolBounds.x + toolBounds.width - xLimit,
+                            drawRect(g, toolBounds.x + toolBounds.width - xLimit,
                                                   toolBounds.y,
                                                   xLimit,
-                                                  toolBounds.height, 3);
+                                                  toolBounds.height);
 
                             putClientProperty("dragAnchor", ToolWindowAnchor.RIGHT);
                         } else if (inToolLocation.y >= toolBounds.height - yLimit && inToolLocation.x > xLimit && inToolLocation.x < toolBounds.width - xLimit) {
                             layout.setColumn(0, 0);
                             g.setColor(Color.BLUE);
-                            GraphicsUtil.drawRect(g, toolBounds.x,
+                            drawRect(g, toolBounds.x,
                                                   toolBounds.y + toolBounds.height - yLimit,
                                                   toolBounds.width,
-                                                  yLimit, 3);
+                                                  yLimit);
 
                             putClientProperty("dragAnchor", ToolWindowAnchor.BOTTOM);
                         } else {
                             g.setColor(Color.BLUE);
-                            GraphicsUtil.drawRect(g, toolBounds.x, toolBounds.y,
+                            drawRect(g, toolBounds.x, toolBounds.y,
                                                   toolBounds.width,
-                                                  toolBounds.height, 3);
+                                                  toolBounds.height);
                             putClientProperty("dragAnchor", null);
                         }
                     } else {
@@ -198,6 +167,39 @@ public class ContentPanel extends JPanel implements PropertyChangeListener {
         }
 
     }
+
+    public void propertyChange(PropertyChangeEvent evt) {
+        String propertyName = evt.getPropertyName();
+        if ("dragStart".equals(propertyName)) {
+            dragActive = true;
+        } else if ("dragOver".equals(propertyName)) {
+            mouseLocation = (Point) evt.getNewValue();
+        } else if ("dragExit".equals(propertyName)) {
+            mouseLocation = null;
+            resetLayout();
+        } else if ("dragEnd".equals(propertyName)) {
+            mouseLocation = null;
+            dragActive = false;
+            resetLayout();
+        }
+        SwingUtil.repaint(this);
+    }
+
+
+    public Component getComponent() {
+        return (getComponentCount() == 0) ? null : getComponent(0);
+    }
+
+    public void setComponent(Component component) {
+        removeAll();
+        add(component, "1,1,FULL,FULL");
+    }
+
+    public void resetComponent() {
+        removeAll();
+        resetLayout();        
+    }
+
 
     protected void resetLayout() {
         layout.setColumn(0, 0);
@@ -212,6 +214,10 @@ public class ContentPanel extends JPanel implements PropertyChangeListener {
             putClientProperty(name, !value);
         else
             putClientProperty(name, false);
+    }
+
+    protected void drawRect(Graphics g, int x, int y, int width, int height) {
+        GraphicsUtil.fillRoundRect(g, x, y, width, height, 3, 10, 10, 0.25f);
     }
 
 }
