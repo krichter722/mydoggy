@@ -145,6 +145,32 @@ public class GraphicsUtil {
         }
     }
 
+    public static void drawRoundRect(Graphics g, int x, int y, int width,
+                                     int height, int tickness,
+                                     int arcWidth, int arcHeight) {
+        Graphics2D g2D = (Graphics2D) g;
+        g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        for (int i = 0; i < tickness; i++) {
+            g.drawRoundRect(x + i, y + i, width - (i*2) - 1, height - (i*2) - 1, arcWidth, arcHeight);
+        }
+    }
+
+    public static void fillRoundRect(Graphics g, int x, int y, int width,
+                                     int height, int tickness,
+                                     int arcWidth, int arcHeight,
+                                     float alpha) {
+        Graphics2D g2D = (Graphics2D) g;
+        g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        for (int i = 0; i < tickness; i++) {
+            g.drawRoundRect(x + i, y + i, width - (i*2) - 1, height - (i*2) - 1, arcWidth, arcHeight);
+        }
+
+        Composite oldComposite = g2D.getComposite();
+        g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        g.fillRect(x + tickness, y + tickness, width - (2 * tickness), height - (2 * tickness));
+        g2D.setComposite(oldComposite);
+
+    }
 
     public static String clippedText(String text, FontMetrics fm, int availTextWidth) {
         if (text == null || text.equals("")) {

@@ -389,7 +389,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
                 ToolWindowType type = (ToolWindowType) evt.getNewValue();
                 dockedMode.setState(type == ToolWindowType.DOCKED);
                 dockedMode.setVisible(type != ToolWindowType.FLOATING);
-                pinnedMode.setVisible(type != ToolWindowType.SLIDING);
+//                pinnedMode.setVisible(type != ToolWindowType.SLIDING);
 
                 floatingMode.setState(type == ToolWindowType.FLOATING);
             } else if ("UI".equals(evt.getPropertyName())) {
