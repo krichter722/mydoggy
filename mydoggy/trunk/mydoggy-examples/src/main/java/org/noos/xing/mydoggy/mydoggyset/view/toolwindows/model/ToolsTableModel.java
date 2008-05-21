@@ -19,7 +19,8 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
     public ToolsTableModel(ToolWindowManager windowManager) {
         this.windowManager = windowManager;
         setColumnIdentifiers(new Object[]{
-                "Id", "Title", "Type", "Anchor", "Available", "Visible", "Active", "Index", "Flashing", "Rab Visible"
+                "Id", "Title", "Type", "Anchor", "Available", "Visible",
+                "Active", "Index", "Flashing", "Rab Visible", "Lock"
         });
         initToolsListeners();
         updateModel();
@@ -65,6 +66,9 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
                 else
                     JOptionPane.showMessageDialog(null, "Cannot modify on FLOATING_FREE tools");
                 break;
+            case 10:
+                toolWindows[row].setLockedOnAnchor((Boolean) aValue);
+                break;
         }
         fireTableChanged(new TableModelEvent(this, row));
     }
@@ -101,6 +105,9 @@ public final class ToolsTableModel extends DefaultTableModel implements Property
             case 9:
                 return toolWindows[row].isRepresentativeAnchorButtonVisible();
             
+            case 10:
+                return toolWindows[row].isLockedOnAnchor();
+
             default:
                 return toolWindows[row];
         }
