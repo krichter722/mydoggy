@@ -81,6 +81,20 @@ public interface ContentManagerUI<C extends ContentUI> extends Observable {
     void setMinimizable(boolean minimizable);
 
     /**
+     *   TODO
+     * @param enabled
+     * @since 1.4.3
+     */
+    void setPopupMenuEnabled(boolean enabled);
+
+    /**
+     *
+     * @return
+     * @since 1.4.3
+     */
+    boolean isPopupMenuEnabled();
+
+    /**
      * Returns the ui part to which this manager maps the specified <code>content</code>.
      *
      * @param content content whose associated ui part is to be returned.

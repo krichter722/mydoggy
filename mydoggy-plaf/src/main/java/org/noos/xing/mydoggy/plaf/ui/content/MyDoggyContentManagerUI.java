@@ -33,6 +33,7 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
     protected boolean closeable, detachable, minimizable, maximizable;
     protected boolean installed;
     protected boolean uninstalling;
+    protected boolean popupMenuEnabled;
 
     protected PropertyChangeSupport internalPropertyChangeSupport;
     protected EventListenerList contentManagerUIListeners;
@@ -48,6 +49,7 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
     public MyDoggyContentManagerUI() {
         contentManagerUIListeners = new EventListenerList();
         this.closeable = this.detachable = this.minimizable = this.maximizable = true;
+        this.popupMenuEnabled = true;
         this.contentUIMap = new Hashtable<Content,T>();
     }
 
@@ -110,6 +112,20 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
 
     public boolean isMaximizable() {
         return maximizable;
+    }
+
+    public boolean isPopupMenuEnabled() {
+        return popupMenuEnabled;
+    }
+
+    public void setPopupMenuEnabled(boolean popupMenuEnabled) {
+        if (this.popupMenuEnabled == popupMenuEnabled)
+            return;
+
+        boolean old = this.popupMenuEnabled;
+        this.popupMenuEnabled = popupMenuEnabled;
+
+        fireContentManagerUIProperty("popupMenuEnabled", old, popupMenuEnabled);
     }
 
     public T getContentUI(Content content) {

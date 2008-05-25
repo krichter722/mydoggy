@@ -505,8 +505,10 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
                     if ((e.getClickCount() == 2 && contentUI.isMaximizable()) || isMaximizeFired(contentUI, e.getPoint()))
                         content.setMaximized(!content.isMaximized());
                     
-                } else if (SwingUtilities.isRightMouseButton(e))
-                    showPopupMenu(e);
+                } else if (SwingUtilities.isRightMouseButton(e)) {
+                    if (toolWindowManager.getContentManager().getContentManagerUI().isPopupMenuEnabled())
+                        showPopupMenu(e);
+                }
                 
             } else if (SwingUtilities.isRightMouseButton(e)) {
                 JPopupMenu popupMenu = getComponentPopupMenu();
@@ -630,6 +632,8 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
                                                      resourceManager.getString("@@tabbed.page.restore") :
                                                      resourceManager.getString("@@tabbed.page.maximize")
                 );
+
+                // TODO: add minimze...
                 popupMenu = stdPopupMenu;
             }
 
