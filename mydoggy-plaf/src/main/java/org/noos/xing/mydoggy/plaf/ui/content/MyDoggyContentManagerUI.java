@@ -30,7 +30,7 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
     protected ResourceManager resourceManager;
     protected Map<Content, T> contentUIMap;
 
-    protected boolean closeable, detachable, minimizable;
+    protected boolean closeable, detachable, minimizable, maximizable;
     protected boolean installed;
     protected boolean uninstalling;
 
@@ -47,7 +47,7 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
 
     public MyDoggyContentManagerUI() {
         contentManagerUIListeners = new EventListenerList();
-        this.closeable = this.detachable = this.minimizable = true;
+        this.closeable = this.detachable = this.minimizable = this.maximizable = true;
         this.contentUIMap = new Hashtable<Content,T>();
     }
 
@@ -95,6 +95,21 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
 
     public boolean isMinimizable() {
         return minimizable;
+    }
+
+    public void setMaximizable(boolean maximizable) {
+        boolean old = this.maximizable;
+        this.maximizable = maximizable;
+
+        for (ContentUI contentUI : contentUIMap.values()) {
+            contentUI.setMaximizable(maximizable);
+        }
+
+        fireContentManagerUIProperty("maximizable", old, maximizable);
+    }
+
+    public boolean isMaximizable() {
+        return maximizable;
     }
 
     public T getContentUI(Content content) {

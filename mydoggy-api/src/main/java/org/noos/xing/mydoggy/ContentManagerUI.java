@@ -47,6 +47,23 @@ public interface ContentManagerUI<C extends ContentUI> extends Observable {
     boolean isDetachable();
 
     /**
+     * Returns whether this content manager permits the contents to be maximized using the ui.
+     *
+     * @return <code>true</code> if this content can be maximized using the ui, <code>false</code> otherwise.
+     * @since 1.4.3
+     */
+    boolean isMaximizable();
+
+    /**
+     * Sets the maximizable property of this manager.
+     *
+     * @param maximizable <code>true</code> if this content can be maximized using the ui, <code>false</code> otherwise.
+     * @since 1.4.3
+     * @see #isDetachable()
+     */
+    void setMaximizable(boolean maximizable);
+
+    /**
      * Returns whether this content manager permits the contents to be minimized using the ui.
      *
      * @return <code>true</code> if this content can be minimized using the ui, <code>false</code> otherwise.

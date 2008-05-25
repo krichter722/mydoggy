@@ -17,13 +17,14 @@ public class MyDoggyTabbedContentUI extends PropertyChangeEventSource implements
     protected Content content;
     protected boolean closable;
     protected boolean detachable;
+    protected boolean minimizable;
+    protected boolean maximizable;
     protected boolean transparentMode;
     protected float transparentRatio;
     protected int transparentDelay;
     protected Rectangle detachedBounds;
     protected boolean addToTaskBar;
-    protected boolean minimizable;
-    
+
 
     public MyDoggyTabbedContentUI(ContentManagerUI contentManagerUI,
                                   JTabbedContentPane tabbedContentPane,
@@ -33,6 +34,7 @@ public class MyDoggyTabbedContentUI extends PropertyChangeEventSource implements
         this.closable = contentManagerUI.isCloseable();
         this.detachable = contentManagerUI.isDetachable();
         this.minimizable = contentManagerUI.isMinimizable();
+        this.maximizable =  contentManagerUI.isMaximizable();
         this.transparentMode = true;
         this.transparentRatio = 0.7f;
         this.transparentDelay = 0;
@@ -84,6 +86,20 @@ public class MyDoggyTabbedContentUI extends PropertyChangeEventSource implements
         this.minimizable = minimizable;
 
         firePropertyChangeEvent("minimizable", old, minimizable);
+    }
+
+    public boolean isMaximizable() {
+        return maximizable;
+    }
+
+    public void setMaximizable(boolean maximizable) {
+        if (this.maximizable == maximizable)
+            return;
+
+        boolean old = this.maximizable;
+        this.maximizable = maximizable;
+
+        firePropertyChangeEvent("maximizable", old, maximizable);
     }
 
     public boolean isTransparentMode() {
