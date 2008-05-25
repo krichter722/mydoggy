@@ -283,6 +283,7 @@ public class MyDoggySet {
         toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
 
         MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
+//        contentManagerUI.setPopupMenuEnabled(false);
 /*
         contentManagerUI.setCloseable(false);
         contentManagerUI.setDetachable(false);

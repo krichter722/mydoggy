@@ -582,7 +582,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         }
 
         public void mouseClicked(MouseEvent e) {
-            if (SwingUtilities.isRightMouseButton(e)) {
+            if (SwingUtilities.isRightMouseButton(e) && isPopupMenuEnabled()) {                
                 popupMenu.removeAll();
 
                 for (Content content : contentManager.getContents()) {
