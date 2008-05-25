@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.FloatingLiveTypeDescriptor;
 import org.noos.xing.mydoggy.SlidingTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
@@ -14,10 +15,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -318,7 +316,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).addPropertyChangeListener(this);
 
         resizeMouseInputHandler = new FloatingResizeMouseInputHandler(sheet);
-        moveMouseInputHandler = new FloatingMoveMouseInputHandler(sheet);
+        moveMouseInputHandler = new FloatingLiveMoveMouseInputHandler(sheet);
     }
 
 
@@ -489,5 +487,41 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                 toolWindow.setType(ToolWindowType.DOCKED);
         }
 
+    }
+
+    protected class FloatingLiveMoveMouseInputHandler extends FloatingMoveMouseInputHandler {
+        protected ToolWindowAnchor onAnchor;
+
+        public FloatingLiveMoveMouseInputHandler(Component floatingContainer) {
+            super(floatingContainer);
+        }
+
+        public void mouseDragged(MouseEvent ev) {
+            super.mouseDragged(ev);
+
+            if (isMovingWindow) {
+                // TODO: activate tempo showed
+                onAnchor = descriptor.getManager().getToolWindowAnchor(
+                        SwingUtilities.convertPoint(ev.getComponent(), ev.getPoint(), descriptor.getManager())
+                );
+
+                System.out.println("onAnchor = " + onAnchor);
+            }
+        }
+
+        public void mouseReleased(MouseEvent ev) {
+            if (isMovingWindow) {
+                if (onAnchor != null) {
+                    try {
+                        toolWindow.setAnchor(onAnchor);
+                        toolWindow.setType(ToolWindowType.DOCKED);
+                    } finally {
+                        isMovingWindow = false;
+                        dragCursor = 0;
+                    }
+                } else
+                    super.mouseReleased(ev);
+            }
+        }
     }
 }

@@ -283,6 +283,13 @@ public class MyDoggySet {
         toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
 
         MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
+/*
+        contentManagerUI.setCloseable(false);
+        contentManagerUI.setDetachable(false);
+        contentManagerUI.setMinimizable(false);
+        contentManagerUI.setMaximizable(false);
+*/
+
         contentManagerUI.setShowAlwaysTab(false);
         contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
         contentManagerUI.setTabLayout(TabbedContentManagerUI.TabLayout.WRAP);

@@ -16,6 +16,7 @@ import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 
 /**
+ * @TODO: introduce common super class with Tabbed
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyDesktopContentUI extends PropertyChangeEventSource implements DesktopContentUI {
@@ -28,12 +29,13 @@ public class MyDoggyDesktopContentUI extends PropertyChangeEventSource implement
     protected Content content;
     protected boolean closable;
     protected boolean detachable;
+    protected boolean minimizable;
+    protected boolean maximizable;
     protected boolean transparentMode;
     protected float transparentRatio;
     protected int transparentDelay;
     protected Rectangle detachedBounds;
     protected boolean addToTaskBar;
-    protected boolean minimizable;
 
 
     public MyDoggyDesktopContentUI(ContentManager contentManager,
@@ -103,6 +105,19 @@ public class MyDoggyDesktopContentUI extends PropertyChangeEventSource implement
         firePropertyChangeEvent("minimizable", old, minimizable);
     }
 
+    public boolean isMaximizable() {
+        return maximizable;
+    }
+
+    public void setMaximizable(boolean maximizable) {
+        if (this.maximizable == maximizable)
+            return;
+
+        boolean old = this.maximizable;
+        this.maximizable = maximizable;
+
+        firePropertyChangeEvent("maximizable", old, maximizable);
+    }
     public boolean isTransparentMode() {
         return transparentMode;
     }

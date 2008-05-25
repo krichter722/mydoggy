@@ -588,6 +588,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
                 for (Content content : contentManager.getContents()) {
                     JMenu menu = new JMenu(content.getTitle());
 
+                    // TODO: use new isMaximizable...
                     JMenuItem detach = new JMenuItem(resourceManager.getString("@@tab.content.detach"));
                     detach.putClientProperty(Content.class, content);
                     detach.setActionCommand("Detach");
