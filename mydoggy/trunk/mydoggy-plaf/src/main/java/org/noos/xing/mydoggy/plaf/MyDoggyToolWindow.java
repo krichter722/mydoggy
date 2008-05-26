@@ -73,7 +73,48 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         this.representativeAnchorButtonVisible = true;
     }
 
-    
+
+    public ToolWindowTab[] getDockables() {
+        return getToolWindowTabs();
+    }
+
+    public void addAlias(ToolWindowTab toolWindowTab, Object alias) {
+        //  TOOD: maybe implements these...
+    }
+
+    public Object[] getAliases(ToolWindowTab toolWindowTab) {
+        return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public ToolWindowTab removeAlias(Object alias) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void addDockableManagerListener(DockableManagerListener listener) {
+        addToolWindowListener(new DockableManager2ToolWindowWrapper(listener));
+    }
+
+    public void removeDockableManagerListener(DockableManagerListener listener) {
+        for (ToolWindowListener managerListener : getToolWindowListeners()) {
+            if (managerListener instanceof DockableManager2ToolWindowWrapper) {
+                if (((DockableManager2ToolWindowWrapper)managerListener).getListener() == listener) {
+                    removeToolWindowListener(managerListener);
+                }
+            }
+        }
+    }
+
+    public DockableManagerListener[] getDockableManagerListeners() {
+        java.util.List<DockableManagerListener> listeners = new ArrayList<DockableManagerListener>();
+        for (ToolWindowListener managerListener : getToolWindowListeners()) {
+            if (managerListener instanceof DockableManager2ToolWindowWrapper) {
+                listeners.add(((DockableManager2ToolWindowWrapper) managerListener).getListener());
+            }
+        }
+        return listeners.toArray(new DockableManagerListener[listeners.size()]);
+    }
+
+
     public ToolWindowManager getDockableManager() {
         return descriptor.getManager();
     }
@@ -648,30 +689,6 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             return new ToolWindowListener[0];
 
         return toolWindowListeners.getListeners(ToolWindowListener.class);
-    }
-
-    public void addDockableManagerListener(DockableManagerListener listener) {
-        addToolWindowListener(new DockableManager2ToolWindowWrapper(listener));
-    }
-
-    public void removeDockableManagerListener(DockableManagerListener listener) {
-        for (ToolWindowListener managerListener : getToolWindowListeners()) {
-            if (managerListener instanceof DockableManager2ToolWindowWrapper) {
-                if (((DockableManager2ToolWindowWrapper)managerListener).getListener() == listener) {
-                    removeToolWindowListener(managerListener);
-                }
-            }
-        }
-    }
-
-    public DockableManagerListener[] getDockableManagerListeners() {
-        java.util.List<DockableManagerListener> listeners = new ArrayList<DockableManagerListener>();
-        for (ToolWindowListener managerListener : getToolWindowListeners()) {
-            if (managerListener instanceof DockableManager2ToolWindowWrapper) {
-                listeners.add(((DockableManager2ToolWindowWrapper) managerListener).getListener());
-            }
-        }
-        return listeners.toArray(new DockableManagerListener[listeners.size()]);
     }
 
     public ToolWindowTypeDescriptor getTypeDescriptor(ToolWindowType type) {

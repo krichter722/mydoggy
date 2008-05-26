@@ -24,7 +24,7 @@ import java.awt.*;
  * @see org.noos.xing.mydoggy.ToolWindowManager
  * @since 1.0.0
  */
-public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager {
+public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager<ToolWindowTab> {
 
     /**
      * This method is used to set the index for the tool. The index is used to activate or hide

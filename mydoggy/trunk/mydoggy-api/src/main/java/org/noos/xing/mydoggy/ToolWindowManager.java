@@ -16,7 +16,7 @@ import java.awt.*;
  * @see ToolWindowManagerListener
  * @since 1.0.0
  */
-public interface ToolWindowManager extends DockableManager {
+public interface ToolWindowManager extends DockableManager<ToolWindow> {
 
     /**
      * Returns the instance of <code>ContentManager</code> that manages main window contents.
@@ -80,28 +80,6 @@ public interface ToolWindowManager extends DockableManager {
      * @since 1.0.0
      */
     void unregisterAllToolWindow();
-
-    /**
-     * Associates the specified toolWindow with the specified alias in this manager.
-     * If the manager previously contained a mapping for this alias, the old toolWindow is replaced
-     * by the specified toolWindow.
-     *
-     * @param toolWindow toolWindow to be associated with the specified alias.
-     * @param alias alias with which the specified toolWindow is to be associated.
-     * @since 1.2.0
-     * @see #getToolWindowByAlias(Object)
-     */
-    void addAlias(ToolWindow toolWindow, Object alias);
-
-    /**
-     * Returns all aliases associated to the passed toolwindow.
-     *
-     * @param toolWindow toolwindow whose aliases are to be returned. 
-     * @return all aliases associated to the passed toolwindow. 
-     * @since 1.4.1
-     * @see #addAlias(ToolWindow, Object)
-     */
-    Object[] getAliases(ToolWindow toolWindow);
 
     /**
      * Returns the toolWindow to which this manager maps the specified alias.  Returns
@@ -225,6 +203,7 @@ public interface ToolWindowManager extends DockableManager {
     boolean containsGroup(String name);
 
     /**
+     * TOOD: check javadoc
      * Returns the dockable to which this manager maps the specified id.
      * Returns <tt>null</tt> if the manager contains no mapping for this id.
      *

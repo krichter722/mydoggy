@@ -123,6 +123,54 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
 
+    public ToolWindow[] getDockables() {
+        return getToolWindows();
+    }
+
+    public void addAlias(ToolWindow toolWindow, Object alias) {
+        if (tools.containsKey(alias))
+            throw new IllegalArgumentException("There is a tool whose id is the passed alias. Cannot add that alias.");
+        aliases.put(alias, toolWindow);
+    }
+
+    public Object[] getAliases(ToolWindow toolWindow) {
+        List<Object> result = new ArrayList<Object>();
+        for (Map.Entry<Object, ToolWindow> entry : aliases.entrySet()) {
+            if (entry.getValue() == toolWindow)
+                result.add(entry.getKey());
+        }
+        return result.toArray();
+    }
+
+    public ToolWindow removeAlias(Object alias) {
+        return aliases.remove(alias);
+    }
+
+    public void addDockableManagerListener(DockableManagerListener listener) {
+        addToolWindowManagerListener(new DockableManager2ToolWindowManagerWrapper(listener));
+    }
+
+    public void removeDockableManagerListener(DockableManagerListener listener) {
+        for (ToolWindowManagerListener managerListener : getToolWindowManagerListeners()) {
+            if (managerListener instanceof DockableManager2ToolWindowManagerWrapper) {
+                if (((DockableManager2ToolWindowManagerWrapper) managerListener).getListener() == listener) {
+                    removeToolWindowManagerListener(managerListener);
+                }
+            }
+        }
+    }
+
+    public DockableManagerListener[] getDockableManagerListeners() {
+        List<DockableManagerListener> listeners = new ArrayList<DockableManagerListener>();
+        for (ToolWindowManagerListener managerListener : getToolWindowManagerListeners()) {
+            if (managerListener instanceof DockableManager2ToolWindowManagerWrapper) {
+                listeners.add(((DockableManager2ToolWindowManagerWrapper) managerListener).getListener());
+            }
+        }
+        return listeners.toArray(new DockableManagerListener[listeners.size()]);
+    }
+
+
     public ContentManager getContentManager() {
         return contentManager;
     }
@@ -217,21 +265,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         // Final cleans
         aliases.clear();
-    }
-
-    public void addAlias(ToolWindow toolWindow, Object alias) {
-        if (tools.containsKey(alias))
-            throw new IllegalArgumentException("There is a tool whose id is the passed alias. Cannot add that alias.");
-        aliases.put(alias, toolWindow);
-    }
-
-    public Object[] getAliases(ToolWindow toolWindow) {
-        List<Object> result = new ArrayList<Object>();
-        for (Map.Entry<Object, ToolWindow> entry : aliases.entrySet()) {
-            if (entry.getValue() == toolWindow)
-                result.add(entry.getKey());
-        }
-        return result.toArray();
     }
 
     public ToolWindow getToolWindowByAlias(Object alias) {
@@ -382,30 +415,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return twmListeners.getListeners(ToolWindowManagerListener.class);
     }
 
-    public void addDockableManagerListener(DockableManagerListener listener) {
-        addToolWindowManagerListener(new DockableManager2ToolWindowManagerWrapper(listener));
-    }
-
-    public void removeDockableManagerListener(DockableManagerListener listener) {
-        for (ToolWindowManagerListener managerListener : getToolWindowManagerListeners()) {
-            if (managerListener instanceof DockableManager2ToolWindowManagerWrapper) {
-                if (((DockableManager2ToolWindowManagerWrapper) managerListener).getListener() == listener) {
-                    removeToolWindowManagerListener(managerListener);
-                }
-            }
-        }
-    }
-
-    public DockableManagerListener[] getDockableManagerListeners() {
-        List<DockableManagerListener> listeners = new ArrayList<DockableManagerListener>();
-        for (ToolWindowManagerListener managerListener : getToolWindowManagerListeners()) {
-            if (managerListener instanceof DockableManager2ToolWindowManagerWrapper) {
-                listeners.add(((DockableManager2ToolWindowManagerWrapper) managerListener).getListener());
-            }
-        }
-        return listeners.toArray(new DockableManagerListener[listeners.size()]);
-    }
-
 
     public synchronized void propertyChange(final PropertyChangeEvent evt) {
         Object source = evt.getSource();
@@ -426,7 +435,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
 
 //        System.out.println(SwingUtil.toString(evt));
-        boolean fired = propertyChangeSupport.firePropertyChange(evt);
+        /*boolean fired = */propertyChangeSupport.firePropertyChange(evt);
 /*
         if (fired && source instanceof MyDoggyToolWindowTab) {
             System.out.println("fired when tab ");
@@ -1009,10 +1018,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public boolean isWindowFocused() {
 //        return (windowAnchestor instanceof Window) ? ((Window) windowAnchestor).isFocused() : windowAnchestor.isfo
         Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-        if (focusOwner != null)
-            return SwingUtil.getWindowAncestor(focusOwner) == windowAnchestor;
+        return focusOwner != null ? SwingUtil.getWindowAncestor(focusOwner) == windowAnchestor : false;
 
-        return false;
     }
 
     public int getJMenuBarExtraHeight() {
@@ -1100,8 +1107,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         if (mainContainer.getWidth() < 50 || mainContainer.getHeight() < 50) {
             // If not, reset split panes to equal divisions
             mainSplitPane.setDividerLocation(0.5);
-            for (int i = 0; i < bars.length; i++) {
-                bars[i].getSplitPane().setDividerLocation(0.5);
+            for (MyDoggyToolWindowBar bar : bars) {
+                bar.getSplitPane().setDividerLocation(0.5);
             }
         }
     }

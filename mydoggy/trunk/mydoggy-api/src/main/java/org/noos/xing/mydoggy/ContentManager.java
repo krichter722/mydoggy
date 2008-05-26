@@ -13,7 +13,7 @@ import java.awt.*;
  * @see Content
  * @since 1.0.0
  */
-public interface ContentManager extends DockableManager, Observable {
+public interface ContentManager extends DockableManager<Content>, Observable {
 
     /**
      * Sets the content manager ui to <code>contentManagerUI</code>.
@@ -93,27 +93,6 @@ public interface ContentManager extends DockableManager, Observable {
      * @since 1.4.0
      */
     Content addContent(Dockable dockable);
-
-    /**
-     * Associates the specified content with the specified alias in this manager.
-     * If the manager previously contained a mapping for this alias, the old content is replaced
-     * by the specified content.
-     *
-     * @param content content to be associated with the specified alias.
-     * @param alias alias with which the specified toolWindow is to be associated.
-     * @since 1.4.1
-     */
-    void addAlias(Content content, Object alias);
-
-    /**
-     * Returns all aliases associated to the passed content.
-     * 
-     * @param content toolwindow whose aliases are to be returned.
-     * @return all aliases associated to the passed content.
-     * @since 1.4.1
-     * @see #addAlias(Content, Object) 
-     */
-    Object[] getAliases(Content content);
 
     /**
      * Removes the content <code>content</code>.
