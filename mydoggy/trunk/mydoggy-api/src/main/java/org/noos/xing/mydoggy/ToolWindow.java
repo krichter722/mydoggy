@@ -280,6 +280,22 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
     boolean isRepresentativeAnchorButtonVisible();
 
     /**
+     * TODO:
+     * @param hideOnZeroTabs
+     * @since 1.4.3
+     * @see #isHideOnZeroTabs()
+     */
+    void setHideOnZeroTabs(boolean hideOnZeroTabs);
+
+    /**
+     * TODO:
+     * @since 1.4.3
+     * @return 
+     * @see #setHideOnZeroTabs(boolean)  
+     */
+    boolean isHideOnZeroTabs();
+
+    /**
      * Adds a <code>component</code> represented by a <code>title</code> and no icon.
      *
      * @param title     the title to be displayed in this tab
