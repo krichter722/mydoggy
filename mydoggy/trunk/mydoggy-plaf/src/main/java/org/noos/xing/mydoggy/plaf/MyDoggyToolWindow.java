@@ -11,6 +11,8 @@ import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -38,6 +40,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     protected boolean lockedOnAnchor;
 
     protected java.util.List<ToolWindowTab> toolWindowTabs;
+    protected Map<Object, ToolWindowTab> aliases;
     protected ToolWindowTab rootTab;
 
     protected ResourceBundle resourceBundle;
@@ -79,15 +82,25 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
     public void addAlias(ToolWindowTab toolWindowTab, Object alias) {
-        //  TOOD: maybe implements these...
+        if (aliases == null)
+            this.aliases = new HashMap<Object, ToolWindowTab>();
+        aliases.put(alias, toolWindowTab);
     }
 
     public Object[] getAliases(ToolWindowTab toolWindowTab) {
-        return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
+        if (aliases == null)
+            return new Object[0];
+
+        java.util.List<Object> result = new ArrayList<Object>();
+        for (Map.Entry<Object, ToolWindowTab> entry : aliases.entrySet()) {
+            if (entry.getValue() == toolWindowTab)
+                result.add(entry.getKey());
+        }
+        return result.toArray();
     }
 
     public ToolWindowTab removeAlias(Object alias) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return aliases.remove(alias);
     }
 
     public void addDockableManagerListener(DockableManagerListener listener) {

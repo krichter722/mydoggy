@@ -454,6 +454,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
 
                 lastAnchor = newAnchor;
             }
+            
             updateGhostImage(dsde.getLocation());
         }
 
