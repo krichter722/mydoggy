@@ -9,38 +9,42 @@ package org.noos.xing.mydoggy;
 public interface DockableManager<D extends Dockable> {
 
     /**
-     * TODO: 
-     * @return
+     * Returns an array of the dockables registered into this manager.
+     *
+     * @return an array of the dockables registered into this manager.
+     *         If there is no tool registered then it returns an empty array.
      * @since 1.4.3
      */
     D[] getDockables();
     
     /**
-     * Associates the specified toolWindow with the specified alias in this manager.
-     * If the manager previously contained a mapping for this alias, the old toolWindow is replaced
-     * by the specified toolWindow.
+     * Associates the specified dockable with the specified alias in this manager.
+     * If the manager previously contained a mapping for this alias, the old dockable is replaced
+     * by the specified dockable.
      *
-     * @param toolWindow toolWindow to be associated with the specified alias.
-     * @param alias alias with which the specified toolWindow is to be associated.
+     * @param d dockable to be associated with the specified alias.
+     * @param alias alias with which the specified dockable is to be associated.
      * @since 1.4.3
-     * @see #getToolWindowByAlias(Object)
      */
     void addAlias(D d, Object alias);
 
     /**
-     * Returns all aliases associated to the passed toolwindow.
+     * Returns all aliases associated to the passed dockable.
      *
-     * @param toolWindow toolwindow whose aliases are to be returned.
-     * @return all aliases associated to the passed toolwindow.
+     * @param d dockable whose aliases are to be returned.
+     * @return all aliases associated to the passed dockable.
      * @since 1.4.3
-     * @see #addAlias(ToolWindow, Object)
+     * @see #addAlias(Dockable, Object)
      */
     Object[] getAliases(D d);
 
     /**
+     * Remove the alias from the manager. If the manager previously contained a mapping for this alias,
+     * the dockable is returned.
      *
-     * @param alias
-     * @return
+     * @param alias alias to be removed.
+     * @return If the manager previously contained a mapping for this alias,
+     * the dockable is returned.
      * @since 1.4.3
      */
     D removeAlias(Object alias);
