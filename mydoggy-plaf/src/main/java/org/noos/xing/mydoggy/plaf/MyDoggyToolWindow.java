@@ -38,6 +38,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     protected boolean aggregateEnabled;
     protected boolean representativeAnchorButtonVisible;
     protected boolean lockedOnAnchor;
+    protected boolean hideOnZeroTabs;
 
     protected java.util.List<ToolWindowTab> toolWindowTabs;
     protected Map<Object, ToolWindowTab> aliases;
@@ -73,6 +74,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         setTitle(title);
         setIcon(icon);
         this.available = this.active = this.visible = this.maximized = this.aggregateEnabled = false;
+        this.hideOnZeroTabs = true;
         this.representativeAnchorButtonVisible = true;
     }
 
@@ -586,6 +588,19 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         }
     }
 
+    public boolean isHideOnZeroTabs() {
+        return hideOnZeroTabs;
+    }
+
+    public void setHideOnZeroTabs(boolean hideOnZeroTabs) {
+        if (this.hideOnZeroTabs == hideOnZeroTabs)
+            return;
+
+        boolean old = this.hideOnZeroTabs;
+        this.hideOnZeroTabs = hideOnZeroTabs;
+        firePropertyChangeEvent("hideOnZeroTabs", old, hideOnZeroTabs);
+    }
+
     public ToolWindowTab addToolWindowTab(String title, Component component) {
         return addTabInternal(title, null, component, null, false);
     }
@@ -673,7 +688,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                 rootTab = null;
         }
 
-        if (toolWindowTabs.size() == 0)
+        if (toolWindowTabs.size() == 0 && isHideOnZeroTabs())
             setAvailable(false);
         
         return result;
