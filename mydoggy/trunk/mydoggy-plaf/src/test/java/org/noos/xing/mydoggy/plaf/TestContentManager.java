@@ -85,8 +85,12 @@ public class TestContentManager extends TestCase {
         assertEquals(1, contentManager.getAliases(content).length);
 
         Content contentByAlias = contentManager.getContent(ContentManager.class);
-
         assertEquals(content, contentByAlias);
+
+        contentManager.removeAlias(ContentManager.class);
+
+        contentByAlias = contentManager.getContent(ContentManager.class);
+        assertNull(contentByAlias);
     }
 
 
