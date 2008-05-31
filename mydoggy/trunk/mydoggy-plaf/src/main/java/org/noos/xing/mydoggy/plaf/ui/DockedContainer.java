@@ -162,6 +162,10 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         titleBar.setEnabled(false);
         titleBar.setBorder(null);
         titleBar.addMouseListener(titleBarMouseAdapter);
+//        titleBar.setFocusTraversalPolicyProvider(true);
+//        titleBar.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
+//        titleBar.setFocusCycleRoot(true);
+//        titleBar.setFocusable(false);
 
         if (descriptor.isIdVisibleOnTitleBar())
             titleBarLayout.setColumn(0, titleBar.getFontMetrics(
