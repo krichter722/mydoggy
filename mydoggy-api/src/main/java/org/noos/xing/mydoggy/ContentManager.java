@@ -225,7 +225,6 @@ public interface ContentManager extends DockableManager<Content>, Observable {
      */
     boolean isEnabled();
 
-
     /**
      * Registers <code>listener</code> so that it will receive events when
      * contents are registered or removed..

@@ -55,20 +55,26 @@ public class MyDoggySet {
     }
 
     public void start(final Runnable runnable) {
+        myDoggySetContext.put(MyDoggySet.class, null);
+        SwingUtil.centrePositionOnScreen(frame);
+        frame.setVisible(true);
+        memoryMonitorDescriptor.setAvailable(true);
+
+        if (runnable != null) {
+            Thread t = new Thread(runnable);
+            t.start();
+        }
+    }
+
+    public void run(final Runnable runnable) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                myDoggySetContext.put(MyDoggySet.class, null);
-                SwingUtil.centrePositionOnScreen(frame);
-                frame.setVisible(true);
-                memoryMonitorDescriptor.setAvailable(true);
-
-                if (runnable != null) {
-                    Thread t = new Thread(runnable);
-                    t.start();
-                }
+                setUp();
+                start(runnable);
             }
         });
     }
+
 
     public ToolWindowManager getToolWindowManager() {
         return toolWindowManager;
@@ -467,21 +473,14 @@ public class MyDoggySet {
         memoryMonitorDescriptor = new MemoryMonitorDockableDescriptor(myDoggyToolWindowManager, ToolWindowAnchor.BOTTOM);
     }
 
-    protected void dispose() {
-        frame.setVisible(false);
-        frame.dispose();
-    }
 
 
     public static void main(String[] args) {
         MyDoggySet test = new MyDoggySet();
         try {
-            test.setUp();
-//            test.toolWindowManager.getContentManager().setEnabled(false);
-
-//            test.start(new MultiSplitRandomConstraints(test));
-//            test.start(new TabbedRandomConstraints(test));
-            test.start(null);
+            test.run(null);
+//            test.run(new MultiSplitRandomConstraints(test));
+//            test.run(new TabbedRandomConstraints(test));
         } catch (Exception e) {
             e.printStackTrace();
         }

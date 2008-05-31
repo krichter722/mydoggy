@@ -14,29 +14,34 @@ public class TutorialSet {
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
 
+    protected void run() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                setUp();
+                start();
+            }
+        });
+    }
+
     protected void setUp() {
         initComponents();
         initToolWindowManager();
     }
 
     protected void start() {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                // Activate "Debug" Tool
-                ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
-                debugTool.setActive(true);
+        // Activate "Debug" Tool
+        ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
+        debugTool.setActive(true);
 
-                // Aggregate "Run" tool
-                ToolWindow runTool = toolWindowManager.getToolWindow("Run");
-                runTool.aggregate(AggregationPosition.TOP);
+        // Aggregate "Run" tool
+        ToolWindow runTool = toolWindowManager.getToolWindow("Run");
+        runTool.aggregate(AggregationPosition.TOP);
 
-                // Aggregate "Properties" tool
-                ToolWindow propertiesTool = toolWindowManager.getToolWindow("Properties");
-                propertiesTool.aggregate(AggregationPosition.RIGHT);
+        // Aggregate "Properties" tool
+        ToolWindow propertiesTool = toolWindowManager.getToolWindow("Properties");
+        propertiesTool.aggregate(AggregationPosition.RIGHT);
 
-                frame.setVisible(true);
-            }
-        });
+        frame.setVisible(true);
     }
 
     protected void initComponents() {
@@ -200,11 +205,11 @@ public class TutorialSet {
                                  new MultiSplitConstraint(AggregationPosition.RIGHT));
     }
 
+    
     public static void main(String[] args) {
         TutorialSet test = new TutorialSet();
         try {
-            test.setUp();
-            test.start();
+            test.run();
         } catch (Exception e) {
             e.printStackTrace();
         }

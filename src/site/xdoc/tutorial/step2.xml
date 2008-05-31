@@ -33,22 +33,28 @@ public class TutorialSet {
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
 
+
+    protected void run() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                setUp();
+                start();
+            }
+        });
+    }
+
     protected void setUp() {
         initComponents();
         <strong style="color:green"><a href="#initToolWindowManager">initToolWindowManager</a>();</strong>
     }
 
     protected void start() {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                // Activate "Debug" Tool
-                <strong style="color:green">
-                ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
-                debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#setActive(boolean)">setActive</a>(true);
-                </strong>
-                frame.setVisible(true);
-            }
-        });
+        // Activate "Debug" Tool
+        <strong style="color:green">
+        ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
+        debugTool.<a href="./../mydoggy-api/apidocs/org/noos/xing/mydoggy/ToolWindow.html#setActive(boolean)">setActive</a>(true);
+        </strong>
+        frame.setVisible(true);
     }
 
     protected void initComponents() {
@@ -102,8 +108,7 @@ public class TutorialSet {
     public static void main(String[] args) {
         TutorialSet test = new TutorialSet();
         try {
-            test.setUp();
-            test.start();
+            test.run();
         } catch (Exception e) {
             e.printStackTrace();
         }
