@@ -37,15 +37,15 @@ public class MyDoggySetApplet extends JApplet {
     protected ToolWindowManager toolWindowManager;
     protected ViewContext myDoggySetContext;
 
+
     public void init() {
-        super.init();
         setUp();
     }
 
     public void start() {
-        super.start();
         start(null);
     }
+
 
     public void setUp() {
         initComponents();
@@ -75,11 +75,6 @@ public class MyDoggySetApplet extends JApplet {
 
 
     protected void initComponents() {
-        // Init the frame
-//        this.frame = new JFrame("MyDoggy-Set 1.4.0 ...");
-//        this.frame.setSize(640, 480);
-//        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        this.frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
         setSize(640, 480);
         getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
 
