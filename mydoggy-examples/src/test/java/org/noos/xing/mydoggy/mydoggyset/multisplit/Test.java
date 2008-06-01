@@ -32,6 +32,9 @@ public class Test {
 
         ToolWindow tw1 = toolWindowManager.getToolWindow("Tool_1");
         tw1.setActive(true);
+
+        ToolWindow tw2 = toolWindowManager.getToolWindow("Tool_2");
+        tw2.setVisible(true);
     }
 
     protected void initComponents() {
@@ -54,8 +57,7 @@ public class Test {
                 "Tool_1",
                 null,
                 new JPanel(),
-                ToolWindowAnchor.LEFT)
-        .setVisible(true);
+                ToolWindowAnchor.LEFT);
 
 
         toolWindowManager.registerToolWindow(
@@ -63,8 +65,7 @@ public class Test {
                 "Tool_2",
                 null,
                 new JPanel(),
-                ToolWindowAnchor.BOTTOM)
-        .setVisible(true);
+                ToolWindowAnchor.BOTTOM);
 
 
         // Made all tools available
