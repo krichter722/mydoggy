@@ -236,7 +236,10 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
                 if (constraints[0] instanceof Point) {
                     Point location = (Point) constraints[0];
 
-                    internalFrame.setBounds(location.x, location.y, 320, 200);
+                    Dimension prefferedSize = content.getComponent().getPreferredSize();
+                    internalFrame.setBounds(location.x, location.y,
+                                            prefferedSize.width > 0 ? prefferedSize.width : 320,
+                                            prefferedSize.height > 0 ? prefferedSize.height: 200);
                 } else if (constraints[0] instanceof Rectangle) {
                     internalFrame.setBounds((Rectangle) constraints[0]);
                 } else
@@ -246,11 +249,15 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
             if (constraints == null || constraints.length == 0) {
                 int contentX, contentY;
                 contentY = contentX = 10 + (contentIndex++ * 25);
-                if (contentX > desktopPane.getWidth() - 320 || contentY > desktopPane.getHeight() - 200) {
+
+                Dimension prefferedSize = content.getComponent().getPreferredSize();
+                int width = prefferedSize.width > 0 ? prefferedSize.width : 320;
+                int height = prefferedSize.height > 0 ? prefferedSize.height: 200;
+                if (contentX > desktopPane.getWidth() - width || contentY > desktopPane.getHeight() - height) {
                     contentIndex = 0;
                     contentY = contentX = 10;
                 }
-                internalFrame.setBounds(contentX, contentY, 320, 200);
+                internalFrame.setBounds(contentX, contentY, width, height);
             }
 
             contentUIMap.put(content, myDoggyDesktopContentUI);
