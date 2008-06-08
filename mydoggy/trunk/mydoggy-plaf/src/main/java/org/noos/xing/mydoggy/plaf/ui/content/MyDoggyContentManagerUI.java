@@ -195,7 +195,7 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
     }
 
 
-    protected abstract Object addUIForContent(Content content, Object[] constraints);
+    protected abstract Object addUIForContent(Content content, Object... constraints);
 
     protected abstract void removeUIForContent(Content content);
 

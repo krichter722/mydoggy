@@ -603,6 +603,8 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
                     detach.setEnabled(getContentUI(content).isDetachable() && !content.isDetached());
                     menu.add(detach);
 
+                    ContentUI contentUI = content.getContentUI();
+
                     if (content.isMaximized() || content.isMinimized()) {
                         JMenuItem maximize = new JMenuItem();
                         maximize.putClientProperty(Content.class, content);
@@ -611,20 +613,24 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
                         maximize.addActionListener(this);
                         menu.add(maximize);
                     } else {
-                        JMenuItem maximize = new JMenuItem();
-                        maximize.putClientProperty(Content.class, content);
-                        maximize.setActionCommand("Maximize");
-                        maximize.setText(resourceManager.getString("@@tabbed.page.maximize"));
-                        maximize.addActionListener(this);
-                        menu.add(maximize);
+                        if (contentUI.isMaximizable()) {
+                            JMenuItem maximize = new JMenuItem();
+                            maximize.putClientProperty(Content.class, content);
+                            maximize.setActionCommand("Maximize");
+                            maximize.setText(resourceManager.getString("@@tabbed.page.maximize"));
+                            maximize.addActionListener(this);
+                            menu.add(maximize);
+                        }
 
-                        JMenuItem minimize = new JMenuItem();
-                        minimize.putClientProperty(Content.class, content);
-                        minimize.setActionCommand("Minimize");
-                        minimize.setText(resourceManager.getString("@@tabbed.page.minimize"));
-                        minimize.addActionListener(this);
-                        minimize.setEnabled(getContentUI(content).isMinimizable() && !content.isMinimized());
-                        menu.add(minimize);
+                        if (contentUI.isMinimizable()) {
+                            JMenuItem minimize = new JMenuItem();
+                            minimize.putClientProperty(Content.class, content);
+                            minimize.setActionCommand("Minimize");
+                            minimize.setText(resourceManager.getString("@@tabbed.page.minimize"));
+                            minimize.addActionListener(this);
+                            minimize.setEnabled(getContentUI(content).isMinimizable() && !content.isMinimized());
+                            menu.add(minimize);
+                        }
                     }
 
                     popupMenu.add(menu);
