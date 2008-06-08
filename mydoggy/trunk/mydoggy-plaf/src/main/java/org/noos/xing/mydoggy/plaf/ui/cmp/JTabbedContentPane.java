@@ -643,12 +643,16 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
                 MaximizeAction maximizeAction = new MaximizeAction(contentAt);
                 stdPopupMenu.add(maximizeAction).setEnabled(contentAt.getContentUI().isMaximizable());
-                maximizeAction.putValue(Action.NAME, contentAt.isMaximized() || isAContentMaximized() ?
+                boolean restore = contentAt.isMaximized() || isAContentMaximized();
+                maximizeAction.putValue(Action.NAME,  restore ?
                         resourceManager.getString("@@tabbed.page.restore") :
                         resourceManager.getString("@@tabbed.page.maximize")
                 );
 
-                // TODO: add minimze...
+                if (!restore && contentAt.getContentUI().isMinimizable()) {
+                    stdPopupMenu.add(new MinimizeAction(contentAt));
+                }
+
                 popupMenu = stdPopupMenu;
             }
 
@@ -678,6 +682,18 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             }
         }
 
+        class MinimizeAction extends AbstractAction {
+            Content content;
+
+            public MinimizeAction(Content content) {
+                super(resourceManager.getString("@@tabbed.page.minimize"));
+                this.content = content;
+            }
+
+            public void actionPerformed(ActionEvent e) {
+                content.setMinimized(!content.isMaximized());
+            }
+        }
     }
 
     protected class ExMultipleAggregateIcon extends MultipleAggregateIcon {
