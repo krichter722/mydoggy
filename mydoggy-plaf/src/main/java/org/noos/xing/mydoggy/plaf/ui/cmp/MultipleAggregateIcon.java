@@ -58,7 +58,32 @@ public class MultipleAggregateIcon implements Icon, SwingConstants {
                 }
                 break;
             case VERTICAL:
-                // TODO...
+                // Find max height
+                int maxWidth = 0;
+                for (int i = 0; i < visible.length; i++) {
+                    if (isVisibleAt(i)) {
+                        Icon icon = getIconAt(i);
+                        int width = icon.getIconWidth();
+                        if (width > maxWidth)
+                            maxWidth = width;
+                    }
+                }
+
+                int yCursor = y;
+                for (int i = 0; i < visible.length; i++) {
+                    if (isVisibleAt(i)) {
+                        Icon icon = getIconAt(i);
+
+                        xCursor = x + ((maxWidth - icon.getIconWidth()) / 2);
+                        icon.paintIcon(c, g, xCursor, yCursor);
+
+                        lastPaintedRecs[i] = new Rectangle(xCursor, yCursor,
+                                                           icon.getIconWidth(), icon.getIconHeight());
+
+                        yCursor += icon.getIconWidth();
+                    } else
+                        lastPaintedRecs[i] = null;
+                }
                 break;
         }
     }

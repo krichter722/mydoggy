@@ -505,7 +505,6 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                         SwingUtilities.convertPoint(ev.getComponent(), ev.getPoint(), descriptor.getManager())
                 );
 
-                System.out.println("onAnchor = " + onAnchor);
             }
         }
 
