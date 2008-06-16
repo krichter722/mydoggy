@@ -364,6 +364,7 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
 
         public TabButton(final MyDoggyToolWindowTab tab) {
             this.tab = tab;
+            tab.addPropertyChangeListener(this);
             tab.getCleaner().addCleaner(this);
 
             putClientProperty(ToolWindowTab.class, tab);
@@ -378,7 +379,6 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
             String name = "toolWindow." + tab.getOwner().getId() + ".tab." + tab.getTitle();
             setName(name);
 
-            this.tab.addPropertyChangeListener(this);
             this.selected = this.pressed = this.inside = false;
 
             // Prepare components
@@ -438,8 +438,8 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
 
             minimizeButton = (JButton) resourceManager.createComponent(
                     MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON,
-                    descriptor.getManager().getContext(
-)            );
+                    descriptor.getManager().getContext()
+            );
             minimizeButton.setName(name + ".minimizeButton");
             minimizeButton.setActionCommand("minimize");
             minimizeButton.addActionListener(this);
@@ -569,7 +569,27 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
                     addTab(this);
                 }
             } else if ("ensureVisible".equals(property)) {
-                ensureVisible();                
+                ensureVisible();
+            } else if ("minimizable".equals(property))  {
+                if (tab.isMinimizable()) {
+                    layout.setColumn(1, 1);
+                    layout.setColumn(2, 14);
+                } else {
+                    layout.setColumn(1, 0);
+                    layout.setColumn(2, 0);
+                }
+                revalidate();
+                repaint();
+            } else if ("closeable".equals(property))  {
+                if (tab.isCloseable()) {
+                    layout.setColumn(3, 1);
+                    layout.setColumn(4, 14);
+                } else {
+                    layout.setColumn(3, 0);
+                    layout.setColumn(4, 0);
+                }
+                revalidate();
+                repaint();
             }
         }
 
@@ -610,8 +630,14 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
                     layout.setColumn(3, 0);
                     layout.setColumn(4, 0);
                 }
-                layout.setColumn(1, 1);
-                layout.setColumn(2, 14);
+
+                if (tab.isMinimizable()) {
+                    layout.setColumn(1, 1);
+                    layout.setColumn(2, 14);
+                } else {
+                    layout.setColumn(1, 0);
+                    layout.setColumn(2, 0);
+                }
             } else {
                 layout.setColumn(1, 0);
                 layout.setColumn(2, 0);
@@ -696,7 +722,7 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
                                                           bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
                                                   ),
                                                   GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-                        } 
+                        }
                     }
                 }
 

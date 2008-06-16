@@ -23,6 +23,7 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
     protected Component component;
     protected boolean selected;
     protected boolean closeable;
+    protected boolean minimizable;
     protected boolean flash;
     protected boolean maximized;
     protected boolean minimized;
@@ -44,6 +45,7 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
         this.component = component;
         this.selected = false;
         this.closeable = !root;
+        this.minimizable = true;
         this.dockable = dockable;
         this.flash = false;
         this.maximized = false;
@@ -174,6 +176,20 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
         this.closeable = closeable;
 
         firePropertyChangeEvent("closeable", old, closeable);
+    }
+
+    public boolean isMinimizable() {
+        return minimizable;
+    }
+
+    public void setMinimizable(boolean minimizable) {
+        if (this.minimizable == minimizable)
+            return;
+
+        boolean old = this.minimizable;
+        this.minimizable = minimizable;
+
+        firePropertyChangeEvent("minimizable", old, minimizable);
     }
 
     public void setMaximized(boolean maximized) {

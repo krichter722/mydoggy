@@ -341,6 +341,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                         attributes.addAttribute(null, "maximized", null, null, String.valueOf(tab.isMaximized()));
                         attributes.addAttribute(null, "minimized", null, null, String.valueOf(tab.isMinimized()));
                         attributes.addAttribute(null, "closeable", null, null, String.valueOf(tab.isCloseable()));
+                        attributes.addAttribute(null, "minimizable", null, null, String.valueOf(tab.isMinimizable()));
                         attributes.addAttribute(null, "detached", null, null, String.valueOf(tab.isDetached()));
                         attributes.addAttribute(null, "flashing", null, null, String.valueOf(tab.isFlashing()));
 
@@ -948,6 +949,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                             tab.setSelected(false);
                             tab.setMaximized(false);
                             tab.setCloseable(getBoolean(tabElement, "closeable", true));
+                            tab.setMinimizable(getBoolean(tabElement, "minimizable", true));
                             tab.setFlashing(getBoolean(tabElement, "flashing", false));
                             tab.setMinimized(getBoolean(tabElement, "minimized", false));
                         }
