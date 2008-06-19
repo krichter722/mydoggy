@@ -49,8 +49,8 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         this.resourceManager = descriptor.getResourceManager();
 
         this.flashingAnimation = new GradientAnimation();
-        this.flashingAnimBackStart = new MutableColor(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
-        this.flashingAnimBackEnd = new MutableColor(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+        this.flashingAnimBackStart = new MutableColor(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+        this.flashingAnimBackEnd = new MutableColor(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
         this.flasingDuration = -1;
 
         dockable.addPropertyChangeListener(this);
@@ -62,9 +62,9 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         super.installUI(c);
 
         this.label = c;
-        labelBorder = new LineBorder(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER), 1, true, 3, 3);
+        labelBorder = new LineBorder(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER), 1, true, 3, 3);
         c.setBorder(labelBorder);
-        c.setForeground(resourceManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
+        c.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
 
         SwingUtil.registerDragGesture(c, new RepresentativeAnchorDragGesture(descriptor, label));
     }
@@ -78,7 +78,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
     }
 
     public void update(Graphics g, JComponent c) {
-        c.setForeground(resourceManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
+        c.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
 
         if (dockable.isFlashing() && descriptor.isAvailable()) {
             updateAnchor(g, c,
@@ -123,8 +123,8 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
             }
 
             updateAnchor(g, c,
-                         resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
-                         resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
+                         UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
+                         UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
                          false,
                          false);
         }
@@ -211,7 +211,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
                                   null,
                                   GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
         } else {
-            g.setColor(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+            g.setColor(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
             g.fillRect(0, 0, r.width, r.height);
         }
     }
@@ -227,23 +227,23 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
             switch (getAnimationDirection()) {
                 case INCOMING:
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackStart,
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
+                                                      UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
+                                                      UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd,
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
+                                                      UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
+                                                      UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
                                                       animationPercent);
                     break;
 
                 case OUTGOING:
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackStart,
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
+                                                      UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
+                                                      UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd,
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
-                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
+                                                      UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
+                                                      UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
                                                       animationPercent);
                     break;
             }
@@ -254,23 +254,23 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         protected void onFinishAnimation() {
             switch (getAnimationDirection()) {
                 case INCOMING:
-                    flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+                    flashingAnimBackStart.setRGB(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
                     break;
                 case OUTGOING:
-                    flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START));
+                    flashingAnimBackStart.setRGB(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START));
                     break;
             }
             SwingUtil.repaint(label);
         }
 
         protected void onHide(Object... params) {
-            flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START));
-            flashingAnimBackEnd.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END));
+            flashingAnimBackStart.setRGB(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START));
+            flashingAnimBackEnd.setRGB(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END));
         }
 
         protected void onShow(Object... params) {
-            flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
-            flashingAnimBackEnd.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+            flashingAnimBackStart.setRGB(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+            flashingAnimBackEnd.setRGB(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
         }
 
         protected void onStartAnimation(Direction direction) {
@@ -293,21 +293,21 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
             }
 
             label.setBorder(labelBorder);
-            labelBorder.setLineColor(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
+            labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
             SwingUtil.repaint(label);
         }
 
         public void mouseEntered(MouseEvent e) {
             Component source = e.getComponent();
 
-            labelBorder.setLineColor(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
+            labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
             SwingUtil.repaint(source);
         }
 
         public void mouseExited(MouseEvent e) {
             Component source = e.getComponent();
 
-            labelBorder.setLineColor(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER));
+            labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER));
             SwingUtil.repaint(source);
         }
 

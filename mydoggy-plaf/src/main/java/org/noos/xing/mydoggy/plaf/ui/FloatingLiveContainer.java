@@ -48,7 +48,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         sheet.removeMouseMotionListener(resizeMouseInputHandler);
         sheet.removeMouseListener(resizeMouseInputHandler);
 
-        titleBarTabs.removeEventDispatcherlListener(moveMouseInputHandler);
+        toolWindowTabContainer.removeEventDispatcherlListener(moveMouseInputHandler);
 
         titleBar.removeMouseMotionListener(moveMouseInputHandler);
         titleBar.removeMouseListener(moveMouseInputHandler);
@@ -189,7 +189,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                         sheet.removeMouseMotionListener(resizeMouseInputHandler);
                         sheet.removeMouseListener(resizeMouseInputHandler);
 
-                        titleBarTabs.removeEventDispatcherlListener(moveMouseInputHandler);
+                        toolWindowTabContainer.removeEventDispatcherlListener(moveMouseInputHandler);
 
                         titleBar.removeMouseMotionListener(moveMouseInputHandler);
                         titleBar.removeMouseListener(moveMouseInputHandler);
@@ -198,7 +198,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                         sheet.addMouseMotionListener(resizeMouseInputHandler);
                         sheet.addMouseListener(resizeMouseInputHandler);
 
-                        titleBarTabs.addEventDispatcherlListener(moveMouseInputHandler);
+                        toolWindowTabContainer.addEventDispatcherlListener(moveMouseInputHandler);
 
                         titleBar.addMouseMotionListener(moveMouseInputHandler);
                         titleBar.addMouseListener(moveMouseInputHandler);
@@ -217,7 +217,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                         sheet.removeMouseMotionListener(resizeMouseInputHandler);
                         sheet.removeMouseListener(resizeMouseInputHandler);
 
-                        titleBarTabs.removeEventDispatcherlListener(moveMouseInputHandler);
+                        toolWindowTabContainer.removeEventDispatcherlListener(moveMouseInputHandler);
 
                         titleBar.removeMouseMotionListener(moveMouseInputHandler);
                         titleBar.removeMouseListener(moveMouseInputHandler);

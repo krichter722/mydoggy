@@ -58,7 +58,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
             window.getWindow().dispose();
         }
 
-        titleBarTabs.removeEventDispatcherlListener(moveMouseInputHandler);
+        toolWindowTabContainer.removeEventDispatcherlListener(moveMouseInputHandler);
 
         titleBar.removeMouseMotionListener(moveMouseInputHandler);
         titleBar.removeMouseListener(moveMouseInputHandler);
@@ -170,7 +170,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                     window.getWindow().removeMouseMotionListener(resizeMouseInputHandler);
                     window.getWindow().removeMouseListener(resizeMouseInputHandler);
 
-                    titleBarTabs.removeEventDispatcherlListener(moveMouseInputHandler);
+                    toolWindowTabContainer.removeEventDispatcherlListener(moveMouseInputHandler);
 
                     titleBar.removeMouseMotionListener(moveMouseInputHandler);
                     titleBar.removeMouseListener(moveMouseInputHandler);
@@ -364,7 +364,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         window.getWindow().removeMouseMotionListener(resizeMouseInputHandler);
         window.getWindow().removeMouseListener(resizeMouseInputHandler);
 
-        titleBarTabs.removeEventDispatcherlListener(moveMouseInputHandler);
+        toolWindowTabContainer.removeEventDispatcherlListener(moveMouseInputHandler);
 
         titleBar.removeMouseMotionListener(moveMouseInputHandler);
         titleBar.removeMouseListener(moveMouseInputHandler);
@@ -373,7 +373,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         window.getWindow().addMouseMotionListener(resizeMouseInputHandler);
         window.getWindow().addMouseListener(resizeMouseInputHandler);
 
-        titleBarTabs.addEventDispatcherlListener(moveMouseInputHandler);
+        toolWindowTabContainer.addEventDispatcherlListener(moveMouseInputHandler);
 
         titleBar.addMouseMotionListener(moveMouseInputHandler);
         titleBar.addMouseListener(moveMouseInputHandler);

@@ -1082,6 +1082,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public MutableContext getContext() {
         DefaultMutableContext context = new DefaultMutableContext();
         context.put(ToolWindowManager.class, this);
+        context.put(MyDoggyToolWindowManager.class, this);
         context.put(ResourceManager.class, getResourceManager());
 
         return context;
@@ -1090,6 +1091,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public MutableContext getContext(Object... entries) {
         DefaultMutableContext context = new DefaultMutableContext(entries);
         context.put(ToolWindowManager.class, this);
+        context.put(MyDoggyToolWindowManager.class, this);
         context.put(ResourceManager.class, getResourceManager());
 
         return context;

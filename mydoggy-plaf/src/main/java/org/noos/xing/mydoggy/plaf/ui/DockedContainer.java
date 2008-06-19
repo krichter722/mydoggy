@@ -31,7 +31,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
     protected JPanel container;
     protected JPanel titleBar;
-    protected ToolWindowTabPanel titleBarTabs;
+    protected ToolWindowTabContainer toolWindowTabContainer;
     protected TitleBarButtons titleBarButtons;
     protected JPanel componentContainer;
 
@@ -103,8 +103,8 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         return titleBarButtons;
     }
 
-    public TitleBarTabs getTitleBarTabs() {
-        return titleBarTabs;
+    public ToolWindowTabContainer getTitleBarTabs() {
+        return toolWindowTabContainer;
     }
 
     public Component getTitleBar() {
@@ -173,7 +173,8 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
             ).stringWidth(resourceManager.getUserString(id)) + 12);
 
         // Tabs
-        titleBarTabs = new ToolWindowTabPanel(this, descriptor);
+        // Request to ResourceManager...
+        toolWindowTabContainer = new ToolWindowTabPanel(this, descriptor);
         toolWindow.getToolWindowTabs()[0].setSelected(true);
 
         // Buttons
@@ -183,7 +184,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
                                                          ));
 
         // Set TitleBar content
-        titleBar.add(titleBarTabs, "1,1");
+        titleBar.add((Component) toolWindowTabContainer, "1,1");
         titleBar.add(titleBarButtons.getComponent(), "3,1,right,c");
 
         // Set Component container
