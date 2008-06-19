@@ -12,25 +12,23 @@ import org.noos.xing.mydoggy.plaf.support.PropertyChangeBridge;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureDelegate;
-import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MouseEventDispatcher;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicLabelUI;
-import javax.swing.plaf.basic.BasicPanelUI;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.EventListener;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @todo: (-) implemets maximized
  */
-public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Cleaner {
+public class ToolWindowTabPanel extends JComponent implements ToolWindowTabContainer, Cleaner {
     protected DockedContainer dockedContainer;
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
@@ -83,12 +81,29 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
     }
 
 
+    public DragGesture getDragGesture() {
+        return dragGestureDelegate;
+    }
+
+    public MouseEventDispatcher getMouseEventDispatcher() {
+        return mouseEventDispatcher;
+    }
+
     public void addEventDispatcherlListener(EventListener eventListener) {
         mouseEventDispatcher.addListener(eventListener);
     }
 
     public void removeEventDispatcherlListener(EventListener eventListener) {
         mouseEventDispatcher.removeListener(eventListener);
+    }
+
+    public void ensureVisible(final Rectangle bounds) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                bounds.x -= viewport.getViewPosition().x;
+                viewport.scrollRectToVisible(bounds);
+            }
+        });
     }
 
 
@@ -130,10 +145,10 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
             final JMenuItem closeAllItem = new JMenuItem(new CloseAllTabAction());
 
             public void update(Component source, JPopupMenu popupMenu) {
-                if (source.getParent() instanceof TabButton) {
+                if (source.getParent() instanceof ToolWindowTabButtonPanel) {
                     boolean enableByTabsCount = toolWindow.getToolWindowTabs().length > 1;
 
-                    TabButton tabButton = (TabButton) source.getParent();
+                    ToolWindowTabButtonPanel tabButton = (ToolWindowTabButtonPanel) source.getParent();
 
                     int index = 0;
                     if (tabButton.tab.isCloseable()) {
@@ -228,7 +243,7 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
         checkPopupButton();
     }
 
-    protected void addTab(TabButton tabButton) {
+    protected void addTab(Component tabButton) {
         int column = containerLayout.getNumColumn();
         containerLayout.insertColumn(column, 0);
         containerLayout.insertColumn(column + 1, -2);
@@ -240,42 +255,38 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
     }
 
     protected void addTab(MyDoggyToolWindowTab tab) {
-        TabButton tabButton = new TabButton(tab);
+        ToolWindowTabButtonPanel tabButton = new ToolWindowTabButtonPanel(descriptor.getManager(), tab,
+                                                                          this, dockedContainer);
         tab.removePlafPropertyChangeListener(propertyChangeBridge);
         tab.addPlafPropertyChangeListener(propertyChangeBridge);
 
         addTab(tabButton);
     }
 
-    protected ToolWindowTab removeTab(ToolWindowTab toolWindowTab, boolean flag) {
-        int nextTabCol = -1;
-        for (Component component : tabContainer.getComponents()) {
-            if (component instanceof TabButton) {
-                TabButton tabButton = (TabButton) component;
-                if (tabButton.tab == toolWindowTab) {
-                    TableLayoutConstraints constraints = containerLayout.getConstraints(tabButton);
-                    tabContainer.remove(tabButton);
 
-                    if (flag)
-                        tabButton.removePropertyChangeListener(propertyChangeBridge);
+    protected ToolWindowTab getNextTab(ToolWindowTab toolWindowTab) {
+        int nextTabCol = -1;
+
+        for (Component component : tabContainer.getComponents()) {
+            if (component instanceof ToolWindowTabButton) {
+                ToolWindowTabButton tabButton = (ToolWindowTabButton) component;
+
+                if (tabButton.getToolWindowTab() == toolWindowTab) {
+                    TableLayoutConstraints constraints = containerLayout.getConstraints(component);
 
                     nextTabCol = constraints.col1;
-                    int col = constraints.col1 - 1;
-                    containerLayout.deleteColumn(col);
-                    containerLayout.deleteColumn(col);
-                    containerLayout.deleteColumn(col);
+                    // TOOD: va bene ?????????
                     break;
                 }
             }
-        }
 
-        SwingUtil.repaint(tabContainer);
+        }
 
         ToolWindowTab firstTab = null;
         if (nextTabCol != -1) {
             for (Component component : tabContainer.getComponents()) {
-                if (component instanceof TabButton) {
-                    TabButton tabButton = (TabButton) component;
+                if (component instanceof ToolWindowTabButtonPanel) {
+                    ToolWindowTabButtonPanel tabButton = (ToolWindowTabButtonPanel) component;
                     TableLayoutConstraints constraints = containerLayout.getConstraints(tabButton);
 
                     if (constraints.col1 == nextTabCol)
@@ -287,6 +298,30 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
             }
         }
         return firstTab;
+
+    }
+
+    protected Component removeTab(ToolWindowTab toolWindowTab, boolean flag) {
+        for (Component component : tabContainer.getComponents()) {
+            if (component instanceof ToolWindowTabButton) {
+                ToolWindowTabButton tabButton = (ToolWindowTabButton) component;
+
+                if (tabButton.getToolWindowTab() == toolWindowTab) {
+                    TableLayoutConstraints constraints = containerLayout.getConstraints(component);
+                    tabContainer.remove(component);
+
+                    if (flag)
+                        tabButton.removePropertyChangeListener(propertyChangeBridge);
+
+                    int col = constraints.col1 - 1;
+                    containerLayout.deleteColumn(col);
+                    containerLayout.deleteColumn(col);
+                    containerLayout.deleteColumn(col);
+                    return component;
+                }
+            }
+        }
+        return null;
     }
 
     protected void checkPopupButton() {
@@ -297,11 +332,15 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
     }
 
 
-    protected class TabToolWindowListener implements ToolWindowListener, Cleaner {
+    protected class TabToolWindowListener implements ToolWindowListener, PropertyChangeListener, Cleaner {
+        protected Map<ToolWindowTab, Component> minimizedTabs;
 
         public TabToolWindowListener() {
+            this.minimizedTabs = new HashMap<ToolWindowTab, Component>();
+
             descriptor.getCleaner().addBefore(ToolWindowTabPanel.this, this);
         }
+
 
         public void cleanup() {
             descriptor.getToolWindow().removeToolWindowListener(this);
@@ -321,7 +360,8 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
         }
 
         public void toolWindowTabRemoved(ToolWindowTabEvent event) {
-            ToolWindowTab nextTab = removeTab(event.getToolWindowTab(), true);
+            ToolWindowTab nextTab = getNextTab(event.getToolWindowTab());
+            removeTab(event.getToolWindowTab(), true);
 
             if (event.getToolWindowTab().isSelected()) {
                 ToolWindowTab[] tabs = toolWindow.getToolWindowTabs();
@@ -339,394 +379,19 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
             checkPopupButton();
         }
 
-    }
-
-
-    protected class TabButton extends JPanel implements PropertyChangeListener,
-                                                        MouseListener,
-                                                        ActionListener,
-                                                        Cleaner {
-        protected MyDoggyToolWindowTab tab;
-
-        protected TableLayout layout;
-        protected JLabel titleLabel;
-        protected JButton closeButton;
-        protected JButton minimizeButton;
-
-        protected boolean pressed;
-        protected boolean inside;
-        protected boolean selected;
-
-        protected Timer flashingTimer;
-        protected int flasingDuration = -1;
-        protected boolean flashingState;
-
-
-        public TabButton(final MyDoggyToolWindowTab tab) {
-            this.tab = tab;
-            tab.addPropertyChangeListener(this);
-            tab.getCleaner().addCleaner(this);
-
-            putClientProperty(ToolWindowTab.class, tab);
-
-            // Setup Panel
-            setLayout(layout = new TableLayout(new double[][]{{-1, 0, 0, 0, 0}, {-1}}));
-            setOpaque(false);
-            setFocusable(false);
-            setUI(new TabButtonPanelUI());
-            addMouseListener(mouseEventDispatcher);
-            addMouseMotionListener(mouseEventDispatcher);
-            String name = "toolWindow." + tab.getOwner().getId() + ".tab." + tab.getTitle();
-            setName(name);
-
-            this.selected = this.pressed = this.inside = false;
-
-            // Prepare components
-
-            // Title
-            titleLabel = new JLabel(tab.getTitle());
-            titleLabel.setName(name + ".title");
-            titleLabel.setForeground(resourceManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
-            titleLabel.setOpaque(false);
-            titleLabel.setFocusable(false);
-            titleLabel.setIcon(tab.getIcon());
-            titleLabel.setFont(titleLabel.getFont().deriveFont(resourceManager.getFloat("toolwindow.title.font.size", 12)));
-            titleLabel.setUI(new BasicLabelUI() {
-
-                public void update(Graphics g, JComponent c) {
-                    if (tab.isFlashing() && toolWindow.isVisible()) {
-                        if (flashingState) {
-                            titleLabel.setForeground(resourceManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
-                        } else {
-                            titleLabel.setForeground(resourceManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
-                        }
-                    } else {
-                        if (selected)
-                            titleLabel.setForeground(resourceManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
-                        else
-                            titleLabel.setForeground(resourceManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
-                    }
-
-                    super.update(g, c);
-                }
-
-                protected void paintEnabledText(JLabel l, Graphics g, String s, int textX, int textY) {
-                    if (pressed && inside)
-                        super.paintEnabledText(l, g, s, textX + 1, textY + 1);
-                    else
-                        super.paintEnabledText(l, g, s, textX, textY);
-                }
-
-
-            });
-            titleLabel.addMouseListener(dockedContainer.getTitleBarMouseAdapter());
-            titleLabel.addMouseListener(mouseEventDispatcher);
-            titleLabel.addMouseMotionListener(mouseEventDispatcher);
-            titleLabel.addMouseListener(this);
-            add(titleLabel, "0,0,FULL,FULL");
-
-            // Buttons
-            closeButton = (JButton) resourceManager.createComponent(
-                    MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON,
-                    descriptor.getManager().getContext()
-            );
-            closeButton.setName(name + ".closeButton");
-            closeButton.setActionCommand("close");
-            closeButton.addActionListener(this);
-            closeButton.setToolTipText(resourceManager.getString("@@tool.tab.close"));
-            closeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.TAB_CLOSE));
-
-            minimizeButton = (JButton) resourceManager.createComponent(
-                    MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON,
-                    descriptor.getManager().getContext()
-            );
-            minimizeButton.setName(name + ".minimizeButton");
-            minimizeButton.setActionCommand("minimize");
-            minimizeButton.addActionListener(this);
-            minimizeButton.setToolTipText(resourceManager.getString("@@tool.tab.minimize"));
-            minimizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.TAB_MINIMIZE));
-
-            add(minimizeButton, "2,0,FULL,c");
-            add(closeButton, "4,0,FULL,c");
-
-            // Register DragGesture
-            SwingUtil.registerDragGesture(this, dragGestureDelegate);
-            SwingUtil.registerDragGesture(titleLabel, dragGestureDelegate);
-            SwingUtil.registerDragGesture(minimizeButton, dragGestureDelegate);
-            SwingUtil.registerDragGesture(closeButton, dragGestureDelegate);
-        }
-
-
-        public void actionPerformed(ActionEvent e) {
-            String actionCommand = e.getActionCommand();
-            if ("close".equals(actionCommand)) {
-                toolWindow.removeToolWindowTab(tab);
-            } else {
-                tab.setMinimized(true);
-            }
-        }
-
-        public void mousePressed(MouseEvent e) {
-            toolWindow.setActive(true);
-
-            if (SwingUtilities.isLeftMouseButton(e) && !selected) {
-                pressed = true;
-                repaint();
-            } else {
-                pressed = false;
-                repaint();
-            }
-        }
-
-        public void mouseReleased(MouseEvent e) {
-            pressed = false;
-            repaint();
-        }
-
-        public void mouseEntered(MouseEvent e) {
-            inside = true;
-            repaint();
-        }
-
-        public void mouseExited(MouseEvent e) {
-            inside = false;
-            repaint();
-        }
-
-        public void mouseClicked(MouseEvent e) {
-            if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        TabButton.this.tab.setSelected(true);
-                    }
-                });
-            }
-        }
-
         public void propertyChange(PropertyChangeEvent evt) {
             String property = evt.getPropertyName();
-            if ("selected".equals(property)) {
-                if (evt.getNewValue() == Boolean.FALSE) {
-                    selecTabButton = null;
+            ToolWindowTab tab = (ToolWindowTab) evt.getSource();
 
-                    titleLabel.setForeground(resourceManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
-                    closeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.TAB_CLOSE_INACTIVE));
-                    minimizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.TAB_MINIMIZE_INACTIVE));
-                    setButtonsEnabled(false);
-
-                    selected = false;
-                } else {
-                    tab.setFlashing(false);
-                    selecTabButton = this;
-
-                    // Ensure position
-                    ensureVisible();
-
-                    titleLabel.setForeground(resourceManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
-                    closeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.TAB_CLOSE));
-                    minimizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.TAB_MINIMIZE));
-                    setButtonsEnabled(true);
-                    selected = true;
-                }
-                SwingUtil.repaint(this);
-            } else if ("title".equals(property)) {
-                titleLabel.setText((String) evt.getNewValue());
-                setName("toolWindow." + toolWindow.getId() + ".tabs." + tab.getTitle());
-            } else if ("icon".equals(property)) {
-                titleLabel.setIcon((Icon) evt.getNewValue());
-            } else if ("flash".equals(property)) {
+            if ("minimized".equals(property)) {
                 if (evt.getNewValue() == Boolean.TRUE) {
-                    if (!tab.isSelected()) {
-                        flasingDuration = -1;
-                        SwingUtil.repaint(this);
-                    }
-                } else {
-                    if (flashingTimer != null) {
-                        flashingTimer.stop();
-                        flashingTimer = null;
-                        SwingUtil.repaint(this);
-                    }
-                }
-            } else if ("flash.duration".equals(property)) {
-                if (evt.getNewValue() == Boolean.TRUE) {
-                    if (!tab.isSelected()) {
-                        flasingDuration = (Integer) evt.getNewValue();
-                        SwingUtil.repaint(this);
-                    }
-                } else {
-                    if (flashingTimer != null) {
-                        flashingTimer.stop();
-                        flashingTimer = null;
-                        SwingUtil.repaint(this);
-                    }
-                }
-            } else if ("minimized".equals(property)) {
-                if (evt.getNewValue() == Boolean.TRUE) {
-                    ToolWindowTab nextTab = removeTab(tab, false);
+                    ToolWindowTab nextTab = getNextTab(tab);
+                    minimizedTabs.put(tab, removeTab(tab, false));
                     if (nextTab != null)
                         nextTab.setSelected(true);
                 } else {
-                    addTab(this);
+                    addTab(minimizedTabs.remove(tab));
                 }
-            } else if ("ensureVisible".equals(property)) {
-                ensureVisible();
-            } else if ("minimizable".equals(property))  {
-                if (tab.isMinimizable()) {
-                    layout.setColumn(1, 1);
-                    layout.setColumn(2, 14);
-                } else {
-                    layout.setColumn(1, 0);
-                    layout.setColumn(2, 0);
-                }
-                revalidate();
-                repaint();
-            } else if ("closeable".equals(property))  {
-                if (tab.isCloseable()) {
-                    layout.setColumn(3, 1);
-                    layout.setColumn(4, 14);
-                } else {
-                    layout.setColumn(3, 0);
-                    layout.setColumn(4, 0);
-                }
-                revalidate();
-                repaint();
-            }
-        }
-
-        public Insets getInsets() {
-            return new Insets(0, 5, 0, 5);
-        }
-
-        public void cleanup() {
-            if (flashingTimer != null)
-                flashingTimer.stop();
-            flashingTimer = null;
-
-            tab.removePropertyChangeListener(this);
-
-            removeMouseMotionListener(mouseEventDispatcher);
-            removeMouseListener(mouseEventDispatcher);
-
-            putClientProperty(ToolWindowTab.class, null);
-
-            titleLabel.removeMouseListener(dockedContainer.getTitleBarMouseAdapter());
-            titleLabel.removeMouseListener(mouseEventDispatcher);
-            titleLabel.removeMouseMotionListener(mouseEventDispatcher);
-            titleLabel.removeMouseListener(this);
-
-            if (selectedTab == tab)
-                selectedTab = null;
-
-            tab = null;
-        }
-
-
-        protected void setButtonsEnabled(boolean enabled) {
-            if (enabled && tabContainer.getComponentCount() > 1) {
-                if (tab.isCloseable()) {
-                    layout.setColumn(3, 1);
-                    layout.setColumn(4, 14);
-                } else {
-                    layout.setColumn(3, 0);
-                    layout.setColumn(4, 0);
-                }
-
-                if (tab.isMinimizable()) {
-                    layout.setColumn(1, 1);
-                    layout.setColumn(2, 14);
-                } else {
-                    layout.setColumn(1, 0);
-                    layout.setColumn(2, 0);
-                }
-            } else {
-                layout.setColumn(1, 0);
-                layout.setColumn(2, 0);
-                layout.setColumn(3, 0);
-                layout.setColumn(4, 0);
-            }
-            revalidate();
-            repaint();
-        }
-
-        protected void ensureVisible() {
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    Rectangle cellBounds = getBounds();
-                    cellBounds.x -= viewport.getViewPosition().x;
-                    viewport.scrollRectToVisible(cellBounds);
-                }
-            });
-        }
-
-        protected class TabButtonPanelUI extends BasicPanelUI {
-
-            public void update(Graphics g, JComponent c) {
-                if (tab == null || toolWindow == null)
-                    return;
-
-                Rectangle bounds = c.getBounds();
-                bounds.x = bounds.y = 0;
-
-                if (tab.isFlashing() && toolWindow.isVisible()) {
-                    if (flashingState) {
-                        GraphicsUtil.fillRect(g, bounds,
-                                              resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
-                                              resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
-                                              new RoundRectangle2D.Double(
-                                                      bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
-                                              ),
-                                              GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-                    } else {
-                        if (toolWindow.isActive()) {
-                            GraphicsUtil.fillRect(g, bounds,
-                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
-                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
-                                                  new RoundRectangle2D.Double(
-                                                          bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
-                                                  ),
-                                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-                        }
-                    }
-
-                    if (flashingTimer == null) {
-                        flashingTimer = new Timer(600, new ActionListener() {
-                            long start = 0;
-
-                            public void actionPerformed(ActionEvent e) {
-                                Rectangle bounds = TabButton.this.getBounds();
-                                bounds.x = bounds.y = 0;
-
-                                if (start == 0)
-                                    start = System.currentTimeMillis();
-
-                                flashingState = !flashingState;
-
-                                SwingUtil.repaint(TabButton.this);
-
-                                if (flasingDuration != -1 && System.currentTimeMillis() - start > flasingDuration)
-                                    tab.setFlashing(false);
-                            }
-                        });
-                        flashingState = true;
-                    }
-                    if (!flashingTimer.isRunning()) {
-                        flashingTimer.start();
-                    }
-                } else if (tabContainer.getComponentCount() > 1) {
-                    if (selected) {
-                        if (toolWindow.isActive()) {
-                            GraphicsUtil.fillRect(g, bounds,
-                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
-                                                  resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
-                                                  new RoundRectangle2D.Double(
-                                                          bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10
-                                                  ),
-                                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-                        }
-                    }
-                }
-
-                super.update(g, c);
             }
         }
     }
@@ -817,8 +482,8 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
                 int nextTabCol = containerLayout.getConstraints(selecTabButton).col1 + 3;
 
                 for (Component component : tabContainer.getComponents()) {
-                    if (component instanceof TabButton) {
-                        TabButton tabButton = (TabButton) component;
+                    if (component instanceof ToolWindowTabButtonPanel) {
+                        ToolWindowTabButtonPanel tabButton = (ToolWindowTabButtonPanel) component;
                         TableLayoutConstraints constraints = containerLayout.getConstraints(tabButton);
 
                         if (constraints.col1 == nextTabCol) {
@@ -846,8 +511,8 @@ public class ToolWindowTabPanel extends JComponent implements TitleBarTabs, Clea
                 int nextTabCol = containerLayout.getConstraints(selecTabButton).col1 - 3;
 
                 for (Component component : tabContainer.getComponents()) {
-                    if (component instanceof TabButton) {
-                        TabButton tabButton = (TabButton) component;
+                    if (component instanceof ToolWindowTabButtonPanel) {
+                        ToolWindowTabButtonPanel tabButton = (ToolWindowTabButtonPanel) component;
                         TableLayoutConstraints constraints = containerLayout.getConstraints(tabButton);
 
                         if (constraints.col1 == nextTabCol) {

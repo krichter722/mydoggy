@@ -3,8 +3,14 @@ package org.noos.xing.mydoggy.plaf.ui.look;
 import org.noos.common.context.Context;
 import org.noos.common.object.ObjectCreator;
 import org.noos.common.object.ObjectCustomizer;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
-import org.noos.xing.mydoggy.plaf.ui.*;
+import static org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace.*;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.TitleBarButtons;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowContainer;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DefaultTitleBarButtons;
@@ -96,7 +102,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     public Color getColor(String id) {
-        return colors.get(id);
+        return UIManager.getColor(id);
     }
 
     public Color putColor(String id, Color color) {
@@ -259,7 +265,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
     public void putInt(String name, int value) {
         putProperty(name, String.valueOf(value));
-        
+
         cache.put("Int." + name, value);
     }
 
@@ -338,7 +344,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
                 String colorKey = strKey.substring(prefix.length());
                 String colorDef = resources.getProperty(strKey);
 
-                colors.put(colorKey, loadColor(colorDef));
+                UIManager.put(colorKey, loadColor(colorDef));
             }
         }
     }
@@ -399,28 +405,30 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
     protected void initComponentCreators() {
         cmpCreators = new Hashtable<String, ObjectCreator<Component>>();
-        cmpCreators.put(MyDoggyKeySpace.ANCHOR_SPLIT_PANE, new BarSplitPaneComponentCreator());
-        cmpCreators.put(MyDoggyKeySpace.ANCHOR_CONTENT_PANE, new BarContentPaneComponentCreator());
-        cmpCreators.put(MyDoggyKeySpace.CORNER_CONTENT_PANE, new CornerContentPaneComponentCreator());
-        cmpCreators.put(MyDoggyKeySpace.TOOL_WINDOW_MANAGER_CONTENT_CONTAINER, new MyDoggyManagerMainContainerComponentCreator());
-        cmpCreators.put(MyDoggyKeySpace.DESKTOP_CONTENT_PANE, new DesktopContentPaneComponentCreator());
-        cmpCreators.put(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR, new ToolWindowTitleBarComponentCreator());
-        cmpCreators.put(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON, new ToolWindowTitleButtonComponentCreator());
-        cmpCreators.put(MyDoggyKeySpace.TOOL_SCROLL_BAR_ARROW, new ToolScrollBarArrowComponentCreator());
-        cmpCreators.put(MyDoggyKeySpace.TOOL_WINDOW_CONTAINER, new ToolWindowCmpContainerComponentCreator());
-        cmpCreators.put(MyDoggyKeySpace.MULTI_SPLIT_CONTAINER_SPLIT, new ObjectCreator<Component>() {
+        cmpCreators.put(ANCHOR_SPLIT_PANE, new BarSplitPaneComponentCreator());
+        cmpCreators.put(ANCHOR_CONTENT_PANE, new BarContentPaneComponentCreator());
+        cmpCreators.put(CORNER_CONTENT_PANE, new CornerContentPaneComponentCreator());
+        cmpCreators.put(TOOL_WINDOW_MANAGER_CONTENT_CONTAINER, new MyDoggyManagerMainContainerComponentCreator());
+        cmpCreators.put(DESKTOP_CONTENT_PANE, new DesktopContentPaneComponentCreator());
+        cmpCreators.put(TOOL_WINDOW_TITLE_BAR, new ToolWindowTitleBarComponentCreator());
+        cmpCreators.put(TOOL_WINDOW_TITLE_BUTTON, new ToolWindowTitleButtonComponentCreator());
+        cmpCreators.put(TOOL_SCROLL_BAR_ARROW, new ToolScrollBarArrowComponentCreator());
+        cmpCreators.put(TOOL_WINDOW_CONTAINER, new ToolWindowCmpContainerComponentCreator());
+        cmpCreators.put(MULTI_SPLIT_CONTAINER_SPLIT, new ObjectCreator<Component>() {
             public Component create(Context context) {
                 return new JSplitPane((Integer) context.get("newOrientation"));
             }
         });
+        cmpCreators.put(TOOL_WINDOW_TAB_TITLE, new ToolWindowTabTitleComponentCreator());
 
         cmpUiCreators = new Hashtable<String, ObjectCreator<ComponentUI>>();
-        cmpUiCreators.put(MyDoggyKeySpace.REPRESENTATIVE_ANCHOR_BUTTON_UI, new RepresentativeAnchorButtonComponentUICreator());
-        cmpUiCreators.put(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR_UI, new ToolWindowTitleBarComponentUICreator());
+        cmpUiCreators.put(REPRESENTATIVE_ANCHOR_BUTTON_UI, new RepresentativeAnchorButtonComponentUICreator());
+        cmpUiCreators.put(TOOL_WINDOW_TITLE_BAR_UI, new ToolWindowTitleBarComponentUICreator());
 
         cmpCustomizers = new Hashtable<String, ObjectCustomizer<Component>>();
-        cmpCustomizers.put(MyDoggyKeySpace.TOOL_WINDOW_MANAGER, new MyDoggyManagerPanelComponentCustomizer());
-        cmpCustomizers.put(MyDoggyKeySpace.TOOL_WINDOW_CONTAINER, new ToolWindowCmpContainerComponentCustomizer());
+        cmpCustomizers.put(TOOL_WINDOW_MANAGER, new MyDoggyManagerPanelComponentCustomizer());
+        cmpCustomizers.put(TOOL_WINDOW_CONTAINER, new ToolWindowCmpContainerComponentCustomizer());
+        cmpCustomizers.put(TOOL_WINDOW_TAB_BUTTON, new ToolWindowTabButtonComponentCustomizer());
 
         instanceCreators = new Hashtable<Class, ObjectCreator>();
         instanceCreators.put(TitleBarButtons.class, new TitleBarButtonsInstanceCreator());
@@ -523,7 +531,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
             };
             titleBar.setBorder(null);
             titleBar.setUI((PanelUI) context.get(ResourceManager.class)
-                    .createComponentUI(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR_UI, context)
+                    .createComponentUI(TOOL_WINDOW_TITLE_BAR_UI, context)
             );
             return titleBar;
         }
@@ -572,6 +580,13 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         }
     }
 
+    public static class ToolWindowTabTitleComponentCreator implements ObjectCreator<Component> {
+
+        public Component create(Context context) {
+            return new JLabel();
+        }
+    }
+
 
     public static class RepresentativeAnchorButtonComponentUICreator implements ObjectCreator<ComponentUI> {
 
@@ -602,9 +617,22 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         public Component customize(Component component, Context context) {
             JPanel panel = (JPanel) component;
             panel.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
-            
+
             return panel;
         }
+    }
+
+    public static class ToolWindowTabButtonComponentCustomizer implements ObjectCustomizer<Component> {
+
+        public Component customize(Component component, Context context) {
+            JPanel panel = (JPanel) component;
+
+            panel.setUI(new ToolWindowTabButtonUI(context.get(MyDoggyToolWindowManager.class),
+                                                  context.get(MyDoggyToolWindowTab.class)));
+
+            return panel;
+        }
+
     }
 
 

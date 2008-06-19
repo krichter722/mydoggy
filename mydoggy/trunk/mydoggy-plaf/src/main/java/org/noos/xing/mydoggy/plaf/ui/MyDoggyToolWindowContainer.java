@@ -17,7 +17,7 @@ public abstract class MyDoggyToolWindowContainer implements ToolWindowContainer 
     protected ToolWindow toolWindow;
 
     protected Component titleBar;
-    protected TitleBarTabs titleBarTabs;
+    protected ToolWindowTabContainer toolWindowTabContainer;
     protected TitleBarButtons titleBarButtons;
 
 
@@ -29,7 +29,7 @@ public abstract class MyDoggyToolWindowContainer implements ToolWindowContainer 
         this.toolWindow = descriptor.getToolWindow();
 
         this.titleBarButtons = dockedContainer.getTitleBarButtons();
-        this.titleBarTabs = dockedContainer.getTitleBarTabs();
+        this.toolWindowTabContainer = dockedContainer.getTitleBarTabs();
         this.titleBar = dockedContainer.getTitleBar();
 
         descriptor.getCleaner().addCleaner(this);
@@ -64,7 +64,7 @@ public abstract class MyDoggyToolWindowContainer implements ToolWindowContainer 
         toolWindow = null;
 
         titleBar = null;
-        titleBarTabs = null;
+        toolWindowTabContainer = null;
         titleBarButtons = null;
     }
 }

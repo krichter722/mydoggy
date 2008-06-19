@@ -64,7 +64,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
 
         dockedContainer.addPropertyChangeListener("active", new GradientActivationListener(descriptor));
 
-        animBackStart = new MutableColor(resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START));
+        animBackStart = new MutableColor(UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START));
         animBackEnd = new MutableColor(0, 0, 0);
         animTextColor = new MutableColor(0, 0, 0);
         flashingAnimation = new GradientAnimation(700f);
@@ -157,12 +157,12 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
             if (flashingState)
                 updateToolWindowTitleBar(g, c,
                                          animBackStart, animBackEnd,
-                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_FLASHING_0),
+                                         UIManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_FLASHING_0),
                                          animTextColor);
             else
                 updateToolWindowTitleBar(g, c,
                                          animBackStart, animBackEnd,
-                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_FLASHING_1),
+                                         UIManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_FLASHING_1),
                                          animTextColor);
 
             if (flashingTimer == null) {
@@ -197,20 +197,20 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
             if (animation.isAnimating()) {
                 updateToolWindowTitleBar(g, c,
                                          animBackStart, animBackEnd,
-                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_ANIMATING),
+                                         UIManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_ANIMATING),
                                          animTextColor);
             } else if (c.isEnabled()) {
                 updateToolWindowTitleBar(g, c,
-                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
-                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
-                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_ACTIVE),
-                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_FOREGROUND_ACTIVE));
+                                         UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
+                                         UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
+                                         UIManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_ACTIVE),
+                                         UIManager.getColor(MyDoggyKeySpace.TWTB_ID_FOREGROUND_ACTIVE));
             } else {
                 updateToolWindowTitleBar(g, c,
-                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START),
-                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END),
-                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_INACTIVE),
-                                         resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_FOREGROUND_INACTIVE));
+                                         UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START),
+                                         UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END),
+                                         UIManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_INACTIVE),
+                                         UIManager.getColor(MyDoggyKeySpace.TWTB_ID_FOREGROUND_INACTIVE));
             }
         }
 
@@ -285,10 +285,10 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
 
             if ("active".equals(evt.getPropertyName())) {
                 if (evt.getNewValue() == Boolean.FALSE) {
-                    if (animBackStart.equals(resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START)))
+                    if (animBackStart.equals(UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START)))
                         animation.hide();
                 } else {
-                    if (animBackStart.equals(resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START)))
+                    if (animBackStart.equals(UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START)))
                         animation.show();
                 }
             }
@@ -309,31 +309,31 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
             switch (getAnimationDirection()) {
                 case INCOMING:
                     GraphicsUtil.getInterpolatedColor(animBackStart,
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START),
+                                                      UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
+                                                      UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(animBackEnd,
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END),
+                                                      UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
+                                                      UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(animTextColor,
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_FOREGROUND_ACTIVE),
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_FOREGROUND_INACTIVE),
+                                                      UIManager.getColor(MyDoggyKeySpace.TWTB_ID_FOREGROUND_ACTIVE),
+                                                      UIManager.getColor(MyDoggyKeySpace.TWTB_ID_FOREGROUND_INACTIVE),
                                                       animationPercent);
                     break;
 
                 case OUTGOING:
                     GraphicsUtil.getInterpolatedColor(animBackStart,
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START),
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
+                                                      UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START),
+                                                      UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(animBackEnd,
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END),
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
+                                                      UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END),
+                                                      UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(animTextColor,
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_FOREGROUND_INACTIVE),
-                                                      resourceManager.getColor(MyDoggyKeySpace.TWTB_ID_FOREGROUND_ACTIVE),
+                                                      UIManager.getColor(MyDoggyKeySpace.TWTB_ID_FOREGROUND_INACTIVE),
+                                                      UIManager.getColor(MyDoggyKeySpace.TWTB_ID_FOREGROUND_ACTIVE),
                                                       animationPercent);
                     break;
             }
@@ -344,23 +344,23 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
         protected void onFinishAnimation() {
             switch (getAnimationDirection()) {
                 case INCOMING:
-                    animBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START));
+                    animBackStart.setRGB(UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START));
                     break;
                 case OUTGOING:
-                    animBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START));
+                    animBackStart.setRGB(UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START));
                     break;
             }
             SwingUtil.repaint(panel);
         }
 
         protected void onHide(Object... params) {
-            animBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START));
-            animBackEnd.setRGB(resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END));
+            animBackStart.setRGB(UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START));
+            animBackEnd.setRGB(UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END));
         }
 
         protected void onShow(Object... params) {
-            animBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START));
-            animBackEnd.setRGB(resourceManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END));
+            animBackStart.setRGB(UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START));
+            animBackEnd.setRGB(UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END));
         }
 
         protected void onStartAnimation(Direction direction) {

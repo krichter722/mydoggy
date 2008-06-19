@@ -674,10 +674,14 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (!oldValue && newValue) { // false and true
+                if (getAnchor().equals(sourceTool.getAnchor()) && sourceTool.getType() == ToolWindowType.SLIDING)
+                    return;
+
                 ToolWindow[] toolWindows = manager.getToolsByAnchor(getAnchor());
                 for (ToolWindow toolWindow : toolWindows) {
                     if (toolWindow == sourceTool)
                         continue;
+
 
                     if (manager.getShowingGroup() == null) {
                         if (toolWindow.getType() == ToolWindowType.FLOATING ||
