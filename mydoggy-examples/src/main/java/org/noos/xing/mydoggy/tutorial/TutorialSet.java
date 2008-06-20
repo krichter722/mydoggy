@@ -206,7 +206,7 @@ public class TutorialSet {
                                  new MultiSplitConstraint(AggregationPosition.RIGHT));
     }
 
-    
+
     public static void main(String[] args) {
         TutorialSet test = new TutorialSet();
         try {

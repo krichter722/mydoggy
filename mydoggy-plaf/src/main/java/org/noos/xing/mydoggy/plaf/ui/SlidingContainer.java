@@ -173,6 +173,15 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getNewValue() != null) {
                     layeredPane = descriptor.getManager().getLayeredPane();
+
+                    // Check type now...
+                    if (toolWindow.getType() == ToolWindowType.SLIDING) {
+                        sheet.removeMouseMotionListener(slidingMouseInputHandler);
+                        sheet.removeMouseListener(slidingMouseInputHandler);
+
+                        sheet.addMouseMotionListener(slidingMouseInputHandler);
+                        sheet.addMouseListener(slidingMouseInputHandler);
+                    }
                 }
             }
         });
