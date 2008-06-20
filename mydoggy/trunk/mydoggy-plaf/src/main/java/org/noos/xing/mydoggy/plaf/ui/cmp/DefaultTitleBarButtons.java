@@ -148,7 +148,7 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
 
         protected TitleBarAction(String name, String icon, String tooltip) {
             putValue("action.name", name);
-            putValue(Action.SMALL_ICON, resourceManager.getIcon(icon));
+            putValue(Action.SMALL_ICON, UIManager.getIcon(icon));
             putValue(Action.SHORT_DESCRIPTION, resourceManager.getString(tooltip));
             propertyChangeSupport.addPropertyChangeListener(this);
         }
@@ -172,9 +172,9 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
                     boolean active = (Boolean) evt.getNewValue();
 
                     if (active) {
-                        putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW));
+                        putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW));
                     } else {
-                        putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE));
+                        putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE));
                     }
                 }
             });
@@ -209,14 +209,14 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
 
                     if (active) {
                         if (toolWindow.getType() == ToolWindowType.SLIDING || toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
-                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.DOCKED));
+                            putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.DOCKED));
                         } else
-                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.SLIDING));
+                            putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.SLIDING));
                     } else {
                         if (toolWindow.getType() == ToolWindowType.SLIDING || toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
-                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.DOCKED_INACTIVE));
+                            putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.DOCKED_INACTIVE));
                         } else
-                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.SLIDING_INACTIVE));
+                            putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.SLIDING_INACTIVE));
                     }
                 }
             });
@@ -237,12 +237,12 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
             ToolWindowType type = (ToolWindowType) evt.getNewValue();
             switch (type) {
                 case DOCKED:
-                    putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.SLIDING));
+                    putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.SLIDING));
                     putValue(Action.SHORT_DESCRIPTION, resourceManager.getString("@@tool.tooltip.undock"));
                     setVisible(descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isEnabled());
                     break;
                 case FLOATING_LIVE:
-                    putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.DOCKED));
+                    putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.DOCKED));
                     putValue(Action.SHORT_DESCRIPTION, resourceManager.getString("@@tool.tooltip.dock"));
                     setVisible(descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isEnabled());
                     break;
@@ -267,10 +267,10 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
                     boolean newValue = ((Boolean) evt.getNewValue());
 
                     if (newValue) {
-                        putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_ON));
+                        putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_ON));
                         putValue(Action.LONG_DESCRIPTION, resourceManager.getString("@@tool.tooltip.pin"));
                     } else {
-                        putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF));
+                        putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF));
                         putValue(Action.LONG_DESCRIPTION, resourceManager.getString("@@tool.tooltip.unpin"));
                     }
                 }
@@ -284,14 +284,14 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
 
                     if (active) {
                         if (toolWindow.isAutoHide()) {
-                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_ON));
+                            putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_ON));
                         } else
-                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF));
+                            putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF));
                     } else {
                         if (toolWindow.isAutoHide()) {
-                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_ON_INACTIVE));
+                            putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_ON_INACTIVE));
                         } else
-                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF_INACTIVE));
+                            putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF_INACTIVE));
                     }
                 }
             });
@@ -332,10 +332,10 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
                         return;
 
                     if ((Boolean) evt.getNewValue()) {
-                        putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.MINIMIZE));
+                        putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.MINIMIZE));
                         flag = true;
                     } else if (flag) {
-                        putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
+                        putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
                         flag = false;
                     }
                 }
@@ -349,14 +349,14 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
 
                     if (active) {
                         if (toolWindow.isMaximized())
-                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.MINIMIZE));
+                            putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.MINIMIZE));
                         else
-                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
+                            putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
                     } else {
                         if (toolWindow.isMaximized())
-                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.MINIMIZE_INACTIVE));
+                            putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.MINIMIZE_INACTIVE));
                         else
-                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.MAXIMIZE_INACTIVE));
+                            putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.MAXIMIZE_INACTIVE));
                     }
                 }
             });
@@ -406,14 +406,14 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
 
                     if (active) {
                         if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.FIX));
+                            putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.FIX));
                         } else
-                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.FLOATING));
+                            putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.FLOATING));
                     } else {
                         if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.FIX_INACTIVE));
+                            putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.FIX_INACTIVE));
                         } else
-                            putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.FLOATING_INACTIVE));
+                            putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.FLOATING_INACTIVE));
                     }
                 }
             });
@@ -438,7 +438,7 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
             switch (type) {
                 case DOCKED:
                 case FLOATING_LIVE:
-                    putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.FLOATING));
+                    putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.FLOATING));
                     putValue(Action.SHORT_DESCRIPTION, resourceManager.getString("@@tool.tooltip.float"));
                     setVisible(descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isEnabled());
                     break;
@@ -447,7 +447,7 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
                     break;
                 case FLOATING:
                 case FLOATING_FREE:
-                    putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.FIX));
+                    putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.FIX));
                     putValue(Action.SHORT_DESCRIPTION, resourceManager.getString("@@tool.tooltip.fix"));
                     setVisible(true);
                     break;

@@ -7,6 +7,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -184,7 +185,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                     // Setup ghostImage
                     if (resourceManager.getBoolean("drag.icon.useDefault", false)) {
                         setGhostImage(dge.getDragOrigin(),
-                                      resourceManager.getBufferedImage(MyDoggyKeySpace.DRAG));
+                                      MyDoggyUtil.getImage(MyDoggyKeySpace.DRAG));
                     } else {
                         Component component = dockableTabbedPane.getComponentAt(index);
                         BufferedImage ghostImage = new BufferedImage(component.getWidth(),

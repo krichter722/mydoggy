@@ -135,7 +135,7 @@ public interface ResourceManager extends Observable {
      *         <tt>null</tt> if the manager contains no mapping for this id.
      * @since 1.4.1
      */
-    BufferedImage getBufferedImage(String id);
+    BufferedImage getImage(String id);
 
     /**
      * Sets the locale of this manager used for the internationalization of the relative toolwindow manager.

@@ -13,6 +13,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ModalWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingMoveMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingResizeMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingToolTransparencyListener;
+import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -308,7 +309,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         if (toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).isAddToTaskBar()) {
             window = new JModalFrame(toolWindow,
                                      resourceManager,
-                                     resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
+                                     MyDoggyUtil.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
                                      null,
                                      false);
         } else {

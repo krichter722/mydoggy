@@ -400,7 +400,7 @@ public class ToolWindowTabPanel extends JComponent implements ToolWindowTabConta
         protected JPopupMenu popupMenu;
 
         public PopupButton() {
-            setIcon(resourceManager.getIcon(MyDoggyKeySpace.TOO_WINDOW_TAB_POPUP));
+            setIcon(UIManager.getIcon(MyDoggyKeySpace.TOO_WINDOW_TAB_POPUP));
             addActionListener(this);
             addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent e) {

@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
+import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +33,7 @@ public class JModalWindow extends JWindow implements ModalWindow {
 
     public void setVisible(boolean visible) {
         if (!visible) {
-            TransparencyManager<Window> transparencyManager = resourceManager.getTransparencyManager();
+            TransparencyManager<Window> transparencyManager = MyDoggyUtil.getTransparencyManager();
             transparencyManager.setAlphaModeRatio(this, 0.0f);
 
             restoreOwner();

@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -45,7 +46,7 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
         // Setup ghostImage
         if (descriptor.getResourceManager().getBoolean("drag.icon.useDefault", false)) {
             setGhostImage(dge.getDragOrigin(),
-                          descriptor.getResourceManager().getBufferedImage(MyDoggyKeySpace.DRAG));
+                          MyDoggyUtil.getImage(MyDoggyKeySpace.DRAG));
         } else {
             JComponent representativeAnchor = descriptor.getRepresentativeAnchor();
             BufferedImage ghostImage = new BufferedImage(representativeAnchor.getWidth(),

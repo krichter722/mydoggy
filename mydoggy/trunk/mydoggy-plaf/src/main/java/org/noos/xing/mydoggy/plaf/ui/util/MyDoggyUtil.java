@@ -2,8 +2,11 @@ package org.noos.xing.mydoggy.plaf.ui.util;
 
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowTab;
+import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -25,4 +28,11 @@ public class MyDoggyUtil {
         return defaultValue;
     }
 
+    public static TransparencyManager<Window> getTransparencyManager() {
+        return (TransparencyManager<Window>) UIManager.get(TransparencyManager.class);
+    }
+
+    public static BufferedImage getImage(String name) {
+        return (BufferedImage) UIManager.get(name);
+    }
 }
