@@ -7,50 +7,50 @@ public interface MyDoggyKeySpace {
 
     // Icons
 
-    String DOCKED = "DOCKED";
-    String DOCKED_INACTIVE = "DOCKED_INACTIVE";
-    String SLIDING = "SLIDING";
-    String SLIDING_INACTIVE = "SLIDING_INACTIVE";
-    String FLOATING = "FLOATING";
-    String FLOATING_INACTIVE = "FLOATING_INACTIVE";
-    String FIX = "FIX";
-    String FIX_INACTIVE = "FIX_INACTIVE";
-    String AUTO_HIDE_ON = "AUTO_HIDE_ON";
-    String AUTO_HIDE_ON_INACTIVE = "AUTO_HIDE_ON_INACTIVE";
-    String AUTO_HIDE_OFF = "AUTO_HIDE_OFF";
-    String AUTO_HIDE_OFF_INACTIVE = "AUTO_HIDE_OFF_INACTIVE";
-    String HIDE_TOOL_WINDOW = "HIDE_TOOL_WINDOW";
-    String HIDE_TOOL_WINDOW_INACTIVE = "HIDE_TOOL_WINDOW_INACTIVE";
-    String MAXIMIZE = "MAXIMIZE";
-    String MAXIMIZE_INACTIVE = "MAXIMIZE_INACTIVE";
-    String MINIMIZE = "MINIMIZE";
-    String MINIMIZE_INACTIVE = "MINIMIZE_INACTIVE";
-    String ACTIONS_POPUP = "ACTIONS_POPUP";
-    String ACTIONS_POPUP_INACTIVE = "ACTIONS_POPUP_INACTIVE";
+    String DOCKED = "mydoggy.icon.docked";
+    String DOCKED_INACTIVE = "mydoggy.icon.docked.inactive";
+    String SLIDING = "mydoggy.icon.sliding";
+    String SLIDING_INACTIVE = "mydoggy.icon.sliding.inactive";
+    String FLOATING = "mydoggy.icon.floating";
+    String FLOATING_INACTIVE = "mydoggy.icon.floating.inactive";
+    String FIX = "mydoggy.icon.fix";
+    String FIX_INACTIVE = "mydoggy.icon.fix.inactive";
+    String AUTO_HIDE_ON = "mydoggy.icon.autoHideOn";
+    String AUTO_HIDE_ON_INACTIVE = "mydoggy.icon.autoHideOn.inactive";
+    String AUTO_HIDE_OFF = "mydoggy.icon.autoHideOff";
+    String AUTO_HIDE_OFF_INACTIVE = "mydoggy.icon.autoHideOff.inactive";
+    String HIDE_TOOL_WINDOW = "mydoggy.icon.hideToolWindow";
+    String HIDE_TOOL_WINDOW_INACTIVE = "mydoggy.icon.hideToolWindow.inactive";
+    String MAXIMIZE = "mydoggy.icon.maximize";
+    String MAXIMIZE_INACTIVE = "mydoggy.icon.maximize.inactive";
+    String MINIMIZE = "mydoggy.icon.minimize";
+    String MINIMIZE_INACTIVE = "mydoggy.icon.minimize.inactive";
+    String ACTIONS_POPUP = "mydoggy.icon.actionsPopup";
+    String ACTIONS_POPUP_INACTIVE = "mydoggy.icon.actionsPopup.inactive";
 
-    String TOO_WINDOW_TAB_POPUP = "TOO_WINDOW_TAB_POPUP";
+    String TOO_WINDOW_TAB_POPUP = "mydoggy.icon.toolWindowTabPopup";
 
-    String CONTENT_PAGE_MINIMIZE = "CONTENT_PAGE_MINIMIZE";
-    String CONTENT_PAGE_DETACH = "CONTENT_PAGE_DETACH";
-    String CONTENT_PAGE_CLOSE = "CONTENT_PAGE_CLOSE";
-    String CONTENT_PAGE_DETACH_INACTIVE = "CONTENT_PAGE_DETACH_INACTIVE";
-    String CONTENT_PAGE_CLOSE_INACTIVE = "CONTENT_PAGE_CLOSE_INACTIVE";
-    String CONTENT_PAGE_MAXIMIZE = "CONTENT_PAGE_MAXIMIZE";
-    String CONTENT_PAGE_RESTORE = "CONTENT_PAGE_RESTORE";
+    String CONTENT_PAGE_MINIMIZE = "mydoggy.icon.contentPageMinimize";
+    String CONTENT_PAGE_DETACH = "mydoggy.icon.contentPageDetach";
+    String CONTENT_PAGE_CLOSE = "mydoggy.icon.contentPageClose";
+    String CONTENT_PAGE_DETACH_INACTIVE = "mydoggy.icon.contentPageDetach.inactive";
+    String CONTENT_PAGE_CLOSE_INACTIVE = "mydoggy.icon.contentPageClose.inactive";
+    String CONTENT_PAGE_MAXIMIZE = "mydoggy.icon.contentPageMaximize";
+    String CONTENT_PAGE_RESTORE = "mydoggy.icon.contentPageRestore";
 
+    String TOOL_SCROLL_BAR_UP = "mydoggy.icon.toolScroolBarUp";
+    String TOOL_SCROLL_BAR_DOWN = "mydoggy.icon.toolScroolBarDown";
+    String TOOL_SCROLL_BAR_LEFT = "mydoggy.icon.toolScroolBarLeft";
+    String TOOL_SCROLL_BAR_RIGHT = "mydoggy.icon.toolScroolBarRight";
 
-    String TOOL_SCROLL_BAR_UP = "TOOL_SCROLL_BAR_UP";
-    String TOOL_SCROLL_BAR_DOWN = "TOOL_SCROLL_BAR_DOWN";
-    String TOOL_SCROLL_BAR_LEFT = "TOOL_SCROLL_BAR_LEFT";
-    String TOOL_SCROLL_BAR_RIGHT = "TOOL_SCROLL_BAR_RIGHT";
+    String TAB_CLOSE = "mydoggy.icon.tabClose";
+    String TAB_CLOSE_INACTIVE = "mydoggy.icon.tabClose.inactive";
+    String TAB_MINIMIZE = "mydoggy.icon.tabMinimize";
+    String TAB_MINIMIZE_INACTIVE = "mydoggy.icon.tabMinimize.inactive";
 
-    String TAB_CLOSE = "TAB_CLOSE";
-    String TAB_CLOSE_INACTIVE = "TAB_CLOSE_INACTIVE";
-    String TAB_MINIMIZE = "TAB_MINIMIZE";
-    String TAB_MINIMIZE_INACTIVE = "TAB_MINIMIZE_INACTIVE";
+    // Images
 
-
-    String DRAG = "DRAG";
+    String DRAG = "mydoggy.image.drag";
 
     // Representative Anchor Button - Colors
 

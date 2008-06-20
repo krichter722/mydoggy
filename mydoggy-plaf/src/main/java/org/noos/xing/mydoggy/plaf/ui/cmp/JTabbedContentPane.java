@@ -129,9 +129,9 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
             aggregateIcon.setVisibleAt(2, contentUI.isMinimizable());
             if (content.isMaximized())
-                aggregateIcon.setIconAt(3, toolWindowManager.getResourceManager().getIcon(MyDoggyKeySpace.CONTENT_PAGE_RESTORE));
+                aggregateIcon.setIconAt(3, UIManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_RESTORE));
             else
-                aggregateIcon.setIconAt(3, toolWindowManager.getResourceManager().getIcon(MyDoggyKeySpace.CONTENT_PAGE_MAXIMIZE));
+                aggregateIcon.setIconAt(3, UIManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_MAXIMIZE));
 
             aggregateIcon.setVisibleAt(3, contentUI.isMaximizable());
             aggregateIcon.setVisibleAt(4, contentUI.isDetachable());
@@ -144,7 +144,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             Content content = getContentAt(index);
             Object o = flashingContents.get(content);
             if (o == null) {
-                Icon icon = new AggregateIcon(resourceManager.getIcon("STAR"),
+                Icon icon = new AggregateIcon(UIManager.getIcon("STAR"),
                                               super.getIconAt(index),
                                               SwingConstants.HORIZONTAL);
                 flashingContents.put(content, icon);
@@ -196,10 +196,10 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         this.toolWindowManager = toolWindowManager;
         this.resourceManager = toolWindowManager.getResourceManager();
 
-        aggregateIcon.setIconAt(2, resourceManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_MINIMIZE));
-        aggregateIcon.setIconAt(3, resourceManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_MAXIMIZE));
-        aggregateIcon.setIconAt(4, resourceManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_DETACH));
-        aggregateIcon.setIconAt(5, resourceManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_CLOSE));
+        aggregateIcon.setIconAt(2, UIManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_MINIMIZE));
+        aggregateIcon.setIconAt(3, UIManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_MAXIMIZE));
+        aggregateIcon.setIconAt(4, UIManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_DETACH));
+        aggregateIcon.setIconAt(5, UIManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_CLOSE));
 
         if (dragEnabled)
             initDragListener();

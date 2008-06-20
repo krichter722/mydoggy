@@ -105,7 +105,7 @@ public class ToolWindowTabButtonPanel extends JPanel implements ToolWindowTabBut
         closeButton.setActionCommand("close");
         closeButton.addActionListener(this);
         closeButton.setToolTipText(resourceManager.getString("@@tool.tab.close"));
-        closeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.TAB_CLOSE));
+        closeButton.setIcon(UIManager.getIcon(MyDoggyKeySpace.TAB_CLOSE));
 
         minimizeButton = (JButton) resourceManager.createComponent(
                 MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON,
@@ -115,7 +115,7 @@ public class ToolWindowTabButtonPanel extends JPanel implements ToolWindowTabBut
         minimizeButton.setActionCommand("minimize");
         minimizeButton.addActionListener(this);
         minimizeButton.setToolTipText(resourceManager.getString("@@tool.tab.minimize"));
-        minimizeButton.setIcon(resourceManager.getIcon(MyDoggyKeySpace.TAB_MINIMIZE));
+        minimizeButton.setIcon(UIManager.getIcon(MyDoggyKeySpace.TAB_MINIMIZE));
 
         add(minimizeButton, "2,0,FULL,c");
         add(closeButton, "4,0,FULL,c");

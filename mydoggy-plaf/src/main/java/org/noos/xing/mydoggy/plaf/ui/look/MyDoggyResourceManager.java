@@ -94,10 +94,12 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
 
     public Icon getIcon(String id) {
-        return icons.get(id);
+//        return icons.get(id);
+        return UIManager.getIcon(id);
     }
 
     public Icon putIcon(String id, Icon icon) {
+        UIManager.put(id, icon);
         return icons.put(id, icon);
     }
 
@@ -106,6 +108,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     public Color putColor(String id, Color color) {
+        UIManager.put(id, color);
         Color oldColor = colors.put(id, color);
         firePropertyChangeEvent("color." + id, oldColor, color);
         return oldColor;
@@ -117,10 +120,11 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
     public void setTransparencyManager(TransparencyManager<Window> transparencyManager) {
         this.transparencyManager = transparencyManager;
+        UIManager.put(TransparencyManager.class, transparencyManager);
     }
 
-    public BufferedImage getBufferedImage(String id) {
-        return images.get(id);
+    public BufferedImage getImage(String id) {
+        return (BufferedImage) UIManager.get(id);
     }
 
 
@@ -316,7 +320,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
                 String iconKey = strKey.substring(prefix.length());
                 String iconUrl = resources.getProperty(strKey);
 
-                icons.put(iconKey, loadIcon(iconUrl));
+                putIcon(iconKey, loadIcon(iconUrl));
             }
         }
     }
@@ -330,7 +334,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
                 String imageKey = strKey.substring(prefix.length());
                 String imageUrl = resources.getProperty(strKey);
 
-                images.put(imageKey, loadImage(imageUrl));
+                UIManager.put(imageKey, loadImage(imageUrl));
             }
         }
     }
@@ -344,7 +348,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
                 String colorKey = strKey.substring(prefix.length());
                 String colorDef = resources.getProperty(strKey);
 
-                UIManager.put(colorKey, loadColor(colorDef));
+                putColor(colorKey, loadColor(colorDef));
             }
         }
     }
@@ -574,7 +578,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
             label.setOpaque(false);
             label.setFocusable(false);
             label.setBackground(Colors.orange);
-            label.setIcon(resourceManager.getIcon((String) context.get("icon")));
+            label.setIcon(UIManager.getIcon(context.get("icon")));
 
             return label;
         }

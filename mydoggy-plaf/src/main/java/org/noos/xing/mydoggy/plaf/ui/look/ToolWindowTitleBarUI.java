@@ -17,6 +17,7 @@ import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureInitiator;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
+import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -419,7 +420,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
             // Setup ghostImage
             if (!descriptor.isDragImageAvailable() || resourceManager.getBoolean("drag.icon.useDefault", false)) {
                 setGhostImage(dge.getDragOrigin(),
-                              resourceManager.getBufferedImage(MyDoggyKeySpace.DRAG));
+                              MyDoggyUtil.getImage(MyDoggyKeySpace.DRAG));
             } else {
                 Component contentContainer = descriptor.getComponentForDragImage();
                 BufferedImage ghostImage = new BufferedImage(contentContainer.getWidth(),

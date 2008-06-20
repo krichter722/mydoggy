@@ -42,9 +42,9 @@ public class MenuTitleBarButtons extends DefaultTitleBarButtons {
                     boolean active = (Boolean) evt.getNewValue();
 
                     if (active) {
-                        putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.ACTIONS_POPUP));
+                        putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.ACTIONS_POPUP));
                     } else {
-                        putValue(Action.SMALL_ICON, resourceManager.getIcon(MyDoggyKeySpace.ACTIONS_POPUP_INACTIVE));
+                        putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.ACTIONS_POPUP_INACTIVE));
                     }
                 }
             });

@@ -14,6 +14,7 @@ import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -843,7 +844,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
                     if (resourceManager.getBoolean("drag.icon.useDefault", false)) {
                         setGhostImage(dge.getDragOrigin(),
-                                      resourceManager.getBufferedImage(MyDoggyKeySpace.DRAG));
+                                      MyDoggyUtil.getImage(MyDoggyKeySpace.DRAG));
                     } else {
                         Component component = tabbedContentPane.getComponentAt(index);
                         BufferedImage ghostImage = new BufferedImage(component.getWidth(),
