@@ -56,7 +56,9 @@ public class MyDoggySet {
 
     public void start(final Runnable runnable) {
         myDoggySetContext.put(MyDoggySet.class, null);
+
         SwingUtil.centrePositionOnScreen(frame);
+
         frame.setVisible(true);
         memoryMonitorDescriptor.setAvailable(true);
 
@@ -357,6 +359,7 @@ public class MyDoggySet {
 
         // Add MyDoggyToolWindowManager to frame
         this.frame.getContentPane().add((Component) toolWindowManager, "1,1,");
+
     }
 
     protected void customizeToolWindowManager(MyDoggyToolWindowManager myDoggyToolWindowManager) {
