@@ -217,6 +217,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
     public void putBoolean(String name, boolean value) {
         putProperty(name, String.valueOf(value));
+        UIManager.put(name, value);
 
         cache.put("Bool." + name, value);
     }
