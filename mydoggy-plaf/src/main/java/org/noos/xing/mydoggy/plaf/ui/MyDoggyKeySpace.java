@@ -54,35 +54,32 @@ public interface MyDoggyKeySpace {
 
     // Representative Anchor Button - Colors
 
-    String TOOL_SCROLL_BAR_UI_BCK_START = "TOOL_SCROLL_BAR_UI_BCK_START";
-    String TOOL_SCROLL_BAR_UI_BCK_END = "TOOL_SCROLL_BAR_UI_BCK_END";
+    String TOOL_SCROLL_BAR_UI_BCK_START = "mydoggy.color.ToolScrollBarArrowUI.background.start";
+    String TOOL_SCROLL_BAR_UI_BCK_END = "mydoggy.color.ToolScrollBarArrowUI.background.end";
 
-    String RAB_MOUSE_IN_BORDER = "RAB_MOUSE_IN_BORDER";
-    String RAB_MOUSE_OUT_BORDER = "RAB_MOUSE_OUT_BORDER";
-    String RAB_BACKGROUND_INACTIVE = "RAB_BACKGROUND_INACTIVE";
-    String RAB_BACKGROUND_ACTIVE_START = "RAB_BACKGROUND_ACTIVE_START";
-    String RAB_BACKGROUND_ACTIVE_END = "RAB_BACKGROUND_ACTIVE_END";
-    String RAB_FOREGROUND = "RAB_FOREGROUND";
-    String RAB_FOREGROUND_UNAVAILABLE = "RAB_FOREGROUND_UNAVAILABLE";
-    String RAB_FOREGROUND_NOT_AVAILABLE = "RAB_FOREGROUND_NOT_AVAILABLE";
-
+    String RAB_MOUSE_IN_BORDER = "mydoggy.color.rab.border.mouseIn";
+    String RAB_MOUSE_OUT_BORDER = "mydoggy.color.rab.border.mouseOut";
+    String RAB_BACKGROUND_INACTIVE = "mydoggy.color.rab.background.inactive";
+    String RAB_BACKGROUND_ACTIVE_START = "mydoggy.color.rab.background.active.start";
+    String RAB_BACKGROUND_ACTIVE_END = "mydoggy.color.rab.background.active.end";
+    String RAB_FOREGROUND = "mydoggy.color.rab.foreground";
+    String RAB_FOREGROUND_UNAVAILABLE = "mydoggy.color.rab.foreground.unavailable";
+    
     // ToolWindow TitleBar - Colors
 
-    String TWTB_BACKGROUND_ACTIVE_START = "TWTB_BACKGROUND_ACTIVE_START";
-    String TWTB_BACKGROUND_ACTIVE_END = "TWTB_BACKGROUND_ACTIVE_END";
-    String TWTB_BACKGROUND_INACTIVE_START = "TWTB_BACKGROUND_INACTIVE_START";
-    String TWTB_BACKGROUND_INACTIVE_END = "TWTB_BACKGROUND_INACTIVE_END";
-
-    String TWTB_ID_BACKGROUND_FLASHING_0 = "TWTB_ID_BACKGROUND_FLASHING_0";
-    String TWTB_ID_BACKGROUND_FLASHING_1 = "TWTB_ID_BACKGROUND_FLASHING_1";
-    String TWTB_ID_BACKGROUND_ANIMATING = "TWTB_ID_BACKGROUND_ANIMATING";
-    String TWTB_ID_BACKGROUND_ACTIVE = "TWTB_ID_BACKGROUND_ACTIVE";
-    String TWTB_ID_BACKGROUND_INACTIVE = "TWTB_ID_BACKGROUND_INACTIVE";
-    String TWTB_ID_FOREGROUND_ACTIVE = "TWTB_ID_FOREGROUND_ACTIVE";
-    String TWTB_ID_FOREGROUND_INACTIVE = "TWTB_ID_FOREGROUND_INACTIVE";
-
-    String TWTB_TAB_FOREGROUND_SELECTED = "TWTB_TAB_FOREGROUND_SELECTED";
-    String TWTB_TAB_FOREGROUND_UNSELECTED = "TWTB_TAB_FOREGROUND_UNSELECTED";
+    String TWTB_BACKGROUND_ACTIVE_START = "mydoggy.color.ToolWindowTitleBarUI.background.active.start";
+    String TWTB_BACKGROUND_ACTIVE_END = "mydoggy.color.ToolWindowTitleBarUI.background.active.end";
+    String TWTB_BACKGROUND_INACTIVE_START = "mydoggy.color.ToolWindowTitleBarUI.background.inactive.start";
+    String TWTB_BACKGROUND_INACTIVE_END = "mydoggy.color.ToolWindowTitleBarUI.background.inactive.end";
+    String TWTB_ID_BACKGROUND_FLASHING_ON = "mydoggy.color.ToolWindowTitleBarUI.id.background.flashing.on";
+    String TWTB_ID_BACKGROUND_FLASHING_OFF = "mydoggy.color.ToolWindowTitleBarUI.id.background.flashing.off";
+    String TWTB_ID_BACKGROUND_ANIMATING = "mydoggy.color.ToolWindowTitleBarUI.id.background.animating";
+    String TWTB_ID_BACKGROUND_ACTIVE = "mydoggy.color.ToolWindowTitleBarUI.id.background.active";
+    String TWTB_ID_BACKGROUND_INACTIVE = "mydoggy.color.ToolWindowTitleBarUI.id.background.inactive";
+    String TWTB_ID_FOREGROUND_ACTIVE = "mydoggy.color.ToolWindowTitleBarUI.id.foreground.active";
+    String TWTB_ID_FOREGROUND_INACTIVE = "mydoggy.color.ToolWindowTitleBarUI.id.foreground.inactive";
+    String TWTB_TAB_FOREGROUND_SELECTED = "mydoggy.color.ToolWindowTitleBarUI.tab.foreground.selected";
+    String TWTB_TAB_FOREGROUND_UNSELECTED = "mydoggy.color.ToolWindowTitleBarUI.tab.foreground.unselected";
 
     // Components, ComponentsUIs, Customizers
 

@@ -158,12 +158,12 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
             if (flashingState)
                 updateToolWindowTitleBar(g, c,
                                          animBackStart, animBackEnd,
-                                         UIManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_FLASHING_0),
+                                         UIManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_FLASHING_ON),
                                          animTextColor);
             else
                 updateToolWindowTitleBar(g, c,
                                          animBackStart, animBackEnd,
-                                         UIManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_FLASHING_1),
+                                         UIManager.getColor(MyDoggyKeySpace.TWTB_ID_BACKGROUND_FLASHING_OFF),
                                          animTextColor);
 
             if (flashingTimer == null) {

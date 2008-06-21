@@ -18,10 +18,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
-import org.noos.xing.mydoggy.plaf.ui.util.Colors;
-import org.noos.xing.mydoggy.plaf.ui.util.DummyResourceBundle;
-import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -44,14 +41,10 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
     protected Properties resources;
 
-    protected Map<String, Icon> icons;
-    protected Map<String, BufferedImage> images;
-    protected Map<String, Color> colors;
     protected Map<String, ObjectCreator<Component>> cmpCreators;
     protected Map<String, ObjectCreator<ComponentUI>> cmpUiCreators;
     protected Map<String, ObjectCustomizer<Component>> cmpCustomizers;
     protected Map<Class, ObjectCreator> instanceCreators;
-    protected Map cache;
 
     protected String bundlePath;
     protected ResourceBundle resourceBundle;
@@ -61,10 +54,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
 
     public MyDoggyResourceManager() {
-        this.icons = new Hashtable<String, Icon>();
-        this.colors = new Hashtable<String, Color>();
-        this.images = new Hashtable<String, BufferedImage>();
-        this.cache = new HashMap();
 
         loadResources();
         initComponentCreators();
@@ -94,13 +83,11 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
 
     public Icon getIcon(String id) {
-//        return icons.get(id);
         return UIManager.getIcon(id);
     }
 
     public Icon putIcon(String id, Icon icon) {
-        UIManager.put(id, icon);
-        return icons.put(id, icon);
+        return (Icon) UIManager.put(id, icon);
     }
 
     public Color getColor(String id) {
@@ -108,10 +95,15 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     public Color putColor(String id, Color color) {
-        UIManager.put(id, color);
-        Color oldColor = colors.put(id, color);
-        firePropertyChangeEvent("color." + id, oldColor, color);
-        return oldColor;
+        return (Color) UIManager.put(id, color);
+    }
+
+    public void putImage(String name, BufferedImage bufferedImage) {
+        UIManager.put(name, bufferedImage);
+    }
+
+    public BufferedImage getImage(String id) {
+        return (BufferedImage) UIManager.get(id);
     }
 
     public TransparencyManager<Window> getTransparencyManager() {
@@ -123,9 +115,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         UIManager.put(TransparencyManager.class, transparencyManager);
     }
 
-    public BufferedImage getImage(String id) {
-        return (BufferedImage) UIManager.get(id);
-    }
 
 
     public void setLocale(Locale locale) {
@@ -171,115 +160,52 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
 
     public Map<String, Color> getColors() {
-        return colors;
+        return Collections.emptyMap();    // TODO:
     }
 
     public Map<String, Icon> getIcons() {
-        return icons;
+        return Collections.emptyMap();
     }
 
 
     public String getProperty(String name) {
-        return resources.getProperty("Property." + name);
+        return UIManager.getString(name);
     }
 
     public void putProperty(String name, String value) {
-        if (name == null)
-            throw new NullPointerException("name must be not null.");
-
-        Object old = resources.put("Property." + name, value);
-
-        // Clear cache...
-        cache.clear();
-
-        firePropertyChangeEvent(name, old, value);
+        UIManager.put(name, value);
     }
 
     public boolean getBoolean(String name, boolean defaultValue) {
-        Boolean result = (Boolean) cache.get("Bool." + name);
-        if (result != null)
-            return result;
-
-        String propertyValue = getProperty(name);
-        if (propertyValue == null || "".equals(propertyValue.trim()))
-            result = defaultValue;
-        else {
-            try {
-                result = Boolean.parseBoolean(propertyValue);
-            } catch (Exception e) {
-                result = defaultValue;
-            }
-        }
-
-        cache.put("Bool." + name, result);
-        return result;
+        return MyDoggyUtil.getBoolean(name, defaultValue);
     }
 
     public void putBoolean(String name, boolean value) {
-        putProperty(name, String.valueOf(value));
         UIManager.put(name, value);
-
-        cache.put("Bool." + name, value);
     }
 
     public float getFloat(String name, float defaultValue) {
-        Float result = (Float) cache.get("Float." + name);
-        if (result != null)
-            return result;
-
-        String propertyValue = getProperty(name);
-        if (propertyValue == null || "".equals(propertyValue.trim()))
-            result = defaultValue;
-        else {
-            try {
-                result = Float.parseFloat(propertyValue);
-            } catch (Exception e) {
-                result = defaultValue;
-            }
-        }
-
-        cache.put("Float." + name, result);
-        return result;
+        return MyDoggyUtil.getFloat(name, defaultValue);
     }
 
     public void putFloat(String name, float value) {
-        putProperty(name, String.valueOf(value));
-
-        cache.put("Float." + name, value);
+        UIManager.put(name, value);
     }
 
     public int getInt(String name, int defaultValue) {
-        Integer result = (Integer) cache.get("Int." + name);
-        if (result != null)
-            return result;
-
-        String propertyValue = getProperty(name);
-        if (propertyValue == null || "".equals(propertyValue.trim()))
-            result = defaultValue;
-        else {
-            try {
-                result = Integer.parseInt(propertyValue);
-            } catch (Exception e) {
-                result = defaultValue;
-            }
-        }
-
-        cache.put("Int." + name, result);
-        return result;
+        return MyDoggyUtil.getInt(name, defaultValue);
     }
 
     public void putInt(String name, int value) {
-        putProperty(name, String.valueOf(value));
-
-        cache.put("Int." + name, value);
+        UIManager.put(name, value);
     }
 
     public void putObject(Object key, Object value) {
-        resources.put(key, value);
+        UIManager.put(key, value);
     }
 
     public <T> T getObject(Class<T> clazz, T defaultValue) {
-        Object value = resources.get(clazz);
+        Object value = UIManager.get(clazz);
         if (clazz.isInstance(value))
             return (T) value;
         return defaultValue;
@@ -306,107 +232,117 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     protected void loadResources() {
         resources = SwingUtil.loadPropertiesFile(resourceName, this.getClass().getClassLoader());
 
-        loadIcons();
-        loadColors();
-        loadImages();
-        loadResourceBundles();
-    }
-
-    protected void loadIcons() {
-        String prefix = "Icon.";
-
         for (Object key : resources.keySet()) {
             String strKey = key.toString();
-            if (strKey.startsWith(prefix)) {
-                String iconKey = strKey.substring(prefix.length());
-                String iconUrl = resources.getProperty(strKey);
+            int pointIndex = strKey.indexOf('.');
+            if (pointIndex != -1) {
+                String prefix =  strKey.substring(0, pointIndex);
+                loadResource(prefix,
+                             strKey.substring(prefix.length() + 1),
+                             resources.getProperty(strKey));
 
-                putIcon(iconKey, loadIcon(iconUrl));
             }
         }
     }
 
-    protected void loadImages() {
-        String prefix = "Image.";
-
-        for (Object key : resources.keySet()) {
-            String strKey = key.toString();
-            if (strKey.startsWith(prefix)) {
-                String imageKey = strKey.substring(prefix.length());
-                String imageUrl = resources.getProperty(strKey);
-
-                UIManager.put(imageKey, loadImage(imageUrl));
-            }
+    protected void loadResource(String prefix, String name, String value) {
+        if ("Icon".equals(prefix)) {
+            // Load icon
+            loadIcon(name, value);
+        } else if ("Color".equals(prefix)) {
+            // Load Color
+            loadColor(name, value);
+        } else if ("Image".equals(prefix)) {
+            // Load Color
+            loadImage(name, value);
+        } else if ("ResourceBundle".equals(prefix)) {
+            loadResourceBundles(value);
+        } else if ("Int".equals(prefix)) {
+            loadInt(name, value);
+        } else if ("Float".equals(prefix)) {
+            loadFloat(name, value);
+        } else if ("String".equals(prefix)) {
+            loadString(name, value);
         }
     }
 
-    protected void loadColors() {
-        String prefix = "Color.";
-
-        for (Object key : resources.keySet()) {
-            String strKey = key.toString();
-            if (strKey.startsWith(prefix)) {
-                String colorKey = strKey.substring(prefix.length());
-                String colorDef = resources.getProperty(strKey);
-
-                putColor(colorKey, loadColor(colorDef));
-            }
-        }
+    protected void loadIcon(String name, String url) {
+        putIcon(name, SwingUtil.loadIcon(url));
     }
 
-    protected void loadResourceBundles() {
-        bundlePath = resources.getProperty("ResourceBundle");
-        if (bundlePath == null)
-            bundlePath = "org/noos/xing/mydoggy/plaf/ui/messages/messages";
-    }
-
-    protected Icon loadIcon(String url) {
-        return SwingUtil.loadIcon(url);
-    }
-
-    protected BufferedImage loadImage(String url) {
+    protected void loadImage(String name, String url) {
         try {
-            return ImageIO.read(this.getClass().getClassLoader().getResource(url));
+            putImage(name, ImageIO.read(this.getClass().getClassLoader().getResource(url)));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
-    protected Color loadColor(String colorDef) {
+    protected void loadColor(String name, String colorDef) {
+        Color color;
         colorDef = colorDef.toLowerCase();
         if ("black".equals(colorDef))
-            return Color.BLACK;
+            color = Color.BLACK;
         else if ("blue".equals(colorDef))
-            return Color.BLUE;
+            color = Color.BLUE;
         else if ("cyan".equals(colorDef))
-            return Color.CYAN;
+            color = Color.CYAN;
         else if ("dark_grey".equals(colorDef))
-            return Color.DARK_GRAY;
+            color = Color.DARK_GRAY;
         else if ("gray".equals(colorDef))
-            return Color.GRAY;
+            color = Color.GRAY;
         else if ("green".equals(colorDef))
-            return Color.GREEN;
+            color = Color.GREEN;
         else if ("magenta".equals(colorDef))
-            return Color.MAGENTA;
+            color = Color.MAGENTA;
         else if ("orange".equals(colorDef))
-            return Color.ORANGE;
+            color = Color.ORANGE;
         else if ("pink".equals(colorDef))
-            return Color.PINK;
+            color = Color.PINK;
         else if ("red".equals(colorDef))
-            return Color.RED;
+            color = Color.RED;
         else if ("white".equals(colorDef))
-            return Color.WHITE;
+            color = Color.WHITE;
         else if ("yellow".equals(colorDef))
-            return Color.YELLOW;
+            color = Color.YELLOW;
+        else {
+            String[] elms = colorDef.split(",");
+            color = new Color(
+                    Integer.parseInt(elms[0].trim()),
+                    Integer.parseInt(elms[1].trim()),
+                    Integer.parseInt(elms[2].trim())
+            );
+        }
 
-        String[] elms = colorDef.split(",");
-        return new Color(
-                Integer.parseInt(elms[0].trim()),
-                Integer.parseInt(elms[1].trim()),
-                Integer.parseInt(elms[2].trim())
-        );
+        putColor(name, color);
     }
+
+    protected void loadInt(String name, String value) {
+        try {
+            putInt(name, Integer.parseInt(value));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void loadFloat(String name, String value) {
+        try {
+            putFloat(name, Float.parseFloat(value));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void loadString(String name, String value) {
+        putProperty(name, value);
+    }
+
+    protected void loadResourceBundles(String bundlePath) {
+        if (bundlePath == null)
+            bundlePath = "org/noos/xing/mydoggy/plaf/ui/messages/messages";
+        this.bundlePath = bundlePath;
+    }
+
 
     protected void initComponentCreators() {
         cmpCreators = new Hashtable<String, ObjectCreator<Component>>();
