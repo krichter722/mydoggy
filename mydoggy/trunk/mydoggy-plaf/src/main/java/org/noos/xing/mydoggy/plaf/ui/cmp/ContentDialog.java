@@ -100,7 +100,7 @@ public class ContentDialog extends JDialog {
     }
 
     public void setBounds(Rectangle r) {
-        System.out.println("setBounds r = " + r);
+//        System.out.println("setBounds r = " + r);
         super.setBounds(r);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
@@ -122,14 +122,14 @@ public class ContentDialog extends JDialog {
 
         public void componentResized(ComponentEvent e) {
             if (isActive() && isVisible()) {
-                System.out.println("componentResized getBounds() = " + getBounds());
+//                System.out.println("componentResized getBounds() = " + getBounds());
                 contentUI.setDetachedBounds(getBounds());
             }
         }
 
         public void componentMoved(ComponentEvent e) {
             if (isActive() && isVisible()) {
-                System.out.println("componentMoved getBounds() = " + getBounds());
+//                System.out.println("componentMoved getBounds() = " + getBounds());
                 contentUI.setDetachedBounds(getBounds());
             }
         }
