@@ -35,4 +35,16 @@ public class MyDoggyUtil {
     public static BufferedImage getImage(String name) {
         return (BufferedImage) UIManager.get(name);
     }
+
+    public static float getFloat(String name, float defaultValue) {
+        if (UIManager.getDefaults().containsKey(name))
+            return (Float) UIManager.get(name);
+        return defaultValue;
+    }
+
+    public static int getInt(String name, int defaultValue) {
+        if (UIManager.getDefaults().containsKey(name))
+            return (Integer) UIManager.get(name);
+        return defaultValue;
+    }
 }
