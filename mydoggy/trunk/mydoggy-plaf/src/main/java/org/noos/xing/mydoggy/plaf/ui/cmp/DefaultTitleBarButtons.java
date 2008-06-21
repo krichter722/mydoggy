@@ -91,14 +91,14 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
 
             double[] newCols;
             if (oldCols.length == 2) {
-                newCols = new double[]{0, 13, 0};
+                newCols = new double[]{0, titleBarAction.getWidth(), 0};
                 row = 1;
             } else {
                 newCols = new double[oldCols.length + 2];
 
                 System.arraycopy(oldCols, 0, newCols, 0, oldCols.length);
                 newCols[oldCols.length - 1] = 1;
-                newCols[oldCols.length] = 13;
+                newCols[oldCols.length] = titleBarAction.getWidth();
                 newCols[oldCols.length + 1] = 0;
                 row = oldCols.length;
             }
@@ -156,6 +156,11 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
         public void setVisible(boolean visible) {
             DefaultTitleBarButtons.this.setVisible((Component) getValue("component"), visible);
             SwingUtil.repaint(DefaultTitleBarButtons.this);
+        }
+
+        public int getWidth() {
+            int width = ((Icon) getValue(Action.SMALL_ICON)).getIconWidth();
+            return (width > 0) ? width : 13;
         }
 
     }
