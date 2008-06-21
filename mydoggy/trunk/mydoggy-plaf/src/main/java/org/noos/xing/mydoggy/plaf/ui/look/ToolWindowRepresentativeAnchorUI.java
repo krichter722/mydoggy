@@ -17,6 +17,7 @@ import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.drag.RepresentativeAnchorDragGesture;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
+import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -462,17 +463,13 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                     }
                     firstPreview = false;
                 } else
-                if (dockedTypeDescriptor.isPreviewEnabled() && descriptor.getManager().getToolWindowManagerDescriptor().isPreviewEnabled()) {
+                if (dockedTypeDescriptor.isPreviewEnabled() &&
+                    descriptor.getManager().getToolWindowManagerDescriptor().isPreviewEnabled()) {
                     Container contentContainer = ((DockedContainer) descriptor.getToolWindowContainer()).getContentContainer();
-                    int width = 176;
-                    int height = 132;
 
                     // Show Preview
                     RootPaneContainer rootPaneContainer = (RootPaneContainer) SwingUtilities.getWindowAncestor(label);
                     if (rootPaneContainer != null) {
-                        JMenuBar jMenuBar = rootPaneContainer instanceof JFrame ?
-                                            ((JFrame) rootPaneContainer).getJMenuBar() : null;
-
                         firstPreview = true;
                         previewTimer.stop();
 
@@ -483,87 +480,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
                         previewPanel = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
                         previewPanel.setAlphaModeRatio(dockedTypeDescriptor.getPreviewTransparentRatio());
-                        previewPanel.setSize(width + 4, height + 4);
-
-                        Rectangle containerRect = descriptor.getToolWindowManagerContainerBounds();
-
-                        switch (descriptor.getToolWindow().getAnchor()) {
-                            case LEFT:
-                                previewPanel.setLocation(
-                                        containerRect.x +
-                                        label.getX() + label.getWidth() + 3,
-
-                                        (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                                        containerRect.y +
-                                        label.getY() +
-                                        (descriptor.getToolBar(TOP).getSize())
-                                );
-                                break;
-                            case TOP:
-                                previewPanel.setLocation(
-                                        containerRect.x +
-                                        label.getX() +
-                                        (descriptor.getToolBar(LEFT).getSize()),
-
-                                        (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                                        containerRect.y +
-                                        label.getY() + label.getHeight() + 3
-                                );
-                                break;
-                            case BOTTOM:
-                                previewPanel.setLocation(
-                                        containerRect.x +
-                                        label.getX() +
-                                        (descriptor.getToolBar(LEFT).getSize()),
-
-                                        (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                                        containerRect.y +
-                                        containerRect.height -
-                                                                  previewPanel.getHeight() - 26
-                                );
-                                break;
-                            case RIGHT:
-                                previewPanel.setLocation(
-                                        containerRect.x +
-                                        containerRect.width -
-                                                                 previewPanel.getWidth() - 26,
-
-                                        (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                                        containerRect.y +
-                                        label.getY() +
-                                        (descriptor.getToolBar(TOP).getSize())
-                                );
-                                break;
-                        }
-
-                        if (previewPanel.getY() + previewPanel.getHeight() >
-                            containerRect.getY() + containerRect.getHeight() - 26) {
-
-                            previewPanel.setLocation(
-                                    previewPanel.getX(),
-
-                                    (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                                    containerRect.y +
-                                    containerRect.height -
-                                                              (descriptor.getToolBar(BOTTOM).getSize()) -
-                                                              previewPanel.getHeight() - 3
-                            );
-                        }
-
-                        if (previewPanel.getX() + previewPanel.getWidth() >
-                            containerRect.x + containerRect.getWidth() - 26) {
-
-                            previewPanel.setLocation(
-                                    containerRect.x +
-                                    containerRect.width -
-                                                             (descriptor.getToolBar(RIGHT).getSize()) -
-                                                             previewPanel.getWidth() - 3,
-
-                                    previewPanel.getY()
-                            );
-                        }
-
-
+                        setPreviewPanelBounds(rootPaneContainer);
                         previewPanel.add(contentContainer, "1,1,FULL,FULL");
 
                         glassPane.add(previewPanel);
@@ -583,6 +500,156 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                 previewTimer.stop();
                 previewTimer = null;
             }
+        }
+
+
+        protected void setPreviewPanelBounds(RootPaneContainer rootPaneContainer) {
+            if (MyDoggyUtil.getBoolean("mydoggy.preview.full", false))
+                setFullPreviewBounds();
+            else
+                setThumbnailPreviewBounds(rootPaneContainer);
+        }
+
+        protected void setThumbnailPreviewBounds(RootPaneContainer rootPaneContainer) {
+            int width = 176;
+            int height = 132;
+            JMenuBar jMenuBar = rootPaneContainer instanceof JFrame ?
+                                ((JFrame) rootPaneContainer).getJMenuBar() : null;
+
+
+            previewPanel.setSize(width + 4, height + 4);
+
+            Rectangle containerRect = descriptor.getToolWindowManagerContainerBounds();
+            switch (descriptor.getToolWindow().getAnchor()) {
+                case LEFT:
+                    previewPanel.setLocation(
+                            containerRect.x +
+                            label.getX() + label.getWidth() + 3,
+
+                            (jMenuBar != null ? jMenuBar.getHeight() : 0) +
+                            containerRect.y +
+                            label.getY() +
+                            (descriptor.getToolBar(TOP).getSize())
+                    );
+                    break;
+                case TOP:
+                    previewPanel.setLocation(
+                            containerRect.x +
+                            label.getX() +
+                            (descriptor.getToolBar(LEFT).getSize()),
+
+                            (jMenuBar != null ? jMenuBar.getHeight() : 0) +
+                            containerRect.y +
+                            label.getY() + label.getHeight() + 3
+                    );
+                    break;
+                case BOTTOM:
+                    previewPanel.setLocation(
+                            containerRect.x +
+                            label.getX() +
+                            (descriptor.getToolBar(LEFT).getSize()),
+
+                            (jMenuBar != null ? jMenuBar.getHeight() : 0) +
+                            containerRect.y +
+                            containerRect.height -
+                                                      previewPanel.getHeight() - 26
+                    );
+                    break;
+                case RIGHT:
+                    previewPanel.setLocation(
+                            containerRect.x +
+                            containerRect.width -
+                                                     previewPanel.getWidth() - 26,
+
+                            (jMenuBar != null ? jMenuBar.getHeight() : 0) +
+                            containerRect.y +
+                            label.getY() +
+                            (descriptor.getToolBar(TOP).getSize())
+                    );
+                    break;
+            }
+
+            if (previewPanel.getY() + previewPanel.getHeight() >
+                containerRect.getY() + containerRect.getHeight() - 26) {
+
+                previewPanel.setLocation(
+                        previewPanel.getX(),
+
+                        (jMenuBar != null ? jMenuBar.getHeight() : 0) +
+                        containerRect.y +
+                        containerRect.height -
+                                                  (descriptor.getToolBar(BOTTOM).getSize()) -
+                                                  previewPanel.getHeight() - 3
+                );
+            }
+
+            if (previewPanel.getX() + previewPanel.getWidth() >
+                containerRect.x + containerRect.getWidth() - 26) {
+
+                previewPanel.setLocation(
+                        containerRect.x +
+                        containerRect.width -
+                                                 (descriptor.getToolBar(RIGHT).getSize()) -
+                                                 previewPanel.getWidth() - 3,
+
+                        previewPanel.getY()
+                );
+            }
+        }
+
+        protected void setFullPreviewBounds() {
+            Component barContainer = descriptor.getToolBar(toolWindow.getAnchor()).getContainer();
+
+            int length = Math.max(descriptor.getDividerLocation(),
+                                  descriptor.getDockedTypeDescriptor().getMinimumDockLength());
+            if (length == -1)
+                length = 200;
+
+            switch (toolWindow.getAnchor()) {
+                case LEFT:
+                    int height = barContainer.getHeight();
+                    previewPanel.setSize(length, height);
+
+                    Point location = new Point(0, 0);
+                    SwingUtilities.convertPointToScreen(location, barContainer);
+                    location.x += barContainer.getWidth();
+                    previewPanel.setLocation(location);
+                    break;
+                case RIGHT:
+                    height = barContainer.getHeight();
+                    previewPanel.setSize(length, height);
+
+                    location = new Point(0, 0);
+                    SwingUtilities.convertPointToScreen(location, barContainer);
+                    location.x -= previewPanel.getWidth();
+                    previewPanel.setLocation(location);
+                    break;
+                case TOP:
+                    int width = barContainer.getWidth();
+                    previewPanel.setSize(width, length);
+
+                    location = new Point(0, 0);
+                    SwingUtilities.convertPointToScreen(location, barContainer);
+                    location.y += barContainer.getHeight();
+                    previewPanel.setLocation(location);
+                    break;
+                case BOTTOM:
+                    width = barContainer.getWidth();
+                    previewPanel.setSize(width, length);
+
+                    location = new Point(0, 0);
+                    SwingUtilities.convertPointToScreen(location, barContainer);
+                    location.y -= previewPanel.getHeight();
+                    previewPanel.setLocation(location);
+                    break;
+            }
+
+            int height = previewPanel.getHeight();
+            Point point = SwingUtilities.convertPoint(previewPanel, 0, 0,
+                                                      descriptor.getManager().getLayeredPane());
+
+            previewPanel.setBounds(point.x, point.y, previewPanel.getWidth(), height);
+
         }
     }
 

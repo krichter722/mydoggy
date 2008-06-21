@@ -77,7 +77,8 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
             layout.setRow(0, 0);
             layout.setRow(2, 0);
 
-            barContainer.getParent().getLayout().layoutContainer(barContainer.getParent());
+            // TODO: can we call validate???
+            barContainer.getParent().doLayout();
             resize();
 
             content.setVisible(true);
