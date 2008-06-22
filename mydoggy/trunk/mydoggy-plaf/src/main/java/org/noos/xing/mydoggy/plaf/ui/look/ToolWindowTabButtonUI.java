@@ -49,7 +49,7 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner, Prop
         this.tabButton = c;
     }
 
-    public void update(Graphics g, JComponent c) {
+    public void update(Graphics g, final JComponent c) {
         if (tab == null || toolWindow == null)
             return;
 
@@ -89,6 +89,7 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner, Prop
                             start = System.currentTimeMillis();
 
                         flashingState = !flashingState;
+                        c.putClientProperty("mydoggy.flashingState", flashingState);
 
                         SwingUtil.repaint(tabButton);
 

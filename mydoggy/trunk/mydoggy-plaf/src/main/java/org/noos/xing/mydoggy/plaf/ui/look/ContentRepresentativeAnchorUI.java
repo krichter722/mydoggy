@@ -60,13 +60,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
 
     public void installUI(JComponent c) {
         super.installUI(c);
-
         this.label = c;
-        labelBorder = new LineBorder(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER), 1, true, 3, 3);
-        c.setBorder(labelBorder);
-        c.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
-
-        SwingUtil.registerDragGesture(c, new RepresentativeAnchorDragGesture(descriptor, label));
     }
 
     public void uninstallUI(JComponent c) {
@@ -195,6 +189,17 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         adapter = new RepresentativeAnchorMouseAdapter();
         c.addMouseListener(adapter);
         c.addMouseMotionListener(adapter);
+
+        SwingUtil.registerDragGesture(c, new RepresentativeAnchorDragGesture(descriptor, label));
+    }
+
+    protected void installDefaults(JLabel c) {
+        labelBorder = new LineBorder(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER), 1, true, 3, 3);
+
+        c.setBorder(labelBorder);
+        c.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
+
+        SwingUtil.installFont(c, "mydoggy.ToolWindowRepresentativeAnchorUI.font");
     }
 
     protected void updateAnchor(Graphics g, JComponent c,
