@@ -593,4 +593,15 @@ public class SwingUtil {
         return null;
     }
 
+    public static void installFont(JComponent component, String name) {
+        Font newfont = UIManager.getFont(name);
+        if (newfont != null)
+            component.setFont(newfont);
+    }
+
+    public static final <T> T getClientProperty(JComponent c, Object key) {
+    	return (T) c.getClientProperty(key);
+    }
+
+
 }

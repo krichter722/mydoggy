@@ -75,13 +75,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
     public void installUI(JComponent c) {
         super.installUI(c);
-
         this.label = c;
-        labelBorder = new LineBorder(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER), 1, true, 3, 3);
-        c.setBorder(labelBorder);
-        c.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
-
-        SwingUtil.registerDragGesture(c, new ToolWindowRepresentativeAnchorDragGesture(descriptor, label));
     }
 
     public void uninstallUI(JComponent c) {
@@ -231,6 +225,17 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         c.addMouseMotionListener(adapter);
 
         descriptor.getToolWindow().addPlafPropertyChangeListener(this);
+
+        SwingUtil.registerDragGesture(c, new ToolWindowRepresentativeAnchorDragGesture(descriptor, label));
+    }
+
+    protected void installDefaults(JLabel c) {
+        labelBorder = new LineBorder(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER), 1, true, 3, 3);
+
+        c.setBorder(labelBorder);
+        c.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
+
+        SwingUtil.installFont(c, "mydoggy.ToolWindowRepresentativeAnchorUI.font");
     }
 
     protected void updateAnchor(Graphics g, JComponent c,

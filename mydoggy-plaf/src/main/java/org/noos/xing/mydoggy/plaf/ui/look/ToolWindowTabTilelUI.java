@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.look;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLabelUI;
@@ -38,16 +39,18 @@ public class ToolWindowTabTilelUI extends BasicLabelUI implements MouseListener 
     @Override
     protected void installDefaults(JLabel c) {
         super.installDefaults(c);
+        
+        SwingUtil.installFont(c, "mydoggy.ToolWindowTabTilelUI.font");
     }
 
     public void update(Graphics g, JComponent c) {
         if (tab.isFlashing() && toolWindow.isVisible()) {
-            // TODO: how to manager flashingState???
-//            if (flashingState) {
+            Boolean flashingState = SwingUtil.getClientProperty(c, "mydoggy.flashingState");
+            if (flashingState) {
                 titleLabel.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
-//            } else {
-//                titleLabel.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
-//            }
+            } else {
+                titleLabel.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
+            }
         } else {
             if (tab.isSelected())
                 titleLabel.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
