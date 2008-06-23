@@ -67,7 +67,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         this.availableTools = 0;
         this.dividerSize = 3;
         this.length = manager.getResourceManager().getInt(
-                "toolwindowbar." +  anchor.toString().toLowerCase() + ".length",
+                "mydoggy.ToolWindowBar." +  anchor.toString().toLowerCase() + ".length",
                 23
         );
         
