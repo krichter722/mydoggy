@@ -226,7 +226,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
         descriptor.getToolWindow().addPlafPropertyChangeListener(this);
 
-        SwingUtil.registerDragGesture(c, new ToolWindowRepresentativeAnchorDragGesture(descriptor, label));
+        SwingUtil.registerDragGesture(c, new ToolWindowRepresentativeAnchorDragGesture(descriptor, c));
     }
 
     protected void installDefaults(JLabel c) {

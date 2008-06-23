@@ -190,7 +190,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         c.addMouseListener(adapter);
         c.addMouseMotionListener(adapter);
 
-        SwingUtil.registerDragGesture(c, new RepresentativeAnchorDragGesture(descriptor, label));
+        SwingUtil.registerDragGesture(c, new RepresentativeAnchorDragGesture(descriptor, c));
     }
 
     protected void installDefaults(JLabel c) {

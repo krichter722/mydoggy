@@ -84,10 +84,12 @@ public class ToolWindowTabButtonPanel extends JPanel implements ToolWindowTabBut
         );
         titleLabel.setText(tab.getTitle());
         titleLabel.setName(name + ".title");
+        titleLabel.setIcon(tab.getIcon());
+
         titleLabel.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
         titleLabel.setOpaque(false);
         titleLabel.setFocusable(false);
-        titleLabel.setIcon(tab.getIcon());
+        // TODO: change toolwindow.title.font.size...
         titleLabel.setFont(titleLabel.getFont().deriveFont(resourceManager.getFloat("toolwindow.title.font.size", 12)));
         titleLabel.setUI(new ToolWindowTabTilelUI(tab));
         titleLabel.addMouseListener(dockedContainer.getTitleBarMouseAdapter());
