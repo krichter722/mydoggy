@@ -303,12 +303,12 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
                     // Init new window
                     Window dialog;
                     if ((Boolean) evt.getNewValue()) {
-                        dialog = new ContentFrame(resourceManager,
-                                                  content, contentUI,
+                        dialog = new ContentFrame(
+                                content, contentUI,
                                                   parentFrame, oldWindow.getBounds());
                     } else {
-                        dialog = new ContentDialog(resourceManager,
-                                                   content, contentUI,
+                        dialog = new ContentDialog(
+                                content, contentUI,
                                                    parentFrame, oldWindow.getBounds());
                     }
 

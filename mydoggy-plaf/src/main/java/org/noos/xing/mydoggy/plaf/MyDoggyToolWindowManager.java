@@ -789,7 +789,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     protected void initGlassPane() {
-        this.glassPanel = new GlassPanel(resourceManager, rootPaneContainer);
+        this.glassPanel = new GlassPanel(rootPaneContainer);
 //        rootPaneContainer.setGlassPane(this.glassPanel = new GlassPanel(rootPaneContainer));
     }
 
@@ -826,18 +826,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             }
         });
         propertyChangeSupport.addPropertyChangeListener("manager.window.anchestor", new AnchestorClosedChangeListener());
-        propertyChangeSupport.addPropertyChangeListener("resourceManager", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                glassPanel.setResourceManager((ResourceManager) evt.getNewValue());
-            }
-        });
         propertyChangeSupport.addPropertyChangeListener("enabled", new ContentMananagerEnabledChangeListener());
         propertyChangeSupport.addPropertyChangeListener("length", new BarLengthListener());
 
         initKeyboardFocusManagerListeners();
 
         // Setup DropTarget for main container
-        mainContainer.setDropTarget(new ContentManagerDropTarget(mainContainer, this, resourceManager));
+        mainContainer.setDropTarget(new ContentManagerDropTarget(mainContainer, this));
     }
 
     protected void initKeyboardFocusManagerListeners() {

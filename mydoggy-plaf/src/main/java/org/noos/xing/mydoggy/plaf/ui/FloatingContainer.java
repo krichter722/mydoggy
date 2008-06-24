@@ -308,13 +308,12 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
         if (toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).isAddToTaskBar()) {
             window = new JModalFrame(toolWindow,
-                                     resourceManager,
                                      MyDoggyUtil.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
                                      null,
                                      false);
         } else {
-            window = new JModalWindow(resourceManager,
-                                      resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
+            window = new JModalWindow(
+                    MyDoggyUtil.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
                                       null,
                                       false);
         }
@@ -338,13 +337,12 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         // Init new window
         if ((Boolean) evt.getNewValue()) {
             window = new JModalFrame(toolWindow,
-                                     resourceManager,
-                                     resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
+                                     MyDoggyUtil.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
                                      null,
                                      false);
         } else {
-            window = new JModalWindow(resourceManager,
-                                      resourceManager.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
+            window = new JModalWindow(
+                    MyDoggyUtil.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
                                       null,
                                       false);
         }

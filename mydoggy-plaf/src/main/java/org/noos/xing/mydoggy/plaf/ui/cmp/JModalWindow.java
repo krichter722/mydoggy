@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
-import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 
@@ -10,15 +9,13 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 
 public class JModalWindow extends JWindow implements ModalWindow {
-    protected ResourceManager resourceManager;
     protected Window modalToWindow;
     protected boolean notifiedModalToWindow;
     protected Component returnFocus;
 
-    public JModalWindow(ResourceManager resourceManager, Window owner, Component returnFocus, boolean modal) {
+    public JModalWindow(Window owner, Component returnFocus, boolean modal) {
         super(owner);
         
-        this.resourceManager = resourceManager;
         setFocusableWindowState(true);
         this.returnFocus = returnFocus;
         synchronized (JModalWindow.this) {

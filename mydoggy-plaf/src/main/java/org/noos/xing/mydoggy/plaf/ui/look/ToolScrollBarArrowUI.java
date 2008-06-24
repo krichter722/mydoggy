@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
-import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -18,11 +17,11 @@ import java.awt.event.MouseEvent;
 public class ToolScrollBarArrowUI extends MetalLabelUI {
 
     protected LineBorder labelBorder;
-    protected ResourceManager resourceManager;
 
-    public ToolScrollBarArrowUI(ResourceManager resourceManager) {
-        this.resourceManager = resourceManager;
+
+    public ToolScrollBarArrowUI() {
     }
+
 
     public void installUI(JComponent c) {
         super.installUI(c);

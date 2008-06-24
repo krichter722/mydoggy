@@ -183,7 +183,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                                   this);
 
                     // Setup ghostImage
-                    if (resourceManager.getBoolean("drag.icon.useDefault", false)) {
+                    if (MyDoggyUtil.getBoolean("drag.icon.useDefault", false)) {
                         setGhostImage(dge.getDragOrigin(),
                                       MyDoggyUtil.getImage(MyDoggyKeySpace.DRAG));
                     } else {

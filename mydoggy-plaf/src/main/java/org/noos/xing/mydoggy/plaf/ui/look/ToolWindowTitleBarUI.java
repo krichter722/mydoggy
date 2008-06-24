@@ -8,7 +8,6 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowContainer;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
@@ -22,6 +21,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.PanelUI;
 import java.awt.*;
 import java.awt.dnd.DragGestureEvent;
@@ -39,7 +39,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro
  */
-public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
+public class ToolWindowTitleBarUI extends PanelUI implements Cleaner, PropertyChangeListener {
     protected ToolWindow toolWindow;
     protected ToolWindowDescriptor descriptor;
     protected ResourceManager resourceManager;
@@ -58,12 +58,15 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
     protected AbstractAnimation flashingAnimation;
 
 
-    public ToolWindowTitleBarUI(ToolWindowDescriptor descriptor, ToolWindowContainer dockedContainer) {
+    public static ComponentUI createUI(JComponent c) {
+        return new ToolWindowTitleBarUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class));
+    }
+
+
+    public ToolWindowTitleBarUI(ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
         this.resourceManager = descriptor.getResourceManager();
-
-        dockedContainer.addPropertyChangeListener("active", new GradientActivationListener(descriptor));
 
         animBackStart = new MutableColor(UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START));
         animBackEnd = new MutableColor(0, 0, 0);
@@ -71,66 +74,23 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
         flashingAnimation = new GradientAnimation(700f);
         flasingDuration = -1;
         animation = new GradientAnimation();
-
-        descriptor.getToolWindow().addPlafPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent e) {
-                String propertyName = e.getPropertyName();
-                if ("flash".equals(propertyName)) {
-                    if (e.getNewValue() == Boolean.TRUE) {
-                        if (toolWindow.isVisible()) {
-                            flasingDuration = -1;
-                            SwingUtil.repaint(panel);
-                        }
-                    } else {
-                        if (flashingTimer != null) {
-                            flashingTimer.stop();
-                            flashingTimer = null;
-                            SwingUtil.repaint(panel);
-                        }
-                    }
-                } else if ("flash.duration".equals(propertyName)) {
-                    if (e.getNewValue() == Boolean.TRUE) {
-                        if (toolWindow.isVisible()) {
-                            flasingDuration = (Integer) e.getNewValue();
-                            SwingUtil.repaint(panel);
-                        }
-                    } else {
-                        if (flashingTimer != null) {
-                            flashingTimer.stop();
-                            flashingTimer = null;
-                            SwingUtil.repaint(panel);
-                        }
-                    }
-                } else if ("active".equals(propertyName)) {
-                    toolWindow.setFlashing(false);
-                }
-            }
-        });        
-        descriptor.getCleaner().addCleaner(this);
     }
 
 
     public void installUI(JComponent c) {
         super.installUI(c);
-        installDefaults(c);
         this.panel = c;
+        panel.setBorder(null);
 
-        // Drag Gesture
-        final ToolWindowTitleBarDragGesture dragGesture = new ToolWindowTitleBarDragGesture(descriptor);
-        SwingUtil.registerDragGesture(c, dragGesture);
-        panel.addContainerListener(new ContainerAdapter() {
-            public void componentAdded(ContainerEvent e) {
-                if (e.getChild() instanceof DragGestureInitiator) {
-                    DragGestureInitiator dragGestureInitiator = (DragGestureInitiator) e.getChild();
-                    dragGestureInitiator.setDragGesture(dragGesture);
-                }
-            }
-        });
+        installDefaults(c);
+        installListeners(c);
     }
 
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
+
         uninstallDefaults(c);
+        uninstallListeners(c);
 
         cleanup();
     }
@@ -219,6 +179,54 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
     }
 
 
+    public void propertyChange(PropertyChangeEvent evt) {
+        String propertyName = evt.getPropertyName();
+
+        if ("flash".equals(propertyName)) {
+            if (evt.getNewValue() == Boolean.TRUE) {
+                if (toolWindow.isVisible()) {
+                    flasingDuration = -1;
+                    SwingUtil.repaint(panel);
+                }
+            } else {
+                if (flashingTimer != null) {
+                    flashingTimer.stop();
+                    flashingTimer = null;
+                    SwingUtil.repaint(panel);
+                }
+            }
+        } else if ("flash.duration".equals(propertyName)) {
+            if (evt.getNewValue() == Boolean.TRUE) {
+                if (toolWindow.isVisible()) {
+                    flasingDuration = (Integer) evt.getNewValue();
+                    SwingUtil.repaint(panel);
+                }
+            } else {
+                if (flashingTimer != null) {
+                    flashingTimer.stop();
+                    flashingTimer = null;
+                    SwingUtil.repaint(panel);
+                }
+            }
+        } else if ("active".equals(evt.getPropertyName())) {
+            if (evt.getSource() != toolWindow || !toolWindow.isVisible())
+                return;
+            assert evt.getPropertyName() != null;
+            assert descriptor.getToolWindow().isVisible();
+
+            if (evt.getNewValue() == Boolean.FALSE) {
+                if (animBackStart.equals(UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START)))
+                    animation.hide();
+            } else {
+                if (animBackStart.equals(UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START)))
+                    animation.show();
+            }
+        }
+
+
+    }
+
+
     protected void installDefaults(JComponent c) {
         LookAndFeel.installColorsAndFont(c, "Panel.background", "Panel.foreground", "Panel.font");
         LookAndFeel.installBorder(c, "Panel.border");
@@ -228,6 +236,27 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
 
     protected void uninstallDefaults(JComponent c) {
         LookAndFeel.uninstallBorder(c);
+    }
+
+    protected void installListeners(JComponent c) {
+        descriptor.getToolWindow().addPlafPropertyChangeListener(this);
+        descriptor.getCleaner().addCleaner(this);
+
+        // Drag Gesture
+        final ToolWindowTitleBarDragGesture dragGesture = new ToolWindowTitleBarDragGesture(descriptor);
+        SwingUtil.registerDragGesture(c, dragGesture);
+        panel.addContainerListener(new ContainerAdapter() {
+            public void componentAdded(ContainerEvent e) {
+                if (e.getChild() instanceof DragGestureInitiator) {
+                    DragGestureInitiator dragGestureInitiator = (DragGestureInitiator) e.getChild();
+                    dragGestureInitiator.setDragGesture(dragGesture);
+                }
+            }
+        });
+    }
+
+    protected void uninstallListeners(JComponent c) {
+        descriptor.getToolWindow().removePlafPropertyChangeListener(this);
     }
 
     protected void updateToolWindowTitleBar(Graphics g, JComponent c,
@@ -268,35 +297,6 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
         }
     }
 
-
-    protected class GradientActivationListener implements PropertyChangeListener {
-        public static final float ANIMATION_DURATION = 80f;
-        public static final int ANIMATION_SLEEP = 10;
-
-        protected ToolWindowDescriptor descriptor;
-
-        public GradientActivationListener(ToolWindowDescriptor descriptor) {
-            this.descriptor = descriptor;
-        }
-
-        public synchronized void propertyChange(PropertyChangeEvent evt) {
-            if (evt.getSource() != descriptor || !descriptor.getToolWindow().isVisible())
-                return;
-
-            assert evt.getPropertyName() != null;
-            assert descriptor.getToolWindow().isVisible();
-
-            if ("active".equals(evt.getPropertyName())) {
-                if (evt.getNewValue() == Boolean.FALSE) {
-                    if (animBackStart.equals(UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START)))
-                        animation.hide();
-                } else {
-                    if (animBackStart.equals(UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START)))
-                        animation.show();
-                }
-            }
-        }
-    }
 
     protected class GradientAnimation extends AbstractAnimation {
 
@@ -420,7 +420,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner {
             }
 
             // Setup ghostImage
-            if (!descriptor.isDragImageAvailable() || resourceManager.getBoolean("drag.icon.useDefault", false)) {
+            if (!descriptor.isDragImageAvailable() || MyDoggyUtil.getBoolean("drag.icon.useDefault", false)) {
                 setGhostImage(dge.getDragOrigin(),
                               MyDoggyUtil.getImage(MyDoggyKeySpace.DRAG));
             } else {

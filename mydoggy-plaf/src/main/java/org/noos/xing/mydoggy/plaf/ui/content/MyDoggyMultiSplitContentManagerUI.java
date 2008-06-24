@@ -8,6 +8,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
 import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
+import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -131,7 +132,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         contentValueAdjusting = false;
 
         if (oldContentManagerUI != null) {
-            if (resourceManager.getBoolean("ContentManagerUI.ContentManagerUiListener.import", false)) {
+            if (MyDoggyUtil.getBoolean("ContentManagerUI.ContentManagerUiListener.import", false)) {
                 // Import listeners from the old ContentManagerUI
                 for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
                     oldContentManagerUI.removeContentManagerUIListener(listener);
@@ -261,7 +262,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                     if (c == content.getComponent())
                         return;
                 }
-                throw new IllegalStateException("Invalid content ui state.");
+                throw new IllegalStateException("Invalid content ui state: " + content);
             }
         } else {
             if (content == lastSelected)
@@ -716,12 +717,12 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
                         Window dialog;
                         if (contentUI.isAddToTaskBarWhenDetached()) {
-                            dialog = new ContentFrame(resourceManager,
-                                                      content, contentUI,
+                            dialog = new ContentFrame(
+                                    content, contentUI,
                                                       parentFrame, inBounds);
                         } else {
-                            dialog = new ContentDialog(resourceManager,
-                                                       content, contentUI,
+                            dialog = new ContentDialog(
+                                    content, contentUI,
                                                        parentFrame, inBounds);
                         }
                         dialog.addWindowFocusListener(new ContentDialogFocusListener(content));

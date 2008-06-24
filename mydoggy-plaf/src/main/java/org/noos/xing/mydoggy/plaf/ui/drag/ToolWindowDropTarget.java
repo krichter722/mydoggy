@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.drag;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
+import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -135,7 +136,7 @@ public class ToolWindowDropTarget extends DropTarget {
                                 toolWindow.setAggregateMode(true);
                                 try {
                                     if (dragAnchor == null && onToolWindow != null && toolWindow != onToolWindow) {
-                                        if (!toolWindowManager.getResourceManager().getBoolean("drag.toolwindow.asTab", true)) {
+                                        if (!MyDoggyUtil.getBoolean("drag.toolwindow.asTab", true)) {
                                             // Choose drag anchor ...
                                             switch (onToolWindow.getAnchor()) {
                                                 case LEFT:

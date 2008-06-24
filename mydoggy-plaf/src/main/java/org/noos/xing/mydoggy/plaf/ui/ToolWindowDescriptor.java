@@ -9,12 +9,11 @@ import org.noos.xing.mydoggy.plaf.cleaner.DefaultCleanerAggregator;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.AggregateIcon;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowRepresentativeAnchor;
 import org.noos.xing.mydoggy.plaf.ui.util.FindFocusableQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 
 import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.LabelUI;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -140,21 +139,21 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
             switch (anchor) {
                 case BOTTOM:
                 case TOP:
-                    representativeAnchor = new RepresentativeAnchor(toolRepresentativeAnchorText, toolIcon, JLabel.CENTER);
+                    representativeAnchor = new ToolWindowRepresentativeAnchor(this, toolRepresentativeAnchorText, toolIcon, JLabel.CENTER);
                     break;
                 case LEFT:
                     TextIcon textIcon = new TextIcon(parent, toolRepresentativeAnchorText, TextIcon.ROTATE_LEFT);
                     textIcon.setForeground(toolWindow.isAvailable() ? UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND)
                                            : UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
                     AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolIcon, SwingConstants.VERTICAL);
-                    representativeAnchor = new RepresentativeAnchor(compositeIcon, JLabel.CENTER);
+                    representativeAnchor = new ToolWindowRepresentativeAnchor(this, compositeIcon, JLabel.CENTER);
                     break;
                 case RIGHT:
                     textIcon = new TextIcon(parent, toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
                     textIcon.setForeground(toolWindow.isAvailable() ? UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND)
                                            : UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
                     compositeIcon = new AggregateIcon(toolIcon, textIcon, SwingConstants.VERTICAL);
-                    representativeAnchor = new RepresentativeAnchor(compositeIcon, JLabel.CENTER);
+                    representativeAnchor = new ToolWindowRepresentativeAnchor(this, compositeIcon, JLabel.CENTER);
                     break;
             }
 
@@ -471,32 +470,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
             // Finalizy clean
             toolWindow = null;
             manager = null;
-        }
-    }
-
-    public class RepresentativeAnchor extends JLabel {
-
-        public RepresentativeAnchor(Icon image, int horizontalAlignment) {
-            super(image, horizontalAlignment);
-            super.setUI((LabelUI) createRepresentativeAnchorUI());
-        }
-
-        public RepresentativeAnchor(String text, Icon icon, int horizontalAlignment) {
-            super(text, icon, horizontalAlignment);
-            super.setUI((LabelUI) createRepresentativeAnchorUI());
-        }
-
-        public void setUI(LabelUI ui) {
-        }
-
-        public void updateUI() {
-            firePropertyChange("UI", null, getUI());
-        }
-
-        protected ComponentUI createRepresentativeAnchorUI() {
-            return manager.getResourceManager().createComponentUI(MyDoggyKeySpace.REPRESENTATIVE_ANCHOR_BUTTON_UI,
-                                                                  manager.getContext(ToolWindowDescriptor.class,
-                                                                                     ToolWindowDescriptor.this));
         }
     }
 

@@ -4,7 +4,6 @@ import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
-import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -26,7 +25,6 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
     protected MyDoggyToolWindowManager toolWindowManager;
-    protected ResourceManager resourceManager;
 
     protected Map<String, byte[]> models;
     protected Map<Dockable, DockableEntry> entries;
@@ -45,7 +43,6 @@ public class MultiSplitDockableContainer extends JPanel {
     public MultiSplitDockableContainer(MyDoggyToolWindowManager toolWindowManager, int orientation) {
         this.orientation = orientation;
         this.toolWindowManager = toolWindowManager;
-        this.resourceManager = toolWindowManager.getResourceManager();
         this.entries = new LinkedHashMap<Dockable, DockableEntry>();
 
         this.multiSplitPane = new MultiSplitPane();
