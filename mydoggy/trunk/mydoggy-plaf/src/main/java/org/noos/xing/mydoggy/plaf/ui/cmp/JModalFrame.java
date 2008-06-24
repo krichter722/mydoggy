@@ -1,8 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.Dockable;
-import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
+import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,17 +10,15 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 
 public class JModalFrame extends JFrame implements ModalWindow {
-    protected ResourceManager resourceManager;
     protected Window modalToWindow;
     protected boolean notifiedModalToWindow;
     protected Component returnFocus;
 
-    public JModalFrame(Dockable dockable, ResourceManager resourceManager, Window owner, Component returnFocus, boolean modal) {
+    public JModalFrame(Dockable dockable, Window owner, Component returnFocus, boolean modal) {
         setAlwaysOnTop(owner != null);
         setUndecorated(true);
         setTitle(dockable.getTitle());
 
-        this.resourceManager = resourceManager;
         setFocusableWindowState(true);
         this.returnFocus = returnFocus;
         synchronized (JModalFrame.this) {
@@ -35,7 +33,7 @@ public class JModalFrame extends JFrame implements ModalWindow {
 
     public void setVisible(boolean visible) {
         if (!visible) {
-            TransparencyManager<Window> transparencyManager = resourceManager.getTransparencyManager();
+            TransparencyManager<Window> transparencyManager = MyDoggyUtil.getTransparencyManager();
             transparencyManager.setAlphaModeRatio(this, 0.0f);
 
             restoreOwner();

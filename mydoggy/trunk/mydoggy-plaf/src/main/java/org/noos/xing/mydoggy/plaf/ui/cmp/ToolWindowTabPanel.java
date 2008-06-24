@@ -13,6 +13,7 @@ import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureDelegate;
 import org.noos.xing.mydoggy.plaf.ui.util.MouseEventDispatcher;
+import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -116,7 +117,7 @@ public class ToolWindowTabPanel extends JComponent implements ToolWindowTabConta
         setBorder(null);
 
         tabContainer = new JPanel(containerLayout = new TableLayout(new double[][]{{0},
-                                                                                   {resourceManager.getFloat("toolwindow.title.font.size", 12) + 4}}));
+                                                                                   {MyDoggyUtil.getFloat("toolwindow.title.font.size", 12) + 4}}));
         tabContainer.setName("toolWindow.tabContainer." + descriptor.getToolWindow().getId());
         tabContainer.setOpaque(false);
         tabContainer.setBorder(null);

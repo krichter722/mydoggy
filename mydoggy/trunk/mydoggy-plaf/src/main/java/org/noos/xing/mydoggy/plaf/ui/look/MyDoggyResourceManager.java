@@ -11,10 +11,7 @@ import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.TitleBarButtons;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowContainer;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
-import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;
-import org.noos.xing.mydoggy.plaf.ui.cmp.DefaultTitleBarButtons;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
+import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
@@ -25,7 +22,6 @@ import javax.swing.*;
 import javax.swing.plaf.ButtonUI;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.LabelUI;
-import javax.swing.plaf.PanelUI;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -65,17 +61,17 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         return (T) instanceCreators.get(clazz).create(context);
     }
 
-    public Component createComponent(String key, Context context) {
-        return applyCustomization(key,
-                                  cmpCreators.get(key).create(context),
-                                  context);
+    public <T extends Component> T createComponent(String key, Context context) {
+        return (T) applyCustomization(key,
+                                      cmpCreators.get(key).create(context),
+                                      context);
     }
 
     public ComponentUI createComponentUI(String key, Context context) {
         return cmpUiCreators.get(key).create(context);
     }
 
-    public Component applyCustomization(String key, Component component, Context context) {
+    public <T extends Component> T applyCustomization(String key, T component, Context context) {
         if (cmpCustomizers.containsKey(key))
             cmpCustomizers.get(key).customize(component, context);
         return component;
@@ -114,7 +110,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         this.transparencyManager = transparencyManager;
         UIManager.put(TransparencyManager.class, transparencyManager);
     }
-
 
 
     public void setLocale(Locale locale) {
@@ -236,7 +231,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
             String strKey = key.toString();
             int pointIndex = strKey.indexOf('.');
             if (pointIndex != -1) {
-                String prefix =  strKey.substring(0, pointIndex);
+                String prefix = strKey.substring(0, pointIndex);
                 loadResource(prefix,
                              strKey.substring(prefix.length() + 1),
                              resources.getProperty(strKey));
@@ -363,8 +358,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         cmpCreators.put(TOOL_WINDOW_TAB_TITLE, new ToolWindowTabTitleComponentCreator());
 
         cmpUiCreators = new Hashtable<String, ObjectCreator<ComponentUI>>();
-        cmpUiCreators.put(REPRESENTATIVE_ANCHOR_BUTTON_UI, new RepresentativeAnchorButtonComponentUICreator());
-        cmpUiCreators.put(TOOL_WINDOW_TITLE_BAR_UI, new ToolWindowTitleBarComponentUICreator());
 
         cmpCustomizers = new Hashtable<String, ObjectCustomizer<Component>>();
         cmpCustomizers.put(TOOL_WINDOW_MANAGER, new MyDoggyManagerPanelComponentCustomizer());
@@ -464,6 +457,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     public static class ToolWindowTitleBarComponentCreator implements ObjectCreator<Component> {
 
         public Component create(Context context) {
+/*
             JPanel titleBar = new JPanel() {
                 public void setUI(PanelUI ui) {
                     if (ui instanceof ToolWindowTitleBarUI)
@@ -475,6 +469,8 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
                     .createComponentUI(TOOL_WINDOW_TITLE_BAR_UI, context)
             );
             return titleBar;
+*/
+            return new ToolWindowTitleBar(context.get(ToolWindowDescriptor.class));
         }
     }
 
@@ -508,7 +504,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
                         super.setUI(ui);
                 }
             };
-            label.setUI(new ToolScrollBarArrowUI(resourceManager));
+            label.setUI(new ToolScrollBarArrowUI());
             label.setPreferredSize(new Dimension(16, 16));
             label.setHorizontalAlignment(SwingConstants.CENTER);
             label.setVerticalAlignment(SwingConstants.CENTER);
@@ -525,22 +521,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
         public Component create(Context context) {
             return new JLabel();
-        }
-    }
-
-
-    public static class RepresentativeAnchorButtonComponentUICreator implements ObjectCreator<ComponentUI> {
-
-        public ComponentUI create(Context context) {
-            return new ToolWindowRepresentativeAnchorUI(context.get(ToolWindowDescriptor.class));
-        }
-    }
-
-    public static class ToolWindowTitleBarComponentUICreator implements ObjectCreator<ComponentUI> {
-
-        public ComponentUI create(Context context) {
-            return new ToolWindowTitleBarUI(context.get(ToolWindowDescriptor.class),
-                                            context.get(ToolWindowContainer.class));
         }
     }
 

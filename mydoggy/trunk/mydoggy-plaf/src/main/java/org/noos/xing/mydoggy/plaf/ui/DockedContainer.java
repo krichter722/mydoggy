@@ -9,7 +9,9 @@ import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
 import org.noos.xing.mydoggy.plaf.support.CleanablePropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowActiveButton;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowRepresentativeAnchor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
+import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -30,7 +32,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
     protected transient ResourceManager resourceManager;
 
     protected JPanel container;
-    protected JPanel titleBar;
+    protected JComponent titleBar;
     protected ToolWindowTabContainer toolWindowTabContainer;
     protected TitleBarButtons titleBarButtons;
     protected JPanel componentContainer;
@@ -137,30 +139,29 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         // Container
         container = (JPanel) resourceManager.createComponent(MyDoggyKeySpace.TOOL_WINDOW_CONTAINER,
                                                              descriptor.getManager().getContext());
-        container.setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {resourceManager.getFloat("toolwindow.title.font.size", 12) + 4,
+        container.setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {MyDoggyUtil.getFloat("toolwindow.title.font.size", 12) + 4,
                                                                                         TableLayout.FILL}}, false));
         container.setName("toolWindow.container." + toolWindow.getId());
         container.setFocusTraversalPolicyProvider(true);
         container.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
         container.setFocusCycleRoot(true);
         container.setFocusable(true);
-        
+
         container.putClientProperty(ToolWindow.class, toolWindow);
 
         String id = toolWindow.getId();
 
         // Title Bar
         ExtendedTableLayout titleBarLayout = new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 2, -2, 3},
-                                                                                    {0, resourceManager.getFloat("toolwindow.title.font.size", 12) + 4, 0}}, false);
-        titleBar = (JPanel) resourceManager.createComponent(
-                MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR,
-                descriptor.getManager().getContext(ToolWindowDescriptor.class, descriptor,
-                                                   ToolWindowContainer.class, this)
+                                                                                    {0, MyDoggyUtil.getFloat("toolwindow.title.font.size", 12) + 4, 0}}, false);
+        titleBar = resourceManager.createComponent(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR,
+                                                   descriptor.getManager().getContext(
+                                                           ToolWindowDescriptor.class, descriptor
+                                                   )
         );
         titleBar.setLayout(titleBarLayout);
         titleBar.setName("toolWindow.titleBar." + toolWindow.getId());
         titleBar.setEnabled(false);
-        titleBar.setBorder(null);
         titleBar.addMouseListener(titleBarMouseAdapter);
         titleBar.setFocusTraversalPolicyProvider(true);
         titleBar.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
@@ -207,9 +208,9 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
     protected void initListeners() {
         focusListener = new FocusOwnerPropertyChangeListener(
-                                    resourceManager.createInstance(ParentOfQuestion.class,
-                                                                   new DefaultMutableContext(ToolWindow.class, toolWindow,
-                                                                                             Component.class, container)));
+                resourceManager.createInstance(ParentOfQuestion.class,
+                                               new DefaultMutableContext(ToolWindow.class, toolWindow,
+                                                                         Component.class, container)));
 
         addPropertyChangeListener("active", new ActivePropertyChangeListener());
         addPropertyChangeListener("type", new TypePropertyChangeListener());
@@ -218,15 +219,15 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getNewValue() != null) {
                     KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-                    keyboardFocusManager.removePropertyChangeListener("focusOwner",focusListener);
-                    keyboardFocusManager.addPropertyChangeListener("focusOwner",focusListener);
+                    keyboardFocusManager.removePropertyChangeListener("focusOwner", focusListener);
+                    keyboardFocusManager.addPropertyChangeListener("focusOwner", focusListener);
                 } else {
                     toolWindow.setFlashing(false);
                 }
             }
         });
 
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner",focusListener);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusListener);
 
         toolWindow.addToolWindowListener(new DockedToolWindowListener());
     }
@@ -408,7 +409,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         public void showPopupMenu(Component source, int x, int y) {
             if (source == titleBar ||
                 SwingUtil.hasParent(source, titleBar) ||
-                source instanceof ToolWindowDescriptor.RepresentativeAnchor) {
+                source instanceof ToolWindowRepresentativeAnchor) {
 
                 popupMenu.removeAll();
                 popupMenu.add(pinnedMode);
@@ -592,13 +593,13 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
                 for (ToolWindowAnchor anchor : anchors) {
                     switch (anchor) {
-                        case LEFT :
+                        case LEFT:
                             left.setVisible(true);
                             break;
                         case RIGHT:
                             right.setVisible(true);
                             break;
-                        case TOP :
+                        case TOP:
                             top.setVisible(true);
                             break;
                         case BOTTOM:

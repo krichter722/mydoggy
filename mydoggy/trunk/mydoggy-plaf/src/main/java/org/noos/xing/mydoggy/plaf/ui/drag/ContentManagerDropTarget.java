@@ -2,8 +2,8 @@ package org.noos.xing.mydoggy.plaf.ui.drag;
 
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
+import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -17,25 +17,21 @@ import java.awt.dnd.*;
 public class ContentManagerDropTarget extends DropTarget {
 
     public ContentManagerDropTarget(JComponent component,
-                                    ToolWindowManager toolWindowManager,
-                                    ResourceManager resourceManager) throws HeadlessException {
+                                    ToolWindowManager toolWindowManager) throws HeadlessException {
         super(component,
               DnDConstants.ACTION_MOVE,
-              new ContentManagerDropTargetListener(toolWindowManager, resourceManager, component));
+              new ContentManagerDropTargetListener(toolWindowManager, component));
     }
 
     public static class ContentManagerDropTargetListener implements DropTargetListener {
         protected ToolWindowManager toolWindowManager;
-        protected ResourceManager resourceManager;
         protected JComponent component;
         protected Border oldBorder;
         protected Border dragBorder = new LineBorder(Color.BLUE, 3);
 
         public ContentManagerDropTargetListener(ToolWindowManager toolWindowManager,
-                                                ResourceManager resourceManager,
                                                 JComponent component) {
             this.toolWindowManager = toolWindowManager;
-            this.resourceManager = resourceManager;
             this.component = component;
         }
 
@@ -98,7 +94,7 @@ public class ContentManagerDropTarget extends DropTarget {
         }
 
         protected boolean isEnabled() {
-            return resourceManager.getBoolean("ContentManagerDropTarget.enabled", false);
+            return MyDoggyUtil.getBoolean("ContentManagerDropTarget.enabled", false);
         }
 
         protected boolean checkEvent(DropTargetDragEvent dtde) {

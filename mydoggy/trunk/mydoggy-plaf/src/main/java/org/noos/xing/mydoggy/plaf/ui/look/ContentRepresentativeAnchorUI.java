@@ -4,7 +4,6 @@ import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
-import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.RepresentativeAnchorDragGesture;
@@ -31,7 +30,6 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
 
     protected DockableDescriptor descriptor;
     protected Dockable dockable;
-    protected ResourceManager resourceManager;
 
     protected RepresentativeAnchorMouseAdapter adapter;
 
@@ -46,7 +44,6 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
     public ContentRepresentativeAnchorUI(DockableDescriptor descriptor) {
         this.descriptor = descriptor;
         this.dockable = descriptor.getDockable();
-        this.resourceManager = descriptor.getResourceManager();
 
         this.flashingAnimation = new GradientAnimation();
         this.flashingAnimBackStart = new MutableColor(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));

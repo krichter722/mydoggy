@@ -8,6 +8,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDialog;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentFrame;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
 import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
+import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -74,7 +75,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         contentValueAdjusting = false;
 
         if (oldContentManagerUI != null) {
-            if (resourceManager.getBoolean("ContentManagerUI.ContentManagerUiListener.import", false)) {
+            if (MyDoggyUtil.getBoolean("ContentManagerUI.ContentManagerUiListener.import", false)) {
                 // Import listeners from the old ContentManagerUI
                 for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
                     oldContentManagerUI.removeContentManagerUIListener(listener);
@@ -555,10 +556,10 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
 
                     Window dialog;
                     if (contentUI.isAddToTaskBarWhenDetached()) {
-                        dialog = new ContentFrame(resourceManager, content, contentUI,
+                        dialog = new ContentFrame(content, contentUI,
                                                   parentFrame, inBounds);
                     } else {
-                        dialog = new ContentDialog(resourceManager, content, contentUI,
+                        dialog = new ContentDialog(content, contentUI,
                                                    parentFrame, inBounds);
                     }
                     dialog.addWindowFocusListener(new ContentDialogFocusListener(content));

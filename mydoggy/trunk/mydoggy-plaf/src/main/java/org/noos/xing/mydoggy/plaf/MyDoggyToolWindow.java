@@ -278,7 +278,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
     public void setDetached(boolean detached) {
-        String detachedType = descriptor.getResourceManager().getProperty("toolwindow.detached.type");
+        String detachedType = UIManager.getString("toolwindow.detached.type");
         try {
             setType(ToolWindowType.valueOf(detachedType));
             ToolWindowType.valueOf(detachedType);
@@ -355,6 +355,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
 
         synchronized (getLock()) {
             if (active) {
+                setFlashing(false);
                 setAvailable(active);
                 setVisible(active);
             }

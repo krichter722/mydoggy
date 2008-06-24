@@ -165,7 +165,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
         if (oldContentManagerUI != null) {
             // Import listeners from the old ContentManagerUI
-            if (resourceManager.getBoolean("ContentManagerUI.ContentManagerUiListener.import", false)) {
+            if (MyDoggyUtil.getBoolean("ContentManagerUI.ContentManagerUiListener.import", false)) {
                 // Import listeners from the old ContentManagerUI
                 for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
                     oldContentManagerUI.removeContentManagerUIListener(listener);
@@ -720,12 +720,12 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
                         Window dialog;
                         if (contentUI.isAddToTaskBarWhenDetached()) {
-                            dialog = new ContentFrame(resourceManager,
-                                                      content, contentUI,
+                            dialog = new ContentFrame(
+                                    content, contentUI,
                                                       parentFrame, inBounds);
                         } else {
-                            dialog = new ContentDialog(resourceManager,
-                                                       content, contentUI,
+                            dialog = new ContentDialog(
+                                    content, contentUI,
                                                        parentFrame, inBounds);
                         }
                         dialog.addWindowFocusListener(new ContentDialogFocusListener(content));
@@ -842,7 +842,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
                     // Setup ghostImage
 
-                    if (resourceManager.getBoolean("drag.icon.useDefault", false)) {
+                    if (MyDoggyUtil.getBoolean("drag.icon.useDefault", false)) {
                         setGhostImage(dge.getDragOrigin(),
                                       MyDoggyUtil.getImage(MyDoggyKeySpace.DRAG));
                     } else {

@@ -44,7 +44,7 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
         descriptor.getToolBar().propertyChange(new PropertyChangeEvent(getComponent(), "startDrag", null, dge));
 
         // Setup ghostImage
-        if (descriptor.getResourceManager().getBoolean("drag.icon.useDefault", false)) {
+        if (MyDoggyUtil.getBoolean("drag.icon.useDefault", false)) {
             setGhostImage(dge.getDragOrigin(),
                           MyDoggyUtil.getImage(MyDoggyKeySpace.DRAG));
         } else {
@@ -70,7 +70,7 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
 
         // Produce updatedGhostImage
         if (newAnchor != lastAnchor) {
-            if (!descriptor.getResourceManager().getBoolean("drag.icon.useDefault", false)) {
+            if (!MyDoggyUtil.getBoolean("drag.icon.useDefault", false)) {
                 resetGhostImage();
 
                 if (newAnchor == null) {

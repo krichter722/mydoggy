@@ -7,7 +7,10 @@ import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
-import org.noos.xing.mydoggy.plaf.ui.*;
+import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
@@ -22,6 +25,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
+import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.metal.MetalLabelUI;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
@@ -41,7 +45,6 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
-    protected ResourceManager resourceManager;
     protected DockedTypeDescriptor dockedTypeDescriptor;
 
     protected RepresentativeAnchorMouseAdapter adapter;
@@ -56,10 +59,14 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     protected TranslucentPanel previewPanel;
 
 
+    public static ComponentUI createUI(JComponent c) {
+        return new ToolWindowRepresentativeAnchorUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class));
+    }
+
+
     public ToolWindowRepresentativeAnchorUI(ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
-        this.resourceManager = descriptor.getResourceManager();
 
         this.flashingAnimation = new GradientAnimation();
         this.flasingDuration = -1;
@@ -80,8 +87,6 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
-        c.removeMouseListener(adapter);
-        c.removeMouseMotionListener(adapter);
 
         cleanup();
     }
@@ -204,10 +209,12 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     }
 
 
-    protected void installListeners(JLabel c) {
-        super.installListeners(c);
+    protected void installDefaults(JLabel c) {
+        labelBorder = new LineBorder(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER), 1, true, 3, 3);
 
-        // Forse PropertyChangeListener
+        c.setBorder(labelBorder);
+        c.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
+
         String oldText = c.getText();
         if (oldText != null) {
             c.setText(null);
@@ -220,6 +227,12 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
             c.setToolTipText(oldText);
         }
 
+        SwingUtil.installFont(c, "mydoggy.ToolWindowRepresentativeAnchorUI.font");
+    }
+
+    protected void installListeners(JLabel c) {
+        super.installListeners(c);
+
         adapter = new RepresentativeAnchorMouseAdapter();
         c.addMouseListener(adapter);
         c.addMouseMotionListener(adapter);
@@ -229,13 +242,11 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         SwingUtil.registerDragGesture(c, new ToolWindowRepresentativeAnchorDragGesture(descriptor, c));
     }
 
-    protected void installDefaults(JLabel c) {
-        labelBorder = new LineBorder(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER), 1, true, 3, 3);
-
-        c.setBorder(labelBorder);
-        c.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
-
-        SwingUtil.installFont(c, "mydoggy.ToolWindowRepresentativeAnchorUI.font");
+    protected void uninstallListeners(JLabel c) {
+        c.removeMouseListener(adapter);
+        c.removeMouseMotionListener(adapter);
+        
+        descriptor.getToolWindow().removePlafPropertyChangeListener(this);
     }
 
     protected void updateAnchor(Graphics g, JComponent c,

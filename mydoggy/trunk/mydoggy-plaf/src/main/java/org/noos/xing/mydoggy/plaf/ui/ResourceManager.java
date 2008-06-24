@@ -39,7 +39,7 @@ public interface ResourceManager extends Observable {
      * @return the component created using the rule specified by the key param.
      * @since 1.3.1
      */
-    Component createComponent(String key, Context context);
+    <T extends Component> T createComponent(String key, Context context);
 
     /**
      * Create the component ui using the rule specified by the key param.
@@ -60,7 +60,7 @@ public interface ResourceManager extends Observable {
      * @return the component customized.
      * @since 1.3.1
      */
-    Component applyCustomization(String key, Component component, Context context);
+    <T extends Component> T applyCustomization(String key, T component, Context context);
 
     /**
      * Returns the icon to which this manager maps the specified id.  Returns
