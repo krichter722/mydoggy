@@ -1200,12 +1200,15 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
                 if (lastFocusOwner != null) {
                     boolean shouldRequest = true;
+
                     for (MyDoggyToolWindowBar bar : bars) {
-                        if (bar.valueAdjusting && getBar(descriptor.getToolWindow().getAnchor()) == bar) {
+                        if (bar.valueAdjusting &&
+                            getBar(descriptor.getToolWindow().getAnchor()) == bar) {
                             shouldRequest = false;
                             break;
                         }
                     }
+
                     if (shouldRequest)
                         SwingUtil.requestFocus(lastFocusOwner);
                 }
