@@ -219,6 +219,12 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         valueAdjusting = false;
     }
 
+    public void hideTool(ToolWindow toolWindow) {
+        valueAdjusting = true;
+        toolWindow.setVisible(false);
+        valueAdjusting = false;
+    }
+
     public int getSize() {
         return (getAvailableTools() > 0) ? getLength() : 0;
     }
@@ -689,11 +695,14 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                             continue;
 
                         if (toolWindow.getAnchor().equals(sourceTool.getAnchor()))
-                            toolWindow.setVisible(false);
+//                            toolWindow.setVisible(false);
+                            hideTool(toolWindow);
                         else if (toolWindow.isAutoHide() || toolWindow.getType() == ToolWindowType.SLIDING)
-                            toolWindow.setVisible(false);
+                            hideTool(toolWindow);
+//                            toolWindow.setVisible(false);
                     } else if (toolWindow.getType() == ToolWindowType.SLIDING)
-                        toolWindow.setVisible(false);
+                        hideTool(toolWindow);
+//                        toolWindow.setVisible(false);
 
                     if (toolWindow.isVisible() && toolWindow.isMaximized())
                         toolWindow.setMaximized(false);
