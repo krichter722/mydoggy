@@ -36,8 +36,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Random;
+import java.util.ResourceBundle;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -364,6 +366,15 @@ public class MyDoggySet {
 
     protected void customizeToolWindowManager(MyDoggyToolWindowManager myDoggyToolWindowManager) {
         ResourceManager resourceManager = myDoggyToolWindowManager.getResourceManager();
+        resourceManager.setUserBundle(new ResourceBundle() {
+            protected Object handleGetObject(String key) {
+                return key;
+            }
+
+            public Enumeration<String> getKeys() {
+                return null;
+            }
+        });
 
         // Add customization here. See the page http://mydoggy.sourceforge.net/mydoggy-plaf/resourceManagerUsing.html
 /*

@@ -139,8 +139,9 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         // Container
         container = (JPanel) resourceManager.createComponent(MyDoggyKeySpace.TOOL_WINDOW_CONTAINER,
                                                              descriptor.getManager().getContext());
-        container.setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL}, {MyDoggyUtil.getFloat("toolwindow.title.font.size", 12) + 4,
-                                                                                        TableLayout.FILL}}, false));
+        container.setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL},
+                                                                   {MyDoggyUtil.getInt("ToolWindowTitleBarUI.length", 16), TableLayout.FILL}}, 
+                                                    false));
         container.setName("toolWindow.container." + toolWindow.getId());
         container.setFocusTraversalPolicyProvider(true);
         container.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
@@ -153,7 +154,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
         // Title Bar
         ExtendedTableLayout titleBarLayout = new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 2, -2, 3},
-                                                                                    {0, MyDoggyUtil.getFloat("toolwindow.title.font.size", 12) + 4, 0}}, false);
+                                                                                    {0, MyDoggyUtil.getInt("ToolWindowTitleBarUI.length", 16) , 0}}, false);
         titleBar = resourceManager.createComponent(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR,
                                                    descriptor.getManager().getContext(
                                                            ToolWindowDescriptor.class, descriptor

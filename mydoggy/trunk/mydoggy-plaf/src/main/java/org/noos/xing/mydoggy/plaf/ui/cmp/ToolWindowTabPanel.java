@@ -117,7 +117,7 @@ public class ToolWindowTabPanel extends JComponent implements ToolWindowTabConta
         setBorder(null);
 
         tabContainer = new JPanel(containerLayout = new TableLayout(new double[][]{{0},
-                                                                                   {MyDoggyUtil.getFloat("toolwindow.title.font.size", 12) + 4}}));
+                                                                                   {MyDoggyUtil.getInt("ToolWindowTitleBarUI.length", 16)}}));
         tabContainer.setName("toolWindow.tabContainer." + descriptor.getToolWindow().getId());
         tabContainer.setOpaque(false);
         tabContainer.setBorder(null);

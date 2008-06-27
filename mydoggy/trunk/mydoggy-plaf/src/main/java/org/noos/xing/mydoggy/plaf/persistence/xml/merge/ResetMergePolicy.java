@@ -15,7 +15,9 @@ public class ResetMergePolicy implements MergePolicyApplier {
         if (toolWindow.getType() == ToolWindowType.FLOATING || 
             toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
             toolWindow.getType() == ToolWindowType.SLIDING) {
+
             toolWindow.setVisible(visible);
+
         } else {
             if (visible)
                 toolWindow.aggregate();
