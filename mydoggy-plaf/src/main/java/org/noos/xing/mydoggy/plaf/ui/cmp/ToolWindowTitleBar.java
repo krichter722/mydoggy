@@ -8,7 +8,7 @@ import javax.swing.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolWindowTitleBar extends JComponent {
+public class ToolWindowTitleBar extends JPanel {
 
     /**
      * @see #getUIClassID
@@ -19,14 +19,13 @@ public class ToolWindowTitleBar extends JComponent {
 
     public ToolWindowTitleBar(ToolWindowDescriptor toolWindowDescriptor) {
         putClientProperty(ToolWindowDescriptor.class, toolWindowDescriptor);
-        setLayout(null);
-        setDoubleBuffered(true);
         updateUI();
     }
 
 
     public void updateUI() {
-        setUI((ToolWindowTitleBarUI) UIManager.getUI(this));
+        if (getClientProperty(ToolWindowDescriptor.class) != null)
+            setUI((ToolWindowTitleBarUI) UIManager.getUI(this));
     }
 
     public void setUI(ToolWindowTitleBarUI ui) {
