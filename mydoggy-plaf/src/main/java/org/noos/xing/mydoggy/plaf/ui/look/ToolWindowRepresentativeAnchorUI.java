@@ -227,7 +227,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
             c.setToolTipText(oldText);
         }
 
-        SwingUtil.installFont(c, "mydoggy.ToolWindowRepresentativeAnchorUI.font");
+        SwingUtil.installFont(c, "ToolWindowRepresentativeAnchorUI.font");
     }
 
     protected void installListeners(JLabel c) {

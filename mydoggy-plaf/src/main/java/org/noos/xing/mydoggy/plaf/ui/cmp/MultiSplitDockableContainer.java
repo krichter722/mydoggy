@@ -784,6 +784,7 @@ public class MultiSplitDockableContainer extends JPanel {
                                int aggregationIndexLocation,
                                AggregationPosition aggregationPosition) {
         boolean old = this.storeLayout;
+        
         storeLayout = false;
         try {
             removeDockable(dockable);
@@ -919,7 +920,7 @@ public class MultiSplitDockableContainer extends JPanel {
                     }
                 }
             }
-            
+
             // Step Two: apply model 2...Isomorphing
             Map<String, Component> newChildMap = new HashMap<String, Component>();
             stack = new Stack<MultiSplitLayout.Split>();
@@ -944,7 +945,6 @@ public class MultiSplitDockableContainer extends JPanel {
             }
 
             multiSplitPane.getMultiSplitLayout().setChildMap(newChildMap);
-
         } else {
             DockableLeaf leaf = (DockableLeaf) root;
 

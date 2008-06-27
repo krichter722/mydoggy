@@ -231,7 +231,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner, PropertyCh
         LookAndFeel.installColorsAndFont(c, "Panel.background", "Panel.foreground", "Panel.font");
         LookAndFeel.installBorder(c, "Panel.border");
         
-        SwingUtil.installFont(c, "mydoggy.ToolWindowTitleBarUI.font");
+        SwingUtil.installFont(c, "ToolWindowTitleBarUI.font");
     }
 
     protected void uninstallDefaults(JComponent c) {
