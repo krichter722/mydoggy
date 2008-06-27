@@ -13,7 +13,7 @@ public interface DockableManager<D extends Dockable> {
      *
      * @return an array of the dockables registered into this manager.
      *         If there is no tool registered then it returns an empty array.
-     * @since 1.4.3
+     * @since 1.5.0
      */
     D[] getDockables();
     
@@ -24,7 +24,7 @@ public interface DockableManager<D extends Dockable> {
      *
      * @param d dockable to be associated with the specified alias.
      * @param alias alias with which the specified dockable is to be associated.
-     * @since 1.4.3
+     * @since 1.5.0
      */
     void addAlias(D d, Object alias);
 
@@ -33,7 +33,7 @@ public interface DockableManager<D extends Dockable> {
      *
      * @param d dockable whose aliases are to be returned.
      * @return all aliases associated to the passed dockable.
-     * @since 1.4.3
+     * @since 1.5.0
      * @see #addAlias(Dockable, Object)
      */
     Object[] getAliases(D d);
@@ -45,7 +45,7 @@ public interface DockableManager<D extends Dockable> {
      * @param alias alias to be removed.
      * @return If the manager previously contained a mapping for this alias,
      * the dockable is returned.
-     * @since 1.4.3
+     * @since 1.5.0
      */
     D removeAlias(Object alias);
 

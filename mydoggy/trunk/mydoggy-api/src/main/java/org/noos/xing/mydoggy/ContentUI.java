@@ -76,7 +76,7 @@ public interface ContentUI extends DockableUI {
      * Returns whether this content could be maximized using the ui.
      *
      * @return <code>true</code> if this content can be maximized using the ui, <code>false</code> otherwise.
-     * @since 1.4.3
+     * @since 1.5.0
      */
     boolean isMaximizable();
 
@@ -84,7 +84,7 @@ public interface ContentUI extends DockableUI {
      * Sets the maximizable property of this content.
      *
      * @param maximizable <code>true</code> if this content can be maximized using the ui, <code>false</code> otherwise.
-     * @since 1.4.3
+     * @since 1.5.0
      * @see #isMaximizable()
      */
     void setMaximizable(boolean maximizable);

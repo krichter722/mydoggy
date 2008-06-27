@@ -91,7 +91,7 @@ public class MyDoggySet {
 
     protected void initComponents() {
         // Init the frame
-        this.frame = new JFrame("MyDoggy-Set 1.4.2 ...");
+        this.frame = new JFrame("MyDoggy-Set 1.5.0 ...");
         this.frame.setSize(640, 480);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));

@@ -117,7 +117,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                 // Write header
                 AttributesImpl mydoggyAttributes = new AttributesImpl();
-                mydoggyAttributes.addAttribute(null, "version", null, null, "1.4.2");
+                mydoggyAttributes.addAttribute(null, "version", null, null, "1.5.0");
                 mydoggyAttributes.addAttribute(null, "contentManagerEnabled", null, null,
                                                String.valueOf(manager.getContentManager().isEnabled()));
                 writer.startElement("mydoggy", mydoggyAttributes);
@@ -741,8 +741,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
         public boolean parse(Element element, Context context) {
             // Validate version
-            if (!"1.4.2".equals(element.getAttribute("version")))
-                throw new IllegalArgumentException("Invalid workspace version. Expected 1.4.2");
+            if (!"1.5.0".equals(element.getAttribute("version")))
+                throw new IllegalArgumentException("Invalid workspace version. Expected 1.5.0");
 
             // Sets content manager enable property...
             ContentManager contentManager = context.get(ToolWindowManager.class).getContentManager();

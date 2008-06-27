@@ -50,7 +50,7 @@ public interface ContentManagerUI<C extends ContentUI> extends Observable {
      * Returns whether this content manager permits the contents to be maximized using the ui.
      *
      * @return <code>true</code> if this content can be maximized using the ui, <code>false</code> otherwise.
-     * @since 1.4.3
+     * @since 1.5.0
      */
     boolean isMaximizable();
 
@@ -58,7 +58,7 @@ public interface ContentManagerUI<C extends ContentUI> extends Observable {
      * Sets the maximizable property of this manager.
      *
      * @param maximizable <code>true</code> if this content can be maximized using the ui, <code>false</code> otherwise.
-     * @since 1.4.3
+     * @since 1.5.0
      * @see #isDetachable()
      */
     void setMaximizable(boolean maximizable);
@@ -83,14 +83,14 @@ public interface ContentManagerUI<C extends ContentUI> extends Observable {
     /**
      *   TODO
      * @param enabled
-     * @since 1.4.3
+     * @since 1.5.0
      */
     void setPopupMenuEnabled(boolean enabled);
 
     /**
      *
      * @return
-     * @since 1.4.3
+     * @since 1.5.0
      */
     boolean isPopupMenuEnabled();
 
