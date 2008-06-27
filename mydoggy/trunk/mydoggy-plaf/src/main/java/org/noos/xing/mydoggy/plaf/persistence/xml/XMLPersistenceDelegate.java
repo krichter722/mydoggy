@@ -989,6 +989,14 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     int anchorIndex1 = getInteger(o1, "anchorIndex", 0);
                     int anchorIndex2 = getInteger(o2, "anchorIndex", 0);
 
+                    ToolWindowType type1 = ToolWindowType.valueOf(o1.getAttribute("type"));
+                    ToolWindowType type2 = ToolWindowType.valueOf(o2.getAttribute("type"));
+
+                    if (type1 == ToolWindowType.SLIDING)
+                        return 1;
+                    if (type2 == ToolWindowType.SLIDING)
+                        return -1;
+
                     if (anchorIndex1 < anchorIndex2)
                         return -1;
                     else if (anchorIndex1 == anchorIndex2)

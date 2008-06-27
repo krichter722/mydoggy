@@ -227,7 +227,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
 
             descriptor.getManager().setShowingGroup();
             if (!isVisible()) {
-                if (getType() == ToolWindowType.SLIDING || getType() == ToolWindowType.FLOATING_LIVE)
+                if (getType() != ToolWindowType.DOCKED)
                     setType(ToolWindowType.DOCKED);
 
                 setVisibleInternal(true, true, toolWindow, aggregationPosition);
@@ -239,7 +239,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                     publicEvent = true;
                 }
 
-                if (getType() == ToolWindowType.SLIDING || getType() == ToolWindowType.FLOATING_LIVE)
+                if (getType() != ToolWindowType.DOCKED)
                     setType(ToolWindowType.DOCKED);
 
                 publicEvent = false;
