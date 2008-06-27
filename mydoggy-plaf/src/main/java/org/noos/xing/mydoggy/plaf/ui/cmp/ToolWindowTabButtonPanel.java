@@ -6,7 +6,10 @@ import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
-import org.noos.xing.mydoggy.plaf.ui.*;
+import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowTabContainer;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTabTilelUI;
 import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -23,8 +26,8 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolWindowTabButtonPanel extends JPanel implements ToolWindowTabButton,
-                                                                PropertyChangeListener,
+public class ToolWindowTabButtonPanel extends JPanel implements
+                                                     PropertyChangeListener,
                                                                 MouseListener,
                                                                 ActionListener,
                                                                 Cleaner {

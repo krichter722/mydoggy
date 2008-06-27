@@ -47,7 +47,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     protected ToolWindow toolWindow;
     protected DockedTypeDescriptor dockedTypeDescriptor;
 
-    protected RepresentativeAnchorMouseAdapter adapter;
+    protected ToolWindowRepresentativeAnchorMouseAdapter adapter;
 
     protected Timer flashingTimer;
     protected int flasingDuration;
@@ -233,7 +233,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     protected void installListeners(JLabel c) {
         super.installListeners(c);
 
-        adapter = new RepresentativeAnchorMouseAdapter();
+        adapter = new ToolWindowRepresentativeAnchorMouseAdapter();
         c.addMouseListener(adapter);
         c.addMouseMotionListener(adapter);
 
@@ -350,12 +350,12 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         }
     }
 
-    protected class RepresentativeAnchorMouseAdapter extends MouseInputAdapter implements ActionListener, Cleaner {
+    protected class ToolWindowRepresentativeAnchorMouseAdapter extends MouseInputAdapter implements ActionListener, Cleaner {
         protected Timer previewTimer;
         protected boolean firstPreview = true;
 
 
-        public RepresentativeAnchorMouseAdapter() {
+        public ToolWindowRepresentativeAnchorMouseAdapter() {
             previewTimer = new Timer(0, this);
             
             descriptor.getCleaner().addBefore(ToolWindowRepresentativeAnchorUI.this, this);

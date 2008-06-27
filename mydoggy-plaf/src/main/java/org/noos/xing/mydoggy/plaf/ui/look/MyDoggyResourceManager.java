@@ -342,7 +342,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     protected void initComponentCreators() {
         cmpCreators = new Hashtable<String, ObjectCreator<Component>>();
         cmpCreators.put(ANCHOR_SPLIT_PANE, new BarSplitPaneComponentCreator());
-        cmpCreators.put(ANCHOR_CONTENT_PANE, new BarContentPaneComponentCreator());
         cmpCreators.put(CORNER_CONTENT_PANE, new CornerContentPaneComponentCreator());
         cmpCreators.put(TOOL_WINDOW_MANAGER_CONTENT_CONTAINER, new MyDoggyManagerMainContainerComponentCreator());
         cmpCreators.put(DESKTOP_CONTENT_PANE, new DesktopContentPaneComponentCreator());
@@ -411,30 +410,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
             splitPane.setLeftComponent(null);
             splitPane.setRightComponent(null);
             return splitPane;
-        }
-    }
-
-    public static class BarContentPaneComponentCreator implements ObjectCreator<Component> {
-
-        public Component create(Context context) {
-            return new JPanel();/* {
-                protected void paintComponent(Graphics g) {
-                    TableLayout tableLyout = (TableLayout) getLayout();
-                    int y = 0;
-                    Random random = new Random();
-                    for (int i = 0, sizei = tableLyout.getNumRow(); i < sizei; i++) {
-
-                        int x = 0;
-                        for (int j = 0, sizej = tableLyout.getNumColumn(); j < sizej; j++) {
-                            g.setColor(new Color(random.nextInt(256),random.nextInt(256),random.nextInt(256)));
-                            g.fillRect(x, y, (int) tableLyout.getColumn(j), (int) tableLyout.getRow(i));
-                            x+= tableLyout.getColumn(j);
-                        }
-                        y+= tableLyout.getRow(i);
-                    }
-                    super.paintComponent(g);
-                }
-            };*/
         }
     }
 

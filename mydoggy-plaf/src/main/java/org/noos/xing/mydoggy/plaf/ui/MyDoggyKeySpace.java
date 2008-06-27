@@ -57,29 +57,29 @@ public interface MyDoggyKeySpace {
     String TOOL_SCROLL_BAR_UI_BCK_START = "mydoggy.color.ToolScrollBarArrowUI.background.start";
     String TOOL_SCROLL_BAR_UI_BCK_END = "mydoggy.color.ToolScrollBarArrowUI.background.end";
 
-    String RAB_MOUSE_IN_BORDER = "mydoggy.color.rab.border.mouseIn";
-    String RAB_MOUSE_OUT_BORDER = "mydoggy.color.rab.border.mouseOut";
-    String RAB_BACKGROUND_INACTIVE = "mydoggy.color.rab.background.inactive";
-    String RAB_BACKGROUND_ACTIVE_START = "mydoggy.color.rab.background.active.start";
-    String RAB_BACKGROUND_ACTIVE_END = "mydoggy.color.rab.background.active.end";
-    String RAB_FOREGROUND = "mydoggy.color.rab.foreground";
-    String RAB_FOREGROUND_UNAVAILABLE = "mydoggy.color.rab.foreground.unavailable";
+    String RAB_MOUSE_IN_BORDER = "ToolWindowRepresentativeAnchorUI.border.mouseIn";
+    String RAB_MOUSE_OUT_BORDER = "ToolWindowRepresentativeAnchorUI.border.mouseOut";
+    String RAB_BACKGROUND_INACTIVE = "ToolWindowRepresentativeAnchorUI.background.inactive";
+    String RAB_BACKGROUND_ACTIVE_START = "ToolWindowRepresentativeAnchorUI.background.active.start";
+    String RAB_BACKGROUND_ACTIVE_END = "ToolWindowRepresentativeAnchorUI.background.active.end";
+    String RAB_FOREGROUND = "ToolWindowRepresentativeAnchorUI.foreground";
+    String RAB_FOREGROUND_UNAVAILABLE = "ToolWindowRepresentativeAnchorUI.foreground.unavailable";
     
     // ToolWindow TitleBar - Colors
 
-    String TWTB_BACKGROUND_ACTIVE_START = "mydoggy.color.ToolWindowTitleBarUI.background.active.start";
-    String TWTB_BACKGROUND_ACTIVE_END = "mydoggy.color.ToolWindowTitleBarUI.background.active.end";
-    String TWTB_BACKGROUND_INACTIVE_START = "mydoggy.color.ToolWindowTitleBarUI.background.inactive.start";
-    String TWTB_BACKGROUND_INACTIVE_END = "mydoggy.color.ToolWindowTitleBarUI.background.inactive.end";
-    String TWTB_ID_BACKGROUND_FLASHING_ON = "mydoggy.color.ToolWindowTitleBarUI.id.background.flashing.on";
-    String TWTB_ID_BACKGROUND_FLASHING_OFF = "mydoggy.color.ToolWindowTitleBarUI.id.background.flashing.off";
-    String TWTB_ID_BACKGROUND_ANIMATING = "mydoggy.color.ToolWindowTitleBarUI.id.background.animating";
-    String TWTB_ID_BACKGROUND_ACTIVE = "mydoggy.color.ToolWindowTitleBarUI.id.background.active";
-    String TWTB_ID_BACKGROUND_INACTIVE = "mydoggy.color.ToolWindowTitleBarUI.id.background.inactive";
-    String TWTB_ID_FOREGROUND_ACTIVE = "mydoggy.color.ToolWindowTitleBarUI.id.foreground.active";
-    String TWTB_ID_FOREGROUND_INACTIVE = "mydoggy.color.ToolWindowTitleBarUI.id.foreground.inactive";
-    String TWTB_TAB_FOREGROUND_SELECTED = "mydoggy.color.ToolWindowTitleBarUI.tab.foreground.selected";
-    String TWTB_TAB_FOREGROUND_UNSELECTED = "mydoggy.color.ToolWindowTitleBarUI.tab.foreground.unselected";
+    String TWTB_BACKGROUND_ACTIVE_START = "ToolWindowTitleBarUI.background.active.start";
+    String TWTB_BACKGROUND_ACTIVE_END = "ToolWindowTitleBarUI.background.active.end";
+    String TWTB_BACKGROUND_INACTIVE_START = "ToolWindowTitleBarUI.background.inactive.start";
+    String TWTB_BACKGROUND_INACTIVE_END = "ToolWindowTitleBarUI.background.inactive.end";
+    String TWTB_ID_BACKGROUND_FLASHING_ON = "ToolWindowTitleBarUI.id.background.flashing.on";
+    String TWTB_ID_BACKGROUND_FLASHING_OFF = "ToolWindowTitleBarUI.id.background.flashing.off";
+    String TWTB_ID_BACKGROUND_ANIMATING = "ToolWindowTitleBarUI.id.background.animating";
+    String TWTB_ID_BACKGROUND_ACTIVE = "ToolWindowTitleBarUI.id.background.active";
+    String TWTB_ID_BACKGROUND_INACTIVE = "ToolWindowTitleBarUI.id.background.inactive";
+    String TWTB_ID_FOREGROUND_ACTIVE = "ToolWindowTitleBarUI.id.foreground.active";
+    String TWTB_ID_FOREGROUND_INACTIVE = "ToolWindowTitleBarUI.id.foreground.inactive";
+    String TWTB_TAB_FOREGROUND_SELECTED = "ToolWindowTitleBarUI.tab.foreground.selected";
+    String TWTB_TAB_FOREGROUND_UNSELECTED = "ToolWindowTitleBarUI.tab.foreground.unselected";
 
     // Components, ComponentsUIs, Customizers
 
@@ -100,7 +100,6 @@ public interface MyDoggyKeySpace {
     String TOOL_SCROLL_BAR_ARROW = "TOOL_SCROLL_BAR_ARROW";
 
     String ANCHOR_SPLIT_PANE = "ANCHOR_SPLIT_PANE";
-    String ANCHOR_CONTENT_PANE = "ANCHOR_CONTENT_PANE";
 
     String CORNER_CONTENT_PANE = "CORNER_CONTENT_PANE";
     String DESKTOP_CONTENT_PANE = "DESKTOP_CONTENT_PANE";
