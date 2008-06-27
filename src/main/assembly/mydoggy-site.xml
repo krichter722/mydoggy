@@ -53,23 +53,23 @@
 
     <files>
         <file>
-            <source>mydoggy-api/target/mydoggy-api-1.4.3.jar</source>
+            <source>mydoggy-api/target/mydoggy-api-1.5.0.jar</source>
             <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
         </file>
         <file>
-            <source>mydoggy-plaf/target/mydoggy-plaf-1.4.3.jar</source>
+            <source>mydoggy-plaf/target/mydoggy-plaf-1.5.0.jar</source>
             <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
         </file>
         <file>
-            <source>mydoggy-res/target/mydoggy-res-1.4.3.jar</source>
+            <source>mydoggy-res/target/mydoggy-res-1.5.0.jar</source>
             <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
         </file>
         <file>
-            <source>mydoggy-itest/target/mydoggy-itest-1.4.3.jar</source>
+            <source>mydoggy-itest/target/mydoggy-itest-1.5.0.jar</source>
             <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
         </file>
         <file>
-            <source>mydoggy-examples/target/mydoggy-examples-1.4.3.jar</source>
+            <source>mydoggy-examples/target/mydoggy-examples-1.5.0.jar</source>
             <outputDirectory>site/mydoggy-examples/jnlp/mydoggyset</outputDirectory>
         </file>
         <file>

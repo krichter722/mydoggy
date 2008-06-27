@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="yes"?>
 
-<mydoggy version="1.4.2" contentManagerEnabled="true">
+<mydoggy version="1.5.0" contentManagerEnabled="true">
     <toolWindows>
         <toolWindow id="Tool 1" available="true" visible="false" active="false" autoHide="true" anchor="LEFT" anchorIndex="1" type="DOCKED" aggregateMode="false" maximized="false" index="1" representativeAnchorButtonVisible="true" flashing="false">
             <descriptors>

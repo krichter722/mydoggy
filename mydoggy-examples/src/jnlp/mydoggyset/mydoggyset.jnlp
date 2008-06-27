@@ -3,10 +3,10 @@
 
 <jnlp codebase="http://mydoggy.sourceforge.net/mydoggy-examples/jnlp/mydoggyset" href="mydoggyset.jnlp">
     <information>
-        <title>MyDoggy - MyDoggySet 1.4.3</title>
+        <title>MyDoggy - MyDoggySet 1.5.0</title>
         <vendor>mydoggy</vendor>
-        <description>MyDoggy - MyDoggySet 1.4.3</description>
-        <description kind="short">MyDoggy - MyDoggy Set 1.4.3</description>
+        <description>MyDoggy - MyDoggySet 1.5.0</description>
+        <description kind="short">MyDoggy - MyDoggy Set 1.5.0</description>
         <offline-allowed/>
     </information>
 
@@ -17,16 +17,16 @@
     <resources>
         <j2se version="1.5+"/>
         <jar href="TableLayout-20050920.jar"/>
-        <jar href="mydoggy-api-1.4.3.jar"/>
-        <jar href="mydoggy-plaf-1.4.3.jar"/>
-        <jar href="mydoggy-res-1.4.3.jar"/>
-        <jar href="mydoggy-itest-1.4.3.jar"/>
+        <jar href="mydoggy-api-1.5.0.jar"/>
+        <jar href="mydoggy-plaf-1.5.0.jar"/>
+        <jar href="mydoggy-res-1.5.0.jar"/>
+        <jar href="mydoggy-itest-1.5.0.jar"/>
         <jar href="filters-2.0.235.jar"/>
         <jar href="multiplegradientpaint-1.0.jar"/>
         <jar href="swing-layout-1.0.3.jar"/>
         <jar href="swing-worker-1.1.jar"/>
         <jar href="swingx-0.9.1.jar"/>
-        <jar main="true" href="mydoggy-examples-1.4.3.jar"/>
+        <jar main="true" href="mydoggy-examples-1.5.0.jar"/>
     </resources>
 
     <application-desc main-class="org.noos.xing.mydoggy.mydoggyset.MyDoggySet"/>

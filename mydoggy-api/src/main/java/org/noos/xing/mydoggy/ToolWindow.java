@@ -223,13 +223,13 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
     /**
      * TODO
      * @param lockedOnAnchor
-     * @since 1.4.3
+     * @since 1.5.0
      */
     void setLockedOnAnchor(boolean lockedOnAnchor);
 
     /**
      *
-     * @since 1.4.3
+     * @since 1.5.0
      */
     boolean isLockedOnAnchor();
 
@@ -282,14 +282,14 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
     /**
      * TODO:
      * @param hideOnZeroTabs
-     * @since 1.4.3
+     * @since 1.5.0
      * @see #isHideOnZeroTabs()
      */
     void setHideOnZeroTabs(boolean hideOnZeroTabs);
 
     /**
      * TODO:
-     * @since 1.4.3
+     * @since 1.5.0
      * @return 
      * @see #setHideOnZeroTabs(boolean)  
      */
