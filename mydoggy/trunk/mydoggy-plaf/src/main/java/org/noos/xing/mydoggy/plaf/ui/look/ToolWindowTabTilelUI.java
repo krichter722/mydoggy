@@ -40,7 +40,7 @@ public class ToolWindowTabTilelUI extends BasicLabelUI implements MouseListener 
     protected void installDefaults(JLabel c) {
         super.installDefaults(c);
         
-        SwingUtil.installFont(c, "mydoggy.ToolWindowTabTilelUI.font");
+        SwingUtil.installFont(c, "ToolWindowTabTilelUI.font");
     }
 
     public void update(Graphics g, JComponent c) {
