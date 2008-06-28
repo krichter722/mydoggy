@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureInitiator;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTabPanelUI;
 import org.noos.xing.mydoggy.plaf.ui.util.MouseEventDispatcher;
 
@@ -14,7 +15,7 @@ import java.util.EventListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolWindowTabPanel extends JPanel implements Cleaner {
+public class ToolWindowTabPanel extends JPanel implements Cleaner, DragGestureInitiator {
     /**
      * @see #getUIClassID
      * @see #readObject
