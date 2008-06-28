@@ -1,10 +1,12 @@
-package org.noos.xing.mydoggy.plaf.ui.cmp;
+package org.noos.xing.mydoggy.plaf.ui.look;
 
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowContainer;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 
 import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
@@ -13,17 +15,23 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MenuTitleBarButtons extends DefaultTitleBarButtons {
+public class MenuToolWindowTitleButtonPanelUI extends FullToolWindowTitleButtonPanelUI {
+
+    public static ComponentUI createUI(JComponent c) {
+        return new MenuToolWindowTitleButtonPanelUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class),
+                                                    (ToolWindowContainer) c.getClientProperty(ToolWindowContainer.class));
+    }
 
 
-    public MenuTitleBarButtons(ToolWindowDescriptor toolWindowDescriptor, ToolWindowContainer dockedContainer) {
+    public MenuToolWindowTitleButtonPanelUI(ToolWindowDescriptor toolWindowDescriptor,
+                                            ToolWindowContainer dockedContainer) {
         super(toolWindowDescriptor, dockedContainer);
     }
 
 
     protected void initComponents() {
-        setLayout(containerLayout = new ExtendedTableLayout(new double[][]{{0, 0}, {1, 14, 1}}, false));
-        setOpaque(false);
+        toolWindowTitleButtonPanel.setLayout(containerLayout = new ExtendedTableLayout(new double[][]{{0, 0}, {1, 14, 1}}, false));
+        toolWindowTitleButtonPanel.setOpaque(false);
 
         addTitleBarAction(new PopupAction());
         focusable = addTitleBarAction(new HideAction());

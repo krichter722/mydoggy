@@ -1,6 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
 import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleButtonPanel;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -17,8 +19,8 @@ public abstract class MyDoggyToolWindowContainer implements ToolWindowContainer 
     protected ToolWindow toolWindow;
 
     protected Component titleBar;
-    protected ToolWindowTabContainer toolWindowTabContainer;
-    protected TitleBarButtons titleBarButtons;
+    protected ToolWindowTabPanel toolWindowTabContainer;
+    protected ToolWindowTitleButtonPanel titleBarButtons;
 
 
     public MyDoggyToolWindowContainer(DockedContainer dockedContainer) {
@@ -28,7 +30,7 @@ public abstract class MyDoggyToolWindowContainer implements ToolWindowContainer 
         this.descriptor = dockedContainer.getToolWindowDescriptor();
         this.toolWindow = descriptor.getToolWindow();
 
-        this.titleBarButtons = dockedContainer.getTitleBarButtons();
+        this.titleBarButtons = dockedContainer.getToolWindowTitleButtonPanel();
         this.toolWindowTabContainer = dockedContainer.getTitleBarTabs();
         this.titleBar = dockedContainer.getTitleBar();
 

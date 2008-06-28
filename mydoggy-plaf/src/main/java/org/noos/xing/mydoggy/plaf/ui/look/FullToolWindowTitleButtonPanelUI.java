@@ -1,15 +1,22 @@
-package org.noos.xing.mydoggy.plaf.ui.cmp;
+package org.noos.xing.mydoggy.plaf.ui.look;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
-import org.noos.xing.mydoggy.plaf.ui.*;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowContainer;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleButton;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleButtonPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.event.SwingPropertyChangeSupport;
+import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
@@ -19,7 +26,9 @@ import java.beans.PropertyChangeSupport;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, Cleaner {
+public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanelUI implements Cleaner {
+
+    protected ToolWindowTitleButtonPanel toolWindowTitleButtonPanel;
     protected ToolWindow toolWindow;
     protected ToolWindowDescriptor descriptor;
     protected transient ResourceManager resourceManager;
@@ -30,21 +39,32 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
 
     protected PropertyChangeSupport propertyChangeSupport;
 
+    
+    public static ComponentUI createUI(JComponent c) {
+        return new FullToolWindowTitleButtonPanelUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class),
+                                                    (ToolWindowContainer) c.getClientProperty(ToolWindowContainer.class));
+    }
 
-    public DefaultTitleBarButtons(ToolWindowDescriptor toolWindowDescriptor,  
-                                  ToolWindowContainer dockedContainer) {
+
+    public FullToolWindowTitleButtonPanelUI(ToolWindowDescriptor toolWindowDescriptor,
+                                            ToolWindowContainer dockedContainer) {
         this.descriptor = toolWindowDescriptor;
         this.toolWindow = toolWindowDescriptor.getToolWindow();
         this.resourceManager = dockedContainer.getResourceManager();
         this.dockedContainer = dockedContainer;
         this.propertyChangeSupport = new SwingPropertyChangeSupport(this);
+    }
 
-        descriptor.getCleaner().addCleaner(this);
+
+    @Override
+    protected void installDefaults(JPanel p) {
+        this.toolWindowTitleButtonPanel = (ToolWindowTitleButtonPanel) p;
+
+        super.installDefaults(p);
 
         initComponents();
         initListeners();
     }
-
 
     public void cleanup() {
         descriptor = null;
@@ -57,17 +77,14 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
         return focusable;
     }
 
-    public Component getComponent() {
-        return this;
-    }
-
     public void setType(ToolWindowType type) {
         propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "type", null, type));
     }
 
+
     protected void initComponents() {
-        setLayout(containerLayout = new ExtendedTableLayout(new double[][]{{0, 0}, {1, 14, 1}}, false));
-        setOpaque(false);
+        toolWindowTitleButtonPanel.setLayout(containerLayout = new ExtendedTableLayout(new double[][]{{0, 0}, {1, 14, 1}}, false));
+        toolWindowTitleButtonPanel.setOpaque(false);
 
         addTitleBarAction(new DockAction());
         addTitleBarAction(new FloatingAction());
@@ -77,6 +94,8 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
     }
 
     protected void initListeners() {
+        descriptor.getCleaner().addCleaner(this);
+
     }
 
 
@@ -107,21 +126,17 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
             throw new IllegalStateException("Not implemented yet!!!");
         }
 
-        JButton button = (JButton) resourceManager.createComponent(
-                MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON,
-                descriptor.getManager().getContext()
-        );
-        button.setAction(titleBarAction);
+        JButton button = new ToolWindowTitleButton(titleBarAction);
         button.setName((String) titleBarAction.getValue("action.name"));
         titleBarAction.putValue("component", button);
 
-        add(button, row + ",1,FULL,FULL");
+        toolWindowTitleButtonPanel.add(button, row + ",1,FULL,FULL");
 
         return button;
     }
 
     protected void setVisible(Component component, boolean visible) {
-        for (Component cmp : getComponents()) {
+        for (Component cmp : toolWindowTitleButtonPanel.getComponents()) {
             if (cmp == component) {
                 if (visible) {
                     int col = containerLayout.getConstraints(component).col1;
@@ -154,8 +169,8 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
         }
 
         public void setVisible(boolean visible) {
-            DefaultTitleBarButtons.this.setVisible((Component) getValue("component"), visible);
-            SwingUtil.repaint(DefaultTitleBarButtons.this);
+            FullToolWindowTitleButtonPanelUI.this.setVisible((Component) getValue("component"), visible);
+            SwingUtil.repaint(toolWindowTitleButtonPanel);
         }
 
         public int getWidth() {
@@ -395,7 +410,7 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getSource() != descriptor ||
                         (evt.getNewValue() != ToolWindowType.FLOATING &&
-                        evt.getNewValue() != ToolWindowType.FLOATING_FREE))
+                         evt.getNewValue() != ToolWindowType.FLOATING_FREE))
                         return;
 
                     oldType = (ToolWindowType) evt.getOldValue();
@@ -459,4 +474,5 @@ public class DefaultTitleBarButtons extends JPanel implements TitleBarButtons, C
             }
         }
     }
+
 }

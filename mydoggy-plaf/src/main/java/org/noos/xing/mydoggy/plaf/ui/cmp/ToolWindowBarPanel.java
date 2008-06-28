@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.ToolWindowBar;
-import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowBarContainerUI;
+import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowBarPanelUI;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTitleBarUI;
 
 import javax.swing.*;
@@ -9,16 +9,16 @@ import javax.swing.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolWindowBarContainer extends JPanel {
+public class ToolWindowBarPanel extends JPanel {
 
     /**
      * @see #getUIClassID
      * @see #readObject
      */
-    private static final String uiClassID = "ToolWindowBarContainerUI";
+    private static final String uiClassID = "ToolWindowBarPanelUI";
 
 
-    public ToolWindowBarContainer(ToolWindowBar toolWindowBar) {
+    public ToolWindowBarPanel(ToolWindowBar toolWindowBar) {
         putClientProperty(ToolWindowBar.class, toolWindowBar);
         updateUI();
     }
@@ -26,7 +26,7 @@ public class ToolWindowBarContainer extends JPanel {
 
     public void updateUI() {
         if (getClientProperty(ToolWindowBar.class) != null)
-            setUI((ToolWindowBarContainerUI) UIManager.getUI(this));
+            setUI((ToolWindowBarPanelUI) UIManager.getUI(this));
     }
 
     public void setUI(ToolWindowTitleBarUI ui) {

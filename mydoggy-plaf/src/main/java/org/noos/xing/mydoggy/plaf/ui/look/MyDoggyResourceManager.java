@@ -8,10 +8,10 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import static org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace.*;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.TitleBarButtons;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowContainer;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.cmp.*;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleBar;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
@@ -19,10 +19,8 @@ import org.noos.xing.mydoggy.plaf.ui.util.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.plaf.ButtonUI;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.LabelUI;
-import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -50,7 +48,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
 
     public MyDoggyResourceManager() {
-
         loadResources();
         initComponentCreators();
         initTransparencyManager();
@@ -168,7 +165,8 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     public void putProperty(String name, String value) {
-        UIManager.put(name, value);
+        if (!UIManager.getDefaults().containsKey(name)) // TODO: patch to resolve the conflict with nested tool window manager... must resolve
+            UIManager.put(name, value);
     }
 
     public boolean getBoolean(String name, boolean defaultValue) {
@@ -346,7 +344,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         cmpCreators.put(TOOL_WINDOW_MANAGER_CONTENT_CONTAINER, new MyDoggyManagerMainContainerComponentCreator());
         cmpCreators.put(DESKTOP_CONTENT_PANE, new DesktopContentPaneComponentCreator());
         cmpCreators.put(TOOL_WINDOW_TITLE_BAR, new ToolWindowTitleBarComponentCreator());
-        cmpCreators.put(TOOL_WINDOW_TITLE_BUTTON, new ToolWindowTitleButtonComponentCreator());
         cmpCreators.put(TOOL_SCROLL_BAR_ARROW, new ToolScrollBarArrowComponentCreator());
         cmpCreators.put(TOOL_WINDOW_CONTAINER, new ToolWindowCmpContainerComponentCreator());
         cmpCreators.put(MULTI_SPLIT_CONTAINER_SPLIT, new ObjectCreator<Component>() {
@@ -364,7 +361,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         cmpCustomizers.put(TOOL_WINDOW_TAB_BUTTON, new ToolWindowTabButtonComponentCustomizer());
 
         instanceCreators = new Hashtable<Class, ObjectCreator>();
-        instanceCreators.put(TitleBarButtons.class, new TitleBarButtonsInstanceCreator());
         instanceCreators.put(ParentOfQuestion.class, new ParentOfQuestionInstanceCreator());
     }
 
@@ -449,16 +445,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         }
     }
 
-    public static class ToolWindowTitleButtonComponentCreator implements ObjectCreator<Component> {
-
-        public Component create(Context context) {
-            JButton button = new ToolWindowActiveButton();
-            button.setUI((ButtonUI) BasicButtonUI.createUI(button));
-            return button;
-        }
-
-    }
-
     public static class MyDoggyManagerMainContainerComponentCreator implements ObjectCreator<Component> {
 
         public Component create(Context context) {
@@ -471,8 +457,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     public static class ToolScrollBarArrowComponentCreator implements ObjectCreator<Component> {
 
         public Component create(Context context) {
-            ResourceManager resourceManager = context.get(ResourceManager.class);
-
             JLabel label = new JLabel() {
                 public void setUI(LabelUI ui) {
                     if (ui instanceof ToolScrollBarArrowUI)
@@ -531,17 +515,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
     }
 
-
-    public static class TitleBarButtonsInstanceCreator implements ObjectCreator {
-
-        public Object create(Context context) {
-            return new DefaultTitleBarButtons(
-                    context.get(ToolWindowDescriptor.class),
-                    context.get(ToolWindowContainer.class)
-            );
-        }
-
-    }
 
     public static class ParentOfQuestionInstanceCreator implements ObjectCreator {
 

@@ -9,7 +9,6 @@ import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowTabContainer;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTabTilelUI;
 import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -26,16 +25,15 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolWindowTabButtonPanel extends JPanel implements
-                                                     PropertyChangeListener,
-                                                                MouseListener,
-                                                                ActionListener,
-                                                                Cleaner {
-    protected ToolWindowTabContainer toolWindowTabContainer;
+public class ToolWindowTabButton extends JPanel implements PropertyChangeListener,
+                                                           MouseListener,
+                                                           ActionListener,
+                                                           Cleaner {
+    protected ToolWindowTabPanel toolWindowTabPanel;
 
     protected MyDoggyToolWindowManager manager;
     protected ToolWindow toolWindow;
-    protected MyDoggyToolWindowTab tab;
+    public MyDoggyToolWindowTab tab;
     protected DockedContainer dockedContainer;
 
     protected TableLayout layout;
@@ -48,13 +46,13 @@ public class ToolWindowTabButtonPanel extends JPanel implements
     protected boolean selected;
 
 
-    public ToolWindowTabButtonPanel(MyDoggyToolWindowManager manager,
-                                    MyDoggyToolWindowTab tab,
-                                    ToolWindowTabContainer toolWindowTabContainer,
-                                    DockedContainer dockedContainer) {
+    public ToolWindowTabButton(MyDoggyToolWindowManager manager,
+                               MyDoggyToolWindowTab tab,
+                               ToolWindowTabPanel toolWindowTabPanel,
+                               DockedContainer dockedContainer) {
         this.tab = tab;
         this.toolWindow = tab.getOwner();
-        this.toolWindowTabContainer = toolWindowTabContainer;
+        this.toolWindowTabPanel = toolWindowTabPanel;
         this.dockedContainer = dockedContainer;
 
         tab.addPropertyChangeListener(this);
@@ -73,8 +71,8 @@ public class ToolWindowTabButtonPanel extends JPanel implements
         manager.getResourceManager().applyCustomization(MyDoggyKeySpace.TOOL_WINDOW_TAB_BUTTON, this,
                                                         manager.getContext(MyDoggyToolWindowTab.class, tab));
 
-        addMouseListener(toolWindowTabContainer.getMouseEventDispatcher());
-        addMouseMotionListener(toolWindowTabContainer.getMouseEventDispatcher());
+        addMouseListener(toolWindowTabPanel.getMouseEventDispatcher());
+        addMouseMotionListener(toolWindowTabPanel.getMouseEventDispatcher());
 
         this.selected = this.pressed = this.inside = false;
 
@@ -96,26 +94,20 @@ public class ToolWindowTabButtonPanel extends JPanel implements
         titleLabel.setFont(titleLabel.getFont().deriveFont(MyDoggyUtil.getFloat("toolwindow.title.font.size", 12)));
         titleLabel.setUI(new ToolWindowTabTilelUI(tab));
         titleLabel.addMouseListener(dockedContainer.getTitleBarMouseAdapter());
-        titleLabel.addMouseListener(toolWindowTabContainer.getMouseEventDispatcher());
-        titleLabel.addMouseMotionListener(toolWindowTabContainer.getMouseEventDispatcher());
+        titleLabel.addMouseListener(toolWindowTabPanel.getMouseEventDispatcher());
+        titleLabel.addMouseMotionListener(toolWindowTabPanel.getMouseEventDispatcher());
         titleLabel.addMouseListener(this);
         add(titleLabel, "0,0,FULL,FULL");
 
         // Buttons
-        closeButton = (JButton) resourceManager.createComponent(
-                MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON,
-                manager.getContext()
-        );
+        closeButton = new ToolWindowTitleButton();
         closeButton.setName(name + ".closeButton");
         closeButton.setActionCommand("close");
         closeButton.addActionListener(this);
         closeButton.setToolTipText(resourceManager.getString("@@tool.tab.close"));
         closeButton.setIcon(UIManager.getIcon(MyDoggyKeySpace.TAB_CLOSE));
 
-        minimizeButton = (JButton) resourceManager.createComponent(
-                MyDoggyKeySpace.TOOL_WINDOW_TITLE_BUTTON,
-                manager.getContext()
-        );
+        minimizeButton = new ToolWindowTitleButton();
         minimizeButton.setName(name + ".minimizeButton");
         minimizeButton.setActionCommand("minimize");
         minimizeButton.addActionListener(this);
@@ -126,10 +118,10 @@ public class ToolWindowTabButtonPanel extends JPanel implements
         add(closeButton, "4,0,FULL,c");
 
         // Register DragGesture
-        SwingUtil.registerDragGesture(this, toolWindowTabContainer.getDragGesture());
-        SwingUtil.registerDragGesture(titleLabel, toolWindowTabContainer.getDragGesture());
-        SwingUtil.registerDragGesture(minimizeButton, toolWindowTabContainer.getDragGesture());
-        SwingUtil.registerDragGesture(closeButton, toolWindowTabContainer.getDragGesture());
+        SwingUtil.registerDragGesture(this, toolWindowTabPanel.getDragGesture());
+        SwingUtil.registerDragGesture(titleLabel, toolWindowTabPanel.getDragGesture());
+        SwingUtil.registerDragGesture(minimizeButton, toolWindowTabPanel.getDragGesture());
+        SwingUtil.registerDragGesture(closeButton, toolWindowTabPanel.getDragGesture());
     }
 
 
@@ -177,7 +169,7 @@ public class ToolWindowTabButtonPanel extends JPanel implements
         if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    ToolWindowTabButtonPanel.this.tab.setSelected(true);
+                    ToolWindowTabButton.this.tab.setSelected(true);
                 }
             });
         }
@@ -243,14 +235,14 @@ public class ToolWindowTabButtonPanel extends JPanel implements
     public void cleanup() {
         tab.removePropertyChangeListener(this);
 
-        removeMouseMotionListener(toolWindowTabContainer.getMouseEventDispatcher());
-        removeMouseListener(toolWindowTabContainer.getMouseEventDispatcher());
+        removeMouseMotionListener(toolWindowTabPanel.getMouseEventDispatcher());
+        removeMouseListener(toolWindowTabPanel.getMouseEventDispatcher());
 
         putClientProperty(ToolWindowTab.class, null);
 
         titleLabel.removeMouseListener(dockedContainer.getTitleBarMouseAdapter());
-        titleLabel.removeMouseListener(toolWindowTabContainer.getMouseEventDispatcher());
-        titleLabel.removeMouseMotionListener(toolWindowTabContainer.getMouseEventDispatcher());
+        titleLabel.removeMouseListener(toolWindowTabPanel.getMouseEventDispatcher());
+        titleLabel.removeMouseMotionListener(toolWindowTabPanel.getMouseEventDispatcher());
         titleLabel.removeMouseListener(this);
 
         tab = null;
@@ -286,7 +278,7 @@ public class ToolWindowTabButtonPanel extends JPanel implements
     }
 
     protected void ensureVisible() {
-        toolWindowTabContainer.ensureVisible(getBounds());
+        toolWindowTabPanel.ensureVisible(getBounds());
     }
 
 
