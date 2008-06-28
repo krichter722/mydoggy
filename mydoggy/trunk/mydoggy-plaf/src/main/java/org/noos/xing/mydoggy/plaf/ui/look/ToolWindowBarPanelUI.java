@@ -9,16 +9,16 @@ import javax.swing.plaf.basic.BasicPanelUI;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolWindowBarContainerUI extends BasicPanelUI {
+public class ToolWindowBarPanelUI extends BasicPanelUI {
 
     protected ToolWindowBar toolWindowBar;
 
     public static ComponentUI createUI(JComponent c) {
-        return new ToolWindowBarContainerUI((ToolWindowBar) c.getClientProperty(ToolWindowBar.class));
+        return new ToolWindowBarPanelUI((ToolWindowBar) c.getClientProperty(ToolWindowBar.class));
     }
 
 
-    public ToolWindowBarContainerUI(ToolWindowBar toolWindowBar) {
+    public ToolWindowBarPanelUI(ToolWindowBar toolWindowBar) {
         this.toolWindowBar = toolWindowBar;
     }
 
@@ -27,9 +27,9 @@ public class ToolWindowBarContainerUI extends BasicPanelUI {
     protected void installDefaults(JPanel p) {
         super.installDefaults(p);
         LookAndFeel.installColorsAndFont(p,
-                                         "ToolWindowBarContainerUI.background",
-                                         "ToolWindowBarContainerUI.foreground",
-                                         "ToolWindowBarContainerUI.font");
-        LookAndFeel.installBorder(p, "ToolWindowBarContainerUI.border");
+                                         "ToolWindowBarPanelUI.background",
+                                         "ToolWindowBarPanelUI.foreground",
+                                         "ToolWindowBarPanelUI.font");
+        LookAndFeel.installBorder(p, "ToolWindowBarPanelUI.border");
     }
 }

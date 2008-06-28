@@ -68,7 +68,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         this.anchor = anchor;
         this.availableTools = 0;
         this.dividerSize = 3;
-        this.length = MyDoggyUtil.getInt("ToolWindowBarContainerUI." +  anchor.toString().toLowerCase() + ".length", 23);
+        this.length = MyDoggyUtil.getInt("ToolWindowBarPanelUI." +  anchor.toString().toLowerCase() + ".length", 23);
         
         initComponents();
         initListeners();
@@ -238,7 +238,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         contentPanel = new ContentPanel("toolWindow.container.");
         contentPanel.setDropTarget(new ToolWindowDropTarget(contentPanel, manager, anchor));
 
-        toolWindowBarContainer = new ToolWindowBarContainer(this);
+        toolWindowBarContainer = new ToolWindowBarPanel(this);
         toolWindowBarContainer.setName("toolWindowManager.bar." + anchor.toString());
         toolWindowBarContainer.setFocusable(false);
         toolWindowBarContainer.setFocusCycleRoot(true);

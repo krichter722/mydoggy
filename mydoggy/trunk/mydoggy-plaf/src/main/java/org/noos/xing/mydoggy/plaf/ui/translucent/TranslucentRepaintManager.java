@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.plaf.ui.cmp;
+package org.noos.xing.mydoggy.plaf.ui.translucent;
 
 import javax.swing.*;
 import java.awt.*;
