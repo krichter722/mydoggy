@@ -563,7 +563,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
         protected boolean isMinimizedFired(ContentUI contentUI, Point point) {
             Point relativeMousePoint = SwingUtilities.convertPoint(JTabbedContentPane.this, point, getDestination());
-            Rectangle iconBounds = aggregateIcon.getlastPaintedRecAt(2);
+            Rectangle iconBounds = aggregateIcon.getLastPaintedRecAt(2);
 
             return (contentUI.isMinimizable() && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
                     (point.getX() > iconBounds.x && point.getX() < iconBounds.x + iconBounds.width)));
@@ -571,7 +571,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
         protected boolean isMaximizeFired(ContentUI contentUI, Point point) {
             Point relativeMousePoint = SwingUtilities.convertPoint(JTabbedContentPane.this, point, getDestination());
-            Rectangle iconsBounds = aggregateIcon.getlastPaintedRecAt(3);
+            Rectangle iconsBounds = aggregateIcon.getLastPaintedRecAt(3);
 
             return (contentUI.isMaximizable() && ((relativeMousePoint.getX() > iconsBounds.x && relativeMousePoint.getX() < iconsBounds.x + iconsBounds.width) ||
                     (point.getX() > iconsBounds.x && point.getX() < iconsBounds.x + iconsBounds.width)));
@@ -579,7 +579,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
         protected boolean isDetachFired(ContentUI contentUI, Point point) {
             Point relativeMousePoint = SwingUtilities.convertPoint(JTabbedContentPane.this, point, getDestination());
-            Rectangle iconBounds = aggregateIcon.getlastPaintedRecAt(4);
+            Rectangle iconBounds = aggregateIcon.getLastPaintedRecAt(4);
 
             return (contentUI.isDetachable() && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
                     (point.getX() > iconBounds.x && point.getX() < iconBounds.x + iconBounds.width)));
@@ -587,7 +587,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
         protected boolean isCloseFired(ContentUI contentUI, Point point) {
             Point relativeMousePoint = SwingUtilities.convertPoint(JTabbedContentPane.this, point, getDestination());
-            Rectangle iconsBounds = aggregateIcon.getlastPaintedRecAt(5);
+            Rectangle iconsBounds = aggregateIcon.getLastPaintedRecAt(5);
 
             return (contentUI.isCloseable() && ((relativeMousePoint.getX() > iconsBounds.x && relativeMousePoint.getX() < iconsBounds.x + iconsBounds.width) ||
                     (point.getX() > iconsBounds.x && point.getX() < iconsBounds.x + iconsBounds.width)));
