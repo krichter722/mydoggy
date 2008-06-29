@@ -3,15 +3,11 @@ package org.noos.xing.mydoggy.plaf.ui.look;
 import org.noos.common.context.Context;
 import org.noos.common.object.ObjectCreator;
 import org.noos.common.object.ObjectCustomizer;
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import static org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace.*;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleBar;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
@@ -170,7 +166,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     public boolean getBoolean(String name, boolean defaultValue) {
-        return MyDoggyUtil.getBoolean(name, defaultValue);
+        return SwingUtil.getBoolean(name, defaultValue);
     }
 
     public void putBoolean(String name, boolean value) {
@@ -178,7 +174,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     public float getFloat(String name, float defaultValue) {
-        return MyDoggyUtil.getFloat(name, defaultValue);
+        return SwingUtil.getFloat(name, defaultValue);
     }
 
     public void putFloat(String name, float value) {
@@ -186,7 +182,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     public int getInt(String name, int defaultValue) {
-        return MyDoggyUtil.getInt(name, defaultValue);
+        return SwingUtil.getInt(name, defaultValue);
     }
 
     public void putInt(String name, int value) {
@@ -223,6 +219,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
 
     protected void loadResources() {
+        // Load from file
         resources = SwingUtil.loadPropertiesFile(resourceName, this.getClass().getClassLoader());
 
         for (Object key : resources.keySet()) {
@@ -236,6 +233,10 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
             }
         }
+
+        // Load static
+        loadObjects();
+
     }
 
     protected void loadResource(String prefix, String name, String value) {
@@ -336,6 +337,10 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         this.bundlePath = bundlePath;
     }
 
+    protected void loadObjects() {
+        putObject(FindFocusableQuestion.class, new FindFocusableQuestion());
+    }
+
 
     protected void initComponentCreators() {
         cmpCreators = new Hashtable<String, ObjectCreator<Component>>();
@@ -343,7 +348,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         cmpCreators.put(CORNER_CONTENT_PANE, new CornerContentPaneComponentCreator());
         cmpCreators.put(TOOL_WINDOW_MANAGER_CONTENT_CONTAINER, new MyDoggyManagerMainContainerComponentCreator());
         cmpCreators.put(DESKTOP_CONTENT_PANE, new DesktopContentPaneComponentCreator());
-        cmpCreators.put(TOOL_WINDOW_TITLE_BAR, new ToolWindowTitleBarComponentCreator());
         cmpCreators.put(TOOL_SCROLL_BAR_ARROW, new ToolScrollBarArrowComponentCreator());
         cmpCreators.put(TOOL_WINDOW_CONTAINER, new ToolWindowCmpContainerComponentCreator());
         cmpCreators.put(MULTI_SPLIT_CONTAINER_SPLIT, new ObjectCreator<Component>() {
@@ -358,7 +362,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         cmpCustomizers = new Hashtable<String, ObjectCustomizer<Component>>();
         cmpCustomizers.put(TOOL_WINDOW_MANAGER, new MyDoggyManagerPanelComponentCustomizer());
         cmpCustomizers.put(TOOL_WINDOW_CONTAINER, new ToolWindowCmpContainerComponentCustomizer());
-        cmpCustomizers.put(TOOL_WINDOW_TAB_BUTTON, new ToolWindowTabButtonComponentCustomizer());
 
         instanceCreators = new Hashtable<Class, ObjectCreator>();
         instanceCreators.put(ParentOfQuestion.class, new ParentOfQuestionInstanceCreator());
@@ -425,26 +428,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         }
     }
 
-    public static class ToolWindowTitleBarComponentCreator implements ObjectCreator<Component> {
-
-        public Component create(Context context) {
-/*
-            JPanel titleBar = new JPanel() {
-                public void setUI(PanelUI ui) {
-                    if (ui instanceof ToolWindowTitleBarUI)
-                        super.setUI(ui);
-                }
-            };
-            titleBar.setBorder(null);
-            titleBar.setUI((PanelUI) context.get(ResourceManager.class)
-                    .createComponentUI(TOOL_WINDOW_TITLE_BAR_UI, context)
-            );
-            return titleBar;
-*/
-            return new ToolWindowTitleBar(context.get(ToolWindowDescriptor.class));
-        }
-    }
-
     public static class MyDoggyManagerMainContainerComponentCreator implements ObjectCreator<Component> {
 
         public Component create(Context context) {
@@ -500,19 +483,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
             return panel;
         }
-    }
-
-    public static class ToolWindowTabButtonComponentCustomizer implements ObjectCustomizer<Component> {
-
-        public Component customize(Component component, Context context) {
-            JPanel panel = (JPanel) component;
-
-            panel.setUI(new ToolWindowTabButtonUI(context.get(MyDoggyToolWindowManager.class),
-                                                  context.get(MyDoggyToolWindowTab.class)));
-
-            return panel;
-        }
-
     }
 
 

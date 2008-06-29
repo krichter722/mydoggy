@@ -5,7 +5,6 @@ import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentUI;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
-import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -24,7 +23,7 @@ public class ContentDialog extends JDialog {
 
 
     public ContentDialog(Content content, ContentUI contentUI, Frame parentFrame, Rectangle inBounds) throws HeadlessException {
-        super(MyDoggyUtil.getBoolean("dialog.owner.enabled", true) ? parentFrame : null, false);
+        super(SwingUtil.getBoolean("dialog.owner.enabled", true) ? parentFrame : null, false);
 //        setFocusCycleRoot(true);
 //        setFocusTraversalPolicyProvider(true);
 //        setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
@@ -48,9 +47,9 @@ public class ContentDialog extends JDialog {
 
         addComponentListener(new ContentDialogComponentAdapter());
 
-        if (MyDoggyUtil.getTransparencyManager().isServiceAvailable()) {
+        if (SwingUtil.getTransparencyManager().isServiceAvailable()) {
             WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(
-                    MyDoggyUtil.getTransparencyManager(),
+                    SwingUtil.getTransparencyManager(),
                     contentUI,
                     this
             );

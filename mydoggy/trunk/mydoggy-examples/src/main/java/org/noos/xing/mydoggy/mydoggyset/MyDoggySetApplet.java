@@ -94,7 +94,7 @@ public class MyDoggySetApplet extends JApplet {
 
         // File Menu
         JMenu fileMenu = new JMenu("File");
-        fileMenu.add(new LoadWorkspaceAction(this, toolWindowManager));
+        fileMenu.add(new LoadWorkspaceAction(myDoggySetContext, this, toolWindowManager));
         fileMenu.add(new StoreWorkspaceAction(this, toolWindowManager));
         fileMenu.addSeparator();
         fileMenu.add(new FrameshotAction(this));

@@ -3,7 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.drag;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -94,7 +94,7 @@ public class ContentManagerDropTarget extends DropTarget {
         }
 
         protected boolean isEnabled() {
-            return MyDoggyUtil.getBoolean("ContentManagerDropTarget.enabled", false);
+            return SwingUtil.getBoolean("ContentManagerDropTarget.enabled", false);
         }
 
         protected boolean checkEvent(DropTargetDragEvent dtde) {

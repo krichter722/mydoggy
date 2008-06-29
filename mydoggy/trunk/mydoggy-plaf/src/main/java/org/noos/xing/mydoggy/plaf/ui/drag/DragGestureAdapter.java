@@ -4,7 +4,6 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
-import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -131,7 +130,7 @@ public abstract class DragGestureAdapter implements DragGesture, Cleaner {
     }
 
     protected boolean isDragEnabled() {
-        return MyDoggyUtil.getBoolean("drag.enabled", true); 
+        return SwingUtil.getBoolean("drag.enabled", true);
     }
 
 }

@@ -4,7 +4,6 @@ import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
-import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -44,9 +43,9 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
         descriptor.getToolBar().propertyChange(new PropertyChangeEvent(getComponent(), "startDrag", null, dge));
 
         // Setup ghostImage
-        if (MyDoggyUtil.getBoolean("drag.icon.useDefault", false)) {
+        if (SwingUtil.getBoolean("drag.icon.useDefault", false)) {
             setGhostImage(dge.getDragOrigin(),
-                          MyDoggyUtil.getImage(MyDoggyKeySpace.DRAG));
+                          SwingUtil.getImage(MyDoggyKeySpace.DRAG));
         } else {
             JComponent representativeAnchor = descriptor.getRepresentativeAnchor();
             BufferedImage ghostImage = new BufferedImage(representativeAnchor.getWidth(),
@@ -70,7 +69,7 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
 
         // Produce updatedGhostImage
         if (newAnchor != lastAnchor) {
-            if (!MyDoggyUtil.getBoolean("drag.icon.useDefault", false)) {
+            if (!SwingUtil.getBoolean("drag.icon.useDefault", false)) {
                 resetGhostImage();
 
                 if (newAnchor == null) {

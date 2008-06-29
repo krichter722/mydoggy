@@ -20,7 +20,6 @@ import org.noos.xing.mydoggy.plaf.ui.drag.RepresentativeAnchorDragGesture;
 import org.noos.xing.mydoggy.plaf.ui.translucent.TranslucentPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
-import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -520,7 +519,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
 
         protected void setPreviewPanelBounds(RootPaneContainer rootPaneContainer) {
-            if (MyDoggyUtil.getBoolean("mydoggy.preview.full", false))
+            if (SwingUtil.getBoolean("mydoggy.preview.full", false))
                 setFullPreviewBounds();
             else
                 setThumbnailPreviewBounds(rootPaneContainer);
