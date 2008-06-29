@@ -161,8 +161,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     public void putProperty(String name, String value) {
-        if (!UIManager.getDefaults().containsKey(name)) // TODO: patch to resolve the conflict with nested tool window manager... must resolve
-            UIManager.put(name, value);
+        UIManager.put(name, value);
     }
 
     public boolean getBoolean(String name, boolean defaultValue) {
@@ -227,10 +226,12 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
             int pointIndex = strKey.indexOf('.');
             if (pointIndex != -1) {
                 String prefix = strKey.substring(0, pointIndex);
-                loadResource(prefix,
-                             strKey.substring(prefix.length() + 1),
-                             resources.getProperty(strKey));
+                String propertyName = strKey.substring(prefix.length() + 1);
 
+                if (!UIManager.getDefaults().containsKey(propertyName))
+                    loadResource(prefix,
+                                 propertyName,
+                                 resources.getProperty(strKey));
             }
         }
 

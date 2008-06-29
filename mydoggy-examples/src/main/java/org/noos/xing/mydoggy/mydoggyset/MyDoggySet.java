@@ -18,13 +18,11 @@ import org.noos.xing.mydoggy.mydoggyset.ui.LookAndFeelMenuItem;
 import org.noos.xing.mydoggy.mydoggyset.ui.MonitorPanel;
 import org.noos.xing.mydoggy.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.CustomDockableDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowRepresentativeAnchorUI;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTitleBarUI;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
@@ -425,6 +423,7 @@ public class MyDoggySet {
 
         UIManager.put("ToolWindowTitleButtonPanelUI", "org.noos.xing.mydoggy.plaf.ui.look.MenuToolWindowTitleButtonPanelUI");
         UIManager.put("ToolWindowTitleBarUI", "org.noos.xing.mydoggy.mydoggyset.MyDoggySet$CustomToolWindowTitleBarUI");
+        UIManager.put("ToolWindowRepresentativeAnchorUI", "org.noos.xing.mydoggy.mydoggyset.MyDoggySet$CustomToolWindowRepresentativeAnchorUI");
 
         myDoggyResourceManager.putInstanceCreator(ParentOfQuestion.class, new ObjectCreator() {
             public Object create(Context context) {
@@ -432,7 +431,6 @@ public class MyDoggySet {
                                                   context.get(ToolWindow.class));
             }
         });
-
 
         memoryMonitorDescriptor = new MemoryMonitorDockableDescriptor(myDoggyToolWindowManager, ToolWindowAnchor.BOTTOM);
     }
@@ -451,7 +449,7 @@ public class MyDoggySet {
     }
 
 
-    public class CustomParentOfQuestion implements Question<Component, Boolean> {
+    public static class CustomParentOfQuestion implements Question<Component, Boolean> {
         protected Component parent;
         protected ToolWindow toolWindow;
 
@@ -473,6 +471,92 @@ public class MyDoggySet {
             return false;
         }
 
+    }
+
+    public static class CustomToolWindowTitleBarUI extends ToolWindowTitleBarUI {
+
+        public static ComponentUI createUI(JComponent c) {
+            return new CustomToolWindowTitleBarUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class));
+        }
+
+
+        public CustomToolWindowTitleBarUI(ToolWindowDescriptor descriptor) {
+            super(descriptor);
+        }
+
+        protected void updateToolWindowTitleBar(Graphics g, JComponent c, Color backgroundStart, Color backgroundEnd, Color idBackgroundColor, Color idColor) {
+            Rectangle r = c.getBounds();
+            r.x = r.y = 0;
+
+            GraphicsUtil.fillRect(g, r,
+                                  backgroundStart, backgroundEnd,
+                                  null,
+                                  GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
+
+            if (descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar() ||
+                toolWindow.getType() == ToolWindowType.FLOATING ||
+                toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
+                toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
+
+                String id = resourceManager.getUserString(descriptor.getToolWindow().getId());
+                r.width = g.getFontMetrics().stringWidth(id) + 8;
+
+                int halfHeigh = (r.height / 2);
+                GraphicsUtil.fillRect(g, r,
+                                      Color.WHITE,
+                                      idBackgroundColor,
+                                      new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
+                                                  new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
+                                                  4),
+                                      GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
+
+
+                Polygon polygon = new Polygon();
+                polygon.addPoint(r.x + r.width - halfHeigh, r.y);
+                polygon.addPoint(r.x + r.width - halfHeigh + 8, r.y + (r.height / 2));
+                polygon.addPoint(r.x + r.width - halfHeigh, r.y + r.height);
+
+                GraphicsUtil.fillRect(g, r,
+                                      Color.WHITE,
+                                      idBackgroundColor,
+                                      polygon,
+                                      GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
+
+                g.setColor(idColor);
+                g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
+            }
+        }
+
+    }
+
+    public static class CustomToolWindowRepresentativeAnchorUI extends ToolWindowRepresentativeAnchorUI {
+
+        public static ComponentUI createUI(JComponent c) {
+            return new CustomToolWindowRepresentativeAnchorUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class));
+        }
+
+        public CustomToolWindowRepresentativeAnchorUI(ToolWindowDescriptor descriptor) {
+            super(descriptor);
+        }
+
+        @Override
+        protected void updateAnchor(Graphics g, JComponent c, Color backgroundStart,
+                                    Color backgroundEnd, boolean active, boolean flashing) {
+            Rectangle r = c.getBounds();
+            r.x = r.y = 0;
+
+            if (flashing || active) {
+                GraphicsUtil.fillRect(g,
+                                      r,
+                                      backgroundStart,
+                                      backgroundEnd,
+                                      null,
+                                      GraphicsUtil.BOTTOM_TO_UP_GRADIENT);
+            } else {
+                g.setColor(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+                g.fillRect(0, 0, r.width, r.height);
+            }
+        }
     }
 
     public static class MemoryMonitorDockableDescriptor extends CustomDockableDescriptor {
@@ -566,61 +650,6 @@ public class MyDoggySet {
 
     }
 
-    public static class CustomToolWindowTitleBarUI extends ToolWindowTitleBarUI {
-
-        public static ComponentUI createUI(JComponent c) {
-            return new CustomToolWindowTitleBarUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class));
-        }
-
-
-        public CustomToolWindowTitleBarUI(ToolWindowDescriptor descriptor) {
-            super(descriptor);
-        }
-
-        protected void updateToolWindowTitleBar(Graphics g, JComponent c, Color backgroundStart, Color backgroundEnd, Color idBackgroundColor, Color idColor) {
-            Rectangle r = c.getBounds();
-            r.x = r.y = 0;
-
-            GraphicsUtil.fillRect(g, r,
-                                  backgroundStart, backgroundEnd,
-                                  null,
-                                  GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
-
-            if (descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar() ||
-                toolWindow.getType() == ToolWindowType.FLOATING ||
-                toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
-                toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
-
-                String id = resourceManager.getUserString(descriptor.getToolWindow().getId());
-                r.width = g.getFontMetrics().stringWidth(id) + 8;
-
-                int halfHeigh = (r.height / 2);
-                GraphicsUtil.fillRect(g, r,
-                                      Color.WHITE,
-                                      idBackgroundColor,
-                                      new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
-                                                  new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
-                                                  4),
-                                      GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
-
-
-                Polygon polygon = new Polygon();
-                polygon.addPoint(r.x + r.width - halfHeigh, r.y);
-                polygon.addPoint(r.x + r.width - halfHeigh + 8, r.y + (r.height / 2));
-                polygon.addPoint(r.x + r.width - halfHeigh, r.y + r.height);
-
-                GraphicsUtil.fillRect(g, r,
-                                      Color.WHITE,
-                                      idBackgroundColor,
-                                      polygon,
-                                      GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
-
-                g.setColor(idColor);
-                g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
-            }
-        }
-
-    }
 
 
     public static class MultiSplitRandomConstraints implements Runnable {
