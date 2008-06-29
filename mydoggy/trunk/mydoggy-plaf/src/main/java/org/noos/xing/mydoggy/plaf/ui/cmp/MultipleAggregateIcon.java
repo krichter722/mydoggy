@@ -157,7 +157,7 @@ public class MultipleAggregateIcon implements Icon, SwingConstants {
         this.visible[index] = visible;
     }
 
-    public Rectangle getlastPaintedRecAt(int index) {
+    public Rectangle getLastPaintedRecAt(int index) {
         return lastPaintedRecs[index];
     }
 
