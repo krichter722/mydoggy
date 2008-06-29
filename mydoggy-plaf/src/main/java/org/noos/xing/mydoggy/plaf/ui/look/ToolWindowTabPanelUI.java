@@ -20,7 +20,6 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleButton;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureDelegate;
 import org.noos.xing.mydoggy.plaf.ui.util.MouseEventDispatcher;
-import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -142,7 +141,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         toolWindowTabPanel.setOpaque(false);
 
         containerLayout = new TableLayout(new double[][]{{0},
-                                                         {MyDoggyUtil.getInt("ToolWindowTitleBarUI.length", 16)}});
+                                                         {SwingUtil.getInt("ToolWindowTitleBarUI.length", 16)}});
         tabContainer = new JPanel();
         tabContainer.setLayout(containerLayout);
         tabContainer.setName("toolWindow.tabContainer." + descriptor.getToolWindow().getId());
@@ -161,15 +160,17 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
 
         viewport.addMouseWheelListener(new WheelScroller());
 
+        propertyChangeBridge = new PropertyChangeBridge();
+        propertyChangeBridge.addBridgePropertyChangeListener("selected", new TabSelectedPropertyChangeListener());
+
         initTabs();
     }
 
     protected void initListeners() {
-        propertyChangeBridge = new PropertyChangeBridge();
+
         descriptor.getCleaner().addCleaner(propertyChangeBridge);
         descriptor.getCleaner().addCleaner(this);
 
-        propertyChangeBridge.addBridgePropertyChangeListener("selected", new TabSelectedPropertyChangeListener());
 
         dockedContainer.setPopupUpdater(new DockedContainer.PopupUpdater() {
             final JMenuItem nextTabItem = new JMenuItem(new SelectNextTabAction());
@@ -183,8 +184,8 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
                     ToolWindowTabButton tabButton = (ToolWindowTabButton) source.getParent();
 
                     int index = 0;
-                    if (tabButton.tab.isCloseable()) {
-                        final JMenuItem closeItem = new JMenuItem(new CloseTabAction(tabButton.tab));
+                    if (tabButton.getToolWindowTab().isCloseable()) {
+                        final JMenuItem closeItem = new JMenuItem(new CloseTabAction(tabButton.getToolWindowTab()));
                         popupMenu.add(closeItem, index++);
                         popupMenu.add(closeAllItem, index++);
                         popupMenu.add(new JSeparator(), index++);
@@ -288,9 +289,9 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
 
     protected void addTab(MyDoggyToolWindowTab tab) {
         ToolWindowTabButton tabButton = new ToolWindowTabButton(descriptor.getManager(),
-                                                                          tab,
-                                                                          toolWindowTabPanel,
-                                                                          dockedContainer);
+                                                                tab,
+                                                                toolWindowTabPanel,
+                                                                dockedContainer);
         tab.removePlafPropertyChangeListener(propertyChangeBridge);
         tab.addPlafPropertyChangeListener(propertyChangeBridge);
 
@@ -324,10 +325,10 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
                     TableLayoutConstraints constraints = containerLayout.getConstraints(tabButton);
 
                     if (constraints.col1 == nextTabCol)
-                        return tabButton.tab;
+                        return tabButton.getToolWindowTab();
 
                     if (constraints.col1 == 2)
-                        firstTab = tabButton.tab;
+                        firstTab = tabButton.getToolWindowTab();
                 }
             }
         }
@@ -537,7 +538,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
                         TableLayoutConstraints constraints = containerLayout.getConstraints(tabButton);
 
                         if (constraints.col1 == nextTabCol) {
-                            tabButton.tab.setSelected(true);
+                            tabButton.getToolWindowTab().setSelected(true);
                             return;
                         }
                     }
@@ -566,7 +567,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
                         TableLayoutConstraints constraints = containerLayout.getConstraints(tabButton);
 
                         if (constraints.col1 == nextTabCol) {
-                            tabButton.tab.setSelected(true);
+                            tabButton.getToolWindowTab().setSelected(true);
                             return;
                         }
                     }

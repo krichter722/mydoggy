@@ -21,9 +21,12 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.CustomDockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTitleBarUI;
+import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.StringUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -31,6 +34,7 @@ import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.view.ViewContext;
 
 import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -112,7 +116,7 @@ public class MyDoggySet {
 
         // File Menu
         JMenu fileMenu = new JMenu("File");
-        fileMenu.add(new LoadWorkspaceAction(frame, toolWindowManager));
+        fileMenu.add(new LoadWorkspaceAction(myDoggySetContext, frame, toolWindowManager));
         fileMenu.add(new StoreWorkspaceAction(frame, toolWindowManager));
         fileMenu.addSeparator();
         fileMenu.add(new FrameshotAction(frame));
@@ -419,69 +423,8 @@ public class MyDoggySet {
         resourceManager.putColor(MyDoggyKeySpace.RAB_FOREGROUND, Color.BLUE);
 */
 
-/*
-        myDoggyResourceManager.putComponentUICreator(MyDoggyKeySpace.TOOL_WINDOW_TITLE_BAR_UI,
-                                                     new ObjectCreator<ComponentUI>() {
-                                                         public ComponentUI create(Context context) {
-                                                             return new ToolWindowTitleBarUI(context.get(ToolWindowDescriptor.class) ,
-                                                                                             context.get(ToolWindowContainer.class)) {
-                                                                 protected void updateToolWindowTitleBar(Graphics g, JComponent c, Color backgroundStart, Color backgroundEnd, Color idBackgroundColor, Color idColor) {
-                                                                     Rectangle r = c.getBounds();
-                                                                     r.x = r.y = 0;
-
-                                                                     GraphicsUtil.fillRect(g, r,
-                                                                                           backgroundStart, backgroundEnd,
-                                                                                           null,
-                                                                                           GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
-
-                                                                     if (descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar() ||
-                                                                         toolWindow.getType() == ToolWindowType.FLOATING ||
-                                                                         toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
-                                                                         toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
-
-                                                                         String id = resourceManager.getUserString(descriptor.getToolWindow().getId());
-                                                                         r.width = g.getFontMetrics().stringWidth(id) + 8;
-
-                                                                         int halfHeigh = (r.height / 2);
-                                                                         GraphicsUtil.fillRect(g, r,
-                                                                                               Color.WHITE,
-                                                                                               idBackgroundColor,
-                                                                                               new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
-                                                                                                           new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
-                                                                                                           4),
-                                                                                               GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
-
-
-                                                                         Polygon polygon = new Polygon();
-                                                                         polygon.addPoint(r.x + r.width - halfHeigh, r.y);
-                                                                         polygon.addPoint(r.x + r.width - halfHeigh + 8, r.y + (r.height / 2));
-                                                                         polygon.addPoint(r.x + r.width - halfHeigh, r.y + r.height);
-
-                                                                         GraphicsUtil.fillRect(g, r,
-                                                                                               Color.WHITE,
-                                                                                               idBackgroundColor,
-                                                                                               polygon,
-                                                                                               GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
-
-                                                                         g.setColor(idColor);
-                                                                         g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
-                                                                     }
-                                                                 }
-                                                             };
-                                                         }
-                                                     });
-
-        myDoggyResourceManager.putInstanceCreator(TitleBarButtons.class,
-                                                  new ObjectCreator() {
-                                                      public Object create(Context context) {
-                                                          return new MenuTitleBarButtons(
-                                                                  context.get(ToolWindowDescriptor.class),
-                                                                  context.get(ToolWindowContainer.class)
-                                                          );
-                                                      }
-                                                  });
-*/
-//        UIManager.put("ToolWindowTitleButtonPanelUI", "org.noos.xing.mydoggy.plaf.ui.look.MenuToolWindowTitleButtonPanelUI");
+        UIManager.put("ToolWindowTitleButtonPanelUI", "org.noos.xing.mydoggy.plaf.ui.look.MenuToolWindowTitleButtonPanelUI");
+        UIManager.put("ToolWindowTitleBarUI", "org.noos.xing.mydoggy.mydoggyset.MyDoggySet$CustomToolWindowTitleBarUI");
 
         myDoggyResourceManager.putInstanceCreator(ParentOfQuestion.class, new ObjectCreator() {
             public Object create(Context context) {
@@ -619,6 +562,62 @@ public class MyDoggySet {
                 this.sleepTime = sleepTime;
             }
 
+        }
+
+    }
+
+    public static class CustomToolWindowTitleBarUI extends ToolWindowTitleBarUI {
+
+        public static ComponentUI createUI(JComponent c) {
+            return new CustomToolWindowTitleBarUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class));
+        }
+
+
+        public CustomToolWindowTitleBarUI(ToolWindowDescriptor descriptor) {
+            super(descriptor);
+        }
+
+        protected void updateToolWindowTitleBar(Graphics g, JComponent c, Color backgroundStart, Color backgroundEnd, Color idBackgroundColor, Color idColor) {
+            Rectangle r = c.getBounds();
+            r.x = r.y = 0;
+
+            GraphicsUtil.fillRect(g, r,
+                                  backgroundStart, backgroundEnd,
+                                  null,
+                                  GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
+
+            if (descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar() ||
+                toolWindow.getType() == ToolWindowType.FLOATING ||
+                toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
+                toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
+
+                String id = resourceManager.getUserString(descriptor.getToolWindow().getId());
+                r.width = g.getFontMetrics().stringWidth(id) + 8;
+
+                int halfHeigh = (r.height / 2);
+                GraphicsUtil.fillRect(g, r,
+                                      Color.WHITE,
+                                      idBackgroundColor,
+                                      new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
+                                                  new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
+                                                  4),
+                                      GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
+
+
+                Polygon polygon = new Polygon();
+                polygon.addPoint(r.x + r.width - halfHeigh, r.y);
+                polygon.addPoint(r.x + r.width - halfHeigh + 8, r.y + (r.height / 2));
+                polygon.addPoint(r.x + r.width - halfHeigh, r.y + r.height);
+
+                GraphicsUtil.fillRect(g, r,
+                                      Color.WHITE,
+                                      idBackgroundColor,
+                                      polygon,
+                                      GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
+
+                g.setColor(idColor);
+                g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
+            }
         }
 
     }

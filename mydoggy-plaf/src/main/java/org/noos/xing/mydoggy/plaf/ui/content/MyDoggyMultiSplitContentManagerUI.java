@@ -8,7 +8,6 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
 import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
-import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -132,7 +131,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         contentValueAdjusting = false;
 
         if (oldContentManagerUI != null) {
-            if (MyDoggyUtil.getBoolean("ContentManagerUI.ContentManagerUiListener.import", false)) {
+            if (SwingUtil.getBoolean("ContentManagerUI.ContentManagerUiListener.import", false)) {
                 // Import listeners from the old ContentManagerUI
                 for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
                     oldContentManagerUI.removeContentManagerUIListener(listener);

@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.util;
 
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
+import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -254,26 +255,6 @@ public class SwingUtil {
         } catch (Throwable e) {
             throw new RuntimeException("Cannot load buffered image : "  + e.getMessage(), e);
         }
-    }
-
-    public static Component findFocusable(Component cmp) {
-        // TODO: move to question....
-        if (cmp.isFocusable() && !(cmp instanceof JPanel) &&
-            !(cmp instanceof JLabel) &&
-            !(cmp instanceof JScrollPane) &&
-            !(cmp instanceof JViewport) &&
-            !(cmp instanceof JToolBar) )
-            return cmp;
-
-        if (cmp instanceof Container) {
-            Container container = (Container) cmp;
-            for (int i = 0, size = container.getComponentCount(); i < size; i++) {
-                Component finded = findFocusable(container.getComponent(i));
-                if (finded != null)
-                    return finded;
-            }
-        }
-        return null;
     }
 
     public static Vector<Window> getTopContainers(String name) {
@@ -552,7 +533,7 @@ public class SwingUtil {
         else
             return null;
 
-        Component focusRequester = SwingUtil.findFocusable(container);
+        Component focusRequester = findFocusable(container);
         if (focusRequester == null) {
             focusRequester = container;
         }
@@ -604,4 +585,33 @@ public class SwingUtil {
     }
 
 
+    public static boolean getBoolean(String name, boolean defaultValue) {
+        if (UIManager.getDefaults().containsKey(name))
+            return UIManager.getBoolean(name);
+        return defaultValue;
+    }
+
+    public static BufferedImage getImage(String name) {
+        return (BufferedImage) UIManager.get(name);
+    }
+
+    public static float getFloat(String name, float defaultValue) {
+        if (UIManager.getDefaults().containsKey(name))
+            return (Float) UIManager.get(name);
+        return defaultValue;
+    }
+
+    public static int getInt(String name, int defaultValue) {
+        if (UIManager.getDefaults().containsKey(name))
+            return (Integer) UIManager.get(name);
+        return defaultValue;
+    }
+
+    public static TransparencyManager<Window> getTransparencyManager() {
+        return (TransparencyManager<Window>) UIManager.get(TransparencyManager.class);
+    }
+
+    public static Component findFocusable(Component cmp) {
+        return ((FindFocusableQuestion) UIManager.get(FindFocusableQuestion.class)).getAnswer(cmp);
+    }
 }

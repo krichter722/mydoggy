@@ -14,7 +14,6 @@ import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
-import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -165,7 +164,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
         if (oldContentManagerUI != null) {
             // Import listeners from the old ContentManagerUI
-            if (MyDoggyUtil.getBoolean("ContentManagerUI.ContentManagerUiListener.import", false)) {
+            if (SwingUtil.getBoolean("ContentManagerUI.ContentManagerUiListener.import", false)) {
                 // Import listeners from the old ContentManagerUI
                 for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
                     oldContentManagerUI.removeContentManagerUIListener(listener);
@@ -842,9 +841,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
                     // Setup ghostImage
 
-                    if (MyDoggyUtil.getBoolean("drag.icon.useDefault", false)) {
+                    if (SwingUtil.getBoolean("drag.icon.useDefault", false)) {
                         setGhostImage(dge.getDragOrigin(),
-                                      MyDoggyUtil.getImage(MyDoggyKeySpace.DRAG));
+                                      SwingUtil.getImage(MyDoggyKeySpace.DRAG));
                     } else {
                         Component component = tabbedContentPane.getComponentAt(index);
                         BufferedImage ghostImage = new BufferedImage(component.getWidth(),

@@ -43,11 +43,14 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
     protected Map<MergePolicy, MergePolicyApplier> mergePolicyApplierMap;
 
+    protected PersistenceDelegateCallback dummyCallback;
+
 
     public XMLPersistenceDelegate(MyDoggyToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
         this.masterElementParser = new MasterElementParser();
         this.masterElementWriter = new ToolWindowManagerElementWriter(toolWindowManager);
+        this.dummyCallback = new DummyPersistenceDelegateCallback();
 
         initMaps();
     }
@@ -64,10 +67,30 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     }
 
     public void apply(InputStream inputStream) {
-        merge(inputStream, MergePolicy.RESET);
+        applyInternal(inputStream, MergePolicy.RESET, null);
     }
 
     public void merge(InputStream inputStream, MergePolicy mergePolicy) {
+        applyInternal(inputStream, mergePolicy, null);
+    }
+
+    public void merge(InputStream inputStream, MergePolicy mergePolicy, PersistenceDelegateCallback callback) {
+        applyInternal(inputStream, mergePolicy, callback);
+    }
+
+
+    protected void initMaps() {
+        mergePolicyApplierMap = new Hashtable<MergePolicy, MergePolicyApplier>();
+        mergePolicyApplierMap.put(PersistenceDelegate.MergePolicy.RESET, new ResetMergePolicy());
+        mergePolicyApplierMap.put(PersistenceDelegate.MergePolicy.UNION, new UnionMergePolicy());
+    }
+
+    protected void applyInternal(InputStream inputStream, MergePolicy mergePolicy, PersistenceDelegateCallback callback) {
+        if (callback == null) {
+            // Setup a dummy callback
+            callback = dummyCallback;
+        }
+
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -77,6 +100,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             context.put(ToolWindowManager.class, toolWindowManager);
             context.put(MyDoggyToolWindowManager.class, toolWindowManager);
             context.put(MergePolicyApplier.class, mergePolicyApplierMap.get(mergePolicy));
+            context.put(PersistenceDelegateCallback.class, callback);
 
             masterElementParser.parse(document.getDocumentElement(), context);
         } catch (Exception e) {
@@ -86,10 +110,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     }
 
 
-    protected void initMaps() {
-        mergePolicyApplierMap = new Hashtable<MergePolicy, MergePolicyApplier>();
-        mergePolicyApplierMap.put(PersistenceDelegate.MergePolicy.RESET, new ResetMergePolicy());
-        mergePolicyApplierMap.put(PersistenceDelegate.MergePolicy.UNION, new UnionMergePolicy());
+    public class DummyPersistenceDelegateCallback implements PersistenceDelegateCallback {
+
+        public Content contentNotFound(ToolWindowManager toolWindowManager, String contentId) {
+            return null;
+        }
     }
 
     // Writing
@@ -735,6 +760,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             String attr = element.getAttribute(name);
             return attr != null && !"".equals(attr.trim());
         }
+
     }
 
     public class MyDoggyElementParser extends ElementParserAdapter {
@@ -1052,7 +1078,13 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             // load contents properties
             for (int i = 0, size = contents.getLength(); i < size; i++) {
                 Element contentElement = (Element) contents.item(i);
-                Content content = context.get(ToolWindowManager.class).getContentManager().getContent(contentElement.getAttribute("id"));
+
+                String contentId = contentElement.getAttribute("id");
+
+                Content content = context.get(ToolWindowManager.class).getContentManager().getContent(contentId);
+                if (content == null)
+                    content = context.get(PersistenceDelegateCallback.class).contentNotFound(context.get(ToolWindowManager.class),
+                                                                                             contentId);
 
                 if (content != null) {
                     if (getBoolean(contentElement, "selected", false))
@@ -1185,7 +1217,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     for (int i = 0, size = contentUIElms.getLength(); i < size; i++) {
                         Element contentUIElm = (Element) contentUIElms.item(i);
 
-                        Content content = contentManager.getContent(contentUIElm.getAttribute("id"));
+                        String contentId = contentUIElm.getAttribute("id");
+                        Content content = contentManager.getContent(contentId);
+                        if (content == null)
+                            content = context.get(PersistenceDelegateCallback.class).contentNotFound(context.get(ToolWindowManager.class), contentId);
+
                         if (content != null) {
                             MultiSplitContentUI multiSplitContentUI = (MultiSplitContentUI) content.getContentUI();
                             multiSplitContentUI.setShowAlwaysTab(getBoolean(contentUIElm, "showAlwaysTab", true));
@@ -1241,7 +1277,12 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 for (int i = 0, size = contentUIElms.getLength(); i < size; i++) {
                     Element contentUIElm = (Element) contentUIElms.item(i);
 
-                    Content content = contentManager.getContent(contentUIElm.getAttribute("id"));
+                    String contentId = contentUIElm.getAttribute("id");
+                    Content content = contentManager.getContent(contentId);
+                    if (content == null)
+                        content = context.get(PersistenceDelegateCallback.class).contentNotFound(context.get(ToolWindowManager.class),
+                                                                                                 contentId);
+                    
                     if (content != null) {
                         DesktopContentUI desktopContentUI = (DesktopContentUI) content.getContentUI();
                         desktopContentUI.setIconified(getBoolean(contentUIElm, "iconified", false));
@@ -1261,5 +1302,6 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         }
 
     }
+
 
 }

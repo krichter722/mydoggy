@@ -18,7 +18,8 @@ public class FindFocusableQuestion implements Question<Component, Component> {
             !(cmp instanceof JLabel) &&
             !(cmp instanceof JScrollPane) &&
             !(cmp instanceof JViewport) &&
-            !(cmp instanceof JToolBar) )
+            !(cmp instanceof JToolBar) &&
+            !(cmp instanceof JSplitPane))
             return cmp;
 
         if (cmp instanceof Container) {

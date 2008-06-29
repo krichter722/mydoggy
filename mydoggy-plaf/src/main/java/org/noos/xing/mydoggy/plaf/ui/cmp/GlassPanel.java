@@ -1,6 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
-import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +45,7 @@ public class GlassPanel extends JPanel implements ContainerListener {
         if (draggingImage == null || !isVisible() || location == null)
             return;
 
-        if (MyDoggyUtil.getBoolean("drag.icon.transparency.enabled", true)) {
+        if (SwingUtil.getBoolean("drag.icon.transparency.enabled", true)) {
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.75f));
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         }

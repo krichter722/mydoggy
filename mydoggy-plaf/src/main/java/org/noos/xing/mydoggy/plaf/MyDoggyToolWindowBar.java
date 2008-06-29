@@ -10,7 +10,6 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToolsOnBarMouseListener;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowBarDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowDropTarget;
-import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -68,7 +67,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         this.anchor = anchor;
         this.availableTools = 0;
         this.dividerSize = 3;
-        this.length = MyDoggyUtil.getInt("ToolWindowBarPanelUI." +  anchor.toString().toLowerCase() + ".length", 23);
+        this.length = SwingUtil.getInt("ToolWindowBarPanelUI." +  anchor.toString().toLowerCase() + ".length", 23);
         
         initComponents();
         initListeners();

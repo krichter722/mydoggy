@@ -6,7 +6,7 @@ import org.noos.xing.mydoggy.plaf.ui.FloatingContainer;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
-import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,13 +28,13 @@ public class FloatingToolTransparencyListener implements PropertyChangeListener,
     private Timer timer;
 
     public FloatingToolTransparencyListener(FloatingContainer floatingContainer, ToolWindowDescriptor descriptor, final Window window) {
-        this.transparencyManager = MyDoggyUtil.getTransparencyManager();
+        this.transparencyManager = SwingUtil.getTransparencyManager();
         if (transparencyManager.isServiceAvailable()) {
             this.descriptor = descriptor;
             this.window = window;
 
             this.transparencyAnimation = new TransparencyAnimation(
-                    MyDoggyUtil.getTransparencyManager(),
+                    SwingUtil.getTransparencyManager(),
                     window, 0.0f
             );
 
