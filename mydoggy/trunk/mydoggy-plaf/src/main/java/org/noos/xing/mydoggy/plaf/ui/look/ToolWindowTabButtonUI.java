@@ -9,6 +9,7 @@ import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabTitle;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleButton;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
@@ -34,6 +35,7 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
                                                                    PropertyChangeListener,
                                                                    MouseListener,
                                                                    ActionListener {
+
 
     public static ComponentUI createUI(JComponent c) {
         return new ToolWindowTabButtonUI((MyDoggyToolWindowManager) c.getClientProperty(MyDoggyToolWindowManager.class),
@@ -332,20 +334,8 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
         // Prepare components
 
         // Title
-        titleLabel = (JLabel) manager.getResourceManager().createComponent(
-                MyDoggyKeySpace.TOOL_WINDOW_TAB_TITLE,
-                manager.getContext()
-        );
-        titleLabel.setText(tab.getTitle());
+        titleLabel = new ToolWindowTabTitle(tab);
         titleLabel.setName(name + ".title");
-        titleLabel.setIcon(tab.getIcon());
-
-        titleLabel.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
-        titleLabel.setOpaque(false);
-        titleLabel.setFocusable(false);
-        // TODO: change toolwindow.title.font.size...
-        titleLabel.setFont(titleLabel.getFont().deriveFont(SwingUtil.getFloat("toolwindow.title.font.size", 12)));
-        titleLabel.setUI(new ToolWindowTabTilelUI(tab));
         titleLabel.addMouseListener(dockedContainer.getTitleBarMouseAdapter());
         titleLabel.addMouseListener(toolWindowTabPanel.getMouseEventDispatcher());
         titleLabel.addMouseMotionListener(toolWindowTabPanel.getMouseEventDispatcher());

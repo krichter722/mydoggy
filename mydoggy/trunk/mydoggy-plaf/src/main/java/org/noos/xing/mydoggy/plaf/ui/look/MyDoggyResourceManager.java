@@ -355,7 +355,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
                 return new JSplitPane((Integer) context.get("newOrientation"));
             }
         });
-        cmpCreators.put(TOOL_WINDOW_TAB_TITLE, new ToolWindowTabTitleComponentCreator());
 
         cmpUiCreators = new Hashtable<String, ObjectCreator<ComponentUI>>();
 
@@ -456,13 +455,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
             label.setIcon(UIManager.getIcon(context.get("icon")));
 
             return label;
-        }
-    }
-
-    public static class ToolWindowTabTitleComponentCreator implements ObjectCreator<Component> {
-
-        public Component create(Context context) {
-            return new JLabel();
         }
     }
 

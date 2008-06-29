@@ -17,6 +17,7 @@ import java.beans.PropertyChangeListener;
  */
 public class MenuToolWindowTitleButtonPanelUI extends FullToolWindowTitleButtonPanelUI {
 
+    
     public static ComponentUI createUI(JComponent c) {
         return new MenuToolWindowTitleButtonPanelUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class),
                                                     (ToolWindowContainer) c.getClientProperty(ToolWindowContainer.class));
