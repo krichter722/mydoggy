@@ -38,6 +38,14 @@ import java.util.Map;
  * @todo: (-) implemets maximized
  */
 public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
+
+
+    public static ComponentUI createUI(JComponent c) {
+        return new ToolWindowTabPanelUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class),
+                                        (DockedContainer) c.getClientProperty(DockedContainer.class));
+    }
+
+
     protected ToolWindowTabPanel toolWindowTabPanel;
 
     protected DockedContainer dockedContainer;
@@ -57,12 +65,6 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
     protected MouseEventDispatcher mouseEventDispatcher;
 
     protected PropertyChangeBridge propertyChangeBridge;
-
-
-    public static ComponentUI createUI(JComponent c) {
-        return new ToolWindowTabPanelUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class),
-                                        (DockedContainer) c.getClientProperty(DockedContainer.class));
-    }
 
 
     public ToolWindowTabPanelUI(ToolWindowDescriptor descriptor, DockedContainer dockedContainer) {

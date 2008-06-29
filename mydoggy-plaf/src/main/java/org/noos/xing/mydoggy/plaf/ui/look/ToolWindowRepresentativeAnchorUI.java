@@ -38,6 +38,13 @@ import java.beans.PropertyChangeEvent;
  * @author Angelo De Caro
  */
 public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cleaner {
+
+
+    public static ComponentUI createUI(JComponent c) {
+        return new ToolWindowRepresentativeAnchorUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class));
+    }
+
+
     protected JComponent label;
 
     protected LineBorder labelBorder;
@@ -56,11 +63,6 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     protected AbstractAnimation flashingAnimation;
 
     protected TranslucentPanel previewPanel;
-
-
-    public static ComponentUI createUI(JComponent c) {
-        return new ToolWindowRepresentativeAnchorUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class));
-    }
 
 
     public ToolWindowRepresentativeAnchorUI(ToolWindowDescriptor descriptor) {

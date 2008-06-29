@@ -39,6 +39,13 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro
  */
 public class ToolWindowTitleBarUI extends PanelUI implements Cleaner, PropertyChangeListener {
+
+
+    public static ComponentUI createUI(JComponent c) {
+        return new ToolWindowTitleBarUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class));
+    }
+
+
     protected ToolWindow toolWindow;
     protected ToolWindowDescriptor descriptor;
     protected ResourceManager resourceManager;
@@ -55,11 +62,6 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner, PropertyCh
     protected int flasingDuration;
     protected boolean flashingState;
     protected AbstractAnimation flashingAnimation;
-
-
-    public static ComponentUI createUI(JComponent c) {
-        return new ToolWindowTitleBarUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class));
-    }
 
 
     public ToolWindowTitleBarUI(ToolWindowDescriptor descriptor) {

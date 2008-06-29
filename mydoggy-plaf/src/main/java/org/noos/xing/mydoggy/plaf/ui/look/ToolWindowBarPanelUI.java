@@ -11,13 +11,15 @@ import javax.swing.plaf.basic.BasicPanelUI;
  */
 public class ToolWindowBarPanelUI extends BasicPanelUI {
 
-    protected ToolWindowBar toolWindowBar;
 
     public static ComponentUI createUI(JComponent c) {
         return new ToolWindowBarPanelUI((ToolWindowBar) c.getClientProperty(ToolWindowBar.class));
     }
 
 
+    protected ToolWindowBar toolWindowBar;
+
+    
     public ToolWindowBarPanelUI(ToolWindowBar toolWindowBar) {
         this.toolWindowBar = toolWindowBar;
     }

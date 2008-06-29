@@ -388,10 +388,10 @@ public class MyDoggySet {
 */
         resourceManager.putProperty("ContentManagerUI.ContentManagerUiListener.import", "true");
         resourceManager.putBoolean("mydoggy.preview.full", true);
-        resourceManager.putObject("ToolWindowTabTilelUI.font", new Font("Verdana", Font.BOLD, 10));
+        resourceManager.putObject("ToolWindowTabTitleUI.font", new Font("Verdana", Font.BOLD, 10));
         resourceManager.putObject("ToolWindowTitleBarUI.font", new Font("Verdana", Font.BOLD, 10));
         resourceManager.putObject("ToolWindowRepresentativeAnchorUI.font", new Font("Verdana", Font.BOLD, 10));
-//        UIManager.put("mydoggy.ToolWindowTabTilelUI.font", new Font("Verdana", Font.BOLD, 10)) ;
+//        UIManager.put("mydoggy.ToolWindowTabTitleUI.font", new Font("Verdana", Font.BOLD, 10)) ;
 
 /*
         resourceManager.putProperty("drag.icon.transparency.enabled", "false");

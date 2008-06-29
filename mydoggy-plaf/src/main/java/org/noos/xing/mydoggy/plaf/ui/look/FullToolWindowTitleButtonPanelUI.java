@@ -28,6 +28,13 @@ import java.beans.PropertyChangeSupport;
  */
 public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanelUI implements Cleaner {
 
+
+    public static ComponentUI createUI(JComponent c) {
+        return new FullToolWindowTitleButtonPanelUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class),
+                                                    (ToolWindowContainer) c.getClientProperty(ToolWindowContainer.class));
+    }
+
+
     protected ToolWindowTitleButtonPanel toolWindowTitleButtonPanel;
     protected ToolWindow toolWindow;
     protected ToolWindowDescriptor descriptor;
@@ -40,12 +47,6 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
     protected PropertyChangeSupport propertyChangeSupport;
 
     
-    public static ComponentUI createUI(JComponent c) {
-        return new FullToolWindowTitleButtonPanelUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class),
-                                                    (ToolWindowContainer) c.getClientProperty(ToolWindowContainer.class));
-    }
-
-
     public FullToolWindowTitleButtonPanelUI(ToolWindowDescriptor toolWindowDescriptor,
                                             ToolWindowContainer dockedContainer) {
         this.descriptor = toolWindowDescriptor;
