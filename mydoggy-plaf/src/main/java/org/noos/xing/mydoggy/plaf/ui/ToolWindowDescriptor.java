@@ -10,7 +10,6 @@ import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.AggregateIcon;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowRepresentativeAnchor;
-import org.noos.xing.mydoggy.plaf.ui.util.FindFocusableQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 
 import javax.swing.*;
@@ -420,11 +419,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
             toolWindowActionHandler.onHideButtonClick(toolWindow);
         else
             toolWindow.setVisible(false);
-    }
-
-    public Component findFocusable(Component cmp) {
-        // TODO: optimize calls
-        return manager.getResourceManager().getObject(FindFocusableQuestion.class, null).getAnswer(cmp);
     }
 
 

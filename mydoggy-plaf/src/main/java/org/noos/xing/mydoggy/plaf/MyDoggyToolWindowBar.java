@@ -67,8 +67,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         this.anchor = anchor;
         this.availableTools = 0;
         this.dividerSize = 3;
-        this.length = SwingUtil.getInt("ToolWindowBarPanelUI." +  anchor.toString().toLowerCase() + ".length", 23);
-        
+        this.length = SwingUtil.getInt("ToolWindowBarPanelUI." + anchor.toString().toLowerCase() + ".length", 23);
+
         initComponents();
         initListeners();
 
@@ -362,29 +362,19 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     }
 
     protected Component getSplitPaneContent() {
-/*
-        switch (anchor) {
-            case LEFT:
-                return splitPane.getLeftComponent();
-            case RIGHT:
-                return splitPane.getRightComponent();
-            case BOTTOM:
-                return splitPane.getBottomComponent();
-            case TOP:
-                return splitPane.getTopComponent();
-        }
-        throw new IllegalStateException();
-*/
         return contentPanel.getComponent();
     }
 
     protected void addRepresentativeAnchor(Component representativeAnchor, int index) {
         availableTools++;
         if (horizontal) {
-            int width = representativeAnchor.getPreferredSize().width + 6;
+            // TODO: used -2 instead or width/height
+//            int width = representativeAnchor.getPreferredSize().width + 6;
 
-            toolWindowBarContainerLayout.insertColumn(toolWindowBarContainerLayout.getNumColumn(), toolWindowBarContainerLayout.getNumColumn() > 0 ? 5 : 1);
-            toolWindowBarContainerLayout.insertColumn(toolWindowBarContainerLayout.getNumColumn(), width);
+            toolWindowBarContainerLayout.insertColumn(toolWindowBarContainerLayout.getNumColumn(),
+                                                      toolWindowBarContainerLayout.getNumColumn() > 0 ? 5 : 1);
+            toolWindowBarContainerLayout.insertColumn(toolWindowBarContainerLayout.getNumColumn(),
+                                                      TableLayout.PREFERRED);
 
             // validate index...
             int finalCol = (index * 2 + 2);
@@ -400,9 +390,9 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                     if (constraints.col1 >= finalCol) {
                         int newCol1 = constraints.col1 + 2;
                         toolWindowBarContainerLayout.setConstraints(component,
-                                                                        new TableLayoutConstraints(
-                                                                                newCol1 + ",1,"
-                                                                        ));
+                                                                    new TableLayoutConstraints(
+                                                                            newCol1 + ",1,"
+                                                                    ));
 
                         olds.put(newCol1, toolWindowBarContainerLayout.getColumn(newCol1));
                         Double colSize = olds.get(constraints.col1);
@@ -412,17 +402,22 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                         toolWindowBarContainerLayout.setColumn(newCol1, colSize);
                     }
                 }
-                toolWindowBarContainerLayout.setColumn(finalCol, width);
+                
+                toolWindowBarContainerLayout.setColumn(finalCol,
+                                                       TableLayout.PREFERRED);
+
                 toolWindowBarContainer.add(representativeAnchor, (index * 2 + 2) + ",1");
             } else
                 toolWindowBarContainer.add(representativeAnchor, (toolWindowBarContainerLayout.getNumColumn() - 1) + ",1");
         } else {
-            int height = Math.max(representativeAnchor.getHeight(),
-                                  Math.max(representativeAnchor.getPreferredSize().height,
-                                           representativeAnchor.getSize().height)) + 12;
+//            int height = Math.max(representativeAnchor.getHeight(),
+//                                  Math.max(representativeAnchor.getPreferredSize().height,
+//                                           representativeAnchor.getSize().height)) + 12;
 
-            toolWindowBarContainerLayout.insertRow(toolWindowBarContainerLayout.getNumRow(), toolWindowBarContainerLayout.getNumRow() > 0 ? 5 : 1);
-            toolWindowBarContainerLayout.insertRow(toolWindowBarContainerLayout.getNumRow(), height);
+            toolWindowBarContainerLayout.insertRow(toolWindowBarContainerLayout.getNumRow(),
+                                                   toolWindowBarContainerLayout.getNumRow() > 0 ? 5 : 1);
+            toolWindowBarContainerLayout.insertRow(toolWindowBarContainerLayout.getNumRow(),
+                                                   TableLayout.PREFERRED);
 
             // validate index...
             int finalRow = (index * 2 + 2);
@@ -439,9 +434,9 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                     if (constraints.row1 >= finalRow) {
                         int newRow1 = constraints.row1 + 2;
                         toolWindowBarContainerLayout.setConstraints(component,
-                                                                        new TableLayoutConstraints(
-                                                                                "1," + newRow1
-                                                                        ));
+                                                                    new TableLayoutConstraints(
+                                                                            "1," + newRow1
+                                                                    ));
 
                         olds.put(newRow1, toolWindowBarContainerLayout.getRow(newRow1));
                         Double rowSize = olds.get(constraints.row1);
@@ -451,10 +446,13 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                         toolWindowBarContainerLayout.setRow(newRow1, rowSize);
                     }
                 }
+
                 if (toolWindowBarContainerLayout.getNumRow() <= finalRow) {
-                    toolWindowBarContainerLayout.setRow(toolWindowBarContainerLayout.getNumRow() - 1, height);
+                    toolWindowBarContainerLayout.setRow(toolWindowBarContainerLayout.getNumRow() - 1,
+                                                        TableLayout.PREFERRED);
                 } else
-                    toolWindowBarContainerLayout.setRow(finalRow, height);
+                    toolWindowBarContainerLayout.setRow(finalRow,
+                                                        TableLayout.PREFERRED);
 
                 toolWindowBarContainer.add(representativeAnchor, "1," + (index * 2 + 2));
             } else

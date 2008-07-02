@@ -19,10 +19,7 @@ import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ContentPanel;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
-import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
-import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer;
+import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ShortcutProcessor;
 import org.noos.xing.mydoggy.plaf.ui.content.ContentDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyTabbedContentManagerUI;
@@ -44,6 +41,7 @@ import java.util.List;
  * @author Angelo De Caro
  * @beaninfo attribute: isContainer true
  * description: MyDoggyToolWindowManager
+ * TODO: put pnot focusable panel into content container...
  */
 public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener {
 
@@ -99,6 +97,11 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     // Support for content manager disabling
     protected Component oldMainContent = null;
     protected boolean dockableMainContentMode = false;
+
+    protected CornerPanel nordWestCorner;
+    protected CornerPanel nordEastCorner;
+    protected CornerPanel southWestCorner;
+    protected CornerPanel southEastCorner;
 
 
     public MyDoggyToolWindowManager() {
@@ -553,43 +556,19 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public void setCornerComponent(ToolWindowManagerDescriptor.Corner corner, Component component) {
         switch (corner) {
             case NORD_WEST:
-                for (Component cmp : getComponents()) {
-                    if (contentPaneLayout.getConstraints(cmp).row1 == 0 &&
-                        contentPaneLayout.getConstraints(cmp).col1 == 0)
-                        remove(cmp);
-                }
-
-                add(component, "0,0,c,c");
+                nordWestCorner.setComponent(component);
                 break;
             case SOUTH_WEST:
-                for (Component cmp : getComponents()) {
-                    if (contentPaneLayout.getConstraints(cmp).row1 == 2 &&
-                        contentPaneLayout.getConstraints(cmp).col1 == 0) {
-                        remove(cmp);
-                    }
-                }
-
-                add(component, "0,2,c,c");
+                southWestCorner.setComponent(component);
                 break;
             case NORD_EAST:
-                for (Component cmp : getComponents()) {
-                    if (contentPaneLayout.getConstraints(cmp).row1 == 0 &&
-                        contentPaneLayout.getConstraints(cmp).col1 == 2)
-                        remove(cmp);
-                }
-
-                add(component, "2,0,c,c");
+                nordEastCorner.setComponent(component);
                 break;
             case SOUTH_EAST:
-                for (Component cmp : getComponents()) {
-                    if (contentPaneLayout.getConstraints(cmp).row1 == 2 &&
-                        contentPaneLayout.getConstraints(cmp).col1 == 2)
-                        remove(cmp);
-                }
-
-                add(component, "2,2,c,c");
+                southEastCorner.setComponent(component);
                 break;
         }
+//        SwingUtil.repaint(this);
     }
 
     public GlassPanel getGlassPanel() {
@@ -758,6 +737,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         );
         setLayout(contentPaneLayout);
 
+        //  Init corner panels...
+        add(nordWestCorner = new CornerPanel(ToolWindowManagerDescriptor.Corner.NORD_WEST), "0,0,c,c");
+        add(southWestCorner = new CornerPanel(ToolWindowManagerDescriptor.Corner.SOUTH_WEST), "0,2,c,c");
+        add(nordEastCorner = new CornerPanel(ToolWindowManagerDescriptor.Corner.NORD_EAST), "2,0,c,c");
+        add(southEastCorner = new CornerPanel(ToolWindowManagerDescriptor.Corner.SOUTH_EAST), "2,2,c,c");
+
         // Register bars, one for every anchor
         addBar(LEFT, JSplitPane.HORIZONTAL_SPLIT, "0,1", "0,0,FULL,FULL");
         addBar(RIGHT, JSplitPane.HORIZONTAL_SPLIT, "2,1", "2,0,FULL,FULL");
@@ -767,7 +752,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         mainContainer = (JPanel) resourceManager.createComponent(MyDoggyKeySpace.TOOL_WINDOW_MANAGER_CONTENT_CONTAINER, getContext());
         mainContainer.setName("toolWindowManager.mainContainer");
         mainContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
+        mainContainer.setFocusable(false);
         mainContainer.setFocusCycleRoot(true);
+        mainContainer.setFocusTraversalPolicyProvider(true);
+        mainContainer.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
 
         getBar(BOTTOM).getSplitPane().setTopComponent(getBar(TOP).getSplitPane());
         getBar(TOP).getSplitPane().setBottomComponent(getBar(LEFT).getSplitPane());
@@ -779,6 +767,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         mainSplitPane = getBar(RIGHT).getSplitPane();
         mainSplitPane.addPropertyChangeListener("UI", new UpdateUIChangeListener());
         mainSplitPane.setLeftComponent(mainContainer);
+
     }
 
     protected void initContentManager() {

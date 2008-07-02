@@ -76,8 +76,6 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
         this.dockedContainer = dockedContainer;
         this.toolWindow = tab.getOwner();
         this.toolWindowTabPanel = toolWindowTabPanel;
-
-        tab.getCleaner().addCleaner(this);
     }
 
 

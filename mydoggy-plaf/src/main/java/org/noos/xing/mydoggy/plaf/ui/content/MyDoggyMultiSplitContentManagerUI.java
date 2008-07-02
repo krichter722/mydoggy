@@ -144,7 +144,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         this.installed = true;
 
         // Select the content selected on the previous ContentManagerUI
-        if (oldContentManagerUI != null) { 
+        if (oldContentManagerUI != null) {
             final Content selectedContent1 = selectedContent;
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
@@ -192,7 +192,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
     public synchronized void setSelected(Content content, boolean selected) {
         if (selected) {
-             if (lastSelected != null)
+            if (lastSelected != null)
                 lastSelected.setSelected(false);
 
             if (content.isMinimized()) {
@@ -293,7 +293,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         });
     }
 
-    
+
     protected void initComponents() {
         if (multiSplitContainer == null) {
             /// Init just once
@@ -402,7 +402,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         }
     }
 
-    
+
     protected class ComponentListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
@@ -718,11 +718,11 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                         if (contentUI.isAddToTaskBarWhenDetached()) {
                             dialog = new ContentFrame(
                                     content, contentUI,
-                                                      parentFrame, inBounds);
+                                    parentFrame, inBounds);
                         } else {
                             dialog = new ContentDialog(
                                     content, contentUI,
-                                                       parentFrame, inBounds);
+                                    parentFrame, inBounds);
                         }
                         dialog.addWindowFocusListener(new ContentDialogFocusListener(content));
                         dialog.toFront();
@@ -783,13 +783,13 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 } else
                     newSelected = (Dockable) tabbedPane.getSelectedContent();
 
-                if (newSelected != null && !valueAdjusting && !contentValueAdjusting) {
-                    if (newSelected == lastSelected)
-                        return;
+                if (newSelected == lastSelected || valueAdjusting || contentValueAdjusting)
+                    return;
 
-                    if (lastSelected != null)
-                        lastSelected.setSelected(false);
+                if (lastSelected != null)
+                    lastSelected.setSelected(false);
 
+                if (newSelected != null) {
                     focusValueAdj = true;
                     try {
                         newSelected.setSelected(true);

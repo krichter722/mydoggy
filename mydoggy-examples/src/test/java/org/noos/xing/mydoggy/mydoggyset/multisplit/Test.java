@@ -1,8 +1,6 @@
 package org.noos.xing.mydoggy.mydoggyset.multisplit;
 
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import javax.swing.*;
@@ -30,11 +28,6 @@ public class Test {
     protected void start() {
         frame.setVisible(true);
 
-        ToolWindow tw1 = toolWindowManager.getToolWindow("Tool_1");
-        tw1.setActive(true);
-
-        ToolWindow tw2 = toolWindowManager.getToolWindow("Tool_2");
-        tw2.setVisible(true);
     }
 
     protected void initComponents() {
@@ -52,21 +45,36 @@ public class Test {
         MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
         this.toolWindowManager = myDoggyToolWindowManager;
 
-        toolWindowManager.registerToolWindow(
-                "Tool_1",
-                "Tool_1",
-                null,
-                new JPanel(),
-                ToolWindowAnchor.LEFT);
+        /* errors */
+        JButton view = new JButton("H");
 
+        ToolWindow toolWindow =
+                toolWindowManager.registerToolWindow("ErrorsView.title", "Title 1",
+                                                     view.getIcon(), (Component) view, ToolWindowAnchor.BOTTOM);
+        toolWindow.setAvailable(true);
+        toolWindow.setAutoHide(true);
+        toolWindow.setType(ToolWindowType.SLIDING);
 
-        toolWindowManager.registerToolWindow(
-                "Tool_2",
-                "Tool_2",
-                null,
-                new JPanel(),
-                ToolWindowAnchor.BOTTOM);
+        DockedTypeDescriptor dockedTypeDescriptor =
+                toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
+        dockedTypeDescriptor.setIdVisibleOnTitleBar(false);
+        dockedTypeDescriptor.setDockLength(400);
+        toolWindow.getTypeDescriptor(SlidingTypeDescriptor.class).setIdVisibleOnTitleBar(false);
 
+        /* report */
+        view = new JButton("H");
+
+        toolWindow = toolWindowManager.registerToolWindow("ReportView.title",
+                                                          "title 2", view.getIcon(), (Component) view, ToolWindowAnchor.RIGHT);
+        toolWindow.setAvailable(true);
+        toolWindow.setAutoHide(true);
+        toolWindow.setType(ToolWindowType.SLIDING);
+
+        dockedTypeDescriptor =
+                toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
+        dockedTypeDescriptor.setIdVisibleOnTitleBar(false);
+        dockedTypeDescriptor.setDockLength(400);
+        toolWindow.getTypeDescriptor(SlidingTypeDescriptor.class).setIdVisibleOnTitleBar(false);
 
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
