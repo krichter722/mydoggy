@@ -180,7 +180,7 @@ public class MyDoggySet {
         JPanel toolOnePanel = new JPanel();
         toolOnePanel.add(label, BorderLayout.NORTH);
         toolOnePanel.add(datePicker, BorderLayout.CENTER);
-        toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, toolOnePanel, ToolWindowAnchor.LEFT);
+        toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, toolOnePanel, ToolWindowAnchor.BOTTOM);
         toolWindowManager.registerToolWindow("Tool 2", "Title 2", null, panel, ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 3", "Title 3",
                                              SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"),

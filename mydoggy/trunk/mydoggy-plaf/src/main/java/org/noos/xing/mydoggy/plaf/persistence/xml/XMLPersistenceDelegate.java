@@ -1119,12 +1119,6 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 }
             }
 
-            if (selectedContent != null)
-                selectedContent.setSelected(true);
-
-            if (maximizedContent != null)
-                maximizedContent.setMaximized(true);
-
             // Load layout
             Element modelElement = getElement(element, "layout");
             if (modelElement != null && !toolWindowManager.getContentManager().isEnabled()) {
@@ -1139,6 +1133,18 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     }
                 });
             }
+
+            final Content selectedContent1 = selectedContent;
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    if (selectedContent1 != null)
+                        selectedContent1.setSelected(true);
+
+                }
+            });
+
+            if (maximizedContent != null)
+                maximizedContent.setMaximized(true);
 
             return false;
         }
