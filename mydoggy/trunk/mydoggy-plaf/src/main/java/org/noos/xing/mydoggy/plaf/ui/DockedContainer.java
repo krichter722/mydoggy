@@ -729,7 +729,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
             valueAdjusting = true;
 
-            System.out.println(toolWindow.getId() + " - cmp = " + component);
+//            System.out.println(toolWindow.getId() + " - cmp = " + component);
 
             if (parentOf.getAnswer(component)) {
                 toolWindow.setActive(true);

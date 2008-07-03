@@ -676,7 +676,19 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             try {
                 context.get(MyDoggyToolWindowManager.class).putClientProperty(MyDoggyKeySpace.PERSISTENCE_DELEGATE_PARSING, this);
 
-                return parseTree(element, context);
+                // Parse tree
+                boolean result = parseTree(element, context);
+
+                // Finalize
+                final ToolWindow activeTool = (ToolWindow) context.get("activeTool");
+                if (activeTool != null) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            activeTool.setActive(true);
+                        }
+                    });
+                }
+                return result;
             } finally {
                 context.get(MyDoggyToolWindowManager.class).putClientProperty(MyDoggyKeySpace.PERSISTENCE_DELEGATE_PARSING, null);
             }
@@ -1059,8 +1071,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     maximizedTool = toolWindow;
             }
 
-            if (activeTool != null) 
-                activeTool.setActive(true);
+            if (activeTool != null) {
+                // TODO: change the key
+                ((MutableContext) context).put("activeTool", activeTool);
+//                activeTool.setActive(true);
+            }
 
             if (maximizedTool != null)
                 maximizedTool.setMaximized(true);
