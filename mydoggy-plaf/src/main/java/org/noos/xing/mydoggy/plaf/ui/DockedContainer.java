@@ -200,7 +200,8 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         focusListener = new FocusOwnerPropertyChangeListener(
                 resourceManager.createInstance(ParentOfQuestion.class,
                                                new DefaultMutableContext(ToolWindow.class, toolWindow,
-                                                                         Component.class, container)));
+                                                                         Component.class, container))
+        );
 
         addPropertyChangeListener("active", new ActivePropertyChangeListener());
         addPropertyChangeListener("type", new TypePropertyChangeListener());
@@ -728,7 +729,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
             valueAdjusting = true;
 
-//            System.out.println(toolWindow.getId() + " - cmp = " + component);
+            System.out.println(toolWindow.getId() + " - cmp = " + component);
 
             if (parentOf.getAnswer(component)) {
                 toolWindow.setActive(true);
