@@ -62,6 +62,7 @@ public class MyDoggySet {
         SwingUtil.centrePositionOnScreen(frame);
 
         frame.setVisible(true);
+
         memoryMonitorDescriptor.setAvailable(true);
 
         if (runnable != null) {
