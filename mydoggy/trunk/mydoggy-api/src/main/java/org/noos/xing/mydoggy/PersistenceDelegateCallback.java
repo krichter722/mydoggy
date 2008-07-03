@@ -15,5 +15,5 @@ public interface PersistenceDelegateCallback {
      * @since 1.5.0
      */
     Content contentNotFound(ToolWindowManager toolWindowManager, String contentId);
-    
+
 }

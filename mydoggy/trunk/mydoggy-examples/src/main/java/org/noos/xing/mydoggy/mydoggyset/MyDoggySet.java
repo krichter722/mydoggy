@@ -38,10 +38,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Random;
-import java.util.ResourceBundle;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -100,12 +98,15 @@ public class MyDoggySet {
 
         // Init ToolWindowManager
         MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(Locale.US, null);
+        // Add MyDoggyToolWindowManager to frame
+        this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
 
         // Apply now all customization if necessary
         customizeToolWindowManager(myDoggyToolWindowManager);
 
         this.toolWindowManager = myDoggyToolWindowManager;
         this.myDoggySetContext = new MyDoggySetContext(toolWindowManager, frame);
+
         initMenuBar();
     }
 
@@ -161,7 +162,7 @@ public class MyDoggySet {
         // Setup type descriptor templates...
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);
         typeDescriptor.setTransparentDelay(0);
-                                 
+
         // Register tools
         JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{20, -1, 20}, {20, -1, 20}}));
         panel.add(new JButton("Hello World 2"), "1,1,FULL,FULL");
@@ -180,6 +181,7 @@ public class MyDoggySet {
         JPanel toolOnePanel = new JPanel();
         toolOnePanel.add(label, BorderLayout.NORTH);
         toolOnePanel.add(datePicker, BorderLayout.CENTER);
+        
         toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, toolOnePanel, ToolWindowAnchor.BOTTOM);
         toolWindowManager.registerToolWindow("Tool 2", "Title 2", null, panel, ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 3", "Title 3",
@@ -199,12 +201,11 @@ public class MyDoggySet {
         form1.setFocusCycleRoot(true);
         form1.add(new JTextField(10));
 
-        toolWindowManager.registerToolWindow("Tool 10", "Title 10", null, form1/*new JButton("Hello World 10")*/, ToolWindowAnchor.RIGHT);
+        toolWindowManager.registerToolWindow("Tool 10", "Title 10", null, form1, ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 11", "Title 11", null, new JButton("Hello World 11"), ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 12", "Title 12", null, new JButton("Hello World 12"), ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 13", "Title 13", null, new JButton("Hello World 13"), ToolWindowAnchor.RIGHT);
-        toolWindowManager.registerToolWindow("Some Doggy Table", "Doggy Style", null, new JScrollPane(new DoggyTable()), ToolWindowAnchor.TOP); 
-
+        toolWindowManager.registerToolWindow("Some Doggy Table", "Doggy Style", null, new JScrollPane(new DoggyTable()), ToolWindowAnchor.TOP);
 
         // Make all available
         for (ToolWindow window : toolWindowManager.getToolWindows()) {
@@ -290,18 +291,15 @@ public class MyDoggySet {
             }
         });
 
-
         // Setup ContentManagerUI
         toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
 
         MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
 //        contentManagerUI.setPopupMenuEnabled(false);
-/*
         contentManagerUI.setCloseable(false);
         contentManagerUI.setDetachable(false);
         contentManagerUI.setMinimizable(false);
         contentManagerUI.setMaximizable(false);
-*/
 
         contentManagerUI.setShowAlwaysTab(false);
         contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
@@ -360,24 +358,10 @@ public class MyDoggySet {
         managerDescriptor.setCornerComponent(SOUTH_WEST, swButton);
         managerDescriptor.setCornerComponent(NORD_EAST, neButton);
         managerDescriptor.setCornerComponent(SOUTH_EAST, seButton);
-
-        // Add MyDoggyToolWindowManager to frame
-        this.frame.getContentPane().add((Component) toolWindowManager, "1,1,");
-
     }
 
     protected void customizeToolWindowManager(MyDoggyToolWindowManager myDoggyToolWindowManager) {
         ResourceManager resourceManager = myDoggyToolWindowManager.getResourceManager();
-        resourceManager.setUserBundle(new ResourceBundle() {
-            protected Object handleGetObject(String key) {
-                return key;
-            }
-
-            public Enumeration<String> getKeys() {
-                return null;
-            }
-        });
-
         // Add customization here. See the page http://mydoggy.sourceforge.net/mydoggy-plaf/resourceManagerUsing.html
 /*
         resourceManager.putProperty("dialog.owner.enabled", "false");
@@ -386,10 +370,6 @@ public class MyDoggySet {
 */
         resourceManager.putProperty("ContentManagerUI.ContentManagerUiListener.import", "true");
         resourceManager.putBoolean("mydoggy.preview.full", true);
-        resourceManager.putObject("ToolWindowTabTitleUI.font", new Font("Verdana", Font.BOLD, 10));
-        resourceManager.putObject("ToolWindowTitleBarUI.font", new Font("Verdana", Font.BOLD, 10));
-        resourceManager.putObject("ToolWindowRepresentativeAnchorUI.font", new Font("Verdana", Font.BOLD, 10));
-//        UIManager.put("mydoggy.ToolWindowTabTitleUI.font", new Font("Verdana", Font.BOLD, 10)) ;
 
 /*
         resourceManager.putProperty("drag.icon.transparency.enabled", "false");
@@ -421,9 +401,12 @@ public class MyDoggySet {
         resourceManager.putColor(MyDoggyKeySpace.RAB_FOREGROUND, Color.BLUE);
 */
 
-        UIManager.put("ToolWindowTitleButtonPanelUI", "org.noos.xing.mydoggy.plaf.ui.look.MenuToolWindowTitleButtonPanelUI");
-        UIManager.put("ToolWindowTitleBarUI", "org.noos.xing.mydoggy.mydoggyset.MyDoggySet$CustomToolWindowTitleBarUI");
-        UIManager.put("ToolWindowRepresentativeAnchorUI", "org.noos.xing.mydoggy.mydoggyset.MyDoggySet$CustomToolWindowRepresentativeAnchorUI");
+//        UIManager.put("ToolWindowTitleButtonPanelUI", "org.noos.xing.mydoggy.plaf.ui.look.MenuToolWindowTitleButtonPanelUI");
+//        UIManager.put("ToolWindowTitleBarUI", "org.noos.xing.mydoggy.mydoggyset.MyDoggySet$CustomToolWindowTitleBarUI");
+//        UIManager.put("ToolWindowRepresentativeAnchorUI", "org.noos.xing.mydoggy.mydoggyset.MyDoggySet$CustomToolWindowRepresentativeAnchorUI");
+//        resourceManager.putObject("ToolWindowTabTitleUI.font", new Font("Verdana", Font.BOLD, 10));
+//        resourceManager.putObject("ToolWindowTitleBarUI.font", new Font("Verdana", Font.BOLD, 10));
+//        resourceManager.putObject("ToolWindowRepresentativeAnchorUI.font", new Font("Verdana", Font.BOLD, 10));
 
         myDoggyResourceManager.putInstanceCreator(ParentOfQuestion.class, new ObjectCreator() {
             public Object create(Context context) {
@@ -434,7 +417,6 @@ public class MyDoggySet {
 
         memoryMonitorDescriptor = new MemoryMonitorDockableDescriptor(myDoggyToolWindowManager, ToolWindowAnchor.BOTTOM);
     }
-
 
 
     public static void main(String[] args) {
@@ -625,13 +607,13 @@ public class MyDoggySet {
                         break;
                     case LEFT:
                         memoryUsage.setOrientation(SwingConstants.VERTICAL);
-                        setLayout(new TableLayout(new double[][]{{-1},{120, 1, 17}}));
+                        setLayout(new TableLayout(new double[][]{{-1}, {120, 1, 17}}));
                         add(memoryUsage, "0,0,FULL,FULL");
                         add(gc, "0,2,FULL,FULL");
                         break;
                     case RIGHT:
                         memoryUsage.setOrientation(SwingConstants.VERTICAL);
-                        setLayout(new TableLayout(new double[][]{{-1},{17, 1, 120}}));
+                        setLayout(new TableLayout(new double[][]{{-1}, {17, 1, 120}}));
                         add(gc, "0,0,FULL,FULL");
                         add(memoryUsage, "0,2,FULL,FULL");
                         break;
@@ -649,7 +631,6 @@ public class MyDoggySet {
         }
 
     }
-
 
 
     public static class MultiSplitRandomConstraints implements Runnable {
@@ -852,7 +833,7 @@ public class MyDoggySet {
                     }
 
                     index = random.nextInt(4);
-                    
+
                     content.getContentUI().setConstraints(index);
 
                     Thread.sleep(500);

@@ -1,6 +1,9 @@
 package org.noos.xing.mydoggy.mydoggyset.multisplit;
 
 import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.mydoggyset.action.ExitAction;
+import org.noos.xing.mydoggy.mydoggyset.action.LoadWorkspaceAction;
+import org.noos.xing.mydoggy.mydoggyset.action.StoreWorkspaceAction;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import javax.swing.*;
@@ -38,12 +41,17 @@ public class Test {
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.frame.getContentPane().setLayout(new BorderLayout());
+
     }
 
     protected void initToolWindowManager() {
 // Create a new instance of MyDoggyToolWindowManager passing the frame.
         MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
         this.toolWindowManager = myDoggyToolWindowManager;
+
+        // Add myDoggyToolWindowManager to the frame. MyDoggyToolWindowManager is an extension of a JPanel
+        this.frame.getContentPane().add(myDoggyToolWindowManager, BorderLayout.CENTER);
+
 
         /* errors */
         JButton view = new JButton("H");
@@ -52,8 +60,8 @@ public class Test {
                 toolWindowManager.registerToolWindow("ErrorsView.title", "Title 1",
                                                      view.getIcon(), (Component) view, ToolWindowAnchor.BOTTOM);
         toolWindow.setAvailable(true);
-        toolWindow.setAutoHide(true);
-        toolWindow.setType(ToolWindowType.SLIDING);
+//        toolWindow.setAutoHide(true);
+//        toolWindow.setType(ToolWindowType.SLIDING);
 
         DockedTypeDescriptor dockedTypeDescriptor =
                 toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
@@ -67,8 +75,8 @@ public class Test {
         toolWindow = toolWindowManager.registerToolWindow("ReportView.title",
                                                           "title 2", view.getIcon(), (Component) view, ToolWindowAnchor.RIGHT);
         toolWindow.setAvailable(true);
-        toolWindow.setAutoHide(true);
-        toolWindow.setType(ToolWindowType.SLIDING);
+//        toolWindow.setAutoHide(true);
+//        toolWindow.setType(ToolWindowType.SLIDING);
 
         dockedTypeDescriptor =
                 toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
@@ -80,8 +88,25 @@ public class Test {
         for (ToolWindow window : toolWindowManager.getToolWindows())
             window.setAvailable(true);
 
-        // Add myDoggyToolWindowManager to the frame. MyDoggyToolWindowManager is an extension of a JPanel
-        this.frame.getContentPane().add(myDoggyToolWindowManager, BorderLayout.CENTER);
+        toolWindowManager.getContentManager().addContent("id", "tit", null, new JButton("H"));
+
+
+        initMenuBar();
+    }
+
+    protected void initMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+
+        // File Menu
+        JMenu fileMenu = new JMenu("File");
+        fileMenu.add(new LoadWorkspaceAction(null, frame, toolWindowManager));
+        fileMenu.add(new StoreWorkspaceAction(frame, toolWindowManager));
+        fileMenu.addSeparator();
+        fileMenu.add(new ExitAction(frame));
+
+        menuBar.add(fileMenu);
+
+        this.frame.setJMenuBar(menuBar);
     }
 
     public void run() {

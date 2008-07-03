@@ -261,7 +261,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                     if (c == content.getComponent())
                         return;
                 }
-                throw new IllegalStateException("Invalid content ui state: " + content);
+               throw new IllegalStateException("Invalid content ui state: " + content);
             }
         } else {
             if (content == lastSelected)
@@ -509,6 +509,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                     if (c == content.getComponent())
                         return;
                 }
+
                 throw new IllegalStateException("Invalid content ui state.");
             }
         }
@@ -782,6 +783,9 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                         newSelected = dockablePanel.getDockable();
                 } else
                     newSelected = (Dockable) tabbedPane.getSelectedContent();
+
+                if (newSelected == null)
+                    return;
 
                 if (newSelected == lastSelected || valueAdjusting || contentValueAdjusting)
                     return;

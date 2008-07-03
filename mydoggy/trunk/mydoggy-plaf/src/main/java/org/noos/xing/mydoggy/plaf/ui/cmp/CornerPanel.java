@@ -16,7 +16,6 @@ public class CornerPanel extends JPanel {
         putClientProperty(ToolWindowManagerDescriptor.Corner.class, corner);
 
         setLayout(new TableLayout(new double[][]{{-1}, {-1}}));
-
         setFocusable(false);
     }
 

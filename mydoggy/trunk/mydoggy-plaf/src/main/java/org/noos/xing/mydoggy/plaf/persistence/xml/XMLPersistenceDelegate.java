@@ -115,6 +115,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         public Content contentNotFound(ToolWindowManager toolWindowManager, String contentId) {
             return null;
         }
+
     }
 
     // Writing
@@ -1058,7 +1059,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     maximizedTool = toolWindow;
             }
 
-            if (activeTool != null)
+            if (activeTool != null) 
                 activeTool.setActive(true);
 
             if (maximizedTool != null)
@@ -1239,9 +1240,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 Element layout = getElement(element, "layout");
                 MyDoggyMultiSplitContentManagerUI myDoggyMultiSplitContentManagerUI = (MyDoggyMultiSplitContentManagerUI) managerUI;
 
-                String text = layout.getTextContent();
-                XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(text.getBytes()));
-                myDoggyMultiSplitContentManagerUI.setLayout(decoder.readObject());
+                if (layout != null) {
+                    String text = layout.getTextContent();
+                    XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(text.getBytes()));
+                    myDoggyMultiSplitContentManagerUI.setLayout(decoder.readObject());
+                }
             }
 
             return false;

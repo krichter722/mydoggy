@@ -16,6 +16,7 @@ import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * TODO: introduce UI class
  */
 public class DockablePanel extends JPanel implements PropertyChangeListener,
                                                      ActionListener,
@@ -37,12 +38,11 @@ public class DockablePanel extends JPanel implements PropertyChangeListener,
         this.flashingEnabled = dockable instanceof Content;
 
         setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
-        setFocusCycleRoot(true);
         setFocusable(false);
+        setFocusCycleRoot(true);
         add(component, "0,0,FULL,FULL");
 
         dockable.addPropertyChangeListener(this);
-
         dockable.getDockableManager().addDockableManagerListener(this);
     }
 
