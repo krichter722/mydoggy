@@ -59,7 +59,7 @@ public class ToolWindowTabButton extends JPanel implements Cleaner {
 
 
     public ToolWindowTab getToolWindowTab() {
-        return (ToolWindowTab) getClientProperty(ToolWindowTab.class);
+        return (ToolWindowTab) getClientProperty(MyDoggyToolWindowTab.class);
     }
 
     public void setUI(ToolWindowTabPanelUI ui) {
