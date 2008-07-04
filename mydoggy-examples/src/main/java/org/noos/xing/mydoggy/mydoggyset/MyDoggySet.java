@@ -9,7 +9,6 @@ import org.noos.common.object.ObjectCreator;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
-import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.mydoggyset.action.*;
 import org.noos.xing.mydoggy.mydoggyset.context.MyDoggySetContext;
@@ -20,7 +19,6 @@ import org.noos.xing.mydoggy.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
-import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowRepresentativeAnchorUI;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTitleBarUI;
@@ -58,7 +56,7 @@ public class MyDoggySet {
     }
 
     public void start(final Runnable runnable) {
-        myDoggySetContext.put(MyDoggySet.class, null);
+//        myDoggySetContext.put(MyDoggySet.class, null);
 
         SwingUtil.centrePositionOnScreen(frame);
 
@@ -294,26 +292,26 @@ public class MyDoggySet {
         });
 
         // Setup ContentManagerUI
-        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
+//        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
 
-        MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
+//        MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
 //        contentManagerUI.setPopupMenuEnabled(false);
-        contentManagerUI.setCloseable(false);
-        contentManagerUI.setDetachable(false);
-        contentManagerUI.setMinimizable(false);
+//        contentManagerUI.setCloseable(false);
+//        contentManagerUI.setDetachable(false);
+//        contentManagerUI.setMinimizable(false);
 //        contentManagerUI.setMaximizable(false);
 
-        contentManagerUI.setShowAlwaysTab(false);
-        contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
-        contentManagerUI.setTabLayout(TabbedContentManagerUI.TabLayout.WRAP);
-        contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
-            public boolean contentUIRemoving(ContentManagerUIEvent event) {
-                return JOptionPane.showConfirmDialog(frame, "Are you sure?") == JOptionPane.OK_OPTION;
-            }
-
-            public void contentUIDetached(ContentManagerUIEvent event) {
-            }
-        });
+//        contentManagerUI.setShowAlwaysTab(false);
+//        contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
+//        contentManagerUI.setTabLayout(TabbedContentManagerUI.TabLayout.WRAP);
+//        contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
+//            public boolean contentUIRemoving(ContentManagerUIEvent event) {
+//                return JOptionPane.showConfirmDialog(frame, "Are you sure?") == JOptionPane.OK_OPTION;
+//            }
+//
+//            public void contentUIDetached(ContentManagerUIEvent event) {
+//            }
+//        });
 
 //        contentManagerUI.setMinimizable(false);
 
