@@ -241,8 +241,12 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                     } finally {
                         valueAdjusting = false;
                     }
-                } else if (isContentManagerEnabled() && toolWindowManager.getMainContent() != content.getComponent())
+                } else if (isContentManagerEnabled() && toolWindowManager.getMainContent() != content.getComponent()) {
                     throw new IllegalStateException("Invalid content ui state.");
+                } else {
+                    componentInFocusRequest = findAndRequestFocus(toolWindowManager.getMainContent());
+                    lastSelected = content;
+                }
             }
         } else {
             if (content == lastSelected)
