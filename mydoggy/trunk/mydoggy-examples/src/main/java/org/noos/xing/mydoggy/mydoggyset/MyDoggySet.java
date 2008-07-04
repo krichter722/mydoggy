@@ -32,6 +32,7 @@ import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.view.ViewContext;
 
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -297,9 +298,9 @@ public class MyDoggySet {
 
         MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
 //        contentManagerUI.setPopupMenuEnabled(false);
-//        contentManagerUI.setCloseable(false);
-//        contentManagerUI.setDetachable(false);
-//        contentManagerUI.setMinimizable(false);
+        contentManagerUI.setCloseable(false);
+        contentManagerUI.setDetachable(false);
+        contentManagerUI.setMinimizable(false);
 //        contentManagerUI.setMaximizable(false);
 
         contentManagerUI.setShowAlwaysTab(false);
@@ -405,6 +406,8 @@ public class MyDoggySet {
 //        UIManager.put("ToolWindowTitleButtonPanelUI", "org.noos.xing.mydoggy.plaf.ui.look.MenuToolWindowTitleButtonPanelUI");
 //        UIManager.put("ToolWindowTitleBarUI", "org.noos.xing.mydoggy.mydoggyset.MyDoggySet$CustomToolWindowTitleBarUI");
 //        UIManager.put("ToolWindowRepresentativeAnchorUI", "org.noos.xing.mydoggy.mydoggyset.MyDoggySet$CustomToolWindowRepresentativeAnchorUI");
+        UIManager.put("ToolWindowBarPanelUI.background", new ColorUIResource(Color.RED));
+
 //        resourceManager.putObject("ToolWindowTabTitleUI.font", new Font("Verdana", Font.BOLD, 10));
 //        resourceManager.putObject("ToolWindowTitleBarUI.font", new Font("Verdana", Font.BOLD, 10));
 //        resourceManager.putObject("ToolWindowRepresentativeAnchorUI.font", new Font("Verdana", Font.BOLD, 10));

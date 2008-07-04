@@ -18,19 +18,18 @@ public class ToolWindowBarPanel extends JPanel {
     private static final String uiClassID = "ToolWindowBarPanelUI";
 
 
+    protected ToolWindowBar toolWindowBar;
+
+
     public ToolWindowBarPanel(ToolWindowBar toolWindowBar) {
-        putClientProperty(ToolWindowBar.class, toolWindowBar);
+        this.toolWindowBar = toolWindowBar;
         updateUI();
     }
 
 
     public void updateUI() {
-        if (getClientProperty(ToolWindowBar.class) != null)
+        if (toolWindowBar != null)
             setUI((ToolWindowBarPanelUI) UIManager.getUI(this));
-    }
-
-    public void setUI(ToolWindowTitleBarUI ui) {
-        super.setUI(ui);
     }
 
     @Override
@@ -38,4 +37,11 @@ public class ToolWindowBarPanel extends JPanel {
         return uiClassID;
     }
 
+    public void setUI(ToolWindowTitleBarUI ui) {
+        super.setUI(ui);
+    }
+
+    public ToolWindowBar getToolWindowBar() {
+        return toolWindowBar;
+    }
 }
