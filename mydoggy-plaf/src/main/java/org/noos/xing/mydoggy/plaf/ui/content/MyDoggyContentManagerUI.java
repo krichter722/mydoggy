@@ -216,6 +216,10 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
         return contentManager.isEnabled();
     }
 
+    protected boolean isFocusAnchestor(Component c) {
+        return SwingUtil.isAnchestor(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner(), c);
+    }
+
     protected Component findAndRequestFocus(Component component) {
         Container container;
         if (component instanceof JDialog) {
