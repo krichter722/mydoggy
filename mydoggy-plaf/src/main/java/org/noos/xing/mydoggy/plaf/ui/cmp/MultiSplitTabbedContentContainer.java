@@ -6,7 +6,6 @@ import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
-import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -60,6 +59,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
     protected Component forceWrapperForComponent(Dockable dockable, Component component) {
         JTabbedContentPane wrapper = new JTabbedContentPane();
+
         wrapper.setToolWindowManager(toolWindowManager);
         wrapper.setName("@@mydoggy.dockable.tabbedpane");
         wrapper.setFocusCycleRoot(true);
@@ -159,12 +159,13 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         return component instanceof JTabbedContentPane; 
     }
 
-    protected class TabbedDragGesture extends DragGestureAdapter {
-        protected JTabbedContentPane dockableTabbedPane;
 
-        public TabbedDragGesture(JTabbedContentPane dockableTabbedPane) {
+    protected class TabbedDragGesture extends DragGestureAdapter {
+        protected JTabbedContentPane tabbedContentPane;
+
+        public TabbedDragGesture(JTabbedContentPane tabbedContentPane) {
             super(toolWindowManager);
-            this.dockableTabbedPane = dockableTabbedPane;
+            this.tabbedContentPane = tabbedContentPane;
         }
 
         public void dragGestureRecognized(DragGestureEvent dge) {
@@ -174,9 +175,9 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
             // Start Drag
             Point origin = dge.getDragOrigin();
-            int index = dockableTabbedPane.indexAtLocation(origin.x, origin.y);
+            int index = tabbedContentPane.indexAtLocation(origin.x, origin.y);
             if (index != -1) {
-                Dockable dockable = dockableTabbedPane.getContentAt(index);
+                Dockable dockable = tabbedContentPane.getContentAt(index);
 
                 if (dockable != null) {
                     dge.startDrag(Cursor.getDefaultCursor(),
@@ -190,15 +191,16 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                         setGhostImage(dge.getDragOrigin(),
                                       SwingUtil.getImage(MyDoggyKeySpace.DRAG));
                     } else {
-                        Component component = dockableTabbedPane.getComponentAt(index);
-                        BufferedImage ghostImage = new BufferedImage(component.getWidth(),
-                                                                     component.getHeight(), BufferedImage.TYPE_INT_RGB);
-                        component.print(ghostImage.getGraphics());
-                        ghostImage = GraphicsUtil.scale(ghostImage,
-                                                        component.getWidth() / 4,
-                                                        component.getHeight() / 4);
+                        Component c = dge.getComponent();
 
-                        setGhostImage(dge.getDragOrigin(), ghostImage);
+                        // Build ghost image
+                        Rectangle rect = tabbedContentPane.getBoundsAt(index);
+                        BufferedImage image = new BufferedImage(c.getWidth(), c.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                        Graphics g = image.getGraphics();
+                        c.paint(g);
+                        image = image.getSubimage(rect.x, rect.y, rect.width, rect.height);
+
+                        setGhostImage(dge.getDragOrigin(), image);
                     }
                 } else
                     releaseLocks();
@@ -209,6 +211,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         public void dragMouseMoved(DragSourceDragEvent dsde) {
             if (!checkStatus())
                 return;
+            
             updateGhostImage(dsde.getLocation());
         }
 
@@ -243,6 +246,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         protected Border oldBorder;
         protected Border dragBorder = new LineBorder(Color.BLUE, 3);
 
+
         public ContentDropTargetListener(JComponent component, ToolWindowManager toolWindowManager) {
             this.component = component;
             this.toolWindowManager = toolWindowManager;
@@ -250,6 +254,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
             this.component.addPropertyChangeListener("dragAnchor", this);
             this.component.addPropertyChangeListener("dragToolWindow", this);
         }
+
 
         public void propertyChange(PropertyChangeEvent evt) {
             String propertyName = evt.getPropertyName();
@@ -286,6 +291,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                 dockableWrapper = SwingUtil.getParent(deepestCmp, "@@mydoggy.dockable.");
                 if (dockableWrapper != null) {
                     if (dockableWrapper instanceof JTabbedContentPane) {
+                        // TODO: introduce a line like tabbed content pane...
                         JTabbedContentPane tabbedContentPane = (JTabbedContentPane) dockableWrapper;
 
                         Point locationOnDeepest = SwingUtilities.convertPoint(component, location, dockableWrapper);

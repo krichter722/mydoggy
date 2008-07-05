@@ -472,6 +472,18 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner, PropertyCh
 
             // Finalize drag action...
             cleanupGhostImage();
+
+            if (!dsde.getDropSuccess()) {
+                // TODO... move to FLOATING_LIVE or FLOATING 
+/*
+                Point location = dsde.getLocation();
+                ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
+                toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setLocation(
+                        location.x, location.y
+                );
+                toolWindow.setType(ToolWindowType.FLOATING_LIVE);
+*/
+            }
         }
 
     }

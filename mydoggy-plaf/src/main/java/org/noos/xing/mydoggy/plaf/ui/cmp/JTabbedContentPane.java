@@ -314,6 +314,14 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         return (index != -1) ? getContentAt(index) : null;
     }
 
+    public void setTargetLine(Point location) {
+        if (getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM)
+            initTargetLeftRightLine(getTargetTabIndex(location));
+        else
+            initTargetTopBottomLine(getTargetTabIndex(location));
+
+        repaint();
+    }
 
     protected void moveTab(int prev, int next) {
         if (next < 0 || prev == next) {
@@ -697,6 +705,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
     protected class TabbedDropTargetListener implements DropTargetListener {
 
+
         public void dragEnter(DropTargetDragEvent e) {
             if (isDragAcceptable(e))
                 e.acceptDrag(e.getDropAction());
@@ -713,7 +722,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         public void dragOver(final DropTargetDragEvent e) {
             if (getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM)
                 initTargetLeftRightLine(getTargetTabIndex(e.getLocation()));
-             else
+            else
                 initTargetTopBottomLine(getTargetTabIndex(e.getLocation()));
 
             repaint();
@@ -721,13 +730,19 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
         public void drop(DropTargetDropEvent e) {
             if (isDropAcceptable(e)) {
-                moveTab(dragTabIndex, getTargetTabIndex(e.getLocation()));
-                e.dropComplete(true);
+                int targetIndex = getTargetTabIndex(e.getLocation());
+                if (targetIndex >= 0) {
+                    moveTab(dragTabIndex, targetIndex);
+                    e.dropComplete(true);
+                } else
+                    e.dropComplete(false);
             } else {
                 e.dropComplete(false);
             }
+
             repaint();
         }
+
 
         public boolean isDragAcceptable(DropTargetDragEvent e) {
             Transferable t = e.getTransferable();
@@ -835,6 +850,24 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         }
 
         public void dragDropEnd(DragSourceDropEvent e) {
+            if (!e.getDropSuccess()) {
+                Content content = getContentAt(dragTabIndex);
+                ContentUI contentUI = content.getContentUI();
+                Rectangle bounds = contentUI.getDetachedBounds();
+                if (bounds != null) {
+                    bounds.setLocation(e.getLocation());
+                } else {
+                    bounds = new Rectangle();
+                    bounds.setLocation(e.getLocation());
+                    bounds.setSize(toolWindowManager.getBoundsToScreen(content.getComponent().getBounds(),
+                                                                       content.getComponent().getParent()).getSize());
+                }
+
+                contentUI.setDetachedBounds(bounds);
+                content.setDetached(true);
+            }
+
+            // cleanup
             lineRect.setRect(0, 0, 0, 0);
             dragTabIndex = -1;
 

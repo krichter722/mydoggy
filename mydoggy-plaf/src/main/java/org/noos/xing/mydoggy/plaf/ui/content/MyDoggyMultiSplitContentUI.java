@@ -13,12 +13,14 @@ public class MyDoggyMultiSplitContentUI extends MyDoggyTabbedContentUI implement
     protected MultiSplitDockableContainer multiSplitContainer;
     protected boolean showAlwaysTab;
 
+
     public MyDoggyMultiSplitContentUI(ContentManagerUI contentManagerUI, MultiSplitDockableContainer multiSplitContainer, Content content) {
         super(contentManagerUI, null, content);
         
         this.multiSplitContainer = multiSplitContainer;
         this.showAlwaysTab = true;
     }
+
 
     public void setConstraints(Object... constraints) {
         if (constraints.length > 0 && constraints[0] instanceof MultiSplitConstraint) {

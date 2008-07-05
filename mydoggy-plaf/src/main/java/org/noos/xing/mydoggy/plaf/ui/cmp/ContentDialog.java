@@ -57,7 +57,6 @@ public class ContentDialog extends JDialog {
             addWindowFocusListener(windowTransparencyListener);
         }
 
-        // Setup bounds
         Rectangle detachedBounds = SwingUtil.validateBounds(contentUI.getDetachedBounds());
         if (detachedBounds != null) {
             setBounds(detachedBounds);
