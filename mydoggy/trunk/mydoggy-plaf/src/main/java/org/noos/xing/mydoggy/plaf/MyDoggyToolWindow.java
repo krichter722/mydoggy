@@ -54,7 +54,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     protected AggregationPosition lastAggregationPosition;
 
 
-    protected MyDoggyToolWindow(MyDoggyToolWindowManager manager,
+    public MyDoggyToolWindow(MyDoggyToolWindowManager manager,
                                 String id, int index,
                                 ToolWindowAnchor anchor, ToolWindowType type,
                                 String title, Icon icon, Component component,

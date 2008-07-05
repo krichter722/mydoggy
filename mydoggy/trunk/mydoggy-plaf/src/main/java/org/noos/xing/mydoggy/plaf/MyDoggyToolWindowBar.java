@@ -402,7 +402,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                         toolWindowBarContainerLayout.setColumn(newCol1, colSize);
                     }
                 }
-                
+
                 toolWindowBarContainerLayout.setColumn(finalCol,
                                                        TableLayout.PREFERRED);
 
@@ -491,7 +491,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     }
 
 
-    protected class AvailableListener implements PropertyChangeListener {
+    public class AvailableListener implements PropertyChangeListener {
         protected Map<DockableDescriptor, Integer> rabsPositions;
 
         public AvailableListener() {
@@ -592,7 +592,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
     }
 
-    protected class ShowUnavailableToolsListener implements PropertyChangeListener {
+    public class ShowUnavailableToolsListener implements PropertyChangeListener {
 
         public ShowUnavailableToolsListener() {
         }
@@ -617,7 +617,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
     }
 
-    protected class ActiveBeforeListener implements PropertyChangeListener {
+    public class ActiveBeforeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
             boolean newValue = (Boolean) evt.getNewValue();
@@ -642,7 +642,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
     }
 
-    protected class TypeListener extends AvailableListener {
+    public class TypeListener extends AvailableListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
@@ -664,7 +664,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     }
 
 
-    protected class VisibleBeforeListener implements PropertyChangeListener {
+    public class VisibleBeforeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
@@ -710,7 +710,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     }
 
-    protected class VisibleListener implements PropertyChangeListener {
+    public class VisibleListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
             boolean oldValue = (Boolean) evt.getOldValue();
@@ -728,7 +728,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     }
 
 
-    protected class VisibleDockedListener implements PropertyChangeListener {
+    public class VisibleDockedListener implements PropertyChangeListener {
         protected final SplitAnimation splitAnimation = new SplitAnimation();
         protected boolean vsdValueAdjusting = false;
         protected Map<ToolWindowDescriptor, Integer> poss;
@@ -1011,7 +1011,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
 
 
-        protected class SplitAnimation extends AbstractAnimation {
+        public class SplitAnimation extends AbstractAnimation {
             protected int dividerLocation;
             protected int sheetLen;
 
@@ -1118,7 +1118,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
     }
 
-    protected class VisibleSlidingListener implements PropertyChangeListener {
+    public class VisibleSlidingListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
@@ -1134,7 +1134,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
     }
 
-    protected class VisibleFloatingLiveListener implements PropertyChangeListener {
+    public class VisibleFloatingLiveListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
@@ -1150,7 +1150,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
     }
 
-    protected class IndexListener implements PropertyChangeListener {
+    public class IndexListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
@@ -1173,13 +1173,13 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
     }
 
-    protected class IconListener extends IndexListener {
+    public class IconListener extends IndexListener {
     }
 
-    protected class TitleListener extends IndexListener {
+    public class TitleListener extends IndexListener {
     }
 
-    protected class BarLengthListener implements PropertyChangeListener {
+    public class BarLengthListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             int oldValue = (Integer) evt.getOldValue() - 4;
@@ -1207,7 +1207,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     }
 
-    protected class DragListener implements PropertyChangeListener {
+    public class DragListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             if ("startDrag".equals(evt.getPropertyName())) {
@@ -1251,7 +1251,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
     }
 
-    protected class MaximizedListener implements PropertyChangeListener {
+    public class MaximizedListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
@@ -1279,7 +1279,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     }
 
-    protected class DividerSizeListener implements PropertyChangeListener {
+    public class DividerSizeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             if (splitPane.getDividerSize() > 0)

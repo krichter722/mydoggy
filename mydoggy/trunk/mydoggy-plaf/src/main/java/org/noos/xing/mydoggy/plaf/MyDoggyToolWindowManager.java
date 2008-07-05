@@ -1100,7 +1100,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
 
-    protected class AvailablePropertyChangeListener implements PropertyChangeListener {
+    public class AvailablePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             DockableDescriptor descriptor = (DockableDescriptor) evt.getSource();
             ToolWindowAnchor target = descriptor.getAnchor();
@@ -1113,7 +1113,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    protected class ShowUnavailableToolsPropertyChangeListener implements PropertyChangeListener {
+    public class ShowUnavailableToolsPropertyChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             for (MyDoggyToolWindowBar bar : bars)
@@ -1127,7 +1127,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    protected class VisiblePropertyChangeListener implements PropertyChangeListener {
+    public class VisiblePropertyChangeListener implements PropertyChangeListener {
         boolean showingGroupValueAdj = false;
 
         public void propertyChange(PropertyChangeEvent evt) {
@@ -1170,7 +1170,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    protected class ActivePropertyChangeListener implements PropertyChangeListener {
+    public class ActivePropertyChangeListener implements PropertyChangeListener {
 
         public synchronized void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
@@ -1206,7 +1206,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    protected class AnchorPropertyChangeListener implements PropertyChangeListener {
+    public class AnchorPropertyChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
@@ -1253,13 +1253,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     }
 
-    protected static class AutoHideChangeListener implements PropertyChangeListener {
+    public static class AutoHideChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ((ToolWindowDescriptor) evt.getSource()).getToolWindowContainer().propertyChange(evt);
         }
     }
 
-    protected class TypePropertyChangeListener implements PropertyChangeListener {
+    public class TypePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor window = (ToolWindowDescriptor) evt.getSource();
 
@@ -1272,7 +1272,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    protected class IndexChangeListener implements PropertyChangeListener {
+    public class IndexChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
             ToolWindow modifiedTool = descriptor.getToolWindow();
@@ -1293,7 +1293,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    protected class IconChangeListener implements PropertyChangeListener {
+    public class IconChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
 
@@ -1302,14 +1302,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    protected class NumberingEnabledChangeListener implements PropertyChangeListener {
+    public class NumberingEnabledChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             for (ToolWindowDescriptor descriptor : tools.values())
                 descriptor.propertyChange(evt);
         }
     }
 
-    protected class UpdateUIChangeListener implements PropertyChangeListener {
+    public class UpdateUIChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             contentManager.updateUI();
@@ -1320,7 +1320,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    protected class MaximizedChangeListener implements PropertyChangeListener {
+    public class MaximizedChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
             toolWindowDescriptor.getToolWindowContainer().propertyChange(evt);
@@ -1333,14 +1333,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    protected class ResourceManagerListener implements PropertyChangeListener {
+    public class ResourceManagerListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             SwingUtil.repaint(MyDoggyToolWindowManager.this);
         }
     }
 
-    protected class BarLengthListener implements PropertyChangeListener {
+    public class BarLengthListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowBar bar = (ToolWindowBar) evt.getSource();
@@ -1366,7 +1366,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    protected class FocusOwnerChangeListener implements PropertyChangeListener {
+    public class FocusOwnerChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Component newFocusOwner = (Component) evt.getNewValue();
             if (newFocusOwner != null && SwingUtilities.isDescendingFrom(newFocusOwner, mainContainer))
@@ -1374,7 +1374,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    protected class AnchestorClosedChangeListener implements PropertyChangeListener {
+    public class AnchestorClosedChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             for (ToolWindowDescriptor tool : tools.values())
@@ -1382,7 +1382,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    protected class ContentMananagerEnabledChangeListener implements PropertyChangeListener {
+    public class ContentMananagerEnabledChangeListener implements PropertyChangeListener {
 
         public void propertyChange(final PropertyChangeEvent evt) {
             if (evt.getSource() instanceof ContentManager) {
@@ -1422,7 +1422,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     }
 
-    protected class InternalContentMananagerListener implements ContentManagerListener,
+    public class InternalContentMananagerListener implements ContentManagerListener,
                                                                 PropertyChangeListener {
 
         public void contentAdded(ContentManagerEvent event) {

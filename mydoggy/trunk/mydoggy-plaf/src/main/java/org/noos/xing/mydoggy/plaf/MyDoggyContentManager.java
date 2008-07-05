@@ -28,7 +28,7 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
     protected boolean enabled;
 
 
-    protected MyDoggyContentManager(MyDoggyToolWindowManager windowManager) {
+    public MyDoggyContentManager(MyDoggyToolWindowManager windowManager) {
         this.toolWindowManager = windowManager;
         this.contents = new ArrayList<Content>();
         this.contentMap = new HashMap<Object, Content>();
@@ -376,7 +376,7 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
     }
 
 
-    protected class SelectedContentPropertyChangeListener implements PropertyChangeListener {
+    public class SelectedContentPropertyChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             assert evt.getSource() instanceof Content;
@@ -386,7 +386,7 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
         }
     }
 
-    protected class MaximizedBeforePropertyChangeListener implements PropertyChangeListener {
+    public class MaximizedBeforePropertyChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             assert evt.getSource() instanceof Content;

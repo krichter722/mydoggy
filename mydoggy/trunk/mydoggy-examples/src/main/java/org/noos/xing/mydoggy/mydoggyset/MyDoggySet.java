@@ -99,6 +99,7 @@ public class MyDoggySet {
 
         // Init ToolWindowManager
         MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(Locale.US, null);
+        
         // Add MyDoggyToolWindowManager to frame
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
 
