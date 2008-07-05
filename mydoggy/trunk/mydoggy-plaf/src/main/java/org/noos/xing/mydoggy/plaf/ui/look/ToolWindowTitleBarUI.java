@@ -299,7 +299,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner, PropertyCh
     }
 
 
-    protected class GradientAnimation extends AbstractAnimation {
+    public class GradientAnimation extends AbstractAnimation {
 
         public GradientAnimation() {
             super(300f);
@@ -376,7 +376,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner, PropertyCh
 
     }
 
-    protected class ToolWindowTitleBarDragGesture extends DragGestureAdapter {
+    public class ToolWindowTitleBarDragGesture extends DragGestureAdapter {
         protected JComponent lastOverCmp = null;
         protected Border oldBorder = null;
 

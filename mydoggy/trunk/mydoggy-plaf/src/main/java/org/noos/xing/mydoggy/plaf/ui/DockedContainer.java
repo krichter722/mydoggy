@@ -262,7 +262,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
     }
 
 
-    protected class TitleBarMouseAdapter extends MouseAdapter implements Cleaner, ActionListener, PropertyChangeListener {
+    public class TitleBarMouseAdapter extends MouseAdapter implements Cleaner, ActionListener, PropertyChangeListener {
         protected JPopupMenu popupMenu;
 
         protected JMenuItem visible;
@@ -646,7 +646,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         }
     }
 
-    protected class DockedToolWindowListener implements Cleaner, ToolWindowListener, PropertyChangeListener {
+    public class DockedToolWindowListener implements Cleaner, ToolWindowListener, PropertyChangeListener {
 
         public DockedToolWindowListener() {
             descriptor.getCleaner().addBefore(DockedContainer.this, this);
@@ -706,7 +706,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         }
     }
 
-    protected class FocusOwnerPropertyChangeListener implements PropertyChangeListener, Cleaner {
+    public class FocusOwnerPropertyChangeListener implements PropertyChangeListener, Cleaner {
         protected Question<Component, Boolean> parentOf;
 
         public FocusOwnerPropertyChangeListener(Question<Component, Boolean> parentOf) {
@@ -757,7 +757,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
     }
 
-    protected class ActivePropertyChangeListener implements PropertyChangeListener {
+    public class ActivePropertyChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getSource() != descriptor)
@@ -789,7 +789,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
     }
 
-    protected class TypePropertyChangeListener implements PropertyChangeListener {
+    public class TypePropertyChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getSource() != descriptor)
@@ -806,7 +806,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
     }
 
-    protected class MaximizedBeforePropertyChangeListener implements PropertyChangeListener {
+    public class MaximizedBeforePropertyChangeListener implements PropertyChangeListener {
         ByteArrayOutputStream workspace;
         boolean valueAdj = false;
 

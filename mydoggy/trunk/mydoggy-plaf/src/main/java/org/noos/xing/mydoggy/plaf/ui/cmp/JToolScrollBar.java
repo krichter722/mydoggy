@@ -175,7 +175,7 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
     }
 
 
-    protected class ArrowListener extends MouseAdapter implements ActionListener {
+    public class ArrowListener extends MouseAdapter implements ActionListener {
         protected Timer scrollTimer;
         protected int direction;
 
@@ -212,7 +212,7 @@ public class JToolScrollBar extends JComponent implements ChangeListener {
         }
     }
 
-    protected class WheelScroller implements MouseWheelListener {
+    public class WheelScroller implements MouseWheelListener {
         public void mouseWheelMoved(MouseWheelEvent e) {
             if (scrollEnabled)
                 scrollBy(e.getWheelRotation() == 1 ? 1 : 0, e.getScrollAmount() * 3);

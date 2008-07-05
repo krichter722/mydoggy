@@ -272,7 +272,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
     }
 
 
-    protected class SlidingAnimation extends AbstractAnimation {
+    public class SlidingAnimation extends AbstractAnimation {
         protected int length;
         protected Rectangle bounds;
         protected int lastLen = 0;
@@ -388,7 +388,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
     }
 
-    protected class ActivePropertyChangeListener implements PropertyChangeListener, ActionListener {
+    public class ActivePropertyChangeListener implements PropertyChangeListener, ActionListener {
         protected TransparencyAnimation animation;
         protected Timer timer;
 
@@ -428,7 +428,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         }
     }
 
-    protected class MaximizedPropertyChangeListener implements PropertyChangeListener {
+    public class MaximizedPropertyChangeListener implements PropertyChangeListener {
         protected Rectangle oldBounds = null;
 
         public void propertyChange(PropertyChangeEvent evt) {
@@ -504,7 +504,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
     }
 
-    protected class SlidingTypePropertyChangeListener implements PropertyChangeListener, Cleaner {
+    public class SlidingTypePropertyChangeListener implements PropertyChangeListener, Cleaner {
 
         public SlidingTypePropertyChangeListener() {
             descriptor.getCleaner().addBefore(SlidingContainer.this, this);
@@ -524,7 +524,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
     }
 
-    protected class TempShowedPropertyChangeListener implements PropertyChangeListener {
+    public class TempShowedPropertyChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
@@ -533,7 +533,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
     }
 
-    protected class ComponentResizer extends ComponentAdapter implements Cleaner {
+    public class ComponentResizer extends ComponentAdapter implements Cleaner {
 
         public ComponentResizer() {
             descriptor.getCleaner().addBefore(SlidingContainer.this, this);

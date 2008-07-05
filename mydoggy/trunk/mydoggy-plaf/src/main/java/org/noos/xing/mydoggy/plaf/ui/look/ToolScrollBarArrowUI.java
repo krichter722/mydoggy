@@ -51,7 +51,7 @@ public class ToolScrollBarArrowUI extends MetalLabelUI {
     }
 
 
-    protected class ScrollToolBarArrowMouseAdapter extends MouseAdapter {
+    public class ScrollToolBarArrowMouseAdapter extends MouseAdapter {
 
         public void mouseEntered(MouseEvent e) {
 			Component source = e.getComponent();

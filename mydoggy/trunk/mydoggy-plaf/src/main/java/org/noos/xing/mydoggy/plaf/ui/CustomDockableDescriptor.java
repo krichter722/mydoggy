@@ -177,7 +177,7 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
     }
 
 
-    protected class CustomRepresentativeAnchorDragGesture extends RepresentativeAnchorDragGesture {
+    public class CustomRepresentativeAnchorDragGesture extends RepresentativeAnchorDragGesture {
 
         public CustomRepresentativeAnchorDragGesture(DockableDescriptor descriptor) {
             super(descriptor, null);

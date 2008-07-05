@@ -181,7 +181,7 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
 
     }
 
-    protected class HideAction extends TitleBarAction {
+    public class HideAction extends TitleBarAction {
 
         public HideAction() {
             super("toolWindow.hideButton." + toolWindow.getId(), MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE, "@@tool.tooltip.hide");
@@ -209,7 +209,7 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
         }
     }
 
-    protected class DockAction extends TitleBarAction {
+    public class DockAction extends TitleBarAction {
 
         public DockAction() {
             super("toolWindow.dockButton." + toolWindow.getId(), MyDoggyKeySpace.DOCKED_INACTIVE, "@@tool.tooltip.undock");
@@ -279,7 +279,7 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
         }
     }
 
-    protected class PinAction extends TitleBarAction {
+    public class PinAction extends TitleBarAction {
 
         public PinAction() {
             super("toolWindow.pinButton." + toolWindow.getId(), MyDoggyKeySpace.AUTO_HIDE_OFF_INACTIVE, "@@tool.tooltip.unpin");
@@ -341,7 +341,7 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
         }
     }
 
-    protected class MaximizeAction extends TitleBarAction {
+    public class MaximizeAction extends TitleBarAction {
 
         public MaximizeAction() {
             super("toolWindow.maximizeButton." + toolWindow.getId(), MyDoggyKeySpace.MAXIMIZE_INACTIVE, "@@tool.tooltip.maximize");
@@ -393,7 +393,7 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
         }
     }
 
-    protected class FloatingAction extends TitleBarAction {
+    public class FloatingAction extends TitleBarAction {
         protected ToolWindowType oldType;
 
         public FloatingAction() {

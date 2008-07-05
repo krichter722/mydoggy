@@ -259,7 +259,7 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
     }
 
     
-    protected class ContentDialogFocusListener implements WindowFocusListener {
+    public class ContentDialogFocusListener implements WindowFocusListener {
         protected Content content;
 
         public ContentDialogFocusListener(Content content) {
@@ -289,7 +289,7 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
         }
     }
     
-    protected class ContentUIListener implements PropertyChangeListener {
+    public class ContentUIListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ContentUI contentUI = (ContentUI) evt.getSource();

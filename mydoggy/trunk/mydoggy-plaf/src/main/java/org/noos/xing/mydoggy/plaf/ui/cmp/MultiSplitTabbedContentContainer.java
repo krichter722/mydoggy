@@ -160,7 +160,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
     }
 
 
-    protected class TabbedDragGesture extends DragGestureAdapter {
+    public class TabbedDragGesture extends DragGestureAdapter {
         protected JTabbedContentPane tabbedContentPane;
 
         public TabbedDragGesture(JTabbedContentPane tabbedContentPane) {
@@ -226,7 +226,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
     }
 
-    protected class ContentDropTarget extends DropTarget {
+    public class ContentDropTarget extends DropTarget {
 
         public ContentDropTarget(JComponent component, ToolWindowManager toolWindowManager) throws HeadlessException {
             super(component, DnDConstants.ACTION_MOVE, new ContentDropTargetListener(component, toolWindowManager));
@@ -234,7 +234,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
     }
 
-    protected class ContentDropTargetListener implements DropTargetListener, PropertyChangeListener {
+    public class ContentDropTargetListener implements DropTargetListener, PropertyChangeListener {
         protected ToolWindowManager toolWindowManager;
         protected JComponent component;
 
