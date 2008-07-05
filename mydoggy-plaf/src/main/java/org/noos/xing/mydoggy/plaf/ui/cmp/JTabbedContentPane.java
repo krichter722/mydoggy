@@ -7,6 +7,7 @@ import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -45,13 +46,11 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
     protected String currentToolTip;
 
     // For drag tabs
-    protected boolean hasGhost = true;
     protected static final int LINEWIDTH = 3;
-    protected static final String NAME = "test";
+    protected static final String NAME = "test";    // TODO: change name
     protected Rectangle2D lineRect = new Rectangle2D.Double();
     protected Color lineColor = new Color(0, 100, 255);
     protected DragSource dragSource = new DragSource();
-    protected DropTarget dropTarget;
     protected int dragTabIndex = -1;
 
 
@@ -125,7 +124,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
             titleIcon.setText(super.getTitleAt(index));
             titleIcon.setUnderlinedIndex(SwingUtil.findDisplayedMnemonicIndex(super.getTitleAt(index),
-                    getContentAt(index).getMnemonic()));
+                                                                              getContentAt(index).getMnemonic()));
 
             aggregateIcon.setVisibleAt(2, contentUI.isMinimizable());
             if (content.isMaximized())
@@ -152,7 +151,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             } else
                 return (Icon) o;
         }
-        
+
         return super.getIconAt(index);
     }
 
@@ -185,12 +184,12 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         addMouseMotionListener(mouseInputAdapter);
     }
 
-    @Override
     public String getToolTipText(MouseEvent event) {
         if (currentToolTip != null)
             return currentToolTip;
         return super.getToolTipText(event);
     }
+
 
     public void setToolWindowManager(MyDoggyToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
@@ -209,9 +208,9 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         String tip = content.getToolTipText();
 
         addTab(content.getTitle(),
-                content.getIcon(),
-                content.getComponent(),
-                tip);
+               content.getIcon(),
+               content.getComponent(),
+               tip);
 
         int index = getTabCount() - 1;
         setForegroundAt(index, content.getForeground());
@@ -229,9 +228,9 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             component = content.getComponent();
 
         addTab(content.getTitle(),
-                content.getIcon(),
-                component,
-                tip);
+               content.getIcon(),
+               component,
+               tip);
 
         int index = getTabCount() - 1;
         setForegroundAt(index, content.getForeground());
@@ -264,10 +263,10 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             }
 
             insertTab(content.getTitle(),
-                    content.getIcon(),
-                    component,
-                    tip,
-                    index);
+                      content.getIcon(),
+                      component,
+                      tip,
+                      index);
 
             setForegroundAt(index, content.getForeground());
             setDisabledIconAt(index, content.getDisabledIcon());
@@ -316,44 +315,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
     }
 
 
-    protected void initDragListener() {
-        final DragSourceListener dsl = new TabbedDragSourceListener();
-        final Transferable t = new TabbedTransferable();
-        final DragGestureListener dgl = new TabbedDragGestureListener(t, dsl);
-
-        dropTarget = new DropTarget(toolWindowManager.getGlassPanel(),
-                DnDConstants.ACTION_COPY_OR_MOVE,
-                new TabbedDropTargetListener(),
-                true);
-        dragSource.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_COPY_OR_MOVE, dgl);
-    }
-
-    public void setPaintGhost(boolean flag) {
-        hasGhost = flag;
-    }
-
-    public boolean hasGhost() {
-        return hasGhost;
-    }
-
-    protected int getTargetTabIndex(Point glassPt) {
-        Point tabPt = SwingUtilities.convertPoint(toolWindowManager.getGlassPanel(),
-                glassPt,
-                JTabbedContentPane.this);
-        boolean isTB = getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM;
-        for (int i = 0; i < getTabCount(); i++) {
-            Rectangle r = getBoundsAt(i);
-            if (isTB) r.setRect(r.x - r.width / 2, r.y, r.width, r.height);
-            else r.setRect(r.x, r.y - r.height / 2, r.width, r.height);
-            if (r.contains(tabPt)) return i;
-        }
-        Rectangle r = getBoundsAt(getTabCount() - 1);
-        if (isTB) r.setRect(r.x + r.width / 2, r.y, r.width, r.height);
-        else r.setRect(r.x, r.y + r.height / 2, r.width, r.height);
-        return r.contains(tabPt) ? getTabCount() : -1;
-    }
-
-    protected void convertTab(int prev, int next) {
+    protected void moveTab(int prev, int next) {
         if (next < 0 || prev == next) {
             //System.out.println("press="+prev+" next="+next);
             return;
@@ -389,6 +351,40 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         }
     }
 
+    protected void initDragListener() {
+        // Init drag
+        SwingUtil.registerDragGesture(this, new TabbedDragGestureAdapter(toolWindowManager));
+
+        // Init drop
+        setDropTarget(new DropTarget(this,
+                                     DnDConstants.ACTION_COPY_OR_MOVE,
+                                     new TabbedDropTargetListener(),
+                                     true));
+    }
+
+    protected int getTargetTabIndex(Point point) {
+        boolean isTB = getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM;
+
+        for (int i = 0; i < getTabCount(); i++) {
+            Rectangle r = getBoundsAt(i);
+
+            if (isTB)
+                r.setRect(r.x - r.width / 2, r.y, r.width, r.height);
+            else
+                r.setRect(r.x, r.y - r.height / 2, r.width, r.height);
+
+            if (r.contains(point))
+                return i;
+        }
+
+        Rectangle r = getBoundsAt(getTabCount() - 1);
+        if (isTB)
+            r.setRect(r.x + r.width / 2, r.y, r.width, r.height);
+        else
+            r.setRect(r.x, r.y + r.height / 2, r.width, r.height);
+        return r.contains(point) ? getTabCount() : -1;
+    }
+
     protected void initTargetLeftRightLine(int next) {
         if (next < 0 || dragTabIndex == next || next - dragTabIndex == 1) {
             lineRect.setRect(0, 0, 0, 0);
@@ -419,23 +415,9 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         }
     }
 
-    protected void initGlassPane(Component c, Point tabPt) {
-        //Point p = (Point) pt.clone();
-        if (hasGhost()) {
-            Rectangle rect = getBoundsAt(dragTabIndex);
-            BufferedImage image = new BufferedImage(c.getWidth(), c.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            Graphics g = image.getGraphics();
-            c.paint(g);
-            image = image.getSubimage(rect.x, rect.y, rect.width, rect.height);
-            toolWindowManager.getGlassPanel().setDraggingImage(image);
-        }
-        Point glassPt = SwingUtilities.convertPoint(c, tabPt, toolWindowManager.getGlassPanel());
-        toolWindowManager.getGlassPanel().setPoint(glassPt);
-        toolWindowManager.getGlassPanel().setVisible(true);
-    }
-
     protected Rectangle getTabAreaBound() {
         Rectangle lastTab = getUI().getTabBounds(this, getTabCount() - 1);
+
         return new Rectangle(0, 0, getWidth(), lastTab.y + lastTab.height);
     }
 
@@ -446,16 +428,16 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
     protected void fireCloseTabEvent(Content content) {
         TabbedContentPaneEvent event = new TabbedContentPaneEvent(this,
-                TabbedContentPaneEvent.ActionId.ON_CLOSE,
-                content);
+                                                                  TabbedContentPaneEvent.ActionId.ON_CLOSE,
+                                                                  content);
         for (TabbedContentPaneListener tabListener : getListeners(TabbedContentPaneListener.class))
             tabListener.tabbedContentPaneEventFired(event);
     }
 
     protected void fireDetachTabEvent(Content content) {
         TabbedContentPaneEvent event = new TabbedContentPaneEvent(this,
-                TabbedContentPaneEvent.ActionId.ON_DETACH,
-                content);
+                                                                  TabbedContentPaneEvent.ActionId.ON_DETACH,
+                                                                  content);
         for (TabbedContentPaneListener tabListener : getListeners(TabbedContentPaneListener.class))
             tabListener.tabbedContentPaneEventFired(event);
     }
@@ -566,7 +548,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             Rectangle iconBounds = aggregateIcon.getLastPaintedRecAt(2);
 
             return (contentUI.isMinimizable() && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
-                    (point.getX() > iconBounds.x && point.getX() < iconBounds.x + iconBounds.width)));
+                                                  (point.getX() > iconBounds.x && point.getX() < iconBounds.x + iconBounds.width)));
         }
 
         protected boolean isMaximizeFired(ContentUI contentUI, Point point) {
@@ -574,7 +556,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             Rectangle iconsBounds = aggregateIcon.getLastPaintedRecAt(3);
 
             return (contentUI.isMaximizable() && ((relativeMousePoint.getX() > iconsBounds.x && relativeMousePoint.getX() < iconsBounds.x + iconsBounds.width) ||
-                    (point.getX() > iconsBounds.x && point.getX() < iconsBounds.x + iconsBounds.width)));
+                                                  (point.getX() > iconsBounds.x && point.getX() < iconsBounds.x + iconsBounds.width)));
         }
 
         protected boolean isDetachFired(ContentUI contentUI, Point point) {
@@ -582,7 +564,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             Rectangle iconBounds = aggregateIcon.getLastPaintedRecAt(4);
 
             return (contentUI.isDetachable() && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
-                    (point.getX() > iconBounds.x && point.getX() < iconBounds.x + iconBounds.width)));
+                                                 (point.getX() > iconBounds.x && point.getX() < iconBounds.x + iconBounds.width)));
         }
 
         protected boolean isCloseFired(ContentUI contentUI, Point point) {
@@ -590,7 +572,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             Rectangle iconsBounds = aggregateIcon.getLastPaintedRecAt(5);
 
             return (contentUI.isCloseable() && ((relativeMousePoint.getX() > iconsBounds.x && relativeMousePoint.getX() < iconsBounds.x + iconsBounds.width) ||
-                    (point.getX() > iconsBounds.x && point.getX() < iconsBounds.x + iconsBounds.width)));
+                                                (point.getX() > iconsBounds.x && point.getX() < iconsBounds.x + iconsBounds.width)));
         }
 
 
@@ -644,9 +626,9 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
                 MaximizeAction maximizeAction = new MaximizeAction(contentAt);
                 stdPopupMenu.add(maximizeAction).setEnabled(contentAt.getContentUI().isMaximizable());
                 boolean restore = contentAt.isMaximized() || isAContentMaximized();
-                maximizeAction.putValue(Action.NAME,  restore ?
-                        resourceManager.getString("@@tabbed.page.restore") :
-                        resourceManager.getString("@@tabbed.page.maximize")
+                maximizeAction.putValue(Action.NAME, restore ?
+                                                     resourceManager.getString("@@tabbed.page.restore") :
+                                                     resourceManager.getString("@@tabbed.page.maximize")
                 );
 
                 if (!restore && contentAt.getContentUI().isMinimizable()) {
@@ -714,9 +696,12 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
 
     protected class TabbedDropTargetListener implements DropTargetListener {
+
         public void dragEnter(DropTargetDragEvent e) {
-            if (isDragAcceptable(e)) e.acceptDrag(e.getDropAction());
-            else e.rejectDrag();
+            if (isDragAcceptable(e))
+                e.acceptDrag(e.getDropAction());
+            else
+                e.rejectDrag();
         }
 
         public void dragExit(DropTargetEvent e) {
@@ -726,21 +711,17 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         }
 
         public void dragOver(final DropTargetDragEvent e) {
-            if (getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM) {
+            if (getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM)
                 initTargetLeftRightLine(getTargetTabIndex(e.getLocation()));
-            } else {
+             else
                 initTargetTopBottomLine(getTargetTabIndex(e.getLocation()));
-            }
+
             repaint();
-            if (hasGhost()) {
-                toolWindowManager.getGlassPanel().setPoint(e.getLocation());
-                toolWindowManager.getGlassPanel().repaint();
-            }
         }
 
         public void drop(DropTargetDropEvent e) {
             if (isDropAcceptable(e)) {
-                convertTab(dragTabIndex, getTargetTabIndex(e.getLocation()));
+                moveTab(dragTabIndex, getTargetTabIndex(e.getLocation()));
                 e.dropComplete(true);
             } else {
                 e.dropComplete(false);
@@ -750,64 +731,20 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
         public boolean isDragAcceptable(DropTargetDragEvent e) {
             Transferable t = e.getTransferable();
-            if (t == null) return false;
+            if (t == null)
+                return false;
+
             DataFlavor[] f = e.getCurrentDataFlavors();
-            if (t.isDataFlavorSupported(f[0]) && dragTabIndex >= 0) {
-                return true;
-            }
-            return false;
+            return t.isDataFlavorSupported(f[0]) && dragTabIndex >= 0;
         }
 
         public boolean isDropAcceptable(DropTargetDropEvent e) {
             Transferable t = e.getTransferable();
-            if (t == null) return false;
+            if (t == null)
+                return false;
+
             DataFlavor[] f = t.getTransferDataFlavors();
-            if (t.isDataFlavorSupported(f[0]) && dragTabIndex >= 0) {
-                return true;
-            }
-            return false;
-        }
-    }
-
-    protected class TabbedDragSourceListener implements DragSourceListener {
-        public void dragEnter(DragSourceDragEvent e) {
-//            e.getDragSourceContext().setCursor(DragSource.DefaultMoveDrop);
-        }
-
-        public void dragExit(DragSourceEvent e) {
-//            e.getDragSourceContext().setCursor(DragSource.DefaultMoveNoDrop);
-            lineRect.setRect(0, 0, 0, 0);
-            toolWindowManager.getGlassPanel().setPoint(new Point(-1000, -1000));
-            toolWindowManager.getGlassPanel().repaint();
-        }
-
-        public void dragOver(DragSourceDragEvent e) {
-            //e.getLocation()
-            //This method returns a Point indicating the cursor location in screen coordinates at the moment
-            Point tabPt = e.getLocation();
-            SwingUtilities.convertPointFromScreen(tabPt, JTabbedContentPane.this);
-            Point glassPt = e.getLocation();
-            SwingUtilities.convertPointFromScreen(glassPt, toolWindowManager.getGlassPanel());
-            int targetIdx = getTargetTabIndex(glassPt);
-
-            if (getTabAreaBound().contains(tabPt) && targetIdx >= 0 &&
-                    targetIdx != dragTabIndex && targetIdx != dragTabIndex + 1) {
-//                e.getDragSourceContext().setCursor(DragSource.DefaultMoveDrop);
-            } else {
-//                e.getDragSourceContext().setCursor(DragSource.DefaultMoveNoDrop);
-            }
-        }
-
-        public void dragDropEnd(DragSourceDropEvent e) {
-            lineRect.setRect(0, 0, 0, 0);
-            dragTabIndex = -1;
-            if (hasGhost()) {
-                toolWindowManager.getGlassPanel().setVisible(false);
-                toolWindowManager.getGlassPanel().setDraggingImage(null);
-            }
-        }
-
-        public void dropActionChanged(DragSourceDragEvent e) {
+            return t.isDataFlavorSupported(f[0]) && dragTabIndex >= 0;
         }
     }
 
@@ -829,25 +766,83 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         }
     }
 
-    protected class TabbedDragGestureListener implements DragGestureListener {
-        private final Transferable t;
-        private final DragSourceListener dsl;
+    protected class TabbedDragGestureAdapter extends DragGestureAdapter {
 
-        public TabbedDragGestureListener(Transferable t, DragSourceListener dsl) {
-            this.t = t;
-            this.dsl = dsl;
+
+        public TabbedDragGestureAdapter(MyDoggyToolWindowManager manager) {
+            super(manager);
         }
 
-        public void dragGestureRecognized(DragGestureEvent e) {
-            Point tabPt = e.getDragOrigin();
+
+        public void dragGestureRecognized(DragGestureEvent dge) {
+            Point tabPt = dge.getDragOrigin();
+
             dragTabIndex = indexAtLocation(tabPt.x, tabPt.y);
             if (dragTabIndex < 0)
                 return;
-            initGlassPane(e.getComponent(), e.getDragOrigin());
-            try {
-                e.startDrag(DragSource.DefaultMoveDrop, t, dsl);
-            } catch (InvalidDnDOperationException idoe) {
+
+            dge.startDrag(DragSource.DefaultMoveDrop,
+                          new TabbedTransferable(),
+                          this);
+
+            // Setup ghostImage
+            if (SwingUtil.getBoolean("drag.icon.useDefault", false)) {
+                setGhostImage(dge.getDragOrigin(),
+                              SwingUtil.getImage(MyDoggyKeySpace.DRAG));
+            } else {
+                Component c = dge.getComponent();
+
+                // Build ghost image
+                Rectangle rect = getBoundsAt(dragTabIndex);
+                BufferedImage image = new BufferedImage(c.getWidth(), c.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                Graphics g = image.getGraphics();
+                c.paint(g);
+                image = image.getSubimage(rect.x, rect.y, rect.width, rect.height);
+
+                // setup ghost image;
+                setGhostImage(dge.getDragOrigin(), image);
+            }
+
+        }
+
+        public void dragMouseMoved(DragSourceDragEvent dsde) {
+            updateGhostImage(dsde.getLocation());
+        }
+
+        public void dragEnter(DragSourceDragEvent e) {
+        }
+
+        public void dragExit(DragSourceEvent e) {
+            lineRect.setRect(0, 0, 0, 0);
+
+//            toolWindowManager.getGlassPanel().setPoint(new Point(-1000, -1000));
+//            toolWindowManager.getGlassPanel().repaint();
+        }
+
+        public void dragOver(DragSourceDragEvent e) {
+            // This method returns a Point indicating the cursor location in screen coordinates at the moment
+
+            Point tabPt = e.getLocation();
+            SwingUtilities.convertPointFromScreen(tabPt, JTabbedContentPane.this);
+
+            Point glassPt = e.getLocation();
+            SwingUtilities.convertPointFromScreen(glassPt, toolWindowManager.getGlassPanel());
+            int targetIdx = getTargetTabIndex(glassPt);
+
+            if (getTabAreaBound().contains(tabPt) && targetIdx >= 0 &&
+                targetIdx != dragTabIndex && targetIdx != dragTabIndex + 1) {
             }
         }
+
+        public void dragDropEnd(DragSourceDropEvent e) {
+            lineRect.setRect(0, 0, 0, 0);
+            dragTabIndex = -1;
+
+            cleanupGhostImage();
+        }
+
+        public void dropActionChanged(DragSourceDragEvent e) {
+        }
+
     }
 }
