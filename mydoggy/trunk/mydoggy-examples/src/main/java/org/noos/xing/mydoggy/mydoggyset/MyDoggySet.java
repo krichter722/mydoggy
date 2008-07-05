@@ -56,7 +56,7 @@ public class MyDoggySet {
     }
 
     public void start(final Runnable runnable) {
-//        myDoggySetContext.put(MyDoggySet.class, null);
+        myDoggySetContext.put(MyDoggySet.class, null);
 
         SwingUtil.centrePositionOnScreen(frame);
 
