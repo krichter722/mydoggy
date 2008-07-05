@@ -20,7 +20,7 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
     protected boolean tempGroup;
 
 
-    protected MyDoggyToolWindowGroup(MyDoggyToolWindowManager manager, String name, boolean tempGroup) {
+    public MyDoggyToolWindowGroup(MyDoggyToolWindowManager manager, String name, boolean tempGroup) {
         this.manager = manager;
         this.name = name;
         this.tools = new ArrayList<ToolWindow>();

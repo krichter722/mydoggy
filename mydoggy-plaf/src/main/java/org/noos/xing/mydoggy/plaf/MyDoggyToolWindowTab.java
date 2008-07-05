@@ -255,7 +255,7 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
     }
 
 
-    protected class DelegatorListener implements PropertyChangeListener  {
+    public class DelegatorListener implements PropertyChangeListener  {
 
         public void propertyChange(PropertyChangeEvent evt) {
             String propertyName = evt.getPropertyName();
@@ -276,7 +276,7 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
         
     }
 
-    protected class DelegateListener implements PropertyChangeListener {
+    public class DelegateListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             String propertyName = evt.getPropertyName();
