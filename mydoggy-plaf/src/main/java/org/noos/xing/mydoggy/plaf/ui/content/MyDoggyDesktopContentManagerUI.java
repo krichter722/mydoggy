@@ -306,7 +306,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
     }
 
 
-    protected class ComponentListener implements PropertyChangeListener {
+    public class ComponentListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -330,12 +330,12 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         }
     }
 
-    protected class DisabledIconListener implements PropertyChangeListener {
+    public class DisabledIconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
         }
     }
 
-    protected class IconListener implements PropertyChangeListener {
+    public class IconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -352,7 +352,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         }
     }
 
-    protected class EnabledListener implements PropertyChangeListener {
+    public class EnabledListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -369,7 +369,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         }
     }
 
-    protected class ForegroundListener implements PropertyChangeListener {
+    public class ForegroundListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -386,7 +386,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         }
     }
 
-    protected class PopupMenuListener implements PropertyChangeListener {
+    public class PopupMenuListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -403,7 +403,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         }
     }
 
-    protected class TitleListener implements PropertyChangeListener {
+    public class TitleListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -422,7 +422,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         }
     }
 
-    protected class ToolTipTextListener implements PropertyChangeListener {
+    public class ToolTipTextListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -439,7 +439,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         }
     }
 
-    protected class MaximizedListener implements PropertyChangeListener {
+    public class MaximizedListener implements PropertyChangeListener {
         protected ByteArrayOutputStream tmpWorkspace;
         protected Component oldFucusOwner;
 
@@ -482,7 +482,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         }
     }
 
-    protected class MinimizedListener implements PropertyChangeListener {
+    public class MinimizedListener implements PropertyChangeListener {
 
         public MinimizedListener() {
         }
@@ -522,7 +522,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
 
     }
 
-    protected class DetachedListener implements PropertyChangeListener {
+    public class DetachedListener implements PropertyChangeListener {
 
         public DetachedListener() {
         }
@@ -581,7 +581,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
     }
 
 
-    protected class PopupMouseListener extends MouseAdapter implements ActionListener {
+    public class PopupMouseListener extends MouseAdapter implements ActionListener {
         protected JPopupMenu popupMenu;
 
         public PopupMouseListener() {

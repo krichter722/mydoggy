@@ -451,7 +451,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
     }
 
 
-    protected class MouseOverTabListener extends MouseInputAdapter {
+    public class MouseOverTabListener extends MouseInputAdapter {
         protected int mouseOverTab = -1;
         protected JPopupMenu stdPopupMenu;
         protected boolean selectionOnPressed;
@@ -686,7 +686,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         }
     }
 
-    protected class ExMultipleAggregateIcon extends MultipleAggregateIcon {
+    public class ExMultipleAggregateIcon extends MultipleAggregateIcon {
         protected int index;
 
         public ExMultipleAggregateIcon(int numIcon, int orientation) {
@@ -703,7 +703,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
     }
 
 
-    protected class TabbedDropTargetListener implements DropTargetListener {
+    public class TabbedDropTargetListener implements DropTargetListener {
 
 
         public void dragEnter(DropTargetDragEvent e) {
@@ -763,7 +763,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         }
     }
 
-    protected class TabbedTransferable implements Transferable {
+    public class TabbedTransferable implements Transferable {
         private final DataFlavor FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, NAME);
 
         public Object getTransferData(DataFlavor flavor) {
@@ -781,7 +781,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         }
     }
 
-    protected class TabbedDragGestureAdapter extends DragGestureAdapter {
+    public class TabbedDragGestureAdapter extends DragGestureAdapter {
 
 
         public TabbedDragGestureAdapter(MyDoggyToolWindowManager manager) {

@@ -287,7 +287,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     }
 
 
-    protected class GradientAnimation extends AbstractAnimation {
+    public class GradientAnimation extends AbstractAnimation {
 
         public GradientAnimation() {
             super(600f);
@@ -351,7 +351,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         }
     }
 
-    protected class ToolWindowRepresentativeAnchorMouseAdapter extends MouseInputAdapter implements ActionListener, Cleaner {
+    public class ToolWindowRepresentativeAnchorMouseAdapter extends MouseInputAdapter implements ActionListener, Cleaner {
         protected Timer previewTimer;
         protected boolean firstPreview = true;
 
@@ -670,7 +670,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         }
     }
 
-    protected class ToolWindowRepresentativeAnchorDragGesture extends RepresentativeAnchorDragGesture {
+    public class ToolWindowRepresentativeAnchorDragGesture extends RepresentativeAnchorDragGesture {
 
         public ToolWindowRepresentativeAnchorDragGesture(DockableDescriptor descriptor, Component component) {
             super(descriptor, component);

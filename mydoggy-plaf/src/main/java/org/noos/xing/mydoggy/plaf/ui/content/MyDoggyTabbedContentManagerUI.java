@@ -465,7 +465,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
     }
 
 
-    protected class ComponentListener implements PropertyChangeListener {
+    public class ComponentListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
             Component oldCmp = (Component) evt.getOldValue();
@@ -493,7 +493,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    protected class DisabledIconListener implements PropertyChangeListener {
+    public class DisabledIconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -510,7 +510,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    protected class IconListener implements PropertyChangeListener {
+    public class IconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -527,7 +527,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    protected class MnemonicListener implements PropertyChangeListener {
+    public class MnemonicListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -544,7 +544,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    protected class EnabledListener implements PropertyChangeListener {
+    public class EnabledListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -564,7 +564,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    protected class ForegroundListener implements PropertyChangeListener {
+    public class ForegroundListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -581,7 +581,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    protected class TitleListener implements PropertyChangeListener {
+    public class TitleListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -600,7 +600,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    protected class ToolTipTextListener implements PropertyChangeListener {
+    public class ToolTipTextListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -617,7 +617,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    protected class MaximizedListener implements PropertyChangeListener {
+    public class MaximizedListener implements PropertyChangeListener {
         protected ByteArrayOutputStream tmpWorkspace;
         protected Component oldFucusOwner;
         protected boolean valudAdj;
@@ -675,7 +675,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    protected class DetachedListener implements PropertyChangeListener {
+    public class DetachedListener implements PropertyChangeListener {
         protected PropertyChangeSupport contentUIListener;
         protected Map<Content, Integer> detachedContentUIMap;
 
@@ -761,7 +761,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
     }
 
-    protected class MinimizedListener implements PropertyChangeListener {
+    public class MinimizedListener implements PropertyChangeListener {
         protected Map<Content, Integer> minimizedContentUIMap;
 
         public MinimizedListener() {
@@ -822,7 +822,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
     }
 
 
-    protected class TabbedContentManagerDragGesture extends DragGestureAdapter {
+    public class TabbedContentManagerDragGesture extends DragGestureAdapter {
 
         public TabbedContentManagerDragGesture() {
             super(toolWindowManager);
@@ -884,7 +884,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
     }
 
-    protected class FocusOwnerPropertyChangeListener implements PropertyChangeListener {
+    public class FocusOwnerPropertyChangeListener implements PropertyChangeListener {
 
         public FocusOwnerPropertyChangeListener() {
         }

@@ -407,7 +407,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
     }
 
 
-    protected class ComponentListener implements PropertyChangeListener {
+    public class ComponentListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -439,7 +439,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         }
     }
 
-    protected class DisabledIconListener implements PropertyChangeListener {
+    public class DisabledIconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -464,7 +464,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         }
     }
 
-    protected class IconListener implements PropertyChangeListener {
+    public class IconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -489,7 +489,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         }
     }
 
-    protected class MnemonicListener implements PropertyChangeListener {
+    public class MnemonicListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -519,7 +519,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         }
     }
 
-    protected class EnabledListener implements PropertyChangeListener {
+    public class EnabledListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -547,7 +547,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         }
     }
 
-    protected class ForegroundListener implements PropertyChangeListener {
+    public class ForegroundListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -572,7 +572,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         }
     }
 
-    protected class TitleListener implements PropertyChangeListener {
+    public class TitleListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -599,7 +599,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         }
     }
 
-    protected class ToolTipTextListener implements PropertyChangeListener {
+    public class ToolTipTextListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -624,7 +624,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         }
     }
 
-    protected class MaximizedListener implements PropertyChangeListener {
+    public class MaximizedListener implements PropertyChangeListener {
         protected ByteArrayOutputStream tmpWorkspace;
         protected Component oldFucusOwner;
         protected boolean valudAdj;
@@ -689,7 +689,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         }
     }
 
-    protected class DetachedListener implements PropertyChangeListener {
+    public class DetachedListener implements PropertyChangeListener {
         protected Frame parentFrame;
         protected Map<Content, MultiSplitDockableContainer.Constraint> detachedContentUIMap;
 
@@ -758,7 +758,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
     }
 
-    protected class FocusOwnerPropertyChangeListener implements PropertyChangeListener {
+    public class FocusOwnerPropertyChangeListener implements PropertyChangeListener {
 
         public FocusOwnerPropertyChangeListener() {
         }
@@ -809,7 +809,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         }
     }
 
-    protected class MinimizedListener implements PropertyChangeListener {
+    public class MinimizedListener implements PropertyChangeListener {
         protected Map<Content, MultiSplitDockableContainer.Constraint> minimizedContentUIMap;
 
         public MinimizedListener() {
@@ -852,7 +852,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
     }
 
-    protected class MultiSplitContainer extends MultiSplitTabbedContentContainer {
+    public class MultiSplitContainer extends MultiSplitTabbedContentContainer {
         protected Component oldRoot;
         protected DockablePanel oldParent;
         protected Dockable currentMaximizedDockable;

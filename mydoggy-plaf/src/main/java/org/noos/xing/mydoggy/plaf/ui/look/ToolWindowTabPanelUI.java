@@ -369,7 +369,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
     }
 
 
-    protected class TabToolWindowListener implements ToolWindowListener, PropertyChangeListener, Cleaner {
+    public class TabToolWindowListener implements ToolWindowListener, PropertyChangeListener, Cleaner {
         protected Map<ToolWindowTab, Component> minimizedTabs;
 
         public TabToolWindowListener() {
@@ -434,7 +434,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         }
     }
 
-    protected class PopupButton extends ToolWindowTitleButton implements ActionListener, MouseListener {
+    public class PopupButton extends ToolWindowTitleButton implements ActionListener, MouseListener {
         protected JPopupMenu popupMenu;
 
 
@@ -485,7 +485,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
 
     }
 
-    protected class WheelScroller implements MouseWheelListener {
+    public class WheelScroller implements MouseWheelListener {
 
         public void mouseWheelMoved(MouseWheelEvent e) {
             switch (e.getWheelRotation()) {
@@ -511,7 +511,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         }
     }
 
-    protected class TabSelectedPropertyChangeListener implements PropertyChangeListener {
+    public class TabSelectedPropertyChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowTab tab = (ToolWindowTab) evt.getSource();
@@ -523,7 +523,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         }
     }
 
-    protected class SelectNextTabAction extends AbstractAction {
+    public class SelectNextTabAction extends AbstractAction {
 
         public SelectNextTabAction() {
             super(resourceManager.getString("@@tool.tab.selectNext"));
@@ -552,7 +552,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         }
     }
 
-    protected class SelectPreviousTabAction extends AbstractAction {
+    public class SelectPreviousTabAction extends AbstractAction {
 
         public SelectPreviousTabAction() {
             super(resourceManager.getString("@@tool.tab.selectPreviuos"));
@@ -581,7 +581,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         }
     }
 
-    protected class SelectTabAction extends AbstractAction {
+    public class SelectTabAction extends AbstractAction {
         private ToolWindowTab tab;
 
         public SelectTabAction(ToolWindowTab tab) {

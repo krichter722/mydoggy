@@ -39,7 +39,7 @@ public class MenuToolWindowTitleButtonPanelUI extends FullToolWindowTitleButtonP
     }
 
 
-    protected class PopupAction extends TitleBarAction {
+    public class PopupAction extends TitleBarAction {
 
         public PopupAction() {
             super("toolWindow.showPopupButton." + toolWindow.getId(), MyDoggyKeySpace.ACTIONS_POPUP, "@@tool.tooltip.showPopup");

@@ -107,13 +107,13 @@ public class ContentDialog extends JDialog {
         super.setSize(d);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
-    protected class ContentDialogWindowAdapter extends WindowAdapter {
+    public class ContentDialogWindowAdapter extends WindowAdapter {
         public void windowClosing(WindowEvent event) {
             content.setDetached(false);
         }
     }
 
-    protected class ContentDialogComponentAdapter extends ComponentAdapter {
+    public class ContentDialogComponentAdapter extends ComponentAdapter {
 
         public void componentResized(ComponentEvent e) {
             if (isActive() && isVisible()) {

@@ -441,7 +441,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
     }
 
 
-    protected class ToolWindowDescriptorCleaner extends DefaultCleanerAggregator {
+    public class ToolWindowDescriptorCleaner extends DefaultCleanerAggregator {
 
         public void cleanup() {
             super.cleanup();

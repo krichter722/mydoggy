@@ -320,7 +320,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
     }
 
 
-    protected class SlidingAnimation extends AbstractAnimation {
+    public class SlidingAnimation extends AbstractAnimation {
         protected int length;
         protected Rectangle bounds;
         protected int lastLen = 0;
@@ -436,7 +436,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
     }
 
-    protected class ActivePropertyChangeListener implements PropertyChangeListener, ActionListener {
+    public class ActivePropertyChangeListener implements PropertyChangeListener, ActionListener {
         protected TransparencyAnimation animation;
         protected Timer timer;
 
@@ -478,7 +478,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         }
     }
 
-    protected class TypeEnabledPropertyChangeListener implements PropertyChangeListener {
+    public class TypeEnabledPropertyChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             boolean newValue = (Boolean) evt.getNewValue();
@@ -489,7 +489,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
     }
 
-    protected class FloatingLiveMoveMouseInputHandler extends FloatingMoveMouseInputHandler {
+    public class FloatingLiveMoveMouseInputHandler extends FloatingMoveMouseInputHandler {
         protected ToolWindowAnchor onAnchor;
 
         public FloatingLiveMoveMouseInputHandler(Component floatingContainer) {

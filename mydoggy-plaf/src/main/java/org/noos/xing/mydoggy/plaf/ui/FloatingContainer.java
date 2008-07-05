@@ -379,7 +379,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         settedListener = true;
     }
 
-    protected class FloatingAnimation extends AbstractAnimation {
+    public class FloatingAnimation extends AbstractAnimation {
         protected Rectangle originalBounds;
         protected int lastLenX = 0;
         protected int lastLenY = 0;
@@ -458,7 +458,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         }
     }
 
-    protected class TypeEnabledPropertyChangeListener implements PropertyChangeListener {
+    public class TypeEnabledPropertyChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             boolean newValue = (Boolean) evt.getNewValue();
@@ -469,7 +469,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
     }
 
-    protected class WindowComponentAdapter extends ComponentAdapter implements Cleaner {
+    public class WindowComponentAdapter extends ComponentAdapter implements Cleaner {
 
         public WindowComponentAdapter() {
             descriptor.getCleaner().addCleaner(this);

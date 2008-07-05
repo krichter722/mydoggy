@@ -219,7 +219,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
     }
 
 
-    protected class GradientAnimation extends AbstractAnimation {
+    public class GradientAnimation extends AbstractAnimation {
 
         public GradientAnimation() {
             super(600f);
@@ -283,7 +283,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         }
     }
 
-    protected class RepresentativeAnchorMouseAdapter extends MouseInputAdapter {
+    public class RepresentativeAnchorMouseAdapter extends MouseInputAdapter {
 
         public RepresentativeAnchorMouseAdapter() {
         }
