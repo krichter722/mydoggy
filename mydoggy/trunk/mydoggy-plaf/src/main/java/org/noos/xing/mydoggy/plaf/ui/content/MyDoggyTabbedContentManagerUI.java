@@ -236,7 +236,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
                     try {
                         tabbedContentPane.setSelectedIndex(index);
-                        componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
+                        if (!isFocusAnchestor(content.getComponent()))
+                            componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
                         lastSelected = content;
                     } finally {
                         valueAdjusting = false;
@@ -244,7 +245,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                 } else if (isContentManagerEnabled() && toolWindowManager.getMainContent() != content.getComponent()) {
                     throw new IllegalStateException("Invalid content ui state.");
                 } else {
-                    componentInFocusRequest = findAndRequestFocus(toolWindowManager.getMainContent());
+                    if (!isFocusAnchestor(content.getComponent()))
+                        componentInFocusRequest = findAndRequestFocus(toolWindowManager.getMainContent());
                     lastSelected = content;
                 }
             }

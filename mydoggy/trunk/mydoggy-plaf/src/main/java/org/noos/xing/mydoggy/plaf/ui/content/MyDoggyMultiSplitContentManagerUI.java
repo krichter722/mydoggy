@@ -190,7 +190,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         this.popupMenu = popupMenu;
     }
 
-    public synchronized void setSelected(Content content, boolean selected) {
+    public synchronized void setSelected(final Content content, boolean selected) {
         if (selected) {
             if (lastSelected != null)
                 lastSelected.setSelected(false);
@@ -219,12 +219,14 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
                             try {
                                 tabbedContentPane.setSelectedIndex(index);
-                                if (!focusValueAdj)
-                                    componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
-                                else {
+                                if (!focusValueAdj) {
+                                    if (!isFocusAnchestor(content.getComponent()))
+                                        componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
+                                } else {
                                     SwingUtilities.invokeLater(new Runnable() {
                                         public void run() {
-                                            componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
+                                            if (!isFocusAnchestor(content.getComponent()))
+                                                componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
                                         }
                                     });
                                 }
@@ -241,12 +243,14 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                             valueAdjusting = true;
 
                             try {
-                                if (!focusValueAdj)
-                                    componentInFocusRequest = findAndRequestFocus(dockablePanel);
-                                else {
+                                if (!focusValueAdj) {
+                                    if (!isFocusAnchestor(content.getComponent()))
+                                        componentInFocusRequest = findAndRequestFocus(dockablePanel);
+                                } else {
                                     SwingUtilities.invokeLater(new Runnable() {
                                         public void run() {
-                                            componentInFocusRequest = findAndRequestFocus(dockablePanel);
+                                            if (!isFocusAnchestor(content.getComponent()))
+                                                componentInFocusRequest = findAndRequestFocus(dockablePanel);
                                         }
                                     });
                                 }

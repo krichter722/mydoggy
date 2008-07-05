@@ -26,41 +26,12 @@ import java.util.Vector;
 public class SwingUtil {
     private static Map<Window, Rectangle> fullScreenBounds = new Hashtable<Window, Rectangle>();
 
+
     private SwingUtil() {
     }
 
-    public static void addKeyActionMapping(JComponent component, KeyStroke keyStroke, Object actionMapKey, Action action) {
-        addKeyActionMapping(JComponent.WHEN_FOCUSED, component, keyStroke, actionMapKey, action);
-    }
 
-    public static void addKeyActionMapping(int condition, JComponent component, KeyStroke keyStroke, Object actionMapKey, Action action) {
-        component.getInputMap(condition).put(keyStroke, actionMapKey);
-        component.getActionMap().put(actionMapKey, action);
-    }
-
-    public static void centrePositionOnScreen(Window window) {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension frameSize = window.getSize();
-        window.setLocation(screenSize.width - frameSize.width >> 1, screenSize.height - frameSize.height >> 1);
-    }
-
-    public static void requestFocus(final Component component) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-//                                System.out.println("IN RUN - requestFocus for : " + component.isFocusable() + " - " + component);
-//                System.out.println("false = " + SwingUtilities.getWindowAncestor(component).isFocusableWindow());
-//                System.out.println("false = " + SwingUtilities.getWindowAncestor(component).getBounds());
-//                System.out.println("false = " + SwingUtilities.getWindowAncestor(component));
-//                System.out.println("Focus result : " + component.requestFocusInWindow());
-
-                Window ancestor = SwingUtilities.getWindowAncestor(component);
-                if (ancestor != null && ancestor.isFocused())
-                    component.requestFocusInWindow();
-                else
-                    component.requestFocus();
-            }
-        });
-    }
+    // Repaint/revalidate support methods
 
     public static void repaint(final Component component) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -68,15 +39,6 @@ public class SwingUtil {
                 component.invalidate();
                 component.validate();
                 component.repaint();
-            }
-        });
-    }
-
-    public static void revalidate(final Component component) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                component.invalidate();
-                component.validate();
             }
         });
     }
@@ -92,6 +54,21 @@ public class SwingUtil {
         });
     }
 
+    public static void repaintNow(Component component) {
+        component.invalidate();
+        component.validate();
+        component.repaint();
+    }
+
+    public static void revalidate(final Component component) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                component.invalidate();
+                component.validate();
+            }
+        });
+    }
+
     public static void revalidate(final JComponent component) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -100,28 +77,25 @@ public class SwingUtil {
         });
     }
 
-    public static void repaintNow(Component component) {
-        component.invalidate();
-        component.validate();
-        component.repaint();
-    }
+    // Component support methods
 
-    public static void registerDragGesture(Component c, DragGesture dragGesture) {
-        DragSource dragSource = new DragSource();
-        dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, dragGesture);
-        dragSource.addDragSourceMotionListener(dragGesture);
-    }
+    public static Vector<Window> getTopContainers(String name) {
+        Vector<Window> containers = new Vector<Window>();
 
-    public static boolean isLeftToRight(Component c) {
-        return c != null && c.getComponentOrientation().isLeftToRight();
-    }
+        Frame frames[] = Frame.getFrames();
+        for (Frame frame : frames) {
+            Window[] windows = frame.getOwnedWindows();
 
-    public static void dispatchEvent(Object src, AWTEvent event) {
-        if (src instanceof Component) {
-            ((Component) src).dispatchEvent(event);
-        } else if (src instanceof MenuComponent) {
-            ((MenuComponent) src).dispatchEvent(event);
+            for (Window window : windows) {
+                if (window.getName() != null && window.getName().equals(name))
+                    containers.add(window);
+            }
+
+            if (!containers.contains(frame)) {
+                containers.add(frame);
+            }
         }
+        return containers;
     }
 
     public static Object getDeepestObjectAt(Object parent, int x, int y) {
@@ -209,21 +183,145 @@ public class SwingUtil {
         return cont;
     }
 
-    public static Container getLastParent(Component component) {
-        for (Container p = component.getParent(); p != null; p = p.getParent()) {
-            if (p.getParent() == null)
-                return p;
-        }
-        return null;
+    // Focus support methods
+
+    public static Component findFocusable(Component cmp) {
+        return ((FindFocusableQuestion) UIManager.get(FindFocusableQuestion.class)).getAnswer(cmp);
     }
 
-    public static boolean hasParent(Component component, Container parent) {
+    public static void requestFocus(final Component component) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+//                                System.out.println("IN RUN - requestFocus for : " + component.isFocusable() + " - " + component);
+//                System.out.println("false = " + SwingUtilities.getWindowAncestor(component).isFocusableWindow());
+//                System.out.println("false = " + SwingUtilities.getWindowAncestor(component).getBounds());
+//                System.out.println("false = " + SwingUtilities.getWindowAncestor(component));
+//                System.out.println("Focus result : " + component.requestFocusInWindow());
+
+                Window ancestor = SwingUtilities.getWindowAncestor(component);
+                if (ancestor != null && ancestor.isFocused())
+                    component.requestFocusInWindow();
+                else
+                    component.requestFocus();
+            }
+        });
+    }
+
+    public static Component findAndRequestFocus(Component component) {
+        Container container;
+        if (component instanceof JDialog) {
+            container = ((JDialog) component).getContentPane();
+        } else if (component instanceof Container)
+            container = (Container) component;
+        else
+            return null;
+
+        Component focusRequester = findFocusable(container);
+        if (focusRequester == null) {
+            focusRequester = container;
+        }
+        SwingUtil.requestFocus(focusRequester);
+        return focusRequester;
+    }
+
+    //  Anchestor support methods
+
+    public static boolean hasParent(Component component, Component parent) {
         for (Container p = component.getParent(); p != null; p = p.getParent()) {
             if (p == parent)
                 return true;
         }
         return false;
     }
+
+    public static boolean isAnchestor(Component component, Component parent) {
+        if (component == null || parent == null)
+            return false;
+        
+        if (component == parent)
+            return true;
+        
+        for (Component p = component.getParent(); p != null; p = p.getParent()) {
+            if (p == parent)
+                return true;
+        }
+        
+        return false;
+    }
+
+    public static Component getParent(Component c, String parentName) {
+        if (c == null || parentName == null)
+            return null;
+
+        if (c.getName() != null && c.getName().startsWith(parentName))
+            return c;
+
+        for (; c != null; c = c.getParent()) {
+            if (c.getName() != null && c.getName().startsWith(parentName))
+                return c;
+        }
+        return null;
+    }
+
+    public static <T> T getParent(Component c, Class<? extends T> parentClass) {
+        if (c == null || parentClass == null)
+            return null;
+
+        if (parentClass.isInstance(c))
+            return (T) c;
+
+        for (; c != null; c = c.getParent()) {
+            if (parentClass.isInstance(c))
+                return (T) c;
+        }
+        return null;
+    }
+
+    public static <T> T getParentClientProperty(Component c, Class<? extends T> propertyIdClass) {
+        if (c == null || propertyIdClass == null)
+            return null;
+
+        if (c instanceof JComponent) {
+            T t = (T) ((JComponent) c).getClientProperty(propertyIdClass);
+            if (t != null)
+                return t;
+        }
+
+        for (; c != null; c = c.getParent()) {
+            if (c instanceof JComponent) {
+                T t = (T) ((JComponent) c).getClientProperty(propertyIdClass);
+                if (t != null)
+                    return t;
+            }
+        }
+
+        return null;
+    }
+
+    public static Component getComponentWhoseParentIs(Component c, Component p) {
+        if (c == null || p == null)
+            return null;
+
+        while (c != null) {
+            if (c.getParent() == p)
+                return c;
+            c = c.getParent();
+        }
+        return null;
+    }
+
+    public static Component getWindowAncestor(Component c) {
+        for (Container p = c.getParent(); p != null; p = p.getParent()) {
+            if (p instanceof Window) {
+                return p;
+            } else if (p instanceof Applet) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    // Resource laoading support methods
 
     public static Icon loadIcon(String urlDef) {
         return loadIcon(SwingUtil.class.getClassLoader(), urlDef);
@@ -257,47 +355,7 @@ public class SwingUtil {
         }
     }
 
-    public static Vector<Window> getTopContainers(String name) {
-        Vector<Window> containers = new Vector<Window>();
-
-        Frame frames[] = Frame.getFrames();
-        for (Frame frame : frames) {
-            Window[] windows = frame.getOwnedWindows();
-
-            for (Window window : windows) {
-                if (window.getName() != null && window.getName().equals(name))
-                    containers.add(window);
-            }
-
-            if (!containers.contains(frame)) {
-                containers.add(frame);
-            }
-        }
-        return containers;
-    }
-
-    public static Component getParent(Component c, String parentName) {
-        if (c == null || parentName == null)
-            return null;
-
-        if (c.getName() != null && c.getName().startsWith(parentName))
-            return c;
-
-        for (; c != null; c = c.getParent()) {
-            if (c.getName() != null && c.getName().startsWith(parentName))
-                return c;
-        }
-        return null;
-    }
-
-    public static int getIconWidth(Icon icon) {
-        return (icon != null) ? icon.getIconWidth() : 0;
-    }
-
-    public static int getIconHeight(Icon icon) {
-        return (icon != null) ? icon.getIconHeight() : 0;
-    }
-
+    // Bounds and window support methods
 
     public static Rectangle getVirtualScreenBounds() {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -394,25 +452,7 @@ public class SwingUtil {
         }
     }
 
-    public static int findDisplayedMnemonicIndex(String text, int mnemonic) {
-        if (text == null || mnemonic == '\0') {
-            return -1;
-        }
-
-        char uc = Character.toUpperCase((char) mnemonic);
-        char lc = Character.toLowerCase((char) mnemonic);
-
-        int uci = text.indexOf(uc);
-        int lci = text.indexOf(lc);
-
-        if (uci == -1) {
-            return lci;
-        } else if (lci == -1) {
-            return uci;
-        } else {
-            return (lci < uci) ? lci : uci;
-        }
-    }
+    // System support methods
 
     public static Properties loadPropertiesFile(String resourceName, ClassLoader classLoader) {
         InputStream is = null;
@@ -462,6 +502,70 @@ public class SwingUtil {
         return event.getPropertyName() + ":\n\t" + event.getSource() + ":\n\t" + event.getOldValue() + ":\n\t" + event.getNewValue();
     }
 
+
+    // UI support methods
+
+    public static void registerDragGesture(Component c, DragGesture dragGesture) {
+        DragSource dragSource = new DragSource();
+        dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, dragGesture);
+        dragSource.addDragSourceMotionListener(dragGesture);
+    }
+
+    public static void addKeyActionMapping(JComponent component, KeyStroke keyStroke, Object actionMapKey, Action action) {
+        addKeyActionMapping(JComponent.WHEN_FOCUSED, component, keyStroke, actionMapKey, action);
+    }
+
+    public static void addKeyActionMapping(int condition, JComponent component, KeyStroke keyStroke, Object actionMapKey, Action action) {
+        component.getInputMap(condition).put(keyStroke, actionMapKey);
+        component.getActionMap().put(actionMapKey, action);
+    }
+
+    public static void centrePositionOnScreen(Window window) {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension frameSize = window.getSize();
+        window.setLocation(screenSize.width - frameSize.width >> 1, screenSize.height - frameSize.height >> 1);
+    }
+
+    public static boolean isLeftToRight(Component c) {
+        return c != null && c.getComponentOrientation().isLeftToRight();
+    }
+
+    public static void dispatchEvent(Object src, AWTEvent event) {
+        if (src instanceof Component) {
+            ((Component) src).dispatchEvent(event);
+        } else if (src instanceof MenuComponent) {
+            ((MenuComponent) src).dispatchEvent(event);
+        }
+    }
+
+    public static int getIconWidth(Icon icon) {
+        return (icon != null) ? icon.getIconWidth() : 0;
+    }
+
+    public static int getIconHeight(Icon icon) {
+        return (icon != null) ? icon.getIconHeight() : 0;
+    }
+
+    public static int findDisplayedMnemonicIndex(String text, int mnemonic) {
+        if (text == null || mnemonic == '\0') {
+            return -1;
+        }
+
+        char uc = Character.toUpperCase((char) mnemonic);
+        char lc = Character.toLowerCase((char) mnemonic);
+
+        int uci = text.indexOf(uc);
+        int lci = text.indexOf(lc);
+
+        if (uci == -1) {
+            return lci;
+        } else if (lci == -1) {
+            return uci;
+        } else {
+            return (lci < uci) ? lci : uci;
+        }
+    }
+
     public static Point convertPointFromScreen(Point p, Component c) {
         int x, y;
 
@@ -494,70 +598,6 @@ public class SwingUtil {
         return p;
     }
 
-    public static <T> T getParent(Component c, Class<? extends T> parentClass) {
-        if (c == null || parentClass == null)
-            return null;
-
-        if (parentClass.isInstance(c))
-            return (T) c;
-
-        for (; c != null; c = c.getParent()) {
-            if (parentClass.isInstance(c))
-                return (T) c;
-        }
-        return null;
-    }
-
-    public static <T> T getParentClientProperty(Component c, Class<? extends T> propertyIdClass) {
-        if (c == null || propertyIdClass == null)
-            return null;
-
-        if (c instanceof JComponent) {
-            T t = (T) ((JComponent) c).getClientProperty(propertyIdClass);
-            if (t != null)
-                return t;
-        }
-
-        for (; c != null; c = c.getParent()) {
-            if (c instanceof JComponent) {
-                T t = (T) ((JComponent) c).getClientProperty(propertyIdClass);
-                if (t != null)
-                    return t;
-            }
-        }
-
-        return null;
-    }
-
-    public static Component findAndRequestFocus(Component component) {
-        Container container;
-        if (component instanceof JDialog) {
-            container = ((JDialog) component).getContentPane();
-        } else if (component instanceof Container)
-            container = (Container) component;
-        else
-            return null;
-
-        Component focusRequester = findFocusable(container);
-        if (focusRequester == null) {
-            focusRequester = container;
-        }
-        SwingUtil.requestFocus(focusRequester);
-        return focusRequester;
-    }
-
-    public static Component getComponentWhoseParentIs(Component c, Component p) {
-        if (c == null || p == null)
-            return null;
-
-        while (c != null) {
-            if (c.getParent() == p)
-                return c;
-            c = c.getParent();
-        }
-        return null;
-    }
-
     public static void setWindowTitle(Component component, String title) {
         Window window = SwingUtilities.windowForComponent(component);
         if (window instanceof Dialog) {
@@ -566,17 +606,6 @@ public class SwingUtil {
             ((Frame) window).setTitle(title);
         } else
             throw new IllegalArgumentException("Cannot set title for that component");
-    }
-
-    public static Component getWindowAncestor(Component c) {
-        for (Container p = c.getParent(); p != null; p = p.getParent()) {
-            if (p instanceof Window) {
-                return p;
-            } else if (p instanceof Applet) {
-                return p;
-            }
-        }
-        return null;
     }
 
     public static void installFont(JComponent component, String name) {
@@ -589,6 +618,7 @@ public class SwingUtil {
     	return (T) c.getClientProperty(key);
     }
 
+    //  UI Manager support methods
 
     public static boolean getBoolean(String name, boolean defaultValue) {
         if (UIManager.getDefaults().containsKey(name))
@@ -616,7 +646,4 @@ public class SwingUtil {
         return (TransparencyManager<Window>) UIManager.get(TransparencyManager.class);
     }
 
-    public static Component findFocusable(Component cmp) {
-        return ((FindFocusableQuestion) UIManager.get(FindFocusableQuestion.class)).getAnswer(cmp);
-    }
 }
