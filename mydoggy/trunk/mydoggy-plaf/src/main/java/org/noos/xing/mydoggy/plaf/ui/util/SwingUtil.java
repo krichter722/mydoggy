@@ -646,4 +646,14 @@ public class SwingUtil {
         return (TransparencyManager<Window>) UIManager.get(TransparencyManager.class);
     }
 
+    public static boolean isZeroSize(Rectangle bounds) {
+        Dimension size =  bounds.getSize();
+        return size.width == 0 || size.height == 0;
+    }
+
+    public static boolean isZeroLocation(Rectangle bounds) {
+        Point location =  bounds.getLocation();
+        return location.x == 0 || location.y == 0;
+    }
+
 }
