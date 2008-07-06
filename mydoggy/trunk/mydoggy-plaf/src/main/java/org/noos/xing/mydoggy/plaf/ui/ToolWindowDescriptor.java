@@ -8,6 +8,7 @@ import org.noos.xing.mydoggy.plaf.cleaner.CleanerAggregator;
 import org.noos.xing.mydoggy.plaf.cleaner.DefaultCleanerAggregator;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.AggregateIcon;
+import org.noos.xing.mydoggy.plaf.ui.cmp.FloatingLivePanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowRepresentativeAnchor;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
@@ -16,6 +17,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -422,6 +425,27 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
     }
 
 
+
+    private static Map<ToolWindow, FloatingLivePanel> livePanelMap = new HashMap<ToolWindow, FloatingLivePanel>();
+
+    public FloatingLivePanel getFloatingLivePanel(ToolWindow toolWindow) {
+        FloatingLivePanel panel = livePanelMap.get(toolWindow);
+        if (panel == null) {
+            panel = new FloatingLivePanel(manager);
+            livePanelMap.put(toolWindow, panel);
+        }
+
+        return panel;
+    }
+
+
+    public FloatingLivePanel getFloatingLivePanel() {
+        return getFloatingLivePanel(toolWindow);
+    }
+
+
+
+
     protected void initListeners() {
         toolWindow.addPlafPropertyChangeListener(this);
     }
@@ -439,6 +463,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         slidingTypeDescriptor = (SlidingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.SLIDING)).cloneMe(this);
         slidingTypeDescriptor.addPropertyChangeListener(this);
     }
+
 
 
     public class ToolWindowDescriptorCleaner extends DefaultCleanerAggregator {

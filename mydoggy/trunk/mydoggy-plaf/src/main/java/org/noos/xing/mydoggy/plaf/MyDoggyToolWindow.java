@@ -55,10 +55,10 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
 
 
     public MyDoggyToolWindow(MyDoggyToolWindowManager manager,
-                                String id, int index,
-                                ToolWindowAnchor anchor, ToolWindowType type,
-                                String title, Icon icon, Component component,
-                                ResourceBundle resourceBundle) {
+                             String id, int index,
+                             ToolWindowAnchor anchor, ToolWindowType type,
+                             String title, Icon icon, Component component,
+                             ResourceBundle resourceBundle) {
         this.descriptor = (ToolWindowDescriptor) manager.createDescriptor(this);
         this.resourceBundle = resourceBundle;
         this.toolWindowTabs = new ArrayList<ToolWindowTab>();
@@ -112,7 +112,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     public void removeDockableManagerListener(DockableManagerListener listener) {
         for (ToolWindowListener managerListener : getToolWindowListeners()) {
             if (managerListener instanceof DockableManager2ToolWindowWrapper) {
-                if (((DockableManager2ToolWindowWrapper)managerListener).getListener() == listener) {
+                if (((DockableManager2ToolWindowWrapper) managerListener).getListener() == listener) {
                     removeToolWindowListener(managerListener);
                 }
             }
@@ -217,8 +217,11 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     public void aggregate(ToolWindow toolWindow, AggregationPosition aggregationPosition) {
         try {
             if (toolWindow != null) {
-                if ((descriptor.getManager().getContentManager().isEnabled() && toolWindow.getAnchor() != anchor) || 
-                    !toolWindow.isVisible())
+                if ((descriptor.getManager().getContentManager().isEnabled() &&
+                     toolWindow.getAnchor() != anchor &&
+                     toolWindow.getType() != ToolWindowType.FLOATING_LIVE   // TODO: check this condition adedd for aggregation on floating...
+
+                ) || !toolWindow.isVisible())
                     return;
             }
 
@@ -227,8 +230,12 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
 
             descriptor.getManager().setShowingGroup();
             if (!isVisible()) {
-                if (getType() != ToolWindowType.DOCKED)
-                    setType(ToolWindowType.DOCKED);
+                if (toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
+                    setType(ToolWindowType.FLOATING_LIVE);
+                } else {
+                    if (getType() != ToolWindowType.DOCKED)
+                        setType(ToolWindowType.DOCKED);
+                }
 
                 setVisibleInternal(true, true, toolWindow, aggregationPosition);
             } else {
@@ -239,8 +246,16 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                     publicEvent = true;
                 }
 
+                if (toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
+                    setType(ToolWindowType.FLOATING_LIVE);
+                } else {
+                    if (getType() != ToolWindowType.DOCKED)
+                        setType(ToolWindowType.DOCKED);
+                }
+/*
                 if (getType() != ToolWindowType.DOCKED)
                     setType(ToolWindowType.DOCKED);
+*/
 
                 publicEvent = false;
                 try {
@@ -339,9 +354,9 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             if (delegator == null)
                 return active;
 
-            if  (delegator instanceof ToolWindowTab) {
+            if (delegator instanceof ToolWindowTab) {
                 ToolWindowTab toolWindowTab = (ToolWindowTab) delegator;
-                return toolWindowTab.isSelected() && toolWindowTab.getOwner().isActive();                
+                return toolWindowTab.isSelected() && toolWindowTab.getOwner().isActive();
             } else
                 return delegator.isSelected();
         }
@@ -376,7 +391,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
 
     public int getAnchorIndex() {
         return descriptor.getAnchorIndex();
-    }       
+    }
 
     public void setAnchor(ToolWindowAnchor anchor) {
         setAnchor(anchor, -2);
@@ -449,7 +464,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     public void setAutoHide(boolean autoHide) {
         if (type == ToolWindowType.EXTERN)
             return;
-        
+
         getTypeDescriptor(type).setAutoHide(autoHide);
     }
 
@@ -682,7 +697,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         }
 
         // Finilize
-        if (rootTab == toolWindowTab)  {
+        if (rootTab == toolWindowTab) {
             if (toolWindowTabs.size() > 0)
                 rootTab = toolWindowTabs.get(0);
             else
@@ -691,7 +706,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
 
         if (toolWindowTabs.size() == 0 && isHideOnZeroTabs())
             setAvailable(false);
-        
+
         return result;
     }
 
@@ -737,7 +752,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             throw new IllegalArgumentException("Cannot recognize the class type. [class : " + descriptorClass + "]");
     }
 
-    
+
     public String toString() {
         return "MyDoggyToolWindow{" +
                "id='" + id + '\'' +
@@ -950,7 +965,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     protected void firePropertyChangeEvent(String property, Object oldValue, Object newValue) {
         PropertyChangeEvent event = new PropertyChangeEvent(descriptor, property, oldValue, newValue);
         PropertyChangeEvent publicEvent = new PropertyChangeEvent(this, property, oldValue, newValue);
-        
+
         firePropertyChangeEvent(event, publicEvent);
     }
 
@@ -968,7 +983,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     protected void fireToolWindowTabEvent(ToolWindowTabEvent event) {
         if (toolWindowListeners == null)
             return;
-        
+
         ToolWindowListener[] listeners = toolWindowListeners.getListeners(ToolWindowListener.class);
         for (ToolWindowListener listener : listeners) {
             switch (event.getActionId()) {

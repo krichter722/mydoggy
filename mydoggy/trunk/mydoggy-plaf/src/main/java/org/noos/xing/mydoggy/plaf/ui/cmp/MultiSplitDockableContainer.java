@@ -515,8 +515,11 @@ public class MultiSplitDockableContainer extends JPanel {
             throw new IllegalArgumentException("Cannot remove dockable. [dockable null]");
 
         DockableEntry dockableEntry = entries.get(dockable);
-        if (dockableEntry == null)
-            throw new IllegalArgumentException("Cannot remove the dockable. No Entry for it. [id : " + dockable.getId() + "]");
+        if (dockableEntry == null) {
+            // TODO: removed temponary...check
+//            throw new IllegalArgumentException("Cannot remove the dockable. No Entry for it. [id : " + dockable.getId() + "]");
+            return null;
+        }
 
         // Store layout
         if (storeLayout) {
