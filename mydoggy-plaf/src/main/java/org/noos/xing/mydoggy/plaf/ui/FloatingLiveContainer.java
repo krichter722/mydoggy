@@ -144,14 +144,17 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         }
     }
 
-    public void setVisible(ToolWindowDescriptor destDescriptor, Component content, AggregationPosition aggregationPosition) {
+    public void setVisible(ToolWindowDescriptor referenceAggregationTool,
+                           Component content,
+                           ToolWindowDescriptor aggregationOnTool, 
+                           AggregationPosition aggregationPosition) {
         // retrieve common panel
-        floatingLivePanel = ((FloatingLiveContainer) destDescriptor.getToolWindowContainer(ToolWindowType.FLOATING_LIVE)).getFloatingLivePanel();
+        floatingLivePanel = ((FloatingLiveContainer) referenceAggregationTool.getToolWindowContainer(ToolWindowType.FLOATING_LIVE)).getFloatingLivePanel();
 
         // setup components
         floatingLivePanel.addDockable(toolWindow,
                                       content,
-                                      destDescriptor.getToolWindow(), 
+                                      (aggregationOnTool != null) ? aggregationOnTool.getToolWindow() : null,
                                       aggregationPosition);
 
         // setup listeners

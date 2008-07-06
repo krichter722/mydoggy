@@ -214,62 +214,12 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         aggregate(null, aggregationPosition);
     }
 
+    public void aggregateByReference(AggregationPosition aggregationPosition, ToolWindow aggregateReferenceTool) {
+        aggregateInternal(null, aggregationPosition, aggregateReferenceTool);
+    }
+
     public void aggregate(ToolWindow toolWindow, AggregationPosition aggregationPosition) {
-        try {
-            if (toolWindow != null) {
-                if ((descriptor.getManager().getContentManager().isEnabled() &&
-                     toolWindow.getAnchor() != anchor &&
-                     toolWindow.getType() != ToolWindowType.FLOATING_LIVE   // TODO: check this condition adedd for aggregation on floating...
-
-                ) || !toolWindow.isVisible())
-                    return;
-            }
-
-            if (isAutoHide())
-                setAutoHide(false);
-
-            descriptor.getManager().setShowingGroup();
-            if (!isVisible()) {
-                if (toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
-                    setType(ToolWindowType.FLOATING_LIVE);
-                } else {
-                    if (getType() != ToolWindowType.DOCKED)
-                        setType(ToolWindowType.DOCKED);
-                }
-
-                setVisibleInternal(true, true, toolWindow, aggregationPosition);
-            } else {
-                publicEvent = false;
-                try {
-                    setVisible(false);
-                } finally {
-                    publicEvent = true;
-                }
-
-                if (toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
-                    setType(ToolWindowType.FLOATING_LIVE);
-                } else {
-                    if (getType() != ToolWindowType.DOCKED)
-                        setType(ToolWindowType.DOCKED);
-                }
-/*
-                if (getType() != ToolWindowType.DOCKED)
-                    setType(ToolWindowType.DOCKED);
-*/
-
-                publicEvent = false;
-                try {
-                    setVisibleInternal(true, true, toolWindow, aggregationPosition);
-                } finally {
-                    publicEvent = true;
-                }
-
-                // Maybe we shourld fire an event to signal aggregation change...
-            }
-            lastAggregationPosition = aggregationPosition;
-        } finally {
-            descriptor.getManager().resetShowingGroup();
-        }
+        aggregateInternal(toolWindow, aggregationPosition, null);
     }
 
     public void setAggregateMode(boolean aggregateEnabled) {
@@ -345,7 +295,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
     public void setVisible(boolean visible) {
-        setVisibleInternal(visible, false, null, null);
+        setVisibleInternal(visible, false, null, null, null);
     }
 
     public boolean isActive() {
@@ -787,6 +737,67 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
 
+    protected void aggregateInternal(ToolWindow toolWindow, AggregationPosition aggregationPosition, ToolWindow aggregateReferenceTool) {
+        try {
+            if (toolWindow != null) {
+                if ((descriptor.getManager().getContentManager().isEnabled() &&
+                     toolWindow.getAnchor() != anchor &&
+                     toolWindow.getType() != ToolWindowType.FLOATING_LIVE   // TODO: check this condition adedd for aggregation on floating...
+
+                ) || !toolWindow.isVisible())
+                    return;
+            }
+
+            if (isAutoHide())
+                setAutoHide(false);
+
+            descriptor.getManager().setShowingGroup();
+            if (!isVisible()) {
+                if ((toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING_LIVE) ||
+                    (aggregateReferenceTool != null && aggregateReferenceTool.getType() == ToolWindowType.FLOATING_LIVE)) {
+                    setType(ToolWindowType.FLOATING_LIVE);
+                } else {
+                    if (getType() != ToolWindowType.DOCKED)
+                        setType(ToolWindowType.DOCKED);
+                }
+
+                setVisibleInternal(true, true, toolWindow, aggregationPosition, aggregateReferenceTool);
+            } else {
+                publicEvent = false;
+                try {
+                    setVisible(false);
+                } finally {
+                    publicEvent = true;
+                }
+
+                if ((toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING_LIVE) ||
+                    (aggregateReferenceTool != null && aggregateReferenceTool.getType() == ToolWindowType.FLOATING_LIVE)) {
+                    setType(ToolWindowType.FLOATING_LIVE);
+                } else {
+                    if (getType() != ToolWindowType.DOCKED)
+                        setType(ToolWindowType.DOCKED);
+                }
+/*
+                if (getType() != ToolWindowType.DOCKED)
+                    setType(ToolWindowType.DOCKED);
+*/
+
+                publicEvent = false;
+                try {
+                    setVisibleInternal(true, true, toolWindow, aggregationPosition, aggregateReferenceTool);
+                } finally {
+                    publicEvent = true;
+                }
+
+                // Maybe we shourld fire an event to signal aggregation change...
+            }
+            lastAggregationPosition = aggregationPosition;
+        } finally {
+            descriptor.getManager().resetShowingGroup();
+        }
+
+    }
+
     protected void setAvailableInternal(boolean available, boolean moveAction) {
         if (this.available == available)
             return;
@@ -810,8 +821,11 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         }
     }
 
-    protected void setVisibleInternal(boolean visible, boolean aggregate,
-                                      ToolWindow aggregationOnTool, AggregationPosition aggregationPosition) {
+    protected void setVisibleInternal(boolean visible,
+                                      boolean aggregate,
+                                      ToolWindow aggregationOnTool,
+                                      AggregationPosition aggregationPosition,
+                                      ToolWindow aggregateReferenceTool) {
         if ((aggregateEnabled || descriptor.getManager().getToolWindowBar(anchor).isAggregateMode()) &&
             visible &&
             !aggregate &&
@@ -880,7 +894,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             }
 
             if (aggregate) {
-                firePropertyChangeEvent("visible", old, visible, new Object[]{aggregate, aggregationPosition, aggregationOnTool});
+                firePropertyChangeEvent("visible", old, visible, new Object[]{aggregate, aggregationPosition, aggregationOnTool, aggregateReferenceTool});
             } else
                 firePropertyChangeEvent("visible", old, visible);
         }

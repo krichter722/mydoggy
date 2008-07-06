@@ -1,7 +1,11 @@
 package org.noos.xing.mydoggy.plaf.ui.drag;
 
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.AggregationPosition;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.cmp.FloatingLivePanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -18,15 +22,17 @@ import java.beans.PropertyChangeListener;
  */
 public class ToolWindowFloatingLiveDropTarget extends DropTarget {
 
-    public ToolWindowFloatingLiveDropTarget(JComponent component,
+    public ToolWindowFloatingLiveDropTarget(FloatingLivePanel floatingLivePanel,
+                                            JComponent component,
                                             MyDoggyToolWindowManager toolWindowManager) throws HeadlessException {
-        super(component,
+        super(floatingLivePanel,
               DnDConstants.ACTION_MOVE,
-              new ToolWindowFloatingDropTargetListener(component, toolWindowManager));
+              new ToolWindowFloatingDropTargetListener(floatingLivePanel, component, toolWindowManager));
     }
 
     public static class ToolWindowFloatingDropTargetListener implements DropTargetListener, PropertyChangeListener {
         protected MyDoggyToolWindowManager toolWindowManager;
+        protected FloatingLivePanel floatingLivePanel;
         protected ToolWindowAnchor anchor;
         protected int anchorIndex;
         protected JComponent component;
@@ -37,7 +43,8 @@ public class ToolWindowFloatingLiveDropTarget extends DropTarget {
         protected Border oldBorder;
         protected Border dragBorder = new LineBorder(Color.BLUE, 3);
 
-        public ToolWindowFloatingDropTargetListener(JComponent component, MyDoggyToolWindowManager toolWindowManager) {
+        public ToolWindowFloatingDropTargetListener(FloatingLivePanel floatingLivePanel, JComponent component, MyDoggyToolWindowManager toolWindowManager) {
+            this.floatingLivePanel = floatingLivePanel;
             this.component = component;
             this.toolWindowManager = toolWindowManager;
             this.anchor = ToolWindowAnchor.BOTTOM;
@@ -151,45 +158,43 @@ public class ToolWindowFloatingLiveDropTarget extends DropTarget {
                                         switch (dragAnchor) {
                                             case LEFT:
                                                 if (onToolWindow != null) {
-                                                    toolWindow.setAnchor(anchor, anchorIndex != -1 ? anchorIndex - 1 : -1);
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.LEFT);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.setAnchor(anchor, 0);
-                                                        toolWindow.aggregate(AggregationPosition.LEFT);
+                                                        toolWindow.aggregateByReference(AggregationPosition.LEFT,
+                                                                              floatingLivePanel.getFirstToolWindow());
                                                     }
                                                 }
                                                 break;
                                             case RIGHT:
                                                 if (onToolWindow != null) {
-                                                    toolWindow.setAnchor(anchor, anchorIndex != -1 ? anchorIndex + 1 : -1);
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.RIGHT);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.setAnchor(anchor);
-                                                        toolWindow.aggregate(AggregationPosition.RIGHT);
+                                                        toolWindow.aggregateByReference(AggregationPosition.RIGHT,
+                                                                              floatingLivePanel.getFirstToolWindow());
                                                     }
                                                 }
                                                 break;
                                             case BOTTOM:
                                                 if (onToolWindow != null) {
-                                                    toolWindow.setAnchor(anchor, anchorIndex != -1 ? anchorIndex + 1 : -1);
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.BOTTOM);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.setAnchor(anchor);
-                                                        toolWindow.aggregate(AggregationPosition.BOTTOM);
+                                                        toolWindow.aggregateByReference(AggregationPosition.BOTTOM,
+                                                                              floatingLivePanel.getFirstToolWindow());
+
                                                     }
                                                 }
                                                 break;
                                             case TOP:
                                                 if (onToolWindow != null) {
-                                                    toolWindow.setAnchor(anchor, anchorIndex != -1 ? anchorIndex - 1 : -1);
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.TOP);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.setAnchor(anchor, 0);
-                                                        toolWindow.aggregate(AggregationPosition.TOP);
+                                                        toolWindow.aggregateByReference(AggregationPosition.TOP,
+                                                                              floatingLivePanel.getFirstToolWindow());
+
                                                     }
                                                 }
                                                 break;
@@ -200,7 +205,8 @@ public class ToolWindowFloatingLiveDropTarget extends DropTarget {
                                             onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
                                             onToolWindow.setActive(true);
                                         } else {
-                                            toolWindow.aggregate();
+                                            toolWindow.aggregateByReference(AggregationPosition.DEFAULT,
+                                                                  floatingLivePanel.getFirstToolWindow());
                                             toolWindow.setActive(true);
                                         }
                                     }
@@ -209,81 +215,6 @@ public class ToolWindowFloatingLiveDropTarget extends DropTarget {
                                 }
 
                                 dtde.dropComplete(true);
-                            } else
-                                dtde.dropComplete(false);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            dtde.dropComplete(false);
-                        }
-                    } else if (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {
-                        try {
-                            Content content = toolWindowManager.getContentManager().getContent(
-                                    dtde.getTransferable().getTransferData(MyDoggyTransferable.CONTENT_ID_DF)
-                            );
-
-                            if (content != null) {
-                                if (content.getDockableDelegator() != null) {
-                                    toolWindowManager.getContentManager().removeContent(content);
-
-                                    Dockable delegator = content.getDockableDelegator();
-
-                                    if (delegator instanceof ToolWindow) {
-                                        ToolWindow toolWindow = (ToolWindow) delegator;
-
-                                        if (toolWindow == onToolWindow)
-                                            return;
-
-                                        boolean oldAggregateMode = toolWindow.isAggregateMode();
-                                        toolWindow.setAggregateMode(true);
-                                        try {
-                                            toolWindow.setAnchor(anchor, anchorIndex);
-
-                                            if (dragAnchor != null) {
-                                                switch (dragAnchor) {
-                                                    case LEFT:
-                                                        if (onToolWindow != null)
-                                                            toolWindow.aggregate(onToolWindow, AggregationPosition.LEFT);
-                                                        else
-                                                            toolWindow.aggregate(AggregationPosition.LEFT);
-                                                        break;
-                                                    case RIGHT:
-                                                        if (onToolWindow != null)
-                                                            toolWindow.aggregate(onToolWindow, AggregationPosition.RIGHT);
-                                                        else
-                                                            toolWindow.aggregate(AggregationPosition.RIGHT);
-                                                        break;
-                                                    case BOTTOM:
-                                                        if (onToolWindow != null)
-                                                            toolWindow.aggregate(onToolWindow, AggregationPosition.BOTTOM);
-                                                        else
-                                                            toolWindow.aggregate(AggregationPosition.BOTTOM);
-                                                        break;
-                                                    case TOP:
-                                                        if (onToolWindow != null)
-                                                            toolWindow.aggregate(onToolWindow, AggregationPosition.TOP);
-                                                        else
-                                                            toolWindow.aggregate(AggregationPosition.TOP);
-                                                        break;
-                                                }
-                                                toolWindow.setActive(true);
-                                            } else {
-                                                if (onToolWindow != null) {
-                                                    onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
-                                                    onToolWindow.setActive(true);
-                                                } else {
-                                                    toolWindow.aggregate();
-                                                    toolWindow.setActive(true);
-                                                }
-                                            }
-                                        } finally {
-                                            toolWindow.setAggregateMode(oldAggregateMode);
-                                        }
-                                        dtde.dropComplete(true);
-                                    }
-                                } else {
-                                    dtde.dropComplete(false);
-                                }
-
                             } else
                                 dtde.dropComplete(false);
                         } catch (Exception e) {

@@ -109,6 +109,14 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
     void aggregate(AggregationPosition aggregationPosition);
 
     /**
+     * TODO:
+     * @param aggregationPosition
+     * @param aggregateReferenceTool
+     * @since 1.5.0
+     */
+    void aggregateByReference(AggregationPosition aggregationPosition, ToolWindow aggregateReferenceTool);
+
+    /**
      * Aggregate this tool to the already visible tools using the specified toolwindow as a relative position and
      * the aggregation position as the position relative to the specified toolwindow.
      * This method is usable also when the tool is already visible.
