@@ -16,6 +16,7 @@ public class LineBorder extends AbstractBorder {
     protected int arcHeight;
     protected int arcWidth;
 
+
     public LineBorder() {
         this(Colors.buttonBorder);
     }
@@ -35,6 +36,7 @@ public class LineBorder extends AbstractBorder {
         this.arcHeight = arcHeight;
         this.arcWidth = arcWidth;
     }
+
 
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
         Color oldColor = g.getColor();
@@ -59,6 +61,11 @@ public class LineBorder extends AbstractBorder {
         return insets;
     }
 
+    public boolean isBorderOpaque() {
+        return !roundedCorners;
+    }
+
+
     public Color getLineColor() {
         return lineColor;
     }
@@ -73,10 +80,6 @@ public class LineBorder extends AbstractBorder {
 
     public boolean getRoundedCorners() {
         return roundedCorners;
-    }
-
-    public boolean isBorderOpaque() {
-        return !roundedCorners;
     }
 
 }

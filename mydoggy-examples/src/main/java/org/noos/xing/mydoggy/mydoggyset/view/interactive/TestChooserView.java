@@ -51,7 +51,7 @@ public class TestChooserView extends ComponentView {
         protected Component initComponent() {
             JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{150,3,-1,3, 100},{-1}}));
 
-            Container container = (Container) viewContext.get("windowAnchestor");
+            Container container = (Container) viewContext.get("windowAncestor");
             ToolWindowManager toolWindowManager = viewContext.get(ToolWindowManager.class);
 
             try {

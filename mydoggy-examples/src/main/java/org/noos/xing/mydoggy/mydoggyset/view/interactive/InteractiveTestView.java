@@ -27,7 +27,7 @@ public class InteractiveTestView implements View {
     public Component getComponent() {
         ViewContext viewContext = new MapViewContext();
         viewContext.put(ToolWindowManager.class, toolWindowManager);
-        viewContext.put("windowAnchestor", parentComponent);
+        viewContext.put("windowAncestor", parentComponent);
         viewContext.put(MyDoggySetContext.class, mydoggySetContext);
 
         JPanel panel = new JPanel();

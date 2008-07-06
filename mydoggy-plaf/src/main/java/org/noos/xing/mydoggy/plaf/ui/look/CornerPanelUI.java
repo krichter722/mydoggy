@@ -1,6 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
-import org.noos.xing.mydoggy.ToolWindowManagerDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.cmp.CornerPanel;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -16,7 +16,7 @@ public class CornerPanelUI extends BasicPanelUI {
     }
 
 
-    protected ToolWindowManagerDescriptor.Corner corner;
+    protected CornerPanel cornerPanel;
 
 
     public CornerPanelUI() {
@@ -24,9 +24,16 @@ public class CornerPanelUI extends BasicPanelUI {
 
     @Override
     public void installUI(JComponent c) {
-        this.corner = (ToolWindowManagerDescriptor.Corner) c.getClientProperty(ToolWindowManagerDescriptor.Corner.class);
-        
+        this.cornerPanel = (CornerPanel) c;
+
         super.installUI(c);
+    }
+
+
+    @Override
+    public void uninstallUI(JComponent c) {
+        super.uninstallUI(c);
+        this.cornerPanel = null;
     }
 
     @Override

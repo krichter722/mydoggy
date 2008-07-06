@@ -9,7 +9,6 @@ import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * TODO: create ui...
  */
 public class CornerPanel extends JPanel {
 
@@ -20,8 +19,10 @@ public class CornerPanel extends JPanel {
     private static final String uiClassID = "CornerPanelUI";
 
 
+    protected ToolWindowManagerDescriptor.Corner corner;
+
     public CornerPanel(ToolWindowManagerDescriptor.Corner corner) {
-        putClientProperty(ToolWindowManagerDescriptor.Corner.class, corner);
+        this.corner = corner;
 
         setLayout(new TableLayout(new double[][]{{-1}, {-1}}));
         setFocusable(false);
@@ -30,18 +31,21 @@ public class CornerPanel extends JPanel {
 
 
     public void updateUI() {
-        if (getClientProperty(ToolWindowManagerDescriptor.Corner.class) != null)
+        if (corner != null)
             setUI((CornerPanelUI) UIManager.getUI(this));
     }
 
-    @Override
     public String getUIClassID() {
         return uiClassID;
     }
 
-
     public void setUI(CornerPanelUI ui) {
         super.setUI(ui);
+    }
+
+
+    public ToolWindowManagerDescriptor.Corner getCorner() {
+        return corner;
     }
 
     public Component getComponent() {

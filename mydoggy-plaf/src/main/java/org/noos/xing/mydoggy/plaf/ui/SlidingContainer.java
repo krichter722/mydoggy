@@ -170,7 +170,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         addPropertyChangeListener("active", new ActivePropertyChangeListener());
         addPropertyChangeListener("maximized", new MaximizedPropertyChangeListener());
         addPropertyChangeListener("tempShowed", new TempShowedPropertyChangeListener());
-        addPropertyChangeListener("manager.window.anchestor", new PropertyChangeListener() {
+        addPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getNewValue() != null) {
                     layeredPane = descriptor.getManager().getLayeredPane();

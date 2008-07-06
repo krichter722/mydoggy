@@ -162,11 +162,14 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
     public class TabbedDragGesture extends DragGestureAdapter {
         protected JTabbedContentPane tabbedContentPane;
+        protected int dragTabIndex;
+
 
         public TabbedDragGesture(JTabbedContentPane tabbedContentPane) {
             super(toolWindowManager);
             this.tabbedContentPane = tabbedContentPane;
         }
+
 
         public void dragGestureRecognized(DragGestureEvent dge) {
             // Acquire locks
@@ -175,12 +178,12 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
             // Start Drag
             Point origin = dge.getDragOrigin();
-            int index = tabbedContentPane.indexAtLocation(origin.x, origin.y);
-            if (index != -1) {
-                Dockable dockable = tabbedContentPane.getContentAt(index);
+            dragTabIndex = tabbedContentPane.indexAtLocation(origin.x, origin.y);
+            if (dragTabIndex != -1) {
+                Dockable dockable = tabbedContentPane.getContentAt(dragTabIndex);
 
                 if (dockable != null) {
-                    dge.startDrag(Cursor.getDefaultCursor(),
+                    dge.startDrag(DragSource.DefaultMoveDrop,
                                   new MyDoggyTransferable(manager,
                                                           MyDoggyTransferable.CONTENT_ID_DF,
                                                           dockable.getId()),
@@ -194,7 +197,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                         Component c = dge.getComponent();
 
                         // Build ghost image
-                        Rectangle rect = tabbedContentPane.getBoundsAt(index);
+                        Rectangle rect = tabbedContentPane.getBoundsAt(dragTabIndex);
                         BufferedImage image = new BufferedImage(c.getWidth(), c.getHeight(), BufferedImage.TYPE_INT_ARGB);
                         Graphics g = image.getGraphics();
                         c.paint(g);
@@ -220,8 +223,27 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                 return;
 
             releaseLocks();
+            
             // Finalize drag action...
             cleanupGhostImage();
+
+            if (!dsde.getDropSuccess()) {
+                 Content content = tabbedContentPane.getContentAt(dragTabIndex);
+                 ContentUI contentUI = content.getContentUI();
+
+                 Rectangle bounds = contentUI.getDetachedBounds();
+                 if (bounds != null) {
+                     bounds.setLocation(dsde.getLocation());
+                 } else {
+                     bounds = new Rectangle();
+                     bounds.setLocation(dsde.getLocation());
+                     bounds.setSize(toolWindowManager.getBoundsToScreen(content.getComponent().getBounds(),
+                                                                        content.getComponent().getParent()).getSize());
+                 }
+
+                 contentUI.setDetachedBounds(bounds);
+                 content.setDetached(true);
+             }
         }
 
     }

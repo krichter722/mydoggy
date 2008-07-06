@@ -1,9 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowTab;
-import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
@@ -24,6 +21,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.PanelUI;
 import java.awt.*;
 import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragSource;
 import java.awt.dnd.DragSourceDragEvent;
 import java.awt.dnd.DragSourceDropEvent;
 import java.awt.event.ActionEvent;
@@ -231,7 +229,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner, PropertyCh
     protected void installDefaults(JComponent c) {
         LookAndFeel.installColorsAndFont(c, "Panel.background", "Panel.foreground", "Panel.font");
         LookAndFeel.installBorder(c, "Panel.border");
-        
+
         SwingUtil.installFont(c, "ToolWindowTitleBarUI.font");
     }
 
@@ -385,10 +383,12 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner, PropertyCh
         protected boolean moveAnchor;
         protected ToolWindowAnchor lastAnchor;
 
+
         public ToolWindowTitleBarDragGesture(ToolWindowDescriptor descriptor) {
             super(descriptor);
             descriptor.getCleaner().addCleaner(this);
         }
+
 
         public void dragGestureRecognized(DragGestureEvent dge) {
             // Check validaty
@@ -413,9 +413,11 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner, PropertyCh
                 transferable.addEntry(MyDoggyTransferable.TOOL_WINDOW_ID_DF, toolWindowTab.getDockableDelegator().getId());
                 transferable.addEntry(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF, toolWindowTab.getId());
 
-                dge.startDrag(Cursor.getDefaultCursor(), transferable, this);
+                dge.startDrag(DragSource.DefaultMoveDrop,
+                              transferable,
+                              this);
             } else {
-                dge.startDrag(Cursor.getDefaultCursor(),
+                dge.startDrag(DragSource.DefaultMoveDrop,
                               new MyDoggyTransferable(manager, MyDoggyTransferable.TOOL_WINDOW_ID_DF, toolWindow.getId()),
                               this);
             }
@@ -458,7 +460,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner, PropertyCh
 
                 lastAnchor = newAnchor;
             }
-            
+
             updateGhostImage(dsde.getLocation());
         }
 
@@ -474,15 +476,35 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner, PropertyCh
             cleanupGhostImage();
 
             if (!dsde.getDropSuccess()) {
-                // TODO... move to FLOATING_LIVE or FLOATING 
-/*
-                Point location = dsde.getLocation();
-                ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
-                toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setLocation(
-                        location.x, location.y
-                );
-                toolWindow.setType(ToolWindowType.FLOATING_LIVE);
-*/
+                // move to FLOATING_LIVE or FLOATING
+
+                Window ancestor = SwingUtilities.getWindowAncestor(manager);
+
+                Rectangle ancestorBounds = ancestor.getBounds();
+                Point dsdeLocation = dsde.getLocation();
+
+                if (dsdeLocation.x >= ancestorBounds.x &&
+                    dsdeLocation.y >= ancestorBounds.y &&
+                    dsdeLocation.x <= ancestorBounds.getMaxX() &&
+                    dsdeLocation.y <= ancestorBounds.getMaxY()) {
+
+                    // Move to floating live
+                    SwingUtil.convertPointFromScreen2(dsdeLocation, ancestor);
+
+                    ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
+                    toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setLocation(
+                            dsdeLocation.x, dsdeLocation.y
+                    );
+                    toolWindow.setType(ToolWindowType.FLOATING_LIVE);
+
+                } else {
+                    // Move to floating
+                    ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
+                    toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).setLocation(
+                            dsdeLocation.x, dsdeLocation.y
+                    );
+                    toolWindow.setType(ToolWindowType.FLOATING);
+                }
             }
         }
 

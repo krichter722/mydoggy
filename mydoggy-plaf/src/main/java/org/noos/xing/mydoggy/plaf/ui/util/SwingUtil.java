@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.applet.Applet;
 import java.awt.*;
 import java.awt.dnd.DnDConstants;
@@ -29,7 +30,6 @@ public class SwingUtil {
 
     private SwingUtil() {
     }
-
 
     // Repaint/revalidate support methods
 
@@ -224,7 +224,7 @@ public class SwingUtil {
         return focusRequester;
     }
 
-    //  Anchestor support methods
+    //  Ancestor support methods
 
     public static boolean hasParent(Component component, Component parent) {
         for (Container p = component.getParent(); p != null; p = p.getParent()) {
@@ -234,18 +234,18 @@ public class SwingUtil {
         return false;
     }
 
-    public static boolean isAnchestor(Component component, Component parent) {
+    public static boolean isAncestor(Component component, Component parent) {
         if (component == null || parent == null)
             return false;
-        
+
         if (component == parent)
             return true;
-        
+
         for (Component p = component.getParent(); p != null; p = p.getParent()) {
             if (p == parent)
                 return true;
         }
-        
+
         return false;
     }
 
@@ -335,7 +335,7 @@ public class SwingUtil {
 
             return new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
         } catch (Throwable e) {
-            throw new RuntimeException("Cannot load icon : "  + e.getMessage(), e);
+            throw new RuntimeException("Cannot load icon : " + e.getMessage(), e);
         }
     }
 
@@ -343,7 +343,7 @@ public class SwingUtil {
         try {
             return Toolkit.getDefaultToolkit().getImage(SwingUtil.class.getClassLoader().getResource(url));
         } catch (Throwable e) {
-            throw new RuntimeException("Cannot load image : "  + e.getMessage(), e);
+            throw new RuntimeException("Cannot load image : " + e.getMessage(), e);
         }
     }
 
@@ -351,7 +351,7 @@ public class SwingUtil {
         try {
             return ImageIO.read(SwingUtil.class.getClassLoader().getResource(url));
         } catch (Throwable e) {
-            throw new RuntimeException("Cannot load buffered image : "  + e.getMessage(), e);
+            throw new RuntimeException("Cannot load buffered image : " + e.getMessage(), e);
         }
     }
 
@@ -362,7 +362,7 @@ public class SwingUtil {
         GraphicsDevice[] gs = ge.getScreenDevices();
 
         if (gs.length == 1) {
-            return ge.getMaximumWindowBounds();  
+            return ge.getMaximumWindowBounds();
         } else {
             Rectangle virtualBounds = new Rectangle();
 
@@ -502,7 +502,6 @@ public class SwingUtil {
         return event.getPropertyName() + ":\n\t" + event.getSource() + ":\n\t" + event.getOldValue() + ":\n\t" + event.getNewValue();
     }
 
-
     // UI support methods
 
     public static void registerDragGesture(Component c, DragGesture dragGesture) {
@@ -598,6 +597,47 @@ public class SwingUtil {
         return p;
     }
 
+    public static Point convertPointFromScreen2(Point p, Component c) {
+        int x, y;
+
+        do {
+            if (c instanceof JComponent) {
+                x = c.getX();
+                y = c.getY();
+            } else if (c instanceof java.applet.Applet ||
+                       c instanceof java.awt.Window) {
+                try {
+                    Point pp = c.getLocationOnScreen();
+                    x = pp.x;
+                    y = pp.y;
+                } catch (IllegalComponentStateException icse) {
+                    x = c.getX();
+                    y = c.getY();
+                }
+
+                if  (c instanceof RootPaneContainer) {
+                    try {
+                        JMenuBar menuBar = ((RootPaneContainer)c).getRootPane().getJMenuBar();
+                        if (menuBar != null)
+                           y += menuBar.getHeight();
+                    } catch (Exception e) {
+                    }
+                }
+            } else {
+                x = c.getX();
+                y = c.getY();
+            }
+
+            p.x -= x;
+            p.y -= y;
+
+            if (c instanceof java.awt.Window || c instanceof java.applet.Applet)
+                break;
+            c = c.getParent();
+        } while (c != null);
+        return p;
+    }
+
     public static void setWindowTitle(Component component, String title) {
         Window window = SwingUtilities.windowForComponent(component);
         if (window instanceof Dialog) {
@@ -615,7 +655,7 @@ public class SwingUtil {
     }
 
     public static final <T> T getClientProperty(JComponent c, Object key) {
-    	return (T) c.getClientProperty(key);
+        return (T) c.getClientProperty(key);
     }
 
     //  UI Manager support methods
@@ -646,14 +686,8 @@ public class SwingUtil {
         return (TransparencyManager<Window>) UIManager.get(TransparencyManager.class);
     }
 
-    public static boolean isZeroSize(Rectangle bounds) {
-        Dimension size =  bounds.getSize();
-        return size.width == 0 || size.height == 0;
+    public static Border getBorder(String key, Border border) {
+        Border result = UIManager.getBorder(key);
+        return (result != null) ? result : border;
     }
-
-    public static boolean isZeroLocation(Rectangle bounds) {
-        Point location =  bounds.getLocation();
-        return location.x == 0 || location.y == 0;
-    }
-
 }

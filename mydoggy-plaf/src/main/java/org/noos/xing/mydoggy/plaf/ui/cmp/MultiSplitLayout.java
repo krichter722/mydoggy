@@ -1368,7 +1368,7 @@ public class MultiSplitLayout implements LayoutManager {
             } else {
                 throwParseException(st, "invalid weight");
             }
-        } else if (name.equalsIgnoreCase("NAME")) {
+        } else if (name.equalsIgnoreCase("TRANSFERABLE_NAME")) {
             if (st.nextToken() == StreamTokenizer.TT_WORD) {
                 if (node instanceof Leaf) {
                     ((Leaf) node).setName(st.sval);

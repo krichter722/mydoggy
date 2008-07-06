@@ -551,7 +551,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
                         throw new IllegalStateException("Invalid Content : " + content);
 
                     // Setup dialog
-                    Frame parentFrame = (toolWindowManager.getWindowAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAnchestor() : null;
+                    Frame parentFrame = (toolWindowManager.getWindowAncestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAncestor() : null;
 
                     Window dialog;
                     if (contentUI.isAddToTaskBarWhenDetached()) {

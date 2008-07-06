@@ -47,7 +47,8 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
     // For drag tabs
     protected static final int LINEWIDTH = 3;
-    protected static final String NAME = "test";    // TODO: change name
+    protected static final String TRANSFERABLE_NAME = "TabbedTransferable";
+
     protected Rectangle2D lineRect = new Rectangle2D.Double();
     protected Color lineColor = new Color(0, 100, 255);
     protected DragSource dragSource = new DragSource();
@@ -314,15 +315,6 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         return (index != -1) ? getContentAt(index) : null;
     }
 
-    public void setTargetLine(Point location) {
-        if (getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM)
-            initTargetLeftRightLine(getTargetTabIndex(location));
-        else
-            initTargetTopBottomLine(getTargetTabIndex(location));
-
-        repaint();
-    }
-
     protected void moveTab(int prev, int next) {
         if (next < 0 || prev == next) {
             //System.out.println("press="+prev+" next="+next);
@@ -358,6 +350,16 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             setSelectedIndex(next - 1);
         }
     }
+
+    public void setTargetLine(Point location) {
+        if (getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM)
+            initTargetLeftRightLine(getTargetTabIndex(location));
+        else
+            initTargetTopBottomLine(getTargetTabIndex(location));
+
+        repaint();
+    }
+
 
     protected void initDragListener() {
         // Init drag
@@ -764,7 +766,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
     }
 
     public class TabbedTransferable implements Transferable {
-        private final DataFlavor FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, NAME);
+        private final DataFlavor FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, TRANSFERABLE_NAME);
 
         public Object getTransferData(DataFlavor flavor) {
             return JTabbedContentPane.this;
@@ -777,7 +779,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         }
 
         public boolean isDataFlavorSupported(DataFlavor flavor) {
-            return flavor.getHumanPresentableName().equals(NAME);
+            return flavor.getHumanPresentableName().equals(TRANSFERABLE_NAME);
         }
     }
 
@@ -853,6 +855,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             if (!e.getDropSuccess()) {
                 Content content = getContentAt(dragTabIndex);
                 ContentUI contentUI = content.getContentUI();
+
                 Rectangle bounds = contentUI.getDetachedBounds();
                 if (bounds != null) {
                     bounds.setLocation(e.getLocation());

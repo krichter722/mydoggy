@@ -53,7 +53,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     protected MyDoggyContentManager contentManager;
 
-    protected Component windowAnchestor;
+    protected Component windowAncestor;
     protected RootPaneContainer rootPaneContainer;
 
     protected MyDoggyToolWindowBar[] bars;
@@ -463,8 +463,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         // Fire event
         propertyChangeSupport.firePropertyChange(
-                new PropertyChangeEvent(MyDoggyToolWindowManager.this, "manager.window.anchestor",
-                                        windowAnchestor,
+                new PropertyChangeEvent(MyDoggyToolWindowManager.this, "manager.window.ancestor",
+                                        windowAncestor,
                                         null)
         );
     }
@@ -473,17 +473,17 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         super.addNotify();
 
         // Load ancestor
-        windowAnchestor = SwingUtil.getWindowAncestor(this);
+        windowAncestor = SwingUtil.getWindowAncestor(this);
         // Check root pane container
-        if (!(windowAnchestor instanceof RootPaneContainer)) {
-            throw new IllegalArgumentException("WindowAnchestor must implement RootPaneContainer");
+        if (!(windowAncestor instanceof RootPaneContainer)) {
+            throw new IllegalArgumentException("Window Ancestor must implement RootPaneContainer");
         }
-        rootPaneContainer = (RootPaneContainer) windowAnchestor;
+        rootPaneContainer = (RootPaneContainer) windowAncestor;
 
         // Fire related event
         propertyChangeSupport.firePropertyChange(
-                new PropertyChangeEvent(MyDoggyToolWindowManager.this, "manager.window.anchestor",
-                                        null, windowAnchestor)
+                new PropertyChangeEvent(MyDoggyToolWindowManager.this, "manager.window.ancestor",
+                                        null, windowAncestor)
         );
 
 /*
@@ -500,8 +500,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 */
     }
 
-    public Component getWindowAnchestor() {
-        return windowAnchestor;
+    public Component getWindowAncestor() {
+        return windowAncestor;
     }
 
     public JLayeredPane getLayeredPane() {
@@ -814,7 +814,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                     getBar(descriptor.getToolWindow().getAnchor()).propertyChange(evt);
             }
         });
-        propertyChangeSupport.addPropertyChangeListener("manager.window.anchestor", new AnchestorClosedChangeListener());
+        propertyChangeSupport.addPropertyChangeListener("manager.window.ancestor", new AncestorClosedChangeListener());
         propertyChangeSupport.addPropertyChangeListener("enabled", new ContentMananagerEnabledChangeListener());
         propertyChangeSupport.addPropertyChangeListener("length", new BarLengthListener());
 
@@ -825,7 +825,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     protected void initKeyboardFocusManagerListeners() {
-        propertyChangeSupport.addPropertyChangeListener("manager.window.anchestor", new PropertyChangeListener() {
+        propertyChangeSupport.addPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
             final ShortcutProcessor shortcutProcessor = new ShortcutProcessor(MyDoggyToolWindowManager.this,
                                                                               MyDoggyToolWindowManager.this);
             final FocusOwnerChangeListener focusOwnerChangeListener = new FocusOwnerChangeListener();
@@ -1000,9 +1000,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
 
     public boolean isWindowFocused() {
-//        return (windowAnchestor instanceof Window) ? ((Window) windowAnchestor).isFocused() : windowAnchestor.isfo
+//        return (windowAncestor instanceof Window) ? ((Window) windowAncestor).isFocused() : windowAncestor.isfo
         Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-        return focusOwner != null ? SwingUtil.getWindowAncestor(focusOwner) == windowAnchestor : false;
+        return focusOwner != null ? SwingUtil.getWindowAncestor(focusOwner) == windowAncestor : false;
 
     }
 
@@ -1374,7 +1374,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    public class AnchestorClosedChangeListener implements PropertyChangeListener {
+    public class AncestorClosedChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             for (ToolWindowDescriptor tool : tools.values())

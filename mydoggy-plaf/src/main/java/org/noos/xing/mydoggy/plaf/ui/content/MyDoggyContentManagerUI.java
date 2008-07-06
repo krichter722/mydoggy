@@ -216,8 +216,8 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
         return contentManager.isEnabled();
     }
 
-    protected boolean isFocusAnchestor(Component c) {
-        return SwingUtil.isAnchestor(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner(), c);
+    protected boolean isFocusAncestor(Component c) {
+        return SwingUtil.isAncestor(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner(), c);
     }
 
     protected Component findAndRequestFocus(Component component) {
@@ -301,7 +301,7 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
                 } else if ("addToTaskBar".equals(evt.getPropertyName())) {
                     Content content = contentUI.getContent();
                     Window oldWindow = SwingUtilities.windowForComponent(contentUI.getContent().getComponent());
-                    Frame parentFrame = (toolWindowManager.getWindowAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAnchestor() : null;
+                    Frame parentFrame = (toolWindowManager.getWindowAncestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAncestor() : null;
                     Component focusOwner = oldWindow.getFocusOwner();
 
                     // Init new window

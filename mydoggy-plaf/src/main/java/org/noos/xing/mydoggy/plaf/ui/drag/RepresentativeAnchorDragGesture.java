@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragSource;
 import java.awt.dnd.DragSourceDragEvent;
 import java.awt.dnd.DragSourceDropEvent;
 import java.awt.image.BufferedImage;
@@ -35,7 +36,7 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
             return;
 
         // Start Drag
-        dge.startDrag(Cursor.getDefaultCursor(),
+        dge.startDrag(DragSource.DefaultMoveDrop,
                       createTransferable(),
                       this);
 

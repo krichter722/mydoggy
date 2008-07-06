@@ -94,7 +94,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
                 // Set Size
                 if (typeDescriptor.getSize() == null) {
-                    Component parentComponent = descriptor.getManager().getWindowAnchestor();
+                    Component parentComponent = descriptor.getManager().getWindowAncestor();
                     window.setSize(parentComponent.getWidth() / 2, (int) (parentComponent.getHeight() / 1.5));
                 } else {
                     window.setSize(typeDescriptor.getSize());
@@ -307,12 +307,12 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
         if (toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).isAddToTaskBar()) {
             window = new JModalFrame(toolWindow,
-                                     SwingUtil.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
+                                     SwingUtil.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAncestor() : null,
                                      null,
                                      false);
         } else {
             window = new JModalWindow(
-                    SwingUtil.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
+                    SwingUtil.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAncestor() : null,
                                       null,
                                       false);
         }
@@ -336,12 +336,12 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         // Init new window
         if ((Boolean) evt.getNewValue()) {
             window = new JModalFrame(toolWindow,
-                                     SwingUtil.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
+                                     SwingUtil.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAncestor() : null,
                                      null,
                                      false);
         } else {
             window = new JModalWindow(
-                    SwingUtil.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAnchestor() : null,
+                    SwingUtil.getBoolean("dialog.owner.enabled", true) ? descriptor.getWindowAncestor() : null,
                                       null,
                                       false);
         }
