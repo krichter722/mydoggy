@@ -368,9 +368,6 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     protected void addRepresentativeAnchor(Component representativeAnchor, int index) {
         availableTools++;
         if (horizontal) {
-            // TODO: used -2 instead or width/height
-//            int width = representativeAnchor.getPreferredSize().width + 6;
-
             toolWindowBarContainerLayout.insertColumn(toolWindowBarContainerLayout.getNumColumn(),
                                                       toolWindowBarContainerLayout.getNumColumn() > 0 ? 5 : 1);
             toolWindowBarContainerLayout.insertColumn(toolWindowBarContainerLayout.getNumColumn(),
@@ -410,10 +407,6 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             } else
                 toolWindowBarContainer.add(representativeAnchor, (toolWindowBarContainerLayout.getNumColumn() - 1) + ",1");
         } else {
-//            int height = Math.max(representativeAnchor.getHeight(),
-//                                  Math.max(representativeAnchor.getPreferredSize().height,
-//                                           representativeAnchor.getSize().height)) + 12;
-
             toolWindowBarContainerLayout.insertRow(toolWindowBarContainerLayout.getNumRow(),
                                                    toolWindowBarContainerLayout.getNumRow() > 0 ? 5 : 1);
             toolWindowBarContainerLayout.insertRow(toolWindowBarContainerLayout.getNumRow(),
@@ -1140,13 +1133,29 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
             boolean visible = (Boolean) evt.getNewValue();
 
-            Component content = (visible) ? toolWindowDescriptor.getComponent() : null;
-            FloatingLiveContainer container = (FloatingLiveContainer) toolWindowDescriptor.getToolWindowContainer(ToolWindowType.FLOATING_LIVE);
+            if (evt instanceof UserPropertyChangeEvent) {
+                Object[] params = (Object[]) ((UserPropertyChangeEvent)evt).getUserObject();
 
-            if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
-                return;
+                ToolWindow dest = (ToolWindow) params[2];
+                ToolWindowDescriptor destDescriptor = manager.getDescriptor(dest);
 
-            container.setVisible(visible);
+                Component content = (visible) ? toolWindowDescriptor.getContentContainer() : null;
+                if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
+                    return;
+
+                FloatingLiveContainer container = (FloatingLiveContainer) toolWindowDescriptor.getToolWindowContainer(ToolWindowType.FLOATING_LIVE);
+                container.setVisible(destDescriptor,
+                                    content,
+                                    (AggregationPosition) params[1]);
+            } else {
+                Component content = (visible) ? toolWindowDescriptor.getComponent() : null;
+                FloatingLiveContainer container = (FloatingLiveContainer) toolWindowDescriptor.getToolWindowContainer(ToolWindowType.FLOATING_LIVE);
+
+                if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
+                    return;
+
+                container.setVisible(visible);
+            }
         }
     }
 

@@ -29,6 +29,8 @@ public class DockablePanel extends JPanel {
 
         setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         add(component, "0,0,FULL,FULL");
+
+        updateUI();
     }
 
 

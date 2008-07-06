@@ -32,6 +32,7 @@ public class FloatingMoveMouseInputHandler implements MouseInputListener {
 
     public FloatingMoveMouseInputHandler(Component floatingContainer) {
         this.floatingContainer = floatingContainer;
+
         if (floatingContainer instanceof Window)
             floatingWindow = (Window) floatingContainer;
     }
@@ -105,4 +106,11 @@ public class FloatingMoveMouseInputHandler implements MouseInputListener {
     public void mouseClicked(MouseEvent ev) {
     }
 
+
+    public void setFloatingContainer(Component floatingContainer) {
+        this.floatingContainer = floatingContainer;
+
+        if (floatingContainer instanceof Window)
+            floatingWindow = (Window) floatingContainer;
+    }
 }

@@ -24,9 +24,9 @@ public class DockablePanelUI extends BasicPanelUI implements PropertyChangeListe
                                                              ActionListener,
                                                              DockableManagerListener {
     protected static Border FLASHING_BORDER = new LineBorder(Color.RED, 3);
-
+    
     public static ComponentUI createUI(JComponent c) {
-        return new CornerPanelUI();
+        return new DockablePanelUI();
     }
 
 

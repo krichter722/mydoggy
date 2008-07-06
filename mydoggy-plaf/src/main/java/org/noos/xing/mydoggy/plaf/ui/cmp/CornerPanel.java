@@ -21,6 +21,7 @@ public class CornerPanel extends JPanel {
 
     protected ToolWindowManagerDescriptor.Corner corner;
 
+    
     public CornerPanel(ToolWindowManagerDescriptor.Corner corner) {
         this.corner = corner;
 
