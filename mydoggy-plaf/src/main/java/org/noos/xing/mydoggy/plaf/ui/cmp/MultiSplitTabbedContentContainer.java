@@ -268,6 +268,8 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         protected Border oldBorder;
         protected Border dragBorder = new LineBorder(Color.BLUE, 3);
 
+        protected JTabbedContentPane oldTabbedContentPane;
+
 
         public ContentDropTargetListener(JComponent component, ToolWindowManager toolWindowManager) {
             this.component = component;
@@ -308,13 +310,14 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
             Point location = dtde.getLocation();
             component.putClientProperty("dragOver", location);
 
+            JTabbedContentPane tabbedContentPane = null;
+
             Component deepestCmp = SwingUtilities.getDeepestComponentAt(component, location.x, location.y);
             if (deepestCmp != null) {
                 dockableWrapper = SwingUtil.getParent(deepestCmp, "@@mydoggy.dockable.");
                 if (dockableWrapper != null) {
                     if (dockableWrapper instanceof JTabbedContentPane) {
-                        // TODO: introduce a line like tabbed content pane...
-                        JTabbedContentPane tabbedContentPane = (JTabbedContentPane) dockableWrapper;
+                        tabbedContentPane = (JTabbedContentPane) dockableWrapper;
 
                         Point locationOnDeepest = SwingUtilities.convertPoint(component, location, dockableWrapper);
                         indexAtLocation = tabbedContentPane.indexAtLocation(locationOnDeepest.x, locationOnDeepest.y);
@@ -344,7 +347,16 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                 onDockable = null;
                 indexAtLocation = -1;
             }
+
+            if (tabbedContentPane != null)
+                tabbedContentPane.setTargetLine(indexAtLocation);
+
+            if (tabbedContentPane != oldTabbedContentPane && oldTabbedContentPane != null)
+                oldTabbedContentPane.setTargetLine(-1);    
+
+            oldTabbedContentPane = tabbedContentPane;
         }
+
 
         public void dropActionChanged(DropTargetDragEvent dtde) {
             if (checkEvent(dtde))
@@ -359,6 +371,11 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         }
 
         public void drop(DropTargetDropEvent dtde) {
+            if (oldTabbedContentPane != null) {
+                oldTabbedContentPane.setTargetLine(-1);
+                oldTabbedContentPane = null;
+            }
+            
             try {
                 if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) {
                     if (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {

@@ -351,13 +351,31 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         }
     }
 
-    public void setTargetLine(Point location) {
-        if (getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM)
-            initTargetLeftRightLine(getTargetTabIndex(location));
-        else
-            initTargetTopBottomLine(getTargetTabIndex(location));
+    public void setTargetLine(int index) {
+        // TODO: do better...
+
+        dragTabIndex = 1;
+        if (getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM) {
+            if (index < 0) {
+                dragTabIndex = -1;
+                lineRect.setRect(0, 0, 0, 0);
+            } else if (index == getTabCount()) {
+                Rectangle rect = getBoundsAt(getTabCount() - 1);
+                lineRect.setRect(rect.x + rect.width - LINEWIDTH / 2, rect.y, LINEWIDTH, rect.height);
+            } else if (index == 0) {
+                Rectangle rect = getBoundsAt(0);
+                lineRect.setRect(-LINEWIDTH / 2, rect.y, LINEWIDTH, rect.height);
+            } else {
+                Rectangle rect = getBoundsAt(index - 1);
+                lineRect.setRect(rect.x + rect.width - LINEWIDTH / 2, rect.y, LINEWIDTH, rect.height);
+            }
+        } else
+            initTargetTopBottomLine(index);
 
         repaint();
+
+        if (index < 0)
+            dragTabIndex = -1;
     }
 
 
