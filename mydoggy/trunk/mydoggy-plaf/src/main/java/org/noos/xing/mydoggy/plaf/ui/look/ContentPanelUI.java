@@ -57,6 +57,7 @@ public class ContentPanelUI extends BasicPanelUI implements PropertyChangeListen
         this.threshold = contentPanel.getThreshold();
     }
 
+
     protected void installListeners(JComponent c) {
         c.addPropertyChangeListener("dragStart", this);
         c.addPropertyChangeListener("dragOver", this);
@@ -70,6 +71,7 @@ public class ContentPanelUI extends BasicPanelUI implements PropertyChangeListen
         c.removePropertyChangeListener("dragExit", this);
         c.removePropertyChangeListener("dragEnd", this);
     }
+
 
     public void update(Graphics g, JComponent c) {
         if (dragActive && mouseLocation != null) {

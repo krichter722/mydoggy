@@ -16,8 +16,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -33,8 +31,6 @@ public class FloatingLivePanel extends TranslucentPanel implements PropertyChang
     protected ContentPanel contentPanel;
     protected MultiSplitDockableContainer multiSplitDockableContainer;
 
-    public boolean valueAdjusting;
-
     protected TransparencyAnimation animation;
     protected Timer timer;
 
@@ -49,6 +45,7 @@ public class FloatingLivePanel extends TranslucentPanel implements PropertyChang
 
     public void propertyChange(final PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
+
         if ("active".equals(propertyName)) {
             if (Boolean.TRUE.equals(evt.getNewValue())) {
                 layeredPane.setLayer(this, JLayeredPane.DEFAULT_LAYER + 4);
@@ -155,7 +152,7 @@ public class FloatingLivePanel extends TranslucentPanel implements PropertyChang
         multiSplitDockableContainer = new MultiSplitDockableContainer(manager, JSplitPane.VERTICAL_SPLIT);
 
         contentPanel = new ContentPanel("toolWindow.container.");
-        contentPanel.setDropTarget(new ToolWindowFloatingLiveDropTarget(contentPanel, manager));
+        contentPanel.setDropTarget(new ToolWindowFloatingLiveDropTarget(this, contentPanel, manager));
         contentPanel.setComponent(multiSplitDockableContainer);
 
         setLayout(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
@@ -169,32 +166,9 @@ public class FloatingLivePanel extends TranslucentPanel implements PropertyChang
 
         addMouseMotionListener(resizeMouseInputHandler);
         addMouseListener(resizeMouseInputHandler);
-        addComponentListener(new ComponentAdapter() {
-
-            public void componentResized(ComponentEvent e) {
-                valueAdjusting = true;
-                try {
-                    for (MultiSplitDockableContainer.DockableEntry entry : multiSplitDockableContainer.getContents()) {
-                        ToolWindow toolWindow = (ToolWindow) entry.dockable;
-                        toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setSize(getWidth(), getHeight());
-                    }
-                } finally {
-                    valueAdjusting = false;
-                }
-            }
-
-            public void componentMoved(ComponentEvent e) {
-                valueAdjusting = true;
-                try {
-                    for (MultiSplitDockableContainer.DockableEntry entry : multiSplitDockableContainer.getContents()) {
-                        ToolWindow toolWindow = (ToolWindow) entry.dockable;
-                        toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setLocation(getX(), getY());
-                    }
-                } finally {
-                    valueAdjusting = false;
-                }
-            }
-        });
     }
 
+    public ToolWindow getFirstToolWindow() {
+        return (ToolWindow) multiSplitDockableContainer.getContents().get(0).dockable;
+    }
 }

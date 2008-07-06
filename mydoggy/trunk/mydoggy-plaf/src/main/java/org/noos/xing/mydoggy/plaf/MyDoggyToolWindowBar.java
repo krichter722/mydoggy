@@ -1134,19 +1134,32 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             boolean visible = (Boolean) evt.getNewValue();
 
             if (evt instanceof UserPropertyChangeEvent) {
-                Object[] params = (Object[]) ((UserPropertyChangeEvent)evt).getUserObject();
+                Object[] params = (Object[]) ((UserPropertyChangeEvent) evt).getUserObject();
 
-                ToolWindow dest = (ToolWindow) params[2];
-                ToolWindowDescriptor destDescriptor = manager.getDescriptor(dest);
+                // pick referenceAggregationTool from params
+                ToolWindow referenceAggregationTool = (ToolWindow) params[3];
+                ToolWindowDescriptor referenceAggregationDescriptor = null;
+                if (referenceAggregationTool != null)
+                    referenceAggregationDescriptor = manager.getDescriptor(referenceAggregationTool);
+
+                // pick aggregationOnTool from params
+                ToolWindow aggregationOnTool = (ToolWindow) params[2];
+                ToolWindowDescriptor aggregationOnDescriptor = null;
+                if (aggregationOnTool != null)
+                    aggregationOnDescriptor = manager.getDescriptor(aggregationOnTool);
+
+                if (referenceAggregationDescriptor == null)
+                    referenceAggregationDescriptor = aggregationOnDescriptor;
 
                 Component content = (visible) ? toolWindowDescriptor.getContentContainer() : null;
                 if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
                     return;
 
                 FloatingLiveContainer container = (FloatingLiveContainer) toolWindowDescriptor.getToolWindowContainer(ToolWindowType.FLOATING_LIVE);
-                container.setVisible(destDescriptor,
-                                    content,
-                                    (AggregationPosition) params[1]);
+                container.setVisible(referenceAggregationDescriptor,
+                                     content,
+                                     aggregationOnDescriptor,
+                                     (AggregationPosition) params[1]);
             } else {
                 Component content = (visible) ? toolWindowDescriptor.getComponent() : null;
                 FloatingLiveContainer container = (FloatingLiveContainer) toolWindowDescriptor.getToolWindowContainer(ToolWindowType.FLOATING_LIVE);
