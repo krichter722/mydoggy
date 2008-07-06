@@ -220,12 +220,12 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                             try {
                                 tabbedContentPane.setSelectedIndex(index);
                                 if (!focusValueAdj) {
-                                    if (!isFocusAnchestor(content.getComponent()))
+                                    if (!isFocusAncestor(content.getComponent()))
                                         componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
                                 } else {
                                     SwingUtilities.invokeLater(new Runnable() {
                                         public void run() {
-                                            if (!isFocusAnchestor(content.getComponent()))
+                                            if (!isFocusAncestor(content.getComponent()))
                                                 componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
                                         }
                                     });
@@ -244,12 +244,12 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
                             try {
                                 if (!focusValueAdj) {
-                                    if (!isFocusAnchestor(content.getComponent()))
+                                    if (!isFocusAncestor(content.getComponent()))
                                         componentInFocusRequest = findAndRequestFocus(dockablePanel);
                                 } else {
                                     SwingUtilities.invokeLater(new Runnable() {
                                         public void run() {
-                                            if (!isFocusAnchestor(content.getComponent()))
+                                            if (!isFocusAncestor(content.getComponent()))
                                                 componentInFocusRequest = findAndRequestFocus(dockablePanel);
                                         }
                                     });
@@ -527,8 +527,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 return;
 
             if (content.isDetached()) {
-                Window anchestor = SwingUtilities.windowForComponent(content.getComponent());
-                anchestor.setEnabled((Boolean) evt.getNewValue());
+                Window ancestor = SwingUtilities.windowForComponent(content.getComponent());
+                ancestor.setEnabled((Boolean) evt.getNewValue());
             } else {
                 for (Component c : multiSplitContainer.getTabbedComponents()) {
                     if (c instanceof JTabbedContentPane) {
@@ -717,7 +717,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                         detachedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
 
                         // Setup dialog
-                        Frame parentFrame = (toolWindowManager.getWindowAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAnchestor() : null;
+                        Frame parentFrame = (toolWindowManager.getWindowAncestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAncestor() : null;
 
                         Window dialog;
                         if (contentUI.isAddToTaskBarWhenDetached()) {

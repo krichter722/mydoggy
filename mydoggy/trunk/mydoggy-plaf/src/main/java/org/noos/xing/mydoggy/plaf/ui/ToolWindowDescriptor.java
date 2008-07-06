@@ -355,8 +355,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
                                                manager.getRootPaneContainer().getContentPane());
     }
 
-    public Window getWindowAnchestor() {
-        return manager.getWindowAnchestor() instanceof Window ? (Window) manager.getWindowAnchestor() : null;
+    public Window getWindowAncestor() {
+        return manager.getWindowAncestor() instanceof Window ? (Window) manager.getWindowAncestor() : null;
     }
 
     public ToolWindowContainer getToolWindowContainer() {

@@ -21,6 +21,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragSource;
 import java.awt.dnd.DragSourceDragEvent;
 import java.awt.dnd.DragSourceDropEvent;
 import java.awt.event.InputEvent;
@@ -236,7 +237,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
                     try {
                         tabbedContentPane.setSelectedIndex(index);
-                        if (!isFocusAnchestor(content.getComponent()))
+                        if (!isFocusAncestor(content.getComponent()))
                             componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
                         lastSelected = content;
                     } finally {
@@ -245,7 +246,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                 } else if (isContentManagerEnabled() && toolWindowManager.getMainContent() != content.getComponent()) {
                     throw new IllegalStateException("Invalid content ui state.");
                 } else {
-                    if (!isFocusAnchestor(content.getComponent()))
+                    if (!isFocusAncestor(content.getComponent()))
                         componentInFocusRequest = findAndRequestFocus(toolWindowManager.getMainContent());
                     lastSelected = content;
                 }
@@ -552,8 +553,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                 return;
 
             if (content.isDetached()) {
-                Window anchestor = SwingUtilities.windowForComponent(content.getComponent());
-                anchestor.setEnabled((Boolean) evt.getNewValue());
+                Window ancestor = SwingUtilities.windowForComponent(content.getComponent());
+                ancestor.setEnabled((Boolean) evt.getNewValue());
             } else {
                 int index = tabbedContentPane.indexOfContent(content);
                 if (index != -1)
@@ -721,7 +722,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                         }
 
                         // Setup dialog
-                        Frame parentFrame = (toolWindowManager.getWindowAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAnchestor() : null;
+                        Frame parentFrame = (toolWindowManager.getWindowAncestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAncestor() : null;
 
                         Window dialog;
                         if (contentUI.isAddToTaskBarWhenDetached()) {
@@ -839,7 +840,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
             if (index != -1) {
                 Content content = tabbedContentPane.getContentAt(index);
                 if (content.getDockableDelegator() != null) {
-                    dge.startDrag(Cursor.getDefaultCursor(),
+                    dge.startDrag(DragSource.DefaultMoveDrop,
                                   new MyDoggyTransferable(manager,
                                                           MyDoggyTransferable.CONTENT_ID_DF,
                                                           content.getId()),

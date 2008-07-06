@@ -1,11 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.DockedTypeDescriptor;
-import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
-import org.noos.xing.mydoggy.ToolWindowTab;
-import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
@@ -29,6 +26,7 @@ import javax.swing.plaf.metal.MetalLabelUI;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragSourceDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -466,14 +464,14 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
             if (e.getSource() == previewTimer) {
                 if ("stop".equals(e.getActionCommand())) {
                     if (previewPanel != null && !firstPreview) {
-                        Window windowAnchestor = SwingUtilities.getWindowAncestor(label);
+                        Window windowAncestor = SwingUtilities.getWindowAncestor(label);
 
-                        if (windowAnchestor != null) {
+                        if (windowAncestor != null) {
                             GlassPanel glassPane = descriptor.getManager().getGlassPanel();
                             glassPane.remove(previewPanel);
                             glassPane.setVisible(false);
                             SwingUtil.repaint(glassPane);
-                            SwingUtil.repaint(windowAnchestor);
+                            SwingUtil.repaint(windowAncestor);
 
                             previewPanel = null;
                         }
@@ -685,6 +683,48 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
         protected Transferable createTransferable() {
             return new MyDoggyTransferable(manager, MyDoggyTransferable.TOOL_WINDOW_ID_DF, toolWindow.getId());
+        }
+
+        public void dragDropEnd(DragSourceDropEvent dsde) {
+            super.dragDropEnd(dsde);
+            
+            if (!dsde.getDropSuccess()) {
+                // move to FLOATING_LIVE or FLOATING
+
+                Window ancestor = SwingUtilities.getWindowAncestor(manager);
+
+                Rectangle ancestorBounds = ancestor.getBounds();
+                Point dsdeLocation = dsde.getLocation();
+
+                if (dsdeLocation.x >= ancestorBounds.x &&
+                    dsdeLocation.y >= ancestorBounds.y &&
+                    dsdeLocation.x <= ancestorBounds.getMaxX() &&
+                    dsdeLocation.y <= ancestorBounds.getMaxY()) {
+
+                    // Move to floating live
+                    SwingUtil.convertPointFromScreen2(dsdeLocation, ancestor);
+
+                    ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
+                    toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setLocation(
+                            dsdeLocation.x, dsdeLocation.y
+                    );
+                    toolWindow.setType(ToolWindowType.FLOATING_LIVE);
+                    
+                    if (!toolWindow.isVisible())
+                        toolWindow.setActive(true);
+
+                } else {
+                    // Move to floating
+                    ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
+                    toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).setLocation(
+                            dsdeLocation.x, dsdeLocation.y
+                    );
+                    toolWindow.setType(ToolWindowType.FLOATING);
+
+                    if (!toolWindow.isVisible())
+                        toolWindow.setActive(true);
+                }
+            }
         }
 
     }

@@ -279,7 +279,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
             }
         });
         addPropertyChangeListener("enabled", new TypeEnabledPropertyChangeListener());
-        addPropertyChangeListener("manager.window.anchestor", new PropertyChangeListener() {
+        addPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getNewValue() != null) {
                     layeredPane = descriptor.getManager().getLayeredPane();
