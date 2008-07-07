@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
-import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowContainer;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
@@ -23,7 +22,9 @@ public class ToolWindowTitleButtonPanel extends JPanel implements Cleaner {
     public ToolWindowTitleButtonPanel(ToolWindowDescriptor descriptor, ToolWindowContainer dockedContainer) {
         putClientProperty(ToolWindowDescriptor.class, descriptor);
         putClientProperty(ToolWindowContainer.class, dockedContainer);
+
         descriptor.getCleaner().addCleaner(this);
+        
         updateUI();
     }
 
@@ -53,10 +54,6 @@ public class ToolWindowTitleButtonPanel extends JPanel implements Cleaner {
 
     public Component getFocusable() {
         return getUI().getFocusable();
-    }
-
-    public void setType(ToolWindowType type) {
-        getUI().setType(type);
     }
 
 }

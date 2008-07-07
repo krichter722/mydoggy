@@ -171,8 +171,6 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
             toolWindowTitleButtonPanel.getFocusable().setFocusable(true);
             focusRequester = toolWindowTitleButtonPanel.getFocusable();
         }
-
-        toolWindowTitleButtonPanel.setType(ToolWindowType.DOCKED);
     }
 
     protected void initListeners() {
@@ -755,10 +753,6 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getSource() != descriptor)
                 return;
-
-            if (evt.getNewValue() == ToolWindowType.DOCKED) {
-                titleBar.getToolWindowTitleButtonPanel().setType(ToolWindowType.DOCKED);
-            }
 
             if (evt.getOldValue() == ToolWindowType.EXTERN) {
                 setMainComponent(toolWindow.getToolWindowTabs()[0].getComponent());

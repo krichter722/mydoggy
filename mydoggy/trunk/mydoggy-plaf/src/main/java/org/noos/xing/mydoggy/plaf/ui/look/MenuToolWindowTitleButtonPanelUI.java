@@ -30,7 +30,7 @@ public class MenuToolWindowTitleButtonPanelUI extends FullToolWindowTitleButtonP
     }
 
 
-    protected void initComponents() {
+    protected void installComponents() {
         toolWindowTitleButtonPanel.setLayout(containerLayout = new ExtendedTableLayout(new double[][]{{0, 0}, {1, 14, 1}}, false));
         toolWindowTitleButtonPanel.setOpaque(false);
 

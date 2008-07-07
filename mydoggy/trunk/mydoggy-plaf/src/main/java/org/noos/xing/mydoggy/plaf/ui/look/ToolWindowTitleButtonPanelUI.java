@@ -1,7 +1,5 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
-import org.noos.xing.mydoggy.ToolWindowType;
-
 import javax.swing.plaf.basic.BasicPanelUI;
 import java.awt.*;
 
@@ -11,7 +9,5 @@ import java.awt.*;
 public abstract class ToolWindowTitleButtonPanelUI extends BasicPanelUI {
 
     public abstract Component getFocusable();
-
-    public abstract void setType(ToolWindowType type);
 
 }
