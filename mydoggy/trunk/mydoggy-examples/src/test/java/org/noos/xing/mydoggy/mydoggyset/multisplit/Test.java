@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy.mydoggyset.multisplit;
 
-import org.jdesktop.swingx.plaf.nimbus.NimbusLookAndFeel;
 import org.noos.xing.mydoggy.DockedTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
@@ -55,7 +54,6 @@ public class Test {
 
         // Add myDoggyToolWindowManager to the frame. MyDoggyToolWindowManager is an extension of a JPanel
         this.frame.getContentPane().add(myDoggyToolWindowManager, BorderLayout.CENTER);
-
 
         /* errors */
         JButton view = new JButton("H");
@@ -123,13 +121,7 @@ public class Test {
     }
 
     public static void main(String[] args) throws IOException {
-        try {
-            UIManager.setLookAndFeel(new NimbusLookAndFeel());
-        } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-       Test test = new Test();
+        Test test = new Test();
         try {
             test.run();
         } catch (Exception e) {
