@@ -9,4 +9,5 @@ public interface CleanerAggregator extends Cleaner {
 
     void addBefore(Cleaner beforeCleaner, Cleaner cleaner);
 
+    void addAfter(Cleaner beforeCleaner, Cleaner cleaner);
 }

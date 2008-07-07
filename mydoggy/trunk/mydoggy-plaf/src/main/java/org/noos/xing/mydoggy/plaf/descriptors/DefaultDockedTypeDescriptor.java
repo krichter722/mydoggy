@@ -1,9 +1,6 @@
 package org.noos.xing.mydoggy.plaf.descriptors;
 
-import org.noos.xing.mydoggy.DockedTypeDescriptor;
-import org.noos.xing.mydoggy.ToolWindowActionHandler;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
@@ -237,6 +234,10 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
 
     public boolean isAnimating() {
         return animating;
+    }
+
+    public ToolWindowType getType() {
+        return ToolWindowType.DOCKED;
     }
 
     public void setAnimating(boolean animating) {

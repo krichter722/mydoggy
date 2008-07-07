@@ -80,7 +80,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
         if (visible) {
             // Setup toolwindow title bar components
-            descriptor.setIdOnTitleBar();
             titleBarButtons.setType(ToolWindowType.FLOATING);
 
             // Add content to window
@@ -160,9 +159,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 if (evt.getNewValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING_FREE) {
                     initWindowListeners();
                 } else {
-                    if (!descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar())
-                        dockedContainer.disableIdOnTitleBar();
-
                     if (settedListener)
                         lastBounds = window.getBounds();
 
@@ -356,8 +352,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
     }
 
     protected void initWindowListeners() {
-        descriptor.setIdOnTitleBar();
-
         // Remove listeners
         window.getWindow().removeMouseMotionListener(resizeMouseInputHandler);
         window.getWindow().removeMouseListener(resizeMouseInputHandler);

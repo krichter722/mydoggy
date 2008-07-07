@@ -48,8 +48,10 @@ public class ToolWindowTabTitleUI extends BasicLabelUI implements MouseListener 
     @Override
     protected void installDefaults(JLabel c) {
         super.installDefaults(c);
+
+        if (c.getFont() != null)
+            c.setFont(c.getFont().deriveFont(SwingUtil.getFloat("ToolWindowTabTitleUI.font.size", 12)));
         
-        c.setFont(c.getFont().deriveFont(SwingUtil.getFloat("ToolWindowTabTitleUI.font.size", 12)));
         c.setText(tab.getTitle());
         c.setIcon(tab.getIcon());
         c.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));

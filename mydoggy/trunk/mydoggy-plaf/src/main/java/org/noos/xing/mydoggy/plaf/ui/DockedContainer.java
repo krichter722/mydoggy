@@ -28,9 +28,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
     protected transient ResourceManager resourceManager;
 
     protected JPanel container;
-    protected JComponent titleBar;
-    protected ToolWindowTabPanel toolWindowTabContainer;
-    protected ToolWindowTitleButtonPanel toolWindowTitleButtonPanel;
+    protected ToolWindowTitleBar titleBar;
     protected JPanel componentContainer;
 
     protected TitleBarMouseAdapter titleBarMouseAdapter;
@@ -98,11 +96,11 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
     }
 
     public ToolWindowTitleButtonPanel getToolWindowTitleButtonPanel() {
-        return toolWindowTitleButtonPanel;
+        return titleBar.getToolWindowTitleButtonPanel();
     }
 
     public ToolWindowTabPanel getTitleBarTabs() {
-        return toolWindowTabContainer;
+        return titleBar.getToolWindowTabPanel();
     }
 
     public Component getTitleBar() {
@@ -143,16 +141,10 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         container.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
         container.setFocusCycleRoot(true);
         container.setFocusable(true);
-
         container.putClientProperty(ToolWindow.class, toolWindow);
 
-        String id = toolWindow.getId();
-
         // Title Bar
-        ExtendedTableLayout titleBarLayout = new ExtendedTableLayout(new double[][]{{3, TableLayout.FILL, 2, -2, 3},
-                                                                                    {0, SwingUtil.getInt("ToolWindowTitleBarUI.length", 16) , 0}}, false);
-        titleBar = new ToolWindowTitleBar(descriptor);
-        titleBar.setLayout(titleBarLayout);
+        titleBar = new ToolWindowTitleBar(descriptor, this);
         titleBar.setName("toolWindow.titleBar." + toolWindow.getId());
         titleBar.setEnabled(false);
         titleBar.addMouseListener(titleBarMouseAdapter);
@@ -161,22 +153,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         titleBar.setFocusCycleRoot(true);
         titleBar.setFocusable(false);
 
-        if (descriptor.isIdVisibleOnTitleBar())
-            titleBarLayout.setColumn(0, titleBar.getFontMetrics(
-                    titleBar.getFont()
-            ).stringWidth(resourceManager.getUserString(id)) + 12);
-
-        // Tabs
-        // Request to ResourceManager...
-        toolWindowTabContainer = new ToolWindowTabPanel(descriptor, this);
         toolWindow.getToolWindowTabs()[0].setSelected(true);
-
-        // Buttons
-        toolWindowTitleButtonPanel = new ToolWindowTitleButtonPanel(descriptor, this);
-
-        // Set TitleBar content
-        titleBar.add(toolWindowTabContainer, "1,1");
-        titleBar.add(toolWindowTitleButtonPanel, "3,1,right,c");
 
         // Set Component container
         componentContainer = new JPanel();
@@ -189,10 +166,12 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         container.add(componentContainer, "0,1");
 
         focusRequester = SwingUtil.findFocusable(descriptor.getComponent());
+        ToolWindowTitleButtonPanel toolWindowTitleButtonPanel = titleBar.getToolWindowTitleButtonPanel();
         if (focusRequester == null) {
             toolWindowTitleButtonPanel.getFocusable().setFocusable(true);
             focusRequester = toolWindowTitleButtonPanel.getFocusable();
         }
+
         toolWindowTitleButtonPanel.setType(ToolWindowType.DOCKED);
     }
 
@@ -225,6 +204,8 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
     protected void assignFocus() {
         focusRequester = SwingUtil.findFocusable(descriptor.getComponent());
+        ToolWindowTitleButtonPanel toolWindowTitleButtonPanel = titleBar.getToolWindowTitleButtonPanel();
+
         if (focusRequester == null) {
             toolWindowTitleButtonPanel.getFocusable().setFocusable(true);
             focusRequester = toolWindowTitleButtonPanel.getFocusable();
@@ -232,26 +213,6 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
             toolWindowTitleButtonPanel.getFocusable().setFocusable(false);
         }
         SwingUtil.requestFocus(focusRequester);
-    }
-
-    protected void enableIdOnTitleBar() {
-        TableLayout layout = (TableLayout) titleBar.getLayout();
-        layout.setColumn(0,
-                         titleBar
-                                 .getFontMetrics(titleBar.getFont())
-                                 .stringWidth(
-                                         resourceManager.getUserString(toolWindow.getId())
-                                 )
-                         + 12);
-
-        SwingUtil.repaint(titleBar);
-    }
-
-    protected void disableIdOnTitleBar() {
-        TableLayout layout = (TableLayout) titleBar.getLayout();
-        layout.setColumn(0, 3);
-
-        SwingUtil.repaint(titleBar);
     }
 
 
@@ -694,7 +655,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
                             if (focusable != null)
                                 focusable.requestFocus();
                             else
-                                toolWindowTitleButtonPanel.getFocusable().requestFocus();
+                                titleBar.getToolWindowTitleButtonPanel().getFocusable().requestFocus();
                         }
                     });
                 }
@@ -739,7 +700,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
                     if (!(focusRequester instanceof ToolWindowTitleButton))
                         focusRequester = component;
                     else {
-                        if (focusRequester == toolWindowTitleButtonPanel.getFocusable())
+                        if (focusRequester == titleBar.getToolWindowTitleButtonPanel().getFocusable())
                             assignFocus();
                         else
                             focusRequester.requestFocusInWindow();
@@ -779,7 +740,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
             if (active && focusRequester != null && !valueAdjusting) {
 //                System.out.println("focusRequester = " + focusRequester);
-                if (focusRequester == toolWindowTitleButtonPanel.getFocusable())
+                if (focusRequester == titleBar.getToolWindowTitleButtonPanel().getFocusable())
                     assignFocus();
                 else
                     SwingUtil.requestFocus(focusRequester);
@@ -796,7 +757,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
                 return;
 
             if (evt.getNewValue() == ToolWindowType.DOCKED) {
-                toolWindowTitleButtonPanel.setType(ToolWindowType.DOCKED);
+                titleBar.getToolWindowTitleButtonPanel().setType(ToolWindowType.DOCKED);
             }
 
             if (evt.getOldValue() == ToolWindowType.EXTERN) {

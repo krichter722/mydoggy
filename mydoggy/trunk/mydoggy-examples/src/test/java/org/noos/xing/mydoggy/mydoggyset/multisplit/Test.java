@@ -1,6 +1,10 @@
 package org.noos.xing.mydoggy.mydoggyset.multisplit;
 
-import org.noos.xing.mydoggy.*;
+import org.jdesktop.swingx.plaf.nimbus.NimbusLookAndFeel;
+import org.noos.xing.mydoggy.DockedTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.mydoggyset.action.ExitAction;
 import org.noos.xing.mydoggy.mydoggyset.action.LoadWorkspaceAction;
 import org.noos.xing.mydoggy.mydoggyset.action.StoreWorkspaceAction;
@@ -65,9 +69,9 @@ public class Test {
 
         DockedTypeDescriptor dockedTypeDescriptor =
                 toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
-        dockedTypeDescriptor.setIdVisibleOnTitleBar(false);
+//        dockedTypeDescriptor.setIdVisibleOnTitleBar(false);
         dockedTypeDescriptor.setDockLength(400);
-        toolWindow.getTypeDescriptor(SlidingTypeDescriptor.class).setIdVisibleOnTitleBar(false);
+//        toolWindow.getTypeDescriptor(SlidingTypeDescriptor.class).setIdVisibleOnTitleBar(false);
 
         /* report */
         view = new JButton("H");
@@ -80,9 +84,9 @@ public class Test {
 
         dockedTypeDescriptor =
                 toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
-        dockedTypeDescriptor.setIdVisibleOnTitleBar(false);
+//        dockedTypeDescriptor.setIdVisibleOnTitleBar(false);
         dockedTypeDescriptor.setDockLength(400);
-        toolWindow.getTypeDescriptor(SlidingTypeDescriptor.class).setIdVisibleOnTitleBar(false);
+//        toolWindow.getTypeDescriptor(SlidingTypeDescriptor.class).setIdVisibleOnTitleBar(false);
 
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
@@ -119,7 +123,13 @@ public class Test {
     }
 
     public static void main(String[] args) throws IOException {
-        Test test = new Test();
+        try {
+            UIManager.setLookAndFeel(new NimbusLookAndFeel());
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+       Test test = new Test();
         try {
             test.run();
         } catch (Exception e) {

@@ -88,8 +88,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
                         )
                 );
             }
-        } else if ("idVisibleOnTitleBar".equals(propertyName)) {
-            setIdOnTitleBar();
         } else if ("autoHide".equals(propertyName)) {
             getToolWindowContainer().propertyChange(evt);
         } else if ("hideRepresentativeButtonOnVisible".equals(propertyName)) {
@@ -326,15 +324,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         throw new IllegalStateException("ToolWindowDescriptor.isIdVisibleOnTitleBar");
     }
 
-    public void setIdOnTitleBar() {
-        if (dockedContainer != null) {
-            if (isIdVisibleOnTitleBar())
-                dockedContainer.enableIdOnTitleBar();
-            else
-                dockedContainer.disableIdOnTitleBar();
-        }
-    }
-
     public void updateUI() {
         getToolWindowContainer().updateUI();
 
@@ -424,6 +413,19 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
             toolWindow.setVisible(false);
     }
 
+    public void addTypeDescriptorChangePropertyListener(PropertyChangeListener listener) {
+        floatingTypeDescriptor.addPropertyChangeListener(listener);
+        floatingLiveTypeDescriptor.addPropertyChangeListener(listener);
+        dockedTypeDescriptor.addPropertyChangeListener(listener);
+        slidingTypeDescriptor.addPropertyChangeListener(listener);
+    }
+
+    public void removeTypeDescriptorChangePropertyListener(PropertyChangeListener listener) {
+        floatingTypeDescriptor.removePropertyChangeListener(listener);
+        floatingLiveTypeDescriptor.removePropertyChangeListener(listener);
+        dockedTypeDescriptor.removePropertyChangeListener(listener);
+        slidingTypeDescriptor.removePropertyChangeListener(listener);
+    }
 
 
     private static Map<ToolWindow, FloatingLivePanel> livePanelMap = new HashMap<ToolWindow, FloatingLivePanel>();
@@ -438,12 +440,9 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         return panel;
     }
 
-
     public FloatingLivePanel getFloatingLivePanel() {
         return getFloatingLivePanel(toolWindow);
     }
-
-
 
 
     protected void initListeners() {
@@ -463,6 +462,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         slidingTypeDescriptor = (SlidingTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.SLIDING)).cloneMe(this);
         slidingTypeDescriptor.addPropertyChangeListener(this);
     }
+
 
 
 

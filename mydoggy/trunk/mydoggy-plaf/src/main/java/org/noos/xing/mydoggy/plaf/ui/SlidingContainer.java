@@ -67,7 +67,6 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         slidingAnimation.stop();
 
         if (visible) {
-            descriptor.setIdOnTitleBar();
             titleBarButtons.setType(ToolWindowType.SLIDING);
 
             // Reset Layout
