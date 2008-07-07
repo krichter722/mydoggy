@@ -67,8 +67,6 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         slidingAnimation.stop();
 
         if (visible) {
-            titleBarButtons.setType(ToolWindowType.SLIDING);
-
             // Reset Layout
             TableLayout layout = (TableLayout) sheet.getLayout();
             layout.setColumn(0, 0);
@@ -193,8 +191,6 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
     protected void update() {
         // Reset Layout
-        titleBarButtons.setType(ToolWindowType.SLIDING);
-
         TableLayout layout = (TableLayout) sheet.getLayout();
         layout.setColumn(0, 0);
         layout.setColumn(2, 0);

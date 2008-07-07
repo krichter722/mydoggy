@@ -57,8 +57,6 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         Component content = dockedContainer.getContentContainer();
 
         if (visible) {
-            dockedContainer.getToolWindowTitleButtonPanel().setType(ToolWindowType.FLOATING_LIVE);
-
             // retrieve common panel
             floatingLivePanel = descriptor.getFloatingLivePanel(toolWindow);
 

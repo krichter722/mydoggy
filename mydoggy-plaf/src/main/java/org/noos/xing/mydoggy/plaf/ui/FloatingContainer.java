@@ -79,9 +79,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         content.setFocusCycleRoot(!visible);
 
         if (visible) {
-            // Setup toolwindow title bar components
-            titleBarButtons.setType(ToolWindowType.FLOATING);
-
             // Add content to window
             window.getContentPane().removeAll();
             window.getContentPane().add(content, "1,1,FULL,FULL");

@@ -26,7 +26,8 @@ import java.beans.PropertyChangeSupport;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanelUI implements Cleaner {
+public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanelUI implements Cleaner,
+                                                                                              PropertyChangeListener {
 
 
     public static ComponentUI createUI(JComponent c) {
@@ -57,14 +58,30 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
     }
 
 
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("type".equals(evt.getPropertyName())) {
+            if (!evt.getNewValue().equals(ToolWindowType.EXTERN))
+                setType((ToolWindowType) evt.getNewValue());
+        }
+    }
+
     @Override
     protected void installDefaults(JPanel p) {
         this.toolWindowTitleButtonPanel = (ToolWindowTitleButtonPanel) p;
 
         super.installDefaults(p);
 
-        initComponents();
-        initListeners();
+        installComponents();
+        installListeners();
+
+        setType(ToolWindowType.DOCKED);
+    }
+
+    @Override
+    public void uninstallUI(JComponent c) {
+        super.uninstallUI(c);
+
+        unistallListeners();
     }
 
     public void cleanup() {
@@ -83,7 +100,7 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
     }
 
 
-    protected void initComponents() {
+    protected void installComponents() {
         toolWindowTitleButtonPanel.setLayout(containerLayout = new ExtendedTableLayout(new double[][]{{0, 0}, {1, 14, 1}}, false));
         toolWindowTitleButtonPanel.setOpaque(false);
 
@@ -92,13 +109,17 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
         addTitleBarAction(new PinAction());
         addTitleBarAction(new MaximizeAction());
         focusable = addTitleBarAction(new HideAction());
+
+        toolWindow.addPropertyChangeListener(this);
     }
 
-    protected void initListeners() {
+    protected void installListeners() {
         descriptor.getCleaner().addCleaner(this);
-
     }
 
+    protected void unistallListeners() {
+        toolWindow.removePropertyChangeListener(this);
+    }
 
     protected Component addTitleBarAction(TitleBarAction titleBarAction) {
         return addTitleBarAction(-1, titleBarAction);
