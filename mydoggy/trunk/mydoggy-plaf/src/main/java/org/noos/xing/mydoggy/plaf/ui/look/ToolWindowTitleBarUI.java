@@ -103,8 +103,6 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner, PropertyCh
 
     @Override
     public void paint(Graphics g, JComponent c) {
-        System.out.println(g.getFont());
-
         Rectangle r = c.getBounds();
         r.x = r.y = 0;
 
