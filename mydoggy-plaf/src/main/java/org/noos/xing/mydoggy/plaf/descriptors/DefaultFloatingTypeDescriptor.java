@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf.descriptors;
 
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
@@ -181,6 +182,10 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
 
     public boolean isAnimating() {
         return animating;
+    }
+
+    public ToolWindowType getType() {
+        return ToolWindowType.FLOATING;
     }
 
     public void setAnimating(boolean animating) {

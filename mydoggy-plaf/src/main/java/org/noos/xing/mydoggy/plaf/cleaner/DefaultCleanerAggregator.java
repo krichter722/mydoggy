@@ -34,4 +34,17 @@ public class DefaultCleanerAggregator implements CleanerAggregator {
             cleaners.add(index, cleaner);
     }
 
+    public void addAfter(Cleaner afterCleaner, Cleaner cleaner) {
+        if (cleaners == null)
+            addCleaner(cleaner);
+        int index = cleaners.indexOf(afterCleaner);
+
+        if (index == -1)
+            cleaners.add(cleaner);
+        else if  (index + 1 >= cleaners.size())
+            cleaners.add(cleaner);
+        else
+            cleaners.add(index + 1, cleaner);
+    }
+
 }

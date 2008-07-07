@@ -462,12 +462,10 @@ public class MyDoggySet {
     public static class CustomToolWindowTitleBarUI extends ToolWindowTitleBarUI {
 
         public static ComponentUI createUI(JComponent c) {
-            return new CustomToolWindowTitleBarUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class));
+            return new CustomToolWindowTitleBarUI();
         }
 
-
-        public CustomToolWindowTitleBarUI(ToolWindowDescriptor descriptor) {
-            super(descriptor);
+        public CustomToolWindowTitleBarUI() {
         }
 
         protected void updateToolWindowTitleBar(Graphics g, JComponent c, Color backgroundStart, Color backgroundEnd, Color idBackgroundColor, Color idColor) {

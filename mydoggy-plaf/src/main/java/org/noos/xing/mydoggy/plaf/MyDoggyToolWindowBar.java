@@ -783,9 +783,6 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 }
             }
 
-            if (visible)
-                descriptor.setIdOnTitleBar();
-
             Component content = (visible) ? descriptor.getComponent() : null;
             if (content != null) {
                 DockedContainer container = (DockedContainer) descriptor.getToolWindowContainer();

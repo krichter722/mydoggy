@@ -57,7 +57,6 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         Component content = dockedContainer.getContentContainer();
 
         if (visible) {
-            descriptor.setIdOnTitleBar();
             dockedContainer.getToolWindowTitleButtonPanel().setType(ToolWindowType.FLOATING_LIVE);
 
             // retrieve common panel
@@ -184,7 +183,6 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                 assert "type".equals(evt.getPropertyName());
                 if (evt.getNewValue() == ToolWindowType.FLOATING_LIVE) {
                     if (descriptor.getManager().getLayeredPane() != null) {
-                        descriptor.setIdOnTitleBar();
 
                         // Remove listeners
                         toolWindowTabContainer.removeEventDispatcherlListener(moveMouseInputHandler);
@@ -202,9 +200,6 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                     }
                 } else if (evt.getOldValue() == ToolWindowType.FLOATING_LIVE) {
                     if (descriptor.getManager().getLayeredPane() != null) {
-                        if (!descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar())
-                            dockedContainer.disableIdOnTitleBar();
-
                         if (settedListener)
                             lastBounds = descriptor.getFloatingLivePanel(toolWindow).getBounds();
 

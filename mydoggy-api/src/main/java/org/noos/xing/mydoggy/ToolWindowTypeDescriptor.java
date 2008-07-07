@@ -14,6 +14,13 @@ package org.noos.xing.mydoggy;
 public interface ToolWindowTypeDescriptor extends Observable {
 
     /**
+     * TODO
+     * @return
+     * @since 1.5.0
+     */
+    ToolWindowType getType();
+
+    /**
      * Enables or disables animations, depending on the value of the
      * parameter <code>animating</code>.
      *
