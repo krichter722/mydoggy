@@ -25,7 +25,7 @@ public class DockablePanel extends JPanel {
         this.dockable = dockable;
 
         setFocusable(false);
-        setFocusCycleRoot(true);
+//        setFocusCycleRoot(true);
 
         setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         add(component, "0,0,FULL,FULL");

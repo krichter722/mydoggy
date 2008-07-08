@@ -130,17 +130,17 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         container.setName("toolWindow.container." + toolWindow.getId());
         container.setFocusTraversalPolicyProvider(true);
         container.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
-        container.setFocusCycleRoot(true);
-        container.setFocusable(true);
+//        container.setFocusCycleRoot(true);
+        container.setFocusable(false);
         container.putClientProperty(ToolWindow.class, toolWindow);
 
         // Title Bar
         titleBar = new ToolWindowTitleBar(descriptor, this);
         titleBar.setName("toolWindow.titleBar." + toolWindow.getId());
         titleBar.setEnabled(false);
-        titleBar.setFocusTraversalPolicyProvider(true);
-        titleBar.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
-        titleBar.setFocusCycleRoot(true);
+//        titleBar.setFocusTraversalPolicyProvider(true);
+//        titleBar.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
+//        titleBar.setFocusCycleRoot(true);
         titleBar.setFocusable(false);
 
         toolWindow.getToolWindowTabs()[0].setSelected(true);
@@ -150,6 +150,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         componentContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         componentContainer.setOpaque(false);
         componentContainer.add(descriptor.getComponent(), "0,0,FULL,FULL");
+        componentContainer.setFocusable(false);
 
         // Set Container content
         container.add(titleBar, "0,0");
@@ -287,7 +288,7 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
             valueAdjusting = true;
 
-//            System.out.println(toolWindow.getId() + " - cmp = " + component);
+            System.out.println(toolWindow.getId() + " - cmp = " + component);
 
             if (parentOf.getAnswer(component)) {
                 toolWindow.setActive(true);
