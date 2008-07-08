@@ -415,7 +415,10 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         if (type == ToolWindowType.EXTERN)
             return;
 
+        boolean old = isAutoHide();
         getTypeDescriptor(type).setAutoHide(autoHide);
+
+        firePropertyChangeEvent("autoHide", old, autoHide);
     }
 
     public void setLockedOnAnchor(boolean lockedOnAnchor) {

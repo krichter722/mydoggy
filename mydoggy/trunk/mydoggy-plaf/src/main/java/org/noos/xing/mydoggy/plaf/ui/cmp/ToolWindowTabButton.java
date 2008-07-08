@@ -1,10 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.ToolWindowTab;
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
-import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTabButtonUI;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTabPanelUI;
 
@@ -21,31 +18,28 @@ public class ToolWindowTabButton extends JPanel implements Cleaner {
     private static final String uiClassID = "ToolWindowTabButtonUI";
 
 
-    public ToolWindowTabButton(MyDoggyToolWindowManager manager,
-                               MyDoggyToolWindowTab tab,
-                               ToolWindowTabPanel toolWindowTabPanel,
-                               DockedContainer dockedContainer) {
-        putClientProperty(MyDoggyToolWindowManager.class, manager);
-        putClientProperty(MyDoggyToolWindowTab.class, tab);
-        putClientProperty(ToolWindowTabPanel.class, toolWindowTabPanel);
-        putClientProperty(DockedContainer.class, dockedContainer);
+    protected ToolWindowTab toolWindowTab;
+    protected ToolWindowTabPanel toolWindowTabPanel;
 
-        tab.getCleaner().addCleaner(this);
+
+    public ToolWindowTabButton(ToolWindowTab tab, ToolWindowTabPanel toolWindowTabPanel) {
+        this.toolWindowTab = tab;
+        this.toolWindowTabPanel = toolWindowTabPanel;
+
+//        TODO : tab.getCleaner().addCleaner(this);
 
         updateUI();
     }
 
 
     public void cleanup() {
-        putClientProperty(MyDoggyToolWindowManager.class, null);
-        putClientProperty(MyDoggyToolWindowTab.class, null);
-        putClientProperty(ToolWindowTabPanel.class, null);
-        putClientProperty(DockedContainer.class, null);
+        this.toolWindowTab = null;
+        this.toolWindowTabPanel = null;
     }
 
 
     public void updateUI() {
-        if (getClientProperty(MyDoggyToolWindowManager.class) != null)
+        if (toolWindowTab != null)
             setUI((ToolWindowTabButtonUI) UIManager.getUI(this));
     }
 
@@ -59,11 +53,14 @@ public class ToolWindowTabButton extends JPanel implements Cleaner {
 
 
     public ToolWindowTab getToolWindowTab() {
-        return (ToolWindowTab) getClientProperty(MyDoggyToolWindowTab.class);
+        return toolWindowTab;
     }
 
     public void setUI(ToolWindowTabPanelUI ui) {
         super.setUI(ui);
     }
 
+    public ToolWindowTabPanel getToolWindowTabPanel() {
+        return toolWindowTabPanel;
+    }
 }

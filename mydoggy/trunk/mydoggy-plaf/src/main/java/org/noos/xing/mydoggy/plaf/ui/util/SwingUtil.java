@@ -16,10 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * @author Angelo De Caro
@@ -689,5 +686,27 @@ public class SwingUtil {
     public static Border getBorder(String key, Border border) {
         Border result = UIManager.getBorder(key);
         return (result != null) ? result : border;
+    }
+
+    public static ResourceBundle getResourceBundle() {
+        return (ResourceBundle) UIManager.get("mydoggy.resourceBundle"); 
+    }
+
+    public static String getString(String key) {
+        ResourceBundle resourceBundle = (ResourceBundle) UIManager.get("mydoggy.resourceBundle");
+        try {
+            return resourceBundle.getString(key);
+        } catch (Exception e) {
+            return key;
+        }
+    }
+
+    public static String getUserString(String key) {
+        ResourceBundle resourceBundle = (ResourceBundle) UIManager.get("mydoggy.resourceBundle.user");
+        try {
+            return resourceBundle.getString(key);
+        } catch (Exception e) {
+            return key;
+        }
     }
 }

@@ -17,15 +17,17 @@ public class ToolWindowTabTitle extends JLabel {
     private static final String uiClassID = "ToolWindowTabTitleUI";
 
 
+    protected ToolWindowTab toolWindowTab;
+
+
     public ToolWindowTabTitle(ToolWindowTab toolWindowTab) {
-        putClientProperty(ToolWindowTab.class, toolWindowTab);
+        this.toolWindowTab = toolWindowTab;
         updateUI();
     }
 
 
-
     public void updateUI() {
-        if (getClientProperty(ToolWindowTab.class) != null)
+        if (toolWindowTab != null)
             setUI((ToolWindowTabTitleUI) UIManager.getUI(this));
     }
 
@@ -33,9 +35,15 @@ public class ToolWindowTabTitle extends JLabel {
         super.setUI(ui);
     }
 
-    @Override
+    public ToolWindowTabTitleUI getUI() {
+        return (ToolWindowTabTitleUI) super.getUI();
+    }
+
     public String getUIClassID() {
         return uiClassID;
     }
 
+    public ToolWindowTab getToolWindowTab() {
+        return toolWindowTab;
+    }
 }

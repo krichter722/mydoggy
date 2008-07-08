@@ -558,13 +558,13 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
                 ContentUI contentUI = getContentAt(mouseOverTab).getContentUI();
                 Point point = e.getPoint();
                 if (isMinimizedFired(contentUI, point))
-                    currentToolTip = resourceManager.getString("@@tabbed.page.minimize");
+                    currentToolTip = SwingUtil.getString("@@tabbed.page.minimize");
                 else if (isMaximizeFired(contentUI, point))
-                    currentToolTip = resourceManager.getString("@@tabbed.page.maximize");
+                    currentToolTip = SwingUtil.getString("@@tabbed.page.maximize");
                 else if (isDetachFired(contentUI, point))
-                    currentToolTip = resourceManager.getString("@@tabbed.page.detach");
+                    currentToolTip = SwingUtil.getString("@@tabbed.page.detach");
                 else if (isCloseFired(contentUI, point))
-                    currentToolTip = resourceManager.getString("@@tabbed.page.close");
+                    currentToolTip = SwingUtil.getString("@@tabbed.page.close");
                 else
                     currentToolTip = null;
             }
@@ -621,13 +621,13 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             if (popupMenu == null) {
                 // Init stdPopupMenu
                 stdPopupMenu = new JPopupMenu("Content Page Popup");
-                stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.close")) {
+                stdPopupMenu.add(new JMenuItem(new AbstractAction(SwingUtil.getString("@@tabbed.page.close")) {
                     public void actionPerformed(ActionEvent e) {
                         JTabbedContentPane.this.fireCloseTabEvent(contentAt);
                     }
                 })).setEnabled(contentAt.getContentUI().isCloseable());
 
-                stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.closeAll")) {
+                stdPopupMenu.add(new JMenuItem(new AbstractAction(SwingUtil.getString("@@tabbed.page.closeAll")) {
                     public void actionPerformed(ActionEvent e) {
                         for (Content content : toolWindowManager.getContentManager().getContents()) {
                             if (content.getContentUI().isCloseable())
@@ -636,7 +636,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
                     }
                 }));
 
-                stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.closeAllButThis")) {
+                stdPopupMenu.add(new JMenuItem(new AbstractAction(SwingUtil.getString("@@tabbed.page.closeAllButThis")) {
                     public void actionPerformed(ActionEvent e) {
                         for (Content content : toolWindowManager.getContentManager().getContents()) {
                             if (content != contentAt && content.getContentUI().isCloseable())
@@ -645,7 +645,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
                     }
                 }));
                 stdPopupMenu.addSeparator();
-                stdPopupMenu.add(new JMenuItem(new AbstractAction(resourceManager.getString("@@tabbed.page.detach")) {
+                stdPopupMenu.add(new JMenuItem(new AbstractAction(SwingUtil.getString("@@tabbed.page.detach")) {
                     public void actionPerformed(ActionEvent e) {
                         JTabbedContentPane.this.fireDetachTabEvent(contentAt);
                     }
@@ -655,8 +655,8 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
                 stdPopupMenu.add(maximizeAction).setEnabled(contentAt.getContentUI().isMaximizable());
                 boolean restore = contentAt.isMaximized() || isAContentMaximized();
                 maximizeAction.putValue(Action.NAME, restore ?
-                                                     resourceManager.getString("@@tabbed.page.restore") :
-                                                     resourceManager.getString("@@tabbed.page.maximize")
+                                                     SwingUtil.getString("@@tabbed.page.restore") :
+                                                     SwingUtil.getString("@@tabbed.page.maximize")
                 );
 
                 if (!restore && contentAt.getContentUI().isMinimizable()) {
@@ -683,7 +683,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             Content content;
 
             public MaximizeAction(Content content) {
-                super(resourceManager.getString("@@tabbed.page.maximize"));
+                super(SwingUtil.getString("@@tabbed.page.maximize"));
                 this.content = content;
             }
 
@@ -696,7 +696,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             Content content;
 
             public MinimizeAction(Content content) {
-                super(resourceManager.getString("@@tabbed.page.minimize"));
+                super(SwingUtil.getString("@@tabbed.page.minimize"));
                 this.content = content;
             }
 

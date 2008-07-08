@@ -18,24 +18,24 @@ public class ToolWindowTitleButtonPanel extends JPanel implements Cleaner {
      */
     private static final String uiClassID = "ToolWindowTitleButtonPanelUI";
 
+    
+    protected ToolWindowDescriptor toolWindowDescriptor;
 
-    public ToolWindowTitleButtonPanel(ToolWindowDescriptor descriptor, ToolWindowContainer dockedContainer) {
-        putClientProperty(ToolWindowDescriptor.class, descriptor);
-        putClientProperty(ToolWindowContainer.class, dockedContainer);
 
-        descriptor.getCleaner().addCleaner(this);
-        
+    public ToolWindowTitleButtonPanel(ToolWindowDescriptor toolWindowDescriptor, ToolWindowContainer dockedContainer) {
+        this.toolWindowDescriptor = toolWindowDescriptor;
+
+        toolWindowDescriptor.getCleaner().addCleaner(this);
         updateUI();
     }
 
 
     public void cleanup() {
-        putClientProperty(ToolWindowDescriptor.class, null);
-        putClientProperty(ToolWindowContainer.class, null);
+        toolWindowDescriptor = null;
     }
 
     public void updateUI() {
-        if (getClientProperty(ToolWindowDescriptor.class) != null)
+        if (toolWindowDescriptor != null)
             setUI((ToolWindowTitleButtonPanelUI) UIManager.getUI(this));
     }
 
@@ -56,4 +56,7 @@ public class ToolWindowTitleButtonPanel extends JPanel implements Cleaner {
         return getUI().getFocusable();
     }
 
+    public ToolWindowDescriptor getToolWindowDescriptor() {
+        return toolWindowDescriptor;
+    }
 }

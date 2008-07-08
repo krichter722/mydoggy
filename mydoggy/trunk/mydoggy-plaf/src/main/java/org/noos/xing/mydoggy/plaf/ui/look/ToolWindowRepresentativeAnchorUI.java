@@ -11,6 +11,7 @@ import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowRepresentativeAnchor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.drag.RepresentativeAnchorDragGesture;
@@ -39,11 +40,11 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
 
     public static ComponentUI createUI(JComponent c) {
-        return new ToolWindowRepresentativeAnchorUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class));
+        return new ToolWindowRepresentativeAnchorUI();
     }
 
 
-    protected JComponent label;
+    protected ToolWindowRepresentativeAnchor representativeAnchor;
 
     protected LineBorder labelBorder;
 
@@ -63,25 +64,15 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     protected TranslucentPanel previewPanel;
 
 
-    public ToolWindowRepresentativeAnchorUI(ToolWindowDescriptor descriptor) {
-        this.descriptor = descriptor;
-        this.toolWindow = descriptor.getToolWindow();
-
-        this.flashingAnimation = new GradientAnimation();
-        this.flasingDuration = -1;
-        this.flashingAnimBackStart = new MutableColor(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
-        this.flashingAnimBackEnd = new MutableColor(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
-
-        this.dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-        this.dockedTypeDescriptor.addPropertyChangeListener(this);
-
-        descriptor.getCleaner().addCleaner(this);
+    public ToolWindowRepresentativeAnchorUI() {
     }
 
 
     public void installUI(JComponent c) {
+        // Init fields
+        this.representativeAnchor = (ToolWindowRepresentativeAnchor) c;
+
         super.installUI(c);
-        this.label = c;
     }
 
     public void uninstallUI(JComponent c) {
@@ -153,40 +144,40 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
         if ("visible".equals(propertyName)) {
             boolean visible = (Boolean) e.getNewValue();
-            label.setOpaque(visible);
+            representativeAnchor.setOpaque(visible);
             if (visible) {
                 labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
 
-                descriptor.getToolBar().ensureVisible(label);
+                descriptor.getToolBar().ensureVisible(representativeAnchor);
                 toolWindow.setFlashing(false);
             } else
                 labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER));
 
-            SwingUtil.repaint(label);
+            SwingUtil.repaint(representativeAnchor);
         } else if ("flash".equals(propertyName)) {
             if (e.getNewValue() == Boolean.TRUE) {
                 if (!toolWindow.isVisible()) {
                     flasingDuration = -1;
-                    SwingUtil.repaint(label);
+                    SwingUtil.repaint(representativeAnchor);
                 }
             } else {
                 if (flashingTimer != null) {
                     flashingTimer.stop();
                     flashingTimer = null;
-                    SwingUtil.repaint(label);
+                    SwingUtil.repaint(representativeAnchor);
                 }
             }
         } else if ("flash.duration".equals(propertyName)) {
             if (e.getNewValue() == Boolean.TRUE) {
                 if (!toolWindow.isVisible()) {
                     flasingDuration = (Integer) e.getNewValue();
-                    SwingUtil.repaint(label);
+                    SwingUtil.repaint(representativeAnchor);
                 }
             } else {
                 if (flashingTimer != null) {
                     flashingTimer.stop();
                     flashingTimer = null;
-                    SwingUtil.repaint(label);
+                    SwingUtil.repaint(representativeAnchor);
                 }
             }
         }
@@ -209,6 +200,21 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
 
     protected void installDefaults(JLabel c) {
+        // init fields
+        this.descriptor = representativeAnchor.getToolWindowDescriptor();
+        this.toolWindow = descriptor.getToolWindow();
+
+        this.flashingAnimation = new GradientAnimation();
+        this.flasingDuration = -1;
+        this.flashingAnimBackStart = new MutableColor(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+        this.flashingAnimBackEnd = new MutableColor(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+
+        this.dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+        this.dockedTypeDescriptor.addPropertyChangeListener(this);
+
+        descriptor.getCleaner().addCleaner(this);
+
+
         labelBorder = new LineBorder(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER), 1, true, 3, 3);
 
         c.setBorder(labelBorder);
@@ -315,7 +321,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                                                       animationPercent);
                     break;
             }
-            SwingUtil.repaint(label);
+            SwingUtil.repaint(representativeAnchor);
             return animationPercent;
         }
 
@@ -328,7 +334,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                     flashingAnimBackStart.setRGB(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START));
                     break;
             }
-            SwingUtil.repaint(label);
+            SwingUtil.repaint(representativeAnchor);
         }
 
         protected void onHide(Object... params) {
@@ -401,14 +407,14 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                 }
             } else if (SwingUtilities.isRightMouseButton(e)) {
                 if (((DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED)).isPopupMenuEnabled()) {
-                    descriptor.getToolWindowContainer().showPopupMenu(e.getComponent(), e.getX(), e.getY());
+                    descriptor.showPopupMenu(e.getComponent(), e.getX(), e.getY());
                 }
             }
 
 //            if (label.getBorder() != labelBorder)
-            label.setBorder(labelBorder);
+            representativeAnchor.setBorder(labelBorder);
             labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
-            SwingUtil.repaint(label);
+            SwingUtil.repaint(representativeAnchor);
         }
 
         public void mouseEntered(MouseEvent e) {
@@ -438,8 +444,8 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
             if (!toolWindow.isAvailable())
                 return;
 
-            if (e.getX() >= label.getWidth() || e.getX() <= 0 ||
-                e.getY() >= label.getHeight() || e.getY() <= 0)
+            if (e.getX() >= representativeAnchor.getWidth() || e.getX() <= 0 ||
+                e.getY() >= representativeAnchor.getHeight() || e.getY() <= 0)
                 firstPreview = false;
 
             previewTimer.stop();
@@ -464,7 +470,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
             if (e.getSource() == previewTimer) {
                 if ("stop".equals(e.getActionCommand())) {
                     if (previewPanel != null && !firstPreview) {
-                        Window windowAncestor = SwingUtilities.getWindowAncestor(label);
+                        Window windowAncestor = SwingUtilities.getWindowAncestor(representativeAnchor);
 
                         if (windowAncestor != null) {
                             GlassPanel glassPane = descriptor.getManager().getGlassPanel();
@@ -483,7 +489,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                     Container contentContainer = ((DockedContainer) descriptor.getToolWindowContainer()).getContentContainer();
 
                     // Show Preview
-                    RootPaneContainer rootPaneContainer = (RootPaneContainer) SwingUtilities.getWindowAncestor(label);
+                    RootPaneContainer rootPaneContainer = (RootPaneContainer) SwingUtilities.getWindowAncestor(representativeAnchor);
                     if (rootPaneContainer != null) {
                         firstPreview = true;
                         previewTimer.stop();
@@ -539,29 +545,29 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                 case LEFT:
                     previewPanel.setLocation(
                             containerRect.x +
-                            label.getX() + label.getWidth() + 3,
+                            representativeAnchor.getX() + representativeAnchor.getWidth() + 3,
 
                             (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                             containerRect.y +
-                            label.getY() +
+                            representativeAnchor.getY() +
                             (descriptor.getToolBar(TOP).getSize())
                     );
                     break;
                 case TOP:
                     previewPanel.setLocation(
                             containerRect.x +
-                            label.getX() +
+                            representativeAnchor.getX() +
                             (descriptor.getToolBar(LEFT).getSize()),
 
                             (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                             containerRect.y +
-                            label.getY() + label.getHeight() + 3
+                            representativeAnchor.getY() + representativeAnchor.getHeight() + 3
                     );
                     break;
                 case BOTTOM:
                     previewPanel.setLocation(
                             containerRect.x +
-                            label.getX() +
+                            representativeAnchor.getX() +
                             (descriptor.getToolBar(LEFT).getSize()),
 
                             (jMenuBar != null ? jMenuBar.getHeight() : 0) +
@@ -578,7 +584,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
                             (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                             containerRect.y +
-                            label.getY() +
+                            representativeAnchor.getY() +
                             (descriptor.getToolBar(TOP).getSize())
                     );
                     break;

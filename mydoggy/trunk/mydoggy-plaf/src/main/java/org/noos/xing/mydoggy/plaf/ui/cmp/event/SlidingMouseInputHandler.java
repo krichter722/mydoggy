@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp.event;
 
 import org.noos.xing.mydoggy.ToolWindow;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
+import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
@@ -245,6 +246,9 @@ public class SlidingMouseInputHandler extends ComponentAdapter implements MouseI
 
     @Override
     public void componentResized(ComponentEvent e) {
+        if (descriptor.getToolWindow().getType() != ToolWindowType.SLIDING)
+                return;
+        
         // TODO: check for conflicts...
         switch (descriptor.getAnchor()) {
             case LEFT:

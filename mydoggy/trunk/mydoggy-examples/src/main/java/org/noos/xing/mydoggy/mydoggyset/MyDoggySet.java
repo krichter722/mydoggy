@@ -17,7 +17,10 @@ import org.noos.xing.mydoggy.mydoggyset.ui.LookAndFeelMenuItem;
 import org.noos.xing.mydoggy.mydoggyset.ui.MonitorPanel;
 import org.noos.xing.mydoggy.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.*;
+import org.noos.xing.mydoggy.plaf.ui.CustomDockableDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
@@ -482,7 +485,7 @@ public class MyDoggySet {
                 toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
                 toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
 
-                String id = resourceManager.getUserString(descriptor.getToolWindow().getId());
+                String id = SwingUtil.getUserString(descriptor.getToolWindow().getId());
                 r.width = g.getFontMetrics().stringWidth(id) + 8;
 
                 int halfHeigh = (r.height / 2);
@@ -516,11 +519,10 @@ public class MyDoggySet {
     public static class CustomToolWindowRepresentativeAnchorUI extends ToolWindowRepresentativeAnchorUI {
 
         public static ComponentUI createUI(JComponent c) {
-            return new CustomToolWindowRepresentativeAnchorUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class));
+            return new CustomToolWindowRepresentativeAnchorUI();
         }
 
-        public CustomToolWindowRepresentativeAnchorUI(ToolWindowDescriptor descriptor) {
-            super(descriptor);
+        public CustomToolWindowRepresentativeAnchorUI() {
         }
 
         @Override

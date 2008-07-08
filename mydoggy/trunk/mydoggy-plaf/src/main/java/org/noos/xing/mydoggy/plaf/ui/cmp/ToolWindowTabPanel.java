@@ -23,8 +23,11 @@ public class ToolWindowTabPanel extends JPanel implements Cleaner, DragGestureIn
     private static final String uiClassID = "ToolWindowTabPanelUI";
 
 
+    protected ToolWindowDescriptor toolWindowDescriptor;
+
+
     public ToolWindowTabPanel(ToolWindowDescriptor descriptor, DockedContainer dockedContainer) {
-        putClientProperty(ToolWindowDescriptor.class, descriptor);
+        this.toolWindowDescriptor = descriptor;
         putClientProperty(DockedContainer.class, dockedContainer);
         descriptor.getCleaner().addCleaner(this);
         updateUI();
@@ -32,11 +35,11 @@ public class ToolWindowTabPanel extends JPanel implements Cleaner, DragGestureIn
 
 
     public void cleanup() {
-        putClientProperty(ToolWindowDescriptor.class, null);
+        toolWindowDescriptor = null;
     }
 
     public void updateUI() {
-        if (getClientProperty(ToolWindowDescriptor.class) != null)
+        if (toolWindowDescriptor != null)
             setUI((ToolWindowTabPanelUI) UIManager.getUI(this));
     }
 
@@ -52,6 +55,10 @@ public class ToolWindowTabPanel extends JPanel implements Cleaner, DragGestureIn
         return uiClassID;
     }
 
+
+    public ToolWindowDescriptor getToolWindowDescriptor() {
+        return toolWindowDescriptor;
+    }
 
     public void setDragGesture(DragGesture dragGesture) {
         getUI().setDragGesture(dragGesture);

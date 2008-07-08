@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
@@ -37,7 +38,7 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
 
     public DefaultDockedTypeDescriptor(ResourceManager resourceManager) {
         this.resourceManager = resourceManager;
-        this.toolsMenu = new JMenu(resourceManager.getString("@@tool.toolsMenu"));
+        this.toolsMenu = new JMenu(SwingUtil.getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = true;
         this.dockLength = 200;
         this.toolWindowActionHandler = null;
@@ -63,7 +64,7 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
                                        int minimumDockLength,
                                        ToolWindowAnchor[] lockingAnchors) {
         this.resourceManager = resourceManager;
-        this.toolsMenu = new JMenu(resourceManager.getString("@@tool.toolsMenu"));
+        this.toolsMenu = new JMenu(SwingUtil.getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = popupMenuEnabled;
         this.dockLength = dockLength;
         this.toolWindowActionHandler = toolWindowActionHandler;
