@@ -129,10 +129,12 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
 
-        // Release timers
+        // Release timers and stop animations
         if (flashingTimer != null)
             flashingTimer.stop();
         flashingTimer = null;
+
+        flashingAnimation.stop();
 
         // Reset Fields
         descriptor = null;

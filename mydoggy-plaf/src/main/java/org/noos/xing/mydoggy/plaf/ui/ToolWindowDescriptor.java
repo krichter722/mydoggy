@@ -532,6 +532,10 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         return panel;
     }
 
+    public void removeFloatingLivePanel() {
+        livePanelMap.remove(toolWindow);        
+    }
+
     public FloatingLivePanel getFloatingLivePanel() {
         return getFloatingLivePanel(toolWindow);
     }
@@ -797,6 +801,9 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
             // Clean listeners...
             toolWindow.cleanup();
+
+            // Remove floating live entry...
+            removeFloatingLivePanel();
 
             // Finalizy clean
             toolWindow = null;
