@@ -30,7 +30,7 @@ public class SwingUtil {
 
     // Repaint/revalidate support methods
 
-    public static void repaint(final Component component) {
+    public static void repaint(final Component component) {       
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 component.invalidate();
