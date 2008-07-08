@@ -92,6 +92,8 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
 
     protected void installDefaults(JPanel p) {
         super.installDefaults(p);
+        // todo: check this...
+        p.setFocusable(false);
 
         installComponents();
         installListeners();

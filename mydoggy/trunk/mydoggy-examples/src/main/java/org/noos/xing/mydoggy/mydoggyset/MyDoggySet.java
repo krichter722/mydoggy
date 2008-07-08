@@ -1,8 +1,10 @@
 package org.noos.xing.mydoggy.mydoggyset;
 
 import info.clearthought.layout.TableLayout;
+import info.clearthought.layout.TableLayoutConstants;
 import org.jdesktop.swingx.JXDatePicker;
 import org.jdesktop.swingx.JXMonthView;
+import org.jdesktop.swingx.JXTitledPanel;
 import org.noos.common.Question;
 import org.noos.common.context.Context;
 import org.noos.common.object.ObjectCreator;
@@ -36,6 +38,7 @@ import org.noos.xing.yasaf.view.ViewContext;
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -191,7 +194,7 @@ public class MyDoggySet {
         toolWindowManager.registerToolWindow("Tool 2", "Title 2", null, panel, ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 3", "Title 3",
                                              SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"),
-                                             new JButton("Hello World 3"), ToolWindowAnchor.LEFT);
+                                             new MainPanel(), ToolWindowAnchor.LEFT);
         toolWindowManager.registerToolWindow("Tool 4", "Title 4", null, new JButton("Hello World 4"), ToolWindowAnchor.TOP);
         toolWindowManager.registerToolWindow("Tool 5", "Title 5", null, new JButton("Hello World 5"), ToolWindowAnchor.TOP);
         toolWindowManager.registerToolWindow("Tool 6", "Title 6", null, new JButton("Hello World 6"), ToolWindowAnchor.BOTTOM);
@@ -848,5 +851,54 @@ public class MyDoggySet {
             }
         }
     }
+
+    @SuppressWarnings("serial")
+    public class MainPanel extends JPanel {
+
+        protected JXTitledPanel navigatorPanel = null;
+        protected JXTitledPanel infoPanel = null;
+
+
+        public MainPanel() {
+            super();
+            init();
+        }
+
+        /**
+         * Initialize the main panel
+         */
+        private void init() {
+            navigatorPanel = new JXTitledPanel("Navigation");
+            infoPanel = new JXTitledPanel("Information");
+
+
+        double size[][] = {{TableLayoutConstants.FILL}, // Columns
+                           {20, 20, 20, 20, TableLayoutConstants.FILL}}; // Rows
+        infoPanel.setLayout(new TableLayout(size));
+            infoPanel.add(new JTextField("textfield1"), "0,0");
+            infoPanel.add(new JTextField("textfield2"), "0,1");
+            infoPanel.add(new JTextField("textfield3"), "0,2");
+            infoPanel.add(new JTextField("textfield4"), "0,3");
+
+
+            JSplitPane mainSP = createSplitPane(200, JSplitPane.HORIZONTAL_SPLIT);
+            mainSP.setLeftComponent(navigatorPanel);
+            mainSP.setRightComponent(infoPanel);
+
+            this.setLayout(new BorderLayout());
+            this.add(infoPanel);
+        }
+
+        private JSplitPane createSplitPane(int dividerLocation, int orientation) {
+            JSplitPane splitPane = new JSplitPane(orientation);
+            splitPane.setDividerLocation(dividerLocation);
+            splitPane.setBorder(null);
+            ((BasicSplitPaneUI) splitPane.getUI()).getDivider().setBorder(BorderFactory.createEmptyBorder());
+            return splitPane;
+        }
+
+
+    }
+
 
 }

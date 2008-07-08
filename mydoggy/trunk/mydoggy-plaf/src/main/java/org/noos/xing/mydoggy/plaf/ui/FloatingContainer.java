@@ -76,7 +76,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         floatingAnimation.stop();
 
         Container content = dockedContainer.getContentContainer();
-        content.setFocusCycleRoot(!visible);
 
         if (visible) {
             // Add content to window

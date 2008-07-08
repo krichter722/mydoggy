@@ -753,9 +753,11 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         mainContainer.setName("toolWindowManager.mainContainer");
         mainContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         mainContainer.setFocusable(false);
-        mainContainer.setFocusCycleRoot(true);
-        mainContainer.setFocusTraversalPolicyProvider(true);
-        mainContainer.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
+
+        // TODO: 
+//        mainContainer.setFocusCycleRoot(true);
+//        mainContainer.setFocusTraversalPolicyProvider(true);
+//        mainContainer.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
 
         getBar(BOTTOM).getSplitPane().setTopComponent(getBar(TOP).getSplitPane());
         getBar(TOP).getSplitPane().setBottomComponent(getBar(LEFT).getSplitPane());
