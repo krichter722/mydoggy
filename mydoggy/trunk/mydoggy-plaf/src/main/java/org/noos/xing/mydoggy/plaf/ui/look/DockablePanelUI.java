@@ -23,8 +23,10 @@ import java.beans.PropertyChangeListener;
 public class DockablePanelUI extends BasicPanelUI implements PropertyChangeListener,
                                                              ActionListener,
                                                              DockableManagerListener {
+
     protected static Border FLASHING_BORDER = new LineBorder(Color.RED, 3);
-    
+
+
     public static ComponentUI createUI(JComponent c) {
         return new DockablePanelUI();
     }
@@ -46,17 +48,21 @@ public class DockablePanelUI extends BasicPanelUI implements PropertyChangeListe
 
 
     public void installUI(JComponent c) {
+        //  Init fields
         this.dockablePanel = (DockablePanel) c;
         this.dockable = dockablePanel.getDockable();
 
         super.installUI(c);
+
         installListeners();
     }
 
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
+
         uninstallListeners();
 
+        // Reset fields
         this.dockablePanel = null;
         this.dockable = null;
     }
@@ -69,6 +75,7 @@ public class DockablePanelUI extends BasicPanelUI implements PropertyChangeListe
                                          "DockablePanelUI.foreground",
                                          "DockablePanelUI.font");
         LookAndFeel.installBorder(p, "DockablePanelUI.border");
+        
         this.flashingBorder = SwingUtil.getBorder("DockablePanelUI.border.flashing", FLASHING_BORDER);
     }
 
@@ -149,13 +156,10 @@ public class DockablePanelUI extends BasicPanelUI implements PropertyChangeListe
 
     public void dockableRemoved(DockableManagerEvent event) {
         if (event.getDockable() == dockable) {
-            dockable.getDockableManager().removeDockableManagerListener(this);
-            dockable.removePropertyChangeListener(this);
-            dockable = null;
-
             if (flashingTimer != null)
                 flashingTimer.stop();
-            flashingTimer = null;
+
+            uninstallUI(dockablePanel);
         }
     }
 }

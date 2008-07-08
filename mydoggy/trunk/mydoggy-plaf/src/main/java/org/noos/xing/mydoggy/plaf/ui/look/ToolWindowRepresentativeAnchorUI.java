@@ -68,9 +68,60 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     }
 
 
+    public void propertyChange(PropertyChangeEvent e) {
+        String propertyName = e.getPropertyName();
+
+        if ("visible".equals(propertyName)) {
+            boolean visible = (Boolean) e.getNewValue();
+            representativeAnchor.setOpaque(visible);
+            if (visible) {
+                labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
+
+                descriptor.getToolBar().ensureVisible(representativeAnchor);
+                toolWindow.setFlashing(false);
+            } else
+                labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER));
+
+            SwingUtil.repaint(representativeAnchor);
+        } else if ("flash".equals(propertyName)) {
+            if (e.getNewValue() == Boolean.TRUE) {
+                if (!toolWindow.isVisible()) {
+                    flasingDuration = -1;
+                    SwingUtil.repaint(representativeAnchor);
+                }
+            } else {
+                if (flashingTimer != null) {
+                    flashingTimer.stop();
+                    flashingTimer = null;
+                    SwingUtil.repaint(representativeAnchor);
+                }
+            }
+        } else if ("flash.duration".equals(propertyName)) {
+            if (e.getNewValue() == Boolean.TRUE) {
+                if (!toolWindow.isVisible()) {
+                    flasingDuration = (Integer) e.getNewValue();
+                    SwingUtil.repaint(representativeAnchor);
+                }
+            } else {
+                if (flashingTimer != null) {
+                    flashingTimer.stop();
+                    flashingTimer = null;
+                    SwingUtil.repaint(representativeAnchor);
+                }
+            }
+        }
+    }
+
+    public void cleanup() {
+        uninstallUI(representativeAnchor);
+    }
+
+
     public void installUI(JComponent c) {
         // Init fields
         this.representativeAnchor = (ToolWindowRepresentativeAnchor) c;
+        this.descriptor = representativeAnchor.getToolWindowDescriptor();
+        this.toolWindow = descriptor.getToolWindow();
 
         super.installUI(c);
     }
@@ -78,8 +129,18 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
 
-        cleanup();
+        // Release timers
+        if (flashingTimer != null)
+            flashingTimer.stop();
+        flashingTimer = null;
+
+        // Reset Fields
+        descriptor = null;
+        toolWindow = null;
+        dockedTypeDescriptor = null;
+        representativeAnchor = null;
     }
+
 
     public void update(Graphics g, JComponent c) {
         if (toolWindow.isAvailable())
@@ -139,81 +200,15 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         paint(g, c);
     }
 
-    public void propertyChange(PropertyChangeEvent e) {
-        String propertyName = e.getPropertyName();
-
-        if ("visible".equals(propertyName)) {
-            boolean visible = (Boolean) e.getNewValue();
-            representativeAnchor.setOpaque(visible);
-            if (visible) {
-                labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
-
-                descriptor.getToolBar().ensureVisible(representativeAnchor);
-                toolWindow.setFlashing(false);
-            } else
-                labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER));
-
-            SwingUtil.repaint(representativeAnchor);
-        } else if ("flash".equals(propertyName)) {
-            if (e.getNewValue() == Boolean.TRUE) {
-                if (!toolWindow.isVisible()) {
-                    flasingDuration = -1;
-                    SwingUtil.repaint(representativeAnchor);
-                }
-            } else {
-                if (flashingTimer != null) {
-                    flashingTimer.stop();
-                    flashingTimer = null;
-                    SwingUtil.repaint(representativeAnchor);
-                }
-            }
-        } else if ("flash.duration".equals(propertyName)) {
-            if (e.getNewValue() == Boolean.TRUE) {
-                if (!toolWindow.isVisible()) {
-                    flasingDuration = (Integer) e.getNewValue();
-                    SwingUtil.repaint(representativeAnchor);
-                }
-            } else {
-                if (flashingTimer != null) {
-                    flashingTimer.stop();
-                    flashingTimer = null;
-                    SwingUtil.repaint(representativeAnchor);
-                }
-            }
-        }
-    }
-
-    public void cleanup() {
-        // Remove listeners
-        toolWindow.getTypeDescriptor(ToolWindowType.DOCKED).removePropertyChangeListener(this);
-        descriptor.getToolWindow().removePlafPropertyChangeListener(this);
-
-        // Release timers
-        if (flashingTimer != null)
-            flashingTimer.stop();
-        flashingTimer = null;
-
-        // Finalize
-        descriptor = null;
-        toolWindow = null;
-    }
-
 
     protected void installDefaults(JLabel c) {
-        // init fields
-        this.descriptor = representativeAnchor.getToolWindowDescriptor();
-        this.toolWindow = descriptor.getToolWindow();
-
+        super.installDefaults(c);
+        
+        // Flashing animation fields
         this.flashingAnimation = new GradientAnimation();
         this.flasingDuration = -1;
         this.flashingAnimBackStart = new MutableColor(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
         this.flashingAnimBackEnd = new MutableColor(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
-
-        this.dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-        this.dockedTypeDescriptor.addPropertyChangeListener(this);
-
-        descriptor.getCleaner().addCleaner(this);
-
 
         labelBorder = new LineBorder(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER), 1, true, 3, 3);
 
@@ -238,6 +233,11 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     protected void installListeners(JLabel c) {
         super.installListeners(c);
 
+        this.dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+        this.dockedTypeDescriptor.addPropertyChangeListener(this);
+
+        descriptor.getCleaner().addCleaner(this);
+
         adapter = new ToolWindowRepresentativeAnchorMouseAdapter();
         c.addMouseListener(adapter);
         c.addMouseMotionListener(adapter);
@@ -248,11 +248,16 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     }
 
     protected void uninstallListeners(JLabel c) {
+        super.uninstallListeners(c);
+
+        dockedTypeDescriptor.removePropertyChangeListener(this);
+
         c.removeMouseListener(adapter);
         c.removeMouseMotionListener(adapter);
         
         descriptor.getToolWindow().removePlafPropertyChangeListener(this);
     }
+
 
     protected void updateAnchor(Graphics g, JComponent c,
                                 Color backgroundStart, Color backgroundEnd,
