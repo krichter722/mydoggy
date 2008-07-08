@@ -22,6 +22,7 @@ import java.beans.PropertyChangeEvent;
 
 /**
  * @author Angelo De Caro
+ * TODO: introduce createUI method
  */
 public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Cleaner {
     protected JComponent label;

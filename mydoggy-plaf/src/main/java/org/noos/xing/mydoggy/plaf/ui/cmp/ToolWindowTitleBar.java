@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowContainer;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTitleBarUI;
 
@@ -19,16 +20,20 @@ public class ToolWindowTitleBar extends JPanel implements Cleaner {
     private static final String uiClassID = "ToolWindowTitleBarUI";
 
     protected ToolWindowDescriptor toolWindowDescriptor;
+    protected ToolWindowContainer toolWindowContainer;
     protected ToolWindowTabPanel toolWindowTabPanel;
     protected ToolWindowTitleButtonPanel toolWindowTitleButtonPanel;
 
 
-    public ToolWindowTitleBar(ToolWindowDescriptor toolWindowDescriptor, DockedContainer dockedContainer) {
+    public ToolWindowTitleBar(ToolWindowDescriptor toolWindowDescriptor,
+                              DockedContainer dockedContainer) {
         this.toolWindowDescriptor = toolWindowDescriptor;
+        this.toolWindowContainer = dockedContainer;
+
         this.toolWindowTabPanel = new ToolWindowTabPanel(toolWindowDescriptor, dockedContainer);
         this.toolWindowTitleButtonPanel = new ToolWindowTitleButtonPanel(toolWindowDescriptor, dockedContainer);
 
-        toolWindowDescriptor.getCleaner().addAfter(dockedContainer, this);
+        toolWindowDescriptor.getCleaner().addCleaner(this);
 
         updateUI();
     }
@@ -36,6 +41,7 @@ public class ToolWindowTitleBar extends JPanel implements Cleaner {
 
     public void cleanup() {
         this.toolWindowDescriptor = null;
+        this.toolWindowContainer = null;
         this.toolWindowTabPanel = null;
         this.toolWindowTitleButtonPanel = null;
     }
@@ -49,6 +55,11 @@ public class ToolWindowTitleBar extends JPanel implements Cleaner {
         super.setUI(ui);
     }
 
+    public ToolWindowTitleBarUI getUI() {
+        return (ToolWindowTitleBarUI) super.getUI();
+    }
+
+
     @Override
     public String getUIClassID() {
         return uiClassID;
@@ -59,6 +70,10 @@ public class ToolWindowTitleBar extends JPanel implements Cleaner {
         return toolWindowDescriptor;
     }
 
+    public ToolWindowContainer getToolWindowContainer() {
+        return toolWindowContainer;
+    }
+
     public ToolWindowTabPanel getToolWindowTabPanel() {
         return toolWindowTabPanel;
     }
@@ -66,4 +81,5 @@ public class ToolWindowTitleBar extends JPanel implements Cleaner {
     public ToolWindowTitleButtonPanel getToolWindowTitleButtonPanel() {
         return toolWindowTitleButtonPanel;
     }
+
 }

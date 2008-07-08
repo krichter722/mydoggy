@@ -7,23 +7,26 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.cleaner.CleanerAggregator;
 import org.noos.xing.mydoggy.plaf.cleaner.DefaultCleanerAggregator;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.cmp.AggregateIcon;
-import org.noos.xing.mydoggy.plaf.ui.cmp.FloatingLivePanel;
-import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowRepresentativeAnchor;
+import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolWindowDescriptor implements PropertyChangeListener, DockableDescriptor {
+public class ToolWindowDescriptor implements PropertyChangeListener,
+                                             DockableDescriptor {
+
     protected MyDoggyToolWindowManager manager;
     protected MyDoggyToolWindow toolWindow;
     protected CleanerAggregator cleaner;
@@ -48,6 +51,29 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
 
     boolean valueAdj = false;
 
+    // Popup menu fiedls
+    protected ToolWindowType oldType;
+
+    protected JPopupMenu popupMenu;
+    protected JMenuItem visible;
+    protected JMenuItem aggregate;
+    protected JMenu aggregateMenu;
+    protected JCheckBoxMenuItem floatingMode;
+    protected JCheckBoxMenuItem floatingLiveMode;
+    protected JCheckBoxMenuItem dockedMode;
+    protected JCheckBoxMenuItem pinnedMode;
+
+    protected JMenu old;
+
+    protected JMenuItem maximize;
+    protected JMenu moveTo;
+    protected JMenuItem right;
+    protected JMenuItem left;
+    protected JMenuItem top;
+    protected JMenuItem bottom;
+
+    protected ArrayList<PopupUpdater> popupUpdaterList;
+
 
     public ToolWindowDescriptor(MyDoggyToolWindowManager manager,
                                 MyDoggyToolWindow toolWindow) {
@@ -71,6 +97,20 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
                 setFloatingWindow(true);
             else if (evt.getOldValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING)
                 setFloatingWindow(false);
+
+            initPopupMenu();
+            ToolWindowType type = (ToolWindowType) evt.getNewValue();
+            dockedMode.setState(type == ToolWindowType.DOCKED);
+            dockedMode.setVisible(type != ToolWindowType.FLOATING);
+//                pinnedMode.setVisible(type != ToolWindowType.SLIDING);
+            floatingMode.setState(type == ToolWindowType.FLOATING);
+
+            if (evt.getSource() != this ||
+                (evt.getNewValue() != ToolWindowType.FLOATING &&
+                 evt.getNewValue() != ToolWindowType.FLOATING_FREE))
+                return;
+
+            oldType = (ToolWindowType) evt.getOldValue();
         } else if ("index".equals(propertyName)) {
             updateRepresentativeAnchor();
         } else if ("numberingEnabled".equals(propertyName)) {
@@ -90,9 +130,18 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
             }
         } else if ("autoHide".equals(propertyName)) {
             getToolWindowContainer().propertyChange(evt);
+
+            initPopupMenu();
+            pinnedMode.setState(!(Boolean) evt.getNewValue());
         } else if ("hideRepresentativeButtonOnVisible".equals(propertyName)) {
             if (toolWindow.isVisible())
                 toolWindow.setRepresentativeAnchorButtonVisible(!(Boolean) evt.getNewValue());
+        } else if ("UI".equals(evt.getPropertyName())) {
+            initPopupMenu();
+            SwingUtilities.updateComponentTreeUI(popupMenu);
+
+            DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+            SwingUtilities.updateComponentTreeUI(descriptor.getToolsMenu());
         }
     }
 
@@ -427,6 +476,49 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         slidingTypeDescriptor.removePropertyChangeListener(listener);
     }
 
+    public void showPopupMenu(Component source, int x, int y) {
+        initPopupMenu();
+
+        ToolWindowTitleBar toolWindowTitleBar = dockedContainer.titleBar;
+        if (source == toolWindowTitleBar ||
+            SwingUtil.hasParent(source, toolWindowTitleBar) ||
+            source instanceof ToolWindowRepresentativeAnchor) {
+
+            popupMenu.removeAll();
+            popupMenu.add(pinnedMode);
+            popupMenu.add(dockedMode);
+            popupMenu.add(floatingMode);
+            popupMenu.add(floatingLiveMode);
+            popupMenu.add(moveTo);
+            popupMenu.add(maximize);
+            popupMenu.addSeparator();
+            popupMenu.add(visible);
+            popupMenu.add(aggregate);
+            popupMenu.add(aggregateMenu);
+
+            enableVisible();
+            enableMoveToItem();
+            enableUserDefined();
+            enableMaximize();
+
+            if (popupUpdaterList != null) {
+                for (PopupUpdater popupUpdater : popupUpdaterList) {
+                    popupUpdater.update(source, popupMenu);
+                }
+            }
+
+            popupMenu.show(source, x, y);
+        }
+
+    }
+
+    public void addPopupUpdater(PopupUpdater popupUpdater) {
+        if (popupUpdaterList == null)
+            popupUpdaterList = new ArrayList<PopupUpdater>();
+
+        popupUpdaterList.add(popupUpdater);
+    }
+
 
     private static Map<ToolWindow, FloatingLivePanel> livePanelMap = new HashMap<ToolWindow, FloatingLivePanel>();
 
@@ -463,7 +555,227 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         slidingTypeDescriptor.addPropertyChangeListener(this);
     }
 
+    protected void initPopupMenu() {
+        if (popupMenu != null)
+            return;
 
+        popupMenu = new JPopupMenu("ToolWindowBarPopupMenu");
+        popupMenu.setLightWeightPopupEnabled(false);
+
+        ActionListener actionListener = new PopupMenuItemActionListener();
+
+        // Visible
+        visible = new JMenuItem();
+        visible.setName("toolWindow.popup.visible." + toolWindow.getId());
+        visible.setActionCommand("visible");
+        visible.addActionListener(actionListener);
+
+        aggregate = new JMenuItem();
+        aggregate.setName("toolWindow.popup.aggregate." + toolWindow.getId());
+        aggregate.setText(SwingUtil.getString("@@tool.aggregate"));
+        aggregate.setActionCommand("aggregate");
+        aggregate.addActionListener(actionListener);
+
+        aggregateMenu = new JMenu(SwingUtil.getString("@@tool.aggregateMenu"));
+
+        JMenuItem aggregateLeft = new JMenuItem();
+        aggregateLeft.setName("toolWindow.popup.aggregate.left." + toolWindow.getId());
+        aggregateLeft.setText(SwingUtil.getString("@@tool.aggregate.left"));
+        aggregateLeft.setActionCommand("aggregate.left");
+        aggregateLeft.addActionListener(actionListener);
+        aggregateMenu.add(aggregateLeft);
+
+        JMenuItem aggregateRight = new JMenuItem();
+        aggregateRight.setName("toolWindow.popup.aggregate.right." + toolWindow.getId());
+        aggregateRight.setText(SwingUtil.getString("@@tool.aggregate.right"));
+        aggregateRight.setActionCommand("aggregate.right");
+        aggregateRight.addActionListener(actionListener);
+        aggregateMenu.add(aggregateRight);
+
+        JMenuItem aggregateTop = new JMenuItem();
+        aggregateTop.setName("toolWindow.popup.aggregate.top." + toolWindow.getId());
+        aggregateTop.setText(SwingUtil.getString("@@tool.aggregate.top"));
+        aggregateTop.setActionCommand("aggregate.top");
+        aggregateTop.addActionListener(actionListener);
+        aggregateMenu.add(aggregateTop);
+
+        JMenuItem aggregateBottom = new JMenuItem();
+        aggregateBottom.setName("toolWindow.popup.aggregate.bottom." + toolWindow.getId());
+        aggregateBottom.setText(SwingUtil.getString("@@tool.aggregate.bottom"));
+        aggregateBottom.setActionCommand("aggregate.bottom");
+        aggregateBottom.addActionListener(actionListener);
+        aggregateMenu.add(aggregateBottom);
+
+        floatingMode = new JCheckBoxMenuItem(null, toolWindow.getType() == ToolWindowType.FLOATING);
+        floatingMode.setText(SwingUtil.getString("@@tool.mode.floating"));
+        floatingMode.setActionCommand("floating");
+        floatingMode.addActionListener(actionListener);
+
+        floatingLiveMode = new JCheckBoxMenuItem(null, toolWindow.getType() == ToolWindowType.FLOATING_LIVE);
+        floatingLiveMode.setName("toolWindow.popup.floatingLive." + toolWindow.getId());
+        floatingLiveMode.setText(SwingUtil.getString("@@tool.mode.floatingLive"));
+        floatingLiveMode.setActionCommand("floatingLive");
+        floatingLiveMode.addActionListener(actionListener);
+
+        dockedMode = new JCheckBoxMenuItem(null, toolWindow.getType() == ToolWindowType.DOCKED);
+        dockedMode.setText(SwingUtil.getString("@@tool.mode.docked"));
+        dockedMode.setActionCommand("docked");
+        dockedMode.addActionListener(actionListener);
+
+        pinnedMode = new JCheckBoxMenuItem(null, !toolWindow.isAutoHide());
+        pinnedMode.setText(SwingUtil.getString("@@tool.mode.pinned"));
+        pinnedMode.setActionCommand("pinned");
+        pinnedMode.addActionListener(actionListener);
+
+        maximize = new JMenuItem();
+        maximize.setText(SwingUtil.getString("@@tool.maximize"));
+        maximize.setActionCommand("maximize");
+        maximize.addActionListener(actionListener);
+
+        // MoveTo SubMenu
+        moveTo = new JMenu();
+        moveTo.getPopupMenu().setLightWeightPopupEnabled(false);
+        moveTo.setText(SwingUtil.getString("@@tool.moveTo"));
+
+        right = new JMenuItem();
+        right.setText(SwingUtil.getString("@@tool.move.right"));
+        right.setActionCommand("move.right");
+        right.addActionListener(actionListener);
+
+        left = new JMenuItem();
+        left.setText(SwingUtil.getString("@@tool.move.left"));
+        left.setActionCommand("move.left");
+        left.addActionListener(actionListener);
+
+        top = new JMenuItem();
+        top.setText(SwingUtil.getString("@@tool.move.top"));
+        top.setActionCommand("move.top");
+        top.addActionListener(actionListener);
+
+        bottom = new JMenuItem();
+        bottom.setText(SwingUtil.getString("@@tool.move.bottom"));
+        bottom.setActionCommand("move.bottom");
+        bottom.addActionListener(actionListener);
+
+        moveTo.add(right);
+        moveTo.add(left);
+        moveTo.add(top);
+        moveTo.add(bottom);
+
+        popupMenu.add(pinnedMode);
+        popupMenu.add(dockedMode);
+        popupMenu.add(floatingMode);
+        popupMenu.add(floatingLiveMode);
+        popupMenu.add(moveTo);
+        popupMenu.add(maximize);
+        popupMenu.addSeparator();
+        popupMenu.add(visible);
+        popupMenu.add(aggregate);
+        popupMenu.add(aggregateMenu);
+    }
+
+    protected void enableVisible() {
+        aggregate.setVisible(!toolWindow.isVisible());
+        aggregateMenu.setVisible(aggregate.isVisible());
+        visible.setText(toolWindow.isVisible() ?
+                        SwingUtil.getString("@@tool.hide") :
+                        SwingUtil.getString("@@tool.show"));
+
+        if (toolWindow.getType() == ToolWindowType.DOCKED) {
+            dockedMode.setVisible(getTypeDescriptor(ToolWindowType.SLIDING).isEnabled());
+            floatingMode.setVisible(getTypeDescriptor(ToolWindowType.FLOATING).isEnabled());
+            floatingLiveMode.setState(false);
+            floatingLiveMode.setVisible(getTypeDescriptor(ToolWindowType.FLOATING_LIVE).isEnabled());
+        } else if (toolWindow.getType() == ToolWindowType.SLIDING) {
+            floatingMode.setVisible(getTypeDescriptor(ToolWindowType.FLOATING).isEnabled());
+            floatingLiveMode.setState(false);
+            floatingLiveMode.setVisible(getTypeDescriptor(ToolWindowType.FLOATING_LIVE).isEnabled());
+        } else if (toolWindow.getType() == ToolWindowType.FLOATING) {
+            floatingLiveMode.setState(false);
+            floatingLiveMode.setVisible(getTypeDescriptor(ToolWindowType.FLOATING_LIVE).isEnabled());
+        } else if (toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
+            dockedMode.setState(false);
+            floatingMode.setState(false);
+            floatingMode.setVisible(getTypeDescriptor(ToolWindowType.FLOATING).isEnabled());
+        }
+    }
+
+    protected void enableMoveToItem() {
+        if (toolWindow.isLockedOnAnchor()) {
+            ToolWindowAnchor[] anchors = getDockedTypeDescriptor().getLockingAnchors();
+
+            if (anchors.length == 0) {
+                moveTo.setVisible(false);
+                return;
+            }
+
+            left.setVisible(false);
+            right.setVisible(false);
+            top.setVisible(false);
+            bottom.setVisible(false);
+
+            for (ToolWindowAnchor anchor : anchors) {
+                switch (anchor) {
+                    case LEFT:
+                        left.setVisible(true);
+                        break;
+                    case RIGHT:
+                        right.setVisible(true);
+                        break;
+                    case TOP:
+                        top.setVisible(true);
+                        break;
+                    case BOTTOM:
+                        bottom.setVisible(true);
+                        break;
+                }
+            }
+        } else {
+            ToolWindowAnchor anchor = toolWindow.getAnchor();
+            if (anchor == ToolWindowAnchor.LEFT) {
+                left.setVisible(false);
+                right.setVisible(true);
+                top.setVisible(true);
+                bottom.setVisible(true);
+            } else if (anchor == ToolWindowAnchor.RIGHT) {
+                left.setVisible(true);
+                right.setVisible(false);
+                top.setVisible(true);
+                bottom.setVisible(true);
+            } else if (anchor == ToolWindowAnchor.BOTTOM) {
+                left.setVisible(true);
+                right.setVisible(true);
+                top.setVisible(true);
+                bottom.setVisible(false);
+            } else if (anchor == ToolWindowAnchor.TOP) {
+                left.setVisible(true);
+                right.setVisible(true);
+                top.setVisible(false);
+                bottom.setVisible(true);
+            }
+        }
+    }
+
+    protected void enableUserDefined() {
+        DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+        if (old != null) {
+            popupMenu.remove(old);
+        }
+
+        JMenu menu = descriptor.getToolsMenu();
+        if (menu.getMenuComponentCount() > 0) {
+            popupMenu.add(menu, 4);
+            old = menu;
+        }
+    }
+
+    protected void enableMaximize() {
+        maximize.setVisible(toolWindow.isVisible());
+        maximize.setText(toolWindow.isMaximized() ?
+                         SwingUtil.getString("@@tool.maximize.restore") :
+                         SwingUtil.getString("@@tool.maximize"));
+
+    }
 
 
     public class ToolWindowDescriptorCleaner extends DefaultCleanerAggregator {
@@ -492,4 +804,62 @@ public class ToolWindowDescriptor implements PropertyChangeListener, DockableDes
         }
     }
 
+    public class PopupMenuItemActionListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            String actionCommand = e.getActionCommand();
+            if ("visible".equals(actionCommand)) {
+                if (toolWindow.isActive()) {
+
+                    toolWindow.setActive(false);
+                    hideToolWindow();
+                } else if (toolWindow.isVisible()) {
+                    hideToolWindow();
+                } else
+                    toolWindow.setActive(true);
+            } else if (actionCommand.startsWith("aggregate")) {
+                if (toolWindow.isActive()) {
+                    toolWindow.setActive(false);
+                    toolWindow.setVisible(false);
+                } else if (toolWindow.isVisible())
+                    toolWindow.setVisible(false);
+                else {
+                    if (actionCommand.endsWith("left"))
+                        toolWindow.aggregate(AggregationPosition.LEFT);
+                    else if (actionCommand.endsWith("right"))
+                        toolWindow.aggregate(AggregationPosition.RIGHT);
+                    else if (actionCommand.endsWith("top"))
+                        toolWindow.aggregate(AggregationPosition.TOP);
+                    else if (actionCommand.endsWith("bottom"))
+                        toolWindow.aggregate(AggregationPosition.BOTTOM);
+                    else
+                        toolWindow.aggregate();
+
+                    toolWindow.setActive(true);
+                }
+            } else if ("move.right".equals(actionCommand)) {
+                toolWindow.setAnchor(ToolWindowAnchor.RIGHT);
+            } else if ("move.left".equals(actionCommand)) {
+                toolWindow.setAnchor(ToolWindowAnchor.LEFT);
+            } else if ("move.top".equals(actionCommand)) {
+                toolWindow.setAnchor(ToolWindowAnchor.TOP);
+            } else if ("move.bottom".equals(actionCommand)) {
+                toolWindow.setAnchor(ToolWindowAnchor.BOTTOM);
+            } else if ("floating".equals(actionCommand)) {
+                if (floatingMode.isSelected()) {
+                    toolWindow.setType((isFloatingWindow()) ? ToolWindowType.FLOATING_FREE : ToolWindowType.FLOATING);
+                    dockedMode.setVisible(!floatingMode.isSelected());
+                } else {
+                    toolWindow.setType(oldType != null ? oldType : ToolWindowType.DOCKED);
+                }
+            } else if ("floatingLive".equals(actionCommand)) {
+                toolWindow.setType(floatingLiveMode.isSelected() ? ToolWindowType.FLOATING_LIVE : ToolWindowType.DOCKED);
+            } else if ("docked".equals(actionCommand)) {
+                toolWindow.setType(dockedMode.isSelected() ? ToolWindowType.DOCKED : ToolWindowType.SLIDING);
+            } else if ("pinned".equals(actionCommand)) {
+                toolWindow.setAutoHide(!toolWindow.isAutoHide());
+            } else if ("maximize".equals(actionCommand)) {
+                toolWindow.setMaximized(!toolWindow.isMaximized());
+            }
+        }
+    }
 }

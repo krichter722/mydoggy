@@ -8,6 +8,7 @@ import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro
+ * TODO: check usage...
  */
 public interface ToolWindowContainer extends PropertyChangeListener, Cleaner {
 

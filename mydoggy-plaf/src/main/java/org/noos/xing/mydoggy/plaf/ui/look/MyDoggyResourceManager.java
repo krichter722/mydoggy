@@ -109,17 +109,20 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         this.resourceBundle = initResourceBundle(locale,
                                                  bundlePath,
                                                  this.getClass().getClassLoader());
+        UIManager.put("mydoggy.resourceBundle", resourceBundle);
     }
 
     public void setUserBundle(Locale locale, String bundle, ClassLoader classLoader) {
         this.userResourceBundle = initResourceBundle(locale, bundle, classLoader);
+        UIManager.put("mydoggy.resourceBundle.user", resourceBundle);
     }
 
     public void setUserBundle(ResourceBundle userBundle) {
         if (userBundle == null)
-            userResourceBundle = new DummyResourceBundle();
+            this.userResourceBundle = new DummyResourceBundle();
         else
             this.userResourceBundle = userBundle;
+        UIManager.put("mydoggy.\resourceBundle.user", resourceBundle);
     }
 
     public ResourceBundle getResourceBundle() {

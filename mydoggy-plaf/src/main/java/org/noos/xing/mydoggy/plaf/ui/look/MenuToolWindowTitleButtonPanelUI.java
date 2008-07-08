@@ -1,8 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowContainer;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 
 import javax.swing.*;
@@ -19,14 +17,11 @@ public class MenuToolWindowTitleButtonPanelUI extends FullToolWindowTitleButtonP
 
     
     public static ComponentUI createUI(JComponent c) {
-        return new MenuToolWindowTitleButtonPanelUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class),
-                                                    (ToolWindowContainer) c.getClientProperty(ToolWindowContainer.class));
+        return new MenuToolWindowTitleButtonPanelUI();
     }
 
 
-    public MenuToolWindowTitleButtonPanelUI(ToolWindowDescriptor toolWindowDescriptor,
-                                            ToolWindowContainer dockedContainer) {
-        super(toolWindowDescriptor, dockedContainer);
+    public MenuToolWindowTitleButtonPanelUI() {
     }
 
 
@@ -43,7 +38,7 @@ public class MenuToolWindowTitleButtonPanelUI extends FullToolWindowTitleButtonP
 
         public PopupAction() {
             super("toolWindow.showPopupButton." + toolWindow.getId(), MyDoggyKeySpace.ACTIONS_POPUP, "@@tool.tooltip.showPopup");
-            dockedContainer.addPropertyChangeListener("active", new PropertyChangeListener() {
+            toolWindow.addPlafPropertyChangeListener("active", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getSource() != descriptor)
                         return;
@@ -63,7 +58,7 @@ public class MenuToolWindowTitleButtonPanelUI extends FullToolWindowTitleButtonP
             toolWindow.setActive(true);
 
             Component c = (Component) e.getSource();
-            dockedContainer.showPopupMenu(c, 0, c.getHeight());
+            descriptor.showPopupMenu(c, 0, c.getHeight());
         }
 
         public void propertyChange(PropertyChangeEvent evt) {

@@ -25,15 +25,15 @@ public class ToolWindowBarPanelUI extends BasicPanelUI {
     public ToolWindowBarPanelUI() {
     }
 
-    @Override
+
     public void installUI(JComponent c) {
+        // Init fields
         this.toolWindowBarPanel = (ToolWindowBarPanel) c;
         this.toolWindowBar = toolWindowBarPanel.getToolWindowBar();
 
         super.installUI(c);
     }
 
-    @Override
     protected void installDefaults(JPanel p) {
         super.installDefaults(p);
 
@@ -44,7 +44,6 @@ public class ToolWindowBarPanelUI extends BasicPanelUI {
         LookAndFeel.installBorder(p, "ToolWindowBarPanelUI.border");
     }
 
-    @Override
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
 

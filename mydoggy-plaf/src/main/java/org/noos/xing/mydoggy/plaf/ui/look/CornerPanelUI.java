@@ -33,6 +33,7 @@ public class CornerPanelUI extends BasicPanelUI {
     @Override
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
+        
         this.cornerPanel = null;
     }
 

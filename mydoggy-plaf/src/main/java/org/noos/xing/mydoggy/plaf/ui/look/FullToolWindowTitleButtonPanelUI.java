@@ -2,12 +2,11 @@ package org.noos.xing.mydoggy.plaf.ui.look;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
-import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
+import org.noos.xing.mydoggy.plaf.support.CleanablePropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
-import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowContainer;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleButton;
@@ -15,13 +14,11 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleButtonPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
-import javax.swing.event.SwingPropertyChangeSupport;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -31,30 +28,21 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
 
 
     public static ComponentUI createUI(JComponent c) {
-        return new FullToolWindowTitleButtonPanelUI((ToolWindowDescriptor) c.getClientProperty(ToolWindowDescriptor.class),
-                                                    (ToolWindowContainer) c.getClientProperty(ToolWindowContainer.class));
+        return new FullToolWindowTitleButtonPanelUI();
     }
 
 
     protected ToolWindowTitleButtonPanel toolWindowTitleButtonPanel;
-    protected ToolWindow toolWindow;
+    protected MyDoggyToolWindow toolWindow;
     protected ToolWindowDescriptor descriptor;
-    protected transient ResourceManager resourceManager;
-    protected ToolWindowContainer dockedContainer;
 
     protected TableLayout containerLayout;
     protected Component focusable;
 
-    protected PropertyChangeSupport propertyChangeSupport;
+    protected CleanablePropertyChangeSupport propertyChangeSupport;
 
     
-    public FullToolWindowTitleButtonPanelUI(ToolWindowDescriptor toolWindowDescriptor,
-                                            ToolWindowContainer dockedContainer) {
-        this.descriptor = toolWindowDescriptor;
-        this.toolWindow = toolWindowDescriptor.getToolWindow();
-        this.resourceManager = dockedContainer.getResourceManager();
-        this.dockedContainer = dockedContainer;
-        this.propertyChangeSupport = new SwingPropertyChangeSupport(this);
+    public FullToolWindowTitleButtonPanelUI() {
     }
 
 
@@ -67,7 +55,12 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
 
     @Override
     protected void installDefaults(JPanel p) {
+        // init fields...
         this.toolWindowTitleButtonPanel = (ToolWindowTitleButtonPanel) p;
+
+        this.descriptor = toolWindowTitleButtonPanel.getToolWindowDescriptor();
+        this.toolWindow = descriptor.getToolWindow();
+        this.propertyChangeSupport = new CleanablePropertyChangeSupport(this);
 
         super.installDefaults(p);
 
@@ -87,8 +80,9 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
     public void cleanup() {
         descriptor = null;
         toolWindow = null;
-        dockedContainer = null;
-        resourceManager = null;
+        
+        propertyChangeSupport.cleanup();
+        propertyChangeSupport = null;
     }
 
     public Component getFocusable() {
@@ -110,7 +104,7 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
         addTitleBarAction(new MaximizeAction());
         focusable = addTitleBarAction(new HideAction());
 
-        toolWindow.addPropertyChangeListener(this);
+        toolWindow.addPlafPropertyChangeListener(this);
     }
 
     protected void installListeners() {
@@ -118,7 +112,8 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
     }
 
     protected void unistallListeners() {
-        toolWindow.removePropertyChangeListener(this);
+        toolWindow.removePlafPropertyChangeListener(this);
+        propertyChangeSupport.cleanup();
     }
 
     protected Component addTitleBarAction(TitleBarAction titleBarAction) {
@@ -186,7 +181,8 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
         protected TitleBarAction(String name, String icon, String tooltip) {
             putValue("action.name", name);
             putValue(Action.SMALL_ICON, UIManager.getIcon(icon));
-            putValue(Action.SHORT_DESCRIPTION, resourceManager.getString(tooltip));
+            putValue(Action.SHORT_DESCRIPTION, SwingUtil.getString(tooltip));
+
             propertyChangeSupport.addPropertyChangeListener(this);
         }
 
@@ -206,7 +202,7 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
 
         public HideAction() {
             super("toolWindow.hideButton." + toolWindow.getId(), MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE, "@@tool.tooltip.hide");
-            dockedContainer.addPropertyChangeListener("active", new PropertyChangeListener() {
+            toolWindow.addPlafPropertyChangeListener("active", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getSource() != descriptor)
                         return;
@@ -242,7 +238,7 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
                         }
                     }
             );
-            dockedContainer.addPropertyChangeListener("active", new PropertyChangeListener() {
+            toolWindow.addPlafPropertyChangeListener("active", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getSource() != descriptor)
                         return;
@@ -280,16 +276,16 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
             switch (type) {
                 case DOCKED:
                     putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.SLIDING));
-                    putValue(Action.SHORT_DESCRIPTION, resourceManager.getString("@@tool.tooltip.undock"));
+                    putValue(Action.SHORT_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.undock"));
                     setVisible(descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isEnabled());
                     break;
                 case FLOATING_LIVE:
                     putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.DOCKED));
-                    putValue(Action.SHORT_DESCRIPTION, resourceManager.getString("@@tool.tooltip.dock"));
+                    putValue(Action.SHORT_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.dock"));
                     setVisible(descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isEnabled());
                     break;
                 case SLIDING:
-                    putValue(Action.SHORT_DESCRIPTION, resourceManager.getString("@@tool.tooltip.dock"));
+                    putValue(Action.SHORT_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.dock"));
                     setVisible(descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isEnabled());
                     break;
                 case FLOATING:
@@ -304,20 +300,20 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
 
         public PinAction() {
             super("toolWindow.pinButton." + toolWindow.getId(), MyDoggyKeySpace.AUTO_HIDE_OFF_INACTIVE, "@@tool.tooltip.unpin");
-            dockedContainer.addPropertyChangeListener("autoHide", new PropertyChangeListener() {
+            toolWindow.addPlafPropertyChangeListener("autoHide", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     boolean newValue = ((Boolean) evt.getNewValue());
 
                     if (newValue) {
                         putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_ON));
-                        putValue(Action.LONG_DESCRIPTION, resourceManager.getString("@@tool.tooltip.pin"));
+                        putValue(Action.LONG_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.pin"));
                     } else {
                         putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF));
-                        putValue(Action.LONG_DESCRIPTION, resourceManager.getString("@@tool.tooltip.unpin"));
+                        putValue(Action.LONG_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.unpin"));
                     }
                 }
             });
-            dockedContainer.addPropertyChangeListener("active", new PropertyChangeListener() {
+            toolWindow.addPlafPropertyChangeListener("active", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getSource() != descriptor)
                         return;
@@ -366,7 +362,7 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
 
         public MaximizeAction() {
             super("toolWindow.maximizeButton." + toolWindow.getId(), MyDoggyKeySpace.MAXIMIZE_INACTIVE, "@@tool.tooltip.maximize");
-            dockedContainer.addPropertyChangeListener("maximized.before", new PropertyChangeListener() {
+            toolWindow.addPlafPropertyChangeListener("maximized.before", new PropertyChangeListener() {
                 private boolean flag = false;
 
                 public void propertyChange(PropertyChangeEvent evt) {
@@ -382,7 +378,7 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
                     }
                 }
             });
-            dockedContainer.addPropertyChangeListener("active", new PropertyChangeListener() {
+            toolWindow.addPlafPropertyChangeListener("active", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getSource() != descriptor)
                         return;
@@ -427,7 +423,7 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
                         }
                     }
             );
-            dockedContainer.addPropertyChangeListener("type", new PropertyChangeListener() {
+            toolWindow.addPlafPropertyChangeListener("type", new PropertyChangeListener() {
 
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getSource() != descriptor ||
@@ -439,7 +435,7 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
                 }
             });
 
-            dockedContainer.addPropertyChangeListener("active", new PropertyChangeListener() {
+            toolWindow.addPlafPropertyChangeListener("active", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getSource() != descriptor)
                         return;
@@ -481,7 +477,7 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
                 case DOCKED:
                 case FLOATING_LIVE:
                     putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.FLOATING));
-                    putValue(Action.SHORT_DESCRIPTION, resourceManager.getString("@@tool.tooltip.float"));
+                    putValue(Action.SHORT_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.float"));
                     setVisible(descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isEnabled());
                     break;
                 case SLIDING:
@@ -490,7 +486,7 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
                 case FLOATING:
                 case FLOATING_FREE:
                     putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.FIX));
-                    putValue(Action.SHORT_DESCRIPTION, resourceManager.getString("@@tool.tooltip.fix"));
+                    putValue(Action.SHORT_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.fix"));
                     setVisible(true);
                     break;
             }

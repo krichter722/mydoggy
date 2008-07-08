@@ -55,7 +55,7 @@ public abstract class MyDoggyToolWindowContainer implements ToolWindowContainer 
     }
 
     public void showPopupMenu(Component c, int x, int y) {
-        dockedContainer.showPopupMenu(c, x, y);
+        descriptor.showPopupMenu(c, x, y);
     }
 
     public void cleanup() {
