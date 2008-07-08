@@ -53,36 +53,8 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
         }
     }
 
-    @Override
-    protected void installDefaults(JPanel p) {
-        // init fields...
-        this.toolWindowTitleButtonPanel = (ToolWindowTitleButtonPanel) p;
-
-        this.descriptor = toolWindowTitleButtonPanel.getToolWindowDescriptor();
-        this.toolWindow = descriptor.getToolWindow();
-        this.propertyChangeSupport = new CleanablePropertyChangeSupport(this);
-
-        super.installDefaults(p);
-
-        installComponents();
-        installListeners();
-
-        setType(ToolWindowType.DOCKED);
-    }
-
-    @Override
-    public void uninstallUI(JComponent c) {
-        super.uninstallUI(c);
-
-        unistallListeners();
-    }
-
     public void cleanup() {
-        descriptor = null;
-        toolWindow = null;
-        
-        propertyChangeSupport.cleanup();
-        propertyChangeSupport = null;
+        uninstallUI(toolWindowTitleButtonPanel);
     }
 
     public Component getFocusable() {
@@ -93,6 +65,39 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
         propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "type", null, type));
     }
 
+
+    public void installUI(JComponent c) {
+        // Init fields...
+        this.toolWindowTitleButtonPanel = (ToolWindowTitleButtonPanel) c;
+
+        this.descriptor = toolWindowTitleButtonPanel.getToolWindowDescriptor();
+        this.toolWindow = descriptor.getToolWindow();
+        this.propertyChangeSupport = new CleanablePropertyChangeSupport(this);
+
+        super.installUI(c);
+    }
+
+    public void uninstallUI(JComponent c) {
+        super.uninstallUI(c);
+
+        unistallListeners();
+
+        // Reset fields
+        this.toolWindowTitleButtonPanel = null;
+        this.descriptor = null;
+        this.toolWindow = null;
+        this.propertyChangeSupport = null;
+    }
+
+
+    protected void installDefaults(JPanel p) {
+        super.installDefaults(p);
+
+        installComponents();
+        installListeners();
+
+        setType(ToolWindowType.DOCKED);
+    }
 
     protected void installComponents() {
         toolWindowTitleButtonPanel.setLayout(containerLayout = new ExtendedTableLayout(new double[][]{{0, 0}, {1, 14, 1}}, false));
@@ -113,8 +118,10 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
 
     protected void unistallListeners() {
         toolWindow.removePlafPropertyChangeListener(this);
+
         propertyChangeSupport.cleanup();
     }
+
 
     protected Component addTitleBarAction(TitleBarAction titleBarAction) {
         return addTitleBarAction(-1, titleBarAction);

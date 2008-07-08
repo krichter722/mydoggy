@@ -34,6 +34,7 @@ public class ContentPanelUI extends BasicPanelUI implements PropertyChangeListen
 
 
     public void installUI(JComponent c) {
+        // Init fields
         this.contentPanel = (ContentPanel) c;
 
         super.installUI(c);
@@ -43,8 +44,10 @@ public class ContentPanelUI extends BasicPanelUI implements PropertyChangeListen
 
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
+
         uninstallListeners(c);
 
+        // Reset fields
         layout = null;
         contentPanel = null;
     }
@@ -84,7 +87,6 @@ public class ContentPanelUI extends BasicPanelUI implements PropertyChangeListen
                 layout.setRow(0, 0);
                 layout.setRow(2, 0);
 
-                g.setColor(Color.BLUE);
                 drawRect(g, 0, 0, 20, c.getHeight());
 
                 putProperty(c, "dragToolWindow");
@@ -96,7 +98,6 @@ public class ContentPanelUI extends BasicPanelUI implements PropertyChangeListen
                 layout.setRow(0, 20);
                 layout.setRow(2, 0);
 
-                g.setColor(Color.BLUE);
                 drawRect(g, 0, 0, c.getWidth(), 20);
 
                 putProperty(c, "dragToolWindow");
@@ -108,7 +109,7 @@ public class ContentPanelUI extends BasicPanelUI implements PropertyChangeListen
                 layout.setRow(0, 0);
                 layout.setRow(2, 0);
 
-                g.setColor(Color.BLUE);
+
                 drawRect(g, c.getWidth() - 20, 0, 20, c.getHeight());
 
                 putProperty(c, "dragToolWindow");
@@ -120,7 +121,7 @@ public class ContentPanelUI extends BasicPanelUI implements PropertyChangeListen
                 layout.setRow(0, 0);
                 layout.setRow(2, 20);
 
-                g.setColor(Color.BLUE);
+
                 drawRect(g, 0, c.getHeight() - 20, c.getWidth(), 20);
 
                 putProperty(c, "dragToolWindow");
@@ -149,7 +150,7 @@ public class ContentPanelUI extends BasicPanelUI implements PropertyChangeListen
                         Point inToolLocation = SwingUtilities.convertPoint(c, mouseLocation, toolWindowContainer);
 
                         if (inToolLocation.x <= xLimit && inToolLocation.y > yLimit && inToolLocation.y < toolBounds.height - yLimit) {
-                            g.setColor(Color.BLUE);
+
                             drawRect(g, toolBounds.x,
                                      toolBounds.y,
                                      xLimit,
@@ -158,7 +159,7 @@ public class ContentPanelUI extends BasicPanelUI implements PropertyChangeListen
                             c.putClientProperty("dragAnchor", ToolWindowAnchor.LEFT);
                         } else
                         if (inToolLocation.y <= yLimit && inToolLocation.x > xLimit && inToolLocation.x < toolBounds.width - xLimit) {
-                            g.setColor(Color.BLUE);
+
                             drawRect(g, toolBounds.x,
                                      toolBounds.y,
                                      toolBounds.width,
@@ -167,7 +168,7 @@ public class ContentPanelUI extends BasicPanelUI implements PropertyChangeListen
                             c.putClientProperty("dragAnchor", ToolWindowAnchor.TOP);
                         } else
                         if (inToolLocation.x >= toolBounds.width - xLimit && inToolLocation.y > yLimit && inToolLocation.y < toolBounds.height - yLimit) {
-                            g.setColor(Color.BLUE);
+
                             drawRect(g, toolBounds.x + toolBounds.width - xLimit,
                                      toolBounds.y,
                                      xLimit,
@@ -177,7 +178,7 @@ public class ContentPanelUI extends BasicPanelUI implements PropertyChangeListen
                         } else
                         if (inToolLocation.y >= toolBounds.height - yLimit && inToolLocation.x > xLimit && inToolLocation.x < toolBounds.width - xLimit) {
                             layout.setColumn(0, 0);
-                            g.setColor(Color.BLUE);
+
                             drawRect(g, toolBounds.x,
                                      toolBounds.y + toolBounds.height - yLimit,
                                      toolBounds.width,
@@ -185,7 +186,6 @@ public class ContentPanelUI extends BasicPanelUI implements PropertyChangeListen
 
                             c.putClientProperty("dragAnchor", ToolWindowAnchor.BOTTOM);
                         } else {
-                            g.setColor(Color.BLUE);
                             drawRect(g, toolBounds.x, toolBounds.y,
                                      toolBounds.width,
                                      toolBounds.height);
@@ -222,6 +222,8 @@ public class ContentPanelUI extends BasicPanelUI implements PropertyChangeListen
 
 
     protected void drawRect(Graphics g, int x, int y, int width, int height) {
+        g.setColor(Color.BLUE);
+
         GraphicsUtil.fillRoundRect(g, x, y, width, height, 3, 10, 10, 0.25f);
     }
 

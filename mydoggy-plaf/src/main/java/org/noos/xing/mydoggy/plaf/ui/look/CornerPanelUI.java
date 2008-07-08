@@ -24,6 +24,7 @@ public class CornerPanelUI extends BasicPanelUI {
 
     @Override
     public void installUI(JComponent c) {
+        // Init fields
         this.cornerPanel = (CornerPanel) c;
 
         super.installUI(c);
@@ -34,6 +35,7 @@ public class CornerPanelUI extends BasicPanelUI {
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
         
+        // Reset fields
         this.cornerPanel = null;
     }
 

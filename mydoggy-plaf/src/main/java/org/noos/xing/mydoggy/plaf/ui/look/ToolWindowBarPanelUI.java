@@ -47,7 +47,7 @@ public class ToolWindowBarPanelUI extends BasicPanelUI {
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
 
-        // cleanup
+        // Reset fields
         this.toolWindowBarPanel = null;
         this.toolWindowBar = null;
     }

@@ -2,6 +2,8 @@ package org.noos.xing.mydoggy.plaf.ui.look;
 
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowTab;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
+import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabTitle;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -16,7 +18,7 @@ import java.awt.event.MouseListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
 */
-public class ToolWindowTabTitleUI extends BasicLabelUI implements MouseListener {
+public class ToolWindowTabTitleUI extends BasicLabelUI implements MouseListener, Cleaner {
 
 
     public static ComponentUI createUI(JComponent c) {
@@ -36,59 +38,10 @@ public class ToolWindowTabTitleUI extends BasicLabelUI implements MouseListener 
     public ToolWindowTabTitleUI() {
     }
 
-    @Override
-    public void installUI(JComponent c) {
-        // Init Fields
-        this.toolWindowTabTitle = (ToolWindowTabTitle) c;
-        this.tab = toolWindowTabTitle.getToolWindowTab();
-        this.toolWindow = tab.getOwner();
 
-        super.installUI(c);
+    public void cleanup() {
+        uninstallUI(toolWindowTabTitle);
     }
-
-    @Override
-    protected void installDefaults(JLabel c) {
-        super.installDefaults(c);
-
-        this.pressed = this.inside = false;
-
-        if (c.getFont() != null)
-            c.setFont(c.getFont().deriveFont(SwingUtil.getFloat("ToolWindowTabTitleUI.font.size", 12)));
-        
-        c.setText(tab.getTitle());
-        c.setIcon(tab.getIcon());
-        c.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
-        c.setOpaque(false);
-        c.setFocusable(false);
-
-        SwingUtil.installFont(c, "ToolWindowTabTitleUI.font");
-    }
-
-    public void update(Graphics g, JComponent c) {
-        if (tab.isFlashing() && toolWindow.isVisible()) {
-            Boolean flashingState = SwingUtil.getClientProperty(c, "mydoggy.flashingState");
-            if (flashingState) {
-                toolWindowTabTitle.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
-            } else {
-                toolWindowTabTitle.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
-            }
-        } else {
-            if (tab.isSelected())
-                toolWindowTabTitle.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
-            else
-                toolWindowTabTitle.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
-        }
-
-        super.update(g, c);
-    }
-
-    protected void paintEnabledText(JLabel l, Graphics g, String s, int textX, int textY) {
-        if (pressed && inside)
-            super.paintEnabledText(l, g, s, textX + 1, textY + 1);
-        else
-            super.paintEnabledText(l, g, s, textX, textY);
-    }
-
 
     public void mousePressed(MouseEvent e) {
         toolWindow.setActive(true);
@@ -125,6 +78,73 @@ public class ToolWindowTabTitleUI extends BasicLabelUI implements MouseListener 
                 }
             });
         }
+    }
+
+
+    public void installUI(JComponent c) {
+        // Init Fields
+        this.toolWindowTabTitle = (ToolWindowTabTitle) c;
+        this.tab = toolWindowTabTitle.getToolWindowTab();
+        this.toolWindow = tab.getOwner();
+
+        super.installUI(c);
+    }
+
+    public void uninstallUI(JComponent c) {
+        super.uninstallUI(c);
+
+        // Reset Fields
+        this.toolWindowTabTitle = null;
+        this.tab = null;
+        this.toolWindow = null;
+    }
+
+    protected void installDefaults(JLabel c) {
+        super.installDefaults(c);
+
+        this.pressed = this.inside = false;
+
+        if (c.getFont() != null)
+            c.setFont(c.getFont().deriveFont(SwingUtil.getFloat("ToolWindowTabTitleUI.font.size", 12)));
+        
+        c.setText(tab.getTitle());
+        c.setIcon(tab.getIcon());
+        c.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
+        c.setOpaque(false);
+        c.setFocusable(false);
+
+        SwingUtil.installFont(c, "ToolWindowTabTitleUI.font");
+    }
+
+
+    public void update(Graphics g, JComponent c) {
+        if (tab.isFlashing() && toolWindow.isVisible()) {
+            Boolean flashingState = SwingUtil.getClientProperty(c, "mydoggy.flashingState");
+            if (flashingState) {
+                toolWindowTabTitle.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
+            } else {
+                toolWindowTabTitle.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
+            }
+        } else {
+            if (tab.isSelected())
+                toolWindowTabTitle.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
+            else
+                toolWindowTabTitle.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
+        }
+
+        super.update(g, c);
+    }
+
+
+    protected void installListener() {
+        ((MyDoggyToolWindowTab) tab).getCleaner().addCleaner(this);
+    }
+
+    protected void paintEnabledText(JLabel l, Graphics g, String s, int textX, int textY) {
+        if (pressed && inside)
+            super.paintEnabledText(l, g, s, textX + 1, textY + 1);
+        else
+            super.paintEnabledText(l, g, s, textX, textY);
     }
 
 }
