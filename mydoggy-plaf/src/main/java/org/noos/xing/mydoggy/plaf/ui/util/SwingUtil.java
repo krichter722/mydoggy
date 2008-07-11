@@ -356,21 +356,21 @@ public class SwingUtil {
 
     public static Rectangle getVirtualScreenBounds() {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice[] gs = ge.getScreenDevices();
+//        GraphicsDevice[] gs = ge.getScreenDevices();
 
-        if (gs.length == 1) {
+//        if (gs.length == 1) {
             return ge.getMaximumWindowBounds();
-        } else {
-            Rectangle virtualBounds = new Rectangle();
-
-            for (GraphicsDevice gd : gs) {
-                GraphicsConfiguration[] gc = gd.getConfigurations();
-                for (GraphicsConfiguration aGc : gc) {
-                    virtualBounds = virtualBounds.union(aGc.getBounds());
-                }
-            }
-            return virtualBounds;
-        }
+//        } else {
+//            Rectangle virtualBounds = new Rectangle();
+//
+//            for (GraphicsDevice gd : gs) {
+//                GraphicsConfiguration[] gc = gd.getConfigurations();
+//                for (GraphicsConfiguration aGc : gc) {
+//                    virtualBounds = virtualBounds.union(aGc.getBounds());
+//                }
+//            }
+//            return virtualBounds;
+//        }
     }
 
     public static Rectangle validateBounds(Rectangle bounds, Rectangle referenceBounds) {
