@@ -50,10 +50,6 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
             wrapper.setName("@@mydoggy.dockable.panel");
 
             return wrapper;
-//            return component;
-//            CornerPanel cornerPanel = new CornerPanel(ToolWindowManagerDescriptor.Corner.SOUTH_EAST);
-//            cornerPanel.setComponent(component);
-//            return cornerPanel;
         }
     }
 

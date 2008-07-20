@@ -1,14 +1,19 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
+import org.noos.common.Question;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowBar;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
+import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.cleaner.CleanerAggregator;
 import org.noos.xing.mydoggy.plaf.cleaner.DefaultCleanerAggregator;
+import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -27,21 +32,35 @@ import java.util.Map;
 public class ToolWindowDescriptor implements PropertyChangeListener,
                                              DockableDescriptor {
 
+    private static Map<ToolWindow, FloatingLivePanel> livePanelMap = new HashMap<ToolWindow, FloatingLivePanel>();
+
+
     protected MyDoggyToolWindowManager manager;
     protected MyDoggyToolWindow toolWindow;
     protected CleanerAggregator cleaner;
 
+    // Components
+    protected ToolWindowPanel toolWindowPanel;
+
+    // Listeners
+    PropertyChangeListener focusListener;
+
+    // Containers
     protected DockedContainer dockedContainer;
     protected FloatingContainer floatingContainer;
     protected SlidingContainer slidingContainer;
     protected FloatingLiveContainer floatingLiveContainer;
 
+    protected Component focusRequester;
     protected Component component;
+
+    // Anchor
     protected JLabel representativeAnchor;
 
     protected int divederLocation = -1;
     protected int tempDivederLocation;
 
+    //  Descriptors
     protected FloatingTypeDescriptor floatingTypeDescriptor;
     protected DockedTypeDescriptor dockedTypeDescriptor;
     protected SlidingTypeDescriptor slidingTypeDescriptor;
@@ -49,7 +68,9 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
     protected boolean floatingWindow = false;
 
+    // TODO: change this names...
     boolean valueAdj = false;
+    boolean valueAdjusting;
 
     // Popup menu fiedls
     protected ToolWindowType oldType;
@@ -129,8 +150,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                 );
             }
         } else if ("autoHide".equals(propertyName)) {
-            getToolWindowContainer().propertyChange(evt);
-
             initPopupMenu();
             pinnedMode.setState(!(Boolean) evt.getNewValue());
         } else if ("hideRepresentativeButtonOnVisible".equals(propertyName)) {
@@ -176,7 +195,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         if (representativeAnchor == null) {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
-            String labelText = getResourceManager().getUserString(toolWindow.getId());
+            String labelText = SwingUtil.getUserString(toolWindow.getId());
             String toolRepresentativeAnchorText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
                                                   ? toolWindow.getIndex() + " : " + labelText
                                                   : labelText;
@@ -234,7 +253,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         if (representativeAnchor != null) {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
-            String labelText = getResourceManager().getUserString(toolWindow.getId());
+            String labelText = SwingUtil.getUserString(toolWindow.getId());
             String toolRepresentativeAnchorText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
                                                   ? toolWindow.getIndex() + " : " + labelText
                                                   : labelText;
@@ -286,25 +305,30 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     }
 
     public Component getComponentForDragImage() {
-        return ((DockedContainer) getToolWindowContainer()).getContentContainer();
+        return getToolWindowPanel();
     }
 
     public void setAnchor(ToolWindowAnchor anchor, int index) {
         toolWindow.setAnchor(anchor, index);
     }
 
-    public ResourceManager getResourceManager() {
-        return manager.getResourceManager();
-    }
-
     public CleanerAggregator getCleaner() {
-            return cleaner;
-        }
+        return cleaner;
+    }
 
     public void cleanup() {
         getCleaner().cleanup();
     }
 
+
+    public MyDoggyToolWindow getToolWindow() {
+        return toolWindow;
+    }
+
+
+    public ToolWindowPanel getToolWindowPanel() {
+        return toolWindowPanel;
+    }
 
     public Component getComponent() {
         if (component == null) {
@@ -328,7 +352,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     public void setDividerLocation(int divederLocation) {
         if (divederLocation <= 0)
             return;
-        
+
         this.divederLocation = divederLocation;
 
         DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
@@ -386,11 +410,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
             getRepresentativeAnchor().updateUI();
     }
 
-    public MyDoggyToolWindow getToolWindow() {
-        return toolWindow;
-    }
 
-    public Rectangle getToolWindowManagerContainerBounds() {
+    public Rectangle getManagerBounds() {
         return SwingUtilities.convertRectangle(manager,
                                                manager.getBounds(),
                                                manager.getRootPaneContainer().getContentPane());
@@ -401,18 +422,16 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     }
 
     public ToolWindowContainer getToolWindowContainer() {
-        if (dockedContainer == null) {
-            dockedContainer = new DockedContainer(this);
-            slidingContainer = new SlidingContainer(dockedContainer);
-            floatingContainer = new FloatingContainer(dockedContainer);
-            floatingLiveContainer = new FloatingLiveContainer(dockedContainer);
-        }
+        if (dockedContainer == null)
+            initContainers();
+
         return dockedContainer;
     }
 
     public ToolWindowContainer getToolWindowContainer(ToolWindowType toolWindowType) {
         if (dockedContainer == null)
-            getToolWindowContainer();
+            initContainers();
+
         switch (toolWindowType) {
             case FLOATING:
             case FLOATING_FREE:
@@ -451,7 +470,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     }
 
     public Component getContentContainer() {
-        return ((DockedContainer) getToolWindowContainer()).getContentContainer();
+        return getToolWindowPanel();
     }
 
     public void hideToolWindow() {
@@ -479,7 +498,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     public void showPopupMenu(Component source, int x, int y) {
         initPopupMenu();
 
-        ToolWindowTitleBar toolWindowTitleBar = dockedContainer.titleBar;
+        ToolWindowTitleBar toolWindowTitleBar = toolWindowPanel.getToolWindowTitleBar();
         if (source == toolWindowTitleBar ||
             SwingUtil.hasParent(source, toolWindowTitleBar) ||
             source instanceof ToolWindowRepresentativeAnchor) {
@@ -520,8 +539,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     }
 
 
-    private static Map<ToolWindow, FloatingLivePanel> livePanelMap = new HashMap<ToolWindow, FloatingLivePanel>();
-
     public FloatingLivePanel getFloatingLivePanel(ToolWindow toolWindow) {
         FloatingLivePanel panel = livePanelMap.get(toolWindow);
         if (panel == null) {
@@ -533,16 +550,76 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     }
 
     public void removeFloatingLivePanel() {
-        livePanelMap.remove(toolWindow);        
+        livePanelMap.remove(toolWindow);
     }
 
     public FloatingLivePanel getFloatingLivePanel() {
         return getFloatingLivePanel(toolWindow);
     }
 
+    public void assignFocus() {
+        focusRequester = SwingUtil.findFocusable(getComponent());
+        ToolWindowTitleButtonPanel toolWindowTitleButtonPanel = toolWindowPanel.getToolWindowTitleBar().getToolWindowTitleButtonPanel();
+
+        if (focusRequester == null) {
+            toolWindowTitleButtonPanel.getFocusable().setFocusable(true);
+            focusRequester = toolWindowTitleButtonPanel.getFocusable();
+        } else {
+            toolWindowTitleButtonPanel.getFocusable().setFocusable(false);
+        }
+        SwingUtil.requestFocus(focusRequester);
+    }
+
+    public void setMainComponent(Component component) {
+        JPanel componentContainer = toolWindowPanel.getComponentContainer();
+
+        componentContainer.removeAll();
+        setComponent(component);
+        componentContainer.add(component, "0,0,FULL,FULL");
+
+        SwingUtil.repaint(componentContainer);
+    }
+
+
+
+    protected void initContainers() {
+        // init components
+        toolWindowPanel = new ToolWindowPanel(this);
+
+        // init containers
+        dockedContainer = new DockedContainer(this);
+        slidingContainer = new SlidingContainer(dockedContainer);
+        floatingContainer = new FloatingContainer(dockedContainer);
+        floatingLiveContainer = new FloatingLiveContainer(dockedContainer);
+
+        // init listeners
+
+        // Init tool window properties listeners
+        PropertyChangeEventSource toolWindowSource = getToolWindow();
+        toolWindowSource.addPlafPropertyChangeListener("active", new ActivePropertyChangeListener());
+
+        // Register focus listener ....
+        focusListener = new FocusOwnerPropertyChangeListener(
+                getManager().getResourceManager().createInstance(ParentOfQuestion.class,
+                                                                 new DefaultMutableContext(ToolWindow.class, toolWindow,
+                                                                                           Component.class, toolWindowPanel))
+        );
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusListener);
+
+        // Load focusRequester
+        focusRequester = SwingUtil.findFocusable(getComponent());
+        if (focusRequester == null) {
+            ToolWindowTitleButtonPanel toolWindowTitleButtonPanel = toolWindowPanel.getToolWindowTitleBar().getToolWindowTitleButtonPanel();
+            toolWindowTitleButtonPanel.getFocusable().setFocusable(true);
+
+            focusRequester = toolWindowTitleButtonPanel.getFocusable();
+        }
+    }
 
     protected void initListeners() {
         toolWindow.addPlafPropertyChangeListener(this);
+        // todo: add as plaf
+        manager.getToolWindowManagerDescriptor().addPropertyChangeListener(this);
     }
 
     protected void initTypeDescriptors() {
@@ -808,6 +885,9 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
             // Finalizy clean
             toolWindow = null;
             manager = null;
+
+            toolWindowPanel.putClientProperty(ToolWindow.class, null);
+            toolWindowPanel.removeAll();
         }
     }
 
@@ -868,5 +948,86 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                 toolWindow.setMaximized(!toolWindow.isMaximized());
             }
         }
+    }
+
+    public class FocusOwnerPropertyChangeListener implements PropertyChangeListener, Cleaner {
+        protected Question<Component, Boolean> parentOf;
+
+        public FocusOwnerPropertyChangeListener(Question<Component, Boolean> parentOf) {
+            this.parentOf = parentOf;
+
+            getCleaner().addBefore(dockedContainer, this);
+        }
+
+        public void cleanup() {
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("focusOwner", this);
+        }
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (!toolWindow.isVisible() || valueAdjusting)
+                return;
+
+            Component component = (Component) evt.getNewValue();
+            if (component == null) return;
+            if (component instanceof JRootPane) return;
+
+            valueAdjusting = true;
+
+            System.out.println(toolWindow.getId() + " - cmp = " + component);
+
+            if (parentOf.getAnswer(component)) {
+                toolWindow.setActive(true);
+                if (focusRequester == null)
+                    focusRequester = component;
+                else {
+                    if (!(focusRequester instanceof ToolWindowTitleButton))
+                        focusRequester = component;
+                    else {
+                        if (focusRequester == getToolWindowPanel().getToolWindowTitleBar().getToolWindowTitleButtonPanel().getFocusable())
+                            assignFocus();
+                        else
+                            focusRequester.requestFocusInWindow();
+                    }
+                }
+            } else {
+                getToolBar().deactiveTool(toolWindow);
+
+                if (toolWindow.isAutoHide() && toolWindow.getType() != ToolWindowType.EXTERN)
+                    toolWindow.setVisible(false);
+            }
+
+            valueAdjusting = false;
+        }
+    }
+
+    public class ActivePropertyChangeListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            boolean active = (Boolean) evt.getNewValue();
+
+            ToolWindowTitleBar toolWindowTitleBar = toolWindowPanel.getToolWindowTitleBar();
+            toolWindowTitleBar.setEnabled(active);
+
+            boolean found = false;
+            for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
+                if (tab.isSelected()) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found && toolWindow.getToolWindowTabs().length > 0)
+                toolWindow.getToolWindowTabs()[0].setSelected(true);
+
+            if (active && focusRequester != null && !valueAdjusting) {
+//                System.out.println("focusRequester = " + focusRequester);
+                if (focusRequester == toolWindowTitleBar.getToolWindowTitleButtonPanel().getFocusable())
+                    assignFocus();
+                else
+                    SwingUtil.requestFocus(focusRequester);
+
+            }
+        }
+
     }
 }

@@ -10,6 +10,7 @@ import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.AggregateIcon;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
 import org.noos.xing.mydoggy.plaf.ui.look.ContentRepresentativeAnchorUI;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -50,7 +51,7 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
         if (representativeAnchor == null) {
             ToolWindowAnchor anchor = getAnchor();
 
-            String labelText = getResourceManager().getUserString(content.getId());
+            String labelText = SwingUtil.getUserString(content.getId());
             Icon toolIcon = content.getIcon();
 
             switch (anchor) {
@@ -100,7 +101,7 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
         if (representativeAnchor != null) {
             ToolWindowAnchor anchor = getAnchor();
 
-            String labelText = getResourceManager().getUserString(content.getId());
+            String labelText = SwingUtil.getUserString(content.getId());
             Icon toolIcon = content.getIcon();
 
             JLabel representativeLabel = (JLabel) representativeAnchor;

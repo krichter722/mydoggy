@@ -5,7 +5,6 @@ import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
@@ -493,7 +492,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                 } else
                 if (dockedTypeDescriptor.isPreviewEnabled() &&
                     descriptor.getManager().getToolWindowManagerDescriptor().isPreviewEnabled()) {
-                    Container contentContainer = ((DockedContainer) descriptor.getToolWindowContainer()).getContentContainer();
+                    Container contentContainer = descriptor.getToolWindowPanel();
 
                     // Show Preview
                     RootPaneContainer rootPaneContainer = (RootPaneContainer) SwingUtilities.getWindowAncestor(representativeAnchor);
@@ -547,7 +546,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
             previewPanel.setSize(width + 4, height + 4);
 
-            Rectangle containerRect = descriptor.getToolWindowManagerContainerBounds();
+            Rectangle containerRect = descriptor.getManagerBounds();
             switch (descriptor.getToolWindow().getAnchor()) {
                 case LEFT:
                     previewPanel.setLocation(

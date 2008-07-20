@@ -17,6 +17,7 @@ import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * todo: move to floating container...
  */
 public class FloatingToolTransparencyListener implements PropertyChangeListener, ActionListener {
     private ToolWindowDescriptor descriptor;
@@ -29,6 +30,7 @@ public class FloatingToolTransparencyListener implements PropertyChangeListener,
 
     public FloatingToolTransparencyListener(FloatingContainer floatingContainer, ToolWindowDescriptor descriptor, final Window window) {
         this.transparencyManager = SwingUtil.getTransparencyManager();
+
         if (transparencyManager.isServiceAvailable()) {
             this.descriptor = descriptor;
             this.window = window;
@@ -51,11 +53,6 @@ public class FloatingToolTransparencyListener implements PropertyChangeListener,
                 descriptor.getToolWindow().getType() != ToolWindowType.FLOATING_FREE))
             return;
 
-        assert evt.getPropertyName() != null;
-//        assert manager.getDockableDelegator().isVisible();
-        assert (descriptor.getToolWindow().getType() == ToolWindowType.FLOATING ||
-                descriptor.getToolWindow().getType() == ToolWindowType.FLOATING_FREE);
-
         if ("active".equals(evt.getPropertyName())) {
             FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
             if (descriptor.getFloatingContainer().isAnimating()) {
@@ -72,8 +69,6 @@ public class FloatingToolTransparencyListener implements PropertyChangeListener,
             }
             
             if (typeDescriptor.isTransparentMode()) {
-//                System.out.println(evt.getNewValue());
-//                System.out.println(window.getBounds());
                 if (evt.getNewValue() == Boolean.FALSE) {
                     timer = new Timer(typeDescriptor.getTransparentDelay(), this);
                     timer.start();

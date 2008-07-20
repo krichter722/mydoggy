@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.SlidingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
@@ -61,7 +62,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
     public void setVisible(boolean visible, Container barContainer) {
         this.barContainer = barContainer;
 
-        Component content = dockedContainer.getContentContainer();
+        Component content = toolWindowPanel;
         sheet.remove(content);
 
         slidingAnimation.stop();
@@ -138,19 +139,17 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
     }
 
     protected void initListeners() {
-        addPropertyChangeListener("anchor", new PropertyChangeListener() {
+        // Init tool window properties listeners
+        PropertyChangeEventSource toolWindowSource = descriptor.getToolWindow();
+        toolWindowSource.addPlafPropertyChangeListener("anchor", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 ToolWindow evtToolWindow = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
                 if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible() && !evtToolWindow.isVisible())
                     update();
             }
         });
-        addPropertyChangeListener("type", new PropertyChangeListener() {
+        toolWindowSource.addPlafPropertyChangeListener("type", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getSource() != descriptor)
-                    return;
-
-                assert "type".equals(evt.getPropertyName());
                 if (evt.getNewValue() == ToolWindowType.SLIDING) {
                     if (layeredPane != null) {
                         sheet.addMouseMotionListener(slidingMouseInputHandler);
@@ -164,8 +163,14 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
                 }
             }
         });
-        addPropertyChangeListener("active", new ActivePropertyChangeListener());
-        addPropertyChangeListener("maximized", new MaximizedPropertyChangeListener());
+        toolWindowSource.addPlafPropertyChangeListener("active", new ActivePropertyChangeListener());
+        toolWindowSource.addPlafPropertyChangeListener("maximized", new MaximizedPropertyChangeListener());
+
+        // Init sliding type descriptor properties listeners
+        PropertyChangeEventSource slidingDescriptorSource = (PropertyChangeEventSource) descriptor.getToolWindow().getTypeDescriptor(SlidingTypeDescriptor.class);
+        slidingDescriptorSource.addPlafPropertyChangeListener(new SlidingTypePropertyChangeListener());
+
+        // TODO: move to manager add listener...
         addPropertyChangeListener("tempShowed", new TempShowedPropertyChangeListener());
         addPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
@@ -186,7 +191,6 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
         slidingMouseInputHandler = new SlidingMouseInputHandler(descriptor);
 
-        descriptor.getTypeDescriptor(ToolWindowType.SLIDING).addPropertyChangeListener(new SlidingTypePropertyChangeListener());
     }
 
     protected void update() {
@@ -201,7 +205,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
             barContainer.getParent().getLayout().layoutContainer(barContainer.getParent());
         resize();
 
-        Component content = dockedContainer.getContentContainer();
+        Component content = toolWindowPanel;
         sheet.remove(content);
         sheet.add(content, "1,1,FULL,FULL");
 
@@ -473,25 +477,25 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         }
 
         protected int calcFirstX() {
-            return descriptor.getToolWindowManagerContainerBounds().x +
+            return descriptor.getManagerBounds().x +
                    descriptor.getToolBar(ToolWindowAnchor.LEFT).getSize();
         }
 
         protected int calcFirstY() {
-            return descriptor.getToolWindowManagerContainerBounds().y +
+            return descriptor.getManagerBounds().y +
                    descriptor.getToolBar(ToolWindowAnchor.TOP).getSize() +
                    descriptor.getManager().getJMenuBarExtraHeight();
         }
 
         protected int calcMaxWidth() {
-            int width = descriptor.getToolWindowManagerContainerBounds().width;
+            int width = descriptor.getManagerBounds().width;
             width -= descriptor.getToolBar(ToolWindowAnchor.LEFT).getSize();
             width -= descriptor.getToolBar(ToolWindowAnchor.RIGHT).getSize();
             return width;
         }
 
         protected int calcMaxHeight() {
-            int height = descriptor.getToolWindowManagerContainerBounds().height;
+            int height = descriptor.getManagerBounds().height;
             height -= descriptor.getToolBar(ToolWindowAnchor.TOP).getSize();
             height -= descriptor.getToolBar(ToolWindowAnchor.BOTTOM).getSize();
             return height;

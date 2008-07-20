@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.FloatingLiveTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.cmp.FloatingLivePanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingMoveMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -40,10 +41,10 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
     public void cleanup() {
         // Remove Listeners
-        toolWindowTabContainer.removeEventDispatcherlListener(moveMouseInputHandler);
+        toolWindowTabPanel.removeEventDispatcherlListener(moveMouseInputHandler);
 
-        titleBar.removeMouseMotionListener(moveMouseInputHandler);
-        titleBar.removeMouseListener(moveMouseInputHandler);
+        toolWindowTitleBar.removeMouseMotionListener(moveMouseInputHandler);
+        toolWindowTitleBar.removeMouseListener(moveMouseInputHandler);
 
         descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).removePropertyChangeListener(this);
 
@@ -54,7 +55,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
 
     public void setVisible(boolean visible) {
-        Component content = dockedContainer.getContentContainer();
+        Component content = toolWindowPanel;
 
         if (visible) {
             // retrieve common panel
@@ -172,7 +173,10 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
     }
 
     protected void initListeners() {
-        addPropertyChangeListener("type", new PropertyChangeListener() {
+        // Init tool window properties listeners
+        PropertyChangeEventSource toolWindowSource = descriptor.getToolWindow();
+
+        toolWindowSource.addPlafPropertyChangeListener("type", new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getSource() != descriptor)
@@ -183,16 +187,16 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                     if (descriptor.getManager().getLayeredPane() != null) {
 
                         // Remove listeners
-                        toolWindowTabContainer.removeEventDispatcherlListener(moveMouseInputHandler);
+                        toolWindowTabPanel.removeEventDispatcherlListener(moveMouseInputHandler);
 
-                        titleBar.removeMouseMotionListener(moveMouseInputHandler);
-                        titleBar.removeMouseListener(moveMouseInputHandler);
+                        toolWindowTitleBar.removeMouseMotionListener(moveMouseInputHandler);
+                        toolWindowTitleBar.removeMouseListener(moveMouseInputHandler);
 
                         // Add listeners
-                        toolWindowTabContainer.addEventDispatcherlListener(moveMouseInputHandler);
+                        toolWindowTabPanel.addEventDispatcherlListener(moveMouseInputHandler);
 
-                        titleBar.addMouseMotionListener(moveMouseInputHandler);
-                        titleBar.addMouseListener(moveMouseInputHandler);
+                        toolWindowTitleBar.addMouseMotionListener(moveMouseInputHandler);
+                        toolWindowTitleBar.addMouseListener(moveMouseInputHandler);
 
                         settedListener = true;
                     }
@@ -202,17 +206,17 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                             lastBounds = descriptor.getFloatingLivePanel(toolWindow).getBounds();
 
                         // Remove listeners
-                        toolWindowTabContainer.removeEventDispatcherlListener(moveMouseInputHandler);
+                        toolWindowTabPanel.removeEventDispatcherlListener(moveMouseInputHandler);
 
-                        titleBar.removeMouseMotionListener(moveMouseInputHandler);
-                        titleBar.removeMouseListener(moveMouseInputHandler);
+                        toolWindowTitleBar.removeMouseMotionListener(moveMouseInputHandler);
+                        toolWindowTitleBar.removeMouseListener(moveMouseInputHandler);
 
                         settedListener = false;
                     }
                 }
             }
         });
-        addPropertyChangeListener("maximized", new PropertyChangeListener() {
+        toolWindowSource.addPlafPropertyChangeListener("maximized", new PropertyChangeListener() {
             protected Rectangle oldBounds = null;
 
             public void propertyChange(PropertyChangeEvent evt) {
@@ -235,7 +239,10 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                 }
             }
         });
-        addPropertyChangeListener("location", new PropertyChangeListener() {
+
+        // Init floating live type desrciptor properties listeners
+        PropertyChangeEventSource floatingLiveTypeDescriptorSource = (PropertyChangeEventSource) descriptor.getToolWindow().getTypeDescriptor(FloatingLiveTypeDescriptor.class);
+        floatingLiveTypeDescriptorSource.addPlafPropertyChangeListener("location", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE) != evt.getSource())
                     return;
@@ -251,7 +258,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                 lastBounds = null;
             }
         });
-        addPropertyChangeListener("size", new PropertyChangeListener() {
+        floatingLiveTypeDescriptorSource.addPlafPropertyChangeListener("size", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE) != evt.getSource())
                     return;
@@ -267,9 +274,8 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                 lastBounds = null;
             }
         });
-        addPropertyChangeListener("enabled", new TypeEnabledPropertyChangeListener());
+        floatingLiveTypeDescriptorSource.addPlafPropertyChangeListener("enabled", new TypeEnabledPropertyChangeListener());
 
-        descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).addPropertyChangeListener(this);
         moveMouseInputHandler = new FloatingLiveMoveMouseInputHandler(null);
         livePanelComponentListener = new LivePanelComponentListener();
     }

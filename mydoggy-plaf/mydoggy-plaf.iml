@@ -16,26 +16,26 @@
     <orderEntry type="module-library">
       <library name="junit:junit:3.8.1">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/repository/junit/junit/3.8.1/junit-3.8.1.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-javadoc.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/repository/junit/junit/3.8.1/junit-3.8.1-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/repository/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
       <library name="tablelayout:TableLayout:20050920">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/tablelayout/TableLayout/20050920/TableLayout-20050920.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/repository/tablelayout/TableLayout/20050920/TableLayout-20050920.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$MAVEN_REPOSITORY$/tablelayout/TableLayout/20050920/TableLayout-20050920-javadoc.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/repository/tablelayout/TableLayout/20050920/TableLayout-20050920-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$MAVEN_REPOSITORY$/tablelayout/TableLayout/20050920/TableLayout-20050920-sources.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/repository/tablelayout/TableLayout/20050920/TableLayout-20050920-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

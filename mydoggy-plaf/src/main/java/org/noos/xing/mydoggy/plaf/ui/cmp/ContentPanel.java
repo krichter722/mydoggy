@@ -39,9 +39,15 @@ public class ContentPanel extends JPanel {
 
     @Override
     public void paint(Graphics g) {
-        super.paint(g); 
+        if (this.isOpaque()) {
+            g.setColor(this.getBackground());
+            g.fillRect(0, 0, this.getWidth(), this.getHeight());
+        }
+
+        super.paint(g);
+
         paintComponent(g);
-    }
+   }
 
     public void updateUI() {
         if (parentPrefix != null)

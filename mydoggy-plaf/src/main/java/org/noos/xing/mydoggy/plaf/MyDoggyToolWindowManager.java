@@ -794,7 +794,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         propertyChangeSupport.addPropertyChangeListener("active", new ActivePropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("anchor", new AnchorPropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("type", new TypePropertyChangeListener());
-        propertyChangeSupport.addPropertyChangeListener("autoHide", new AutoHideChangeListener());
 
         MaximizedChangeListener maximizedChangeListener = new MaximizedChangeListener();
         propertyChangeSupport.addPropertyChangeListener("maximized", maximizedChangeListener);
@@ -1255,22 +1254,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     }
 
-    public static class AutoHideChangeListener implements PropertyChangeListener {
-        public void propertyChange(PropertyChangeEvent evt) {
-            ((ToolWindowDescriptor) evt.getSource()).getToolWindowContainer().propertyChange(evt);
-        }
-    }
-
     public class TypePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowDescriptor window = (ToolWindowDescriptor) evt.getSource();
+            ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
 
-            getBar(window.getToolWindow().getAnchor()).propertyChange(evt);
+            toolWindowDescriptor.getToolBar().propertyChange(evt);
 
-            for (ToolWindowDescriptor tool : tools.values())
-                tool.getToolWindowContainer().propertyChange(evt);
-
-            syncPanel(window.getToolWindow().getAnchor());
+            syncPanel(toolWindowDescriptor.getToolWindow().getAnchor());
         }
     }
 
@@ -1290,24 +1280,24 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 }
             }
 
-            descriptor.propertyChange(evt);
             getBar(modifiedTool.getAnchor()).propertyChange(evt);
         }
     }
 
     public class IconChangeListener implements PropertyChangeListener {
+
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
-
-            descriptor.propertyChange(evt);
-            getBar(descriptor.getToolWindow().getAnchor()).propertyChange(evt);
+            descriptor.getToolBar().propertyChange(evt);
         }
+
     }
 
     public class NumberingEnabledChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
-            for (ToolWindowDescriptor descriptor : tools.values())
-                descriptor.propertyChange(evt);
+            // TODO: what is preferible...one listener that dispatch or many listeners...
+//            for (ToolWindowDescriptor descriptor : tools.values())
+//                descriptor.propertyChange(evt);
         }
     }
 

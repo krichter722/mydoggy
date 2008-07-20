@@ -8,7 +8,6 @@ import static org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace.*;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;
-import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.*;
@@ -36,7 +35,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     protected Map<String, ObjectCustomizer<Component>> cmpCustomizers;
     protected Map<Class, ObjectCreator> instanceCreators;
 
-    protected String bundlePath;
+    protected String bundlePath = "org/noos/xing/mydoggy/plaf/ui/messages/messages";    // TODO...
     protected ResourceBundle resourceBundle;
     protected ResourceBundle userResourceBundle;
 
@@ -47,6 +46,9 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         loadResources();
         initComponentCreators();
         initTransparencyManager();
+
+        // Put a flag
+        UIManager.put(ResourceManager.class, this);
     }
 
 
@@ -106,14 +108,14 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
 
     public void setLocale(Locale locale) {
-        this.resourceBundle = initResourceBundle(locale,
+        this.resourceBundle = loadResourceBundle(locale,
                                                  bundlePath,
                                                  this.getClass().getClassLoader());
         UIManager.put("mydoggy.resourceBundle", resourceBundle);
     }
 
     public void setUserBundle(Locale locale, String bundle, ClassLoader classLoader) {
-        this.userResourceBundle = initResourceBundle(locale, bundle, classLoader);
+        this.userResourceBundle = loadResourceBundle(locale, bundle, classLoader);
         UIManager.put("mydoggy.resourceBundle.user", resourceBundle);
     }
 
@@ -122,7 +124,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
             this.userResourceBundle = new DummyResourceBundle();
         else
             this.userResourceBundle = userBundle;
-        UIManager.put("mydoggy.\resourceBundle.user", resourceBundle);
+        UIManager.put("mydoggy.resourceBundle.user", resourceBundle);
     }
 
     public ResourceBundle getResourceBundle() {
@@ -221,6 +223,10 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
 
     protected void loadResources() {
+        // Check for the flag
+        if (isAlreadyLoaded())
+            return;
+
         // Load from file
         resources = SwingUtil.loadPropertiesFile(resourceName, this.getClass().getClassLoader());
 
@@ -240,7 +246,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
         // Load static
         loadObjects();
-
     }
 
     protected void loadResource(String prefix, String name, String value) {
@@ -345,6 +350,10 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         putObject(FindFocusableQuestion.class, new FindFocusableQuestion());
     }
 
+    protected boolean isAlreadyLoaded() {
+        return UIManager.get(ResourceManager.class) != null;
+    }
+
 
     protected void initComponentCreators() {
         cmpCreators = new Hashtable<String, ObjectCreator<Component>>();
@@ -353,7 +362,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         cmpCreators.put(TOOL_WINDOW_MANAGER_CONTENT_CONTAINER, new MyDoggyManagerMainContainerComponentCreator());
         cmpCreators.put(DESKTOP_CONTENT_PANE, new DesktopContentPaneComponentCreator());
         cmpCreators.put(TOOL_SCROLL_BAR_ARROW, new ToolScrollBarArrowComponentCreator());
-        cmpCreators.put(TOOL_WINDOW_CONTAINER, new ToolWindowCmpContainerComponentCreator());
         cmpCreators.put(MULTI_SPLIT_CONTAINER_SPLIT, new ObjectCreator<Component>() {
             public Component create(Context context) {
                 return new JSplitPane((Integer) context.get("newOrientation"));
@@ -364,13 +372,12 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
         cmpCustomizers = new Hashtable<String, ObjectCustomizer<Component>>();
         cmpCustomizers.put(TOOL_WINDOW_MANAGER, new MyDoggyManagerPanelComponentCustomizer());
-        cmpCustomizers.put(TOOL_WINDOW_CONTAINER, new ToolWindowCmpContainerComponentCustomizer());
 
         instanceCreators = new Hashtable<Class, ObjectCreator>();
         instanceCreators.put(ParentOfQuestion.class, new ParentOfQuestionInstanceCreator());
     }
 
-    protected ResourceBundle initResourceBundle(Locale locale, String bundle, ClassLoader classLoader) {
+    protected ResourceBundle loadResourceBundle(Locale locale, String bundle, ClassLoader classLoader) {
         ResourceBundle result;
         if (locale == null)
             locale = Locale.getDefault();
@@ -388,18 +395,12 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     protected void initTransparencyManager() {
+        if (isAlreadyLoaded())
+            return;
+
         setTransparencyManager(new WindowTransparencyManager());
     }
 
-
-    public static class ToolWindowCmpContainerComponentCreator implements ObjectCreator<Component> {
-
-        public Component create(Context context) {
-            JPanel panel = new JPanel();
-            panel.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
-            return panel;
-        }
-    }
 
     public static class BarSplitPaneComponentCreator implements ObjectCreator<Component> {
 
@@ -470,17 +471,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
             return component;
         }
     }
-
-    public static class ToolWindowCmpContainerComponentCustomizer implements ObjectCustomizer<Component> {
-
-        public Component customize(Component component, Context context) {
-            JPanel panel = (JPanel) component;
-            panel.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
-
-            return panel;
-        }
-    }
-
 
     public static class ParentOfQuestionInstanceCreator implements ObjectCreator {
 

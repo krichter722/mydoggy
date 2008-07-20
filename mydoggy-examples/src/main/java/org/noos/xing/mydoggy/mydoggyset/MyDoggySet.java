@@ -36,7 +36,6 @@ import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.view.ViewContext;
 
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.*;
@@ -412,7 +411,6 @@ public class MyDoggySet {
 //        UIManager.put("ToolWindowTitleButtonPanelUI", "org.noos.xing.mydoggy.plaf.ui.look.MenuToolWindowTitleButtonPanelUI");
 //        UIManager.put("ToolWindowTitleBarUI", "org.noos.xing.mydoggy.mydoggyset.MyDoggySet$CustomToolWindowTitleBarUI");
 //        UIManager.put("ToolWindowRepresentativeAnchorUI", "org.noos.xing.mydoggy.mydoggyset.MyDoggySet$CustomToolWindowRepresentativeAnchorUI");
-        UIManager.put("ToolWindowBarPanelUI.background", new ColorUIResource(Color.RED));
 
 //        resourceManager.putObject("ToolWindowTabTitleUI.font", new Font("Verdana", Font.BOLD, 10));
 //        resourceManager.putObject("ToolWindowTitleBarUI.font", new Font("Verdana", Font.BOLD, 10));
@@ -483,7 +481,7 @@ public class MyDoggySet {
                                   null,
                                   GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
 
-            if (descriptor.getDockedTypeDescriptor().isIdVisibleOnTitleBar() ||
+            if (descriptor.isIdVisibleOnTitleBar() ||
                 toolWindow.getType() == ToolWindowType.FLOATING ||
                 toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
                 toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {

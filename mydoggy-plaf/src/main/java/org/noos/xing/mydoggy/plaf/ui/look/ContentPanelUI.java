@@ -109,7 +109,6 @@ public class ContentPanelUI extends BasicPanelUI implements PropertyChangeListen
                 layout.setRow(0, 0);
                 layout.setRow(2, 0);
 
-
                 drawRect(g, c.getWidth() - 20, 0, 20, c.getHeight());
 
                 putProperty(c, "dragToolWindow");
@@ -234,4 +233,5 @@ public class ContentPanelUI extends BasicPanelUI implements PropertyChangeListen
         else
             c.putClientProperty(name, false);
     }
+
 }

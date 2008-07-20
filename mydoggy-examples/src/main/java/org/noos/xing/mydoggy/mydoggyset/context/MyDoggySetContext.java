@@ -12,6 +12,7 @@ import org.noos.xing.mydoggy.mydoggyset.view.customize.CustomizeView;
 import org.noos.xing.mydoggy.mydoggyset.view.group.GroupsView;
 import org.noos.xing.mydoggy.mydoggyset.view.interactive.InteractiveTestView;
 import org.noos.xing.mydoggy.mydoggyset.view.manager.ManagerView;
+import org.noos.xing.mydoggy.mydoggyset.view.nested.NestedManagerView;
 import org.noos.xing.mydoggy.mydoggyset.view.toolwindows.ToolWindowsView;
 import org.noos.xing.mydoggy.mydoggyset.view.welcome.WelcomeContentView;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
@@ -70,10 +71,10 @@ public class MyDoggySetContext extends MapViewContext {
                                                                                  customizeContentComponent = new CustomizeView(parentComponent, toolWindowManager).getComponent(),
                                                                                  "Customize", (int) 'u'));
 
-//        addViewContextChangeListener(ActionKey.NEST_TOOLMANAGER, new AddContentAction(toolWindowManager,
-//                                                                                      "Nested Manager", "Nested Manager", null,
-//                                                                                      nestedManagerContentComponent = new NestedManagerView(parentComponent, toolWindowManager).getComponent(),
-//                                                                                      "Nested Manager", (int) 'N'));
+        addViewContextChangeListener(ActionKey.NEST_TOOLMANAGER, new AddContentAction(toolWindowManager,
+                                                                                      "Nested Manager", "Nested Manager", null,
+                                                                                      nestedManagerContentComponent = new NestedManagerView(parentComponent, toolWindowManager).getComponent(),
+                                                                                      "Nested Manager", (int) 'N'));
 
         addViewContextChangeListener(UIManager.class, new ViewContextChangeListener() {
             public void contextChange(ViewContextChangeEvent evt) {
