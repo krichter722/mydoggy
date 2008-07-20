@@ -265,7 +265,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                     if (c == content.getComponent())
                         return;
                 }
-               throw new IllegalStateException("Invalid content ui state: " + content);
+//TODO               throw new IllegalStateException("Invalid content ui state: " + content);
             }
         } else {
             if (content == lastSelected)
@@ -656,11 +656,15 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
                     oldFucusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
 
+                    if (lastSelected != null)
+                        lastSelected.setSelected(false);
+
                     // Maximize
                     multiSplitContainer.setMaximizedDockable(content);
 
-                    // Resotre the focus owner
+                    content.setSelected(true);
 
+                    // Restore the focus owner
                     maximizedContent = content;
                 }
             } else {
@@ -794,16 +798,18 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 if (newSelected == lastSelected || valueAdjusting || contentValueAdjusting)
                     return;
 
+                // TODO:.....check this...
+                if (maximizedContent != null && newSelected != maximizedContent)
+                    return;
+
                 if (lastSelected != null)
                     lastSelected.setSelected(false);
 
-                if (newSelected != null) {
-                    focusValueAdj = true;
-                    try {
-                        newSelected.setSelected(true);
-                    } finally {
-                        focusValueAdj = false;
-                    }
+                focusValueAdj = true;
+                try {
+                    newSelected.setSelected(true);
+                } finally {
+                    focusValueAdj = false;
                 }
             }
         }
@@ -942,6 +948,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
                 setRootComponent(forceWrapperForComponent(dockable, dockable.getComponent()));
             }
+            
             SwingUtil.repaint(this);
         }
 

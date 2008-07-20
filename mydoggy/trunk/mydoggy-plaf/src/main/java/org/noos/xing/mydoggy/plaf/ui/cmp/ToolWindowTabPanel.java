@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
-import org.noos.xing.mydoggy.plaf.ui.DockedContainer;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureInitiator;
@@ -26,9 +25,8 @@ public class ToolWindowTabPanel extends JPanel implements Cleaner, DragGestureIn
     protected ToolWindowDescriptor toolWindowDescriptor;
 
 
-    public ToolWindowTabPanel(ToolWindowDescriptor descriptor, DockedContainer dockedContainer) {
+    public ToolWindowTabPanel(ToolWindowDescriptor descriptor) {
         this.toolWindowDescriptor = descriptor;
-        putClientProperty(DockedContainer.class, dockedContainer);
         descriptor.getCleaner().addCleaner(this);
         updateUI();
     }

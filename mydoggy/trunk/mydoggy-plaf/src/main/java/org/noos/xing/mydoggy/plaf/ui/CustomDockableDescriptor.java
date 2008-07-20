@@ -125,10 +125,6 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
     }
 
 
-    public ResourceManager getResourceManager() {
-        return manager.getResourceManager();
-    }
-
     public MyDoggyToolWindowManager getManager() {
         return manager;
     }

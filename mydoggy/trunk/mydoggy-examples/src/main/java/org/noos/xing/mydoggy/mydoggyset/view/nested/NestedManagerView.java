@@ -24,30 +24,30 @@ public class NestedManagerView implements View {
         MyDoggyToolWindowManager nestedToolManager = new MyDoggyToolWindowManager();
 
         // Add a tool
-        
+
         ToolWindow toolWindow = nestedToolManager.registerToolWindow("Nested Tool 1",
-                                             "Nested Tool 1",
-                                             null,
-                                             new JButton("Nested Hello World 1"),
-                                             ToolWindowAnchor.RIGHT);
+                                                                     "Nested Tool 1",
+                                                                     null,
+                                                                     new JButton("Nested Hello World 1"),
+                                                                     ToolWindowAnchor.RIGHT);
         toolWindow.setAvailable(true);
         toolWindow.setType(ToolWindowType.SLIDING);
 
         // Setup contents
 
-        ContentManager subContentManager = nestedToolManager.getContentManager();
+        ContentManager nestedContentManager = nestedToolManager.getContentManager();
 
-        subContentManager.setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
+        nestedContentManager.setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
 
-        Content browseContent = subContentManager.addContent("Browse", "Browse", null, new JButton("BrowseButton"), null,
-                                                             new MultiSplitConstraint(AggregationPosition.BOTTOM));
-        TabbedContentUI contentBrowse = (TabbedContentUI) browseContent.getContentUI();
-        contentBrowse.setCloseable(false);
+        // Add a content
+        Content browseContent = nestedContentManager.addContent("Browse", "Browse", null, new JButton("BrowseButton"), null,
+                                                                new MultiSplitConstraint(AggregationPosition.BOTTOM));
+        browseContent.getContentUI().setCloseable(false);
 
-        Content queryContent = subContentManager.addContent("Query", "Query", null, new JButton("QueryButton"), null,
-                                                            new MultiSplitConstraint(browseContent, 0));
-        TabbedContentUI contentQuery = (TabbedContentUI) queryContent.getContentUI();
-        contentQuery.setCloseable(false);
+        // Add another content
+        Content queryContent = nestedContentManager.addContent("Query", "Query", null, new JButton("QueryButton"), null,
+                                                               new MultiSplitConstraint(browseContent, 0));
+        queryContent.getContentUI().setCloseable(false);
 
         return nestedToolManager;
     }

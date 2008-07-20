@@ -37,6 +37,7 @@ public class MyDoggyContentUI extends PropertyChangeEventSource {
         this.closable = contentManagerUI.isCloseable();
         this.detachable = contentManagerUI.isDetachable();
         this.minimizable = contentManagerUI.isMinimizable();
+        this.maximizable = contentManagerUI.isMaximizable();
 
         this.transparentMode = true;
         this.transparentRatio = 0.7f;

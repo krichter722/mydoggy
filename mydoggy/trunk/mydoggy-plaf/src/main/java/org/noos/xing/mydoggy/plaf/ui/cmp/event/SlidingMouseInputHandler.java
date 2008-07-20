@@ -145,7 +145,7 @@ public class SlidingMouseInputHandler extends ComponentAdapter implements MouseI
 
             if (!r.equals(startBounds)) {
                 JMenuBar menuBar = descriptor.getManager().getRootPane().getJMenuBar();
-                Rectangle containerRect = descriptor.getToolWindowManagerContainerBounds();
+                Rectangle containerRect = descriptor.getManagerBounds();
 
                 switch (toolWindow.getAnchor()) {
                     case LEFT:

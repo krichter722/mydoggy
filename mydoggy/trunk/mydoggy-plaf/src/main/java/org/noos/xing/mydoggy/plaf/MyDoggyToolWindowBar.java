@@ -784,10 +784,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             }
 
             Component content = (visible) ? descriptor.getComponent() : null;
-            if (content != null) {
-                DockedContainer container = (DockedContainer) descriptor.getToolWindowContainer();
-                content = container.getContentContainer();
-            }
+            if (content != null)
+                content = descriptor.getToolWindowPanel();
 
             if (content == null || descriptor.getDividerLocation() > 0 && splitPane.getDividerSize() != 0) {
                 synchronized (splitAnimation) {
@@ -945,10 +943,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 //                    aggregationPosition = AggregationPosition.valueOf(anchor.toString());
 
 
-                DockedContainer container = (DockedContainer) descriptor.getToolWindowContainer();
-
                 managerDockableContainer.addDockable(descriptor.getToolWindow(),
-                                                     container.getContentContainer(),
+                                                     descriptor.getToolWindowPanel(),
                                                      aggregationOnTool,
                                                      -1,
                                                      aggregationPosition
