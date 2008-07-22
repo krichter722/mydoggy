@@ -138,6 +138,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
             updateRepresentativeAnchor();
         } else if ("icon".equals(propertyName)) {
             updateRepresentativeAnchor();
+        } else if ("representativeAnchorButtonTitle".equals(propertyName)) {
+            updateRepresentativeAnchor();
         } else if ("dockLength".equals(propertyName)) {
             if (!valueAdj) {
                 this.divederLocation = (Integer) evt.getNewValue();
@@ -195,7 +197,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         if (representativeAnchor == null) {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
-            String labelText = SwingUtil.getUserString(toolWindow.getId());
+            String labelText = SwingUtil.getUserString(toolWindow.getRepresentativeAnchorButtonTitle());
             String toolRepresentativeAnchorText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
                                                   ? toolWindow.getIndex() + " : " + labelText
                                                   : labelText;
@@ -253,7 +255,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         if (representativeAnchor != null) {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
-            String labelText = SwingUtil.getUserString(toolWindow.getId());
+            String labelText = SwingUtil.getUserString(toolWindow.getRepresentativeAnchorButtonTitle());
             String toolRepresentativeAnchorText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
                                                   ? toolWindow.getIndex() + " : " + labelText
                                                   : labelText;
@@ -973,7 +975,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
             valueAdjusting = true;
 
-            System.out.println(toolWindow.getId() + " - cmp = " + component);
+//            System.out.println(toolWindow.getId() + " - cmp = " + component);
 
             if (parentOf.getAnswer(component)) {
                 toolWindow.setActive(true);

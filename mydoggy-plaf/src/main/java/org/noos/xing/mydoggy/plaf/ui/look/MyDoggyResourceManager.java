@@ -124,7 +124,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
             this.userResourceBundle = new DummyResourceBundle();
         else
             this.userResourceBundle = userBundle;
-        UIManager.put("mydoggy.resourceBundle.user", resourceBundle);
+        UIManager.put("mydoggy.resourceBundle.user", userResourceBundle);
     }
 
     public ResourceBundle getResourceBundle() {

@@ -209,5 +209,5 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * @since 1.5.0
      */
     boolean containsLockingAnchor(ToolWindowAnchor anchor);
-    
+
 }

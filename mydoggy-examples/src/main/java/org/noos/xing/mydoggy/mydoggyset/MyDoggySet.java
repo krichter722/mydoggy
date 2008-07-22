@@ -43,8 +43,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Random;
+import java.util.ResourceBundle;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -224,6 +226,7 @@ public class MyDoggySet {
 
         // Setup Tool 1
         toolWindow = toolWindowManager.getToolWindow("Tool 1");
+        toolWindow.setRepresentativeAnchorButtonTitle("Hello  World 1!!!");
         toolWindow.setAutoHide(true);
         dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
 //        dockedTypeDescriptor.setPopupMenuEnabled(false);
@@ -378,6 +381,17 @@ public class MyDoggySet {
 */
         resourceManager.putProperty("ContentManagerUI.ContentManagerUiListener.import", "true");
         resourceManager.putBoolean("mydoggy.preview.full", true);
+        resourceManager.setUserBundle(new ResourceBundle() {
+            protected Object handleGetObject(String key) {
+                if  ("Tool 3".equals(key))
+                    return "ciao";
+                return key;
+            }
+
+            public Enumeration<String> getKeys() {
+                return null;
+            }
+        });
 
 /*
         resourceManager.putProperty("drag.icon.transparency.enabled", "false");

@@ -288,6 +288,20 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
     boolean isRepresentativeAnchorButtonVisible();
 
     /**
+     *
+     * @param title
+     * @since 1.5.0
+     */
+    void setRepresentativeAnchorButtonTitle(String title);
+
+    /**
+     *
+     * @return
+     * @since 1.5.0
+     */
+    String getRepresentativeAnchorButtonTitle(); 
+
+    /**
      * TODO:
      * @param hideOnZeroTabs
      * @since 1.5.0
