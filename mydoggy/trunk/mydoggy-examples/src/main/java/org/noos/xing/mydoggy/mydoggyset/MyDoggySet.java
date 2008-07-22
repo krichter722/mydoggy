@@ -370,9 +370,10 @@ public class MyDoggySet {
     protected void customizeToolWindowManager(MyDoggyToolWindowManager myDoggyToolWindowManager) {
         ResourceManager resourceManager = myDoggyToolWindowManager.getResourceManager();
         // Add customization here. See the page http://mydoggy.sourceforge.net/mydoggy-plaf/resourceManagerUsing.html
+
+        resourceManager.putProperty("dialog.owner.enabled", "false");
+
 /*
-        resourceManager.putProperty("dialog.owner.enabled", "false");
-        resourceManager.putProperty("dialog.owner.enabled", "false");
         resourceManager.putProperty("ContentManagerDropTarget.enabled", "true");
 */
         resourceManager.putProperty("ContentManagerUI.ContentManagerUiListener.import", "true");
