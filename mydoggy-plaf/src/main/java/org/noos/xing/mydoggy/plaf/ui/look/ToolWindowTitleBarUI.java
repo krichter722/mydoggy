@@ -292,18 +292,8 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
 
 
     protected void setIdOnTitleBarVisible(boolean visible) {
-        if (visible) {
-//      todo      toolWindowTitleBarLayout.setColumn(0,
-//                                               toolWindowTitleBar
-//                                                       .getFontMetrics(toolWindowTitleBar.getFont())
-//                                                       .stringWidth(
-//                                                               SwingUtil.getUserString(toolWindow.getId())
-//                                                       )
-//                                               + 12);
-
-        } else {
+        if (!visible)
             toolWindowTitleBarLayout.setColumn(0, 3);
-        }
         SwingUtil.repaint(toolWindowTitleBar);
     }
 

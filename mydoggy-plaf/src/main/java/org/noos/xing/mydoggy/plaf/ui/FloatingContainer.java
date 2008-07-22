@@ -7,17 +7,20 @@ import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.animation.AnimationListener;
+import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JModalFrame;
 import org.noos.xing.mydoggy.plaf.ui.cmp.JModalWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ModalWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingMoveMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingResizeMouseInputHandler;
-import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingToolTransparencyListener;
+import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
@@ -218,7 +221,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         contentPane.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         window.setContentPane(contentPane);
 
-        new FloatingToolTransparencyListener(this, descriptor, window.getWindow());
+        new FloatingToolTransparencyListener();
         resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window.getWindow());
         moveMouseInputHandler = new FloatingMoveMouseInputHandler(window.getWindow());
 
@@ -514,6 +517,111 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
                 // Finalize clean
                 oldWindow.getWindow().dispose();
+            }
+        }
+
+    }
+
+    public class FloatingToolTransparencyListener implements PropertyChangeListener, ActionListener {
+        protected final TransparencyManager<Window> transparencyManager;
+        protected TransparencyAnimation transparencyAnimation;
+
+        protected Timer timer;
+
+
+        public FloatingToolTransparencyListener() {
+            this.transparencyManager = SwingUtil.getTransparencyManager();
+
+            if (transparencyManager.isServiceAvailable()) {
+                this.transparencyAnimation = new TransparencyAnimation(
+                        SwingUtil.getTransparencyManager(),
+                        window.getWindow(),
+                        0.0f
+                );
+
+                // TODO Move this listeners...
+                addPropertyChangeListener("active", this);
+                addPropertyChangeListener("visible.FLOATING", this);
+                addPropertyChangeListener("visible.FLOATING_FREE", this);
+            } else
+                this.transparencyAnimation = null;
+        }
+
+
+        public synchronized void propertyChange(PropertyChangeEvent evt) {
+            if (evt.getSource() != descriptor /*|| !manager.getDockableDelegator().isVisible()*/
+                || (descriptor.getToolWindow().getType() != ToolWindowType.FLOATING &&
+                    descriptor.getToolWindow().getType() != ToolWindowType.FLOATING_FREE))
+                return;
+
+            if ("active".equals(evt.getPropertyName())) {
+                FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
+                if (descriptor.getFloatingContainer().isAnimating()) {
+                    if (timer != null) {
+                        timer.stop();
+                        synchronized (transparencyManager) {
+                            if (transparencyManager.isAlphaModeEnabled(window.getWindow())) {
+                                transparencyAnimation.stop();
+                                transparencyManager.setAlphaModeRatio(window.getWindow(), 0.0f);
+                            }
+                        }
+                    }
+                    return;
+                }
+
+                if (typeDescriptor.isTransparentMode()) {
+                    if (evt.getNewValue() == Boolean.FALSE) {
+                        timer = new Timer(typeDescriptor.getTransparentDelay(), this);
+                        timer.start();
+                    } else {
+                        if (timer != null)
+                            timer.stop();
+
+                        synchronized (transparencyManager) {
+                            if (transparencyManager.isAlphaModeEnabled(window.getWindow())) {
+                                transparencyAnimation.stop();
+                                transparencyManager.setAlphaModeRatio(window.getWindow(), 0.0f);
+                            }
+                        }
+                    }
+                }
+            } else if (evt.getPropertyName().startsWith("visible.")) {
+                synchronized (transparencyManager) {
+                    if (evt.getNewValue() == Boolean.FALSE && transparencyManager.isAlphaModeEnabled(window.getWindow())) {
+                        if (timer != null)
+                            timer.stop();
+
+                        if (transparencyManager.isAlphaModeEnabled(window.getWindow())) {
+                            transparencyAnimation.stop();
+                            transparencyManager.setAlphaModeRatio(window.getWindow(), 0.0f);
+                        }
+                    }
+                }
+
+                if (evt.getNewValue() == Boolean.TRUE) {
+                    FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
+                    if (typeDescriptor.isTransparentMode()) {
+                        timer = new Timer(1000 + typeDescriptor.getTransparentDelay(), this);
+                        timer.start();
+                    }
+                }
+            }
+        }
+
+        public synchronized void actionPerformed(ActionEvent e) {
+            if (timer != null && timer.isRunning()) {
+                timer.stop();
+                if (!descriptor.getToolWindow().isVisible()
+                    || (descriptor.getToolWindow().getType() != ToolWindowType.FLOATING &&
+                        descriptor.getToolWindow().getType() != ToolWindowType.FLOATING_FREE))
+                    return;
+
+                FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
+                synchronized (transparencyManager) {
+                    transparencyAnimation.setAlpha(typeDescriptor.getTransparentRatio());
+                    transparencyAnimation.show();
+    //                transparencyManager.setAlphaModeRatio(window, typeDescriptor.getTransparentRatio());
+                }
             }
         }
 
