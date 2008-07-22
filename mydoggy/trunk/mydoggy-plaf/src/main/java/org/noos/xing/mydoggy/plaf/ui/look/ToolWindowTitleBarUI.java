@@ -315,7 +315,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
                 SwingUtil.revalidate(toolWindowTitleBar);
             }
 
-            String id = SwingUtil.getUserString(descriptor.getToolWindow().getId());
+            String id = SwingUtil.getUserString(descriptor.getToolWindow().getRepresentativeAnchorButtonTitle());
             r.width = g.getFontMetrics().stringWidth(id) + 8;
 
             int halfHeigh = (r.height / 2);
@@ -342,7 +342,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
     }
 
     protected int getTitleWidth(Graphics g) {
-        return g.getFontMetrics().stringWidth(SwingUtil.getUserString(toolWindow.getId())) + 12;
+        return g.getFontMetrics().stringWidth(SwingUtil.getUserString(toolWindow.getRepresentativeAnchorButtonTitle())) + 12;
     }
 
 

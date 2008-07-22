@@ -36,6 +36,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     protected boolean flash;
     protected boolean maximized;
     protected boolean aggregateEnabled;
+    protected String  representativeAnchorButtonTitle;
     protected boolean representativeAnchorButtonVisible;
     protected boolean lockedOnAnchor;
     protected boolean hideOnZeroTabs;
@@ -76,6 +77,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         this.available = this.active = this.visible = this.maximized = this.aggregateEnabled = false;
         this.hideOnZeroTabs = true;
         this.representativeAnchorButtonVisible = true;
+        this.representativeAnchorButtonTitle = id;
     }
 
 
@@ -541,6 +543,23 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
 
     public boolean isRepresentativeAnchorButtonVisible() {
         return representativeAnchorButtonVisible;
+    }
+
+    public void setRepresentativeAnchorButtonTitle(String title) {
+        if (title == null)
+            title = id;
+
+        if (title != null && title.equals(getRepresentativeAnchorButtonTitle()))
+            return;
+
+        String old = this.getRepresentativeAnchorButtonTitle();
+        this.representativeAnchorButtonTitle =  title;
+
+        firePropertyChangeEvent("representativeAnchorButtonTitle", old, title);
+    }
+
+    public String getRepresentativeAnchorButtonTitle() {
+        return representativeAnchorButtonTitle;
     }
 
     public void setMaximized(boolean maximized) {

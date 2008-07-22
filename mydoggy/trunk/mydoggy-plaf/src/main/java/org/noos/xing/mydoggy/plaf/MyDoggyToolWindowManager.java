@@ -203,6 +203,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         if (getDockable(id) != null)
             throw new IllegalArgumentException("Cannot register tool window with passed id. An already registered dockable exists. [id : " + id + "]");
 
+        // TODO: why resourceBundle is null???
         MyDoggyToolWindow toolWindow = new MyDoggyToolWindow(this,
                                                              id,
                                                              index,
