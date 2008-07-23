@@ -2,8 +2,8 @@
 <module relativePaths="true" MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_5" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/classes" />
-    <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <exclude-output />
+    <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
@@ -16,13 +16,13 @@
     <orderEntry type="module-library" exported="">
       <library name="tablelayout:TableLayout:20050920">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/repository/tablelayout/TableLayout/20050920/TableLayout-20050920.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/tablelayout/TableLayout/20050920/TableLayout-20050920.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$MAVEN_REPOSITORY$/repository/tablelayout/TableLayout/20050920/TableLayout-20050920-javadoc.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/tablelayout/TableLayout/20050920/TableLayout-20050920-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$MAVEN_REPOSITORY$/repository/tablelayout/TableLayout/20050920/TableLayout-20050920-sources.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/tablelayout/TableLayout/20050920/TableLayout-20050920-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -33,39 +33,39 @@
     <orderEntry type="module-library" exported="">
       <library name="org.swinglabs:swingx:0.9.1">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/repository/org/swinglabs/swingx/0.9.1/swingx-0.9.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/swinglabs/swingx/0.9.1/swingx-0.9.1.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$MAVEN_REPOSITORY$/repository/org/swinglabs/swingx/0.9.1/swingx-0.9.1-javadoc.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/swinglabs/swingx/0.9.1/swingx-0.9.1-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$MAVEN_REPOSITORY$/repository/org/swinglabs/swingx/0.9.1/swingx-0.9.1-sources.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/swinglabs/swingx/0.9.1/swingx-0.9.1-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
       <library name="com.jhlabs:filters:2.0.235">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/repository/com/jhlabs/filters/2.0.235/filters-2.0.235.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/jhlabs/filters/2.0.235/filters-2.0.235.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$MAVEN_REPOSITORY$/repository/com/jhlabs/filters/2.0.235/filters-2.0.235-javadoc.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/jhlabs/filters/2.0.235/filters-2.0.235-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$MAVEN_REPOSITORY$/repository/com/jhlabs/filters/2.0.235/filters-2.0.235-sources.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/jhlabs/filters/2.0.235/filters-2.0.235-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library name="junit:junit:3.8.1">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/repository/junit/junit/3.8.1/junit-3.8.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$MAVEN_REPOSITORY$/repository/junit/junit/3.8.1/junit-3.8.1-javadoc.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$MAVEN_REPOSITORY$/repository/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
