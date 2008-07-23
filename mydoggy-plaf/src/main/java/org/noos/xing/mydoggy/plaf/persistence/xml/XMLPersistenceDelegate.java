@@ -850,53 +850,53 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 if (toolWindow == null)
                     continue;
 
-                Element dockedType = getElement(tool, "docked");
-                if (dockedType != null) {
+                Element typeElement = getElement(tool, "docked");
+                if (typeElement != null) {
                     DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-                    descriptor.setDockLength(getInteger(dockedType, "dockLength", 200));
-                    descriptor.setMinimumDockLength(getInteger(dockedType, "minimumDockLength", 100));
-                    descriptor.setPopupMenuEnabled(getBoolean(dockedType, "popupMenuEnabled", true));
-                    descriptor.setAnimating(getBoolean(dockedType, "animating", true));
-                    descriptor.setPreviewEnabled(getBoolean(dockedType, "previewEnabled", true));
-                    descriptor.setPreviewDelay(getInteger(dockedType, "previewDelay", 0));
-                    descriptor.setPreviewTransparentRatio(getFloat(dockedType, "previewTransparentRatio", 0.7f));
-                    descriptor.setIdVisibleOnTitleBar(getBoolean(dockedType, "idVisibleOnTitleBar", true));
-                    descriptor.setHideRepresentativeButtonOnVisible(getBoolean(dockedType, "hideRepresentativeButtonOnVisible", false));
-                    descriptor.setAutoHide(getBoolean(dockedType, "autoHide", false));
+                    descriptor.setDockLength(getInteger(typeElement, "dockLength", 200));
+                    descriptor.setMinimumDockLength(getInteger(typeElement, "minimumDockLength", 100));
+                    descriptor.setPopupMenuEnabled(getBoolean(typeElement, "popupMenuEnabled", true));
+                    descriptor.setAnimating(getBoolean(typeElement, "animating", true));
+                    descriptor.setPreviewEnabled(getBoolean(typeElement, "previewEnabled", true));
+                    descriptor.setPreviewDelay(getInteger(typeElement, "previewDelay", 0));
+                    descriptor.setPreviewTransparentRatio(getFloat(typeElement, "previewTransparentRatio", 0.7f));
+                    descriptor.setIdVisibleOnTitleBar(getBoolean(typeElement, "idVisibleOnTitleBar", true));
+                    descriptor.setHideRepresentativeButtonOnVisible(getBoolean(typeElement, "hideRepresentativeButtonOnVisible", false));
+                    descriptor.setAutoHide(getBoolean(typeElement, "autoHide", false));
                 }
 
-                Element slidingType = getElement(tool, "sliding");
-                if (slidingType != null) {
+                typeElement = getElement(tool, "sliding");
+                if (typeElement != null) {
                     SlidingTypeDescriptor descriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);
-                    descriptor.setEnabled(getBoolean(slidingType, "enabled", true));
-                    descriptor.setTransparentDelay(getInteger(slidingType, "transparentDelay", 0));
-                    descriptor.setTransparentMode(getBoolean(slidingType, "transparentMode", true));
-                    descriptor.setTransparentRatio(getFloat(slidingType, "transparentRatio", 0.7f));
-                    descriptor.setAnimating(getBoolean(slidingType, "animating", true));
-                    descriptor.setIdVisibleOnTitleBar(getBoolean(slidingType, "idVisibleOnTitleBar", true));
-                    descriptor.setAutoHide(getBoolean(slidingType, "autoHide", false));
+                    descriptor.setEnabled(getBoolean(typeElement, "enabled", true));
+                    descriptor.setTransparentDelay(getInteger(typeElement, "transparentDelay", 0));
+                    descriptor.setTransparentMode(getBoolean(typeElement, "transparentMode", true));
+                    descriptor.setTransparentRatio(getFloat(typeElement, "transparentRatio", 0.7f));
+                    descriptor.setAnimating(getBoolean(typeElement, "animating", true));
+                    descriptor.setIdVisibleOnTitleBar(getBoolean(typeElement, "idVisibleOnTitleBar", true));
+                    descriptor.setAutoHide(getBoolean(typeElement, "autoHide", false));
                 }
 
-                Element floatingType = getElement(tool, "floating");
-                if (floatingType != null) {
+                typeElement = getElement(tool, "floating");
+                if (typeElement != null) {
                     FloatingTypeDescriptor descriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
-                    descriptor.setEnabled(getBoolean(floatingType, "enabled", true));
-                    descriptor.setTransparentDelay(getInteger(floatingType, "transparentDelay", 0));
-                    descriptor.setTransparentMode(getBoolean(floatingType, "transparentMode", true));
-                    descriptor.setTransparentRatio(getFloat(floatingType, "transparentRatio", 0.7f));
-                    descriptor.setModal(getBoolean(floatingType, "modal", false));
-                    descriptor.setAnimating(getBoolean(floatingType, "animating", true));
-                    descriptor.setIdVisibleOnTitleBar(getBoolean(floatingType, "idVisibleOnTitleBar", true));
-                    descriptor.setAutoHide(getBoolean(floatingType, "autoHide", false));
-                    descriptor.setAddToTaskBar(getBoolean(floatingType, "addToTaskBar", false));
+                    descriptor.setEnabled(getBoolean(typeElement, "enabled", true));
+                    descriptor.setTransparentDelay(getInteger(typeElement, "transparentDelay", 0));
+                    descriptor.setTransparentMode(getBoolean(typeElement, "transparentMode", true));
+                    descriptor.setTransparentRatio(getFloat(typeElement, "transparentRatio", 0.7f));
+                    descriptor.setModal(getBoolean(typeElement, "modal", false));
+                    descriptor.setAnimating(getBoolean(typeElement, "animating", true));
+                    descriptor.setIdVisibleOnTitleBar(getBoolean(typeElement, "idVisibleOnTitleBar", true));
+                    descriptor.setAutoHide(getBoolean(typeElement, "autoHide", false));
+                    descriptor.setAddToTaskBar(getBoolean(typeElement, "addToTaskBar", false));
 
-                    Element location = getElement(floatingType, "location");
+                    Element location = getElement(typeElement, "location");
                     if (location != null)
                         descriptor.setLocation(
                                 getInteger(location, "x", 0),
                                 getInteger(location, "y", 0)
                         );
-                    Element dimension = getElement(floatingType, "size");
+                    Element dimension = getElement(typeElement, "size");
                     if (dimension != null)
                         descriptor.setSize(
                                 getInteger(dimension, "width", 100),
@@ -904,24 +904,24 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                         );
                 }
 
-                Element floatingLiveType = getElement(tool, "floatingLive");
-                if (floatingLiveType != null) {
+                typeElement = getElement(tool, "floatingLive");
+                if (typeElement != null) {
                     FloatingLiveTypeDescriptor descriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
-                    descriptor.setEnabled(getBoolean(floatingLiveType, "enabled", true));
-                    descriptor.setTransparentDelay(getInteger(floatingLiveType, "transparentDelay", 0));
-                    descriptor.setTransparentMode(getBoolean(floatingLiveType, "transparentMode", true));
-                    descriptor.setTransparentRatio(getFloat(floatingLiveType, "transparentRatio", 0.7f));
-                    descriptor.setAnimating(getBoolean(floatingLiveType, "animating", true));
-                    descriptor.setIdVisibleOnTitleBar(getBoolean(floatingLiveType, "idVisibleOnTitleBar", true));
-                    descriptor.setAutoHide(getBoolean(floatingType, "autoHide", false));
+                    descriptor.setEnabled(getBoolean(typeElement, "enabled", true));
+                    descriptor.setTransparentDelay(getInteger(typeElement, "transparentDelay", 0));
+                    descriptor.setTransparentMode(getBoolean(typeElement, "transparentMode", true));
+                    descriptor.setTransparentRatio(getFloat(typeElement, "transparentRatio", 0.7f));
+                    descriptor.setAnimating(getBoolean(typeElement, "animating", true));
+                    descriptor.setIdVisibleOnTitleBar(getBoolean(typeElement, "idVisibleOnTitleBar", true));
+                    descriptor.setAutoHide(getBoolean(typeElement, "autoHide", false));
 
-                    Element location = getElement(floatingType, "location");
+                    Element location = getElement(typeElement, "location");
                     if (location != null)
                         descriptor.setLocation(
                                 getInteger(location, "x", 0),
                                 getInteger(location, "y", 0)
                         );
-                    Element dimension = getElement(floatingType, "size");
+                    Element dimension = getElement(typeElement, "size");
                     if (dimension != null)
                         descriptor.setSize(
                                 getInteger(dimension, "width", 100),

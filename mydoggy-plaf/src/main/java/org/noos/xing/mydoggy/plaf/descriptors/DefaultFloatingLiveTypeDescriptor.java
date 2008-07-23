@@ -67,6 +67,10 @@ public class DefaultFloatingLiveTypeDescriptor extends PropertyChangeEventSource
         firePropertyChangeEvent("location", old, location);
     }
 
+    public Point getLocation() {
+        return location;
+    }
+
     public void setSize(int width, int height) {
         Dimension newSize = new Dimension(width, height);
         if (size != null && size.equals(newSize))
@@ -76,10 +80,6 @@ public class DefaultFloatingLiveTypeDescriptor extends PropertyChangeEventSource
         this.size = newSize;
 
         firePropertyChangeEvent("size", old, size);
-    }
-
-    public Point getLocation() {
-        return location;
     }
 
     public Dimension getSize() {
