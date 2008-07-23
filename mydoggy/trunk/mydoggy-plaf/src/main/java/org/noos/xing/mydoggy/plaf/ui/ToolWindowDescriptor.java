@@ -884,12 +884,14 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
             // Remove floating live entry...
             removeFloatingLivePanel();
 
+            if (toolWindowPanel != null) {
+                toolWindowPanel.putClientProperty(ToolWindow.class, null);
+                toolWindowPanel.removeAll();
+            }
+
             // Finalizy clean
             toolWindow = null;
             manager = null;
-
-            toolWindowPanel.putClientProperty(ToolWindow.class, null);
-            toolWindowPanel.removeAll();
         }
     }
 
