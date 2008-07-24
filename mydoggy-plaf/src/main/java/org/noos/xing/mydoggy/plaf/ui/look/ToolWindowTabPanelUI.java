@@ -342,10 +342,9 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
 
 
         public PopupButton() {
-            setIcon(UIManager.getIcon(MyDoggyKeySpace.TOO_WINDOW_TAB_POPUP));
-            addActionListener(this);
-            addMouseListener(this);
+            super(UIManager.getIcon(MyDoggyKeySpace.TOO_WINDOW_TAB_POPUP));
             setVisible(false);
+            initListeners();
         }
 
 
@@ -370,6 +369,11 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         public void mouseExited(MouseEvent e) {
         }
 
+
+        protected void initListeners() {
+            addActionListener(this);
+            addMouseListener(this);
+        }
 
         protected void initPopup() {
             if (popupMenu == null) {
