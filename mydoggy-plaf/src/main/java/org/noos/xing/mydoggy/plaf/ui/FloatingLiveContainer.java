@@ -31,8 +31,8 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
     protected boolean valueAdjusting;
 
 
-    public FloatingLiveContainer(DockedContainer dockedContainer) {
-        super(dockedContainer);
+    public FloatingLiveContainer(ToolWindowDescriptor toolWindowDescriptor) {
+        super(toolWindowDescriptor);
 
         initComponents();
         initListeners();

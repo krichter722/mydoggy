@@ -45,8 +45,8 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
     protected boolean assignFocusOnAnimFinished = false;
 
 
-    public FloatingContainer(DockedContainer dockedContainer) {
-        super(dockedContainer);
+    public FloatingContainer(ToolWindowDescriptor toolWindowDescriptor) {
+        super(toolWindowDescriptor);
         this.floatingAnimation = new FloatingAnimation();
 
         initComponents();

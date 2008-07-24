@@ -60,12 +60,10 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                              ToolWindowAnchor anchor, ToolWindowType type,
                              String title, Icon icon, Component component,
                              ResourceBundle resourceBundle) {
-        this.descriptor = (ToolWindowDescriptor) manager.createDescriptor(this);
         this.resourceBundle = resourceBundle;
         this.toolWindowTabs = new ArrayList<ToolWindowTab>();
 
         rootTab = addTabInternal(title, null, component, null, true);
-
         rootTab.setIcon(icon);
 
         this.id = id;
@@ -78,6 +76,8 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         this.hideOnZeroTabs = true;
         this.representativeAnchorButtonVisible = true;
         this.representativeAnchorButtonTitle = id;
+
+        this.descriptor = (ToolWindowDescriptor) manager.createDescriptor(this);
     }
 
 
@@ -765,7 +765,6 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                 if ((descriptor.getManager().getContentManager().isEnabled() &&
                      toolWindow.getAnchor() != anchor &&
                      toolWindow.getType() != ToolWindowType.FLOATING_LIVE   // TODO: check this condition adedd for aggregation on floating...
-
                 ) || !toolWindow.isVisible())
                     return;
             }

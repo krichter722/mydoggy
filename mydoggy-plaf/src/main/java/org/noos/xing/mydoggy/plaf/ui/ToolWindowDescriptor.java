@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui;
 
 import org.noos.common.Question;
 import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowBar;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
@@ -15,6 +16,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.ToolWindowManagerListenerAdapter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +34,7 @@ import java.util.Map;
 public class ToolWindowDescriptor implements PropertyChangeListener,
                                              DockableDescriptor {
 
+    // TODO: comment this...
     private static Map<ToolWindow, FloatingLivePanel> livePanelMap = new HashMap<ToolWindow, FloatingLivePanel>();
 
 
@@ -588,15 +591,17 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
 
 
-    protected void initContainers() {
+    public void initContainers() {
+        if (toolWindowPanel != null)
+                    return;
         // init components
         toolWindowPanel = new ToolWindowPanel(this);
 
-        // init containers
+        // init containers .. TODO: move to a method..
         dockedContainer = new DockedContainer(this);
-        slidingContainer = new SlidingContainer(dockedContainer);
-        floatingContainer = new FloatingContainer(dockedContainer);
-        floatingLiveContainer = new FloatingLiveContainer(dockedContainer);
+        slidingContainer = new SlidingContainer(this);
+        floatingContainer = new FloatingContainer(this);
+        floatingLiveContainer = new FloatingLiveContainer(this);
 
         // init listeners
 
@@ -630,6 +635,14 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
     protected void initListeners() {
         toolWindow.addPlafPropertyChangeListener(this);
+
+        manager.addToolWindowManagerListener(new ToolWindowManagerListenerAdapter() {
+            public void toolWindowRegistered(ToolWindowManagerEvent event) {
+                initContainers();
+                manager.removeToolWindowManagerListener(this);
+            }
+        });
+
         // todo: add as plaf
         manager.getToolWindowManagerDescriptor().addPropertyChangeListener(this);
     }
@@ -988,7 +1001,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
             valueAdjusting = true;
 
-//            System.out.println(toolWindow.getId() + " - cmp = " + component);
+            System.out.println(toolWindow.getId() + " - cmp = " + component);
 
             if (parentOf.getAnswer(component)) {
                 toolWindow.setActive(true);

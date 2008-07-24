@@ -1063,7 +1063,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     }
 
-    protected static class VisibleFloatingListener implements PropertyChangeListener {
+    public static class VisibleFloatingListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
@@ -1075,12 +1075,11 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
                 return;
 
-            container.propertyChange(evt);
             container.setVisible(visible);
         }
     }
 
-    protected static class VisibleFloatingFreeListener implements PropertyChangeListener {
+    public static class VisibleFloatingFreeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
@@ -1092,7 +1091,6 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
                 return;
 
-            container.propertyChange(evt);
             container.setVisible(visible);
         }
     }

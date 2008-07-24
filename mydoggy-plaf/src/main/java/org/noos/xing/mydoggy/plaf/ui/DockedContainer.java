@@ -1,6 +1,9 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.PersistenceDelegate;
+import org.noos.xing.mydoggy.ToolWindowListener;
+import org.noos.xing.mydoggy.ToolWindowTab;
+import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
@@ -16,18 +19,11 @@ import java.io.ByteArrayOutputStream;
 /**
  * @author Angelo De Caro
  */
-public class DockedContainer implements ToolWindowContainer, Cleaner {
-    protected ToolWindowDescriptor descriptor;
-    protected ToolWindow toolWindow;
-
-    boolean valueAdjusting;
+public class DockedContainer extends MyDoggyToolWindowContainer {
 
 
     public DockedContainer(ToolWindowDescriptor descriptor) {
-        this.descriptor = descriptor;
-        this.toolWindow = descriptor.getToolWindow();
-
-        descriptor.getCleaner().addCleaner(this);
+        super(descriptor);
 
         initListeners();
     }
@@ -41,15 +37,6 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
     public void updateUI() {
         SwingUtilities.updateComponentTreeUI(descriptor.getToolWindowPanel());
-    }
-
-    public void propertyChange(PropertyChangeEvent evt) {
-//        propertyChangeSupport.firePropertyChange(evt);
-    }
-
-
-    public ToolWindowDescriptor getToolWindowDescriptor() {
-        return descriptor;
     }
 
 

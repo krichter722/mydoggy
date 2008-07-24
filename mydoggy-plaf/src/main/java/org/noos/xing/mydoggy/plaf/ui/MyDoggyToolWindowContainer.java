@@ -6,14 +6,10 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleBar;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleButtonPanel;
 
-import java.beans.PropertyChangeEvent;
-
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public abstract class MyDoggyToolWindowContainer implements ToolWindowContainer {
-    protected DockedContainer dockedContainer;
-
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
 
@@ -23,13 +19,12 @@ public abstract class MyDoggyToolWindowContainer implements ToolWindowContainer 
     protected ToolWindowTitleButtonPanel titleBarButtons;
 
 
-    public MyDoggyToolWindowContainer(DockedContainer dockedContainer) {
-        this.dockedContainer = dockedContainer;
-
-        this.descriptor = dockedContainer.getToolWindowDescriptor();
+    public MyDoggyToolWindowContainer(ToolWindowDescriptor toolWindowDescriptor) {
+        this.descriptor = toolWindowDescriptor;
         this.toolWindow = descriptor.getToolWindow();
 
         this.toolWindowPanel = descriptor.getToolWindowPanel();
+
         this.toolWindowTitleBar = toolWindowPanel.getToolWindowTitleBar();
         this.titleBarButtons = toolWindowTitleBar.getToolWindowTitleButtonPanel();
         this.toolWindowTabPanel = toolWindowTitleBar.getToolWindowTabPanel();
@@ -39,16 +34,11 @@ public abstract class MyDoggyToolWindowContainer implements ToolWindowContainer 
 
 
     public void updateUI() {
-        dockedContainer.updateUI();
-    }
-
-    public void propertyChange(PropertyChangeEvent evt) {
-//        dockedContainer.propertyChange(evt);
+        // TODO: change this...
     }
 
     public void cleanup() {
-        // Finalize
-        dockedContainer = null;
+        // Clean fields...
         descriptor = null;
         toolWindow = null;
 

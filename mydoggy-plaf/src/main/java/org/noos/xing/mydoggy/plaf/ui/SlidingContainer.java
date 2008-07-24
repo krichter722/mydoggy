@@ -39,8 +39,8 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
     protected SlidingMouseInputHandler slidingMouseInputHandler;
 
 
-    public SlidingContainer(DockedContainer dockedContainer) {
-        super(dockedContainer);
+    public SlidingContainer(ToolWindowDescriptor toolWindowDescriptor) {
+        super(toolWindowDescriptor);
 
         initComponents();
         initListeners();
