@@ -106,7 +106,7 @@ public class MyDoggySet {
 
         // Init ToolWindowManager
         MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(Locale.US, null);
-        
+
         // Add MyDoggyToolWindowManager to frame
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
 
@@ -190,7 +190,7 @@ public class MyDoggySet {
         JPanel toolOnePanel = new JPanel();
         toolOnePanel.add(label, BorderLayout.NORTH);
         toolOnePanel.add(datePicker, BorderLayout.CENTER);
-        
+
         toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, toolOnePanel, ToolWindowAnchor.BOTTOM);
         toolWindowManager.registerToolWindow("Tool 2", "Title 2", null, panel, ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 3", "Title 3",
@@ -217,9 +217,8 @@ public class MyDoggySet {
         toolWindowManager.registerToolWindow("Some Doggy Table", "Doggy Style", null, new JScrollPane(new DoggyTable()), ToolWindowAnchor.TOP);
 
 
-toolWindowManager.registerToolWindow("Paramètres",
-"",
-null, new JButton("HELLOO"), ToolWindowAnchor.LEFT); 
+        toolWindowManager.registerToolWindow("Paramètres", "",
+                                             null, new JButton("HELLOO"), ToolWindowAnchor.LEFT);
 
         // Make all available
         for (ToolWindow window : toolWindowManager.getToolWindows()) {
@@ -379,7 +378,9 @@ null, new JButton("HELLOO"), ToolWindowAnchor.LEFT);
         ResourceManager resourceManager = myDoggyToolWindowManager.getResourceManager();
         // Add customization here. See the page http://mydoggy.sourceforge.net/mydoggy-plaf/resourceManagerUsing.html
 
+/*
         resourceManager.putProperty("dialog.owner.enabled", "false");
+*/
 
 /*
         resourceManager.putProperty("ContentManagerDropTarget.enabled", "true");
@@ -388,7 +389,7 @@ null, new JButton("HELLOO"), ToolWindowAnchor.LEFT);
         resourceManager.putBoolean("mydoggy.preview.full", true);
         resourceManager.setUserBundle(new ResourceBundle() {
             protected Object handleGetObject(String key) {
-                if  ("Tool 3".equals(key))
+                if ("Tool 3".equals(key))
                     return "ciao";
                 return key;
             }
@@ -890,9 +891,9 @@ null, new JButton("HELLOO"), ToolWindowAnchor.LEFT);
             infoPanel = new JXTitledPanel("Information");
 
 
-        double size[][] = {{TableLayoutConstants.FILL}, // Columns
-                           {20, 20, 20, 20, TableLayoutConstants.FILL}}; // Rows
-        infoPanel.setLayout(new TableLayout(size));
+            double size[][] = {{TableLayoutConstants.FILL}, // Columns
+                               {20, 20, 20, 20, TableLayoutConstants.FILL}}; // Rows
+            infoPanel.setLayout(new TableLayout(size));
             infoPanel.add(new JTextField("textfield1"), "0,0");
             infoPanel.add(new JTextField("textfield2"), "0,1");
             infoPanel.add(new JTextField("textfield3"), "0,2");

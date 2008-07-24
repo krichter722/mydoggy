@@ -232,7 +232,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     protected void initComponents() {
         splitPane.setName(anchor.toString());
-        splitPane.setFocusCycleRoot(true);
+//        splitPane.setFocusCycleRoot(true);
 
         contentPanel = new ContentPanel("toolWindow.container.");
         contentPanel.setDropTarget(new ToolWindowDropTarget(contentPanel, manager, anchor));
@@ -287,8 +287,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         propertyChangeSupport.addPropertyChangeListener("visible", new VisibleListener());
 
         propertyChangeSupport.addPropertyChangeListener("active.before", new ActiveBeforeListener());
-        propertyChangeSupport.addPropertyChangeListener("active", new ActiveListener());
-
+        
         propertyChangeSupport.addPropertyChangeListener("type", new TypeListener());
         propertyChangeSupport.addPropertyChangeListener("index", new IndexListener());
         propertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
@@ -309,6 +308,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         propertyChangeSupport.addPropertyChangeListener("endDrag", dragListener);
         propertyChangeSupport.addPropertyChangeListener("maximized", new MaximizedListener());
 
+        // Why doesn't this use propertyChangeSupport.add....  
         addPropertyChangeListener("dividerSize", new DividerSizeListener());
         addPropertyChangeListener("length", new BarLengthListener());
     }
@@ -625,13 +625,6 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                     deactiveTool(toolWindow);
                 }
             }
-        }
-    }
-
-    protected static class ActiveListener implements PropertyChangeListener {
-        public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
-            toolWindowDescriptor.getToolWindowContainer().propertyChange(evt);
         }
     }
 

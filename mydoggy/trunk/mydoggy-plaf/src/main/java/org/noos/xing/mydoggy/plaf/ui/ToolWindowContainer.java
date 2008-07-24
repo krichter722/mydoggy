@@ -11,7 +11,6 @@ import java.beans.PropertyChangeListener;
  */
 public interface ToolWindowContainer extends PropertyChangeListener, Cleaner {
 
-    void addPropertyChangeListener(String property, PropertyChangeListener listener);
 
     void updateUI();
 

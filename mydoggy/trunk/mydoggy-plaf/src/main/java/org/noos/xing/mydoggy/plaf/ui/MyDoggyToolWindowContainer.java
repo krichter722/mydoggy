@@ -7,7 +7,6 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleBar;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleButtonPanel;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -39,16 +38,12 @@ public abstract class MyDoggyToolWindowContainer implements ToolWindowContainer 
     }
 
 
-    public void addPropertyChangeListener(String property, PropertyChangeListener listener) {
-        dockedContainer.addPropertyChangeListener(property, listener);
-    }
-
     public void updateUI() {
         dockedContainer.updateUI();
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        dockedContainer.propertyChange(evt);
+//        dockedContainer.propertyChange(evt);
     }
 
     public void cleanup() {

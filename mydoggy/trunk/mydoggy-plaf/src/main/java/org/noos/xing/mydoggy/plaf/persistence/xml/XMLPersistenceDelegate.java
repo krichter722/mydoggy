@@ -34,8 +34,12 @@ import java.util.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * TODO: support new properties...
  */
 public class XMLPersistenceDelegate implements PersistenceDelegate {
+    protected static final String ACTIVE_TOOL_KEY = "ACTIVE_TOOL_KEY";
+
+
     protected MyDoggyToolWindowManager toolWindowManager;
 
     protected ElementParser<Element> masterElementParser;
@@ -218,8 +222,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             elementWriterMap.put(ToolWindowManagerDescriptor.class, new ToolWindowManagerDescriptorEntityWriter());
             elementWriterMap.put(ContentManager.class, new ContentManagerEntityWriter());
 
-            elementWriterMap.put(TabbedContentManagerUI.class, new TabbedContentManagerUIEntityPWriter());
-            elementWriterMap.put(MultiSplitContentManagerUI.class, new MultiSplitContentManagerUIEntityPWriter());
+            elementWriterMap.put(TabbedContentManagerUI.class, new TabbedContentManagerUIEntityWriter());
+            elementWriterMap.put(MultiSplitContentManagerUI.class, new MultiSplitContentManagerUIEntityWriter());
             elementWriterMap.put(DesktopContentManagerUI.class, new DesktopContentManagerUIEntityWriter());
             elementWriterMap.put(ToolWindowAnchor.class, new ToolWindowAnchorEntityWriter());
         }
@@ -263,6 +267,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 dockedDescriptorAttributes.addAttribute(null, "hideRepresentativeButtonOnVisible", null, null, String.valueOf(dockedTypeDescriptor.isHideRepresentativeButtonOnVisible()));
                 dockedDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(dockedTypeDescriptor.isIdVisibleOnTitleBar()));
                 dockedDescriptorAttributes.addAttribute(null, "autoHide", null, null, String.valueOf(dockedTypeDescriptor.isAutoHide()));
+
                 writer.dataElement("docked", dockedDescriptorAttributes);
 
                 // DockedTypeDescriptor
@@ -457,6 +462,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     contentAttributes.addAttribute(null, "closeable", null, null, String.valueOf(contentUI.isCloseable()));
                     contentAttributes.addAttribute(null, "detachable", null, null, String.valueOf(contentUI.isDetachable()));
                     contentAttributes.addAttribute(null, "minimizable", null, null, String.valueOf(contentUI.isMinimizable()));
+                    contentAttributes.addAttribute(null, "maximizable", null, null, String.valueOf(contentUI.isMaximizable()));
                     contentAttributes.addAttribute(null, "transparentMode", null, null, String.valueOf(contentUI.isTransparentMode()));
                     contentAttributes.addAttribute(null, "transparentDelay", null, null, String.valueOf(contentUI.getTransparentDelay()));
                     contentAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(contentUI.getTransparentRatio()));
@@ -503,7 +509,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
     }
 
-    public class TabbedContentManagerUIEntityPWriter implements ElementWriter<XMLWriter> {
+    public class TabbedContentManagerUIEntityWriter implements ElementWriter<XMLWriter> {
 
         public void write(XMLWriter writer, Context context) {
             try {
@@ -513,9 +519,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 attributes.addAttribute(null, "closeable", null, null, String.valueOf(tabbedContentManagerUI.isCloseable()));
                 attributes.addAttribute(null, "detachable", null, null, String.valueOf(tabbedContentManagerUI.isDetachable()));
                 attributes.addAttribute(null, "minimizable", null, null, String.valueOf(tabbedContentManagerUI.isMinimizable()));
+                attributes.addAttribute(null, "maximizable", null, null, String.valueOf(tabbedContentManagerUI.isMaximizable()));
                 attributes.addAttribute(null, "showAlwaysTab", null, null, String.valueOf(tabbedContentManagerUI.isShowAlwaysTab()));
                 attributes.addAttribute(null, "tabLayout", null, null, tabbedContentManagerUI.getTabLayout().toString());
                 attributes.addAttribute(null, "tabPlacement", null, null, tabbedContentManagerUI.getTabPlacement().toString());
+                attributes.addAttribute(null, "popupMenuEnabled", null, null, String.valueOf(tabbedContentManagerUI.isPopupMenuEnabled()));
 
                 writer.dataElement("TabbedContentManagerUI", attributes);
             } catch (SAXException e) {
@@ -525,7 +533,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
     }
 
-    public class MultiSplitContentManagerUIEntityPWriter implements ElementWriter<XMLWriter> {
+    public class MultiSplitContentManagerUIEntityWriter implements ElementWriter<XMLWriter> {
 
         public void write(XMLWriter writer, Context context) {
             try {
@@ -535,9 +543,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 attributes.addAttribute(null, "closeable", null, null, String.valueOf(multiSplitContentManagerUI.isCloseable()));
                 attributes.addAttribute(null, "detachable", null, null, String.valueOf(multiSplitContentManagerUI.isDetachable()));
                 attributes.addAttribute(null, "minimizable", null, null, String.valueOf(multiSplitContentManagerUI.isMinimizable()));
+                attributes.addAttribute(null, "maximizable", null, null, String.valueOf(multiSplitContentManagerUI.isMaximizable()));
                 attributes.addAttribute(null, "showAlwaysTab", null, null, String.valueOf(multiSplitContentManagerUI.isShowAlwaysTab()));
                 attributes.addAttribute(null, "tabLayout", null, null, multiSplitContentManagerUI.getTabLayout().toString());
                 attributes.addAttribute(null, "tabPlacement", null, null, multiSplitContentManagerUI.getTabPlacement().toString());
+                attributes.addAttribute(null, "popupMenuEnabled", null, null, String.valueOf(multiSplitContentManagerUI.isPopupMenuEnabled()));
 
                 writer.startElement("MultiSplitContentManagerUI", attributes);
 
@@ -585,6 +595,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 attributes.addAttribute(null, "closeable", null, null, String.valueOf(desktopContentManagerUI.isCloseable()));
                 attributes.addAttribute(null, "detachable", null, null, String.valueOf(desktopContentManagerUI.isDetachable()));
                 attributes.addAttribute(null, "minimizable", null, null, String.valueOf(desktopContentManagerUI.isMinimizable()));
+                attributes.addAttribute(null, "maximizable", null, null, String.valueOf(desktopContentManagerUI.isMaximizable()));
+                attributes.addAttribute(null, "popupMenuEnabled", null, null, String.valueOf(desktopContentManagerUI.isPopupMenuEnabled()));
 
                 writer.startElement("DesktopContentManagerUI", attributes);
 
@@ -680,7 +692,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 boolean result = parseTree(element, context);
 
                 // Finalize
-                final ToolWindow activeTool = (ToolWindow) context.get("activeTool");
+                final ToolWindow activeTool = (ToolWindow) context.get(ACTIVE_TOOL_KEY);
                 if (activeTool != null) {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
@@ -1071,15 +1083,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     maximizedTool = toolWindow;
             }
 
-            if (activeTool != null) {
-                // TODO: change the key
-                ((MutableContext) context).put("activeTool", activeTool);
-//                activeTool.setActive(true);
-            }
+            if (activeTool != null)
+                ((MutableContext) context).put(ACTIVE_TOOL_KEY, activeTool);
 
             if (maximizedTool != null)
                 maximizedTool.setMaximized(true);
-
         }
     }
 

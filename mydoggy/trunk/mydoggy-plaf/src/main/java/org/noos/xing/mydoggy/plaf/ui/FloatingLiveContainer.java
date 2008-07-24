@@ -46,8 +46,6 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         toolWindowTitleBar.removeMouseMotionListener(moveMouseInputHandler);
         toolWindowTitleBar.removeMouseListener(moveMouseInputHandler);
 
-        descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).removePropertyChangeListener(this);
-
         floatingLivePanel = null;
         
         super.cleanup();

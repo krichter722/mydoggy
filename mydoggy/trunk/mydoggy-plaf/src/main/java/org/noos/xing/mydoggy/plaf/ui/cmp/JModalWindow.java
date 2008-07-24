@@ -15,7 +15,8 @@ public class JModalWindow extends JWindow implements ModalWindow {
 
     public JModalWindow(Window owner, Component returnFocus, boolean modal) {
         super(owner);
-        
+
+        setAlwaysOnTop(SwingUtil.getBoolean("dialog.owner.enabled", true));
         setFocusableWindowState(true);
         this.returnFocus = returnFocus;
         synchronized (JModalWindow.this) {

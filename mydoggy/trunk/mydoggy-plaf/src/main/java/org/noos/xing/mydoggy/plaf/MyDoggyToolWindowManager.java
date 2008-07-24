@@ -482,10 +482,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         rootPaneContainer = (RootPaneContainer) windowAncestor;
 
         // Fire related event
-        propertyChangeSupport.firePropertyChange(
-                new PropertyChangeEvent(MyDoggyToolWindowManager.this, "manager.window.ancestor",
-                                        null, windowAncestor)
-        );
+        propertyChangeSupport.firePropertyChange("manager.window.ancestor", null, windowAncestor);
 
 /*
         TODO: (-) introduce level
@@ -804,8 +801,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         propertyChangeSupport.addPropertyChangeListener("numberingEnabled", new NumberingEnabledChangeListener());
         propertyChangeSupport.addPropertyChangeListener("tempShowed", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                for (ToolWindowDescriptor tool : tools.values())
-                    tool.getToolWindowContainer().propertyChange(evt);
+//                for (ToolWindowDescriptor tool : tools.values())
+//                    tool.getToolWindowContainer().propertyChange(evt);
             }
         });
         propertyChangeSupport.addPropertyChangeListener("anchor.index", new PropertyChangeListener() {
@@ -1239,8 +1236,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 syncPanel(newAnchor);
             }
 
-            for (ToolWindowDescriptor tool : tools.values())
-                tool.getToolWindowContainer().propertyChange(evt);
+//            for (ToolWindowDescriptor tool : tools.values())
+//                tool.getToolWindowContainer().propertyChange(evt);
 
             syncPanel(oldAnchor);
             syncPanel(newAnchor);
@@ -1316,7 +1313,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public class MaximizedChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
-            toolWindowDescriptor.getToolWindowContainer().propertyChange(evt);
+//            toolWindowDescriptor.getToolWindowContainer().propertyChange(evt);
 
             // Notify specific bar
             getBar(toolWindowDescriptor.getToolWindow().getAnchor()).propertyChange(evt);
@@ -1370,6 +1367,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public class AncestorClosedChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
+            // TODO: this de facto initialize the toolwindow panel ...move this
             for (ToolWindowDescriptor tool : tools.values())
                 tool.getToolWindowContainer().propertyChange(evt);
         }

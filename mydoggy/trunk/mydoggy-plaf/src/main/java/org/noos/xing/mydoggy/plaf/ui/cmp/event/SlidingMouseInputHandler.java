@@ -247,8 +247,8 @@ public class SlidingMouseInputHandler extends ComponentAdapter implements MouseI
     @Override
     public void componentResized(ComponentEvent e) {
         if (descriptor.getToolWindow().getType() != ToolWindowType.SLIDING)
-                return;
-        
+            return;
+
         // TODO: check for conflicts...
         switch (descriptor.getAnchor()) {
             case LEFT:
