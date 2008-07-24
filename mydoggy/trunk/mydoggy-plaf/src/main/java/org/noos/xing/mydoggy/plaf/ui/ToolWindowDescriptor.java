@@ -1001,8 +1001,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
             valueAdjusting = true;
 
-            System.out.println(toolWindow.getId() + " - cmp = " + component);
-
             if (parentOf.getAnswer(component)) {
                 toolWindow.setActive(true);
                 if (focusRequester == null)
@@ -1018,6 +1016,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                     }
                 }
             } else {
+                System.out.println(toolWindow.getId() + " - cmp = " + component);
+
                 getToolBar().deactiveTool(toolWindow);
 
                 if (toolWindow.isAutoHide() && toolWindow.getType() != ToolWindowType.EXTERN)

@@ -9,7 +9,6 @@ import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -202,9 +201,9 @@ public interface ResourceManager extends Observable {
      * Returns the map that contains all colors definition.
      *
      * @return the map that contains all colors definition.
-     * @since 1.4.0
+     * @since 1.5.0
      */
-    Map<String, Color> getColors();
+    java.util.List<String> getColors();
 
     /**
      * Returns the map that contains all icons definition.
@@ -212,7 +211,7 @@ public interface ResourceManager extends Observable {
      * @return the map that contains all icons definition.
      * @since 1.4.0
      */
-    Map<String, Icon> getIcons();
+    java.util.List<String> getIcons();
 
     /**
      * Searches for the property with the specified name in the property list.

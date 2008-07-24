@@ -20,6 +20,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -78,7 +79,16 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     public Icon putIcon(String id, Icon icon) {
-        return (Icon) UIManager.put(id, icon);
+        Icon oldIcon = (Icon) UIManager.put(id, icon);
+
+        List<String> icons = (List<String>) UIManager.get("mydoggy.icons");
+        if (icons == null) {
+            icons = new ArrayList<String>();
+            UIManager.put("mydoggy.icons", icons);
+        }
+        icons.add(id);
+
+        return oldIcon;
     }
 
     public Color getColor(String id) {
@@ -86,7 +96,16 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     public Color putColor(String id, Color color) {
-        return (Color) UIManager.put(id, color);
+        Color oldColor = (Color) UIManager.put(id, color);
+
+        List<String> colors = (List<String>) UIManager.get("mydoggy.colors");
+        if (colors == null) {
+            colors = new ArrayList<String>();
+            UIManager.put("mydoggy.colors", colors);
+        }
+        colors.add(id);
+
+        return oldColor;
     }
 
     public void putImage(String name, BufferedImage bufferedImage) {
@@ -152,12 +171,12 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
 
-    public Map<String, Color> getColors() {
-        return Collections.emptyMap();    // TODO:
+    public java.util.List<String> getColors() {
+        return (List<String>) UIManager.get("mydoggy.colors");
     }
 
-    public Map<String, Icon> getIcons() {
-        return Collections.emptyMap();
+    public java.util.List<String> getIcons() {
+        return (List<String>) UIManager.get("mydoggy.icons");
     }
 
 

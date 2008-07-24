@@ -7,26 +7,26 @@ public interface MyDoggyKeySpace {
 
     // Icons
 
-    String DOCKED = "mydoggy.icon.docked";
-    String DOCKED_INACTIVE = "mydoggy.icon.docked.inactive";
-    String SLIDING = "mydoggy.icon.sliding";
-    String SLIDING_INACTIVE = "mydoggy.icon.sliding.inactive";
-    String FLOATING = "mydoggy.icon.floating";
-    String FLOATING_INACTIVE = "mydoggy.icon.floating.inactive";
-    String FIX = "mydoggy.icon.fix";
-    String FIX_INACTIVE = "mydoggy.icon.fix.inactive";
-    String AUTO_HIDE_ON = "mydoggy.icon.autoHideOn";
-    String AUTO_HIDE_ON_INACTIVE = "mydoggy.icon.autoHideOn.inactive";
-    String AUTO_HIDE_OFF = "mydoggy.icon.autoHideOff";
-    String AUTO_HIDE_OFF_INACTIVE = "mydoggy.icon.autoHideOff.inactive";
-    String HIDE_TOOL_WINDOW = "mydoggy.icon.hideToolWindow";
-    String HIDE_TOOL_WINDOW_INACTIVE = "mydoggy.icon.hideToolWindow.inactive";
-    String MAXIMIZE = "mydoggy.icon.maximize";
-    String MAXIMIZE_INACTIVE = "mydoggy.icon.maximize.inactive";
-    String MINIMIZE = "mydoggy.icon.minimize";
-    String MINIMIZE_INACTIVE = "mydoggy.icon.minimize.inactive";
-    String ACTIONS_POPUP = "mydoggy.icon.actionsPopup";
-    String ACTIONS_POPUP_INACTIVE = "mydoggy.icon.actionsPopup.inactive";
+    String DOCKED = "ToolWindowTitleButtonPanelUI.icon.docked";
+    String DOCKED_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.docked.inactive";
+    String SLIDING = "ToolWindowTitleButtonPanelUI.icon.sliding";
+    String SLIDING_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.sliding.inactive";
+    String FLOATING = "ToolWindowTitleButtonPanelUI.icon.floating";
+    String FLOATING_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.floating.inactive";
+    String FIX = "ToolWindowTitleButtonPanelUI.icon.fix";
+    String FIX_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.fix.inactive";
+    String AUTO_HIDE_ON = "ToolWindowTitleButtonPanelUI.icon.autoHideOn";
+    String AUTO_HIDE_ON_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.autoHideOn.inactive";
+    String AUTO_HIDE_OFF = "ToolWindowTitleButtonPanelUI.icon.autoHideOff";
+    String AUTO_HIDE_OFF_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.autoHideOff.inactive";
+    String HIDE_TOOL_WINDOW = "ToolWindowTitleButtonPanelUI.icon.hideToolWindow";
+    String HIDE_TOOL_WINDOW_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.hideToolWindow.inactive";
+    String MAXIMIZE = "ToolWindowTitleButtonPanelUI.icon.maximize";
+    String MAXIMIZE_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.maximize.inactive";
+    String MINIMIZE = "ToolWindowTitleButtonPanelUI.icon.minimize";
+    String MINIMIZE_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.minimize.inactive";
+    String ACTIONS_POPUP = "ToolWindowTitleButtonPanelUI.icon.actionsPopup";
+    String ACTIONS_POPUP_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.actionsPopup.inactive";
 
     String TOO_WINDOW_TAB_POPUP = "mydoggy.icon.toolWindowTabPopup";
 
@@ -43,10 +43,10 @@ public interface MyDoggyKeySpace {
     String TOOL_SCROLL_BAR_LEFT = "mydoggy.icon.toolScroolBarLeft";
     String TOOL_SCROLL_BAR_RIGHT = "mydoggy.icon.toolScroolBarRight";
 
-    String TAB_CLOSE = "mydoggy.icon.tabClose";
-    String TAB_CLOSE_INACTIVE = "mydoggy.icon.tabClose.inactive";
-    String TAB_MINIMIZE = "mydoggy.icon.tabMinimize";
-    String TAB_MINIMIZE_INACTIVE = "mydoggy.icon.tabMinimize.inactive";
+    String TAB_CLOSE = "ToolWindowTabButtonUI.icon.tabClose";
+    String TAB_CLOSE_INACTIVE = "ToolWindowTabButtonUI.icon.tabClose.inactive";
+    String TAB_MINIMIZE = "ToolWindowTabButtonUI.icon.tabMinimize";
+    String TAB_MINIMIZE_INACTIVE = "ToolWindowTabButtonUI.icon.tabMinimize.inactive";
 
     // Images
 
