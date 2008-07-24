@@ -110,15 +110,19 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
         } else if ("active".equals(evt.getPropertyName())) {
             if (evt.getSource() != descriptor || !toolWindow.isVisible())
                 return;
-            assert evt.getPropertyName() != null;
-            assert descriptor.getToolWindow().isVisible();
+
+            System.out.println(toolWindow.getId() + " - active = " + evt.getNewValue());
 
             if (evt.getNewValue() == Boolean.FALSE) {
                 if (animBackStart.equals(UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START)))
                     animation.hide();
+                else
+                    animation.stop();
             } else {
                 if (animBackStart.equals(UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START)))
                     animation.show();
+                else
+                    animation.stop();
             }
         } else if ("idVisibleOnTitleBar".equals(propertyName)) {
             ToolWindowTypeDescriptor typeDescriptor = (ToolWindowTypeDescriptor) evt.getSource();
@@ -545,7 +549,6 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
                             dsdeLocation.x, dsdeLocation.y
                     );
                     toolWindow.setType(ToolWindowType.FLOATING_LIVE);
-
                 } else {
                     // Move to floating
                     ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();

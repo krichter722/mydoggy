@@ -213,7 +213,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                                                              null);
         toolWindow.addPlafPropertyChangeListener(this);
 
-        tools.put(toolWindow.getId(), toolWindow.getDescriptor());
 
         // fire Event
         fireRegisteredToolEvent(toolWindow);
@@ -813,7 +812,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                     getBar(descriptor.getToolWindow().getAnchor()).propertyChange(evt);
             }
         });
-        propertyChangeSupport.addPropertyChangeListener("manager.window.ancestor", new AncestorClosedChangeListener());
         propertyChangeSupport.addPropertyChangeListener("enabled", new ContentMananagerEnabledChangeListener());
         propertyChangeSupport.addPropertyChangeListener("length", new BarLengthListener());
 
@@ -1001,7 +999,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public boolean isWindowFocused() {
 //        return (windowAncestor instanceof Window) ? ((Window) windowAncestor).isFocused() : windowAncestor.isfo
         Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-        return focusOwner != null ? SwingUtil.getWindowAncestor(focusOwner) == windowAncestor : false;
+        return focusOwner != null && SwingUtil.getWindowAncestor(focusOwner) == windowAncestor;
 
     }
 
@@ -1035,11 +1033,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public DockableDescriptor createDescriptor(Dockable dockable) {
-        if (dockable instanceof ToolWindow)
-            return new ToolWindowDescriptor(this, (MyDoggyToolWindow) dockable);
-        else if (dockable instanceof Content)
+        if (dockable instanceof ToolWindow) {
+            ToolWindowDescriptor descriptor = new ToolWindowDescriptor(this, (MyDoggyToolWindow) dockable);
+            tools.put(dockable.getId(), descriptor);
+            return descriptor;
+        } else if (dockable instanceof Content) {
             return new ContentDescriptor(this, (Content) dockable);
-        throw new IllegalArgumentException("Invalid dockable. [dockable : " + dockable + "]");
+        } throw new IllegalArgumentException("Invalid dockable. [dockable : " + dockable + "]");
     }
 
     public Dockable getDockableWrapper(Dockable dockable) {
@@ -1361,15 +1361,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             Component newFocusOwner = (Component) evt.getNewValue();
             if (newFocusOwner != null && SwingUtilities.isDescendingFrom(newFocusOwner, mainContainer))
                 lastFocusOwner = newFocusOwner;
-        }
-    }
-
-    public class AncestorClosedChangeListener implements PropertyChangeListener {
-
-        public void propertyChange(PropertyChangeEvent evt) {
-            // TODO: this de facto initialize the toolwindow panel ...move this
-            for (ToolWindowDescriptor tool : tools.values())
-                tool.getToolWindowContainer().propertyChange(evt);
         }
     }
 
