@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ContentRepresentativeAnchor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.RepresentativeAnchorDragGesture;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
@@ -13,6 +14,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
+import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.metal.MetalLabelUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -22,10 +24,16 @@ import java.beans.PropertyChangeEvent;
 
 /**
  * @author Angelo De Caro
- * TODO: introduce createUI method
  */
 public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Cleaner {
-    protected JComponent label;
+
+
+    public static ComponentUI createUI(JComponent c) {
+        return new ContentRepresentativeAnchorUI();
+    }
+
+
+    protected ContentRepresentativeAnchor contentRepresentativeAnchor;
 
     protected LineBorder labelBorder;
 
@@ -42,8 +50,15 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
     protected AbstractAnimation flashingAnimation;
 
     
-    public ContentRepresentativeAnchorUI(DockableDescriptor descriptor) {
-        this.descriptor = descriptor;
+    public ContentRepresentativeAnchorUI() {
+    }
+
+
+    public void installUI(JComponent c) {
+        // Init fields
+        this.contentRepresentativeAnchor = (ContentRepresentativeAnchor) c;
+
+        this.descriptor = contentRepresentativeAnchor.getContentDescriptor();
         this.dockable = descriptor.getDockable();
 
         this.flashingAnimation = new GradientAnimation();
@@ -51,22 +66,21 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         this.flashingAnimBackEnd = new MutableColor(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
         this.flasingDuration = -1;
 
-        dockable.addPropertyChangeListener(this);
-        descriptor.getCleaner().addCleaner(this);
-    }
-
-
-    public void installUI(JComponent c) {
         super.installUI(c);
-        this.label = c;
     }
 
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
 
-        dockable.removePropertyChangeListener(this);
-        c.removeMouseListener(adapter);
-        c.removeMouseMotionListener(adapter);
+        // Release timers
+        if (flashingTimer != null)
+            flashingTimer.stop();
+        flashingTimer = null;
+
+        // Finalize
+        this.descriptor = null;
+        this.dockable = null;
+        this.contentRepresentativeAnchor = null;
     }
 
     public void update(Graphics g, JComponent c) {
@@ -131,40 +145,33 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
             if (e.getNewValue() == Boolean.TRUE) {
                 if (descriptor.isAvailable()) {
                     flasingDuration = -1;
-                    SwingUtil.repaint(label);
+                    SwingUtil.repaint(contentRepresentativeAnchor);
                 }
             } else {
                 if (flashingTimer != null) {
                     flashingTimer.stop();
                     flashingTimer = null;
-                    SwingUtil.repaint(label);
+                    SwingUtil.repaint(contentRepresentativeAnchor);
                 }
             }
         } else if ("flash.duration".equals(propertyName)) {
             if (e.getNewValue() == Boolean.TRUE) {
                 if (descriptor.isAvailable()) {
                     flasingDuration = (Integer) e.getNewValue();
-                    SwingUtil.repaint(label);
+                    SwingUtil.repaint(contentRepresentativeAnchor);
                 }
             } else {
                 if (flashingTimer != null) {
                     flashingTimer.stop();
                     flashingTimer = null;
-                    SwingUtil.repaint(label);
+                    SwingUtil.repaint(contentRepresentativeAnchor);
                 }
             }
         }
     }
 
     public void cleanup() {
-        // Remove listeners
-        // Release timers
-        if (flashingTimer != null)
-            flashingTimer.stop();
-        flashingTimer = null;
-
-        // Finalize
-        descriptor = null;
+        uninstallUI(contentRepresentativeAnchor);
     }
 
     
@@ -189,6 +196,9 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         c.addMouseMotionListener(adapter);
 
         SwingUtil.registerDragGesture(c, new RepresentativeAnchorDragGesture(descriptor, c));
+
+        dockable.addPropertyChangeListener(this);
+        descriptor.getCleaner().addCleaner(this);
     }
 
     protected void installDefaults(JLabel c) {
@@ -199,6 +209,15 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
 
         SwingUtil.installFont(c, "mydoggy.ToolWindowRepresentativeAnchorUI.font");
     }
+
+    protected void uninstallListeners(JLabel c) {
+        super.uninstallListeners(c);
+
+        dockable.removePropertyChangeListener(this);
+        c.removeMouseListener(adapter);
+        c.removeMouseMotionListener(adapter);
+    }
+
 
     protected void updateAnchor(Graphics g, JComponent c,
                                 Color backgroundStart, Color backgroundEnd,
@@ -250,7 +269,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
                                                       animationPercent);
                     break;
             }
-            SwingUtil.repaint(label);
+            SwingUtil.repaint(contentRepresentativeAnchor);
             return animationPercent;
         }
 
@@ -263,7 +282,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
                     flashingAnimBackStart.setRGB(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START));
                     break;
             }
-            SwingUtil.repaint(label);
+            SwingUtil.repaint(contentRepresentativeAnchor);
         }
 
         protected void onHide(Object... params) {
@@ -295,9 +314,9 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
             } else if (SwingUtilities.isRightMouseButton(e)) {
             }
 
-            label.setBorder(labelBorder);
+            contentRepresentativeAnchor.setBorder(labelBorder);
             labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
-            SwingUtil.repaint(label);
+            SwingUtil.repaint(contentRepresentativeAnchor);
         }
 
         public void mouseEntered(MouseEvent e) {

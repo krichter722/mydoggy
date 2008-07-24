@@ -2,8 +2,8 @@ package org.noos.xing.mydoggy.plaf.ui.look;
 
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowTab;
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
+import org.noos.xing.mydoggy.plaf.cleaner.CleanerProvider;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabTitle;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -137,7 +137,7 @@ public class ToolWindowTabTitleUI extends BasicLabelUI implements MouseListener,
 
 
     protected void installListener() {
-        ((MyDoggyToolWindowTab) tab).getCleaner().addCleaner(this);
+        ((CleanerProvider) tab).getCleanerAggregator().addCleaner(this);
     }
 
     protected void paintEnabledText(JLabel l, Graphics g, String s, int textX, int textY) {

@@ -350,7 +350,7 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
 
     protected void installListeners() {
         tab.addPropertyChangeListener(this);
-        tab.getCleaner().addCleaner(this);
+        tab.getCleanerAggregator().addCleaner(this);
 
         toolWindowTabButton.addMouseListener(toolWindowTabPanel.getMouseEventDispatcher());
         toolWindowTabButton.addMouseMotionListener(toolWindowTabPanel.getMouseEventDispatcher());

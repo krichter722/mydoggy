@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
+import org.noos.xing.mydoggy.plaf.cleaner.CleanerProvider;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTabButtonUI;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTabPanelUI;
 
@@ -26,7 +27,7 @@ public class ToolWindowTabButton extends JPanel implements Cleaner {
         this.toolWindowTab = tab;
         this.toolWindowTabPanel = toolWindowTabPanel;
 
-//        TODO : tab.getCleaner().addCleaner(this);
+        ((CleanerProvider) tab).getCleanerAggregator().addCleaner(this);
 
         updateUI();
     }

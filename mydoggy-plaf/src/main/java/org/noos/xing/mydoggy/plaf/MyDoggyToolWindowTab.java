@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.plaf.cleaner.CleanerAggregator;
+import org.noos.xing.mydoggy.plaf.cleaner.CleanerProvider;
 import org.noos.xing.mydoggy.plaf.cleaner.DefaultCleanerAggregator;
 
 import javax.swing.*;
@@ -14,7 +15,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements ToolWindowTab {
+public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements ToolWindowTab, CleanerProvider {
     protected boolean root;
     protected String id;
     protected ToolWindow owner;
@@ -250,7 +251,7 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
     }
 
 
-    public CleanerAggregator getCleaner() {
+    public CleanerAggregator getCleanerAggregator() {
         return cleanerAggregator;
     }
 

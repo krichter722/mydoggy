@@ -1,14 +1,14 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
+import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
 import javax.swing.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * TODO: add cleanup
 */
-public class ToolWindowRepresentativeAnchor extends JLabel {
+public class ToolWindowRepresentativeAnchor extends JLabel implements Cleaner {
 
     /**
      * @see #getUIClassID
@@ -20,20 +20,30 @@ public class ToolWindowRepresentativeAnchor extends JLabel {
     protected ToolWindowDescriptor toolWindowDescriptor;
 
 
-    public ToolWindowRepresentativeAnchor(ToolWindowDescriptor toolWindowDescriptor, Icon image, int horizontalAlignment) {
+    public ToolWindowRepresentativeAnchor(ToolWindowDescriptor toolWindowDescriptor,
+                                          Icon image, int horizontalAlignment) {
         super(image, horizontalAlignment);
         this.toolWindowDescriptor = toolWindowDescriptor;
 
+        toolWindowDescriptor.getCleaner().addCleaner(this);
+
         updateUI();
     }
 
-    public ToolWindowRepresentativeAnchor(ToolWindowDescriptor toolWindowDescriptor, String text, Icon icon, int horizontalAlignment) {
+    public ToolWindowRepresentativeAnchor(ToolWindowDescriptor toolWindowDescriptor,
+                                          String text, Icon icon, int horizontalAlignment) {
         super(text, icon, horizontalAlignment);
         this.toolWindowDescriptor = toolWindowDescriptor;
 
+        toolWindowDescriptor.getCleaner().addCleaner(this);
+
         updateUI();
     }
 
+
+    public void cleanup() {
+        this.toolWindowDescriptor = null;
+    }
 
     public void updateUI() {
         if (toolWindowDescriptor != null)

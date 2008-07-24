@@ -111,8 +111,6 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
             if (evt.getSource() != descriptor || !toolWindow.isVisible())
                 return;
 
-            System.out.println(toolWindow.getId() + " - active = " + evt.getNewValue());
-
             if (evt.getNewValue() == Boolean.FALSE) {
                 if (animBackStart.equals(UIManager.getColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START)))
                     animation.hide();

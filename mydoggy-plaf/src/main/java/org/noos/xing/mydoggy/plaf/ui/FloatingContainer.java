@@ -526,7 +526,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                         0.0f
                 );
 
-                // TODO Move this listeners...
                 descriptor.getManager().addInternalPropertyChangeListener("active", this);
                 descriptor.getManager().addInternalPropertyChangeListener("visible.FLOATING", this);
                 descriptor.getManager().addInternalPropertyChangeListener("visible.FLOATING_FREE", this);
