@@ -28,7 +28,7 @@ public interface MyDoggyKeySpace {
     String ACTIONS_POPUP = "ToolWindowTitleButtonPanelUI.icon.actionsPopup";
     String ACTIONS_POPUP_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.actionsPopup.inactive";
 
-    String TOO_WINDOW_TAB_POPUP = "mydoggy.icon.toolWindowTabPopup";
+    String TOO_WINDOW_TAB_POPUP = "ToolWindowTabPanelUI.icon.toolWindowTabPopup";
 
     String CONTENT_PAGE_MINIMIZE = "mydoggy.icon.contentPageMinimize";
     String CONTENT_PAGE_DETACH = "mydoggy.icon.contentPageDetach";

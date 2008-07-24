@@ -38,7 +38,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     protected boolean aggregateMode;
 
     // Bar Components
-    protected JToolScrollBar toolScrollBar;
+    protected ToolWindowScrollBar toolWindowScrollBar;
     protected JPanel toolWindowBarContainer;
     protected TableLayout toolWindowBarContainerLayout;
 
@@ -170,7 +170,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     }
 
     public Container getContainer() {
-        return toolScrollBar;
+        return toolWindowScrollBar;
     }
 
     public JSplitPane getSplitPane() {
@@ -180,7 +180,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     public void ensureVisible(final Component component) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                toolScrollBar.ensureVisible(component);
+                toolWindowScrollBar.ensureVisible(component);
             }
         });
     }
@@ -265,7 +265,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
         multiSplitDockableContainer = new MultiSplitDockableContainer(manager, orientation);
 
-        toolScrollBar = new JToolScrollBar(manager.getResourceManager(), orientation, toolWindowBarContainer);
+        toolWindowScrollBar = new ToolWindowScrollBar(this, toolWindowBarContainer);
 
         toolWindowBarContainer.setDropTarget(new ToolWindowBarDropTarget(manager, anchor, toolWindowBarContainer));
         toolWindowBarContainer.addMouseListener(new ToolsOnBarMouseListener(manager, this));
@@ -451,7 +451,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             } else
                 toolWindowBarContainer.add(representativeAnchor, "1," + (toolWindowBarContainerLayout.getNumRow() - 1));
         }
-        SwingUtil.repaint(toolScrollBar);
+        SwingUtil.repaint(toolWindowScrollBar);
     }
 
     protected void removeRepresentativeAnchor(Component representativeAnchor,
@@ -478,7 +478,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             toolWindowBarContainerLayout.deleteRow(toDelete - 1);
         }
 
-        SwingUtil.repaint(toolScrollBar);
+        SwingUtil.repaint(toolWindowScrollBar);
 
         descriptor.resetRepresentativeAnchor();
     }
