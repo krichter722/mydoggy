@@ -5,7 +5,10 @@ import org.noos.xing.mydoggy.PersistenceDelegateCallback;
 import org.noos.xing.mydoggy.ToolWindowManager;
 
 /**
- * TODO:
+ * An abstract adapter class for receiving persistence events.
+ * The methods in this class are empty. This class exists as
+ * convenience for creating listener objects.
+ * 
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class PersistenceDelegateCallbackAdapter implements PersistenceDelegateCallback {

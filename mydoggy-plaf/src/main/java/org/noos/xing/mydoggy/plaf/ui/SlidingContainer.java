@@ -170,9 +170,8 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         PropertyChangeEventSource slidingDescriptorSource = (PropertyChangeEventSource) descriptor.getToolWindow().getTypeDescriptor(SlidingTypeDescriptor.class);
         slidingDescriptorSource.addPlafPropertyChangeListener(new SlidingTypePropertyChangeListener());
 
-        // TODO: move to manager add listener...
-        addPropertyChangeListener("tempShowed", new TempShowedPropertyChangeListener());
-        addPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
+        descriptor.getManager().addInternalPropertyChangeListener("tempShowed", new TempShowedPropertyChangeListener());
+        descriptor.getManager().addInternalPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getNewValue() != null) {
                     layeredPane = descriptor.getManager().getLayeredPane();

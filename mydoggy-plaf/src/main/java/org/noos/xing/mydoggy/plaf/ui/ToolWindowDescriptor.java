@@ -423,6 +423,10 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         return manager.getWindowAncestor() instanceof Window ? (Window) manager.getWindowAncestor() : null;
     }
 
+    public Window getAncestorForWindow() {
+        return SwingUtil.getBoolean("dialog.owner.enabled", true) ? getWindowAncestor() : null;
+    }
+
     public ToolWindowContainer getToolWindowContainer() {
         if (dockedContainer == null)
             initContainers();
@@ -607,6 +611,12 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                                                                                            Component.class, toolWindowPanel))
         );
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusListener);
+        manager.addInternalPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getNewValue() == null) 
+                    toolWindow.setFlashing(false);
+            }
+        });
 
         // Load focusRequester
         focusRequester = SwingUtil.findFocusable(getComponent());
@@ -756,6 +766,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         popupMenu.add(aggregate);
         popupMenu.add(aggregateMenu);
     }
+
 
     protected void enableVisible() {
         aggregate.setVisible(!toolWindow.isVisible());

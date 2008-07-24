@@ -4,7 +4,6 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
-import org.noos.xing.mydoggy.plaf.support.CleanablePropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -21,11 +20,6 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
 
-    protected CleanablePropertyChangeSupport propertyChangeSupport;
-    protected PropertyChangeListener focusListener;
-
-    protected PopupUpdater popupUpdater;
-
     boolean valueAdjusting;
 
 
@@ -35,14 +29,12 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
 
         descriptor.getCleaner().addCleaner(this);
 
-        initComponents();
         initListeners();
     }
 
 
     public void cleanup() {
         // Finalize
-        popupUpdater = null;
         toolWindow = null;
         descriptor = null;
     }
@@ -51,12 +43,8 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         SwingUtilities.updateComponentTreeUI(descriptor.getToolWindowPanel());
     }
 
-    public void addPropertyChangeListener(String property, PropertyChangeListener listener) {
-        propertyChangeSupport.addPropertyChangeListener(property, listener);
-    }
-
     public void propertyChange(PropertyChangeEvent evt) {
-        propertyChangeSupport.firePropertyChange(evt);
+//        propertyChangeSupport.firePropertyChange(evt);
     }
 
 
@@ -64,34 +52,12 @@ public class DockedContainer implements ToolWindowContainer, Cleaner {
         return descriptor;
     }
 
-    public void setPopupUpdater(PopupUpdater popupUpdater) {
-        this.popupUpdater = popupUpdater;
-    }
-
-
-    protected void initComponents() {
-        propertyChangeSupport = new CleanablePropertyChangeSupport(this);
-        descriptor.getCleaner().addCleaner(propertyChangeSupport);
-
-    }
 
     protected void initListeners() {
         // Init tool window properties listeners
         PropertyChangeEventSource toolWindowSource = descriptor.getToolWindow();
         toolWindowSource.addPlafPropertyChangeListener("type", new TypePropertyChangeListener());
         toolWindowSource.addPlafPropertyChangeListener("maximized.before", new MaximizedBeforePropertyChangeListener());
-
-        addPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getNewValue() != null) {
-                    KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-                    keyboardFocusManager.removePropertyChangeListener("focusOwner", focusListener);
-                    keyboardFocusManager.addPropertyChangeListener("focusOwner", focusListener);
-                } else {
-                    toolWindow.setFlashing(false);
-                }
-            }
-        });
 
         toolWindow.addToolWindowListener(new DockedToolWindowListener());
     }
