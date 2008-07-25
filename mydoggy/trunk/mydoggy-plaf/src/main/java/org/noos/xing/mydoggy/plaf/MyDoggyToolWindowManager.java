@@ -741,21 +741,18 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         add(southEastCorner = new CornerPanel(ToolWindowManagerDescriptor.Corner.SOUTH_EAST), "2,2,c,c");
 
         // Register bars, one for every anchor
-        addBar(LEFT, JSplitPane.HORIZONTAL_SPLIT, "0,1", "0,0,FULL,FULL");
-        addBar(RIGHT, JSplitPane.HORIZONTAL_SPLIT, "2,1", "2,0,FULL,FULL");
-        addBar(TOP, JSplitPane.VERTICAL_SPLIT, "1,0", "2,2,FULL,FULL");
-        addBar(BOTTOM, JSplitPane.VERTICAL_SPLIT, "1,2", "0,2,FULL,FULL");
+        addBar(LEFT, JSplitPane.HORIZONTAL_SPLIT, "0,1");
+        addBar(RIGHT, JSplitPane.HORIZONTAL_SPLIT, "2,1");
+        addBar(TOP, JSplitPane.VERTICAL_SPLIT, "1,0");
+        addBar(BOTTOM, JSplitPane.VERTICAL_SPLIT, "1,2");
 
-        mainContainer = (JPanel) resourceManager.createComponent(MyDoggyKeySpace.TOOL_WINDOW_MANAGER_CONTENT_CONTAINER, getContext());
+        // Init main container
+        mainContainer = new JPanel();
         mainContainer.setName("toolWindowManager.mainContainer");
         mainContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         mainContainer.setFocusable(false);
 
-        // TODO: 
-//        mainContainer.setFocusCycleRoot(true);
-//        mainContainer.setFocusTraversalPolicyProvider(true);
-//        mainContainer.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
-
+        // Net bar split pane in default mode
         getBar(BOTTOM).getSplitPane().setTopComponent(getBar(TOP).getSplitPane());
         getBar(TOP).getSplitPane().setBottomComponent(getBar(LEFT).getSplitPane());
         getBar(LEFT).getSplitPane().setRightComponent(getBar(RIGHT).getSplitPane());
@@ -766,7 +763,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         mainSplitPane = getBar(RIGHT).getSplitPane();
         mainSplitPane.addPropertyChangeListener("UI", new UpdateUIChangeListener());
         mainSplitPane.setLeftComponent(mainContainer);
-
     }
 
     protected void initContentManager() {
@@ -868,12 +864,18 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
 
     protected JSplitPane renderSplitPane(int orientation) {
-        return (JSplitPane) resourceManager.createComponent(MyDoggyKeySpace.ANCHOR_SPLIT_PANE,
-                                                            getContext("newOrientation", orientation));
+        JSplitPane splitPane = new DebugSplitPane(orientation);
+        splitPane.setBorder(null);
+        splitPane.setContinuousLayout(true);
+        splitPane.setDividerSize(0);
+        splitPane.setDividerLocation(300);
+        splitPane.setLeftComponent(null);
+        splitPane.setRightComponent(null);
+        
+        return splitPane;
     }
 
-    protected JSplitPane addBar(ToolWindowAnchor anchor, int splitPaneOrientation,
-                                String barConstraints, String cornerConstraints) {
+    protected JSplitPane addBar(ToolWindowAnchor anchor, int splitPaneOrientation, String barConstraints) {
         // Initialize bar
         MyDoggyToolWindowBar myDoggyToolWindowBar = new MyDoggyToolWindowBar(this,
                                                                              renderSplitPane(splitPaneOrientation),
@@ -884,10 +886,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         // Add Bar to Container
         add(myDoggyToolWindowBar.getContainer(), barConstraints);
-
-        // Add Corner to Container
-        add(resourceManager.createComponent(MyDoggyKeySpace.CORNER_CONTENT_PANE, getContext()),
-            cornerConstraints);
 
         return myDoggyToolWindowBar.getSplitPane();
     }

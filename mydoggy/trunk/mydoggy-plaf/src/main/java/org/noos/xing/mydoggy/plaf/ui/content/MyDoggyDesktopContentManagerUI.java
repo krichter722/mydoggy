@@ -3,7 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.content;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDialog;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentFrame;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
@@ -178,9 +178,10 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
     protected void initComponents() {
         if (desktopPane == null) {
             /// Init just once
-            desktopPane = (JDesktopPane) toolWindowManager.getResourceManager().createComponent(
-                    MyDoggyKeySpace.DESKTOP_CONTENT_PANE, toolWindowManager.getContext()
-            );
+            desktopPane = new JDesktopPane();
+            desktopPane.setDesktopManager(new ContentDesktopManager());
+
+            // Setup Actions...
             setupActions();
         }
     }

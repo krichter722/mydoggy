@@ -25,6 +25,7 @@ public class ToolWindowTitleButtonPanel extends JPanel implements Cleaner {
         this.toolWindowDescriptor = toolWindowDescriptor;
 
         toolWindowDescriptor.getCleaner().addCleaner(this);
+
         updateUI();
     }
 

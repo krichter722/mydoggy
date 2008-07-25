@@ -403,6 +403,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     }
 
     public void updateUI() {
+        // TODO: check this procedure..
         getToolWindowContainer().updateUI();
 
         SwingUtilities.updateComponentTreeUI(getComponent());

@@ -4,18 +4,18 @@ import org.noos.common.context.Context;
 import org.noos.common.object.ObjectCreator;
 import org.noos.common.object.ObjectCustomizer;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
-import static org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace.*;
+import static org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace.TOOL_WINDOW_MANAGER;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
-import org.noos.xing.mydoggy.plaf.ui.cmp.DebugSplitPane;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
-import org.noos.xing.mydoggy.plaf.ui.util.*;
+import org.noos.xing.mydoggy.plaf.ui.util.DummyResourceBundle;
+import org.noos.xing.mydoggy.plaf.ui.util.FindFocusableQuestion;
+import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.LabelUI;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -376,17 +376,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
     protected void initComponentCreators() {
         cmpCreators = new Hashtable<String, ObjectCreator<Component>>();
-        cmpCreators.put(ANCHOR_SPLIT_PANE, new BarSplitPaneComponentCreator());
-        cmpCreators.put(CORNER_CONTENT_PANE, new CornerContentPaneComponentCreator());
-        cmpCreators.put(TOOL_WINDOW_MANAGER_CONTENT_CONTAINER, new MyDoggyManagerMainContainerComponentCreator());
-        cmpCreators.put(DESKTOP_CONTENT_PANE, new DesktopContentPaneComponentCreator());
-        cmpCreators.put(TOOL_SCROLL_BAR_ARROW, new ToolScrollBarArrowComponentCreator());
-        cmpCreators.put(MULTI_SPLIT_CONTAINER_SPLIT, new ObjectCreator<Component>() {
-            public Component create(Context context) {
-                return new JSplitPane((Integer) context.get("newOrientation"));
-            }
-        });
-
         cmpUiCreators = new Hashtable<String, ObjectCreator<ComponentUI>>();
 
         cmpCustomizers = new Hashtable<String, ObjectCustomizer<Component>>();
@@ -420,67 +409,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         setTransparencyManager(new WindowTransparencyManager());
     }
 
-
-    public static class BarSplitPaneComponentCreator implements ObjectCreator<Component> {
-
-        public Component create(Context context) {
-            JSplitPane splitPane = new DebugSplitPane((Integer) context.get("newOrientation"));
-            splitPane.setBorder(null);
-            splitPane.setContinuousLayout(true);
-            splitPane.setDividerSize(0);
-            splitPane.setDividerLocation(300);
-            splitPane.setLeftComponent(null);
-            splitPane.setRightComponent(null);
-            return splitPane;
-        }
-    }
-
-    public static class CornerContentPaneComponentCreator implements ObjectCreator<Component> {
-
-        public Component create(Context context) {
-            return new JPanel();
-        }
-    }
-
-    public static class DesktopContentPaneComponentCreator implements ObjectCreator<Component> {
-
-        public Component create(Context context) {
-            JDesktopPane desktopPane = new JDesktopPane();
-            desktopPane.setDesktopManager(new ContentDesktopManager());
-            return desktopPane;
-        }
-    }
-
-    public static class MyDoggyManagerMainContainerComponentCreator implements ObjectCreator<Component> {
-
-        public Component create(Context context) {
-            JPanel panel = new JPanel();
-            panel.setBackground(Color.GRAY);
-            return panel;
-        }
-    }
-
-    public static class ToolScrollBarArrowComponentCreator implements ObjectCreator<Component> {
-
-        public Component create(Context context) {
-            JLabel label = new JLabel() {
-                public void setUI(LabelUI ui) {
-                    if (ui instanceof ToolScrollBarArrowUI)
-                        super.setUI(ui);
-                }
-            };
-            label.setUI(new ToolScrollBarArrowUI());
-            label.setPreferredSize(new Dimension(16, 16));
-            label.setHorizontalAlignment(SwingConstants.CENTER);
-            label.setVerticalAlignment(SwingConstants.CENTER);
-            label.setOpaque(false);
-            label.setFocusable(false);
-            label.setBackground(Colors.orange);
-            label.setIcon(UIManager.getIcon(context.get("icon")));
-
-            return label;
-        }
-    }
 
 
     public static class MyDoggyManagerPanelComponentCustomizer implements ObjectCustomizer<Component> {
