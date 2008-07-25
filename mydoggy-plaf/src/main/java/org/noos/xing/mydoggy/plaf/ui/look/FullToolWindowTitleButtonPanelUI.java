@@ -93,7 +93,7 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
     protected void installDefaults(JPanel p) {
         super.installDefaults(p);
 
-        p.setFocusable(false);
+        toolWindowTitleButtonPanel.setFocusable(false);
 
         installComponents();
         installListeners();
@@ -152,8 +152,10 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
             throw new IllegalStateException("Not implemented yet!!!");
         }
 
-        JButton button = new ToolWindowTitleButton(titleBarAction);
+        ToolWindowTitleButton button = new ToolWindowTitleButton(titleBarAction);
+        button.setFocusable(false);
         button.setName((String) titleBarAction.getValue("action.name"));
+        
         titleBarAction.putValue("component", button);
 
         toolWindowTitleButtonPanel.add(button, row + ",1,FULL,FULL");

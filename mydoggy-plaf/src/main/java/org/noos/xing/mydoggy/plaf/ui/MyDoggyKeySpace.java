@@ -30,6 +30,16 @@ public interface MyDoggyKeySpace {
 
     String TOO_WINDOW_TAB_POPUP = "ToolWindowTabPanelUI.icon.toolWindowTabPopup";
 
+    String TOOL_SCROLL_BAR_UP = "ToolWindowScrollBarUI.arrow.icon.up";
+    String TOOL_SCROLL_BAR_DOWN = "ToolWindowScrollBarUI.arrow.icon.down";
+    String TOOL_SCROLL_BAR_LEFT = "ToolWindowScrollBarUI.arrow.icon.left";
+    String TOOL_SCROLL_BAR_RIGHT = "ToolWindowScrollBarUI.arrow.icon.right";
+
+    String TAB_CLOSE = "ToolWindowTabButtonUI.icon.tabClose";
+    String TAB_CLOSE_INACTIVE = "ToolWindowTabButtonUI.icon.tabClose.inactive";
+    String TAB_MINIMIZE = "ToolWindowTabButtonUI.icon.tabMinimize";
+    String TAB_MINIMIZE_INACTIVE = "ToolWindowTabButtonUI.icon.tabMinimize.inactive";
+
     String CONTENT_PAGE_MINIMIZE = "mydoggy.icon.contentPageMinimize";
     String CONTENT_PAGE_DETACH = "mydoggy.icon.contentPageDetach";
     String CONTENT_PAGE_CLOSE = "mydoggy.icon.contentPageClose";
@@ -38,24 +48,14 @@ public interface MyDoggyKeySpace {
     String CONTENT_PAGE_MAXIMIZE = "mydoggy.icon.contentPageMaximize";
     String CONTENT_PAGE_RESTORE = "mydoggy.icon.contentPageRestore";
 
-    String TOOL_SCROLL_BAR_UP = "mydoggy.icon.toolScroolBarUp";
-    String TOOL_SCROLL_BAR_DOWN = "mydoggy.icon.toolScroolBarDown";
-    String TOOL_SCROLL_BAR_LEFT = "mydoggy.icon.toolScroolBarLeft";
-    String TOOL_SCROLL_BAR_RIGHT = "mydoggy.icon.toolScroolBarRight";
-
-    String TAB_CLOSE = "ToolWindowTabButtonUI.icon.tabClose";
-    String TAB_CLOSE_INACTIVE = "ToolWindowTabButtonUI.icon.tabClose.inactive";
-    String TAB_MINIMIZE = "ToolWindowTabButtonUI.icon.tabMinimize";
-    String TAB_MINIMIZE_INACTIVE = "ToolWindowTabButtonUI.icon.tabMinimize.inactive";
-
     // Images
 
     String DRAG = "mydoggy.image.drag";
 
     // Representative Anchor Button - Colors
 
-    String TOOL_SCROLL_BAR_UI_BCK_START = "mydoggy.color.ToolScrollBarArrowUI.background.start";
-    String TOOL_SCROLL_BAR_UI_BCK_END = "mydoggy.color.ToolScrollBarArrowUI.background.end";
+    String TOOL_SCROLL_BAR_UI_BCK_START = "ToolWindowScrollBarUI.arrow.background.start";
+    String TOOL_SCROLL_BAR_UI_BCK_END = "ToolWindowScrollBarUI.arrow.background.end";
 
     String RAB_MOUSE_IN_BORDER = "ToolWindowRepresentativeAnchorUI.border.mouseIn";
     String RAB_MOUSE_OUT_BORDER = "ToolWindowRepresentativeAnchorUI.border.mouseOut";
@@ -83,19 +83,10 @@ public interface MyDoggyKeySpace {
 
     // Components, ComponentsUIs, Customizers
 
-    String TOOL_WINDOW_CONTAINER = "TOOL_WINDOW_CONTAINER";
-
     String TOOL_WINDOW_MANAGER = "TOOL_WINDOW_MANAGER";
     String TOOL_WINDOW_MANAGER_CONTENT_CONTAINER = "TOOL_WINDOW_MANAGER_CONTENT_CONTAINER";
 
-    String TOOL_SCROLL_BAR_ARROW = "TOOL_SCROLL_BAR_ARROW";
-
-    String ANCHOR_SPLIT_PANE = "ANCHOR_SPLIT_PANE";
-
-    String CORNER_CONTENT_PANE = "CORNER_CONTENT_PANE";
     String DESKTOP_CONTENT_PANE = "DESKTOP_CONTENT_PANE";
-
-    String MULTI_SPLIT_CONTAINER_SPLIT = "MULTI_SPLIT_CONTAINER_SPLIT";
 
     // Properties
 
