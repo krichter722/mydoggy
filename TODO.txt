@@ -7,5 +7,5 @@ TODO: check content flashing staring from MUltiSplitPane
 TODO: workspace loading for MULTISPLIT, it's an instance also of tabbed
 TODO: stopping animation before cleaning in all ui class..
 TODO: when maximize an autoHide=true tool there 's a buh during restoring.. (Try under windows...)
-TODO: when move from docked to sliding the tool is hided..
 TODO: move properties key like "dialog.owner.enabled" into a class...
+TODO: check changing ui....something wrong during the drag...
