@@ -29,9 +29,10 @@ public abstract class AbstractAnimation implements ActionListener {
     private EventListenerList listenerList;
 
 
-    protected AbstractAnimation(float animationDuration) {
+    public AbstractAnimation(float animationDuration) {
         this.animationDuration = animationDuration;
     }
+
 
     public final void actionPerformed(ActionEvent e) {
         synchronized (SYNC) {
@@ -85,9 +86,12 @@ public abstract class AbstractAnimation implements ActionListener {
     public final void stop() {
         synchronized (SYNC) {
             if (isAnimating()) {
-                stopAnimation();
-                onFinishAnimation();
-                fireOnFinished();
+                try {
+                    stopAnimation();
+                } finally {
+                    onFinishAnimation();
+                    fireOnFinished();
+                }
             }
         }
     }
@@ -108,9 +112,7 @@ public abstract class AbstractAnimation implements ActionListener {
         if (listenerList == null)
             listenerList = new EventListenerList();
         listenerList.add(AnimationListener.class, animationListener);
-
     }
-
 
 
     private void startAnimation(Direction direction) {

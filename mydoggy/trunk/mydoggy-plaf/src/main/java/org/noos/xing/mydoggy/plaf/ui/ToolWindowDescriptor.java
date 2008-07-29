@@ -74,6 +74,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     // TODO: change this names...
     boolean valueAdj = false;
     boolean valueAdjusting;
+    boolean focusValueAdjusting = false;
 
     // Popup menu fiedls
     protected ToolWindowType oldType;
@@ -993,7 +994,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            if (!toolWindow.isVisible() || valueAdjusting)
+            if (!toolWindow.isVisible() || valueAdjusting || focusValueAdjusting)
                 return;
 
             Component component = (Component) evt.getNewValue();

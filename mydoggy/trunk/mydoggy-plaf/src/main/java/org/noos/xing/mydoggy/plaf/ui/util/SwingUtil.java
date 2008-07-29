@@ -501,10 +501,12 @@ public class SwingUtil {
 
     // UI support methods
 
-    public static void registerDragGesture(Component c, DragGesture dragGesture) {
+    public static DragSource registerDragGesture(Component c, DragGesture dragGesture) {
         DragSource dragSource = new DragSource();
         dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, dragGesture);
         dragSource.addDragSourceMotionListener(dragGesture);
+
+        return dragSource;
     }
 
     public static void addKeyActionMapping(JComponent component, KeyStroke keyStroke, Object actionMapKey, Action action) {

@@ -261,20 +261,23 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
     }
 
     protected void installListeners(JComponent c) {
+        // Register cleaner
+        descriptor.getCleaner().addCleaner(this);
+
+        // Register Listeners
         descriptor.getToolWindow().addPlafPropertyChangeListener(this);
         descriptor.addTypeDescriptorChangePropertyListener(this);
 
-        descriptor.getCleaner().addCleaner(this);
-
         toolWindowTitleBar.addMouseListener(titleBarMouseAdapter = new TitleBarMouseAdapter(descriptor));
 
-        // Drag Gesture
-        final ToolWindowTitleBarDragGesture dragGesture = new ToolWindowTitleBarDragGesture(descriptor);
+        // Register Drag Gesture
+        ToolWindowTitleBarDragGesture dragGesture = new ToolWindowTitleBarDragGesture(descriptor);
         SwingUtil.registerDragGesture(toolWindowTitleBar, dragGesture);
         toolWindowTitleBar.getToolWindowTabPanel().setDragGesture(dragGesture);
     }
 
     protected void uninstallListeners(JComponent c) {
+        // Remove listeners
         descriptor.getToolWindow().removePlafPropertyChangeListener(this);
         descriptor.removeTypeDescriptorChangePropertyListener(this);
 
