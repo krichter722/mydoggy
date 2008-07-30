@@ -1,0 +1,43 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy - My Java Docking Framework (PLAF) : ToolWindowManager</title>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="MyDoggyToolWindowManager">
+            <p>
+                To obtain an instance of <code>ToolWindowManager</code> interface you have to instantiate the
+                <code>MyDoggyToolWindowManager</code> class. This is the default implementation.
+                <br/>
+                To obtain an instance use the following (for example):
+            </p>
+            <source>ToolWindowManager toolWindowManager = new MyDoggyToolWindowManager();
+            </source>
+            <p>or</p>
+            <source>ToolWindowManager toolWindowManager = new MyDoggyToolWindowManager(
+              Locale.getDefault() // A Locale instance
+);
+            </source>
+            <p>
+                MyDoggyToolWindowManager is implemented like a JPanel so you can use it like any other component.
+                <br/>
+                For example:
+            </p>
+            <source>JFrame frame = new JFrame("MyDoggy-Set...");
+...
+MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
+...
+frame.getContentPane().add(myDoggyToolWindowManager);</source>
+            <p>
+                To enable all toolwindow types (Sliding, Floating Live, etc.), MyDoggyToolWindowManager
+                must be have as window ancestor an object implementing the <code>RootPaneContainer</code> interface
+                (i.e. JFrame, JWindow, JApplet, ...).
+            </p>
+
+        </section>
+    </body>
+</document>
