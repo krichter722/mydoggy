@@ -1,6 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +14,7 @@ import java.awt.geom.Area;
 public class GlassPanel extends JPanel implements ContainerListener {
     protected RootPaneContainer rootPaneContainer;
     protected Component oldGlassPanel;
+    protected ResourceManager resourceManager;
 
     protected Image draggingImage = null;
 
@@ -24,7 +25,8 @@ public class GlassPanel extends JPanel implements ContainerListener {
     protected int height;
     protected Rectangle visibleRect = null;
 
-    public GlassPanel(RootPaneContainer rootPaneContainer) {
+    public GlassPanel(ResourceManager resourceManager, RootPaneContainer rootPaneContainer) {
+        this.resourceManager = resourceManager;
         this.rootPaneContainer = rootPaneContainer;
 
         setOpaque(false);
@@ -45,7 +47,7 @@ public class GlassPanel extends JPanel implements ContainerListener {
         if (draggingImage == null || !isVisible() || location == null)
             return;
 
-        if (SwingUtil.getBoolean("drag.icon.transparency.enabled", true)) {
+        if (resourceManager.getBoolean("drag.icon.transparency.enabled", true)) {
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.75f));
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         }
@@ -141,4 +143,7 @@ public class GlassPanel extends JPanel implements ContainerListener {
             rootPaneContainer.setGlassPane(oldGlassPanel);
     }
 
+    public void setResourceManager(ResourceManager resourceManager) {
+        this.resourceManager = resourceManager;
+    }
 }

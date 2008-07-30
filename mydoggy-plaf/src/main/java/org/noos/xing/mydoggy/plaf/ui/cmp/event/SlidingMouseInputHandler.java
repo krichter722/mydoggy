@@ -2,22 +2,18 @@ package org.noos.xing.mydoggy.plaf.ui.cmp.event;
 
 import org.noos.xing.mydoggy.ToolWindow;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
-import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class SlidingMouseInputHandler extends ComponentAdapter implements MouseInputListener,
-                                                                          Cleaner {
+public class SlidingMouseInputHandler implements MouseInputListener, Cleaner {
     static final int BORDER_DRAG_THICKNESS = 5;
     static final int CORNER_DRAG_WIDTH = 16;
 
@@ -65,15 +61,11 @@ public class SlidingMouseInputHandler extends ComponentAdapter implements MouseI
     public SlidingMouseInputHandler(ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
-        descriptor.getContentContainer().addComponentListener(this);
-
         descriptor.getCleaner().addCleaner(this);
     }
 
 
     public void cleanup() {
-        descriptor.getContentContainer().removeComponentListener(this);
-
         descriptor = null;
         toolWindow = null;
     }
@@ -145,7 +137,7 @@ public class SlidingMouseInputHandler extends ComponentAdapter implements MouseI
 
             if (!r.equals(startBounds)) {
                 JMenuBar menuBar = descriptor.getManager().getRootPane().getJMenuBar();
-                Rectangle containerRect = descriptor.getManagerBounds();
+                Rectangle containerRect = descriptor.getToolWindowManagerContainerBounds();
 
                 switch (toolWindow.getAnchor()) {
                     case LEFT:
@@ -244,24 +236,6 @@ public class SlidingMouseInputHandler extends ComponentAdapter implements MouseI
     public void mouseClicked(MouseEvent ev) {
     }
 
-    @Override
-    public void componentResized(ComponentEvent e) {
-        if (descriptor.getToolWindow().getType() != ToolWindowType.SLIDING)
-            return;
-
-        // TODO: check for conflicts...
-        switch (descriptor.getAnchor()) {
-            case LEFT:
-            case RIGHT:
-                descriptor.setDividerLocation(e.getComponent().getWidth());
-                break;
-            case TOP:
-            case BOTTOM:
-                descriptor.setDividerLocation(e.getComponent().getHeight());
-                break;
-        }
-    }
-
 
     protected void adjust(Rectangle bounds, Dimension min, int deltaX, int deltaY, int deltaWidth, int deltaHeight) {
         bounds.x += deltaX;
@@ -346,6 +320,5 @@ public class SlidingMouseInputHandler extends ComponentAdapter implements MouseI
 
         return 2;
     }
-
 
 }

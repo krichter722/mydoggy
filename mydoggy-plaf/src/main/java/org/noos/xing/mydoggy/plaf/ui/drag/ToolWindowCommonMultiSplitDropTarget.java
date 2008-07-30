@@ -306,7 +306,8 @@ public class ToolWindowCommonMultiSplitDropTarget extends DropTarget {
         }
 
         protected boolean checkCondition(ToolWindow toolWindow) {
-            return true;
+                return true;
+
         }
     }
 

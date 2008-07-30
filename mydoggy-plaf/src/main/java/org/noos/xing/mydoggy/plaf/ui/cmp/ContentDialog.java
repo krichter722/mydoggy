@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentUI;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -22,8 +23,11 @@ public class ContentDialog extends JDialog {
     protected ContentUI contentUI;
 
 
-    public ContentDialog(Content content, ContentUI contentUI, Frame parentFrame, Rectangle inBounds) throws HeadlessException {
-        super(SwingUtil.getBoolean("dialog.owner.enabled", true) ? parentFrame : null, false);
+    public ContentDialog(ResourceManager resourceManager,
+                         Content content, ContentUI contentUI,
+                         Frame parentFrame,
+                         Rectangle inBounds) throws HeadlessException {
+        super(resourceManager.getBoolean("dialog.owner.enabled", true) ? parentFrame : null, false);
 //        setFocusCycleRoot(true);
 //        setFocusTraversalPolicyProvider(true);
 //        setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
@@ -47,9 +51,9 @@ public class ContentDialog extends JDialog {
 
         addComponentListener(new ContentDialogComponentAdapter());
 
-        if (SwingUtil.getTransparencyManager().isServiceAvailable()) {
+        if (resourceManager.getTransparencyManager().isServiceAvailable()) {
             WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(
-                    SwingUtil.getTransparencyManager(),
+                    resourceManager.getTransparencyManager(),
                     contentUI,
                     this
             );
@@ -57,6 +61,7 @@ public class ContentDialog extends JDialog {
             addWindowFocusListener(windowTransparencyListener);
         }
 
+        // Setup bounds
         Rectangle detachedBounds = SwingUtil.validateBounds(contentUI.getDetachedBounds());
         if (detachedBounds != null) {
             setBounds(detachedBounds);
@@ -95,7 +100,7 @@ public class ContentDialog extends JDialog {
     }
 
     public void setBounds(Rectangle r) {
-//        System.out.println("setBounds r = " + r);
+        System.out.println("setBounds r = " + r);
         super.setBounds(r);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
@@ -107,24 +112,24 @@ public class ContentDialog extends JDialog {
         super.setSize(d);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
-    public class ContentDialogWindowAdapter extends WindowAdapter {
+    protected class ContentDialogWindowAdapter extends WindowAdapter {
         public void windowClosing(WindowEvent event) {
             content.setDetached(false);
         }
     }
 
-    public class ContentDialogComponentAdapter extends ComponentAdapter {
+    protected class ContentDialogComponentAdapter extends ComponentAdapter {
 
         public void componentResized(ComponentEvent e) {
             if (isActive() && isVisible()) {
-//                System.out.println("componentResized getBounds() = " + getBounds());
+                System.out.println("componentResized getBounds() = " + getBounds());
                 contentUI.setDetachedBounds(getBounds());
             }
         }
 
         public void componentMoved(ComponentEvent e) {
             if (isActive() && isVisible()) {
-//                System.out.println("componentMoved getBounds() = " + getBounds());
+                System.out.println("componentMoved getBounds() = " + getBounds());
                 contentUI.setDetachedBounds(getBounds());
             }
         }

@@ -10,7 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DragGestureEvent;
-import java.awt.dnd.DragSource;
 import java.awt.dnd.DragSourceDragEvent;
 import java.awt.dnd.DragSourceDropEvent;
 import java.awt.image.BufferedImage;
@@ -32,11 +31,10 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
 
     public void dragGestureRecognized(DragGestureEvent dge) {
         // Acquire locks
-        if (!acquireLocks())
-            return;
+        acquireLocks();
 
         // Start Drag
-        dge.startDrag(DragSource.DefaultMoveDrop,
+        dge.startDrag(Cursor.getDefaultCursor(),
                       createTransferable(),
                       this);
 
@@ -44,9 +42,9 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
         descriptor.getToolBar().propertyChange(new PropertyChangeEvent(getComponent(), "startDrag", null, dge));
 
         // Setup ghostImage
-        if (SwingUtil.getBoolean("drag.icon.useDefault", false)) {
+        if (descriptor.getResourceManager().getBoolean("drag.icon.useDefault", false)) {
             setGhostImage(dge.getDragOrigin(),
-                          SwingUtil.getImage(MyDoggyKeySpace.DRAG));
+                          descriptor.getResourceManager().getBufferedImage(MyDoggyKeySpace.DRAG));
         } else {
             JComponent representativeAnchor = descriptor.getRepresentativeAnchor();
             BufferedImage ghostImage = new BufferedImage(representativeAnchor.getWidth(),
@@ -70,7 +68,7 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
 
         // Produce updatedGhostImage
         if (newAnchor != lastAnchor) {
-            if (!SwingUtil.getBoolean("drag.icon.useDefault", false)) {
+            if (!descriptor.getResourceManager().getBoolean("drag.icon.useDefault", false)) {
                 resetGhostImage();
 
                 if (newAnchor == null) {
@@ -166,9 +164,5 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
                                        MyDoggyTransferable.CUSTOM_DESCRIPTOR_ID,
                                        descriptor.getDockable().getId()
         );
-    }
-
-    protected boolean isDragEnabled() {
-        return true;
     }
 }

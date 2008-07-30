@@ -20,7 +20,7 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
              Cursor.SE_RESIZE_CURSOR, Cursor.SE_RESIZE_CURSOR
             };
 
-    protected Cursor lastCursor;
+    protected Cursor lastCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
 
     protected int dragCursor;
     protected int dragOffsetX;
@@ -38,7 +38,6 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
         this.floatingContainer = floatingContainer;
         this.isWindow = floatingContainer instanceof Window;
         this.minimumSize = new Dimension(150, 24);
-        this.lastCursor = null;
     }
 
 
@@ -68,7 +67,6 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
 
     public void mouseMoved(MouseEvent ev) {
         Component w = (Component) ev.getSource();
-
         int cursor = getCursor(calculateCorner(w, ev.getX(), ev.getY()));
         if (cursor != 0) {
             w.setCursor(Cursor.getPredefinedCursor(cursor));
@@ -151,15 +149,13 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
 
     public void mouseEntered(MouseEvent ev) {
         Component w = (Component) ev.getSource();
-        lastCursor = w.isCursorSet() ? w.getCursor() : null;
+        lastCursor = w.getCursor();
         mouseMoved(ev);
     }
 
     public void mouseExited(MouseEvent ev) {
         Component w = (Component) ev.getSource();
-
-        if (lastCursor != null)
-            w.setCursor(lastCursor);
+        w.setCursor(lastCursor);
     }
 
     public void mouseClicked(MouseEvent ev) {

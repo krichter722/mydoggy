@@ -29,14 +29,11 @@ public class FloatingMoveMouseInputHandler implements MouseInputListener {
     protected Component floatingContainer;
     protected Window floatingWindow;
 
-
     public FloatingMoveMouseInputHandler(Component floatingContainer) {
         this.floatingContainer = floatingContainer;
-
         if (floatingContainer instanceof Window)
             floatingWindow = (Window) floatingContainer;
     }
-
 
     public void mousePressed(MouseEvent ev) {
         Component w = (Component) ev.getSource();
@@ -106,11 +103,4 @@ public class FloatingMoveMouseInputHandler implements MouseInputListener {
     public void mouseClicked(MouseEvent ev) {
     }
 
-
-    public void setFloatingContainer(Component floatingContainer) {
-        this.floatingContainer = floatingContainer;
-
-        if (floatingContainer instanceof Window)
-            floatingWindow = (Window) floatingContainer;
-    }
 }

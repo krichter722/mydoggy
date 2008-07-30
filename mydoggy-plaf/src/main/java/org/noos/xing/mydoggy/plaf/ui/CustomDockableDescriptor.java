@@ -125,6 +125,10 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
     }
 
 
+    public ResourceManager getResourceManager() {
+        return manager.getResourceManager();
+    }
+
     public MyDoggyToolWindowManager getManager() {
         return manager;
     }
@@ -173,7 +177,7 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
     }
 
 
-    public class CustomRepresentativeAnchorDragGesture extends RepresentativeAnchorDragGesture {
+    protected class CustomRepresentativeAnchorDragGesture extends RepresentativeAnchorDragGesture {
 
         public CustomRepresentativeAnchorDragGesture(DockableDescriptor descriptor) {
             super(descriptor, null);

@@ -1,32 +1,30 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.DockedTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindow;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
+import org.noos.xing.mydoggy.ToolWindowTab;
+import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
-import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowRepresentativeAnchor;
+import org.noos.xing.mydoggy.plaf.ui.cmp.TranslucentPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.drag.RepresentativeAnchorDragGesture;
-import org.noos.xing.mydoggy.plaf.ui.translucent.TranslucentPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
-import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.metal.MetalLabelUI;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DragGestureEvent;
-import java.awt.dnd.DragSourceDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -36,22 +34,16 @@ import java.beans.PropertyChangeEvent;
  * @author Angelo De Caro
  */
 public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cleaner {
-
-
-    public static ComponentUI createUI(JComponent c) {
-        return new ToolWindowRepresentativeAnchorUI();
-    }
-
-
-    protected ToolWindowRepresentativeAnchor representativeAnchor;
+    protected JComponent label;
 
     protected LineBorder labelBorder;
 
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
+    protected ResourceManager resourceManager;
     protected DockedTypeDescriptor dockedTypeDescriptor;
 
-    protected ToolWindowRepresentativeAnchorMouseAdapter adapter;
+    protected RepresentativeAnchorMouseAdapter adapter;
 
     protected Timer flashingTimer;
     protected int flasingDuration;
@@ -63,91 +55,47 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     protected TranslucentPanel previewPanel;
 
 
-    public ToolWindowRepresentativeAnchorUI() {
-    }
+    public ToolWindowRepresentativeAnchorUI(ToolWindowDescriptor descriptor) {
+        this.descriptor = descriptor;
+        this.toolWindow = descriptor.getToolWindow();
+        this.resourceManager = descriptor.getResourceManager();
 
+        this.flashingAnimation = new GradientAnimation();
+        this.flasingDuration = -1;
+        this.flashingAnimBackStart = new MutableColor(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+        this.flashingAnimBackEnd = new MutableColor(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
 
-    public void propertyChange(PropertyChangeEvent e) {
-        String propertyName = e.getPropertyName();
+        this.dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+        this.dockedTypeDescriptor.addPropertyChangeListener(this);
 
-        if ("visible".equals(propertyName)) {
-            boolean visible = (Boolean) e.getNewValue();
-            representativeAnchor.setOpaque(visible);
-            if (visible) {
-                labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
-
-                descriptor.getToolBar().ensureVisible(representativeAnchor);
-                toolWindow.setFlashing(false);
-            } else
-                labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER));
-
-            SwingUtil.repaint(representativeAnchor);
-        } else if ("flash".equals(propertyName)) {
-            if (e.getNewValue() == Boolean.TRUE) {
-                if (!toolWindow.isVisible()) {
-                    flasingDuration = -1;
-                    SwingUtil.repaint(representativeAnchor);
-                }
-            } else {
-                if (flashingTimer != null) {
-                    flashingTimer.stop();
-                    flashingTimer = null;
-                    SwingUtil.repaint(representativeAnchor);
-                }
-            }
-        } else if ("flash.duration".equals(propertyName)) {
-            if (e.getNewValue() == Boolean.TRUE) {
-                if (!toolWindow.isVisible()) {
-                    flasingDuration = (Integer) e.getNewValue();
-                    SwingUtil.repaint(representativeAnchor);
-                }
-            } else {
-                if (flashingTimer != null) {
-                    flashingTimer.stop();
-                    flashingTimer = null;
-                    SwingUtil.repaint(representativeAnchor);
-                }
-            }
-        }
-    }
-
-    public void cleanup() {
-        uninstallUI(representativeAnchor);
+        descriptor.getCleaner().addCleaner(this);
     }
 
 
     public void installUI(JComponent c) {
-        // Init fields
-        this.representativeAnchor = (ToolWindowRepresentativeAnchor) c;
-        this.descriptor = representativeAnchor.getToolWindowDescriptor();
-        this.toolWindow = descriptor.getToolWindow();
-
         super.installUI(c);
+
+        this.label = c;
+        labelBorder = new LineBorder(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER), 1, true, 3, 3);
+        c.setBorder(labelBorder);
+        c.setForeground(resourceManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
+
+        SwingUtil.registerDragGesture(c, new ToolWindowRepresentativeAnchorDragGesture(descriptor, label));
     }
 
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
+        c.removeMouseListener(adapter);
+        c.removeMouseMotionListener(adapter);
 
-        // Release timers and stop animations
-        if (flashingTimer != null)
-            flashingTimer.stop();
-        flashingTimer = null;
-
-        flashingAnimation.stop();
-
-        // Reset Fields
-        descriptor = null;
-        toolWindow = null;
-        dockedTypeDescriptor = null;
-        representativeAnchor = null;
+        cleanup();
     }
-
 
     public void update(Graphics g, JComponent c) {
         if (toolWindow.isAvailable())
-            c.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
+            c.setForeground(resourceManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
         else
-            c.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
+            c.setForeground(resourceManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
 
         if (isFlashing() && !toolWindow.isVisible()) {
 
@@ -193,29 +141,78 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
             }
 
             updateAnchor(g, c,
-                         UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
-                         UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
+                         resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
+                         resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
                          toolWindow.isVisible(),
                          false);
         }
         paint(g, c);
     }
 
+    public void propertyChange(PropertyChangeEvent e) {
+        String propertyName = e.getPropertyName();
 
-    protected void installDefaults(JLabel c) {
-        super.installDefaults(c);
-        
-        // Flashing animation fields
-        this.flashingAnimation = new GradientAnimation();
-        this.flasingDuration = -1;
-        this.flashingAnimBackStart = new MutableColor(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
-        this.flashingAnimBackEnd = new MutableColor(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+        if ("visible".equals(propertyName)) {
+            boolean visible = (Boolean) e.getNewValue();
+            label.setOpaque(visible);
+            if (visible) {
+                labelBorder.setLineColor(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
 
-        labelBorder = new LineBorder(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER), 1, true, 3, 3);
+                descriptor.getToolBar().ensureVisible(label);
+                toolWindow.setFlashing(false);
+            } else
+                labelBorder.setLineColor(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER));
 
-        c.setBorder(labelBorder);
-        c.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
+            SwingUtil.repaint(label);
+        } else if ("flash".equals(propertyName)) {
+            if (e.getNewValue() == Boolean.TRUE) {
+                if (!toolWindow.isVisible()) {
+                    flasingDuration = -1;
+                    SwingUtil.repaint(label);
+                }
+            } else {
+                if (flashingTimer != null) {
+                    flashingTimer.stop();
+                    flashingTimer = null;
+                    SwingUtil.repaint(label);
+                }
+            }
+        } else if ("flash.duration".equals(propertyName)) {
+            if (e.getNewValue() == Boolean.TRUE) {
+                if (!toolWindow.isVisible()) {
+                    flasingDuration = (Integer) e.getNewValue();
+                    SwingUtil.repaint(label);
+                }
+            } else {
+                if (flashingTimer != null) {
+                    flashingTimer.stop();
+                    flashingTimer = null;
+                    SwingUtil.repaint(label);
+                }
+            }
+        }
+    }
 
+    public void cleanup() {
+        // Remove listeners
+        toolWindow.getTypeDescriptor(ToolWindowType.DOCKED).removePropertyChangeListener(this);
+        descriptor.getToolWindow().removePlafPropertyChangeListener(this);
+
+        // Release timers
+        if (flashingTimer != null)
+            flashingTimer.stop();
+        flashingTimer = null;
+
+        // Finalize
+        descriptor = null;
+        toolWindow = null;
+    }
+
+
+    protected void installListeners(JLabel c) {
+        super.installListeners(c);
+
+        // Forse PropertyChangeListener
         String oldText = c.getText();
         if (oldText != null) {
             c.setText(null);
@@ -228,37 +225,12 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
             c.setToolTipText(oldText);
         }
 
-        SwingUtil.installFont(c, "ToolWindowRepresentativeAnchorUI.font");
-    }
-
-    protected void installListeners(JLabel c) {
-        super.installListeners(c);
-
-        this.dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-        this.dockedTypeDescriptor.addPropertyChangeListener(this);
-
-        descriptor.getCleaner().addCleaner(this);
-
-        adapter = new ToolWindowRepresentativeAnchorMouseAdapter();
+        adapter = new RepresentativeAnchorMouseAdapter();
         c.addMouseListener(adapter);
         c.addMouseMotionListener(adapter);
 
         descriptor.getToolWindow().addPlafPropertyChangeListener(this);
-
-        SwingUtil.registerDragGesture(c, new ToolWindowRepresentativeAnchorDragGesture(descriptor, c));
     }
-
-    protected void uninstallListeners(JLabel c) {
-        super.uninstallListeners(c);
-
-        dockedTypeDescriptor.removePropertyChangeListener(this);
-
-        c.removeMouseListener(adapter);
-        c.removeMouseMotionListener(adapter);
-        
-        descriptor.getToolWindow().removePlafPropertyChangeListener(this);
-    }
-
 
     protected void updateAnchor(Graphics g, JComponent c,
                                 Color backgroundStart, Color backgroundEnd,
@@ -274,7 +246,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                                   null,
                                   GraphicsUtil.FROM_CENTRE_GRADIENT_ON_X);
         } else {
-            g.setColor(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+            g.setColor(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
             g.fillRect(0, 0, r.width, r.height);
         }
     }
@@ -297,7 +269,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     }
 
 
-    public class GradientAnimation extends AbstractAnimation {
+    protected class GradientAnimation extends AbstractAnimation {
 
         public GradientAnimation() {
             super(600f);
@@ -307,50 +279,50 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
             switch (getAnimationDirection()) {
                 case INCOMING:
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackStart,
-                                                      UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
-                                                      UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd,
-                                                      UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
-                                                      UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
                                                       animationPercent);
                     break;
 
                 case OUTGOING:
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackStart,
-                                                      UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
-                                                      UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
                                                       animationPercent);
                     GraphicsUtil.getInterpolatedColor(flashingAnimBackEnd,
-                                                      UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
-                                                      UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END),
+                                                      resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE),
                                                       animationPercent);
                     break;
             }
-            SwingUtil.repaint(representativeAnchor);
+            SwingUtil.repaint(label);
             return animationPercent;
         }
 
         protected void onFinishAnimation() {
             switch (getAnimationDirection()) {
                 case INCOMING:
-                    flashingAnimBackStart.setRGB(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+                    flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
                     break;
                 case OUTGOING:
-                    flashingAnimBackStart.setRGB(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START));
+                    flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START));
                     break;
             }
-            SwingUtil.repaint(representativeAnchor);
+            SwingUtil.repaint(label);
         }
 
         protected void onHide(Object... params) {
-            flashingAnimBackStart.setRGB(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START));
-            flashingAnimBackEnd.setRGB(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END));
+            flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START));
+            flashingAnimBackEnd.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END));
         }
 
         protected void onShow(Object... params) {
-            flashingAnimBackStart.setRGB(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
-            flashingAnimBackEnd.setRGB(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+            flashingAnimBackStart.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+            flashingAnimBackEnd.setRGB(resourceManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
         }
 
         protected void onStartAnimation(Direction direction) {
@@ -361,12 +333,12 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         }
     }
 
-    public class ToolWindowRepresentativeAnchorMouseAdapter extends MouseInputAdapter implements ActionListener, Cleaner {
+    protected class RepresentativeAnchorMouseAdapter extends MouseInputAdapter implements ActionListener, Cleaner {
         protected Timer previewTimer;
         protected boolean firstPreview = true;
 
 
-        public ToolWindowRepresentativeAnchorMouseAdapter() {
+        public RepresentativeAnchorMouseAdapter() {
             previewTimer = new Timer(0, this);
             
             descriptor.getCleaner().addBefore(ToolWindowRepresentativeAnchorUI.this, this);
@@ -413,14 +385,14 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                 }
             } else if (SwingUtilities.isRightMouseButton(e)) {
                 if (((DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED)).isPopupMenuEnabled()) {
-                    descriptor.showPopupMenu(e.getComponent(), e.getX(), e.getY());
+                    descriptor.getToolWindowContainer().showPopupMenu(e.getComponent(), e.getX(), e.getY());
                 }
             }
 
 //            if (label.getBorder() != labelBorder)
-            representativeAnchor.setBorder(labelBorder);
-            labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
-            SwingUtil.repaint(representativeAnchor);
+            label.setBorder(labelBorder);
+            labelBorder.setLineColor(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
+            SwingUtil.repaint(label);
         }
 
         public void mouseEntered(MouseEvent e) {
@@ -441,7 +413,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
             Component source = e.getComponent();
             if (!source.isOpaque()) {
-                labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
+                labelBorder.setLineColor(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_IN_BORDER));
                 SwingUtil.repaint(source);
             }
         }
@@ -450,8 +422,8 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
             if (!toolWindow.isAvailable())
                 return;
 
-            if (e.getX() >= representativeAnchor.getWidth() || e.getX() <= 0 ||
-                e.getY() >= representativeAnchor.getHeight() || e.getY() <= 0)
+            if (e.getX() >= label.getWidth() || e.getX() <= 0 ||
+                e.getY() >= label.getHeight() || e.getY() <= 0)
                 firstPreview = false;
 
             previewTimer.stop();
@@ -462,7 +434,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
             Component source = e.getComponent();
             if (!source.isOpaque()) {
-                labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER));
+                labelBorder.setLineColor(resourceManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER));
                 SwingUtil.repaint(source);
             }
         }
@@ -476,27 +448,31 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
             if (e.getSource() == previewTimer) {
                 if ("stop".equals(e.getActionCommand())) {
                     if (previewPanel != null && !firstPreview) {
-                        Window windowAncestor = SwingUtilities.getWindowAncestor(representativeAnchor);
+                        Window windowAnchestor = SwingUtilities.getWindowAncestor(label);
 
-                        if (windowAncestor != null) {
+                        if (windowAnchestor != null) {
                             GlassPanel glassPane = descriptor.getManager().getGlassPanel();
                             glassPane.remove(previewPanel);
                             glassPane.setVisible(false);
                             SwingUtil.repaint(glassPane);
-                            SwingUtil.repaint(windowAncestor);
+                            SwingUtil.repaint(windowAnchestor);
 
                             previewPanel = null;
                         }
                     }
                     firstPreview = false;
                 } else
-                if (dockedTypeDescriptor.isPreviewEnabled() &&
-                    descriptor.getManager().getToolWindowManagerDescriptor().isPreviewEnabled()) {
-                    Container contentContainer = descriptor.getToolWindowPanel();
+                if (dockedTypeDescriptor.isPreviewEnabled() && descriptor.getManager().getToolWindowManagerDescriptor().isPreviewEnabled()) {
+                    Container contentContainer = ((DockedContainer) descriptor.getToolWindowContainer()).getContentContainer();
+                    int width = 176;
+                    int height = 132;
 
                     // Show Preview
-                    RootPaneContainer rootPaneContainer = (RootPaneContainer) SwingUtilities.getWindowAncestor(representativeAnchor);
+                    RootPaneContainer rootPaneContainer = (RootPaneContainer) SwingUtilities.getWindowAncestor(label);
                     if (rootPaneContainer != null) {
+                        JMenuBar jMenuBar = rootPaneContainer instanceof JFrame ?
+                                            ((JFrame) rootPaneContainer).getJMenuBar() : null;
+
                         firstPreview = true;
                         previewTimer.stop();
 
@@ -507,7 +483,87 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
                         previewPanel = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
                         previewPanel.setAlphaModeRatio(dockedTypeDescriptor.getPreviewTransparentRatio());
-                        setPreviewPanelBounds(rootPaneContainer);
+                        previewPanel.setSize(width + 4, height + 4);
+
+                        Rectangle containerRect = descriptor.getToolWindowManagerContainerBounds();
+
+                        switch (descriptor.getToolWindow().getAnchor()) {
+                            case LEFT:
+                                previewPanel.setLocation(
+                                        containerRect.x +
+                                        label.getX() + label.getWidth() + 3,
+
+                                        (jMenuBar != null ? jMenuBar.getHeight() : 0) +
+                                        containerRect.y +
+                                        label.getY() +
+                                        (descriptor.getToolBar(TOP).getSize())
+                                );
+                                break;
+                            case TOP:
+                                previewPanel.setLocation(
+                                        containerRect.x +
+                                        label.getX() +
+                                        (descriptor.getToolBar(LEFT).getSize()),
+
+                                        (jMenuBar != null ? jMenuBar.getHeight() : 0) +
+                                        containerRect.y +
+                                        label.getY() + label.getHeight() + 3
+                                );
+                                break;
+                            case BOTTOM:
+                                previewPanel.setLocation(
+                                        containerRect.x +
+                                        label.getX() +
+                                        (descriptor.getToolBar(LEFT).getSize()),
+
+                                        (jMenuBar != null ? jMenuBar.getHeight() : 0) +
+                                        containerRect.y +
+                                        containerRect.height -
+                                                                  previewPanel.getHeight() - 26
+                                );
+                                break;
+                            case RIGHT:
+                                previewPanel.setLocation(
+                                        containerRect.x +
+                                        containerRect.width -
+                                                                 previewPanel.getWidth() - 26,
+
+                                        (jMenuBar != null ? jMenuBar.getHeight() : 0) +
+                                        containerRect.y +
+                                        label.getY() +
+                                        (descriptor.getToolBar(TOP).getSize())
+                                );
+                                break;
+                        }
+
+                        if (previewPanel.getY() + previewPanel.getHeight() >
+                            containerRect.getY() + containerRect.getHeight() - 26) {
+
+                            previewPanel.setLocation(
+                                    previewPanel.getX(),
+
+                                    (jMenuBar != null ? jMenuBar.getHeight() : 0) +
+                                    containerRect.y +
+                                    containerRect.height -
+                                                              (descriptor.getToolBar(BOTTOM).getSize()) -
+                                                              previewPanel.getHeight() - 3
+                            );
+                        }
+
+                        if (previewPanel.getX() + previewPanel.getWidth() >
+                            containerRect.x + containerRect.getWidth() - 26) {
+
+                            previewPanel.setLocation(
+                                    containerRect.x +
+                                    containerRect.width -
+                                                             (descriptor.getToolBar(RIGHT).getSize()) -
+                                                             previewPanel.getWidth() - 3,
+
+                                    previewPanel.getY()
+                            );
+                        }
+
+
                         previewPanel.add(contentContainer, "1,1,FULL,FULL");
 
                         glassPane.add(previewPanel);
@@ -528,159 +584,9 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                 previewTimer = null;
             }
         }
-
-
-        protected void setPreviewPanelBounds(RootPaneContainer rootPaneContainer) {
-            if (SwingUtil.getBoolean("mydoggy.preview.full", false))
-                setFullPreviewBounds();
-            else
-                setThumbnailPreviewBounds(rootPaneContainer);
-        }
-
-        protected void setThumbnailPreviewBounds(RootPaneContainer rootPaneContainer) {
-            int width = 176;
-            int height = 132;
-            JMenuBar jMenuBar = rootPaneContainer instanceof JFrame ?
-                                ((JFrame) rootPaneContainer).getJMenuBar() : null;
-
-
-            previewPanel.setSize(width + 4, height + 4);
-
-            Rectangle containerRect = descriptor.getManagerBounds();
-            switch (descriptor.getToolWindow().getAnchor()) {
-                case LEFT:
-                    previewPanel.setLocation(
-                            containerRect.x +
-                            representativeAnchor.getX() + representativeAnchor.getWidth() + 3,
-
-                            (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                            containerRect.y +
-                            representativeAnchor.getY() +
-                            (descriptor.getToolBar(TOP).getSize())
-                    );
-                    break;
-                case TOP:
-                    previewPanel.setLocation(
-                            containerRect.x +
-                            representativeAnchor.getX() +
-                            (descriptor.getToolBar(LEFT).getSize()),
-
-                            (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                            containerRect.y +
-                            representativeAnchor.getY() + representativeAnchor.getHeight() + 3
-                    );
-                    break;
-                case BOTTOM:
-                    previewPanel.setLocation(
-                            containerRect.x +
-                            representativeAnchor.getX() +
-                            (descriptor.getToolBar(LEFT).getSize()),
-
-                            (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                            containerRect.y +
-                            containerRect.height -
-                                                      previewPanel.getHeight() - 26
-                    );
-                    break;
-                case RIGHT:
-                    previewPanel.setLocation(
-                            containerRect.x +
-                            containerRect.width -
-                                                     previewPanel.getWidth() - 26,
-
-                            (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                            containerRect.y +
-                            representativeAnchor.getY() +
-                            (descriptor.getToolBar(TOP).getSize())
-                    );
-                    break;
-            }
-
-            if (previewPanel.getY() + previewPanel.getHeight() >
-                containerRect.getY() + containerRect.getHeight() - 26) {
-
-                previewPanel.setLocation(
-                        previewPanel.getX(),
-
-                        (jMenuBar != null ? jMenuBar.getHeight() : 0) +
-                        containerRect.y +
-                        containerRect.height -
-                                                  (descriptor.getToolBar(BOTTOM).getSize()) -
-                                                  previewPanel.getHeight() - 3
-                );
-            }
-
-            if (previewPanel.getX() + previewPanel.getWidth() >
-                containerRect.x + containerRect.getWidth() - 26) {
-
-                previewPanel.setLocation(
-                        containerRect.x +
-                        containerRect.width -
-                                                 (descriptor.getToolBar(RIGHT).getSize()) -
-                                                 previewPanel.getWidth() - 3,
-
-                        previewPanel.getY()
-                );
-            }
-        }
-
-        protected void setFullPreviewBounds() {
-            Component barContainer = descriptor.getToolBar(toolWindow.getAnchor()).getContainer();
-
-            int length = Math.max(descriptor.getDividerLocation(),
-                                  descriptor.getDockedTypeDescriptor().getMinimumDockLength());
-            if (length == -1)
-                length = 200;
-
-            switch (toolWindow.getAnchor()) {
-                case LEFT:
-                    int height = barContainer.getHeight();
-                    previewPanel.setSize(length, height);
-
-                    Point location = new Point(0, 0);
-                    SwingUtilities.convertPointToScreen(location, barContainer);
-                    location.x += barContainer.getWidth();
-                    previewPanel.setLocation(location);
-                    break;
-                case RIGHT:
-                    height = barContainer.getHeight();
-                    previewPanel.setSize(length, height);
-
-                    location = new Point(0, 0);
-                    SwingUtilities.convertPointToScreen(location, barContainer);
-                    location.x -= previewPanel.getWidth();
-                    previewPanel.setLocation(location);
-                    break;
-                case TOP:
-                    int width = barContainer.getWidth();
-                    previewPanel.setSize(width, length);
-
-                    location = new Point(0, 0);
-                    SwingUtilities.convertPointToScreen(location, barContainer);
-                    location.y += barContainer.getHeight();
-                    previewPanel.setLocation(location);
-                    break;
-                case BOTTOM:
-                    width = barContainer.getWidth();
-                    previewPanel.setSize(width, length);
-
-                    location = new Point(0, 0);
-                    SwingUtilities.convertPointToScreen(location, barContainer);
-                    location.y -= previewPanel.getHeight();
-                    previewPanel.setLocation(location);
-                    break;
-            }
-
-            int height = previewPanel.getHeight();
-            Point point = SwingUtilities.convertPoint(previewPanel, 0, 0,
-                                                      descriptor.getManager().getLayeredPane());
-
-            previewPanel.setBounds(point.x, point.y, previewPanel.getWidth(), height);
-
-        }
     }
 
-    public class ToolWindowRepresentativeAnchorDragGesture extends RepresentativeAnchorDragGesture {
+    protected class ToolWindowRepresentativeAnchorDragGesture extends RepresentativeAnchorDragGesture {
 
         public ToolWindowRepresentativeAnchorDragGesture(DockableDescriptor descriptor, Component component) {
             super(descriptor, component);
@@ -695,48 +601,6 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
         protected Transferable createTransferable() {
             return new MyDoggyTransferable(manager, MyDoggyTransferable.TOOL_WINDOW_ID_DF, toolWindow.getId());
-        }
-
-        public void dragDropEnd(DragSourceDropEvent dsde) {
-            super.dragDropEnd(dsde);
-            
-            if (!dsde.getDropSuccess()) {
-                // move to FLOATING_LIVE or FLOATING
-
-                Window ancestor = SwingUtilities.getWindowAncestor(manager);
-
-                Rectangle ancestorBounds = ancestor.getBounds();
-                Point dsdeLocation = dsde.getLocation();
-
-                if (dsdeLocation.x >= ancestorBounds.x &&
-                    dsdeLocation.y >= ancestorBounds.y &&
-                    dsdeLocation.x <= ancestorBounds.getMaxX() &&
-                    dsdeLocation.y <= ancestorBounds.getMaxY()) {
-
-                    // Move to floating live
-                    SwingUtil.convertPointFromScreen2(dsdeLocation, ancestor);
-
-                    ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
-                    toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setLocation(
-                            dsdeLocation.x, dsdeLocation.y
-                    );
-                    toolWindow.setType(ToolWindowType.FLOATING_LIVE);
-                    
-                    if (!toolWindow.isVisible())
-                        toolWindow.setActive(true);
-
-                } else {
-                    // Move to floating
-                    ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
-                    toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).setLocation(
-                            dsdeLocation.x, dsdeLocation.y
-                    );
-                    toolWindow.setType(ToolWindowType.FLOATING);
-
-                    if (!toolWindow.isVisible())
-                        toolWindow.setActive(true);
-                }
-            }
         }
 
     }

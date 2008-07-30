@@ -62,17 +62,13 @@ public abstract class DragGestureAdapter implements DragGesture, Cleaner {
 
 
     protected boolean acquireLocks() {
-        if  (isDragEnabled()) {
-            if (DragAndDropLock.isLocked()) {
-                DragAndDropLock.setDragAndDropStarted(false);
-                return false;
-            }
-            DragAndDropLock.setLocked(true);
-            DragAndDropLock.setDragAndDropStarted(true);
-            return true;
+        if (DragAndDropLock.isLocked()) {
+            DragAndDropLock.setDragAndDropStarted(false);
+            return false;
         }
-
-        return false;
+        DragAndDropLock.setLocked(true);
+        DragAndDropLock.setDragAndDropStarted(true);
+        return true;
     }
 
     protected boolean checkStatus() {
@@ -127,10 +123,6 @@ public abstract class DragGestureAdapter implements DragGesture, Cleaner {
         glassPane.setVisible(false);
         ghostImage = null;
         SwingUtilities.getWindowAncestor(manager).repaint();
-    }
-
-    protected boolean isDragEnabled() {
-        return SwingUtil.getBoolean("drag.enabled", true);
     }
 
 }

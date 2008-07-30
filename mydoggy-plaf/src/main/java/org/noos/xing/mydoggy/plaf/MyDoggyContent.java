@@ -128,9 +128,6 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
     }
 
     public boolean isSelected() {
-        if (contentManager == null)
-            return false;
-
         if (contentManager.getPlafContentManagerUI().isInstalled())
             return contentManager.getPlafContentManagerUI().isSelected(this);
         else
@@ -138,9 +135,6 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
     }
 
     public void setSelected(boolean selected) {
-        if (contentManager == null)
-            return;
-
         if (isSelected() != selected || !contentManager.getPlafContentManagerUI().isInstalled()) {
             boolean old = isSelected();
             this.selected = selected;
@@ -264,9 +258,6 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
     }
 
     public ContentUI getContentUI() {
-        if (contentManager == null)
-            return null;
-
         return contentManager.getContentManagerUI().getContentUI(this);
     }
 

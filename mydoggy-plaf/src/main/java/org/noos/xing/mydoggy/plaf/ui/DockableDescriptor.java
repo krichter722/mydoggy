@@ -48,6 +48,8 @@ public interface DockableDescriptor extends Cleaner {
     void resetRepresentativeAnchor();
 
 
+    ResourceManager getResourceManager();
+
     MyDoggyToolWindowManager getManager();
 
     MyDoggyToolWindowBar getToolBar();

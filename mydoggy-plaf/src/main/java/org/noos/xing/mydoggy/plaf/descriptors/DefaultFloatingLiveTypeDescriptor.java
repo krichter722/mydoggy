@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy.plaf.descriptors;
 
 import org.noos.xing.mydoggy.FloatingLiveTypeDescriptor;
-import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
@@ -67,10 +66,6 @@ public class DefaultFloatingLiveTypeDescriptor extends PropertyChangeEventSource
         firePropertyChangeEvent("location", old, location);
     }
 
-    public Point getLocation() {
-        return location;
-    }
-
     public void setSize(int width, int height) {
         Dimension newSize = new Dimension(width, height);
         if (size != null && size.equals(newSize))
@@ -80,6 +75,10 @@ public class DefaultFloatingLiveTypeDescriptor extends PropertyChangeEventSource
         this.size = newSize;
 
         firePropertyChangeEvent("size", old, size);
+    }
+
+    public Point getLocation() {
+        return location;
     }
 
     public Dimension getSize() {
@@ -147,10 +146,6 @@ public class DefaultFloatingLiveTypeDescriptor extends PropertyChangeEventSource
 
     public boolean isAnimating() {
         return animating;
-    }
-
-    public ToolWindowType getType() {
-        return ToolWindowType.FLOATING_LIVE;
     }
 
     public void setAnimating(boolean animating) {

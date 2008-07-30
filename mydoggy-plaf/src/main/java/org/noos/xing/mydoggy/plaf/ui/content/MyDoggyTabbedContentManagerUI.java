@@ -21,7 +21,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.dnd.DragGestureEvent;
-import java.awt.dnd.DragSource;
 import java.awt.dnd.DragSourceDragEvent;
 import java.awt.dnd.DragSourceDropEvent;
 import java.awt.event.InputEvent;
@@ -165,7 +164,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
         if (oldContentManagerUI != null) {
             // Import listeners from the old ContentManagerUI
-            if (SwingUtil.getBoolean("ContentManagerUI.ContentManagerUiListener.import", false)) {
+            if (resourceManager.getBoolean("ContentManagerUI.ContentManagerUiListener.import", false)) {
                 // Import listeners from the old ContentManagerUI
                 for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
                     oldContentManagerUI.removeContentManagerUIListener(listener);
@@ -237,19 +236,13 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
                     try {
                         tabbedContentPane.setSelectedIndex(index);
-                        if (!isFocusAncestor(content.getComponent()))
-                            componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
+                        componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
                         lastSelected = content;
                     } finally {
                         valueAdjusting = false;
                     }
-                } else if (isContentManagerEnabled() && toolWindowManager.getMainContent() != content.getComponent()) {
+                } else if (isContentManagerEnabled() && toolWindowManager.getMainContent() != content.getComponent())
                     throw new IllegalStateException("Invalid content ui state.");
-                } else {
-                    if (!isFocusAncestor(content.getComponent()))
-                        componentInFocusRequest = findAndRequestFocus(toolWindowManager.getMainContent());
-                    lastSelected = content;
-                }
             }
         } else {
             if (content == lastSelected)
@@ -466,7 +459,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
     }
 
 
-    public class ComponentListener implements PropertyChangeListener {
+    protected class ComponentListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
             Component oldCmp = (Component) evt.getOldValue();
@@ -494,7 +487,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    public class DisabledIconListener implements PropertyChangeListener {
+    protected class DisabledIconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -511,7 +504,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    public class IconListener implements PropertyChangeListener {
+    protected class IconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -528,7 +521,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    public class MnemonicListener implements PropertyChangeListener {
+    protected class MnemonicListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -545,7 +538,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    public class EnabledListener implements PropertyChangeListener {
+    protected class EnabledListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -553,8 +546,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                 return;
 
             if (content.isDetached()) {
-                Window ancestor = SwingUtilities.windowForComponent(content.getComponent());
-                ancestor.setEnabled((Boolean) evt.getNewValue());
+                Window anchestor = SwingUtilities.windowForComponent(content.getComponent());
+                anchestor.setEnabled((Boolean) evt.getNewValue());
             } else {
                 int index = tabbedContentPane.indexOfContent(content);
                 if (index != -1)
@@ -565,7 +558,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    public class ForegroundListener implements PropertyChangeListener {
+    protected class ForegroundListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -582,7 +575,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    public class TitleListener implements PropertyChangeListener {
+    protected class TitleListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -601,7 +594,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    public class ToolTipTextListener implements PropertyChangeListener {
+    protected class ToolTipTextListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -618,7 +611,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    public class MaximizedListener implements PropertyChangeListener {
+    protected class MaximizedListener implements PropertyChangeListener {
         protected ByteArrayOutputStream tmpWorkspace;
         protected Component oldFucusOwner;
         protected boolean valudAdj;
@@ -676,7 +669,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
     }
 
-    public class DetachedListener implements PropertyChangeListener {
+    protected class DetachedListener implements PropertyChangeListener {
         protected PropertyChangeSupport contentUIListener;
         protected Map<Content, Integer> detachedContentUIMap;
 
@@ -722,16 +715,16 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                         }
 
                         // Setup dialog
-                        Frame parentFrame = (toolWindowManager.getWindowAncestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAncestor() : null;
+                        Frame parentFrame = (toolWindowManager.getWindowAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAnchestor() : null;
 
                         Window dialog;
                         if (contentUI.isAddToTaskBarWhenDetached()) {
-                            dialog = new ContentFrame(
-                                    content, contentUI,
+                            dialog = new ContentFrame(resourceManager,
+                                                      content, contentUI,
                                                       parentFrame, inBounds);
                         } else {
-                            dialog = new ContentDialog(
-                                    content, contentUI,
+                            dialog = new ContentDialog(resourceManager,
+                                                       content, contentUI,
                                                        parentFrame, inBounds);
                         }
                         dialog.addWindowFocusListener(new ContentDialogFocusListener(content));
@@ -762,7 +755,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
     }
 
-    public class MinimizedListener implements PropertyChangeListener {
+    protected class MinimizedListener implements PropertyChangeListener {
         protected Map<Content, Integer> minimizedContentUIMap;
 
         public MinimizedListener() {
@@ -823,7 +816,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
     }
 
 
-    public class TabbedContentManagerDragGesture extends DragGestureAdapter {
+    protected class TabbedContentManagerDragGesture extends DragGestureAdapter {
 
         public TabbedContentManagerDragGesture() {
             super(toolWindowManager);
@@ -840,7 +833,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
             if (index != -1) {
                 Content content = tabbedContentPane.getContentAt(index);
                 if (content.getDockableDelegator() != null) {
-                    dge.startDrag(DragSource.DefaultMoveDrop,
+                    dge.startDrag(Cursor.getDefaultCursor(),
                                   new MyDoggyTransferable(manager,
                                                           MyDoggyTransferable.CONTENT_ID_DF,
                                                           content.getId()),
@@ -848,9 +841,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
                     // Setup ghostImage
 
-                    if (SwingUtil.getBoolean("drag.icon.useDefault", false)) {
+                    if (resourceManager.getBoolean("drag.icon.useDefault", false)) {
                         setGhostImage(dge.getDragOrigin(),
-                                      SwingUtil.getImage(MyDoggyKeySpace.DRAG));
+                                      resourceManager.getBufferedImage(MyDoggyKeySpace.DRAG));
                     } else {
                         Component component = tabbedContentPane.getComponentAt(index);
                         BufferedImage ghostImage = new BufferedImage(component.getWidth(),
@@ -885,7 +878,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
     }
 
-    public class FocusOwnerPropertyChangeListener implements PropertyChangeListener {
+    protected class FocusOwnerPropertyChangeListener implements PropertyChangeListener {
 
         public FocusOwnerPropertyChangeListener() {
         }

@@ -9,6 +9,7 @@ import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -38,7 +39,7 @@ public interface ResourceManager extends Observable {
      * @return the component created using the rule specified by the key param.
      * @since 1.3.1
      */
-    <T extends Component> T createComponent(String key, Context context);
+    Component createComponent(String key, Context context);
 
     /**
      * Create the component ui using the rule specified by the key param.
@@ -59,7 +60,7 @@ public interface ResourceManager extends Observable {
      * @return the component customized.
      * @since 1.3.1
      */
-    <T extends Component> T applyCustomization(String key, T component, Context context);
+    Component applyCustomization(String key, Component component, Context context);
 
     /**
      * Returns the icon to which this manager maps the specified id.  Returns
@@ -134,7 +135,7 @@ public interface ResourceManager extends Observable {
      *         <tt>null</tt> if the manager contains no mapping for this id.
      * @since 1.4.1
      */
-    BufferedImage getImage(String id);
+    BufferedImage getBufferedImage(String id);
 
     /**
      * Sets the locale of this manager used for the internationalization of the relative toolwindow manager.
@@ -201,9 +202,9 @@ public interface ResourceManager extends Observable {
      * Returns the map that contains all colors definition.
      *
      * @return the map that contains all colors definition.
-     * @since 1.5.0
+     * @since 1.4.0
      */
-    java.util.List<String> getColors();
+    Map<String, Color> getColors();
 
     /**
      * Returns the map that contains all icons definition.
@@ -211,7 +212,7 @@ public interface ResourceManager extends Observable {
      * @return the map that contains all icons definition.
      * @since 1.4.0
      */
-    java.util.List<String> getIcons();
+    Map<String, Icon> getIcons();
 
     /**
      * Searches for the property with the specified name in the property list.

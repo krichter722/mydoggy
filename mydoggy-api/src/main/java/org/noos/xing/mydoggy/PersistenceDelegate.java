@@ -47,14 +47,13 @@ public interface PersistenceDelegate {
 
     /**
      * Reads the settings for the ToolWindows, already registered into the manager, from the input
-     * stream. By dafault the MergePolicy.RESET policy is used.
+     * stream.
      * 
      * @param inputStream the input stream.
      * @exception RuntimeException  if an error occurred when reading from the
      *               input stream.
      * @since 1.2.0
-     * @see #save(java.io.OutputStream)
-     * @see org.noos.xing.mydoggy.PersistenceDelegate.MergePolicy#RESET
+     * @see #save(java.io.OutputStream) 
      */
     void apply(InputStream inputStream);
 
@@ -70,16 +69,4 @@ public interface PersistenceDelegate {
      * @since 1.3.0
      */
     void merge(InputStream inputStream, MergePolicy mergePolicy);
-
-    /**
-     * TODO...
-     * 
-     * @param inputStream
-     * @param mergePolicy
-     * @param callback
-     * @since 1.5.0
-     */
-    void merge(InputStream inputStream, MergePolicy mergePolicy, PersistenceDelegateCallback callback);
-
-
 }

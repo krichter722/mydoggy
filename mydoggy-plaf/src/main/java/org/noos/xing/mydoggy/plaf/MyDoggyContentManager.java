@@ -10,8 +10,10 @@ import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -28,38 +30,13 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
     protected boolean enabled;
 
 
-    public MyDoggyContentManager(MyDoggyToolWindowManager windowManager) {
+    protected MyDoggyContentManager(MyDoggyToolWindowManager windowManager) {
         this.toolWindowManager = windowManager;
         this.contents = new ArrayList<Content>();
         this.contentMap = new HashMap<Object, Content>();
         this.aliases = new HashMap<Object, Content>();
         this.listeners = new EventListenerList();
         this.enabled = true;
-    }
-
-
-    public Content[] getDockables() {
-        return getContents();
-    }
-
-    public void addAlias(Content content, Object alias) {
-        if (contentMap.containsKey(alias))
-            throw new IllegalArgumentException("There is a content whose id is the passed alias. Cannot add that alias.");
-
-        aliases.put(alias, content);
-    }
-
-    public Object[] getAliases(Content content) {
-        List<Object> result = new ArrayList<Object>();
-        for (Map.Entry<Object, Content> entry : aliases.entrySet()) {
-            if (entry.getValue() == content)
-                result.add(entry.getKey());
-        }
-        return result.toArray();
-    }
-
-    public Content removeAlias(Object alias) {
-        return aliases.remove(alias);
     }
 
 
@@ -104,14 +81,21 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
             toolWindowManager.removeIfDockableDelegator(dockable);
 
             ((MyDoggyToolWindow) dockable).setTypeInternal(ToolWindowType.EXTERN);
-            return addContentInternal(dockable.getId(),
+            Content content = addContentInternal(dockable.getId(),
                                                  dockable.getTitle(),
                                                  dockable.getIcon(),
                                                  dockable.getComponent(),
                                                  null,
                                                  (ToolWindow) dockable);
+            return content;
         } else
             throw new IllegalArgumentException("Dockable not yet supported");
+    }
+
+    public void addAlias(Content content, Object alias) {
+        if (contentMap.containsKey(alias))
+            throw new IllegalArgumentException("There is a content whose id is the passed alias. Cannot add that alias.");
+        aliases.put(alias, content);
     }
 
     public boolean removeContent(Content content) {
@@ -148,13 +132,6 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
                     }
                 }
             } finally {
-                // Remove aliases
-                for (Iterator<Content> iterator = aliases.values().iterator(); iterator.hasNext();) {
-                    Content aliasedContent = iterator.next();
-                    if (aliasedContent == content)
-                        iterator.remove();
-                }
-
                 // clean the content
                 ((MyDoggyContent) content).cleanup();
             }
@@ -182,6 +159,15 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
         if (content == null)
             content = aliases.get(key);
         return content;
+    }
+
+    public Object[] getAliases(Content content) {
+        List<Object> result = new ArrayList<Object>();
+        for (Map.Entry<Object, Content> entry : aliases.entrySet()) {
+            if (entry.getValue() == content)
+                result.add(entry.getKey());
+        }
+        return result.toArray();
     }
 
     public Content getContentByComponent(Component component) {
@@ -376,7 +362,7 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
     }
 
 
-    public class SelectedContentPropertyChangeListener implements PropertyChangeListener {
+    protected class SelectedContentPropertyChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             assert evt.getSource() instanceof Content;
@@ -386,7 +372,7 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
         }
     }
 
-    public class MaximizedBeforePropertyChangeListener implements PropertyChangeListener {
+    protected class MaximizedBeforePropertyChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             assert evt.getSource() instanceof Content;

@@ -1,17 +1,15 @@
 package org.noos.xing.mydoggy.plaf.descriptors;
 
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.DockedTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindowActionHandler;
+import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -33,12 +31,9 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
     private boolean idVisibleOnTitleBar;
     private int minimumDockLength;
 
-    private Set<ToolWindowAnchor> lockingAnchors;
-
-
     public DefaultDockedTypeDescriptor(ResourceManager resourceManager) {
         this.resourceManager = resourceManager;
-        this.toolsMenu = new JMenu(SwingUtil.getString("@@tool.toolsMenu"));
+        this.toolsMenu = new JMenu(resourceManager.getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = true;
         this.dockLength = 200;
         this.toolWindowActionHandler = null;
@@ -50,7 +45,6 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         this.hideRepresentativeButtonOnVisible = false;
         this.idVisibleOnTitleBar = true;
         this.minimumDockLength = 100;
-        this.lockingAnchors = new HashSet<ToolWindowAnchor>();
     }
 
     public DefaultDockedTypeDescriptor(ToolWindowDescriptor toolWindowDescriptor,
@@ -59,12 +53,9 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
                                        int dockLength, boolean popupMenuEnabled,
                                        ToolWindowActionHandler toolWindowActionHandler, boolean animating,
                                        boolean autoHide, boolean previewEnabled, int previewDelay, float previewTransparentRatio,
-                                       boolean hideRepresentativeButtonOnVisible,
-                                       boolean idVisibleOnTitleBar,
-                                       int minimumDockLength,
-                                       ToolWindowAnchor[] lockingAnchors) {
+                                       boolean hideRepresentativeButtonOnVisible, boolean idVisibleOnTitleBar, int minimumDockLength) {
         this.resourceManager = resourceManager;
-        this.toolsMenu = new JMenu(SwingUtil.getString("@@tool.toolsMenu"));
+        this.toolsMenu = new JMenu(resourceManager.getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = popupMenuEnabled;
         this.dockLength = dockLength;
         this.toolWindowActionHandler = toolWindowActionHandler;
@@ -76,8 +67,6 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         this.hideRepresentativeButtonOnVisible = hideRepresentativeButtonOnVisible;
         this.idVisibleOnTitleBar = idVisibleOnTitleBar;
         this.minimumDockLength = minimumDockLength;
-        this.lockingAnchors = new HashSet<ToolWindowAnchor>();
-        this.lockingAnchors.addAll(Arrays.asList(lockingAnchors));
 
         parent.addPropertyChangeListener(this);
 
@@ -184,22 +173,6 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         return hideRepresentativeButtonOnVisible;
     }
 
-    public void addLockingAnchor(ToolWindowAnchor anchor) {
-        lockingAnchors.add(anchor);
-    }
-
-    public void removeLockingAnchor(ToolWindowAnchor anchor) {
-        lockingAnchors.remove(anchor);
-    }
-
-    public ToolWindowAnchor[] getLockingAnchors() {
-        return lockingAnchors.toArray(new ToolWindowAnchor[lockingAnchors.size()]);
-    }
-
-    public boolean containsLockingAnchor(ToolWindowAnchor anchor) {
-        return lockingAnchors.contains(anchor);
-    }
-
     public void setIdVisibleOnTitleBar(boolean idVisibleOnTitleBar) {
         if (this.idVisibleOnTitleBar == idVisibleOnTitleBar)
             return;
@@ -237,10 +210,6 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         return animating;
     }
 
-    public ToolWindowType getType() {
-        return ToolWindowType.DOCKED;
-    }
-
     public void setAnimating(boolean animating) {
         if (this.animating == animating)
             return;
@@ -270,8 +239,7 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
                                                previewDelay, previewTransparentRatio,
                                                hideRepresentativeButtonOnVisible,
                                                idVisibleOnTitleBar,
-                                               minimumDockLength,
-                                               getLockingAnchors());
+                                               minimumDockLength);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

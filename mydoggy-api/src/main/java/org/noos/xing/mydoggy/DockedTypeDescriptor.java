@@ -180,34 +180,4 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * @since 1.3.1
      */
     boolean isHideRepresentativeButtonOnVisible();
-
-    /**
-     * TODO
-     * @param anchor
-     * @since 1.5.0
-     */
-    void addLockingAnchor(ToolWindowAnchor anchor);
-
-    /**
-     * TODO
-     * @param anchor
-     * @since 1.5.0
-     */
-    void removeLockingAnchor(ToolWindowAnchor anchor);
-
-    /**
-     * TODO
-     * @return
-     * @since 1.5.0
-     */
-    ToolWindowAnchor[] getLockingAnchors();
-
-    /**
-     * TODO
-     * @param anchor
-     * @return
-     * @since 1.5.0
-     */
-    boolean containsLockingAnchor(ToolWindowAnchor anchor);
-
 }

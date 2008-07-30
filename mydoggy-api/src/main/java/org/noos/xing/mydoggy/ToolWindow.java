@@ -24,7 +24,7 @@ import java.awt.*;
  * @see org.noos.xing.mydoggy.ToolWindowManager
  * @since 1.0.0
  */
-public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager<ToolWindowTab> {
+public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager {
 
     /**
      * This method is used to set the index for the tool. The index is used to activate or hide
@@ -107,14 +107,6 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
      * @since 1.4.0
      */
     void aggregate(AggregationPosition aggregationPosition);
-
-    /**
-     * TODO:
-     * @param aggregationPosition
-     * @param aggregateReferenceTool
-     * @since 1.5.0
-     */
-    void aggregateByReference(AggregationPosition aggregationPosition, ToolWindow aggregateReferenceTool);
 
     /**
      * Aggregate this tool to the already visible tools using the specified toolwindow as a relative position and
@@ -229,19 +221,6 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
     void setAutoHide(boolean autoHide);
 
     /**
-     * TODO
-     * @param lockedOnAnchor
-     * @since 1.5.0
-     */
-    void setLockedOnAnchor(boolean lockedOnAnchor);
-
-    /**
-     *
-     * @since 1.5.0
-     */
-    boolean isLockedOnAnchor();
-
-    /**
      * Returns the autoHide property value of the tool.
      *
      * @return autoHide property value.
@@ -286,36 +265,6 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
      * @return <tt>true</tt> if the representative anchor button is visible, <tt>false</tt> otherwise.
      */
     boolean isRepresentativeAnchorButtonVisible();
-
-    /**
-     *
-     * @param title
-     * @since 1.5.0
-     */
-    void setRepresentativeAnchorButtonTitle(String title);
-
-    /**
-     *
-     * @return
-     * @since 1.5.0
-     */
-    String getRepresentativeAnchorButtonTitle(); 
-
-    /**
-     * TODO:
-     * @param hideOnZeroTabs
-     * @since 1.5.0
-     * @see #isHideOnZeroTabs()
-     */
-    void setHideOnZeroTabs(boolean hideOnZeroTabs);
-
-    /**
-     * TODO:
-     * @since 1.5.0
-     * @return 
-     * @see #setHideOnZeroTabs(boolean)  
-     */
-    boolean isHideOnZeroTabs();
 
     /**
      * Adds a <code>component</code> represented by a <code>title</code> and no icon.

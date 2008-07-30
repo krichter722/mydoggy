@@ -3,7 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.content;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDesktopManager;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDialog;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentFrame;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
@@ -74,7 +74,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         contentValueAdjusting = false;
 
         if (oldContentManagerUI != null) {
-            if (SwingUtil.getBoolean("ContentManagerUI.ContentManagerUiListener.import", false)) {
+            if (resourceManager.getBoolean("ContentManagerUI.ContentManagerUiListener.import", false)) {
                 // Import listeners from the old ContentManagerUI
                 for (ContentManagerUIListener listener : oldContentManagerUI.getContentManagerUiListener()) {
                     oldContentManagerUI.removeContentManagerUIListener(listener);
@@ -178,10 +178,9 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
     protected void initComponents() {
         if (desktopPane == null) {
             /// Init just once
-            desktopPane = new JDesktopPane();
-            desktopPane.setDesktopManager(new ContentDesktopManager());
-
-            // Setup Actions...
+            desktopPane = (JDesktopPane) toolWindowManager.getResourceManager().createComponent(
+                    MyDoggyKeySpace.DESKTOP_CONTENT_PANE, toolWindowManager.getContext()
+            );
             setupActions();
         }
     }
@@ -237,10 +236,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
                 if (constraints[0] instanceof Point) {
                     Point location = (Point) constraints[0];
 
-                    Dimension prefferedSize = content.getComponent().getPreferredSize();
-                    internalFrame.setBounds(location.x, location.y,
-                                            prefferedSize.width > 0 ? prefferedSize.width : 320,
-                                            prefferedSize.height > 0 ? prefferedSize.height: 200);
+                    internalFrame.setBounds(location.x, location.y, 320, 200);
                 } else if (constraints[0] instanceof Rectangle) {
                     internalFrame.setBounds((Rectangle) constraints[0]);
                 } else
@@ -250,15 +246,11 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
             if (constraints == null || constraints.length == 0) {
                 int contentX, contentY;
                 contentY = contentX = 10 + (contentIndex++ * 25);
-
-                Dimension prefferedSize = content.getComponent().getPreferredSize();
-                int width = prefferedSize.width > 0 ? prefferedSize.width : 320;
-                int height = prefferedSize.height > 0 ? prefferedSize.height: 200;
-                if (contentX > desktopPane.getWidth() - width || contentY > desktopPane.getHeight() - height) {
+                if (contentX > desktopPane.getWidth() - 320 || contentY > desktopPane.getHeight() - 200) {
                     contentIndex = 0;
                     contentY = contentX = 10;
                 }
-                internalFrame.setBounds(contentX, contentY, width, height);
+                internalFrame.setBounds(contentX, contentY, 320, 200);
             }
 
             contentUIMap.put(content, myDoggyDesktopContentUI);
@@ -307,7 +299,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
     }
 
 
-    public class ComponentListener implements PropertyChangeListener {
+    protected class ComponentListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -331,12 +323,12 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         }
     }
 
-    public class DisabledIconListener implements PropertyChangeListener {
+    protected class DisabledIconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
         }
     }
 
-    public class IconListener implements PropertyChangeListener {
+    protected class IconListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -353,7 +345,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         }
     }
 
-    public class EnabledListener implements PropertyChangeListener {
+    protected class EnabledListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -370,7 +362,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         }
     }
 
-    public class ForegroundListener implements PropertyChangeListener {
+    protected class ForegroundListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -387,7 +379,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         }
     }
 
-    public class PopupMenuListener implements PropertyChangeListener {
+    protected class PopupMenuListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -404,7 +396,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         }
     }
 
-    public class TitleListener implements PropertyChangeListener {
+    protected class TitleListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -423,7 +415,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         }
     }
 
-    public class ToolTipTextListener implements PropertyChangeListener {
+    protected class ToolTipTextListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
@@ -440,7 +432,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         }
     }
 
-    public class MaximizedListener implements PropertyChangeListener {
+    protected class MaximizedListener implements PropertyChangeListener {
         protected ByteArrayOutputStream tmpWorkspace;
         protected Component oldFucusOwner;
 
@@ -483,7 +475,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         }
     }
 
-    public class MinimizedListener implements PropertyChangeListener {
+    protected class MinimizedListener implements PropertyChangeListener {
 
         public MinimizedListener() {
         }
@@ -523,7 +515,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
 
     }
 
-    public class DetachedListener implements PropertyChangeListener {
+    protected class DetachedListener implements PropertyChangeListener {
 
         public DetachedListener() {
         }
@@ -552,14 +544,14 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
                         throw new IllegalStateException("Invalid Content : " + content);
 
                     // Setup dialog
-                    Frame parentFrame = (toolWindowManager.getWindowAncestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAncestor() : null;
+                    Frame parentFrame = (toolWindowManager.getWindowAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAnchestor() : null;
 
                     Window dialog;
                     if (contentUI.isAddToTaskBarWhenDetached()) {
-                        dialog = new ContentFrame(content, contentUI,
+                        dialog = new ContentFrame(resourceManager, content, contentUI,
                                                   parentFrame, inBounds);
                     } else {
-                        dialog = new ContentDialog(content, contentUI,
+                        dialog = new ContentDialog(resourceManager, content, contentUI,
                                                    parentFrame, inBounds);
                     }
                     dialog.addWindowFocusListener(new ContentDialogFocusListener(content));
@@ -582,7 +574,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
     }
 
 
-    public class PopupMouseListener extends MouseAdapter implements ActionListener {
+    protected class PopupMouseListener extends MouseAdapter implements ActionListener {
         protected JPopupMenu popupMenu;
 
         public PopupMouseListener() {
@@ -590,47 +582,41 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         }
 
         public void mouseClicked(MouseEvent e) {
-            if (SwingUtilities.isRightMouseButton(e) && isPopupMenuEnabled()) {                
+            if (SwingUtilities.isRightMouseButton(e)) {
                 popupMenu.removeAll();
 
                 for (Content content : contentManager.getContents()) {
                     JMenu menu = new JMenu(content.getTitle());
 
-                    JMenuItem detach = new JMenuItem(SwingUtil.getString("@@tab.content.detach"));
+                    JMenuItem detach = new JMenuItem(resourceManager.getString("@@tab.content.detach"));
                     detach.putClientProperty(Content.class, content);
                     detach.setActionCommand("Detach");
                     detach.addActionListener(this);
                     detach.setEnabled(getContentUI(content).isDetachable() && !content.isDetached());
                     menu.add(detach);
 
-                    ContentUI contentUI = content.getContentUI();
-
                     if (content.isMaximized() || content.isMinimized()) {
                         JMenuItem maximize = new JMenuItem();
                         maximize.putClientProperty(Content.class, content);
                         maximize.setActionCommand(content.isMaximized() ? "Maximize" : "Minimize");
-                        maximize.setText(SwingUtil.getString("@@tabbed.page.restore"));
+                        maximize.setText(resourceManager.getString("@@tabbed.page.restore"));
                         maximize.addActionListener(this);
                         menu.add(maximize);
                     } else {
-                        if (contentUI.isMaximizable()) {
-                            JMenuItem maximize = new JMenuItem();
-                            maximize.putClientProperty(Content.class, content);
-                            maximize.setActionCommand("Maximize");
-                            maximize.setText(SwingUtil.getString("@@tabbed.page.maximize"));
-                            maximize.addActionListener(this);
-                            menu.add(maximize);
-                        }
+                        JMenuItem maximize = new JMenuItem();
+                        maximize.putClientProperty(Content.class, content);
+                        maximize.setActionCommand("Maximize");
+                        maximize.setText(resourceManager.getString("@@tabbed.page.maximize"));
+                        maximize.addActionListener(this);
+                        menu.add(maximize);
 
-                        if (contentUI.isMinimizable()) {
-                            JMenuItem minimize = new JMenuItem();
-                            minimize.putClientProperty(Content.class, content);
-                            minimize.setActionCommand("Minimize");
-                            minimize.setText(SwingUtil.getString("@@tabbed.page.minimize"));
-                            minimize.addActionListener(this);
-                            minimize.setEnabled(getContentUI(content).isMinimizable() && !content.isMinimized());
-                            menu.add(minimize);
-                        }
+                        JMenuItem minimize = new JMenuItem();
+                        minimize.putClientProperty(Content.class, content);
+                        minimize.setActionCommand("Minimize");
+                        minimize.setText(resourceManager.getString("@@tabbed.page.minimize"));
+                        minimize.addActionListener(this);
+                        minimize.setEnabled(getContentUI(content).isMinimizable() && !content.isMinimized());
+                        menu.add(minimize);
                     }
 
                     popupMenu.add(menu);

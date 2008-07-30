@@ -388,7 +388,7 @@ public class MultiSplitPane extends JPanel {
         return accessibleContext;
     }
 
-    public class AccessibleMultiSplitPane extends AccessibleJPanel {
+    protected class AccessibleMultiSplitPane extends AccessibleJPanel {
         public AccessibleRole getAccessibleRole() {
             return AccessibleRole.SPLIT_PANE;
         }

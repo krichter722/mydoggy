@@ -1,4 +1,6 @@
-package org.noos.xing.mydoggy.plaf.ui.translucent;
+package org.noos.xing.mydoggy.plaf.ui.cmp;
+
+import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)

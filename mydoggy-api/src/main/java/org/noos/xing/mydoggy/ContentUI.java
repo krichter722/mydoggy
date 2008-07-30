@@ -68,26 +68,9 @@ public interface ContentUI extends DockableUI {
      *
      * @param minimizable <code>true</code> if this content can be minimized using the ui, <code>false</code> otherwise.
      * @since 1.4.2
-     * @see #isMinimizable() ()
+     * @see #isDetachable()
      */
     void setMinimizable(boolean minimizable);
-
-    /**
-     * Returns whether this content could be maximized using the ui.
-     *
-     * @return <code>true</code> if this content can be maximized using the ui, <code>false</code> otherwise.
-     * @since 1.5.0
-     */
-    boolean isMaximizable();
-
-    /**
-     * Sets the maximizable property of this content.
-     *
-     * @param maximizable <code>true</code> if this content can be maximized using the ui, <code>false</code> otherwise.
-     * @since 1.5.0
-     * @see #isMaximizable()
-     */
-    void setMaximizable(boolean maximizable);
 
     /**
      * Sets the transparent mode. If the transparent mode is enabled then when
@@ -187,5 +170,5 @@ public interface ContentUI extends DockableUI {
      * @since 1.4.2
      */
     boolean isAddToTaskBarWhenDetached();
-
+    
 }

@@ -38,10 +38,9 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     protected boolean aggregateMode;
 
     // Bar Components
-    protected ToolWindowScrollBar toolWindowScrollBar;
-    protected JPanel toolWindowBarContainer;
-    protected TableLayout toolWindowBarContainerLayout;
-
+    protected JToolScrollBar toolScrollBar;
+    protected JPanel representativeButtonsPanel;
+    protected TableLayout representativeButtonsPanelLayout;
     protected JSplitPane splitPane;
     protected MultiSplitDockableContainer multiSplitDockableContainer;
     protected ContentPanel contentPanel;
@@ -67,8 +66,11 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         this.anchor = anchor;
         this.availableTools = 0;
         this.dividerSize = 3;
-        this.length = SwingUtil.getInt("ToolWindowBarPanelUI." + anchor.toString().toLowerCase() + ".length", 23);
-
+        this.length = manager.getResourceManager().getInt(
+                "toolwindowbar." +  anchor.toString().toLowerCase() + ".length",
+                23
+        );
+        
         initComponents();
         initListeners();
 
@@ -170,7 +172,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     }
 
     public Container getContainer() {
-        return toolWindowScrollBar;
+        return toolScrollBar;
     }
 
     public JSplitPane getSplitPane() {
@@ -180,7 +182,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     public void ensureVisible(final Component component) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                toolWindowScrollBar.ensureVisible(component);
+                toolScrollBar.ensureVisible(component);
             }
         });
     }
@@ -203,7 +205,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     }
 
     public int getRepresentativeAnchorIndex(Component representativeAnchor) {
-        TableLayoutConstraints constraints = toolWindowBarContainerLayout.getConstraints(representativeAnchor);
+        TableLayoutConstraints constraints = representativeButtonsPanelLayout.getConstraints(representativeAnchor);
         if (constraints == null)
             return -1;
 
@@ -219,12 +221,6 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         valueAdjusting = false;
     }
 
-    public void hideTool(ToolWindow toolWindow) {
-        valueAdjusting = true;
-        toolWindow.setVisible(false);
-        valueAdjusting = false;
-    }
-
     public int getSize() {
         return (getAvailableTools() > 0) ? getLength() : 0;
     }
@@ -232,22 +228,22 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     protected void initComponents() {
         splitPane.setName(anchor.toString());
-//        splitPane.setFocusCycleRoot(true);
+        splitPane.setFocusCycleRoot(true);
 
         contentPanel = new ContentPanel("toolWindow.container.");
         contentPanel.setDropTarget(new ToolWindowDropTarget(contentPanel, manager, anchor));
 
-        toolWindowBarContainer = new ToolWindowBarPanel(this);
-        toolWindowBarContainer.setName("toolWindowManager.bar." + anchor.toString());
-        toolWindowBarContainer.setFocusable(false);
-        toolWindowBarContainer.setFocusCycleRoot(true);
+        representativeButtonsPanel = (JPanel) manager.getResourceManager().createComponent(MyDoggyKeySpace.ANCHOR_CONTENT_PANE, manager.getContext());
+        representativeButtonsPanel.setName("toolWindowManager.bar." + anchor.toString());
+        representativeButtonsPanel.setFocusable(false);
+        representativeButtonsPanel.setFocusCycleRoot(true);
 
         switch (anchor) {
             case LEFT:
             case RIGHT:
                 horizontal = false;
-                toolWindowBarContainer.setLayout(
-                        toolWindowBarContainerLayout = new ExtendedTableLayout(
+                representativeButtonsPanel.setLayout(
+                        representativeButtonsPanelLayout = new ExtendedTableLayout(
                                 new double[][]{{2, getLength() - 4, 2}, {0}}
                         )
                 );
@@ -255,8 +251,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 break;
             default:
                 horizontal = true;
-                toolWindowBarContainer.setLayout(
-                        toolWindowBarContainerLayout = new ExtendedTableLayout(
+                representativeButtonsPanel.setLayout(
+                        representativeButtonsPanelLayout = new ExtendedTableLayout(
                                 new double[][]{{0}, {2, getLength() - 4, 2}}
                         )
                 );
@@ -265,10 +261,10 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
         multiSplitDockableContainer = new MultiSplitDockableContainer(manager, orientation);
 
-        toolWindowScrollBar = new ToolWindowScrollBar(this, toolWindowBarContainer);
+        toolScrollBar = new JToolScrollBar(manager.getResourceManager(), orientation, representativeButtonsPanel);
 
-        toolWindowBarContainer.setDropTarget(new ToolWindowBarDropTarget(manager, anchor, toolWindowBarContainer));
-        toolWindowBarContainer.addMouseListener(new ToolsOnBarMouseListener(manager, this));
+        representativeButtonsPanel.setDropTarget(new ToolWindowBarDropTarget(manager, anchor, representativeButtonsPanel));
+        representativeButtonsPanel.addMouseListener(new ToolsOnBarMouseListener(manager, this));
     }
 
     protected void initListeners() {
@@ -287,7 +283,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         propertyChangeSupport.addPropertyChangeListener("visible", new VisibleListener());
 
         propertyChangeSupport.addPropertyChangeListener("active.before", new ActiveBeforeListener());
-        
+        propertyChangeSupport.addPropertyChangeListener("active", new ActiveListener());
+
         propertyChangeSupport.addPropertyChangeListener("type", new TypeListener());
         propertyChangeSupport.addPropertyChangeListener("index", new IndexListener());
         propertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
@@ -308,7 +305,6 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         propertyChangeSupport.addPropertyChangeListener("endDrag", dragListener);
         propertyChangeSupport.addPropertyChangeListener("maximized", new MaximizedListener());
 
-        // Why doesn't this use propertyChangeSupport.add....  
         addPropertyChangeListener("dividerSize", new DividerSizeListener());
         addPropertyChangeListener("length", new BarLengthListener());
     }
@@ -362,96 +358,105 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     }
 
     protected Component getSplitPaneContent() {
+/*
+        switch (anchor) {
+            case LEFT:
+                return splitPane.getLeftComponent();
+            case RIGHT:
+                return splitPane.getRightComponent();
+            case BOTTOM:
+                return splitPane.getBottomComponent();
+            case TOP:
+                return splitPane.getTopComponent();
+        }
+        throw new IllegalStateException();
+*/
         return contentPanel.getComponent();
     }
 
     protected void addRepresentativeAnchor(Component representativeAnchor, int index) {
         availableTools++;
         if (horizontal) {
-            toolWindowBarContainerLayout.insertColumn(toolWindowBarContainerLayout.getNumColumn(),
-                                                      toolWindowBarContainerLayout.getNumColumn() > 0 ? 5 : 1);
-            toolWindowBarContainerLayout.insertColumn(toolWindowBarContainerLayout.getNumColumn(),
-                                                      TableLayout.PREFERRED);
+            int width = representativeAnchor.getPreferredSize().width + 6;
+
+            representativeButtonsPanelLayout.insertColumn(representativeButtonsPanelLayout.getNumColumn(), representativeButtonsPanelLayout.getNumColumn() > 0 ? 5 : 1);
+            representativeButtonsPanelLayout.insertColumn(representativeButtonsPanelLayout.getNumColumn(), width);
 
             // validate index...
             int finalCol = (index * 2 + 2);
-            if (finalCol >= toolWindowBarContainerLayout.getNumColumn())
+            if (finalCol >= representativeButtonsPanelLayout.getNumColumn())
                 index = -1;
 
             if (index >= 0) {
-                Component[] components = toolWindowBarContainer.getComponents();
+                Component[] components = representativeButtonsPanel.getComponents();
 
                 Map<Integer, Double> olds = new Hashtable<Integer, Double>();
                 for (Component component : components) {
-                    TableLayoutConstraints constraints = toolWindowBarContainerLayout.getConstraints(component);
+                    TableLayoutConstraints constraints = representativeButtonsPanelLayout.getConstraints(component);
                     if (constraints.col1 >= finalCol) {
                         int newCol1 = constraints.col1 + 2;
-                        toolWindowBarContainerLayout.setConstraints(component,
-                                                                    new TableLayoutConstraints(
-                                                                            newCol1 + ",1,"
-                                                                    ));
+                        representativeButtonsPanelLayout.setConstraints(component,
+                                                                        new TableLayoutConstraints(
+                                                                                newCol1 + ",1,"
+                                                                        ));
 
-                        olds.put(newCol1, toolWindowBarContainerLayout.getColumn(newCol1));
+                        olds.put(newCol1, representativeButtonsPanelLayout.getColumn(newCol1));
                         Double colSize = olds.get(constraints.col1);
                         if (colSize == null)
-                            colSize = toolWindowBarContainerLayout.getColumn(constraints.col1);
+                            colSize = representativeButtonsPanelLayout.getColumn(constraints.col1);
 
-                        toolWindowBarContainerLayout.setColumn(newCol1, colSize);
+                        representativeButtonsPanelLayout.setColumn(newCol1, colSize);
                     }
                 }
-
-                toolWindowBarContainerLayout.setColumn(finalCol,
-                                                       TableLayout.PREFERRED);
-
-                toolWindowBarContainer.add(representativeAnchor, (index * 2 + 2) + ",1");
+                representativeButtonsPanelLayout.setColumn(finalCol, width);
+                representativeButtonsPanel.add(representativeAnchor, (index * 2 + 2) + ",1");
             } else
-                toolWindowBarContainer.add(representativeAnchor, (toolWindowBarContainerLayout.getNumColumn() - 1) + ",1");
+                representativeButtonsPanel.add(representativeAnchor, (representativeButtonsPanelLayout.getNumColumn() - 1) + ",1");
         } else {
-            toolWindowBarContainerLayout.insertRow(toolWindowBarContainerLayout.getNumRow(),
-                                                   toolWindowBarContainerLayout.getNumRow() > 0 ? 5 : 1);
-            toolWindowBarContainerLayout.insertRow(toolWindowBarContainerLayout.getNumRow(),
-                                                   TableLayout.PREFERRED);
+            int height = Math.max(representativeAnchor.getHeight(),
+                                  Math.max(representativeAnchor.getPreferredSize().height,
+                                           representativeAnchor.getSize().height)) + 12;
+
+            representativeButtonsPanelLayout.insertRow(representativeButtonsPanelLayout.getNumRow(), representativeButtonsPanelLayout.getNumRow() > 0 ? 5 : 1);
+            representativeButtonsPanelLayout.insertRow(representativeButtonsPanelLayout.getNumRow(), height);
 
             // validate index...
             int finalRow = (index * 2 + 2);
-            if (finalRow >= toolWindowBarContainerLayout.getNumRow())
+            if (finalRow >= representativeButtonsPanelLayout.getNumRow())
                 index = -1;
 
             if (index >= 0) {
-                Component[] components = toolWindowBarContainer.getComponents();
+                Component[] components = representativeButtonsPanel.getComponents();
 
                 Map<Integer, Double> olds = new Hashtable<Integer, Double>();
                 for (Component component : components) {
-                    TableLayoutConstraints constraints = toolWindowBarContainerLayout.getConstraints(component);
+                    TableLayoutConstraints constraints = representativeButtonsPanelLayout.getConstraints(component);
 
                     if (constraints.row1 >= finalRow) {
                         int newRow1 = constraints.row1 + 2;
-                        toolWindowBarContainerLayout.setConstraints(component,
-                                                                    new TableLayoutConstraints(
-                                                                            "1," + newRow1
-                                                                    ));
+                        representativeButtonsPanelLayout.setConstraints(component,
+                                                                        new TableLayoutConstraints(
+                                                                                "1," + newRow1
+                                                                        ));
 
-                        olds.put(newRow1, toolWindowBarContainerLayout.getRow(newRow1));
+                        olds.put(newRow1, representativeButtonsPanelLayout.getRow(newRow1));
                         Double rowSize = olds.get(constraints.row1);
                         if (rowSize == null)
-                            rowSize = toolWindowBarContainerLayout.getRow(constraints.row1);
+                            rowSize = representativeButtonsPanelLayout.getRow(constraints.row1);
 
-                        toolWindowBarContainerLayout.setRow(newRow1, rowSize);
+                        representativeButtonsPanelLayout.setRow(newRow1, rowSize);
                     }
                 }
-
-                if (toolWindowBarContainerLayout.getNumRow() <= finalRow) {
-                    toolWindowBarContainerLayout.setRow(toolWindowBarContainerLayout.getNumRow() - 1,
-                                                        TableLayout.PREFERRED);
+                if (representativeButtonsPanelLayout.getNumRow() <= finalRow) {
+                    representativeButtonsPanelLayout.setRow(representativeButtonsPanelLayout.getNumRow() - 1, height);
                 } else
-                    toolWindowBarContainerLayout.setRow(finalRow,
-                                                        TableLayout.PREFERRED);
+                    representativeButtonsPanelLayout.setRow(finalRow, height);
 
-                toolWindowBarContainer.add(representativeAnchor, "1," + (index * 2 + 2));
+                representativeButtonsPanel.add(representativeAnchor, "1," + (index * 2 + 2));
             } else
-                toolWindowBarContainer.add(representativeAnchor, "1," + (toolWindowBarContainerLayout.getNumRow() - 1));
+                representativeButtonsPanel.add(representativeAnchor, "1," + (representativeButtonsPanelLayout.getNumRow() - 1));
         }
-        SwingUtil.repaint(toolWindowScrollBar);
+        SwingUtil.repaint(toolScrollBar);
     }
 
     protected void removeRepresentativeAnchor(Component representativeAnchor,
@@ -460,7 +465,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             return;
 
         int toDelete;
-        TableLayoutConstraints constraints = toolWindowBarContainerLayout.getConstraints(representativeAnchor);
+        TableLayoutConstraints constraints = representativeButtonsPanelLayout.getConstraints(representativeAnchor);
         if (constraints == null)
             return;
 
@@ -469,22 +474,22 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
         toDelete = horizontal ? constraints.col1 : constraints.row1;
 
-        toolWindowBarContainer.remove(representativeAnchor);
+        representativeButtonsPanel.remove(representativeAnchor);
         if (horizontal) {
-            toolWindowBarContainerLayout.deleteColumn(toDelete);
-            toolWindowBarContainerLayout.deleteColumn(toDelete - 1);
+            representativeButtonsPanelLayout.deleteColumn(toDelete);
+            representativeButtonsPanelLayout.deleteColumn(toDelete - 1);
         } else {
-            toolWindowBarContainerLayout.deleteRow(toDelete);
-            toolWindowBarContainerLayout.deleteRow(toDelete - 1);
+            representativeButtonsPanelLayout.deleteRow(toDelete);
+            representativeButtonsPanelLayout.deleteRow(toDelete - 1);
         }
 
-        SwingUtil.repaint(toolWindowScrollBar);
+        SwingUtil.repaint(toolScrollBar);
 
         descriptor.resetRepresentativeAnchor();
     }
 
 
-    public class AvailableListener implements PropertyChangeListener {
+    protected class AvailableListener implements PropertyChangeListener {
         protected Map<DockableDescriptor, Integer> rabsPositions;
 
         public AvailableListener() {
@@ -552,7 +557,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                             flag = false;
                     }
 
-                    representativeAnchor = descriptor.getRepresentativeAnchor(toolWindowBarContainer);
+                    representativeAnchor = descriptor.getRepresentativeAnchor(representativeButtonsPanel);
                     if (!flag) {
                         if (rabsEvent) {
                             int index = -1;
@@ -570,7 +575,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
                 if (repaint) {
 //                    representativeAnchor.setEnabled(newAvailable);
-                    SwingUtil.repaint(toolWindowBarContainer);
+                    SwingUtil.repaint(representativeButtonsPanel);
                 }
             }
         }
@@ -585,7 +590,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
     }
 
-    public class ShowUnavailableToolsListener implements PropertyChangeListener {
+    protected class ShowUnavailableToolsListener implements PropertyChangeListener {
 
         public ShowUnavailableToolsListener() {
         }
@@ -594,7 +599,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             if (evt.getNewValue() == Boolean.TRUE) {
                 for (ToolWindow tool : manager.getToolsByAnchor(anchor)) {
                     if (!tool.isAvailable() && tool.getType() != ToolWindowType.FLOATING_FREE) {
-                        addRepresentativeAnchor(manager.getDescriptor(tool).getRepresentativeAnchor(toolWindowBarContainer),
+                        addRepresentativeAnchor(manager.getDescriptor(tool).getRepresentativeAnchor(representativeButtonsPanel),
                                                 -1);
                     }
                 }
@@ -602,7 +607,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 for (ToolWindow tool : manager.getToolsByAnchor(anchor)) {
                     if (!tool.isAvailable() && tool.getType() != ToolWindowType.FLOATING_FREE) {
                         ToolWindowDescriptor descriptor = manager.getDescriptor(tool);
-                        removeRepresentativeAnchor(descriptor.getRepresentativeAnchor(toolWindowBarContainer),
+                        removeRepresentativeAnchor(descriptor.getRepresentativeAnchor(representativeButtonsPanel),
                                                    descriptor);
                     }
                 }
@@ -610,7 +615,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
     }
 
-    public class ActiveBeforeListener implements PropertyChangeListener {
+    protected class ActiveBeforeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
             boolean newValue = (Boolean) evt.getNewValue();
@@ -628,29 +633,36 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
     }
 
-    public class TypeListener extends AvailableListener {
+    protected static class ActiveListener implements PropertyChangeListener {
+        public void propertyChange(PropertyChangeEvent evt) {
+            ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
+            toolWindowDescriptor.getToolWindowContainer().propertyChange(evt);
+        }
+    }
+
+    protected class TypeListener extends AvailableListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
 
             if (evt.getOldValue() == ToolWindowType.FLOATING_FREE) {
-                addRepresentativeAnchor(toolWindowDescriptor.getRepresentativeAnchor(toolWindowBarContainer), -1);
+                addRepresentativeAnchor(toolWindowDescriptor.getRepresentativeAnchor(representativeButtonsPanel), -1);
                 ensureVisible(toolWindowDescriptor.getRepresentativeAnchor());
 
-                SwingUtil.repaint(toolWindowBarContainer);
+                SwingUtil.repaint(representativeButtonsPanel);
             } else
             if ((evt.getNewValue() == ToolWindowType.FLOATING_FREE || evt.getNewValue() == ToolWindowType.EXTERN) &&
                 toolWindowDescriptor.getRepresentativeAnchor() != null) {
 
                 removeRepresentativeAnchor(toolWindowDescriptor.getRepresentativeAnchor(), toolWindowDescriptor);
-                SwingUtil.repaint(toolWindowBarContainer);
+                SwingUtil.repaint(representativeButtonsPanel);
             }
 
         }
     }
 
 
-    public class VisibleBeforeListener implements PropertyChangeListener {
+    protected class VisibleBeforeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
@@ -662,14 +674,10 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (!oldValue && newValue) { // false and true
-                if (getAnchor().equals(sourceTool.getAnchor()) && sourceTool.getType() == ToolWindowType.SLIDING)
-                    return;
-
                 ToolWindow[] toolWindows = manager.getToolsByAnchor(getAnchor());
                 for (ToolWindow toolWindow : toolWindows) {
                     if (toolWindow == sourceTool)
                         continue;
-
 
                     if (manager.getShowingGroup() == null) {
                         if (toolWindow.getType() == ToolWindowType.FLOATING ||
@@ -679,14 +687,11 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                             continue;
 
                         if (toolWindow.getAnchor().equals(sourceTool.getAnchor()))
-//                            toolWindow.setVisible(false);
-                            hideTool(toolWindow);
+                            toolWindow.setVisible(false);
                         else if (toolWindow.isAutoHide() || toolWindow.getType() == ToolWindowType.SLIDING)
-                            hideTool(toolWindow);
-//                            toolWindow.setVisible(false);
+                            toolWindow.setVisible(false);
                     } else if (toolWindow.getType() == ToolWindowType.SLIDING)
-                        hideTool(toolWindow);
-//                        toolWindow.setVisible(false);
+                        toolWindow.setVisible(false);
 
                     if (toolWindow.isVisible() && toolWindow.isMaximized())
                         toolWindow.setMaximized(false);
@@ -696,7 +701,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     }
 
-    public class VisibleListener implements PropertyChangeListener {
+    protected class VisibleListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
             boolean oldValue = (Boolean) evt.getOldValue();
@@ -714,7 +719,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     }
 
 
-    public class VisibleDockedListener implements PropertyChangeListener {
+    protected class VisibleDockedListener implements PropertyChangeListener {
         protected final SplitAnimation splitAnimation = new SplitAnimation();
         protected boolean vsdValueAdjusting = false;
         protected Map<ToolWindowDescriptor, Integer> poss;
@@ -771,14 +776,19 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                     if (poss.containsKey(descriptor))
                         index = poss.get(descriptor);
 
-                    addRepresentativeAnchor(descriptor.getRepresentativeAnchor(toolWindowBarContainer),
+                    addRepresentativeAnchor(descriptor.getRepresentativeAnchor(representativeButtonsPanel),
                                             index);
                 }
             }
 
+            if (visible)
+                descriptor.setIdOnTitleBar();
+
             Component content = (visible) ? descriptor.getComponent() : null;
-            if (content != null)
-                content = descriptor.getToolWindowPanel();
+            if (content != null) {
+                DockedContainer container = (DockedContainer) descriptor.getToolWindowContainer();
+                content = container.getContentContainer();
+            }
 
             if (content == null || descriptor.getDividerLocation() > 0 && splitPane.getDividerSize() != 0) {
                 synchronized (splitAnimation) {
@@ -936,8 +946,10 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 //                    aggregationPosition = AggregationPosition.valueOf(anchor.toString());
 
 
+                DockedContainer container = (DockedContainer) descriptor.getToolWindowContainer();
+
                 managerDockableContainer.addDockable(descriptor.getToolWindow(),
-                                                     descriptor.getToolWindowPanel(),
+                                                     container.getContentContainer(),
                                                      aggregationOnTool,
                                                      -1,
                                                      aggregationPosition
@@ -990,7 +1002,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
 
 
-        public class SplitAnimation extends AbstractAnimation {
+        protected class SplitAnimation extends AbstractAnimation {
             protected int dividerLocation;
             protected int sheetLen;
 
@@ -1063,7 +1075,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     }
 
-    public static class VisibleFloatingListener implements PropertyChangeListener {
+    protected static class VisibleFloatingListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
@@ -1075,11 +1087,12 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
                 return;
 
+            container.propertyChange(evt);
             container.setVisible(visible);
         }
     }
 
-    public static class VisibleFloatingFreeListener implements PropertyChangeListener {
+    protected static class VisibleFloatingFreeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
@@ -1091,11 +1104,12 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
                 return;
 
+            container.propertyChange(evt);
             container.setVisible(visible);
         }
     }
 
-    public class VisibleSlidingListener implements PropertyChangeListener {
+    protected class VisibleSlidingListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
@@ -1111,81 +1125,52 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
     }
 
-    public class VisibleFloatingLiveListener implements PropertyChangeListener {
+    protected class VisibleFloatingLiveListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
             boolean visible = (Boolean) evt.getNewValue();
 
-            if (evt instanceof UserPropertyChangeEvent) {
-                Object[] params = (Object[]) ((UserPropertyChangeEvent) evt).getUserObject();
+            Component content = (visible) ? toolWindowDescriptor.getComponent() : null;
+            FloatingLiveContainer container = (FloatingLiveContainer) toolWindowDescriptor.getToolWindowContainer(ToolWindowType.FLOATING_LIVE);
 
-                // pick referenceAggregationTool from params
-                ToolWindow referenceAggregationTool = (ToolWindow) params[3];
-                ToolWindowDescriptor referenceAggregationDescriptor = null;
-                if (referenceAggregationTool != null)
-                    referenceAggregationDescriptor = manager.getDescriptor(referenceAggregationTool);
+            if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
+                return;
 
-                // pick aggregationOnTool from params
-                ToolWindow aggregationOnTool = (ToolWindow) params[2];
-                ToolWindowDescriptor aggregationOnDescriptor = null;
-                if (aggregationOnTool != null)
-                    aggregationOnDescriptor = manager.getDescriptor(aggregationOnTool);
-
-                if (referenceAggregationDescriptor == null)
-                    referenceAggregationDescriptor = aggregationOnDescriptor;
-
-                Component content = (visible) ? toolWindowDescriptor.getContentContainer() : null;
-                if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
-                    return;
-
-                FloatingLiveContainer container = (FloatingLiveContainer) toolWindowDescriptor.getToolWindowContainer(ToolWindowType.FLOATING_LIVE);
-                container.setVisible(referenceAggregationDescriptor,
-                                     content,
-                                     aggregationOnDescriptor,
-                                     (AggregationPosition) params[1]);
-            } else {
-                Component content = (visible) ? toolWindowDescriptor.getComponent() : null;
-                FloatingLiveContainer container = (FloatingLiveContainer) toolWindowDescriptor.getToolWindowContainer(ToolWindowType.FLOATING_LIVE);
-
-                if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
-                    return;
-
-                container.setVisible(visible);
-            }
+            container.setVisible(visible);
         }
     }
 
-    public class IndexListener implements PropertyChangeListener {
+    protected class IndexListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
             JLabel representativeAnchor = descriptor.getRepresentativeAnchor();
             if (representativeAnchor != null) {
-                TableLayoutConstraints constraints = toolWindowBarContainerLayout.getConstraints(representativeAnchor);
+                TableLayoutConstraints constraints = representativeButtonsPanelLayout.getConstraints(representativeAnchor);
 
                 if (horizontal) {
                     int width = representativeAnchor.getPreferredSize().width + 6;
 
-                    toolWindowBarContainerLayout.setColumn(constraints.col1, width);
+                    representativeButtonsPanelLayout.setColumn(constraints.col1, width);
                 } else {
                     int height = Math.max(representativeAnchor.getPreferredSize().height,
                                           representativeAnchor.getSize().height);
-                    toolWindowBarContainerLayout.setRow(constraints.row1, height);
+                    representativeButtonsPanelLayout.setRow(constraints.row1, height);
                 }
 
-                SwingUtil.repaint(toolWindowBarContainer);
+                SwingUtil.repaint(representativeButtonsPanel);
             }
         }
     }
 
-    public class IconListener extends IndexListener {
+    protected class IconListener extends IndexListener {
     }
 
-    public class TitleListener extends IndexListener {
+    protected class TitleListener extends IndexListener {
     }
 
-    public class BarLengthListener implements PropertyChangeListener {
+    protected class BarLengthListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             int oldValue = (Integer) evt.getOldValue() - 4;
@@ -1194,31 +1179,31 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             switch (anchor) {
                 case LEFT:
                 case RIGHT:
-                    for (int i = 0, size = toolWindowBarContainerLayout.getNumColumn(); i < size; i++) {
-                        if (toolWindowBarContainerLayout.getColumn(i) == oldValue)
-                            toolWindowBarContainerLayout.setColumn(i, newValue);
+                    for (int i = 0, size = representativeButtonsPanelLayout.getNumColumn(); i < size; i++) {
+                        if (representativeButtonsPanelLayout.getColumn(i) == oldValue)
+                            representativeButtonsPanelLayout.setColumn(i, newValue);
                     }
                     break;
                 case TOP:
                 case BOTTOM:
-                    for (int i = 0, size = toolWindowBarContainerLayout.getNumRow(); i < size; i++) {
-                        if (toolWindowBarContainerLayout.getRow(i) == oldValue)
-                            toolWindowBarContainerLayout.setRow(i, newValue);
+                    for (int i = 0, size = representativeButtonsPanelLayout.getNumRow(); i < size; i++) {
+                        if (representativeButtonsPanelLayout.getRow(i) == oldValue)
+                            representativeButtonsPanelLayout.setRow(i, newValue);
                     }
                     break;
             }
 
-            SwingUtil.repaint(toolWindowBarContainer);
+            SwingUtil.repaint(representativeButtonsPanel);
         }
 
     }
 
-    public class DragListener implements PropertyChangeListener {
+    protected class DragListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             if ("startDrag".equals(evt.getPropertyName())) {
-                Component cmp = SwingUtil.getComponentWhoseParentIs((Component) evt.getSource(), toolWindowBarContainer);
-                TableLayout layout = (TableLayout) toolWindowBarContainer.getLayout();
+                Component cmp = SwingUtil.getComponentWhoseParentIs((Component) evt.getSource(), representativeButtonsPanel);
+                TableLayout layout = (TableLayout) representativeButtonsPanel.getLayout();
                 switch (anchor) {
                     case LEFT:
                     case RIGHT:
@@ -1231,13 +1216,13 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                         layout.setColumn(layout.getConstraints(cmp).col1, 0);
                         break;
                 }
-                SwingUtil.repaint(toolWindowBarContainer);
+                SwingUtil.repaint(representativeButtonsPanel);
             } else if ("endDrag".equals(evt.getPropertyName())) {
-                for (Component cmp : toolWindowBarContainer.getComponents()) {
-                    Component source = SwingUtil.getComponentWhoseParentIs((Component) evt.getSource(), toolWindowBarContainer);
+                for (Component cmp : representativeButtonsPanel.getComponents()) {
+                    Component source = SwingUtil.getComponentWhoseParentIs((Component) evt.getSource(), representativeButtonsPanel);
 
                     if (cmp == source) {
-                        TableLayout layout = (TableLayout) toolWindowBarContainer.getLayout();
+                        TableLayout layout = (TableLayout) representativeButtonsPanel.getLayout();
                         switch (anchor) {
                             case LEFT:
                             case RIGHT:
@@ -1248,7 +1233,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                                 layout.setColumn(layout.getConstraints(cmp).col1, dragComponentLength);
                                 break;
                         }
-                        SwingUtil.repaint(toolWindowBarContainer);
+                        SwingUtil.repaint(representativeButtonsPanel);
                         manager.syncPanel(anchor);
                     }
                 }
@@ -1257,7 +1242,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
     }
 
-    public class MaximizedListener implements PropertyChangeListener {
+    protected class MaximizedListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
@@ -1285,7 +1270,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     }
 
-    public class DividerSizeListener implements PropertyChangeListener {
+    protected class DividerSizeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             if (splitPane.getDividerSize() > 0)

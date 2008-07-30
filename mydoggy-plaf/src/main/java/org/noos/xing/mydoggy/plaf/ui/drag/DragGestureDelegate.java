@@ -56,7 +56,7 @@ public class DragGestureDelegate implements DragGesture {
         dragGesture.dragDropEnd(dsde);
     }
 
-    public class DummyDragGesture implements DragGesture {
+    protected class DummyDragGesture implements DragGesture {
 
         public void dragGestureRecognized(DragGestureEvent dge) {
         }

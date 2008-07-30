@@ -1,6 +1,10 @@
 package org.noos.xing.mydoggy.plaf.ui.content;
 
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.ContentManager;
+import org.noos.xing.mydoggy.ContentUI;
+import org.noos.xing.mydoggy.DesktopContentUI;
+import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 
 import javax.swing.*;
 import javax.swing.event.InternalFrameAdapter;
@@ -14,31 +18,49 @@ import java.beans.VetoableChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyDesktopContentUI extends MyDoggyContentUI implements DesktopContentUI {
+public class MyDoggyDesktopContentUI extends PropertyChangeEventSource implements DesktopContentUI {
+
+    protected ContentManager contentManager;
+    protected MyDoggyContentManagerUI contentManagerUI;
 
     protected JInternalFrame internalFrame;
-    protected MyDoggyContentManagerUI myDoggyContentManagerUI;
+
+    protected Content content;
+    protected boolean closable;
+    protected boolean detachable;
+    protected boolean transparentMode;
+    protected float transparentRatio;
+    protected int transparentDelay;
+    protected Rectangle detachedBounds;
+    protected boolean addToTaskBar;
+    protected boolean minimizable;
 
 
     public MyDoggyDesktopContentUI(ContentManager contentManager,
-                                   ContentManagerUI contentManagerUI,
+                                   MyDoggyContentManagerUI contentManagerUI,
                                    Content content) {
-        super(contentManager, contentManagerUI, content);
-        this.myDoggyContentManagerUI = (MyDoggyContentManagerUI) contentManagerUI;
+        this.contentManager = contentManager;
+        this.contentManagerUI = contentManagerUI;
+        this.content = content;
+        this.closable = contentManagerUI.isCloseable();
+        this.detachable = contentManagerUI.isDetachable();
+        this.minimizable = contentManagerUI.isMinimizable();
+        this.transparentMode = true;
+        this.transparentRatio = 0.7f;
+        this.transparentDelay = 0;
+        this.addToTaskBar = false;
+
 
         initInternalFrame();
     }
 
 
-    public void setMinimizable(boolean minimizable) {
-        if (this.minimizable == minimizable)
-            return;
+    public Content getContent() {
+        return content;
+    }
 
-        boolean old = this.minimizable;
-        this.minimizable = minimizable;
-        internalFrame.setMaximizable(minimizable);
-
-        firePropertyChangeEvent("minimizable", old, minimizable);
+    public boolean isCloseable() {
+        return closable;
     }
 
     public void setCloseable(boolean closable) {
@@ -52,6 +74,77 @@ public class MyDoggyDesktopContentUI extends MyDoggyContentUI implements Desktop
         firePropertyChangeEvent("closable", old, closable);
     }
 
+    public boolean isDetachable() {
+        return detachable;
+    }
+
+    public void setDetachable(boolean detachable) {
+        if (this.detachable == detachable)
+            return;
+
+        boolean old = this.detachable;
+        this.detachable = detachable;
+
+        firePropertyChangeEvent("detachable", old, detachable);
+    }
+
+    public boolean isMinimizable() {
+        return minimizable;
+    }
+
+    public void setMinimizable(boolean minimizable) {
+        if (this.minimizable == minimizable)
+            return;
+
+        boolean old = this.minimizable;
+        this.minimizable = minimizable;
+        internalFrame.setMaximizable(minimizable);
+
+        firePropertyChangeEvent("minimizable", old, minimizable);
+    }
+
+    public boolean isTransparentMode() {
+        return transparentMode;
+    }
+
+    public void setTransparentMode(boolean transparentMode) {
+        if (this.transparentMode == transparentMode)
+            return;
+
+        boolean old = this.transparentMode;
+        this.transparentMode = transparentMode;
+
+        firePropertyChangeEvent("transparentMode", old, transparentMode);
+    }
+
+    public float getTransparentRatio() {
+        return transparentRatio;
+    }
+
+    public void setTransparentRatio(float transparentRatio) {
+        if (this.transparentRatio == transparentRatio)
+            return;
+
+        float old = this.transparentRatio;
+        this.transparentRatio = transparentRatio;
+
+        firePropertyChangeEvent("transparentRatio", old, transparentRatio);
+    }
+
+    public int getTransparentDelay() {
+        return transparentDelay;
+    }
+
+    public void setTransparentDelay(int transparentDelay) {
+        if (this.transparentDelay == transparentDelay)
+            return;
+
+        int old = this.transparentDelay;
+        this.transparentDelay = transparentDelay;
+
+        firePropertyChangeEvent("transparentDelay", old, transparentDelay);
+    }
+
     public void setConstraints(Object... constraints) {
         if (constraints.length > 0) {
             if (constraints[0] instanceof Point) {
@@ -60,6 +153,32 @@ public class MyDoggyDesktopContentUI extends MyDoggyContentUI implements Desktop
                 internalFrame.setBounds((Rectangle) constraints[0]);
             }
         }
+    }
+
+    public Rectangle getDetachedBounds() {
+        return detachedBounds;
+    }
+
+    public void setDetachedBounds(Rectangle detachedBounds) {
+        if ((this.detachedBounds != null && this.detachedBounds.equals(detachedBounds)) || detachedBounds == null)
+            return;
+
+        this.detachedBounds = detachedBounds;
+        firePropertyChangeEvent("detachedBounds", null, detachedBounds);
+    }
+
+    public void setAddToTaskBarWhenDetached(boolean addToTaskBar) {
+        if (this.addToTaskBar == addToTaskBar)
+            return;
+
+        boolean old = this.addToTaskBar;
+        this.addToTaskBar = addToTaskBar;
+
+        firePropertyChangeEvent("addToTaskBar", old, addToTaskBar);
+    }
+
+    public boolean isAddToTaskBarWhenDetached() {
+        return addToTaskBar;
     }
 
     public void setLocation(int x, int y) {
@@ -115,7 +234,9 @@ public class MyDoggyDesktopContentUI extends MyDoggyContentUI implements Desktop
     public void cleanup() {
         super.cleanup();
 
-        myDoggyContentManagerUI = null;
+        content = null;
+        contentManager = null;
+        contentManagerUI = null;
     }
 
 
@@ -140,19 +261,21 @@ public class MyDoggyDesktopContentUI extends MyDoggyContentUI implements Desktop
                 contentManager.removeContent(content);
             }
         });
+
         internalFrame.addVetoableChangeListener(new VetoableChangeListener() {
             public void vetoableChange(PropertyChangeEvent evt) throws PropertyVetoException {
                 if (JInternalFrame.IS_CLOSED_PROPERTY.equals(evt.getPropertyName())) {
                     if (Boolean.TRUE.equals(evt.getNewValue())) {
-                        if (!myDoggyContentManagerUI.fireContentUIRemoving(content.getContentUI()))
+                        if (!contentManagerUI.fireContentUIRemoving(content.getContentUI()))
                             throw new PropertyVetoException("Cannot remove.", evt);
                     }
                 }
             }
         });
+
         internalFrame.addPropertyChangeListener(JInternalFrame.IS_SELECTED_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                if (!myDoggyContentManagerUI.valueAdjusting && !myDoggyContentManagerUI.contentValueAdjusting) {
+                if (!contentManagerUI.valueAdjusting && !contentManagerUI.contentValueAdjusting) {
                     ContentUI contentUI = content.getContentUI();
                     if (contentUI != null) {
                         Content content = contentUI.getContent();
@@ -161,12 +284,12 @@ public class MyDoggyDesktopContentUI extends MyDoggyContentUI implements Desktop
 
                         boolean value = (Boolean) evt.getNewValue();
                         if (value) {
-                            if (myDoggyContentManagerUI.lastSelected != null) {
-                                if (myDoggyContentManagerUI.lastSelected.isDetached())
-                                    myDoggyContentManagerUI.lastSelected.setSelected(false);
+                            if (contentManagerUI.lastSelected != null) {
+                                if (contentManagerUI.lastSelected.isDetached())
+                                    contentManagerUI.lastSelected.setSelected(false);
                             }
                             content.setSelected(true);
-                            myDoggyContentManagerUI.lastSelected = content;
+                            contentManagerUI.lastSelected = content;
                         } else
                             content.setSelected(false);
                     }

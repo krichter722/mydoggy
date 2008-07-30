@@ -19,7 +19,10 @@ import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.cmp.*;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ContentPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ShortcutProcessor;
 import org.noos.xing.mydoggy.plaf.ui.content.ContentDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyTabbedContentManagerUI;
@@ -41,7 +44,6 @@ import java.util.List;
  * @author Angelo De Caro
  * @beaninfo attribute: isContainer true
  * description: MyDoggyToolWindowManager
- * TODO: put pnot focusable panel into content container...
  */
 public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener {
 
@@ -53,7 +55,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     protected MyDoggyContentManager contentManager;
 
-    protected Component windowAncestor;
+    protected Component windowAnchestor;
     protected RootPaneContainer rootPaneContainer;
 
     protected MyDoggyToolWindowBar[] bars;
@@ -98,11 +100,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected Component oldMainContent = null;
     protected boolean dockableMainContentMode = false;
 
-    protected CornerPanel nordWestCorner;
-    protected CornerPanel nordEastCorner;
-    protected CornerPanel southWestCorner;
-    protected CornerPanel southEastCorner;
-
 
     public MyDoggyToolWindowManager() {
         this(Locale.getDefault(), null);
@@ -123,54 +120,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         initPersistenceDelegate();
         initComponents();
         initListeners();
-    }
-
-
-    public ToolWindow[] getDockables() {
-        return getToolWindows();
-    }
-
-    public void addAlias(ToolWindow toolWindow, Object alias) {
-        if (tools.containsKey(alias))
-            throw new IllegalArgumentException("There is a tool whose id is the passed alias. Cannot add that alias.");
-        aliases.put(alias, toolWindow);
-    }
-
-    public Object[] getAliases(ToolWindow toolWindow) {
-        List<Object> result = new ArrayList<Object>();
-        for (Map.Entry<Object, ToolWindow> entry : aliases.entrySet()) {
-            if (entry.getValue() == toolWindow)
-                result.add(entry.getKey());
-        }
-        return result.toArray();
-    }
-
-    public ToolWindow removeAlias(Object alias) {
-        return aliases.remove(alias);
-    }
-
-    public void addDockableManagerListener(DockableManagerListener listener) {
-        addToolWindowManagerListener(new DockableManager2ToolWindowManagerWrapper(listener));
-    }
-
-    public void removeDockableManagerListener(DockableManagerListener listener) {
-        for (ToolWindowManagerListener managerListener : getToolWindowManagerListeners()) {
-            if (managerListener instanceof DockableManager2ToolWindowManagerWrapper) {
-                if (((DockableManager2ToolWindowManagerWrapper) managerListener).getListener() == listener) {
-                    removeToolWindowManagerListener(managerListener);
-                }
-            }
-        }
-    }
-
-    public DockableManagerListener[] getDockableManagerListeners() {
-        List<DockableManagerListener> listeners = new ArrayList<DockableManagerListener>();
-        for (ToolWindowManagerListener managerListener : getToolWindowManagerListeners()) {
-            if (managerListener instanceof DockableManager2ToolWindowManagerWrapper) {
-                listeners.add(((DockableManager2ToolWindowManagerWrapper) managerListener).getListener());
-            }
-        }
-        return listeners.toArray(new DockableManagerListener[listeners.size()]);
     }
 
 
@@ -203,7 +152,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         if (getDockable(id) != null)
             throw new IllegalArgumentException("Cannot register tool window with passed id. An already registered dockable exists. [id : " + id + "]");
 
-        // TODO: why resourceBundle is null???
         MyDoggyToolWindow toolWindow = new MyDoggyToolWindow(this,
                                                              id,
                                                              index,
@@ -213,6 +161,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                                                              null);
         toolWindow.addPlafPropertyChangeListener(this);
 
+        tools.put(toolWindow.getId(), toolWindow.getDescriptor());
 
         // fire Event
         fireRegisteredToolEvent(toolWindow);
@@ -268,6 +217,21 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         // Final cleans
         aliases.clear();
+    }
+
+    public void addAlias(ToolWindow toolWindow, Object alias) {
+        if (tools.containsKey(alias))
+            throw new IllegalArgumentException("There is a tool whose id is the passed alias. Cannot add that alias.");
+        aliases.put(alias, toolWindow);
+    }
+
+    public Object[] getAliases(ToolWindow toolWindow) {
+        List<Object> result = new ArrayList<Object>();
+        for (Map.Entry<Object, ToolWindow> entry : aliases.entrySet()) {
+            if (entry.getValue() == toolWindow)
+                result.add(entry.getKey());
+        }
+        return result.toArray();
     }
 
     public ToolWindow getToolWindowByAlias(Object alias) {
@@ -418,6 +382,30 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return twmListeners.getListeners(ToolWindowManagerListener.class);
     }
 
+    public void addDockableManagerListener(DockableManagerListener listener) {
+        addToolWindowManagerListener(new DockableManager2ToolWindowManagerWrapper(listener));
+    }
+
+    public void removeDockableManagerListener(DockableManagerListener listener) {
+        for (ToolWindowManagerListener managerListener : getToolWindowManagerListeners()) {
+            if (managerListener instanceof DockableManager2ToolWindowManagerWrapper) {
+                if (((DockableManager2ToolWindowManagerWrapper) managerListener).getListener() == listener) {
+                    removeToolWindowManagerListener(managerListener);
+                }
+            }
+        }
+    }
+
+    public DockableManagerListener[] getDockableManagerListeners() {
+        List<DockableManagerListener> listeners = new ArrayList<DockableManagerListener>();
+        for (ToolWindowManagerListener managerListener : getToolWindowManagerListeners()) {
+            if (managerListener instanceof DockableManager2ToolWindowManagerWrapper) {
+                listeners.add(((DockableManager2ToolWindowManagerWrapper) managerListener).getListener());
+            }
+        }
+        return listeners.toArray(new DockableManagerListener[listeners.size()]);
+    }
+
 
     public synchronized void propertyChange(final PropertyChangeEvent evt) {
         Object source = evt.getSource();
@@ -438,7 +426,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
 
 //        System.out.println(SwingUtil.toString(evt));
-        /*boolean fired = */propertyChangeSupport.firePropertyChange(evt);
+        boolean fired = propertyChangeSupport.firePropertyChange(evt);
 /*
         if (fired && source instanceof MyDoggyToolWindowTab) {
             System.out.println("fired when tab ");
@@ -463,8 +451,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         // Fire event
         propertyChangeSupport.firePropertyChange(
-                new PropertyChangeEvent(MyDoggyToolWindowManager.this, "manager.window.ancestor",
-                                        windowAncestor,
+                new PropertyChangeEvent(MyDoggyToolWindowManager.this, "manager.window.anchestor",
+                                        windowAnchestor,
                                         null)
         );
     }
@@ -473,15 +461,18 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         super.addNotify();
 
         // Load ancestor
-        windowAncestor = SwingUtil.getWindowAncestor(this);
+        windowAnchestor = SwingUtil.getWindowAncestor(this);
         // Check root pane container
-        if (!(windowAncestor instanceof RootPaneContainer)) {
-            throw new IllegalArgumentException("Window Ancestor must implement RootPaneContainer");
+        if (!(windowAnchestor instanceof RootPaneContainer)) {
+            throw new IllegalArgumentException("WindowAnchestor must implement RootPaneContainer");
         }
-        rootPaneContainer = (RootPaneContainer) windowAncestor;
+        rootPaneContainer = (RootPaneContainer) windowAnchestor;
 
         // Fire related event
-        propertyChangeSupport.firePropertyChange("manager.window.ancestor", null, windowAncestor);
+        propertyChangeSupport.firePropertyChange(
+                new PropertyChangeEvent(MyDoggyToolWindowManager.this, "manager.window.anchestor",
+                                        null, windowAnchestor)
+        );
 
 /*
         TODO: (-) introduce level
@@ -497,8 +488,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 */
     }
 
-    public Component getWindowAncestor() {
-        return windowAncestor;
+    public Component getWindowAnchestor() {
+        return windowAnchestor;
     }
 
     public JLayeredPane getLayeredPane() {
@@ -553,19 +544,43 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public void setCornerComponent(ToolWindowManagerDescriptor.Corner corner, Component component) {
         switch (corner) {
             case NORD_WEST:
-                nordWestCorner.setComponent(component);
+                for (Component cmp : getComponents()) {
+                    if (contentPaneLayout.getConstraints(cmp).row1 == 0 &&
+                        contentPaneLayout.getConstraints(cmp).col1 == 0)
+                        remove(cmp);
+                }
+
+                add(component, "0,0,c,c");
                 break;
             case SOUTH_WEST:
-                southWestCorner.setComponent(component);
+                for (Component cmp : getComponents()) {
+                    if (contentPaneLayout.getConstraints(cmp).row1 == 2 &&
+                        contentPaneLayout.getConstraints(cmp).col1 == 0) {
+                        remove(cmp);
+                    }
+                }
+
+                add(component, "0,2,c,c");
                 break;
             case NORD_EAST:
-                nordEastCorner.setComponent(component);
+                for (Component cmp : getComponents()) {
+                    if (contentPaneLayout.getConstraints(cmp).row1 == 0 &&
+                        contentPaneLayout.getConstraints(cmp).col1 == 2)
+                        remove(cmp);
+                }
+
+                add(component, "2,0,c,c");
                 break;
             case SOUTH_EAST:
-                southEastCorner.setComponent(component);
+                for (Component cmp : getComponents()) {
+                    if (contentPaneLayout.getConstraints(cmp).row1 == 2 &&
+                        contentPaneLayout.getConstraints(cmp).col1 == 2)
+                        remove(cmp);
+                }
+
+                add(component, "2,2,c,c");
                 break;
         }
-//        SwingUtil.repaint(this);
     }
 
     public GlassPanel getGlassPanel() {
@@ -734,25 +749,17 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         );
         setLayout(contentPaneLayout);
 
-        //  Init corner panels...
-        add(nordWestCorner = new CornerPanel(ToolWindowManagerDescriptor.Corner.NORD_WEST), "0,0,c,c");
-        add(southWestCorner = new CornerPanel(ToolWindowManagerDescriptor.Corner.SOUTH_WEST), "0,2,c,c");
-        add(nordEastCorner = new CornerPanel(ToolWindowManagerDescriptor.Corner.NORD_EAST), "2,0,c,c");
-        add(southEastCorner = new CornerPanel(ToolWindowManagerDescriptor.Corner.SOUTH_EAST), "2,2,c,c");
-
         // Register bars, one for every anchor
-        addBar(LEFT, JSplitPane.HORIZONTAL_SPLIT, "0,1");
-        addBar(RIGHT, JSplitPane.HORIZONTAL_SPLIT, "2,1");
-        addBar(TOP, JSplitPane.VERTICAL_SPLIT, "1,0");
-        addBar(BOTTOM, JSplitPane.VERTICAL_SPLIT, "1,2");
+        addBar(LEFT, JSplitPane.HORIZONTAL_SPLIT, "0,1", "0,0,FULL,FULL");
+        addBar(RIGHT, JSplitPane.HORIZONTAL_SPLIT, "2,1", "2,0,FULL,FULL");
+        addBar(TOP, JSplitPane.VERTICAL_SPLIT, "1,0", "2,2,FULL,FULL");
+        addBar(BOTTOM, JSplitPane.VERTICAL_SPLIT, "1,2", "0,2,FULL,FULL");
 
-        // Init main container
-        mainContainer = new JPanel();
+        mainContainer = (JPanel) resourceManager.createComponent(MyDoggyKeySpace.TOOL_WINDOW_MANAGER_CONTENT_CONTAINER, getContext());
         mainContainer.setName("toolWindowManager.mainContainer");
         mainContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
-        mainContainer.setFocusable(false);
+        mainContainer.setFocusCycleRoot(true);
 
-        // Net bar split pane in default mode
         getBar(BOTTOM).getSplitPane().setTopComponent(getBar(TOP).getSplitPane());
         getBar(TOP).getSplitPane().setBottomComponent(getBar(LEFT).getSplitPane());
         getBar(LEFT).getSplitPane().setRightComponent(getBar(RIGHT).getSplitPane());
@@ -773,7 +780,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     protected void initGlassPane() {
-        this.glassPanel = new GlassPanel(rootPaneContainer);
+        this.glassPanel = new GlassPanel(resourceManager, rootPaneContainer);
 //        rootPaneContainer.setGlassPane(this.glassPanel = new GlassPanel(rootPaneContainer));
     }
 
@@ -787,6 +794,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         propertyChangeSupport.addPropertyChangeListener("active", new ActivePropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("anchor", new AnchorPropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("type", new TypePropertyChangeListener());
+        propertyChangeSupport.addPropertyChangeListener("autoHide", new AutoHideChangeListener());
 
         MaximizedChangeListener maximizedChangeListener = new MaximizedChangeListener();
         propertyChangeSupport.addPropertyChangeListener("maximized", maximizedChangeListener);
@@ -796,8 +804,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         propertyChangeSupport.addPropertyChangeListener("numberingEnabled", new NumberingEnabledChangeListener());
         propertyChangeSupport.addPropertyChangeListener("tempShowed", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-//                for (ToolWindowDescriptor tool : tools.values())
-//                    tool.getToolWindowContainer().propertyChange(evt);
+                for (ToolWindowDescriptor tool : tools.values())
+                    tool.getToolWindowContainer().propertyChange(evt);
             }
         });
         propertyChangeSupport.addPropertyChangeListener("anchor.index", new PropertyChangeListener() {
@@ -808,17 +816,23 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                     getBar(descriptor.getToolWindow().getAnchor()).propertyChange(evt);
             }
         });
+        propertyChangeSupport.addPropertyChangeListener("manager.window.anchestor", new AnchestorClosedChangeListener());
+        propertyChangeSupport.addPropertyChangeListener("resourceManager", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                glassPanel.setResourceManager((ResourceManager) evt.getNewValue());
+            }
+        });
         propertyChangeSupport.addPropertyChangeListener("enabled", new ContentMananagerEnabledChangeListener());
         propertyChangeSupport.addPropertyChangeListener("length", new BarLengthListener());
 
         initKeyboardFocusManagerListeners();
 
         // Setup DropTarget for main container
-        mainContainer.setDropTarget(new ContentManagerDropTarget(mainContainer, this));
+        mainContainer.setDropTarget(new ContentManagerDropTarget(mainContainer, this, resourceManager));
     }
 
     protected void initKeyboardFocusManagerListeners() {
-        propertyChangeSupport.addPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
+        propertyChangeSupport.addPropertyChangeListener("manager.window.anchestor", new PropertyChangeListener() {
             final ShortcutProcessor shortcutProcessor = new ShortcutProcessor(MyDoggyToolWindowManager.this,
                                                                               MyDoggyToolWindowManager.this);
             final FocusOwnerChangeListener focusOwnerChangeListener = new FocusOwnerChangeListener();
@@ -864,18 +878,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
 
     protected JSplitPane renderSplitPane(int orientation) {
-        JSplitPane splitPane = new DebugSplitPane(orientation);
-        splitPane.setBorder(null);
-        splitPane.setContinuousLayout(true);
-        splitPane.setDividerSize(0);
-        splitPane.setDividerLocation(300);
-        splitPane.setLeftComponent(null);
-        splitPane.setRightComponent(null);
-        
-        return splitPane;
+        return (JSplitPane) resourceManager.createComponent(MyDoggyKeySpace.ANCHOR_SPLIT_PANE,
+                                                            getContext("newOrientation", orientation));
     }
 
-    protected JSplitPane addBar(ToolWindowAnchor anchor, int splitPaneOrientation, String barConstraints) {
+    protected JSplitPane addBar(ToolWindowAnchor anchor, int splitPaneOrientation,
+                                String barConstraints, String cornerConstraints) {
         // Initialize bar
         MyDoggyToolWindowBar myDoggyToolWindowBar = new MyDoggyToolWindowBar(this,
                                                                              renderSplitPane(splitPaneOrientation),
@@ -886,6 +894,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         // Add Bar to Container
         add(myDoggyToolWindowBar.getContainer(), barConstraints);
+
+        // Add Corner to Container
+        add(resourceManager.createComponent(MyDoggyKeySpace.CORNER_CONTENT_PANE, getContext()),
+            cornerConstraints);
 
         return myDoggyToolWindowBar.getSplitPane();
     }
@@ -995,10 +1007,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
 
     public boolean isWindowFocused() {
-//        return (windowAncestor instanceof Window) ? ((Window) windowAncestor).isFocused() : windowAncestor.isfo
+//        return (windowAnchestor instanceof Window) ? ((Window) windowAnchestor).isFocused() : windowAnchestor.isfo
         Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-        return focusOwner != null && SwingUtil.getWindowAncestor(focusOwner) == windowAncestor;
+        if (focusOwner != null)
+            return SwingUtil.getWindowAncestor(focusOwner) == windowAnchestor;
 
+        return false;
     }
 
     public int getJMenuBarExtraHeight() {
@@ -1031,13 +1045,11 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public DockableDescriptor createDescriptor(Dockable dockable) {
-        if (dockable instanceof ToolWindow) {
-            ToolWindowDescriptor descriptor = new ToolWindowDescriptor(this, (MyDoggyToolWindow) dockable);
-            tools.put(dockable.getId(), descriptor);
-            return descriptor;
-        } else if (dockable instanceof Content) {
+        if (dockable instanceof ToolWindow)
+            return new ToolWindowDescriptor(this, (MyDoggyToolWindow) dockable);
+        else if (dockable instanceof Content)
             return new ContentDescriptor(this, (Content) dockable);
-        } throw new IllegalArgumentException("Invalid dockable. [dockable : " + dockable + "]");
+        throw new IllegalArgumentException("Invalid dockable. [dockable : " + dockable + "]");
     }
 
     public Dockable getDockableWrapper(Dockable dockable) {
@@ -1063,7 +1075,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public MutableContext getContext() {
         DefaultMutableContext context = new DefaultMutableContext();
         context.put(ToolWindowManager.class, this);
-        context.put(MyDoggyToolWindowManager.class, this);
         context.put(ResourceManager.class, getResourceManager());
 
         return context;
@@ -1072,7 +1083,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public MutableContext getContext(Object... entries) {
         DefaultMutableContext context = new DefaultMutableContext(entries);
         context.put(ToolWindowManager.class, this);
-        context.put(MyDoggyToolWindowManager.class, this);
         context.put(ResourceManager.class, getResourceManager());
 
         return context;
@@ -1090,14 +1100,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         if (mainContainer.getWidth() < 50 || mainContainer.getHeight() < 50) {
             // If not, reset split panes to equal divisions
             mainSplitPane.setDividerLocation(0.5);
-            for (MyDoggyToolWindowBar bar : bars) {
-                bar.getSplitPane().setDividerLocation(0.5);
+            for (int i = 0; i < bars.length; i++) {
+                bars[i].getSplitPane().setDividerLocation(0.5);
             }
         }
     }
 
 
-    public class AvailablePropertyChangeListener implements PropertyChangeListener {
+    protected class AvailablePropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             DockableDescriptor descriptor = (DockableDescriptor) evt.getSource();
             ToolWindowAnchor target = descriptor.getAnchor();
@@ -1110,7 +1120,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    public class ShowUnavailableToolsPropertyChangeListener implements PropertyChangeListener {
+    protected class ShowUnavailableToolsPropertyChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             for (MyDoggyToolWindowBar bar : bars)
@@ -1124,7 +1134,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    public class VisiblePropertyChangeListener implements PropertyChangeListener {
+    protected class VisiblePropertyChangeListener implements PropertyChangeListener {
         boolean showingGroupValueAdj = false;
 
         public void propertyChange(PropertyChangeEvent evt) {
@@ -1167,7 +1177,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    public class ActivePropertyChangeListener implements PropertyChangeListener {
+    protected class ActivePropertyChangeListener implements PropertyChangeListener {
 
         public synchronized void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
@@ -1186,15 +1196,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
                 if (lastFocusOwner != null) {
                     boolean shouldRequest = true;
-
                     for (MyDoggyToolWindowBar bar : bars) {
-                        if (bar.valueAdjusting &&
-                            getBar(descriptor.getToolWindow().getAnchor()) == bar) {
+                        if (bar.valueAdjusting && getBar(descriptor.getToolWindow().getAnchor()) == bar) {
                             shouldRequest = false;
                             break;
                         }
                     }
-
                     if (shouldRequest)
                         SwingUtil.requestFocus(lastFocusOwner);
                 }
@@ -1203,7 +1210,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    public class AnchorPropertyChangeListener implements PropertyChangeListener {
+    protected class AnchorPropertyChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
@@ -1234,8 +1241,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 syncPanel(newAnchor);
             }
 
-//            for (ToolWindowDescriptor tool : tools.values())
-//                tool.getToolWindowContainer().propertyChange(evt);
+            for (ToolWindowDescriptor tool : tools.values())
+                tool.getToolWindowContainer().propertyChange(evt);
 
             syncPanel(oldAnchor);
             syncPanel(newAnchor);
@@ -1250,17 +1257,26 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     }
 
-    public class TypePropertyChangeListener implements PropertyChangeListener {
+    protected static class AutoHideChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
-
-            toolWindowDescriptor.getToolBar().propertyChange(evt);
-
-            syncPanel(toolWindowDescriptor.getToolWindow().getAnchor());
+            ((ToolWindowDescriptor) evt.getSource()).getToolWindowContainer().propertyChange(evt);
         }
     }
 
-    public class IndexChangeListener implements PropertyChangeListener {
+    protected class TypePropertyChangeListener implements PropertyChangeListener {
+        public void propertyChange(PropertyChangeEvent evt) {
+            ToolWindowDescriptor window = (ToolWindowDescriptor) evt.getSource();
+
+            getBar(window.getToolWindow().getAnchor()).propertyChange(evt);
+
+            for (ToolWindowDescriptor tool : tools.values())
+                tool.getToolWindowContainer().propertyChange(evt);
+
+            syncPanel(window.getToolWindow().getAnchor());
+        }
+    }
+
+    protected class IndexChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
             ToolWindow modifiedTool = descriptor.getToolWindow();
@@ -1276,28 +1292,28 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 }
             }
 
+            descriptor.propertyChange(evt);
             getBar(modifiedTool.getAnchor()).propertyChange(evt);
         }
     }
 
-    public class IconChangeListener implements PropertyChangeListener {
-
+    protected class IconChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
-            descriptor.getToolBar().propertyChange(evt);
-        }
 
+            descriptor.propertyChange(evt);
+            getBar(descriptor.getToolWindow().getAnchor()).propertyChange(evt);
+        }
     }
 
-    public class NumberingEnabledChangeListener implements PropertyChangeListener {
+    protected class NumberingEnabledChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
-            // TODO: what is preferible...one listener that dispatch or many listeners...
-//            for (ToolWindowDescriptor descriptor : tools.values())
-//                descriptor.propertyChange(evt);
+            for (ToolWindowDescriptor descriptor : tools.values())
+                descriptor.propertyChange(evt);
         }
     }
 
-    public class UpdateUIChangeListener implements PropertyChangeListener {
+    protected class UpdateUIChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             contentManager.updateUI();
@@ -1308,10 +1324,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    public class MaximizedChangeListener implements PropertyChangeListener {
+    protected class MaximizedChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
-//            toolWindowDescriptor.getToolWindowContainer().propertyChange(evt);
+            toolWindowDescriptor.getToolWindowContainer().propertyChange(evt);
 
             // Notify specific bar
             getBar(toolWindowDescriptor.getToolWindow().getAnchor()).propertyChange(evt);
@@ -1321,14 +1337,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    public class ResourceManagerListener implements PropertyChangeListener {
+    protected class ResourceManagerListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             SwingUtil.repaint(MyDoggyToolWindowManager.this);
         }
     }
 
-    public class BarLengthListener implements PropertyChangeListener {
+    protected class BarLengthListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowBar bar = (ToolWindowBar) evt.getSource();
@@ -1354,7 +1370,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    public class FocusOwnerChangeListener implements PropertyChangeListener {
+    protected class FocusOwnerChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Component newFocusOwner = (Component) evt.getNewValue();
             if (newFocusOwner != null && SwingUtilities.isDescendingFrom(newFocusOwner, mainContainer))
@@ -1362,7 +1378,15 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
     }
 
-    public class ContentMananagerEnabledChangeListener implements PropertyChangeListener {
+    protected class AnchestorClosedChangeListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            for (ToolWindowDescriptor tool : tools.values())
+                tool.getToolWindowContainer().propertyChange(evt);
+        }
+    }
+
+    protected class ContentMananagerEnabledChangeListener implements PropertyChangeListener {
 
         public void propertyChange(final PropertyChangeEvent evt) {
             if (evt.getSource() instanceof ContentManager) {
@@ -1402,7 +1426,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     }
 
-    public class InternalContentMananagerListener implements ContentManagerListener,
+    protected class InternalContentMananagerListener implements ContentManagerListener,
                                                                 PropertyChangeListener {
 
         public void contentAdded(ContentManagerEvent event) {

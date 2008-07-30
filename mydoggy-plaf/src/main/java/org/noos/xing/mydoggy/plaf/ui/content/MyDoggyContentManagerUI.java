@@ -30,10 +30,9 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
     protected ResourceManager resourceManager;
     protected Map<Content, T> contentUIMap;
 
-    protected boolean closeable, detachable, minimizable, maximizable;
+    protected boolean closeable, detachable, minimizable;
     protected boolean installed;
     protected boolean uninstalling;
-    protected boolean popupMenuEnabled;
 
     protected PropertyChangeSupport internalPropertyChangeSupport;
     protected EventListenerList contentManagerUIListeners;
@@ -48,8 +47,7 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
 
     public MyDoggyContentManagerUI() {
         contentManagerUIListeners = new EventListenerList();
-        this.closeable = this.detachable = this.minimizable = this.maximizable = true;
-        this.popupMenuEnabled = true;
+        this.closeable = this.detachable = this.minimizable = true;
         this.contentUIMap = new Hashtable<Content,T>();
     }
 
@@ -97,35 +95,6 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
 
     public boolean isMinimizable() {
         return minimizable;
-    }
-
-    public void setMaximizable(boolean maximizable) {
-        boolean old = this.maximizable;
-        this.maximizable = maximizable;
-
-        for (ContentUI contentUI : contentUIMap.values()) {
-            contentUI.setMaximizable(maximizable);
-        }
-
-        fireContentManagerUIProperty("maximizable", old, maximizable);
-    }
-
-    public boolean isMaximizable() {
-        return maximizable;
-    }
-
-    public boolean isPopupMenuEnabled() {
-        return popupMenuEnabled;
-    }
-
-    public void setPopupMenuEnabled(boolean popupMenuEnabled) {
-        if (this.popupMenuEnabled == popupMenuEnabled)
-            return;
-
-        boolean old = this.popupMenuEnabled;
-        this.popupMenuEnabled = popupMenuEnabled;
-
-        fireContentManagerUIProperty("popupMenuEnabled", old, popupMenuEnabled);
     }
 
     public T getContentUI(Content content) {
@@ -195,7 +164,7 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
     }
 
 
-    protected abstract Object addUIForContent(Content content, Object... constraints);
+    protected abstract Object addUIForContent(Content content, Object[] constraints);
 
     protected abstract void removeUIForContent(Content content);
 
@@ -214,10 +183,6 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
 
     protected boolean isContentManagerEnabled() {
         return contentManager.isEnabled();
-    }
-
-    protected boolean isFocusAncestor(Component c) {
-        return SwingUtil.isAncestor(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner(), c);
     }
 
     protected Component findAndRequestFocus(Component component) {
@@ -259,7 +224,7 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
     }
 
     
-    public class ContentDialogFocusListener implements WindowFocusListener {
+    protected class ContentDialogFocusListener implements WindowFocusListener {
         protected Content content;
 
         public ContentDialogFocusListener(Content content) {
@@ -289,7 +254,7 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
         }
     }
     
-    public class ContentUIListener implements PropertyChangeListener {
+    protected class ContentUIListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ContentUI contentUI = (ContentUI) evt.getSource();
@@ -301,18 +266,18 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
                 } else if ("addToTaskBar".equals(evt.getPropertyName())) {
                     Content content = contentUI.getContent();
                     Window oldWindow = SwingUtilities.windowForComponent(contentUI.getContent().getComponent());
-                    Frame parentFrame = (toolWindowManager.getWindowAncestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAncestor() : null;
+                    Frame parentFrame = (toolWindowManager.getWindowAnchestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAnchestor() : null;
                     Component focusOwner = oldWindow.getFocusOwner();
 
                     // Init new window
                     Window dialog;
                     if ((Boolean) evt.getNewValue()) {
-                        dialog = new ContentFrame(
-                                content, contentUI,
+                        dialog = new ContentFrame(resourceManager,
+                                                  content, contentUI,
                                                   parentFrame, oldWindow.getBounds());
                     } else {
-                        dialog = new ContentDialog(
-                                content, contentUI,
+                        dialog = new ContentDialog(resourceManager,
+                                                   content, contentUI,
                                                    parentFrame, oldWindow.getBounds());
                     }
 

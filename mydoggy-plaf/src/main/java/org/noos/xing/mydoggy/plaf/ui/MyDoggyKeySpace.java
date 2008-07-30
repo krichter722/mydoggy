@@ -7,91 +7,110 @@ public interface MyDoggyKeySpace {
 
     // Icons
 
-    String DOCKED = "ToolWindowTitleButtonPanelUI.icon.docked";
-    String DOCKED_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.docked.inactive";
-    String SLIDING = "ToolWindowTitleButtonPanelUI.icon.sliding";
-    String SLIDING_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.sliding.inactive";
-    String FLOATING = "ToolWindowTitleButtonPanelUI.icon.floating";
-    String FLOATING_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.floating.inactive";
-    String FIX = "ToolWindowTitleButtonPanelUI.icon.fix";
-    String FIX_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.fix.inactive";
-    String AUTO_HIDE_ON = "ToolWindowTitleButtonPanelUI.icon.autoHideOn";
-    String AUTO_HIDE_ON_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.autoHideOn.inactive";
-    String AUTO_HIDE_OFF = "ToolWindowTitleButtonPanelUI.icon.autoHideOff";
-    String AUTO_HIDE_OFF_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.autoHideOff.inactive";
-    String HIDE_TOOL_WINDOW = "ToolWindowTitleButtonPanelUI.icon.hideToolWindow";
-    String HIDE_TOOL_WINDOW_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.hideToolWindow.inactive";
-    String MAXIMIZE = "ToolWindowTitleButtonPanelUI.icon.maximize";
-    String MAXIMIZE_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.maximize.inactive";
-    String MINIMIZE = "ToolWindowTitleButtonPanelUI.icon.minimize";
-    String MINIMIZE_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.minimize.inactive";
-    String ACTIONS_POPUP = "ToolWindowTitleButtonPanelUI.icon.actionsPopup";
-    String ACTIONS_POPUP_INACTIVE = "ToolWindowTitleButtonPanelUI.icon.actionsPopup.inactive";
+    String DOCKED = "DOCKED";
+    String DOCKED_INACTIVE = "DOCKED_INACTIVE";
+    String SLIDING = "SLIDING";
+    String SLIDING_INACTIVE = "SLIDING_INACTIVE";
+    String FLOATING = "FLOATING";
+    String FLOATING_INACTIVE = "FLOATING_INACTIVE";
+    String FIX = "FIX";
+    String FIX_INACTIVE = "FIX_INACTIVE";
+    String AUTO_HIDE_ON = "AUTO_HIDE_ON";
+    String AUTO_HIDE_ON_INACTIVE = "AUTO_HIDE_ON_INACTIVE";
+    String AUTO_HIDE_OFF = "AUTO_HIDE_OFF";
+    String AUTO_HIDE_OFF_INACTIVE = "AUTO_HIDE_OFF_INACTIVE";
+    String HIDE_TOOL_WINDOW = "HIDE_TOOL_WINDOW";
+    String HIDE_TOOL_WINDOW_INACTIVE = "HIDE_TOOL_WINDOW_INACTIVE";
+    String MAXIMIZE = "MAXIMIZE";
+    String MAXIMIZE_INACTIVE = "MAXIMIZE_INACTIVE";
+    String MINIMIZE = "MINIMIZE";
+    String MINIMIZE_INACTIVE = "MINIMIZE_INACTIVE";
+    String ACTIONS_POPUP = "ACTIONS_POPUP";
+    String ACTIONS_POPUP_INACTIVE = "ACTIONS_POPUP_INACTIVE";
 
-    String TOO_WINDOW_TAB_POPUP = "ToolWindowTabPanelUI.icon.toolWindowTabPopup";
+    String TOO_WINDOW_TAB_POPUP = "TOO_WINDOW_TAB_POPUP";
 
-    String TOOL_SCROLL_BAR_UP = "ToolWindowScrollBarUI.arrow.icon.up";
-    String TOOL_SCROLL_BAR_DOWN = "ToolWindowScrollBarUI.arrow.icon.down";
-    String TOOL_SCROLL_BAR_LEFT = "ToolWindowScrollBarUI.arrow.icon.left";
-    String TOOL_SCROLL_BAR_RIGHT = "ToolWindowScrollBarUI.arrow.icon.right";
+    String CONTENT_PAGE_MINIMIZE = "CONTENT_PAGE_MINIMIZE";
+    String CONTENT_PAGE_DETACH = "CONTENT_PAGE_DETACH";
+    String CONTENT_PAGE_CLOSE = "CONTENT_PAGE_CLOSE";
+    String CONTENT_PAGE_DETACH_INACTIVE = "CONTENT_PAGE_DETACH_INACTIVE";
+    String CONTENT_PAGE_CLOSE_INACTIVE = "CONTENT_PAGE_CLOSE_INACTIVE";
 
-    String TAB_CLOSE = "ToolWindowTabButtonUI.icon.tabClose";
-    String TAB_CLOSE_INACTIVE = "ToolWindowTabButtonUI.icon.tabClose.inactive";
-    String TAB_MINIMIZE = "ToolWindowTabButtonUI.icon.tabMinimize";
-    String TAB_MINIMIZE_INACTIVE = "ToolWindowTabButtonUI.icon.tabMinimize.inactive";
+    String TOOL_SCROLL_BAR_UP = "TOOL_SCROLL_BAR_UP";
+    String TOOL_SCROLL_BAR_DOWN = "TOOL_SCROLL_BAR_DOWN";
+    String TOOL_SCROLL_BAR_LEFT = "TOOL_SCROLL_BAR_LEFT";
+    String TOOL_SCROLL_BAR_RIGHT = "TOOL_SCROLL_BAR_RIGHT";
 
-    String CONTENT_PAGE_MINIMIZE = "mydoggy.icon.contentPageMinimize";
-    String CONTENT_PAGE_DETACH = "mydoggy.icon.contentPageDetach";
-    String CONTENT_PAGE_CLOSE = "mydoggy.icon.contentPageClose";
-    String CONTENT_PAGE_DETACH_INACTIVE = "mydoggy.icon.contentPageDetach.inactive";
-    String CONTENT_PAGE_CLOSE_INACTIVE = "mydoggy.icon.contentPageClose.inactive";
-    String CONTENT_PAGE_MAXIMIZE = "mydoggy.icon.contentPageMaximize";
-    String CONTENT_PAGE_RESTORE = "mydoggy.icon.contentPageRestore";
+    String TAB_CLOSE = "TAB_CLOSE";
+    String TAB_CLOSE_INACTIVE = "TAB_CLOSE_INACTIVE";
+    String TAB_MINIMIZE = "TAB_MINIMIZE";
+    String TAB_MINIMIZE_INACTIVE = "TAB_MINIMIZE_INACTIVE";
 
-    // Images
 
-    String DRAG = "mydoggy.image.drag";
+    String DRAG = "DRAG";
 
     // Representative Anchor Button - Colors
 
-    String TOOL_SCROLL_BAR_UI_BCK_START = "ToolWindowScrollBarUI.arrow.background.start";
-    String TOOL_SCROLL_BAR_UI_BCK_END = "ToolWindowScrollBarUI.arrow.background.end";
+    String TOOL_SCROLL_BAR_UI_BCK_START = "TOOL_SCROLL_BAR_UI_BCK_START";
+    String TOOL_SCROLL_BAR_UI_BCK_END = "TOOL_SCROLL_BAR_UI_BCK_END";
 
-    String RAB_MOUSE_IN_BORDER = "ToolWindowRepresentativeAnchorUI.border.mouseIn";
-    String RAB_MOUSE_OUT_BORDER = "ToolWindowRepresentativeAnchorUI.border.mouseOut";
-    String RAB_BACKGROUND_INACTIVE = "ToolWindowRepresentativeAnchorUI.background.inactive";
-    String RAB_BACKGROUND_ACTIVE_START = "ToolWindowRepresentativeAnchorUI.background.active.start";
-    String RAB_BACKGROUND_ACTIVE_END = "ToolWindowRepresentativeAnchorUI.background.active.end";
-    String RAB_FOREGROUND = "ToolWindowRepresentativeAnchorUI.foreground";
-    String RAB_FOREGROUND_UNAVAILABLE = "ToolWindowRepresentativeAnchorUI.foreground.unavailable";
-    
+    String RAB_MOUSE_IN_BORDER = "RAB_MOUSE_IN_BORDER";
+    String RAB_MOUSE_OUT_BORDER = "RAB_MOUSE_OUT_BORDER";
+    String RAB_BACKGROUND_INACTIVE = "RAB_BACKGROUND_INACTIVE";
+    String RAB_BACKGROUND_ACTIVE_START = "RAB_BACKGROUND_ACTIVE_START";
+    String RAB_BACKGROUND_ACTIVE_END = "RAB_BACKGROUND_ACTIVE_END";
+    String RAB_FOREGROUND = "RAB_FOREGROUND";
+    String RAB_FOREGROUND_UNAVAILABLE = "RAB_FOREGROUND_UNAVAILABLE";
+    String RAB_FOREGROUND_NOT_AVAILABLE = "RAB_FOREGROUND_NOT_AVAILABLE";
+
     // ToolWindow TitleBar - Colors
 
-    String TWTB_BACKGROUND_ACTIVE_START = "ToolWindowTitleBarUI.background.active.start";
-    String TWTB_BACKGROUND_ACTIVE_END = "ToolWindowTitleBarUI.background.active.end";
-    String TWTB_BACKGROUND_INACTIVE_START = "ToolWindowTitleBarUI.background.inactive.start";
-    String TWTB_BACKGROUND_INACTIVE_END = "ToolWindowTitleBarUI.background.inactive.end";
-    String TWTB_ID_BACKGROUND_FLASHING_ON = "ToolWindowTitleBarUI.id.background.flashing.on";
-    String TWTB_ID_BACKGROUND_FLASHING_OFF = "ToolWindowTitleBarUI.id.background.flashing.off";
-    String TWTB_ID_BACKGROUND_ANIMATING = "ToolWindowTitleBarUI.id.background.animating";
-    String TWTB_ID_BACKGROUND_ACTIVE = "ToolWindowTitleBarUI.id.background.active";
-    String TWTB_ID_BACKGROUND_INACTIVE = "ToolWindowTitleBarUI.id.background.inactive";
-    String TWTB_ID_FOREGROUND_ACTIVE = "ToolWindowTitleBarUI.id.foreground.active";
-    String TWTB_ID_FOREGROUND_INACTIVE = "ToolWindowTitleBarUI.id.foreground.inactive";
-    String TWTB_TAB_FOREGROUND_SELECTED = "ToolWindowTitleBarUI.tab.foreground.selected";
-    String TWTB_TAB_FOREGROUND_UNSELECTED = "ToolWindowTitleBarUI.tab.foreground.unselected";
+    String TWTB_BACKGROUND_ACTIVE_START = "TWTB_BACKGROUND_ACTIVE_START";
+    String TWTB_BACKGROUND_ACTIVE_END = "TWTB_BACKGROUND_ACTIVE_END";
+    String TWTB_BACKGROUND_INACTIVE_START = "TWTB_BACKGROUND_INACTIVE_START";
+    String TWTB_BACKGROUND_INACTIVE_END = "TWTB_BACKGROUND_INACTIVE_END";
+
+    String TWTB_ID_BACKGROUND_FLASHING_0 = "TWTB_ID_BACKGROUND_FLASHING_0";
+    String TWTB_ID_BACKGROUND_FLASHING_1 = "TWTB_ID_BACKGROUND_FLASHING_1";
+    String TWTB_ID_BACKGROUND_ANIMATING = "TWTB_ID_BACKGROUND_ANIMATING";
+    String TWTB_ID_BACKGROUND_ACTIVE = "TWTB_ID_BACKGROUND_ACTIVE";
+    String TWTB_ID_BACKGROUND_INACTIVE = "TWTB_ID_BACKGROUND_INACTIVE";
+    String TWTB_ID_FOREGROUND_ACTIVE = "TWTB_ID_FOREGROUND_ACTIVE";
+    String TWTB_ID_FOREGROUND_INACTIVE = "TWTB_ID_FOREGROUND_INACTIVE";
+
+    String TWTB_TAB_FOREGROUND_SELECTED = "TWTB_TAB_FOREGROUND_SELECTED";
+    String TWTB_TAB_FOREGROUND_UNSELECTED = "TWTB_TAB_FOREGROUND_UNSELECTED";
 
     // Components, ComponentsUIs, Customizers
+
+    String TOOL_WINDOW_CONTAINER = "TOOL_WINDOW_CONTAINER";
+    String TOOL_WINDOW_TITLE_BAR = "TOOL_WINDOW_TITLE_BAR";
+    String TOOL_WINDOW_TITLE_BAR_UI = "TOOL_WINDOW_TITLE_BAR_UI";
+    String TOOL_WINDOW_TITLE_BUTTON = "TOOL_WINDOW_TITLE_BUTTON";
+    String TOOL_WINDOW_TAB_BUTTON_UI = "TOOL_WINDOW_TAB_BUTTON_UI";
+
+
+    String REPRESENTATIVE_ANCHOR_BUTTON_UI = "REPRESENTATIVE_ANCHOR_BUTTON_UI";
 
     String TOOL_WINDOW_MANAGER = "TOOL_WINDOW_MANAGER";
     String TOOL_WINDOW_MANAGER_CONTENT_CONTAINER = "TOOL_WINDOW_MANAGER_CONTENT_CONTAINER";
 
+    String TOOL_SCROLL_BAR_ARROW = "TOOL_SCROLL_BAR_ARROW";
+
+    String ANCHOR_SPLIT_PANE = "ANCHOR_SPLIT_PANE";
+    String ANCHOR_CONTENT_PANE = "ANCHOR_CONTENT_PANE";
+
+    String CORNER_CONTENT_PANE = "CORNER_CONTENT_PANE";
     String DESKTOP_CONTENT_PANE = "DESKTOP_CONTENT_PANE";
 
+    String MULTI_SPLIT_CONTAINER_SPLIT = "MULTI_SPLIT_CONTAINER_SPLIT";
+
     // Properties
+    String TWB_LEFT_LENGTH = "toolwindowbar.left.length";
+    String TWB_RIGHT_LENGTH = "toolwindowbar.right.length";
+    String TWB_TOP_LENGTH = "toolwindowbar.top.length";
+    String TWB_BOTTOM_LENGTH = "toolwindowbar.bottom.length";
+
 
     String PERSISTENCE_DELEGATE_PARSING = "PERSISTENCE_DELEGATE_PARSING";
-
-
-
 }

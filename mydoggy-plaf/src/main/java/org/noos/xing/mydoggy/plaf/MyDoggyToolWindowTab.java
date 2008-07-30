@@ -4,7 +4,6 @@ import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.plaf.cleaner.CleanerAggregator;
-import org.noos.xing.mydoggy.plaf.cleaner.CleanerProvider;
 import org.noos.xing.mydoggy.plaf.cleaner.DefaultCleanerAggregator;
 
 import javax.swing.*;
@@ -15,7 +14,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements ToolWindowTab, CleanerProvider {
+public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements ToolWindowTab {
     protected boolean root;
     protected String id;
     protected ToolWindow owner;
@@ -24,7 +23,6 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
     protected Component component;
     protected boolean selected;
     protected boolean closeable;
-    protected boolean minimizable;
     protected boolean flash;
     protected boolean maximized;
     protected boolean minimized;
@@ -46,7 +44,6 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
         this.component = component;
         this.selected = false;
         this.closeable = !root;
-        this.minimizable = true;
         this.dockable = dockable;
         this.flash = false;
         this.maximized = false;
@@ -179,20 +176,6 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
         firePropertyChangeEvent("closeable", old, closeable);
     }
 
-    public boolean isMinimizable() {
-        return minimizable;
-    }
-
-    public void setMinimizable(boolean minimizable) {
-        if (this.minimizable == minimizable)
-            return;
-
-        boolean old = this.minimizable;
-        this.minimizable = minimizable;
-
-        firePropertyChangeEvent("minimizable", old, minimizable);
-    }
-
     public void setMaximized(boolean maximized) {
         if (this.maximized == maximized)
             return;
@@ -251,12 +234,12 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
     }
 
 
-    public CleanerAggregator getCleanerAggregator() {
+    public CleanerAggregator getCleaner() {
         return cleanerAggregator;
     }
 
 
-    public class DelegatorListener implements PropertyChangeListener  {
+    protected class DelegatorListener implements PropertyChangeListener  {
 
         public void propertyChange(PropertyChangeEvent evt) {
             String propertyName = evt.getPropertyName();
@@ -277,7 +260,7 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
         
     }
 
-    public class DelegateListener implements PropertyChangeListener {
+    protected class DelegateListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             String propertyName = evt.getPropertyName();

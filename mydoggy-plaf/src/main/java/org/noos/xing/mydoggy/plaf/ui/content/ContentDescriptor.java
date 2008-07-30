@@ -8,11 +8,12 @@ import org.noos.xing.mydoggy.plaf.ui.CustomDockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.AggregateIcon;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ContentRepresentativeAnchor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
-import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.plaf.ui.look.ContentRepresentativeAnchorUI;
 
 import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.LabelUI;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -49,25 +50,25 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
         if (representativeAnchor == null) {
             ToolWindowAnchor anchor = getAnchor();
 
-            String labelText = SwingUtil.getUserString(content.getId());
+            String labelText = getResourceManager().getUserString(content.getId());
             Icon toolIcon = content.getIcon();
 
             switch (anchor) {
                 case BOTTOM:
                 case TOP:
-                    representativeAnchor = new ContentRepresentativeAnchor(this, labelText, toolIcon, JLabel.CENTER);
+                    representativeAnchor = new RepresentativeAnchorLabel(labelText, toolIcon, JLabel.CENTER);
                     break;
                 case LEFT:
                     TextIcon textIcon = new TextIcon(parent, labelText, TextIcon.ROTATE_LEFT);
-                    textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
+                    textIcon.setForeground(manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND));
                     AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolIcon, SwingConstants.VERTICAL);
-                    representativeAnchor = new ContentRepresentativeAnchor(this, compositeIcon, JLabel.CENTER);
+                    representativeAnchor = new RepresentativeAnchorLabel(compositeIcon, JLabel.CENTER);
                     break;
                 case RIGHT:
                     textIcon = new TextIcon(parent, labelText, TextIcon.ROTATE_RIGHT);
-                    textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
+                    textIcon.setForeground(manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND));
                     compositeIcon = new AggregateIcon(toolIcon, textIcon, SwingConstants.VERTICAL);
-                    representativeAnchor = new ContentRepresentativeAnchor(this, compositeIcon, JLabel.CENTER);
+                    representativeAnchor = new RepresentativeAnchorLabel(compositeIcon, JLabel.CENTER);
                     break;
             }
 
@@ -99,7 +100,7 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
         if (representativeAnchor != null) {
             ToolWindowAnchor anchor = getAnchor();
 
-            String labelText = SwingUtil.getUserString(content.getId());
+            String labelText = getResourceManager().getUserString(content.getId());
             Icon toolIcon = content.getIcon();
 
             JLabel representativeLabel = (JLabel) representativeAnchor;
@@ -111,14 +112,14 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
                     break;
                 case LEFT:
                     TextIcon textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeLabel.getIcon()).getLeftIcon()).getComponent(), labelText, TextIcon.ROTATE_LEFT);
-                    textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
+                    textIcon.setForeground(manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND));
                     AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolIcon, SwingConstants.VERTICAL);
                     representativeLabel.setText(null);
                     representativeLabel.setIcon(compositeIcon);
                     break;
                 case RIGHT:
                     textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeLabel.getIcon()).getRightIcon()).getComponent(), labelText, TextIcon.ROTATE_RIGHT);
-                    textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
+                    textIcon.setForeground(manager.getResourceManager().getColor(MyDoggyKeySpace.RAB_FOREGROUND));
                     compositeIcon = new AggregateIcon(toolIcon, textIcon, SwingConstants.VERTICAL);
                     representativeLabel.setText(null);
                     representativeLabel.setIcon(compositeIcon);
@@ -142,6 +143,31 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
 
     public Component getComponentForDragImage() {
         return null;
+    }
+
+
+    public class RepresentativeAnchorLabel extends JLabel {
+
+        public RepresentativeAnchorLabel(Icon image, int horizontalAlignment) {
+            super(image, horizontalAlignment);
+            super.setUI((LabelUI) createRepresentativeAnchorUI());
+        }
+
+        public RepresentativeAnchorLabel(String text, Icon icon, int horizontalAlignment) {
+            super(text, icon, horizontalAlignment);
+            super.setUI((LabelUI) createRepresentativeAnchorUI());
+        }
+
+        public void setUI(LabelUI ui) {
+        }
+
+        public void updateUI() {
+            firePropertyChange("UI", null, getUI());
+        }
+
+        protected ComponentUI createRepresentativeAnchorUI() {
+            return new ContentRepresentativeAnchorUI(ContentDescriptor.this);
+        }
     }
 
 }

@@ -135,7 +135,7 @@ public class ToolWindowDropTarget extends DropTarget {
                                 toolWindow.setAggregateMode(true);
                                 try {
                                     if (dragAnchor == null && onToolWindow != null && toolWindow != onToolWindow) {
-                                        if (!SwingUtil.getBoolean("drag.toolwindow.asTab", true)) {
+                                        if (!toolWindowManager.getResourceManager().getBoolean("drag.toolwindow.asTab", true)) {
                                             // Choose drag anchor ...
                                             switch (onToolWindow.getAnchor()) {
                                                 case LEFT:
