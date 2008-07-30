@@ -15,7 +15,7 @@ public class JModalWindow extends JDialog implements ModalWindow {
     protected Component returnFocus;
 
     public JModalWindow(ResourceManager resourceManager, Window owner, Component returnFocus, boolean modal) {
-        super(owner);
+        super(owner instanceof Frame ? (Frame) owner : null);
 
         setUndecorated(true);
         setAlwaysOnTop(resourceManager.getBoolean("dialog.owner.enabled", true));
