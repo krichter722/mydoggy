@@ -3,17 +3,17 @@ package org.noos.xing.mydoggy.plaf.ui.content;
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentManagerUI;
 import org.noos.xing.mydoggy.TabbedContentUI;
-import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentPane;
+import org.noos.xing.mydoggy.plaf.ui.cmp.TabbedContentPane;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
 */
 public class MyDoggyTabbedContentUI extends MyDoggyContentUI implements TabbedContentUI {
-    protected JTabbedContentPane tabbedContentPane;
+    protected TabbedContentPane tabbedContentPane;
 
 
     public MyDoggyTabbedContentUI(ContentManagerUI contentManagerUI,
-                                  JTabbedContentPane tabbedContentPane,
+                                  TabbedContentPane tabbedContentPane,
                                   Content content) {
         super(null, contentManagerUI, content);
 

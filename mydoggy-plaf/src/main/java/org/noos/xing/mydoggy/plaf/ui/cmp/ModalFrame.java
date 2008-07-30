@@ -9,19 +9,20 @@ import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 
-public class JModalFrame extends JFrame implements ModalWindow {
+public class ModalFrame extends JFrame implements ModalWindow {
     protected Window modalToWindow;
     protected boolean notifiedModalToWindow;
     protected Component returnFocus;
 
-    public JModalFrame(Dockable dockable, Window owner, Component returnFocus, boolean modal) {
+    public ModalFrame(Dockable dockable, Window owner, Component returnFocus, boolean modal) {
         setAlwaysOnTop(owner != null);
         setUndecorated(true);
         setTitle(dockable.getTitle());
+        // TODO: set the icon from dockable...
 
         setFocusableWindowState(true);
         this.returnFocus = returnFocus;
-        synchronized (JModalFrame.this) {
+        synchronized (ModalFrame.this) {
             if (modal)
                 modalToWindow = owner;
 
@@ -39,7 +40,7 @@ public class JModalFrame extends JFrame implements ModalWindow {
             restoreOwner();
         } else {
             if (!isVisible()) {
-                synchronized (JModalFrame.this) {
+                synchronized (ModalFrame.this) {
                     if ((modalToWindow != null) && notifiedModalToWindow) {
                         modalToWindow.setEnabled(false);
                         notifiedModalToWindow = false;
@@ -71,20 +72,20 @@ public class JModalFrame extends JFrame implements ModalWindow {
     }
 
     public void setModal(boolean modal) {
-        synchronized (JModalFrame.this) {
+        synchronized (ModalFrame.this) {
             modalToWindow = modal ? getOwner() : null;
         }
     }
 
     public boolean isModal() {
-        synchronized (JModalFrame.this) {
+        synchronized (ModalFrame.this) {
             return modalToWindow != null;
         }
     }
 
 
     protected void restoreOwner() {
-        synchronized (JModalFrame.this) {
+        synchronized (ModalFrame.this) {
             if ((modalToWindow != null) && !notifiedModalToWindow) {
                 modalToWindow.setEnabled(true);
                 modalToWindow.toFront();

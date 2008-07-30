@@ -29,7 +29,7 @@ import java.util.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class JTabbedContentPane extends JTabbedPane implements PropertyChangeListener {
+public class TabbedContentPane extends JTabbedPane implements PropertyChangeListener {
     protected MyDoggyToolWindowManager toolWindowManager;
     protected ResourceManager resourceManager;
     protected boolean dragEnabled;
@@ -55,11 +55,11 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
     protected int dragTabIndex = -1;
 
 
-    public JTabbedContentPane() {
+    public TabbedContentPane() {
         this(false);
     }
 
-    public JTabbedContentPane(boolean dragEnabled) {
+    public TabbedContentPane(boolean dragEnabled) {
         super.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
         this.contentMap = new Hashtable<Integer, Content>();
@@ -521,7 +521,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             } else if (SwingUtilities.isRightMouseButton(e)) {
                 JPopupMenu popupMenu = getComponentPopupMenu();
                 if (popupMenu != null)
-                    popupMenu.show(JTabbedContentPane.this, e.getX(), e.getY());
+                    popupMenu.show(TabbedContentPane.this, e.getX(), e.getY());
             }
         }
 
@@ -535,7 +535,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         }
 
         public void mouseMoved(MouseEvent e) {
-            if (!JTabbedContentPane.this.isEnabled())
+            if (!TabbedContentPane.this.isEnabled())
                 return;
 
             if (mouseOverTab != -1) {
@@ -572,7 +572,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
 
         protected boolean isMinimizedFired(ContentUI contentUI, Point point) {
-            Point relativeMousePoint = SwingUtilities.convertPoint(JTabbedContentPane.this, point, getDestination());
+            Point relativeMousePoint = SwingUtilities.convertPoint(TabbedContentPane.this, point, getDestination());
             Rectangle iconBounds = aggregateIcon.getLastPaintedRecAt(2);
 
             return (contentUI.isMinimizable() && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
@@ -580,7 +580,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         }
 
         protected boolean isMaximizeFired(ContentUI contentUI, Point point) {
-            Point relativeMousePoint = SwingUtilities.convertPoint(JTabbedContentPane.this, point, getDestination());
+            Point relativeMousePoint = SwingUtilities.convertPoint(TabbedContentPane.this, point, getDestination());
             Rectangle iconsBounds = aggregateIcon.getLastPaintedRecAt(3);
 
             return (contentUI.isMaximizable() && ((relativeMousePoint.getX() > iconsBounds.x && relativeMousePoint.getX() < iconsBounds.x + iconsBounds.width) ||
@@ -588,7 +588,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         }
 
         protected boolean isDetachFired(ContentUI contentUI, Point point) {
-            Point relativeMousePoint = SwingUtilities.convertPoint(JTabbedContentPane.this, point, getDestination());
+            Point relativeMousePoint = SwingUtilities.convertPoint(TabbedContentPane.this, point, getDestination());
             Rectangle iconBounds = aggregateIcon.getLastPaintedRecAt(4);
 
             return (contentUI.isDetachable() && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
@@ -596,7 +596,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         }
 
         protected boolean isCloseFired(ContentUI contentUI, Point point) {
-            Point relativeMousePoint = SwingUtilities.convertPoint(JTabbedContentPane.this, point, getDestination());
+            Point relativeMousePoint = SwingUtilities.convertPoint(TabbedContentPane.this, point, getDestination());
             Rectangle iconsBounds = aggregateIcon.getLastPaintedRecAt(5);
 
             return (contentUI.isCloseable() && ((relativeMousePoint.getX() > iconsBounds.x && relativeMousePoint.getX() < iconsBounds.x + iconsBounds.width) ||
@@ -605,11 +605,11 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
 
 
         protected Component getDestination() {
-            for (int i = 0, size = JTabbedContentPane.this.getComponentCount(); i < size; i++) {
-                if (JTabbedContentPane.this.getComponent(i) instanceof JViewport)
-                    return ((JViewport) JTabbedContentPane.this.getComponent(i)).getView();
+            for (int i = 0, size = TabbedContentPane.this.getComponentCount(); i < size; i++) {
+                if (TabbedContentPane.this.getComponent(i) instanceof JViewport)
+                    return ((JViewport) TabbedContentPane.this.getComponent(i)).getView();
             }
-            return JTabbedContentPane.this;
+            return TabbedContentPane.this;
         }
 
         protected void showPopupMenu(final MouseEvent mouseEvent) {
@@ -623,7 +623,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
                 stdPopupMenu = new JPopupMenu("Content Page Popup");
                 stdPopupMenu.add(new JMenuItem(new AbstractAction(SwingUtil.getString("@@tabbed.page.close")) {
                     public void actionPerformed(ActionEvent e) {
-                        JTabbedContentPane.this.fireCloseTabEvent(contentAt);
+                        TabbedContentPane.this.fireCloseTabEvent(contentAt);
                     }
                 })).setEnabled(contentAt.getContentUI().isCloseable());
 
@@ -631,7 +631,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
                     public void actionPerformed(ActionEvent e) {
                         for (Content content : toolWindowManager.getContentManager().getContents()) {
                             if (content.getContentUI().isCloseable())
-                                JTabbedContentPane.this.fireCloseTabEvent(content);
+                                TabbedContentPane.this.fireCloseTabEvent(content);
                         }
                     }
                 }));
@@ -640,14 +640,14 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
                     public void actionPerformed(ActionEvent e) {
                         for (Content content : toolWindowManager.getContentManager().getContents()) {
                             if (content != contentAt && content.getContentUI().isCloseable())
-                                JTabbedContentPane.this.fireCloseTabEvent(content);
+                                TabbedContentPane.this.fireCloseTabEvent(content);
                         }
                     }
                 }));
                 stdPopupMenu.addSeparator();
                 stdPopupMenu.add(new JMenuItem(new AbstractAction(SwingUtil.getString("@@tabbed.page.detach")) {
                     public void actionPerformed(ActionEvent e) {
-                        JTabbedContentPane.this.fireDetachTabEvent(contentAt);
+                        TabbedContentPane.this.fireDetachTabEvent(contentAt);
                     }
                 })).setEnabled(contentAt.getContentUI().isDetachable());
 
@@ -667,7 +667,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             }
 
             if (popupMenu != null)
-                popupMenu.show(JTabbedContentPane.this, mouseEvent.getX(), mouseEvent.getY());
+                popupMenu.show(TabbedContentPane.this, mouseEvent.getX(), mouseEvent.getY());
         }
 
         protected boolean isAContentMaximized() {
@@ -787,7 +787,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
         private final DataFlavor FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, TRANSFERABLE_NAME);
 
         public Object getTransferData(DataFlavor flavor) {
-            return JTabbedContentPane.this;
+            return TabbedContentPane.this;
         }
 
         public DataFlavor[] getTransferDataFlavors() {
@@ -858,7 +858,7 @@ public class JTabbedContentPane extends JTabbedPane implements PropertyChangeLis
             // This method returns a Point indicating the cursor location in screen coordinates at the moment
 
             Point tabPt = e.getLocation();
-            SwingUtilities.convertPointFromScreen(tabPt, JTabbedContentPane.this);
+            SwingUtilities.convertPointFromScreen(tabPt, TabbedContentPane.this);
 
             Point glassPt = e.getLocation();
             SwingUtilities.convertPointFromScreen(glassPt, toolWindowManager.getGlassPanel());

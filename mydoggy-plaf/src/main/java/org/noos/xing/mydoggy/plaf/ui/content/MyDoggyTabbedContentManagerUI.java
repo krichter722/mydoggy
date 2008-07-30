@@ -6,7 +6,7 @@ import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDialog;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentFrame;
-import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentPane;
+import org.noos.xing.mydoggy.plaf.ui.cmp.TabbedContentPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
@@ -39,7 +39,7 @@ import java.util.Map;
  */
 public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<TabbedContentUI> implements TabbedContentManagerUI,
                                                                                                        PlafContentManagerUI {
-    protected JTabbedContentPane tabbedContentPane;
+    protected TabbedContentPane tabbedContentPane;
     protected boolean showAlwaysTab;
 
     protected Component componentInFocusRequest = null;
@@ -302,7 +302,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
 
     protected void initComponents() {
-        final JTabbedContentPane tabbedContentPane = new JTabbedContentPane(true);
+        final TabbedContentPane tabbedContentPane = new TabbedContentPane(true);
         tabbedContentPane.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 if (!valueAdjusting && !contentValueAdjusting) {

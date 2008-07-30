@@ -54,7 +54,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
     }
 
     protected Component forceWrapperForComponent(Dockable dockable, Component component) {
-        JTabbedContentPane wrapper = new JTabbedContentPane();
+        TabbedContentPane wrapper = new TabbedContentPane();
 
         wrapper.setToolWindowManager(toolWindowManager);
         wrapper.setName("@@mydoggy.dockable.tabbedpane");
@@ -67,8 +67,8 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
     }
 
     protected Component getComponentFromWrapper(Component wrapper) {
-        if (wrapper instanceof JTabbedContentPane) {
-            JTabbedContentPane tabbedPane = (JTabbedContentPane) wrapper;
+        if (wrapper instanceof TabbedContentPane) {
+            TabbedContentPane tabbedPane = (TabbedContentPane) wrapper;
             return ((DockablePanel) tabbedPane.getComponentAt(0)).getComponent();
         } else if (wrapper instanceof DockablePanel) {
             return ((DockablePanel) wrapper).getComponent();
@@ -77,8 +77,8 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
     }
 
     protected Component getComponentFromWrapper(Component wrapper, Dockable dockable) {
-        if (wrapper instanceof JTabbedContentPane) {
-            JTabbedContentPane tabbedPane = (JTabbedContentPane) wrapper;
+        if (wrapper instanceof TabbedContentPane) {
+            TabbedContentPane tabbedPane = (TabbedContentPane) wrapper;
             return ((DockablePanel) tabbedPane.getComponentAt(tabbedPane.indexOfContent((Content) dockable))).getComponent();
         } else if (wrapper instanceof DockablePanel) {
             return ((DockablePanel) wrapper).getComponent();
@@ -88,8 +88,8 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
     protected void addToWrapper(Component wrapper, Dockable dockable,
                                 int aggregationIndexLocation, Component content) {
-        if (wrapper instanceof JTabbedContentPane) {
-            JTabbedContentPane tabbedContentPane = (JTabbedContentPane) wrapper;
+        if (wrapper instanceof TabbedContentPane) {
+            TabbedContentPane tabbedContentPane = (TabbedContentPane) wrapper;
             tabbedContentPane.addTab((Content) dockable,
                                      new DockablePanel(dockable, content),
                                      aggregationIndexLocation);
@@ -98,7 +98,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
             DockablePanel wrapperContainer = (DockablePanel) wrapper;
 
             // Create a new tabbedContentPane with the old dockable
-            JTabbedContentPane tabbedContentPane = (JTabbedContentPane) forceWrapperForComponent(wrapperContainer.getDockable(),
+            TabbedContentPane tabbedContentPane = (TabbedContentPane) forceWrapperForComponent(wrapperContainer.getDockable(),
                                                                                                  wrapperContainer.getComponent());
 
             // add the new dockable
@@ -116,7 +116,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
     }
 
     protected int removeFromWrapper(Component wrapperSource, Dockable dockable) {
-        JTabbedContentPane tabbedPane = (JTabbedContentPane) wrapperSource;
+        TabbedContentPane tabbedPane = (TabbedContentPane) wrapperSource;
         int index = tabbedPane.indexOfContent((Content) dockable);
         if (index != -1) {
             tabbedPane.removeTabAt(index);
@@ -152,16 +152,16 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
     }
 
     protected boolean isWrapper(Component component) {
-        return component instanceof JTabbedContentPane; 
+        return component instanceof TabbedContentPane;
     }
 
 
     public class TabbedDragGesture extends DragGestureAdapter {
-        protected JTabbedContentPane tabbedContentPane;
+        protected TabbedContentPane tabbedContentPane;
         protected int dragTabIndex;
 
 
-        public TabbedDragGesture(JTabbedContentPane tabbedContentPane) {
+        public TabbedDragGesture(TabbedContentPane tabbedContentPane) {
             super(toolWindowManager);
             this.tabbedContentPane = tabbedContentPane;
         }
@@ -264,7 +264,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         protected Border oldBorder;
         protected Border dragBorder = new LineBorder(Color.BLUE, 3);
 
-        protected JTabbedContentPane oldTabbedContentPane;
+        protected TabbedContentPane oldTabbedContentPane;
 
 
         public ContentDropTargetListener(JComponent component, ToolWindowManager toolWindowManager) {
@@ -306,14 +306,14 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
             Point location = dtde.getLocation();
             component.putClientProperty("dragOver", location);
 
-            JTabbedContentPane tabbedContentPane = null;
+            TabbedContentPane tabbedContentPane = null;
 
             Component deepestCmp = SwingUtilities.getDeepestComponentAt(component, location.x, location.y);
             if (deepestCmp != null) {
                 dockableWrapper = SwingUtil.getParent(deepestCmp, "@@mydoggy.dockable.");
                 if (dockableWrapper != null) {
-                    if (dockableWrapper instanceof JTabbedContentPane) {
-                        tabbedContentPane = (JTabbedContentPane) dockableWrapper;
+                    if (dockableWrapper instanceof TabbedContentPane) {
+                        tabbedContentPane = (TabbedContentPane) dockableWrapper;
 
                         Point locationOnDeepest = SwingUtilities.convertPoint(component, location, dockableWrapper);
                         indexAtLocation = tabbedContentPane.indexAtLocation(locationOnDeepest.x, locationOnDeepest.y);
@@ -387,8 +387,8 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                                     if (indexAtLocation == -1) {
                                         rejectDrop = true;
                                     } else {
-                                        if (dockableWrapper instanceof JTabbedContentPane) {
-                                            JTabbedContentPane tabbedContentPane = (JTabbedContentPane) dockableWrapper;
+                                        if (dockableWrapper instanceof TabbedContentPane) {
+                                            TabbedContentPane tabbedContentPane = (TabbedContentPane) dockableWrapper;
                                             for (int i = 0, size = tabbedContentPane.getTabCount(); i < size; i++) {
                                                 DockablePanel dockablePanel = (DockablePanel) tabbedContentPane.getComponentAt(i);
                                                 if (dockablePanel.getDockable() == onDockable && i == indexAtLocation) {
