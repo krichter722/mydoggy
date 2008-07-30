@@ -1,9 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp.event;
 
 import org.noos.xing.mydoggy.Content;
-import org.noos.xing.mydoggy.plaf.ui.cmp.JTabbedContentPane;
+import org.noos.xing.mydoggy.plaf.ui.cmp.TabbedContentPane;
 
-import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 public class TabbedContentPaneEvent extends EventObject {
@@ -12,11 +11,11 @@ public class TabbedContentPaneEvent extends EventObject {
         ON_DETACH,
     }
 
-    private JTabbedContentPane tabbedContentPane;
+    private TabbedContentPane tabbedContentPane;
     private ActionId actionId;
     private Content content;
 
-    public TabbedContentPaneEvent(JTabbedContentPane source, ActionId actionId, Content content) {
+    public TabbedContentPaneEvent(TabbedContentPane source, ActionId actionId, Content content) {
         super(source);
         this.tabbedContentPane = source;
         this.actionId = actionId;
@@ -24,7 +23,7 @@ public class TabbedContentPaneEvent extends EventObject {
     }
 
 
-    public JTabbedContentPane getTabbedContentPane() {
+    public TabbedContentPane getTabbedContentPane() {
         return tabbedContentPane;
     }
 

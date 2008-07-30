@@ -8,18 +8,20 @@ import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 
-public class JModalWindow extends JWindow implements ModalWindow {
+public class ModalDialog extends JDialog implements ModalWindow {
     protected Window modalToWindow;
     protected boolean notifiedModalToWindow;
     protected Component returnFocus;
 
-    public JModalWindow(Window owner, Component returnFocus, boolean modal) {
-        super(owner);
 
+    public ModalDialog(Window owner, Component returnFocus, boolean modal) {
+        super(owner instanceof Frame ? (Frame) owner : null);
+
+        setUndecorated(true);
         setAlwaysOnTop(SwingUtil.getBoolean("dialog.owner.enabled", true));
         setFocusableWindowState(true);
         this.returnFocus = returnFocus;
-        synchronized (JModalWindow.this) {
+        synchronized (ModalDialog.this) {
             if (modal)
                 modalToWindow = owner;
 
@@ -29,6 +31,7 @@ public class JModalWindow extends JWindow implements ModalWindow {
         enableEvents(WindowEvent.WINDOW_EVENT_MASK | ComponentEvent.MOUSE_MOTION_EVENT_MASK);
     }
 
+
     public void setVisible(boolean visible) {
         if (!visible) {
             TransparencyManager<Window> transparencyManager = SwingUtil.getTransparencyManager();
@@ -37,7 +40,7 @@ public class JModalWindow extends JWindow implements ModalWindow {
             restoreOwner();
         } else {
             if (!isVisible()) {
-                synchronized (JModalWindow.this) {
+                synchronized (ModalDialog.this) {
                     if ((modalToWindow != null) && notifiedModalToWindow) {
                         modalToWindow.setEnabled(false);
                         notifiedModalToWindow = false;
@@ -68,20 +71,20 @@ public class JModalWindow extends JWindow implements ModalWindow {
     }
 
     public void setModal(boolean modal) {
-        synchronized (JModalWindow.this) {
+        synchronized (ModalDialog.this) {
             modalToWindow = modal ? getOwner() : null;
         }
     }
 
     public boolean isModal() {
-        synchronized (JModalWindow.this) {
+        synchronized (ModalDialog.this) {
             return modalToWindow != null;
         }
     }
 
 
     protected void restoreOwner() {
-        synchronized (JModalWindow.this) {
+        synchronized (ModalDialog.this) {
             if ((modalToWindow != null) && !notifiedModalToWindow) {
                 modalToWindow.setEnabled(true);
                 modalToWindow.toFront();

@@ -211,8 +211,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
                 // Choose the owner tab or check if the content is the main content
                 for (Component c : multiSplitContainer.getTabbedComponents()) {
-                    if (c instanceof JTabbedContentPane) {
-                        final JTabbedContentPane tabbedContentPane = ((JTabbedContentPane) c);
+                    if (c instanceof TabbedContentPane) {
+                        final TabbedContentPane tabbedContentPane = ((TabbedContentPane) c);
                         final int index = tabbedContentPane.indexOfContent(content);
                         if (index != -1) {
                             valueAdjusting = true;
@@ -422,8 +422,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 container.add((Component) evt.getNewValue());
             } else {
                 for (Component c : multiSplitContainer.getTabbedComponents()) {
-                    if (c instanceof JTabbedContentPane) {
-                        JTabbedContentPane tabbedContentPane = ((JTabbedContentPane) c);
+                    if (c instanceof TabbedContentPane) {
+                        TabbedContentPane tabbedContentPane = ((TabbedContentPane) c);
                         int index = tabbedContentPane.indexOfContent(content);
                         if (index != -1) {
                             tabbedContentPane.setComponentAt(index, (Component) evt.getNewValue());
@@ -449,8 +449,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
             if (!content.isDetached()) {
                 for (Component c : multiSplitContainer.getTabbedComponents()) {
-                    if (c instanceof JTabbedContentPane) {
-                        JTabbedContentPane tabbedContentPane = ((JTabbedContentPane) c);
+                    if (c instanceof TabbedContentPane) {
+                        TabbedContentPane tabbedContentPane = ((TabbedContentPane) c);
                         int index = tabbedContentPane.indexOfContent(content);
                         if (index != -1) {
                             tabbedContentPane.setDisabledIconAt(index, (Icon) evt.getNewValue());
@@ -474,8 +474,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
             if (!content.isDetached()) {
                 for (Component c : multiSplitContainer.getTabbedComponents()) {
-                    if (c instanceof JTabbedContentPane) {
-                        JTabbedContentPane tabbedContentPane = ((JTabbedContentPane) c);
+                    if (c instanceof TabbedContentPane) {
+                        TabbedContentPane tabbedContentPane = ((TabbedContentPane) c);
                         int index = tabbedContentPane.indexOfContent(content);
                         if (index != -1) {
                             tabbedContentPane.setIconAt(index, (Icon) evt.getNewValue());
@@ -499,8 +499,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
             if (!content.isDetached()) {
                 for (Component c : multiSplitContainer.getTabbedComponents()) {
-                    if (c instanceof JTabbedContentPane) {
-                        JTabbedContentPane tabbedContentPane = ((JTabbedContentPane) c);
+                    if (c instanceof TabbedContentPane) {
+                        TabbedContentPane tabbedContentPane = ((TabbedContentPane) c);
                         int index = tabbedContentPane.indexOfContent(content);
                         if (index != -1) {
                             tabbedContentPane.setMnemonicAt(index, (Integer) evt.getNewValue());
@@ -532,8 +532,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 ancestor.setEnabled((Boolean) evt.getNewValue());
             } else {
                 for (Component c : multiSplitContainer.getTabbedComponents()) {
-                    if (c instanceof JTabbedContentPane) {
-                        JTabbedContentPane tabbedContentPane = ((JTabbedContentPane) c);
+                    if (c instanceof TabbedContentPane) {
+                        TabbedContentPane tabbedContentPane = ((TabbedContentPane) c);
                         int index = tabbedContentPane.indexOfContent(content);
                         if (index != -1) {
                             tabbedContentPane.setEnabledAt(index, (Boolean) evt.getNewValue());
@@ -557,8 +557,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
             if (!content.isDetached()) {
                 for (Component c : multiSplitContainer.getTabbedComponents()) {
-                    if (c instanceof JTabbedContentPane) {
-                        JTabbedContentPane tabbedContentPane = ((JTabbedContentPane) c);
+                    if (c instanceof TabbedContentPane) {
+                        TabbedContentPane tabbedContentPane = ((TabbedContentPane) c);
                         int index = tabbedContentPane.indexOfContent(content);
                         if (index != -1) {
                             tabbedContentPane.setForegroundAt(index, (Color) evt.getNewValue());
@@ -584,8 +584,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 SwingUtil.setWindowTitle(content.getComponent(), (String) evt.getNewValue());
             } else {
                 for (Component c : multiSplitContainer.getTabbedComponents()) {
-                    if (c instanceof JTabbedContentPane) {
-                        JTabbedContentPane tabbedContentPane = ((JTabbedContentPane) c);
+                    if (c instanceof TabbedContentPane) {
+                        TabbedContentPane tabbedContentPane = ((TabbedContentPane) c);
                         int index = tabbedContentPane.indexOfContent(content);
                         if (index != -1) {
                             tabbedContentPane.setTitleAt(index, (String) evt.getNewValue());
@@ -609,8 +609,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
             if (!content.isDetached()) {
                 for (Component c : multiSplitContainer.getTabbedComponents()) {
-                    if (c instanceof JTabbedContentPane) {
-                        JTabbedContentPane tabbedContentPane = ((JTabbedContentPane) c);
+                    if (c instanceof TabbedContentPane) {
+                        TabbedContentPane tabbedContentPane = ((TabbedContentPane) c);
                         int index = tabbedContentPane.indexOfContent(content);
                         if (index != -1) {
                             tabbedContentPane.setToolTipTextAt(index, (String) evt.getNewValue());
@@ -785,7 +785,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
                 Dockable newSelected = null;
 
-                JTabbedContentPane tabbedPane = SwingUtil.getParent((Component) evt.getNewValue(), JTabbedContentPane.class);
+                TabbedContentPane tabbedPane = SwingUtil.getParent((Component) evt.getNewValue(), TabbedContentPane.class);
                 if (tabbedPane == null) {
                     DockablePanel dockablePanel = SwingUtil.getParent((Component) evt.getNewValue(), DockablePanel.class);
                     if (dockablePanel != null)
@@ -874,7 +874,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         }
 
         protected Component forceWrapperForComponent(Dockable dockable, Component component) {
-            final JTabbedContentPane tabbedContentPane = (JTabbedContentPane) super.forceWrapperForComponent(dockable, component);
+            final TabbedContentPane tabbedContentPane = (TabbedContentPane) super.forceWrapperForComponent(dockable, component);
 
             tabbedContentPane.setTabPlacement(tabPlacement.ordinal() + 1);
             tabbedContentPane.setTabLayoutPolicy(tabLayout.ordinal());
@@ -955,8 +955,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
         public void setTabPlacement(TabPlacement tabPlacement) {
             for (Component c : multiSplitContainer.getTabbedComponents()) {
-                if (c instanceof JTabbedContentPane) {
-                    JTabbedContentPane tabbedContentPane = ((JTabbedContentPane) c);
+                if (c instanceof TabbedContentPane) {
+                    TabbedContentPane tabbedContentPane = ((TabbedContentPane) c);
                     tabbedContentPane.setTabPlacement(tabPlacement.ordinal() + 1);
                 }
             }
@@ -964,8 +964,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
         public void setTabLayout(TabLayout tabLayout) {
             for (Component c : multiSplitContainer.getTabbedComponents()) {
-                if (c instanceof JTabbedContentPane) {
-                    JTabbedContentPane tabbedContentPane = ((JTabbedContentPane) c);
+                if (c instanceof TabbedContentPane) {
+                    TabbedContentPane tabbedContentPane = ((TabbedContentPane) c);
                     tabbedContentPane.setTabLayoutPolicy(tabLayout.ordinal());
                 }
             }

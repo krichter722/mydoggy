@@ -106,7 +106,6 @@ public class FloatingLivePanel extends TranslucentPanel implements PropertyChang
     public void addDockable(ToolWindow toolWindow,
                             Component content) {
         addDockable(toolWindow, content, null, AggregationPosition.DEFAULT);
-
     }
 
     public void addDockable(ToolWindow toolWindow,
@@ -145,6 +144,10 @@ public class FloatingLivePanel extends TranslucentPanel implements PropertyChang
         SwingUtil.repaint(layeredPane);
     }
 
+    public ToolWindow getFirstToolWindow() {
+        return (ToolWindow) multiSplitDockableContainer.getContents().get(0).dockable;
+    }
+
 
     protected void initComponents() {
         this.layeredPane = manager.getLayeredPane();
@@ -168,7 +171,4 @@ public class FloatingLivePanel extends TranslucentPanel implements PropertyChang
         addMouseListener(resizeMouseInputHandler);
     }
 
-    public ToolWindow getFirstToolWindow() {
-        return (ToolWindow) multiSplitDockableContainer.getContents().get(0).dockable;
-    }
 }

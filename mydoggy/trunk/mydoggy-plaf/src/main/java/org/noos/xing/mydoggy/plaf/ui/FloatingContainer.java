@@ -9,8 +9,8 @@ import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.animation.AnimationListener;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
-import org.noos.xing.mydoggy.plaf.ui.cmp.JModalFrame;
-import org.noos.xing.mydoggy.plaf.ui.cmp.JModalWindow;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ModalDialog;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ModalFrame;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ModalWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingMoveMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingResizeMouseInputHandler;
@@ -203,9 +203,9 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
             return;
 
         if (toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).isAddToTaskBar())
-            window = new JModalFrame(toolWindow, descriptor.getAncestorForWindow(), null, false);
+            window = new ModalFrame(toolWindow, descriptor.getAncestorForWindow(), null, false);
         else
-            window = new JModalWindow(descriptor.getWindowAncestor(), null, false);
+            window = new ModalDialog(descriptor.getAncestorForWindow(), null, false);
 
         window.setName("toolWindow.floating.window." + toolWindow.getId());
 
@@ -226,9 +226,9 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
     protected void reinitWindow(PropertyChangeEvent evt, ModalWindow oldWindow) {
         // Init new window
         if ((Boolean) evt.getNewValue())
-            window = new JModalFrame(toolWindow, descriptor.getAncestorForWindow(), null, false);
+            window = new ModalFrame(toolWindow, descriptor.getAncestorForWindow(), null, false);
         else
-            window = new JModalWindow(descriptor.getWindowAncestor(), null, false);
+            window = new ModalDialog(descriptor.getAncestorForWindow(), null, false);
 
         window.setName("toolWindow.floating.window." + toolWindow.getId());
         window.setBounds(oldWindow.getBounds());

@@ -75,6 +75,7 @@ public class ContentDialog extends JDialog {
         }
     }
 
+
     public void dispose() {
         super.dispose();
         
@@ -106,6 +107,7 @@ public class ContentDialog extends JDialog {
     public void setSize(Dimension d) {
         super.setSize(d);    //To change body of overridden methods use File | Settings | File Templates.
     }
+
 
     public class ContentDialogWindowAdapter extends WindowAdapter {
         public void windowClosing(WindowEvent event) {
