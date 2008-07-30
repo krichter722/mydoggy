@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 
-public class JModalWindow extends JWindow implements ModalWindow {
+public class JModalWindow extends JDialog implements ModalWindow {
     protected ResourceManager resourceManager;
     protected Window modalToWindow;
     protected boolean notifiedModalToWindow;
@@ -17,6 +17,8 @@ public class JModalWindow extends JWindow implements ModalWindow {
     public JModalWindow(ResourceManager resourceManager, Window owner, Component returnFocus, boolean modal) {
         super(owner);
 
+        setUndecorated(true);
+        setAlwaysOnTop(resourceManager.getBoolean("dialog.owner.enabled", true));
         this.resourceManager = resourceManager;
         setFocusableWindowState(true);
         this.returnFocus = returnFocus;
