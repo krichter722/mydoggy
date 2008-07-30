@@ -261,7 +261,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                     if (c == content.getComponent())
                         return;
                 }
-                throw new IllegalStateException("Invalid content ui state.");
+// TODO: should be resolved better...
+//                throw new IllegalStateException("Invalid content ui state.");
             }
         } else {
             if (content == lastSelected)

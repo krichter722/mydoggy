@@ -22,10 +22,10 @@ export MYDOGGY_HOME
 
 MYDOGGY_MCN="org.noos.xing.mydoggy.tutorial.TutorialSet"
 
-CLASSPATH=../lib/mydoggy-api-1.4.2.jar
-CLASSPATH=$CLASSPATH:../lib/mydoggy-plaf-1.4.2.jar
-CLASSPATH=$CLASSPATH:../lib/mydoggy-res-1.4.2.jar
-CLASSPATH=$CLASSPATH:../lib/mydoggy-examples-1.4.2.jar
+CLASSPATH=../lib/mydoggy-api-1.4.3.jar
+CLASSPATH=$CLASSPATH:../lib/mydoggy-plaf-1.4.3.jar
+CLASSPATH=$CLASSPATH:../lib/mydoggy-res-1.4.3.jar
+CLASSPATH=$CLASSPATH:../lib/mydoggy-examples-1.4.3.jar
 CLASSPATH=$CLASSPATH:../lib/TableLayout-20050920.jar
 
 export CLASSPATH
