@@ -1,6 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
+import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.Dockable;
+import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -9,6 +11,9 @@ import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 
+/**
+ * TODO: implements new methods...
+ */
 public class ModalFrame extends JFrame implements ModalWindow {
     protected Window modalToWindow;
     protected boolean notifiedModalToWindow;
@@ -83,6 +88,22 @@ public class ModalFrame extends JFrame implements ModalWindow {
         }
     }
 
+    public void addDockable(ToolWindow toolWindow, Component content) {
+    }
+
+    public void addDockable(ToolWindow toolWindow, Component content, ToolWindow aggregationOnDockable, AggregationPosition aggregationPosition) {
+    }
+
+    public void removeDockable(ToolWindow toolWindow) {
+    }
+
+    public int getNumDockables() {
+        return 0;
+    }
+
+    public ToolWindow getFirstToolWindow() {
+        return null;
+    }
 
     protected void restoreOwner() {
         synchronized (ModalFrame.this) {

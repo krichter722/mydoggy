@@ -230,11 +230,21 @@ public class MyDoggySet {
 
         // Setup Tool 1
         toolWindow = toolWindowManager.getToolWindow("Tool 1");
+
         toolWindow.setRepresentativeAnchorButtonTitle("Hello  World 1!!!");
         toolWindow.setAutoHide(true);
         dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
 //        dockedTypeDescriptor.setPopupMenuEnabled(false);
         dockedTypeDescriptor.setDockLength(200);
+
+        dockedTypeDescriptor.setToolWindowActionHandler(new ToolWindowActionHandler()
+           {
+               public void onHideButtonClick(final ToolWindow toolWindow)
+               {
+                       toolWindowManager.unregisterToolWindow(toolWindow.getId());
+
+               }
+           });
 
         // Setup Tool 2
         toolWindow = toolWindowManager.getToolWindow("Tool 2");
@@ -375,10 +385,13 @@ public class MyDoggySet {
     }
 
     protected void customizeToolWindowManager(MyDoggyToolWindowManager myDoggyToolWindowManager) {
+        ToolWindowManagerDescriptor descriptor = myDoggyToolWindowManager.getToolWindowManagerDescriptor();
+        descriptor.setShowUnavailableTools(true);
+
         ResourceManager resourceManager = myDoggyToolWindowManager.getResourceManager();
         // Add customization here. See the page http://mydoggy.sourceforge.net/mydoggy-plaf/resourceManagerUsing.html
 
-        resourceManager.putProperty("dialog.owner.enabled", "false");
+//        resourceManager.putProperty("dialog.owner.enabled", "false");
 
 /*
         resourceManager.putProperty("ContentManagerDropTarget.enabled", "true");

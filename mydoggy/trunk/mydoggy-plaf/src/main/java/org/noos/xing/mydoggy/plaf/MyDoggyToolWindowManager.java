@@ -41,13 +41,13 @@ import java.util.List;
  * @author Angelo De Caro
  * @beaninfo attribute: isContainer true
  * description: MyDoggyToolWindowManager
- * TODO: put pnot focusable panel into content container...
+ * TODO: put not focusable panel into content container...
  */
 public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener {
 
     protected static boolean firePublic = true;
 
-    public final static Object sync = new Object();
+    public final Object sync = new Object();    //  TODO: is public the right visibility?
 
     protected ToolWindowGroup showingGroup;
 
@@ -231,6 +231,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 removeIfDockableDelegator(toolWindow);
 
                 // Deactivate the tool
+                toolWindow.setRepresentativeAnchorButtonVisible(false);
                 toolWindow.setFlashing(false);
                 toolWindow.setMaximized(false);
                 toolWindow.setAvailable(false);
@@ -793,7 +794,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         propertyChangeSupport.addPropertyChangeListener("maximized.before", maximizedChangeListener);
         propertyChangeSupport.addPropertyChangeListener("index", new IndexChangeListener());
         propertyChangeSupport.addPropertyChangeListener("icon", new IconChangeListener());
-        propertyChangeSupport.addPropertyChangeListener("numberingEnabled", new NumberingEnabledChangeListener());
         propertyChangeSupport.addPropertyChangeListener("tempShowed", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
 //                for (ToolWindowDescriptor tool : tools.values())
@@ -1287,14 +1287,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             descriptor.getToolBar().propertyChange(evt);
         }
 
-    }
-
-    public class NumberingEnabledChangeListener implements PropertyChangeListener {
-        public void propertyChange(PropertyChangeEvent evt) {
-            // TODO: what is preferible...one listener that dispatch or many listeners...
-//            for (ToolWindowDescriptor descriptor : tools.values())
-//                descriptor.propertyChange(evt);
-        }
     }
 
     public class UpdateUIChangeListener implements PropertyChangeListener {

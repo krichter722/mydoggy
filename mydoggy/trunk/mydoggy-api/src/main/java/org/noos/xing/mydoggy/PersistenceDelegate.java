@@ -60,7 +60,7 @@ public interface PersistenceDelegate {
 
     /**
      * Reads the settings for the ToolWindows, already registered into the manager, from the input
-     * stream applying the passed merge policy
+     * stream applying the passed merge policy.
      *
      * @param inputStream the input stream.
      * @param mergePolicy the merget policy used to apply settings.
@@ -72,12 +72,16 @@ public interface PersistenceDelegate {
     void merge(InputStream inputStream, MergePolicy mergePolicy);
 
     /**
-     * TODO...
-     * 
-     * @param inputStream
-     * @param mergePolicy
-     * @param callback
+     * Reads the settings for the ToolWindows, already registered into the manager, from the input
+     * stream applying the passed merge policy and using the passed callback.
+     *
+     * @param inputStream the input stream.
+     * @param mergePolicy the merget policy used to apply settings.
+     * @param callback a callback object instance. It can be null.
+     * @exception RuntimeException  if an error occurred when reading from the
+     *               input stream.
      * @since 1.5.0
+     * @see org.noos.xing.mydoggy.PersistenceDelegateCallback
      */
     void merge(InputStream inputStream, MergePolicy mergePolicy, PersistenceDelegateCallback callback);
 

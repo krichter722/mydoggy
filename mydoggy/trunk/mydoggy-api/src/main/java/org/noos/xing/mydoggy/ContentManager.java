@@ -16,6 +16,12 @@ import java.awt.*;
 public interface ContentManager extends DockableManager<Content>, Observable {
 
     /**
+     * TODO:..
+     * @return
+     */
+    ToolWindowManager getToolWindowManager();
+
+    /**
      * Sets the content manager ui to <code>contentManagerUI</code>.
      *
      * @param contentManagerUI the content manager ui.

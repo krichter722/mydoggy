@@ -1,8 +1,8 @@
 package org.noos.xing.mydoggy.plaf;
 
-import org.noos.xing.mydoggy.ContentManager;
-import org.noos.xing.mydoggy.ContentUI;
-import org.noos.xing.mydoggy.Dockable;
+import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
+import org.noos.xing.mydoggy.plaf.ui.content.ContentDetachConstraint;
 import org.noos.xing.mydoggy.plaf.ui.content.PlafContent;
 
 import javax.swing.*;
@@ -297,6 +297,31 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
 
     public Dockable getDockableDelegator() {
         return dockableDelegator;
+    }
+
+    public void detachOn(Content onContent, int indexAtLocation, AggregationPosition aggregationPosition) {
+        if (isDetached())
+            return;
+
+        this.detached = true;
+        
+        if (indexAtLocation < -1)
+            indexAtLocation = -1;
+
+        firePropertyChangeEvent(new UserPropertyChangeEvent(this, "detached", false, true,
+                                                            new ContentDetachConstraint(onContent, 
+                                                                                        indexAtLocation,
+                                                                                        aggregationPosition)));
+    }
+
+    public void detachOn(Content onContent, AggregationPosition aggregationPosition) {
+        if (isDetached())
+            return;
+
+        this.detached = true;
+
+        firePropertyChangeEvent(new UserPropertyChangeEvent(this, "detached", false, true,
+                                                            new ContentDetachConstraint(onContent, -2, aggregationPosition)));
     }
 
     public String toString() {

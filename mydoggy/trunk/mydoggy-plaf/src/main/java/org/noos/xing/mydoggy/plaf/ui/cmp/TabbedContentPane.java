@@ -45,6 +45,9 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
     protected MouseInputAdapter mouseInputAdapter;
     protected String currentToolTip;
 
+
+    protected boolean showMaximize = true, showDetach = true, showClose = true, showMinimize = true;
+
     // For drag tabs
     protected static final int LINEWIDTH = 3;
     protected static final String TRANSFERABLE_NAME = "TabbedTransferable";
@@ -127,15 +130,16 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             titleIcon.setUnderlinedIndex(SwingUtil.findDisplayedMnemonicIndex(super.getTitleAt(index),
                                                                               getContentAt(index).getMnemonic()));
 
-            aggregateIcon.setVisibleAt(2, contentUI.isMinimizable());
+
+            aggregateIcon.setVisibleAt(2, contentUI.isMinimizable() && showMinimize);
             if (content.isMaximized())
                 aggregateIcon.setIconAt(3, UIManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_RESTORE));
             else
                 aggregateIcon.setIconAt(3, UIManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_MAXIMIZE));
 
-            aggregateIcon.setVisibleAt(3, contentUI.isMaximizable());
-            aggregateIcon.setVisibleAt(4, contentUI.isDetachable());
-            aggregateIcon.setVisibleAt(5, contentUI.isCloseable());
+            aggregateIcon.setVisibleAt(3, contentUI.isMaximizable() && showMaximize);
+            aggregateIcon.setVisibleAt(4, contentUI.isDetachable() && showDetach);
+            aggregateIcon.setVisibleAt(5, contentUI.isCloseable() && showClose);
 
             aggregateIcon.setIndex(index);
 
@@ -378,6 +382,39 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             dragTabIndex = -1;
     }
 
+    public boolean isShowMaximize() {
+        return showMaximize;
+    }
+
+    public void setShowMaximize(boolean showMaximize) {
+        this.showMaximize = showMaximize;
+    }
+
+    public boolean isShowDetach() {
+        return showDetach;
+    }
+
+    public void setShowDetach(boolean showDetach) {
+        this.showDetach = showDetach;
+    }
+
+    public boolean isShowClose() {
+        return showClose;
+    }
+
+    public void setShowClose(boolean showClose) {
+        this.showClose = showClose;
+    }
+
+    public boolean isShowMinimize() {
+        return showMinimize;
+    }
+
+    public void setShowMinimize(boolean showMinimize) {
+        this.showMinimize = showMinimize;
+    }
+
+
 
     protected void initDragListener() {
         // Init drag
@@ -575,7 +612,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             Point relativeMousePoint = SwingUtilities.convertPoint(TabbedContentPane.this, point, getDestination());
             Rectangle iconBounds = aggregateIcon.getLastPaintedRecAt(2);
 
-            return (contentUI.isMinimizable() && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
+            return (contentUI.isMinimizable() && showMinimize && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
                                                   (point.getX() > iconBounds.x && point.getX() < iconBounds.x + iconBounds.width)));
         }
 
@@ -583,7 +620,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             Point relativeMousePoint = SwingUtilities.convertPoint(TabbedContentPane.this, point, getDestination());
             Rectangle iconsBounds = aggregateIcon.getLastPaintedRecAt(3);
 
-            return (contentUI.isMaximizable() && ((relativeMousePoint.getX() > iconsBounds.x && relativeMousePoint.getX() < iconsBounds.x + iconsBounds.width) ||
+            return (contentUI.isMaximizable() && showMaximize && ((relativeMousePoint.getX() > iconsBounds.x && relativeMousePoint.getX() < iconsBounds.x + iconsBounds.width) ||
                                                   (point.getX() > iconsBounds.x && point.getX() < iconsBounds.x + iconsBounds.width)));
         }
 
@@ -591,7 +628,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             Point relativeMousePoint = SwingUtilities.convertPoint(TabbedContentPane.this, point, getDestination());
             Rectangle iconBounds = aggregateIcon.getLastPaintedRecAt(4);
 
-            return (contentUI.isDetachable() && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
+            return (contentUI.isDetachable() && showDetach && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
                                                  (point.getX() > iconBounds.x && point.getX() < iconBounds.x + iconBounds.width)));
         }
 
@@ -599,7 +636,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             Point relativeMousePoint = SwingUtilities.convertPoint(TabbedContentPane.this, point, getDestination());
             Rectangle iconsBounds = aggregateIcon.getLastPaintedRecAt(5);
 
-            return (contentUI.isCloseable() && ((relativeMousePoint.getX() > iconsBounds.x && relativeMousePoint.getX() < iconsBounds.x + iconsBounds.width) ||
+            return (contentUI.isCloseable() && showClose && ((relativeMousePoint.getX() > iconsBounds.x && relativeMousePoint.getX() < iconsBounds.x + iconsBounds.width) ||
                                                 (point.getX() > iconsBounds.x && point.getX() < iconsBounds.x + iconsBounds.width)));
         }
 

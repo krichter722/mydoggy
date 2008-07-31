@@ -37,6 +37,7 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
     public FloatingResizeMouseInputHandler(Component floatingContainer) {
         this.floatingContainer = floatingContainer;
         this.isWindow = floatingContainer instanceof Window;
+
         this.minimumSize = new Dimension(150, 24);
         this.lastCursor = null;
     }
@@ -172,6 +173,15 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
 
     public void setMinimumSize(Dimension minimumSize) {
         this.minimumSize = minimumSize;
+    }
+
+    public Component getFloatingContainer() {
+        return floatingContainer;
+    }
+
+    public void setFloatingContainer(Component floatingContainer) {
+        this.floatingContainer = floatingContainer;
+        this.isWindow = floatingContainer instanceof Window;
     }
 
     protected void adjust(Rectangle bounds, Dimension min, int deltaX, int deltaY, int deltaWidth, int deltaHeight) {

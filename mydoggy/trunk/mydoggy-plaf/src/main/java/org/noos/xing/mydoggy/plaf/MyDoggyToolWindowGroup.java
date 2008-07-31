@@ -73,7 +73,7 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
 
     public void setVisible(final boolean visible) {
         if (tempGroup || manager.containsGroup(name)) {
-            synchronized (MyDoggyToolWindowManager.sync) {
+            synchronized (manager.sync) {
 
                 boolean doAction = false;
                 for (ToolWindow tool : getToolsWindow()) {

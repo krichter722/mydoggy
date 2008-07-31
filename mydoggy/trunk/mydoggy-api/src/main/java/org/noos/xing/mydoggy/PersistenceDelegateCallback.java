@@ -1,17 +1,34 @@
 package org.noos.xing.mydoggy;
 
 /**
- * TODO
+ * A callback interface used to listen to events fired by the PersistenceDelegate
+ * during the merge.
+ *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.5.0
+ * @see org.noos.xing.mydoggy.PersistenceDelegate
+ * @see org.noos.xing.mydoggy.PersistenceDelegate#merge(java.io.InputStream, org.noos.xing.mydoggy.PersistenceDelegate.MergePolicy, PersistenceDelegateCallback)
  */
 public interface PersistenceDelegateCallback {
 
     /**
+     * This method is invoked when the PersistenceDelegate try to access a ToolWindow that is not
+     * currently registered in the ToolWindowManager.
      *
-     * @param toolWindowManager
-     * @param contentId
-     * @return
+     * @param toolWindowManager a reference to.
+     * @param toolWindowId the requested toolwindow id.
+     * @return a instance of ToolWindow eventually registered.
+     * @since 1.5.0
+     */
+    ToolWindow toolwindowNotFound(ToolWindowManager toolWindowManager, String toolWindowId);
+
+    /**
+     * This method is invoked when the PersistenceDelegate try to access a Content that is not
+     * currently registered in the ContentManager.
+     *
+     * @param toolWindowManager a reference to.
+     * @param contentId the requested content id.
+     * @return a instance of Content eventually registered.
      * @since 1.5.0
      */
     Content contentNotFound(ToolWindowManager toolWindowManager, String contentId);
