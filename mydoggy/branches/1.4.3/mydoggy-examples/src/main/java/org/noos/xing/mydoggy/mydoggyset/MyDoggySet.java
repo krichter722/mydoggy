@@ -149,7 +149,7 @@ public class MyDoggySet {
         // Setup type descriptor templates...
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);
         typeDescriptor.setTransparentDelay(0);
-                                 
+
         // Register tools
         JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{20, -1, 20}, {20, -1, 20}}));
         panel.add(new JButton("Hello World 2"), "1,1,FULL,FULL");
@@ -191,8 +191,7 @@ public class MyDoggySet {
         toolWindowManager.registerToolWindow("Tool 11", "Title 11", null, new JButton("Hello World 11"), ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 12", "Title 12", null, new JButton("Hello World 12"), ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 13", "Title 13", null, new JButton("Hello World 13"), ToolWindowAnchor.RIGHT);
-        toolWindowManager.registerToolWindow("Some Doggy Table", "Doggy Style", null, new JScrollPane(new DoggyTable()), ToolWindowAnchor.TOP); 
-
+        toolWindowManager.registerToolWindow("Some Doggy Table", "Doggy Style", null, new JScrollPane(new DoggyTable()), ToolWindowAnchor.TOP);
 
         // Make all available
         for (ToolWindow window : toolWindowManager.getToolWindows()) {
@@ -208,6 +207,11 @@ public class MyDoggySet {
         dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
 //        dockedTypeDescriptor.setPopupMenuEnabled(false);
         dockedTypeDescriptor.setDockLength(200);
+        dockedTypeDescriptor.setToolWindowActionHandler(new ToolWindowActionHandler() {
+            public void onHideButtonClick(final ToolWindow toolWindow) {
+                toolWindowManager.unregisterToolWindow(toolWindow.getId());
+            }
+        });
 
         // Setup Tool 2
         toolWindow = toolWindowManager.getToolWindow("Tool 2");
@@ -278,7 +282,6 @@ public class MyDoggySet {
             }
         });
 
-
         // Setup ContentManagerUI
         toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
 
@@ -346,6 +349,9 @@ public class MyDoggySet {
     }
 
     protected void customizeToolWindowManager(MyDoggyToolWindowManager myDoggyToolWindowManager) {
+        ToolWindowManagerDescriptor descriptor = myDoggyToolWindowManager.getToolWindowManagerDescriptor();
+        descriptor.setShowUnavailableTools(true);
+
         ResourceManager resourceManager = myDoggyToolWindowManager.getResourceManager();
 
         // Add customization here. See the page http://mydoggy.sourceforge.net/mydoggy-plaf/resourceManagerUsing.html
@@ -569,13 +575,13 @@ public class MyDoggySet {
                         break;
                     case LEFT:
                         memoryUsage.setOrientation(SwingConstants.VERTICAL);
-                        setLayout(new TableLayout(new double[][]{{-1},{120, 1, 17}}));
+                        setLayout(new TableLayout(new double[][]{{-1}, {120, 1, 17}}));
                         add(memoryUsage, "0,0,FULL,FULL");
                         add(gc, "0,2,FULL,FULL");
                         break;
                     case RIGHT:
                         memoryUsage.setOrientation(SwingConstants.VERTICAL);
-                        setLayout(new TableLayout(new double[][]{{-1},{17, 1, 120}}));
+                        setLayout(new TableLayout(new double[][]{{-1}, {17, 1, 120}}));
                         add(gc, "0,0,FULL,FULL");
                         add(memoryUsage, "0,2,FULL,FULL");
                         break;
@@ -795,7 +801,7 @@ public class MyDoggySet {
                     }
 
                     index = random.nextInt(4);
-                    
+
                     content.getContentUI().setConstraints(index);
 
                     Thread.sleep(500);
