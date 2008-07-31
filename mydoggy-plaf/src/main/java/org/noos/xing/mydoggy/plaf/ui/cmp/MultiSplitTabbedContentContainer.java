@@ -23,12 +23,13 @@ import java.beans.PropertyChangeListener;
 public class MultiSplitTabbedContentContainer extends MultiSplitDockableContainer {
     protected ContentPanel contentPanel;
 
+
     public MultiSplitTabbedContentContainer(MyDoggyToolWindowManager toolWindowManager) {
         super(toolWindowManager, JSplitPane.VERTICAL_SPLIT);
         setStoreLayout(false);
 
         this.contentPanel = new ContentPanel("@@mydoggy.dockable.", 10);
-        this.contentPanel.setDropTarget(new ContentDropTarget(contentPanel, toolWindowManager));
+        this.contentPanel.setDropTarget(createDropTarget());
         add(contentPanel, "0,0,FULL,FULL");
     }
 
@@ -58,7 +59,6 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
         wrapper.setToolWindowManager(toolWindowManager);
         wrapper.setName("@@mydoggy.dockable.tabbedpane");
-//        wrapper.setFocusCycleRoot(true);
         wrapper.addTab((Content) dockable, new DockablePanel(dockable, component));
         
         SwingUtil.registerDragGesture(wrapper, new TabbedDragGesture(wrapper));
@@ -155,6 +155,10 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         return component instanceof TabbedContentPane;
     }
 
+    protected DropTarget createDropTarget() {
+        return new ContentDropTarget(contentPanel, toolWindowManager);
+    }
+
 
     public class TabbedDragGesture extends DragGestureAdapter {
         protected TabbedContentPane tabbedContentPane;
@@ -247,7 +251,11 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
     public class ContentDropTarget extends DropTarget {
 
         public ContentDropTarget(JComponent component, ToolWindowManager toolWindowManager) throws HeadlessException {
-            super(component, DnDConstants.ACTION_MOVE, new ContentDropTargetListener(component, toolWindowManager));
+            this(component, new ContentDropTargetListener(component, toolWindowManager));
+        }
+
+        public ContentDropTarget(JComponent component, DropTargetListener dropTargetListener) throws HeadlessException {
+            super(component, DnDConstants.ACTION_MOVE, dropTargetListener);
         }
 
     }
@@ -348,7 +356,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                 tabbedContentPane.setTargetLine(indexAtLocation);
 
             if (tabbedContentPane != oldTabbedContentPane && oldTabbedContentPane != null)
-                oldTabbedContentPane.setTargetLine(-1);    
+                oldTabbedContentPane.setTargetLine(-1);
 
             oldTabbedContentPane = tabbedContentPane;
         }
@@ -371,7 +379,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                 oldTabbedContentPane.setTargetLine(-1);
                 oldTabbedContentPane = null;
             }
-            
+
             try {
                 if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) {
                     if (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {

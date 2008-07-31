@@ -95,6 +95,24 @@ public class SwingUtil {
         return containers;
     }
 
+    public static Vector<Window> getTopContainers() {
+        Vector<Window> containers = new Vector<Window>();
+
+        Frame frames[] = Frame.getFrames();
+        for (Frame frame : frames) {
+            Window[] windows = frame.getOwnedWindows();
+
+            containers.addAll(Arrays.asList(windows));
+
+            if (!containers.contains(frame)) {
+                containers.add(frame);
+            }
+        }
+
+        return containers;
+    }
+
+
     public static Object getDeepestObjectAt(Object parent, int x, int y) {
         if (parent != null && parent instanceof Container) {
             // use a copy of 1.3 Container.findComponentAt

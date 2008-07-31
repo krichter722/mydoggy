@@ -36,6 +36,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
     // TODO: comment this...
     private static Map<ToolWindow, FloatingLivePanel> livePanelMap = new HashMap<ToolWindow, FloatingLivePanel>();
+    private static Map<ToolWindow, ModalWindow> modalWindowMap = new HashMap<ToolWindow, ModalWindow>();
 
 
     protected MyDoggyToolWindowManager manager;
@@ -549,25 +550,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         popupUpdaterList.add(popupUpdater);
     }
 
-
-    public FloatingLivePanel getFloatingLivePanel(ToolWindow toolWindow) {
-        FloatingLivePanel panel = livePanelMap.get(toolWindow);
-        if (panel == null) {
-            panel = new FloatingLivePanel(manager);
-            livePanelMap.put(toolWindow, panel);
-        }
-
-        return panel;
-    }
-
-    public void removeFloatingLivePanel() {
-        livePanelMap.remove(toolWindow);
-    }
-
-    public FloatingLivePanel getFloatingLivePanel() {
-        return getFloatingLivePanel(toolWindow);
-    }
-
     public void assignFocus() {
         focusRequester = SwingUtil.findFocusable(getComponent());
         ToolWindowTitleButtonPanel toolWindowTitleButtonPanel = toolWindowPanel.getToolWindowTitleBar().getToolWindowTitleButtonPanel();
@@ -592,8 +574,59 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     }
 
 
+    public FloatingLivePanel getFloatingLivePanel(ToolWindow toolWindow) {
+        FloatingLivePanel panel = livePanelMap.get(toolWindow);
+        if (panel == null) {
+            panel = new FloatingLivePanel(manager);
+            livePanelMap.put(toolWindow, panel);
+        }
 
-    public void initContainers() {
+        return panel;
+    }
+
+    public void removeFloatingLivePanel() {
+        livePanelMap.remove(toolWindow);
+    }
+
+    public FloatingLivePanel getFloatingLivePanel() {
+        return getFloatingLivePanel(toolWindow);
+    }
+
+
+    public ModalWindow getModalWindow(ToolWindow toolWindow) {
+        ModalWindow modalWindow = modalWindowMap.get(toolWindow);
+        
+        if (modalWindow == null) {
+            FloatingTypeDescriptor floatingTypeDescriptor = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class);
+            if (floatingTypeDescriptor.isAddToTaskBar()) {
+                modalWindow = new ModalFrame(toolWindow,
+                                             getAncestorForWindow(),
+                                             null,  // TODO: and this...
+                                             floatingTypeDescriptor.isModal());
+            } else
+                modalWindow = new ModalDialog(manager,
+                                              getAncestorForWindow(),
+                                              null, // TODO: and this...
+                                              floatingTypeDescriptor.isModal());
+
+            modalWindowMap.put(toolWindow, modalWindow);
+        }
+
+        return modalWindow;
+    }
+
+    public void removeModalWindow() {
+        modalWindowMap.remove(toolWindow);
+    }
+
+    public ModalWindow getModalWindow() {
+        return getModalWindow(toolWindow);
+    }
+
+
+
+
+    protected void initContainers() {
         if (toolWindowPanel != null)
                     return;
         // init components

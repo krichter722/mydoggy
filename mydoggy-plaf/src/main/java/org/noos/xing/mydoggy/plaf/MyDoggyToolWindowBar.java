@@ -1063,20 +1063,66 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     }
 
-    public static class VisibleFloatingListener implements PropertyChangeListener {
+    public class VisibleSlidingListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
             boolean visible = (Boolean) evt.getNewValue();
 
             Component content = (visible) ? toolWindowDescriptor.getComponent() : null;
-            FloatingContainer container = (FloatingContainer) toolWindowDescriptor.getToolWindowContainer(ToolWindowType.FLOATING);
+            SlidingContainer container = (SlidingContainer) toolWindowDescriptor.getToolWindowContainer(ToolWindowType.SLIDING);
 
             if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
                 return;
 
-            container.setVisible(visible);
+            container.setVisible(visible, getContainer());
         }
+    }
+
+    public class VisibleFloatingListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
+            boolean visible = (Boolean) evt.getNewValue();
+
+            if (evt instanceof UserPropertyChangeEvent) {
+                Object[] params = (Object[]) ((UserPropertyChangeEvent) evt).getUserObject();
+
+                // pick referenceAggregationTool from params
+                ToolWindow referenceAggregationTool = (ToolWindow) params[3];
+                ToolWindowDescriptor referenceAggregationDescriptor = null;
+                if (referenceAggregationTool != null)
+                    referenceAggregationDescriptor = manager.getDescriptor(referenceAggregationTool);
+
+                // pick aggregationOnTool from params
+                ToolWindow aggregationOnTool = (ToolWindow) params[2];
+                ToolWindowDescriptor aggregationOnDescriptor = null;
+                if (aggregationOnTool != null)
+                    aggregationOnDescriptor = manager.getDescriptor(aggregationOnTool);
+
+                if (referenceAggregationDescriptor == null)
+                    referenceAggregationDescriptor = aggregationOnDescriptor;
+
+                Component content = (visible) ? toolWindowDescriptor.getContentContainer() : null;
+                if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
+                    return;
+
+                FloatingContainer container = (FloatingContainer) toolWindowDescriptor.getToolWindowContainer(ToolWindowType.FLOATING);
+                container.setVisible(referenceAggregationDescriptor,
+                                     content,
+                                     aggregationOnDescriptor,
+                                     (AggregationPosition) params[1]);
+            } else {
+                Component content = (visible) ? toolWindowDescriptor.getComponent() : null;
+                FloatingContainer container = (FloatingContainer) toolWindowDescriptor.getToolWindowContainer(ToolWindowType.FLOATING);
+
+                if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
+                    return;
+
+                container.setVisible(visible);
+            }
+        }
+
     }
 
     public static class VisibleFloatingFreeListener implements PropertyChangeListener {
@@ -1092,22 +1138,6 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 return;
 
             container.setVisible(visible);
-        }
-    }
-
-    public class VisibleSlidingListener implements PropertyChangeListener {
-
-        public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
-            boolean visible = (Boolean) evt.getNewValue();
-
-            Component content = (visible) ? toolWindowDescriptor.getComponent() : null;
-            SlidingContainer container = (SlidingContainer) toolWindowDescriptor.getToolWindowContainer(ToolWindowType.SLIDING);
-
-            if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
-                return;
-
-            container.setVisible(visible, getContainer());
         }
     }
 

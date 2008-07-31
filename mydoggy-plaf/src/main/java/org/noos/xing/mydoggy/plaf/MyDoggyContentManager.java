@@ -63,6 +63,10 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
     }
 
 
+    public ToolWindowManager getToolWindowManager() {
+        return toolWindowManager;
+    }
+
     public void setContentManagerUI(ContentManagerUI contentManagerUI) {
         if (!(contentManagerUI instanceof PlafContentManagerUI))
             throw new IllegalArgumentException("ContentManagerUI type not supported. See Plaf prescription.");

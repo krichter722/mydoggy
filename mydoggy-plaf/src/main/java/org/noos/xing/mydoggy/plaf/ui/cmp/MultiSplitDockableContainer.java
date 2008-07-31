@@ -1067,6 +1067,14 @@ public class MultiSplitDockableContainer extends JPanel {
         return null;
     }
 
+    public boolean containsDockable(Dockable dockable) {
+        for (DockableEntry entry : getContents()) {
+            if (entry.dockable == dockable)
+                return true;
+        }
+        return false;
+    }
+
     // Methods to manage container root
 
     protected Component getRootComponent() {
@@ -1181,8 +1189,7 @@ public class MultiSplitDockableContainer extends JPanel {
         resetBounds(multiSplitPaneModelRoot);
     }
 
-    protected void
-    resetBounds(Node rootNode) {
+    protected void resetBounds(Node rootNode) {
         // Reset the model bounds...
         if (rootNode == null || !(rootNode instanceof Split))
             return;
@@ -1447,16 +1454,19 @@ public class MultiSplitDockableContainer extends JPanel {
         }
     }
 
+
     public class Constraint {
-        private Node node;
-        private AggregationPosition aggregationPosition;
-        private int index = -1;
+        protected Node node;
+        protected AggregationPosition aggregationPosition;
+        protected int index = -1;
+
 
         public Constraint(Node node, AggregationPosition aggregationPosition, int index) {
             this.node = node;
             this.aggregationPosition = aggregationPosition;
             this.index = index;
         }
+
 
         public Node getNode() {
             return node;

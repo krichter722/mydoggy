@@ -81,15 +81,17 @@ public interface ContentManagerUI<C extends ContentUI> extends Observable {
     void setMinimizable(boolean minimizable);
 
     /**
-     *   TODO
-     * @param enabled
+     * Enables or disabled the popup menu for this manager.
+     *
+     * @param enabled <code>true</code> to enable, <code>false</code> to disable.
      * @since 1.5.0
      */
     void setPopupMenuEnabled(boolean enabled);
 
     /**
+     * Returns whether this content manager permits the popup menu to be showed.
      *
-     * @return
+     * @return <code>true</code> if the popup menu can be showed, <code>false</code> otherwise. 
      * @since 1.5.0
      */
     boolean isPopupMenuEnabled();

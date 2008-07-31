@@ -14,8 +14,9 @@ package org.noos.xing.mydoggy;
 public interface ToolWindowTypeDescriptor extends Observable {
 
     /**
-     * TODO
-     * @return
+     * Returns the type whom this descriptor is for. 
+     *
+     * @return the type whom this descriptor is for.
      * @since 1.5.0
      */
     ToolWindowType getType();

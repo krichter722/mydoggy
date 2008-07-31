@@ -36,7 +36,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     protected boolean flash;
     protected boolean maximized;
     protected boolean aggregateEnabled;
-    protected String  representativeAnchorButtonTitle;
+    protected String representativeAnchorButtonTitle;
     protected boolean representativeAnchorButtonVisible;
     protected boolean lockedOnAnchor;
     protected boolean hideOnZeroTabs;
@@ -245,10 +245,9 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
     public void setDetached(boolean detached) {
-        String detachedType = UIManager.getString("toolwindow.detached.type");
+        String detachedType = UIManager.getString("toolwindow.detached.type");  // TODO: move this property...
         try {
             setType(ToolWindowType.valueOf(detachedType));
-            ToolWindowType.valueOf(detachedType);
         } catch (IllegalArgumentException e) {
             setType(ToolWindowType.FLOATING);
         }
@@ -553,7 +552,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             return;
 
         String old = this.getRepresentativeAnchorButtonTitle();
-        this.representativeAnchorButtonTitle =  title;
+        this.representativeAnchorButtonTitle = title;
 
         firePropertyChangeEvent("representativeAnchorButtonTitle", old, title);
     }
@@ -764,7 +763,8 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             if (toolWindow != null) {
                 if ((descriptor.getManager().getContentManager().isEnabled() &&
                      toolWindow.getAnchor() != anchor &&
-                     toolWindow.getType() != ToolWindowType.FLOATING_LIVE   // TODO: check this condition adedd for aggregation on floating...
+                     toolWindow.getType() != ToolWindowType.FLOATING_LIVE &&
+                     toolWindow.getType() != ToolWindowType.FLOATING// TODO: check this condition adedd for aggregation on floating...
                 ) || !toolWindow.isVisible())
                     return;
             }
@@ -776,7 +776,12 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             if (!isVisible()) {
                 if ((toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING_LIVE) ||
                     (aggregateReferenceTool != null && aggregateReferenceTool.getType() == ToolWindowType.FLOATING_LIVE)) {
+
                     setType(ToolWindowType.FLOATING_LIVE);
+                } else if ((toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING) ||
+                           (aggregateReferenceTool != null && aggregateReferenceTool.getType() == ToolWindowType.FLOATING)) {
+
+                    setType(ToolWindowType.FLOATING);
                 } else {
                     if (getType() != ToolWindowType.DOCKED)
                         setType(ToolWindowType.DOCKED);
@@ -794,6 +799,9 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                 if ((toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING_LIVE) ||
                     (aggregateReferenceTool != null && aggregateReferenceTool.getType() == ToolWindowType.FLOATING_LIVE)) {
                     setType(ToolWindowType.FLOATING_LIVE);
+                } else if ((toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING) ||
+                           (aggregateReferenceTool != null && aggregateReferenceTool.getType() == ToolWindowType.FLOATING)) {
+                    setType(ToolWindowType.FLOATING);
                 } else {
                     if (getType() != ToolWindowType.DOCKED)
                         setType(ToolWindowType.DOCKED);

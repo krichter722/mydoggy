@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.persistence;
 
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.PersistenceDelegateCallback;
+import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowManager;
 
 /**
@@ -12,7 +13,11 @@ import org.noos.xing.mydoggy.ToolWindowManager;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class PersistenceDelegateCallbackAdapter implements PersistenceDelegateCallback {
-    
+
+    public ToolWindow toolwindowNotFound(ToolWindowManager toolWindowManager, String toolWindowId) {
+        return null;
+    }
+
     public Content contentNotFound(ToolWindowManager toolWindowManager, String contentId) {
         return null;
     }

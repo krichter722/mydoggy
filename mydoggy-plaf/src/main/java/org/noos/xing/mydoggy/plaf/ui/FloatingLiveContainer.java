@@ -57,10 +57,10 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
         if (visible) {
             // retrieve common panel
-            floatingLivePanel = descriptor.getFloatingLivePanel(toolWindow);
+            floatingLivePanel = descriptor.getFloatingLivePanel();
 
             // setup components
-            floatingLivePanel.resetLayout();
+            floatingLivePanel.resetLayout();    // TODO: remove this call...
             content.setVisible(true);
             floatingLivePanel.addDockable(toolWindow, content);
 
@@ -129,8 +129,10 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
             // mount common panel
             floatingLivePanel.mount();
         } else {
-            // remove dockable
+            // remove dockable...
             floatingLivePanel.removeDockable(toolWindow);
+
+            // remove listeners...
             floatingLivePanel.removeComponentListener(livePanelComponentListener);
 
             // unmount

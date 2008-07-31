@@ -37,6 +37,11 @@ public class LoadWorkspaceAction extends AbstractAction {
                         inputStream,
                         PersistenceDelegate.MergePolicy.RESET,
                         new PersistenceDelegateCallback() {
+
+                            public ToolWindow toolwindowNotFound(ToolWindowManager toolWindowManager, String toolWindowId) {
+                                return null;
+                            }
+
                             public Content contentNotFound(ToolWindowManager toolWindowManager, String contentId) {
                                 if ("Welcome".equals(contentId))
                                     myDoggySetContext.put(MyDoggySet.class, null);

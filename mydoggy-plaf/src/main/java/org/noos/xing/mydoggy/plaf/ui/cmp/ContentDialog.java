@@ -1,8 +1,10 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import info.clearthought.layout.TableLayout;
+import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentUI;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -17,46 +19,23 @@ import java.awt.event.WindowEvent;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ContentDialog extends JDialog {
+public class ContentDialog extends JDialog implements ContentWindow {
     protected Content content;
     protected ContentUI contentUI;
+
+    protected MultiSplitDockableContainer multiSplitDockableContainer;
 
 
     public ContentDialog(Content content, ContentUI contentUI, Frame parentFrame, Rectangle inBounds) throws HeadlessException {
         super(SwingUtil.getBoolean("dialog.owner.enabled", true) ? parentFrame : null, false);
-//        setFocusCycleRoot(true);
-//        setFocusTraversalPolicyProvider(true);
-//        setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
 
         this.content = content;
         this.contentUI = contentUI;
 
-        // Setup title and component
-        Component component = content.getComponent();
-        component.setPreferredSize(component.getSize());
+        installComponents();
+        installListeners(parentFrame);
 
-        setTitle(content.getTitle());
-        getContentPane().setLayout(new TableLayout(new double[][]{{-1},{-1}}));
-        getContentPane().add(component, "0,0,FULL,FULL");
-
-        // Init Listener
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        addWindowListener(new ContentDialogWindowAdapter());
-        if (parentFrame == null)
-            addWindowFocusListener(new ToFrontWindowFocusListener(this));
-
-        addComponentListener(new ContentDialogComponentAdapter());
-
-        if (SwingUtil.getTransparencyManager().isServiceAvailable()) {
-            WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(
-                    SwingUtil.getTransparencyManager(),
-                    contentUI,
-                    this
-            );
-            addWindowListener(windowTransparencyListener);
-            addWindowFocusListener(windowTransparencyListener);
-        }
-
+        // Set Bounds...
         Rectangle detachedBounds = SwingUtil.validateBounds(contentUI.getDetachedBounds());
         if (detachedBounds != null) {
             setBounds(detachedBounds);
@@ -78,34 +57,75 @@ public class ContentDialog extends JDialog {
 
     public void dispose() {
         super.dispose();
-        
+
         content = null;
         contentUI = null;
     }
 
-    public void setLocation(int x, int y) {
-        super.setLocation(x, y);    //To change body of overridden methods use File | Settings | File Templates.
+
+    public void addContent(Content content, Component contentComponent) {
+        addContent(content, contentComponent, null, AggregationPosition.DEFAULT);
     }
 
-    public void setLocation(Point p) {
-        super.setLocation(p);    //To change body of overridden methods use File | Settings | File Templates.
+    public void addContent(Content content,
+                           Component componentContent,
+                           Content aggregationOnContent,
+                           AggregationPosition aggregationPosition) {
+        multiSplitDockableContainer.addDockable(content,
+                                                componentContent,
+                                                aggregationOnContent,
+                                                -1,
+                                                aggregationPosition);
     }
 
-    public void setBounds(int x, int y, int width, int height) {
-        super.setBounds(x, y, width, height);    //To change body of overridden methods use File | Settings | File Templates.
+    public void removeContent(Content content) {
+        multiSplitDockableContainer.removeDockable(content);
     }
 
-    public void setBounds(Rectangle r) {
-//        System.out.println("setBounds r = " + r);
-        super.setBounds(r);    //To change body of overridden methods use File | Settings | File Templates.
+    public int getNumContents() {
+        return multiSplitDockableContainer.getContentCount();
     }
 
-    public void setSize(int width, int height) {
-        super.setSize(width, height);    //To change body of overridden methods use File | Settings | File Templates.
+    public boolean containsContent(Content content) {
+        return multiSplitDockableContainer.containsDockable(content);
     }
 
-    public void setSize(Dimension d) {
-        super.setSize(d);    //To change body of overridden methods use File | Settings | File Templates.
+
+    protected void installComponents() {
+        // Setup title
+        setTitle(content.getTitle());
+
+        // Add content
+        Component component = content.getComponent();
+        component.setPreferredSize(component.getSize());
+
+        multiSplitDockableContainer = new ContentWindowMultiSplitContainer(
+                (MyDoggyToolWindowManager) content.getDockableManager().getToolWindowManager()
+        );
+        multiSplitDockableContainer.addDockable(content, component, null);
+
+        setLayout(new ExtendedTableLayout(new double[][]{{0, TableLayout.FILL, 0}, {0, TableLayout.FILL, 0}}));
+        add(multiSplitDockableContainer, "1,1,FULL,FULL");
+    }
+
+    protected void installListeners(Frame parentFrame) {
+        // Init Listener
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new ContentDialogWindowAdapter());
+        if (parentFrame == null)
+            addWindowFocusListener(new ToFrontWindowFocusListener(this));
+
+        addComponentListener(new ContentDialogComponentAdapter());
+
+        if (SwingUtil.getTransparencyManager().isServiceAvailable()) {
+            WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(
+                    SwingUtil.getTransparencyManager(),
+                    contentUI,
+                    this
+            );
+            addWindowListener(windowTransparencyListener);
+            addWindowFocusListener(windowTransparencyListener);
+        }
     }
 
 
@@ -118,18 +138,15 @@ public class ContentDialog extends JDialog {
     public class ContentDialogComponentAdapter extends ComponentAdapter {
 
         public void componentResized(ComponentEvent e) {
-            if (isActive() && isVisible()) {
-//                System.out.println("componentResized getBounds() = " + getBounds());
+            if (isActive() && isVisible())
                 contentUI.setDetachedBounds(getBounds());
-            }
         }
 
         public void componentMoved(ComponentEvent e) {
-            if (isActive() && isVisible()) {
-//                System.out.println("componentMoved getBounds() = " + getBounds());
+            if (isActive() && isVisible())
                 contentUI.setDetachedBounds(getBounds());
-            }
         }
 
     }
+
 }

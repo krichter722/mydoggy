@@ -1,8 +1,10 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import info.clearthought.layout.TableLayout;
+import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentUI;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -17,28 +19,97 @@ import java.awt.event.WindowEvent;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ContentFrame extends JFrame {
+public class ContentFrame extends JFrame implements ContentWindow {
     protected Content content;
     protected ContentUI contentUI;
+
+    protected MultiSplitDockableContainer multiSplitDockableContainer;
 
 
     public ContentFrame(Content content, ContentUI contentUI, Frame parentFrame, Rectangle inBounds) throws HeadlessException {
         setAlwaysOnTop(SwingUtil.getBoolean("dialog.owner.enabled", true));
-//        setFocusCycleRoot(true);
-//        setFocusTraversalPolicyProvider(true);
-//        setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
 
         this.content = content;
         this.contentUI = contentUI;
 
-        // Setup title and component
+        installComponents();
+        installListeners(parentFrame);
+
+        // Set bounds...
+        Rectangle detachedBounds = SwingUtil.validateBounds(contentUI.getDetachedBounds());
+        if (detachedBounds != null) {
+            setBounds(detachedBounds);
+        } else {
+            if (inBounds != null) {
+                setBounds(inBounds);
+            } else {
+                if (parentFrame != null) {
+                    Point location = parentFrame.getLocation();
+                    location.translate(5, 5);
+                    setLocation(location);
+                    setSize(320, 200);
+                } else {
+                    SwingUtil.centrePositionOnScreen(this);
+                }
+            }
+        }
+    }
+
+
+    public void dispose() {
+        super.dispose();
+
+        content = null;
+        contentUI = null;
+    }
+
+
+    public void addContent(Content content, Component contentComponent) {
+        addContent(content, contentComponent, null, AggregationPosition.DEFAULT);
+    }
+
+    public void addContent(Content content,
+                           Component componentContent,
+                           Content aggregationOnContent,
+                           AggregationPosition aggregationPosition) {
+        multiSplitDockableContainer.addDockable(content,
+                                                componentContent,
+                                                aggregationOnContent,
+                                                -1,
+                                                aggregationPosition);
+    }
+
+    public void removeContent(Content content) {
+        multiSplitDockableContainer.removeDockable(content);
+    }
+
+    public int getNumContents() {
+        return multiSplitDockableContainer.getContentCount();
+    }
+
+    public boolean containsContent(Content content) {
+        return multiSplitDockableContainer.containsDockable(content);
+    }
+
+
+    protected void installComponents() {
+        // Setup title
+        setTitle(content.getTitle());
+
+        // Add content
         Component component = content.getComponent();
         component.setPreferredSize(component.getSize());
 
-        setTitle(content.getTitle());
-        getContentPane().setLayout(new TableLayout(new double[][]{{-1}, {-1}}));
-        getContentPane().add(component, "0,0,FULL,FULL");
+        multiSplitDockableContainer = new ContentWindowMultiSplitContainer(
+                (MyDoggyToolWindowManager) content.getDockableManager().getToolWindowManager()
+        );
+        multiSplitDockableContainer.addDockable(content, component, null);
 
+        setLayout(new ExtendedTableLayout(new double[][]{{0, TableLayout.FILL, 0}, {0, TableLayout.FILL, 0}}));
+        add(multiSplitDockableContainer, "1,1,FULL,FULL");
+    }
+
+    protected void installListeners(Frame parentFrame) {
         // Init Listener
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new ContentDialogWindowAdapter());
@@ -56,36 +127,8 @@ public class ContentFrame extends JFrame {
             addWindowListener(windowTransparencyListener);
             addWindowFocusListener(windowTransparencyListener);
         }
-
-        // Setup bounds
-        Rectangle detachedBounds = SwingUtil.validateBounds(contentUI.getDetachedBounds());
-        if (detachedBounds != null) {
-            setBounds(detachedBounds);
-        } else {
-            if (inBounds != null) {
-                setBounds(inBounds);
-            } else {
-                if (parentFrame != null) {
-                    Point location = parentFrame.getLocation();
-                    location.translate(5, 5);
-                    setLocation(location);
-                    setSize(320, 200);
-                } else {
-                    SwingUtil.centrePositionOnScreen(this);
-                }
-            }
-//            pack();
-        }
-
     }
 
-
-    public void dispose() {
-        super.dispose();
-
-        content = null;
-        contentUI = null;
-    }
 
 
     public class ContentDialogWindowAdapter extends WindowAdapter {
@@ -104,4 +147,5 @@ public class ContentFrame extends JFrame {
             contentUI.setDetachedBounds(getBounds());
         }
     }
+
 }

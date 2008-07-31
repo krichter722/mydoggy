@@ -8,6 +8,7 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowBar;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
+import org.noos.xing.mydoggy.plaf.persistence.PersistenceDelegateCallbackAdapter;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.MergePolicyApplier;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.ResetMergePolicy;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.UnionMergePolicy;
@@ -54,7 +55,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         this.toolWindowManager = toolWindowManager;
         this.masterElementParser = new MasterElementParser();
         this.masterElementWriter = new ToolWindowManagerElementWriter(toolWindowManager);
-        this.dummyCallback = new DummyPersistenceDelegateCallback();
+        this.dummyCallback = new PersistenceDelegateCallbackAdapter();
 
         initMaps();
     }
@@ -113,14 +114,6 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
     }
 
-
-    public class DummyPersistenceDelegateCallback implements PersistenceDelegateCallback {
-
-        public Content contentNotFound(ToolWindowManager toolWindowManager, String contentId) {
-            return null;
-        }
-
-    }
 
     // Writing
 
@@ -856,9 +849,13 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
             for (int i = 0, size = tools.getLength(); i < size; i++) {
                 Element tool = (Element) tools.item(i);
+                String toolId = tool.getAttribute("id");
 
                 // load descriptors
-                ToolWindow toolWindow = context.get(ToolWindowManager.class).getToolWindow(tool.getAttribute("id"));
+                ToolWindow toolWindow = context.get(ToolWindowManager.class).getToolWindow(toolId);
+                if (toolWindow == null)
+                    toolWindow = context.get(PersistenceDelegateCallback.class).toolwindowNotFound(context.get(ToolWindowManager.class), toolId);
+
                 if (toolWindow == null)
                     continue;
 
@@ -1059,7 +1056,12 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             ToolWindow activeTool = null;
             ToolWindow maximizedTool = null;
             for (Element tool : toolsByAnchor) {
-                ToolWindow toolWindow = context.get(ToolWindowManager.class).getToolWindow(tool.getAttribute("id"));
+                String toolId = tool.getAttribute("id");
+
+                ToolWindow toolWindow = context.get(ToolWindowManager.class).getToolWindow(toolId);
+                if (toolWindow == null)
+                    toolWindow = context.get(PersistenceDelegateCallback.class).toolwindowNotFound(context.get(ToolWindowManager.class), toolId);
+
                 if (toolWindow == null)
                     continue;
 

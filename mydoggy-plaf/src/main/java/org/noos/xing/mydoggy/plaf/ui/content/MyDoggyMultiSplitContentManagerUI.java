@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
@@ -713,39 +714,84 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
             } else {
                 if ((Boolean) evt.getNewValue()) {
                     valueAdjusting = true;
+
                     try {
-                        ContentUI contentUI = getContentUI(content);
+                        if (evt instanceof UserPropertyChangeEvent) {
 
-                        Rectangle inBounds = multiSplitContainer.getBoundsRelativeToScreen(content);
+                            UserPropertyChangeEvent userEvent = (UserPropertyChangeEvent) evt;
+                            ContentDetachConstraint constraint = (ContentDetachConstraint) userEvent.getUserObject();
 
-                        // Remove from multiSpli and store constraint
-                        detachedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
+                            if (constraint.getIndex() == -2) {
+                                for (Window window : SwingUtil.getTopContainers()) {
+                                    if (window instanceof ContentWindow) {
+                                        ContentWindow contentWindow = (ContentWindow) window;
 
-                        // Setup dialog
-                        Frame parentFrame = (toolWindowManager.getWindowAncestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAncestor() : null;
+                                        if (contentWindow.containsContent(constraint.getOnContent())) {
+                                            // Remove from multiSpli and store constraint
+                                            detachedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
 
-                        Window dialog;
-                        if (contentUI.isAddToTaskBarWhenDetached()) {
-                            dialog = new ContentFrame(
-                                    content, contentUI,
-                                    parentFrame, inBounds);
+                                            contentWindow.addContent(content,
+                                                                     content.getComponent(),
+                                                                     null,
+                                                                     constraint.getAggregatePosition());
+                                            break;
+                                        }
+                                    }
+                                }
+                            } else {
+                                for (Window window : SwingUtil.getTopContainers()) {
+                                    if (window instanceof ContentWindow) {
+                                        ContentWindow contentWindow = (ContentWindow) window;
+
+                                        if (contentWindow.containsContent(constraint.getOnContent())) {
+                                            // Remove from multiSpli and store constraint
+                                            detachedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
+
+                                            contentWindow.addContent(content,
+                                                                     content.getComponent(),
+                                                                     constraint.getOnContent(),
+                                                                     constraint.getAggregatePosition());
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
                         } else {
-                            dialog = new ContentDialog(
-                                    content, contentUI,
-                                    parentFrame, inBounds);
-                        }
-                        dialog.addWindowFocusListener(new ContentDialogFocusListener(content));
-                        dialog.toFront();
-                        dialog.setVisible(true);
+                            ContentUI contentUI = getContentUI(content);
 
-                        componentInFocusRequest = findAndRequestFocus(dialog);
+                            Rectangle inBounds = multiSplitContainer.getBoundsRelativeToScreen(content);
+
+                            // Remove from multiSpli and store constraint
+                            detachedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
+
+                            // Setup dialog
+                            Frame parentFrame = (toolWindowManager.getWindowAncestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAncestor() : null;
+
+                            Window dialog;
+                            if (contentUI.isAddToTaskBarWhenDetached())
+                                dialog = new ContentFrame(content, contentUI,
+                                                          parentFrame, inBounds);
+                            else
+                                dialog = new ContentDialog(content, contentUI,
+                                                           parentFrame, inBounds);
+
+                            dialog.addWindowFocusListener(new ContentDialogFocusListener(content));
+                            dialog.toFront();
+                            dialog.setVisible(true);
+
+                            componentInFocusRequest = findAndRequestFocus(dialog);
+                        }
                     } finally {
                         valueAdjusting = false;
                     }
                 } else {
-                    Window window = SwingUtilities.windowForComponent(content.getComponent());
-                    window.setVisible(false);
-                    window.dispose();
+                    ContentDialog window = (ContentDialog) SwingUtilities.windowForComponent(content.getComponent());
+                    window.removeContent(content);
+
+                    if (window.getNumContents() <= 0) {
+                        window.setVisible(false);
+                        window.dispose();
+                    }
 
                     contentValueAdjusting = true;
                     try {
@@ -949,7 +995,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
                 setRootComponent(forceWrapperForComponent(dockable, dockable.getComponent()));
             }
-            
+
             SwingUtil.repaint(this);
         }
 

@@ -1,5 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
+import org.noos.xing.mydoggy.AggregationPosition;
+import org.noos.xing.mydoggy.ToolWindow;
+
 import java.awt.*;
 
 /**
@@ -9,19 +12,16 @@ public interface ModalWindow {
 
     Window getWindow();
 
+
+    void setName(String name);
+
     void setModal(boolean modal);
+
 
     Container getContentPane();
 
-    void setSize(int width, int height);
+    void setContentPane(Container container);
 
-    void setSize(Dimension size);
-
-    void setLocation(Point location);
-
-    void setBounds(Rectangle lastBounds);
-
-    Rectangle getBounds();
 
     void setVisible(boolean visible);
 
@@ -29,9 +29,6 @@ public interface ModalWindow {
 
     boolean isFocused();
 
-    void setName(String name);
-
-    void setContentPane(Container container);
 
     int getWidth();
 
@@ -42,4 +39,28 @@ public interface ModalWindow {
     int getY();
 
     void setBounds(int x, int y, int width, int height);
+
+    void setBounds(Rectangle lastBounds);
+
+    Rectangle getBounds();
+
+    void setSize(int width, int height);
+
+    void setSize(Dimension size);
+
+    void setLocation(Point location);
+
+
+    void addDockable(ToolWindow toolWindow, Component content);
+
+    void addDockable(ToolWindow toolWindow,
+                            Component content,
+                            ToolWindow aggregationOnDockable,
+                            AggregationPosition aggregationPosition);
+
+    void removeDockable(ToolWindow toolWindow);
+
+    int getNumDockables();
+
+    ToolWindow getFirstToolWindow();
 }
