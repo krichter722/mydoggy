@@ -920,27 +920,21 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             if (animate) {
                 if (component != null) {
                     splitPane.setDividerSize(getDividerSize());
-/*
                     if (manager.getShowingGroup() == null &&
                         descriptor.getTypeDescriptor(ToolWindowType.DOCKED).isAnimating()) {
 
                         splitAnimation.show(dividerLocation);
                     } else {
-*/
                         if (dividerLocation != 0) {
                             vsdValueAdjusting = true;
                             try {
-                                System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD dividerLocation = " + dividerLocation);
                                 setSplitDividerLocation(dividerLocation);
                             } finally {
                                 vsdValueAdjusting = false;
                             }
-
                             SwingUtil.repaintNow(splitPane);
                         }
-/*
                     }
-*/
                 } else {
                     splitPane.setDividerSize(0);
 

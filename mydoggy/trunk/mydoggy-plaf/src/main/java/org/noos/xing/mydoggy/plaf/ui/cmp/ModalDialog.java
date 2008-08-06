@@ -1,11 +1,9 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.AggregationPosition;
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowTab;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -14,17 +12,31 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class ModalDialog extends JDialog implements ModalWindow {
+public class ModalDialog extends JDialog implements ModalWindow,
+                                                    PropertyChangeListener,
+                                                    ActionListener {
+    protected MyDoggyToolWindowManager toolWindowManager;
+
+    // Modal support
     protected Window modalToWindow;
     protected boolean notifiedModalToWindow;
     protected Component returnFocus;
-    protected MyDoggyToolWindowManager toolWindowManager;
 
-    protected MultiSplitDockableContainer multiSplitDockableContainer;
+    // Multi split support
     protected DockableDropPanel dockableDropPanel;
+    protected MultiSplitDockableContainer multiSplitDockableContainer;
+
+    // Transparency support
+    protected Timer transparencyTimer;
+    protected TransparencyManager<Window> transparencyManager;
+    protected TransparencyAnimation transparencyAnimation;
 
 
     public ModalDialog(MyDoggyToolWindowManager toolWindowManager, Window owner, Component returnFocus, boolean modal) {
@@ -47,6 +59,91 @@ public class ModalDialog extends JDialog implements ModalWindow {
         enableEvents(WindowEvent.WINDOW_EVENT_MASK | ComponentEvent.MOUSE_MOTION_EVENT_MASK);
 
         initComponents();
+    }
+
+
+    public void propertyChange(final PropertyChangeEvent evt) {
+        if ("active".equals(evt.getPropertyName())) {
+            ToolWindow toolWindow = (ToolWindow) evt.getSource();
+            FloatingTypeDescriptor typeDescriptor = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class);
+
+            if (transparencyTimer != null) {
+                transparencyTimer.stop();
+                if (transparencyAnimation.isAnimating()) {
+                    synchronized (transparencyManager) {
+                        if (transparencyManager.isAlphaModeEnabled(ModalDialog.this)) {
+                            transparencyAnimation.stop();
+                            transparencyManager.setAlphaModeRatio(ModalDialog.this, 0.0f);
+                        }
+                    }
+                }
+            }
+
+            if (typeDescriptor.isTransparentMode()) {
+                if (evt.getNewValue() == Boolean.FALSE) {
+                    if (transparencyAnimation != null) {
+                        transparencyTimer = new Timer(typeDescriptor.getTransparentDelay() + 100, this) {
+                            @Override
+                            protected void fireActionPerformed(ActionEvent e) {
+                                e = new ActionEvent(evt.getSource(),
+                                                    e.getID(), e.getActionCommand(), e.getWhen(), e.getModifiers());
+                                super.fireActionPerformed(e);
+                            }
+                        };
+                        transparencyTimer.start();
+                    }
+                } else {
+                    if (transparencyTimer != null)
+                        transparencyTimer.stop();
+
+                    if (transparencyAnimation != null) {
+                        synchronized (transparencyManager) {
+                            if (transparencyManager.isAlphaModeEnabled(ModalDialog.this)) {
+                                transparencyAnimation.stop();
+                                transparencyManager.setAlphaModeRatio(ModalDialog.this, 0.0f);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+/*
+        else if (evt.getPropertyName().startsWith("visible")) {
+            synchronized (transparencyManager) {
+                if (evt.getNewValue() == Boolean.FALSE && transparencyManager.isAlphaModeEnabled(ModalDialog.this)) {
+                    if (transparencyTimer != null)
+                        transparencyTimer.stop();
+
+                    if (transparencyManager.isAlphaModeEnabled(ModalDialog.this)) {
+                        transparencyAnimation.stop();
+                        transparencyManager.setAlphaModeRatio(ModalDialog.this, 0.0f);
+                    }
+                }
+            }
+
+            if (evt.getNewValue() == Boolean.TRUE) {
+                ToolWindow toolWindow = (ToolWindow) evt.getSource();
+                FloatingTypeDescriptor typeDescriptor = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class);
+
+                if (typeDescriptor.isTransparentMode()) {
+                    transparencyTimer = new Timer(1000 + typeDescriptor.getTransparentDelay(), this);
+                    transparencyTimer.start();
+                }
+            }
+        }
+*/
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if (transparencyTimer.isRunning()) {
+            transparencyTimer.stop();
+
+            if (transparencyAnimation != null) {
+                FloatingTypeDescriptor floatingTypeDescriptor = ((ToolWindow) e.getSource()).getTypeDescriptor(FloatingTypeDescriptor.class);
+                transparencyAnimation.setAlpha(floatingTypeDescriptor.getTransparentRatio());
+                transparencyAnimation.show();
+            }
+        }
     }
 
 
@@ -113,10 +210,15 @@ public class ModalDialog extends JDialog implements ModalWindow {
                                                 aggregationOnDockable,
                                                 -1,
                                                 aggregationPosition);
+        toolWindow.addPropertyChangeListener(this);
     }
 
     public void removeDockable(ToolWindow toolWindow) {
-        multiSplitDockableContainer.removeDockable(toolWindow);
+        try {
+            multiSplitDockableContainer.removeDockable(toolWindow);
+        } finally {
+            toolWindow.removePropertyChangeListener(this);
+        }
     }
 
     public int getNumDockables() {
@@ -137,6 +239,16 @@ public class ModalDialog extends JDialog implements ModalWindow {
         ((JComponent) getContentPane()).setBorder(BorderFactory.createLineBorder(Color.GRAY));
         setLayout(new ExtendedTableLayout(new double[][]{{0, TableLayout.FILL, 0}, {0, TableLayout.FILL, 0}}));
         add(dockableDropPanel, "1,1,FULL,FULL");
+
+        this.transparencyManager = SwingUtil.getTransparencyManager();
+        if (transparencyManager.isServiceAvailable()) {
+            this.transparencyAnimation = new TransparencyAnimation(
+                    SwingUtil.getTransparencyManager(),
+                    ModalDialog.this,
+                    0.0f
+            );
+        } else
+            this.transparencyAnimation = null;
     }
 
     protected void restoreOwner() {
@@ -176,6 +288,7 @@ public class ModalDialog extends JDialog implements ModalWindow {
         public ModalDialogDockableDropPanel() {
             super("toolWindow.container.", ToolWindow.class);   // TODO: toolWindow.container. can we change it?
         }
+
 
         public boolean dragStart(Transferable transferable, int action) {
              try {
@@ -313,6 +426,7 @@ public class ModalDialog extends JDialog implements ModalWindow {
             return false;
         }
 
+
         protected boolean checkCondition(ToolWindow toolWindow) {
             if (toolWindow.getAnchor() != ToolWindowAnchor.BOTTOM)
                  return true;
@@ -330,112 +444,4 @@ public class ModalDialog extends JDialog implements ModalWindow {
         }
     }
 
-/*
-    public class FloatingToolTransparencyListener implements PropertyChangeListener, ActionListener {
-        protected final TransparencyManager<Window> transparencyManager;
-        protected TransparencyAnimation transparencyAnimation;
-
-        protected Timer timer;
-
-
-        public FloatingToolTransparencyListener() {
-            this.transparencyManager = SwingUtil.getTransparencyManager();
-
-            if (transparencyManager.isServiceAvailable()) {
-                this.transparencyAnimation = new TransparencyAnimation(
-                        SwingUtil.getTransparencyManager(),
-                        ModalDialog.this,
-                        0.0f
-                );
-
-                descriptor.getManager().addInternalPropertyChangeListener("active", this);
-                descriptor.getManager().addInternalPropertyChangeListener("visible.FLOATING", this);
-                descriptor.getManager().addInternalPropertyChangeListener("visible.FLOATING_FREE", this);
-            } else
-                this.transparencyAnimation = null;
-        }
-
-
-        public synchronized void propertyChange(PropertyChangeEvent evt) {
-            if (evt.getSource() != descriptor */
-/*|| !manager.getDockableDelegator().isVisible()*/
-/*
-                || (descriptor.getToolWindow().getType() != ToolWindowType.FLOATING &&
-                    descriptor.getToolWindow().getType() != ToolWindowType.FLOATING_FREE))
-                return;
-
-            if ("active".equals(evt.getPropertyName())) {
-                FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
-                if (descriptor.getFloatingContainer().isAnimating()) {
-                    if (timer != null) {
-                        timer.stop();
-                        synchronized (transparencyManager) {
-                            if (transparencyManager.isAlphaModeEnabled(ModalDialog.this)) {
-                                transparencyAnimation.stop();
-                                transparencyManager.setAlphaModeRatio(ModalDialog.this, 0.0f);
-                            }
-                        }
-                    }
-                    return;
-                }
-
-                if (typeDescriptor.isTransparentMode()) {
-                    if (evt.getNewValue() == Boolean.FALSE) {
-                        timer = new Timer(typeDescriptor.getTransparentDelay(), this);
-                        timer.start();
-                    } else {
-                        if (timer != null)
-                            timer.stop();
-
-                        synchronized (transparencyManager) {
-                            if (transparencyManager.isAlphaModeEnabled(ModalDialog.this)) {
-                                transparencyAnimation.stop();
-                                transparencyManager.setAlphaModeRatio(ModalDialog.this, 0.0f);
-                            }
-                        }
-                    }
-                }
-            } else if (evt.getPropertyName().startsWith("visible.")) {
-                synchronized (transparencyManager) {
-                    if (evt.getNewValue() == Boolean.FALSE && transparencyManager.isAlphaModeEnabled(ModalDialog.this))) {
-                        if (timer != null)
-                            timer.stop();
-
-                        if (transparencyManager.isAlphaModeEnabled(ModalDialog.this)) {
-                            transparencyAnimation.stop();
-                            transparencyManager.setAlphaModeRatio(ModalDialog.this, 0.0f);
-                        }
-                    }
-                }
-
-                if (evt.getNewValue() == Boolean.TRUE) {
-                    FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
-                    if (typeDescriptor.isTransparentMode()) {
-                        timer = new Timer(1000 + typeDescriptor.getTransparentDelay(), this);
-                        timer.start();
-                    }
-                }
-            }
-        }
-
-        public synchronized void actionPerformed(ActionEvent e) {
-            if (timer != null && timer.isRunning()) {
-                timer.stop();
-                if (!descriptor.getToolWindow().isVisible()
-                    || (descriptor.getToolWindow().getType() != ToolWindowType.FLOATING &&
-                        descriptor.getToolWindow().getType() != ToolWindowType.FLOATING_FREE))
-                    return;
-
-                FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
-                synchronized (transparencyManager) {
-                    transparencyAnimation.setAlpha(typeDescriptor.getTransparentRatio());
-                    transparencyAnimation.show();
-    //                transparencyManager.setAlphaModeRatio(window, typeDescriptor.getTransparentRatio());
-                }
-            }
-        }
-
-    }
-
-*/
 }

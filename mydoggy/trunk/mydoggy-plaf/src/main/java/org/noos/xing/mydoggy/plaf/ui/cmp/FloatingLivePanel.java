@@ -79,7 +79,7 @@ public class FloatingLivePanel extends TranslucentPanel implements PropertyChang
         if (timer.isRunning()) {
             timer.stop();
 
-            FloatingLiveTypeDescriptor floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) ((ToolWindow) e.getSource()).getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
+            FloatingLiveTypeDescriptor floatingLiveTypeDescriptor = ((ToolWindow) e.getSource()).getTypeDescriptor(FloatingLiveTypeDescriptor.class);
             animation.setAlpha(floatingLiveTypeDescriptor.getTransparentRatio());
             animation.show();
         }
@@ -120,9 +120,11 @@ public class FloatingLivePanel extends TranslucentPanel implements PropertyChang
     }
 
     public void removeDockable(ToolWindow toolWindow) {
-        multiSplitDockableContainer.removeDockable(toolWindow);
-
-        toolWindow.removePropertyChangeListener(this);
+        try {
+            multiSplitDockableContainer.removeDockable(toolWindow);
+        } finally {
+            toolWindow.removePropertyChangeListener(this);
+        }
     }
 
     public void mount() {
