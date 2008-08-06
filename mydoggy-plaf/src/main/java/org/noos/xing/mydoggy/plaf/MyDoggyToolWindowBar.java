@@ -1375,7 +1375,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     public class DockedDockableDropPanel extends DockableDropPanel {
 
         public DockedDockableDropPanel() {
-            super("toolWindow.container.", ToolWindow.class, Content.class);   // TODO: add also custom...
+            super("toolWindow.container.", ToolWindow.class, Content.class); 
         }
 
 

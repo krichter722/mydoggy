@@ -6,11 +6,8 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDropEvent;
+import java.awt.datatransfer.Transferable;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -23,8 +20,8 @@ public class ContentWindowMultiSplitContainer extends MultiSplitTabbedContentCon
     }
 
 
-    protected DropTarget createDropTarget() {
-        return new ContentWindowContentDropTarget(dockableDropPanel, toolWindowManager);
+    protected DockableDropPanel createDockableDropPanel() {
+        return new ContentWindowDockableDropPanel();
     }
 
     protected boolean isWrapRequest(Dockable dockable, Action action) {
@@ -85,86 +82,73 @@ public class ContentWindowMultiSplitContainer extends MultiSplitTabbedContentCon
     }
 
 
-    public class ContentWindowContentDropTarget extends ContentDropTarget {
 
-        public ContentWindowContentDropTarget(JComponent component, ToolWindowManager toolWindowManager) throws HeadlessException {
-            super(component, new ContentWindowDropTargetListener(component, toolWindowManager));
-        }
+    public class ContentWindowDockableDropPanel extends MultiSplitTabbedDockableDropPanel {
+        // TODO: setup dratStart
 
-    }
+        public boolean drop(Transferable transferable) {
+// TODO           if (oldTabbedContentPane != null) {
+//                oldTabbedContentPane.setTargetLine(-1);
+//                oldTabbedContentPane = null;
+//            }
 
-    public class ContentWindowDropTargetListener extends ContentDropTargetListener {
+            if (transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {
+                try {
+                    ContentManager contentManager = toolWindowManager.getContentManager();
+                    Content content = contentManager.getContent(
+                            transferable.getTransferData(MyDoggyTransferable.CONTENT_ID_DF)
+                    );
 
-        public ContentWindowDropTargetListener(JComponent component, ToolWindowManager toolWindowManager) {
-            super(component, toolWindowManager);
-        }
+                    if (content != null) {
+                        boolean rejectDrop = false;
 
-        public void drop(DropTargetDropEvent dtde) {
-            if (oldTabbedContentPane != null) {
-                oldTabbedContentPane.setTargetLine(-1);
-                oldTabbedContentPane = null;
-            }
+                        Content onDockable = (Content) getOnDockable();
+                        ToolWindowAnchor onAnchor = getOnAnchor();
+                        int onIndex = getOnIndex();
 
-            try {
-                if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) {
+                        if (content == onDockable) {
+                            if (onIndex == -1) {
+                                rejectDrop = true;
+                            } else {
+                                Component onDockableContainer = getOnDockableContainer();
 
-                    if (dtde.getTransferable().isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {
-                        try {
-                            ContentManager contentManager = toolWindowManager.getContentManager();
-                            Content content = contentManager.getContent(
-                                    dtde.getTransferable().getTransferData(MyDoggyTransferable.CONTENT_ID_DF)
-                            );
-
-                            if (content != null) {
-                                boolean rejectDrop = false;
-                                if (content == onDockable) {
-                                    if (indexAtLocation == -1) {
-                                        rejectDrop = true;
-                                    } else {
-                                        if (dockableWrapper instanceof TabbedContentPane) {
-                                            TabbedContentPane tabbedContentPane = (TabbedContentPane) dockableWrapper;
-                                            for (int i = 0, size = tabbedContentPane.getTabCount(); i < size; i++) {
-                                                DockablePanel dockablePanel = (DockablePanel) tabbedContentPane.getComponentAt(i);
-                                                if (dockablePanel.getDockable() == onDockable && i == indexAtLocation) {
-                                                    rejectDrop = true;
-                                                    break;
-                                                }
-                                            }
-                                        } else if (dockableWrapper instanceof DockablePanel) {
-                                            DockablePanel dockablePanel = (DockablePanel) dockableWrapper;
-                                            if (dockablePanel.getDockable() == onDockable)
-                                                rejectDrop = true;
+                                if (onDockableContainer instanceof TabbedContentPane) {
+                                    TabbedContentPane tabbedContentPane = (TabbedContentPane) onDockableContainer;
+                                    for (int i = 0, size = tabbedContentPane.getTabCount(); i < size; i++) {
+                                        DockablePanel dockablePanel = (DockablePanel) tabbedContentPane.getComponentAt(i);
+                                        if (dockablePanel.getDockable() == onDockable && i == onIndex) {
+                                            rejectDrop = true;
+                                            break;
                                         }
                                     }
-                                }
-
-                                if (!rejectDrop) {
-                                    if (onDockable != null) {
-                                        content.detachOn((Content) onDockable,
-                                                         indexAtLocation,
-                                                         (dragAnchor == null) ? null : AggregationPosition.valueOf(dragAnchor.toString()));
-                                    } else {
-                                        content.detachOn((Content) onDockable,
-                                                         (dragAnchor == null) ? null : AggregationPosition.valueOf(dragAnchor.toString()));
-                                    }
-                                    dtde.dropComplete(true);
+                                } else if (onDockableContainer instanceof DockablePanel) {
+                                    DockablePanel dockablePanel = (DockablePanel) onDockableContainer;
+                                    if (dockablePanel.getDockable() == onDockable)
+                                        rejectDrop = true;
                                 }
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            dtde.dropComplete(false);
                         }
-                    } else
-                        dtde.rejectDrop();
-                } else
-                    dtde.rejectDrop();
-            } finally {
-                putProperty("dragEnd");
 
-                // Restore component
-                dragExit(dtde);
+                        if (!rejectDrop) {
+                            if (onDockable != null) {
+                                content.detachOn(onDockable,
+                                                 onIndex,
+                                                 (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()));
+                            } else {
+                                content.detachOn(onDockable,
+                                                 (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()));
+                            }
+                            return true;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
             }
-        }
 
+            return false;
+        }
     }
+
 }

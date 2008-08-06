@@ -33,6 +33,7 @@ import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DnDConstants;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
@@ -1429,6 +1430,23 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             super("toolWindow.container.", ToolWindow.class, Content.class);
         }
 
+        public boolean dragStart(Transferable transferable, int action) {
+            try {
+                if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
+                    if (System.identityHashCode(MyDoggyToolWindowManager.this) == (Integer) transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
+                        if (action == DnDConstants.ACTION_MOVE &&
+                            (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) ||
+                             transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF) ||
+                             transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)))
+
+                            return super.dragStart(transferable, action);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
 
         public boolean drop(Transferable transferable) {
             if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF)) {
