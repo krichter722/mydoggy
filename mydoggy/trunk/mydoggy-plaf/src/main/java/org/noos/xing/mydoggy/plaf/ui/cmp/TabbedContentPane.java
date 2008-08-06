@@ -5,7 +5,6 @@ import org.noos.xing.mydoggy.ContentUI;
 import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
-import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
@@ -32,33 +31,36 @@ import java.util.*;
  */
 public class TabbedContentPane extends JTabbedPane implements PropertyChangeListener,
                                                               MultiDockableOwner {
-    protected MyDoggyToolWindowManager toolWindowManager;
-    protected ResourceManager resourceManager;
-    protected boolean dragEnabled;
 
+    protected static final int LINEWIDTH = 3;
+    protected static final String TRANSFERABLE_NAME = "TabbedTransferable";
+
+
+    protected MyDoggyToolWindowManager toolWindowManager;
+
+    // Support maps
     protected Map<Integer, Content> contentMap;
     protected Map<Content, Object> flashingContents;
 
+    // Icons
     protected ExMultipleAggregateIcon aggregateIcon;
     protected TextIcon titleIcon;
 
+    // Support stream for the maximazion
     protected ByteArrayOutputStream tmpWorkspace = null;
 
+    // Support fields...
     protected MouseInputAdapter mouseInputAdapter;
     protected String currentToolTip;
-
-
+    protected boolean dragEnabled;
     protected boolean showMaximize = true, showDetach = true, showClose = true, showMinimize = true;
 
-    // For drag tabs
-    protected static final int LINEWIDTH = 3;
-    protected static final String TRANSFERABLE_NAME = "TabbedTransferable";
+    // Drag support fields
 
     protected Rectangle2D lineRect = new Rectangle2D.Double();
     protected Color lineColor = new Color(0, 100, 255);
     protected DragSource dragSource = new DragSource();
     protected int dragTabIndex = -1;
-
     protected int indexAtLocation;
 
 
@@ -66,29 +68,26 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         this(false);
     }
 
-    Image downArrow;
 
     public TabbedContentPane(boolean dragEnabled) {
-        super.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-
-        this.contentMap = new Hashtable<Integer, Content>();
-        this.flashingContents = new HashMap<Content, Object>();
-        this.dragEnabled = dragEnabled;
-
-        // Init aggregate icon
-        this.aggregateIcon = new ExMultipleAggregateIcon(6, SwingConstants.HORIZONTAL);
-        aggregateIcon.setIconAt(1, this.titleIcon = new TextIcon(this, "", TextIcon.ROTATE_NONE));
-
+        setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         setFocusable(false);
         setInheritsPopupMenu(false);
 
-        mouseInputAdapter = new MouseOverTabListener();
-        addMouseListener(mouseInputAdapter);
+        // Init maps
+        this.contentMap = new Hashtable<Integer, Content>();
+        this.flashingContents = new HashMap<Content, Object>();
+
+        // Init icons
+        this.aggregateIcon = new ExMultipleAggregateIcon(6, SwingConstants.HORIZONTAL);
+        aggregateIcon.setIconAt(1, this.titleIcon = new TextIcon(this, "", TextIcon.ROTATE_NONE));
+
+        // Init support fields
+        this.dragEnabled = dragEnabled;
+
+        // Register mouse listeners
+        addMouseListener(mouseInputAdapter = new MouseOverTabListener());
         addMouseMotionListener(mouseInputAdapter);
-
-
-        downArrow = SwingUtil.loadImage("org/noos/xing/mydoggy/plaf/ui/icons/arrowDown.png");
-
     }
 
 
@@ -121,14 +120,9 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         if (dragTabIndex >= 0) {
             Graphics2D g2 = (Graphics2D) g;
 
-            Rectangle rec = lineRect.getBounds();
-            g2.drawImage(downArrow, rec.x, rec.y , this);
-
-
-            // TODO... 
-
-//            g2.setPaint(lineColor);
-//            g2.fill(lineRect);
+            // TODO...paint an arrow like in firefox.. 
+            g2.setPaint(lineColor);
+            g2.fill(lineRect);
         }
     }
 
@@ -188,7 +182,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             Content content = getContentAt(index);
             Object o = flashingContents.get(content);
             if (o == null) {
-                Icon icon = new AggregateIcon(UIManager.getIcon("STAR"),
+                Icon icon = new AggregateIcon(UIManager.getIcon(MyDoggyKeySpace.TCP_STAR),
                                               super.getIconAt(index),
                                               SwingConstants.HORIZONTAL);
                 flashingContents.put(content, icon);
@@ -238,7 +232,6 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
     public void setToolWindowManager(MyDoggyToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
-        this.resourceManager = toolWindowManager.getResourceManager();
 
         aggregateIcon.setIconAt(2, UIManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_MINIMIZE));
         aggregateIcon.setIconAt(3, UIManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_MAXIMIZE));

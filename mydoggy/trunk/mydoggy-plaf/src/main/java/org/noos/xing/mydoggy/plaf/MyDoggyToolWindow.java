@@ -765,7 +765,10 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                 if ((descriptor.getManager().getContentManager().isEnabled() &&
                      toolWindow.getAnchor() != anchor &&
                      toolWindow.getType() != ToolWindowType.FLOATING_LIVE &&
-                     toolWindow.getType() != ToolWindowType.FLOATING// TODO: check this condition adedd for aggregation on floating...
+                     toolWindow.getType() != ToolWindowType.FLOATING &&
+                     toolWindow.getType() != ToolWindowType.FLOATING_FREE
+
+                     // TODO: check this condition adedd for aggregation on floating...
                 ) || !toolWindow.isVisible())
                     return;
             }
@@ -781,6 +784,10 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                     setType(ToolWindowType.FLOATING_LIVE);
                 } else if ((toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING) ||
                            (aggregateReferenceTool != null && aggregateReferenceTool.getType() == ToolWindowType.FLOATING)) {
+
+                    setType(ToolWindowType.FLOATING);
+                } else if ((toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING_FREE) ||
+                           (aggregateReferenceTool != null && aggregateReferenceTool.getType() == ToolWindowType.FLOATING_FREE)) {
 
                     setType(ToolWindowType.FLOATING);
                 } else {
@@ -802,6 +809,9 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                     setType(ToolWindowType.FLOATING_LIVE);
                 } else if ((toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING) ||
                            (aggregateReferenceTool != null && aggregateReferenceTool.getType() == ToolWindowType.FLOATING)) {
+                    setType(ToolWindowType.FLOATING);
+                } else if ((toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING_FREE) ||
+                           (aggregateReferenceTool != null && aggregateReferenceTool.getType() == ToolWindowType.FLOATING_FREE)) {
                     setType(ToolWindowType.FLOATING);
                 } else {
                     if (getType() != ToolWindowType.DOCKED)

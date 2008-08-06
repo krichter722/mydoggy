@@ -45,11 +45,11 @@ public class LoadWorkspaceAction extends AbstractAction implements ViewContextCh
                         PersistenceDelegate.MergePolicy.RESET,
                         new PersistenceDelegateCallback() {
 
-                            public ToolWindow toolwindowNotFound(ToolWindowManager toolWindowManager, String toolWindowId) {
+                            public ToolWindow toolwindowNotFound(ToolWindowManager toolWindowManager, String toolWindowId, PersistenceNode node) {
                                 return null;
                             }
 
-                            public Content contentNotFound(ToolWindowManager toolWindowManager, String contentId) {
+                            public Content contentNotFound(ToolWindowManager toolWindowManager, String contentId, PersistenceNode node) {
                                 if ("Welcome".equals(contentId))
                                     myDoggySetContext.put(MyDoggySet.class, null);
                                 else if ("Manager".equals(contentId))
