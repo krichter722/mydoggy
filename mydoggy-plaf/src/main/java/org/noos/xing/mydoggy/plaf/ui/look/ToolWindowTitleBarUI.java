@@ -456,14 +456,15 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
             if (!acquireLocks())
                 return;
 
-            // Start Drag
+            // if the source component a tab?
             MyDoggyToolWindowTab toolWindowTab = null;
             if (SwingUtilities.isDescendingFrom(dge.getComponent(), toolWindowTitleBar)) {
                 toolWindowTab = (MyDoggyToolWindowTab) SwingUtil.getParentClientProperty(dge.getComponent(), ToolWindowTab.class);
             }
 
+            // Start Drag
             if (toolWindowTab != null && toolWindowTab.getDockableDelegator() != null) {
-                // TODO: change..this
+                // The source is a tab
                 MyDoggyTransferable transferable = new MyDoggyTransferable(manager);
                 transferable.addEntry(MyDoggyTransferable.TOOL_WINDOW_ID_DF, toolWindowTab.getDockableDelegator().getId());
                 transferable.addEntry(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF, toolWindowTab.getId());
@@ -472,16 +473,19 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
                               transferable,
                               this);
             } else {
+                // The source is the tool window
                 dge.startDrag(DragSource.DefaultMoveDrop,
                               new MyDoggyTransferable(manager, MyDoggyTransferable.TOOL_WINDOW_ID_DF, toolWindow.getId()),
                               this);
             }
 
-            // Setup ghostImage
-            if (!descriptor.isDragImageAvailable() || SwingUtil.getBoolean("drag.icon.useDefault", false)) {
+            // Setup ghost image
+            if (!descriptor.isDragImageAvailable() || SwingUtil.getBoolean(MyDoggyKeySpace.DRAG_USE_DEFAULT_ICON, false)) {
+                // load default ghost image
                 setGhostImage(dge.getDragOrigin(),
                               SwingUtil.getImage(MyDoggyKeySpace.DRAG));
             } else {
+                // extract a ghost image from the component
                 Component contentContainer = descriptor.getComponentForDragImage();
                 BufferedImage ghostImage = new BufferedImage(contentContainer.getWidth(),
                                                              contentContainer.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -536,7 +540,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
                 if (lastDropPanel != null) {
                     lastDropPanel.drop(dsde.getDragSourceContext().getTransferable());
                 } else if (lastBarAnchor == null) {
-                    // move to FLOATING_LIVE or FLOATING
+                    // The drop is not on an ToolWindowBar... so move the tool to FLOATING_LIVE or FLOATING
 
                     Window ancestor = SwingUtilities.getWindowAncestor(manager);
 
@@ -548,21 +552,21 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
                         dsdeLocation.x <= ancestorBounds.getMaxX() &&
                         dsdeLocation.y <= ancestorBounds.getMaxY()) {
 
-                        // Move to floating live
                         SwingUtil.convertPointFromScreen2(dsdeLocation, ancestor);
-
                         ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
-                        // TODO: check for JMenuBar
                         toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setLocation(
                                 dsdeLocation.x, dsdeLocation.y
                         );
+
+                        // Move to floating live
                         toolWindow.setType(ToolWindowType.FLOATING_LIVE);
                     } else {
-                        // Move to floating
                         ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
                         toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).setLocation(
                                 dsdeLocation.x, dsdeLocation.y
                         );
+
+                        // Move to floating
                         toolWindow.setType(ToolWindowType.FLOATING);
                     }
                 }

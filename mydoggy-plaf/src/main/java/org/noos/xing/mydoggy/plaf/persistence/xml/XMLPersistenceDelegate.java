@@ -730,6 +730,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     }
 
     public abstract class ElementParserAdapter implements ElementParser<Element> {
+        protected XMLPersistenceNode node;
+
+        protected ElementParserAdapter() {
+            this.node = new XMLPersistenceNode();
+        }
 
         public Element getElement(Element root, String name) {
             NodeList list = root.getElementsByTagName(name);
@@ -854,7 +859,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 // load descriptors
                 ToolWindow toolWindow = context.get(ToolWindowManager.class).getToolWindow(toolId);
                 if (toolWindow == null)
-                    toolWindow = context.get(PersistenceDelegateCallback.class).toolwindowNotFound(context.get(ToolWindowManager.class), toolId);
+                    toolWindow = context.get(PersistenceDelegateCallback.class).toolwindowNotFound(
+                            context.get(ToolWindowManager.class),
+                            toolId,
+                            node.setElement(tool)
+                    );
 
                 if (toolWindow == null)
                     continue;
@@ -1060,7 +1069,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                 ToolWindow toolWindow = context.get(ToolWindowManager.class).getToolWindow(toolId);
                 if (toolWindow == null)
-                    toolWindow = context.get(PersistenceDelegateCallback.class).toolwindowNotFound(context.get(ToolWindowManager.class), toolId);
+                    toolWindow = context.get(PersistenceDelegateCallback.class).toolwindowNotFound(
+                            context.get(ToolWindowManager.class),
+                            toolId,
+                            node.setElement(tool)
+                    );
 
                 if (toolWindow == null)
                     continue;
@@ -1110,7 +1123,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 Content content = context.get(ToolWindowManager.class).getContentManager().getContent(contentId);
                 if (content == null)
                     content = context.get(PersistenceDelegateCallback.class).contentNotFound(context.get(ToolWindowManager.class),
-                                                                                             contentId);
+                                                                                             contentId,
+                                                                                             node.setElement(contentElement));
 
                 if (content != null) {
                     if (getBoolean(contentElement, "selected", false))
@@ -1252,7 +1266,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                         String contentId = contentUIElm.getAttribute("id");
                         Content content = contentManager.getContent(contentId);
                         if (content == null)
-                            content = context.get(PersistenceDelegateCallback.class).contentNotFound(context.get(ToolWindowManager.class), contentId);
+                            content = context.get(PersistenceDelegateCallback.class).contentNotFound(
+                                    context.get(ToolWindowManager.class),
+                                    contentId,
+                                    node.setElement(contentUIElm)
+                            );
 
                         if (content != null) {
                             MultiSplitContentUI multiSplitContentUI = (MultiSplitContentUI) content.getContentUI();
@@ -1315,7 +1333,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     Content content = contentManager.getContent(contentId);
                     if (content == null)
                         content = context.get(PersistenceDelegateCallback.class).contentNotFound(context.get(ToolWindowManager.class),
-                                                                                                 contentId);
+                                                                                                 contentId,
+                                                                                                 node.setElement(contentUIElm));
                     
                     if (content != null) {
                         DesktopContentUI desktopContentUI = (DesktopContentUI) content.getContentUI();
@@ -1336,6 +1355,5 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         }
 
     }
-
 
 }

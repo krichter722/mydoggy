@@ -14,11 +14,11 @@ import org.noos.xing.mydoggy.ToolWindowManager;
  */
 public class PersistenceDelegateCallbackAdapter implements PersistenceDelegateCallback {
 
-    public ToolWindow toolwindowNotFound(ToolWindowManager toolWindowManager, String toolWindowId) {
+    public ToolWindow toolwindowNotFound(ToolWindowManager toolWindowManager, String toolWindowId, PersistenceNode node) {
         return null;
     }
 
-    public Content contentNotFound(ToolWindowManager toolWindowManager, String contentId) {
+    public Content contentNotFound(ToolWindowManager toolWindowManager, String contentId, PersistenceNode node) {
         return null;
     }
 

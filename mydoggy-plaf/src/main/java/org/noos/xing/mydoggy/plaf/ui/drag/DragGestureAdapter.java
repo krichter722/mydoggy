@@ -152,8 +152,22 @@ public abstract class DragGestureAdapter implements DragGesture, Cleaner {
         Container source = manager.getLayeredPane();
         Component deepestCmp = null;
 
+        // Check is the point is on a mydoggy window. (ModalWindow or ContentWindow)
+        for (Window window : SwingUtil.getMyDoggyTopContainers()) {
+            if (!window.isVisible())
+                continue;
+
+            location = event.getLocation();
+
+            SwingUtilities.convertPointFromScreen(location, window);
+            deepestCmp = SwingUtilities.getDeepestComponentAt(window, location.x, location.y);
+
+            if (deepestCmp != null)
+                break;
+        }
+
         // Check is the point is on the layered pane of the manager...for FLOATING_LIVE
-        if (source.getComponentCount() > 0) {
+        if (deepestCmp == null && source.getComponentCount() > 0) {
             SwingUtilities.convertPointFromScreen(location, source);
             deepestCmp = SwingUtilities.getDeepestComponentAt(source, location.x, location.y);
         }
@@ -164,23 +178,6 @@ public abstract class DragGestureAdapter implements DragGesture, Cleaner {
             SwingUtilities.convertPointFromScreen(location, manager);
             deepestCmp = SwingUtilities.getDeepestComponentAt(manager, location.x, location.y);
         }
-
-        if (deepestCmp == null) {
-            // Check is the point is on a mydoggy window. (ModalWindow or ContentWindow)  TODO: it doesn't work as expected
-            for (Window window : SwingUtil.getMyDoggyTopContainers()) {
-                if (!window.isVisible())
-                    continue;
-                
-                location = event.getLocation();
-
-                SwingUtilities.convertPointFromScreen(location, window);
-                deepestCmp = SwingUtilities.getDeepestComponentAt(window, location.x, location.y);
-
-                if (deepestCmp != null)
-                    break;
-            }
-        }
-
 
         if (deepestCmp != null) {
             DockableDropPanel dockableDropPanel = SwingUtil.getParent(deepestCmp, DockableDropPanel.class);

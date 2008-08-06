@@ -1,5 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
+import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.DockableManagerListener;
 import org.noos.xing.mydoggy.event.DockableManagerEvent;
@@ -41,6 +42,7 @@ public class DockablePanelUI extends BasicPanelUI implements PropertyChangeListe
     protected boolean flashingState;
     protected Border flashingBorder;
     protected long startingTime = 0;
+    protected int flashingInterval = 500;
 
 
     public DockablePanelUI() {
@@ -51,6 +53,7 @@ public class DockablePanelUI extends BasicPanelUI implements PropertyChangeListe
         //  Init fields
         this.dockablePanel = (DockablePanel) c;
         this.dockable = dockablePanel.getDockable();
+        this.flashingEnabled = dockable instanceof Content;
 
         super.installUI(c);
 
@@ -101,13 +104,14 @@ public class DockablePanelUI extends BasicPanelUI implements PropertyChangeListe
                 if (!dockable.isSelected()) {
                     dockablePanel.putClientProperty("oldBorder", dockablePanel.getBorder());
                     flashingDuration = -1;
-                    flashingTimer = new Timer(600, this);
+                    flashingTimer = new Timer(flashingInterval, this);
                     flashingTimer.start();
                 }
             } else {
                 if (flashingTimer != null) {
                     flashingTimer.stop();
                     flashingTimer = null;
+
                     dockablePanel.setBorder((Border) dockablePanel.getClientProperty("oldBorder"));
                 }
             }
@@ -119,7 +123,7 @@ public class DockablePanelUI extends BasicPanelUI implements PropertyChangeListe
                 if (!dockable.isSelected()) {
                     dockablePanel.putClientProperty("oldBorder", dockablePanel.getBorder());
                     flashingDuration = (Integer) evt.getNewValue();
-                    flashingTimer = new Timer(600, this);
+                    flashingTimer = new Timer(flashingInterval, this);
                     flashingTimer.start();
                 }
             } else {

@@ -48,6 +48,8 @@ public interface MyDoggyKeySpace {
     String CONTENT_PAGE_MAXIMIZE = "mydoggy.icon.contentPageMaximize";
     String CONTENT_PAGE_RESTORE = "mydoggy.icon.contentPageRestore";
 
+    String TCP_STAR = "TabbedContentPan.icon.star";
+
     // Images
 
     String DRAG = "mydoggy.image.drag";

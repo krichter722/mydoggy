@@ -715,30 +715,26 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                         dsdeLocation.x <= ancestorBounds.getMaxX() &&
                         dsdeLocation.y <= ancestorBounds.getMaxY()) {
 
-                        // Move to floating live
+                        // Setup location
                         SwingUtil.convertPointFromScreen2(dsdeLocation, ancestor);
-
                         ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
-                        // TODO: check for JMenuBar
-                        toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setLocation(
-                                dsdeLocation.x, dsdeLocation.y
-                        );
+                        toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setLocation(dsdeLocation.x, dsdeLocation.y);
+
+                        // Move to floating live
                         toolWindow.setType(ToolWindowType.FLOATING_LIVE);
-
-                        if (!toolWindow.isVisible())
-                            toolWindow.setActive(true);
-
                     } else {
-                        // Move to floating
+                        // Setup location
                         ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
                         toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).setLocation(
                                 dsdeLocation.x, dsdeLocation.y
                         );
-                        toolWindow.setType(ToolWindowType.FLOATING);
 
-                        if (!toolWindow.isVisible())
-                            toolWindow.setActive(true);
+                        // Move to floating
+                        toolWindow.setType(ToolWindowType.FLOATING);
                     }
+                    // activate the tool
+                    if (!toolWindow.isVisible())
+                        toolWindow.setActive(true);
                 }
             } finally {
                 // End dockable drop gesture..

@@ -600,15 +600,17 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
             FloatingTypeDescriptor floatingTypeDescriptor = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class);
 
             if (floatingTypeDescriptor.isAddToTaskBar()) {
-                modalWindow = new ModalFrame(toolWindow,
+                modalWindow = new ModalFrame(manager,
+                                             toolWindow,
                                              getAncestorForWindow(),
                                              null,  // TODO: and this...
                                              floatingTypeDescriptor.isModal());
             } else
                 modalWindow = new ModalDialog(manager,
                                               getAncestorForWindow(),
-                                              null, // TODO: and this...
+                                              null,
                                               floatingTypeDescriptor.isModal());
+            modalWindow.setName("toolWindow.floating.window." + toolWindow.getId());
 
             modalWindowMap.put(toolWindow, modalWindow);
         }
