@@ -24,7 +24,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.event.ShortcutProcessor;
 import org.noos.xing.mydoggy.plaf.ui.content.ContentDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyTabbedContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.drag.ContentManagerDropTarget;
-import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowCommonMultiSplitDropTarget;
+import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.util.DockableManager2ToolWindowManagerWrapper;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -32,6 +32,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import java.awt.*;
+import java.awt.datatransfer.Transferable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
@@ -212,7 +213,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                                                              title, icon, component,
                                                              null);
         toolWindow.addPlafPropertyChangeListener(this);
-
 
         // fire Event
         fireRegisteredToolEvent(toolWindow);
@@ -439,7 +439,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
 
 //        System.out.println(SwingUtil.toString(evt));
-        /*boolean fired = */propertyChangeSupport.firePropertyChange(evt);
+        /*boolean fired = */
+        propertyChangeSupport.firePropertyChange(evt);
 /*
         if (fired && source instanceof MyDoggyToolWindowTab) {
             System.out.println("fired when tab ");
@@ -591,6 +592,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public ToolWindowAnchor getToolWindowAnchor(Point p) {
+        p = SwingUtil.convertPointFromScreen(p, this);
+
         Rectangle b = getBounds();
 
         int leftLength = getBar(LEFT).getLength();
@@ -681,12 +684,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             toolDockableContainer = new MultiSplitDockableContainer(MyDoggyToolWindowManager.this, JSplitPane.VERTICAL_SPLIT);
             toolDockableContainer.setStoreLayout(false);
 
-            ContentPanel contentPanel = new ContentPanel("toolWindow.container.");
-            contentPanel.setDropTarget(new ToolWindowCommonMultiSplitDropTarget(contentPanel, MyDoggyToolWindowManager.this));
-            contentPanel.setComponent(toolDockableContainer);
+            DockableDropPanel dockableDropPanel = new ToolDockableDropPanel();
+//            dockableDropPanel.setDropTarget(new ToolWindowCommonMultiSplitDropTarget(dockableDropPanel, MyDoggyToolWindowManager.this));
+            dockableDropPanel.setComponent(toolDockableContainer);
 
             oldMainContent = getMainContent();
-            setMainContent(contentPanel);
+            setMainContent(dockableDropPanel);
             dockableMainContentMode = true;
         } else {
             dockableMainContentMode = false;
@@ -871,7 +874,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         splitPane.setDividerLocation(300);
         splitPane.setLeftComponent(null);
         splitPane.setRightComponent(null);
-        
+
         return splitPane;
     }
 
@@ -1024,6 +1027,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public void setTempShowed(boolean tempShowed) {
+        // TODO: change this name..
         getBar(LEFT).setTempShowed(tempShowed);
         getBar(RIGHT).setTempShowed(tempShowed);
         getBar(TOP).setTempShowed(tempShowed);
@@ -1037,7 +1041,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             return descriptor;
         } else if (dockable instanceof Content) {
             return new ContentDescriptor(this, (Content) dockable);
-        } throw new IllegalArgumentException("Invalid dockable. [dockable : " + dockable + "]");
+        }
+        throw new IllegalArgumentException("Invalid dockable. [dockable : " + dockable + "]");
     }
 
     public Dockable getDockableWrapper(Dockable dockable) {
@@ -1379,7 +1384,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 //                        group.getToolsWindow()[0].addPropertyChangeListener(listener);
 
                         firePublic = false;
-                        
+
                         group.setVisible(false);
                         setDockableMainContentMode(!(Boolean) evt.getNewValue());
                         group.setVisible(true);
@@ -1395,7 +1400,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public class InternalContentMananagerListener implements ContentManagerListener,
-                                                                PropertyChangeListener {
+                                                             PropertyChangeListener {
 
         public void contentAdded(ContentManagerEvent event) {
             MyDoggyContent content = (MyDoggyContent) event.getContent();
@@ -1405,7 +1410,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         public void contentRemoved(ContentManagerEvent event) {
             MyDoggyContent content = (MyDoggyContent) event.getContent();
-            content.removePlafPropertyChangeListener(this);            
+            content.removePlafPropertyChangeListener(this);
         }
 
         public void contentSelected(ContentManagerEvent event) {
@@ -1413,6 +1418,195 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         public void propertyChange(PropertyChangeEvent evt) {
             ensureContentVisible((Content) evt.getNewValue());
+        }
+    }
+
+
+    public class ToolDockableDropPanel extends DockableDropPanel {
+
+        public ToolDockableDropPanel() {
+            super("toolWindow.container.", ToolWindow.class, Content.class);
+        }
+
+
+        public boolean drop(Transferable transferable) {
+            if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF)) {
+                try {
+                    ToolWindow toolWindow = getToolWindow(
+                            transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_ID_DF)
+                    );
+
+                    if (toolWindow != null) {
+                        // Move tool to another anchor
+
+                        // Chech if it was a tab
+                        if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)) {
+                            // Remove from tab
+                            ToolWindowTab tab = (ToolWindowTab) getDockable(
+                                    transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)
+                            );
+                            tab.getOwner().removeToolWindowTab(tab);
+                            toolWindow = (ToolWindow) tab.getDockableDelegator();
+                        }
+
+                        ToolWindow onToolWindow = (ToolWindow) getOnDockable();
+                        int anchorIndex = (onToolWindow != null) ? onToolWindow.getAnchorIndex() : -1;
+
+                        if (toolWindow == onToolWindow)
+                            return false;
+
+                        boolean oldAggregateMode = toolWindow.isAggregateMode();
+                        toolWindow.setAggregateMode(true);
+
+                        ToolWindowAnchor dragAnchor = getOnAnchor();
+                        try {
+                            if (dragAnchor != null) {
+                                switch (dragAnchor) {
+                                    case LEFT:
+                                        if (onToolWindow != null) {
+                                            toolWindow.setAnchor(dragAnchor, anchorIndex != -1 ? anchorIndex - 1 : -1);
+                                            toolWindow.aggregate(onToolWindow, AggregationPosition.LEFT);
+                                        } else {
+                                            if (checkCondition(toolWindow)) {
+                                                toolWindow.setAnchor(dragAnchor, 0);
+                                                toolWindow.aggregate(AggregationPosition.LEFT);
+                                            }
+                                        }
+                                        break;
+                                    case RIGHT:
+                                        if (onToolWindow != null) {
+                                            toolWindow.setAnchor(dragAnchor, anchorIndex != -1 ? anchorIndex + 1 : -1);
+                                            toolWindow.aggregate(onToolWindow, AggregationPosition.RIGHT);
+                                        } else {
+                                            if (checkCondition(toolWindow)) {
+                                                toolWindow.setAnchor(dragAnchor);
+                                                toolWindow.aggregate(AggregationPosition.RIGHT);
+                                            }
+                                        }
+                                        break;
+                                    case BOTTOM:
+                                        if (onToolWindow != null) {
+                                            toolWindow.setAnchor(dragAnchor, anchorIndex != -1 ? anchorIndex + 1 : -1);
+                                            toolWindow.aggregate(onToolWindow, AggregationPosition.BOTTOM);
+                                        } else {
+                                            if (checkCondition(toolWindow)) {
+                                                toolWindow.setAnchor(dragAnchor);
+                                                toolWindow.aggregate(AggregationPosition.BOTTOM);
+                                            }
+                                        }
+                                        break;
+                                    case TOP:
+                                        if (onToolWindow != null) {
+                                            toolWindow.setAnchor(dragAnchor, anchorIndex != -1 ? anchorIndex - 1 : -1);
+                                            toolWindow.aggregate(onToolWindow, AggregationPosition.TOP);
+                                        } else {
+                                            if (checkCondition(toolWindow)) {
+                                                toolWindow.setAnchor(dragAnchor, 0);
+                                                toolWindow.aggregate(AggregationPosition.TOP);
+                                            }
+                                        }
+                                        break;
+                                }
+                            } else {
+                                if (onToolWindow != null && toolWindow != onToolWindow) {
+                                    onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
+                                } else {
+                                    toolWindow.aggregate();
+                                }
+                            }
+                            toolWindow.setActive(true);
+                        } finally {
+                            toolWindow.setAggregateMode(oldAggregateMode);
+                        }
+
+                        return true;
+                    } else
+                        return false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            } else if (transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {
+                try {
+                    Content content = getContentManager().getContent(
+                            transferable.getTransferData(MyDoggyTransferable.CONTENT_ID_DF)
+                    );
+
+                    if (content != null) {
+                        getContentManager().removeContent(content);
+
+                        if (content.getDockableDelegator() != null) {
+                            Dockable delegator = content.getDockableDelegator();
+
+                            if (delegator instanceof ToolWindow) {
+                                ToolWindow toolWindow = (ToolWindow) delegator;
+                                ToolWindow onToolWindow = (ToolWindow) getOnDockable();
+                                int anchorIndex = (onToolWindow != null) ? onToolWindow.getAnchorIndex() : -1;
+
+                                if (toolWindow == onToolWindow)
+                                    return false;
+
+                                boolean oldAggregateMode = toolWindow.isAggregateMode();
+                                toolWindow.setAggregateMode(true);
+                                ToolWindowAnchor dragAnchor = getOnAnchor();
+                                try {
+                                    toolWindow.setAnchor(dragAnchor, anchorIndex);
+
+                                    if (dragAnchor != null) {
+                                        switch (dragAnchor) {
+                                            case LEFT:
+                                                if (onToolWindow != null)
+                                                    toolWindow.aggregate(onToolWindow, AggregationPosition.LEFT);
+                                                else
+                                                    toolWindow.aggregate(AggregationPosition.LEFT);
+                                                break;
+                                            case RIGHT:
+                                                if (onToolWindow != null)
+                                                    toolWindow.aggregate(onToolWindow, AggregationPosition.RIGHT);
+                                                else
+                                                    toolWindow.aggregate(AggregationPosition.RIGHT);
+                                                break;
+                                            case BOTTOM:
+                                                if (onToolWindow != null)
+                                                    toolWindow.aggregate(onToolWindow, AggregationPosition.BOTTOM);
+                                                else
+                                                    toolWindow.aggregate(AggregationPosition.BOTTOM);
+                                                break;
+                                            case TOP:
+                                                if (onToolWindow != null)
+                                                    toolWindow.aggregate(onToolWindow, AggregationPosition.TOP);
+                                                else
+                                                    toolWindow.aggregate(AggregationPosition.TOP);
+                                                break;
+                                        }
+                                    } else {
+                                        if (onToolWindow != null) {
+                                            onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
+                                        } else
+                                            toolWindow.aggregate();
+                                    }
+                                    toolWindow.setActive(true);
+                                } finally {
+                                    toolWindow.setAggregateMode(oldAggregateMode);
+                                }
+                                return true;
+                            }
+                        } else {
+                            return false;
+                        }
+
+                    } else
+                        return false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        protected boolean checkCondition(ToolWindow toolWindow) {
+            return true;    // TODO: it's always true........is it right?
         }
     }
 
@@ -1454,5 +1648,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                    '}';
         }
     }
+
 
 }

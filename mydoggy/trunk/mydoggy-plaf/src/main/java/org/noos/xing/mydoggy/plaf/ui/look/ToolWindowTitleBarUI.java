@@ -56,7 +56,6 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
     protected ExtendedTableLayout toolWindowTitleBarLayout;
     protected MouseListener titleBarMouseAdapter;
 
-
     // Animation fields
 
     protected GradientAnimation animation;
@@ -445,10 +444,12 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
 
 
         public void dragGestureRecognized(DragGestureEvent dge) {
+            super.dragGestureRecognized(dge);
+
             // Check validaty
-            if (toolWindow.getType() == ToolWindowType.FLOATING ||
-                toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
-                toolWindow.getType() == ToolWindowType.FLOATING_LIVE)
+            if ((toolWindow.getType() == ToolWindowType.FLOATING ||
+                 toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
+                 toolWindow.getType() == ToolWindowType.FLOATING_LIVE) && !dge.getTriggerEvent().isShiftDown())
                 return;
 
             // Acquire locks
@@ -462,7 +463,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
             }
 
             if (toolWindowTab != null && toolWindowTab.getDockableDelegator() != null) {
-                // TDDO: change..this
+                // TODO: change..this
                 MyDoggyTransferable transferable = new MyDoggyTransferable(manager);
                 transferable.addEntry(MyDoggyTransferable.TOOL_WINDOW_ID_DF, toolWindowTab.getDockableDelegator().getId());
                 transferable.addEntry(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF, toolWindowTab.getId());
@@ -500,9 +501,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
                 return;
 
             // Obtain anchor for location
-            ToolWindowAnchor newAnchor = manager.getToolWindowAnchor(
-                    SwingUtil.convertPointFromScreen(dsde.getLocation(), manager)
-            );
+            ToolWindowAnchor newAnchor = manager.getToolWindowAnchor(dsde.getLocation());
 
             if (newAnchor != lastAnchor) {
                 if (newAnchor == null) {
@@ -516,6 +515,8 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
             }
 
             updateGhostImage(dsde.getLocation());
+
+            updateDropTarget(dsde);
         }
 
         public void dragDropEnd(DragSourceDropEvent dsde) {
@@ -524,40 +525,50 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
 
             releaseLocks();
 
+            // Restore bars
             manager.setTempShowed(false);
 
-            // Finalize drag action...
+            // Clean ghost image
             cleanupGhostImage();
 
-            if (!dsde.getDropSuccess()) {
-                // move to FLOATING_LIVE or FLOATING
+            // Finalize drag action...
+            try {
+                if (lastDropPanel != null) {
+                    lastDropPanel.drop(dsde.getDragSourceContext().getTransferable());
+                } else if (lastBarAnchor == null) {
+                    // move to FLOATING_LIVE or FLOATING
 
-                Window ancestor = SwingUtilities.getWindowAncestor(manager);
+                    Window ancestor = SwingUtilities.getWindowAncestor(manager);
 
-                Rectangle ancestorBounds = ancestor.getBounds();
-                Point dsdeLocation = dsde.getLocation();
+                    Rectangle ancestorBounds = ancestor.getBounds();
+                    Point dsdeLocation = dsde.getLocation();
 
-                if (dsdeLocation.x >= ancestorBounds.x &&
-                    dsdeLocation.y >= ancestorBounds.y &&
-                    dsdeLocation.x <= ancestorBounds.getMaxX() &&
-                    dsdeLocation.y <= ancestorBounds.getMaxY()) {
+                    if (dsdeLocation.x >= ancestorBounds.x &&
+                        dsdeLocation.y >= ancestorBounds.y &&
+                        dsdeLocation.x <= ancestorBounds.getMaxX() &&
+                        dsdeLocation.y <= ancestorBounds.getMaxY()) {
 
-                    // Move to floating live
-                    SwingUtil.convertPointFromScreen2(dsdeLocation, ancestor);
+                        // Move to floating live
+                        SwingUtil.convertPointFromScreen2(dsdeLocation, ancestor);
 
-                    ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
-                    toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setLocation(
-                            dsdeLocation.x, dsdeLocation.y
-                    );
-                    toolWindow.setType(ToolWindowType.FLOATING_LIVE);
-                } else {
-                    // Move to floating
-                    ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
-                    toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).setLocation(
-                            dsdeLocation.x, dsdeLocation.y
-                    );
-                    toolWindow.setType(ToolWindowType.FLOATING);
+                        ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
+                        // TODO: check for JMenuBar
+                        toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setLocation(
+                                dsdeLocation.x, dsdeLocation.y
+                        );
+                        toolWindow.setType(ToolWindowType.FLOATING_LIVE);
+                    } else {
+                        // Move to floating
+                        ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
+                        toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).setLocation(
+                                dsdeLocation.x, dsdeLocation.y
+                        );
+                        toolWindow.setType(ToolWindowType.FLOATING);
+                    }
                 }
+            } finally {
+                // End dockable drop gesture..
+                dockableDropDragExit();
             }
         }
 

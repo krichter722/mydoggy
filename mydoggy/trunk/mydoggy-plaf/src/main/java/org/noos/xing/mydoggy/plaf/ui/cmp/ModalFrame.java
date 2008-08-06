@@ -12,12 +12,13 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 
 /**
- * TODO: implements new methods...
+ * TODO: implements new methods...like ModalDialog...
  */
 public class ModalFrame extends JFrame implements ModalWindow {
     protected Window modalToWindow;
     protected boolean notifiedModalToWindow;
     protected Component returnFocus;
+
 
     public ModalFrame(Dockable dockable, Window owner, Component returnFocus, boolean modal) {
         setAlwaysOnTop(owner != null);
@@ -36,6 +37,7 @@ public class ModalFrame extends JFrame implements ModalWindow {
 
         enableEvents(WindowEvent.WINDOW_EVENT_MASK | ComponentEvent.MOUSE_MOTION_EVENT_MASK);
     }
+
 
     public void setVisible(boolean visible) {
         if (!visible) {
@@ -104,6 +106,7 @@ public class ModalFrame extends JFrame implements ModalWindow {
     public ToolWindow getFirstToolWindow() {
         return null;
     }
+
 
     protected void restoreOwner() {
         synchronized (ModalFrame.this) {

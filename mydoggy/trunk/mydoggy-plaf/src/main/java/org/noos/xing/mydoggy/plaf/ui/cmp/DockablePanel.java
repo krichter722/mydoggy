@@ -9,7 +9,7 @@ import java.awt.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class DockablePanel extends JPanel {
+public class DockablePanel extends JPanel implements DockableOwner {
 
     /**
      * @see #getUIClassID
@@ -34,6 +34,10 @@ public class DockablePanel extends JPanel {
     }
 
 
+    public Dockable getDockable() {
+        return dockable;
+    }
+
     public void updateUI() {
         if (dockable != null)
             setUI((DockablePanelUI) UIManager.getUI(this));
@@ -47,10 +51,6 @@ public class DockablePanel extends JPanel {
         super.setUI(ui);
     }
 
-
-    public Dockable getDockable() {
-        return dockable;
-    }
 
     public Component getComponent() {
         return getComponent(0);

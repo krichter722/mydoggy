@@ -21,21 +21,20 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MultiSplitTabbedContentContainer extends MultiSplitDockableContainer {
-    protected ContentPanel contentPanel;
+    protected DockableDropPanel dockableDropPanel;
 
 
     public MultiSplitTabbedContentContainer(MyDoggyToolWindowManager toolWindowManager) {
         super(toolWindowManager, JSplitPane.VERTICAL_SPLIT);
         setStoreLayout(false);
 
-        this.contentPanel = new ContentPanel("@@mydoggy.dockable.", 10);
-        this.contentPanel.setDropTarget(createDropTarget());
-        add(contentPanel, "0,0,FULL,FULL");
+        this.dockableDropPanel = createDockableDropPanel();
+        add(dockableDropPanel, "0,0,FULL,FULL");
     }
 
 
     public Component[] getTabbedComponents() {
-        Component component = contentPanel.getComponent();
+        Component component = dockableDropPanel.getComponent();
         if (component instanceof MultiSplitPane) {
             return ((MultiSplitPane) component).getComponents();
         } else
@@ -60,7 +59,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         wrapper.setToolWindowManager(toolWindowManager);
         wrapper.setName("@@mydoggy.dockable.tabbedpane");
         wrapper.addTab((Content) dockable, new DockablePanel(dockable, component));
-        
+
         SwingUtil.registerDragGesture(wrapper, new TabbedDragGesture(wrapper));
 
         return wrapper;
@@ -99,7 +98,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
             // Create a new tabbedContentPane with the old dockable
             TabbedContentPane tabbedContentPane = (TabbedContentPane) forceWrapperForComponent(wrapperContainer.getDockable(),
-                                                                                                 wrapperContainer.getComponent());
+                                                                                               wrapperContainer.getComponent());
 
             // add the new dockable
             tabbedContentPane.addTab((Content) dockable,
@@ -140,15 +139,15 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
     }
 
     protected Component getRootComponent() {
-        return contentPanel.getComponent();
+        return dockableDropPanel.getComponent();
     }
 
     protected void setRootComponent(Component component) {
-        contentPanel.setComponent(component);
+        dockableDropPanel.setComponent(component);
     }
 
     protected void resetRootComponent() {
-        contentPanel.resetComponent();
+        dockableDropPanel.resetComponent();
     }
 
     protected boolean isWrapper(Component component) {
@@ -156,7 +155,11 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
     }
 
     protected DropTarget createDropTarget() {
-        return new ContentDropTarget(contentPanel, toolWindowManager);
+        return new ContentDropTarget(dockableDropPanel, toolWindowManager);
+    }
+
+    protected DockableDropPanel createDockableDropPanel() {
+        return new MultiSplitTabbedDockableDropPanel();
     }
 
 
@@ -172,6 +175,8 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
 
         public void dragGestureRecognized(DragGestureEvent dge) {
+            super.dragGestureRecognized(dge);
+
             // Acquire locks
             if (!acquireLocks())
                 return;
@@ -214,8 +219,10 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         public void dragMouseMoved(DragSourceDragEvent dsde) {
             if (!checkStatus())
                 return;
-            
+
             updateGhostImage(dsde.getLocation());
+
+            updateDropTarget(dsde);
         }
 
         public void dragDropEnd(DragSourceDropEvent dsde) {
@@ -223,30 +230,129 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                 return;
 
             releaseLocks();
-            
-            // Finalize drag action...
+
+            // Clean ghost image
             cleanupGhostImage();
 
-            if (!dsde.getDropSuccess()) {
-                 Content content = tabbedContentPane.getContentAt(dragTabIndex);
-                 ContentUI contentUI = content.getContentUI();
+            // Finalize drag action...
+            try {
+                if (lastDropPanel != null) {
+                    lastDropPanel.drop(dsde.getDragSourceContext().getTransferable());
+                } else if (lastBarAnchor == null) {
+                    // Detach content
 
-                 Rectangle bounds = contentUI.getDetachedBounds();
-                 if (bounds != null) {
-                     bounds.setLocation(dsde.getLocation());
-                 } else {
-                     bounds = new Rectangle();
-                     bounds.setLocation(dsde.getLocation());
-                     bounds.setSize(toolWindowManager.getBoundsToScreen(content.getComponent().getBounds(),
-                                                                        content.getComponent().getParent()).getSize());
-                 }
+                    Content content = tabbedContentPane.getContentAt(dragTabIndex);
+                    ContentUI contentUI = content.getContentUI();
 
-                 contentUI.setDetachedBounds(bounds);
-                 content.setDetached(true);
-             }
+                    Rectangle bounds = contentUI.getDetachedBounds();
+                    if (bounds != null) {
+                        bounds.setLocation(dsde.getLocation());
+                    } else {
+                        bounds = new Rectangle();
+                        bounds.setLocation(dsde.getLocation());
+                        bounds.setSize(toolWindowManager.getBoundsToScreen(content.getComponent().getBounds(),
+                                                                           content.getComponent().getParent()).getSize());
+                    }
+
+                    contentUI.setDetachedBounds(bounds);
+                    content.setDetached(true);
+                }
+            } finally {
+                // End dockable drop gesture..
+                dockableDropDragExit();
+            }
         }
 
     }
+
+    public class MultiSplitTabbedDockableDropPanel extends DockableDropPanel {
+
+        public MultiSplitTabbedDockableDropPanel() {
+            super("@@mydoggy.dockable.", 10, Content.class);
+        }
+
+
+        public boolean dragStart(Transferable transferable, int action) {
+            try {
+                if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
+                    if (System.identityHashCode(toolWindowManager) == (Integer) transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
+                        if (transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF))
+                            return super.dragStart(transferable, 1);;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        public boolean drop(Transferable transferable) {
+// TODO           if (oldTabbedContentPane != null) {
+//                oldTabbedContentPane.setTargetLine(-1);
+//                oldTabbedContentPane = null;
+//            }
+
+            if (transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {
+                try {
+                    ContentManager contentManager = toolWindowManager.getContentManager();
+                    Content content = contentManager.getContent(
+                            transferable.getTransferData(MyDoggyTransferable.CONTENT_ID_DF)
+                    );
+
+                    if (content != null) {
+                        boolean rejectDrop = false;
+
+                        Content onDockable = (Content) getOnDockable();
+                        int onIndex = getOnIndex();
+
+                        if (content == onDockable) {
+                            if (onIndex == -1) {
+                                rejectDrop = true;
+                            } else {
+                                Component onDockableContainer = getOnDockableContainer();
+
+                                if (onDockableContainer instanceof TabbedContentPane) {
+                                    TabbedContentPane tabbedContentPane = (TabbedContentPane) onDockableContainer;
+                                    for (int i = 0, size = tabbedContentPane.getTabCount(); i < size; i++) {
+                                        DockablePanel dockablePanel = (DockablePanel) tabbedContentPane.getComponentAt(i);
+                                        if (dockablePanel.getDockable() == onDockable && i == onIndex) {
+                                            rejectDrop = true;
+                                            break;
+                                        }
+                                    }
+                                } else if (onDockableContainer instanceof DockablePanel) {
+                                    DockablePanel dockablePanel = (DockablePanel) onDockableContainer;
+                                    if (dockablePanel.getDockable() == onDockable)
+                                        rejectDrop = true;
+                                }
+                            }
+                        }
+
+                        if (rejectDrop) {
+                            return false;
+                        } else {
+                            ToolWindowAnchor onAnchor = getOnAnchor();
+                            setConstraints(content,
+                                           content.getComponent(),
+                                           onDockable,
+                                           onIndex,
+                                           (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()));
+
+                            return true;
+                        }
+                    } else
+                        return false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+    }
+
 
     public class ContentDropTarget extends DropTarget {
 
@@ -328,7 +434,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
                         DockablePanel dockablePanel = SwingUtil.getParent(deepestCmp, DockablePanel.class);
                         if (dockablePanel != null)
-                            onDockable = SwingUtil.getParent(deepestCmp, DockablePanel.class).getDockable();
+                            onDockable = dockablePanel.getDockable();
                         else {
                             if (indexAtLocation != -1)
                                 onDockable = ((DockablePanel) tabbedContentPane.getComponentAt(indexAtLocation)).getDockable();
@@ -451,6 +557,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         }
 
         protected boolean checkEvent(DropTargetDragEvent dtde) {
+            // TODO: and this checks ??? ....
             Transferable transferable = dtde.getTransferable();
             try {
                 if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {

@@ -8,12 +8,14 @@ import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToolsOnBarMouseListener;
+import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowBarDropTarget;
-import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DnDConstants;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -44,7 +46,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     protected JSplitPane splitPane;
     protected MultiSplitDockableContainer multiSplitDockableContainer;
-    protected ContentPanel contentPanel;
+    protected DockableDropPanel dockableDropPanel;
     protected JPopupMenu popupMenu;
 
     protected int length;
@@ -234,8 +236,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         splitPane.setName(anchor.toString());
 //        splitPane.setFocusCycleRoot(true);
 
-        contentPanel = new ContentPanel("toolWindow.container.");
-        contentPanel.setDropTarget(new ToolWindowDropTarget(contentPanel, manager, anchor));
+        dockableDropPanel = new DockedDockableDropPanel();
 
         toolWindowBarContainer = new ToolWindowBarPanel(this);
         toolWindowBarContainer.setName("toolWindowManager.bar." + anchor.toString());
@@ -287,7 +288,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         propertyChangeSupport.addPropertyChangeListener("visible", new VisibleListener());
 
         propertyChangeSupport.addPropertyChangeListener("active.before", new ActiveBeforeListener());
-        
+
         propertyChangeSupport.addPropertyChangeListener("type", new TypeListener());
         propertyChangeSupport.addPropertyChangeListener("index", new IndexListener());
         propertyChangeSupport.addPropertyChangeListener("title", new TitleListener());
@@ -362,7 +363,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     }
 
     protected Component getSplitPaneContent() {
-        return contentPanel.getComponent();
+        return dockableDropPanel.getComponent();
     }
 
     protected void addRepresentativeAnchor(Component representativeAnchor, int index) {
@@ -495,9 +496,9 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             DockableDescriptor descriptor = (DockableDescriptor) evt.getSource();
 
             if (isDockableDescriptorValid(descriptor)) {
-                boolean rabsEvent = evt.getPropertyName().equals("representativeAnchorButtonVisible");
+                boolean rabEvent = evt.getPropertyName().equals("representativeAnchorButtonVisible");
 
-                if (!rabsEvent) {
+                if (!rabEvent) {
                     if (descriptor.getDockableType() == DockableDescriptor.DockableType.TOOL_WINDOW &&
                         !((ToolWindow) descriptor.getDockable()).isRepresentativeAnchorButtonVisible())
                         return;
@@ -511,59 +512,70 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
                 Component representativeAnchor;
                 if (oldAvailable && !newAvailable) {
-                    boolean flag = false;
-                    if (!rabsEvent) {
+                    // true -> false
+
+                    boolean updateRepresentativeAnchor = false;
+
+                    if (!rabEvent) {
                         assert evt instanceof UserPropertyChangeEvent;
                         Object[] params = (Object[]) ((UserPropertyChangeEvent) evt).getUserObject();
 
-                        // true -> false
-                        flag = (manager.getToolWindowManagerDescriptor().isShowUnavailableTools() &&
-                                descriptor.getAnchorIndex() != -1);
+                        updateRepresentativeAnchor = (manager.getToolWindowManagerDescriptor().isShowUnavailableTools() &&
+                                                      descriptor.getAnchorIndex() != -1);
 
                         if (params[1] == Boolean.TRUE)
-                            flag = false;
+                            updateRepresentativeAnchor = false;
                     }
 
                     representativeAnchor = descriptor.getRepresentativeAnchor();
 
                     if (representativeAnchor != null) {
-                        if (!flag) {
-                            if (rabsEvent)
+                        if (updateRepresentativeAnchor &&
+                            descriptor.getDockableType() != DockableDescriptor.DockableType.CUSTOM) {
+                            // Update
+                            descriptor.updateRepresentativeAnchor();
+                        } else {
+                            // Remove
+                            if (rabEvent)
                                 rabsPositions.put(descriptor, descriptor.getAnchorIndex());
 
                             removeRepresentativeAnchor(representativeAnchor, descriptor);
-                        } else
-                            descriptor.updateRepresentativeAnchor();
+                        }
 
                         repaint = true;
                     }
                 } else if (!oldAvailable && newAvailable) {
                     // false -> true
                     Object[] params = null;
-                    boolean flag = false;
-                    if (!rabsEvent) {
+                    boolean updateRepresentativeAnchor = false;
+
+                    if (!rabEvent) {
                         assert evt instanceof UserPropertyChangeEvent;
                         params = (Object[]) ((UserPropertyChangeEvent) evt).getUserObject();
 
-                        flag = (manager.getToolWindowManagerDescriptor().isShowUnavailableTools() &&
-                                descriptor.getAnchorIndex() != -1);
+                        updateRepresentativeAnchor = (manager.getToolWindowManagerDescriptor().isShowUnavailableTools() &&
+                                                      descriptor.getAnchorIndex() != -1);
 
                         if (params[1] == Boolean.TRUE)
-                            flag = false;
+                            updateRepresentativeAnchor = false;
                     }
 
                     representativeAnchor = descriptor.getRepresentativeAnchor(toolWindowBarContainer);
-                    if (!flag) {
-                        if (rabsEvent) {
+                    if (updateRepresentativeAnchor &&
+                        descriptor.getDockableType() != DockableDescriptor.DockableType.CUSTOM) {
+                        // Update
+                        descriptor.updateRepresentativeAnchor();
+                    } else {
+                        // Add
+                        if (rabEvent) {
                             int index = -1;
-                            if (rabsEvent && rabsPositions.containsKey(descriptor))
+                            if (rabEvent && rabsPositions.containsKey(descriptor))
                                 index = rabsPositions.get(descriptor);
 
                             addRepresentativeAnchor(representativeAnchor, index);
                         } else
                             addRepresentativeAnchor(representativeAnchor, (Integer) params[0]);
-                    } else
-                        descriptor.updateRepresentativeAnchor();
+                    }
 
                     repaint = true;
                 }
@@ -578,6 +590,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         protected boolean isDockableDescriptorValid(DockableDescriptor dockableDescriptor) {
             if (dockableDescriptor.getDockableType() == DockableDescriptor.DockableType.TOOL_WINDOW) {
                 ToolWindow tool = (ToolWindow) dockableDescriptor.getDockable();
+
                 return tool.getType() != ToolWindowType.FLOATING_FREE &&
                        tool.getType() != ToolWindowType.EXTERN;
             }
@@ -717,10 +730,10 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     public class VisibleDockedListener implements PropertyChangeListener {
         protected final SplitAnimation splitAnimation = new SplitAnimation();
         protected boolean vsdValueAdjusting = false;
-        protected Map<ToolWindowDescriptor, Integer> poss;
+        protected Map<ToolWindowDescriptor, Integer> anchorPositions;
 
         public VisibleDockedListener() {
-            poss = new HashMap<ToolWindowDescriptor, Integer>();
+            anchorPositions = new HashMap<ToolWindowDescriptor, Integer>();
 
             splitPane.addPropertyChangeListener("dividerLocation", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
@@ -746,11 +759,13 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
 
         public void enabledContentManagerPropertyChange(PropertyChangeEvent evt) {
+            // Prepare parameters
             boolean shiftShow = false;
             AggregationPosition aggregationPosition = AggregationPosition.DEFAULT;
             ToolWindow aggregationOnTool = null;
 
             if (evt instanceof UserPropertyChangeEvent) {
+                // This is an aggregation
                 UserPropertyChangeEvent upce = (UserPropertyChangeEvent) evt;
                 Object[] args = ((Object[]) upce.getUserObject());
 
@@ -762,25 +777,30 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
             boolean visible = (Boolean) evt.getNewValue();
 
+            // Check if we should hide the representative anchor button
             if (descriptor.getDockedTypeDescriptor().isHideRepresentativeButtonOnVisible()) {
                 if (visible) {
-                    poss.put(descriptor, descriptor.getAnchorIndex());
+                    // Store position and remove anchor
+                    anchorPositions.put(descriptor, descriptor.getAnchorIndex());
+
                     removeRepresentativeAnchor(descriptor.getRepresentativeAnchor(), descriptor);
                 } else {
+                    // Restore the anchor to the old position
                     int index = -1;
-                    if (poss.containsKey(descriptor))
-                        index = poss.get(descriptor);
+                    if (anchorPositions.containsKey(descriptor))
+                        index = anchorPositions.get(descriptor);
 
                     addRepresentativeAnchor(descriptor.getRepresentativeAnchor(toolWindowBarContainer),
                                             index);
                 }
             }
 
-            Component content = (visible) ? descriptor.getComponent() : null;
-            if (content != null)
-                content = descriptor.getToolWindowPanel();
+            // Choose the component...
+            Component component = (visible) ? descriptor.getComponent() : null;
+            if (component != null)
+                component = descriptor.getToolWindowPanel();
 
-            if (content == null || descriptor.getDividerLocation() > 0 && splitPane.getDividerSize() != 0) {
+            if (component == null || descriptor.getDividerLocation() > 0 && splitPane.getDividerSize() != 0) {
                 synchronized (splitAnimation) {
                     if (splitAnimation.isAnimating())
                         splitAnimation.stop();
@@ -797,64 +817,78 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 }
             }
 
-            if (content == null && descriptor.getToolWindow().isVisible())
+            if (component == null && descriptor.getToolWindow().isVisible())
                 return;
 
-            int divederLocation = Math.max(descriptor.getDividerLocation(),
+            // Populate the dividerLocation.
+
+            // Ensure the minimun size
+            int dividerLocation = Math.max(descriptor.getDividerLocation(),
                                            descriptor.getDockedTypeDescriptor().getMinimumDockLength());
 
             if (getSplitDividerLocation() != 0) {
+
+                // If a toolwindow is already visible on the anchor, peek the dividerLocation from the split pane...  
                 for (ToolWindow toolWindow : manager.getToolsByAnchor(anchor)) {
-                    if (descriptor.getToolWindow() != toolWindow && toolWindow.isVisible() &&
+                    if (descriptor.getToolWindow() != toolWindow &&
+                        toolWindow.isVisible() &&
                         toolWindow.getType() == ToolWindowType.DOCKED) {
-                        divederLocation = getSplitDividerLocation();
+
+                        dividerLocation = getSplitDividerLocation();
                         break;
                     }
                 }
             }
 
 //            if (getSplitDividerLocation() != 0)
-//                divederLocation = getSplitDividerLocation();
-//            System.out.println("divederLocation(" + anchor + ") : " + divederLocation);
+//                dividerLocation = getSplitDividerLocation();
+//            System.out.println("dividerLocation(" + anchor + ") : " + dividerLocation);
 
-            Component splitPaneContent = getSplitPaneContent();
+            // Add the component...
+
             boolean animate = true;
+            Component splitPaneContent = getSplitPaneContent();
+
             if (splitPaneContent != null) {
+                // There are one or more tools already visible...
                 if (splitPaneContent instanceof MultiSplitDockableContainer) {
-                    MultiSplitDockableContainer multiSplitDockableContainer = (MultiSplitDockableContainer) splitPaneContent;
+                    // These tools are aggregated...
+                    MultiSplitDockableContainer dockableContainer = (MultiSplitDockableContainer) splitPaneContent;
 
-                    if (content == null) {
-                        multiSplitDockableContainer.removeDockable(descriptor.getToolWindow(),
-                                                                   !visible && !manager.isShowingGroup());
+                    if (component == null) {
+                        // Remove the tool..
+                        dockableContainer.removeDockable(descriptor.getToolWindow(),
+                                                         !visible && !manager.isShowingGroup());
                         animate = false;
-
-                        if (multiSplitDockableContainer.isEmpty()) {
+                        if (dockableContainer.isEmpty()) {
+                            // No more tools, hide the pane
                             animate = true;
-                            content = null;
-                        } else if (multiSplitDockableContainer.getContentCount() == 1) {
+                            component = null;
+                        } else if (dockableContainer.getContentCount() == 1) {
                             // Remove last dockable on container...
                             animate = false;
 
-                            MultiSplitDockableContainer.DockableEntry dockableEntry = multiSplitDockableContainer.getContents().get(0);
-                            content = multiSplitDockableContainer.getContents().get(0).getComponent();
-                            multiSplitDockableContainer.removeDockable(dockableEntry.getDockable(),
-                                                                       !visible && !manager.isShowingGroup());
+                            MultiSplitDockableContainer.DockableEntry dockableEntry = dockableContainer.getContents().get(0);
+                            component = dockableContainer.getContents().get(0).getComponent();
+                            dockableContainer.removeDockable(dockableEntry.getDockable(),
+                                                             !visible && !manager.isShowingGroup());
 
                             // Put the component on the new location...
                             int temp = getSplitDividerLocation();
-                            setSplitPaneContent(content);
+
+                            setSplitPaneContent(component);
                             setSplitDividerLocation(temp);
                         }
                     } else {
                         if (manager.getShowingGroup() != null) {
-                            multiSplitDockableContainer.addDockable(descriptor.getToolWindow(),
-                                                                    content,
-                                                                    aggregationOnTool,
-                                                                    -1, aggregationPosition);
+                            dockableContainer.addDockable(descriptor.getToolWindow(),
+                                                          component,
+                                                          aggregationOnTool,
+                                                          -1, aggregationPosition);
                         } else
-                            setSplitPaneContent(content);
+                            setSplitPaneContent(component);
                     }
-                } else if (manager.getShowingGroup() != null && content != null) {
+                } else if (manager.getShowingGroup() != null && component != null) {
                     multiSplitDockableContainer.clear();
                     if (shiftShow)
                         multiSplitDockableContainer.addDockable(
@@ -863,57 +897,74 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                                 null,
                                 -1, AggregationPosition.DEFAULT);
                     multiSplitDockableContainer.addDockable(descriptor.getToolWindow(),
-                                                            content,
+                                                            component,
                                                             null,
                                                             -1, aggregationPosition);
 
                     setSplitPaneContent(multiSplitDockableContainer);
-                } else if (content != null)
-                    setSplitPaneContent(content);
+                } else if (component != null)
+                    setSplitPaneContent(component);
             } else {
-                if (manager.getShowingGroup() != null && content != null) {
+                if (manager.getShowingGroup() != null && component != null) {
                     multiSplitDockableContainer.clear();
                     multiSplitDockableContainer.addDockable(descriptor.getToolWindow(),
-                                                            content,
+                                                            component,
                                                             null,
                                                             -1, AggregationPosition.DEFAULT);
 
                     setSplitPaneContent(multiSplitDockableContainer);
-                } else if (content != null)
-                    setSplitPaneContent(content);
+                } else if (component != null)
+                    setSplitPaneContent(component);
             }
 
             if (animate) {
-                if (content != null) {
+                if (component != null) {
                     splitPane.setDividerSize(getDividerSize());
+/*
                     if (manager.getShowingGroup() == null &&
                         descriptor.getTypeDescriptor(ToolWindowType.DOCKED).isAnimating()) {
-                        splitAnimation.show(divederLocation);
+
+                        splitAnimation.show(dividerLocation);
                     } else {
-                        if (divederLocation != 0) {
+*/
+                        if (dividerLocation != 0) {
                             vsdValueAdjusting = true;
-                            setSplitDividerLocation(divederLocation);
-                            vsdValueAdjusting = false;
+                            try {
+                                System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD dividerLocation = " + dividerLocation);
+                                setSplitDividerLocation(dividerLocation);
+                            } finally {
+                                vsdValueAdjusting = false;
+                            }
+
                             SwingUtil.repaintNow(splitPane);
                         }
+/*
                     }
+*/
                 } else {
                     splitPane.setDividerSize(0);
+
                     setSplitPaneContent(null);
+
                     vsdValueAdjusting = true;
-                    setSplitDividerLocation(0);
-                    SwingUtil.repaintNow(splitPane);
-                    vsdValueAdjusting = false;
-//                    splitAnimation.hide(divederLocation);
+                    try {
+                        setSplitDividerLocation(0);
+                        SwingUtil.repaintNow(splitPane);
+                    } finally {
+                        vsdValueAdjusting = false;
+                    }
+
+//                    splitAnimation.hide(dividerLocation);
                 }
             } else {
-                setSplitDividerLocation(divederLocation);
+                setSplitDividerLocation(dividerLocation);
                 SwingUtil.repaint(splitPane);
             }
+
         }
 
         public void disabledContentManagerPropertyChange(PropertyChangeEvent evt) {
-            MultiSplitDockableContainer managerDockableContainer = (MultiSplitDockableContainer) ((ContentPanel) manager.getMainContent()).getComponent();
+            MultiSplitDockableContainer managerDockableContainer = (MultiSplitDockableContainer) ((DockableDropPanel) manager.getMainContent()).getComponent();
 
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
             boolean visible = (Boolean) evt.getNewValue();
@@ -957,10 +1008,10 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 Component splitPaneContent = content;
 
                 if (content != null) {
-                    contentPanel.setComponent(content);
-                    splitPaneContent = contentPanel;
+                    dockableDropPanel.setComponent(content);
+                    splitPaneContent = dockableDropPanel;
                 } else {
-                    contentPanel.resetComponent();
+                    dockableDropPanel.resetComponent();
                 }
 
                 switch (anchor) {
@@ -1247,6 +1298,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
         public void propertyChange(PropertyChangeEvent evt) {
             if ("startDrag".equals(evt.getPropertyName())) {
+                // TODO: check the call getComponentWhoseParentIs. Is it necessary??? 
                 Component cmp = SwingUtil.getComponentWhoseParentIs((Component) evt.getSource(), toolWindowBarContainer);
                 TableLayout layout = (TableLayout) toolWindowBarContainer.getLayout();
                 switch (anchor) {
@@ -1263,24 +1315,25 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 }
                 SwingUtil.repaint(toolWindowBarContainer);
             } else if ("endDrag".equals(evt.getPropertyName())) {
-                for (Component cmp : toolWindowBarContainer.getComponents()) {
-                    Component source = SwingUtil.getComponentWhoseParentIs((Component) evt.getSource(), toolWindowBarContainer);
-
-                    if (cmp == source) {
-                        TableLayout layout = (TableLayout) toolWindowBarContainer.getLayout();
-                        switch (anchor) {
-                            case LEFT:
-                            case RIGHT:
-                                layout.setRow(layout.getConstraints(cmp).row1, dragComponentLength);
-                                break;
-                            case TOP:
-                            case BOTTOM:
-                                layout.setColumn(layout.getConstraints(cmp).col1, dragComponentLength);
-                                break;
-                        }
-                        SwingUtil.repaint(toolWindowBarContainer);
-                        manager.syncPanel(anchor);
-                    }
+                TableLayout layout = (TableLayout) toolWindowBarContainer.getLayout();
+                TableLayoutConstraints constraints = null;
+                switch (anchor) {
+                    case LEFT:
+                    case RIGHT:
+                        constraints = layout.getConstraints((Component) evt.getSource());
+                        if (constraints != null)
+                            layout.setRow(constraints .row1, dragComponentLength);
+                        break;
+                    case TOP:
+                    case BOTTOM:
+                        constraints = layout.getConstraints((Component) evt.getSource());
+                        if (constraints != null)
+                            layout.setColumn(constraints.col1, dragComponentLength);
+                        break;
+                }
+                if (constraints != null) {
+                    SwingUtil.repaint(toolWindowBarContainer);
+                    manager.syncPanel(anchor);
                 }
             } else
                 throw new IllegalArgumentException("Invalid property name. [property : " + evt.getPropertyName() + "]");
@@ -1322,6 +1375,247 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 splitPane.setDividerSize((Integer) evt.getNewValue());
         }
 
+    }
+
+
+    public class DockedDockableDropPanel extends DockableDropPanel {
+
+        public DockedDockableDropPanel() {
+            super("toolWindow.container.", ToolWindow.class, Content.class);   // TODO: add also custom...
+        }
+
+
+        public boolean dragStart(Transferable transferable, int action) {
+            try {
+                if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
+                    if (System.identityHashCode(manager) == (Integer) transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
+                        if (action == DnDConstants.ACTION_MOVE &&
+                            (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) ||
+                             transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF) ||
+                             transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)))
+
+                            return super.dragStart(transferable, action);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        public boolean drop(Transferable transferable) {
+            if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF)) {
+                try {
+                    ToolWindow toolWindow = manager.getToolWindow(
+                            transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_ID_DF)
+                    );
+
+                    if (toolWindow != null) {
+                        // Move tool to another anchor
+
+                        // Chech if it was a tab
+                        if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)) {
+                            // Remove from tab
+                            ToolWindowTab tab = (ToolWindowTab) manager.getDockable(
+                                    transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)
+                            );
+                            tab.getOwner().removeToolWindowTab(tab);
+                            toolWindow = (ToolWindow) tab.getDockableDelegator();
+                        }
+
+                        ToolWindow onToolWindow = (ToolWindow) getOnDockable();
+                        int anchorIndex = (onToolWindow != null) ? onToolWindow.getAnchorIndex() : -1;
+
+                        if (toolWindow == onToolWindow)
+                            return false;
+
+                        boolean oldAggregateMode = toolWindow.isAggregateMode();
+                        toolWindow.setAggregateMode(true);
+                        try {
+                            ToolWindowAnchor dragAnchor = getOnAnchor();
+
+                            if (dragAnchor == null && onToolWindow != null && toolWindow != onToolWindow) {
+                                if (!SwingUtil.getBoolean("drag.toolwindow.asTab", true)) {
+                                    // Choose drag anchor ...
+                                    switch (onToolWindow.getAnchor()) {
+                                        case LEFT:
+                                        case RIGHT:
+                                            dragAnchor = ToolWindowAnchor.TOP;
+                                            break;
+                                        case TOP:
+                                        case BOTTOM:
+                                            dragAnchor = ToolWindowAnchor.LEFT;
+                                            break;
+                                    }
+                                }
+                            }
+
+                            if (dragAnchor != null) {
+                                switch (dragAnchor) {
+                                    case LEFT:
+                                        if (onToolWindow != null) {
+                                            toolWindow.setAnchor(anchor, anchorIndex != -1 ? anchorIndex - 1 : -1);
+                                            toolWindow.aggregate(onToolWindow, AggregationPosition.LEFT);
+                                        } else {
+                                            if (checkCondition(toolWindow)) {
+                                                toolWindow.setAnchor(anchor, 0);
+                                                toolWindow.aggregate(AggregationPosition.LEFT);
+                                            }
+                                        }
+                                        break;
+                                    case RIGHT:
+                                        if (onToolWindow != null) {
+                                            toolWindow.setAnchor(anchor, anchorIndex != -1 ? anchorIndex + 1 : -1);
+                                            toolWindow.aggregate(onToolWindow, AggregationPosition.RIGHT);
+                                        } else {
+                                            if (checkCondition(toolWindow)) {
+                                                toolWindow.setAnchor(anchor);
+                                                toolWindow.aggregate(AggregationPosition.RIGHT);
+                                            }
+                                        }
+                                        break;
+                                    case BOTTOM:
+                                        if (onToolWindow != null) {
+                                            toolWindow.setAnchor(anchor, anchorIndex != -1 ? anchorIndex + 1 : -1);
+                                            toolWindow.aggregate(onToolWindow, AggregationPosition.BOTTOM);
+                                        } else {
+                                            if (checkCondition(toolWindow)) {
+                                                toolWindow.setAnchor(anchor);
+                                                toolWindow.aggregate(AggregationPosition.BOTTOM);
+                                            }
+                                        }
+                                        break;
+                                    case TOP:
+                                        if (onToolWindow != null) {
+                                            toolWindow.setAnchor(anchor, anchorIndex != -1 ? anchorIndex - 1 : -1);
+                                            toolWindow.aggregate(onToolWindow, AggregationPosition.TOP);
+                                        } else {
+                                            if (checkCondition(toolWindow)) {
+                                                toolWindow.setAnchor(anchor, 0);
+                                                toolWindow.aggregate(AggregationPosition.TOP);
+                                            }
+                                        }
+                                        break;
+                                }
+                                toolWindow.setActive(true);
+                            } else {
+                                if (onToolWindow != null && toolWindow != onToolWindow) {
+                                    onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
+                                    onToolWindow.setActive(true);
+                                } else {
+                                    toolWindow.aggregate();
+                                    toolWindow.setActive(true);
+                                }
+                            }
+                        } finally {
+                            toolWindow.setAggregateMode(oldAggregateMode);
+                        }
+
+                        return true;
+                    } else
+                        return false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            } else if (transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {
+                try {
+                    Content content = manager.getContentManager().getContent(
+                            transferable.getTransferData(MyDoggyTransferable.CONTENT_ID_DF)
+                    );
+
+                    if (content != null) {
+                        if (content.getDockableDelegator() != null) {
+                            manager.getContentManager().removeContent(content);
+
+                            Dockable delegator = content.getDockableDelegator();
+
+                            if (delegator instanceof ToolWindow) {
+                                ToolWindow toolWindow = (ToolWindow) delegator;
+
+                                ToolWindow onToolWindow = (ToolWindow) getOnDockable();
+                                int anchorIndex = (onToolWindow != null) ? onToolWindow.getAnchorIndex() : -1;
+                                ToolWindowAnchor dragAnchor = getOnAnchor();
+
+                                if (toolWindow == onToolWindow)
+                                    return false;
+
+                                boolean oldAggregateMode = toolWindow.isAggregateMode();
+                                toolWindow.setAggregateMode(true);
+                                try {
+                                    toolWindow.setAnchor(anchor, anchorIndex);
+
+                                    if (dragAnchor != null) {
+                                        switch (dragAnchor) {
+                                            case LEFT:
+                                                if (onToolWindow != null)
+                                                    toolWindow.aggregate(onToolWindow, AggregationPosition.LEFT);
+                                                else
+                                                    toolWindow.aggregate(AggregationPosition.LEFT);
+                                                break;
+                                            case RIGHT:
+                                                if (onToolWindow != null)
+                                                    toolWindow.aggregate(onToolWindow, AggregationPosition.RIGHT);
+                                                else
+                                                    toolWindow.aggregate(AggregationPosition.RIGHT);
+                                                break;
+                                            case BOTTOM:
+                                                if (onToolWindow != null)
+                                                    toolWindow.aggregate(onToolWindow, AggregationPosition.BOTTOM);
+                                                else
+                                                    toolWindow.aggregate(AggregationPosition.BOTTOM);
+                                                break;
+                                            case TOP:
+                                                if (onToolWindow != null)
+                                                    toolWindow.aggregate(onToolWindow, AggregationPosition.TOP);
+                                                else
+                                                    toolWindow.aggregate(AggregationPosition.TOP);
+                                                break;
+                                        }
+                                        toolWindow.setActive(true);
+                                    } else {
+                                        if (onToolWindow != null) {
+                                            onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
+                                            onToolWindow.setActive(true);
+                                        } else {
+                                            toolWindow.aggregate();
+                                            toolWindow.setActive(true);
+                                        }
+                                    }
+                                } finally {
+                                    toolWindow.setAggregateMode(oldAggregateMode);
+                                }
+                                return true;
+                            }
+                        } else
+                            return false;
+                    } else
+                        return false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        protected boolean checkCondition(ToolWindow toolWindow) {
+            if (toolWindow.getAnchor() != anchor)
+                return true;
+
+            int visibleNum = 0;
+            boolean flag = false;
+            for (ToolWindow tool : manager.getToolsByAnchor(anchor)) {
+                if (tool.isVisible())
+                    visibleNum++;
+                if (tool == toolWindow)
+                    flag = true;
+            }
+
+            return (!flag || visibleNum != 1);
+
+        }
     }
 }
 

@@ -53,7 +53,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
     public void cleanup() {
         // uninstall listeners
-        uninstallListeners();
+        uninstallWindowListeners();
 
         // Finalize
         super.cleanup();
@@ -71,42 +71,41 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
             window = descriptor.getModalWindow();
 
             // install listeners
-            installListeners();
+            installWindowListeners();
 
             // Add content to window
             window.addDockable(toolWindow, content);
             content.setVisible(true);
 
             // Position window
-            if (lastBounds == null) {
-                FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
+//            if (lastBounds == null) {
+            // TODO: validate this procedure....expacially for when x + width excede the total width..
+            FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
 
-                // Set Size
-                if (typeDescriptor.getSize() == null) {
-                    Component parentComponent = descriptor.getManager().getWindowAncestor();
-                    window.setSize(parentComponent.getWidth() / 2, (int) (parentComponent.getHeight() / 1.5));
-                } else {
-                    window.setSize(typeDescriptor.getSize());
-                }
-
-                // Set Location
-                if (typeDescriptor.getLocation() == null) {
-                    SwingUtil.centrePositionOnScreen(window.getWindow());
-                } else
-                    window.setLocation(typeDescriptor.getLocation());
-
-                SwingUtil.validateBounds(window.getWindow());
+            // Set Size
+            if (typeDescriptor.getSize() == null) {
+                Component parentComponent = descriptor.getManager().getWindowAncestor();
+                window.setSize(parentComponent.getWidth() / 2, (int) (parentComponent.getHeight() / 1.5));
             } else {
-                window.setBounds(lastBounds);
-                lastBounds = null;
+                window.setSize(typeDescriptor.getSize());
             }
+
+            // Set Location
+            if (typeDescriptor.getLocation() == null) {
+                SwingUtil.centrePositionOnScreen(window.getWindow());
+            } else
+                window.setLocation(typeDescriptor.getLocation());
+
+            SwingUtil.validateBounds(window.getWindow());
+//            } else {
+//                window.setBounds(lastBounds);
+//                lastBounds = null;
+//            }
 
             // Show the window
             if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isAnimating()) {
                 floatingAnimation.show();
             } else {
-                FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
-
                 window.setModal(typeDescriptor.isModal());
                 window.setVisible(true);
                 window.getContentPane().setVisible(true);
@@ -125,7 +124,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 window.removeDockable(toolWindow);
             } finally {
                 // uninstall listeners
-                uninstallListeners();
+                uninstallWindowListeners();
 
                 // save and restore parameters...
                 if (titleBarButtons.getFocusable().isFocusable())
@@ -135,17 +134,13 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
                 // Hide the window if necessary
                 if (window.getNumDockables() <= 0) {
-                    if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isAnimating())
-                        floatingAnimation.hide();
-                    else {
-                        window.getContentPane().setVisible(true);
-                        window.setVisible(false);
-                    }
+                    window.getContentPane().setVisible(true);
+                    window.setVisible(false);
                 }
 
                 window = null;
             }
-       }
+        }
     }
 
     public void setVisible(ToolWindowDescriptor referenceAggregationTool,
@@ -157,12 +152,12 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
         // setup components
         window.addDockable(toolWindow,
-                                      content,
-                                      (aggregationOnTool != null) ? aggregationOnTool.getToolWindow() : null,
-                                      aggregationPosition);
+                           content,
+                           (aggregationOnTool != null) ? aggregationOnTool.getToolWindow() : null,
+                           aggregationPosition);
 
         // install listeners
-        installListeners();
+        installWindowListeners();
 
         // make it visible...
         if (!window.isVisible()) {
@@ -239,8 +234,8 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         floatingTypeDescriptorSource.addPlafPropertyChangeListener("location", new LocationPropertyChangeListener());
         floatingTypeDescriptorSource.addPlafPropertyChangeListener("size", new SizePropertyChangeListener());
         floatingTypeDescriptorSource.addPlafPropertyChangeListener("modal", new ModalPropertyChangeListener());
-        floatingTypeDescriptorSource.addPlafPropertyChangeListener("addToTaskBar", new AddToTaskBarPropertyChangeListener());
         floatingTypeDescriptorSource.addPlafPropertyChangeListener("enabled", new TypeEnabledPropertyChangeListener());
+        floatingTypeDescriptorSource.addPlafPropertyChangeListener("addToTaskBar", new AddToTaskBarPropertyChangeListener());
 
         floatingAnimation.addAnimationListener(new AnimationListener() {
             public void onFinished() {
@@ -256,7 +251,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         moveMouseInputHandler = new FloatingMoveMouseInputHandler(null);
         windowComponentAdapter = new WindowComponentAdapter();
     }
-
 
 
     protected void initWindow() {
@@ -291,8 +285,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
     }
 
 
-
-    protected void installListeners() {
+    protected void installWindowListeners() {
         resizeMouseInputHandler.setFloatingContainer(window.getWindow());
         moveMouseInputHandler.setFloatingContainer(window.getWindow());
 
@@ -308,7 +301,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         window.getWindow().addComponentListener(windowComponentAdapter);
     }
 
-    protected void uninstallListeners() {
+    protected void uninstallWindowListeners() {
         resizeMouseInputHandler.setFloatingContainer(null);
         moveMouseInputHandler.setFloatingContainer(null);
 
@@ -407,7 +400,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
 
     public class TypeEnabledPropertyChangeListener implements PropertyChangeListener {
-        // TODO: this listener must be centrilized....
 
         public void propertyChange(PropertyChangeEvent evt) {
             boolean newValue = (Boolean) evt.getNewValue();
@@ -572,7 +564,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
         protected Timer timer;
 
-
+        // TODO: Move to ModalDialog and Frame...
         public FloatingToolTransparencyListener() {
             this.transparencyManager = SwingUtil.getTransparencyManager();
 
@@ -663,7 +655,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 synchronized (transparencyManager) {
                     transparencyAnimation.setAlpha(typeDescriptor.getTransparentRatio());
                     transparencyAnimation.show();
-    //                transparencyManager.setAlphaModeRatio(window, typeDescriptor.getTransparentRatio());
+                    //                transparencyManager.setAlphaModeRatio(window, typeDescriptor.getTransparentRatio());
                 }
             }
         }

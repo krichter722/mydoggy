@@ -1,5 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.util;
 
+import org.noos.xing.mydoggy.plaf.ui.cmp.ContentWindow;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ModalWindow;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 
@@ -17,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
 
 /**
  * @author Angelo De Caro
@@ -76,7 +79,7 @@ public class SwingUtil {
 
     // Component support methods
 
-    public static Vector<Window> getTopContainers(String name) {
+    public static List<Window> getTopContainers(String name) {
         Vector<Window> containers = new Vector<Window>();
 
         Frame frames[] = Frame.getFrames();
@@ -95,7 +98,7 @@ public class SwingUtil {
         return containers;
     }
 
-    public static Vector<Window> getTopContainers() {
+    public static List<Window> getTopContainers() {
         Vector<Window> containers = new Vector<Window>();
 
         Frame frames[] = Frame.getFrames();
@@ -106,6 +109,23 @@ public class SwingUtil {
 
             if (!containers.contains(frame)) {
                 containers.add(frame);
+            }
+        }
+
+        return containers;
+    }
+
+    public static List<Window> getMyDoggyTopContainers() {
+        Vector<Window> containers = new Vector<Window>();
+
+        Frame frames[] = Frame.getFrames();
+        for (Frame frame : frames) {
+            Window[] windows = frame.getOwnedWindows();
+
+            for (Window window : windows) {
+                if (window instanceof ModalWindow || window instanceof ContentWindow)
+                    containers.add(window);
+
             }
         }
 
@@ -632,7 +652,7 @@ public class SwingUtil {
                     y = c.getY();
                 }
 
-                if  (c instanceof RootPaneContainer) {
+                if (c instanceof RootPaneContainer) {
                     try {
                         JMenuBar menuBar = ((RootPaneContainer)c).getRootPane().getJMenuBar();
                         if (menuBar != null)
@@ -729,4 +749,5 @@ public class SwingUtil {
             return key;
         }
     }
+
 }

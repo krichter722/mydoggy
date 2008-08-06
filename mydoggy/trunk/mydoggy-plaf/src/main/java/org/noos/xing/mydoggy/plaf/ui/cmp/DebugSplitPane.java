@@ -40,8 +40,8 @@ public class DebugSplitPane extends UIFSplitPane {
 //            if (toolWindowBar != null && toolWindowBar.aa && location == 0)
 //                return;
 
-//        String anchor = (toolWindowBar != null) ? toolWindowBar.getAnchor().toString() : "";
-//        System.out.println("--dividerLocation(" + anchor + ") : " + location);
+        String anchor = (toolWindowBar != null) ? toolWindowBar.getAnchor().toString() : "";
+        System.out.println("--dividerLocation(" + anchor + ") : " + (getHeight() - location));
 //        if (location <= 5) {
 //            new RuntimeException().printStackTrace();
 //        }

@@ -70,14 +70,15 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         this.index = index;
         this.anchor = anchor;
         this.type = type;
-        setTitle(title);
-        setIcon(icon);
         this.available = this.active = this.visible = this.maximized = this.aggregateEnabled = false;
         this.hideOnZeroTabs = true;
         this.representativeAnchorButtonVisible = true;
         this.representativeAnchorButtonTitle = id;
 
         this.descriptor = (ToolWindowDescriptor) manager.createDescriptor(this);
+
+        setTitle(title);
+        setIcon(icon);
     }
 
 

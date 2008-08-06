@@ -6,6 +6,8 @@ import org.noos.xing.mydoggy.mydoggyset.MyDoggySet;
 import org.noos.xing.mydoggy.mydoggyset.context.MyDoggySetContext;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.yasaf.view.ViewContext;
+import org.noos.xing.yasaf.view.ViewContextChangeListener;
+import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +18,7 @@ import java.io.FileInputStream;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class LoadWorkspaceAction extends AbstractAction {
+public class LoadWorkspaceAction extends AbstractAction implements ViewContextChangeListener {
     protected Component parentComponent;
     protected ToolWindowManager toolWindowManager;
     protected ViewContext myDoggySetContext;
@@ -26,6 +28,11 @@ public class LoadWorkspaceAction extends AbstractAction {
         this.myDoggySetContext = myDoggySetContext;
         this.parentComponent = parentComponent;
         this.toolWindowManager = toolWindowManager;
+        myDoggySetContext.addViewContextChangeListener("loadWorkspace", this);
+    }
+
+    public void contextChange(ViewContextChangeEvent evt) {
+        actionPerformed(null);
     }
 
     public void actionPerformed(ActionEvent e) {

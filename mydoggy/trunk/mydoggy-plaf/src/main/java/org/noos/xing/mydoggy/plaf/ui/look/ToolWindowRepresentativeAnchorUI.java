@@ -686,6 +686,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
             super(descriptor, component);
         }
 
+
         public void dragGestureRecognized(DragGestureEvent dge) {
             // Check if a preview is still visible.
             hideAllPreview();
@@ -693,50 +694,60 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
             super.dragGestureRecognized(dge);
         }
 
-        protected Transferable createTransferable() {
-            return new MyDoggyTransferable(manager, MyDoggyTransferable.TOOL_WINDOW_ID_DF, toolWindow.getId());
-        }
-
         public void dragDropEnd(DragSourceDropEvent dsde) {
             super.dragDropEnd(dsde);
-            
-            if (!dsde.getDropSuccess()) {
-                // move to FLOATING_LIVE or FLOATING
 
-                Window ancestor = SwingUtilities.getWindowAncestor(manager);
+            // Finalize drag action...
+            try {
+                if (lastDropPanel != null) {
+                    // The drop is on a dockable drop panel
+                    lastDropPanel.drop(dsde.getDragSourceContext().getTransferable());
+                } else if (lastBarAnchor == null) {
+                    // The drop is not on an ToolWindowBar... so move the tool to FLOATING_LIVE or FLOATING
 
-                Rectangle ancestorBounds = ancestor.getBounds();
-                Point dsdeLocation = dsde.getLocation();
+                    Window ancestor = SwingUtilities.getWindowAncestor(manager);
 
-                if (dsdeLocation.x >= ancestorBounds.x &&
-                    dsdeLocation.y >= ancestorBounds.y &&
-                    dsdeLocation.x <= ancestorBounds.getMaxX() &&
-                    dsdeLocation.y <= ancestorBounds.getMaxY()) {
+                    Rectangle ancestorBounds = ancestor.getBounds();
+                    Point dsdeLocation = dsde.getLocation();
 
-                    // Move to floating live
-                    SwingUtil.convertPointFromScreen2(dsdeLocation, ancestor);
+                    if (dsdeLocation.x >= ancestorBounds.x &&
+                        dsdeLocation.y >= ancestorBounds.y &&
+                        dsdeLocation.x <= ancestorBounds.getMaxX() &&
+                        dsdeLocation.y <= ancestorBounds.getMaxY()) {
 
-                    ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
-                    toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setLocation(
-                            dsdeLocation.x, dsdeLocation.y
-                    );
-                    toolWindow.setType(ToolWindowType.FLOATING_LIVE);
-                    
-                    if (!toolWindow.isVisible())
-                        toolWindow.setActive(true);
+                        // Move to floating live
+                        SwingUtil.convertPointFromScreen2(dsdeLocation, ancestor);
 
-                } else {
-                    // Move to floating
-                    ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
-                    toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).setLocation(
-                            dsdeLocation.x, dsdeLocation.y
-                    );
-                    toolWindow.setType(ToolWindowType.FLOATING);
+                        ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
+                        // TODO: check for JMenuBar
+                        toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setLocation(
+                                dsdeLocation.x, dsdeLocation.y
+                        );
+                        toolWindow.setType(ToolWindowType.FLOATING_LIVE);
 
-                    if (!toolWindow.isVisible())
-                        toolWindow.setActive(true);
+                        if (!toolWindow.isVisible())
+                            toolWindow.setActive(true);
+
+                    } else {
+                        // Move to floating
+                        ToolWindow toolWindow = (ToolWindow) descriptor.getDockable();
+                        toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).setLocation(
+                                dsdeLocation.x, dsdeLocation.y
+                        );
+                        toolWindow.setType(ToolWindowType.FLOATING);
+
+                        if (!toolWindow.isVisible())
+                            toolWindow.setActive(true);
+                    }
                 }
+            } finally {
+                // End dockable drop gesture..
+                dockableDropDragExit();
             }
+        }
+
+        protected Transferable createTransferable() {
+            return new MyDoggyTransferable(manager, MyDoggyTransferable.TOOL_WINDOW_ID_DF, toolWindow.getId());
         }
 
     }

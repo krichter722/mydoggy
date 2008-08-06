@@ -13,7 +13,7 @@ import org.noos.xing.mydoggy.plaf.persistence.xml.merge.MergePolicyApplier;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.ResetMergePolicy;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.UnionMergePolicy;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ContentPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.DockableDropPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
@@ -478,7 +478,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 writer.endElement("contents");
 
                 if (!contentManager.isEnabled()) {
-                    MultiSplitDockableContainer dockableContainer = (MultiSplitDockableContainer) ((ContentPanel) toolWindowManager.getMainContent()).getComponent();
+                    MultiSplitDockableContainer dockableContainer = (MultiSplitDockableContainer) ((DockableDropPanel) toolWindowManager.getMainContent()).getComponent();
                     writer.startElement("layout");
 
                     ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -1154,7 +1154,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        MultiSplitDockableContainer dockableContainer = (MultiSplitDockableContainer) ((ContentPanel) context.get(MyDoggyToolWindowManager.class).getMainContent()).getComponent();
+                        MultiSplitDockableContainer dockableContainer = (MultiSplitDockableContainer) ((DockableDropPanel) context.get(MyDoggyToolWindowManager.class).getMainContent()).getComponent();
                         dockableContainer.setModel(model);
                     }
                 });
@@ -1216,7 +1216,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        MultiSplitDockableContainer dockableContainer = (MultiSplitDockableContainer) ((ContentPanel) context.get(MyDoggyToolWindowManager.class).getMainContent()).getComponent();
+                        MultiSplitDockableContainer dockableContainer = (MultiSplitDockableContainer) ((DockableDropPanel) context.get(MyDoggyToolWindowManager.class).getMainContent()).getComponent();
                         dockableContainer.setModel(model);
                     }
                 });
