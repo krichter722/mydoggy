@@ -31,6 +31,8 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
 
 
     public void dragGestureRecognized(DragGestureEvent dge) {
+        super.dragGestureRecognized(dge);
+
         // Acquire locks
         if (!acquireLocks())
             return;
@@ -44,7 +46,7 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
         descriptor.getToolBar().propertyChange(new PropertyChangeEvent(getComponent(), "startDrag", null, dge));
 
         // Setup ghostImage
-        if (SwingUtil.getBoolean("drag.icon.useDefault", false)) {
+        if (SwingUtil.getBoolean(MyDoggyKeySpace.DRAG_USE_DEFAULT_ICON, false)) {
             setGhostImage(dge.getDragOrigin(),
                           SwingUtil.getImage(MyDoggyKeySpace.DRAG));
         } else {
@@ -53,6 +55,7 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
                                                          representativeAnchor.getHeight(),
                                                          BufferedImage.TYPE_INT_RGB);
             representativeAnchor.print(ghostImage.createGraphics());
+
             setGhostImage(dge.getDragOrigin(), ghostImage);
         }
 
@@ -64,11 +67,9 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
             return;
 
         // Obtain anchor for location
-        ToolWindowAnchor newAnchor = manager.getToolWindowAnchor(
-                SwingUtil.convertPointFromScreen(dsde.getLocation(), manager)
-        );
+        ToolWindowAnchor newAnchor = manager.getToolWindowAnchor(dsde.getLocation());
 
-        // Produce updatedGhostImage
+        // updated the ghost image
         if (newAnchor != lastAnchor) {
             if (!SwingUtil.getBoolean("drag.icon.useDefault", false)) {
                 resetGhostImage();
@@ -130,6 +131,9 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
         }
 
         updateGhostImage(dsde.getLocation(), updatedGhostImage);
+
+        // Update drop target
+        updateDropTarget(dsde);
     }
 
     public void dragDropEnd(DragSourceDropEvent dsde) {

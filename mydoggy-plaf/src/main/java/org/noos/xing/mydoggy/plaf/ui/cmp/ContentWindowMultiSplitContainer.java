@@ -24,7 +24,7 @@ public class ContentWindowMultiSplitContainer extends MultiSplitTabbedContentCon
 
 
     protected DropTarget createDropTarget() {
-        return new ContentWindowContentDropTarget(contentPanel, toolWindowManager);
+        return new ContentWindowContentDropTarget(dockableDropPanel, toolWindowManager);
     }
 
     protected boolean isWrapRequest(Dockable dockable, Action action) {

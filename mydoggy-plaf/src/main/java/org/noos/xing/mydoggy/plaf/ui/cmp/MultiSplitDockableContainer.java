@@ -1075,6 +1075,10 @@ public class MultiSplitDockableContainer extends JPanel {
         return false;
     }
 
+    public Dockable getFirstDockable() {
+        return getContents().get(0).dockable;
+    }
+
     // Methods to manage container root
 
     protected Component getRootComponent() {

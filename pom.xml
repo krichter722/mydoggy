@@ -60,6 +60,15 @@
         <url>http://mydoggy.svn.sourceforge.net/viewvc/mydoggy/mydoggy/trunk/</url>
     </scm>
 
+    <distributionManagement>
+        <repository>
+            <id>archiva.internal</id>
+            <name>Internal Release Repository</name>
+            <url>dav:http://localhost:8080/archiva/repository/internal/</url>
+        </repository>
+    </distributionManagement>
+
+
     <profiles>
         <!-- Profile which creates an assembly using mydoggy-distro.xml -->
         <profile>
@@ -137,6 +146,14 @@
 
 
     <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-webdav</artifactId>
+                <version>1.0-beta-2</version>
+            </extension>
+        </extensions>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -146,16 +163,16 @@
                     <target>1.5</target>
                 </configuration>
             </plugin>
-           <plugin>
-                 <artifactId>maven-source-plugin</artifactId>
-                 <executions>
-                     <execution>
-                         <id>attach-sources</id>
-                         <goals>
-                             <goal>jar</goal>
-                         </goals>
-                     </execution>
-                 </executions>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

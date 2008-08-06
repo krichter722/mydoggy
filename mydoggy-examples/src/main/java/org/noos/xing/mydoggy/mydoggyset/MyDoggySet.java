@@ -68,7 +68,14 @@ public class MyDoggySet {
 
         SwingUtil.centrePositionOnScreen(frame);
 
+
         frame.setVisible(true);
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                myDoggySetContext.put("loadWorkspace", null);
+            }
+        });
 
         memoryMonitorDescriptor.setAvailable(true);
 
@@ -411,10 +418,11 @@ public class MyDoggySet {
         });
 
 /*
+        //TODO: move this property name to a class...
         resourceManager.putProperty("drag.icon.transparency.enabled", "false");
         resourceManager.putProperty("drag.icon.useDefault", "true");
         resourceManager.putBoolean("drag.toolwindow.asTab", true);
-        resourceManager.putBoolean("drag.enabled", false);
+        resourceManager.putBoolean(MyDoggyKeySpace.DRAG_ENABLED, false);
 */
 
         MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) myDoggyToolWindowManager.getResourceManager();
@@ -588,8 +596,10 @@ public class MyDoggySet {
         }
 
         public JComponent getRepresentativeAnchor(Component parent) {
-            if (representativeAnchor == null)
+            if (representativeAnchor == null) {
+                System.out.println("anchor = " + anchor);
                 representativeAnchor = new MemoryMonitorPanel(anchor);
+            }
             return representativeAnchor;
         }
 

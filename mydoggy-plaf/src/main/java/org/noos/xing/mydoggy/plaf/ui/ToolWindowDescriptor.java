@@ -598,6 +598,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         
         if (modalWindow == null) {
             FloatingTypeDescriptor floatingTypeDescriptor = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class);
+
             if (floatingTypeDescriptor.isAddToTaskBar()) {
                 modalWindow = new ModalFrame(toolWindow,
                                              getAncestorForWindow(),
@@ -1051,7 +1052,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                     }
                 }
             } else {
-                System.out.println(toolWindow.getId() + " - cmp = " + component);
+//                System.out.println(toolWindow.getId() + " - cmp = " + component);
 
                 getToolBar().deactiveTool(toolWindow);
 

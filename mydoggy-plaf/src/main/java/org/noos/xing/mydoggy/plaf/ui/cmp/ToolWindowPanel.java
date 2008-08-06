@@ -1,5 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
+import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowPanelUI;
@@ -10,7 +11,7 @@ import java.awt.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolWindowPanel extends JPanel {
+public class ToolWindowPanel extends JPanel implements DockableOwner {
 
     /**
      * @see #getUIClassID
@@ -51,6 +52,10 @@ public class ToolWindowPanel extends JPanel {
         updateUI();
     }
 
+
+    public Dockable getDockable() {
+        return toolWindowDescriptor.getToolWindow();
+    }
 
     public void updateUI() {
         if (toolWindowDescriptor != null)

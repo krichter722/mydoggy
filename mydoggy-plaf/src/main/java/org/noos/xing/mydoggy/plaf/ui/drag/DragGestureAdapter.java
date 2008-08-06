@@ -1,9 +1,13 @@
 package org.noos.xing.mydoggy.plaf.ui.drag;
 
+import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.cmp.DockableDropPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowScrollBar;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -18,10 +22,16 @@ import java.awt.image.BufferedImage;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public abstract class DragGestureAdapter implements DragGesture, Cleaner {
-    protected DockableDescriptor descriptor;
     protected MyDoggyToolWindowManager manager;
+    protected DockableDescriptor descriptor;
+
+    // Fields for ghost image during the drag...
     protected BufferedImage ghostImage;
     protected BufferedImage updatedGhostImage;
+
+    // Fields for the drop support...
+    protected DockableDropPanel lastDropPanel;
+    protected ToolWindowAnchor lastBarAnchor;
 
 
     protected DragGestureAdapter(DockableDescriptor descriptor) {
@@ -39,7 +49,11 @@ public abstract class DragGestureAdapter implements DragGesture, Cleaner {
         manager = null;
     }
 
+
     public void dragGestureRecognized(DragGestureEvent dge) {
+        // TODO: check all extentions of this class for a call of super...
+        lastDropPanel = null;
+        lastBarAnchor = null;
     }
 
     public void dragMouseMoved(DragSourceDragEvent dsde) {
@@ -62,7 +76,7 @@ public abstract class DragGestureAdapter implements DragGesture, Cleaner {
 
 
     protected boolean acquireLocks() {
-        if  (isDragEnabled()) {
+        if (isDragEnabled()) {
             if (DragAndDropLock.isLocked()) {
                 DragAndDropLock.setDragAndDropStarted(false);
                 return false;
@@ -74,11 +88,6 @@ public abstract class DragGestureAdapter implements DragGesture, Cleaner {
 
         return false;
     }
-
-    protected boolean checkStatus() {
-        return DragAndDropLock.isDragAndDropStarted() && ghostImage != null;
-    }
-
 
     protected void releaseLocks() {
         releaseLocksOne();
@@ -93,6 +102,14 @@ public abstract class DragGestureAdapter implements DragGesture, Cleaner {
         DragAndDropLock.setLocked(false);
     }
 
+    protected boolean checkStatus() {
+        return DragAndDropLock.isDragAndDropStarted() && ghostImage != null;
+    }
+
+
+    protected boolean isDragEnabled() {
+        return SwingUtil.getBoolean(MyDoggyKeySpace.DRAG_ENABLED, true); 
+    }
 
     protected void setGhostImage(Point point, BufferedImage ghostImage) {
         updateGhostImage(point, ghostImage);
@@ -129,8 +146,92 @@ public abstract class DragGestureAdapter implements DragGesture, Cleaner {
         SwingUtilities.getWindowAncestor(manager).repaint();
     }
 
-    protected boolean isDragEnabled() {
-        return SwingUtil.getBoolean("drag.enabled", true);
+
+    protected void updateDropTarget(DragSourceDragEvent event) {
+        Point location = event.getLocation();
+        Container source = manager.getLayeredPane();
+        Component deepestCmp = null;
+
+        // Check is the point is on the layered pane of the manager...for FLOATING_LIVE
+        if (source.getComponentCount() > 0) {
+            SwingUtilities.convertPointFromScreen(location, source);
+            deepestCmp = SwingUtilities.getDeepestComponentAt(source, location.x, location.y);
+        }
+
+        // Check is the point is on the manager
+        if (deepestCmp == null) {
+            location = event.getLocation();
+            SwingUtilities.convertPointFromScreen(location, manager);
+            deepestCmp = SwingUtilities.getDeepestComponentAt(manager, location.x, location.y);
+        }
+
+        if (deepestCmp == null) {
+            // Check is the point is on a mydoggy window. (ModalWindow or ContentWindow)  TODO: it doesn't work as expected
+            for (Window window : SwingUtil.getMyDoggyTopContainers()) {
+                if (!window.isVisible())
+                    continue;
+                
+                location = event.getLocation();
+
+                SwingUtilities.convertPointFromScreen(location, window);
+                deepestCmp = SwingUtilities.getDeepestComponentAt(window, location.x, location.y);
+
+                if (deepestCmp != null)
+                    break;
+            }
+        }
+
+
+        if (deepestCmp != null) {
+            DockableDropPanel dockableDropPanel = SwingUtil.getParent(deepestCmp, DockableDropPanel.class);
+
+            if (dockableDropPanel != null) {
+                // the point is on a dockable drop panel...
+
+                if (lastDropPanel != dockableDropPanel) {
+                    if (lastDropPanel != null)
+                        lastDropPanel.dragExit();
+
+                    if (dockableDropPanel.dragStart(event.getDragSourceContext().getTransferable(),
+                                                    event.getDragSourceContext().getSourceActions())) {
+                        lastDropPanel = dockableDropPanel;
+                    } else
+                        lastDropPanel = null;
+                } else {
+                    location = event.getLocation();
+                    SwingUtilities.convertPointFromScreen(location, dockableDropPanel);
+
+                    dockableDropPanel.dragOver(location);
+                }
+                lastBarAnchor = null;
+            } else {
+                dockableDropDragExit();
+
+                // Check if the point is on a ToolWindowBar
+                ToolWindowScrollBar toolWindowScrollBar = SwingUtil.getParent(deepestCmp, ToolWindowScrollBar.class);
+                if (toolWindowScrollBar != null)  {
+                    lastBarAnchor = toolWindowScrollBar.getToolWindowBar().getAnchor();
+                } else
+                    lastBarAnchor = null;
+            }
+        } else {
+            dockableDropDragExit();
+            lastBarAnchor = null;
+        }
+    }
+
+    protected void dockableDropDragEnd() {
+        if (lastDropPanel != null) {
+            lastDropPanel.dragEnd();
+            lastDropPanel = null;
+        }
+    }
+
+    protected void dockableDropDragExit() {
+        if (lastDropPanel != null) {
+            lastDropPanel.dragExit();
+            lastDropPanel = null;
+        }
     }
 
 }

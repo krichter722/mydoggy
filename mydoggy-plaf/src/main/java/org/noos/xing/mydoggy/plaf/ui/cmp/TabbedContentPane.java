@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentUI;
+import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
@@ -29,7 +30,8 @@ import java.util.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class TabbedContentPane extends JTabbedPane implements PropertyChangeListener {
+public class TabbedContentPane extends JTabbedPane implements PropertyChangeListener,
+                                                              MultiDockableOwner {
     protected MyDoggyToolWindowManager toolWindowManager;
     protected ResourceManager resourceManager;
     protected boolean dragEnabled;
@@ -57,10 +59,14 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
     protected DragSource dragSource = new DragSource();
     protected int dragTabIndex = -1;
 
+    protected int indexAtLocation;
+
 
     public TabbedContentPane() {
         this(false);
     }
+
+    Image downArrow;
 
     public TabbedContentPane(boolean dragEnabled) {
         super.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -79,16 +85,50 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         mouseInputAdapter = new MouseOverTabListener();
         addMouseListener(mouseInputAdapter);
         addMouseMotionListener(mouseInputAdapter);
+
+
+        downArrow = SwingUtil.loadImage("org/noos/xing/mydoggy/plaf/ui/icons/arrowDown.png");
+
     }
 
+
+    public Dockable getDockableAt(Point point) {
+        SwingUtilities.convertPointFromScreen(point, this);
+
+        indexAtLocation = indexAtLocation(point.x, point.y);
+        Dockable onDockable = null;
+
+        DockableOwner dockableOwner = SwingUtil.getParent(this, DockableOwner.class);
+        if (dockableOwner != null)
+            onDockable = dockableOwner.getDockable();
+        else {
+            if (indexAtLocation != -1)
+                onDockable = ((DockableOwner) getComponentAt(indexAtLocation)).getDockable();
+            else
+                onDockable = ((DockableOwner) getComponentAt(0)).getDockable();
+        }
+
+        return onDockable;
+    }
+
+    public int getDockableIndex() {
+        return indexAtLocation;
+    }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         if (dragTabIndex >= 0) {
             Graphics2D g2 = (Graphics2D) g;
-            g2.setPaint(lineColor);
-            g2.fill(lineRect);
+
+            Rectangle rec = lineRect.getBounds();
+            g2.drawImage(downArrow, rec.x, rec.y , this);
+
+
+            // TODO... 
+
+//            g2.setPaint(lineColor);
+//            g2.fill(lineRect);
         }
     }
 
@@ -362,15 +402,19 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         if (getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM) {
             if (index < 0) {
                 dragTabIndex = -1;
+
                 lineRect.setRect(0, 0, 0, 0);
             } else if (index == getTabCount()) {
                 Rectangle rect = getBoundsAt(getTabCount() - 1);
+
                 lineRect.setRect(rect.x + rect.width - LINEWIDTH / 2, rect.y, LINEWIDTH, rect.height);
             } else if (index == 0) {
                 Rectangle rect = getBoundsAt(0);
+
                 lineRect.setRect(-LINEWIDTH / 2, rect.y, LINEWIDTH, rect.height);
             } else {
                 Rectangle rect = getBoundsAt(index - 1);
+
                 lineRect.setRect(rect.x + rect.width - LINEWIDTH / 2, rect.y, LINEWIDTH, rect.height);
             }
         } else

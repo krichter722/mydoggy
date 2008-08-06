@@ -110,6 +110,9 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         if (this.dockLength == dockLength || dockLength <= 0)
             return;
 
+        if (dockLength < minimumDockLength)
+            setMinimumDockLength(dockLength);
+
         int old = this.dockLength;
         this.dockLength = dockLength;
 

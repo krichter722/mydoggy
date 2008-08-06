@@ -189,7 +189,7 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
             manager.setTempShowed(false);
 
             // Fire endDrag event
-            if (lastAnchor != null)
+            if (lastAnchor != null && dsde.getDropSuccess())
                 descriptor.getToolBar(lastAnchor).propertyChange(new PropertyChangeEvent(representativeAnchor, "endDrag", null, dsde));
             else
                 descriptor.getToolBar().propertyChange(new PropertyChangeEvent(representativeAnchor, "endDrag", null, dsde));

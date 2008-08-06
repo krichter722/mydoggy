@@ -92,6 +92,8 @@ public interface MyDoggyKeySpace {
 
     String PERSISTENCE_DELEGATE_PARSING = "PERSISTENCE_DELEGATE_PARSING";
 
+    // UI Properties
 
-
+    String DRAG_ENABLED = "drag.enabled";
+    String DRAG_USE_DEFAULT_ICON = "drag.icon.useDefault";
 }

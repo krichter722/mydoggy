@@ -26,6 +26,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
     protected TableLayout layout;
     protected Point lastPosition;
 
+
     public ToolWindowBarDropTarget(MyDoggyToolWindowManager manager, ToolWindowAnchor anchor, Container container) throws HeadlessException {
         super(container, new ToolWindowBarDropTargetListener(manager, anchor));
         this.manager = manager;
