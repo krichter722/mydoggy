@@ -4,7 +4,7 @@
     <skin>
         <groupId>org.noos.xing</groupId>
         <artifactId>mydoggy-site-skin</artifactId>
-        <version>1.5.0</version>
+        <version>1.5.0-SNAPSHOT</version>
     </skin>
 
     <body>
