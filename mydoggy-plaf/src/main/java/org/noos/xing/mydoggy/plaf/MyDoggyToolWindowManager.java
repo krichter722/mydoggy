@@ -231,7 +231,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 removeIfDockableDelegator(toolWindow);
 
                 // Deactivate the tool
-                toolWindow.setRepresentativeAnchorButtonVisible(false);
+                if (toolWindow.getType() != ToolWindowType.FLOATING_FREE)
+                    toolWindow.setRepresentativeAnchorButtonVisible(false);
                 toolWindow.setFlashing(false);
                 toolWindow.setMaximized(false);
                 toolWindow.setAvailable(false);

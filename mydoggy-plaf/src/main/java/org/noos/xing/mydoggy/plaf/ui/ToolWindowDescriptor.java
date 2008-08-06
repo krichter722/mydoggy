@@ -654,7 +654,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusListener);
         manager.addInternalPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getNewValue() == null) 
+                if (evt.getNewValue() == null && toolWindow != null)    // TODO: whey this.... 
                     toolWindow.setFlashing(false);
             }
         });

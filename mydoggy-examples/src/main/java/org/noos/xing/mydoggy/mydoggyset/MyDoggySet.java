@@ -68,14 +68,15 @@ public class MyDoggySet {
 
         SwingUtil.centrePositionOnScreen(frame);
 
-
+//        frame.pack();
+//        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
 
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                myDoggySetContext.put("loadWorkspace", null);
-            }
-        });
+//        SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
+//                myDoggySetContext.put("loadWorkspace", null);
+//            }
+//        });
 
         memoryMonitorDescriptor.setAvailable(true);
 
