@@ -213,16 +213,16 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         }
     }
 
-    public void aggregate(AggregationPosition aggregationPosition) {
-        aggregate(null, aggregationPosition);
+    public void aggregate(AggregationPosition onPosition) {
+        aggregate(null, onPosition);
     }
 
-    public void aggregateByReference(AggregationPosition aggregationPosition, ToolWindow aggregateReferenceTool) {
-        aggregateInternal(null, aggregationPosition, aggregateReferenceTool);
+    public void aggregateByReference(ToolWindow refToolWindow, AggregationPosition onPosition) {
+        aggregateInternal(null, onPosition, refToolWindow);
     }
 
-    public void aggregate(ToolWindow toolWindow, AggregationPosition aggregationPosition) {
-        aggregateInternal(toolWindow, aggregationPosition, null);
+    public void aggregate(ToolWindow onToolWindow, AggregationPosition onPosition) {
+        aggregateInternal(onToolWindow, onPosition, null);
     }
 
     public void setAggregateMode(boolean aggregateEnabled) {
@@ -759,17 +759,17 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
 
-    protected void aggregateInternal(ToolWindow toolWindow, AggregationPosition aggregationPosition, ToolWindow aggregateReferenceTool) {
+    protected void aggregateInternal(ToolWindow onToolWindow, AggregationPosition aggregationPosition, ToolWindow aggregateReferenceTool) {
         try {
-            if (toolWindow != null) {
+            if (onToolWindow != null) {
                 if ((descriptor.getManager().getContentManager().isEnabled() &&
-                     toolWindow.getAnchor() != anchor &&
-                     toolWindow.getType() != ToolWindowType.FLOATING_LIVE &&
-                     toolWindow.getType() != ToolWindowType.FLOATING &&
-                     toolWindow.getType() != ToolWindowType.FLOATING_FREE
+                     onToolWindow.getAnchor() != anchor &&
+                     onToolWindow.getType() != ToolWindowType.FLOATING_LIVE &&
+                     onToolWindow.getType() != ToolWindowType.FLOATING &&
+                     onToolWindow.getType() != ToolWindowType.FLOATING_FREE
 
                      // TODO: check this condition adedd for aggregation on floating...
-                ) || !toolWindow.isVisible())
+                ) || !onToolWindow.isVisible())
                     return;
             }
 
@@ -778,15 +778,15 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
 
             descriptor.getManager().setShowingGroup();
             if (!isVisible()) {
-                if ((toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING_LIVE) ||
+                if ((onToolWindow != null && onToolWindow.getType() == ToolWindowType.FLOATING_LIVE) ||
                     (aggregateReferenceTool != null && aggregateReferenceTool.getType() == ToolWindowType.FLOATING_LIVE)) {
 
                     setType(ToolWindowType.FLOATING_LIVE);
-                } else if ((toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING) ||
+                } else if ((onToolWindow != null && onToolWindow.getType() == ToolWindowType.FLOATING) ||
                            (aggregateReferenceTool != null && aggregateReferenceTool.getType() == ToolWindowType.FLOATING)) {
 
                     setType(ToolWindowType.FLOATING);
-                } else if ((toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING_FREE) ||
+                } else if ((onToolWindow != null && onToolWindow.getType() == ToolWindowType.FLOATING_FREE) ||
                            (aggregateReferenceTool != null && aggregateReferenceTool.getType() == ToolWindowType.FLOATING_FREE)) {
 
                     setType(ToolWindowType.FLOATING);
@@ -795,7 +795,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                         setType(ToolWindowType.DOCKED);
                 }
 
-                setVisibleInternal(true, true, toolWindow, aggregationPosition, aggregateReferenceTool);
+                setVisibleInternal(true, true, onToolWindow, aggregationPosition, aggregateReferenceTool);
             } else {
                 publicEvent = false;
                 try {
@@ -804,13 +804,13 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                     publicEvent = true;
                 }
 
-                if ((toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING_LIVE) ||
+                if ((onToolWindow != null && onToolWindow.getType() == ToolWindowType.FLOATING_LIVE) ||
                     (aggregateReferenceTool != null && aggregateReferenceTool.getType() == ToolWindowType.FLOATING_LIVE)) {
                     setType(ToolWindowType.FLOATING_LIVE);
-                } else if ((toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING) ||
+                } else if ((onToolWindow != null && onToolWindow.getType() == ToolWindowType.FLOATING) ||
                            (aggregateReferenceTool != null && aggregateReferenceTool.getType() == ToolWindowType.FLOATING)) {
                     setType(ToolWindowType.FLOATING);
-                } else if ((toolWindow != null && toolWindow.getType() == ToolWindowType.FLOATING_FREE) ||
+                } else if ((onToolWindow != null && onToolWindow.getType() == ToolWindowType.FLOATING_FREE) ||
                            (aggregateReferenceTool != null && aggregateReferenceTool.getType() == ToolWindowType.FLOATING_FREE)) {
                     setType(ToolWindowType.FLOATING);
                 } else {
@@ -824,7 +824,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
 
                 publicEvent = false;
                 try {
-                    setVisibleInternal(true, true, toolWindow, aggregationPosition, aggregateReferenceTool);
+                    setVisibleInternal(true, true, onToolWindow, aggregationPosition, aggregateReferenceTool);
                 } finally {
                     publicEvent = true;
                 }

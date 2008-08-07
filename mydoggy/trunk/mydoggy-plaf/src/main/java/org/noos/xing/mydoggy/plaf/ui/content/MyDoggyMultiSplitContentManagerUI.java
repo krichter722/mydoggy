@@ -369,14 +369,14 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 MultiSplitConstraint constraint = (MultiSplitConstraint) constraints[0];
                 multiSplitContainer.addDockable(content,
                                                 content.getComponent(),
-                                                constraint.getAggregationContent(),
-                                                constraint.getAggregationIndexLocation(),
-                                                constraint.getAggregationPosition());
-            } else if (constraints[0] instanceof MultiSplitContainer.Constraint) {
-                MultiSplitContainer.Constraint constraint = (MultiSplitContainer.Constraint) constraints[0];
+                                                constraint.getOnContent(),
+                                                constraint.getOnIndex(),
+                                                constraint.getOnPosition());
+            } else if (constraints[0] instanceof MultiSplitDockableContainer.DockableConstraint) {
+                MultiSplitDockableContainer.DockableConstraint dockableConstraint = (MultiSplitDockableContainer.DockableConstraint) constraints[0];
                 multiSplitContainer.addDockable(content,
                                                 content.getComponent(),
-                                                constraint);
+                                                dockableConstraint);
             } else
                 multiSplitContainer.addDockable(content,
                                                 content.getComponent(),
@@ -697,10 +697,10 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
     public class DetachedListener implements PropertyChangeListener {
         protected Frame parentFrame;
-        protected Map<Content, MultiSplitDockableContainer.Constraint> detachedContentUIMap;
+        protected Map<Content, MultiSplitDockableContainer.DockableConstraint> detachedContentUIMap;
 
         public DetachedListener() {
-            detachedContentUIMap = new HashMap<Content, MultiSplitDockableContainer.Constraint>();
+            detachedContentUIMap = new HashMap<Content, MultiSplitDockableContainer.DockableConstraint>();
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
@@ -717,6 +717,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
                     try {
                         if (evt instanceof UserPropertyChangeEvent) {
+                            // We are here because a call ot the detachOn methods was made.
 
                             UserPropertyChangeEvent userEvent = (UserPropertyChangeEvent) evt;
                             ContentDetachConstraint constraint = (ContentDetachConstraint) userEvent.getUserObject();
@@ -795,7 +796,20 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
                     contentValueAdjusting = true;
                     try {
-                        addUIForContent(content, detachedContentUIMap.get(content));
+                        if (evt instanceof UserPropertyChangeEvent) {
+                            // We are here because a call ot the detachOn methods was made.
+                            UserPropertyChangeEvent userEvent = (UserPropertyChangeEvent) evt;
+                            ContentDetachConstraint constraint = (ContentDetachConstraint) userEvent.getUserObject();
+
+                            addUIForContent(content,
+                                            (constraint.getIndex() < 0)
+                                            ? new MultiSplitConstraint(constraint.getOnContent(), constraint.getAggregatePosition())
+                                            : new MultiSplitConstraint(constraint.getOnContent(), constraint.getIndex())
+                            );
+                        } else {
+                            addUIForContent(content, detachedContentUIMap.get(content));
+                        }
+
                         content.setSelected(true);
 
                         componentInFocusRequest = findAndRequestFocus(content.getComponent());
@@ -863,10 +877,10 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
     }
 
     public class MinimizedListener implements PropertyChangeListener {
-        protected Map<Content, MultiSplitDockableContainer.Constraint> minimizedContentUIMap;
+        protected Map<Content, MultiSplitDockableContainer.DockableConstraint> minimizedContentUIMap;
 
         public MinimizedListener() {
-            minimizedContentUIMap = new HashMap<Content, MultiSplitDockableContainer.Constraint>();
+            minimizedContentUIMap = new HashMap<Content, MultiSplitDockableContainer.DockableConstraint>();
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
@@ -909,6 +923,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         protected Component oldRoot;
         protected DockablePanel oldParent;
         protected Dockable currentMaximizedDockable;
+
 
         public MultiSplitContainer(MyDoggyToolWindowManager toolWindowManager) {
             super(toolWindowManager);

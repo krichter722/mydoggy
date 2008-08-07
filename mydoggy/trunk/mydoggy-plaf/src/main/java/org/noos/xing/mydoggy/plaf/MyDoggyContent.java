@@ -324,6 +324,16 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
                                                             new ContentDetachConstraint(onContent, -2, aggregationPosition)));
     }
 
+    public void reattachOn(Content onContent, int indexAtLocation, AggregationPosition aggregationPosition) {
+        if (!isDetached())
+            throw new IllegalStateException("Cannot reattach the content. It's not detached.");
+
+        this.detached = false;
+
+        firePropertyChangeEvent(new UserPropertyChangeEvent(this, "detached", true, false,
+                                                            new ContentDetachConstraint(onContent, -2, aggregationPosition)));
+    }
+
     public String toString() {
         return id;
     }

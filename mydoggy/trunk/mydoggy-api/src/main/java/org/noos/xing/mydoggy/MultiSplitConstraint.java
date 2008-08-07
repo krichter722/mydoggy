@@ -8,70 +8,72 @@ package org.noos.xing.mydoggy;
  * @since 1.4.0
  */
 public class MultiSplitConstraint {
-    private Content aggregationContent;
-    private AggregationPosition aggregationPosition;
-    private int aggregationIndexLocation = -1;
+    private Content onContent;
+    private AggregationPosition onPosition;
+    private int onIndex = -1;
+
 
     /**
      * This tells to aggregate on the <code>aggregationContent</code> 
      *
-     * @param aggregationContent aggregate on this content
+     * @param onContent aggregate on this content
      */
-    public MultiSplitConstraint(Content aggregationContent) {
-        this.aggregationContent = aggregationContent;
+    public MultiSplitConstraint(Content onContent) {
+        this.onContent = onContent;
     }
 
     /**
      * This tells to aggregate on the <code>aggregationPosition</code> position
      *
-     * @param aggregationPosition aggregate using this position.
+     * @param onPosition aggregate using this position.
      */
-    public MultiSplitConstraint(AggregationPosition aggregationPosition) {
-        this.aggregationPosition = aggregationPosition;
+    public MultiSplitConstraint(AggregationPosition onPosition) {
+        this.onPosition = onPosition;
     }
 
     /**
      * This tells to aggregate on the <code>aggregationContent</code> on the
      * <code>aggregationPosition</code> position
      *
-     * @param aggregationContent aggregate on this content
-     * @param aggregationPosition using this position
+     * @param onContent aggregate on this content
+     * @param onPosition using this position
      */
-    public MultiSplitConstraint(Content aggregationContent, AggregationPosition aggregationPosition) {
-        this.aggregationContent = aggregationContent;
-        this.aggregationPosition = aggregationPosition;
+    public MultiSplitConstraint(Content onContent, AggregationPosition onPosition) {
+        this.onContent = onContent;
+        this.onPosition = onPosition;
     }
 
     /**
      * This tells to aggregate on the <code>aggregationContent</code> on the
      * <code>aggregationIndexLocation</code> location.
      *
-     * @param aggregationContent aggregate on this content
-     * @param aggregationIndexLocation using this location
+     * @param onContent aggregate on this content
+     * @param onIndex using this location
      */
-    public MultiSplitConstraint(Content aggregationContent, int aggregationIndexLocation) {
-        this.aggregationContent = aggregationContent;
-        this.aggregationIndexLocation = aggregationIndexLocation;
+    public MultiSplitConstraint(Content onContent, int onIndex) {
+        this.onContent = onContent;
+        this.onIndex = onIndex;
     }
 
 
-    public Content getAggregationContent() {
-        return aggregationContent;
+    public Content getOnContent() {
+        return onContent;
     }
 
-    public int getAggregationIndexLocation() {
-        return aggregationIndexLocation;
+    public int getOnIndex() {
+        return onIndex;
     }
 
-    public AggregationPosition getAggregationPosition() {
-        return aggregationPosition;
+    public AggregationPosition getOnPosition() {
+        return onPosition;
     }
+
 
     public String toString() {
         return "MultiSplitConstraint{" +
-               "aggregationContent=" + aggregationContent +
-               ", aggregationPosition=" + aggregationPosition +
-               ", aggregationIndexLocation=" + aggregationIndexLocation +
+               "onContent=" + onContent +
+               ", onPosition=" + onPosition +
+               ", onIndex=" + onIndex +
                '}';
     }
 }

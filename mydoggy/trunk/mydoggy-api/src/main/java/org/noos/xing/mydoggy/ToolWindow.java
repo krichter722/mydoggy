@@ -103,29 +103,30 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
      * Agggregate this tool to the already visible tools using the specified aggregation position.
      * This method is usable also when the tool is already visible.
      *
-     * @param aggregationPosition the position used to aggregate the tool.
+     * @param onPosition the position used to aggregate the tool.
      * @since 1.4.0
      */
-    void aggregate(AggregationPosition aggregationPosition);
+    void aggregate(AggregationPosition onPosition);
 
     /**
-     * TODO:
-     * @param aggregationPosition
-     * @param aggregateReferenceTool
-     * @since 1.5.0
-     */
-    void aggregateByReference(AggregationPosition aggregationPosition, ToolWindow aggregateReferenceTool);
-
-    /**
-     * Aggregate this tool to the already visible tools using the specified toolwindow as a relative position and
+     * Aggregate this tool using <code>onToolWindow</code> as a relative position and
      * the aggregation position as the position relative to the specified toolwindow.
      * This method is usable also when the tool is already visible.
      *
-     * @param toolWindow          the toolwindow used as relative position.
-     * @param aggregationPosition the position used to aggregate the tool.
+     * @param onToolWindow  the toolwindow used as relative position. It must be already visible.
+     * @param onPosition the position used to aggregate the tool.
      * @since 1.4.0
      */
-    void aggregate(ToolWindow toolWindow, AggregationPosition aggregationPosition);
+    void aggregate(ToolWindow onToolWindow, AggregationPosition onPosition);
+
+    /**
+     * This method is used when the user want to aggregate this toolwindow to another toolwindow
+     * whose type is FLOATING, FLOATING_FREE or FLOATING_LIVE.
+     *
+     * @param refToolWindow TODO..
+     * @param onPosition the position used to aggregate the tool. @since 1.5.0
+     */
+    void aggregateByReference(ToolWindow refToolWindow, AggregationPosition onPosition);
 
     /**
      * The method is used to set the aggregateEnabled property of the tool.

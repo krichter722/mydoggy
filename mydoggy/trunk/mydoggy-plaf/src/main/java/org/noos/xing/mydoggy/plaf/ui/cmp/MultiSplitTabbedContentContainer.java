@@ -327,11 +327,20 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                             return false;
                         } else {
                             ToolWindowAnchor onAnchor = getOnAnchor();
-                            setConstraints(content,
-                                           content.getComponent(),
-                                           onDockable,
-                                           onIndex,
-                                           (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()));
+                            if (content.isDetached()) {
+                                // Reattach...
+                                content.reattachOn(onDockable,
+                                                   onIndex,
+                                                   (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString())
+                                );
+                            } else {
+                                // Move the content using the new position...
+                                setConstraints(content,
+                                               content.getComponent(),
+                                               onDockable,
+                                               onIndex,
+                                               (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()));
+                            }
 
                             return true;
                         }

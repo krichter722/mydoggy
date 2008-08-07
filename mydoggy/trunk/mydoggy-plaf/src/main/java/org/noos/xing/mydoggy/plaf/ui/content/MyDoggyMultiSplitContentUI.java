@@ -28,9 +28,9 @@ public class MyDoggyMultiSplitContentUI extends MyDoggyTabbedContentUI implement
 
             multiSplitContainer.setConstraints(content,
                                                content.getComponent(),
-                                               multiSplitConstraint.getAggregationContent(),
-                                               multiSplitConstraint.getAggregationIndexLocation(),
-                                               multiSplitConstraint.getAggregationPosition());
+                                               multiSplitConstraint.getOnContent(),
+                                               multiSplitConstraint.getOnIndex(),
+                                               multiSplitConstraint.getOnPosition());
         }
     }
 
