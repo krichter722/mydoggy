@@ -434,36 +434,36 @@ public class MultiSplitDockableContainer extends JPanel {
         entries.put(dockable, new DockableEntry(dockable, content, modelId));
     }
 
-    public void addDockable(Dockable dockable, Component component, Constraint constraint) {
-        if (constraint == null)
+    public void addDockable(Dockable dockable, Component component, DockableConstraint dockableConstraint) {
+        if (dockableConstraint == null)
             addDockable(dockable, component, null, -1, AggregationPosition.DEFAULT);
         else {
-            if (constraint.getNode() == null)
-                addDockable(dockable, component, null, constraint.getIndex(), constraint.getAggregationPosition());
+            if (dockableConstraint.getNode() == null)
+                addDockable(dockable, component, null, dockableConstraint.getIndex(), dockableConstraint.getAggregationPosition());
             else {
-                if (constraint.getNode() instanceof DockableLeaf) {
-                    DockableLeaf leaf = (DockableLeaf) constraint.getNode();
+                if (dockableConstraint.getNode() instanceof DockableLeaf) {
+                    DockableLeaf leaf = (DockableLeaf) dockableConstraint.getNode();
 
                     for (String leafDockableId : leaf.getDockables()) {
                         Dockable leafDockable = toolWindowManager.getDockable(leafDockableId);
                         if (leafDockable != null && !leafDockable.isDetached()) {
-                            addDockable(dockable, component, leafDockable, constraint.getIndex(), constraint.getAggregationPosition());
+                            addDockable(dockable, component, leafDockable, dockableConstraint.getIndex(), dockableConstraint.getAggregationPosition());
                             return;
                         }
                     }
 
-                    addDockable(dockable, component, null, constraint.getIndex(), constraint.getAggregationPosition());
-                } else if (constraint.getNode() instanceof Split) {
-                    Split split = (Split) constraint.getNode();
+                    addDockable(dockable, component, null, dockableConstraint.getIndex(), dockableConstraint.getAggregationPosition());
+                } else if (dockableConstraint.getNode() instanceof Split) {
+                    Split split = (Split) dockableConstraint.getNode();
 
                     if (multiSplitPaneModelRoot == split)
-                        addDockable(dockable, component, null, constraint.getIndex(), constraint.getAggregationPosition());
+                        addDockable(dockable, component, null, dockableConstraint.getIndex(), dockableConstraint.getAggregationPosition());
                     else {
                         Split parent = split.getParent();
                         if (!isNodeAttached(split) || parent == null) {
-                            addDockable(dockable, component, null, constraint.getIndex(), constraint.getAggregationPosition());
+                            addDockable(dockable, component, null, dockableConstraint.getIndex(), dockableConstraint.getAggregationPosition());
                         } else {
-                            AggregationPosition aggregationPosition = constraint.getAggregationPosition();
+                            AggregationPosition aggregationPosition = dockableConstraint.getAggregationPosition();
                             switch (aggregationPosition) {
                                 case TOP:
                                 case LEFT:
@@ -505,12 +505,12 @@ public class MultiSplitDockableContainer extends JPanel {
                     }
 
                 } else
-                    addDockable(dockable, component, null, constraint.getIndex(), constraint.getAggregationPosition());
+                    addDockable(dockable, component, null, dockableConstraint.getIndex(), dockableConstraint.getAggregationPosition());
             }
         }
     }
 
-    public Constraint removeDockable(Dockable dockable) {
+    public DockableConstraint removeDockable(Dockable dockable) {
         if (dockable == null)
             throw new IllegalArgumentException("Cannot remove dockable. [dockable null]");
 
@@ -562,7 +562,7 @@ public class MultiSplitDockableContainer extends JPanel {
                     multiSplitPane.add(getComponentFromWrapper(root), "1");
                 }
 
-                return new Constraint(leaf,
+                return new DockableConstraint(leaf,
                                       AggregationPosition.DEFAULT,
                                       index);
             } else {
@@ -619,12 +619,12 @@ public class MultiSplitDockableContainer extends JPanel {
                 SwingUtil.repaint(this);
 
                 // Prepare constraint
-                return new Constraint(leftLeaf,
+                return new DockableConstraint(leftLeaf,
                                       constraintAggPosition,
                                       -1);
             }
         } else {
-            Constraint constraint = null;
+            DockableConstraint dockableConstraint = null;
 
             DockableLeaf dockableLeaf = getLeaf(dockable);
             if (dockableLeaf == null)
@@ -638,8 +638,8 @@ public class MultiSplitDockableContainer extends JPanel {
                 int index = removeFromWrapper(multiSplitPane.getMultiSplitLayout().getChildMap().get(dockableLeaf.getName()),
                                               dockable);
 
-                // Prepare constraint
-                return new Constraint(dockableLeaf,
+                // Prepare dockableConstraint
+                return new DockableConstraint(dockableLeaf,
                                       AggregationPosition.DEFAULT,
                                       index);
             } else {
@@ -689,13 +689,13 @@ public class MultiSplitDockableContainer extends JPanel {
                                             multiSplitPaneModelRoot = getFirstNotDivider(children);
                                             multiSplitPaneModelRoot.setParent(null);
 
-                                            // Prepare constraint
+                                            // Prepare dockableConstraint
                                             AggregationPosition position;
                                             if (children.get(0) == multiSplitPaneModelRoot) {
                                                 position = (split.isRowLayout()) ? AggregationPosition.RIGHT : AggregationPosition.BOTTOM;
                                             } else
                                                 position = (split.isRowLayout()) ? AggregationPosition.LEFT : AggregationPosition.TOP;
-                                            constraint = new Constraint(multiSplitPaneModelRoot,
+                                            dockableConstraint = new DockableConstraint(multiSplitPaneModelRoot,
                                                                         position,
                                                                         -1);
 
@@ -707,16 +707,16 @@ public class MultiSplitDockableContainer extends JPanel {
                                                 grenpaChildren.set(grenpaChildren.indexOf(split),
                                                                    children.get(1));
 
-                                                // Prepare constraint
-                                                constraint = new Constraint(children.get(1),
+                                                // Prepare dockableConstraint
+                                                dockableConstraint = new DockableConstraint(children.get(1),
                                                                             (split.isRowLayout()) ? AggregationPosition.LEFT : AggregationPosition.TOP,
                                                                             -1);
                                             } else {
                                                 grenpaChildren.set(grenpaChildren.indexOf(split),
                                                                    children.get(0));
 
-                                                // Prepare constraint
-                                                constraint = new Constraint(children.get(0),
+                                                // Prepare dockableConstraint
+                                                dockableConstraint = new DockableConstraint(children.get(0),
                                                                             (split.isRowLayout()) ? AggregationPosition.RIGHT : AggregationPosition.BOTTOM,
                                                                             -1);
                                             }
@@ -727,12 +727,12 @@ public class MultiSplitDockableContainer extends JPanel {
                                         // Remove the divider
                                         if (i < children.size()) {
                                             children.remove(i);
-                                            constraint = new Constraint(children.get(i),
+                                            dockableConstraint = new DockableConstraint(children.get(i),
                                                                         (split.isRowLayout()) ? AggregationPosition.LEFT : AggregationPosition.TOP,
                                                                         -1);
                                         } else {
                                             children.remove(i - 1);
-                                            constraint = new Constraint(children.get(i - 2),
+                                            dockableConstraint = new DockableConstraint(children.get(i - 2),
                                                                         (split.isRowLayout()) ? AggregationPosition.RIGHT : AggregationPosition.BOTTOM,
                                                                         -1);
                                         }
@@ -786,11 +786,11 @@ public class MultiSplitDockableContainer extends JPanel {
             repaintMultiSplit(false/*toolWindowManager.getClientProperty(MyDoggyKeySpace.PERSISTENCE_DELEGATE_PARSING) == null*/,
                               null);
 
-            return constraint;
+            return dockableConstraint;
         }
     }
 
-    public Constraint removeDockable(Dockable dockable, boolean storeLayout) {
+    public DockableConstraint removeDockable(Dockable dockable, boolean storeLayout) {
         boolean old = this.storeLayout;
         this.storeLayout = storeLayout;
         try {
@@ -1459,13 +1459,13 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
 
-    public class Constraint {
+    public class DockableConstraint {
         protected Node node;
         protected AggregationPosition aggregationPosition;
         protected int index = -1;
 
 
-        public Constraint(Node node, AggregationPosition aggregationPosition, int index) {
+        public DockableConstraint(Node node, AggregationPosition aggregationPosition, int index) {
             this.node = node;
             this.aggregationPosition = aggregationPosition;
             this.index = index;

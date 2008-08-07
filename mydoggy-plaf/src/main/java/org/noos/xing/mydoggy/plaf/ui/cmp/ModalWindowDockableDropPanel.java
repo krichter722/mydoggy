@@ -93,8 +93,8 @@ public class ModalWindowDockableDropPanel extends DockableDropPanel {
                                         toolWindow.aggregate(onToolWindow, AggregationPosition.LEFT);
                                     } else {
                                         if (checkCondition(toolWindow)) {
-                                            toolWindow.aggregateByReference(AggregationPosition.LEFT,
-                                                                            modalWindow.getFirstToolWindow());
+                                            toolWindow.aggregateByReference(modalWindow.getFirstToolWindow(), AggregationPosition.LEFT
+                                            );
                                         }
                                     }
                                     break;
@@ -103,8 +103,8 @@ public class ModalWindowDockableDropPanel extends DockableDropPanel {
                                         toolWindow.aggregate(onToolWindow, AggregationPosition.RIGHT);
                                     } else {
                                         if (checkCondition(toolWindow)) {
-                                            toolWindow.aggregateByReference(AggregationPosition.RIGHT,
-                                                                            modalWindow.getFirstToolWindow());
+                                            toolWindow.aggregateByReference(modalWindow.getFirstToolWindow(), AggregationPosition.RIGHT
+                                            );
                                         }
                                     }
                                     break;
@@ -113,8 +113,8 @@ public class ModalWindowDockableDropPanel extends DockableDropPanel {
                                         toolWindow.aggregate(onToolWindow, AggregationPosition.BOTTOM);
                                     } else {
                                         if (checkCondition(toolWindow)) {
-                                            toolWindow.aggregateByReference(AggregationPosition.BOTTOM,
-                                                                            modalWindow.getFirstToolWindow());
+                                            toolWindow.aggregateByReference(modalWindow.getFirstToolWindow(), AggregationPosition.BOTTOM
+                                            );
 
                                         }
                                     }
@@ -124,8 +124,8 @@ public class ModalWindowDockableDropPanel extends DockableDropPanel {
                                         toolWindow.aggregate(onToolWindow, AggregationPosition.TOP);
                                     } else {
                                         if (checkCondition(toolWindow)) {
-                                            toolWindow.aggregateByReference(AggregationPosition.TOP,
-                                                                            modalWindow.getFirstToolWindow());
+                                            toolWindow.aggregateByReference(modalWindow.getFirstToolWindow(), AggregationPosition.TOP
+                                            );
 
                                         }
                                     }
@@ -137,8 +137,8 @@ public class ModalWindowDockableDropPanel extends DockableDropPanel {
                                 onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
                                 onToolWindow.setActive(true);
                             } else {
-                                toolWindow.aggregateByReference(AggregationPosition.DEFAULT,
-                                                                modalWindow.getFirstToolWindow());
+                                toolWindow.aggregateByReference(modalWindow.getFirstToolWindow(), AggregationPosition.DEFAULT
+                                );
                                 toolWindow.setActive(true);
                             }
                         }

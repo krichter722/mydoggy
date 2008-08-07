@@ -8,7 +8,6 @@ import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.animation.AnimationListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ModalWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingMoveMouseInputHandler;
-import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingResizeMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -24,7 +23,6 @@ import java.beans.PropertyChangeListener;
 public class FloatingContainer extends MyDoggyToolWindowContainer {
     protected ModalWindow window;
 
-    protected FloatingResizeMouseInputHandler resizeMouseInputHandler;
     protected FloatingMoveMouseInputHandler moveMouseInputHandler;
     protected WindowComponentAdapter windowComponentAdapter;
 
@@ -241,7 +239,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         });
 
         // Init window listeners
-        resizeMouseInputHandler = new FloatingResizeMouseInputHandler(null);
         moveMouseInputHandler = new FloatingMoveMouseInputHandler(null);
         windowComponentAdapter = new WindowComponentAdapter();
     }
@@ -269,13 +266,9 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
 
     protected void installWindowListeners() {
-        resizeMouseInputHandler.setFloatingContainer(window.getWindow());
         moveMouseInputHandler.setFloatingContainer(window.getWindow());
 
         // Add listeners
-        window.getWindow().addMouseMotionListener(resizeMouseInputHandler);
-        window.getWindow().addMouseListener(resizeMouseInputHandler);
-
         toolWindowTabPanel.addEventDispatcherlListener(moveMouseInputHandler);
 
         toolWindowTitleBar.addMouseMotionListener(moveMouseInputHandler);
@@ -285,13 +278,10 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
     }
 
     protected void uninstallWindowListeners() {
-        resizeMouseInputHandler.setFloatingContainer(null);
         moveMouseInputHandler.setFloatingContainer(null);
 
         // Remove listeners
         if (window != null) {
-            window.getWindow().removeMouseMotionListener(resizeMouseInputHandler);
-            window.getWindow().removeMouseListener(resizeMouseInputHandler);
             window.getWindow().removeComponentListener(windowComponentAdapter);
         }
 
@@ -437,9 +427,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 //                    lastBounds = window.getBounds();
 
                 // Remove listeners
-                window.getWindow().removeMouseMotionListener(resizeMouseInputHandler);
-                window.getWindow().removeMouseListener(resizeMouseInputHandler);
-
                 toolWindowTabPanel.removeEventDispatcherlListener(moveMouseInputHandler);
 
                 toolWindowTitleBar.removeMouseMotionListener(moveMouseInputHandler);
@@ -508,8 +495,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 // Clean
                 Component focusOwner = oldWindow.getWindow().getFocusOwner();
                 oldWindow.setVisible(false);
-                oldWindow.getWindow().removeMouseMotionListener(resizeMouseInputHandler);
-                oldWindow.getWindow().removeMouseListener(resizeMouseInputHandler);
                 oldWindow.getWindow().removeComponentListener(windowComponentAdapter);
 
                 // Reinit window
@@ -528,8 +513,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
                 // Clean old window
                 oldWindow.getWindow().removeComponentListener(windowComponentAdapter);
-                oldWindow.getWindow().removeMouseMotionListener(resizeMouseInputHandler);
-                oldWindow.getWindow().removeMouseListener(resizeMouseInputHandler);
 
                 // Prepare for new
                 reinitWindow(evt, oldWindow);

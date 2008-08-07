@@ -249,8 +249,8 @@ public class FloatingLivePanel extends TranslucentPanel implements PropertyChang
                                             toolWindow.aggregate(onToolWindow, AggregationPosition.LEFT);
                                         } else {
                                             if (checkCondition(toolWindow)) {
-                                                toolWindow.aggregateByReference(AggregationPosition.LEFT,
-                                                                                (ToolWindow) multiSplitDockableContainer.getFirstDockable());
+                                                toolWindow.aggregateByReference((ToolWindow) multiSplitDockableContainer.getFirstDockable(), AggregationPosition.LEFT
+                                                );
                                             }
                                         }
                                         break;
@@ -259,8 +259,8 @@ public class FloatingLivePanel extends TranslucentPanel implements PropertyChang
                                             toolWindow.aggregate(onToolWindow, AggregationPosition.RIGHT);
                                         } else {
                                             if (checkCondition(toolWindow)) {
-                                                toolWindow.aggregateByReference(AggregationPosition.RIGHT,
-                                                                                (ToolWindow) multiSplitDockableContainer.getFirstDockable());
+                                                toolWindow.aggregateByReference((ToolWindow) multiSplitDockableContainer.getFirstDockable(), AggregationPosition.RIGHT
+                                                );
                                             }
                                         }
                                         break;
@@ -269,8 +269,8 @@ public class FloatingLivePanel extends TranslucentPanel implements PropertyChang
                                             toolWindow.aggregate(onToolWindow, AggregationPosition.BOTTOM);
                                         } else {
                                             if (checkCondition(toolWindow)) {
-                                                toolWindow.aggregateByReference(AggregationPosition.BOTTOM,
-                                                                                (ToolWindow) multiSplitDockableContainer.getFirstDockable());
+                                                toolWindow.aggregateByReference((ToolWindow) multiSplitDockableContainer.getFirstDockable(), AggregationPosition.BOTTOM
+                                                );
 
                                             }
                                         }
@@ -280,8 +280,8 @@ public class FloatingLivePanel extends TranslucentPanel implements PropertyChang
                                             toolWindow.aggregate(onToolWindow, AggregationPosition.TOP);
                                         } else {
                                             if (checkCondition(toolWindow)) {
-                                                toolWindow.aggregateByReference(AggregationPosition.TOP,
-                                                                                (ToolWindow) multiSplitDockableContainer.getFirstDockable());
+                                                toolWindow.aggregateByReference((ToolWindow) multiSplitDockableContainer.getFirstDockable(), AggregationPosition.TOP
+                                                );
 
                                             }
                                         }
@@ -293,8 +293,8 @@ public class FloatingLivePanel extends TranslucentPanel implements PropertyChang
                                     onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
                                     onToolWindow.setActive(true);
                                 } else {
-                                    toolWindow.aggregateByReference(AggregationPosition.DEFAULT,
-                                                                    (ToolWindow) multiSplitDockableContainer.getFirstDockable());
+                                    toolWindow.aggregateByReference((ToolWindow) multiSplitDockableContainer.getFirstDockable(), AggregationPosition.DEFAULT
+                                    );
                                     toolWindow.setActive(true);
                                 }
                             }

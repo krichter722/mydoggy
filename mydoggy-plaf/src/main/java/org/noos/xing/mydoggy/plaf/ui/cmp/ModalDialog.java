@@ -6,10 +6,12 @@ import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingResizeMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
+import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -61,6 +63,7 @@ public class ModalDialog extends JDialog implements ModalWindow,
         enableEvents(WindowEvent.WINDOW_EVENT_MASK | ComponentEvent.MOUSE_MOTION_EVENT_MASK);
 
         initComponents();
+        initListeners();
     }
 
 
@@ -248,6 +251,14 @@ public class ModalDialog extends JDialog implements ModalWindow,
         } else
             this.transparencyAnimation = null;
     }
+
+    protected void initListeners()  {
+        MouseInputListener resizeMouseInputHandler = new FloatingResizeMouseInputHandler(this);
+
+        addMouseMotionListener(resizeMouseInputHandler);
+        addMouseListener(resizeMouseInputHandler);
+    }
+
 
     protected void restoreOwner() {
         synchronized (ModalDialog.this) {
