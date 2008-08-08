@@ -131,11 +131,11 @@ public class ContentWindowMultiSplitContainer extends MultiSplitTabbedContentCon
 
                         if (!rejectDrop) {
                             if (onDockable != null) {
-                                content.detachOn(onDockable,
+                                content.detach(onDockable,
                                                  onIndex,
                                                  (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()));
                             } else {
-                                content.detachOn(onDockable,
+                                content.detach(onDockable,
                                                  (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()));
                             }
                             return true;

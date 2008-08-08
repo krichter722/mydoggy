@@ -47,6 +47,11 @@ public interface ToolWindowTab extends Dockable<ToolWindow> {
      */
     void setCloseable(boolean closeable);
 
+    /**
+     * TODO:.. 
+     * @return
+     * @since 1.5.0
+     */
     boolean isMinimizable();
 
     void setMinimizable(boolean minimizable);

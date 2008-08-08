@@ -214,9 +214,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
                             return true;
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                // Impossible
+            } catch (Exception ignoreIt) {
             }
             return false;
         }

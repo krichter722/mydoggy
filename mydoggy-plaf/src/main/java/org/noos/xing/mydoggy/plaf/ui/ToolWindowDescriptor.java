@@ -1039,6 +1039,10 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
             valueAdjusting = true;
 
+//            if (ToolWindowType.EXTERN.equals(toolWindow.getType())) {
+//                Dockable dockable = manager.getDockableWrapper(toolWindow);
+//            }
+
             if (parentOf.getAnswer(component)) {
                 toolWindow.setActive(true);
                 if (focusRequester == null)

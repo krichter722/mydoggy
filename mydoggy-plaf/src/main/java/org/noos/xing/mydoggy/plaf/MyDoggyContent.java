@@ -299,40 +299,43 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
         return dockableDelegator;
     }
 
-    public void detachOn(Content onContent, int indexAtLocation, AggregationPosition aggregationPosition) {
+    public void detach(Content onContent, int onIndex, AggregationPosition onPosition) {
         if (isDetached())
             return;
 
         this.detached = true;
         
-        if (indexAtLocation < -1)
-            indexAtLocation = -1;
+        if (onIndex < -1)
+            onIndex = -1;
 
         firePropertyChangeEvent(new UserPropertyChangeEvent(this, "detached", false, true,
-                                                            new ContentDetachConstraint(onContent, 
-                                                                                        indexAtLocation,
-                                                                                        aggregationPosition)));
+                                                            new ContentDetachConstraint(onContent,
+                                                                                        onIndex,
+                                                                                        onPosition)));
     }
 
-    public void detachOn(Content onContent, AggregationPosition aggregationPosition) {
+    public void detach(Content onContent, AggregationPosition onPosition) {
         if (isDetached())
             return;
 
         this.detached = true;
 
         firePropertyChangeEvent(new UserPropertyChangeEvent(this, "detached", false, true,
-                                                            new ContentDetachConstraint(onContent, -2, aggregationPosition)));
+                                                            new ContentDetachConstraint(onContent, -2, onPosition)));
     }
 
-    public void reattachOn(Content onContent, int indexAtLocation, AggregationPosition aggregationPosition) {
+    public void reattach(Content onContent, int onIndex, AggregationPosition onPosition) {
         if (!isDetached())
             throw new IllegalStateException("Cannot reattach the content. It's not detached.");
 
         this.detached = false;
 
         firePropertyChangeEvent(new UserPropertyChangeEvent(this, "detached", true, false,
-                                                            new ContentDetachConstraint(onContent, -2, aggregationPosition)));
+                                                            new ContentDetachConstraint(onContent,
+                                                                                        onIndex,
+                                                                                        onPosition)));
     }
+
 
     public String toString() {
         return id;

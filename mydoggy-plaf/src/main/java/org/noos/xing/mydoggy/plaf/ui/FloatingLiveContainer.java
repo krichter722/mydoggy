@@ -315,8 +315,8 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
             if (isMovingWindow) {
                 if (onAnchor != null) {
                     try {
-                        toolWindow.setAnchor(onAnchor);
-                        toolWindow.setType(ToolWindowType.DOCKED);
+//                        toolWindow.setAnchor(onAnchor);
+//                        toolWindow.setType(ToolWindowType.DOCKED);
                     } finally {
                         isMovingWindow = false;
                         dragCursor = 0;
