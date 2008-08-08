@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.util.DockableManager2ToolWindowWrapper;
 
@@ -246,7 +247,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
     public void setDetached(boolean detached) {
-        String detachedType = UIManager.getString("toolwindow.detached.type");  // TODO: move this property...
+        String detachedType = UIManager.getString(MyDoggyKeySpace.TOOL_WINDOW_DETACH_TYPE);
         try {
             setType(ToolWindowType.valueOf(detachedType));
         } catch (IllegalArgumentException e) {
@@ -766,10 +767,8 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                      onToolWindow.getAnchor() != anchor &&
                      onToolWindow.getType() != ToolWindowType.FLOATING_LIVE &&
                      onToolWindow.getType() != ToolWindowType.FLOATING &&
-                     onToolWindow.getType() != ToolWindowType.FLOATING_FREE
-
-                     // TODO: check this condition adedd for aggregation on floating...
-                ) || !onToolWindow.isVisible())
+                     onToolWindow.getType() != ToolWindowType.FLOATING_FREE) || !onToolWindow.isVisible())
+                
                     return;
             }
 

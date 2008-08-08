@@ -720,9 +720,9 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                             // We are here because a call ot the detach methods was made.
 
                             UserPropertyChangeEvent userEvent = (UserPropertyChangeEvent) evt;
-                            ContentDetachConstraint constraint = (ContentDetachConstraint) userEvent.getUserObject();
+                            MultiSplitConstraint constraint = (MultiSplitConstraint) userEvent.getUserObject();
 
-                            if (constraint.getIndex() == -2) {
+                            if (constraint.getOnIndex() == -2) {
                                 for (Window window : SwingUtil.getTopContainers()) {
                                     if (window instanceof ContentWindow) {
                                         ContentWindow contentWindow = (ContentWindow) window;
@@ -734,7 +734,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                                             contentWindow.addContent(content,
                                                                      content.getComponent(),
                                                                      null,
-                                                                     constraint.getAggregatePosition());
+                                                                     constraint.getOnPosition());
                                             break;
                                         }
                                     }
@@ -751,7 +751,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                                             contentWindow.addContent(content,
                                                                      content.getComponent(),
                                                                      constraint.getOnContent(),
-                                                                     constraint.getAggregatePosition());
+                                                                     constraint.getOnPosition());
                                             break;
                                         }
                                     }
@@ -799,13 +799,12 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                         if (evt instanceof UserPropertyChangeEvent) {
                             // We are here because a call ot the detach methods was made.
                             UserPropertyChangeEvent userEvent = (UserPropertyChangeEvent) evt;
-                            ContentDetachConstraint constraint = (ContentDetachConstraint) userEvent.getUserObject();
+                            if (userEvent.getUserObject() instanceof MultiSplitConstraint) {
+                                MultiSplitConstraint constraint = (MultiSplitConstraint) userEvent.getUserObject();
 
-                            addUIForContent(content,
-                                            (constraint.getIndex() < 0)
-                                            ? new MultiSplitConstraint(constraint.getOnContent(), constraint.getAggregatePosition())
-                                            : new MultiSplitConstraint(constraint.getOnContent(), constraint.getIndex())
-                            );
+                                addUIForContent(content, constraint);
+                            } else
+                                addUIForContent(content, detachedContentUIMap.get(content));
                         } else {
                             addUIForContent(content, detachedContentUIMap.get(content));
                         }

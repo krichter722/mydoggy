@@ -697,6 +697,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                 if ((Boolean) evt.getNewValue()) {
                     valueAdjusting = true;
                     try {
+                        // TODO: add support for multi detaching..
                         ContentUI contentUI = getContentUI(content);
 
                         Rectangle inBounds = toolWindowManager.getBoundsToScreen(content.getComponent().getBounds(),

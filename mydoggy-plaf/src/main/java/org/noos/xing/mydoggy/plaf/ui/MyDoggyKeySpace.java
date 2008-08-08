@@ -98,4 +98,6 @@ public interface MyDoggyKeySpace {
 
     String DRAG_ENABLED = "drag.enabled";
     String DRAG_USE_DEFAULT_ICON = "drag.icon.useDefault";
+    String TOOL_WINDOW_DETACH_TYPE = "toolwindow.detached.type";
+
 }

@@ -1148,7 +1148,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 if (referenceAggregationDescriptor == null)
                     referenceAggregationDescriptor = aggregationOnDescriptor;
 
-                Component content = (visible) ? toolWindowDescriptor.getContentContainer() : null;
+                Component content = (visible) ? toolWindowDescriptor.getToolWindowPanel() : null;
                 if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
                     return;
 
@@ -1210,7 +1210,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 if (referenceAggregationDescriptor == null)
                     referenceAggregationDescriptor = aggregationOnDescriptor;
 
-                Component content = (visible) ? toolWindowDescriptor.getContentContainer() : null;
+                Component content = (visible) ? toolWindowDescriptor.getToolWindowPanel() : null;
                 if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
                     return;
 

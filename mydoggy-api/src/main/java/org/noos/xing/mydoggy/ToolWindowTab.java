@@ -48,12 +48,20 @@ public interface ToolWindowTab extends Dockable<ToolWindow> {
     void setCloseable(boolean closeable);
 
     /**
-     * TODO:.. 
-     * @return
+     * Returns whether this tab could be minimized using the ui.
+     *
+     * @return <code>true</code> if this content can be minimized using the ui, <code>false</code> otherwise.
      * @since 1.5.0
      */
     boolean isMinimizable();
 
+    /**
+     * Sets the minimizable property of this tab.
+     *
+     * @param minimizable <code>true</code> if this content can be minimized using the ui, <code>false</code> otherwise.
+     * @see #isMinimizable()
+     * @since 1.5.0
+     */
     void setMinimizable(boolean minimizable);
 
     /**

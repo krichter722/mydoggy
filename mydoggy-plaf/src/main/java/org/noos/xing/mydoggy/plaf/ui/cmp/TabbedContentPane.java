@@ -452,7 +452,6 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
     }
 
 
-
     protected void initDragListener() {
         // Init drag
         SwingUtil.registerDragGesture(this, new TabbedDragGestureAdapter(toolWindowManager));
@@ -586,7 +585,6 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
                     if ((e.getClickCount() == 2 && contentUI.isMaximizable()) || isMaximizeFired(contentUI, e.getPoint()))
                         content.setMaximized(!content.isMaximized());
-
                 } else if (SwingUtilities.isRightMouseButton(e)) {
                     if (toolWindowManager.getContentManager().getContentManagerUI().isPopupMenuEnabled())
                         showPopupMenu(e);
@@ -630,6 +628,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
                 currentToolTip = null;
             } else {
                 ContentUI contentUI = getContentAt(mouseOverTab).getContentUI();
+
                 Point point = e.getPoint();
                 if (isMinimizedFired(contentUI, point))
                     currentToolTip = SwingUtil.getString("@@tabbed.page.minimize");
@@ -649,32 +648,33 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             Point relativeMousePoint = SwingUtilities.convertPoint(TabbedContentPane.this, point, getDestination());
             Rectangle iconBounds = aggregateIcon.getLastPaintedRecAt(2);
 
-            return (contentUI.isMinimizable() && showMinimize && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
-                                                  (point.getX() > iconBounds.x && point.getX() < iconBounds.x + iconBounds.width)));
+            return iconBounds != null && (contentUI.isMinimizable() && showMinimize && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
+                                                                                        (point.getX() > iconBounds.x && point.getX() < iconBounds.x + iconBounds.width)));
         }
 
         protected boolean isMaximizeFired(ContentUI contentUI, Point point) {
             Point relativeMousePoint = SwingUtilities.convertPoint(TabbedContentPane.this, point, getDestination());
-            Rectangle iconsBounds = aggregateIcon.getLastPaintedRecAt(3);
+            Rectangle iconBounds = aggregateIcon.getLastPaintedRecAt(3);
 
-            return (contentUI.isMaximizable() && showMaximize && ((relativeMousePoint.getX() > iconsBounds.x && relativeMousePoint.getX() < iconsBounds.x + iconsBounds.width) ||
-                                                  (point.getX() > iconsBounds.x && point.getX() < iconsBounds.x + iconsBounds.width)));
+            return iconBounds != null && (contentUI.isMaximizable() && showMaximize && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
+                                                                                        (point.getX() > iconBounds.x && point.getX() < iconBounds.x + iconBounds.width)));
         }
 
         protected boolean isDetachFired(ContentUI contentUI, Point point) {
             Point relativeMousePoint = SwingUtilities.convertPoint(TabbedContentPane.this, point, getDestination());
             Rectangle iconBounds = aggregateIcon.getLastPaintedRecAt(4);
+            return iconBounds != null && (contentUI.isDetachable() && showDetach && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
+                                                                                     (point.getX() > iconBounds.x && point.getX() < iconBounds.x + iconBounds.width)));
 
-            return (contentUI.isDetachable() && showDetach && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
-                                                 (point.getX() > iconBounds.x && point.getX() < iconBounds.x + iconBounds.width)));
         }
 
         protected boolean isCloseFired(ContentUI contentUI, Point point) {
             Point relativeMousePoint = SwingUtilities.convertPoint(TabbedContentPane.this, point, getDestination());
-            Rectangle iconsBounds = aggregateIcon.getLastPaintedRecAt(5);
+            Rectangle iconBounds = aggregateIcon.getLastPaintedRecAt(5);
 
-            return (contentUI.isCloseable() && showClose && ((relativeMousePoint.getX() > iconsBounds.x && relativeMousePoint.getX() < iconsBounds.x + iconsBounds.width) ||
-                                                (point.getX() > iconsBounds.x && point.getX() < iconsBounds.x + iconsBounds.width)));
+            return iconBounds != null && (contentUI.isCloseable() && showClose && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
+                                                                                   (point.getX() > iconBounds.x && point.getX() < iconBounds.x + iconBounds.width)));
+
         }
 
 

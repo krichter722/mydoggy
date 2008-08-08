@@ -48,6 +48,25 @@ public class ToolWindowPanelUI extends BasicPanelUI {
     }
 
 
+    public void setComponent(Component component) {
+        JPanel componentContainer = toolWindowPanel.getComponentContainer();
+
+        componentContainer.removeAll();
+        componentContainer.add(component, "0,0,FULL,FULL");
+
+        SwingUtil.repaint(componentContainer);
+    }
+
+    public void removeComponent(Component component) {
+        if (component == null)
+            return;
+        JPanel componentContainer = toolWindowPanel.getComponentContainer();
+        componentContainer.remove(component);
+
+        SwingUtil.repaint(componentContainer);
+    }
+
+
     protected void installComponents() {
         toolWindowPanel.setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL},
                                                                          {SwingUtil.getInt("ToolWindowTitleBarUI.length", 16), TableLayout.FILL}},
@@ -64,4 +83,5 @@ public class ToolWindowPanelUI extends BasicPanelUI {
 
         toolWindowPanel.getToolWindowDescriptor().getToolWindow().getToolWindowTabs()[0].setSelected(true);
     }
+
 }

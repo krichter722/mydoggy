@@ -21,7 +21,8 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class FloatingLivePanel extends TranslucentPanel implements PropertyChangeListener,
+public class FloatingLivePanel extends TranslucentPanel implements FloatingLiveWindow,
+                                                                   PropertyChangeListener,
                                                                    ActionListener {
 
     protected MyDoggyToolWindowManager manager;
@@ -143,10 +144,6 @@ public class FloatingLivePanel extends TranslucentPanel implements PropertyChang
             setBorder(null);
         }
         SwingUtil.repaint(layeredPane);
-    }
-
-    public ToolWindow getFirstToolWindow() {
-        return (ToolWindow) multiSplitDockableContainer.getContents().get(0).dockable;
     }
 
 

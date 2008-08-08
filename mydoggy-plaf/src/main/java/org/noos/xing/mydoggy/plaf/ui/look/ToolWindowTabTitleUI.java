@@ -119,8 +119,11 @@ public class ToolWindowTabTitleUI extends BasicLabelUI implements MouseListener,
 
     public void update(Graphics g, JComponent c) {
         if (tab.isFlashing() && toolWindow.isVisible()) {
-            Boolean flashingState = SwingUtil.getClientProperty(c, "mydoggy.flashingState");
-            if (flashingState) {
+            Boolean flashingState = SwingUtil.getClientProperty(
+                    (JComponent) c.getParent(),
+                    "mydoggy.flashingState"
+            );
+            if (flashingState == null || flashingState) {
                 toolWindowTabTitle.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
             } else {
                 toolWindowTabTitle.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));

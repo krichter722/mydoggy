@@ -192,9 +192,7 @@ public interface Content extends Dockable<ContentManager> {
 
     /**
      *
-     * @param onContent
-     * @param onIndex
-     *@param onPosition @since 1.5.0
+     * @param constraints
      */
-    void reattach(Content onContent, int onIndex, AggregationPosition onPosition);
+    void reattach(Object... constraints);
 }

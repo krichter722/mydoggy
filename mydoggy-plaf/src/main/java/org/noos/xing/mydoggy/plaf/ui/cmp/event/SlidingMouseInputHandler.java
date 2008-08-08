@@ -65,14 +65,14 @@ public class SlidingMouseInputHandler extends ComponentAdapter implements MouseI
     public SlidingMouseInputHandler(ToolWindowDescriptor descriptor) {
         this.descriptor = descriptor;
         this.toolWindow = descriptor.getToolWindow();
-        descriptor.getContentContainer().addComponentListener(this);
+        descriptor.getToolWindowPanel().addComponentListener(this);
 
         descriptor.getCleaner().addCleaner(this);
     }
 
 
     public void cleanup() {
-        descriptor.getContentContainer().removeComponentListener(this);
+        descriptor.getToolWindowPanel().removeComponentListener(this);
 
         descriptor = null;
         toolWindow = null;
