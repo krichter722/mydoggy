@@ -299,8 +299,7 @@ public class ToolWindowCommonMultiSplitDropTarget extends DropTarget {
                             return true;
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception ignoreIt) {
             }
             return false;
         }

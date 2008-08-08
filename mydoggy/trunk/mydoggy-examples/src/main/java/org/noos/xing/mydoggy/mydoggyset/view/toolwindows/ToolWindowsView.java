@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.mydoggyset.view.toolwindows;
 
 import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.mydoggyset.view.toolwindows.tools.ToolWindowsTableView;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.yasaf.plaf.view.MapViewContext;
 import org.noos.xing.yasaf.view.View;
@@ -25,10 +26,9 @@ public class ToolWindowsView implements View {
 
         JPanel panel = new JPanel();
         panel.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1, 5, -1}}));
-        panel.add(new ToolWindowTableView(viewContext).getComponent(),
-                  "0,0,FULL,FULL");
-        panel.add(new PreferencePanelView(viewContext).getComponent(),
-                  "0,2,FULL,FULL");
+
+        panel.add(new ToolWindowsTableView(viewContext).getComponent(), "0,0,FULL,FULL");
+        panel.add(new PreferencePanelView(viewContext).getComponent(), "0,2,FULL,FULL");
 
         return panel;
     }

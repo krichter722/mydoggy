@@ -105,7 +105,7 @@ public class ContentManagerDropTarget extends DropTarget {
                         return isEnabled();
                     }
                 }
-            } catch (Exception e) {
+            } catch (Exception ignoreIt) {
             }
             return false;
         }

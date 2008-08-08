@@ -177,26 +177,24 @@ public interface Content extends Dockable<ContentManager> {
     /**
      * TODO:..
      * @param onContent
-     * @param indexAtLocation
-     * @param aggregationPosition
-     * @since 1.5.0
+     * @param onIndex
+     *@param onPosition @since 1.5.0
      */
-    void detachOn(Content onContent, int indexAtLocation, AggregationPosition aggregationPosition);
+    void detach(Content onContent, int onIndex, AggregationPosition onPosition);
 
     /**
      *
      * @param onContent
-     * @param aggregationPosition
+     * @param onPosition
      * @since 1.5.0
      */
-    void detachOn(Content onContent, AggregationPosition aggregationPosition);
+    void detach(Content onContent, AggregationPosition onPosition);
 
     /**
      *
      * @param onContent
-     * @param indexAtLocation
-     * @param aggregationPosition
-     * @since 1.5.0
+     * @param onIndex
+     *@param onPosition @since 1.5.0
      */
-    void reattachOn(Content onContent, int indexAtLocation, AggregationPosition aggregationPosition);
+    void reattach(Content onContent, int onIndex, AggregationPosition onPosition);
 }

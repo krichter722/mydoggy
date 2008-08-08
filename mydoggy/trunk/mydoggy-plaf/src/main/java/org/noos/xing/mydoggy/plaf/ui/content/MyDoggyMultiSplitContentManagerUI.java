@@ -717,7 +717,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
                     try {
                         if (evt instanceof UserPropertyChangeEvent) {
-                            // We are here because a call ot the detachOn methods was made.
+                            // We are here because a call ot the detach methods was made.
 
                             UserPropertyChangeEvent userEvent = (UserPropertyChangeEvent) evt;
                             ContentDetachConstraint constraint = (ContentDetachConstraint) userEvent.getUserObject();
@@ -797,7 +797,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                     contentValueAdjusting = true;
                     try {
                         if (evt instanceof UserPropertyChangeEvent) {
-                            // We are here because a call ot the detachOn methods was made.
+                            // We are here because a call ot the detach methods was made.
                             UserPropertyChangeEvent userEvent = (UserPropertyChangeEvent) evt;
                             ContentDetachConstraint constraint = (ContentDetachConstraint) userEvent.getUserObject();
 

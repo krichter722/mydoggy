@@ -329,7 +329,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                             ToolWindowAnchor onAnchor = getOnAnchor();
                             if (content.isDetached()) {
                                 // Reattach...
-                                content.reattachOn(onDockable,
+                                content.reattach(onDockable,
                                                    onIndex,
                                                    (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString())
                                 );
