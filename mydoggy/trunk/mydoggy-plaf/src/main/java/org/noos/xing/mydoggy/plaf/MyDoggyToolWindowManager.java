@@ -43,7 +43,6 @@ import java.util.List;
  * @author Angelo De Caro
  * @beaninfo attribute: isContainer true
  * description: MyDoggyToolWindowManager
- * TODO: put not focusable panel into content container...
  */
 public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener {
 
@@ -104,6 +103,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected CornerPanel nordEastCorner;
     protected CornerPanel southWestCorner;
     protected CornerPanel southEastCorner;
+
+    private Map<ToolWindow, FloatingLiveWindow> livePanelMap = new HashMap<ToolWindow, FloatingLiveWindow>();
+    private Map<ToolWindow, ModalWindow> modalWindowMap = new HashMap<ToolWindow, ModalWindow>();
 
 
     public MyDoggyToolWindowManager() {
@@ -1101,6 +1103,55 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 bar.getSplitPane().setDividerLocation(0.5);
             }
         }
+    }
+
+
+    public FloatingLiveWindow getFloatingLiveWindow(ToolWindow toolWindow) {
+        FloatingLiveWindow panel = livePanelMap.get(toolWindow);
+        if (panel == null) {
+            panel = new FloatingLivePanel(this);
+            livePanelMap.put(toolWindow, panel);
+        }
+
+        return panel;
+    }
+
+    public void removeFloatingLivePanel(ToolWindow toolWindow) {
+        livePanelMap.remove(toolWindow);
+    }
+
+    public ModalWindow getModalWindow(ToolWindow toolWindow) {
+        ModalWindow modalWindow = modalWindowMap.get(toolWindow);
+
+        if (modalWindow == null) {
+            FloatingTypeDescriptor floatingTypeDescriptor = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class);
+
+            if (floatingTypeDescriptor.isAddToTaskBar()) {
+                modalWindow = new ModalFrame(this,
+                                             toolWindow,
+                                             SwingUtil.getBoolean("dialog.owner.enabled", true)
+                                                ? windowAncestor instanceof Window ? (Window) windowAncestor : null
+                                                : null,
+                                             null,  // TODO: and this...
+                                             floatingTypeDescriptor.isModal());
+            } else
+                modalWindow = new ModalDialog(this,
+                                              SwingUtil.getBoolean("dialog.owner.enabled", true)
+                                                 ? windowAncestor instanceof Window ? (Window) windowAncestor : null
+                                                 : null,
+                                              null,
+                                              floatingTypeDescriptor.isModal());
+            modalWindow.setName("toolWindow.floating.window." + toolWindow.getId());
+
+            modalWindowMap.put(toolWindow, modalWindow);
+        }
+
+        return modalWindow;
+    }
+
+    public void removeModalWindow(ToolWindow toolWindow) {
+        // TODO: when we call this?
+        modalWindowMap.remove(toolWindow);
     }
 
 

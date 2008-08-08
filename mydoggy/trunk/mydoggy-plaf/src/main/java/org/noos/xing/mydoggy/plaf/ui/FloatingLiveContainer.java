@@ -5,7 +5,7 @@ import org.noos.xing.mydoggy.FloatingLiveTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
-import org.noos.xing.mydoggy.plaf.ui.cmp.FloatingLivePanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.FloatingLiveWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingMoveMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -22,7 +22,7 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro
  */
 public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
-    protected FloatingLivePanel floatingLivePanel;
+    protected FloatingLiveWindow floatingLiveWindow;
     protected FloatingMoveMouseInputHandler moveMouseInputHandler;
     protected ComponentListener livePanelComponentListener;
 
@@ -46,7 +46,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         toolWindowTitleBar.removeMouseMotionListener(moveMouseInputHandler);
         toolWindowTitleBar.removeMouseListener(moveMouseInputHandler);
 
-        floatingLivePanel = null;
+        floatingLiveWindow = null;
         
         super.cleanup();
     }
@@ -54,22 +54,23 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
     public void setVisible(boolean visible) {
         Component content = toolWindowPanel;
+        JComponent floatingLiveComponent = (JComponent) floatingLiveWindow;
 
         if (visible) {
             // retrieve common panel
-            floatingLivePanel = descriptor.getFloatingLivePanel();
+            floatingLiveWindow = descriptor.getFloatingLivePanel();
 
             // setup components
-            floatingLivePanel.resetLayout();    // TODO: remove this call...
+            floatingLiveWindow.resetLayout();    // TODO: remove this call...
             content.setVisible(true);
-            floatingLivePanel.addDockable(toolWindow, content);
+            floatingLiveWindow.addDockable(toolWindow, content);
 
             // setup listener
-            moveMouseInputHandler.setFloatingContainer(floatingLivePanel);
-            floatingLivePanel.addComponentListener(livePanelComponentListener);
+            moveMouseInputHandler.setFloatingContainer(floatingLiveComponent);
+            floatingLiveComponent.addComponentListener(livePanelComponentListener);
 
             // Prepare common panel
-            floatingLivePanel.setBorder(BorderFactory.createEtchedBorder());
+            floatingLiveComponent.setBorder(BorderFactory.createEtchedBorder());
 
             if (lastBounds == null) {
                 FloatingLiveTypeDescriptor typeDescriptor = (FloatingLiveTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
@@ -81,19 +82,19 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                     switch (toolWindow.getAnchor()) {
                         case LEFT:
                         case RIGHT:
-                            floatingLivePanel.setSize(descriptor.getDockedTypeDescriptor().getDockLength(),
+                            floatingLiveWindow.setSize(descriptor.getDockedTypeDescriptor().getDockLength(),
                                                       (int) (managerCmp.getHeight() / 1.5));
                             break;
                         case TOP:
                         case BOTTOM:
-                            floatingLivePanel.setSize((int) (managerCmp.getWidth() / 1.5),
+                            floatingLiveWindow.setSize((int) (managerCmp.getWidth() / 1.5),
                                                       descriptor.getDockedTypeDescriptor().getDockLength());
                             break;
                     }
                 } else
-                    floatingLivePanel.setSize(typeDescriptor.getSize());
+                    floatingLiveWindow.setSize(typeDescriptor.getSize());
 
-                SwingUtil.validateBounds(floatingLivePanel, descriptor.getManager().getMainContainer().getBounds());
+                SwingUtil.validateBounds(floatingLiveComponent, descriptor.getManager().getMainContainer().getBounds());
 
                 // Set Location
                 if (typeDescriptor.getLocation() == null ||
@@ -105,40 +106,40 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
                     switch (toolWindow.getAnchor()) {
                         case LEFT:
-                            floatingLivePanel.setLocation(50, 50);
+                            floatingLiveWindow.setLocation(50, 50);
                             break;
                         case RIGHT:
-                            floatingLivePanel.setLocation(managerCmp.getWidth() - 50 - floatingLivePanel.getWidth(),
+                            floatingLiveWindow.setLocation(managerCmp.getWidth() - 50 - floatingLiveWindow.getWidth(),
                                                           50);
                             break;
                         case TOP:
-                            floatingLivePanel.setLocation(50, 50);
+                            floatingLiveWindow.setLocation(50, 50);
                             break;
                         case BOTTOM:
-                            floatingLivePanel.setLocation(50,
-                                                          managerCmp.getHeight() - 50 - floatingLivePanel.getHeight());
+                            floatingLiveWindow.setLocation(50,
+                                                          managerCmp.getHeight() - 50 - floatingLiveWindow.getHeight());
                             break;
                     }
                 } else
-                    floatingLivePanel.setLocation(typeDescriptor.getLocation());
+                    floatingLiveWindow.setLocation(typeDescriptor.getLocation());
             } else {
-                floatingLivePanel.setBounds(lastBounds);
+                floatingLiveWindow.setBounds(lastBounds);
                 lastBounds = null;
             }
 
             // mount common panel
-            floatingLivePanel.mount();
+            floatingLiveWindow.mount();
         } else {
             // remove dockable...
-            floatingLivePanel.removeDockable(toolWindow);
+            floatingLiveWindow.removeDockable(toolWindow);
 
             // remove listeners...
-            floatingLivePanel.removeComponentListener(livePanelComponentListener);
+            floatingLiveComponent.removeComponentListener(livePanelComponentListener);
 
             // unmount
-            floatingLivePanel.unmount();
+            floatingLiveWindow.unmount();
             
-            floatingLivePanel = null;
+            floatingLiveWindow = null;
         }
     }
 
@@ -147,25 +148,27 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                            ToolWindowDescriptor aggregationOnTool, 
                            AggregationPosition aggregationPosition) {
         // retrieve common panel
-        floatingLivePanel = ((FloatingLiveContainer) referenceAggregationTool.getToolWindowContainer(ToolWindowType.FLOATING_LIVE)).getFloatingLivePanel();
+        floatingLiveWindow = ((FloatingLiveContainer) referenceAggregationTool.getToolWindowContainer(ToolWindowType.FLOATING_LIVE)).getFloatingLiveWindow();
 
         // setup components
-        floatingLivePanel.addDockable(toolWindow,
+        floatingLiveWindow.addDockable(toolWindow,
                                       content,
                                       (aggregationOnTool != null) ? aggregationOnTool.getToolWindow() : null,
                                       aggregationPosition);
 
         // setup listeners
-        moveMouseInputHandler.setFloatingContainer(floatingLivePanel);
-        floatingLivePanel.addComponentListener(livePanelComponentListener);
+        JComponent floatingLiveComponent = (JComponent) floatingLiveWindow;
+
+        moveMouseInputHandler.setFloatingContainer(floatingLiveComponent);
+        floatingLiveComponent.addComponentListener(livePanelComponentListener);
 
         // Mount panel
-        floatingLivePanel.mount();
+        floatingLiveWindow.mount();
     }
 
 
-    public FloatingLivePanel getFloatingLivePanel() {
-        return floatingLivePanel;
+    public FloatingLiveWindow getFloatingLiveWindow() {
+        return floatingLiveWindow;
     }
 
 
@@ -203,7 +206,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                 } else if (evt.getOldValue() == ToolWindowType.FLOATING_LIVE) {
                     if (descriptor.getManager().getLayeredPane() != null) {
                         if (settedListener)
-                            lastBounds = descriptor.getFloatingLivePanel(toolWindow).getBounds();
+                            lastBounds = descriptor.getManager().getFloatingLiveWindow(toolWindow).getBounds();
 
                         // Remove listeners
                         toolWindowTabPanel.removeEventDispatcherlListener(moveMouseInputHandler);
@@ -222,20 +225,20 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
 
-                    FloatingLivePanel floatingLivePanel = descriptor.getFloatingLivePanel(toolWindow);
+                    FloatingLiveWindow floatingLiveWindow = descriptor.getManager().getFloatingLiveWindow(toolWindow);
                     if ((Boolean) evt.getNewValue()) {
-                        oldBounds = floatingLivePanel.getBounds();
+                        oldBounds = floatingLiveWindow.getBounds();
 
                         Rectangle bounds = descriptor.getManager().getMainContainer().getBounds();
                         bounds = SwingUtilities.convertRectangle(descriptor.getManager().getMainContainer(),
                                                                  bounds,
                                                                  descriptor.getManager().getRootPane().getLayeredPane());
-                        floatingLivePanel.setBounds(bounds);
+                        floatingLiveWindow.setBounds(bounds);
                     } else {
-                        floatingLivePanel.setBounds(oldBounds);
+                        floatingLiveWindow.setBounds(oldBounds);
                     }
 
-                    SwingUtil.repaint(floatingLivePanel);
+                    SwingUtil.repaint((Component) floatingLiveWindow);
                 }
             }
         });
@@ -250,10 +253,10 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                 if (valueAdjusting)
                     return;
 
-                FloatingLivePanel floatingLivePanel = descriptor.getFloatingLivePanel(toolWindow);
-                if (floatingLivePanel.isVisible()) {
+                FloatingLiveWindow floatingLiveWindow = descriptor.getManager().getFloatingLiveWindow(toolWindow);
+                if (floatingLiveWindow.isVisible()) {
                     Point location = (Point) evt.getNewValue();
-                    floatingLivePanel.setLocation(location);
+                    floatingLiveWindow.setLocation(location);
                 }
                 lastBounds = null;
             }
@@ -266,10 +269,10 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                 if (valueAdjusting)
                     return;
 
-                FloatingLivePanel floatingLivePanel = descriptor.getFloatingLivePanel(toolWindow);
-                if (floatingLivePanel.isVisible()) {
+                FloatingLiveWindow floatingLiveWindow = descriptor.getManager().getFloatingLiveWindow(toolWindow);
+                if (floatingLiveWindow.isVisible()) {
                     Dimension size = (Dimension) evt.getNewValue();
-                    floatingLivePanel.setSize(size);
+                    floatingLiveWindow.setSize(size);
                 }
                 lastBounds = null;
             }
@@ -332,8 +335,8 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         public void componentResized(ComponentEvent e) {
             valueAdjusting = true;
             try {
-                toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setSize(floatingLivePanel.getWidth(),
-                                                                                       floatingLivePanel.getHeight());
+                toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setSize(floatingLiveWindow.getWidth(),
+                                                                                       floatingLiveWindow.getHeight());
             } finally {
                 valueAdjusting = false;
             }
@@ -342,8 +345,8 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         public void componentMoved(ComponentEvent e) {
             valueAdjusting = true;
             try {
-                toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setLocation(floatingLivePanel.getX(),
-                                                                                           floatingLivePanel.getY());
+                toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).setLocation(floatingLiveWindow.getX(),
+                                                                                           floatingLiveWindow.getY());
             } finally {
                 valueAdjusting = false;
             }

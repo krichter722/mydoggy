@@ -55,6 +55,19 @@ public class MultiSplitConstraint {
         this.onIndex = onIndex;
     }
 
+    /**
+     * TODO:
+     * @param onContent
+     * @param onIndex
+     * @param onPosition
+     * @since 1.5.0
+     */
+    public MultiSplitConstraint(Content onContent, int onIndex, AggregationPosition onPosition) {
+        this.onContent = onContent;
+        this.onIndex = onIndex;
+        this.onPosition = onPosition;
+    }
+
 
     public Content getOnContent() {
         return onContent;

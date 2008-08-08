@@ -16,8 +16,10 @@ import java.awt.*;
 public interface ContentManager extends DockableManager<Content>, Observable {
 
     /**
-     * TODO:..
-     * @return
+     * Returns the related tool window manager.
+     *
+     * @return the related tool window manager.
+     * @since 1.5.0
      */
     ToolWindowManager getToolWindowManager();
 

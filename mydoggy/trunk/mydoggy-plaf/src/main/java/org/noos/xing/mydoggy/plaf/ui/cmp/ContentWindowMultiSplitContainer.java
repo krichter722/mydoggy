@@ -11,7 +11,7 @@ import java.awt.datatransfer.Transferable;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
-*/
+ */
 public class ContentWindowMultiSplitContainer extends MultiSplitTabbedContentContainer {
 
 
@@ -82,7 +82,6 @@ public class ContentWindowMultiSplitContainer extends MultiSplitTabbedContentCon
     }
 
 
-
     public class ContentWindowDockableDropPanel extends MultiSplitTabbedDockableDropPanel {
         // TODO: setup dratStart
 
@@ -132,11 +131,11 @@ public class ContentWindowMultiSplitContainer extends MultiSplitTabbedContentCon
                         if (!rejectDrop) {
                             if (onDockable != null) {
                                 content.detach(onDockable,
-                                                 onIndex,
-                                                 (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()));
+                                               onIndex,
+                                               (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()));
                             } else {
                                 content.detach(onDockable,
-                                                 (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()));
+                                               (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()));
                             }
                             return true;
                         }

@@ -77,9 +77,7 @@ public class DockedContainer extends MyDoggyToolWindowContainer {
 
         public void toolWindowTabRemoved(ToolWindowTabEvent event) {
             if (toolWindow.getToolWindowTabs().length == 0) {
-                JPanel componentContainer = descriptor.getToolWindowPanel().getComponentContainer();
-                componentContainer.remove(event.getToolWindowTab().getComponent());
-                SwingUtil.repaint(componentContainer);
+                descriptor.getToolWindowPanel().removeComponent(event.getToolWindowTab().getComponent());
             }
 
             event.getToolWindowTab().removePropertyChangeListener(this);
@@ -93,7 +91,7 @@ public class DockedContainer extends MyDoggyToolWindowContainer {
                 if (evt.getNewValue() == Boolean.TRUE) {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
-                            descriptor.setMainComponent(tab.getComponent());
+                            descriptor.setComponent(tab.getComponent());
 
                             Component focusable = SwingUtil.findFocusable(tab.getComponent());
                             if (focusable != null)
@@ -105,7 +103,7 @@ public class DockedContainer extends MyDoggyToolWindowContainer {
                 }
             } else if ("component".equals(property)) {
                 if (descriptor.getComponent() == evt.getOldValue())
-                    descriptor.setMainComponent(tab.getComponent());
+                    descriptor.setComponent(tab.getComponent());
             }
 
         }
@@ -115,7 +113,7 @@ public class DockedContainer extends MyDoggyToolWindowContainer {
 
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getOldValue() == ToolWindowType.EXTERN)
-                descriptor.setMainComponent(toolWindow.getToolWindowTabs()[0].getComponent());
+                descriptor.setComponent(toolWindow.getToolWindowTabs()[0].getComponent());
         }
 
     }

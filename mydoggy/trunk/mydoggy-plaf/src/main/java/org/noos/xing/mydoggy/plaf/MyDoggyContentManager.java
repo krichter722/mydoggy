@@ -148,7 +148,7 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
                     Dockable delegator = content.getDockableDelegator();
                     if (delegator instanceof ToolWindow) {
                         ToolWindow toolWindow = (ToolWindow) delegator;
-                        toolWindow.setType(ToolWindowType.DOCKED);  // TODO (-): Remember old type
+                        toolWindow.setType(ToolWindowType.DOCKED);
                     }
                 }
             } finally {

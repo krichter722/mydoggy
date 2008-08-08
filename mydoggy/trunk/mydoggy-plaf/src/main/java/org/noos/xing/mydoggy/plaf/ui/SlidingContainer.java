@@ -68,7 +68,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         slidingAnimation.stop();
 
         if (visible) {
-            descriptor.focusValueAdjusting = true;
+            descriptor.externalFocusValueAdjusting = true;
 
             // Reset Layout
             TableLayout layout = (TableLayout) sheet.getLayout();
@@ -301,7 +301,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
                     sheet.setBounds(bounds);
                     descriptor.assignFocus();
 
-                    descriptor.focusValueAdjusting = false;
+                    descriptor.externalFocusValueAdjusting = false;
                     break;
                 case OUTGOING:
                     layeredPane.remove(sheet);

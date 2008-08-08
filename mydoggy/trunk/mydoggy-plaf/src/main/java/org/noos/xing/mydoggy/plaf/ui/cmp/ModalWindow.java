@@ -54,9 +54,9 @@ public interface ModalWindow {
     void addDockable(ToolWindow toolWindow, Component content);
 
     void addDockable(ToolWindow toolWindow,
-                            Component content,
-                            ToolWindow aggregationOnDockable,
-                            AggregationPosition aggregationPosition);
+                     Component content,
+                     ToolWindow aggregationOnDockable,
+                     AggregationPosition aggregationPosition);
 
     void removeDockable(ToolWindow toolWindow);
 

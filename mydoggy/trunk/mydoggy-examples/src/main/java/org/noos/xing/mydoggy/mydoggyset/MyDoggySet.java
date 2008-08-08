@@ -24,7 +24,6 @@ import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
-import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowRepresentativeAnchorUI;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTitleBarUI;
@@ -64,7 +63,7 @@ public class MyDoggySet {
     }
 
     public void start(final Runnable runnable) {
-        myDoggySetContext.put(MyDoggySet.class, null);
+//        myDoggySetContext.put(MyDoggySet.class, null);
 
         SwingUtil.centrePositionOnScreen(frame);
 
@@ -324,7 +323,7 @@ public class MyDoggySet {
         });
 
         // Setup ContentManagerUI
-        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
+//        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
 
 //        MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
 //        contentManagerUI.setPopupMenuEnabled(false);

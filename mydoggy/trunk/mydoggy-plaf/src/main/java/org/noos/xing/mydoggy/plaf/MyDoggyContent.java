@@ -2,7 +2,6 @@ package org.noos.xing.mydoggy.plaf;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
-import org.noos.xing.mydoggy.plaf.ui.content.ContentDetachConstraint;
 import org.noos.xing.mydoggy.plaf.ui.content.PlafContent;
 
 import javax.swing.*;
@@ -51,7 +50,7 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
         this.flash = false;
     }
 
-    
+
     public ContentManager getDockableManager() {
         return contentManager;
     }
@@ -233,7 +232,7 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
         boolean old = this.maximized;
         if (maximized)
             firePlafPropertyChangeEvent("maximized.before", false, maximized);
-        
+
         this.maximized = maximized;
         firePropertyChangeEvent("maximized", old, maximized);
     }
@@ -304,14 +303,12 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
             return;
 
         this.detached = true;
-        
+
         if (onIndex < -1)
             onIndex = -1;
 
         firePropertyChangeEvent(new UserPropertyChangeEvent(this, "detached", false, true,
-                                                            new ContentDetachConstraint(onContent,
-                                                                                        onIndex,
-                                                                                        onPosition)));
+                                                            new MultiSplitConstraint(onContent, onIndex, onPosition)));
     }
 
     public void detach(Content onContent, AggregationPosition onPosition) {
@@ -321,19 +318,16 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
         this.detached = true;
 
         firePropertyChangeEvent(new UserPropertyChangeEvent(this, "detached", false, true,
-                                                            new ContentDetachConstraint(onContent, -2, onPosition)));
+                                                            new MultiSplitConstraint(onContent, -2, onPosition)));
     }
 
-    public void reattach(Content onContent, int onIndex, AggregationPosition onPosition) {
+    public void reattach(Object... constraints) {
         if (!isDetached())
             throw new IllegalStateException("Cannot reattach the content. It's not detached.");
 
         this.detached = false;
 
-        firePropertyChangeEvent(new UserPropertyChangeEvent(this, "detached", true, false,
-                                                            new ContentDetachConstraint(onContent,
-                                                                                        onIndex,
-                                                                                        onPosition)));
+        firePropertyChangeEvent(new UserPropertyChangeEvent(this, "detached", true, false, constraints));
     }
 
 
