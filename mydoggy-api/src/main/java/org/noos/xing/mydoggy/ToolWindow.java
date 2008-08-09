@@ -290,10 +290,10 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
 
     /**
      *
-     * @param title
+     * @param representativeAnchorButtonTitle
      * @since 1.5.0
      */
-    void setRepresentativeAnchorButtonTitle(String title);
+    void setRepresentativeAnchorButtonTitle(String representativeAnchorButtonTitle);
 
     /**
      *

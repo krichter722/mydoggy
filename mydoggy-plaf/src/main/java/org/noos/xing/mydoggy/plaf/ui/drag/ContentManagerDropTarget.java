@@ -101,7 +101,7 @@ public class ContentManagerDropTarget extends DropTarget {
             Transferable transferable = dtde.getTransferable();
             try {
                 if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
-                    if (System.identityHashCode(toolWindowManager) == (Integer) transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
+                    if (((Integer)System.identityHashCode(toolWindowManager)).equals(transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_MANAGER))) {
                         return isEnabled();
                     }
                 }

@@ -214,7 +214,7 @@ public class FloatingLivePanel extends TranslucentPanel implements FloatingLiveW
                             toolWindow = (ToolWindow) tab.getDockableDelegator();
                         }
 
-                        ToolWindow onToolWindow = (ToolWindow) getOnDockable();
+                        final ToolWindow onToolWindow = (ToolWindow) getOnDockable();
 
                         if (toolWindow == onToolWindow)
                             return false;
@@ -284,15 +284,31 @@ public class FloatingLivePanel extends TranslucentPanel implements FloatingLiveW
                                         }
                                         break;
                                 }
-                                toolWindow.setActive(true);
+
+                                final ToolWindow toolWindow2 = toolWindow;
+                                SwingUtilities.invokeLater(new Runnable() {
+                                    public void run() {
+                                        toolWindow2.setActive(true);
+                                    }
+                                });
                             } else {
                                 if (onToolWindow != null && toolWindow != onToolWindow) {
                                     onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
-                                    onToolWindow.setActive(true);
+
+                                    SwingUtilities.invokeLater(new Runnable() {
+                                        public void run() {
+                                            onToolWindow.setActive(true);
+                                        }
+                                    });
                                 } else {
-                                    toolWindow.aggregateByReference((ToolWindow) multiSplitDockableContainer.getFirstDockable(), AggregationPosition.DEFAULT
-                                    );
-                                    toolWindow.setActive(true);
+                                    toolWindow.aggregateByReference((ToolWindow) multiSplitDockableContainer.getFirstDockable(), AggregationPosition.DEFAULT);
+
+                                    final ToolWindow toolWindow1 = toolWindow;
+                                    SwingUtilities.invokeLater(new Runnable() {
+                                        public void run() {
+                                            toolWindow1.setActive(true);
+                                        }
+                                    });
                                 }
                             }
                         } finally {

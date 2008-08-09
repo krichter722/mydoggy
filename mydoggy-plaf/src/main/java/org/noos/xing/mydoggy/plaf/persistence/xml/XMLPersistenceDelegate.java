@@ -242,6 +242,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 toolAttributes.addAttribute(null, "index", null, null, String.valueOf(toolWindow.getIndex()));
                 toolAttributes.addAttribute(null, "representativeAnchorButtonVisible", null, null, String.valueOf(toolWindow.isRepresentativeAnchorButtonVisible()));
                 toolAttributes.addAttribute(null, "flashing", null, null, String.valueOf(toolWindow.isFlashing()));
+
+                // Properties from 1.5.0
+                toolAttributes.addAttribute(null, "lockedOnAnchor", null, null, String.valueOf(toolWindow.isLockedOnAnchor()));
+                toolAttributes.addAttribute(null, "representativeAnchorButtonTitle", null, null, toolWindow.getRepresentativeAnchorButtonTitle());
+                toolAttributes.addAttribute(null, "hideOnZeroTabs", null, null, String.valueOf(toolWindow.isHideOnZeroTabs()));
                 writer.startElement("toolWindow", toolAttributes);
 
                 writer.startElement("descriptors");
@@ -260,10 +265,20 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 dockedDescriptorAttributes.addAttribute(null, "hideRepresentativeButtonOnVisible", null, null, String.valueOf(dockedTypeDescriptor.isHideRepresentativeButtonOnVisible()));
                 dockedDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(dockedTypeDescriptor.isIdVisibleOnTitleBar()));
                 dockedDescriptorAttributes.addAttribute(null, "autoHide", null, null, String.valueOf(dockedTypeDescriptor.isAutoHide()));
+                writer.startElement("docked", dockedDescriptorAttributes);
 
-                writer.dataElement("docked", dockedDescriptorAttributes);
+                writer.startElement("lockingAnchors");
+                for (ToolWindowAnchor anchor : dockedTypeDescriptor.getLockingAnchors()) {
+                    AttributesImpl attributes = new AttributesImpl();
+                    attributes.addAttribute(null, "anchor", null, null, anchor.toString());
 
-                // DockedTypeDescriptor
+                    writer.dataElement("lockingAnchor", attributes);
+                }
+                writer.endElement("lockingAnchors");
+
+                writer.endElement("docked");
+
+                // SlidingTypeDescriptor
                 SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);
 
                 AttributesImpl slidingDescriptorAttributes = new AttributesImpl();
@@ -349,6 +364,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 // End descriptors
                 writer.endElement("descriptors");
 
+                // Tabs
                 boolean addTabsTag = false;
                 for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
                     if (tab.getDockableDelegator() != null) {
@@ -667,7 +683,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
     }
 
-    // Parsing
+    // Reading
 
     public class MasterElementParser implements ElementParser<Element> {
         protected Map<String, ElementParser<Element>> elementParserMap;
@@ -719,7 +735,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             elementParserMap.put("mydoggy", new MyDoggyElementParser());
             elementParserMap.put("toolWindowManagerDescriptor", new ToolWindowManagerDescriptorElementParser());
             elementParserMap.put("pushAway", new PushAwayModeElementParser());
-            elementParserMap.put("toolWindows", new ToolsElementParser());
+            elementParserMap.put("toolWindows", new ToolWindowsElementParser());
             elementParserMap.put("contentManager", new ContentManagerElementParser());
             elementParserMap.put("toolWindowBar", new ToolWindowBarElementParser());
             elementParserMap.put("MultiSplitContentManagerUI", new MultiSplitContentManagerUIElementParser());
@@ -844,7 +860,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
     }
 
-    public class ToolsElementParser extends ElementParserAdapter {
+    public class ToolWindowsElementParser extends ElementParserAdapter {
         protected MergePolicyApplier mergePolicyApplier;
 
         public boolean parse(Element element, Context context) {
@@ -881,6 +897,18 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     descriptor.setIdVisibleOnTitleBar(getBoolean(typeElement, "idVisibleOnTitleBar", true));
                     descriptor.setHideRepresentativeButtonOnVisible(getBoolean(typeElement, "hideRepresentativeButtonOnVisible", false));
                     descriptor.setAutoHide(getBoolean(typeElement, "autoHide", false));
+
+                    descriptor.removeAllLockingAnchor();
+                    Element lockingAnchorsElement = getElement(typeElement, "lockingAnchors");
+                    if (lockingAnchorsElement != null) {
+                        NodeList lockingAnchorList = lockingAnchorsElement.getElementsByTagName("lockingAnchor");
+                        for (int j= 0, sizej = lockingAnchorList.getLength(); j< sizej; j++) {
+                            Element lockingAnchorElement = (Element) lockingAnchorList.item(j);
+
+                            descriptor.addLockingAnchor(ToolWindowAnchor.valueOf(lockingAnchorElement.getAttribute("anchor")));
+                        }
+                    }
+
                 }
 
                 typeElement = getElement(tool, "sliding");
@@ -962,6 +990,9 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                             getBoolean(tool, "representativeAnchorButtonVisible", true)
                     );
                 toolWindow.setFlashing(getBoolean(tool, "flashing", false));
+                toolWindow.setLockedOnAnchor(getBoolean(tool, "lockedOnAnchor", false));
+                toolWindow.setRepresentativeAnchorButtonTitle(tool.getAttribute("representativeAnchorButtonTitle"));
+                toolWindow.setHideOnZeroTabs(getBoolean(tool, "hideOnZeroTabs", false));
 
                 // Load tabs
                 Element tabs = getElement(tool, "tabs");
@@ -1142,6 +1173,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     contentUI.setCloseable(getBoolean(contentElement, "closeable", true));
                     contentUI.setDetachable(getBoolean(contentElement, "detachable", true));
                     contentUI.setMinimizable(getBoolean(contentElement, "minimizable", true));
+                    contentUI.setMaximizable(getBoolean(contentElement, "maximizable", true));
                     contentUI.setTransparentMode(getBoolean(contentElement, "transparentMode", true));
                     contentUI.setTransparentDelay(getInteger(contentElement, "transparentDelay", 0));
                     contentUI.setTransparentRatio(getFloat(contentElement, "transparentRatio", 0.7f));
@@ -1250,6 +1282,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 managerUI.setCloseable(getBoolean(element, "closeable", true));
                 managerUI.setDetachable(getBoolean(element, "detachable", false));
                 managerUI.setMinimizable(getBoolean(element, "minimizable", false));
+                managerUI.setMaximizable(getBoolean(element, "maximizable", false));
+                managerUI.setPopupMenuEnabled(getBoolean(element, "popupMenuEnabled", true));
                 managerUI.setShowAlwaysTab(getBoolean(element, "showAlwaysTab", false));
                 managerUI.setTabLayout(TabbedContentManagerUI.TabLayout.valueOf(element.getAttribute("tabLayout")));
                 managerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.valueOf(element.getAttribute("tabPlacement")));
@@ -1304,6 +1338,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 managerUI.setCloseable(getBoolean(element, "closeable", true));
                 managerUI.setDetachable(getBoolean(element, "detachable", false));
                 managerUI.setMinimizable(getBoolean(element, "minimizable", false));
+                managerUI.setMaximizable(getBoolean(element, "maximizable", false));
+                managerUI.setPopupMenuEnabled(getBoolean(element, "popupMenuEnabled", true));
                 managerUI.setShowAlwaysTab(getBoolean(element, "showAlwaysTab", false));
                 managerUI.setTabLayout(TabbedContentManagerUI.TabLayout.valueOf(element.getAttribute("tabLayout")));
                 managerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.valueOf(element.getAttribute("tabPlacement")));
@@ -1322,6 +1358,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 managerUI.setCloseable(getBoolean(element, "closeable", true));
                 managerUI.setDetachable(getBoolean(element, "detachable", false));
                 managerUI.setMinimizable(getBoolean(element, "minimizable", false));
+                managerUI.setMaximizable(getBoolean(element, "maximizable", false));
+                managerUI.setPopupMenuEnabled(getBoolean(element, "popupMenuEnabled", true));
 
                 ContentManager contentManager = context.get(ToolWindowManager.class).getContentManager();
 

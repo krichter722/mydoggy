@@ -546,17 +546,17 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         return representativeAnchorButtonVisible;
     }
 
-    public void setRepresentativeAnchorButtonTitle(String title) {
-        if (title == null)
-            title = id;
+    public void setRepresentativeAnchorButtonTitle(String representativeAnchorButtonTitle) {
+        if (representativeAnchorButtonTitle == null)
+            representativeAnchorButtonTitle = id;
 
-        if (title != null && title.equals(getRepresentativeAnchorButtonTitle()))
+        if (representativeAnchorButtonTitle != null && representativeAnchorButtonTitle.equals(getRepresentativeAnchorButtonTitle()))
             return;
 
         String old = this.getRepresentativeAnchorButtonTitle();
-        this.representativeAnchorButtonTitle = title;
+        this.representativeAnchorButtonTitle = representativeAnchorButtonTitle;
 
-        firePropertyChangeEvent("representativeAnchorButtonTitle", old, title);
+        firePropertyChangeEvent("representativeAnchorButtonTitle", old, representativeAnchorButtonTitle);
     }
 
     public String getRepresentativeAnchorButtonTitle() {
