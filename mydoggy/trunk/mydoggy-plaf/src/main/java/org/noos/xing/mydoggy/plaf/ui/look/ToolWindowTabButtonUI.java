@@ -119,6 +119,7 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
         } else if ("title".equals(property)) {
             titleLabel.setText((String) evt.getNewValue());
             toolWindowTabButton.setName("toolWindow." + toolWindow.getId() + ".tabs." + tab.getTitle());
+            SwingUtil.repaint(titleLabel);
         } else if ("icon".equals(property)) {
             titleLabel.setIcon((Icon) evt.getNewValue());
         } else if ("ensureVisible".equals(property)) {
@@ -143,7 +144,7 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
             }
             toolWindowTabButton.revalidate();
             toolWindowTabButton.repaint();
-        }
+        }                                              
     }
 
     public void cleanup() {
@@ -349,7 +350,7 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
     }
 
     protected void installListeners() {
-        tab.addPropertyChangeListener(this);
+        tab.addPropertyChangeListener(this);    //  TODO: add as plaf...
         tab.getCleanerAggregator().addCleaner(this);
 
         toolWindowTabButton.addMouseListener(toolWindowTabPanel.getMouseEventDispatcher());

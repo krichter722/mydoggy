@@ -9,6 +9,7 @@ import org.noos.xing.mydoggy.plaf.ui.PopupUpdater;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleBar;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
@@ -460,7 +461,9 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
             // if the source component a tab?
             MyDoggyToolWindowTab toolWindowTab = null;
             if (SwingUtilities.isDescendingFrom(dge.getComponent(), toolWindowTitleBar)) {
-                toolWindowTab = (MyDoggyToolWindowTab) SwingUtil.getParentClientProperty(dge.getComponent(), ToolWindowTab.class);
+                ToolWindowTabButton toolWindowTabButton = SwingUtil.getParent(dge.getComponent(), ToolWindowTabButton.class);
+                if (toolWindowTabButton != null)
+                    toolWindowTab = (MyDoggyToolWindowTab) toolWindowTabButton.getToolWindowTab();
             }
 
             // Start Drag

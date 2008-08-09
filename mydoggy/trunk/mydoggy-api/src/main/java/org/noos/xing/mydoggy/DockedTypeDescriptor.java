@@ -196,6 +196,12 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
     void removeLockingAnchor(ToolWindowAnchor anchor);
 
     /**
+     *
+     * @since 1.5.0
+     */
+    void removeAllLockingAnchor();
+
+    /**
      * TODO
      * @return
      * @since 1.5.0

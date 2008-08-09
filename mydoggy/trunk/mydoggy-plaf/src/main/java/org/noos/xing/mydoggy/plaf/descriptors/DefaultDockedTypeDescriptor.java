@@ -195,6 +195,10 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         lockingAnchors.remove(anchor);
     }
 
+    public void removeAllLockingAnchor() {
+        lockingAnchors.clear();
+    }
+
     public ToolWindowAnchor[] getLockingAnchors() {
         return lockingAnchors.toArray(new ToolWindowAnchor[lockingAnchors.size()]);
     }

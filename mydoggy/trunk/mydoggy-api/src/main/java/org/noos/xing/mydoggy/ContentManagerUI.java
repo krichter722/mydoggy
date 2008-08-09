@@ -83,10 +83,10 @@ public interface ContentManagerUI<C extends ContentUI> extends Observable {
     /**
      * Enables or disabled the popup menu for this manager.
      *
-     * @param enabled <code>true</code> to enable, <code>false</code> to disable.
+     * @param popupMenuEnabled
      * @since 1.5.0
      */
-    void setPopupMenuEnabled(boolean enabled);
+    void setPopupMenuEnabled(boolean popupMenuEnabled);
 
     /**
      * Returns whether this content manager permits the popup menu to be showed.

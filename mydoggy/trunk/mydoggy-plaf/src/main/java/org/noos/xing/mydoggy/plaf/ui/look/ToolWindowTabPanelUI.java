@@ -12,7 +12,10 @@ import org.noos.xing.mydoggy.plaf.support.PropertyChangeBridge;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.PopupUpdater;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.cmp.*;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabButton;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleButton;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureDelegate;
 import org.noos.xing.mydoggy.plaf.ui.util.MouseEventDispatcher;
@@ -41,7 +44,6 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
     }
 
 
-    protected ToolWindowTitleBar toolWindowTitleBar;
     protected ToolWindowTabPanel toolWindowTabPanel;
 
     protected ToolWindowDescriptor descriptor;
@@ -156,6 +158,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
 
         propertyChangeBridge = new PropertyChangeBridge();
         propertyChangeBridge.addBridgePropertyChangeListener("selected", new TabSelectedPropertyChangeListener());
+        propertyChangeBridge.addBridgePropertyChangeListener("minimized", new TabMinimizedPropertyChangeListener());
 
         initTabs();
     }
@@ -250,7 +253,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
                     tabContainer.remove(component);
 
                     if (flag)
-                        tabButton.removePropertyChangeListener(propertyChangeBridge);
+                        toolWindowTab.removePropertyChangeListener(propertyChangeBridge);
 
                     int col = constraints.col1 - 1;
                     containerLayout.deleteColumn(col);
@@ -272,7 +275,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
 
 
 
-    public class TabToolWindowListener implements ToolWindowListener, PropertyChangeListener, Cleaner {
+    public class TabToolWindowListener implements ToolWindowListener, Cleaner {
         protected Map<ToolWindowTab, Component> minimizedTabs;
 
         public TabToolWindowListener() {
@@ -320,21 +323,6 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
             checkPopupButton();
         }
 
-        public void propertyChange(PropertyChangeEvent evt) {
-            String property = evt.getPropertyName();
-            ToolWindowTab tab = (ToolWindowTab) evt.getSource();
-
-            if ("minimized".equals(property)) {
-                if (evt.getNewValue() == Boolean.TRUE) {
-                    ToolWindowTab nextTab = getNextTab(tab);
-                    minimizedTabs.put(tab, removeTab(tab, false));
-                    if (nextTab != null)
-                        nextTab.setSelected(true);
-                } else {
-                    addTab(minimizedTabs.remove(tab));
-                }
-            }
-        }
     }
 
     public class PopupButton extends ToolWindowTitleButton implements ActionListener, MouseListener {
@@ -427,6 +415,28 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
                     selectedTab.setSelected(false);
                 selectedTab = tab;
             }
+        }
+    }
+
+    public class TabMinimizedPropertyChangeListener implements PropertyChangeListener {
+        protected Map<ToolWindowTab, Component> minimizedTabs;
+
+        public TabMinimizedPropertyChangeListener() {
+            this.minimizedTabs = new HashMap<ToolWindowTab, Component>();
+        }
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            ToolWindowTab tab = (ToolWindowTab) evt.getSource();
+
+            if (evt.getNewValue() == Boolean.TRUE) {
+                ToolWindowTab nextTab = getNextTab(tab);
+                minimizedTabs.put(tab, removeTab(tab, false));
+                if (nextTab != null)
+                    nextTab.setSelected(true);
+            } else {
+                addTab(minimizedTabs.remove(tab));
+            }
+            SwingUtil.repaint(toolWindowTabPanel);
         }
     }
 

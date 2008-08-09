@@ -1210,13 +1210,13 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 if (referenceAggregationDescriptor == null)
                     referenceAggregationDescriptor = aggregationOnDescriptor;
 
-                Component content = (visible) ? toolWindowDescriptor.getToolWindowPanel() : null;
-                if (content == null && toolWindowDescriptor.getToolWindow().isVisible())
+                Component component = (visible) ? toolWindowDescriptor.getToolWindowPanel() : null;
+                if (component == null && toolWindowDescriptor.getToolWindow().isVisible())
                     return;
 
                 FloatingLiveContainer container = (FloatingLiveContainer) toolWindowDescriptor.getToolWindowContainer(ToolWindowType.FLOATING_LIVE);
                 container.setVisible(referenceAggregationDescriptor,
-                                     content,
+                                     component,
                                      aggregationOnDescriptor,
                                      (AggregationPosition) params[1]);
             } else {
