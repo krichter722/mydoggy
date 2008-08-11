@@ -46,6 +46,14 @@ public interface PersistenceDelegate {
     void save(OutputStream outputStream);
 
     /**
+     * TODO: 
+     * @param outputStream
+     * @param filter
+     * @since 1.5.0
+     */
+    void save(OutputStream outputStream, PersistenceDelegateFilter filter);
+
+    /**
      * Reads the settings for the ToolWindows, already registered into the manager, from the input
      * stream. By dafault the MergePolicy.RESET policy is used.
      * 

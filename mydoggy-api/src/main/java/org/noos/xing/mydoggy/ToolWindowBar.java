@@ -106,4 +106,18 @@ public interface ToolWindowBar extends Observable {
      * @since 1.4.2
      */
     ToolWindow[] getToolWindows();
+
+    /**
+     *
+     * @return
+     * @since 1.5.0
+     */
+    boolean isVisible();
+
+    /**
+     * TODO: 
+     * @param visible
+     * @since 1.5.0
+     */
+    void setVisible(boolean visible);
 }
