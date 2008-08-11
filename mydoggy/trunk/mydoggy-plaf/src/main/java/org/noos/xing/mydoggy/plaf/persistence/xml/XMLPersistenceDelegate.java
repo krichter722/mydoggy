@@ -9,6 +9,7 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowBar;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
 import org.noos.xing.mydoggy.plaf.persistence.PersistenceDelegateCallbackAdapter;
+import org.noos.xing.mydoggy.plaf.persistence.PersistenceDelegateFilterAdapter;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.MergePolicyApplier;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.ResetMergePolicy;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.UnionMergePolicy;
@@ -49,6 +50,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     protected Map<MergePolicy, MergePolicyApplier> mergePolicyApplierMap;
 
     protected PersistenceDelegateCallback dummyCallback;
+    protected PersistenceDelegateFilter dummyFilter;
 
 
     public XMLPersistenceDelegate(MyDoggyToolWindowManager toolWindowManager) {
@@ -56,19 +58,18 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         this.masterElementParser = new MasterElementParser();
         this.masterElementWriter = new ToolWindowManagerElementWriter(toolWindowManager);
         this.dummyCallback = new PersistenceDelegateCallbackAdapter();
+        this.dummyFilter = new PersistenceDelegateFilterAdapter(); 
 
         initMaps();
     }
 
 
     public void save(OutputStream outputStream) {
-        try {
-            XMLWriter writer = new XMLWriter(new OutputStreamWriter(outputStream));
-            masterElementWriter.write(writer, null);
-            writer.close();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        saveInternal(outputStream, dummyFilter, true);
+    }
+
+    public void save(OutputStream outputStream, PersistenceDelegateFilter filter) {
+        saveInternal(outputStream, filter, true);
     }
 
     public void apply(InputStream inputStream) {
@@ -84,10 +85,52 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     }
 
 
+    public void save(OutputStream outputStream, PersistenceDelegateFilter filter, boolean standalone) {
+        saveInternal(outputStream, filter, standalone);
+    }
+
+    public void apply(Element element, MergePolicy mergePolicy, PersistenceDelegateCallback callback) {
+        if (callback == null) {
+            // Setup a dummy callback
+            callback = dummyCallback;
+        }
+
+        try {
+            // Setup the context
+            DefaultMutableContext context = new DefaultMutableContext();
+            context.put(ToolWindowManager.class, toolWindowManager);
+            context.put(MyDoggyToolWindowManager.class, toolWindowManager);
+            context.put(MergePolicyApplier.class, mergePolicyApplierMap.get(mergePolicy));
+            context.put(PersistenceDelegateCallback.class, callback);
+
+            // start parsing..
+            masterElementParser.parse(element, context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     protected void initMaps() {
         mergePolicyApplierMap = new Hashtable<MergePolicy, MergePolicyApplier>();
         mergePolicyApplierMap.put(PersistenceDelegate.MergePolicy.RESET, new ResetMergePolicy());
         mergePolicyApplierMap.put(PersistenceDelegate.MergePolicy.UNION, new UnionMergePolicy());
+    }
+
+    protected void saveInternal(OutputStream outputStream, PersistenceDelegateFilter filter, boolean standalone) {
+        try {
+            XMLWriter writer = new XMLWriter(new OutputStreamWriter(outputStream));
+
+            MutableContext mutableContext = new DefaultMutableContext();
+            mutableContext.put(PersistenceDelegateFilter.class, (filter != null) ? filter : dummyFilter);
+            mutableContext.put("standalone", standalone);
+
+            masterElementWriter.write(writer, mutableContext);
+            writer.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected void applyInternal(InputStream inputStream, MergePolicy mergePolicy, PersistenceDelegateCallback callback) {
@@ -111,8 +154,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
+
 
 
     // Writing
@@ -129,14 +172,16 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         }
 
 
-        public void write(XMLWriter writer, Context params) {
+        public void write(XMLWriter writer, Context context) {
             try {
                 // Init context
-                MutableContext context = new DefaultMutableContext();
-                context.put(ToolWindowManager.class, manager);
+                MutableContext mutableContext = (MutableContext) context;
+                mutableContext.put(ToolWindowManager.class, manager);
+                boolean standalone = (Boolean)context.get("standalone");
 
                 // Start document
-                writer.startDocument();
+                if (standalone)
+                    writer.startDocument();
 
                 // Write header
                 AttributesImpl mydoggyAttributes = new AttributesImpl();
@@ -148,33 +193,42 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 // Write ToolWindows
                 writer.startElement("toolWindows");
                 for (ToolWindow toolWindow : manager.getToolWindows()) {
-                    context.put(ToolWindow.class, toolWindow);
+                    if  (!context.get(PersistenceDelegateFilter.class).storeToolWindow(toolWindow))
+                        continue;
+
+                    mutableContext.put(ToolWindow.class, toolWindow);
                     getElementWriter(ToolWindow.class).write(writer, context);
                 }
                 writer.endElement("toolWindows");
 
                 // Write ToolWindowManagerDescriptor
-                context.put(ToolWindowManagerDescriptor.class, manager.getToolWindowManagerDescriptor());
-                getElementWriter(ToolWindowManagerDescriptor.class).write(writer, context);
+                if  (context.get(PersistenceDelegateFilter.class).storeToolWindowManagerDescriptor()) {
+                    mutableContext.put(ToolWindowManagerDescriptor.class, manager.getToolWindowManagerDescriptor());
+                    getElementWriter(ToolWindowManagerDescriptor.class).write(writer, context);
+                }
 
-                // Write ContentManagerUI
-                context.put(ContentManager.class, manager.getContentManager());
-                context.put(ContentManagerUI.class, manager.getContentManager().getContentManagerUI());
+                if  (context.get(PersistenceDelegateFilter.class).storeContentManager()) {
+                    // Write ContentManagerUI
+                    mutableContext.put(ContentManager.class, manager.getContentManager());
+                    mutableContext.put(ContentManagerUI.class, manager.getContentManager().getContentManagerUI());
 
-                ContentManager contentManager = manager.getContentManager();
-                writer.startElement("contentManagerUI");
-                getElementWriter(contentManager.getContentManagerUI().getClass()).write(writer, context);
-                writer.endElement("contentManagerUI");
+                    ContentManager contentManager = manager.getContentManager();
+                    writer.startElement("contentManagerUI");
+                    getElementWriter(contentManager.getContentManagerUI().getClass()).write(writer, context);
+                    writer.endElement("contentManagerUI");
 
-                // Write ContentManager
-                getElementWriter(ContentManager.class).write(writer, context);
+                    // Write ContentManager
+                    getElementWriter(ContentManager.class).write(writer, context);
+                }
 
                 // Write ToolWindowAnchor
                 getElementWriter(ToolWindowAnchor.class).write(writer, context);
 
                 // End document
                 writer.endElement("mydoggy");
-                writer.endDocument();
+
+                if (standalone)
+                    writer.endDocument();
 
                 writer.flush();
             } catch (SAXException e) {
@@ -227,7 +281,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         public void write(XMLWriter writer, Context context) {
             try {
                 ToolWindow toolWindow = context.get(ToolWindow.class);
-
+                
                 AttributesImpl toolAttributes = new AttributesImpl();
                 toolAttributes.addAttribute(null, "id", null, null, String.valueOf(toolWindow.getId()));
                 toolAttributes.addAttribute(null, "available", null, null, String.valueOf(toolWindow.isAvailable()));
@@ -643,10 +697,10 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 writer.startElement("toolWindowBars");
 
                 // Save single bar
-                saveBar(writer, (MyDoggyToolWindowBar) toolWindowManager.getToolWindowBar(ToolWindowAnchor.LEFT));
-                saveBar(writer, (MyDoggyToolWindowBar) toolWindowManager.getToolWindowBar(ToolWindowAnchor.BOTTOM));
-                saveBar(writer, (MyDoggyToolWindowBar) toolWindowManager.getToolWindowBar(ToolWindowAnchor.RIGHT));
-                saveBar(writer, (MyDoggyToolWindowBar) toolWindowManager.getToolWindowBar(ToolWindowAnchor.TOP));
+                saveBar(writer, (MyDoggyToolWindowBar) toolWindowManager.getToolWindowBar(ToolWindowAnchor.LEFT), context);
+                saveBar(writer, (MyDoggyToolWindowBar) toolWindowManager.getToolWindowBar(ToolWindowAnchor.BOTTOM), context);
+                saveBar(writer, (MyDoggyToolWindowBar) toolWindowManager.getToolWindowBar(ToolWindowAnchor.RIGHT), context);
+                saveBar(writer, (MyDoggyToolWindowBar) toolWindowManager.getToolWindowBar(ToolWindowAnchor.TOP), context);
 
                 writer.endElement("toolWindowBars");
             } catch (SAXException e) {
@@ -654,31 +708,32 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             }
         }
 
-        protected void saveBar(XMLWriter writer, MyDoggyToolWindowBar toolWindowBar) throws SAXException {
+        protected void saveBar(XMLWriter writer, MyDoggyToolWindowBar toolWindowBar, Context context) throws SAXException {
+            if  (context.get(PersistenceDelegateFilter.class).storeToolWindowBar(toolWindowBar)) {
+                AttributesImpl attributes = new AttributesImpl();
+                attributes.addAttribute(null, "anchor", null, null, toolWindowBar.getAnchor().toString());
+                attributes.addAttribute(null, "dividerSize", null, null, String.valueOf(toolWindowBar.getDividerSize()));
+                attributes.addAttribute(null, "aggregateMode", null, null, String.valueOf(toolWindowBar.isAggregateMode()));
+                writer.startElement("toolWindowBar", attributes);
 
-            AttributesImpl attributes = new AttributesImpl();
-            attributes.addAttribute(null, "anchor", null, null, toolWindowBar.getAnchor().toString());
-            attributes.addAttribute(null, "dividerSize", null, null, String.valueOf(toolWindowBar.getDividerSize()));
-            attributes.addAttribute(null, "aggregateMode", null, null, String.valueOf(toolWindowBar.isAggregateMode()));
-            writer.startElement("toolWindowBar", attributes);
+                // Check for model
+                if (toolWindowBar.getToolWindows().length > 0) {
+                    writer.startElement("layout");
 
-            // Check for model
-            if (toolWindowBar.getToolWindows().length > 0) {
-                writer.startElement("layout");
+                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+                    XMLEncoder encoder = new XMLEncoder(os);
+                    encoder.writeObject(toolWindowBar.getLayout());
+                    encoder.flush();
+                    encoder.close();
 
-                ByteArrayOutputStream os = new ByteArrayOutputStream();
-                XMLEncoder encoder = new XMLEncoder(os);
-                encoder.writeObject(toolWindowBar.getLayout());
-                encoder.flush();
-                encoder.close();
+                    String model = os.toString();
+                    writer.cdata(model.substring(model.indexOf('\n')));
 
-                String model = os.toString();
-                writer.cdata(model.substring(model.indexOf('\n')));
+                    writer.endElement("layout");
+                }
 
-                writer.endElement("layout");
+                writer.endElement("toolWindowBar");
             }
-
-            writer.endElement("toolWindowBar");
         }
 
     }

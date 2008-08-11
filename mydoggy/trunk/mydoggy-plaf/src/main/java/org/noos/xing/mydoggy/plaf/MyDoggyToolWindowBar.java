@@ -19,6 +19,8 @@ import java.awt.dnd.DnDConstants;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -59,6 +61,10 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     protected boolean tempShowed;
 
     boolean valueAdjusting = false;
+
+    // Used for setVisible store/restore the layout of the bar...
+    protected boolean visible = true;
+    protected ByteArrayOutputStream visibleWorkspace;
 
 
     public MyDoggyToolWindowBar(MyDoggyToolWindowManager manager, JSplitPane splitPane, ToolWindowAnchor anchor) {
@@ -147,6 +153,43 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     public ToolWindow[] getToolWindows() {
         return manager.getToolsByAnchor(anchor);
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        if (visible) {
+            if (visibleWorkspace != null)
+                manager.getPersistenceDelegate().merge(new ByteArrayInputStream(visibleWorkspace.toByteArray()),
+                                                       PersistenceDelegate.MergePolicy.RESET);
+         } else {
+            visibleWorkspace = new ByteArrayOutputStream();
+            manager.getPersistenceDelegate().save(visibleWorkspace, new PersistenceDelegateFilter() {
+                public boolean storeToolWindowManagerDescriptor() {
+                    return false;
+                }
+
+                public boolean storeToolWindow(ToolWindow toolWindow) {
+                    return toolWindow.getAnchor() == anchor;
+                }
+
+                public boolean storeToolWindowBar(ToolWindowBar toolWindowBar) {
+                    return toolWindowBar == MyDoggyToolWindowBar.this;
+                }
+
+                public boolean storeContentManager() {
+                    return false;
+                }
+            });
+
+            for (ToolWindow toolWindow : getToolWindows()) {
+                toolWindow.setVisible(false);
+            }
+        }
+        
+        this.visible = visible;
     }
 
 

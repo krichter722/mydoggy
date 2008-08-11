@@ -237,21 +237,16 @@ public class MyDoggySet {
 
         // Setup Tool 1
         toolWindow = toolWindowManager.getToolWindow("Tool 1");
-
         toolWindow.setRepresentativeAnchorButtonTitle("Hello  World 1!!!");
         toolWindow.setAutoHide(true);
         dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
 //        dockedTypeDescriptor.setPopupMenuEnabled(false);
         dockedTypeDescriptor.setDockLength(200);
-
-        dockedTypeDescriptor.setToolWindowActionHandler(new ToolWindowActionHandler()
-           {
-               public void onHideButtonClick(final ToolWindow toolWindow)
-               {
-                       toolWindowManager.unregisterToolWindow(toolWindow.getId());
-
-               }
-           });
+        dockedTypeDescriptor.setToolWindowActionHandler(new ToolWindowActionHandler() {
+            public void onHideButtonClick(final ToolWindow toolWindow) {
+                toolWindowManager.unregisterToolWindow(toolWindow.getId());
+            }
+        });
 
         // Setup Tool 2
         toolWindow = toolWindowManager.getToolWindow("Tool 2");
@@ -266,6 +261,7 @@ public class MyDoggySet {
 
         // Setup Tool 3
         toolWindow = toolWindowManager.getToolWindow("Tool 3");
+        toolWindow.setRepresentativeAnchorButtonTitle("Tool 3 !!!");
         dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
 
         JMenuItem menuItem = new JMenuItem("Hello World!!!");

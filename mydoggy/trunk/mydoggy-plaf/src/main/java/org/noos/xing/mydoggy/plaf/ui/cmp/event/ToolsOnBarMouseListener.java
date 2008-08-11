@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowBar;
 import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -44,16 +45,27 @@ public class ToolsOnBarMouseListener extends MouseAdapter implements ActionListe
                     for (ToolWindow tool : tools) {
                         if (tool.isAvailable()) {
                             JMenuItem showTool = new JMenuItem();
-                            showTool.setText(tool.getId());
+                            showTool.setText(SwingUtil.getUserString(tool.getRepresentativeAnchorButtonTitle()));
                             showTool.setActionCommand("tool.visible." + tool.getId());
                             showTool.addActionListener(this);
 
                             popupMenu.add(showTool);
                         }
                     }
+
                     if (popupMenu.getComponentCount() > 0)
-                        popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                        popupMenu.addSeparator();
+
+                    // Add store/restore item
+                    JMenuItem showTool = new JMenuItem();
+                    showTool.setText(toolWindowBar.isVisible() ? SwingUtil.getString("@@tool.bar.hide") : SwingUtil.getString("@@tool.bar.show"));
+                    showTool.setActionCommand("bar.visible");
+                    showTool.addActionListener(this);
+                    popupMenu.add(showTool);
+
+                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
+
             }
         }
     }
@@ -63,6 +75,8 @@ public class ToolsOnBarMouseListener extends MouseAdapter implements ActionListe
         if (actionCommand.startsWith("tool.visible.")) {
             String toolId = actionCommand.substring(13);
             toolWindowManager.getToolWindow(toolId).setActive(true);
+        } else if ("bar.visible".equals(actionCommand)) {
+            toolWindowBar.setVisible(!toolWindowBar.isVisible());
         }
     }
 
