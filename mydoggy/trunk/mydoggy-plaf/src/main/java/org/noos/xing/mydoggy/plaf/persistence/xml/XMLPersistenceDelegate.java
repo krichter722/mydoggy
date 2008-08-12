@@ -299,7 +299,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                 // Properties from 1.5.0
                 toolAttributes.addAttribute(null, "lockedOnAnchor", null, null, String.valueOf(toolWindow.isLockedOnAnchor()));
-//                toolAttributes.addAttribute(null, "representativeAnchorButtonTitle", null, null, toolWindow.getRepresentativeAnchorButtonTitle());
+                toolAttributes.addAttribute(null, "representativeAnchorButtonTitle", null, null, toolWindow.getRepresentativeAnchorButtonTitle());
                 toolAttributes.addAttribute(null, "hideOnZeroTabs", null, null, String.valueOf(toolWindow.isHideOnZeroTabs()));
                 writer.startElement("toolWindow", toolAttributes);
 
@@ -1046,7 +1046,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     );
                 toolWindow.setFlashing(getBoolean(tool, "flashing", false));
                 toolWindow.setLockedOnAnchor(getBoolean(tool, "lockedOnAnchor", false));
-//                toolWindow.setRepresentativeAnchorButtonTitle(tool.getAttribute("representativeAnchorButtonTitle"));
+                toolWindow.setRepresentativeAnchorButtonTitle(tool.getAttribute("representativeAnchorButtonTitle"));
                 toolWindow.setHideOnZeroTabs(getBoolean(tool, "hideOnZeroTabs", false));
 
                 // Load tabs

@@ -97,22 +97,22 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
             }
         } else if ("selected".equals(property)) {
             if (evt.getNewValue() == Boolean.FALSE) {
-                titleLabel.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
-                closeButton.setIcon(UIManager.getIcon(MyDoggyKeySpace.TAB_CLOSE_INACTIVE));
-                minimizeButton.setIcon(UIManager.getIcon(MyDoggyKeySpace.TAB_MINIMIZE_INACTIVE));
-                setButtonsEnabled(false);
+                // Disable the button
+                setEnabled(false);
 
+                // The tab is no more selected
                 selected = false;
             } else {
+                // Stop flashing
                 tab.setFlashing(false);
 
                 // Ensure position
                 ensureVisible();
 
-                titleLabel.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
-                closeButton.setIcon(UIManager.getIcon(MyDoggyKeySpace.TAB_CLOSE));
-                minimizeButton.setIcon(UIManager.getIcon(MyDoggyKeySpace.TAB_MINIMIZE));
-                setButtonsEnabled(true);
+                // Enable the button
+                setEnabled(true);
+
+                // The tab is now selected
                 selected = true;
             }
             SwingUtil.repaint(toolWindowTabButton);
@@ -390,7 +390,17 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
     }
 
 
-    protected void setButtonsEnabled(boolean enabled) {
+    protected void setEnabled(boolean enabled) {
+        if (enabled) {
+            titleLabel.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED));
+            closeButton.setIcon(UIManager.getIcon(MyDoggyKeySpace.TAB_CLOSE));
+            minimizeButton.setIcon(UIManager.getIcon(MyDoggyKeySpace.TAB_MINIMIZE));
+        } else {
+            titleLabel.setForeground(UIManager.getColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED));
+            closeButton.setIcon(UIManager.getIcon(MyDoggyKeySpace.TAB_CLOSE_INACTIVE));
+            minimizeButton.setIcon(UIManager.getIcon(MyDoggyKeySpace.TAB_MINIMIZE_INACTIVE));
+        }
+
         if (enabled && MyDoggyUtil.getNumTabs(toolWindow) > 1) {
             if (tab.isCloseable()) {
                 layout.setColumn(3, 1);

@@ -258,13 +258,13 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             return (constraints.row1 / 2) - 1;
     }
 
-    public void deactiveTool(ToolWindow toolWindow) {
+    public synchronized void deactiveTool(ToolWindow toolWindow) {
         valueAdjusting = true;
         toolWindow.setActive(false);
         valueAdjusting = false;
     }
 
-    public void hideTool(ToolWindow toolWindow) {
+    public synchronized void hideTool(ToolWindow toolWindow) {
         valueAdjusting = true;
         toolWindow.setVisible(false);
         valueAdjusting = false;

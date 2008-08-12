@@ -76,9 +76,8 @@ public class DockedContainer extends MyDoggyToolWindowContainer {
         }
 
         public void toolWindowTabRemoved(ToolWindowTabEvent event) {
-            if (toolWindow.getToolWindowTabs().length == 0) {
+            if (toolWindow.getToolWindowTabs().length == 0)
                 descriptor.getToolWindowPanel().removeComponent(event.getToolWindowTab().getComponent());
-            }
 
             event.getToolWindowTab().removePropertyChangeListener(this);
         }
@@ -91,13 +90,26 @@ public class DockedContainer extends MyDoggyToolWindowContainer {
                 if (evt.getNewValue() == Boolean.TRUE) {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
-                            descriptor.setComponent(tab.getComponent());
+                            Component focusable = descriptor.getToolWindowPanel().getFocusable();
+                            focusable.setFocusable(true);
+                            focusable.requestFocusInWindow();
+                        }
+                    });
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            Component toolWindowPanelFocusable = descriptor.getToolWindowPanel().getFocusable();
 
-                            Component focusable = SwingUtil.findFocusable(tab.getComponent());
-                            if (focusable != null)
-                                focusable.requestFocus();
-                            else
-                                descriptor.getToolWindowPanel().getToolWindowTitleBar().getToolWindowTitleButtonPanel().getFocusable().requestFocus();
+                            if (toolWindowPanelFocusable.isFocusOwner()) {
+                                descriptor.setComponent(tab.getComponent());
+
+                                Component focusable = SwingUtil.findFocusable(tab.getComponent());
+                                if (focusable != null) {
+                                    focusable.requestFocusInWindow();
+                                    toolWindowPanelFocusable.setFocusable(false);
+                                } else
+                                    toolWindowPanelFocusable.requestFocusInWindow();
+                            } else
+                                SwingUtilities.invokeLater(this);
                         }
                     });
                 }

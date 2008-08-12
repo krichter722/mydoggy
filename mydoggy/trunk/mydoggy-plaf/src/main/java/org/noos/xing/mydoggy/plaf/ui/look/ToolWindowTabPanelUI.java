@@ -168,7 +168,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         descriptor.getCleaner().addCleaner(this);
         descriptor.addPopupUpdater(new TabPopupUpdater());
 
-        toolWindow.addToolWindowListener(new TabToolWindowListener());
+        toolWindow.addToolWindowListener(new TabPanelToolWindowListener());
 
         // TODO: best cleanup
         viewport.addMouseListener(new TitleBarMouseAdapter(descriptor));
@@ -207,24 +207,20 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
 
 
     protected ToolWindowTab getNextTab(ToolWindowTab toolWindowTab) {
+        // Look for column of the next tab in respeto to <code>toolWindowTab</code> 
         int nextTabCol = -1;
-
         for (Component component : tabContainer.getComponents()) {
             if (component instanceof ToolWindowTabButton) {
                 ToolWindowTabButton tabButton = (ToolWindowTabButton) component;
-
                 if (tabButton.getToolWindowTab() == toolWindowTab) {
                     TableLayoutConstraints constraints = containerLayout.getConstraints(component);
-
-                    nextTabCol = constraints.col1;
-                    // TODO: va bene ?????????
+                    nextTabCol = constraints.col1 + 3;
                     break;
                 }
             }
 
         }
 
-        ToolWindowTab firstTab = null;
         if (nextTabCol != -1) {
             for (Component component : tabContainer.getComponents()) {
                 if (component instanceof ToolWindowTabButton) {
@@ -233,14 +229,15 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
 
                     if (constraints.col1 == nextTabCol)
                         return tabButton.getToolWindowTab();
-
-                    if (constraints.col1 == 2)
-                        firstTab = tabButton.getToolWindowTab();
                 }
             }
+            for (ToolWindowTab windowTab : toolWindow.getToolWindowTabs()) {
+                if (windowTab != toolWindowTab)
+                    return windowTab;
+            }
         }
-        return firstTab;
 
+        return null;
     }
 
     protected Component removeTab(ToolWindowTab toolWindowTab, boolean flag) {
@@ -275,10 +272,10 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
 
 
 
-    public class TabToolWindowListener implements ToolWindowListener, Cleaner {
+    public class TabPanelToolWindowListener implements ToolWindowListener, Cleaner {
         protected Map<ToolWindowTab, Component> minimizedTabs;
 
-        public TabToolWindowListener() {
+        public TabPanelToolWindowListener() {
             this.minimizedTabs = new HashMap<ToolWindowTab, Component>();
 
             descriptor.getCleaner().addBefore(toolWindowTabPanel,
@@ -304,16 +301,19 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         }
 
         public void toolWindowTabRemoved(ToolWindowTabEvent event) {
-            ToolWindowTab nextTab = getNextTab(event.getToolWindowTab());
+            ToolWindowTab toolWindowTab = event.getToolWindowTab();
+
+            // Store support fields
+            boolean isSelected = toolWindowTab.isSelected();
+            ToolWindowTab nextTab = (isSelected) ? getNextTab(toolWindowTab) : null;
+
+            // Remove the tab
             removeTab(event.getToolWindowTab(), true);
 
-            if (event.getToolWindowTab().isSelected()) {
-                ToolWindowTab[] tabs = toolWindow.getToolWindowTabs();
-                if (tabs.length > 0) {
-                    if (nextTab != null)
-                        nextTab.setSelected(true);
-                    else
-                        tabs[0].setSelected(true);
+            // Select the next if necessary
+            if (isSelected) {
+                if (nextTab != null) {
+                    nextTab.setSelected(true);
                 } else {
                     selectedTab = null;
                     selecTabButton = null;
@@ -406,111 +406,6 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         }
     }
 
-    public class TabSelectedPropertyChangeListener implements PropertyChangeListener {
-
-        public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowTab tab = (ToolWindowTab) evt.getSource();
-            if (evt.getNewValue() == Boolean.TRUE) {
-                if (selectedTab != null)
-                    selectedTab.setSelected(false);
-                selectedTab = tab;
-            }
-        }
-    }
-
-    public class TabMinimizedPropertyChangeListener implements PropertyChangeListener {
-        protected Map<ToolWindowTab, Component> minimizedTabs;
-
-        public TabMinimizedPropertyChangeListener() {
-            this.minimizedTabs = new HashMap<ToolWindowTab, Component>();
-        }
-
-        public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowTab tab = (ToolWindowTab) evt.getSource();
-
-            if (evt.getNewValue() == Boolean.TRUE) {
-                ToolWindowTab nextTab = getNextTab(tab);
-                minimizedTabs.put(tab, removeTab(tab, false));
-                if (nextTab != null)
-                    nextTab.setSelected(true);
-            } else {
-                addTab(minimizedTabs.remove(tab));
-            }
-            SwingUtil.repaint(toolWindowTabPanel);
-        }
-    }
-
-    public class SelectNextTabAction extends AbstractAction {
-
-        public SelectNextTabAction() {
-            super(SwingUtil.getString("@@tool.tab.selectNext"));
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            ToolWindowTab[] tabs = toolWindow.getToolWindowTabs();
-            if (selectedTab != null && selecTabButton != null) {
-                int nextTabCol = containerLayout.getConstraints(selecTabButton).col1 + 3;
-
-                for (Component component : tabContainer.getComponents()) {
-                    if (component instanceof ToolWindowTabButton) {
-                        ToolWindowTabButton tabButton = (ToolWindowTabButton) component;
-                        TableLayoutConstraints constraints = containerLayout.getConstraints(tabButton);
-
-                        if (constraints.col1 == nextTabCol) {
-                            tabButton.getToolWindowTab().setSelected(true);
-                            return;
-                        }
-                    }
-                }
-                if (tabs.length > 0)
-                    tabs[0].setSelected(true);
-            } else if (tabs.length > 0)
-                tabs[0].setSelected(true);
-        }
-    }
-
-    public class SelectPreviousTabAction extends AbstractAction {
-
-        public SelectPreviousTabAction() {
-            super(SwingUtil.getString("@@tool.tab.selectPreviuos"));
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            ToolWindowTab[] tabs = toolWindow.getToolWindowTabs();
-            if (selectedTab != null && selecTabButton != null) {
-                int nextTabCol = containerLayout.getConstraints(selecTabButton).col1 - 3;
-
-                for (Component component : tabContainer.getComponents()) {
-                    if (component instanceof ToolWindowTabButton) {
-                        ToolWindowTabButton tabButton = (ToolWindowTabButton) component;
-                        TableLayoutConstraints constraints = containerLayout.getConstraints(tabButton);
-
-                        if (constraints.col1 == nextTabCol) {
-                            tabButton.getToolWindowTab().setSelected(true);
-                            return;
-                        }
-                    }
-                }
-                if (tabs.length > 0)
-                    tabs[tabs.length - 1].setSelected(true);
-            } else if (tabs.length > 0)
-                tabs[tabs.length - 1].setSelected(true);
-        }
-    }
-
-    public class SelectTabAction extends AbstractAction {
-        private ToolWindowTab tab;
-
-        public SelectTabAction(ToolWindowTab tab) {
-            super(tab.getTitle());
-            this.tab = tab;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            tab.setSelected(true);
-        }
-    }
-
     public class TabPopupUpdater implements PopupUpdater {
         protected JMenuItem nextTabItem = new JMenuItem(new SelectNextTabAction());
         protected JMenuItem previousTabItem = new JMenuItem(new SelectPreviousTabAction());
@@ -597,4 +492,120 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         }
 
     }
+
+
+    public class TabSelectedPropertyChangeListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            ToolWindowTab tab = (ToolWindowTab) evt.getSource();
+            if (evt.getNewValue() == Boolean.TRUE) {
+                if (selectedTab != null)
+                    selectedTab.setSelected(false);
+                selectedTab = tab;
+            }
+        }
+    }
+
+    public class TabMinimizedPropertyChangeListener implements PropertyChangeListener {
+        protected Map<ToolWindowTab, Component> minimizedTabs;
+
+
+        public TabMinimizedPropertyChangeListener() {
+            this.minimizedTabs = new HashMap<ToolWindowTab, Component>();
+        }
+
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            ToolWindowTab tab = (ToolWindowTab) evt.getSource();
+
+            if (evt.getNewValue() == Boolean.TRUE) {
+                ToolWindowTab nextTab = getNextTab(tab);
+
+                if (tab.isSelected())
+                    tab.setSelected(false);
+
+                minimizedTabs.put(tab, removeTab(tab, false));
+
+                if (nextTab != null) {
+                    nextTab.setSelected(true);
+                }
+            } else {
+                addTab(minimizedTabs.remove(tab));
+            }
+            SwingUtil.repaint(toolWindowTabPanel);
+        }
+    }
+
+
+    public class SelectNextTabAction extends AbstractAction {
+
+        public SelectNextTabAction() {
+            super(SwingUtil.getString("@@tool.tab.selectNext"));
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            ToolWindowTab[] tabs = toolWindow.getToolWindowTabs();
+            if (selectedTab != null && selecTabButton != null) {
+                int nextTabCol = containerLayout.getConstraints(selecTabButton).col1 + 3;
+
+                for (Component component : tabContainer.getComponents()) {
+                    if (component instanceof ToolWindowTabButton) {
+                        ToolWindowTabButton tabButton = (ToolWindowTabButton) component;
+                        TableLayoutConstraints constraints = containerLayout.getConstraints(tabButton);
+
+                        if (constraints.col1 == nextTabCol) {
+                            tabButton.getToolWindowTab().setSelected(true);
+                            return;
+                        }
+                    }
+                }
+                if (tabs.length > 0)
+                    tabs[0].setSelected(true);
+            } else if (tabs.length > 0)
+                tabs[0].setSelected(true);
+        }
+    }
+
+    public class SelectPreviousTabAction extends AbstractAction {
+
+        public SelectPreviousTabAction() {
+            super(SwingUtil.getString("@@tool.tab.selectPreviuos"));
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            ToolWindowTab[] tabs = toolWindow.getToolWindowTabs();
+            if (selectedTab != null && selecTabButton != null) {
+                int nextTabCol = containerLayout.getConstraints(selecTabButton).col1 - 3;
+
+                for (Component component : tabContainer.getComponents()) {
+                    if (component instanceof ToolWindowTabButton) {
+                        ToolWindowTabButton tabButton = (ToolWindowTabButton) component;
+                        TableLayoutConstraints constraints = containerLayout.getConstraints(tabButton);
+
+                        if (constraints.col1 == nextTabCol) {
+                            tabButton.getToolWindowTab().setSelected(true);
+                            return;
+                        }
+                    }
+                }
+                if (tabs.length > 0)
+                    tabs[tabs.length - 1].setSelected(true);
+            } else if (tabs.length > 0)
+                tabs[tabs.length - 1].setSelected(true);
+        }
+    }
+
+    public class SelectTabAction extends AbstractAction {
+        private ToolWindowTab tab;
+
+        public SelectTabAction(ToolWindowTab tab) {
+            super(tab.getTitle());
+            this.tab = tab;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            tab.setSelected(true);
+        }
+    }
+
 }
