@@ -224,7 +224,7 @@ public class MyDoggySet {
         toolWindowManager.registerToolWindow("Some Doggy Table", "Doggy Style", null, new JScrollPane(new DoggyTable()), ToolWindowAnchor.TOP);
 
 
-        toolWindowManager.registerToolWindow("Paramètres", "",
+        toolWindowManager.registerToolWindow("Paramètres", "Paramètres",
                                              null, new JButton("HELLOO"), ToolWindowAnchor.LEFT);
 
         // Make all available
