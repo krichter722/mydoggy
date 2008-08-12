@@ -23,4 +23,10 @@
 
     <target name="allSign" depends="initSign, sign"/>
 
+    <target name="distro">
+        <exec executable="mvn">
+            <arg line="-Ddistro clean package assembly:assembly"/>
+        </exec>
+    </target>
+
 </project>
