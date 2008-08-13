@@ -373,7 +373,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 return floatingLiveTypeDescriptor;
             case DOCKED:
                 if (dockingTypeDescriptor == null)
-                    dockingTypeDescriptor = new DefaultDockedTypeDescriptor(resourceManager);
+                    dockingTypeDescriptor = new DefaultDockedTypeDescriptor();
                 return dockingTypeDescriptor;
             case SLIDING:
                 if (slidingTypeDescriptor == null)
@@ -721,6 +721,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         initContentManager();
 
+        // TODO: what is this....???
         resourceManager.applyCustomization(MyDoggyKeySpace.TOOL_WINDOW_MANAGER, this, getContext());
 
         // Init data structures

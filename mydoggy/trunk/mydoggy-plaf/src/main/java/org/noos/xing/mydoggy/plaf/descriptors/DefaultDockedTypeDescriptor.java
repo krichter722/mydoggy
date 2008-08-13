@@ -2,7 +2,6 @@ package org.noos.xing.mydoggy.plaf.descriptors;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
-import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -17,27 +16,24 @@ import java.util.Set;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource implements DockedTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
-    private transient ResourceManager resourceManager;
+    protected ToolWindowActionHandler toolWindowActionHandler;
+    protected boolean popupMenuEnabled;
+    protected JMenu toolsMenu;
+    protected int dockLength;
+    protected boolean animating;
+    protected boolean autoHide;
 
-    private ToolWindowActionHandler toolWindowActionHandler;
-    private boolean popupMenuEnabled;
-    private JMenu toolsMenu;
-    private int dockLength;
-    private boolean animating;
-    private boolean autoHide;
+    protected boolean previewEnabled;
+    protected int previewDelay;
+    protected float previewTransparentRatio;
+    protected boolean hideRepresentativeButtonOnVisible;
+    protected boolean idVisibleOnTitleBar;
+    protected int minimumDockLength;
 
-    private boolean previewEnabled;
-    private int previewDelay;
-    private float previewTransparentRatio;
-    private boolean hideRepresentativeButtonOnVisible;
-    private boolean idVisibleOnTitleBar;
-    private int minimumDockLength;
-
-    private Set<ToolWindowAnchor> lockingAnchors;
+    protected Set<ToolWindowAnchor> lockingAnchors;
 
 
-    public DefaultDockedTypeDescriptor(ResourceManager resourceManager) {
-        this.resourceManager = resourceManager;
+    public DefaultDockedTypeDescriptor() {
         this.toolsMenu = new JMenu(SwingUtil.getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = true;
         this.dockLength = 200;
@@ -55,7 +51,6 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
 
     public DefaultDockedTypeDescriptor(ToolWindowDescriptor toolWindowDescriptor,
                                        DefaultDockedTypeDescriptor parent,
-                                       ResourceManager resourceManager,
                                        int dockLength, boolean popupMenuEnabled,
                                        ToolWindowActionHandler toolWindowActionHandler, boolean animating,
                                        boolean autoHide, boolean previewEnabled, int previewDelay, float previewTransparentRatio,
@@ -63,7 +58,6 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
                                        boolean idVisibleOnTitleBar,
                                        int minimumDockLength,
                                        ToolWindowAnchor[] lockingAnchors) {
-        this.resourceManager = resourceManager;
         this.toolsMenu = new JMenu(SwingUtil.getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = popupMenuEnabled;
         this.dockLength = dockLength;
@@ -84,6 +78,7 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         toolWindowDescriptor.getCleaner().addCleaner(this);
     }
 
+    
     public void setPopupMenuEnabled(boolean enabled) {
         if (this.popupMenuEnabled == enabled)
             return;
@@ -268,7 +263,6 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
     public ToolWindowTypeDescriptor cloneMe(ToolWindowDescriptor toolWindowDescriptor) {
         return new DefaultDockedTypeDescriptor(toolWindowDescriptor,
                                                this,
-                                               resourceManager,
                                                dockLength,
                                                popupMenuEnabled,
                                                toolWindowActionHandler,

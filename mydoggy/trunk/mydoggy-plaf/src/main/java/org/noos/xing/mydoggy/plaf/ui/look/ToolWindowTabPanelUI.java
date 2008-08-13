@@ -127,7 +127,6 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
     }
 
 
-    
     protected void installComponents() {
         toolWindowTabPanel.setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL, 1, 14},
                                                                             {0, TableLayout.FILL, 0}},
@@ -286,6 +285,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         public void cleanup() {
             descriptor.getToolWindow().removeToolWindowListener(this);
         }
+
 
         public void toolWindowTabAdded(ToolWindowTabEvent event) {
             if (tabContainer.getComponentCount() == 0)
