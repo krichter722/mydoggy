@@ -11,6 +11,7 @@ import org.noos.common.object.ObjectCreator;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
+import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.mydoggyset.action.*;
 import org.noos.xing.mydoggy.mydoggyset.context.MyDoggySetContext;
@@ -113,6 +114,20 @@ public class MyDoggySet {
 
         // Init ToolWindowManager
         MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(Locale.US, null);
+        myDoggyToolWindowManager.addToolWindowManagerListener(new ToolWindowManagerListener() {
+            public void toolWindowRegistered(ToolWindowManagerEvent event) {
+            }
+
+            public void toolWindowUnregistered(ToolWindowManagerEvent event) {
+                System.out.println("event.getToolWindow().getComponent() = " + event.getToolWindow().getComponent());
+            }
+
+            public void toolWindowGroupAdded(ToolWindowManagerEvent event) {
+            }
+
+            public void toolWindowGroupRemoved(ToolWindowManagerEvent event) {
+            }
+        });
 
         // Add MyDoggyToolWindowManager to frame
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
