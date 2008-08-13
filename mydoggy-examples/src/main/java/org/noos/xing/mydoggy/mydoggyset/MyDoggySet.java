@@ -613,6 +613,9 @@ public class MyDoggySet {
             return representativeAnchor;
         }
 
+        public boolean isAvailableCountable() {
+            return false;
+        }
 
         public class MemoryMonitorPanel extends JPanel {
             int sleepTime;

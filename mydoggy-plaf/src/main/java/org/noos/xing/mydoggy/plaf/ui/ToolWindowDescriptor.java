@@ -183,6 +183,10 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         return toolWindow.isAvailable();
     }
 
+    public boolean isAvailableCountable() {
+        return true;
+    }
+
     public DockableType getDockableType() {
         return DockableType.TOOL_WINDOW;
     }

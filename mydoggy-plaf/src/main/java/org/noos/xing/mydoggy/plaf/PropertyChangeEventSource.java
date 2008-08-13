@@ -5,6 +5,9 @@ import org.noos.xing.mydoggy.plaf.support.CleanablePropertyChangeSupport;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -38,6 +41,19 @@ public class PropertyChangeEventSource implements Cleaner {
         if (publicChangeSupport == null)
             publicChangeSupport = initPropertyChangeSupport();
         
+        publicChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener, String... excludeProperties) {
+        if (listener == null)
+            return;
+
+        if (publicChangeSupport == null)
+            publicChangeSupport = initPropertyChangeSupport();
+
+        if (excludeProperties != null && excludeProperties.length > 0)
+            listener = new ExcludePropertyChangeListener(listener, excludeProperties);
+
         publicChangeSupport.addPropertyChangeListener(listener);
     }
 
@@ -167,4 +183,21 @@ public class PropertyChangeEventSource implements Cleaner {
             this.publicChangeSupport.firePropertyChange(pblEvent);
     }
 
+
+    public class ExcludePropertyChangeListener implements PropertyChangeListener {
+        protected PropertyChangeListener delegate;
+        protected Set<String> excludePropertiesSet;
+
+
+        public ExcludePropertyChangeListener(PropertyChangeListener delegate, String... excludeProperties) {
+            this.delegate = delegate;
+            this.excludePropertiesSet = new HashSet<String>(Arrays.asList(excludeProperties));
+        }
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (!excludePropertiesSet.contains(evt.getPropertyName()))
+                delegate.propertyChange(evt);
+        }
+
+    }
 }

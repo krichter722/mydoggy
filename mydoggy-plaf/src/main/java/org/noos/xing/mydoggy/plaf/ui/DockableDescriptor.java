@@ -28,6 +28,7 @@ public interface DockableDescriptor extends Cleaner {
     Dockable getDockable();
 
 
+
     void setAnchor(ToolWindowAnchor anchor, int index);
 
     ToolWindowAnchor getAnchor();
@@ -37,6 +38,8 @@ public interface DockableDescriptor extends Cleaner {
     void setAvailable(boolean available);
 
     boolean isAvailable();
+
+    boolean isAvailableCountable();
 
 
     JComponent getRepresentativeAnchor();
