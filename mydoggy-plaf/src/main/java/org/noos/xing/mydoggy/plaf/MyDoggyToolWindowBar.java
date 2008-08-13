@@ -190,6 +190,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
         
         this.visible = visible;
+
+        firePropertyChangeEvent("visible", !visible, visible);
     }
 
 
