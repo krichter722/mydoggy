@@ -2,6 +2,8 @@ package org.noos.xing.mydoggy.plaf.ui.look;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowListener;
+import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
@@ -203,6 +205,7 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
         this.toolWindowTabButton = (ToolWindowTabButton) c;
         this.tab = (MyDoggyToolWindowTab) toolWindowTabButton.getToolWindowTab();
         this.toolWindow = tab.getOwner();
+
         this.toolWindowTabPanel = toolWindowTabButton.getToolWindowTabPanel();
 
         super.installUI(c);
@@ -353,6 +356,8 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
         tab.addPropertyChangeListener(this);    //  TODO: add as plaf...
         tab.getCleanerAggregator().addCleaner(this);
 
+        toolWindow.addToolWindowListener(new TabButtonToolWindowListener());
+
         toolWindowTabButton.addMouseListener(toolWindowTabPanel.getMouseEventDispatcher());
         toolWindowTabButton.addMouseMotionListener(toolWindowTabPanel.getMouseEventDispatcher());
 
@@ -423,6 +428,7 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
             layout.setColumn(3, 0);
             layout.setColumn(4, 0);
         }
+
         toolWindowTabButton.revalidate();
         toolWindowTabButton.repaint();
     }
@@ -431,4 +437,36 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
         toolWindowTabPanel.ensureVisible(toolWindowTabButton.getBounds());
     }
 
+    protected void hideAllButtons() {
+        layout.setColumn(1, 0);
+        layout.setColumn(2, 0);
+        layout.setColumn(3, 0);
+        layout.setColumn(4, 0);
+
+        SwingUtil.repaint(toolWindowTabButton);
+    }
+
+
+    public class TabButtonToolWindowListener implements ToolWindowListener, Cleaner {
+
+        public TabButtonToolWindowListener() {
+            tab.getCleanerAggregator().addBefore(ToolWindowTabButtonUI.this, this);
+        }
+
+        public void toolWindowTabAdded(ToolWindowTabEvent event) {
+        }
+
+        public boolean toolWindowTabRemoving(ToolWindowTabEvent event) {
+            return true;
+        }
+
+        public void toolWindowTabRemoved(ToolWindowTabEvent event) {
+            if (MyDoggyUtil.getNumTabs(toolWindow) == 1) 
+                hideAllButtons();
+        }
+
+        public void cleanup() {
+            toolWindow.removeToolWindowListener(this);
+        }
+    }
 }

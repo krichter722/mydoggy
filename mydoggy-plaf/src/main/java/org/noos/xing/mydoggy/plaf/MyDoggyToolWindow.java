@@ -550,10 +550,10 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         if (representativeAnchorButtonTitle == null)
             representativeAnchorButtonTitle = id;
 
-        if (representativeAnchorButtonTitle != null && representativeAnchorButtonTitle.equals(getRepresentativeAnchorButtonTitle()))
+        if (representativeAnchorButtonTitle != null && representativeAnchorButtonTitle.equals(this.representativeAnchorButtonTitle))
             return;
 
-        String old = this.getRepresentativeAnchorButtonTitle();
+        String old = this.representativeAnchorButtonTitle;
         this.representativeAnchorButtonTitle = representativeAnchorButtonTitle;
 
         firePropertyChangeEvent("representativeAnchorButtonTitle", old, representativeAnchorButtonTitle);

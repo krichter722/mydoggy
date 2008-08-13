@@ -852,11 +852,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 if (manager.getShowingGroup() == null) {
                     descriptor.setDividerLocation(getSplitDividerLocation());
                 } else {
-                    int divederLocation = descriptor.getDividerLocation();
-                    for (ToolWindow toolWindow : manager.getToolsByAnchor(anchor)) {
-                        if (toolWindow.isVisible())
-                            manager.getDescriptor(toolWindow).setDividerLocation(divederLocation);
-                    }
+                    updateToolDividerLocation(descriptor.getDividerLocation());
                 }
             }
 
@@ -881,6 +877,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                         break;
                     }
                 }
+                updateToolDividerLocation(dividerLocation);
             }
 
 //            if (getSplitDividerLocation() != 0)
@@ -1036,6 +1033,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             SwingUtil.repaint(managerDockableContainer);
         }
 
+
         protected void setSplitPaneContent(Component content) {
             vsdValueAdjusting = true;
             try {
@@ -1074,6 +1072,13 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                     content.setVisible(true);
             } finally {
                 vsdValueAdjusting = false;
+            }
+        }
+
+        protected void updateToolDividerLocation(int divederLocation) {
+            for (ToolWindow toolWindow : manager.getToolsByAnchor(anchor)) {
+                if (toolWindow.isVisible())
+                    manager.getDescriptor(toolWindow).setDividerLocation(divederLocation);
             }
         }
 
