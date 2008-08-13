@@ -411,8 +411,10 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         return dockableDropPanel.getComponent();
     }
 
-    protected void addRepresentativeAnchor(Component representativeAnchor, int index) {
-        availableTools++;
+    protected void addRepresentativeAnchor(DockableDescriptor dockableDescriptor, Component representativeAnchor, int index) {
+        if (dockableDescriptor.isAvailableCountable())
+            availableTools++;
+
         if (horizontal) {
             toolWindowBarContainerLayout.insertColumn(toolWindowBarContainerLayout.getNumColumn(),
                                                       toolWindowBarContainerLayout.getNumColumn() > 0 ? 5 : 1);
@@ -500,8 +502,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         SwingUtil.repaint(toolWindowScrollBar);
     }
 
-    protected void removeRepresentativeAnchor(Component representativeAnchor,
-                                              DockableDescriptor descriptor) {
+    protected void removeRepresentativeAnchor(DockableDescriptor dockableDescriptor, Component representativeAnchor) {
         if (representativeAnchor == null)
             return;
 
@@ -511,7 +512,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             return;
 
         // Remove
-        availableTools--;
+        if (dockableDescriptor.isAvailableCountable())
+            availableTools--;
 
         toDelete = horizontal ? constraints.col1 : constraints.row1;
 
@@ -526,7 +528,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
         SwingUtil.repaint(toolWindowScrollBar);
 
-        descriptor.resetRepresentativeAnchor();
+        dockableDescriptor.resetRepresentativeAnchor();
     }
 
 
@@ -584,7 +586,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                             if (rabEvent)
                                 rabsPositions.put(descriptor, descriptor.getAnchorIndex());
 
-                            removeRepresentativeAnchor(representativeAnchor, descriptor);
+                            removeRepresentativeAnchor(descriptor, representativeAnchor);
                         }
 
                         repaint = true;
@@ -617,9 +619,9 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                             if (rabEvent && rabsPositions.containsKey(descriptor))
                                 index = rabsPositions.get(descriptor);
 
-                            addRepresentativeAnchor(representativeAnchor, index);
+                            addRepresentativeAnchor(descriptor, representativeAnchor, index);
                         } else
-                            addRepresentativeAnchor(representativeAnchor, (Integer) params[0]);
+                            addRepresentativeAnchor(descriptor, representativeAnchor, (Integer) params[0]);
                     }
 
                     repaint = true;
@@ -652,7 +654,10 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             if (evt.getNewValue() == Boolean.TRUE) {
                 for (ToolWindow tool : manager.getToolsByAnchor(anchor)) {
                     if (!tool.isAvailable() && tool.getType() != ToolWindowType.FLOATING_FREE) {
-                        addRepresentativeAnchor(manager.getDescriptor(tool).getRepresentativeAnchor(toolWindowBarContainer),
+                        ToolWindowDescriptor descriptor = manager.getDescriptor(tool);
+
+                        addRepresentativeAnchor(descriptor, 
+                                                manager.getDescriptor(tool).getRepresentativeAnchor(toolWindowBarContainer),
                                                 -1);
                     }
                 }
@@ -660,8 +665,9 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 for (ToolWindow tool : manager.getToolsByAnchor(anchor)) {
                     if (!tool.isAvailable() && tool.getType() != ToolWindowType.FLOATING_FREE) {
                         ToolWindowDescriptor descriptor = manager.getDescriptor(tool);
-                        removeRepresentativeAnchor(descriptor.getRepresentativeAnchor(toolWindowBarContainer),
-                                                   descriptor);
+
+                        removeRepresentativeAnchor(descriptor,
+                                                   descriptor.getRepresentativeAnchor(toolWindowBarContainer));
                     }
                 }
             }
@@ -692,7 +698,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
 
             if (evt.getOldValue() == ToolWindowType.FLOATING_FREE) {
-                addRepresentativeAnchor(toolWindowDescriptor.getRepresentativeAnchor(toolWindowBarContainer), -1);
+                addRepresentativeAnchor(toolWindowDescriptor, toolWindowDescriptor.getRepresentativeAnchor(toolWindowBarContainer), -1);
                 ensureVisible(toolWindowDescriptor.getRepresentativeAnchor());
 
                 SwingUtil.repaint(toolWindowBarContainer);
@@ -700,7 +706,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             if ((evt.getNewValue() == ToolWindowType.FLOATING_FREE || evt.getNewValue() == ToolWindowType.EXTERN) &&
                 toolWindowDescriptor.getRepresentativeAnchor() != null) {
 
-                removeRepresentativeAnchor(toolWindowDescriptor.getRepresentativeAnchor(), toolWindowDescriptor);
+                removeRepresentativeAnchor(toolWindowDescriptor, toolWindowDescriptor.getRepresentativeAnchor());
                 SwingUtil.repaint(toolWindowBarContainer);
             }
 
@@ -828,14 +834,14 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                     // Store position and remove anchor
                     anchorPositions.put(descriptor, descriptor.getAnchorIndex());
 
-                    removeRepresentativeAnchor(descriptor.getRepresentativeAnchor(), descriptor);
+                    removeRepresentativeAnchor(descriptor, descriptor.getRepresentativeAnchor());
                 } else {
                     // Restore the anchor to the old position
                     int index = -1;
                     if (anchorPositions.containsKey(descriptor))
                         index = anchorPositions.get(descriptor);
 
-                    addRepresentativeAnchor(descriptor.getRepresentativeAnchor(toolWindowBarContainer),
+                    addRepresentativeAnchor(descriptor, descriptor.getRepresentativeAnchor(toolWindowBarContainer),
                                             index);
                 }
             }

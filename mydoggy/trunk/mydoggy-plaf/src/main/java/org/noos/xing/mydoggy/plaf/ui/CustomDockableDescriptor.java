@@ -115,6 +115,10 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
         return available;
     }
 
+    public boolean isAvailableCountable() {
+        return true;
+    }
+
 
     public JComponent getRepresentativeAnchor() {
         return representativeAnchor;

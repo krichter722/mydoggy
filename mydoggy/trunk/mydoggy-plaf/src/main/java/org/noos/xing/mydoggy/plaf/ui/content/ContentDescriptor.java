@@ -95,6 +95,10 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
         return getToolBar().getRepresentativeAnchorIndex(representativeAnchor);
     }
 
+    public boolean isAvailableCountable() {
+        return true;
+    }
+
     public void updateRepresentativeAnchor() {
         if (representativeAnchor != null) {
             ToolWindowAnchor anchor = getAnchor();

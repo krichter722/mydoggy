@@ -888,7 +888,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         MyDoggyToolWindowBar myDoggyToolWindowBar = new MyDoggyToolWindowBar(this,
                                                                              renderSplitPane(splitPaneOrientation),
                                                                              anchor);
-        myDoggyToolWindowBar.addPropertyChangeListener(this);
+        myDoggyToolWindowBar.addPropertyChangeListener(this, "visible");
 
         bars[anchor.ordinal()] = myDoggyToolWindowBar;
 
