@@ -40,9 +40,9 @@ public interface ToolWindowTypeDescriptor extends Observable {
     boolean isAnimating();
 
     /**
-     * Sets if the toolwindow id has to be showed on the title bar when the toolwindow is docked (that is type == DOCKED).
+     * Sets if the toolwindow id has to be shown on the title bar when the toolwindow is docked (that is type == DOCKED).
      *
-     * @param idVisibleOnTitleBar <code>true</code> if the toolwindow id has to be showed on the title bar.
+     * @param idVisibleOnTitleBar <code>true</code> if the toolwindow id has to be shown on the title bar.
      * tool has type ToolWindowType.DOCKED.<br><code>false</code> otherwise.
      * @see #isIdVisibleOnTitleBar()
      * @since 1.4.0
@@ -51,7 +51,7 @@ public interface ToolWindowTypeDescriptor extends Observable {
 
     /**
      * Returns the "idVisibleOnTitleBar" property value.
-     * @return <code>true</code> if the toolwindow id has to be showed on the title bar.
+     * @return <code>true</code> if the toolwindow id has to be shown on the title bar.
      * tool has type ToolWindowType.DOCKED.<br>
      *         <code>false</code> otherwise.
      * @see #setIdVisibleOnTitleBar(boolean)

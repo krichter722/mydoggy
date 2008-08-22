@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingResizeMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
@@ -28,9 +29,6 @@ public class ModalDialog extends JDialog implements ModalWindow,
                                                     ActionListener {
     protected MyDoggyToolWindowManager toolWindowManager;
 
-    // Modal support
-    protected Window modalToWindow;
-    protected boolean notifiedModalToWindow;
     protected Component returnFocus;
 
     // Multi split support
@@ -50,15 +48,9 @@ public class ModalDialog extends JDialog implements ModalWindow,
         this.returnFocus = returnFocus;
 
         setUndecorated(true);
-        setAlwaysOnTop(SwingUtil.getBoolean("dialog.owner.enabled", true));
+        setAlwaysOnTop(SwingUtil.getBoolean(MyDoggyKeySpace.WINDOW_ALWAYS_ON_TOP, true));
         setFocusableWindowState(true);
-
-        synchronized (ModalDialog.this) {
-            if (modal)
-                modalToWindow = owner;
-
-            notifiedModalToWindow = true;
-        }
+        setModal(modal);
 
         enableEvents(WindowEvent.WINDOW_EVENT_MASK | ComponentEvent.MOUSE_MOTION_EVENT_MASK);
 
@@ -156,50 +148,14 @@ public class ModalDialog extends JDialog implements ModalWindow,
         if (!visible) {
             TransparencyManager<Window> transparencyManager = SwingUtil.getTransparencyManager();
             transparencyManager.setAlphaModeRatio(this, 0.0f);
-
-            restoreOwner();
-        } else {
-            if (!isVisible()) {
-                synchronized (ModalDialog.this) {
-                    if ((modalToWindow != null) && notifiedModalToWindow) {
-                        modalToWindow.setEnabled(false);
-                        notifiedModalToWindow = false;
-                    }
-                }
-            }
-        }
+        } 
 
         super.setVisible(visible);
     }
 
-    protected void processWindowEvent(WindowEvent windowEvent) {
-        switch (windowEvent.getID()) {
-            case WindowEvent.WINDOW_CLOSING:
-                tryToDispose(windowEvent);
-                break;
-            case WindowEvent.WINDOW_CLOSED:
-                close(windowEvent);
-                break;
-            default:
-                super.processWindowEvent(windowEvent);
-                break;
-        }
-    }
 
     public Window getWindow() {
         return this;
-    }
-
-    public void setModal(boolean modal) {
-        synchronized (ModalDialog.this) {
-            modalToWindow = modal ? getOwner() : null;
-        }
-    }
-
-    public boolean isModal() {
-        synchronized (ModalDialog.this) {
-            return modalToWindow != null;
-        }
     }
 
     public void addDockable(ToolWindow toolWindow, Component content) {
@@ -258,38 +214,5 @@ public class ModalDialog extends JDialog implements ModalWindow,
         addMouseMotionListener(resizeMouseInputHandler);
         addMouseListener(resizeMouseInputHandler);
     }
-
-
-    protected void restoreOwner() {
-        synchronized (ModalDialog.this) {
-            if ((modalToWindow != null) && !notifiedModalToWindow) {
-                modalToWindow.setEnabled(true);
-                modalToWindow.toFront();
-                notifiedModalToWindow = true;
-            }
-
-            if (returnFocus != null) {
-                Window owner = SwingUtilities.windowForComponent(returnFocus);
-                boolean stillBusy;
-
-                stillBusy = !owner.isEnabled();
-
-                if (!stillBusy) {
-                    returnFocus.requestFocusInWindow();
-                }
-            }
-        }
-    }
-
-    protected void tryToDispose(WindowEvent windowEvent) {
-        dispose();
-        super.processWindowEvent(windowEvent);
-    }
-
-    protected void close(WindowEvent windowEvent) {
-        restoreOwner();
-        super.processWindowEvent(windowEvent);
-    }
-
 
 }

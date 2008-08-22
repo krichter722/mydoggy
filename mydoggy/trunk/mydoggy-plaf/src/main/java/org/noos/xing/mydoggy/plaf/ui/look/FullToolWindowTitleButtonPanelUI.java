@@ -1,7 +1,9 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
 import info.clearthought.layout.TableLayout;
+import org.noos.xing.mydoggy.DockedTypeDescriptor;
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindowAction;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
@@ -47,9 +49,15 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
 
 
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("type".equals(evt.getPropertyName())) {
+        String propertyName = evt.getPropertyName();
+        if ("type".equals(propertyName)) {
             if (!evt.getNewValue().equals(ToolWindowType.EXTERN))
                 setType((ToolWindowType) evt.getNewValue());
+        } else if ("visibleOnTitleBar".equals(propertyName)) {
+            ToolWindowAction toolWindowAction = (ToolWindowAction) evt.getSource();
+
+            setVisible((Component) toolWindowAction.getValue("component"),
+                       (Boolean) evt.getNewValue());
         }
     }
 
@@ -105,11 +113,12 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
         toolWindowTitleButtonPanel.setLayout(containerLayout = new ExtendedTableLayout(new double[][]{{0, 0}, {1, 14, 1}}, false));
         toolWindowTitleButtonPanel.setOpaque(false);
 
-        addTitleBarAction(new DockAction());
-        addTitleBarAction(new FloatingAction());
-        addTitleBarAction(new PinAction());
-        addTitleBarAction(new MaximizeAction());
-        focusable = addTitleBarAction(new HideAction());
+        DockedTypeDescriptor dockedTypeDescriptor = descriptor.getDockedTypeDescriptor();
+        addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.DOCK_ACTION_ID));
+        addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.FLOATING_ACTION_ID));
+        addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.PIN_ACTION_ID));
+        addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.MAXIMIZE_ACTION_ID));
+        focusable = addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.HIDE_ACTION_ID));
 
         toolWindow.addPlafPropertyChangeListener(this);
     }
@@ -125,38 +134,40 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
     }
 
 
-    protected Component addTitleBarAction(TitleBarAction titleBarAction) {
-        return addTitleBarAction(-1, titleBarAction);
+    protected Component addToolWindowAction(ToolWindowAction toolWindowAction) {
+        return addToolWindowAction(-1, toolWindowAction);
     }
 
-    protected Component addTitleBarAction(int index, TitleBarAction titleBarAction) {
+    protected Component addToolWindowAction(int index, ToolWindowAction toolWindowAction) {
         int row;
         if (index == -1) {
             double[] oldCols = containerLayout.getColumn();
 
             double[] newCols;
             if (oldCols.length == 2) {
-                newCols = new double[]{0, titleBarAction.getWidth(), 0};
+                newCols = new double[]{0, toolWindowAction.getWidth(), 0};
                 row = 1;
             } else {
                 newCols = new double[oldCols.length + 2];
 
                 System.arraycopy(oldCols, 0, newCols, 0, oldCols.length);
                 newCols[oldCols.length - 1] = 1;
-                newCols[oldCols.length] = titleBarAction.getWidth();
+                newCols[oldCols.length] = toolWindowAction.getWidth();
                 newCols[oldCols.length + 1] = 0;
                 row = oldCols.length;
             }
             containerLayout.setColumn(newCols);
         } else {
+            // TODO: implement this...
             throw new IllegalStateException("Not implemented yet!!!");
         }
 
-        ToolWindowTitleButton button = new ToolWindowTitleButton(titleBarAction);
+        ToolWindowTitleButton button = new ToolWindowTitleButton(toolWindowAction);
         button.setFocusable(false);
-        button.setName((String) titleBarAction.getValue("action.name"));
+        button.setName((String) toolWindowAction.getValue("action.name"));
         
-        titleBarAction.putValue("component", button);
+        toolWindowAction.putValue("component", button);
+        toolWindowAction.addPropertyChangeListener(this);
 
         toolWindowTitleButtonPanel.add(button, row + ",1,FULL,FULL");
 
@@ -179,11 +190,14 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
                 }
             }
         }
+        SwingUtil.repaint(toolWindowTitleButtonPanel);
 
     }
 
 
-    protected abstract class TitleBarAction extends AbstractAction implements PropertyChangeListener {
+
+    public abstract class TitleBarAction extends AbstractAction implements PropertyChangeListener {
+
 
         protected TitleBarAction() {
             propertyChangeSupport.addPropertyChangeListener(this);
@@ -196,6 +210,7 @@ public class FullToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanel
 
             propertyChangeSupport.addPropertyChangeListener(this);
         }
+
 
         public void setVisible(boolean visible) {
             FullToolWindowTitleButtonPanelUI.this.setVisible((Component) getValue("component"), visible);

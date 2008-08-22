@@ -10,7 +10,7 @@
     <body>
         <section name="ToolWindow Types">
             <p>
-                A tool window can be showed in several ways. A
+                A tool window can be shown in several ways. A
                 <code>ToolWindowType</code>
                 is used to choose between different
                 viewing modes. Now we describe the types provided.

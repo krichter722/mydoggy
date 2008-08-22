@@ -548,6 +548,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return bars[anchor.ordinal()];
     }
 
+    public MyDoggyToolWindowBar[] getBars() {
+        return bars;
+    }
+
+    public Collection<ToolWindowDescriptor> getToolWindowDescriptors() {
+        return tools.values();
+    }
+
     public ToolWindowGroup getShowingGroup() {
         return this.showingGroup;
     }
@@ -716,6 +724,31 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         this.persistenceDelegate = new XMLPersistenceDelegate(this);
     }
 
+    protected void initContentManager() {
+        contentManager = new MyDoggyContentManager(this);
+        contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
+        contentManager.addPropertyChangeListener(this);
+        contentManager.addContentManagerListener(new InternalContentMananagerListener());
+    }
+
+    protected void initUI(Locale locale) {
+        Properties properties = SwingUtil.loadPropertiesFile("mydoggyplaf.properties", uiClassLoader);
+
+        String className = properties.getProperty("ResourceManager.class");
+        if (className == null) {
+            System.err.println("Cannot find ResourceManager.class property value. Use default.");
+            className = MyDoggyResourceManager.class.getName();
+        }
+        try {
+            setResourceManager((ResourceManager) SwingUtil.newObject(className));
+        } catch (Exception e) {
+            e.printStackTrace();
+            setResourceManager(new MyDoggyResourceManager());
+        }
+        resourceManager.setLocale(locale);
+    }
+
+
     protected void initComponents() {
         this.twmListeners = new EventListenerList();
 
@@ -757,6 +790,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         // Init main container
         mainContainer = new JPanel();
+        mainContainer.setOpaque(true);
+        mainContainer.setBackground(Color.GRAY);
         mainContainer.setName("toolWindowManager.mainContainer");
         mainContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
         mainContainer.setFocusable(false);
@@ -772,13 +807,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         mainSplitPane = getBar(RIGHT).getSplitPane();
         mainSplitPane.addPropertyChangeListener("UI", new UpdateUIChangeListener());
         mainSplitPane.setLeftComponent(mainContainer);
-    }
-
-    protected void initContentManager() {
-        contentManager = new MyDoggyContentManager(this);
-        contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
-        contentManager.addPropertyChangeListener(this);
-        contentManager.addContentManagerListener(new InternalContentMananagerListener());
     }
 
     protected void initGlassPane() {
@@ -802,7 +830,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         propertyChangeSupport.addPropertyChangeListener("maximized.before", maximizedChangeListener);
         propertyChangeSupport.addPropertyChangeListener("index", new IndexChangeListener());
         propertyChangeSupport.addPropertyChangeListener("icon", new IconChangeListener());
-        propertyChangeSupport.addPropertyChangeListener("tempShowed", new PropertyChangeListener() {
+        propertyChangeSupport.addPropertyChangeListener("tempShown", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
 //                for (ToolWindowDescriptor tool : tools.values())
 //                    tool.getToolWindowContainer().propertyChange(evt);
@@ -851,23 +879,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 }
             }
         });
-    }
-
-    protected void initUI(Locale locale) {
-        Properties properties = SwingUtil.loadPropertiesFile("mydoggyplaf.properties", uiClassLoader);
-
-        String className = properties.getProperty("ResourceManager.class");
-        if (className == null) {
-            System.err.println("Cannot find ResourceManager.class property value. Use default.");
-            className = MyDoggyResourceManager.class.getName();
-        }
-        try {
-            setResourceManager((ResourceManager) SwingUtil.newObject(className));
-        } catch (Exception e) {
-            e.printStackTrace();
-            setResourceManager(new MyDoggyResourceManager());
-        }
-        resourceManager.setLocale(locale);
     }
 
 
@@ -942,38 +953,38 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         MyDoggyToolWindowBar toolWindowBar = getBar(anchor);
 
         if (anchor == LEFT) {
-            if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTempShowed() && contentPaneLayout.getColumn(0) != 0) {
+            if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTempShown() && contentPaneLayout.getColumn(0) != 0) {
                 contentPaneLayout.setColumn(0, 0);
                 revalidate = true;
             } else
-            if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getColumn(0) == 0) {
+            if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShown()) && contentPaneLayout.getColumn(0) == 0) {
                 contentPaneLayout.setColumn(0, getBar(LEFT).getLength());
                 revalidate = true;
             }
         } else if (anchor == RIGHT) {
-            if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTempShowed() && contentPaneLayout.getColumn(2) != 0) {
+            if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTempShown() && contentPaneLayout.getColumn(2) != 0) {
                 contentPaneLayout.setColumn(2, 0);
                 revalidate = true;
             } else
-            if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getColumn(2) == 0) {
+            if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShown()) && contentPaneLayout.getColumn(2) == 0) {
                 contentPaneLayout.setColumn(2, getBar(RIGHT).getLength());
                 revalidate = true;
             }
         } else if (anchor == TOP) {
-            if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTempShowed() && contentPaneLayout.getRow(0) != 0) {
+            if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTempShown() && contentPaneLayout.getRow(0) != 0) {
                 contentPaneLayout.setRow(0, 0);
                 revalidate = true;
             } else
-            if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getRow(0) == 0) {
+            if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShown()) && contentPaneLayout.getRow(0) == 0) {
                 contentPaneLayout.setRow(0, getBar(TOP).getLength());
                 revalidate = true;
             }
         } else if (anchor == BOTTOM) {
-            if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTempShowed() && contentPaneLayout.getRow(2) != 0) {
+            if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTempShown() && contentPaneLayout.getRow(2) != 0) {
                 contentPaneLayout.setRow(2, 0);
                 revalidate = true;
             } else
-            if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShowed()) && contentPaneLayout.getRow(2) == 0) {
+            if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTempShown()) && contentPaneLayout.getRow(2) == 0) {
                 contentPaneLayout.setRow(2, getBar(BOTTOM).getLength());
                 revalidate = true;
             }
@@ -1031,12 +1042,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             descriptor.cleanup();
     }
 
-    public void setTempShowed(boolean tempShowed) {
+    public void setTempShown(boolean tempShown) {
         // TODO: change this name..
-        getBar(LEFT).setTempShowed(tempShowed);
-        getBar(RIGHT).setTempShowed(tempShowed);
-        getBar(TOP).setTempShowed(tempShowed);
-        getBar(BOTTOM).setTempShowed(tempShowed);
+        getBar(LEFT).setTempShown(tempShown);
+        getBar(RIGHT).setTempShown(tempShown);
+        getBar(TOP).setTempShown(tempShown);
+        getBar(BOTTOM).setTempShown(tempShown);
     }
 
     public DockableDescriptor createDescriptor(Dockable dockable) {
@@ -1130,14 +1141,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             if (floatingTypeDescriptor.isAddToTaskBar()) {
                 modalWindow = new ModalFrame(this,
                                              toolWindow,
-                                             SwingUtil.getBoolean("dialog.owner.enabled", true)
+                                             SwingUtil.getBoolean(MyDoggyKeySpace.WINDOW_ALWAYS_ON_TOP, true)
                                                 ? windowAncestor instanceof Window ? (Window) windowAncestor : null
                                                 : null,
                                              null,  // TODO: and this...
                                              floatingTypeDescriptor.isModal());
             } else
                 modalWindow = new ModalDialog(this,
-                                              SwingUtil.getBoolean("dialog.owner.enabled", true)
+                                              SwingUtil.getBoolean(MyDoggyKeySpace.WINDOW_ALWAYS_ON_TOP, true)
                                                  ? windowAncestor instanceof Window ? (Window) windowAncestor : null
                                                  : null,
                                               null,

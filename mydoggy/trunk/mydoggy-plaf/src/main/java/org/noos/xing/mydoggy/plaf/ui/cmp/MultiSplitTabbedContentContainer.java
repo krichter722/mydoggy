@@ -308,6 +308,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
                                 if (onDockableContainer instanceof TabbedContentPane) {
                                     TabbedContentPane tabbedContentPane = (TabbedContentPane) onDockableContainer;
+
                                     for (int i = 0, size = tabbedContentPane.getTabCount(); i < size; i++) {
                                         DockablePanel dockablePanel = (DockablePanel) tabbedContentPane.getComponentAt(i);
                                         if (dockablePanel.getDockable() == onDockable && i == onIndex) {
@@ -317,6 +318,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                                     }
                                 } else if (onDockableContainer instanceof DockablePanel) {
                                     DockablePanel dockablePanel = (DockablePanel) onDockableContainer;
+
                                     if (dockablePanel.getDockable() == onDockable)
                                         rejectDrop = true;
                                 }

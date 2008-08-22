@@ -218,7 +218,7 @@
                     <li>
                         <code style="color:green">void setMinimumDockLength(int minimumDockLength);</code>
                         - Sets the minimum dock length. This information is used every time a toolwindow (in docked or sliding mode)
-                        is showed.
+                        is shown.
                     </li>
                     <li>
                         <code style="color:green">int getMinimumDockLength();</code></br>
@@ -297,7 +297,7 @@
                 <ul>
                     <li>
                         <code style="color:green">void setShowUnavailableTools(boolean showUnavailableTools);</code>
-                        Sets whether or not the representative anchor buttons for unavailable tools are to be showed.
+                        Sets whether or not the representative anchor buttons for unavailable tools are to be shown.
                     </li>
                     <li>
                         <code style="color:green">Returns the value of the property "showUnavailableTools"</code>
@@ -553,7 +553,7 @@
                 <ul>
                     <li>
                         <code style="color:green">void setIdVisibleOnTitleBar(boolean idVisibleOnTitleBar);</code></br>
-                        Sets if the toolwindow id has to be showed on the title bar when the toolwindow is docked (that is type == DOCKED).
+                        Sets if the toolwindow id has to be shown on the title bar when the toolwindow is docked (that is type == DOCKED).
                     </li>
                     <li>
                         <code style="color:green">boolean isIdVisibleOnTitleBar();</code>
@@ -643,7 +643,7 @@
                     </li>
                     <li>
                         <code style="color:green">void setIdVisibleOnTitleBar(boolean idVisibleOnTitleBar);</code>
-                        Sets if the toolwindow id has to be showed on the title bar when the toolwindow is docked (that is type == DOCKED).
+                        Sets if the toolwindow id has to be shown on the title bar when the toolwindow is docked (that is type == DOCKED).
                     </li>
                     <li>
                         <code style="color:green">boolean isIdVisibleOnTitleBar();</code></br>
@@ -1113,7 +1113,7 @@
                 </a> ]]>
                 - A ContentManagerUI is an interface to modify the ui behaviours of
                 a content manager. For example this is used to modify the way a content
-                is showed.
+                is shown.
             </action>
             <action dev="adecaro" type="add">
                 <![CDATA[

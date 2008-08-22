@@ -24,17 +24,17 @@ public class Test {
 
     protected void setUp() {
         initComponents();
-        initToolWindowManager();
+//        initToolWindowManager();
     }
 
     protected void start() {
         frame.setVisible(true);
 
-        ToolWindow tw1 = toolWindowManager.getToolWindow("Tool_1");
-        tw1.setActive(true);
-
-        ToolWindow tw2 = toolWindowManager.getToolWindow("Tool_2");
-        tw2.setVisible(true);
+//        ToolWindow tw1 = toolWindowManager.getToolWindow("Tool_1");
+//        tw1.setActive(true);
+//
+//        ToolWindow tw2 = toolWindowManager.getToolWindow("Tool_2");
+//        tw2.setVisible(true);
     }
 
     protected void initComponents() {
@@ -44,7 +44,10 @@ public class Test {
         this.frame.setLocation(100, 100);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        this.frame.getContentPane().setLayout(new BorderLayout());
+//        this.frame.getContentPane().setLayout(new BorderLayout());
+
+        JPanel panel = (JPanel) this.frame.getContentPane();
+        panel.setOpaque(false);
     }
 
     protected void initToolWindowManager() {

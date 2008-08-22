@@ -17,9 +17,9 @@ public class LoadWorkspaceApp {
                 JFrame frame = new JFrame();
 //                <GEOMETRY X="107" Y="131" WIDTH="1065" HEIGHT="912" EXT_STATE="6" />
 
-                frame.setLocation(107,131);
-                frame.setSize(1065,912);
-//                frame.setSize(640,480);
+//                frame.setLocation(107,131);
+//                frame.setSize(1065,912);
+                frame.setSize(640,480);
 
                 final MyDoggyToolWindowManager manager = new MyDoggyToolWindowManager();
 
@@ -31,7 +31,7 @@ public class LoadWorkspaceApp {
                     public void run() {
                         try {
                             manager.getPersistenceDelegate().merge(
-                                new FileInputStream("mydoggy-0-mode-c++.xml"),
+                                new FileInputStream("1.xml"),
                                 PersistenceDelegate.MergePolicy.RESET,
                                     new PersistenceDelegateCallback() {
                                         public ToolWindow toolwindowNotFound(ToolWindowManager toolWindowManager, String toolWindowId, PersistenceNode node) {

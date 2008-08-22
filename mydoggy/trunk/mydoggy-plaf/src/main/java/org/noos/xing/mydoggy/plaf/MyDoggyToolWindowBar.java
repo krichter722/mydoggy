@@ -58,7 +58,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     protected PropertyChangeSupport propertyChangeSupport;
 
-    protected boolean tempShowed;
+    protected boolean tempShown;
 
     boolean valueAdjusting = false;
 
@@ -236,17 +236,17 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         return availableTools;
     }
 
-    public boolean isTempShowed() {
-        return tempShowed;
+    public boolean isTempShown() {
+        return tempShown;
     }
 
-    public void setTempShowed(boolean tempShowed) {
-        boolean old = this.tempShowed;
-        this.tempShowed = tempShowed;
+    public void setTempShown(boolean tempShown) {
+        boolean old = this.tempShown;
+        this.tempShown = tempShown;
 
         manager.syncPanel(anchor);
 
-        firePropertyChangeEvent("tempShowed", old, tempShowed);
+        firePropertyChangeEvent("tempShown", old, tempShown);
     }
 
     public int getRepresentativeAnchorIndex(Component representativeAnchor) {
@@ -276,6 +276,10 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         return (getAvailableTools() > 0) ? getLength() : 0;
     }
 
+    public boolean isValueAdjusting() {
+        return valueAdjusting;
+    }
+    
 
     protected void initComponents() {
         splitPane.setName(anchor.toString());

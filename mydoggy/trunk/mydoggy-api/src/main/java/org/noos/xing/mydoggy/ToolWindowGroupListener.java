@@ -6,7 +6,7 @@ import java.util.EventListener;
 
 /**
  * The listener interface for receiving "interesting" events
- * (showed, hided, tool added, tool removed) on a tool window group.
+ * (shown, hidden, tool added, tool removed) on a tool window group.
  * <p/>
  * The listener object created is then registered with a
  * tool window group using the groups's <code>addToolWindowGroupListener</code>
@@ -39,13 +39,13 @@ public interface ToolWindowGroupListener extends EventListener {
     void toolRemoved(ToolWindowGroupEvent event);
 
     /**
-     * Invoked when the group has been showed.
+     * Invoked when the group has been shown.
      *
      * @param event the fired event.
      * @see ToolWindowGroupEvent
      * @since 1.0.0
      */
-    void groupShowed(ToolWindowGroupEvent event);
+    void groupShown(ToolWindowGroupEvent event);
 
     /**
      * Invoked when the group has been hidden.
@@ -54,6 +54,6 @@ public interface ToolWindowGroupListener extends EventListener {
      * @see ToolWindowGroupEvent
      * @since 1.0.0
      */
-    void groupHided(ToolWindowGroupEvent event);
+    void groupHidden(ToolWindowGroupEvent event);
 
 }

@@ -403,12 +403,12 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                     if (toolWindow.isVisible()) {
                         toolWindow.setVisible(false);
                     } else {
-                        toolWindow.setVisible(true);
                         SwingUtilities.invokeLater(new Runnable() {
                             public void run() {
                                 toolWindow.setActive(true);
                             }
                         });
+                        toolWindow.setVisible(true);
                     }
                 }
             } else if (SwingUtilities.isRightMouseButton(e)) {

@@ -99,9 +99,8 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 floatingAnimation.show();
             } else {
                 window.setModal(typeDescriptor.isModal());
-                window.setVisible(true);
                 window.getContentPane().setVisible(true);
-
+                
                 SwingUtil.repaint(window.getWindow());
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
@@ -109,6 +108,8 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                             descriptor.assignFocus();
                     }
                 });
+
+                window.setVisible(true);
             }
         } else {
             try {

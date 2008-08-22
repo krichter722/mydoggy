@@ -1,5 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
+import org.noos.xing.mydoggy.DockedTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowAction;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 
@@ -29,16 +32,28 @@ public class MenuToolWindowTitleButtonPanelUI extends FullToolWindowTitleButtonP
         toolWindowTitleButtonPanel.setLayout(containerLayout = new ExtendedTableLayout(new double[][]{{0, 0}, {1, 14, 1}}, false));
         toolWindowTitleButtonPanel.setOpaque(false);
 
-        addTitleBarAction(new PopupAction());
-        focusable = addTitleBarAction(new HideAction());
+        DockedTypeDescriptor dockedTypeDescriptor = descriptor.getDockedTypeDescriptor();
+        dockedTypeDescriptor.addToolWindowAction(new PopupAction());
+
+        addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.POPUP_ACTION_ID));
+        focusable = addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.HIDE_ACTION_ID));
     }
 
 
-    public class PopupAction extends TitleBarAction {
+    public class PopupAction extends ToolWindowAction {
 
         public PopupAction() {
-            super("toolWindow.showPopupButton." + toolWindow.getId(), MyDoggyKeySpace.ACTIONS_POPUP, "@@tool.tooltip.showPopup");
-            toolWindow.addPlafPropertyChangeListener("active", new PropertyChangeListener() {
+            super(POPUP_ACTION_ID);
+        }
+
+        @Override
+        public void setToolWindow(ToolWindow toolWindow) {
+            super.setToolWindow(toolWindow);
+            setIcon(UIManager.getIcon(MyDoggyKeySpace.ACTIONS_POPUP));
+            setTooltipText("@@tool.tooltip.showPopup");
+            setActionName("toolWindow.showPopupButton." + toolWindow.getId());
+
+            toolWindow.addPropertyChangeListener("active", new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getSource() != descriptor)
                         return;
@@ -46,12 +61,16 @@ public class MenuToolWindowTitleButtonPanelUI extends FullToolWindowTitleButtonP
                     boolean active = (Boolean) evt.getNewValue();
 
                     if (active) {
-                        putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.ACTIONS_POPUP));
+                        setIcon(UIManager.getIcon(MyDoggyKeySpace.ACTIONS_POPUP));
                     } else {
-                        putValue(Action.SMALL_ICON, UIManager.getIcon(MyDoggyKeySpace.ACTIONS_POPUP_INACTIVE));
+                        setIcon(UIManager.getIcon(MyDoggyKeySpace.ACTIONS_POPUP_INACTIVE));
                     }
                 }
             });
+        }
+
+        public JMenuItem getMenuItem() {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
 
         public void actionPerformed(ActionEvent e) {
@@ -61,8 +80,6 @@ public class MenuToolWindowTitleButtonPanelUI extends FullToolWindowTitleButtonP
             descriptor.showPopupMenu(c, 0, c.getHeight());
         }
 
-        public void propertyChange(PropertyChangeEvent evt) {
-        }
     }
 
 }

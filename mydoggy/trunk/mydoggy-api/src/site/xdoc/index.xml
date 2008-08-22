@@ -71,7 +71,7 @@
                     </a>
 					A ContentManagerUI is an interface to modify the ui behaviours of
 					a content manager. For example this is used to modify the way a content
-					is showed.
+					is shown.
                 </li>
                 <li>
                     <a href="./apidocs/org/noos/xing/mydoggy/PersistenceDelegate.html">
