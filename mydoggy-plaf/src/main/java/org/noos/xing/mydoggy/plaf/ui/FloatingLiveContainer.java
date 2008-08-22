@@ -307,7 +307,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
             super.mouseDragged(ev);
 
             if (isMovingWindow) {
-                // TODO: activate tempo showed
+                // TODO: activate tempo shown
                 onAnchor = descriptor.getManager().getToolWindowAnchor(
                         SwingUtilities.convertPoint(ev.getComponent(), ev.getPoint(), descriptor.getManager())
                 );

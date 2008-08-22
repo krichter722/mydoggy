@@ -92,10 +92,11 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
 
     public Dockable getDockableAt(Point point) {
-        SwingUtilities.convertPointFromScreen(point, this);
+//        SwingUtilities.convertPointFromScreen(point, this);
 
         indexAtLocation = indexAtLocation(point.x, point.y);
-        Dockable onDockable = null;
+        System.out.println("indexAtLocation = " + indexAtLocation);
+        Dockable onDockable;
 
         DockableOwner dockableOwner = SwingUtil.getParent(this, DockableOwner.class);
         if (dockableOwner != null)
@@ -665,7 +666,6 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             Rectangle iconBounds = aggregateIcon.getLastPaintedRecAt(4);
             return iconBounds != null && (contentUI.isDetachable() && showDetach && ((relativeMousePoint.getX() > iconBounds.x && relativeMousePoint.getX() < iconBounds.x + iconBounds.width) ||
                                                                                      (point.getX() > iconBounds.x && point.getX() < iconBounds.x + iconBounds.width)));
-
         }
 
         protected boolean isCloseFired(ContentUI contentUI, Point point) {

@@ -64,7 +64,7 @@ public class TestTWGroupListener extends TestCase {
         assertEquals(tool, listener.getLastEvent().getToolWindow());
     }
 
-    public void testGroupShowed() {
+    public void testGroupShown() {
         ToolWindow tool = toolWindowManager.registerToolWindow(
                 "test", "title", null, new JLabel("Test"), ToolWindowAnchor.TOP
         );
@@ -77,16 +77,16 @@ public class TestTWGroupListener extends TestCase {
 
         group.setVisible(true);
 
-        assertTrue(listener.isGroupShowed());
+        assertTrue(listener.isGroupShown());
         assertNotNull(listener.getLastEvent());
-        assertEquals(ToolWindowGroupEvent.ActionId.GROUP_SHOWED, listener.getLastEvent().getId());
+        assertEquals(ToolWindowGroupEvent.ActionId.GROUP_SHOWN, listener.getLastEvent().getId());
         assertEquals(group, listener.getLastEvent().getToolWindowGroup());
         assertNull(listener.getLastEvent().getToolWindow());
 
         group.setVisible(false);
     }
 
-    public void testGroupHided() {
+    public void testGroupHidden() {
         ToolWindow tool = toolWindowManager.registerToolWindow(
                 "test", "title", null, new JLabel("Test"), ToolWindowAnchor.TOP
         );
@@ -99,9 +99,9 @@ public class TestTWGroupListener extends TestCase {
         group.setVisible(true);
         group.setVisible(false);
 
-        assertTrue(listener.isGroupHided());
+        assertTrue(listener.isGroupHidden());
         assertNotNull(listener.getLastEvent());
-        assertEquals(ToolWindowGroupEvent.ActionId.GROUP_HIDED, listener.getLastEvent().getId());
+        assertEquals(ToolWindowGroupEvent.ActionId.GROUP_HIDDEN, listener.getLastEvent().getId());
         assertEquals(group, listener.getLastEvent().getToolWindowGroup());
         assertNull(listener.getLastEvent().getToolWindow());
     }
@@ -109,19 +109,19 @@ public class TestTWGroupListener extends TestCase {
     private class TestToolWindowGroupListener implements ToolWindowGroupListener {
         private boolean toolAdded;
         private boolean toolRemoved;
-        private boolean groupShowed;
-        private boolean groupHided;
+        private boolean groupShown;
+        private boolean groupHidden;
 
         private ToolWindowGroupEvent lastEvent;
 
 
-        public void groupHided(ToolWindowGroupEvent event) {
-            this.groupHided = true;
+        public void groupHidden(ToolWindowGroupEvent event) {
+            this.groupHidden = true;
             this.lastEvent = event;
         }
 
-        public void groupShowed(ToolWindowGroupEvent event) {
-            this.groupShowed = true;
+        public void groupShown(ToolWindowGroupEvent event) {
+            this.groupShown = true;
             this.lastEvent = event;
         }
 
@@ -135,12 +135,12 @@ public class TestTWGroupListener extends TestCase {
             this.lastEvent = event;
         }
 
-        public boolean isGroupShowed() {
-            return groupShowed;
+        public boolean isGroupShown() {
+            return groupShown;
         }
 
-        public boolean isGroupHided() {
-            return groupHided;
+        public boolean isGroupHidden() {
+            return groupHidden;
         }
 
         public boolean isToolAdded() {

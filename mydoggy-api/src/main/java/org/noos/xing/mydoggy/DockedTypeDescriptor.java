@@ -65,7 +65,7 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
 
     /**
      * Sets the minimum dock length. This information is used every time a toolwindow (in docked or sliding mode)
-     * is showed.
+     * is shown.
      *
      * @param minimumDockLength the minimum dock length.
      * @since 1.4.2
@@ -215,5 +215,15 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      * @since 1.5.0
      */
     boolean containsLockingAnchor(ToolWindowAnchor anchor);
+
+    ToolWindowAction getToolWindowAction(String id);
+
+    void addToolWindowAction(ToolWindowAction toolWindowAction);
+
+/*
+    ToolWindowAction[] getToolWindowActions();
+
+    void removeToolWindowAction(String id);
+*/
 
 }

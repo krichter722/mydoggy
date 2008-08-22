@@ -127,7 +127,7 @@ Changes
     -- Content aliasing support into the ContentManager interface.
     -- New <code>MultiSplitContentUI</code> interface to modify the ui behaviours of a content when a
        <code>MultiSplitContentManagerUIis</code> used as current <code>ContentManagerUI</code>.
-    -- Now also the representative anchor buttons for unavailable tools can be showed. See the screenshot here.
+    -- Now also the representative anchor buttons for unavailable tools can be shown. See the screenshot here.
 
     Bug Resolved:
 

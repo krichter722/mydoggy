@@ -85,7 +85,7 @@
                             <code>MultiSplitContentManagerUIis</code> used as current <code>ContentManagerUI</code>. 
                         </li>
                         <li>
-                            Now also the representative anchor buttons for unavailable tools can be showed. See the screenshot
+                            Now also the representative anchor buttons for unavailable tools can be shown. See the screenshot
                             <a href="./mydoggy-examples/mydoggysetScreenshots.html#UnavailableTools">here</a>.
                         </li>
                     </ul>

@@ -287,6 +287,8 @@ public class MyDoggySet {
         });
         dockedTypeDescriptor.getToolsMenu().add(menuItem);
         dockedTypeDescriptor.setPreviewDelay(1500);
+        dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.HIDE_ACTION_ID).setVisible(false);
+        dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.MAXIMIZE_ACTION_ID).setVisible(false);
 
         SlidingTypeDescriptor slidingTypeDescriptor = toolWindow.getTypeDescriptor(SlidingTypeDescriptor.class);
         slidingTypeDescriptor.setEnabled(false);
@@ -409,7 +411,7 @@ public class MyDoggySet {
         ResourceManager resourceManager = myDoggyToolWindowManager.getResourceManager();
         // Add customization here. See the page http://mydoggy.sourceforge.net/mydoggy-plaf/resourceManagerUsing.html
 
-//        resourceManager.putProperty("dialog.owner.enabled", "false");
+        resourceManager.putProperty(MyDoggyKeySpace.WINDOW_ALWAYS_ON_TOP, "false");
 
 /*
         resourceManager.putProperty("ContentManagerDropTarget.enabled", "true");

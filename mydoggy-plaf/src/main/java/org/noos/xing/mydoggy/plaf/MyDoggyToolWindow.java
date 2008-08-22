@@ -1001,7 +1001,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                 this.type = type;
 
                 if (type != ToolWindowType.EXTERN) {
-                    if (tempActive) {
+                    if (tempActive && tempVisible) {
                         setActive(true);
                     } else if (tempVisible)
                         setVisible(true);

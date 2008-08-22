@@ -21,8 +21,8 @@ public class ToolWindowGroupEvent extends EventObject {
     public enum ActionId {
         TOOL_ADDED,         // When a tool window is added to a group.
         TOOL_REMOVED,       // When a tool window is added from a group.
-        GROUP_SHOWED,       // When a group is made visible.
-        GROUP_HIDED         // When a group is made hide.
+        GROUP_SHOWN,       // When a group is made visible.
+        GROUP_HIDDEN         // When a group is made hide.
     }
 
     /**

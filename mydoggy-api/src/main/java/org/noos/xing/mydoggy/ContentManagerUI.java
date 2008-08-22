@@ -3,7 +3,7 @@ package org.noos.xing.mydoggy;
 /**
  * A ContentManagerUI is an interface to modify the ui behaviours of
  * a content manager. For example this is used to modify the way a content
- * is showed.
+ * is shown.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @see TabbedContentManagerUI
@@ -89,9 +89,9 @@ public interface ContentManagerUI<C extends ContentUI> extends Observable {
     void setPopupMenuEnabled(boolean popupMenuEnabled);
 
     /**
-     * Returns whether this content manager permits the popup menu to be showed.
+     * Returns whether this content manager permits the popup menu to be shown.
      *
-     * @return <code>true</code> if the popup menu can be showed, <code>false</code> otherwise. 
+     * @return <code>true</code> if the popup menu can be shown, <code>false</code> otherwise.
      * @since 1.5.0
      */
     boolean isPopupMenuEnabled();

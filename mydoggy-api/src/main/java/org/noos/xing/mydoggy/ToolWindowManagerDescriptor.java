@@ -96,7 +96,7 @@ public interface ToolWindowManagerDescriptor extends Observable {
     boolean isPreviewEnabled();
 
     /**
-     * Sets whether or not the representative anchor buttons for unavailable tools are to be showed.
+     * Sets whether or not the representative anchor buttons for unavailable tools are to be shown.
      *
      * @param showUnavailableTools <tt>true</tt> if you want to show the representative anchor buttons
      * for unavailable tools, <tt>false</tt> otherwise.
@@ -109,7 +109,7 @@ public interface ToolWindowManagerDescriptor extends Observable {
      * Returns the value of the property "showUnavailableTools"
      *
      * @return <tt>true</tt> if the representative anchor buttons
-     * for unavailable tools are showed, <tt>false</tt> otherwise.
+     * for unavailable tools are shown, <tt>false</tt> otherwise.
      * @since 1.4.1
      * @see #setShowUnavailableTools(boolean) 
      */

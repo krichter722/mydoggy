@@ -102,9 +102,9 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
                     }
 
                     if (visible)
-                        fireGroupShowed();
+                        fireGroupShown();
                     else
-                        fireGroupHided();
+                        fireGroupHidden();
                 }
 
                 if (visible && tools.size() > 0)
@@ -139,17 +139,17 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
     }
 
 
-    protected void fireGroupShowed() {
-        ToolWindowGroupEvent event = new ToolWindowGroupEvent(manager, ToolWindowGroupEvent.ActionId.GROUP_SHOWED, this);
+    protected void fireGroupShown() {
+        ToolWindowGroupEvent event = new ToolWindowGroupEvent(manager, ToolWindowGroupEvent.ActionId.GROUP_SHOWN, this);
         for (ToolWindowGroupListener listener : listenerList.getListeners(ToolWindowGroupListener.class)) {
-            listener.groupShowed(event);
+            listener.groupShown(event);
         }
     }
 
-    protected void fireGroupHided() {
-        ToolWindowGroupEvent event = new ToolWindowGroupEvent(manager, ToolWindowGroupEvent.ActionId.GROUP_HIDED, this);
+    protected void fireGroupHidden() {
+        ToolWindowGroupEvent event = new ToolWindowGroupEvent(manager, ToolWindowGroupEvent.ActionId.GROUP_HIDDEN, this);
         for (ToolWindowGroupListener listener : listenerList.getListeners(ToolWindowGroupListener.class)) {
-            listener.groupHided(event);
+            listener.groupHidden(event);
         }
     }
 

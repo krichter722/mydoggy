@@ -252,7 +252,7 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
     boolean isAutoHide();
 
     /**
-     * This method is used to set the type for the tool. The type specifies the way the tool is showed, made available,
+     * This method is used to set the type for the tool. The type specifies the way the tool is shown, made available,
      * etc.
      *
      * @param type the new type.
@@ -303,17 +303,21 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
     String getRepresentativeAnchorButtonTitle(); 
 
     /**
-     * TODO:
-     * @param hideOnZeroTabs
+     * Sets the "hideOnZeroTabs" property. When <code>true</code> is used this means that
+     * the tool is hidden when no tabs are available on it.
+     *
+     * @param hideOnZeroTabs <code>true</code> to hide the tool when no tabs are available on it,
+     * <code>false</code> otherwise.
      * @since 1.5.0
      * @see #isHideOnZeroTabs()
      */
     void setHideOnZeroTabs(boolean hideOnZeroTabs);
 
     /**
-     * TODO:
+     * Return the "hideOnZeroTabs" property value.
      * @since 1.5.0
-     * @return 
+     * @return <code>true</code> if the the tool is hidden when no tabs are available on it, 
+     * <code>false</code> otherwise.
      * @see #setHideOnZeroTabs(boolean)  
      */
     boolean isHideOnZeroTabs();
@@ -394,8 +398,8 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
     ToolWindowListener[] getToolWindowListeners();
 
     /**
-     * This method retrieves the TypeDescriptor for <code>type</code> that the tool use to modify the behaviours
-     * of the that type. The modifications are visible only for this tool.
+     * This method retrieves the TypeDescriptor for <code>type</code> that the tool uses to modify the behaviours
+     * of that type. The modifications are visible only for this tool.
      *
      * @param type tool window type.
      * @return the type descriptor for <code>type</code>.

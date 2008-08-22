@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -48,7 +49,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
         this.returnFocus = returnFocus;
 
         setUndecorated(true);
-        setAlwaysOnTop(SwingUtil.getBoolean("dialog.owner.enabled", true));
+        setAlwaysOnTop(SwingUtil.getBoolean(MyDoggyKeySpace.WINDOW_ALWAYS_ON_TOP, true));
         setFocusableWindowState(true);
 
         synchronized (ModalFrame.this) {

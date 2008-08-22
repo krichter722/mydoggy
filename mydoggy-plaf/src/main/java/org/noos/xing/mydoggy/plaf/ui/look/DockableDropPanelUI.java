@@ -133,10 +133,13 @@ public class DockableDropPanelUI extends BasicPanelUI {
                     if (onDockableContainer != null) {
                         if (onDockableContainer instanceof DockableOwner) {
                             onDockable = ((DockableOwner) onDockableContainer).getDockable();
-                        } else if (onDockableContainer instanceof MultiDockableOwner)  {
+                        } else if (onDockableContainer instanceof MultiDockableOwner) {
                             MultiDockableOwner multiDockableOwner = (MultiDockableOwner) onDockableContainer;
 
-                            onDockable = multiDockableOwner.getDockableAt(new Point(mouseLocation));
+                            onDockable = multiDockableOwner.getDockableAt(
+                                    SwingUtilities.convertPoint(dockableDropPanel,
+                                                                new Point(mouseLocation),
+                                                                onDockableContainer));
                             onIndex = multiDockableOwner.getDockableIndex();
                         } else
                             throw new IllegalStateException("Dockable Container not reconized!!!");
@@ -195,6 +198,7 @@ public class DockableDropPanelUI extends BasicPanelUI {
 
                             onAnchor = ToolWindowAnchor.BOTTOM;
                         } else {
+                            System.out.println("onIndex = " + onIndex);
                             drawRect(g,
                                      toolBounds.x, toolBounds.y,
                                      toolBounds.width,
@@ -232,7 +236,7 @@ public class DockableDropPanelUI extends BasicPanelUI {
 
     public boolean dragStart(Transferable transferable) {
         dragActive = false;
-        
+
         for (Class<? extends Dockable> clazz : dockableDropPanel.getTargets()) {
             if (clazz.isAssignableFrom(ToolWindow.class)) {
                 if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF)) {
@@ -249,7 +253,7 @@ public class DockableDropPanelUI extends BasicPanelUI {
                     dragActive = true;
                     break;
                 }
-            }             
+            }
         }
 
         if (dragActive)
@@ -310,5 +314,5 @@ public class DockableDropPanelUI extends BasicPanelUI {
         layout.setRow(0, 0);
         layout.setRow(2, 0);
     }
-    
+
 }

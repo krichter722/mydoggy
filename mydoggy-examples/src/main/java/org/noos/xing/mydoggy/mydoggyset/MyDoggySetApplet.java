@@ -266,7 +266,7 @@ public class MyDoggySetApplet extends JApplet {
 
         // Add customization here. See the page http://mydoggy.sourceforge.net/mydoggy-plaf/resourceManagerUsing.html
 /*
-        resourceManager.putProperty("dialog.owner.enabled", "false");
+        resourceManager.putProperty(MyDoggyKeySpace.WINDOW_ALWAYS_ON_TOP, "false");
         resourceManager.putProperty("ContentManagerDropTarget.enabled", "true");
 */
         resourceManager.putProperty("ContentManagerUI.ContentManagerUiListener.import", "true");

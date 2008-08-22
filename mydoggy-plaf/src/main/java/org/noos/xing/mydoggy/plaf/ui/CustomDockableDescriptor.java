@@ -22,6 +22,7 @@ import java.beans.PropertyChangeEvent;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * TODO: block anchor position...
  */
 public abstract class CustomDockableDescriptor implements DockableDescriptor {
 
@@ -190,7 +191,7 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
             releaseLocksOne();
 
             // Restore graphics
-            manager.setTempShowed(false);
+            manager.setTempShown(false);
 
             // Fire endDrag event
             if (lastAnchor != null && dsde.getDropSuccess())

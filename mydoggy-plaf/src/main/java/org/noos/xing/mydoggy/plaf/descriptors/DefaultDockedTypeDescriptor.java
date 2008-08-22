@@ -8,14 +8,13 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource implements DockedTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
+    protected ToolWindowDescriptor toolWindowDescriptor;
     protected ToolWindowActionHandler toolWindowActionHandler;
     protected boolean popupMenuEnabled;
     protected JMenu toolsMenu;
@@ -31,6 +30,7 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
     protected int minimumDockLength;
 
     protected Set<ToolWindowAnchor> lockingAnchors;
+    protected Map<String, ToolWindowAction> toolWindowActionMap;
 
 
     public DefaultDockedTypeDescriptor() {
@@ -47,6 +47,7 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         this.idVisibleOnTitleBar = true;
         this.minimumDockLength = 100;
         this.lockingAnchors = new HashSet<ToolWindowAnchor>();
+        this.toolWindowActionMap = new HashMap<String, ToolWindowAction>();
     }
 
     public DefaultDockedTypeDescriptor(ToolWindowDescriptor toolWindowDescriptor,
@@ -58,6 +59,7 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
                                        boolean idVisibleOnTitleBar,
                                        int minimumDockLength,
                                        ToolWindowAnchor[] lockingAnchors) {
+        this.toolWindowDescriptor = toolWindowDescriptor;
         this.toolsMenu = new JMenu(SwingUtil.getString("@@tool.toolsMenu"));
         this.popupMenuEnabled = popupMenuEnabled;
         this.dockLength = dockLength;
@@ -72,6 +74,8 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         this.minimumDockLength = minimumDockLength;
         this.lockingAnchors = new HashSet<ToolWindowAnchor>();
         this.lockingAnchors.addAll(Arrays.asList(lockingAnchors));
+        this.toolWindowActionMap = new HashMap<String, ToolWindowAction>();
+        initActions();
 
         parent.addPropertyChangeListener(this);
 
@@ -260,6 +264,15 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         return true;
     }
 
+    public ToolWindowAction getToolWindowAction(String id) {
+        return toolWindowActionMap.get(id);
+    }
+
+    public void addToolWindowAction(ToolWindowAction toolWindowAction) {
+        toolWindowAction.setToolWindow(toolWindowDescriptor.getToolWindow());
+        toolWindowActionMap.put(toolWindowAction.getId(), toolWindowAction);
+    }
+
     public ToolWindowTypeDescriptor cloneMe(ToolWindowDescriptor toolWindowDescriptor) {
         return new DefaultDockedTypeDescriptor(toolWindowDescriptor,
                                                this,
@@ -297,6 +310,19 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         } else if ("autoHide".equals(evt.getPropertyName())) {
             setAutoHide((Boolean) evt.getNewValue());
         }
+    }
+
+
+    protected void initActions() {
+/*
+        ToolWindowAction toolWindowAction = new DockToolWindowAction();
+        toolWindowAction.setToolWindow(toolWindowDescriptor.getToolWindow());
+        toolWindowActionMap.put(ToolWindowAction.DOCK_ACTION_ID, toolWindowAction);
+
+        toolWindowAction = new HideToolWindowAction();
+        toolWindowAction.setToolWindow(toolWindowDescriptor.getToolWindow());
+        toolWindowActionMap.put(ToolWindowAction.HIDE_ACTION_ID, toolWindowAction);
+*/
     }
 
 }

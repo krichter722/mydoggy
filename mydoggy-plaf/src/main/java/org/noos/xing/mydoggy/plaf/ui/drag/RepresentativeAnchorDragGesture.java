@@ -76,10 +76,10 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
 
                 if (newAnchor == null) {
                     updatedGhostImage = ghostImage;
-                    manager.getBar(lastAnchor).setTempShowed(false);
+                    manager.getBar(lastAnchor).setTempShown(false);
                 } else {
                     if (manager.getBar(newAnchor).getAvailableTools() == 0)
-                        manager.getBar(newAnchor).setTempShowed(true);
+                        manager.getBar(newAnchor).setTempShown(true);
 
                     switch (newAnchor) {
                         case LEFT:
@@ -143,7 +143,7 @@ public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
         releaseLocksOne();
 
         // Restore graphics
-        manager.setTempShowed(false);
+        manager.setTempShown(false);
 
         // Fire endDrag event
         descriptor.getToolBar().propertyChange(new PropertyChangeEvent(getComponent(), "endDrag", null, dsde));

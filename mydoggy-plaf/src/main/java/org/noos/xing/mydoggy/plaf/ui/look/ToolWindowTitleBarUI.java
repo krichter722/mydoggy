@@ -513,10 +513,10 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
 
             if (newAnchor != lastAnchor) {
                 if (newAnchor == null) {
-                    manager.getBar(lastAnchor).setTempShowed(false);
+                    manager.getBar(lastAnchor).setTempShown(false);
                 } else {
                     if (manager.getBar(newAnchor).getAvailableTools() == 0)
-                        manager.getBar(newAnchor).setTempShowed(true);
+                        manager.getBar(newAnchor).setTempShown(true);
                 }
 
                 lastAnchor = newAnchor;
@@ -534,7 +534,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
             releaseLocks();
 
             // Restore bars
-            manager.setTempShowed(false);
+            manager.setTempShown(false);
 
             // Clean ghost image
             cleanupGhostImage();

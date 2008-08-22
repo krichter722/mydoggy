@@ -289,7 +289,7 @@ myDoggyResourceManager.putComponentUICreator(MyDoggyKeySpace.TOOL_WINDOW_TITLE_B
                               </td>
                               <td>
                                   <p>As use can see, now we have two buttons. One is the hide buttone, the other is
-                                      a special button, if the user clicks on it then a popup menu is showed with all
+                                      a special button, if the user clicks on it then a popup menu is shown with all
                                       available actions.
                                   </p>
                                   <p>You can use the following code:</p>
