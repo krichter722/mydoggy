@@ -86,11 +86,6 @@ public class ContentWindowMultiSplitContainer extends MultiSplitTabbedContentCon
         // TODO: setup dratStart
 
         public boolean drop(Transferable transferable) {
-// TODO           if (oldTabbedContentPane != null) {
-//                oldTabbedContentPane.setTabPointerAt(-1);
-//                oldTabbedContentPane = null;
-//            }
-
             if (transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {
                 try {
                     ContentManager contentManager = toolWindowManager.getContentManager();

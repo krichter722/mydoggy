@@ -59,7 +59,6 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         wrapper.setName("@@mydoggy.dockable.tabbedpane");
         wrapper.addTab((Content) dockable, new DockablePanel(dockable, component));
 
-        // TODO: unregisterDragListener ??? 
         SwingUtil.registerDragListener(wrapper, new TabbedDragListener(wrapper));
 
         return wrapper;
@@ -283,11 +282,6 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         }
 
         public boolean drop(Transferable transferable) {
-// TODO           if (oldTabbedContentPane != null) {
-//                oldTabbedContentPane.setTabPointerAt(-1);
-//                oldTabbedContentPane = null;
-//            }
-
             if (transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {
                 try {
                     ContentManager contentManager = toolWindowManager.getContentManager();
