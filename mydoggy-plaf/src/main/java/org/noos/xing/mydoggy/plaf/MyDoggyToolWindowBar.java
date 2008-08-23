@@ -353,9 +353,9 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             }
         });
 
-        DragListener dragListener = new DragListener();
-        propertyChangeSupport.addPropertyChangeListener("startDrag", dragListener);
-        propertyChangeSupport.addPropertyChangeListener("endDrag", dragListener);
+        DragSupportListener dragSupportListener = new DragSupportListener();
+        propertyChangeSupport.addPropertyChangeListener("startDrag", dragSupportListener);
+        propertyChangeSupport.addPropertyChangeListener("endDrag", dragSupportListener);
         propertyChangeSupport.addPropertyChangeListener("maximized", new MaximizedListener());
 
         // Why doesn't this use propertyChangeSupport.add....  
@@ -1348,7 +1348,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     }
 
-    public class DragListener implements PropertyChangeListener {
+    public class DragSupportListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             if ("startDrag".equals(evt.getPropertyName())) {

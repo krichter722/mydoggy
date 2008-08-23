@@ -13,7 +13,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowRepresentativeAnchor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
-import org.noos.xing.mydoggy.plaf.ui.drag.RepresentativeAnchorDragGesture;
+import org.noos.xing.mydoggy.plaf.ui.drag.RepresentativeAnchorDragListener;
 import org.noos.xing.mydoggy.plaf.ui.translucent.TranslucentPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
@@ -245,12 +245,14 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
         descriptor.getToolWindow().addPlafPropertyChangeListener(this);
 
-        SwingUtil.registerDragGesture(c, new ToolWindowRepresentativeAnchorDragGesture(descriptor, c));
+        SwingUtil.registerDragListener(c, new ToolWindowRepresentativeAnchorDragListener(descriptor, c));
     }
 
     protected void uninstallListeners(JLabel c) {
         super.uninstallListeners(c);
 
+        SwingUtil.unregisterDragListener(c);
+        
         dockedTypeDescriptor.removePropertyChangeListener(this);
 
         c.removeMouseListener(adapter);
@@ -680,9 +682,9 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         }
     }
 
-    public class ToolWindowRepresentativeAnchorDragGesture extends RepresentativeAnchorDragGesture {
+    public class ToolWindowRepresentativeAnchorDragListener extends RepresentativeAnchorDragListener {
 
-        public ToolWindowRepresentativeAnchorDragGesture(DockableDescriptor descriptor, Component component) {
+        public ToolWindowRepresentativeAnchorDragListener(DockableDescriptor descriptor, Component component) {
             super(descriptor, component);
         }
 

@@ -98,6 +98,7 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
         super.uninstallUI(c);
 
         unistallListeners();
+        uninstallComponents();
 
         // Reset fields
         this.toolWindowTitleButtonPanel = null;
@@ -143,6 +144,9 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
         toolWindow.removePlafPropertyChangeListener(this);
     }
 
+    protected void uninstallComponents() {
+        toolWindowTitleButtonPanel.removeAll();
+    }
 
     protected Component addToolWindowAction(ToolWindowAction toolWindowAction) {
         return addToolWindowAction(toolWindowAction, -1);

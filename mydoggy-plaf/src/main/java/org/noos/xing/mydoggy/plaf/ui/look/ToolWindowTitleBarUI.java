@@ -12,7 +12,8 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleBar;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragListener;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragListenerAdapter;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
@@ -272,15 +273,16 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
         toolWindowTitleBar.addMouseListener(titleBarMouseAdapter = new TitleBarMouseAdapter(descriptor));
 
         // Register Drag Gesture
-        ToolWindowTitleBarDragGesture dragGesture = new ToolWindowTitleBarDragGesture(descriptor);
-        SwingUtil.registerDragGesture(toolWindowTitleBar, dragGesture);
-        toolWindowTitleBar.getToolWindowTabPanel().setDragGesture(dragGesture);
+        DragListener dragListener = new ToolWindowTitleBarDragListener(descriptor);
+        SwingUtil.registerDragListener(toolWindowTitleBar, dragListener);
+        toolWindowTitleBar.getToolWindowTabPanel().setDragListener(dragListener);
     }
 
     protected void uninstallListeners(JComponent c) {
         // Remove listeners
         descriptor.getToolWindow().removePlafPropertyChangeListener(this);
         descriptor.removeTypeDescriptorChangePropertyListener(this);
+        SwingUtil.unregisterDragListener(toolWindowTitleBar);
 
         toolWindowTitleBar.removeMouseListener(titleBarMouseAdapter);
     }
@@ -429,7 +431,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
 
     }
 
-    public class ToolWindowTitleBarDragGesture extends DragGestureAdapter {
+    public class ToolWindowTitleBarDragListener extends DragListenerAdapter {
         protected JComponent lastOverCmp = null;
         protected Border oldBorder = null;
 
@@ -439,7 +441,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
         protected ToolWindowAnchor lastAnchor;
 
 
-        public ToolWindowTitleBarDragGesture(ToolWindowDescriptor descriptor) {
+        public ToolWindowTitleBarDragListener(ToolWindowDescriptor descriptor) {
             super(descriptor);
             descriptor.getCleaner().addCleaner(this);
         }

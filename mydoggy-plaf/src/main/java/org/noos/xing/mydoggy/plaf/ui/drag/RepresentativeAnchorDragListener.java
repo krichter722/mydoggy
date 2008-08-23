@@ -19,12 +19,12 @@ import java.beans.PropertyChangeEvent;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class RepresentativeAnchorDragGesture extends DragGestureAdapter {
+public class RepresentativeAnchorDragListener extends DragListenerAdapter {
     protected ToolWindowAnchor lastAnchor;
     protected Component component;
 
 
-    public RepresentativeAnchorDragGesture(DockableDescriptor descriptor, Component component) {
+    public RepresentativeAnchorDragListener(DockableDescriptor descriptor, Component component) {
         super(descriptor);
         this.component = component;
     }

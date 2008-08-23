@@ -2,8 +2,8 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureInitiator;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragListener;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTabPanelUI;
 import org.noos.xing.mydoggy.plaf.ui.util.MouseEventDispatcher;
 
@@ -58,12 +58,12 @@ public class ToolWindowTabPanel extends JPanel implements Cleaner, DragGestureIn
         return toolWindowDescriptor;
     }
 
-    public void setDragGesture(DragGesture dragGesture) {
-        getUI().setDragGesture(dragGesture);
+    public void setDragListener(DragListener dragListener) {
+        getUI().setDragListener(dragListener);
     }
 
-    public DragGesture getDragGesture() {
-        return getUI().getDragGesture();
+    public DragListener getDragListener() {
+        return getUI().getDragListener();
     }
 
     public MouseEventDispatcher getMouseEventDispatcher() {

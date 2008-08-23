@@ -372,14 +372,19 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
         closeButton.addActionListener(this);
         minimizeButton.addActionListener(this);
 
-        // Register DragGesture
-        SwingUtil.registerDragGesture(toolWindowTabButton, toolWindowTabPanel.getDragGesture());
-        SwingUtil.registerDragGesture(titleLabel, toolWindowTabPanel.getDragGesture());
-        SwingUtil.registerDragGesture(minimizeButton, toolWindowTabPanel.getDragGesture());
-        SwingUtil.registerDragGesture(closeButton, toolWindowTabPanel.getDragGesture());
+        // Register DragSupportListener
+        SwingUtil.registerDragListener(toolWindowTabButton, toolWindowTabPanel.getDragListener());
+        SwingUtil.registerDragListener(titleLabel, toolWindowTabPanel.getDragListener());
+        SwingUtil.registerDragListener(minimizeButton, toolWindowTabPanel.getDragListener());
+        SwingUtil.registerDragListener(closeButton, toolWindowTabPanel.getDragListener());
     }
 
     protected void uninstallListeners() {
+        SwingUtil.unregisterDragListener(toolWindowTabButton);
+        SwingUtil.unregisterDragListener(titleLabel);
+        SwingUtil.unregisterDragListener(minimizeButton);
+        SwingUtil.unregisterDragListener(closeButton);
+
         tab.removePropertyChangeListener(this);
 
         toolWindowTabButton.removeMouseListener(toolWindowTabPanel.getMouseEventDispatcher());

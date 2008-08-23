@@ -16,8 +16,8 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabButton;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleButton;
-import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
-import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureDelegate;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragListener;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragListenerDelegate;
 import org.noos.xing.mydoggy.plaf.ui.util.MouseEventDispatcher;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -57,13 +57,20 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
     protected Component selecTabButton;
     protected PopupButton popupButton;
 
-    protected DragGestureDelegate dragGestureDelegate;
     protected MouseEventDispatcher mouseEventDispatcher;
-
     protected PropertyChangeBridge propertyChangeBridge;
+
+    // Drag gesture
+
+    protected DragListenerDelegate dragListenerDelegate;
 
 
     public ToolWindowTabPanelUI() {
+    }
+
+
+    public void cleanup() {
+        uninstallUI(toolWindowTabPanel);
     }
 
 
@@ -74,9 +81,21 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         this.toolWindow = descriptor.getToolWindow();
 
         this.mouseEventDispatcher = new MouseEventDispatcher();
-        this.dragGestureDelegate = new DragGestureDelegate();
+        this.dragListenerDelegate = new DragListenerDelegate();
 
         super.installUI(c);
+    }
+
+    public void uninstallUI(JComponent c) {
+        super.uninstallUI(c);
+
+        //Finalize
+        toolWindow = null;
+        descriptor = null;
+
+        selectedTab = null;
+        selecTabButton = null;
+        dragListenerDelegate = null;
     }
 
     protected void installDefaults(JPanel p) {
@@ -86,46 +105,11 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         installListeners();
     }
 
-    public void cleanup() {
-        //Finalize
-        toolWindow = null;
-        descriptor = null;
+    protected void uninstallDefaults(JPanel p) {
+        super.uninstallDefaults(p);
 
-        selectedTab = null;
-        selecTabButton = null;
-        dragGestureDelegate = null;
+        uninstallListeners();
     }
-
-
-    public void setDragGesture(DragGesture dragGesture) {
-        dragGestureDelegate.setDragGesture(dragGesture);
-    }
-
-    public DragGesture getDragGesture() {
-        return dragGestureDelegate;
-    }
-
-    public MouseEventDispatcher getMouseEventDispatcher() {
-        return mouseEventDispatcher;
-    }
-
-    public void addEventDispatcherlListener(EventListener eventListener) {
-        mouseEventDispatcher.addListener(eventListener);
-    }
-
-    public void removeEventDispatcherlListener(EventListener eventListener) {
-        mouseEventDispatcher.removeListener(eventListener);
-    }
-
-    public void ensureVisible(final Rectangle bounds) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                bounds.x -= viewport.getViewPosition().x;
-                viewport.scrollRectToVisible(bounds);
-            }
-        });
-    }
-
 
     protected void installComponents() {
         toolWindowTabPanel.setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL, 1, 14},
@@ -175,8 +159,43 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         viewport.addMouseMotionListener(mouseEventDispatcher);
 
         // Register drag gesture
-        SwingUtil.registerDragGesture(viewport, dragGestureDelegate);
+        SwingUtil.registerDragListener(viewport, dragListenerDelegate);
     }
+
+    protected void uninstallListeners() {
+        SwingUtil.unregisterDragListener(viewport);
+    }
+
+
+    public void setDragListener(DragListener dragListener) {
+        dragListenerDelegate.setDragListener(dragListener);
+    }
+
+    public DragListener getDragListener() {
+        return dragListenerDelegate;
+    }
+
+    public MouseEventDispatcher getMouseEventDispatcher() {
+        return mouseEventDispatcher;
+    }
+
+    public void addEventDispatcherlListener(EventListener eventListener) {
+        mouseEventDispatcher.addListener(eventListener);
+    }
+
+    public void removeEventDispatcherlListener(EventListener eventListener) {
+        mouseEventDispatcher.removeListener(eventListener);
+    }
+
+    public void ensureVisible(final Rectangle bounds) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                bounds.x -= viewport.getViewPosition().x;
+                viewport.scrollRectToVisible(bounds);
+            }
+        });
+    }
+
 
     protected void initTabs() {
         for (ToolWindowTab tab : toolWindow.getToolWindowTabs())
@@ -268,7 +287,6 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
 
         ((TableLayout) toolWindowTabPanel.getLayout()).setColumn(2, visible ? 14 : 0);
     }
-
 
 
     public class TabPanelToolWindowListener implements ToolWindowListener, Cleaner {

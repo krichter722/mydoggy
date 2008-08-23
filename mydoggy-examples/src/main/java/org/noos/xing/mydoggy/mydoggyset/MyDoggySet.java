@@ -684,9 +684,9 @@ public class MyDoggySet {
                         break;
                 }
 
-                registerDragGesture(memoryUsage);
-                registerDragGesture(gc);
-                registerDragGesture(this);
+                registerDragListener(memoryUsage);
+                registerDragListener(gc);
+                registerDragListener(this);
             }
 
             public void setSleepTime(int sleepTime) {

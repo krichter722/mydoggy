@@ -3,7 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
-import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragListenerAdapter;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -59,7 +59,8 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         wrapper.setName("@@mydoggy.dockable.tabbedpane");
         wrapper.addTab((Content) dockable, new DockablePanel(dockable, component));
 
-        SwingUtil.registerDragGesture(wrapper, new TabbedDragGesture(wrapper));
+        // TODO: unregisterDragListener ??? 
+        SwingUtil.registerDragListener(wrapper, new TabbedDragListener(wrapper));
 
         return wrapper;
     }
@@ -158,12 +159,12 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
     }
 
 
-    public class TabbedDragGesture extends DragGestureAdapter {
+    public class TabbedDragListener extends DragListenerAdapter {
         protected TabbedContentPane tabbedContentPane;
         protected int dragTabIndex;
 
 
-        public TabbedDragGesture(TabbedContentPane tabbedContentPane) {
+        public TabbedDragListener(TabbedContentPane tabbedContentPane) {
             super(toolWindowManager);
             this.tabbedContentPane = tabbedContentPane;
         }

@@ -11,7 +11,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
 import org.noos.xing.mydoggy.plaf.ui.content.action.NextContentAction;
 import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
-import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragListenerAdapter;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -375,8 +375,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
             internalPropertyChangeSupport.addPropertyChangeListener("minimized", new MinimizedListener());
             contentUIListener = new ContentUIListener();
 
-            SwingUtil.registerDragGesture(tabbedContentPane,
-                                          new TabbedContentManagerDragGesture());
+            SwingUtil.registerDragListener(tabbedContentPane,
+                                          new TabbedContentManagerDragListener());
 
         }
 
@@ -385,6 +385,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
     }
 
     protected void removeListeners() {
+        SwingUtil.unregisterDragListener(tabbedContentPane);
+
         KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(
                 "focusOwner", focusOwnerPropertyChangeListener);
     }
@@ -824,9 +826,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
     }
 
 
-    public class TabbedContentManagerDragGesture extends DragGestureAdapter {
+    public class TabbedContentManagerDragListener extends DragListenerAdapter {
 
-        public TabbedContentManagerDragGesture() {
+        public TabbedContentManagerDragListener() {
             super(toolWindowManager);
         }
 

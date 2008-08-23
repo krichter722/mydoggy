@@ -8,9 +8,9 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.cleaner.CleanerAggregator;
 import org.noos.xing.mydoggy.plaf.cleaner.DefaultCleanerAggregator;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
-import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragListener;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
-import org.noos.xing.mydoggy.plaf.ui.drag.RepresentativeAnchorDragGesture;
+import org.noos.xing.mydoggy.plaf.ui.drag.RepresentativeAnchorDragListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +33,7 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
     protected JComponent representativeAnchor;
     protected int anchorIndex;
 
-    protected DragGesture dragGesture;
+    protected DragListener dragListener;
     protected CleanerAggregator cleaner;
 
 
@@ -163,23 +163,23 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
     }
 
 
-    protected void registerDragGesture(Component c) {
-        if (dragGesture == null)
-            initDragGesture();
+    protected void registerDragListener(Component c) {
+        if (dragListener == null)
+            initDragListener();
 
         DragSource dragSource = new DragSource();
-        dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, dragGesture);
-        dragSource.addDragSourceMotionListener(dragGesture);
+        dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, dragListener);
+        dragSource.addDragSourceMotionListener(dragListener);
     }
 
-    protected void initDragGesture() {
-        this.dragGesture = new CustomRepresentativeAnchorDragGesture(this);
+    protected void initDragListener() {
+        this.dragListener = new CustomRepresentativeAnchorDragListener(this);
     }
 
 
-    public class CustomRepresentativeAnchorDragGesture extends RepresentativeAnchorDragGesture {
+    public class CustomRepresentativeAnchorDragListener extends RepresentativeAnchorDragListener {
 
-        public CustomRepresentativeAnchorDragGesture(DockableDescriptor descriptor) {
+        public CustomRepresentativeAnchorDragListener(DockableDescriptor descriptor) {
             super(descriptor, null);
         }
 
