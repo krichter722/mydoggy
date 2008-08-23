@@ -58,7 +58,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
     protected DragSource dragSource = new DragSource();
 
-    protected Rectangle lineRect = new Rectangle();
+    protected Point tabPointerLocation = new Point();
     protected Image tabPointer;
     protected int dragTabIndex = -1;
     protected int indexAtLocation;
@@ -129,11 +129,11 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             else
                 initTargetTopBottomLine(indexAtLocation);
 
-            g.drawImage(tabPointer, lineRect.x, lineRect.y, this);
+            g.drawImage(tabPointer, tabPointerLocation.x, tabPointerLocation.y, this);
         }
 
         if (dragTabIndex >= 0) {
-            g.drawImage(tabPointer, lineRect.x, lineRect.y, this);
+            g.drawImage(tabPointer, tabPointerLocation.x, tabPointerLocation.y, this);
         }
     }
 
@@ -355,36 +355,6 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         return (index != -1) ? getContentAt(index) : null;
     }
 
-    public void setTabPointerAt(int index) {
-        // TODO: do better...
-        dragTabIndex = 1;
-        if (getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM) {
-            if (index < 0) {
-                dragTabIndex = -1;
-
-                lineRect.setRect(0, 0, 0, 0);
-            } else if (index == getTabCount()) {
-                Rectangle rect = getBoundsAt(getTabCount() - 1);
-
-                lineRect.setRect(rect.x + rect.width - LINEWIDTH / 2, rect.y, LINEWIDTH, rect.height);
-            } else if (index == 0) {
-                Rectangle rect = getBoundsAt(0);
-
-                lineRect.setRect(-LINEWIDTH / 2, rect.y, LINEWIDTH, rect.height);
-            } else {
-                Rectangle rect = getBoundsAt(index - 1);
-
-                lineRect.setRect(rect.x + rect.width - LINEWIDTH / 2, rect.y, LINEWIDTH, rect.height);
-            }
-        } else
-            initTargetTopBottomLine(index);
-
-        repaint();
-
-        if (index < 0)
-            dragTabIndex = -1;
-    }
-
     public void addTabbedContentPaneListener(TabbedContentPaneListener listener) {
         listenerList.add(TabbedContentPaneListener.class, listener);
     }
@@ -440,31 +410,31 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
     protected void initTargetLeftRightLine(int next) {
         if (next < 0 || dragTabIndex == next || next - dragTabIndex == 1) {
-            lineRect.setRect(0, 0, 0, 0);
+            tabPointerLocation.setLocation(0, 0);
         } else if (next == getTabCount()) {
             Rectangle rect = getBoundsAt(getTabCount() - 1);
-            lineRect.setRect(rect.x + rect.width - LINEWIDTH / 2, rect.y, LINEWIDTH, rect.height);
+            tabPointerLocation.setLocation(rect.x + rect.width - LINEWIDTH / 2, rect.y);
         } else if (next == 0) {
             Rectangle rect = getBoundsAt(0);
-            lineRect.setRect(-LINEWIDTH / 2, rect.y, LINEWIDTH, rect.height);
+            tabPointerLocation.setLocation(-LINEWIDTH / 2, rect.y);
         } else {
             Rectangle rect = getBoundsAt(next - 1);
-            lineRect.setRect(rect.x + rect.width - LINEWIDTH / 2, rect.y, LINEWIDTH, rect.height);
+            tabPointerLocation.setLocation(rect.x + rect.width - LINEWIDTH / 2, rect.y);
         }
     }
 
     protected void initTargetTopBottomLine(int next) {
         if (next < 0 || dragTabIndex == next || next - dragTabIndex == 1) {
-            lineRect.setRect(0, 0, 0, 0);
+            tabPointerLocation.setLocation(0, 0);
         } else if (next == getTabCount()) {
             Rectangle rect = getBoundsAt(getTabCount() - 1);
-            lineRect.setRect(rect.x, rect.y + rect.height - LINEWIDTH / 2, rect.width, LINEWIDTH);
+            tabPointerLocation.setLocation(rect.x, rect.y + rect.height - LINEWIDTH / 2);
         } else if (next == 0) {
             Rectangle rect = getBoundsAt(0);
-            lineRect.setRect(rect.x, -LINEWIDTH / 2, rect.width, LINEWIDTH);
+            tabPointerLocation.setLocation(rect.x, -LINEWIDTH / 2);
         } else {
             Rectangle rect = getBoundsAt(next - 1);
-            lineRect.setRect(rect.x, rect.y + rect.height - LINEWIDTH / 2, rect.width, LINEWIDTH);
+            tabPointerLocation.setLocation(rect.x, rect.y + rect.height - LINEWIDTH / 2);
         }
     }
 
@@ -916,7 +886,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         }
 
         public void dragExit(DragSourceEvent e) {
-            lineRect.setRect(0, 0, 0, 0);
+            tabPointerLocation.setLocation(0, 0);
         }
 
         public void dragOver(DragSourceDragEvent e) {
@@ -944,7 +914,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             }
 
             // cleanup
-            lineRect.setRect(0, 0, 0, 0);
+            tabPointerLocation.setLocation(0, 0);
             dragTabIndex = -1;
 
             cleanupGhostImage();
