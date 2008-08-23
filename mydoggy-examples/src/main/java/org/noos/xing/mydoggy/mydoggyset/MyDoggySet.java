@@ -45,7 +45,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Enumeration;
 import java.util.Locale;
-import java.util.Random;
 import java.util.ResourceBundle;
 
 /**
@@ -53,7 +52,9 @@ import java.util.ResourceBundle;
  */
 public class MyDoggySet {
     protected JFrame frame;
+
     protected ToolWindowManager toolWindowManager;
+
     protected ViewContext myDoggySetContext;
     protected DockableDescriptor memoryMonitorDescriptor;
 
@@ -420,7 +421,7 @@ public class MyDoggySet {
         resourceManager.putProperty("ContentManagerDropTarget.enabled", "true");
 */
         resourceManager.putProperty("ContentManagerUI.ContentManagerUiListener.import", "true");
-        resourceManager.putBoolean("mydoggy.preview.full", true);
+        resourceManager.putBoolean(MyDoggyKeySpace.TOOL_WINDOW_PREVIEW_FULL, true);
         resourceManager.setUserBundle(new ResourceBundle() {
             protected Object handleGetObject(String key) {
                 if ("Tool 3".equals(key))
@@ -435,7 +436,7 @@ public class MyDoggySet {
 
 /*
         //TODO: move this property name to a class...
-        resourceManager.putProperty("drag.icon.transparency.enabled", "false");
+        resourceManager.putProperty(MyDoggyKeySpace.DRAG_ICON_TRANSPARENCY, "false");
         resourceManager.putProperty("drag.icon.useDefault", "true");
         resourceManager.putBoolean("drag.toolwindow.asTab", true);
         resourceManager.putBoolean(MyDoggyKeySpace.DRAG_ENABLED, false);
@@ -698,219 +699,6 @@ public class MyDoggySet {
     }
 
 
-    public static class MultiSplitRandomConstraints implements Runnable {
-        MyDoggySet myDoggySet;
-
-        public MultiSplitRandomConstraints(MyDoggySet myDoggySet) {
-            this.myDoggySet = myDoggySet;
-        }
-
-        public void run() {
-            try {
-                Random random = new Random();
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        myDoggySet.getMyDoggySetContext().put(ToolWindowManager.class, null);
-                    }
-                });
-                Thread.sleep(2000);
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        myDoggySet.getMyDoggySetContext().put(ToolWindow.class, null);
-                    }
-                });
-                Thread.sleep(2000);
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        myDoggySet.getMyDoggySetContext().put(Content.class, null);
-                    }
-                });
-
-                Thread.sleep(2000);
-                for (int i = 0; i < 200; i++) {
-                    int index = random.nextInt(4);
-                    Content content = null;
-                    switch (index) {
-                        case 0:
-                            content = myDoggySet.getToolWindowManager().getContentManager().getContent("Welcome");
-                            break;
-                        case 1:
-                            content = myDoggySet.getToolWindowManager().getContentManager().getContent("Manager");
-                            break;
-                        case 2:
-                            content = myDoggySet.getToolWindowManager().getContentManager().getContent("Tools");
-                            break;
-                        case 3:
-                            content = myDoggySet.getToolWindowManager().getContentManager().getContent("Contents");
-                            break;
-                    }
-
-
-                    index = random.nextInt(2);
-                    Content contentOn = null;
-                    switch (index) {
-                        case 0:
-                            index = random.nextInt(4);
-                            switch (index) {
-                                case 0:
-                                    contentOn = myDoggySet.getToolWindowManager().getContentManager().getContent("Welcome");
-                                    break;
-                                case 1:
-                                    contentOn = myDoggySet.getToolWindowManager().getContentManager().getContent("Manager");
-                                    break;
-                                case 2:
-                                    contentOn = myDoggySet.getToolWindowManager().getContentManager().getContent("Tools");
-                                    break;
-                                case 3:
-                                    contentOn = myDoggySet.getToolWindowManager().getContentManager().getContent("Contents");
-                                    break;
-                            }
-                            if (contentOn == content)
-                                contentOn = null;
-                            break;
-
-                    }
-
-                    index = random.nextInt(2);
-                    AggregationPosition aggregationPosition = null;
-                    switch (index) {
-                        case 0:
-                            index = random.nextInt(5);
-                            switch (index) {
-                                case 0:
-                                    aggregationPosition = AggregationPosition.BOTTOM;
-                                    break;
-                                case 1:
-                                    aggregationPosition = AggregationPosition.TOP;
-                                    break;
-                                case 2:
-                                    aggregationPosition = AggregationPosition.LEFT;
-                                    break;
-                                case 3:
-                                    aggregationPosition = AggregationPosition.RIGHT;
-                                    break;
-                                case 4:
-                                    aggregationPosition = AggregationPosition.DEFAULT;
-                                    break;
-                            }
-                            if (contentOn == content)
-                                contentOn = null;
-                            break;
-
-                    }
-
-                    MultiSplitConstraint constraint = new MultiSplitConstraint(
-                            contentOn, aggregationPosition
-                    );
-
-                    StringBuffer sb = new StringBuffer();
-                    sb.append("apply(\"").append(content.getId()).append("\",");
-                    if (contentOn != null)
-                        sb.append("\"").append(contentOn.getId()).append("\",");
-                    if (aggregationPosition != null)
-                        sb.append(aggregationPosition);
-                    sb.append(");");
-
-                    System.out.println(sb);
-
-                    content.getContentUI().setConstraints(constraint);
-
-                    Thread.sleep(500);
-                }
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static class TabbedRandomConstraints implements Runnable {
-        MyDoggySet myDoggySet;
-
-        public TabbedRandomConstraints(MyDoggySet myDoggySet) {
-            this.myDoggySet = myDoggySet;
-        }
-
-        public void run() {
-            try {
-                Random random = new Random();
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        myDoggySet.getMyDoggySetContext().put(ToolWindowManager.class, null);
-                    }
-                });
-                Thread.sleep(2000);
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        myDoggySet.getMyDoggySetContext().put(ToolWindow.class, null);
-                    }
-                });
-                Thread.sleep(2000);
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        myDoggySet.getMyDoggySetContext().put(Content.class, null);
-                    }
-                });
-
-                Thread.sleep(2000);
-                for (int i = 0; i < 200; i++) {
-                    int index = random.nextInt(4);
-                    Content content = null;
-                    switch (index) {
-                        case 0:
-                            content = myDoggySet.getToolWindowManager().getContentManager().getContent("Welcome");
-                            break;
-                        case 1:
-                            content = myDoggySet.getToolWindowManager().getContentManager().getContent("Manager");
-                            break;
-                        case 2:
-                            content = myDoggySet.getToolWindowManager().getContentManager().getContent("Tools");
-                            break;
-                        case 3:
-                            content = myDoggySet.getToolWindowManager().getContentManager().getContent("Contents");
-                            break;
-                    }
-
-
-                    index = random.nextInt(2);
-                    Content contentOn = null;
-                    switch (index) {
-                        case 0:
-                            index = random.nextInt(4);
-                            switch (index) {
-                                case 0:
-                                    contentOn = myDoggySet.getToolWindowManager().getContentManager().getContent("Welcome");
-                                    break;
-                                case 1:
-                                    contentOn = myDoggySet.getToolWindowManager().getContentManager().getContent("Manager");
-                                    break;
-                                case 2:
-                                    contentOn = myDoggySet.getToolWindowManager().getContentManager().getContent("Tools");
-                                    break;
-                                case 3:
-                                    contentOn = myDoggySet.getToolWindowManager().getContentManager().getContent("Contents");
-                                    break;
-                            }
-                            if (contentOn == content)
-                                contentOn = null;
-                            break;
-
-                    }
-
-                    index = random.nextInt(4);
-
-                    content.getContentUI().setConstraints(index);
-
-                    Thread.sleep(500);
-                }
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @SuppressWarnings("serial")
     public class MainPanel extends JPanel {
 
         protected JXTitledPanel navigatorPanel = null;

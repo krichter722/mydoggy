@@ -12,5 +12,7 @@ public interface MultiDockableOwner {
     Dockable getDockableAt(Point point);
 
     int getDockableIndex();
-    
+
+    void setPointerVisible(boolean visible);
+
 }

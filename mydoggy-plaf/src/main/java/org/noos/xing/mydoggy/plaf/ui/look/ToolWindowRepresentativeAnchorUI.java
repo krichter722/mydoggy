@@ -533,7 +533,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
 
         protected void setPreviewPanelBounds(RootPaneContainer rootPaneContainer) {
-            if (SwingUtil.getBoolean("mydoggy.preview.full", false))
+            if (SwingUtil.getBoolean(MyDoggyKeySpace.TOOL_WINDOW_PREVIEW_FULL, false))
                 setFullPreviewBounds();
             else
                 setThumbnailPreviewBounds(rootPaneContainer);
@@ -740,7 +740,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                 }
             } finally {
                 // End dockable drop gesture..
-                dockableDropDragExit();
+                dockableDropDragEnd();
             }
         }
 
