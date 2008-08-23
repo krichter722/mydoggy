@@ -884,6 +884,8 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
 
         public void dragGestureRecognized(DragGestureEvent dge) {
+            super.dragGestureRecognized(dge);
+
             Point tabPt = dge.getDragOrigin();
 
             dragTabIndex = indexAtLocation(tabPt.x, tabPt.y);

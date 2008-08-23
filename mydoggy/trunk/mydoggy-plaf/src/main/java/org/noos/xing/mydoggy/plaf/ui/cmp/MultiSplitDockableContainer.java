@@ -141,7 +141,6 @@ public class MultiSplitDockableContainer extends JPanel {
                     // The requeste is to add more than one dockable on the same leaf... no need to request a new leaf name
                     addToWrapper(componentWrapper, dockable, aggregationIndexLocation, content);
 
-                    // TODO: why this
                     repaintMultiSplit(toolWindowManager.getClientProperty(MyDoggyKeySpace.PERSISTENCE_DELEGATE_PARSING) != null,
                                       multiSplitPaneModelRoot);
 
@@ -515,11 +514,8 @@ public class MultiSplitDockableContainer extends JPanel {
             throw new IllegalArgumentException("Cannot remove dockable. [dockable null]");
 
         DockableEntry dockableEntry = entries.get(dockable);
-        if (dockableEntry == null) {
-            // TODO: removed temponary...check
-//            throw new IllegalArgumentException("Cannot remove the dockable. No Entry for it. [id : " + dockable.getId() + "]");
+        if (dockableEntry == null)
             return null;
-        }
 
         // Store layout
         if (storeLayout) {

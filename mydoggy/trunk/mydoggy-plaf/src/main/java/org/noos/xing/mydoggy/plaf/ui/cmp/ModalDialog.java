@@ -5,7 +5,6 @@ import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingResizeMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
@@ -41,14 +40,12 @@ public class ModalDialog extends JDialog implements ModalWindow,
     protected TransparencyAnimation transparencyAnimation;
 
 
-    public ModalDialog(MyDoggyToolWindowManager toolWindowManager, Window owner, Component returnFocus, boolean modal) {
+    public ModalDialog(MyDoggyToolWindowManager toolWindowManager, Window owner, boolean modal) {
         super(owner instanceof Frame ? (Frame) owner : null);
 
         this.toolWindowManager = toolWindowManager;
-        this.returnFocus = returnFocus;
 
         setUndecorated(true);
-        setAlwaysOnTop(SwingUtil.getBoolean(MyDoggyKeySpace.WINDOW_ALWAYS_ON_TOP, true));
         setFocusableWindowState(true);
         setModal(modal);
 
@@ -198,7 +195,7 @@ public class ModalDialog extends JDialog implements ModalWindow,
         dockableDropPanel.setComponent(multiSplitDockableContainer);
 
         ((JComponent) getContentPane()).setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        setLayout(new ExtendedTableLayout(new double[][]{{0, TableLayout.FILL, 0}, {0, TableLayout.FILL, 0}}));
+        setLayout(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
         add(dockableDropPanel, "1,1,FULL,FULL");
 
         this.transparencyManager = SwingUtil.getTransparencyManager();

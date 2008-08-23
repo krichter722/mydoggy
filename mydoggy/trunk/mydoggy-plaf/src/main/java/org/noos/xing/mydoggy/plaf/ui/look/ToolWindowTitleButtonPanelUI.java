@@ -1,13 +1,290 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
+import info.clearthought.layout.TableLayout;
+import info.clearthought.layout.TableLayoutConstraints;
+import org.noos.xing.mydoggy.DockedTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindowAction;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
+import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
+import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleButton;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleButtonPanel;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicPanelUI;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public abstract class ToolWindowTitleButtonPanelUI extends BasicPanelUI {
+public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleaner,
+                                                                          PropertyChangeListener {
 
-    public abstract Component getFocusable();
+    public static ComponentUI createUI(JComponent c) {
+        return new ToolWindowTitleButtonPanelUI();
+    }
+
+
+    protected ToolWindowTitleButtonPanel toolWindowTitleButtonPanel;
+    protected MyDoggyToolWindow toolWindow;
+    protected ToolWindowDescriptor descriptor;
+
+    protected TableLayout containerLayout;
+    protected Component focusable;
+
+
+    public ToolWindowTitleButtonPanelUI() {
+    }
+
+
+    public void propertyChange(PropertyChangeEvent evt) {
+        String propertyName = evt.getPropertyName();
+
+        if ("visibleOnTitleBar".equals(propertyName)) {
+            ToolWindowAction toolWindowAction = (ToolWindowAction) evt.getSource();
+
+            setVisible((Component) toolWindowAction.getValue("component"),
+                       (Boolean) evt.getNewValue());
+        } else if ("toolWindowAction".equals(propertyName)) {
+            if (evt.getNewValue() != null) {
+                // Add the action
+                ToolWindowAction toolWindowAction = (ToolWindowAction) evt.getNewValue();
+                if (toolWindowAction.isVisibleOnTitleBar()) {
+
+                    int index = -1;
+                    if (evt instanceof UserPropertyChangeEvent) {
+                        UserPropertyChangeEvent upce = (UserPropertyChangeEvent) evt;
+                        index = (Integer) ((Object[]) upce.getUserObject())[0];
+                    }
+
+                    addToolWindowAction(toolWindowAction, index);
+
+                    SwingUtil.repaint(toolWindowTitleButtonPanel);
+                }
+            } else {
+                // Remove the action
+                removeToolWindowAction((ToolWindowAction) evt.getOldValue());
+            }
+
+        }
+    }
+
+    public void cleanup() {
+        uninstallUI(toolWindowTitleButtonPanel);
+    }
+
+    public Component getFocusable() {
+        return focusable;
+    }
+
+
+    public void installUI(JComponent c) {
+        // Init fields...
+        this.toolWindowTitleButtonPanel = (ToolWindowTitleButtonPanel) c;
+
+        this.descriptor = toolWindowTitleButtonPanel.getToolWindowDescriptor();
+        this.toolWindow = descriptor.getToolWindow();
+
+        super.installUI(c);
+    }
+
+    public void uninstallUI(JComponent c) {
+        super.uninstallUI(c);
+
+        unistallListeners();
+
+        // Reset fields
+        this.toolWindowTitleButtonPanel = null;
+        this.descriptor = null;
+        this.toolWindow = null;
+    }
+
+
+    protected void installDefaults(JPanel p) {
+        super.installDefaults(p);
+
+        toolWindowTitleButtonPanel.setFocusable(false);
+
+        installComponents();
+        installListeners();
+    }
+
+    protected void installComponents() {
+        // Define the layout
+        toolWindowTitleButtonPanel.setLayout(containerLayout = new ExtendedTableLayout(new double[][]{{0, 0}, {1, 14, 1}}, false));
+        toolWindowTitleButtonPanel.setOpaque(false);
+
+        // Add the default set of actions
+        DockedTypeDescriptor dockedTypeDescriptor = descriptor.getDockedTypeDescriptor();
+
+        focusable = addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.HIDE_ACTION_ID));
+        addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.MAXIMIZE_ACTION_ID));
+        addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.PIN_ACTION_ID));
+        addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.FLOATING_ACTION_ID));
+        addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.DOCK_ACTION_ID));
+
+    }
+
+    protected void installListeners() {
+        descriptor.getDockedTypeDescriptor().addPropertyChangeListener(this);
+        toolWindow.addPlafPropertyChangeListener(this);
+
+        descriptor.getCleaner().addCleaner(this);
+    }
+
+    protected void unistallListeners() {
+        descriptor.getDockedTypeDescriptor().removePropertyChangeListener(this);
+        toolWindow.removePlafPropertyChangeListener(this);
+    }
+
+
+    protected Component addToolWindowAction(ToolWindowAction toolWindowAction) {
+        return addToolWindowAction(toolWindowAction, -1);
+    }
+
+    protected Component addToolWindowAction(ToolWindowAction toolWindowAction, int index) {
+        int col;
+
+        if (index <= -1 || index >= toolWindowTitleButtonPanel.getComponentCount() - 1) {
+            double[] oldCols = containerLayout.getColumn();
+            double[] newCols;
+
+            if (oldCols.length == 2) {
+                // No actions are in place
+                newCols = new double[]{0, toolWindowAction.getWidth(), 0};
+                col = 1;
+            } else {
+                newCols = new double[oldCols.length + 2];
+
+                // Move all components
+                for (Component component : toolWindowTitleButtonPanel.getComponents()) {
+                    TableLayoutConstraints constraints = containerLayout.getConstraints(component);
+                    if (constraints.col1 >= 1) {
+                        constraints.col1 += 2;
+                        constraints.col2 = constraints.col1;
+                        containerLayout.setConstraints(component, constraints);
+                    }
+                }
+
+                // Prepare the space at the beginning of neCols
+                System.arraycopy(oldCols, 1, newCols, 3, oldCols.length - 1);
+
+                // Setup the columns for the new actions
+                newCols[1] = toolWindowAction.getWidth();
+                newCols[2] = 1;
+
+                // setup the column destination
+                col = 1;
+            }
+            containerLayout.setColumn(newCols);
+        } else {
+            int colIndex = 1 + ((toolWindowTitleButtonPanel.getComponentCount() - 1 - index) * 2);
+
+            for (Component component : toolWindowTitleButtonPanel.getComponents()) {
+                TableLayoutConstraints constraints = containerLayout.getConstraints(component);
+                if (constraints.col1 >= colIndex) {
+                    constraints.col1 += 2;
+                    constraints.col2 = constraints.col1;
+                    containerLayout.setConstraints(component, constraints);
+                }
+            }
+
+            double[] oldCols = containerLayout.getColumn();
+            double[] newCols;
+
+            newCols = new double[oldCols.length + 2];
+            System.arraycopy(oldCols, 0, newCols, 0, colIndex);
+            System.arraycopy(oldCols, colIndex, newCols, colIndex + 2, oldCols.length - colIndex - 1);
+            newCols[colIndex] = toolWindowAction.getWidth();
+            newCols[colIndex + 1] = 1;
+            col = colIndex;
+
+            containerLayout.setColumn(newCols);
+        }
+
+        ToolWindowTitleButton button = new ToolWindowTitleButton(toolWindowAction);
+        button.setFocusable(false);
+        button.setName((String) toolWindowAction.getValue("action.name"));
+
+        toolWindowAction.putValue("component", button);
+        toolWindowAction.addPropertyChangeListener(this);
+
+        toolWindowTitleButtonPanel.add(button, col + ",1,FULL,FULL");
+
+        return button;
+    }
+
+    protected void removeToolWindowAction(ToolWindowAction toolWindowAction) {
+        for (Component component : toolWindowTitleButtonPanel.getComponents()) {
+            ToolWindowTitleButton toolWindowTitleButton = (ToolWindowTitleButton) component;
+
+            if (toolWindowTitleButton.getAction() == toolWindowAction) {
+                // We found the action
+
+                double[] newCols = null;
+                if (toolWindowTitleButtonPanel.getComponentCount() == 1) {
+                    newCols = new double[]{0, 0};
+                } else {
+                    TableLayoutConstraints constraints = containerLayout.getConstraints(toolWindowTitleButton);
+
+                    double[] oldCols = containerLayout.getColumn();
+
+                    if (constraints.col1 == oldCols.length - 2) {
+                        newCols = new double[oldCols.length - 1];
+                        System.arraycopy(oldCols, 0, newCols, 0, constraints.col1);
+                        System.arraycopy(oldCols, constraints.col1 + 1, newCols, constraints.col1, 1);
+                    } else {
+                        for (Component cmp : toolWindowTitleButtonPanel.getComponents()) {
+                            TableLayoutConstraints cst = containerLayout.getConstraints(cmp);
+                            if (cst.col1 >= constraints.col1 + 2) {
+                                cst.col1 -= 2;
+                                cst.col2 = cst.col1;
+                                containerLayout.setConstraints(cmp, cst);
+                            }
+                        }
+
+                        newCols = new double[oldCols.length - 2];
+                        System.arraycopy(oldCols, 0, newCols, 0, constraints.col1);
+                        System.arraycopy(oldCols, constraints.col1 + 2, newCols, constraints.col1, oldCols.length - constraints.col1 - 2);
+                    }
+                }
+                
+                containerLayout.setColumn(newCols);
+                toolWindowTitleButtonPanel.remove(toolWindowTitleButton);
+
+                SwingUtil.revalidate(toolWindowTitleButtonPanel.getParent());
+                SwingUtil.repaint(toolWindowTitleButtonPanel);
+                break;
+            }
+
+        }
+
+    }
+
+    protected void setVisible(Component component, boolean visible) {
+        for (Component cmp : toolWindowTitleButtonPanel.getComponents()) {
+            if (cmp == component) {
+                if (visible) {
+                    int col = containerLayout.getConstraints(component).col1;
+                    containerLayout.setColumn(col, 13);
+                    if (col != containerLayout.getColumn().length - 1)
+                        containerLayout.setColumn(col + 1, 1);
+                } else {
+                    int col = containerLayout.getConstraints(component).col1;
+                    containerLayout.setColumn(col, 0);
+                    if (col != containerLayout.getColumn().length - 1)
+                        containerLayout.setColumn(col + 1, 0);
+                }
+            }
+        }
+        SwingUtil.repaint(toolWindowTitleButtonPanel);
+
+    }
 
 }

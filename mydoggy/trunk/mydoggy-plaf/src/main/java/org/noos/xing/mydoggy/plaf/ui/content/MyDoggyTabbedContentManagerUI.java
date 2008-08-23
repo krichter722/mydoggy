@@ -831,6 +831,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
 
         public void dragGestureRecognized(DragGestureEvent dge) {
+            super.dragGestureRecognized(dge);
+            
             // Acquire locks
             if (!acquireLocks())
                 return;

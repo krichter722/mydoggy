@@ -14,13 +14,13 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class DockToolWindowAction extends ToolWindowAction implements PropertyChangeListener {
+public class DockToolWindowAction extends ToolWindowAction implements PropertyChangeListener, PlafToolWindowAction  {
 
     protected JCheckBoxMenuItem menuItem;
 
     public DockToolWindowAction() {
         super(DOCK_ACTION_ID, UIManager.getIcon(MyDoggyKeySpace.DOCKED_INACTIVE));
-        setTooltipText("@@tool.tooltip.undock");
+        setTooltipText(SwingUtil.getString("@@tool.tooltip.undock"));
     }
 
 

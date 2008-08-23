@@ -357,6 +357,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 floatingDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(floatingTypeDescriptor.isIdVisibleOnTitleBar()));
                 floatingDescriptorAttributes.addAttribute(null, "autoHide", null, null, String.valueOf(floatingTypeDescriptor.isAutoHide()));
                 floatingDescriptorAttributes.addAttribute(null, "addToTaskBar", null, null, String.valueOf(floatingTypeDescriptor.isAddToTaskBar()));
+                floatingDescriptorAttributes.addAttribute(null, "alwaysOnTop", null, null, String.valueOf(floatingTypeDescriptor.isAlwaysOnTop()));
 
                 Point point = floatingTypeDescriptor.getLocation();
                 Dimension dimension = floatingTypeDescriptor.getSize();
@@ -530,6 +531,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     contentAttributes.addAttribute(null, "transparentDelay", null, null, String.valueOf(contentUI.getTransparentDelay()));
                     contentAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(contentUI.getTransparentRatio()));
                     contentAttributes.addAttribute(null, "addToTaskBarWhenDetached", null, null, String.valueOf(contentUI.isAddToTaskBarWhenDetached()));
+                    contentAttributes.addAttribute(null, "alwaysOnTop", null, null, String.valueOf(contentUI.isAlwaysOnTop()));
 
                     writer.startElement("content", contentAttributes);
 
@@ -990,6 +992,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     descriptor.setIdVisibleOnTitleBar(getBoolean(typeElement, "idVisibleOnTitleBar", true));
                     descriptor.setAutoHide(getBoolean(typeElement, "autoHide", false));
                     descriptor.setAddToTaskBar(getBoolean(typeElement, "addToTaskBar", false));
+                    descriptor.setAlwaysOnTop(getBoolean(typeElement, "alwaysOnTop", true));
 
                     Element location = getElement(typeElement, "location");
                     if (location != null)
@@ -1233,6 +1236,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     contentUI.setTransparentDelay(getInteger(contentElement, "transparentDelay", 0));
                     contentUI.setTransparentRatio(getFloat(contentElement, "transparentRatio", 0.7f));
                     contentUI.setAddToTaskBarWhenDetached(getBoolean(contentElement, "addToTaskBarWhenDetached", false));
+                    contentUI.setAlwaysOnTop(getBoolean(contentElement, "alwaysOnTop", false));
 
                     NodeList list = contentElement.getElementsByTagName("detachedBounds");
                     if (list.getLength() > 0) {

@@ -176,6 +176,13 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
         firePropertyChange(new PropertyChangeEvent(source, propertyName, oldValue, newValue));
     }
 
+    public void firePropertyChange(String propertyName, Object oldValue, Object newValue, Object userObject) {
+        if (oldValue != null && newValue != null && oldValue.equals(newValue))
+            return;
+
+        firePropertyChange(new UserPropertyChangeEvent(source, propertyName, oldValue, newValue, userObject));
+    }
+
     public boolean firePropertyChange(PropertyChangeEvent evt) {
         Object oldValue = evt.getOldValue();
         Object newValue = evt.getNewValue();

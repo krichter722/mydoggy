@@ -15,13 +15,13 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class HideToolWindowAction extends ToolWindowAction {
+public class HideToolWindowAction extends ToolWindowAction implements PlafToolWindowAction {
 
     protected JMenuItem menuItem;
 
     public HideToolWindowAction() {
         super(HIDE_ACTION_ID, UIManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE));
-        setTooltipText("@@tool.tooltip.hide");
+        setTooltipText(SwingUtil.getString("@@tool.tooltip.hide"));
     }
 
 

@@ -401,10 +401,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         return manager.getWindowAncestor() instanceof Window ? (Window) manager.getWindowAncestor() : null;
     }
 
-    public Window getAncestorForWindow() {
-        return SwingUtil.getBoolean(MyDoggyKeySpace.WINDOW_ALWAYS_ON_TOP, true) ? getWindowAncestor() : null;
-    }
-
     public ToolWindowContainer getToolWindowContainer() {
         if (dockedContainer == null)
             initContainers();
@@ -505,6 +501,13 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
             addPopupAction(popupMenu, dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.MOVE_TO_ACTION_ID));
             addPopupAction(popupMenu, dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.MAXIMIZE_ACTION_ID));
             addPopupAction(popupMenu, dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.TOOLS_MENU_ACTION_ID));
+
+            // TODO: add custom actions...introduce some customization...
+            for (ToolWindowAction toolWindowAction : getDockedTypeDescriptor().getToolWindowActions()) {
+                if (!(toolWindowAction instanceof PlafToolWindowAction))  {
+                    addPopupAction(popupMenu, toolWindowAction);
+                }
+            }
 
             popupMenu.addSeparator();
 

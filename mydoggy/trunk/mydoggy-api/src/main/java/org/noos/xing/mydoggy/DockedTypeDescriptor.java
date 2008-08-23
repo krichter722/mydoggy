@@ -220,10 +220,10 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
 
     void addToolWindowAction(ToolWindowAction toolWindowAction);
 
-/*
+    void addToolWindowAction(ToolWindowAction toolWindowAction, int index);
+
     ToolWindowAction[] getToolWindowActions();
 
     void removeToolWindowAction(String id);
-*/
 
 }

@@ -5,7 +5,6 @@ import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentUI;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -28,7 +27,8 @@ public class ContentDialog extends JDialog implements ContentWindow {
 
 
     public ContentDialog(Content content, ContentUI contentUI, Frame parentFrame, Rectangle inBounds) throws HeadlessException {
-        super(SwingUtil.getBoolean(MyDoggyKeySpace.WINDOW_ALWAYS_ON_TOP, true) ? parentFrame : null, false);
+        super(contentUI.isAlwaysOnTop() ? parentFrame : null, false);
+        setAlwaysOnTop(contentUI.isAlwaysOnTop());
 
         this.content = content;
         this.contentUI = contentUI;

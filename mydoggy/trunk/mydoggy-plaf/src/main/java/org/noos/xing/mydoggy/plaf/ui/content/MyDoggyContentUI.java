@@ -25,6 +25,7 @@ public class MyDoggyContentUI extends PropertyChangeEventSource {
     protected int transparentDelay;
     protected Rectangle detachedBounds;
     protected boolean addToTaskBar;
+    protected boolean alwaysOnTop;
 
 
     public MyDoggyContentUI(ContentManager contentManager,
@@ -38,6 +39,7 @@ public class MyDoggyContentUI extends PropertyChangeEventSource {
         this.detachable = contentManagerUI.isDetachable();
         this.minimizable = contentManagerUI.isMinimizable();
         this.maximizable = contentManagerUI.isMaximizable();
+        this.alwaysOnTop = true; // Maybe this can be obtained from the contentManagerUI 
 
         this.transparentMode = true;
         this.transparentRatio = 0.7f;
@@ -184,4 +186,17 @@ public class MyDoggyContentUI extends PropertyChangeEventSource {
         return addToTaskBar;
     }
 
+    public void setAlwaysOnTop(boolean alwaysOnTop) {
+        if (this.alwaysOnTop == alwaysOnTop)
+            return;
+
+        boolean old = this.alwaysOnTop;
+        this.alwaysOnTop = alwaysOnTop;
+
+        firePropertyChangeEvent("alwaysOnTop", old, alwaysOnTop);
+    }
+
+    public boolean isAlwaysOnTop() {
+        return alwaysOnTop;
+    }
 }

@@ -75,7 +75,6 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         this.lockingAnchors = new HashSet<ToolWindowAnchor>();
         this.lockingAnchors.addAll(Arrays.asList(lockingAnchors));
         this.toolWindowActionMap = new HashMap<String, ToolWindowAction>();
-        initActions();
 
         parent.addPropertyChangeListener(this);
 
@@ -269,9 +268,32 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
     }
 
     public void addToolWindowAction(ToolWindowAction toolWindowAction) {
+        addToolWindowAction(toolWindowAction, -1);
+    }
+
+    public void addToolWindowAction(ToolWindowAction toolWindowAction, int index) {
+        if  (toolWindowAction == null)
+            throw new IllegalArgumentException("The action cannot be null.");
+
+        if  (getToolWindowAction(toolWindowAction.getId()) != null)
+            throw new IllegalArgumentException("The action is already registered.");
+
         toolWindowAction.setToolWindow(toolWindowDescriptor.getToolWindow());
         toolWindowActionMap.put(toolWindowAction.getId(), toolWindowAction);
+
+        firePropertyChangeEvent("toolWindowAction", null, toolWindowAction, new Object[]{index});
     }
+
+    public ToolWindowAction[] getToolWindowActions() {
+        return toolWindowActionMap.values().toArray(new ToolWindowAction[0]);
+    }
+
+    public void removeToolWindowAction(String id) {
+        ToolWindowAction toolWindowAction = toolWindowActionMap.remove(id);
+
+        firePropertyChangeEvent("toolWindowAction", toolWindowAction, null);
+    }
+
 
     public ToolWindowTypeDescriptor cloneMe(ToolWindowDescriptor toolWindowDescriptor) {
         return new DefaultDockedTypeDescriptor(toolWindowDescriptor,
@@ -310,19 +332,6 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         } else if ("autoHide".equals(evt.getPropertyName())) {
             setAutoHide((Boolean) evt.getNewValue());
         }
-    }
-
-
-    protected void initActions() {
-/*
-        ToolWindowAction toolWindowAction = new DockToolWindowAction();
-        toolWindowAction.setToolWindow(toolWindowDescriptor.getToolWindow());
-        toolWindowActionMap.put(ToolWindowAction.DOCK_ACTION_ID, toolWindowAction);
-
-        toolWindowAction = new HideToolWindowAction();
-        toolWindowAction.setToolWindow(toolWindowDescriptor.getToolWindow());
-        toolWindowActionMap.put(ToolWindowAction.HIDE_ACTION_ID, toolWindowAction);
-*/
     }
 
 }
