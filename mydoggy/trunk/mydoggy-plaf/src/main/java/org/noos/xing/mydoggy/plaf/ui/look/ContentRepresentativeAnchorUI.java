@@ -7,7 +7,7 @@ import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentRepresentativeAnchor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
-import org.noos.xing.mydoggy.plaf.ui.drag.RepresentativeAnchorDragGesture;
+import org.noos.xing.mydoggy.plaf.ui.drag.RepresentativeAnchorDragListener;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -197,7 +197,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         c.addMouseListener(adapter);
         c.addMouseMotionListener(adapter);
 
-        SwingUtil.registerDragGesture(c, new RepresentativeAnchorDragGesture(descriptor, c));
+        SwingUtil.registerDragListener(c, new RepresentativeAnchorDragListener(descriptor, c));
 
         dockable.addPropertyChangeListener(this);
         descriptor.getCleaner().addCleaner(this);
@@ -214,6 +214,8 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
 
     protected void uninstallListeners(JLabel c) {
         super.uninstallListeners(c);
+
+        SwingUtil.unregisterDragListener(c);
 
         dockable.removePropertyChangeListener(this);
         c.removeMouseListener(adapter);

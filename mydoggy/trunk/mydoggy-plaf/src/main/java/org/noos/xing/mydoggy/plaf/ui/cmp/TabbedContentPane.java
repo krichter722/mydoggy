@@ -7,7 +7,7 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
-import org.noos.xing.mydoggy.plaf.ui.drag.DragGestureAdapter;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragListenerAdapter;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -95,7 +95,6 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 //        SwingUtilities.convertPointFromScreen(point, this);
 
         indexAtLocation = indexAtLocation(point.x, point.y);
-        System.out.println("indexAtLocation = " + indexAtLocation);
         Dockable onDockable;
 
         DockableOwner dockableOwner = SwingUtil.getParent(this, DockableOwner.class);
@@ -455,7 +454,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
     protected void initDragListener() {
         // Init drag
-        SwingUtil.registerDragGesture(this, new TabbedDragGestureAdapter(toolWindowManager));
+        SwingUtil.registerDragListener(this, new TabbedDragListenerAdapter(toolWindowManager));
 
         // Init drop
         setDropTarget(new DropTarget(this,
@@ -875,10 +874,10 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         }
     }
 
-    public class TabbedDragGestureAdapter extends DragGestureAdapter {
+    public class TabbedDragListenerAdapter extends DragListenerAdapter {
 
 
-        public TabbedDragGestureAdapter(MyDoggyToolWindowManager manager) {
+        public TabbedDragListenerAdapter(MyDoggyToolWindowManager manager) {
             super(manager);
         }
 

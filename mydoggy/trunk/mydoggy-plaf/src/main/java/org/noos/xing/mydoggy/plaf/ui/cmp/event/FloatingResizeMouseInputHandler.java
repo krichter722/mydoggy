@@ -68,7 +68,6 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
     }
 
     public void mouseMoved(MouseEvent ev) {
-        System.out.println("ev = " + ev);
         Component w = (Component) ev.getSource();
 
         int cursor = getCursor(calculateCorner(w, ev.getX(), ev.getY()));

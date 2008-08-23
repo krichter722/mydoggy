@@ -21,7 +21,7 @@ import java.awt.image.BufferedImage;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public abstract class DragGestureAdapter implements DragGesture, Cleaner {
+public abstract class DragListenerAdapter implements DragListener, Cleaner {
     protected MyDoggyToolWindowManager manager;
     protected DockableDescriptor descriptor;
 
@@ -34,12 +34,12 @@ public abstract class DragGestureAdapter implements DragGesture, Cleaner {
     protected ToolWindowAnchor lastBarAnchor;
 
 
-    protected DragGestureAdapter(DockableDescriptor descriptor) {
+    protected DragListenerAdapter(DockableDescriptor descriptor) {
         this.descriptor = descriptor;
         this.manager = descriptor.getManager();
     }
 
-    protected DragGestureAdapter(MyDoggyToolWindowManager manager) {
+    protected DragListenerAdapter(MyDoggyToolWindowManager manager) {
         this.manager = manager;
     }
 

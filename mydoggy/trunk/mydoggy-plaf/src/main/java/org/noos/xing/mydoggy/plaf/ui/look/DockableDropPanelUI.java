@@ -198,7 +198,6 @@ public class DockableDropPanelUI extends BasicPanelUI {
 
                             onAnchor = ToolWindowAnchor.BOTTOM;
                         } else {
-                            System.out.println("onIndex = " + onIndex);
                             drawRect(g,
                                      toolBounds.x, toolBounds.y,
                                      toolBounds.width,

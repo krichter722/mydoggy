@@ -2,7 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.util;
 
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ModalWindow;
-import org.noos.xing.mydoggy.plaf.ui.drag.DragGesture;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragListener;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 
 import javax.imageio.ImageIO;
@@ -11,6 +11,7 @@ import javax.swing.border.Border;
 import java.applet.Applet;
 import java.awt.*;
 import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragGestureRecognizer;
 import java.awt.dnd.DragSource;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
@@ -25,7 +26,8 @@ import java.util.List;
  * @author Angelo De Caro
  */
 public class SwingUtil {
-    private static Map<Window, Rectangle> fullScreenBounds = new Hashtable<Window, Rectangle>();
+    private static Map<Window, Rectangle> fullScreenBounds = new HashMap<Window, Rectangle>();
+    private static Map<Component, DragEntry> dragEntryMap = new HashMap<Component, DragEntry>();
 
 
     private SwingUtil() {
@@ -539,13 +541,30 @@ public class SwingUtil {
 
     // UI support methods
 
-    public static DragSource registerDragGesture(Component c, DragGesture dragGesture) {
+    public static DragGestureRecognizer registerDragListener(Component c, DragListener dragListener) {
         DragSource dragSource = new DragSource();
-        dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, dragGesture);
-        dragSource.addDragSourceMotionListener(dragGesture);
+        DragGestureRecognizer recognizer = dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, dragListener);
+        dragSource.addDragSourceMotionListener(dragListener);
 
-        return dragSource;
+        dragEntryMap.put(c, new DragEntry(recognizer, dragListener));
+
+        return recognizer;
     }
+
+    public static void unregisterDragListener(DragGestureRecognizer recognizer, DragListener dragListener) {
+        recognizer.getDragSource().removeDragSourceMotionListener(dragListener);
+        recognizer.removeDragGestureListener(dragListener);
+    }
+
+    public static void unregisterDragListener(Component c) {
+        DragEntry dragEntry = dragEntryMap.get(c);
+        if (dragEntry == null)
+            return;
+        
+        dragEntry.dragGestureRecognizer.getDragSource().removeDragSourceMotionListener(dragEntry.dragListener);
+        dragEntry.dragGestureRecognizer.removeDragGestureListener(dragEntry.dragListener);
+    }
+
 
     public static void addKeyActionMapping(JComponent component, KeyStroke keyStroke, Object actionMapKey, Action action) {
         addKeyActionMapping(JComponent.WHEN_FOCUSED, component, keyStroke, actionMapKey, action);
@@ -747,6 +766,17 @@ public class SwingUtil {
             return resourceBundle.getString(key);
         } catch (Exception e) {
             return key;
+        }
+    }
+
+
+    public static class DragEntry {
+        DragGestureRecognizer dragGestureRecognizer;
+        DragListener dragListener;
+
+        public DragEntry(DragGestureRecognizer dragGestureRecognizer, DragListener dragListener) {
+            this.dragGestureRecognizer = dragGestureRecognizer;
+            this.dragListener = dragListener;
         }
     }
 
