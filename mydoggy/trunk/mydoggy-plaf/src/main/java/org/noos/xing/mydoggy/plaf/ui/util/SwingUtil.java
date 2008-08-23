@@ -557,7 +557,7 @@ public class SwingUtil {
     }
 
     public static void unregisterDragListener(Component c) {
-        DragEntry dragEntry = dragEntryMap.get(c);
+        DragEntry dragEntry = dragEntryMap.remove(c);
         if (dragEntry == null)
             return;
         

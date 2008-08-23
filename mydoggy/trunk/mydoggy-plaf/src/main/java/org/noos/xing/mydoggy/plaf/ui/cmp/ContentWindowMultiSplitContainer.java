@@ -87,7 +87,7 @@ public class ContentWindowMultiSplitContainer extends MultiSplitTabbedContentCon
 
         public boolean drop(Transferable transferable) {
 // TODO           if (oldTabbedContentPane != null) {
-//                oldTabbedContentPane.setTargetLine(-1);
+//                oldTabbedContentPane.setTabPointerAt(-1);
 //                oldTabbedContentPane = null;
 //            }
 

@@ -269,9 +269,9 @@ public class MyDoggySetApplet extends JApplet {
         resourceManager.putProperty(MyDoggyKeySpace.WINDOW_ALWAYS_ON_TOP, "false");
         resourceManager.putProperty("ContentManagerDropTarget.enabled", "true");
 */
-        resourceManager.putProperty("ContentManagerUI.ContentManagerUiListener.import", "true");
-        resourceManager.putProperty("drag.icon.transparency.enabled", "false");
-        resourceManager.putProperty("drag.icon.useDefault", "true");
+//        resourceManager.putProperty("ContentManagerUI.ContentManagerUiListener.import", "true");
+//        resourceManager.putProperty("drag.icon.transparency.enabled", "false");
+//        resourceManager.putProperty("drag.icon.useDefault", "true");
 
         MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) myDoggyToolWindowManager.getResourceManager();
 

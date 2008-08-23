@@ -880,12 +880,16 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
 
         public void dragDropEnd(DragSourceDropEvent dsde) {
-            if (!checkStatus())
-                return;
+            try {
+                if (!checkStatus())
+                    return;
 
-            releaseLocks();
-            // Finalize drag action...
-            cleanupGhostImage();
+                releaseLocks();
+            } finally {
+                // Finalize drag action...
+                cleanupGhostImage();
+                dockableDropDragEnd();
+            }
         }
 
     }

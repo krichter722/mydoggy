@@ -33,6 +33,7 @@ public class DockableDropPanelUI extends BasicPanelUI {
     protected Point mouseLocation;
     protected boolean dragActive;
 
+    protected MultiDockableOwner oldMultiDockableOwner;
     protected Component onDockableContainer;
     protected ToolWindowAnchor onAnchor;
     protected Dockable onDockable;
@@ -136,11 +137,18 @@ public class DockableDropPanelUI extends BasicPanelUI {
                         } else if (onDockableContainer instanceof MultiDockableOwner) {
                             MultiDockableOwner multiDockableOwner = (MultiDockableOwner) onDockableContainer;
 
+                            if (oldMultiDockableOwner != null && oldMultiDockableOwner != multiDockableOwner)
+                                oldMultiDockableOwner.setPointerVisible(false);
+
                             onDockable = multiDockableOwner.getDockableAt(
                                     SwingUtilities.convertPoint(dockableDropPanel,
                                                                 new Point(mouseLocation),
                                                                 onDockableContainer));
                             onIndex = multiDockableOwner.getDockableIndex();
+
+                            multiDockableOwner.setPointerVisible(true);
+
+                            oldMultiDockableOwner = multiDockableOwner;
                         } else
                             throw new IllegalStateException("Dockable Container not reconized!!!");
 
@@ -229,6 +237,8 @@ public class DockableDropPanelUI extends BasicPanelUI {
     public void dragExit() {
         mouseLocation = null;
         resetLayout();
+        if (oldMultiDockableOwner != null)
+            oldMultiDockableOwner.setPointerVisible(false);
 
         SwingUtil.repaint(dockableDropPanel);
     }
@@ -271,6 +281,8 @@ public class DockableDropPanelUI extends BasicPanelUI {
         mouseLocation = null;
         dragActive = false;
         resetLayout();
+        if (oldMultiDockableOwner != null)
+            oldMultiDockableOwner.setPointerVisible(false);
 
         SwingUtil.repaint(dockableDropPanel);
     }

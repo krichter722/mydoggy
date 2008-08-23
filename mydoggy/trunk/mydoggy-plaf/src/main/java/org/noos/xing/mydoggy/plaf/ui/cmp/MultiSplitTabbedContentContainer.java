@@ -255,7 +255,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                 }
             } finally {
                 // End dockable drop gesture..
-                dockableDropDragExit();
+                dockableDropDragEnd();
             }
         }
 
@@ -284,7 +284,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
 
         public boolean drop(Transferable transferable) {
 // TODO           if (oldTabbedContentPane != null) {
-//                oldTabbedContentPane.setTargetLine(-1);
+//                oldTabbedContentPane.setTabPointerAt(-1);
 //                oldTabbedContentPane = null;
 //            }
 

@@ -137,22 +137,26 @@ public class RepresentativeAnchorDragListener extends DragListenerAdapter {
     }
 
     public void dragDropEnd(DragSourceDropEvent dsde) {
-        if (!checkStatus())
-            return;
+        try {
+            if (!checkStatus())
+                return;
 
-        releaseLocksOne();
+            releaseLocksOne();
 
-        // Restore graphics
-        manager.setTempShown(false);
+            // Restore graphics
+            manager.setTempShown(false);
 
-        // Fire endDrag event
-        descriptor.getToolBar().propertyChange(new PropertyChangeEvent(getComponent(), "endDrag", null, dsde));
+            // Fire endDrag event
+            descriptor.getToolBar().propertyChange(new PropertyChangeEvent(getComponent(), "endDrag", null, dsde));
 
-        // cleanup glassPane
-        cleanupGhostImage();
-        lastAnchor = null;
+            // cleanup glassPane
+            cleanupGhostImage();
+            lastAnchor = null;
 
-        releaseLocksTwo();
+            releaseLocksTwo();
+        } finally {
+            dockableDropDragEnd();
+        }
     }
 
 

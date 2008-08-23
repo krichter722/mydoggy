@@ -578,7 +578,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
                 }
             } finally {
                 // End dockable drop gesture..
-                dockableDropDragExit();
+                dockableDropDragEnd();
             }
         }
 
