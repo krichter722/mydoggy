@@ -13,13 +13,13 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MaximizeToolWindowAction extends ToolWindowAction {
+public class MaximizeToolWindowAction extends ToolWindowAction implements PlafToolWindowAction {
 
     protected JMenuItem menuItem;
 
     public MaximizeToolWindowAction() {
         super(MAXIMIZE_ACTION_ID, UIManager.getIcon(MyDoggyKeySpace.MAXIMIZE_INACTIVE));
-        setTooltipText("@@tool.tooltip.maximize");
+        setTooltipText(SwingUtil.getString("@@tool.tooltip.maximize"));
     }
 
 

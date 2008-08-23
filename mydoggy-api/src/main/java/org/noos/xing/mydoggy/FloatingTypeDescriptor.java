@@ -160,4 +160,19 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * @since 1.4.2
      */
     boolean isAddToTaskBar();
+
+    /**
+     * TODO
+     * @param alwaysOnTop
+     * @since 1.5.0
+     */
+    void setAlwaysOnTop(boolean alwaysOnTop);
+
+    /**
+     *
+     * @return
+     * @since 1.5.0
+     */
+    boolean isAlwaysOnTop();
+
 }

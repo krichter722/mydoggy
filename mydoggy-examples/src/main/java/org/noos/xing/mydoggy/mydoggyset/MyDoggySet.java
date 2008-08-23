@@ -80,6 +80,10 @@ public class MyDoggySet {
 
         memoryMonitorDescriptor.setAvailable(true);
 
+        toolWindowManager.getToolWindow("Tool 3").getTypeDescriptor(DockedTypeDescriptor.class)
+                .addToolWindowAction(new CustomAction(), 2);
+
+
         if (runnable != null) {
             Thread t = new Thread(runnable);
             t.start();
@@ -193,6 +197,7 @@ public class MyDoggySet {
         // Setup type descriptor templates...
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);
         typeDescriptor.setTransparentDelay(0);
+        typeDescriptor.setAlwaysOnTop(false);
 
         // Register tools
         JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{20, -1, 20}, {20, -1, 20}}));
@@ -410,8 +415,6 @@ public class MyDoggySet {
 
         ResourceManager resourceManager = myDoggyToolWindowManager.getResourceManager();
         // Add customization here. See the page http://mydoggy.sourceforge.net/mydoggy-plaf/resourceManagerUsing.html
-
-        resourceManager.putProperty(MyDoggyKeySpace.WINDOW_ALWAYS_ON_TOP, "false");
 
 /*
         resourceManager.putProperty("ContentManagerDropTarget.enabled", "true");
@@ -955,5 +958,28 @@ public class MyDoggySet {
 
     }
 
+    public class CustomAction extends ToolWindowAction {
+        protected JMenuItem menuItem;
+
+        public CustomAction() {
+            super("CUSTOM ACTION", UIManager.getIcon(MyDoggyKeySpace.TOOL_SCROLL_BAR_UP));
+//            setVisibleOnMenuBar(false);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            toolWindowManager.getToolWindow("Tool 3").getTypeDescriptor(DockedTypeDescriptor.class).
+                    removeToolWindowAction(this.id);
+
+        }
+
+        @Override
+        public JMenuItem getMenuItem() {
+            if (menuItem == null) {
+                menuItem = new JMenuItem("Hello World");
+                menuItem.addActionListener(this);
+            }
+            return menuItem;
+        }
+    }
 
 }

@@ -5,7 +5,6 @@ import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentUI;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -28,7 +27,7 @@ public class ContentFrame extends JFrame implements ContentWindow {
 
 
     public ContentFrame(Content content, ContentUI contentUI, Frame parentFrame, Rectangle inBounds) throws HeadlessException {
-        setAlwaysOnTop(SwingUtil.getBoolean(MyDoggyKeySpace.WINDOW_ALWAYS_ON_TOP, true));
+        setAlwaysOnTop(contentUI.isAlwaysOnTop());
 
         this.content = content;
         this.contentUI = contentUI;
@@ -36,7 +35,7 @@ public class ContentFrame extends JFrame implements ContentWindow {
         installComponents();
         installListeners(parentFrame);
 
-        // Set bounds...
+        // Set Bounds...
         Rectangle detachedBounds = SwingUtil.validateBounds(contentUI.getDetachedBounds());
         if (detachedBounds != null) {
             setBounds(detachedBounds);

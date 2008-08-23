@@ -22,7 +22,6 @@ import java.beans.PropertyChangeEvent;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * TODO: block anchor position...
  */
 public abstract class CustomDockableDescriptor implements DockableDescriptor {
 
@@ -99,13 +98,13 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
         if (available) {
             manager.propertyChange(
                     new UserPropertyChangeEvent(this, "available", false, true,
-                                                new Object[]{anchorIndex, false}
+                                                new Object[]{anchorIndex, true}
                     )
             );
         } else {
             manager.propertyChange(
                     new UserPropertyChangeEvent(this, "available", true, false,
-                                                new Object[]{-1, false}
+                                                new Object[]{-1, true}
                     )
             );
         }

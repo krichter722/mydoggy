@@ -17,6 +17,8 @@ public interface ModalWindow {
 
     void setModal(boolean modal);
 
+    void setAlwaysOnTop(boolean alwaysOnTop);
+
 
     Container getContentPane();
 
@@ -63,4 +65,5 @@ public interface ModalWindow {
     int getNumDockables();
 
     ToolWindow getFirstToolWindow();
+
 }

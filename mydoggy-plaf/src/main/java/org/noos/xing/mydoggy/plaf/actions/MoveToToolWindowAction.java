@@ -11,7 +11,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MoveToToolWindowAction extends ToolWindowAction implements PropertyChangeListener {
+public class MoveToToolWindowAction extends ToolWindowAction implements PropertyChangeListener, PlafToolWindowAction  {
 
     protected JMenu moveTo;
     protected JMenuItem right;
@@ -22,7 +22,7 @@ public class MoveToToolWindowAction extends ToolWindowAction implements Property
 
     public MoveToToolWindowAction() {
         super(MOVE_TO_ACTION_ID);
-        setTooltipText("@@tool.tooltip.floatingLive");
+        setTooltipText(SwingUtil.getString("@@tool.tooltip.floatingLive"));
         setVisibleOnMenuBar(true);
         setVisibleOnTitleBar(false);
     }

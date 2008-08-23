@@ -14,7 +14,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class FloatingToolWindowAction extends ToolWindowAction implements PropertyChangeListener {
+public class FloatingToolWindowAction extends ToolWindowAction implements PropertyChangeListener, PlafToolWindowAction  {
 
     protected ToolWindowType oldType;
     protected boolean floatingWindow;
@@ -23,7 +23,7 @@ public class FloatingToolWindowAction extends ToolWindowAction implements Proper
 
     public FloatingToolWindowAction() {
         super(FLOATING_ACTION_ID, UIManager.getIcon(MyDoggyKeySpace.FLOATING_INACTIVE));
-        setTooltipText("@@tool.tooltip.float");
+        setTooltipText(SwingUtil.getString("@@tool.tooltip.float"));
     }
 
 

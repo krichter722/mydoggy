@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolsMenuToolWindowAction extends ToolWindowAction {
+public class ToolsMenuToolWindowAction extends ToolWindowAction implements PlafToolWindowAction {
 
 
     public ToolsMenuToolWindowAction() {

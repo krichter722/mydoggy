@@ -5,7 +5,6 @@ import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -42,14 +41,12 @@ public class ModalFrame extends JFrame implements ModalWindow,
     protected TransparencyAnimation transparencyAnimation;
 
 
-    public ModalFrame(MyDoggyToolWindowManager toolWindowManager, ToolWindow toolWindow, Window owner, Component returnFocus, boolean modal) {
+    public ModalFrame(MyDoggyToolWindowManager toolWindowManager, ToolWindow toolWindow, Window owner, boolean modal) {
         super(toolWindow.getTitle());
 
         this.toolWindowManager = toolWindowManager;
-        this.returnFocus = returnFocus;
 
         setUndecorated(true);
-        setAlwaysOnTop(SwingUtil.getBoolean(MyDoggyKeySpace.WINDOW_ALWAYS_ON_TOP, true));
         setFocusableWindowState(true);
 
         synchronized (ModalFrame.this) {
@@ -200,6 +197,14 @@ public class ModalFrame extends JFrame implements ModalWindow,
         }
     }
 
+    public Component getReturnFocus() {
+        return returnFocus;
+    }
+
+    public void setReturnFocus(Component returnFocus) {
+        this.returnFocus = returnFocus;
+    }
+
     public void addDockable(ToolWindow toolWindow, Component content) {
         addDockable(toolWindow, content, null, AggregationPosition.DEFAULT);
     }
@@ -233,6 +238,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
     }
 
 
+
     protected void initComponents() {
         multiSplitDockableContainer = new MultiSplitDockableContainer(toolWindowManager, JSplitPane.VERTICAL_SPLIT);
 
@@ -240,7 +246,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
         dockableDropPanel.setComponent(multiSplitDockableContainer);
 
         ((JComponent) getContentPane()).setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        setLayout(new ExtendedTableLayout(new double[][]{{0, TableLayout.FILL, 0}, {0, TableLayout.FILL, 0}}));
+        setLayout(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
         add(dockableDropPanel, "1,1,FULL,FULL");
 
         this.transparencyManager = SwingUtil.getTransparencyManager();

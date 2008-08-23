@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAction;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -16,7 +17,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MenuToolWindowTitleButtonPanelUI extends FullToolWindowTitleButtonPanelUI {
+public class MenuToolWindowTitleButtonPanelUI extends ToolWindowTitleButtonPanelUI {
 
     
     public static ComponentUI createUI(JComponent c) {
@@ -35,8 +36,8 @@ public class MenuToolWindowTitleButtonPanelUI extends FullToolWindowTitleButtonP
         DockedTypeDescriptor dockedTypeDescriptor = descriptor.getDockedTypeDescriptor();
         dockedTypeDescriptor.addToolWindowAction(new PopupAction());
 
-        addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.POPUP_ACTION_ID));
         focusable = addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.HIDE_ACTION_ID));
+        addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.POPUP_ACTION_ID));
     }
 
 
@@ -50,7 +51,7 @@ public class MenuToolWindowTitleButtonPanelUI extends FullToolWindowTitleButtonP
         public void setToolWindow(ToolWindow toolWindow) {
             super.setToolWindow(toolWindow);
             setIcon(UIManager.getIcon(MyDoggyKeySpace.ACTIONS_POPUP));
-            setTooltipText("@@tool.tooltip.showPopup");
+            setTooltipText(SwingUtil.getString("@@tool.tooltip.showPopup"));
             setActionName("toolWindow.showPopupButton." + toolWindow.getId());
 
             toolWindow.addPropertyChangeListener("active", new PropertyChangeListener() {
@@ -70,7 +71,7 @@ public class MenuToolWindowTitleButtonPanelUI extends FullToolWindowTitleButtonP
         }
 
         public JMenuItem getMenuItem() {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
+            return null;
         }
 
         public void actionPerformed(ActionEvent e) {

@@ -54,6 +54,43 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
     }
 
 
+    public void propertyChange(PropertyChangeEvent e) {
+        String propertyName = e.getPropertyName();
+
+        if ("flash".equals(propertyName)) {
+            if (e.getNewValue() == Boolean.TRUE) {
+                if (descriptor.isAvailable()) {
+                    flasingDuration = -1;
+                    SwingUtil.repaint(contentRepresentativeAnchor);
+                }
+            } else {
+                if (flashingTimer != null) {
+                    flashingTimer.stop();
+                    flashingTimer = null;
+                    SwingUtil.repaint(contentRepresentativeAnchor);
+                }
+            }
+        } else if ("flash.duration".equals(propertyName)) {
+            if (e.getNewValue() == Boolean.TRUE) {
+                if (descriptor.isAvailable()) {
+                    flasingDuration = (Integer) e.getNewValue();
+                    SwingUtil.repaint(contentRepresentativeAnchor);
+                }
+            } else {
+                if (flashingTimer != null) {
+                    flashingTimer.stop();
+                    flashingTimer = null;
+                    SwingUtil.repaint(contentRepresentativeAnchor);
+                }
+            }
+        }
+    }
+
+    public void cleanup() {
+        uninstallUI(contentRepresentativeAnchor);
+    }
+
+
     public void installUI(JComponent c) {
         // Init fields
         this.contentRepresentativeAnchor = (ContentRepresentativeAnchor) c;
@@ -82,6 +119,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         this.dockable = null;
         this.contentRepresentativeAnchor = null;
     }
+
 
     public void update(Graphics g, JComponent c) {
         c.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
@@ -138,42 +176,6 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         paint(g, c);
     }
 
-    public void propertyChange(PropertyChangeEvent e) {
-        String propertyName = e.getPropertyName();
-
-        if ("flash".equals(propertyName)) {
-            if (e.getNewValue() == Boolean.TRUE) {
-                if (descriptor.isAvailable()) {
-                    flasingDuration = -1;
-                    SwingUtil.repaint(contentRepresentativeAnchor);
-                }
-            } else {
-                if (flashingTimer != null) {
-                    flashingTimer.stop();
-                    flashingTimer = null;
-                    SwingUtil.repaint(contentRepresentativeAnchor);
-                }
-            }
-        } else if ("flash.duration".equals(propertyName)) {
-            if (e.getNewValue() == Boolean.TRUE) {
-                if (descriptor.isAvailable()) {
-                    flasingDuration = (Integer) e.getNewValue();
-                    SwingUtil.repaint(contentRepresentativeAnchor);
-                }
-            } else {
-                if (flashingTimer != null) {
-                    flashingTimer.stop();
-                    flashingTimer = null;
-                    SwingUtil.repaint(contentRepresentativeAnchor);
-                }
-            }
-        }
-    }
-
-    public void cleanup() {
-        uninstallUI(contentRepresentativeAnchor);
-    }
-
     
     protected void installListeners(JLabel c) {
         super.installListeners(c);
@@ -207,7 +209,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         c.setBorder(labelBorder);
         c.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
 
-        SwingUtil.installFont(c, "mydoggy.ToolWindowRepresentativeAnchorUI.font");
+        SwingUtil.installFont(c, "ToolWindowRepresentativeAnchorUI.font");
     }
 
     protected void uninstallListeners(JLabel c) {

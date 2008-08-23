@@ -164,6 +164,14 @@ public class PropertyChangeEventSource implements Cleaner {
             this.publicChangeSupport.firePropertyChange(property, oldValue, newValue);
     }
 
+    protected void firePropertyChangeEvent(String property, Object oldValue, Object newValue, Object userObject) {
+        if (this.plafChangeSupport != null)
+            this.plafChangeSupport.firePropertyChange(property, oldValue, newValue, userObject);
+
+        if (MyDoggyToolWindowManager.firePublic && publicEvent && this.publicChangeSupport != null)
+            this.publicChangeSupport.firePropertyChange(property, oldValue, newValue, userObject);
+    }
+
     protected void firePlafPropertyChangeEvent(PropertyChangeEvent event) {
         if (this.plafChangeSupport != null)
             this.plafChangeSupport.firePropertyChange(event);

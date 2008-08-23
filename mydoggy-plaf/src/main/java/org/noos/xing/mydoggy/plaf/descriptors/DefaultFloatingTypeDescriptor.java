@@ -28,6 +28,8 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
     private boolean autoHide;
     private boolean idVisibleOnTitleBar;
     private boolean addToTaskBar;
+    private boolean alwaysOnTop
+            ;
 
     public DefaultFloatingTypeDescriptor() {
         transparentMode = true;
@@ -45,7 +47,7 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
                                          DefaultFloatingTypeDescriptor parent, Point location, Dimension size,
                                          int transparentDelay, float transparentRatio, boolean useTransparentMode,
                                          boolean modal, boolean enabled, boolean animating, boolean autoHide, boolean idVisibleOnTitleBar,
-                                         boolean addToTaskBar) {
+                                         boolean addToTaskBar, boolean alwaysOnTop) {
         this.location = location;
         this.size = size;
         this.transparentDelay = transparentDelay;
@@ -57,6 +59,7 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
         this.autoHide = autoHide;
         this.idVisibleOnTitleBar = idVisibleOnTitleBar;
         this.addToTaskBar = addToTaskBar;
+        this.alwaysOnTop = alwaysOnTop;
 
         parent.addPropertyChangeListener(this);
 
@@ -156,6 +159,20 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
         return addToTaskBar;
     }
 
+    public void setAlwaysOnTop(boolean alwaysOnTop) {
+        if (this.alwaysOnTop == alwaysOnTop)
+            return;
+
+        boolean old = this.alwaysOnTop;
+        this.alwaysOnTop = alwaysOnTop;
+
+        firePropertyChangeEvent("alwaysOnTop", old, alwaysOnTop);
+    }
+
+    public boolean isAlwaysOnTop() {
+        return alwaysOnTop;
+    }
+
     public void setEnabled(boolean enabled) {
         if (this.enabled == enabled)
             return;
@@ -228,7 +245,7 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
                                                  transparentRatio, transparentMode,
                                                  modal, enabled, animating, autoHide,
                                                  idVisibleOnTitleBar,
-                                                 addToTaskBar);
+                                                 addToTaskBar, alwaysOnTop);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {        
@@ -256,6 +273,8 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
             setIdVisibleOnTitleBar((Boolean) evt.getNewValue());
         } else if ("addToTaskBar".equals(evt.getPropertyName())) {
             setAddToTaskBar((Boolean) evt.getNewValue());
+        } else if ("alwaysOnTop".equals(evt.getPropertyName())) {
+            setAlwaysOnTop((Boolean) evt.getNewValue());
         }
     }
 

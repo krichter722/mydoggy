@@ -13,14 +13,14 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class FloatingLiveToolWindowAction extends ToolWindowAction implements PropertyChangeListener {
+public class FloatingLiveToolWindowAction extends ToolWindowAction implements PropertyChangeListener, PlafToolWindowAction  {
 
     protected JCheckBoxMenuItem menuItem;
 
 
     public FloatingLiveToolWindowAction() {
         super(FLOATING_LIVE_ACTION_ID);
-        setTooltipText("@@tool.tooltip.floatingLive");
+        setTooltipText(SwingUtil.getString("@@tool.tooltip.floatingLive"));
         setVisibleOnMenuBar(true);
         setVisibleOnTitleBar(false);
     }

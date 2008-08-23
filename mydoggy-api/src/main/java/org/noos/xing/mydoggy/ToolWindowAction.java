@@ -115,5 +115,7 @@ public abstract class ToolWindowAction extends AbstractAction {
         return (width > 0) ? width : 13;
     }
 
-    public abstract JMenuItem getMenuItem();
+    public JMenuItem getMenuItem() {
+        return null;
+    }
 }

@@ -582,7 +582,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
                     if (representativeAnchor != null) {
                         if (updateRepresentativeAnchor &&
-                            descriptor.getDockableType() != DockableDescriptor.DockableType.CUSTOM) {
+                            descriptor.getDockableType() == DockableDescriptor.DockableType.TOOL_WINDOW) {
                             // Update
                             descriptor.updateRepresentativeAnchor();
                         } else {

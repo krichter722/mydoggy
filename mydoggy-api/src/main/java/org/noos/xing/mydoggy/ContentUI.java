@@ -188,4 +188,18 @@ public interface ContentUI extends DockableUI {
      */
     boolean isAddToTaskBarWhenDetached();
 
+    /**
+     * TODO
+     * @param alwaysOnTop
+     * @since 1.5.0
+     */
+    void setAlwaysOnTop(boolean alwaysOnTop);
+
+    /**
+     *
+     * @return
+     * @since 1.5.0
+     */
+    boolean isAlwaysOnTop();
+
 }

@@ -51,7 +51,6 @@ public abstract class DragGestureAdapter implements DragGesture, Cleaner {
 
 
     public void dragGestureRecognized(DragGestureEvent dge) {
-        // TODO: check all extentions of this class for a call of super...
         lastDropPanel = null;
         lastBarAnchor = null;
     }
