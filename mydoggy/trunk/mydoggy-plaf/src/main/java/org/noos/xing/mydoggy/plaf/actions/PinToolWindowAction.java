@@ -17,8 +17,6 @@ import java.beans.PropertyChangeListener;
  */
 public class PinToolWindowAction extends ToolWindowAction implements PropertyChangeListener, PlafToolWindowAction  {
 
-    protected JMenuItem menuItem;
-
     public PinToolWindowAction() {
         super(PIN_ACTION_ID, UIManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF_INACTIVE));
         setTooltipText(SwingUtil.getString("@@tool.tooltip.unpin"));

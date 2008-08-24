@@ -120,8 +120,8 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         SwingUtil.repaint(this);
     }
 
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    protected void paintChildren(Graphics g) {
+        super.paintChildren(g);
 
         if (pointerVisible && indexAtLocation != -1) {
             if (getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM)

@@ -129,6 +129,8 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 if (window.getNumDockables() <= 0) {
                     window.getContentPane().setVisible(true);
                     window.setVisible(false);
+                    
+                    descriptor.removeModalWindow();
                 }
 
                 window = null;

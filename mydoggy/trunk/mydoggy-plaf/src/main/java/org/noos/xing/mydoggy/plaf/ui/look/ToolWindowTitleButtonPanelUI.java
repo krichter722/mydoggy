@@ -148,6 +148,7 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
         toolWindowTitleButtonPanel.removeAll();
     }
 
+
     protected Component addToolWindowAction(ToolWindowAction toolWindowAction) {
         return addToolWindowAction(toolWindowAction, -1);
     }
@@ -161,7 +162,7 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
 
             if (oldCols.length == 2) {
                 // No actions are in place
-                newCols = new double[]{0, toolWindowAction.getWidth(), 0};
+                newCols = new double[]{0, -2, 0};
                 col = 1;
             } else {
                 newCols = new double[oldCols.length + 2];
@@ -180,7 +181,7 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
                 System.arraycopy(oldCols, 1, newCols, 3, oldCols.length - 1);
 
                 // Setup the columns for the new actions
-                newCols[1] = toolWindowAction.getWidth();
+                newCols[1] = -2;
                 newCols[2] = 1;
 
                 // setup the column destination
@@ -205,7 +206,7 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
             newCols = new double[oldCols.length + 2];
             System.arraycopy(oldCols, 0, newCols, 0, colIndex);
             System.arraycopy(oldCols, colIndex, newCols, colIndex + 2, oldCols.length - colIndex - 1);
-            newCols[colIndex] = toolWindowAction.getWidth();
+            newCols[colIndex] = -2;
             newCols[colIndex + 1] = 1;
             col = colIndex;
 
@@ -214,7 +215,9 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
 
         ToolWindowTitleButton button = new ToolWindowTitleButton(toolWindowAction);
         button.setFocusable(false);
-        button.setName((String) toolWindowAction.getValue("action.name"));
+        button.setName(toolWindowAction.getActionName());
+        if (!toolWindowAction.isShowTextOnTitleBar())
+            button.setText(null);
 
         toolWindowAction.putValue("component", button);
         toolWindowAction.addPropertyChangeListener(this);
@@ -271,12 +274,13 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
 
     }
 
+
     protected void setVisible(Component component, boolean visible) {
         for (Component cmp : toolWindowTitleButtonPanel.getComponents()) {
             if (cmp == component) {
                 if (visible) {
                     int col = containerLayout.getConstraints(component).col1;
-                    containerLayout.setColumn(col, 13);
+                    containerLayout.setColumn(col, -2);
                     if (col != containerLayout.getColumn().length - 1)
                         containerLayout.setColumn(col + 1, 1);
                 } else {
