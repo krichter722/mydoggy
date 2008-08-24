@@ -28,8 +28,7 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
     private boolean autoHide;
     private boolean idVisibleOnTitleBar;
     private boolean addToTaskBar;
-    private boolean alwaysOnTop
-            ;
+    private boolean alwaysOnTop;
 
     public DefaultFloatingTypeDescriptor() {
         transparentMode = true;
@@ -41,6 +40,7 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
         autoHide = false;
         idVisibleOnTitleBar = true;
         addToTaskBar = false;
+        alwaysOnTop = true;
     }
 
     public DefaultFloatingTypeDescriptor(ToolWindowDescriptor toolWindowDescriptor,

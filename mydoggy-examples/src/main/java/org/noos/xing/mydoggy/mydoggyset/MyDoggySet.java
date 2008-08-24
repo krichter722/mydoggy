@@ -198,7 +198,7 @@ public class MyDoggySet {
         // Setup type descriptor templates...
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);
         typeDescriptor.setTransparentDelay(0);
-        typeDescriptor.setAlwaysOnTop(false);
+//        typeDescriptor.setAlwaysOnTop(false);
 
         // Register tools
         JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{20, -1, 20}, {20, -1, 20}}));
@@ -751,6 +751,8 @@ public class MyDoggySet {
 
         public CustomAction() {
             super("CUSTOM ACTION", UIManager.getIcon(MyDoggyKeySpace.TOOL_SCROLL_BAR_UP));
+            setText("HELLO WORLD");
+            setShowTextOnTitleBar(false);
 //            setVisibleOnMenuBar(false);
         }
 
@@ -760,6 +762,7 @@ public class MyDoggySet {
 
         }
 
+/*
         @Override
         public JMenuItem getMenuItem() {
             if (menuItem == null) {
@@ -768,6 +771,7 @@ public class MyDoggySet {
             }
             return menuItem;
         }
+*/
     }
 
 }

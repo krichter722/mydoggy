@@ -12,6 +12,7 @@ public class ToolWindowTitleButtonUI extends BasicButtonUI {
     // Shared UI object
     private final static ToolWindowTitleButtonUI buttonUI = new ToolWindowTitleButtonUI();
 
+    
     public static ComponentUI createUI(JComponent c) {
         return buttonUI;
     }
@@ -27,6 +28,8 @@ public class ToolWindowTitleButtonUI extends BasicButtonUI {
         b.setFocusable(false);
         b.setBorder(null);
         b.setBorderPainted(false);
+        b.setForeground(Color.WHITE);
+
         defaultTextShiftOffset = 1;
     }
 
