@@ -25,6 +25,8 @@ public abstract class ToolWindowAction extends AbstractAction {
     protected String id;
     protected String actionName;
     protected ToolWindow toolWindow;
+    protected boolean showTextOnTitleBar;
+    protected JMenuItem menuItem;
 
     protected boolean visibleOnTitleBar = true;
     protected boolean visibleOnMenuBar = true;
@@ -59,6 +61,14 @@ public abstract class ToolWindowAction extends AbstractAction {
 
     public Icon getIcon() {
         return (Icon) getValue(Action.SMALL_ICON);
+    }
+
+    public void setText(String text) {
+        putValue(Action.NAME, text);
+    }
+
+    public String getText() {
+        return (String) getValue(Action.NAME);
     }
 
     public void setTooltipText(String tooltipText) {
@@ -105,17 +115,24 @@ public abstract class ToolWindowAction extends AbstractAction {
         firePropertyChange("visibleOnMenuBar", old, visibleOnMenuBar);
     }
 
+    public boolean isShowTextOnTitleBar() {
+        return showTextOnTitleBar;
+    }
+
+    public void setShowTextOnTitleBar(boolean showTextOnTitleBar) {
+        this.showTextOnTitleBar = showTextOnTitleBar;
+    }
+
     public void setVisible(boolean visible) {
         setVisibleOnMenuBar(visible);
         setVisibleOnTitleBar(visible);
     }
 
-    public int getWidth() {
-        int width = getIcon() != null ? getIcon().getIconWidth() : 0;
-        return (width > 0) ? width : 13;
-    }
-
     public JMenuItem getMenuItem() {
-        return null;
+        if (menuItem == null) {
+            menuItem = new JMenuItem(this);
+        }
+
+        return menuItem;
     }
 }
