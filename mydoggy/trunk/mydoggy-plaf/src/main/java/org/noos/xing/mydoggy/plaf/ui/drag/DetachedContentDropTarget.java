@@ -161,7 +161,7 @@ public class DetachedContentDropTarget extends DropTarget {
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.LEFT);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.aggregateByReference(modalWindow.getFirstToolWindow(), AggregationPosition.LEFT
+                                                        toolWindow.aggregateByReference(modalWindow.getToolWindow(), AggregationPosition.LEFT
                                                         );
                                                     }
                                                 }
@@ -171,7 +171,7 @@ public class DetachedContentDropTarget extends DropTarget {
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.RIGHT);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.aggregateByReference(modalWindow.getFirstToolWindow(), AggregationPosition.RIGHT
+                                                        toolWindow.aggregateByReference(modalWindow.getToolWindow(), AggregationPosition.RIGHT
                                                         );
                                                     }
                                                 }
@@ -181,7 +181,7 @@ public class DetachedContentDropTarget extends DropTarget {
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.BOTTOM);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.aggregateByReference(modalWindow.getFirstToolWindow(), AggregationPosition.BOTTOM
+                                                        toolWindow.aggregateByReference(modalWindow.getToolWindow(), AggregationPosition.BOTTOM
                                                         );
 
                                                     }
@@ -192,7 +192,7 @@ public class DetachedContentDropTarget extends DropTarget {
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.TOP);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.aggregateByReference(modalWindow.getFirstToolWindow(), AggregationPosition.TOP
+                                                        toolWindow.aggregateByReference(modalWindow.getToolWindow(), AggregationPosition.TOP
                                                         );
 
                                                     }
@@ -205,7 +205,7 @@ public class DetachedContentDropTarget extends DropTarget {
                                             onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
                                             onToolWindow.setActive(true);
                                         } else {
-                                            toolWindow.aggregateByReference(modalWindow.getFirstToolWindow(), AggregationPosition.DEFAULT
+                                            toolWindow.aggregateByReference(modalWindow.getToolWindow(), AggregationPosition.DEFAULT
                                             );
                                             toolWindow.setActive(true);
                                         }

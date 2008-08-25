@@ -25,20 +25,23 @@ public abstract class ToolWindowAction extends AbstractAction {
     protected String id;
     protected String actionName;
     protected ToolWindow toolWindow;
-    protected boolean showTextOnTitleBar;
     protected JMenuItem menuItem;
 
-    protected boolean visibleOnTitleBar = true;
-    protected boolean visibleOnMenuBar = true;
+    protected boolean showTextOnTitleBar;
+    protected boolean visibleOnTitleBar;
+    protected boolean visibleOnMenuBar;
 
 
     protected ToolWindowAction(String id) {
-        this.id = id;
+        this(id, null);
     }
 
     protected ToolWindowAction(String id, Icon icon) {
         super(null, icon);
         this.id = id;
+        this.showTextOnTitleBar = false;
+        this.visibleOnTitleBar = true;
+        this.visibleOnMenuBar = true;
     }
 
 

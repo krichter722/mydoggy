@@ -46,7 +46,6 @@ public class ModalFrame extends JFrame implements ModalWindow,
 
         this.toolWindowManager = toolWindowManager;
 
-        setUndecorated(true);
         setFocusableWindowState(true);
 
         synchronized (ModalFrame.this) {
@@ -230,11 +229,11 @@ public class ModalFrame extends JFrame implements ModalWindow,
     }
 
     public int getNumDockables() {
-        return multiSplitDockableContainer.getContentCount();
+        return multiSplitDockableContainer.getDockableCount();
     }
 
-    public ToolWindow getFirstToolWindow() {
-        return (ToolWindow) multiSplitDockableContainer.getContents().get(0).dockable;
+    public ToolWindow getToolWindow() {
+        return (ToolWindow) multiSplitDockableContainer.getDockableEntries().get(0).dockable;
     }
 
 

@@ -995,11 +995,11 @@ public class MultiSplitDockableContainer extends JPanel {
         return entries.size() == 0;
     }
 
-    public int getContentCount() {
+    public int getDockableCount() {
         return entries.size();
     }
 
-    public List<DockableEntry> getContents() {
+    public List<DockableEntry> getDockableEntries() {
         return new ArrayList<DockableEntry>(entries.values());
     }
 
@@ -1064,7 +1064,7 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
     public boolean containsDockable(Dockable dockable) {
-        for (DockableEntry entry : getContents()) {
+        for (DockableEntry entry : getDockableEntries()) {
             if (entry.dockable == dockable)
                 return true;
         }
@@ -1072,7 +1072,7 @@ public class MultiSplitDockableContainer extends JPanel {
     }
 
     public Dockable getFirstDockable() {
-        return getContents().get(0).dockable;
+        return getDockableEntries().get(0).dockable;
     }
 
     // Methods to manage container root

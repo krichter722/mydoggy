@@ -1154,6 +1154,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
             modalWindow.setName("toolWindow.floating.window." + toolWindow.getId());
             modalWindow.setAlwaysOnTop(floatingTypeDescriptor.isAlwaysOnTop());
+            modalWindow.setUndecorated(!floatingTypeDescriptor.isOsDecorated());
 
             modalWindowMap.put(toolWindow, modalWindow);
         }

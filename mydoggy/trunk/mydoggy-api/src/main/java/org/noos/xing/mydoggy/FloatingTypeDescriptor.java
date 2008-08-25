@@ -175,4 +175,17 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      */
     boolean isAlwaysOnTop();
 
+    /**
+     *
+     * @param OSDecorated
+     * @since 1.5.0
+     */
+    void setOsDecorated(boolean OSDecorated);
+
+    /**
+     *
+     * @return
+     * @since 1.5.0
+     */
+    boolean isOsDecorated();
 }

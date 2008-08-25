@@ -975,16 +975,16 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         protected boolean isWrapRequest(Dockable dockable, Action action) {
             switch (action) {
                 case ADD_DOCK:
-                    if (getContentCount() == 0) {
+                    if (getDockableCount() == 0) {
                         return useAlwaysContentWrapper;
-                    } else if (getContentCount() >= 1) {
+                    } else if (getDockableCount() >= 1) {
                         return (((MultiSplitContentUI) ((Content) dockable).getContentUI()).isShowAlwaysTab());
                     }
                     return useAlwaysContentWrapper;
                 case REMOVE_DOCK:
-                    if (getContentCount() <= 1) {
+                    if (getDockableCount() <= 1) {
                         return useAlwaysContentWrapper;
-                    } else if (getContentCount() > 1) {
+                    } else if (getDockableCount() > 1) {
                         return (((MultiSplitContentUI) ((Content) dockable).getContentUI()).isShowAlwaysTab());
                     }
                     return useAlwaysContentWrapper;

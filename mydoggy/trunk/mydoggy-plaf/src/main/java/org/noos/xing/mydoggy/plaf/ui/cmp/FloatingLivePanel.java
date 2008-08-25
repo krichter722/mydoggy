@@ -138,7 +138,7 @@ public class FloatingLivePanel extends TranslucentPanel implements FloatingLiveW
     }
 
     public void unmount() {
-        if (multiSplitDockableContainer.getContentCount() == 0) {
+        if (multiSplitDockableContainer.getDockableCount() == 0) {
             setLayout();
             layeredPane.remove(this);
             setBorder(null);

@@ -29,6 +29,7 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
     private boolean idVisibleOnTitleBar;
     private boolean addToTaskBar;
     private boolean alwaysOnTop;
+    private boolean osDecorated;
 
     public DefaultFloatingTypeDescriptor() {
         transparentMode = true;
@@ -41,13 +42,14 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
         idVisibleOnTitleBar = true;
         addToTaskBar = false;
         alwaysOnTop = true;
+        osDecorated = false;
     }
 
     public DefaultFloatingTypeDescriptor(ToolWindowDescriptor toolWindowDescriptor,
                                          DefaultFloatingTypeDescriptor parent, Point location, Dimension size,
                                          int transparentDelay, float transparentRatio, boolean useTransparentMode,
                                          boolean modal, boolean enabled, boolean animating, boolean autoHide, boolean idVisibleOnTitleBar,
-                                         boolean addToTaskBar, boolean alwaysOnTop) {
+                                         boolean addToTaskBar, boolean alwaysOnTop, boolean osDecorated) {
         this.location = location;
         this.size = size;
         this.transparentDelay = transparentDelay;
@@ -60,6 +62,7 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
         this.idVisibleOnTitleBar = idVisibleOnTitleBar;
         this.addToTaskBar = addToTaskBar;
         this.alwaysOnTop = alwaysOnTop;
+        this.osDecorated = osDecorated;
 
         parent.addPropertyChangeListener(this);
 
@@ -173,6 +176,20 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
         return alwaysOnTop;
     }
 
+    public boolean isOsDecorated() {
+        return osDecorated;
+    }
+
+    public void setOsDecorated(boolean osDecorated) {
+        if (this.osDecorated == osDecorated)
+            return;
+
+        boolean old = this.osDecorated;
+        this.osDecorated = osDecorated;
+
+        firePropertyChangeEvent("osDecorated", old, osDecorated);
+    }
+
     public void setEnabled(boolean enabled) {
         if (this.enabled == enabled)
             return;
@@ -245,7 +262,7 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
                                                  transparentRatio, transparentMode,
                                                  modal, enabled, animating, autoHide,
                                                  idVisibleOnTitleBar,
-                                                 addToTaskBar, alwaysOnTop);
+                                                 addToTaskBar, alwaysOnTop, osDecorated);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {        
