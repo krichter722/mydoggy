@@ -219,7 +219,6 @@ public abstract class DragListenerAdapter implements DragListener, Cleaner {
     protected void dockableDropDragEnd() {
         if (lastDropPanel != null) {
             lastDropPanel.dragEnd();
-            lastDropPanel = null;
         }
     }
 

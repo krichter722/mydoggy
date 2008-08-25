@@ -84,7 +84,7 @@ public class ContentFrame extends JFrame implements ContentWindow {
     }
 
     public int getNumContents() {
-        return multiSplitDockableContainer.getContentCount();
+        return multiSplitDockableContainer.getDockableCount();
     }
 
     public boolean containsContent(Content content) {

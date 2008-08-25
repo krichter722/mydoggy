@@ -13,10 +13,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -38,6 +35,7 @@ public class ModalDialog extends JDialog implements ModalWindow,
     protected Timer transparencyTimer;
     protected TransparencyManager<Window> transparencyManager;
     protected TransparencyAnimation transparencyAnimation;
+    protected ModalWindowListener modalWindowListener;
 
 
     public ModalDialog(MyDoggyToolWindowManager toolWindowManager, Window owner, boolean modal) {
@@ -45,7 +43,6 @@ public class ModalDialog extends JDialog implements ModalWindow,
 
         this.toolWindowManager = toolWindowManager;
 
-        setUndecorated(true);
         setFocusableWindowState(true);
         setModal(modal);
 
@@ -150,6 +147,16 @@ public class ModalDialog extends JDialog implements ModalWindow,
         super.setVisible(visible);
     }
 
+    public void setUndecorated(boolean undecorated) {
+        super.setUndecorated(undecorated);
+        if (undecorated) {
+            // remove
+            removeWindowListener(modalWindowListener);
+        } else {
+            // add
+            addWindowListener(modalWindowListener);
+        }
+    }
 
     public Window getWindow() {
         return this;
@@ -180,11 +187,11 @@ public class ModalDialog extends JDialog implements ModalWindow,
     }
 
     public int getNumDockables() {
-        return multiSplitDockableContainer.getContentCount();
+        return multiSplitDockableContainer.getDockableCount();
     }
 
-    public ToolWindow getFirstToolWindow() {
-        return (ToolWindow) multiSplitDockableContainer.getContents().get(0).dockable;
+    public ToolWindow getToolWindow() {
+        return (ToolWindow) multiSplitDockableContainer.getDockableEntries().get(0).dockable;
     }
 
 
@@ -210,6 +217,21 @@ public class ModalDialog extends JDialog implements ModalWindow,
 
         addMouseMotionListener(resizeMouseInputHandler);
         addMouseListener(resizeMouseInputHandler);
+
+        modalWindowListener = new ModalWindowListener();
     }
 
+
+    public class ModalWindowListener extends WindowAdapter {
+
+        @Override
+        public void windowClosing(WindowEvent e) {
+            for (MultiSplitDockableContainer.DockableEntry dockableEntry : multiSplitDockableContainer.getDockableEntries()) {
+                ((ToolWindow) dockableEntry.dockable).setVisible(false);
+            }
+
+            super.windowClosing(e);
+        }
+
+    }
 }

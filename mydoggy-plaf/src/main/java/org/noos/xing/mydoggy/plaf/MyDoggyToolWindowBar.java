@@ -916,12 +916,12 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                             // No more tools, hide the pane
                             animate = true;
                             component = null;
-                        } else if (dockableContainer.getContentCount() == 1) {
+                        } else if (dockableContainer.getDockableCount() == 1) {
                             // Remove last dockable on container...
                             animate = false;
 
-                            MultiSplitDockableContainer.DockableEntry dockableEntry = dockableContainer.getContents().get(0);
-                            component = dockableContainer.getContents().get(0).getComponent();
+                            MultiSplitDockableContainer.DockableEntry dockableEntry = dockableContainer.getDockableEntries().get(0);
+                            component = dockableContainer.getDockableEntries().get(0).getComponent();
                             dockableContainer.removeDockable(dockableEntry.getDockable(),
                                                              !visible && !manager.isShowingGroup());
 

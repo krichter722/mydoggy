@@ -27,16 +27,16 @@ public class ContentWindowMultiSplitContainer extends MultiSplitTabbedContentCon
     protected boolean isWrapRequest(Dockable dockable, Action action) {
         switch (action) {
             case ADD_DOCK:
-                if (getContentCount() == 0) {
+                if (getDockableCount() == 0) {
                     return false;
-                } else if (getContentCount() >= 1) {
+                } else if (getDockableCount() >= 1) {
                     return true;
                 }
                 return false;
             case REMOVE_DOCK:
-                if (getContentCount() <= 1) {
+                if (getDockableCount() <= 1) {
                     return false;
-                } else if (getContentCount() > 1) {
+                } else if (getDockableCount() > 1) {
                     return true;
                 }
                 return false;
