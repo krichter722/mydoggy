@@ -599,6 +599,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         this.resourceManager = resourceManager;
         resourceManager.addPropertyChangeListener(resourceManagerListener);
+        resourceManager.setClassloader(uiClassLoader);
 
         propertyChange(new PropertyChangeEvent(this, "resourceManager", null, resourceManager));
     }
@@ -739,13 +740,20 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             System.err.println("Cannot find ResourceManager.class property value. Use default.");
             className = MyDoggyResourceManager.class.getName();
         }
+
+        ResourceManager resourceManager = null;
         try {
-            setResourceManager((ResourceManager) SwingUtil.newObject(className));
+            resourceManager = (ResourceManager) SwingUtil.newObject(uiClassLoader, className);
         } catch (Exception e) {
             e.printStackTrace();
-            setResourceManager(new MyDoggyResourceManager());
+
+            resourceManager = new MyDoggyResourceManager();
         }
+
         resourceManager.setLocale(locale);
+        resourceManager.setClassloader(uiClassLoader);
+
+        setResourceManager(resourceManager);
     }
 
 

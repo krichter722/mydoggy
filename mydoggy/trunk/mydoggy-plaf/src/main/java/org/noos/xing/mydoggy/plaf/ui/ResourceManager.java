@@ -20,6 +20,8 @@ import java.util.ResourceBundle;
  */
 public interface ResourceManager extends Observable {
 
+    void setClassloader(ClassLoader classloader);
+
     /**
      * Returns an instance of class <code>clazz</code> using passed <code>args</code>.
      *

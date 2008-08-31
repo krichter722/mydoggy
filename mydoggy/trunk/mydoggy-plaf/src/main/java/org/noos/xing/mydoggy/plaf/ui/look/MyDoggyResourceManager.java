@@ -29,6 +29,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
     private static final String resourceName = "resources.properties";
 
+    protected ClassLoader classLoader;
     protected Properties resources;
 
     protected Map<String, ObjectCreator<Component>> cmpCreators;
@@ -44,6 +45,17 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
 
     public MyDoggyResourceManager() {
+        // To initializa the resource manager use @link{setClassLoader}
+    }
+
+
+    public void setClassloader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+        
+        if (classLoader == null)
+            this.classLoader = Thread.currentThread().getContextClassLoader();
+
+        // Now load all the resources...
         loadResources();
         initComponentCreators();
         initTransparencyManager();
@@ -51,7 +63,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         // Put a flag
         UIManager.put(ResourceManager.class, this);
     }
-
 
     public <T> T createInstance(Class<T> clazz, Context context) {
         return (T) instanceCreators.get(clazz).create(context);
@@ -129,7 +140,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     public void setLocale(Locale locale) {
         this.resourceBundle = loadResourceBundle(locale,
                                                  bundlePath,
-                                                 this.getClass().getClassLoader());
+                                                 classLoader);
         UIManager.put("mydoggy.resourceBundle", resourceBundle);
     }
 
@@ -247,7 +258,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
             return;
 
         // Load from file
-        resources = SwingUtil.loadPropertiesFile(resourceName, this.getClass().getClassLoader());
+        resources = SwingUtil.loadPropertiesFile(resourceName, classLoader);
 
         for (Object key : resources.keySet()) {
             String strKey = key.toString();
@@ -289,12 +300,12 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     protected void loadIcon(String name, String url) {
-        putIcon(name, SwingUtil.loadIcon(url));
+        putIcon(name, SwingUtil.loadIcon(classLoader, url));
     }
 
     protected void loadImage(String name, String url) {
         try {
-            putImage(name, ImageIO.read(this.getClass().getClassLoader().getResource(url)));
+            putImage(name, ImageIO.read(classLoader.getResource(url)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -408,7 +419,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
         setTransparencyManager(new WindowTransparencyManager());
     }
-
 
 
     public static class MyDoggyManagerPanelComponentCustomizer implements ObjectCustomizer<Component> {

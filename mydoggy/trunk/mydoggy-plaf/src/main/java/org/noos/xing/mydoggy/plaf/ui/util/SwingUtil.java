@@ -366,6 +366,9 @@ public class SwingUtil {
 
     public static Icon loadIcon(ClassLoader classLoader, String urlDef) {
         try {
+            if (classLoader == null)
+                classLoader = Thread.currentThread().getContextClassLoader();
+
             URL url = classLoader.getResource(urlDef);
             if (url == null)
                 throw new IllegalArgumentException("Invalid URL : " + urlDef);
@@ -495,7 +498,7 @@ public class SwingUtil {
         InputStream is = null;
         try {
             if (classLoader == null)
-                classLoader = SwingUtil.class.getClassLoader();
+                classLoader = Thread.currentThread().getContextClassLoader();
 
             URL resource = classLoader.getResource("META-INF/" + resourceName);
             if (resource == null) {
@@ -527,9 +530,12 @@ public class SwingUtil {
         }
     }
 
-    public static Object newObject(String className) {
+    public static Object newObject(ClassLoader classLoader, String className) {
         try {
-            return SwingUtil.class.getClassLoader().loadClass(className).newInstance();
+            if (classLoader == null)
+                classLoader = Thread.currentThread().getContextClassLoader();
+
+            return classLoader.loadClass(className).newInstance();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
