@@ -58,7 +58,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     protected PropertyChangeSupport propertyChangeSupport;
 
-    protected boolean tempShown;
+    protected boolean temporarilyVisible;
 
     boolean valueAdjusting = false;
 
@@ -236,17 +236,17 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         return availableTools;
     }
 
-    public boolean isTempShown() {
-        return tempShown;
+    public boolean isTemporarilyVisible() {
+        return temporarilyVisible;
     }
 
-    public void setTempShown(boolean tempShown) {
-        boolean old = this.tempShown;
-        this.tempShown = tempShown;
+    public void setTemporarilyVisible(boolean temporarilyVisible) {
+        boolean old = this.temporarilyVisible;
+        this.temporarilyVisible = temporarilyVisible;
 
         manager.syncPanel(anchor);
 
-        firePropertyChangeEvent("tempShown", old, tempShown);
+        firePropertyChangeEvent("temporarilyVisible", old, temporarilyVisible);
     }
 
     public int getRepresentativeAnchorIndex(Component representativeAnchor) {
@@ -1352,9 +1352,9 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
         public void propertyChange(PropertyChangeEvent evt) {
             if ("startDrag".equals(evt.getPropertyName())) {
-                // TODO: check the call getComponentWhoseParentIs. Is it necessary??? 
                 Component cmp = SwingUtil.getComponentWhoseParentIs((Component) evt.getSource(), toolWindowBarContainer);
                 TableLayout layout = (TableLayout) toolWindowBarContainer.getLayout();
+
                 switch (anchor) {
                     case LEFT:
                     case RIGHT:
@@ -1371,12 +1371,13 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             } else if ("endDrag".equals(evt.getPropertyName())) {
                 TableLayout layout = (TableLayout) toolWindowBarContainer.getLayout();
                 TableLayoutConstraints constraints = null;
+
                 switch (anchor) {
                     case LEFT:
                     case RIGHT:
                         constraints = layout.getConstraints((Component) evt.getSource());
                         if (constraints != null)
-                            layout.setRow(constraints .row1, dragComponentLength);
+                            layout.setRow(constraints.row1, dragComponentLength);
                         break;
                     case TOP:
                     case BOTTOM:
@@ -1435,7 +1436,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     public class DockedDockableDropPanel extends DockableDropPanel {
 
         public DockedDockableDropPanel() {
-            super("toolWindow.container.", ToolWindow.class, Content.class); 
+            super(ToolWindow.class, Content.class);
         }
 
 

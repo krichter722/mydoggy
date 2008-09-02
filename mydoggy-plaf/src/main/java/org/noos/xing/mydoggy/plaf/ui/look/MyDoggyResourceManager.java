@@ -19,6 +19,7 @@ import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     protected Map<String, ObjectCustomizer<Component>> cmpCustomizers;
     protected Map<Class, ObjectCreator> instanceCreators;
 
-    protected String bundlePath = "org/noos/xing/mydoggy/plaf/ui/messages/messages";    // TODO...
+    protected String bundlePath;
     protected ResourceBundle resourceBundle;
     protected ResourceBundle userResourceBundle;
 
@@ -52,9 +53,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     public void setClassloader(ClassLoader classLoader) {
         this.classLoader = classLoader;
         
-        if (classLoader == null)
-            this.classLoader = Thread.currentThread().getContextClassLoader();
-
         // Now load all the resources...
         loadResources();
         initComponentCreators();
@@ -136,12 +134,15 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         UIManager.put(TransparencyManager.class, transparencyManager);
     }
 
-
     public void setLocale(Locale locale) {
-        this.resourceBundle = loadResourceBundle(locale,
-                                                 bundlePath,
-                                                 classLoader);
-        UIManager.put("mydoggy.resourceBundle", resourceBundle);
+        if (UIManager.get("mydoggy.resourceBundle") != null) {
+            this.resourceBundle = (ResourceBundle) UIManager.get("mydoggy.resourceBundle");
+            this.bundlePath = (String) UIManager.get("mydoggy.bundlePath");
+        } else {
+            this.resourceBundle = loadResourceBundle(locale, bundlePath);
+            UIManager.put("mydoggy.resourceBundle", resourceBundle);
+            UIManager.put("mydoggy.bundlePath", bundlePath);
+        }
     }
 
     public void setUserBundle(Locale locale, String bundle, ClassLoader classLoader) {
@@ -300,12 +301,12 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     protected void loadIcon(String name, String url) {
-        putIcon(name, SwingUtil.loadIcon(classLoader, url));
+        putIcon(name, new ImageIcon(Toolkit.getDefaultToolkit().getImage(getUrl(url))));
     }
 
     protected void loadImage(String name, String url) {
         try {
-            putImage(name, ImageIO.read(classLoader.getResource(url)));
+            putImage(name, ImageIO.read(getUrl(url)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -371,8 +372,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
     }
 
     protected void loadResourceBundles(String bundlePath) {
-        if (bundlePath == null)
-            bundlePath = "org/noos/xing/mydoggy/plaf/ui/messages/messages";
         this.bundlePath = bundlePath;
     }
 
@@ -382,6 +381,24 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
     protected boolean isAlreadyLoaded() {
         return UIManager.get(ResourceManager.class) != null;
+    }
+
+    protected URL getUrl(String url) {
+        URL result = null;
+
+        if (classLoader != null)
+            result = classLoader.getResource(url);
+
+        if (result == null)
+            result = this.getClass().getClassLoader().getResource(url);
+
+        if (result == null)
+            result = Thread.currentThread().getContextClassLoader().getResource(url);
+
+        if (result == null)
+            result = ClassLoader.getSystemClassLoader().getResource(url);
+
+        return result;
     }
 
 
@@ -394,6 +411,20 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
         instanceCreators = new Hashtable<Class, ObjectCreator>();
         instanceCreators.put(ParentOfQuestion.class, new ParentOfQuestionInstanceCreator());
+    }
+
+    protected ResourceBundle loadResourceBundle(Locale locale, String bundle) {
+        ResourceBundle result = loadResourceBundle(locale, bundle, classLoader);
+        if (result instanceof DummyResourceBundle)
+            result = loadResourceBundle(locale, bundle, this.getClass().getClassLoader());
+
+        if (result instanceof DummyResourceBundle)
+            result = loadResourceBundle(locale, bundle, Thread.currentThread().getContextClassLoader());
+
+        if (result instanceof DummyResourceBundle)
+            result = loadResourceBundle(locale, bundle, ClassLoader.getSystemClassLoader());
+
+        return result;
     }
 
     protected ResourceBundle loadResourceBundle(Locale locale, String bundle, ClassLoader classLoader) {

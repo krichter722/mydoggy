@@ -16,7 +16,8 @@ public class ModalWindowDockableDropPanel extends DockableDropPanel {
 
 
     public ModalWindowDockableDropPanel(ModalWindow modalWindow, ToolWindowManager toolWindowManager) {
-        super("toolWindow.container.", ToolWindow.class);   // TODO: toolWindow.container. can we change it?
+        super(ToolWindow.class);
+        
         this.modalWindow = modalWindow;
         this.toolWindowManager = toolWindowManager;
     }

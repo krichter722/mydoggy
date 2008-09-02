@@ -502,7 +502,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
             addPopupAction(popupMenu, dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.MAXIMIZE_ACTION_ID));
             addPopupAction(popupMenu, dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.TOOLS_MENU_ACTION_ID));
 
-            // TODO: add custom actions...introduce some customization...
+            // add user actions
             for (ToolWindowAction toolWindowAction : getDockedTypeDescriptor().getToolWindowActions()) {
                 if (!(toolWindowAction instanceof PlafToolWindowAction))  {
                     addPopupAction(popupMenu, toolWindowAction);
@@ -511,10 +511,12 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
             popupMenu.addSeparator();
 
+            // add show/hide/aggregate actions...
             addPopupAction(popupMenu, dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.HIDE_ACTION_ID));
             addPopupAction(popupMenu, dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.AGGREGATE_ACTION_ID));
             addPopupAction(popupMenu, dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.AGGREGATE_MENU_ACTION_ID));
 
+            // call for popup updater...
             if (popupUpdaterList != null) {
                 for (PopupUpdater popupUpdater : popupUpdaterList) {
                     popupUpdater.update(source, popupMenu);

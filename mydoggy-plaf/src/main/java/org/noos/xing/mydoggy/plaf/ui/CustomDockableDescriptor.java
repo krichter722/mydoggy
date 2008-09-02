@@ -190,7 +190,7 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
             releaseLocksOne();
 
             // Restore graphics
-            manager.setTempShown(false);
+            manager.setBarsTemporarilyVisible(false);
 
             // Fire endDrag event
             if (lastAnchor != null && dsde.getDropSuccess())

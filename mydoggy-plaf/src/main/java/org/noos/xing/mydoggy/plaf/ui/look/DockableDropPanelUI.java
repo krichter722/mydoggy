@@ -27,7 +27,6 @@ public class DockableDropPanelUI extends BasicPanelUI {
 
     protected DockableDropPanel dockableDropPanel;
     protected TableLayout layout;
-    protected String parentPrefix;
     protected int threshold;
 
     protected Point mouseLocation;
@@ -63,7 +62,6 @@ public class DockableDropPanelUI extends BasicPanelUI {
         super.installDefaults(p);
 
         dockableDropPanel.setLayout(layout = new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
-        this.parentPrefix = dockableDropPanel.getParentPrefix();
         this.threshold = dockableDropPanel.getThreshold();
     }
 
@@ -129,12 +127,10 @@ public class DockableDropPanelUI extends BasicPanelUI {
                 // Check if the mouse is on a dockable container..
                 Component deepestCmp = SwingUtilities.getDeepestComponentAt(c, mouseLocation.x, mouseLocation.y);
                 if (deepestCmp != null) {
-                    onDockableContainer = SwingUtil.getParent(deepestCmp, parentPrefix);
+                    onDockableContainer = (Component) SwingUtil.getParent(deepestCmp, DockableOwner.class);
 
                     if (onDockableContainer != null) {
-                        if (onDockableContainer instanceof DockableOwner) {
-                            onDockable = ((DockableOwner) onDockableContainer).getDockable();
-                        } else if (onDockableContainer instanceof MultiDockableOwner) {
+                        if (onDockableContainer instanceof MultiDockableOwner) {
                             MultiDockableOwner multiDockableOwner = (MultiDockableOwner) onDockableContainer;
 
                             if (oldMultiDockableOwner != null && oldMultiDockableOwner != multiDockableOwner)
@@ -149,7 +145,9 @@ public class DockableDropPanelUI extends BasicPanelUI {
                             multiDockableOwner.setPointerVisible(true);
 
                             oldMultiDockableOwner = multiDockableOwner;
-                        } else
+                        } else if (onDockableContainer instanceof DockableOwner) {
+                            onDockable = ((DockableOwner) onDockableContainer).getDockable();
+                        } else 
                             throw new IllegalStateException("Dockable Container not reconized!!!");
 
                         // Ok the mouse is on a dockable container

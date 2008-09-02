@@ -14,7 +14,6 @@ import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * @author Angelo De Caro
@@ -46,7 +45,6 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     protected Map<Object, ToolWindowTab> aliases;
     protected ToolWindowTab rootTab;
 
-    protected ResourceBundle resourceBundle;
     protected ToolWindowDescriptor descriptor;
 
     protected EventListenerList toolWindowListeners;
@@ -59,9 +57,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     public MyDoggyToolWindow(MyDoggyToolWindowManager manager,
                              String id, int index,
                              ToolWindowAnchor anchor, ToolWindowType type,
-                             String title, Icon icon, Component component,
-                             ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
+                             String title, Icon icon, Component component) {
         this.toolWindowTabs = new ArrayList<ToolWindowTab>();
 
         rootTab = addTabInternal(title, null, component, null, true);
@@ -493,14 +489,13 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             if (toolWindowTabs.size() == 0)
                 return;
 
-            String newTitle = (resourceBundle != null) ? resourceBundle.getString(title) : title;
-            if (newTitle != null && newTitle.equals(getTitle()))
+            if (title != null && title.equals(getTitle()))
                 return;
 
             String old = this.getTitle();
-            rootTab.setTitle(newTitle);
+            rootTab.setTitle(title);
 
-            firePropertyChangeEvent("title", old, newTitle);
+            firePropertyChangeEvent("title", old, title);
         }
     }
 

@@ -7,7 +7,7 @@ import java.awt.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public interface MultiDockableOwner {
+public interface MultiDockableOwner extends DockableOwner {
 
     Dockable getDockableAt(Point point);
 

@@ -263,7 +263,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
     public class MultiSplitTabbedDockableDropPanel extends DockableDropPanel {
 
         public MultiSplitTabbedDockableDropPanel() {
-            super("@@mydoggy.dockable.", 10, Content.class);
+            super(10, Content.class);
         }
 
 

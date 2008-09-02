@@ -77,7 +77,6 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
             layout.setRow(0, 0);
             layout.setRow(2, 0);
 
-            // TODO: can we call validate???
             barContainer.getParent().doLayout();
             resize();
 
@@ -172,7 +171,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         PropertyChangeEventSource slidingDescriptorSource = (PropertyChangeEventSource) descriptor.getToolWindow().getTypeDescriptor(SlidingTypeDescriptor.class);
         slidingDescriptorSource.addPlafPropertyChangeListener(new SlidingTypePropertyChangeListener());
 
-        descriptor.getManager().addInternalPropertyChangeListener("tempShown", new TempShownPropertyChangeListener());
+        descriptor.getManager().addInternalPropertyChangeListener("temporarilyVisible", new TempShownPropertyChangeListener());
         descriptor.getManager().addInternalPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getNewValue() != null) {

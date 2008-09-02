@@ -83,7 +83,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         // Init icons
         this.aggregateIcon = new ExMultipleAggregateIcon(6, SwingConstants.HORIZONTAL);
         this.aggregateIcon.setIconAt(1, this.titleIcon = new TextIcon(this, "", TextIcon.ROTATE_NONE));
-        this.tabPointer = SwingUtil.loadImage("org/noos/xing/mydoggy/plaf/ui/icons/tabPointer.png");
+        this.tabPointer = SwingUtil.getImage(MyDoggyKeySpace.CONTENT_POINTER);
 
         // Init support fields
         this.dragEnabled = dragEnabled;
@@ -93,6 +93,10 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         addMouseMotionListener(mouseInputAdapter);
     }
 
+
+    public Dockable getDockable() {
+        throw new IllegalStateException("Cannot call this method on this object.");
+    }                                         
 
     public Dockable getDockableAt(Point point) {
         indexAtLocation = indexAtLocation(point.x, point.y);
