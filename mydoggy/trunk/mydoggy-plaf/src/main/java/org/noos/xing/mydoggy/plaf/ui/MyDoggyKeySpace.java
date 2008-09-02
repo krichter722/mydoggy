@@ -47,6 +47,8 @@ public interface MyDoggyKeySpace {
     String CONTENT_PAGE_CLOSE_INACTIVE = "mydoggy.icon.contentPageClose.inactive";
     String CONTENT_PAGE_MAXIMIZE = "mydoggy.icon.contentPageMaximize";
     String CONTENT_PAGE_RESTORE = "mydoggy.icon.contentPageRestore";
+    String CONTENT_POINTER = "mydoggy.image.contentPointer";
+
 
     String TCP_STAR = "TabbedContentPan.icon.star";
 

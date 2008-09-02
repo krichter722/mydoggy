@@ -71,15 +71,15 @@ public class RepresentativeAnchorDragListener extends DragListenerAdapter {
 
         // updated the ghost image
         if (newAnchor != lastAnchor) {
-            if (!SwingUtil.getBoolean("drag.icon.useDefault", false)) {
+            if (!SwingUtil.getBoolean(MyDoggyKeySpace.DRAG_USE_DEFAULT_ICON, false)) {
                 resetGhostImage();
 
                 if (newAnchor == null) {
                     updatedGhostImage = ghostImage;
-                    manager.getBar(lastAnchor).setTempShown(false);
+                    manager.getBar(lastAnchor).setTemporarilyVisible(false);
                 } else {
                     if (manager.getBar(newAnchor).getAvailableTools() == 0)
-                        manager.getBar(newAnchor).setTempShown(true);
+                        manager.getBar(newAnchor).setTemporarilyVisible(true);
 
                     switch (newAnchor) {
                         case LEFT:
@@ -144,7 +144,7 @@ public class RepresentativeAnchorDragListener extends DragListenerAdapter {
             releaseLocksOne();
 
             // Restore graphics
-            manager.setTempShown(false);
+            manager.setBarsTemporarilyVisible(false);
 
             // Fire endDrag event
             descriptor.getToolBar().propertyChange(new PropertyChangeEvent(getComponent(), "endDrag", null, dsde));

@@ -5,7 +5,6 @@ import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * TODO: add docs
  */
 public class ToolWindowManagerListenerAdapter implements ToolWindowManagerListener {
 

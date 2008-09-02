@@ -21,20 +21,18 @@ public class DockableDropPanel extends JPanel {
 
 
     protected Class<? extends Dockable>[] targets;
-    protected String parentPrefix;
     protected int threshold;
 
 
-    public DockableDropPanel(String parentPrefix, Class<? extends Dockable>... targets) {
-        this(parentPrefix, 20, targets);
+    public DockableDropPanel(Class<? extends Dockable>... targets) {
+        this(20, targets);
     }
 
-    public DockableDropPanel(String parentPrefix, int threshold, Class<? extends Dockable>... targets) {
+    public DockableDropPanel(int threshold, Class<? extends Dockable>... targets) {
         if (targets == null || targets.length == 0)
             throw new IllegalArgumentException("Targets cannot be null or zero length.");
 
         this.targets = targets;
-        this.parentPrefix = parentPrefix;
         this.threshold = threshold;
 
         updateUI();
@@ -54,7 +52,7 @@ public class DockableDropPanel extends JPanel {
    }
 
     public void updateUI() {
-        if (parentPrefix != null)
+        if (targets != null)
             setUI((DockableDropPanelUI) UIManager.getUI(this));
     }
 
@@ -70,10 +68,6 @@ public class DockableDropPanel extends JPanel {
         return (DockableDropPanelUI) super.getUI();
     }
 
-
-    public String getParentPrefix() {
-        return parentPrefix;
-    }
 
     public int getThreshold() {
         return threshold;

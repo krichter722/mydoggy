@@ -172,7 +172,7 @@ public class FloatingLivePanel extends TranslucentPanel implements FloatingLiveW
     public class FloatingLiveDockableDropPanel extends DockableDropPanel {
 
         public FloatingLiveDockableDropPanel() {
-            super("toolWindow.container.", ToolWindow.class);
+            super(ToolWindow.class);
         }
 
 

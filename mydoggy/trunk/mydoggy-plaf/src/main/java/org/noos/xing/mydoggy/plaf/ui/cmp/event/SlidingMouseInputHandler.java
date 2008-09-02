@@ -249,7 +249,6 @@ public class SlidingMouseInputHandler extends ComponentAdapter implements MouseI
         if (descriptor.getToolWindow().getType() != ToolWindowType.SLIDING)
             return;
 
-        // TODO: check for conflicts...
         switch (descriptor.getAnchor()) {
             case LEFT:
             case RIGHT:
