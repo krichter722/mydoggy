@@ -6,14 +6,10 @@ TODO: rewrite tests...
 TODO: workspace loading for MULTISPLIT, it's an instance also of tabbed
 TODO: stopping animation before cleaning, in all ui class..
 TODO: move properties key like MyDoggyKeySpace.WINDOW_ALWAYS_ON_TOP into a class...
-TODO: check changing ui....something wrong during the drag...
 TODO: How to make the representative anchor button of a tool window show the title of the tab which is currently active in the tool window.
 TODO: tab flashing doesn't work...when the tool is not visible...
 
-
 BY EMAIL:
 
-TODO: hiding ToolWindowTitleBar
-TODO: TabbedcontentPAne: reordering like in firefox
-TODO: setRepresentativeAnchorButton also for minimized content
+TODO: (-) hiding ToolWindowTitleBar
 TODO: unregisterAllToolWindow-toolWindowUnregistere

@@ -25,8 +25,6 @@ public class ModalDialog extends JDialog implements ModalWindow,
                                                     ActionListener {
     protected MyDoggyToolWindowManager toolWindowManager;
 
-    protected Component returnFocus;
-
     // Multi split support
     protected DockableDropPanel dockableDropPanel;
     protected MultiSplitDockableContainer multiSplitDockableContainer;
@@ -161,6 +159,7 @@ public class ModalDialog extends JDialog implements ModalWindow,
     public Window getWindow() {
         return this;
     }
+
 
     public void addDockable(ToolWindow toolWindow, Component content) {
         addDockable(toolWindow, content, null, AggregationPosition.DEFAULT);

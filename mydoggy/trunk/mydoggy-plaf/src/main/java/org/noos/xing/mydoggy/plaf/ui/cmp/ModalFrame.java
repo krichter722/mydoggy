@@ -6,15 +6,14 @@ import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
+import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingResizeMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
+import javax.swing.event.MouseInputListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -39,6 +38,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
     protected Timer transparencyTimer;
     protected TransparencyManager<Window> transparencyManager;
     protected TransparencyAnimation transparencyAnimation;
+    protected ModalWindowListener modalWindowListener;
 
 
     public ModalFrame(MyDoggyToolWindowManager toolWindowManager, ToolWindow toolWindow, Window owner, boolean modal) {
@@ -58,6 +58,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
         enableEvents(WindowEvent.WINDOW_EVENT_MASK | ComponentEvent.MOUSE_MOTION_EVENT_MASK);
 
         initComponents();
+        initListeners();
     }
 
 
@@ -166,6 +167,17 @@ public class ModalFrame extends JFrame implements ModalWindow,
         super.setVisible(visible);
     }
 
+    public void setUndecorated(boolean undecorated) {
+        super.setUndecorated(undecorated);
+        if (undecorated) {
+            // remove
+            removeWindowListener(modalWindowListener);
+        } else {
+            // add
+            addWindowListener(modalWindowListener);
+        }
+    }
+
     protected void processWindowEvent(WindowEvent windowEvent) {
         switch (windowEvent.getID()) {
             case WindowEvent.WINDOW_CLOSING:
@@ -190,19 +202,6 @@ public class ModalFrame extends JFrame implements ModalWindow,
         }
     }
 
-    public boolean isModal() {
-        synchronized (ModalFrame.this) {
-            return modalToWindow != null;
-        }
-    }
-
-    public Component getReturnFocus() {
-        return returnFocus;
-    }
-
-    public void setReturnFocus(Component returnFocus) {
-        this.returnFocus = returnFocus;
-    }
 
     public void addDockable(ToolWindow toolWindow, Component content) {
         addDockable(toolWindow, content, null, AggregationPosition.DEFAULT);
@@ -237,6 +236,20 @@ public class ModalFrame extends JFrame implements ModalWindow,
     }
 
 
+    public boolean isModal() {
+        synchronized (ModalFrame.this) {
+            return modalToWindow != null;
+        }
+    }
+
+    public Component getReturnFocus() {
+        return returnFocus;
+    }
+
+    public void setReturnFocus(Component returnFocus) {
+        this.returnFocus = returnFocus;
+    }
+
 
     protected void initComponents() {
         multiSplitDockableContainer = new MultiSplitDockableContainer(toolWindowManager, JSplitPane.VERTICAL_SPLIT);
@@ -253,6 +266,15 @@ public class ModalFrame extends JFrame implements ModalWindow,
             this.transparencyAnimation = new TransparencyAnimation(SwingUtil.getTransparencyManager(), this, 0.0f);
         } else
             this.transparencyAnimation = null;
+    }
+
+    protected void initListeners() {
+        MouseInputListener resizeMouseInputHandler = new FloatingResizeMouseInputHandler(this);
+
+        addMouseMotionListener(resizeMouseInputHandler);
+        addMouseListener(resizeMouseInputHandler);
+
+        modalWindowListener = new ModalWindowListener();
     }
 
     protected void restoreOwner() {
@@ -284,6 +306,20 @@ public class ModalFrame extends JFrame implements ModalWindow,
     protected void close(WindowEvent windowEvent) {
         restoreOwner();
         super.processWindowEvent(windowEvent);
+    }
+
+    
+    public class ModalWindowListener extends WindowAdapter {
+
+        @Override
+        public void windowClosing(WindowEvent e) {
+            for (MultiSplitDockableContainer.DockableEntry dockableEntry : multiSplitDockableContainer.getDockableEntries()) {
+                ((ToolWindow) dockableEntry.dockable).setVisible(false);
+            }
+
+            super.windowClosing(e);
+        }
+
     }
 
 }
