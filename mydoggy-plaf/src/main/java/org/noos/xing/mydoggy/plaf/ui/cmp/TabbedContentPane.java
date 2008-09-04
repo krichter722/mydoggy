@@ -95,7 +95,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
 
     public Dockable getDockable() {
-        throw new IllegalStateException("Cannot call this method on this object.");
+        return null;
     }                                         
 
     public Dockable getDockableAt(Point point) {
