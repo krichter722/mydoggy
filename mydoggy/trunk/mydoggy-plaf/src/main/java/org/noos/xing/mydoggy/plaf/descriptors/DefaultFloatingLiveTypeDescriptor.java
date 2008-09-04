@@ -3,58 +3,58 @@ package org.noos.xing.mydoggy.plaf.descriptors;
 import org.noos.xing.mydoggy.FloatingLiveTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
-import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class DefaultFloatingLiveTypeDescriptor extends PropertyChangeEventSource implements FloatingLiveTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
+public class DefaultFloatingLiveTypeDescriptor extends DefaultToolWindowTypeDescriptor implements FloatingLiveTypeDescriptor,
+                                                                                                  InternalTypeDescriptor {
     private Point location;
     private Dimension size;
 
     private boolean transparentMode;
     private float transparentRatio;
     private int transparentDelay;
-    private boolean enabled;
-    private boolean animating;
-    private boolean autoHide;
-    private boolean idVisibleOnTitleBar;
 
 
     public DefaultFloatingLiveTypeDescriptor() {
         transparentMode = true;
         transparentRatio = 0.5f;
         transparentDelay = 1000;
-        enabled = true;
-        animating = true;
+
         autoHide = false;
-        idVisibleOnTitleBar = true;
     }
 
     public DefaultFloatingLiveTypeDescriptor(ToolWindowDescriptor toolWindowDescriptor,
-                                             DefaultFloatingLiveTypeDescriptor parent, Point location, Dimension size,
-                                             int transparentDelay, float transparentRatio, boolean useTransparentMode,
-                                             boolean enabled, boolean animating, boolean autoHide, boolean idVisibleOnTitleBar) {
+                                             DefaultFloatingLiveTypeDescriptor parent,
+                                             Point location,
+                                             Dimension size,
+                                             int transparentDelay,
+                                             float transparentRatio,
+                                             boolean useTransparentMode,
+                                             boolean enabled,
+                                             boolean animating,
+                                             boolean autoHide,
+                                             boolean idVisibleOnTitleBar,
+                                             boolean hideRepresentativeButtonOnVisible) {
+        super(toolWindowDescriptor, parent, enabled, animating, autoHide, idVisibleOnTitleBar, hideRepresentativeButtonOnVisible);
+
         this.location = location;
         this.size = size;
         this.transparentDelay = transparentDelay;
         this.transparentRatio = transparentRatio;
         this.transparentMode = useTransparentMode;
-        this.enabled = enabled;
-        this.animating = animating;
-        this.autoHide = autoHide;
-        this.idVisibleOnTitleBar = idVisibleOnTitleBar;
-
-        parent.addPropertyChangeListener(this);
-
-        toolWindowDescriptor.getCleaner().addCleaner(this);
-        
     }
+
+
+    public ToolWindowType getType() {
+        return ToolWindowType.FLOATING_LIVE;
+    }
+
 
     public void setLocation(int x, int y) {
         Point newLocation = new Point(x, y);
@@ -121,20 +121,6 @@ public class DefaultFloatingLiveTypeDescriptor extends PropertyChangeEventSource
         return transparentDelay;
     }
 
-    public void setEnabled(boolean enabled) {
-        if (this.enabled == enabled)
-            return;
-
-        boolean old = this.enabled;
-        this.enabled = enabled;
-
-        firePropertyChangeEvent("enabled", old, enabled);
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
     public void setTransparentDelay(int transparentDelay) {
         if (this.transparentDelay == transparentDelay)
             return;
@@ -145,56 +131,17 @@ public class DefaultFloatingLiveTypeDescriptor extends PropertyChangeEventSource
         firePropertyChangeEvent("transparentDelay", old, transparentDelay);
     }
 
-    public boolean isAnimating() {
-        return animating;
-    }
-
-    public ToolWindowType getType() {
-        return ToolWindowType.FLOATING_LIVE;
-    }
-
-    public void setAnimating(boolean animating) {
-        if (this.animating == animating)
-            return;
-
-        boolean old = this.animating;
-        this.animating = animating;
-        firePropertyChangeEvent("animating", old, animating);
-    }
-
-    public void setIdVisibleOnTitleBar(boolean idVisibleOnTitleBar) {
-        if (this.idVisibleOnTitleBar == idVisibleOnTitleBar)
-            return;
-
-        boolean old = this.idVisibleOnTitleBar;
-        this.idVisibleOnTitleBar = idVisibleOnTitleBar;
-        firePropertyChangeEvent("idVisibleOnTitleBar", old, idVisibleOnTitleBar);
-    }
-
-    public boolean isIdVisibleOnTitleBar() {
-        return idVisibleOnTitleBar;
-    }
-
-    public void setAutoHide(boolean autoHide) {
-        boolean old = this.autoHide;
-        this.autoHide = autoHide;
-
-        firePropertyChangeEvent("autoHide", old, autoHide);
-    }
-
-    public boolean isAutoHide() {
-        return autoHide;
-    }
-
 
     public ToolWindowTypeDescriptor cloneMe(ToolWindowDescriptor toolWindowDescriptor) {
         return new DefaultFloatingLiveTypeDescriptor(toolWindowDescriptor,
                                                      this, location, size, transparentDelay,
                                                      transparentRatio, transparentMode,
-                                                     enabled, animating, autoHide, idVisibleOnTitleBar);
+                                                     enabled, animating, autoHide, idVisibleOnTitleBar, hideRepresentativeButtonOnVisible);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
+        super.propertyChange(evt);
+
         if ("location".equals(evt.getPropertyName())) {
             Point p = (Point) evt.getNewValue();
             setLocation(p.x, p.y);
@@ -207,15 +154,7 @@ public class DefaultFloatingLiveTypeDescriptor extends PropertyChangeEventSource
             setTransparentRatio((Float) evt.getNewValue());
         } else if ("transparentDelay".equals(evt.getPropertyName())) {
             setTransparentDelay((Integer) evt.getNewValue());
-        } else if ("enabled".equals(evt.getPropertyName())) {
-            setEnabled((Boolean) evt.getNewValue());
-        } else if ("animating".equals(evt.getPropertyName())) {
-            setAnimating((Boolean) evt.getNewValue());
-        } else if ("autoHide".equals(evt.getPropertyName())) {
-            setAutoHide((Boolean) evt.getNewValue());
-        } else if ("idVisibleOnTitleBar".equals(evt.getPropertyName())) {
-            setIdVisibleOnTitleBar((Boolean) evt.getNewValue());
-        }
+        } 
     }
 
 }

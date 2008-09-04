@@ -1,36 +1,27 @@
 package org.noos.xing.mydoggy.plaf.descriptors;
 
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.*;
+import java.util.HashMap;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource implements DockedTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
-    protected ToolWindowDescriptor toolWindowDescriptor;
+public class DefaultDockedTypeDescriptor extends DefaultToolWindowTypeDescriptor implements DockedTypeDescriptor,
+                                                                                            InternalTypeDescriptor {
     protected ToolWindowActionHandler toolWindowActionHandler;
+
     protected boolean popupMenuEnabled;
     protected JMenu toolsMenu;
-    protected int dockLength;
-    protected boolean animating;
-    protected boolean autoHide;
 
-    protected boolean previewEnabled;
-    protected int previewDelay;
-    protected float previewTransparentRatio;
-    protected boolean hideRepresentativeButtonOnVisible;
-    protected boolean idVisibleOnTitleBar;
+    protected int dockLength;
     protected int minimumDockLength;
 
-    protected Set<ToolWindowAnchor> lockingAnchors;
-    protected Map<String, ToolWindowAction> toolWindowActionMap;
+    protected boolean hideRepresentativeButtonOnVisible;
 
 
     public DefaultDockedTypeDescriptor() {
@@ -40,13 +31,9 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         this.toolWindowActionHandler = null;
         this.animating = true;
         this.autoHide = false;
-        this.previewEnabled = true;
-        this.previewDelay = 1000;
-        this.previewTransparentRatio = 0.65f;
         this.hideRepresentativeButtonOnVisible = false;
         this.idVisibleOnTitleBar = true;
         this.minimumDockLength = 100;
-        this.lockingAnchors = new HashSet<ToolWindowAnchor>();
         this.toolWindowActionMap = new HashMap<String, ToolWindowAction>();
     }
 
@@ -54,34 +41,27 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
                                        DefaultDockedTypeDescriptor parent,
                                        int dockLength, boolean popupMenuEnabled,
                                        ToolWindowActionHandler toolWindowActionHandler, boolean animating,
-                                       boolean autoHide, boolean previewEnabled, int previewDelay, float previewTransparentRatio,
+                                       boolean autoHide,
                                        boolean hideRepresentativeButtonOnVisible,
                                        boolean idVisibleOnTitleBar,
-                                       int minimumDockLength,
-                                       ToolWindowAnchor[] lockingAnchors) {
-        this.toolWindowDescriptor = toolWindowDescriptor;
+                                       int minimumDockLength) {
+        super(toolWindowDescriptor, parent, true, animating, autoHide, idVisibleOnTitleBar, hideRepresentativeButtonOnVisible);
+        
         this.toolsMenu = new JMenu(SwingUtil.getString("@@tool.toolsMenu"));
+
         this.popupMenuEnabled = popupMenuEnabled;
+
         this.dockLength = dockLength;
-        this.toolWindowActionHandler = toolWindowActionHandler;
-        this.animating = animating;
-        this.autoHide = autoHide;
-        this.previewEnabled = previewEnabled;
-        this.previewDelay = previewDelay;
-        this.previewTransparentRatio = previewTransparentRatio;
-        this.hideRepresentativeButtonOnVisible = hideRepresentativeButtonOnVisible;
-        this.idVisibleOnTitleBar = idVisibleOnTitleBar;
         this.minimumDockLength = minimumDockLength;
-        this.lockingAnchors = new HashSet<ToolWindowAnchor>();
-        this.lockingAnchors.addAll(Arrays.asList(lockingAnchors));
-        this.toolWindowActionMap = new HashMap<String, ToolWindowAction>();
 
-        parent.addPropertyChangeListener(this);
-
-        toolWindowDescriptor.getCleaner().addCleaner(this);
+        this.toolWindowActionHandler = toolWindowActionHandler;
     }
 
-    
+
+    public ToolWindowType getType() {
+        return ToolWindowType.DOCKED;
+    }
+
     public void setPopupMenuEnabled(boolean enabled) {
         if (this.popupMenuEnabled == enabled)
             return;
@@ -142,156 +122,8 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
         firePropertyChangeEvent("toolWindowActionHandler", old, toolWindowActionHandler);
     }
 
-    public boolean isPreviewEnabled() {
-        return previewEnabled;
-    }
-
-    public void setPreviewEnabled(boolean previewEnabled) {
-        if (this.previewEnabled == previewEnabled)
-            return;
-
-        boolean old = this.previewEnabled;
-        this.previewEnabled = previewEnabled;
-        firePropertyChangeEvent("previewEnabled", old, previewEnabled);
-    }
-
-    public int getPreviewDelay() {
-        return previewDelay;
-    }
-
-    public void setPreviewDelay(int previewDelay) {
-        if (this.previewDelay == previewDelay)
-            return;
-
-        int old = this.previewDelay;
-        this.previewDelay = previewDelay;
-        firePropertyChangeEvent("previewDelay", old, previewDelay);
-    }
-
-    public float getPreviewTransparentRatio() {
-        return previewTransparentRatio;
-    }
-
-    public void setHideRepresentativeButtonOnVisible(boolean hideRepresentativeButtonOnVisible) {
-        if (this.hideRepresentativeButtonOnVisible == hideRepresentativeButtonOnVisible)
-            return;
-
-        boolean old = this.hideRepresentativeButtonOnVisible;
-        this.hideRepresentativeButtonOnVisible = hideRepresentativeButtonOnVisible;
-        firePropertyChangeEvent("hideRepresentativeButtonOnVisible", old, hideRepresentativeButtonOnVisible);
-    }
-
-    public boolean isHideRepresentativeButtonOnVisible() {
-        return hideRepresentativeButtonOnVisible;
-    }
-
-    public void addLockingAnchor(ToolWindowAnchor anchor) {
-        lockingAnchors.add(anchor);
-    }
-
-    public void removeLockingAnchor(ToolWindowAnchor anchor) {
-        lockingAnchors.remove(anchor);
-    }
-
-    public void removeAllLockingAnchor() {
-        lockingAnchors.clear();
-    }
-
-    public ToolWindowAnchor[] getLockingAnchors() {
-        return lockingAnchors.toArray(new ToolWindowAnchor[lockingAnchors.size()]);
-    }
-
-    public boolean containsLockingAnchor(ToolWindowAnchor anchor) {
-        return lockingAnchors.contains(anchor);
-    }
-
-    public void setIdVisibleOnTitleBar(boolean idVisibleOnTitleBar) {
-        if (this.idVisibleOnTitleBar == idVisibleOnTitleBar)
-            return;
-
-        boolean old = this.idVisibleOnTitleBar;
-        this.idVisibleOnTitleBar = idVisibleOnTitleBar;
-        firePropertyChangeEvent("idVisibleOnTitleBar", old, idVisibleOnTitleBar);
-    }
-
-    public boolean isIdVisibleOnTitleBar() {
-        return idVisibleOnTitleBar;
-    }
-
-    public void setAutoHide(boolean autoHide) {
-        boolean old = this.autoHide;
-        this.autoHide = autoHide;
-
-        firePropertyChangeEvent("autoHide", old, autoHide);
-    }
-
-    public boolean isAutoHide() {
-        return autoHide;
-    }
-
-    public void setPreviewTransparentRatio(float previewTransparentRatio) {
-        if (this.previewTransparentRatio == previewTransparentRatio)
-            return;
-
-        float old = this.previewTransparentRatio;
-        this.previewTransparentRatio = previewTransparentRatio;
-        firePropertyChangeEvent("previewTransparentRatio", old, previewTransparentRatio);
-    }
-
-    public boolean isAnimating() {
-        return animating;
-    }
-
-    public ToolWindowType getType() {
-        return ToolWindowType.DOCKED;
-    }
-
-    public void setAnimating(boolean animating) {
-        if (this.animating == animating)
-            return;
-
-        boolean old = this.animating;
-        this.animating = animating;
-        firePropertyChangeEvent("animating", old, animating);
-    }
-
     public void setEnabled(boolean enabled) {
         throw new RuntimeException("Cannot call this method. This type is always available.");
-    }
-
-    public boolean isEnabled() {
-        return true;
-    }
-
-    public ToolWindowAction getToolWindowAction(String id) {
-        return toolWindowActionMap.get(id);
-    }
-
-    public void addToolWindowAction(ToolWindowAction toolWindowAction) {
-        addToolWindowAction(toolWindowAction, -1);
-    }
-
-    public void addToolWindowAction(ToolWindowAction toolWindowAction, int index) {
-        if  (toolWindowAction == null)
-            throw new IllegalArgumentException("The action cannot be null.");
-
-        if  (getToolWindowAction(toolWindowAction.getId()) != null)
-            throw new IllegalArgumentException("The action is already registered.");
-
-        toolWindowAction.setToolWindow(toolWindowDescriptor.getToolWindow());
-        toolWindowActionMap.put(toolWindowAction.getId(), toolWindowAction);
-
-        firePropertyChangeEvent("toolWindowAction", null, toolWindowAction, new Object[]{index});
-    }
-
-    public ToolWindowAction[] getToolWindowActions() {
-        return toolWindowActionMap.values().toArray(new ToolWindowAction[0]);
-    }
-
-    public void removeToolWindowAction(String id) {
-        ToolWindowAction toolWindowAction = toolWindowActionMap.remove(id);
-
-        firePropertyChangeEvent("toolWindowAction", toolWindowAction, null);
     }
 
 
@@ -302,35 +134,22 @@ public class DefaultDockedTypeDescriptor extends PropertyChangeEventSource imple
                                                popupMenuEnabled,
                                                toolWindowActionHandler,
                                                animating,
-                                               this.autoHide, previewEnabled,
-                                               previewDelay, previewTransparentRatio,
+                                               autoHide,
                                                hideRepresentativeButtonOnVisible,
                                                idVisibleOnTitleBar,
-                                               minimumDockLength,
-                                               getLockingAnchors());
+                                               minimumDockLength
+        );
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
+        super.propertyChange(evt);
+
         if ("popupMenuEnabled".equals(evt.getPropertyName())) {
             setPopupMenuEnabled((Boolean) evt.getNewValue());
         } else if ("dockLength".equals(evt.getPropertyName())) {
             setDockLength((Integer) evt.getNewValue());
-        } else if ("animating".equals(evt.getPropertyName())) {
-            setAnimating((Boolean) evt.getNewValue());
         } else if ("toolWindowActionHandler".equals(evt.getPropertyName())) {
             setToolWindowActionHandler((ToolWindowActionHandler) evt.getNewValue());
-        } else if ("previewEnabled".equals(evt.getPropertyName())) {
-            setPreviewEnabled((Boolean) evt.getNewValue());
-        } else if ("previewDelay".equals(evt.getPropertyName())) {
-            setPreviewDelay((Integer) evt.getNewValue());
-        } else if ("previewTransparentRatio".equals(evt.getPropertyName())) {
-            setPreviewTransparentRatio((Float) evt.getNewValue());
-        } else if ("hideRepresentativeButtonOnVisible".equals(evt.getPropertyName())) {
-            setHideRepresentativeButtonOnVisible((Boolean) evt.getNewValue());
-        } else if ("idVisibleOnTitleBar".equals(evt.getPropertyName())) {
-            setIdVisibleOnTitleBar((Boolean) evt.getNewValue());
-        } else if ("autoHide".equals(evt.getPropertyName())) {
-            setAutoHide((Boolean) evt.getNewValue());
         }
     }
 

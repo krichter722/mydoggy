@@ -360,6 +360,21 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
     ToolWindowTab[] getToolWindowTabs();
 
     /**
+     * TODO:
+     * @param toolWindowAction
+     * @since 1.5.0
+     */
+    void addToolWindowAction(ToolWindowAction toolWindowAction);
+
+    /**
+     * TODO:
+     *
+     * @param id
+     * @since 1.5.0
+     */
+    void removeToolWindowAction(String id);
+
+    /**
      * Adds the specified toolwindow listener to receive toolwindow events from
      * this tool.
      * If listener <code>l</code> is <code>null</code>,
@@ -415,4 +430,11 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
      * @since 1.4.0
      */
     <T extends ToolWindowTypeDescriptor> T getTypeDescriptor(Class<T> descriptorClass);
+
+    /**
+     *
+     * @return
+     * @since 1.5.0
+     */
+    RepresentativeAnchorDescriptor getRepresentativeAnchorDescriptor();
 }

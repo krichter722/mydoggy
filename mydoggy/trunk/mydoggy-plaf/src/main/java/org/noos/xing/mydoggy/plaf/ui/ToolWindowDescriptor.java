@@ -12,6 +12,7 @@ import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.cleaner.CleanerAggregator;
 import org.noos.xing.mydoggy.plaf.cleaner.DefaultCleanerAggregator;
 import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
+import org.noos.xing.mydoggy.plaf.descriptors.DefaultRepresentativeAnchorDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
@@ -63,6 +64,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     protected DockedTypeDescriptor dockedTypeDescriptor;
     protected SlidingTypeDescriptor slidingTypeDescriptor;
     protected FloatingLiveTypeDescriptor floatingLiveTypeDescriptor;
+    protected RepresentativeAnchorDescriptor representativeAnchorDescriptor;
 
     // Field for adjusting
     boolean dockLengthValueAdjusting = false;
@@ -460,6 +462,14 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         return dockedTypeDescriptor;
     }
 
+    public ToolWindowTypeDescriptor getTypeDescriptor() {
+        return toolWindow.getTypeDescriptor(toolWindow.getType());
+    }
+
+    public RepresentativeAnchorDescriptor getRepresentativeAnchorDescriptor() {
+            return representativeAnchorDescriptor;
+        }
+
     public void hideToolWindow() {
         ToolWindowActionHandler toolWindowActionHandler = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class).getToolWindowActionHandler();
         if (toolWindowActionHandler != null)
@@ -493,17 +503,19 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
             // clean the menu
             popupMenu.removeAll();
 
+            ToolWindowTypeDescriptor typeDescriptor = toolWindow.getTypeDescriptor(toolWindow.getType());
+
             // populate the menu
-            addPopupAction(popupMenu, dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.PIN_ACTION_ID));
-            addPopupAction(popupMenu, dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.DOCK_ACTION_ID));
-            addPopupAction(popupMenu, dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.FLOATING_ACTION_ID));
-            addPopupAction(popupMenu, dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.FLOATING_LIVE_ACTION_ID));
-            addPopupAction(popupMenu, dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.MOVE_TO_ACTION_ID));
-            addPopupAction(popupMenu, dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.MAXIMIZE_ACTION_ID));
-            addPopupAction(popupMenu, dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.TOOLS_MENU_ACTION_ID));
+            addPopupAction(popupMenu, typeDescriptor.getToolWindowAction(ToolWindowAction.PIN_ACTION_ID));
+            addPopupAction(popupMenu, typeDescriptor.getToolWindowAction(ToolWindowAction.DOCK_ACTION_ID));
+            addPopupAction(popupMenu, typeDescriptor.getToolWindowAction(ToolWindowAction.FLOATING_ACTION_ID));
+            addPopupAction(popupMenu, typeDescriptor.getToolWindowAction(ToolWindowAction.FLOATING_LIVE_ACTION_ID));
+            addPopupAction(popupMenu, typeDescriptor.getToolWindowAction(ToolWindowAction.MOVE_TO_ACTION_ID));
+            addPopupAction(popupMenu, typeDescriptor.getToolWindowAction(ToolWindowAction.MAXIMIZE_ACTION_ID));
+            addPopupAction(popupMenu, typeDescriptor.getToolWindowAction(ToolWindowAction.TOOLS_MENU_ACTION_ID));
 
             // add user actions
-            for (ToolWindowAction toolWindowAction : getDockedTypeDescriptor().getToolWindowActions()) {
+            for (ToolWindowAction toolWindowAction : typeDescriptor.getToolWindowActions()) {
                 if (!(toolWindowAction instanceof PlafToolWindowAction))  {
                     addPopupAction(popupMenu, toolWindowAction);
                 }
@@ -512,9 +524,9 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
             popupMenu.addSeparator();
 
             // add show/hide/aggregate actions...
-            addPopupAction(popupMenu, dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.HIDE_ACTION_ID));
-            addPopupAction(popupMenu, dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.AGGREGATE_ACTION_ID));
-            addPopupAction(popupMenu, dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.AGGREGATE_MENU_ACTION_ID));
+            addPopupAction(popupMenu, typeDescriptor.getToolWindowAction(ToolWindowAction.HIDE_ACTION_ID));
+            addPopupAction(popupMenu, typeDescriptor.getToolWindowAction(ToolWindowAction.AGGREGATE_ACTION_ID));
+            addPopupAction(popupMenu, typeDescriptor.getToolWindowAction(ToolWindowAction.AGGREGATE_MENU_ACTION_ID));
 
             // call for popup updater...
             if (popupUpdaterList != null) {
@@ -627,16 +639,16 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     }
 
     protected void initToolWindowActions() {
-        dockedTypeDescriptor.addToolWindowAction(new HideToolWindowAction());
-        dockedTypeDescriptor.addToolWindowAction(new DockToolWindowAction());
-        dockedTypeDescriptor.addToolWindowAction(new MaximizeToolWindowAction());
-        dockedTypeDescriptor.addToolWindowAction(new FloatingToolWindowAction());
-        dockedTypeDescriptor.addToolWindowAction(new PinToolWindowAction());
-        dockedTypeDescriptor.addToolWindowAction(new FloatingLiveToolWindowAction());
-        dockedTypeDescriptor.addToolWindowAction(new MoveToToolWindowAction());
-        dockedTypeDescriptor.addToolWindowAction(new AggregateToolWindowAction());
-        dockedTypeDescriptor.addToolWindowAction(new AggregateMenuToolWindowAction());
-        dockedTypeDescriptor.addToolWindowAction(new ToolsMenuToolWindowAction());
+        toolWindow.addToolWindowAction(new HideToolWindowAction());
+        toolWindow.addToolWindowAction(new DockToolWindowAction());
+        toolWindow.addToolWindowAction(new MaximizeToolWindowAction());
+        toolWindow.addToolWindowAction(new FloatingToolWindowAction());
+        toolWindow.addToolWindowAction(new PinToolWindowAction());
+        toolWindow.addToolWindowAction(new FloatingLiveToolWindowAction());
+        toolWindow.addToolWindowAction(new MoveToToolWindowAction());
+        toolWindow.addToolWindowAction(new AggregateToolWindowAction());
+        toolWindow.addToolWindowAction(new AggregateMenuToolWindowAction());
+        toolWindow.addToolWindowAction(new ToolsMenuToolWindowAction());
     }
 
     protected void initTypeDescriptors() {
@@ -651,6 +663,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
         dockedTypeDescriptor = (DockedTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).cloneMe(this);
         dockedTypeDescriptor.addPropertyChangeListener(this);
+
+        representativeAnchorDescriptor = new DefaultRepresentativeAnchorDescriptor();
     }
 
     protected void initPopupMenu() {
@@ -660,6 +674,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         popupMenu = new JPopupMenu("ToolWindowBarPopupMenu");
         popupMenu.setLightWeightPopupEnabled(false);
     }
+
 
     protected void addPopupAction(JPopupMenu popupMenu, ToolWindowAction toolWindowAction) {
         if (toolWindowAction.isVisibleOnMenuBar()) {

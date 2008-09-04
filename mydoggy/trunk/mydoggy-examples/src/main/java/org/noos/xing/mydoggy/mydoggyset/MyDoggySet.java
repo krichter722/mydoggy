@@ -261,7 +261,7 @@ public class MyDoggySet {
         toolWindow.setRepresentativeAnchorButtonTitle("Hello  World 1!!!");
         toolWindow.setAutoHide(true);
         dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
-//        dockedTypeDescriptor.setPopupMenuEnabled(false);
+//        representativeAnchorDescriptor.setPopupMenuEnabled(false);
         dockedTypeDescriptor.setDockLength(200);
         dockedTypeDescriptor.setToolWindowActionHandler(new ToolWindowActionHandler() {
             public void onHideButtonClick(final ToolWindow toolWindow) {
@@ -292,7 +292,7 @@ public class MyDoggySet {
             }
         });
         dockedTypeDescriptor.getToolsMenu().add(menuItem);
-        dockedTypeDescriptor.setPreviewDelay(1500);
+        toolWindow.getRepresentativeAnchorDescriptor().setPreviewDelay(1500);
         dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.HIDE_ACTION_ID).setVisible(false);
         dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.MAXIMIZE_ACTION_ID).setVisible(false);
 

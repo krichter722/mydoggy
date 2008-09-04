@@ -352,7 +352,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                 (index == getDescriptor().getAnchorIndex() || index == -2))
                 return;
 
-            if (isLockedOnAnchor() && !descriptor.getDockedTypeDescriptor().containsLockingAnchor(anchor))
+            if (isLockedOnAnchor() && !descriptor.getRepresentativeAnchorDescriptor().containsLockingAnchor(anchor))
                 return;
 
             if (isMaximized())
@@ -682,6 +682,20 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         return toolWindowTabs.toArray(new ToolWindowTab[toolWindowTabs.size()]);
     }
 
+    public void addToolWindowAction(ToolWindowAction toolWindowAction) {
+        getTypeDescriptor(DockedTypeDescriptor.class).addToolWindowAction(toolWindowAction);
+        getTypeDescriptor(SlidingTypeDescriptor.class).addToolWindowAction(toolWindowAction);
+        getTypeDescriptor(FloatingTypeDescriptor.class).addToolWindowAction(toolWindowAction);
+        getTypeDescriptor(FloatingLiveTypeDescriptor.class).addToolWindowAction(toolWindowAction);
+    }
+
+    public void removeToolWindowAction(String id) {
+        getTypeDescriptor(DockedTypeDescriptor.class).removeToolWindowAction(id);
+        getTypeDescriptor(SlidingTypeDescriptor.class).removeToolWindowAction(id);
+        getTypeDescriptor(FloatingTypeDescriptor.class).removeToolWindowAction(id);
+        getTypeDescriptor(FloatingLiveTypeDescriptor.class).removeToolWindowAction(id);
+    }
+
     public void addToolWindowListener(ToolWindowListener listener) {
         if (toolWindowListeners == null)
             toolWindowListeners = new EventListenerList();
@@ -720,6 +734,9 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             throw new IllegalArgumentException("Cannot recognize the class type. [class : " + descriptorClass + "]");
     }
 
+    public RepresentativeAnchorDescriptor getRepresentativeAnchorDescriptor() {
+        return descriptor.getRepresentativeAnchorDescriptor();
+    }
 
     public String toString() {
         return "MyDoggyToolWindow{" +

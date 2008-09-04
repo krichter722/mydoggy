@@ -3,17 +3,16 @@ package org.noos.xing.mydoggy.plaf.descriptors;
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
-import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource implements FloatingTypeDescriptor, PropertyChangeListener, InternalTypeDescriptor {
+public class DefaultFloatingTypeDescriptor extends DefaultToolWindowTypeDescriptor implements FloatingTypeDescriptor,
+                                                                                              InternalTypeDescriptor {
     private Point location;
     private Dimension size;
 
@@ -23,10 +22,6 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
     private float transparentRatio;
     private int transparentDelay;
 
-    private boolean enabled;
-    private boolean animating;
-    private boolean autoHide;
-    private boolean idVisibleOnTitleBar;
     private boolean addToTaskBar;
     private boolean alwaysOnTop;
     private boolean osDecorated;
@@ -36,38 +31,44 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
         transparentRatio = 0.7f;
         transparentDelay = 1500;
         modal = false;
-        enabled = true;
-        animating = true;
         autoHide = false;
-        idVisibleOnTitleBar = true;
         addToTaskBar = false;
         alwaysOnTop = true;
         osDecorated = false;
     }
 
     public DefaultFloatingTypeDescriptor(ToolWindowDescriptor toolWindowDescriptor,
-                                         DefaultFloatingTypeDescriptor parent, Point location, Dimension size,
-                                         int transparentDelay, float transparentRatio, boolean useTransparentMode,
-                                         boolean modal, boolean enabled, boolean animating, boolean autoHide, boolean idVisibleOnTitleBar,
-                                         boolean addToTaskBar, boolean alwaysOnTop, boolean osDecorated) {
+                                         DefaultFloatingTypeDescriptor parent,
+                                         Point location,
+                                         Dimension size,
+                                         int transparentDelay,
+                                         float transparentRatio,
+                                         boolean useTransparentMode,
+                                         boolean modal,
+                                         boolean addToTaskBar, boolean alwaysOnTop, boolean osDecorated, boolean enabled,
+                                         boolean animating,
+                                         boolean autoHide,
+                                         boolean idVisibleOnTitleBar,
+                                         boolean hideRepresentativeButtonOnVisible) {
+        
+        super(toolWindowDescriptor, parent, enabled, animating, autoHide, idVisibleOnTitleBar, hideRepresentativeButtonOnVisible);
+
         this.location = location;
         this.size = size;
         this.transparentDelay = transparentDelay;
         this.transparentRatio = transparentRatio;
         this.transparentMode = useTransparentMode;
         this.modal = modal;
-        this.enabled = enabled;
-        this.animating = animating;
-        this.autoHide = autoHide;
-        this.idVisibleOnTitleBar = idVisibleOnTitleBar;
         this.addToTaskBar = addToTaskBar;
         this.alwaysOnTop = alwaysOnTop;
         this.osDecorated = osDecorated;
-
-        parent.addPropertyChangeListener(this);
-
-        toolWindowDescriptor.getCleaner().addCleaner(this);
     }
+
+
+    public ToolWindowType getType() {
+        return ToolWindowType.FLOATING;
+    }
+
 
     public void setLocation(int x, int y) {
         Point newLocation = new Point(x, y);
@@ -148,6 +149,16 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
         return transparentDelay;
     }
 
+    public void setTransparentDelay(int transparentDelay) {
+        if (this.transparentDelay == transparentDelay)
+            return;
+
+        int old = this.transparentDelay;
+        this.transparentDelay = transparentDelay;
+
+        firePropertyChangeEvent("transparentDelay", old, transparentDelay);
+    }
+
     public void setAddToTaskBar(boolean addToTaskBar) {
         if (this.addToTaskBar == addToTaskBar)
             return;
@@ -190,82 +201,19 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
         firePropertyChangeEvent("osDecorated", old, osDecorated);
     }
 
-    public void setEnabled(boolean enabled) {
-        if (this.enabled == enabled)
-            return;
-
-        boolean old = this.enabled;
-        this.enabled = enabled;
-
-        firePropertyChangeEvent("enabled", old, enabled);
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setTransparentDelay(int transparentDelay) {
-        if (this.transparentDelay == transparentDelay)
-            return;
-
-        int old = this.transparentDelay;
-        this.transparentDelay = transparentDelay;
-
-        firePropertyChangeEvent("transparentDelay", old, transparentDelay);
-    }
-
-    public boolean isAnimating() {
-        return animating;
-    }
-
-    public ToolWindowType getType() {
-        return ToolWindowType.FLOATING;
-    }
-
-    public void setAnimating(boolean animating) {
-        if (this.animating == animating)
-            return;
-
-        boolean old = this.animating;
-        this.animating = animating;
-        firePropertyChangeEvent("animating", old, animating);
-    }
-
-    public void setIdVisibleOnTitleBar(boolean idVisibleOnTitleBar) {
-        if (this.idVisibleOnTitleBar == idVisibleOnTitleBar)
-            return;
-
-        boolean old = this.idVisibleOnTitleBar;
-        this.idVisibleOnTitleBar = idVisibleOnTitleBar;
-        firePropertyChangeEvent("idVisibleOnTitleBar", old, idVisibleOnTitleBar);
-    }
-
-    public boolean isIdVisibleOnTitleBar() {
-        return idVisibleOnTitleBar;
-    }
-
-    public void setAutoHide(boolean autoHide) {
-        boolean old = this.autoHide;
-        this.autoHide = autoHide;
-
-        firePropertyChangeEvent("autoHide", old, autoHide);
-    }
-
-    public boolean isAutoHide() {
-        return autoHide;
-    }
-
 
     public ToolWindowTypeDescriptor cloneMe(ToolWindowDescriptor toolWindowDescriptor) {
         return new DefaultFloatingTypeDescriptor(toolWindowDescriptor,
                                                  this, location, size, transparentDelay,
                                                  transparentRatio, transparentMode,
-                                                 modal, enabled, animating, autoHide,
+                                                 modal, addToTaskBar, alwaysOnTop, osDecorated, enabled, animating, autoHide,
                                                  idVisibleOnTitleBar,
-                                                 addToTaskBar, alwaysOnTop, osDecorated);
+                                                 hideRepresentativeButtonOnVisible);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {        
+        super.propertyChange(evt);
+
         if ("location".equals(evt.getPropertyName())) {
             Point p = (Point) evt.getNewValue();
             setLocation(p.x, p.y);
@@ -280,14 +228,6 @@ public class DefaultFloatingTypeDescriptor extends PropertyChangeEventSource imp
             setTransparentRatio((Float) evt.getNewValue());
         } else if ("transparentDelay".equals(evt.getPropertyName())) {
             setTransparentDelay((Integer) evt.getNewValue());
-        } else if ("enabled".equals(evt.getPropertyName())) {
-            setEnabled((Boolean) evt.getNewValue());
-        } else if ("autoHide".equals(evt.getPropertyName())) {
-            setAutoHide((Boolean) evt.getNewValue());
-        } else if ("animating".equals(evt.getPropertyName())) {
-            setAnimating((Boolean) evt.getNewValue());
-        } else if ("idVisibleOnTitleBar".equals(evt.getPropertyName())) {
-            setIdVisibleOnTitleBar((Boolean) evt.getNewValue());
         } else if ("addToTaskBar".equals(evt.getPropertyName())) {
             setAddToTaskBar((Boolean) evt.getNewValue());
         } else if ("alwaysOnTop".equals(evt.getPropertyName())) {

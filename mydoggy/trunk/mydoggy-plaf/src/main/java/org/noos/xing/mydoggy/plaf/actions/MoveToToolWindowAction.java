@@ -1,6 +1,9 @@
 package org.noos.xing.mydoggy.plaf.actions;
 
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowAction;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -87,7 +90,7 @@ public class MoveToToolWindowAction extends ToolWindowAction implements Property
         }
 
         if (toolWindow.isLockedOnAnchor()) {
-            ToolWindowAnchor[] anchors = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class).getLockingAnchors();
+            ToolWindowAnchor[] anchors = toolWindow.getRepresentativeAnchorDescriptor().getLockingAnchors();
 
             if (anchors.length == 0) {
                 moveTo.setVisible(false);

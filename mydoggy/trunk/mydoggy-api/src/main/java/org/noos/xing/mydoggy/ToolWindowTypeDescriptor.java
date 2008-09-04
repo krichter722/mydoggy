@@ -99,4 +99,43 @@ public interface ToolWindowTypeDescriptor extends Observable {
      */
     boolean isEnabled();
 
+    /**
+     * Sets if mydoggy must hide the representative button when the tool become visible and
+     * the tool has type ToolWindowType.DOCKED.
+     *
+     * @param hideRepresentativeButtonOnVisible
+     *         <code>true</code> if mydoggy must hide the representative button when the tool become visible and the
+     *         tool has type ToolWindowType.DOCKED.<br>
+     *         <code>false</code> otherwise.
+     * @since 1.5.0
+     */
+    void setHideRepresentativeButtonOnVisible(boolean hideRepresentativeButtonOnVisible);
+
+    /**
+     * Returns the "hideRepresentativeButtonOnVisible" property value.
+     *
+     * @return <code>true</code> if mydoggy must hide the representative button when the tool become visible and the
+     *         tool has type ToolWindowType.DOCKED.<br>
+     *         <code>false</code> otherwise.
+     * @since 1.5.0
+     */
+    boolean isHideRepresentativeButtonOnVisible();
+
+    /**
+     * TODO:...
+     * @param id
+     * @return
+     * @since 1.5.0
+     */
+    ToolWindowAction getToolWindowAction(String id);
+
+    void addToolWindowAction(ToolWindowAction toolWindowAction);
+
+    void addToolWindowAction(ToolWindowAction toolWindowAction, int index);
+
+    ToolWindowAction[] getToolWindowActions();
+
+    void removeToolWindowAction(String id);
+
+
 }

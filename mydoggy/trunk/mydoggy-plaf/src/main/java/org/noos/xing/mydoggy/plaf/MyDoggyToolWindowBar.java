@@ -833,7 +833,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             boolean visible = (Boolean) evt.getNewValue();
 
             // Check if we should hide the representative anchor button
-            if (descriptor.getDockedTypeDescriptor().isHideRepresentativeButtonOnVisible()) {
+            if (descriptor.getTypeDescriptor().isHideRepresentativeButtonOnVisible()) {
                 if (visible) {
                     // Store position and remove anchor
                     anchorPositions.put(descriptor, descriptor.getAnchorIndex());
