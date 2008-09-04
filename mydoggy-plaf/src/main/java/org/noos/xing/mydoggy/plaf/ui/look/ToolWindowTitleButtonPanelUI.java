@@ -4,9 +4,11 @@ import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
 import org.noos.xing.mydoggy.DockedTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindowAction;
+import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
+import org.noos.xing.mydoggy.plaf.actions.PlafToolWindowAction;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
-import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleButton;
@@ -57,12 +59,7 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
                 ToolWindowAction toolWindowAction = (ToolWindowAction) evt.getNewValue();
                 if (toolWindowAction.isVisibleOnTitleBar()) {
 
-                    int index = -1;
-                    if (evt instanceof UserPropertyChangeEvent) {
-                        UserPropertyChangeEvent upce = (UserPropertyChangeEvent) evt;
-                        index = (Integer) ((Object[]) upce.getUserObject())[0];
-                    }
-
+                    int index = (Integer) toolWindowAction.getValue("constraint");
                     addToolWindowAction(toolWindowAction, index);
 
                     SwingUtil.repaint(toolWindowTitleButtonPanel);
@@ -71,7 +68,8 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
                 // Remove the action
                 removeToolWindowAction((ToolWindowAction) evt.getOldValue());
             }
-
+        } else if ("type".equals(propertyName)) {
+            setType((ToolWindowType) evt.getNewValue());
         }
     }
 
@@ -122,18 +120,18 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
         toolWindowTitleButtonPanel.setOpaque(false);
 
         // Add the default set of actions
-        DockedTypeDescriptor dockedTypeDescriptor = descriptor.getDockedTypeDescriptor();
+        focusable = null;
 
-        focusable = addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.HIDE_ACTION_ID));
+        DockedTypeDescriptor dockedTypeDescriptor = descriptor.getDockedTypeDescriptor();
+        addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.HIDE_ACTION_ID));
         addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.MAXIMIZE_ACTION_ID));
         addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.PIN_ACTION_ID));
         addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.FLOATING_ACTION_ID));
         addToolWindowAction(dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.DOCK_ACTION_ID));
-
     }
 
     protected void installListeners() {
-        descriptor.getDockedTypeDescriptor().addPropertyChangeListener(this);
+        descriptor.addTypeDescriptorChangePropertyListener(this);
         toolWindow.addPlafPropertyChangeListener(this);
 
         descriptor.getCleaner().addCleaner(this);
@@ -149,11 +147,39 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
     }
 
 
+    protected void setType(ToolWindowType toolWindowType) {
+        // remove all actions from the container
+        toolWindowTitleButtonPanel.removeAll();
+        containerLayout.setColumn(new double[]{0,0});
+
+        // add actions for the current type...
+        focusable = null;
+        
+        ToolWindowTypeDescriptor typeDescriptor = descriptor.getTypeDescriptor(toolWindowType);
+
+        addToolWindowAction(typeDescriptor.getToolWindowAction(ToolWindowAction.HIDE_ACTION_ID));
+        addToolWindowAction(typeDescriptor.getToolWindowAction(ToolWindowAction.MAXIMIZE_ACTION_ID));
+        addToolWindowAction(typeDescriptor.getToolWindowAction(ToolWindowAction.PIN_ACTION_ID));
+        addToolWindowAction(typeDescriptor.getToolWindowAction(ToolWindowAction.FLOATING_ACTION_ID));
+        addToolWindowAction(typeDescriptor.getToolWindowAction(ToolWindowAction.DOCK_ACTION_ID));
+
+        // Add custom actions...
+        for (ToolWindowAction toolWindowAction : typeDescriptor.getToolWindowActions()) {
+            if (!(toolWindowAction instanceof PlafToolWindowAction))  {
+                int index = (Integer) toolWindowAction.getValue("constraint");
+                addToolWindowAction(toolWindowAction, index);
+            }
+        }
+    }
+
     protected Component addToolWindowAction(ToolWindowAction toolWindowAction) {
         return addToolWindowAction(toolWindowAction, -1);
     }
 
     protected Component addToolWindowAction(ToolWindowAction toolWindowAction, int index) {
+        if (!toolWindowAction.isVisibleOnTitleBar())
+            return null;
+
         int col;
 
         if (index <= -1 || index >= toolWindowTitleButtonPanel.getComponentCount() - 1) {
@@ -223,6 +249,9 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
         toolWindowAction.addPropertyChangeListener(this);
 
         toolWindowTitleButtonPanel.add(button, col + ",1,FULL,FULL");
+
+        if (focusable == null)
+            focusable = button;
 
         return button;
     }

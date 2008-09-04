@@ -217,7 +217,7 @@ public class MyDoggySetApplet extends JApplet {
             }
         });
         dockedTypeDescriptor.getToolsMenu().add(menuItem);
-        dockedTypeDescriptor.setPreviewDelay(1500);
+        toolWindow.getRepresentativeAnchorDescriptor().setPreviewDelay(1500);
 
         SlidingTypeDescriptor slidingTypeDescriptor = toolWindow.getTypeDescriptor(SlidingTypeDescriptor.class);
         slidingTypeDescriptor.setEnabled(false);

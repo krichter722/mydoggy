@@ -65,9 +65,6 @@ public class SplitterTest extends JFrame{
       dockedTypeDescriptor.setDockLength(300);
       dockedTypeDescriptor.setPopupMenuEnabled(true);    
       dockedTypeDescriptor.setAnimating(true);
-      dockedTypeDescriptor.setPreviewEnabled(true);
-      dockedTypeDescriptor.setPreviewDelay(500);
-      dockedTypeDescriptor.setPreviewTransparentRatio(0.7f);
       
       SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) win.getTypeDescriptor(ToolWindowType.SLIDING);
       slidingTypeDescriptor.setEnabled(true);

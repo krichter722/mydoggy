@@ -313,24 +313,10 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 dockedDescriptorAttributes.addAttribute(null, "minimumDockLength", null, null, String.valueOf(dockedTypeDescriptor.getMinimumDockLength()));
                 dockedDescriptorAttributes.addAttribute(null, "popupMenuEnabled", null, null, String.valueOf(dockedTypeDescriptor.isPopupMenuEnabled()));
                 dockedDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(dockedTypeDescriptor.isAnimating()));
-                dockedDescriptorAttributes.addAttribute(null, "previewEnabled", null, null, String.valueOf(dockedTypeDescriptor.isPreviewEnabled()));
-                dockedDescriptorAttributes.addAttribute(null, "previewDelay", null, null, String.valueOf(dockedTypeDescriptor.getPreviewDelay()));
-                dockedDescriptorAttributes.addAttribute(null, "previewTransparentRatio", null, null, String.valueOf(dockedTypeDescriptor.getPreviewTransparentRatio()));
                 dockedDescriptorAttributes.addAttribute(null, "hideRepresentativeButtonOnVisible", null, null, String.valueOf(dockedTypeDescriptor.isHideRepresentativeButtonOnVisible()));
                 dockedDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(dockedTypeDescriptor.isIdVisibleOnTitleBar()));
                 dockedDescriptorAttributes.addAttribute(null, "autoHide", null, null, String.valueOf(dockedTypeDescriptor.isAutoHide()));
-                writer.startElement("docked", dockedDescriptorAttributes);
-
-                writer.startElement("lockingAnchors");
-                for (ToolWindowAnchor anchor : dockedTypeDescriptor.getLockingAnchors()) {
-                    AttributesImpl attributes = new AttributesImpl();
-                    attributes.addAttribute(null, "anchor", null, null, anchor.toString());
-
-                    writer.dataElement("lockingAnchor", attributes);
-                }
-                writer.endElement("lockingAnchors");
-
-                writer.endElement("docked");
+                writer.dataElement("docked", dockedDescriptorAttributes);
 
                 // SlidingTypeDescriptor
                 SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);
@@ -415,6 +401,27 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     writer.endElement("floatingLive");
                 } else
                     writer.dataElement("floatingLive", floatingLiveDescriptorAttributes);
+
+                // RepresentativeAnchor Descriptor
+
+                RepresentativeAnchorDescriptor anchorDescriptor = toolWindow.getRepresentativeAnchorDescriptor();
+
+                AttributesImpl anchorDescriptorAttributes = new AttributesImpl();
+                anchorDescriptorAttributes.addAttribute(null, "previewEnabled", null, null, String.valueOf(anchorDescriptor.isPreviewEnabled()));
+                anchorDescriptorAttributes.addAttribute(null, "previewDelay", null, null, String.valueOf(anchorDescriptor.getPreviewDelay()));
+                anchorDescriptorAttributes.addAttribute(null, "previewTransparentRatio", null, null, String.valueOf(anchorDescriptor.getPreviewTransparentRatio()));
+                writer.startElement("anchor", anchorDescriptorAttributes);
+
+                writer.startElement("lockingAnchors");
+                for (ToolWindowAnchor anchor : anchorDescriptor.getLockingAnchors()) {
+                    AttributesImpl attributes = new AttributesImpl();
+                    attributes.addAttribute(null, "anchor", null, null, anchor.toString());
+
+                    writer.dataElement("lockingAnchor", attributes);
+                }
+                writer.endElement("lockingAnchors");
+
+                writer.endElement("anchor");
 
                 // End descriptors
                 writer.endElement("descriptors");
@@ -948,23 +955,9 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     descriptor.setMinimumDockLength(getInteger(typeElement, "minimumDockLength", 100));
                     descriptor.setPopupMenuEnabled(getBoolean(typeElement, "popupMenuEnabled", true));
                     descriptor.setAnimating(getBoolean(typeElement, "animating", true));
-                    descriptor.setPreviewEnabled(getBoolean(typeElement, "previewEnabled", true));
-                    descriptor.setPreviewDelay(getInteger(typeElement, "previewDelay", 0));
-                    descriptor.setPreviewTransparentRatio(getFloat(typeElement, "previewTransparentRatio", 0.7f));
                     descriptor.setIdVisibleOnTitleBar(getBoolean(typeElement, "idVisibleOnTitleBar", true));
                     descriptor.setHideRepresentativeButtonOnVisible(getBoolean(typeElement, "hideRepresentativeButtonOnVisible", false));
                     descriptor.setAutoHide(getBoolean(typeElement, "autoHide", false));
-
-                    descriptor.removeAllLockingAnchor();
-                    Element lockingAnchorsElement = getElement(typeElement, "lockingAnchors");
-                    if (lockingAnchorsElement != null) {
-                        NodeList lockingAnchorList = lockingAnchorsElement.getElementsByTagName("lockingAnchor");
-                        for (int j= 0, sizej = lockingAnchorList.getLength(); j< sizej; j++) {
-                            Element lockingAnchorElement = (Element) lockingAnchorList.item(j);
-
-                            descriptor.addLockingAnchor(ToolWindowAnchor.valueOf(lockingAnchorElement.getAttribute("anchor")));
-                        }
-                    }
 
                 }
 
@@ -1032,6 +1025,27 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                                 getInteger(dimension, "height", 100)
                         );
                 }
+
+                typeElement = getElement(tool, "anchor");
+                if (typeElement != null) {
+                    RepresentativeAnchorDescriptor descriptor = toolWindow.getRepresentativeAnchorDescriptor();
+                    descriptor.setPreviewEnabled(getBoolean(typeElement, "previewEnabled", true));
+                    descriptor.setPreviewDelay(getInteger(typeElement, "previewDelay", 0));
+                    descriptor.setPreviewTransparentRatio(getFloat(typeElement, "previewTransparentRatio", 0.7f));
+
+                    descriptor.removeAllLockingAnchor();
+                    Element lockingAnchorsElement = getElement(typeElement, "lockingAnchors");
+                    if (lockingAnchorsElement != null) {
+                        NodeList lockingAnchorList = lockingAnchorsElement.getElementsByTagName("lockingAnchor");
+                        for (int j= 0, sizej = lockingAnchorList.getLength(); j< sizej; j++) {
+                            Element lockingAnchorElement = (Element) lockingAnchorList.item(j);
+
+                            descriptor.addLockingAnchor(ToolWindowAnchor.valueOf(lockingAnchorElement.getAttribute("anchor")));
+                        }
+                    }
+                }
+
+
 
                 ToolWindowType type = ToolWindowType.valueOf(tool.getAttribute("type"));
                 if (type != ToolWindowType.EXTERN)

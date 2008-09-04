@@ -127,9 +127,6 @@ public class MemoryLeakTester {
             }
         });
         dockedTypeDescriptor.setAnimating(true);
-        dockedTypeDescriptor.setPreviewEnabled(true);
-        dockedTypeDescriptor.setPreviewDelay(1500);
-        dockedTypeDescriptor.setPreviewTransparentRatio(0.4f);
 
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
         slidingTypeDescriptor.setEnabled(true);

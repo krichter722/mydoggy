@@ -49,7 +49,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
     protected ToolWindowDescriptor descriptor;
     protected ToolWindow toolWindow;
-    protected DockedTypeDescriptor dockedTypeDescriptor;
+    protected RepresentativeAnchorDescriptor representativeAnchorDescriptor;
 
     protected ToolWindowRepresentativeAnchorMouseAdapter adapter;
 
@@ -138,7 +138,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         // Reset Fields
         descriptor = null;
         toolWindow = null;
-        dockedTypeDescriptor = null;
+        representativeAnchorDescriptor = null;
         representativeAnchor = null;
     }
 
@@ -234,8 +234,8 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     protected void installListeners(JLabel c) {
         super.installListeners(c);
 
-        this.dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-        this.dockedTypeDescriptor.addPropertyChangeListener(this);
+        this.representativeAnchorDescriptor = toolWindow.getRepresentativeAnchorDescriptor();
+        this.representativeAnchorDescriptor.addPropertyChangeListener(this);
 
         descriptor.getCleaner().addCleaner(this);
 
@@ -253,7 +253,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
         SwingUtil.unregisterDragListener(c);
         
-        dockedTypeDescriptor.removePropertyChangeListener(this);
+        representativeAnchorDescriptor.removePropertyChangeListener(this);
 
         c.removeMouseListener(adapter);
         c.removeMouseMotionListener(adapter);
@@ -432,7 +432,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
             if (!toolWindow.isVisible()) {
                 if (previewPanel == null) {
                     previewTimer.setInitialDelay(
-                            dockedTypeDescriptor.getPreviewDelay()
+                            representativeAnchorDescriptor.getPreviewDelay()
                     );
                     previewTimer.start();
                 }
@@ -492,7 +492,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                     }
                     firstPreview = false;
                 } else
-                if (dockedTypeDescriptor.isPreviewEnabled() &&
+                if (representativeAnchorDescriptor.isPreviewEnabled() &&
                     descriptor.getManager().getToolWindowManagerDescriptor().isPreviewEnabled()) {
                     Container contentContainer = descriptor.getToolWindowPanel();
 
@@ -508,7 +508,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                             glassPane.remove(previewPanel);
 
                         previewPanel = new TranslucentPanel(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
-                        previewPanel.setAlphaModeRatio(dockedTypeDescriptor.getPreviewTransparentRatio());
+                        previewPanel.setAlphaModeRatio(representativeAnchorDescriptor.getPreviewTransparentRatio());
                         setPreviewPanelBounds(rootPaneContainer);
                         previewPanel.add(contentContainer, "1,1,FULL,FULL");
 

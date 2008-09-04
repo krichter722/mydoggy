@@ -127,9 +127,11 @@ public class TutorialSet {
             }
         });
         dockedTypeDescriptor.setAnimating(true);
-        dockedTypeDescriptor.setPreviewEnabled(true);
-        dockedTypeDescriptor.setPreviewDelay(1500);
-        dockedTypeDescriptor.setPreviewTransparentRatio(0.4f);
+
+        RepresentativeAnchorDescriptor representativeAnchorDescriptor = debugTool.getRepresentativeAnchorDescriptor();
+        representativeAnchorDescriptor.setPreviewEnabled(true);
+        representativeAnchorDescriptor.setPreviewDelay(1500);
+        representativeAnchorDescriptor.setPreviewTransparentRatio(0.4f);
 
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
         slidingTypeDescriptor.setEnabled(false);
