@@ -14,6 +14,7 @@ import org.noos.xing.mydoggy.plaf.ui.content.action.PreviousContentAction;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragListenerAdapter;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.RemoveNotifyDragListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -45,6 +46,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
     protected Component componentInFocusRequest = null;
 
     protected FocusOwnerPropertyChangeListener focusOwnerPropertyChangeListener;
+
+    // Drag fields
+    protected RemoveNotifyDragListener removeNotifyDragListener;
 
 
     public MyDoggyTabbedContentManagerUI() {
@@ -375,8 +379,10 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
             internalPropertyChangeSupport.addPropertyChangeListener("minimized", new MinimizedListener());
             contentUIListener = new ContentUIListener();
 
-            SwingUtil.registerDragListener(tabbedContentPane,
-                                          new TabbedContentManagerDragListener());
+            toolWindowManager.addRemoveNotifyListener(
+                    removeNotifyDragListener = new RemoveNotifyDragListener(tabbedContentPane,
+                                                                            new TabbedContentManagerDragListener())
+            );
         }
 
         toolWindowManager.addInternalPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
@@ -394,8 +400,11 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
     }
 
     protected void removeListeners() {
-        SwingUtil.unregisterDragListener(tabbedContentPane);
+        // Remove drag gesture
+        removeNotifyDragListener.cleanup();
+        toolWindowManager.removeRemoveNotifyListener(removeNotifyDragListener);
 
+        // Remove focus listener
         KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(
                 "focusOwner", focusOwnerPropertyChangeListener
         );

@@ -1,9 +1,9 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowListener;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowTab;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
@@ -14,6 +14,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabTitle;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleButton;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MyDoggyUtil;
+import org.noos.xing.mydoggy.plaf.ui.util.RemoveNotifyDragListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -46,7 +47,7 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
     protected ToolWindowTabPanel toolWindowTabPanel;
     protected ToolWindowTabButton toolWindowTabButton;
 
-    protected ToolWindow toolWindow;
+    protected MyDoggyToolWindow toolWindow;
     protected MyDoggyToolWindowTab tab;
 
     protected MouseListener titleBarMouseListener;
@@ -60,9 +61,14 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
     protected boolean inside;
     protected boolean selected;
 
+    // Flashing fields
     protected Timer flashingTimer;
     protected int flasingDuration = -1;
     protected boolean flashingState;
+
+    // Drag fields
+    protected RemoveNotifyDragListener removeNotifyDragListener;
+
 
 
     public ToolWindowTabButtonUI() {
@@ -191,7 +197,7 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
         // Init fields
         this.toolWindowTabButton = (ToolWindowTabButton) c;
         this.tab = (MyDoggyToolWindowTab) toolWindowTabButton.getToolWindowTab();
-        this.toolWindow = tab.getOwner();
+        this.toolWindow = (MyDoggyToolWindow) tab.getOwner();
 
         this.toolWindowTabPanel = toolWindowTabButton.getToolWindowTabPanel();
 
@@ -300,7 +306,7 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
 
 
     protected void installComponents() {
-        this.toolWindow = tab.getOwner();
+        this.toolWindow = (MyDoggyToolWindow) tab.getOwner();
 
         String name = "toolWindow." + tab.getOwner().getId() + ".tab." + tab.getTitle();
         toolWindowTabButton.setName(name);
@@ -360,17 +366,19 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
         minimizeButton.addActionListener(this);
 
         // Register DragSupportListener
-        SwingUtil.registerDragListener(toolWindowTabButton, toolWindowTabPanel.getDragListener());
-        SwingUtil.registerDragListener(titleLabel, toolWindowTabPanel.getDragListener());
-        SwingUtil.registerDragListener(minimizeButton, toolWindowTabPanel.getDragListener());
-        SwingUtil.registerDragListener(closeButton, toolWindowTabPanel.getDragListener());
+        toolWindow.getDescriptor().getManager().addRemoveNotifyListener(
+                removeNotifyDragListener = new RemoveNotifyDragListener(
+                        toolWindowTabPanel.getDragListener(),
+                        toolWindowTabButton, titleLabel, minimizeButton, closeButton
+
+                )
+        );
     }
 
     protected void uninstallListeners() {
-        SwingUtil.unregisterDragListener(toolWindowTabButton);
-        SwingUtil.unregisterDragListener(titleLabel);
-        SwingUtil.unregisterDragListener(minimizeButton);
-        SwingUtil.unregisterDragListener(closeButton);
+        // Remove drag gesture
+        removeNotifyDragListener.cleanup();
+        toolWindow.getDescriptor().getManager().removeRemoveNotifyListener(removeNotifyDragListener);
 
         tab.removePropertyChangeListener(this);
         tab.getCleanerAggregator().removeCleaner(this);
