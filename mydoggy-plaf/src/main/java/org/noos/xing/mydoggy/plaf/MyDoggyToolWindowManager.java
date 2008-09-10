@@ -660,6 +660,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         propertyChangeSupport.addPropertyChangeListener(property, listener);
     }
 
+    public void addRemoveNotifyListener(PropertyChangeListener listener) {
+        addInternalPropertyChangeListener("manager.window.ancestor", listener);
+    }
+
+    public void removeRemoveNotifyListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener("manager.window.ancestor", listener);
+    }
+
 
     public void setMainContent(Component content) {
         if (content == null)
