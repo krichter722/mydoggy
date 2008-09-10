@@ -549,6 +549,9 @@ public class SwingUtil {
     // UI support methods
 
     public static DragGestureRecognizer registerDragListener(Component c, DragListener dragListener) {
+        if (dragEntryMap.containsKey(c))
+            return dragEntryMap.get(c).dragGestureRecognizer;
+
         DragSource dragSource = new DragSource();
         DragGestureRecognizer recognizer = dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, dragListener);
         dragSource.addDragSourceMotionListener(dragListener);

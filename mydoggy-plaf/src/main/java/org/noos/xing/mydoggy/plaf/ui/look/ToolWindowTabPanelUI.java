@@ -19,6 +19,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleButton;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragListener;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragListenerDelegate;
 import org.noos.xing.mydoggy.plaf.ui.util.MouseEventDispatcher;
+import org.noos.xing.mydoggy.plaf.ui.util.RemoveNotifyDragListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -68,6 +69,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
     // Drag gesture
 
     protected DragListenerDelegate dragListenerDelegate;
+    protected RemoveNotifyDragListener removeNotifyDragListener;
 
 
     public ToolWindowTabPanelUI() {
@@ -166,7 +168,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         viewport.addMouseMotionListener(mouseEventDispatcher);
 
         // Register drag gesture
-        SwingUtil.registerDragListener(viewport, dragListenerDelegate);
+        descriptor.getManager().addRemoveNotifyListener(removeNotifyDragListener = new RemoveNotifyDragListener(viewport, dragListenerDelegate));
     }
 
     protected void uninstallListeners() {
@@ -179,12 +181,13 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         toolWindow.removeToolWindowListener(toolWindowListener);
 
         // viewport
-        viewport.removeMouseListener(titleBarMouseListener = new TitleBarMouseAdapter(descriptor));
+        viewport.removeMouseListener(titleBarMouseListener);
         viewport.removeMouseListener(mouseEventDispatcher);
         viewport.removeMouseMotionListener(mouseEventDispatcher);
 
         // drag gesture
-        SwingUtil.unregisterDragListener(viewport);
+        removeNotifyDragListener.cleanup();
+        descriptor.getManager().removeRemoveNotifyListener(removeNotifyDragListener);
     }
 
 

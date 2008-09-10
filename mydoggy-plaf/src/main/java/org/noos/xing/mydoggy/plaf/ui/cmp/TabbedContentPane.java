@@ -7,7 +7,9 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
+import org.noos.xing.mydoggy.plaf.ui.drag.DragListener;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragListenerAdapter;
+import org.noos.xing.mydoggy.plaf.ui.util.RemoveNotifyDragListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -56,6 +58,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
     // Drag support fields
 
+    protected RemoveNotifyDragListener removeNotifyDragListener;
     protected DragSource dragSource = new DragSource();
 
     protected Point tabPointerLocation = new Point();
@@ -64,6 +67,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
     protected int indexAtLocation;
 
     protected boolean pointerVisible;
+
 
 
     public TabbedContentPane() {
@@ -244,6 +248,13 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         return super.getToolTipText(event);
     }
 
+    public void removeNotify() {
+        super.removeNotify();
+
+        // Remove drag gesture
+        removeNotifyDragListener.cleanup();
+        toolWindowManager.removeRemoveNotifyListener(removeNotifyDragListener);
+    }
 
     public void setToolWindowManager(MyDoggyToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
@@ -359,6 +370,10 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         return (index != -1) ? getContentAt(index) : null;
     }
 
+    public void setDragListener(DragListener dragListener) {
+        toolWindowManager.addRemoveNotifyListener(removeNotifyDragListener = new RemoveNotifyDragListener(this, dragListener));
+    }
+
     public void addTabbedContentPaneListener(TabbedContentPaneListener listener) {
         listenerList.add(TabbedContentPaneListener.class, listener);
     }
@@ -403,7 +418,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
     protected void initDragListener() {
         // Init drag
-        SwingUtil.registerDragListener(this, new TabbedDragListenerAdapter(toolWindowManager));
+        toolWindowManager.addRemoveNotifyListener(removeNotifyDragListener = new RemoveNotifyDragListener(this, new TabbedDragListenerAdapter(toolWindowManager)));
 
         // Init drop
         setDropTarget(new DropTarget(this,
@@ -500,6 +515,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         for (TabbedContentPaneListener tabListener : getListeners(TabbedContentPaneListener.class))
             tabListener.tabbedContentPaneEventFired(event);
     }
+
 
 
     public class MouseOverTabListener extends MouseInputAdapter {

@@ -17,6 +17,7 @@ import org.noos.xing.mydoggy.plaf.ui.drag.DragListenerAdapter;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
+import org.noos.xing.mydoggy.plaf.ui.util.RemoveNotifyDragListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -66,6 +67,9 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
     protected int flasingDuration;
     protected boolean flashingState;
     protected AbstractAnimation flashingAnimation;
+
+    // Drag fields
+    protected RemoveNotifyDragListener removeNotifyDragListener;
 
 
     protected java.util.List<PopupUpdater> popupUpdaterList;
@@ -261,7 +265,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
 
         // Register Drag Gesture
         DragListener dragListener = new ToolWindowTitleBarDragListener(descriptor);
-        SwingUtil.registerDragListener(toolWindowTitleBar, dragListener);
+        descriptor.getManager().addRemoveNotifyListener(removeNotifyDragListener = new RemoveNotifyDragListener(toolWindowTitleBar, dragListener));
         toolWindowTitleBar.getToolWindowTabPanel().setDragListener(dragListener);
     }
 
@@ -275,7 +279,9 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
 
         toolWindowTitleBar.removeMouseListener(titleBarMouseAdapter);
 
-        SwingUtil.unregisterDragListener(toolWindowTitleBar);
+        // Remove drag gesture
+        removeNotifyDragListener.cleanup();
+        descriptor.getManager().removeRemoveNotifyListener(removeNotifyDragListener);
     }
 
     protected void installComponents() {

@@ -58,8 +58,7 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
         wrapper.setToolWindowManager(toolWindowManager);
         wrapper.setName("@@mydoggy.dockable.tabbedpane");
         wrapper.addTab((Content) dockable, new DockablePanel(dockable, component));
-
-        SwingUtil.registerDragListener(wrapper, new TabbedDragListener(wrapper));
+        wrapper.setDragListener(new TabbedDragListener(wrapper));
 
         return wrapper;
     }

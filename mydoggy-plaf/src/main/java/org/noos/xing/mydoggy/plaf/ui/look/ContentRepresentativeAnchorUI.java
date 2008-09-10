@@ -10,6 +10,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.RepresentativeAnchorDragListener;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
+import org.noos.xing.mydoggy.plaf.ui.util.RemoveNotifyDragListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -49,6 +50,9 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
     protected MutableColor flashingAnimBackEnd;
     protected AbstractAnimation flashingAnimation;
 
+    // Drag fileds
+    protected RemoveNotifyDragListener removeNotifyDragListener;
+
     
     public ContentRepresentativeAnchorUI() {
     }
@@ -60,7 +64,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         if ("flash".equals(propertyName)) {
             if (e.getNewValue() == Boolean.TRUE) {
                 if (descriptor.isAvailable()) {
-                    flasingDuration = SwingUtil.getInt(e, -1);;
+                    flasingDuration = SwingUtil.getInt(e, -1);
                     SwingUtil.repaint(contentRepresentativeAnchor);
                 }
             } else {
@@ -193,7 +197,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         c.addMouseListener(adapter);
         c.addMouseMotionListener(adapter);
 
-        SwingUtil.registerDragListener(c, new RepresentativeAnchorDragListener(descriptor, c));
+        descriptor.getManager().addRemoveNotifyListener(removeNotifyDragListener = new RemoveNotifyDragListener(c, new RepresentativeAnchorDragListener(descriptor, c)));
 
         dockable.addPropertyChangeListener(this);
 
@@ -206,7 +210,9 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         c.removeMouseListener(adapter);
         c.removeMouseMotionListener(adapter);
 
-        SwingUtil.unregisterDragListener(c);
+        // Remove drag gesture
+        removeNotifyDragListener.cleanup();
+        descriptor.getManager().removeRemoveNotifyListener(removeNotifyDragListener);
 
         dockable.removePropertyChangeListener(this);
 

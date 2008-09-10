@@ -17,6 +17,7 @@ import org.noos.xing.mydoggy.plaf.ui.drag.RepresentativeAnchorDragListener;
 import org.noos.xing.mydoggy.plaf.ui.translucent.TranslucentPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.MutableColor;
+import org.noos.xing.mydoggy.plaf.ui.util.RemoveNotifyDragListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -61,6 +62,9 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     protected AbstractAnimation flashingAnimation;
 
     protected TranslucentPanel previewPanel;
+
+    // Drag fields
+    protected RemoveNotifyDragListener removeNotifyDragListener;
 
 
     public ToolWindowRepresentativeAnchorUI() {
@@ -232,7 +236,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
         descriptor.getToolWindow().addPlafPropertyChangeListener(this);
 
-        SwingUtil.registerDragListener(c, new ToolWindowRepresentativeAnchorDragListener(descriptor, c));
+        descriptor.getManager().addRemoveNotifyListener(removeNotifyDragListener = new RemoveNotifyDragListener(c, new ToolWindowRepresentativeAnchorDragListener(descriptor, c)));
     }
 
     protected void uninstallListeners(JLabel c) {
@@ -247,7 +251,9 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
         descriptor.getToolWindow().removePlafPropertyChangeListener(this);
 
-        SwingUtil.unregisterDragListener(c);
+        // Remove drag gesture
+        removeNotifyDragListener.cleanup();
+        descriptor.getManager().removeRemoveNotifyListener(removeNotifyDragListener);
     }
 
 
