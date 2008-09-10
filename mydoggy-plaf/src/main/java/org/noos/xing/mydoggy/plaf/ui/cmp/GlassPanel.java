@@ -142,4 +142,8 @@ public class GlassPanel extends JPanel implements ContainerListener {
             rootPaneContainer.setGlassPane(oldGlassPanel);
     }
 
+    public void reset() {
+        this.rootPaneContainer = null;
+    }
+
 }

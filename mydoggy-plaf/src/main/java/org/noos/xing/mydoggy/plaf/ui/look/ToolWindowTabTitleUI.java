@@ -43,6 +43,7 @@ public class ToolWindowTabTitleUI extends BasicLabelUI implements MouseListener,
         uninstallUI(toolWindowTabTitle);
     }
 
+
     public void mousePressed(MouseEvent e) {
         toolWindow.setActive(true);
 
@@ -116,6 +117,18 @@ public class ToolWindowTabTitleUI extends BasicLabelUI implements MouseListener,
         SwingUtil.installFont(c, "ToolWindowTabTitleUI.font");
     }
 
+    protected void installListeners(JLabel c) {
+        super.installListeners(c);
+
+        ((CleanerProvider) tab).getCleanerAggregator().addCleaner(this);
+    }
+
+    protected void uninstallListeners(JLabel c) {
+        super.uninstallListeners(c); 
+
+        ((CleanerProvider) tab).getCleanerAggregator().removeCleaner(this);
+    }
+
 
     public void update(Graphics g, JComponent c) {
         if (tab.isFlashing() && toolWindow.isVisible()) {
@@ -138,10 +151,6 @@ public class ToolWindowTabTitleUI extends BasicLabelUI implements MouseListener,
         super.update(g, c);
     }
 
-
-    protected void installListener() {
-        ((CleanerProvider) tab).getCleanerAggregator().addCleaner(this);
-    }
 
     protected void paintEnabledText(JLabel l, Graphics g, String s, int textX, int textY) {
         if (pressed && inside)

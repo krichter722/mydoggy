@@ -218,6 +218,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
         sheet.setBounds(point.x, point.y, mainPanel.getWidth(), height);
 
+        // TODO: use layered pane like floating live container...
         layeredPane.remove(sheet);
         layeredPane.setLayer(sheet, JLayeredPane.DEFAULT_LAYER + 2);
         layeredPane.add(sheet);

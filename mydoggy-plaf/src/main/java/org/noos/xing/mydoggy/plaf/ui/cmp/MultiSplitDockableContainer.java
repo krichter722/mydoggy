@@ -180,6 +180,8 @@ public class MultiSplitDockableContainer extends JPanel {
                     split.setRowLayout(rowLayout);
                     split.setBounds(split.getBounds());
                     split.setChildren(children);
+
+                    // update the model
                     multiSplitPaneModelRoot = split;
 
                     if (!multiSplitPane.getMultiSplitLayout().getFloatingDividers())
@@ -188,6 +190,7 @@ public class MultiSplitDockableContainer extends JPanel {
                     validateModel(multiSplitPaneModelRoot);
                     multiSplitPane.setModel(multiSplitPaneModelRoot);
 
+                    // update the components in the container
                     Component wrapper;
                     if (rootLeaf.getDockables().size() > 1) {
                         wrapper = multiSplitPane.getComponent(0);

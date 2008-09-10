@@ -20,6 +20,7 @@ public class DefaultDockedTypeDescriptor extends DefaultToolWindowTypeDescriptor
 
     protected int dockLength;
     protected int minimumDockLength;
+    protected int dockSpace;
 
     protected boolean hideRepresentativeButtonOnVisible;
 
@@ -82,6 +83,14 @@ public class DefaultDockedTypeDescriptor extends DefaultToolWindowTypeDescriptor
 
     public int getDockLength() {
         return dockLength;
+    }
+
+    public void setDockSpace(int space) {
+        this.dockSpace = space;
+    }
+
+    public int getDockSpace() {
+        return dockSpace;
     }
 
     public void setDockLength(int dockLength) {

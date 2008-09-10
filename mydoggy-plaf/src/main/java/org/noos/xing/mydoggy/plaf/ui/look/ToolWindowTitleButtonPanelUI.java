@@ -140,6 +140,8 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
     protected void unistallListeners() {
         descriptor.getDockedTypeDescriptor().removePropertyChangeListener(this);
         toolWindow.removePlafPropertyChangeListener(this);
+
+        descriptor.getCleaner().removeCleaner(this);
     }
 
     protected void uninstallComponents() {

@@ -453,33 +453,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
 
-    public void removeNotify() {
-        super.removeNotify();
-
-        // Restore all detached ddckable...
-        for (ToolWindow toolWindow : getToolWindows()) {
-            if (toolWindow.getType() == ToolWindowType.FLOATING && toolWindow.isVisible()) {
-                toolWindow.setVisible(false);
-            }
-        }
-
-        for (Content content : getContentManager().getContents()) {
-            content.setDetached(false);
-        }
-
-        // Fire event
-        propertyChangeSupport.firePropertyChange(
-                new PropertyChangeEvent(MyDoggyToolWindowManager.this, "manager.window.ancestor",
-                                        windowAncestor,
-                                        null)
-        );
-    }
-
     public void addNotify() {
         super.addNotify();
 
         // Load ancestor
         windowAncestor = SwingUtil.getWindowAncestor(this);
+
         // Check root pane container
         if (!(windowAncestor instanceof RootPaneContainer)) {
             throw new IllegalArgumentException("Window Ancestor must implement RootPaneContainer");
@@ -502,6 +481,33 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         getResourceManager().putProperty("layer.level", String.valueOf(level * 5));
 */
     }
+
+    public void removeNotify() {
+        super.removeNotify();
+
+        // Restore all detached ddckable...
+        for (ToolWindow toolWindow : getToolWindows()) {
+            if (toolWindow.getType() == ToolWindowType.FLOATING && toolWindow.isVisible()) {
+                toolWindow.setVisible(false);
+            }
+        }
+
+        for (Content content : getContentManager().getContents()) {
+            content.setDetached(false);
+        }
+
+        // Fire event
+        propertyChangeSupport.firePropertyChange("manager.window.ancestor", windowAncestor, null);
+
+        // clean up
+        windowAncestor = null;
+        rootPaneContainer = null;
+        if (glassPanel != null) {
+            glassPanel.reset();
+            glassPanel = null;
+        }
+    }
+
 
     public Component getWindowAncestor() {
         return windowAncestor;

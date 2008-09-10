@@ -714,8 +714,9 @@ public class MultiSplitLayout implements LayoutManager {
                                 childWidth = child.bounds.width - 20;
                             else if (stateCondition == -1) {
                                 childWidth = child.bounds.width + 20;
-                            } else
+                            } else {
                                 childWidth = dividerChild.getBounds().getX() - x;
+                            }
                         } else {
                             if (stateCondition == 1)
                                 childWidth = child.bounds.width - 20;

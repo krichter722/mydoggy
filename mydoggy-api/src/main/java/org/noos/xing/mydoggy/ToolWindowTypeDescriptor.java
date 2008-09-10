@@ -122,19 +122,45 @@ public interface ToolWindowTypeDescriptor extends Observable {
     boolean isHideRepresentativeButtonOnVisible();
 
     /**
-     * TODO:...
-     * @param id
-     * @return
+     * TODO
+     * @param toolWindowAction
+     * @since 1.5.0
+     */
+    void addToolWindowAction(ToolWindowAction toolWindowAction);
+
+    /**
+     *
+     * @param toolWindowAction
+     * @param index
+     * @since 1.5.0
+     */
+    void addToolWindowAction(ToolWindowAction toolWindowAction, int index);
+
+    /**
+     * Returns the toolWindow action to which this descriptor maps the specified id. Returns
+     * <tt>null</tt> if the descriptor contains no mapping for this id.
+     *
+     * @param id id whose associated toolWindow is to be returned.
+     * @return the toolWindow action to which this descriptor maps the specified id. Returns
+     * <tt>null</tt> if the descriptor contains no mapping for this id.
      * @since 1.5.0
      */
     ToolWindowAction getToolWindowAction(String id);
 
-    void addToolWindowAction(ToolWindowAction toolWindowAction);
-
-    void addToolWindowAction(ToolWindowAction toolWindowAction, int index);
-
+    /**
+     * Returns an array of the toolwindow actions registered into this descriptor.
+     *
+     * @return an array of the toolwindow actions registered into this descriptor
+     * @since 1.5.0
+     */
     ToolWindowAction[] getToolWindowActions();
 
+    /**
+     * Removes the toolwindow action for this id from this descriptor if it is present.
+     *
+     * @param id id of toolwindow action to be removed.
+     * @since 1.5.0
+     */
     void removeToolWindowAction(String id);
 
 

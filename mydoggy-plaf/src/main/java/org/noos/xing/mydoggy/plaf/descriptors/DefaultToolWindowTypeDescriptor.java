@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.descriptors;
 import org.noos.xing.mydoggy.ToolWindowAction;
 import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
+import org.noos.xing.mydoggy.plaf.actions.PlafToolWindowAction;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
 import java.beans.PropertyChangeEvent;
@@ -150,8 +151,10 @@ public abstract class DefaultToolWindowTypeDescriptor extends PropertyChangeEven
     }
 
     public void removeToolWindowAction(String id) {
-        ToolWindowAction toolWindowAction = toolWindowActionMap.remove(id);
+        if (toolWindowActionMap.get(id) instanceof PlafToolWindowAction)
+            throw new IllegalArgumentException("Cannot remove a system action.");
 
+        ToolWindowAction toolWindowAction = toolWindowActionMap.remove(id);
         firePropertyChangeEvent("toolWindowAction", toolWindowAction, null);
     }
 

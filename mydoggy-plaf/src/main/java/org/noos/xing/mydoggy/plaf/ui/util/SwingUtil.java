@@ -1,5 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.util;
 
+import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ModalWindow;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragListener;
@@ -552,7 +553,8 @@ public class SwingUtil {
         DragGestureRecognizer recognizer = dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, dragListener);
         dragSource.addDragSourceMotionListener(dragListener);
 
-        dragEntryMap.put(c, new DragEntry(recognizer, dragListener));
+        dragEntryMap.put(c, new DragEntry(recognizer,
+                                          dragListener));
 
         return recognizer;
     }
@@ -773,6 +775,18 @@ public class SwingUtil {
         } catch (Exception e) {
             return key;
         }
+    }
+
+    // UserPropertyChangeEvent
+
+    public static int getInt(PropertyChangeEvent e, int defaultValue) {
+        if (e instanceof UserPropertyChangeEvent) {
+            UserPropertyChangeEvent event = (UserPropertyChangeEvent) e;
+            if (event.getUserObject() instanceof Integer)
+                return (Integer) event.getUserObject();
+        }
+
+        return defaultValue;
     }
 
 

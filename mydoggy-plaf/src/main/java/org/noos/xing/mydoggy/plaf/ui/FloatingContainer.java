@@ -70,8 +70,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
             content.setVisible(true);
 
             // Position window
-//            if (lastBounds == null) {
-            // TODO: validate this procedure....expacially for when x + width excede the total width..
             FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
 
             // Set Size
@@ -89,10 +87,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 window.setLocation(typeDescriptor.getLocation());
 
             SwingUtil.validateBounds(window.getWindow());
-//            } else {
-//                window.setBounds(lastBounds);
-//                lastBounds = null;
-//            }
 
             // Show the window
             if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING).isAnimating()) {

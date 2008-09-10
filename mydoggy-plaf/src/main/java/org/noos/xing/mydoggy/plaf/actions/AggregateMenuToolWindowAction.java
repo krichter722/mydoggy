@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class AggregateMenuToolWindowAction extends ToolWindowAction {
+public class AggregateMenuToolWindowAction extends ToolWindowAction implements PlafToolWindowAction {
 
     protected JMenuItem menuItem;
 

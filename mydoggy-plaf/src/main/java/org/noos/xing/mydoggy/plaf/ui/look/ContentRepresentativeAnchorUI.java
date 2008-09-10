@@ -60,7 +60,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         if ("flash".equals(propertyName)) {
             if (e.getNewValue() == Boolean.TRUE) {
                 if (descriptor.isAvailable()) {
-                    flasingDuration = -1;
+                    flasingDuration = SwingUtil.getInt(e, -1);;
                     SwingUtil.repaint(contentRepresentativeAnchor);
                 }
             } else {
@@ -70,20 +70,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
                     SwingUtil.repaint(contentRepresentativeAnchor);
                 }
             }
-        } else if ("flash.duration".equals(propertyName)) {
-            if (e.getNewValue() == Boolean.TRUE) {
-                if (descriptor.isAvailable()) {
-                    flasingDuration = (Integer) e.getNewValue();
-                    SwingUtil.repaint(contentRepresentativeAnchor);
-                }
-            } else {
-                if (flashingTimer != null) {
-                    flashingTimer.stop();
-                    flashingTimer = null;
-                    SwingUtil.repaint(contentRepresentativeAnchor);
-                }
-            }
-        }
+        } 
     }
 
     public void cleanup() {
@@ -177,6 +164,15 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
     }
 
     
+    protected void installDefaults(JLabel c) {
+        labelBorder = new LineBorder(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER), 1, true, 3, 3);
+
+        c.setBorder(labelBorder);
+        c.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
+
+        SwingUtil.installFont(c, "ToolWindowRepresentativeAnchorUI.font");
+    }
+
     protected void installListeners(JLabel c) {
         super.installListeners(c);
 
@@ -200,26 +196,21 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         SwingUtil.registerDragListener(c, new RepresentativeAnchorDragListener(descriptor, c));
 
         dockable.addPropertyChangeListener(this);
+
         descriptor.getCleaner().addCleaner(this);
-    }
-
-    protected void installDefaults(JLabel c) {
-        labelBorder = new LineBorder(UIManager.getColor(MyDoggyKeySpace.RAB_MOUSE_OUT_BORDER), 1, true, 3, 3);
-
-        c.setBorder(labelBorder);
-        c.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
-
-        SwingUtil.installFont(c, "ToolWindowRepresentativeAnchorUI.font");
     }
 
     protected void uninstallListeners(JLabel c) {
         super.uninstallListeners(c);
 
+        c.removeMouseListener(adapter);
+        c.removeMouseMotionListener(adapter);
+
         SwingUtil.unregisterDragListener(c);
 
         dockable.removePropertyChangeListener(this);
-        c.removeMouseListener(adapter);
-        c.removeMouseMotionListener(adapter);
+
+        descriptor.getCleaner().removeCleaner(this);
     }
 
 

@@ -22,6 +22,7 @@ public class ContentCleaner extends DefaultCleanerAggregator implements ContentM
 
     public void cleanup() {
         super.cleanup();
+        
         manager.removeContentManagerListener(this);
     }
 
@@ -35,4 +36,5 @@ public class ContentCleaner extends DefaultCleanerAggregator implements ContentM
 
     public void contentSelected(ContentManagerEvent event) {
     }
+
 }

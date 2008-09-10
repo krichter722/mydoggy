@@ -547,6 +547,14 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         popupUpdaterList.add(popupUpdater);
     }
 
+    public void removePopupUpdater(PopupUpdater popupUpdater) {
+        if (popupUpdaterList == null)
+            return;
+
+        popupUpdaterList.remove(popupUpdater);
+    }
+
+
     public void addTypeDescriptorChangePropertyListener(PropertyChangeListener listener) {
         floatingTypeDescriptor.addPropertyChangeListener(listener);
         floatingLiveTypeDescriptor.addPropertyChangeListener(listener);
@@ -600,10 +608,20 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                                                                                            Component.class, toolWindowPanel))
         );
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusListener);
+        
         manager.addInternalPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getNewValue() == null && toolWindow != null)    // TODO: why this.... 
-                    toolWindow.setFlashing(false);
+                KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+
+                if (evt.getNewValue() != null) {
+                    keyboardFocusManager.removePropertyChangeListener("focusOwner", focusListener);
+                    keyboardFocusManager.addPropertyChangeListener("focusOwner", focusListener);
+                } else {
+                    keyboardFocusManager.removePropertyChangeListener("focusOwner", focusListener);
+
+                    if  (toolWindow != null)
+                        toolWindow.setFlashing(false);
+                }
             }
         });
 
@@ -684,6 +702,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                 popupMenu.add(menuItem);
         }
     }
+
 
 
     public class ToolWindowDescriptorCleaner extends DefaultCleanerAggregator {
