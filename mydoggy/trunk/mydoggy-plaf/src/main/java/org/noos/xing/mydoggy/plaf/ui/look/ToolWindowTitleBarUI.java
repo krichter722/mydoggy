@@ -85,20 +85,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
         if ("flash".equals(propertyName)) {
             if (evt.getNewValue() == Boolean.TRUE) {
                 if (toolWindow.isVisible()) {
-                    flasingDuration = -1;
-                    SwingUtil.repaint(toolWindowTitleBar);
-                }
-            } else {
-                if (flashingTimer != null) {
-                    flashingTimer.stop();
-                    flashingTimer = null;
-                    SwingUtil.repaint(toolWindowTitleBar);
-                }
-            }
-        } else if ("flash.duration".equals(propertyName)) {
-            if (evt.getNewValue() == Boolean.TRUE) {
-                if (toolWindow.isVisible()) {
-                    flasingDuration = (Integer) evt.getNewValue();
+                    flasingDuration = SwingUtil.getInt(evt, -1);
                     SwingUtil.repaint(toolWindowTitleBar);
                 }
             } else {
@@ -279,12 +266,16 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
     }
 
     protected void uninstallListeners(JComponent c) {
+        // cleaner
+        descriptor.getCleaner().removeCleaner(this);
+
         // Remove listeners
         descriptor.getToolWindow().removePlafPropertyChangeListener(this);
         descriptor.removeTypeDescriptorChangePropertyListener(this);
-        SwingUtil.unregisterDragListener(toolWindowTitleBar);
 
         toolWindowTitleBar.removeMouseListener(titleBarMouseAdapter);
+
+        SwingUtil.unregisterDragListener(toolWindowTitleBar);
     }
 
     protected void installComponents() {

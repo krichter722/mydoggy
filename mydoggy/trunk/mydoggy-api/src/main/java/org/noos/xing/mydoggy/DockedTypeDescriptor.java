@@ -63,6 +63,10 @@ public interface DockedTypeDescriptor extends ToolWindowTypeDescriptor {
      */
     int getDockLength();
 
+    void setDockSpace(int space);
+
+    int getDockSpace();
+
     /**
      * Sets the minimum dock length. This information is used every time a toolwindow (in docked or sliding mode)
      * is shown.

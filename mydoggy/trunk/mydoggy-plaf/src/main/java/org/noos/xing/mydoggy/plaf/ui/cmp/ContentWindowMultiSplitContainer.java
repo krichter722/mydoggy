@@ -83,7 +83,6 @@ public class ContentWindowMultiSplitContainer extends MultiSplitTabbedContentCon
 
 
     public class ContentWindowDockableDropPanel extends MultiSplitTabbedDockableDropPanel {
-        // TODO: setup dratStart
 
         public boolean drop(Transferable transferable) {
             if (transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)) {

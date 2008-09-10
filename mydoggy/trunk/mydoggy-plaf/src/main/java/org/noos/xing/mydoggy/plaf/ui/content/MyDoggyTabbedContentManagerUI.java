@@ -377,18 +377,28 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
             SwingUtil.registerDragListener(tabbedContentPane,
                                           new TabbedContentManagerDragListener());
-
         }
 
+        toolWindowManager.addInternalPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getNewValue() == null)
+                    KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(
+                            "focusOwner", focusOwnerPropertyChangeListener
+                    );
+            }
+        });
+
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(
-                "focusOwner", focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener());
+                "focusOwner", focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener()
+        );
     }
 
     protected void removeListeners() {
         SwingUtil.unregisterDragListener(tabbedContentPane);
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(
-                "focusOwner", focusOwnerPropertyChangeListener);
+                "focusOwner", focusOwnerPropertyChangeListener
+        );
     }
 
     protected Object addUIForContent(Content content, Object... constaints) {

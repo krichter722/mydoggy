@@ -333,13 +333,23 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         }
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(
-                "focusOwner", focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener());
+                "focusOwner", focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener()
+        );
 
+        toolWindowManager.addInternalPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getNewValue() == null)
+                    KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(
+                            "focusOwner", focusOwnerPropertyChangeListener
+                    );
+            }
+        });
     }
 
     protected void removeListeners() {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(
-                "focusOwner", focusOwnerPropertyChangeListener);
+                "focusOwner", focusOwnerPropertyChangeListener
+        );
     }
 
     protected void setupActions() {
@@ -858,7 +868,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 if (newSelected == lastSelected || valueAdjusting || contentValueAdjusting)
                     return;
 
-                // TODO:.....check this...
                 if (maximizedContent != null && newSelected != maximizedContent)
                     return;
 

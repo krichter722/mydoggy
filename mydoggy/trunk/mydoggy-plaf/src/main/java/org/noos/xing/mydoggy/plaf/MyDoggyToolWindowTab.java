@@ -134,8 +134,11 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
         if (isSelected())
             return;
 
+        if (this.flash)
+            return;
+
         this.flash = true;
-        firePropertyChangeEvent("flash.duration", null, duration);
+        firePropertyChangeEvent("flash", false, true, duration);
     }
 
     public void setComponent(Component component) {

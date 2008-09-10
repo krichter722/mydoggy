@@ -57,8 +57,13 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
     protected Component selecTabButton;
     protected PopupButton popupButton;
 
+    // Listeners
+
     protected MouseEventDispatcher mouseEventDispatcher;
     protected PropertyChangeBridge propertyChangeBridge;
+    protected ToolWindowListener toolWindowListener;
+    protected MouseListener titleBarMouseListener;
+    protected PopupUpdater popupUpdater;
 
     // Drag gesture
 
@@ -147,14 +152,16 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
     }
 
     protected void installListeners() {
+        // cleaner
         descriptor.getCleaner().addCleaner(propertyChangeBridge);
         descriptor.getCleaner().addCleaner(this);
-        descriptor.addPopupUpdater(new TabPopupUpdater());
+        descriptor.addPopupUpdater(popupUpdater = new TabPopupUpdater());
 
-        toolWindow.addToolWindowListener(new TabPanelToolWindowListener());
+        // toolwindow listeners
+        toolWindow.addToolWindowListener(toolWindowListener = new TabPanelToolWindowListener());
 
-        // TODO: best cleanup
-        viewport.addMouseListener(new TitleBarMouseAdapter(descriptor));
+        // viewport listeners
+        viewport.addMouseListener(titleBarMouseListener = new TitleBarMouseAdapter(descriptor));
         viewport.addMouseListener(mouseEventDispatcher);
         viewport.addMouseMotionListener(mouseEventDispatcher);
 
@@ -163,6 +170,20 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
     }
 
     protected void uninstallListeners() {
+        // cleaner
+        descriptor.getCleaner().removeCleaner(propertyChangeBridge);
+        descriptor.getCleaner().removeCleaner(this);
+        descriptor.removePopupUpdater(popupUpdater);
+
+        // toolwindow
+        toolWindow.removeToolWindowListener(toolWindowListener);
+
+        // viewport
+        viewport.removeMouseListener(titleBarMouseListener = new TitleBarMouseAdapter(descriptor));
+        viewport.removeMouseListener(mouseEventDispatcher);
+        viewport.removeMouseMotionListener(mouseEventDispatcher);
+
+        // drag gesture
         SwingUtil.unregisterDragListener(viewport);
     }
 
@@ -292,11 +313,12 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
     public class TabPanelToolWindowListener implements ToolWindowListener, Cleaner {
         protected Map<ToolWindowTab, Component> minimizedTabs;
 
+        
         public TabPanelToolWindowListener() {
             this.minimizedTabs = new HashMap<ToolWindowTab, Component>();
 
             descriptor.getCleaner().addBefore(toolWindowTabPanel,
-                                              ToolWindowTabPanelUI.this);
+                                              this);
         }
 
 

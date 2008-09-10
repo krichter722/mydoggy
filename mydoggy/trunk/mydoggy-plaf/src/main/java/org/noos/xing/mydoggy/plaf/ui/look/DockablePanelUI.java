@@ -84,11 +84,13 @@ public class DockablePanelUI extends BasicPanelUI implements PropertyChangeListe
 
     protected void installListeners() {
         dockable.addPropertyChangeListener(this);
+
         dockable.getDockableManager().addDockableManagerListener(this);
     }
 
     protected void uninstallListeners() {
         dockable.removePropertyChangeListener(this);
+        
         dockable.getDockableManager().removeDockableManagerListener(this);
     }
 
@@ -103,7 +105,7 @@ public class DockablePanelUI extends BasicPanelUI implements PropertyChangeListe
             if (evt.getNewValue() == Boolean.TRUE) {
                 if (!dockable.isSelected()) {
                     dockablePanel.putClientProperty("oldBorder", dockablePanel.getBorder());
-                    flashingDuration = -1;
+                    flashingDuration = SwingUtil.getInt(evt, -1);
                     flashingTimer = new Timer(flashingInterval, this);
                     flashingTimer.start();
                 }
@@ -112,24 +114,6 @@ public class DockablePanelUI extends BasicPanelUI implements PropertyChangeListe
                     flashingTimer.stop();
                     flashingTimer = null;
 
-                    dockablePanel.setBorder((Border) dockablePanel.getClientProperty("oldBorder"));
-                }
-            }
-        } else if ("flash.duration".equals(propertyName)) {
-            if (!flashingEnabled)
-                return;
-
-            if (evt.getNewValue() == Boolean.TRUE) {
-                if (!dockable.isSelected()) {
-                    dockablePanel.putClientProperty("oldBorder", dockablePanel.getBorder());
-                    flashingDuration = (Integer) evt.getNewValue();
-                    flashingTimer = new Timer(flashingInterval, this);
-                    flashingTimer.start();
-                }
-            } else {
-                if (flashingTimer != null) {
-                    flashingTimer.stop();
-                    flashingTimer = null;
                     dockablePanel.setBorder((Border) dockablePanel.getClientProperty("oldBorder"));
                 }
             }

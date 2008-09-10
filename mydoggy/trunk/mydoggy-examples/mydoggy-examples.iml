@@ -11,62 +11,14 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library" exported="">
-      <library name="tablelayout:TableLayout:20050920">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/tablelayout/TableLayout/20050920/TableLayout-20050920.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/tablelayout/TableLayout/20050920/TableLayout-20050920-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/tablelayout/TableLayout/20050920/TableLayout-20050920-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
+    <orderEntry type="library" exported="" name="Maven: tablelayout:TableLayout:20050920" level="project" />
     <orderEntry type="module" module-name="mydoggy-api" exported="" />
     <orderEntry type="module" module-name="mydoggy-plaf" exported="" />
     <orderEntry type="module" module-name="mydoggy-res" exported="" />
     <orderEntry type="module" module-name="mydoggy-itest" exported="" />
-    <orderEntry type="module-library" exported="">
-      <library name="org.swinglabs:swingx:0.9.1">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/org/swinglabs/swingx/0.9.1/swingx-0.9.1.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/org/swinglabs/swingx/0.9.1/swingx-0.9.1-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/org/swinglabs/swingx/0.9.1/swingx-0.9.1-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" exported="">
-      <library name="com.jhlabs:filters:2.0.235">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/com/jhlabs/filters/2.0.235/filters-2.0.235.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/com/jhlabs/filters/2.0.235/filters-2.0.235-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/com/jhlabs/filters/2.0.235/filters-2.0.235-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="junit:junit:3.8.1">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/junit/junit/3.8.1/junit-3.8.1-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../../../.m2/repository/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
+    <orderEntry type="library" exported="" name="Maven: org.swinglabs:swingx:0.9.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: com.jhlabs:filters:2.0.235" level="project" />
+    <orderEntry type="library" name="Maven: junit:junit:3.8.1" level="project" />
   </component>
 </module>
 

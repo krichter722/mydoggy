@@ -289,7 +289,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         synchronized (getLock()) {
             this.flash = true;
 
-            firePropertyChangeEvent("flash.duration", null, duration);
+            firePropertyChangeEvent("flash", false, true, duration);
         }
     }
 

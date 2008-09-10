@@ -74,20 +74,7 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
         if ("flash".equals(property)) {
             if (evt.getNewValue() == Boolean.TRUE) {
                 if (!tab.isSelected()) {
-                    flasingDuration = -1;
-                    SwingUtil.repaint(toolWindowTabButton);
-                }
-            } else {
-                if (flashingTimer != null) {
-                    flashingTimer.stop();
-                    flashingTimer = null;
-                    SwingUtil.repaint(toolWindowTabButton);
-                }
-            }
-        } else if ("flash.duration".equals(property)) {
-            if (evt.getNewValue() == Boolean.TRUE) {
-                if (!tab.isSelected()) {
-                    flasingDuration = (Integer) evt.getNewValue();
+                    flasingDuration = SwingUtil.getInt(evt, -1);;
                     SwingUtil.repaint(toolWindowTabButton);
                 }
             } else {
@@ -353,7 +340,7 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
     }
 
     protected void installListeners() {
-        tab.addPropertyChangeListener(this);    //  TODO: add as plaf...
+        tab.addPlafPropertyChangeListener(this); 
         tab.getCleanerAggregator().addCleaner(this);
 
         toolWindow.addToolWindowListener(new TabButtonToolWindowListener());
@@ -386,11 +373,12 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
         SwingUtil.unregisterDragListener(closeButton);
 
         tab.removePropertyChangeListener(this);
+        tab.getCleanerAggregator().removeCleaner(this);
 
         toolWindowTabButton.removeMouseListener(toolWindowTabPanel.getMouseEventDispatcher());
         toolWindowTabButton.removeMouseMotionListener(toolWindowTabPanel.getMouseEventDispatcher());
 
-        titleLabel.removeMouseListener(titleBarMouseListener );
+        titleLabel.removeMouseListener(titleBarMouseListener);
         titleLabel.removeMouseListener(toolWindowTabPanel.getMouseEventDispatcher());
         titleLabel.removeMouseMotionListener(toolWindowTabPanel.getMouseEventDispatcher());
         titleLabel.removeMouseListener(this);

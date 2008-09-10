@@ -85,7 +85,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         } else if ("flash".equals(propertyName)) {
             if (e.getNewValue() == Boolean.TRUE) {
                 if (!toolWindow.isVisible()) {
-                    flasingDuration = -1;
+                    flasingDuration = SwingUtil.getInt(e, -1);
                     SwingUtil.repaint(representativeAnchor);
                 }
             } else {
@@ -95,20 +95,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                     SwingUtil.repaint(representativeAnchor);
                 }
             }
-        } else if ("flash.duration".equals(propertyName)) {
-            if (e.getNewValue() == Boolean.TRUE) {
-                if (!toolWindow.isVisible()) {
-                    flasingDuration = (Integer) e.getNewValue();
-                    SwingUtil.repaint(representativeAnchor);
-                }
-            } else {
-                if (flashingTimer != null) {
-                    flashingTimer.stop();
-                    flashingTimer = null;
-                    SwingUtil.repaint(representativeAnchor);
-                }
-            }
-        }
+        } 
     }
 
     public void cleanup() {
@@ -251,14 +238,16 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     protected void uninstallListeners(JLabel c) {
         super.uninstallListeners(c);
 
-        SwingUtil.unregisterDragListener(c);
-        
         representativeAnchorDescriptor.removePropertyChangeListener(this);
+
+        descriptor.getCleaner().removeCleaner(this);
 
         c.removeMouseListener(adapter);
         c.removeMouseMotionListener(adapter);
-        
+
         descriptor.getToolWindow().removePlafPropertyChangeListener(this);
+
+        SwingUtil.unregisterDragListener(c);
     }
 
 

@@ -84,9 +84,11 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
         if (isSelected())
             return;
 
-        this.flash = true;
+        if (this.flash)
+            return;
 
-        firePropertyChangeEvent("flash.duration", null, duration);
+        this.flash = true;
+        firePropertyChangeEvent("flash", false, true, duration);
     }
 
     public void setComponent(Component component) {
