@@ -83,10 +83,12 @@ public class MultiSplitConstraint {
 
 
     public String toString() {
-        return "MultiSplitConstraint{" +
-               "onContent=" + onContent +
-               ", onPosition=" + onPosition +
-               ", onIndex=" + onIndex +
-               '}';
+        final StringBuilder sb = new StringBuilder();
+        sb.append("MultiSplitConstraint");
+        sb.append("{onContent=").append(onContent);
+        sb.append(", onPosition=").append(onPosition);
+        sb.append(", onIndex=").append(onIndex);
+        sb.append('}');
+        return sb.toString();
     }
 }

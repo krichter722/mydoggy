@@ -189,11 +189,15 @@ public class ModalDialog extends JDialog implements ModalWindow,
         return multiSplitDockableContainer.getDockableCount();
     }
 
-    public ToolWindow getToolWindow() {
+    public ToolWindow getDockable() {
         return (ToolWindow) multiSplitDockableContainer.getDockableEntries().get(0).dockable;
     }
 
+    public boolean containsDockable(ToolWindow toolWindow) {
+        return multiSplitDockableContainer.containsDockable(toolWindow);
+    }
 
+    
     protected void initComponents() {
         multiSplitDockableContainer = new MultiSplitDockableContainer(toolWindowManager, JSplitPane.VERTICAL_SPLIT);
 

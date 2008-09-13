@@ -191,6 +191,13 @@ public interface Content extends Dockable<ContentManager> {
     void detach(Content onContent, AggregationPosition onPosition);
 
     /**
+     * TODO
+     * @param refContent
+     * @param onPosition
+     */
+    void detachByReference(Content refContent, AggregationPosition onPosition);
+
+    /**
      *
      * @param constraints
      */

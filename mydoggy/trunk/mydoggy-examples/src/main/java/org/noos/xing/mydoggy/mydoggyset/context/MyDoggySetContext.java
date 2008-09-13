@@ -29,7 +29,8 @@ import java.awt.*;
 public class MyDoggySetContext extends MapViewContext {
 
     public enum ActionKey {
-        NEST_TOOLMANAGER
+        NEST_TOOLMANAGER,
+        ADD_ALL_CONTENTS
     }
 
     protected Component toolsContentComponent;
@@ -74,6 +75,20 @@ public class MyDoggySetContext extends MapViewContext {
                                                                                       "Nested Manager", "Nested Manager", null,
                                                                                       nestedManagerContentComponent = new NestedManagerView(parentComponent, toolWindowManager).getComponent(),
                                                                                       "Nested Manager", (int) 'N'));
+
+        addViewContextChangeListener(ActionKey.ADD_ALL_CONTENTS, new ViewContextChangeListener() {
+            public void contextChange(ViewContextChangeEvent evt) {
+                put(MyDoggySet.class, this);
+                put(ToolWindowManager.class, this);
+                put(ToolWindow.class, this);
+                put(ToolWindowGroup.class, this);
+                put(Content.class, this);
+                put(InteractiveTest.class, this);
+                put(ToolWindowManager.class, this);
+                put(ResourceManager.class, this);
+                
+            }
+        });
 
         addViewContextChangeListener(UIManager.class, new ViewContextChangeListener() {
             public void contextChange(ViewContextChangeEvent evt) {

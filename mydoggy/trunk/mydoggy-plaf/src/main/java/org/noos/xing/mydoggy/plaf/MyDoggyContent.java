@@ -301,6 +301,9 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
     }
 
     public void detach(Content onContent, int onIndex, AggregationPosition onPosition) {
+        if (onContent == null)
+            throw new IllegalArgumentException("onContent cannot be null.");
+
         if (isDetached())
             return;
 
@@ -314,13 +317,29 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
     }
 
     public void detach(Content onContent, AggregationPosition onPosition) {
+        if (onContent == null)
+            throw new IllegalArgumentException("onContent cannot be null.");
+
         if (isDetached())
             return;
 
         this.detached = true;
 
         firePropertyChangeEvent(new UserPropertyChangeEvent(this, "detached", false, true,
-                                                            new MultiSplitConstraint(onContent, -2, onPosition)));
+                                                            new MultiSplitConstraint(onContent, -1, onPosition)));
+    }
+
+    public void detachByReference(Content refContent, AggregationPosition onPosition) {
+        if (refContent == null)
+            throw new IllegalArgumentException("refContent cannot be null.");
+
+        if (isDetached())
+            return;
+
+        this.detached = true;
+
+        firePropertyChangeEvent(new UserPropertyChangeEvent(this, "detached", false, true,
+                                                            new MultiSplitConstraint(refContent, -2, onPosition)));
     }
 
     public void reattach(Object... constraints) {

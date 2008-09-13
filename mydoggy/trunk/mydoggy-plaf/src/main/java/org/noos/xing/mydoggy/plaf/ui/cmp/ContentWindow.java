@@ -1,24 +1,14 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
-import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.Content;
-
-import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public interface ContentWindow {
+public interface ContentWindow extends MultiSplitWindow<Content> {
 
-    void addContent(Content content, Component contentComponent);
+    void setVisible(boolean visible);
 
-    void addContent(Content content, Component componentContent,
-                    Content aggregationOnContent, AggregationPosition aggregationPosition);
-
-    void removeContent(Content content);
-
-    boolean containsContent(Content content);
-
-    int getNumContents();
-
+    void dispose();
+    
 }

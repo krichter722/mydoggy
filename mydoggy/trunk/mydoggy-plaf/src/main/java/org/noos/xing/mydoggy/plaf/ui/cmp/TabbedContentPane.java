@@ -105,6 +105,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
     public Dockable getDockableAt(Point point) {
         indexAtLocation = indexAtLocation(point.x, point.y);
+
         Dockable onDockable;
 
         DockableOwner dockableOwner = SwingUtil.getParent(this, DockableOwner.class);

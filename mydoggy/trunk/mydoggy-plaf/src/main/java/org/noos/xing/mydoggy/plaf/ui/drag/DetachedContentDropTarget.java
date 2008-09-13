@@ -23,8 +23,8 @@ import java.beans.PropertyChangeListener;
 public class DetachedContentDropTarget extends DropTarget {
 
     public DetachedContentDropTarget(ModalWindow modalWindow,
-                                    JComponent component,
-                                    MyDoggyToolWindowManager toolWindowManager) throws HeadlessException {
+                                     JComponent component,
+                                     MyDoggyToolWindowManager toolWindowManager) throws HeadlessException {
         super(modalWindow.getWindow(),
               DnDConstants.ACTION_MOVE,
               new ToolWindowFloatingDropTargetListener(modalWindow, component, toolWindowManager));
@@ -161,8 +161,7 @@ public class DetachedContentDropTarget extends DropTarget {
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.LEFT);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.aggregateByReference(modalWindow.getToolWindow(), AggregationPosition.LEFT
-                                                        );
+                                                        toolWindow.aggregateByReference(modalWindow.getDockable(), AggregationPosition.LEFT);
                                                     }
                                                 }
                                                 break;
@@ -171,8 +170,7 @@ public class DetachedContentDropTarget extends DropTarget {
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.RIGHT);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.aggregateByReference(modalWindow.getToolWindow(), AggregationPosition.RIGHT
-                                                        );
+                                                        toolWindow.aggregateByReference(modalWindow.getDockable(), AggregationPosition.RIGHT);
                                                     }
                                                 }
                                                 break;
@@ -181,8 +179,7 @@ public class DetachedContentDropTarget extends DropTarget {
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.BOTTOM);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.aggregateByReference(modalWindow.getToolWindow(), AggregationPosition.BOTTOM
-                                                        );
+                                                        toolWindow.aggregateByReference(modalWindow.getDockable(), AggregationPosition.BOTTOM);
 
                                                     }
                                                 }
@@ -192,9 +189,7 @@ public class DetachedContentDropTarget extends DropTarget {
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.TOP);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.aggregateByReference(modalWindow.getToolWindow(), AggregationPosition.TOP
-                                                        );
-
+                                                        toolWindow.aggregateByReference(modalWindow.getDockable(), AggregationPosition.TOP);
                                                     }
                                                 }
                                                 break;
@@ -205,8 +200,7 @@ public class DetachedContentDropTarget extends DropTarget {
                                             onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
                                             onToolWindow.setActive(true);
                                         } else {
-                                            toolWindow.aggregateByReference(modalWindow.getToolWindow(), AggregationPosition.DEFAULT
-                                            );
+                                            toolWindow.aggregateByReference(modalWindow.getDockable(), AggregationPosition.DEFAULT);
                                             toolWindow.setActive(true);
                                         }
                                     }

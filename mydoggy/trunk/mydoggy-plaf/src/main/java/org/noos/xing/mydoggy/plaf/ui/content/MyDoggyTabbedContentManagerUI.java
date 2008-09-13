@@ -2,10 +2,12 @@ package org.noos.xing.mydoggy.plaf.ui.content;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDialog;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentFrame;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ContentWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TabbedContentPane;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
@@ -725,59 +727,107 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                     valueAdjusting = true;
                     try {
                         // TODO: add support for multi detaching..
-                        ContentUI contentUI = getContentUI(content);
+                        if (evt instanceof UserPropertyChangeEvent) {
+                            // We are here because a call ot the detach methods was made.
 
-                        Rectangle inBounds = toolWindowManager.getBoundsToScreen(content.getComponent().getBounds(),
-                                                                                 content.getComponent().getParent());
+                            UserPropertyChangeEvent userEvent = (UserPropertyChangeEvent) evt;
+                            MultiSplitConstraint constraint = (MultiSplitConstraint) userEvent.getUserObject();
 
-                        // Store constraint
-                        if (tabbedContentPane.getTabCount() != 0)
-                            detachedContentUIMap.put(content, tabbedContentPane.indexOfContent(content));
-                        else
-                            detachedContentUIMap.put(content, -1);
+                            switch (constraint.getOnIndex()) {
+                                case -2:
+                                    for (Window window : SwingUtil.getTopContainers()) {
+                                        if (window instanceof ContentWindow) {
+                                            ContentWindow contentWindow = (ContentWindow) window;
 
-                        // Remove content from tab
-                        int tabIndex = tabbedContentPane.indexOfContent(content);
-                        if (tabIndex != -1) {
-                            tabbedContentPane.removeTabAt(tabIndex);
-                            if (tabbedContentPane.getTabCount() == 0)
-                                toolWindowManager.resetMainContent();
+                                            if (contentWindow.containsDockable(constraint.getOnContent())) {
+                                                // remove content
+                                                removeContent(content);
+
+                                                contentWindow.addDockable(content,
+                                                                          content.getComponent(),
+                                                                          null,
+                                                                          constraint.getOnPosition());
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    break;
+                                default:
+                                    for (Window window : SwingUtil.getTopContainers()) {
+                                        if (window instanceof ContentWindow) {
+                                            ContentWindow contentWindow = (ContentWindow) window;
+
+                                            if (contentWindow.containsDockable(constraint.getOnContent())) {
+                                                // remove content
+                                                removeContent(content);
+
+                                                contentWindow.addDockable(content,
+                                                                          content.getComponent(),
+                                                                          constraint.getOnContent(),
+                                                                          constraint.getOnPosition());
+                                                break;
+                                            }
+                                        }
+                                    }
+                            }
                         } else {
-                            if (tabbedContentPane.getParent() == null)
-                                toolWindowManager.resetMainContent();
-                            else
-                                throw new IllegalStateException("Invalid Content : " + content);
+                            ContentUI contentUI = getContentUI(content);
+
+                            Rectangle inBounds = toolWindowManager.getBoundsToScreen(content.getComponent().getBounds(),
+                                                                                     content.getComponent().getParent());
+
+                            // remove content
+                            removeContent(content);
+
+                            // Setup dialog
+                            Frame parentFrame = (toolWindowManager.getWindowAncestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAncestor() : null;
+
+                            Window dialog;
+                            if (contentUI.isAddToTaskBarWhenDetached()) {
+                                dialog = new ContentFrame(
+                                        content, contentUI,
+                                        parentFrame, inBounds);
+                            } else {
+                                dialog = new ContentDialog(
+                                        content, contentUI,
+                                        parentFrame, inBounds);
+                            }
+                            dialog.addWindowFocusListener(new ContentDialogFocusListener(content));
+                            dialog.toFront();
+                            dialog.setVisible(true);
+
+                            componentInFocusRequest = findAndRequestFocus(dialog);
                         }
-
-                        // Setup dialog
-                        Frame parentFrame = (toolWindowManager.getWindowAncestor() instanceof Frame) ? (Frame) toolWindowManager.getWindowAncestor() : null;
-
-                        Window dialog;
-                        if (contentUI.isAddToTaskBarWhenDetached()) {
-                            dialog = new ContentFrame(
-                                    content, contentUI,
-                                                      parentFrame, inBounds);
-                        } else {
-                            dialog = new ContentDialog(
-                                    content, contentUI,
-                                                       parentFrame, inBounds);
-                        }
-                        dialog.addWindowFocusListener(new ContentDialogFocusListener(content));
-                        dialog.toFront();
-                        dialog.setVisible(true);
-
-                        componentInFocusRequest = findAndRequestFocus(dialog);
                     } finally {
                         valueAdjusting = false;
                     }
                 } else {
-                    Window window = SwingUtilities.windowForComponent(content.getComponent());
-                    window.setVisible(false);
-                    window.dispose();
+                    ContentWindow window = (ContentWindow) SwingUtilities.windowForComponent(content.getComponent());
+                    window.removeDockable(content);
+
+                    if (window.getNumDockables() <= 0) {
+                        window.setVisible(false);
+                        window.dispose();
+                    }
 
                     contentValueAdjusting = true;
                     try {
-                        int index = (Integer) addUIForContent(content, detachedContentUIMap.get(content));
+                        int index = 0;
+                        if (evt instanceof UserPropertyChangeEvent) {
+                            // We are here because a call ot the detach methods was made.
+                            UserPropertyChangeEvent userEvent = (UserPropertyChangeEvent) evt;
+                            if (userEvent.getUserObject() instanceof MultiSplitConstraint) {
+                                //  TODO: here we don't have MultiSplitConstraint...
+                                MultiSplitConstraint constraint = (MultiSplitConstraint) userEvent.getUserObject();
+
+                                addUIForContent(content, constraint);
+                            } else
+                                index = (Integer) addUIForContent(content, detachedContentUIMap.get(content));
+                        } else {
+                            index = (Integer) addUIForContent(content, detachedContentUIMap.get(content));
+                        }
+
+
                         tabbedContentPane.setSelectedIndex(index);
                         componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
                     } finally {
@@ -788,6 +838,26 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
             }
         }
 
+        protected void removeContent(Content content) {
+            // Store constraint
+            if (tabbedContentPane.getTabCount() != 0)
+                detachedContentUIMap.put(content, tabbedContentPane.indexOfContent(content));
+            else
+                detachedContentUIMap.put(content, -1);
+
+            // Remove content from tab
+            int tabIndex = tabbedContentPane.indexOfContent(content);
+            if (tabIndex != -1) {
+                tabbedContentPane.removeTabAt(tabIndex);
+                if (tabbedContentPane.getTabCount() == 0)
+                    toolWindowManager.resetMainContent();
+            } else {
+                if (tabbedContentPane.getParent() == null)
+                    toolWindowManager.resetMainContent();
+                else
+                    throw new IllegalStateException("Invalid Content : " + content);
+            }
+        }
     }
 
     public class MinimizedListener implements PropertyChangeListener {
@@ -859,7 +929,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
         public void dragGestureRecognized(DragGestureEvent dge) {
             super.dragGestureRecognized(dge);
-            
+
             // Acquire locks
             if (!acquireLocks())
                 return;

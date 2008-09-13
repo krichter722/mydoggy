@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DockableDropPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DockableOwner;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiDockableOwner;
+import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitWindow;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -36,6 +37,7 @@ public class DockableDropPanelUI extends BasicPanelUI {
     protected Component onDockableContainer;
     protected ToolWindowAnchor onAnchor;
     protected Dockable onDockable;
+    protected Dockable refDockable;
     protected int onIndex;
 
 
@@ -61,6 +63,7 @@ public class DockableDropPanelUI extends BasicPanelUI {
     protected void installDefaults(JPanel p) {
         super.installDefaults(p);
 
+        p.setOpaque(false);
         dockableDropPanel.setLayout(layout = new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
         this.threshold = dockableDropPanel.getThreshold();
     }
@@ -127,6 +130,7 @@ public class DockableDropPanelUI extends BasicPanelUI {
                 // Check if the mouse is on a dockable container..
                 Component deepestCmp = SwingUtilities.getDeepestComponentAt(c, mouseLocation.x, mouseLocation.y);
                 if (deepestCmp != null) {
+
                     onDockableContainer = (Component) SwingUtil.getParent(deepestCmp, DockableOwner.class);
 
                     if (onDockableContainer != null) {
@@ -140,6 +144,7 @@ public class DockableDropPanelUI extends BasicPanelUI {
                                     SwingUtilities.convertPoint(dockableDropPanel,
                                                                 new Point(mouseLocation),
                                                                 onDockableContainer));
+
                             onIndex = multiDockableOwner.getDockableIndex();
 
                             multiDockableOwner.setPointerVisible(true);
@@ -147,9 +152,22 @@ public class DockableDropPanelUI extends BasicPanelUI {
                             oldMultiDockableOwner = multiDockableOwner;
                         } else if (onDockableContainer instanceof DockableOwner) {
                             onDockable = ((DockableOwner) onDockableContainer).getDockable();
-                        } else 
+
+                            Component tmp = (Component) SwingUtil.getParent(deepestCmp, MultiDockableOwner.class);
+                            if (tmp != null)
+                                onDockableContainer = tmp;
+                            
+                        } else
                             throw new IllegalStateException("Dockable Container not reconized!!!");
 
+                        if (onDockable == null) {
+                            // Try to find a refDockable...
+                            MultiSplitWindow multiSplitWindow = SwingUtil.getParent(deepestCmp, MultiSplitWindow.class);
+                            if (multiSplitWindow != null)
+                                refDockable = multiSplitWindow.getDockable();
+                        } else
+                            refDockable = null;
+                                                
                         // Ok the mouse is on a dockable container
                         Rectangle toolBounds = onDockableContainer.getBounds();
                         Point point = SwingUtilities.convertPoint(onDockableContainer,
@@ -302,7 +320,11 @@ public class DockableDropPanelUI extends BasicPanelUI {
         return onIndex;
     }
 
+    public Dockable getRefDockable() {
+        return refDockable;
+    }
 
+    
     protected void drawRect(Graphics g, int x, int y, int width, int height) {
         g.setColor(Color.BLUE);
 
