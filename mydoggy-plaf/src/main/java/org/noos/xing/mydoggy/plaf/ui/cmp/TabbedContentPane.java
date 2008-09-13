@@ -9,6 +9,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragListener;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragListenerAdapter;
+import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.RemoveNotifyDragListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -60,6 +61,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
     protected RemoveNotifyDragListener removeNotifyDragListener;
     protected DragSource dragSource = new DragSource();
+    protected DragListener dragListener;
 
     protected Point tabPointerLocation = new Point();
     protected Image tabPointer;
@@ -67,7 +69,6 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
     protected int indexAtLocation;
 
     protected boolean pointerVisible;
-
 
 
     public TabbedContentPane() {
@@ -100,7 +101,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
     public Dockable getDockable() {
         return null;
-    }                                         
+    }
 
     public Dockable getDockableAt(Point point) {
         indexAtLocation = indexAtLocation(point.x, point.y);
@@ -248,6 +249,16 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         return super.getToolTipText(event);
     }
 
+    public void addNotify() {
+        super.addNotify();
+
+        // Setup drag
+        if (dragListener != null) {
+            toolWindowManager.removeRemoveNotifyListener(removeNotifyDragListener);
+            toolWindowManager.addRemoveNotifyListener(removeNotifyDragListener = new RemoveNotifyDragListener(this, dragListener));
+        }
+    }
+
     public void removeNotify() {
         super.removeNotify();
 
@@ -371,6 +382,8 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
     }
 
     public void setDragListener(DragListener dragListener) {
+        this.dragListener = dragListener;
+
         toolWindowManager.addRemoveNotifyListener(removeNotifyDragListener = new RemoveNotifyDragListener(this, dragListener));
     }
 
@@ -418,7 +431,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
     protected void initDragListener() {
         // Init drag
-        toolWindowManager.addRemoveNotifyListener(removeNotifyDragListener = new RemoveNotifyDragListener(this, new TabbedDragListenerAdapter(toolWindowManager)));
+        setDragListener(new TabbedDragListenerAdapter(toolWindowManager));
 
         // Init drop
         setDropTarget(new DropTarget(this,
@@ -517,7 +530,6 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
     }
 
 
-
     public class MouseOverTabListener extends MouseInputAdapter {
         protected int mouseOverTab = -1;
         protected JPopupMenu stdPopupMenu;
@@ -606,7 +618,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
                 Content content = getContentAt(mouseOverTab);
                 if (content == null)
                     return;
-                
+
                 ContentUI contentUI = content.getContentUI();
 
                 Point point = e.getPoint();
@@ -875,8 +887,11 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             if (dragTabIndex < 0)
                 return;
 
+            Content content = getContentAt(dragTabIndex);
             dge.startDrag(DragSource.DefaultMoveDrop,
-                          new TabbedTransferable(),
+                          new MyDoggyTransferable(manager,
+                                                  MyDoggyTransferable.CONTENT_ID_DF,
+                                                  content.getId()),
                           this);
 
             // Setup ghostImage
@@ -899,7 +914,11 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         }
 
         public void dragMouseMoved(DragSourceDragEvent dsde) {
+            // Update ghost image
             updateGhostImage(dsde.getLocation());
+
+            // Update drop target
+            updateDropTarget(dsde);
         }
 
         public void dragEnter(DragSourceDragEvent e) {
@@ -913,24 +932,34 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         }
 
         public void dragDropEnd(DragSourceDropEvent e) {
-            if (!e.getDropSuccess()) {
-                Content content = getContentAt(dragTabIndex);
-                if (content == null)
-                    return;
-                ContentUI contentUI = content.getContentUI();
+            try {
+                if (!e.getDropSuccess()) {
+                    // Finalize drag action...
+                    if (lastDropPanel != null) {
+                        lastDropPanel.drop(e.getDragSourceContext().getTransferable());
+                    } else if (lastBarAnchor == null) {
+                        // Detach content
 
-                Rectangle bounds = contentUI.getDetachedBounds();
-                if (bounds != null) {
-                    bounds.setLocation(e.getLocation());
-                } else {
-                    bounds = new Rectangle();
-                    bounds.setLocation(e.getLocation());
-                    bounds.setSize(toolWindowManager.getBoundsToScreen(content.getComponent().getBounds(),
-                                                                       content.getComponent().getParent()).getSize());
+                        Content content = getContentAt(dragTabIndex);
+                        ContentUI contentUI = content.getContentUI();
+
+                        Rectangle bounds = contentUI.getDetachedBounds();
+                        if (bounds != null) {
+                            bounds.setLocation(e.getLocation());
+                        } else {
+                            bounds = new Rectangle();
+                            bounds.setLocation(e.getLocation());
+                            bounds.setSize(toolWindowManager.getBoundsToScreen(content.getComponent().getBounds(),
+                                                                               content.getComponent().getParent()).getSize());
+                        }
+
+                        contentUI.setDetachedBounds(bounds);
+                        content.setDetached(true);
+                    }
                 }
-
-                contentUI.setDetachedBounds(bounds);
-                content.setDetached(true);
+            } finally {
+                // End dockable drop gesture..
+                dockableDropDragEnd();
             }
 
             // cleanup
@@ -944,4 +973,4 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         }
 
     }
-}
+}                                                       

@@ -20,10 +20,7 @@ import org.noos.xing.mydoggy.mydoggyset.ui.LookAndFeelMenuItem;
 import org.noos.xing.mydoggy.mydoggyset.ui.MonitorPanel;
 import org.noos.xing.mydoggy.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.CustomDockableDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
-import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
+import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowRepresentativeAnchorUI;
@@ -80,6 +77,8 @@ public class MyDoggySet {
 //        });
 
         memoryMonitorDescriptor.setAvailable(true);
+        memoryMonitorDescriptor.setAnchor(ToolWindowAnchor.BOTTOM, 0);
+        memoryMonitorDescriptor.setAnchorPositionLocked(true);
 
         toolWindowManager.getToolWindow("Tool 3").getTypeDescriptor(DockedTypeDescriptor.class)
                 .addToolWindowAction(new CustomAction(), 2);
@@ -623,7 +622,7 @@ public class MyDoggySet {
             return false;
         }
 
-        public class MemoryMonitorPanel extends JPanel {
+        public class MemoryMonitorPanel extends JPanel implements DescriptorOwner {
             int sleepTime;
 
             public MemoryMonitorPanel(ToolWindowAnchor anchor) {
@@ -694,6 +693,9 @@ public class MyDoggySet {
                 this.sleepTime = sleepTime;
             }
 
+            public DockableDescriptor getDockableDescriptor() {
+                return MemoryMonitorDockableDescriptor.this;
+            }
         }
 
     }

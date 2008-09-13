@@ -164,7 +164,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             if (visibleWorkspace != null)
                 manager.getPersistenceDelegate().merge(new ByteArrayInputStream(visibleWorkspace.toByteArray()),
                                                        PersistenceDelegate.MergePolicy.RESET);
-         } else {
+        } else {
             visibleWorkspace = new ByteArrayOutputStream();
             manager.getPersistenceDelegate().save(visibleWorkspace, new PersistenceDelegateFilter() {
                 public boolean storeToolWindowManagerDescriptor() {
@@ -188,7 +188,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 toolWindow.setVisible(false);
             }
         }
-        
+
         this.visible = visible;
 
         firePropertyChangeEvent("visible", !visible, visible);
@@ -279,7 +279,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     public boolean isValueAdjusting() {
         return valueAdjusting;
     }
-    
+
 
     protected void initComponents() {
         splitPane.setName(anchor.toString());
@@ -420,6 +420,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             availableTools++;
 
         if (horizontal) {
+            // insert columns
             toolWindowBarContainerLayout.insertColumn(toolWindowBarContainerLayout.getNumColumn(),
                                                       toolWindowBarContainerLayout.getNumColumn() > 0 ? 5 : 1);
             toolWindowBarContainerLayout.insertColumn(toolWindowBarContainerLayout.getNumColumn(),
@@ -429,12 +430,30 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             int finalCol = (index * 2 + 2);
             if (finalCol >= toolWindowBarContainerLayout.getNumColumn())
                 index = -1;
+            else {
+                // Verify for locked index
+                Component[] components = toolWindowBarContainer.getComponents();
+
+                for (Component component : components) {
+                    TableLayoutConstraints constraints = toolWindowBarContainerLayout.getConstraints(component);
+
+                    if (constraints.col1 >= finalCol) {
+                        if (component instanceof DescriptorOwner) {
+                            if (((DescriptorOwner) component).getDockableDescriptor().isAnchorPositionLocked()) {
+                                finalCol += 2;
+                                index++;
+                            }
+                        }
+                    }
+                }
+            }
 
             if (index >= 0) {
                 Component[] components = toolWindowBarContainer.getComponents();
 
                 Map<Integer, Double> olds = new Hashtable<Integer, Double>();
                 for (Component component : components) {
+
                     TableLayoutConstraints constraints = toolWindowBarContainerLayout.getConstraints(component);
                     if (constraints.col1 >= finalCol) {
                         int newCol1 = constraints.col1 + 2;
@@ -452,8 +471,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                     }
                 }
 
-                toolWindowBarContainerLayout.setColumn(finalCol,
-                                                       TableLayout.PREFERRED);
+                toolWindowBarContainerLayout.setColumn(finalCol, TableLayout.PREFERRED);
 
                 toolWindowBarContainer.add(representativeAnchor, (index * 2 + 2) + ",1");
             } else
@@ -468,12 +486,30 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             int finalRow = (index * 2 + 2);
             if (finalRow >= toolWindowBarContainerLayout.getNumRow())
                 index = -1;
+            else {
+                // Verify for locked index
+                Component[] components = toolWindowBarContainer.getComponents();
+
+                for (Component component : components) {
+                    TableLayoutConstraints constraints = toolWindowBarContainerLayout.getConstraints(component);
+
+                    if (constraints.col1 >= finalRow) {
+                        if (component instanceof DescriptorOwner) {
+                            if (((DescriptorOwner) component).getDockableDescriptor().isAnchorPositionLocked()) {
+                                finalRow += 2;
+                                index++;
+                            }
+                        }
+                    }
+                }
+            }
 
             if (index >= 0) {
                 Component[] components = toolWindowBarContainer.getComponents();
 
                 Map<Integer, Double> olds = new Hashtable<Integer, Double>();
                 for (Component component : components) {
+
                     TableLayoutConstraints constraints = toolWindowBarContainerLayout.getConstraints(component);
 
                     if (constraints.row1 >= finalRow) {
@@ -660,7 +696,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                     if (!tool.isAvailable() && tool.getType() != ToolWindowType.FLOATING_FREE) {
                         ToolWindowDescriptor descriptor = manager.getDescriptor(tool);
 
-                        addRepresentativeAnchor(descriptor, 
+                        addRepresentativeAnchor(descriptor,
                                                 manager.getDescriptor(tool).getRepresentativeAnchor(toolWindowBarContainer),
                                                 -1);
                     }
@@ -706,9 +742,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 ensureVisible(toolWindowDescriptor.getRepresentativeAnchor());
 
                 SwingUtil.repaint(toolWindowBarContainer);
-            } else
-            if ((evt.getNewValue() == ToolWindowType.FLOATING_FREE || evt.getNewValue() == ToolWindowType.EXTERN) &&
-                toolWindowDescriptor.getRepresentativeAnchor() != null) {
+            } else if ((evt.getNewValue() == ToolWindowType.FLOATING_FREE || evt.getNewValue() == ToolWindowType.EXTERN) &&
+                       toolWindowDescriptor.getRepresentativeAnchor() != null) {
 
                 removeRepresentativeAnchor(toolWindowDescriptor, toolWindowDescriptor.getRepresentativeAnchor());
                 SwingUtil.repaint(toolWindowBarContainer);

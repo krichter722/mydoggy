@@ -130,6 +130,7 @@ public class RepresentativeAnchorDragListener extends DragListenerAdapter {
             lastAnchor = newAnchor;
         }
 
+        // Update ghost image
         updateGhostImage(dsde.getLocation(), updatedGhostImage);
 
         // Update drop target

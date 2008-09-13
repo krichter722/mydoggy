@@ -33,6 +33,10 @@ public interface DockableDescriptor extends Cleaner {
 
     ToolWindowAnchor getAnchor();
 
+    void setAnchorPositionLocked(boolean anchorPositionLocked);
+
+    boolean isAnchorPositionLocked();
+
     int getAnchorIndex();
 
     void setAvailable(boolean available);

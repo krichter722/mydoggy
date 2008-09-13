@@ -1,6 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
+import org.noos.xing.mydoggy.plaf.ui.DescriptorOwner;
+import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.content.ContentDescriptor;
 
 import javax.swing.*;
@@ -8,7 +10,7 @@ import javax.swing.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ContentRepresentativeAnchor extends JLabel implements Cleaner {
+public class ContentRepresentativeAnchor extends JLabel implements Cleaner, DescriptorOwner {
 
     /**
      * @see #getUIClassID
@@ -56,7 +58,7 @@ public class ContentRepresentativeAnchor extends JLabel implements Cleaner {
     }
 
 
-    public ContentDescriptor getContentDescriptor() {
+    public DockableDescriptor getDockableDescriptor() {
         return contentDescriptor;
     }
 

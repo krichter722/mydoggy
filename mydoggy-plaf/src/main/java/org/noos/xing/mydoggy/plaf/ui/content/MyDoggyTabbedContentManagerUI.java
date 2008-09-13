@@ -159,13 +159,16 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         Content selectedContent = null;
 
         contentValueAdjusting = true;
-        for (Content content : contentManager.getContents()) {
-            if (content.isSelected())
-                selectedContent = content;
-            addContent((PlafContent) content);
-            contentValueAdjusting = false; //  TODO: why this...
+        try {
+            for (Content content : contentManager.getContents()) {
+                if (content.isSelected())
+                    selectedContent = content;
+
+                addContent((PlafContent) content);
+            }
+        } finally {
+            contentValueAdjusting = false;
         }
-        contentValueAdjusting = false;
 
         if (oldContentManagerUI != null) {
             // Import listeners from the old ContentManagerUI
@@ -206,10 +209,13 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
             // Remove all contents
             contentValueAdjusting = true;
-            for (Content content : contentManager.getContents()) {
-                removeContent((PlafContent) content);
+            try {
+                for (Content content : contentManager.getContents()) {
+                    removeContent((PlafContent) content);
+                }
+            } finally {
+                contentValueAdjusting = false;
             }
-            contentValueAdjusting = false;
 
             removeListeners();
 
