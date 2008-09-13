@@ -184,6 +184,7 @@ public abstract class DragListenerAdapter implements DragListener, Cleaner {
             if (dockableDropPanel != null) {
                 // the point is on a dockable drop panel...
 
+
                 if (lastDropPanel != dockableDropPanel) {
                     if (lastDropPanel != null)
                         lastDropPanel.dragExit();

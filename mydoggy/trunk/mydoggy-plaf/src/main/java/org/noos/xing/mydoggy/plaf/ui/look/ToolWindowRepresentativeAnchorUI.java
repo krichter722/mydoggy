@@ -110,7 +110,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     public void installUI(JComponent c) {
         // Init fields
         this.representativeAnchor = (ToolWindowRepresentativeAnchor) c;
-        this.descriptor = representativeAnchor.getToolWindowDescriptor();
+        this.descriptor = representativeAnchor.getDockableDescriptor();
         this.toolWindow = descriptor.getToolWindow();
 
         super.installUI(c);

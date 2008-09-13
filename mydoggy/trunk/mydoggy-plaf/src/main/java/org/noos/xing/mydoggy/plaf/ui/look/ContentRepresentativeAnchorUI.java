@@ -86,7 +86,7 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         // Init fields
         this.contentRepresentativeAnchor = (ContentRepresentativeAnchor) c;
 
-        this.descriptor = contentRepresentativeAnchor.getContentDescriptor();
+        this.descriptor = contentRepresentativeAnchor.getDockableDescriptor();
         this.dockable = descriptor.getDockable();
 
         this.flashingAnimation = new GradientAnimation();

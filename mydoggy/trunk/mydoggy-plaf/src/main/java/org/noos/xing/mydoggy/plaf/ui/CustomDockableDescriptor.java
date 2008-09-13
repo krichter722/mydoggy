@@ -32,6 +32,7 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
     protected ToolWindowAnchor anchor;
     protected JComponent representativeAnchor;
     protected int anchorIndex;
+    protected boolean anchorPositionLocked = false;
 
     protected DragListener dragListener;
     protected CleanerAggregator cleaner;
@@ -82,6 +83,14 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
 
     public ToolWindowAnchor getAnchor() {
         return anchor;
+    }
+
+    public void setAnchorPositionLocked(boolean anchorPositionLocked) {
+        this.anchorPositionLocked = anchorPositionLocked;
+    }
+
+    public boolean isAnchorPositionLocked() {
+        return anchorPositionLocked;
     }
 
     public int getAnchorIndex() {

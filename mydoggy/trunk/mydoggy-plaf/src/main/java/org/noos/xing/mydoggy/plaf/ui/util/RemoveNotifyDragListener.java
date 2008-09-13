@@ -47,12 +47,18 @@ public class RemoveNotifyDragListener implements PropertyChangeListener, Cleaner
 
 
     protected void installListeners() {
+        if (components == null)
+            return;
+
         for (Component component : components) {
             SwingUtil.registerDragListener(component, dragListener);
         }
     }
 
     protected void uninstallListeners() {
+        if (components == null)
+            return;
+
         for (Component component : components) {
             SwingUtil.unregisterDragListener(component);
         }

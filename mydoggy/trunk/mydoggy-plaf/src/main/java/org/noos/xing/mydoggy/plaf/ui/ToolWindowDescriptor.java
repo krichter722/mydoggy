@@ -36,6 +36,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     protected MyDoggyToolWindow toolWindow;
     protected CleanerAggregator cleaner;
 
+    protected boolean anchorPositionLocked = false;
     protected boolean floatingWindow = false;
 
     // Components
@@ -150,6 +151,14 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
     public ToolWindowAnchor getAnchor() {
         return toolWindow.getAnchor();
+    }
+
+    public void setAnchorPositionLocked(boolean anchorPositionLocked) {
+        this.anchorPositionLocked = anchorPositionLocked;
+    }
+
+    public boolean isAnchorPositionLocked() {
+        return anchorPositionLocked;
     }
 
     public void setAvailable(boolean available) {
