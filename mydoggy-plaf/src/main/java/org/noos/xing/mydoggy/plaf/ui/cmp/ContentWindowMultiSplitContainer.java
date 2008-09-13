@@ -66,6 +66,7 @@ public class ContentWindowMultiSplitContainer extends MultiSplitTabbedContentCon
 //                }
 //            }
 //        });
+
         tabbedContentPane.addTabbedContentPaneListener(new TabbedContentPaneListener() {
             public void tabbedContentPaneEventFired(TabbedContentPaneEvent event) {
                 Content content = event.getContent();
@@ -96,43 +97,53 @@ public class ContentWindowMultiSplitContainer extends MultiSplitTabbedContentCon
                         boolean rejectDrop = false;
 
                         Content onDockable = (Content) getOnDockable();
+                        Content refDockable = (Content) getRefDockable();
                         ToolWindowAnchor onAnchor = getOnAnchor();
                         int onIndex = getOnIndex();
 
-                        if (content == onDockable) {
-                            if (onIndex == -1) {
-                                rejectDrop = true;
-                            } else {
-                                Component onDockableContainer = getOnDockableContainer();
+                        if (onDockable == null) {
+                            if (refDockable != null) {
+                                content.detachByReference(refDockable,
+                                                          (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()));
+                                return true;
+                            }
+                            return false;
 
-                                if (onDockableContainer instanceof TabbedContentPane) {
-                                    TabbedContentPane tabbedContentPane = (TabbedContentPane) onDockableContainer;
-                                    for (int i = 0, size = tabbedContentPane.getTabCount(); i < size; i++) {
-                                        DockablePanel dockablePanel = (DockablePanel) tabbedContentPane.getComponentAt(i);
-                                        if (dockablePanel.getDockable() == onDockable && i == onIndex) {
-                                            rejectDrop = true;
-                                            break;
+                        } else {
+                            if (content == onDockable) {
+                                if (onIndex == -1) {
+                                    rejectDrop = true;
+                                } else {
+                                    Component onDockableContainer = getOnDockableContainer();
+
+                                    if (onDockableContainer instanceof TabbedContentPane) {
+                                        TabbedContentPane tabbedContentPane = (TabbedContentPane) onDockableContainer;
+
+                                        for (int i = 0, size = tabbedContentPane.getTabCount(); i < size; i++) {
+                                            DockablePanel dockablePanel = (DockablePanel) tabbedContentPane.getComponentAt(i);
+
+                                            if (dockablePanel.getDockable() == onDockable && i == onIndex) {
+                                                rejectDrop = true;
+                                                break;
+                                            }
                                         }
+                                    } else if (onDockableContainer instanceof DockablePanel) {
+                                        DockablePanel dockablePanel = (DockablePanel) onDockableContainer;
+
+                                        if (dockablePanel.getDockable() == onDockable)
+                                            rejectDrop = true;
                                     }
-                                } else if (onDockableContainer instanceof DockablePanel) {
-                                    DockablePanel dockablePanel = (DockablePanel) onDockableContainer;
-                                    if (dockablePanel.getDockable() == onDockable)
-                                        rejectDrop = true;
                                 }
                             }
-                        }
 
-                        if (!rejectDrop) {
-                            if (onDockable != null) {
+                            if (!rejectDrop) {
                                 content.detach(onDockable,
                                                onIndex,
                                                (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()));
-                            } else {
-                                content.detach(onDockable,
-                                               (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()));
+                                return true;
                             }
-                            return true;
                         }
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

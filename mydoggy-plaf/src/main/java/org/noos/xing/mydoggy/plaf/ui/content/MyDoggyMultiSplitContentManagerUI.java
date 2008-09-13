@@ -732,41 +732,44 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                             UserPropertyChangeEvent userEvent = (UserPropertyChangeEvent) evt;
                             MultiSplitConstraint constraint = (MultiSplitConstraint) userEvent.getUserObject();
 
-                            if (constraint.getOnIndex() == -2) {
-                                for (Window window : SwingUtil.getTopContainers()) {
-                                    if (window instanceof ContentWindow) {
-                                        ContentWindow contentWindow = (ContentWindow) window;
+                            switch (constraint.getOnIndex()) {
+                                case -2:
+                                    for (Window window : SwingUtil.getTopContainers()) {
+                                        if (window instanceof ContentWindow) {
+                                            ContentWindow contentWindow = (ContentWindow) window;
 
-                                        if (contentWindow.containsContent(constraint.getOnContent())) {
-                                            // Remove from multiSpli and store constraint
-                                            detachedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
+                                            if (contentWindow.containsDockable(constraint.getOnContent())) {
+                                                // Remove from multiSpli and store constraint
+                                                detachedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
 
-                                            contentWindow.addContent(content,
-                                                                     content.getComponent(),
-                                                                     null,
-                                                                     constraint.getOnPosition());
-                                            break;
+                                                contentWindow.addDockable(content,
+                                                                          content.getComponent(),
+                                                                          null,
+                                                                          constraint.getOnPosition());
+                                                break;
+                                            }
                                         }
                                     }
-                                }
-                            } else {
-                                for (Window window : SwingUtil.getTopContainers()) {
-                                    if (window instanceof ContentWindow) {
-                                        ContentWindow contentWindow = (ContentWindow) window;
+                                    break;
+                                default:
+                                    for (Window window : SwingUtil.getTopContainers()) {
+                                        if (window instanceof ContentWindow) {
+                                            ContentWindow contentWindow = (ContentWindow) window;
 
-                                        if (contentWindow.containsContent(constraint.getOnContent())) {
-                                            // Remove from multiSpli and store constraint
-                                            detachedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
+                                            if (contentWindow.containsDockable(constraint.getOnContent())) {
+                                                // Remove from multiSpli and store constraint
+                                                detachedContentUIMap.put(content, multiSplitContainer.removeDockable(content));
 
-                                            contentWindow.addContent(content,
-                                                                     content.getComponent(),
-                                                                     constraint.getOnContent(),
-                                                                     constraint.getOnPosition());
-                                            break;
+                                                contentWindow.addDockable(content,
+                                                                          content.getComponent(),
+                                                                          constraint.getOnContent(),
+                                                                          constraint.getOnPosition());
+                                                break;
+                                            }
                                         }
                                     }
-                                }
                             }
+
                         } else {
                             ContentUI contentUI = getContentUI(content);
 
@@ -796,10 +799,10 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                         valueAdjusting = false;
                     }
                 } else {
-                    ContentDialog window = (ContentDialog) SwingUtilities.windowForComponent(content.getComponent());
-                    window.removeContent(content);
+                    ContentWindow window = (ContentWindow) SwingUtilities.windowForComponent(content.getComponent());
+                    window.removeDockable(content);
 
-                    if (window.getNumContents() <= 0) {
+                    if (window.getNumDockables() <= 0) {
                         window.setVisible(false);
                         window.dispose();
                     }

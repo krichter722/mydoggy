@@ -119,6 +119,10 @@ public class DockableDropPanel extends JPanel {
         return getUI().getOnDockable();
     }
 
+    public Dockable getRefDockable() {
+        return getUI().getRefDockable();
+    }
+   
     public int getOnIndex() {
         return getUI().getOnIndex();
     }

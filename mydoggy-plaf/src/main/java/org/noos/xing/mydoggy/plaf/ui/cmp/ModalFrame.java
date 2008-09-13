@@ -231,10 +231,14 @@ public class ModalFrame extends JFrame implements ModalWindow,
         return multiSplitDockableContainer.getDockableCount();
     }
 
-    public ToolWindow getToolWindow() {
+    public ToolWindow getDockable() {
         return (ToolWindow) multiSplitDockableContainer.getDockableEntries().get(0).dockable;
     }
 
+    public boolean containsDockable(ToolWindow toolWindow) {
+        return multiSplitDockableContainer.containsDockable(toolWindow);
+    }
+    
 
     public boolean isModal() {
         synchronized (ModalFrame.this) {

@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
-import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.ToolWindow;
 
 import java.awt.*;
@@ -8,7 +7,7 @@ import java.awt.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public interface ModalWindow {
+public interface ModalWindow extends MultiSplitWindow<ToolWindow> {
 
     Window getWindow();
 
@@ -53,19 +52,5 @@ public interface ModalWindow {
     void setSize(Dimension size);
 
     void setLocation(Point location);
-
-
-    void addDockable(ToolWindow toolWindow, Component content);
-
-    void addDockable(ToolWindow toolWindow,
-                     Component content,
-                     ToolWindow aggregationOnDockable,
-                     AggregationPosition aggregationPosition);
-
-    void removeDockable(ToolWindow toolWindow);
-
-    int getNumDockables();
-
-    ToolWindow getToolWindow();
 
 }

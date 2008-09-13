@@ -64,11 +64,11 @@ public class ContentDialog extends JDialog implements ContentWindow {
     }
 
 
-    public void addContent(Content content, Component contentComponent) {
-        addContent(content, contentComponent, null, AggregationPosition.DEFAULT);
+    public void addDockable(Content content, Component contentComponent) {
+        addDockable(content, contentComponent, null, AggregationPosition.DEFAULT);
     }
 
-    public void addContent(Content content,
+    public void addDockable(Content content,
                            Component componentContent,
                            Content aggregationOnContent,
                            AggregationPosition aggregationPosition) {
@@ -79,15 +79,19 @@ public class ContentDialog extends JDialog implements ContentWindow {
                                                 aggregationPosition);
     }
 
-    public void removeContent(Content content) {
+    public void removeDockable(Content dockable) {
         multiSplitDockableContainer.removeDockable(content);
     }
 
-    public int getNumContents() {
+    public int getNumDockables() {
         return multiSplitDockableContainer.getDockableCount();
     }
 
-    public boolean containsContent(Content content) {
+    public Content getDockable() {
+        return (Content) multiSplitDockableContainer.getFirstDockable();
+    }
+
+    public boolean containsDockable(Content content) {
         return multiSplitDockableContainer.containsDockable(content);
     }
 

@@ -22,6 +22,7 @@ import org.noos.xing.mydoggy.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowRepresentativeAnchorUI;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTitleBarUI;
@@ -171,6 +172,8 @@ public class MyDoggySet {
         contentMenu.add(new ViewContextAction("ITests", myDoggySetContext, InteractiveTest.class));
         contentMenu.add(new ViewContextAction("Customize", myDoggySetContext, ResourceManager.class));
         contentMenu.add(new ViewContextAction("Nested Manager", myDoggySetContext, MyDoggySetContext.ActionKey.NEST_TOOLMANAGER));
+        contentMenu.addSeparator();
+        contentMenu.add(new ViewContextAction("Add all Contents", myDoggySetContext, MyDoggySetContext.ActionKey.ADD_ALL_CONTENTS));
 
         // L&F Menu
         JMenu lafMenu = new JMenu("Looks");
@@ -341,7 +344,7 @@ public class MyDoggySet {
         });
 
         // Setup ContentManagerUI
-//        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
+        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
 
 //        MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
 //        contentManagerUI.setPopupMenuEnabled(false);
