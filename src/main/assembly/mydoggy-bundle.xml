@@ -23,12 +23,12 @@
     <files>
         <file>
             <source>pom_bundle.xml</source>
-            <outputDirectory>.</outputDirectory>
+            <!--<outputDirectory>.</outputDirectory>-->
             <destName>pom.xml</destName>
         </file>
         <file>
             <source>license/lgpl.txt</source>
-            <outputDirectory>.</outputDirectory>
+            <!--<outputDirectory>.</outputDirectory>-->
             <destName>LICENSE.txt</destName>
         </file>
     </files>

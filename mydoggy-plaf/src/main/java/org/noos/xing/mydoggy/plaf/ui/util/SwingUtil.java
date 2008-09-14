@@ -498,10 +498,7 @@ public class SwingUtil {
     public static Properties loadPropertiesFile(String resourceName, ClassLoader classLoader) {
         InputStream is = null;
         try {
-            if (classLoader == null)
-                classLoader = Thread.currentThread().getContextClassLoader();
-
-            URL resource = classLoader.getResource("META-INF/" + resourceName);
+            URL resource = getUrl(classLoader, "META-INF/" + resourceName);
             if (resource == null) {
                 File file = new File(resourceName);
                 if (file.exists())
@@ -544,6 +541,24 @@ public class SwingUtil {
 
     public static String toString(PropertyChangeEvent event) {
         return event.getPropertyName() + ":\n\t" + event.getSource() + ":\n\t" + event.getOldValue() + ":\n\t" + event.getNewValue();
+    }
+
+    public static URL getUrl(ClassLoader classLoader, String url) {
+        URL result = null;
+
+        if (classLoader != null)
+            result = classLoader.getResource(url);
+
+        if (result == null)
+            result = SwingUtil.class.getClassLoader().getResource(url);
+
+        if (result == null)
+            result = Thread.currentThread().getContextClassLoader().getResource(url);
+
+        if (result == null)
+            result = ClassLoader.getSystemClassLoader().getResource(url);
+
+        return result;
     }
 
     // UI support methods
