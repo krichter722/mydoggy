@@ -79,7 +79,7 @@ public class ContentDialog extends JDialog implements ContentWindow {
                                                 aggregationPosition);
     }
 
-    public void removeDockable(Content dockable) {
+    public void removeDockable(Content content) {
         multiSplitDockableContainer.removeDockable(content);
     }
 
@@ -116,11 +116,12 @@ public class ContentDialog extends JDialog implements ContentWindow {
     protected void installListeners(Frame parentFrame) {
         // Init Listener
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        addWindowListener(new ContentDialogWindowAdapter());
+        addWindowListener(new ContentWindowListener());
         if (parentFrame == null)
             addWindowFocusListener(new ToFrontWindowFocusListener(this));
 
-        addComponentListener(new ContentDialogComponentAdapter());
+        addComponentListener(new ContentComponentAdapter());
+        addWindowListener(new ContentWindowListener());
 
         if (SwingUtil.getTransparencyManager().isServiceAvailable()) {
             WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(
@@ -134,13 +135,8 @@ public class ContentDialog extends JDialog implements ContentWindow {
     }
 
 
-    public class ContentDialogWindowAdapter extends WindowAdapter {
-        public void windowClosing(WindowEvent event) {
-            content.setDetached(false);
-        }
-    }
-
-    public class ContentDialogComponentAdapter extends ComponentAdapter {
+    // TODO: check multi content bounds
+    public class ContentComponentAdapter extends ComponentAdapter {
 
         public void componentResized(ComponentEvent e) {
             if (isActive() && isVisible())
@@ -154,4 +150,18 @@ public class ContentDialog extends JDialog implements ContentWindow {
 
     }
 
+    public class ContentWindowListener extends WindowAdapter {
+
+        public void windowClosing(WindowEvent e) {
+            for (MultiSplitDockableContainer.DockableEntry dockableEntry : multiSplitDockableContainer.getDockableEntries()) {
+                dockableEntry.dockable.setDetached(false);
+            }
+
+            content = null;
+            contentUI = null;
+
+            super.windowClosing(e);
+        }
+
+    }
 }

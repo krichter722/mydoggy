@@ -809,18 +809,12 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
                     contentValueAdjusting = true;
                     try {
-                        if (evt instanceof UserPropertyChangeEvent) {
-                            // We are here because a call ot the detach methods was made.
-                            UserPropertyChangeEvent userEvent = (UserPropertyChangeEvent) evt;
-                            if (userEvent.getUserObject() instanceof MultiSplitConstraint) {
-                                MultiSplitConstraint constraint = (MultiSplitConstraint) userEvent.getUserObject();
+                        MultiSplitConstraint constraint = SwingUtil.getAt(evt, 0, null);
 
-                                addUIForContent(content, constraint);
-                            } else
-                                addUIForContent(content, detachedContentUIMap.get(content));
-                        } else {
+                        if (constraint != null) {
+                            addUIForContent(content, constraint);
+                        } else
                             addUIForContent(content, detachedContentUIMap.get(content));
-                        }
 
                         content.setSelected(true);
 

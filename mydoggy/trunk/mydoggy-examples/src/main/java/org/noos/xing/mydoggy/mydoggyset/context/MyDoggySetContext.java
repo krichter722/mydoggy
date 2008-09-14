@@ -82,10 +82,10 @@ public class MyDoggySetContext extends MapViewContext {
                 put(ToolWindowManager.class, this);
                 put(ToolWindow.class, this);
                 put(ToolWindowGroup.class, this);
-                put(Content.class, this);
-                put(InteractiveTest.class, this);
-                put(ToolWindowManager.class, this);
-                put(ResourceManager.class, this);
+//                put(Content.class, this);
+//                put(InteractiveTest.class, this);
+//                put(ToolWindowManager.class, this);
+//                put(ResourceManager.class, this);
                 
             }
         });

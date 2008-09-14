@@ -79,7 +79,7 @@ public class ContentFrame extends JFrame implements ContentWindow {
                                                 aggregationPosition);
     }
 
-    public void removeDockable(Content dockable) {
+    public void removeDockable(Content content) {
         multiSplitDockableContainer.removeDockable(content);
     }
 
@@ -116,7 +116,7 @@ public class ContentFrame extends JFrame implements ContentWindow {
     protected void installListeners(Frame parentFrame) {
         // Init Listener
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        addWindowListener(new ContentDialogWindowAdapter());
+        addWindowListener(new ContentWindowAdapter());
         if (parentFrame == null)
             addWindowFocusListener(new ToFrontWindowFocusListener(this));
 
@@ -134,9 +134,16 @@ public class ContentFrame extends JFrame implements ContentWindow {
     }
 
 
-    public class ContentDialogWindowAdapter extends WindowAdapter {
+    public class ContentWindowAdapter extends WindowAdapter {
         public void windowClosing(WindowEvent event) {
-            content.setDetached(false);
+            for (MultiSplitDockableContainer.DockableEntry dockableEntry : multiSplitDockableContainer.getDockableEntries()) {
+                dockableEntry.dockable.setDetached(false);
+            }
+
+            content = null;
+            contentUI = null;
+
+            super.windowClosing(event);
         }
     }
 

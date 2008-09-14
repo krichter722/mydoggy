@@ -792,6 +792,20 @@ public class SwingUtil {
         return defaultValue;
     }
 
+    public static <T> T getAt(PropertyChangeEvent e , int index, T defaultValue) {
+        if (e instanceof UserPropertyChangeEvent) {
+            UserPropertyChangeEvent event = (UserPropertyChangeEvent) e;
+
+            if (event.getUserObject() instanceof Object[]) {
+                Object[] objects = (Object[]) event.getUserObject();
+
+                return (T) objects[index];
+            }
+        }
+
+        return defaultValue;
+    }
+
 
     public static class DragEntry {
         DragGestureRecognizer dragGestureRecognizer;
