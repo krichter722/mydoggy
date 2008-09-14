@@ -133,6 +133,9 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
     protected void paintChildren(Graphics g) {
         super.paintChildren(g);
 
+        if (tabPointerLocation.x < 0)
+            return;
+
         if (pointerVisible && indexAtLocation != -1) {
             if (getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM)
                 initTargetLeftRightLine(indexAtLocation);
@@ -442,14 +445,16 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
     }
 
     protected void initTargetLeftRightLine(int next) {
-        if (next < 0 || dragTabIndex == next || next - dragTabIndex == 1) {
-            tabPointerLocation.setLocation(0, 0);
-        } else if (next == getTabCount()) {
+        if  (next < 0)
+            tabPointerLocation.setLocation(-1, 0);
+        else if (next == getTabCount()) {
             Rectangle rect = getBoundsAt(getTabCount() - 1);
             tabPointerLocation.setLocation(rect.x + rect.width - LINEWIDTH / 2, rect.y);
+        } else if (dragTabIndex == next || next - dragTabIndex == 1) {
+            tabPointerLocation.setLocation(-1, 0);
         } else if (next == 0) {
             Rectangle rect = getBoundsAt(0);
-            tabPointerLocation.setLocation(-LINEWIDTH / 2, rect.y);
+            tabPointerLocation.setLocation(0, rect.y);
         } else {
             Rectangle rect = getBoundsAt(next - 1);
             tabPointerLocation.setLocation(rect.x + rect.width - LINEWIDTH / 2, rect.y);
@@ -457,14 +462,16 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
     }
 
     protected void initTargetTopBottomLine(int next) {
-        if (next < 0 || dragTabIndex == next || next - dragTabIndex == 1) {
-            tabPointerLocation.setLocation(0, 0);
+        if  (next < 0)
+            tabPointerLocation.setLocation(-1, 0);
+        else if (dragTabIndex == next || next - dragTabIndex == 1) {
+            tabPointerLocation.setLocation(-1, 0);
         } else if (next == getTabCount()) {
             Rectangle rect = getBoundsAt(getTabCount() - 1);
             tabPointerLocation.setLocation(rect.x, rect.y + rect.height - LINEWIDTH / 2);
         } else if (next == 0) {
             Rectangle rect = getBoundsAt(0);
-            tabPointerLocation.setLocation(rect.x, -LINEWIDTH / 2);
+            tabPointerLocation.setLocation(rect.x, 0);
         } else {
             Rectangle rect = getBoundsAt(next - 1);
             tabPointerLocation.setLocation(rect.x, rect.y + rect.height - LINEWIDTH / 2);
@@ -810,9 +817,9 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
     public class TabbedDropTargetListener implements DropTargetListener {
 
         public void dragEnter(DropTargetDragEvent e) {
-            if (isDragAcceptable(e))
+            if (isDragAcceptable(e)) {
                 e.acceptDrag(e.getDropAction());
-            else
+            } else
                 e.rejectDrag();
         }
 
@@ -857,17 +864,15 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             if (transferable == null)
                 return false;
 
-            DataFlavor[] flavors = e.getCurrentDataFlavors();
-            return transferable.isDataFlavorSupported(flavors[0]) && dragTabIndex >= 0;
+            return transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF) && dragTabIndex >= 0;
         }
 
         public boolean isDropAcceptable(DropTargetDropEvent e) {
-            Transferable t = e.getTransferable();
-            if (t == null)
+            Transferable transferable = e.getTransferable();
+            if (transferable == null)
                 return false;
 
-            DataFlavor[] flavors = t.getTransferDataFlavors();
-            return t.isDataFlavorSupported(flavors[0]) && dragTabIndex >= 0;
+            return transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF) && dragTabIndex >= 0;
         }
     }
 
@@ -926,7 +931,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         }
 
         public void dragExit(DragSourceEvent e) {
-            tabPointerLocation.setLocation(0, 0);
+            tabPointerLocation.setLocation(-1, 0);
         }
 
         public void dragOver(DragSourceDragEvent e) {
@@ -964,7 +969,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             }
 
             // cleanup
-            tabPointerLocation.setLocation(0, 0);
+            tabPointerLocation.setLocation(-1, 0);
             dragTabIndex = -1;
 
             cleanupGhostImage();
