@@ -818,9 +818,12 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
         public void dragEnter(DropTargetDragEvent e) {
             if (isDragAcceptable(e)) {
+                System.out.println("TabbedContentPane$TabbedDropTargetListener.dragEnter accepted");
                 e.acceptDrag(e.getDropAction());
-            } else
+            } else {
+                System.out.println("TabbedContentPane$TabbedDropTargetListener.dragEnter rejected");
                 e.rejectDrag();
+            }
         }
 
         public void dragExit(DropTargetEvent e) {
@@ -846,8 +849,8 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
                 int targetIndex = indexAtLocation(location.x, location.y);
 
                 if (targetIndex >= 0) {
-                    setIndex(getContentAt(dragTabIndex),
-                             targetIndex);
+                    setIndex(getContentAt(dragTabIndex), targetIndex);
+
                     e.dropComplete(true);
                 } else
                     e.dropComplete(false);
