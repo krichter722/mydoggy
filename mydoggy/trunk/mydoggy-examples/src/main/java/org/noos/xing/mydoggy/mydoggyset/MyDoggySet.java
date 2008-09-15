@@ -77,7 +77,7 @@ public class MyDoggySet {
 //        });
 
         memoryMonitorDescriptor.setAvailable(true);
-        memoryMonitorDescriptor.setAnchor(ToolWindowAnchor.LEFT, 0);
+        memoryMonitorDescriptor.setAnchor(ToolWindowAnchor.BOTTOM, 0);
         memoryMonitorDescriptor.setAnchorPositionLocked(true);
 
         toolWindowManager.getToolWindow("Tool 3").getTypeDescriptor(DockedTypeDescriptor.class)
