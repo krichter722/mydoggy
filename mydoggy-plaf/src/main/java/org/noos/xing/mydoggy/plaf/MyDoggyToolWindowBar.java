@@ -430,7 +430,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             int finalCol = (index * 2 + 2);
             if (finalCol >= toolWindowBarContainerLayout.getNumColumn())
                 index = -1;
-            else {
+            else if (index != -1) {
                 // Verify for locked index
                 Component[] components = toolWindowBarContainer.getComponents();
 
@@ -486,7 +486,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             int finalRow = (index * 2 + 2);
             if (finalRow >= toolWindowBarContainerLayout.getNumRow())
                 index = -1;
-            else {
+            else if (index != -1) {
                 // Verify for locked index
                 Component[] components = toolWindowBarContainer.getComponents();
 
