@@ -163,6 +163,9 @@ public class ModalDialog extends JDialog implements ModalWindow,
 
     public void addDockable(ToolWindow toolWindow, Component content) {
         addDockable(toolWindow, content, null, AggregationPosition.DEFAULT);
+
+        if (getNumDockables() == 1)
+            setTitle(toolWindow.getTitle());
     }
 
     public void addDockable(ToolWindow toolWindow,

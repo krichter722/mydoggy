@@ -47,7 +47,8 @@ public class ModalFrame extends JFrame implements ModalWindow,
         this.toolWindowManager = toolWindowManager;
 
         setFocusableWindowState(true);
-
+        setTitle(toolWindow.getTitle());
+        
         synchronized (ModalFrame.this) {
             if (modal)
                 modalToWindow = owner;

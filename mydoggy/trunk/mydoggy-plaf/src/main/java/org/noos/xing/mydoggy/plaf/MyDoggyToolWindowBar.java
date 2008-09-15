@@ -493,7 +493,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 for (Component component : components) {
                     TableLayoutConstraints constraints = toolWindowBarContainerLayout.getConstraints(component);
 
-                    if (constraints.col1 >= finalRow) {
+                    if (constraints.row1 >= finalRow) {
                         if (component instanceof DescriptorOwner) {
                             if (((DescriptorOwner) component).getDockableDescriptor().isAnchorPositionLocked()) {
                                 finalRow += 2;
