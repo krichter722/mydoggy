@@ -55,13 +55,18 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
                        (Boolean) evt.getNewValue());
         } else if ("toolWindowAction".equals(propertyName)) {
             if (evt.getNewValue() != null) {
-                // Add the action
-                ToolWindowAction toolWindowAction = (ToolWindowAction) evt.getNewValue();
-                if (toolWindowAction.isVisibleOnTitleBar()) {
+                if (evt.getOldValue() == null) {
+                    // Add the action
+                    ToolWindowAction toolWindowAction = (ToolWindowAction) evt.getNewValue();
+                    if (toolWindowAction.isVisibleOnTitleBar()) {
 
-                    int index = (Integer) toolWindowAction.getValue("constraint");
-                    addToolWindowAction(toolWindowAction, index);
+                        int index = (Integer) toolWindowAction.getValue("constraint");
+                        addToolWindowAction(toolWindowAction, index);
 
+                        SwingUtil.repaint(toolWindowTitleButtonPanel);
+                    }
+                } else {
+                    replaceToolWindowAction((ToolWindowAction) evt.getOldValue(), (ToolWindowAction) evt.getNewValue());
                     SwingUtil.repaint(toolWindowTitleButtonPanel);
                 }
             } else {
@@ -300,9 +305,19 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
                 SwingUtil.repaint(toolWindowTitleButtonPanel);
                 break;
             }
-
         }
+    }
 
+    protected void replaceToolWindowAction(ToolWindowAction oldToolWindowAction, ToolWindowAction newToolWindowAction) {
+        for (Component component : toolWindowTitleButtonPanel.getComponents()) {
+            ToolWindowTitleButton toolWindowTitleButton = (ToolWindowTitleButton) component;
+
+            if (toolWindowTitleButton.getAction() == oldToolWindowAction) {
+                // We found the action...replace it
+                toolWindowTitleButton.setAction(newToolWindowAction);
+                break;
+            }
+        }
     }
 
 

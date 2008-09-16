@@ -20,6 +20,7 @@ import org.noos.xing.mydoggy.mydoggyset.ui.LookAndFeelMenuItem;
 import org.noos.xing.mydoggy.mydoggyset.ui.MonitorPanel;
 import org.noos.xing.mydoggy.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.actions.HideToolWindowAction;
 import org.noos.xing.mydoggy.plaf.ui.CustomDockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
@@ -267,11 +268,14 @@ public class MyDoggySet {
         dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
 //        representativeAnchorDescriptor.setPopupMenuEnabled(false);
         dockedTypeDescriptor.setDockLength(200);
-        dockedTypeDescriptor.setToolWindowActionHandler(new ToolWindowActionHandler() {
-            public void onHideButtonClick(final ToolWindow toolWindow) {
-                toolWindowManager.unregisterToolWindow(toolWindow.getId());
-            }
-        });
+
+        toolWindow.addToolWindowAction(new ToolWindowCloseAction());
+
+//        dockedTypeDescriptor.setToolWindowActionHandler(new ToolWindowActionHandler() {
+//            public void onHideButtonClick(final ToolWindow toolWindow) {
+//                toolWindowManager.unregisterToolWindow(toolWindow.getId());
+//            }
+//        });
 
         // Setup Tool 2
         toolWindow = toolWindowManager.getToolWindow("Tool 2");
@@ -778,4 +782,12 @@ public class MyDoggySet {
 */
     }
 
+    public class ToolWindowCloseAction extends HideToolWindowAction {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            toolWindowManager.unregisterToolWindow(toolWindow.getId());
+        }
+
+    }
 }
