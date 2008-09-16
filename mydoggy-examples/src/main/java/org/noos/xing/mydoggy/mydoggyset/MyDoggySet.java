@@ -20,7 +20,10 @@ import org.noos.xing.mydoggy.mydoggyset.ui.LookAndFeelMenuItem;
 import org.noos.xing.mydoggy.mydoggyset.ui.MonitorPanel;
 import org.noos.xing.mydoggy.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.*;
+import org.noos.xing.mydoggy.plaf.ui.CustomDockableDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowRepresentativeAnchorUI;
@@ -624,7 +627,7 @@ public class MyDoggySet {
             return false;
         }
 
-        public class MemoryMonitorPanel extends JPanel implements DescriptorOwner {
+        public class MemoryMonitorPanel extends JPanel {
             int sleepTime;
 
             public MemoryMonitorPanel(ToolWindowAnchor anchor) {
@@ -695,9 +698,6 @@ public class MyDoggySet {
                 this.sleepTime = sleepTime;
             }
 
-            public DockableDescriptor getDockableDescriptor() {
-                return MemoryMonitorDockableDescriptor.this;
-            }
         }
 
     }

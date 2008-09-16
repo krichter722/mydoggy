@@ -186,46 +186,14 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
     protected void initListeners() {
         // Init tool window properties listeners
         PropertyChangeEventSource toolWindowSource = descriptor.getToolWindow();
-        toolWindowSource.addPlafPropertyChangeListener("type", new TypePropertyChangeListener());
-        toolWindowSource.addPlafPropertyChangeListener("maximized", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-                    if ((Boolean) evt.getNewValue())
-                        SwingUtil.setFullScreen(window.getWindow());
-                    else
-                        SwingUtil.restoreFullScreenWindow(window.getWindow());
-                    SwingUtil.repaint(window.getWindow());
-                }
+        toolWindowSource.addPlafPropertyChangeListener(new ToolWindowPropertyChangeListener(),
+                                                       "type", "maximized");
 
-            }
-        });
-/*
-        toolWindowSource.addPlafPropertyChangeListener("active", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (toolWindow.getType() == ToolWindowType.FLOATING ||
-                    toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
-
-                    if (Boolean.TRUE.equals(evt.getNewValue())) {
-                        synchronized (floatingAnimation) {
-                            if (floatingAnimation.isAnimating()) {
-                                assignFocusOnAnimFinished = true;
-                            } else
-                                descriptor.assignFocus();
-                        }
-                    }
-                }
-            }
-        });
-
-*/
         // Init floating type descriptor properties listeners
         PropertyChangeEventSource floatingTypeDescriptorSource = (PropertyChangeEventSource) descriptor.getToolWindow().getTypeDescriptor(FloatingTypeDescriptor.class);
-        floatingTypeDescriptorSource.addPlafPropertyChangeListener("location", new LocationPropertyChangeListener());
-        floatingTypeDescriptorSource.addPlafPropertyChangeListener("size", new SizePropertyChangeListener());
-        floatingTypeDescriptorSource.addPlafPropertyChangeListener("modal", new ModalPropertyChangeListener());
-        floatingTypeDescriptorSource.addPlafPropertyChangeListener("enabled", new TypeEnabledPropertyChangeListener());
-        floatingTypeDescriptorSource.addPlafPropertyChangeListener("addToTaskBar", new AddToTaskBarPropertyChangeListener());
+        floatingTypeDescriptorSource.addPlafPropertyChangeListener(new FloatingDescriptorPropertyChangeListener());
 
+        // Animation listener
         floatingAnimation.addAnimationListener(new AnimationListener() {
             public void onFinished() {
                 if (assignFocusOnAnimFinished) {
@@ -239,7 +207,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         moveMouseInputHandler = new FloatingMoveMouseInputHandler(null);
         windowComponentAdapter = new WindowComponentAdapter();
     }
-
 
     protected void reinitWindow(PropertyChangeEvent evt, ModalWindow oldWindow) {
         // Init new window
@@ -260,7 +227,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         window.getWindow().addComponentListener(windowComponentAdapter);
 */
     }
-
 
     protected void installWindowListeners() {
         moveMouseInputHandler.setFloatingContainer(window.getWindow());
@@ -368,18 +334,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         }
     }
 
-
-    public class TypeEnabledPropertyChangeListener implements PropertyChangeListener {
-
-        public void propertyChange(PropertyChangeEvent evt) {
-            boolean newValue = (Boolean) evt.getNewValue();
-
-            if (!newValue && toolWindow.getType() == ToolWindowType.FLOATING)
-                toolWindow.setType(ToolWindowType.DOCKED);
-        }
-
-    }
-
     public class WindowComponentAdapter extends ComponentAdapter {
 
         public WindowComponentAdapter() {
@@ -410,9 +364,49 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         }
     }
 
-    public class TypePropertyChangeListener implements PropertyChangeListener {
+    public class ToolWindowPropertyChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
+            String property = evt.getPropertyName();
+
+            if ("type".equals(property))
+                onType(evt);
+            else if ("maximized".equals(property))
+                onMaximized(evt);
+            else if ("active".equals(property))
+                onActive(evt);
+        }
+
+
+        protected void onActive(PropertyChangeEvent evt) {
+/*
+            if (toolWindow.getType() == ToolWindowType.FLOATING ||
+                toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
+
+                if (Boolean.TRUE.equals(evt.getNewValue())) {
+                    synchronized (floatingAnimation) {
+                        if (floatingAnimation.isAnimating()) {
+                            assignFocusOnAnimFinished = true;
+                        } else
+                            descriptor.assignFocus();
+                    }
+                }
+            }
+*/
+        }
+
+        protected void onMaximized(PropertyChangeEvent evt) {
+            if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
+                if ((Boolean) evt.getNewValue())
+                    SwingUtil.setFullScreen(window.getWindow());
+                else
+                    SwingUtil.restoreFullScreenWindow(window.getWindow());
+                SwingUtil.repaint(window.getWindow());
+            }
+
+        }
+
+        protected void onType(PropertyChangeEvent evt) {
             // TODO: reimplement this...
             if (evt.getSource() != descriptor || window == null)
                 return;
@@ -431,28 +425,42 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
 //                settedListener = false;
             }
+
         }
+
     }
 
-    public class LocationPropertyChangeListener implements PropertyChangeListener {
+    public class FloatingDescriptorPropertyChangeListener implements PropertyChangeListener {
+
+
         public void propertyChange(PropertyChangeEvent evt) {
-            if (window == null)
-                return;
+            String property = evt.getPropertyName();
 
-            if (valueAdjusting)
-                return;
+            if ("enabled".equals(property))
+                onEnabled(evt);
+            else if ("location".equals(property))
+                onLocation(evt);
+            else if ("size".equals(property))
+                onSize(evt);
+            else if ("modal".equals(property))
+                onModal(evt);
+            else if ("addToTaskBar".equals(property))
+                onAddToTaskBar(evt);
+            else if ("osDecorated".equals(property))
+                onOSDecorated(evt);
+            else if ("alwaysOnTop".equals(property))
+                onAlwaysOnTop(evt);
+       }
 
-            if (window.isVisible()) {
-                Point location = (Point) evt.getNewValue();
-                window.setLocation(location);
-            }
-            lastBounds = null;
+
+        protected void onEnabled(PropertyChangeEvent evt) {
+            boolean newValue = (Boolean) evt.getNewValue();
+
+            if (!newValue && toolWindow.getType() == ToolWindowType.FLOATING)
+                toolWindow.setType(ToolWindowType.DOCKED);
         }
-    }
 
-    public class SizePropertyChangeListener implements PropertyChangeListener {
-
-        public void propertyChange(PropertyChangeEvent evt) {
+        protected void onSize(PropertyChangeEvent evt) {
             if (window == null)
                 return;
 
@@ -466,23 +474,32 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
             lastBounds = null;
         }
 
-    }
-
-    public class ModalPropertyChangeListener implements PropertyChangeListener {
-
-        public void propertyChange(PropertyChangeEvent evt) {
+        protected void onLocation(PropertyChangeEvent evt) {
             if (window == null)
                 return;
 
-            if (window.isVisible())
-                window.setModal((Boolean) evt.getNewValue());
+            if (valueAdjusting)
+                return;
+
+            if (window.isVisible()) {
+                Point location = (Point) evt.getNewValue();
+                window.setLocation(location);
+            }
+            lastBounds = null;
         }
 
-    }
+        protected void onModal(PropertyChangeEvent evt) {
+            if (window == null)
+                return;
 
-    public class AddToTaskBarPropertyChangeListener implements PropertyChangeListener {
+            if (window.isVisible()) {
+                window.dispose();
+                window.setModal((Boolean) evt.getNewValue());
+                window.setVisible(true);
+            }
+        }
 
-        public void propertyChange(PropertyChangeEvent evt) {
+        protected void onAddToTaskBar(PropertyChangeEvent evt) {
             if (window == null)
                 return;
 
@@ -519,6 +536,14 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
             }
         }
 
-    }
+        protected void onOSDecorated(PropertyChangeEvent evt) {
+            window.dispose();
+            window.setUndecorated(! (Boolean) evt.getNewValue());
+            window.setVisible(true);
+        }
 
+        protected void onAlwaysOnTop(PropertyChangeEvent evt) {
+            // TODO
+        }
+    }
 }

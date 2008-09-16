@@ -250,7 +250,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     }
 
     public int getRepresentativeAnchorIndex(Component representativeAnchor) {
-        TableLayoutConstraints constraints = toolWindowBarContainerLayout.getConstraints(representativeAnchor);
+        TableLayoutConstraints constraints = getRepresentativeAnchorConstraints(representativeAnchor);
         if (constraints == null)
             return -1;
 
@@ -416,6 +416,9 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     }
 
     protected void addRepresentativeAnchor(DockableDescriptor dockableDescriptor, Component representativeAnchor, int index) {
+        // create the wrapper
+        representativeAnchor = new RepresentativeAnchorWrapper(dockableDescriptor, representativeAnchor);
+
         if (dockableDescriptor.isAvailableCountable())
             availableTools++;
 
@@ -438,11 +441,9 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                     TableLayoutConstraints constraints = toolWindowBarContainerLayout.getConstraints(component);
 
                     if (constraints.col1 >= finalCol) {
-                        if (component instanceof DescriptorOwner) {
-                            if (((DescriptorOwner) component).getDockableDescriptor().isAnchorPositionLocked()) {
-                                finalCol += 2;
-                                index++;
-                            }
+                        if (((RepresentativeAnchorWrapper) component).getDockableDescriptor().isAnchorPositionLocked()) {
+                            finalCol += 2;
+                            index++;
                         }
                     }
                 }
@@ -494,11 +495,9 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                     TableLayoutConstraints constraints = toolWindowBarContainerLayout.getConstraints(component);
 
                     if (constraints.row1 >= finalRow) {
-                        if (component instanceof DescriptorOwner) {
-                            if (((DescriptorOwner) component).getDockableDescriptor().isAnchorPositionLocked()) {
-                                finalRow += 2;
-                                index++;
-                            }
+                        if (((RepresentativeAnchorWrapper) component).getDockableDescriptor().isAnchorPositionLocked()) {
+                            finalRow += 2;
+                            index++;
                         }
                     }
                 }
@@ -547,6 +546,15 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             return;
 
         int toDelete;
+
+        Component[] components = toolWindowBarContainer.getComponents();
+        for (Component component : components) {
+            if (((RepresentativeAnchorWrapper) component).getRepresentativeAnchor().equals(representativeAnchor)) {
+                representativeAnchor = component;
+                break;
+            }
+        }
+
         TableLayoutConstraints constraints = toolWindowBarContainerLayout.getConstraints(representativeAnchor);
         if (constraints == null)
             return;
@@ -569,6 +577,18 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         SwingUtil.repaint(toolWindowScrollBar);
 
         dockableDescriptor.resetRepresentativeAnchor();
+    }
+
+    protected TableLayoutConstraints getRepresentativeAnchorConstraints(Component representativeAnchor) {
+        Component[] components = toolWindowBarContainer.getComponents();
+        for (Component component : components) {
+            if (((RepresentativeAnchorWrapper) component).getRepresentativeAnchor().equals(representativeAnchor)) {
+                representativeAnchor = component;
+                break;
+            }
+        }
+
+        return toolWindowBarContainerLayout.getConstraints(representativeAnchor);
     }
 
 
@@ -1332,7 +1352,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
             JLabel representativeAnchor = descriptor.getRepresentativeAnchor();
             if (representativeAnchor != null) {
-                TableLayoutConstraints constraints = toolWindowBarContainerLayout.getConstraints(representativeAnchor);
+                TableLayoutConstraints constraints = getRepresentativeAnchorConstraints(representativeAnchor);
 
                 if (horizontal) {
                     int width = representativeAnchor.getPreferredSize().width + 6;
@@ -1405,22 +1425,23 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 SwingUtil.repaint(toolWindowBarContainer);
             } else if ("endDrag".equals(evt.getPropertyName())) {
                 TableLayout layout = (TableLayout) toolWindowBarContainer.getLayout();
-                TableLayoutConstraints constraints = null;
+                TableLayoutConstraints constraints = getRepresentativeAnchorConstraints((Component) evt.getSource());
 
                 switch (anchor) {
                     case LEFT:
                     case RIGHT:
-                        constraints = layout.getConstraints((Component) evt.getSource());
                         if (constraints != null)
                             layout.setRow(constraints.row1, dragComponentLength);
+
                         break;
                     case TOP:
                     case BOTTOM:
-                        constraints = layout.getConstraints((Component) evt.getSource());
                         if (constraints != null)
                             layout.setColumn(constraints.col1, dragComponentLength);
+
                         break;
                 }
+
                 if (constraints != null) {
                     SwingUtil.repaint(toolWindowBarContainer);
                     manager.syncPanel(anchor);
@@ -1705,6 +1726,30 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
             return (!flag || visibleNum != 1);
 
+        }
+    }
+
+    public class RepresentativeAnchorWrapper extends JPanel {
+        protected DockableDescriptor dockableDescriptor;
+        protected Component representativeAnchor;
+
+
+        public RepresentativeAnchorWrapper(DockableDescriptor dockableDescriptor, Component representativeAnchor) {
+            this.dockableDescriptor = dockableDescriptor;
+            this.representativeAnchor = representativeAnchor;
+
+            setOpaque(false);
+            setLayout(new ExtendedTableLayout(new double[][]{{-1},{-1}}));
+            add(representativeAnchor, "0,0,FULL,FULL");
+        }
+
+
+        public DockableDescriptor getDockableDescriptor() {
+            return dockableDescriptor;
+        }
+
+        public Component getRepresentativeAnchor() {
+            return representativeAnchor;
         }
     }
 }

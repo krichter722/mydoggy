@@ -1309,6 +1309,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             if (layoutElement != null) {
                 String layoutAsText = layoutElement.getTextContent();
                 XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(layoutAsText.getBytes()));
+
                 final MultiSplitLayout.Node layout = (MultiSplitLayout.Node) decoder.readObject();
 
                 SwingUtilities.invokeLater(new Runnable() {
