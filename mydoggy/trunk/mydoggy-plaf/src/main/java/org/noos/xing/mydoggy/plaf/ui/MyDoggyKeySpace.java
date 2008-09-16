@@ -105,4 +105,6 @@ public interface MyDoggyKeySpace {
     String TOOL_WINDOW_DETACH_TYPE = "toolwindow.detached.type";
     String TOOL_WINDOW_PREVIEW_FULL = "toolwindowl.preview.full";
 
+    String MODAL_WINDOW_BORDER_LENGTH = "modawindow.border.length";
+
 }

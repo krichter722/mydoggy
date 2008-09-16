@@ -30,6 +30,8 @@ public interface ModalWindow extends MultiSplitWindow<ToolWindow> {
 
     boolean isVisible();
 
+    void dispose();
+
     boolean isFocused();
 
 

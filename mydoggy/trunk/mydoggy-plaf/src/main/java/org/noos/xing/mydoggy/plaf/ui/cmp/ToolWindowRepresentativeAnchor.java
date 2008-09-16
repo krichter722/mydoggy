@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
-import org.noos.xing.mydoggy.plaf.ui.DescriptorOwner;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
 import javax.swing.*;
@@ -9,7 +8,7 @@ import javax.swing.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
 */
-public class ToolWindowRepresentativeAnchor extends JLabel implements Cleaner, DescriptorOwner<ToolWindowDescriptor> {
+public class ToolWindowRepresentativeAnchor extends JLabel implements Cleaner {
 
     /**
      * @see #getUIClassID

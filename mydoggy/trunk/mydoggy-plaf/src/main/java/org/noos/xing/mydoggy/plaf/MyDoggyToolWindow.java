@@ -24,6 +24,11 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     static class ToolWindowLock {
     }
 
+    enum Property {
+        visible,
+    }
+
+
     protected int index;
     protected String id;
     protected ToolWindowAnchor anchor;

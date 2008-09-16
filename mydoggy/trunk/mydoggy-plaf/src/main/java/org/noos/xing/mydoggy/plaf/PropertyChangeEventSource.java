@@ -129,6 +129,12 @@ public class PropertyChangeEventSource implements Cleaner {
         plafChangeSupport.addPropertyChangeListener(propertyName, listener);
     }
 
+    public void addPlafPropertyChangeListener(PropertyChangeListener listener, String... propertyNames) {
+        for (String propertyName : propertyNames) {
+            addPlafPropertyChangeListener(propertyName, listener);
+        }
+    }
+
     public void removePlafPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         if (listener == null || plafChangeSupport == null)
             return;

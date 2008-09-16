@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingResizeMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
@@ -170,12 +171,26 @@ public class ModalFrame extends JFrame implements ModalWindow,
 
     public void setUndecorated(boolean undecorated) {
         super.setUndecorated(undecorated);
+
         if (undecorated) {
             // remove
             removeWindowListener(modalWindowListener);
+
+            TableLayout tableLayout = ((TableLayout) getContentPane().getLayout());
+            int borderLength = SwingUtil.getInt(MyDoggyKeySpace.MODAL_WINDOW_BORDER_LENGTH, 2);
+            tableLayout.setRow(new double[]{borderLength, TableLayout.FILL, borderLength});
+            tableLayout.setColumn(new double[]{borderLength, TableLayout.FILL, borderLength});
+
+            SwingUtil.revalidate(this);
         } else {
             // add
             addWindowListener(modalWindowListener);
+
+            TableLayout tableLayout = ((TableLayout) getContentPane().getLayout());
+            tableLayout.setRow(new double[]{0, TableLayout.FILL, 0});
+            tableLayout.setColumn(new double[]{0, TableLayout.FILL, 0});
+
+            SwingUtil.revalidate(this);
         }
     }
 
@@ -263,7 +278,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
         dockableDropPanel.setComponent(multiSplitDockableContainer);
 
         ((JComponent) getContentPane()).setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        setLayout(new ExtendedTableLayout(new double[][]{{2, TableLayout.FILL, 2}, {2, TableLayout.FILL, 2}}));
+        setLayout(new ExtendedTableLayout(new double[][]{{0, TableLayout.FILL, 0}, {0, TableLayout.FILL, 0}}));
         add(dockableDropPanel, "1,1,FULL,FULL");
 
         this.transparencyManager = SwingUtil.getTransparencyManager();
