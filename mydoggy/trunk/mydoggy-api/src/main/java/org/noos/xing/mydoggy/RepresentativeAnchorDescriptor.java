@@ -1,10 +1,9 @@
 package org.noos.xing.mydoggy;
 
 /**
- * TODO: updats javadoc
+ * This interface is used to modify the behaviour of a dockable's representative anchor.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- *
  * @since 1.5.0
  */
 public interface RepresentativeAnchorDescriptor extends Observable {

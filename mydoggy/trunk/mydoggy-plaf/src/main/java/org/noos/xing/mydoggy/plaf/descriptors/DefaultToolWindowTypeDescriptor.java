@@ -144,8 +144,10 @@ public abstract class DefaultToolWindowTypeDescriptor extends PropertyChangeEven
             if (!toolWindowDescriptor.containsToolWindowAction(this, oldToolWindowAction.getId()))
                 oldToolWindowAction.setToolWindow(null);
         }
-        
-        toolWindowAction.setToolWindow(toolWindowDescriptor.getToolWindow());
+
+        if (!toolWindowDescriptor.containsToolWindowAction(this, toolWindowAction))
+            toolWindowAction.setToolWindow(toolWindowDescriptor.getToolWindow());
+
         toolWindowAction.putValue("constraint", index);
         toolWindowActionMap.put(toolWindowAction.getId(), toolWindowAction);
 

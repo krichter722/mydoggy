@@ -13,7 +13,6 @@ import org.noos.xing.mydoggy.plaf.cleaner.CleanerAggregator;
 import org.noos.xing.mydoggy.plaf.cleaner.DefaultCleanerAggregator;
 import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultRepresentativeAnchorDescriptor;
-import org.noos.xing.mydoggy.plaf.descriptors.DefaultToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
@@ -597,12 +596,10 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
 
     public void addCommonToolWindowAction(ToolWindowAction toolWindowAction) {
-        toolWindowAction.setToolWindow(toolWindow);
-
-        ((DefaultToolWindowTypeDescriptor) getTypeDescriptor(ToolWindowType.DOCKED)).addSharedToolWindowAction(toolWindowAction);
-        ((DefaultToolWindowTypeDescriptor) getTypeDescriptor(ToolWindowType.SLIDING)).addSharedToolWindowAction(toolWindowAction);
-        ((DefaultToolWindowTypeDescriptor) getTypeDescriptor(ToolWindowType.FLOATING)).addSharedToolWindowAction(toolWindowAction);
-        ((DefaultToolWindowTypeDescriptor) getTypeDescriptor(ToolWindowType.FLOATING_LIVE)).addSharedToolWindowAction(toolWindowAction);
+        getTypeDescriptor(ToolWindowType.DOCKED).addToolWindowAction(toolWindowAction);
+        getTypeDescriptor(ToolWindowType.SLIDING).addToolWindowAction(toolWindowAction);
+        getTypeDescriptor(ToolWindowType.FLOATING).addToolWindowAction(toolWindowAction);
+        getTypeDescriptor(ToolWindowType.FLOATING_LIVE).addToolWindowAction(toolWindowAction);
     }
 
     public void removeCommonToolWindowAction(String id) {
@@ -610,6 +607,38 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         getTypeDescriptor(ToolWindowType.SLIDING).removeToolWindowAction(id);
         getTypeDescriptor(ToolWindowType.FLOATING).removeToolWindowAction(id);
         getTypeDescriptor(ToolWindowType.FLOATING_LIVE).removeToolWindowAction(id);
+    }
+
+    public boolean containsToolWindowAction(ToolWindowTypeDescriptor except, String id) {
+        if (except != dockedTypeDescriptor && dockedTypeDescriptor.getToolWindowAction(id) != null)
+            return true;
+
+        if (except != slidingTypeDescriptor && slidingTypeDescriptor.getToolWindowAction(id) != null)
+            return true;
+
+        if (except != floatingTypeDescriptor && floatingTypeDescriptor.getToolWindowAction(id) != null)
+            return true;
+
+        if (except != floatingLiveTypeDescriptor && floatingLiveTypeDescriptor.getToolWindowAction(id) != null)
+            return true;
+
+        return false;
+    }
+
+    public boolean containsToolWindowAction(ToolWindowTypeDescriptor except, ToolWindowAction action) {
+        if (except != dockedTypeDescriptor && dockedTypeDescriptor.getToolWindowAction(action.getId()) == action)
+            return true;
+
+        if (except != slidingTypeDescriptor && slidingTypeDescriptor.getToolWindowAction(action.getId()) == action)
+            return true;
+
+        if (except != floatingTypeDescriptor && floatingTypeDescriptor.getToolWindowAction(action.getId()) == action)
+            return true;
+
+        if (except != floatingLiveTypeDescriptor && floatingLiveTypeDescriptor.getToolWindowAction(action.getId()) == action)
+            return true;
+
+        return false;
     }
 
 
@@ -728,22 +757,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
             if (menuItem != null)
                 popupMenu.add(menuItem);
         }
-    }
-
-    public boolean containsToolWindowAction(ToolWindowTypeDescriptor except, String id) {
-        if (except != dockedTypeDescriptor && dockedTypeDescriptor.getToolWindowAction(id) != null)
-            return true;
-
-        if (except != slidingTypeDescriptor && slidingTypeDescriptor.getToolWindowAction(id) != null)
-            return true;
-
-        if (except != floatingTypeDescriptor && floatingTypeDescriptor.getToolWindowAction(id) != null)
-            return true;
-
-        if (except != floatingLiveTypeDescriptor && floatingLiveTypeDescriptor.getToolWindowAction(id) != null)
-            return true;
-
-        return false;
     }
 
 
