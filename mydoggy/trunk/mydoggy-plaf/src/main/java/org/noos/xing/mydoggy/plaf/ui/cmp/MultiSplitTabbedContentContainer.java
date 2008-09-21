@@ -236,6 +236,8 @@ public class MultiSplitTabbedContentContainer extends MultiSplitDockableContaine
                     // Detach content
 
                     Content content = tabbedContentPane.getContentAt(dragTabIndex);
+                    if (content == null)
+                        return;
                     ContentUI contentUI = content.getContentUI();
 
                     Rectangle bounds = contentUI.getDetachedBounds();

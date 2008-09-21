@@ -325,7 +325,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
             internalPropertyChangeSupport.addPropertyChangeListener("detached.dispose", detachedListener);
             internalPropertyChangeSupport.addPropertyChangeListener("detached", detachedListener);
             MaximizedListener maximizedListener = new MaximizedListener();
-            internalPropertyChangeSupport.addPropertyChangeListener("maximized.before", maximizedListener);
+            internalPropertyChangeSupport.addPropertyChangeListener("maximizedBefore", maximizedListener);
             internalPropertyChangeSupport.addPropertyChangeListener("maximized", maximizedListener);
             internalPropertyChangeSupport.addPropertyChangeListener("minimized", new MinimizedListener());
 
@@ -336,7 +336,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 "focusOwner", focusOwnerPropertyChangeListener = new FocusOwnerPropertyChangeListener()
         );
 
-        toolWindowManager.addInternalPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
+        toolWindowManager.addInternalPropertyChangeListener("managerWindowAncestor", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getNewValue() == null)
                     KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(
@@ -646,7 +646,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 return;
             Content content = (Content) evt.getSource();
 
-            if ("maximized.before".equals(evt.getPropertyName())) {
+            if ("maximizedBefore".equals(evt.getPropertyName())) {
                 if ((Boolean) evt.getNewValue()) {
                     if (tmpWorkspace != null) {
                         // Restore...

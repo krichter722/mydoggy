@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAction;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.plaf.ui.util.DynamicPropertyChangeListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -14,7 +15,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MoveToToolWindowAction extends ToolWindowAction implements PropertyChangeListener, PlafToolWindowAction  {
+public class MoveToToolWindowAction extends ToolWindowAction implements PlafToolWindowAction  {
 
     protected JMenu moveTo;
     protected JMenuItem right;
@@ -22,9 +23,12 @@ public class MoveToToolWindowAction extends ToolWindowAction implements Property
     protected JMenuItem top;
     protected JMenuItem bottom;
 
+    protected PropertyChangeListener propertyChangeListener;
+
 
     public MoveToToolWindowAction() {
         super(MOVE_TO_ACTION_ID);
+
         setTooltipText(SwingUtil.getString("@@tool.tooltip.floatingLive"));
         setVisibleOnMenuBar(true);
         setVisibleOnTitleBar(false);
@@ -32,16 +36,19 @@ public class MoveToToolWindowAction extends ToolWindowAction implements Property
 
 
     public void setToolWindow(final ToolWindow toolWindow) {
-        super.setToolWindow(toolWindow);
+        if (toolWindow == null) {
+            this.toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).removePropertyChangeListener("enabled", propertyChangeListener);
+            this.propertyChangeListener = null;
 
-        setActionName("toolWindow.popup.floatingLive." + toolWindow.getId());
-        toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).addPropertyChangeListener("enabled", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                setVisibleOnMenuBar((Boolean) evt.getNewValue());
-            }
+            super.setToolWindow(toolWindow);
+        } else {
+            super.setToolWindow(toolWindow);
+
+            propertyChangeListener = new PropertyListener();
+            setActionName("toolWindow.popup.floatingLive." + toolWindow.getId());
+
+            toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).addPropertyChangeListener("enabled", propertyChangeListener);
         }
-        );
-        toolWindow.addPropertyChangeListener("type", this);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -143,12 +150,17 @@ public class MoveToToolWindowAction extends ToolWindowAction implements Property
             }
         }
 
-
         return moveTo;
     }
 
-    public void propertyChange(PropertyChangeEvent evt) {
-        ToolWindowType type = (ToolWindowType) evt.getNewValue();
+
+
+    public class PropertyListener extends DynamicPropertyChangeListener {
+
+        public void onEnabled(PropertyChangeEvent evt) {
+            setVisibleOnMenuBar((Boolean) evt.getNewValue());
+        }
+
     }
 
 }

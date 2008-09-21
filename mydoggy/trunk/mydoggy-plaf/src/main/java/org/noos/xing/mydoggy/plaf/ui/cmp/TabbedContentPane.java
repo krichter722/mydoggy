@@ -687,6 +687,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
         protected void showPopupMenu(final MouseEvent mouseEvent) {
             final Content contentAt = getContentAt(mouseOverTab);
+
             JPopupMenu popupMenu = contentAt.getPopupMenu();
             if (popupMenu == null)
                 popupMenu = getComponentPopupMenu();
@@ -694,11 +695,14 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             if (popupMenu == null) {
                 // Init stdPopupMenu
                 stdPopupMenu = new JPopupMenu("Content Page Popup");
-                stdPopupMenu.add(new JMenuItem(new AbstractAction(SwingUtil.getString("@@tabbed.page.close")) {
-                    public void actionPerformed(ActionEvent e) {
-                        TabbedContentPane.this.fireCloseTabEvent(contentAt);
-                    }
-                })).setEnabled(contentAt.getContentUI().isCloseable());
+
+                if (contentAt.getContentUI().isCloseable()) {
+                    stdPopupMenu.add(new JMenuItem(new AbstractAction(SwingUtil.getString("@@tabbed.page.close")) {
+                        public void actionPerformed(ActionEvent e) {
+                            TabbedContentPane.this.fireCloseTabEvent(contentAt);
+                        }
+                    }));
+                }
 
                 stdPopupMenu.add(new JMenuItem(new AbstractAction(SwingUtil.getString("@@tabbed.page.closeAll")) {
                     public void actionPerformed(ActionEvent e) {
@@ -717,22 +721,30 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
                         }
                     }
                 }));
-                stdPopupMenu.addSeparator();
-                stdPopupMenu.add(new JMenuItem(new AbstractAction(SwingUtil.getString("@@tabbed.page.detach")) {
-                    public void actionPerformed(ActionEvent e) {
-                        TabbedContentPane.this.fireDetachTabEvent(contentAt);
-                    }
-                })).setEnabled(contentAt.getContentUI().isDetachable());
 
-                MaximizeAction maximizeAction = new MaximizeAction(contentAt);
-                stdPopupMenu.add(maximizeAction).setEnabled(contentAt.getContentUI().isMaximizable());
-                boolean restore = contentAt.isMaximized() || isAContentMaximized();
-                maximizeAction.putValue(Action.NAME, restore ?
-                                                     SwingUtil.getString("@@tabbed.page.restore") :
-                                                     SwingUtil.getString("@@tabbed.page.maximize")
-                );
+                boolean restore = false;
+                if (contentAt.getContentUI().isDetachable() && showDetach) {
+                    stdPopupMenu.addSeparator();
+                    stdPopupMenu.add(new JMenuItem(new AbstractAction(SwingUtil.getString("@@tabbed.page.detach")) {
+                        public void actionPerformed(ActionEvent e) {
+                            TabbedContentPane.this.fireDetachTabEvent(contentAt);
+                        }
+                    }));
+                }
 
-                if (!restore && contentAt.getContentUI().isMinimizable()) {
+
+                if (contentAt.getContentUI().isMaximizable() && showMaximize) {
+                    MaximizeAction maximizeAction = new MaximizeAction(contentAt);
+                    restore = contentAt.isMaximized() || isAContentMaximized();
+                    maximizeAction.putValue(Action.NAME, restore ?
+                                                         SwingUtil.getString("@@tabbed.page.restore") :
+                                                         SwingUtil.getString("@@tabbed.page.maximize")
+                    );
+
+                    stdPopupMenu.add(maximizeAction);
+                }
+
+                if (!restore && contentAt.getContentUI().isMinimizable() && showMinimize) {
                     stdPopupMenu.add(new MinimizeAction(contentAt));
                 }
 
@@ -818,10 +830,8 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
         public void dragEnter(DropTargetDragEvent e) {
             if (isDragAcceptable(e)) {
-                System.out.println("TabbedContentPane$TabbedDropTargetListener.dragEnter accepted");
                 e.acceptDrag(e.getDropAction());
             } else {
-                System.out.println("TabbedContentPane$TabbedDropTargetListener.dragEnter rejected");
                 e.rejectDrag();
             }
         }
@@ -845,15 +855,32 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
         public void drop(DropTargetDropEvent e) {
             if (isDropAcceptable(e)) {
-                Point location = e.getLocation();
-                int targetIndex = indexAtLocation(location.x, location.y);
+                try {
+                    Content dragContent = toolWindowManager.getContentManager().getContent(
+                            e.getTransferable().getTransferData(MyDoggyTransferable.CONTENT_ID_DF)
+                    );
 
-                if (targetIndex >= 0) {
-                    setIndex(getContentAt(dragTabIndex), targetIndex);
+                    Point location = e.getLocation();
+                    int targetIndex = indexAtLocation(location.x, location.y);
 
-                    e.dropComplete(true);
-                } else
+                    if (dragContent.isDetached()) {
+                        if (targetIndex >= 0) {
+                           dragContent.reattach(targetIndex);
+                        } else
+                            dragContent.reattach(-1);
+
+                        e.dropComplete(true);
+                    } else {
+                        if (targetIndex >= 0) {
+                            setIndex(getContentAt(dragTabIndex), targetIndex);
+                            e.dropComplete(true);
+                        } else
+                            e.dropComplete(false);
+                   }
+                } catch (Exception e1) {
+                    e1.printStackTrace();
                     e.dropComplete(false);
+                }
             } else {
                 e.dropComplete(false);
             }
@@ -867,7 +894,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             if (transferable == null)
                 return false;
 
-            return transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF) && dragTabIndex >= 0;
+            return transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF) /*&& dragTabIndex >= 0*/;
         }
 
         public boolean isDropAcceptable(DropTargetDropEvent e) {
@@ -875,7 +902,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             if (transferable == null)
                 return false;
 
-            return transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF) && dragTabIndex >= 0;
+            return transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF) /*&& dragTabIndex >= 0*/;
         }
     }
 

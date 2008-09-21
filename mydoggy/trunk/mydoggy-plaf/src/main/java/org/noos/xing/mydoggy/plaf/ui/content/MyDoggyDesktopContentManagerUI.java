@@ -203,7 +203,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
             internalPropertyChangeSupport.addPropertyChangeListener("detached.dispose", detachedListener);
             internalPropertyChangeSupport.addPropertyChangeListener("detached", detachedListener);
             MaximizedListener maximizedListener = new MaximizedListener();
-            internalPropertyChangeSupport.addPropertyChangeListener("maximized.before", maximizedListener);
+            internalPropertyChangeSupport.addPropertyChangeListener("maximizedBefore", maximizedListener);
             internalPropertyChangeSupport.addPropertyChangeListener("maximized", maximizedListener);
             internalPropertyChangeSupport.addPropertyChangeListener("minimized", new MinimizedListener());
 
@@ -447,7 +447,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
 
-            if ("maximized.before".equals(evt.getPropertyName())) {
+            if ("maximizedBefore".equals(evt.getPropertyName())) {
                 if ((Boolean) evt.getNewValue()) {
                     toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
                     toolWindowManager.getToolWindowGroup().setVisible(false);

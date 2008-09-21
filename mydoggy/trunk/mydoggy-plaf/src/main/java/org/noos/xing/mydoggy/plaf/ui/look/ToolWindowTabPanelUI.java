@@ -35,7 +35,6 @@ import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * @todo: (-) implemets maximized
  */
 public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
 

@@ -233,7 +233,7 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
 
         boolean old = this.maximized;
         if (maximized)
-            firePlafPropertyChangeEvent("maximized.before", false, maximized);
+            firePlafPropertyChangeEvent("maximizedBefore", false, maximized);
 
         this.maximized = maximized;
         firePropertyChangeEvent("maximized", old, maximized);
@@ -304,7 +304,7 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
         if (onContent == null)
             throw new IllegalArgumentException("onContent cannot be null.");
 
-        if (isDetached())
+        if (isDetached() || !contentManager.isEnabled())
             return;
 
         this.detached = true;
@@ -344,7 +344,7 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
 
     public void reattach(Object... constraints) {
         if (!isDetached())
-            throw new IllegalStateException("Cannot reattach the content. It's not detached.");
+            return;
 
         this.detached = false;
 

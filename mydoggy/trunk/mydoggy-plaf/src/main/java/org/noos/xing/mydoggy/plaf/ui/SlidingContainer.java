@@ -13,6 +13,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.SlidingBorder;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.SlidingMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.translucent.TranslucentPanel;
+import org.noos.xing.mydoggy.plaf.ui.util.DynamicPropertyChangeListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -141,53 +142,17 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
     protected void initListeners() {
         // Init tool window properties listeners
+        PropertyChangeListener propertyChangeListener = new PropertyListener();
+
         PropertyChangeEventSource toolWindowSource = descriptor.getToolWindow();
-        toolWindowSource.addPlafPropertyChangeListener("anchor", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                ToolWindow evtToolWindow = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
-                if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible() && !evtToolWindow.isVisible())
-                    update();
-            }
-        });
-        toolWindowSource.addPlafPropertyChangeListener("type", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getNewValue() == ToolWindowType.SLIDING) {
-                    if (layeredPane != null) {
-                        sheet.addMouseMotionListener(slidingMouseInputHandler);
-                        sheet.addMouseListener(slidingMouseInputHandler);
-                    }
-                } else {
-                    if (layeredPane != null) {
-                        sheet.removeMouseMotionListener(slidingMouseInputHandler);
-                        sheet.removeMouseListener(slidingMouseInputHandler);
-                    }
-                }
-            }
-        });
-        toolWindowSource.addPlafPropertyChangeListener("active", new ActivePropertyChangeListener());
-        toolWindowSource.addPlafPropertyChangeListener("maximized", new MaximizedPropertyChangeListener());
+        toolWindowSource.addPlafPropertyChangeListener(propertyChangeListener, "anchor", "type", "active", "maximized");
 
         // Init sliding type descriptor properties listeners
         PropertyChangeEventSource slidingDescriptorSource = (PropertyChangeEventSource) descriptor.getToolWindow().getTypeDescriptor(SlidingTypeDescriptor.class);
-        slidingDescriptorSource.addPlafPropertyChangeListener(new SlidingTypePropertyChangeListener());
+        slidingDescriptorSource.addPlafPropertyChangeListener("type", propertyChangeListener);
 
-        descriptor.getManager().addInternalPropertyChangeListener("temporarilyVisible", new TempShownPropertyChangeListener());
-        descriptor.getManager().addInternalPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getNewValue() != null) {
-                    layeredPane = descriptor.getManager().getLayeredPane();
-
-                    // Check type now...
-                    if (toolWindow.getType() == ToolWindowType.SLIDING) {
-                        sheet.removeMouseMotionListener(slidingMouseInputHandler);
-                        sheet.removeMouseListener(slidingMouseInputHandler);
-
-                        sheet.addMouseMotionListener(slidingMouseInputHandler);
-                        sheet.addMouseListener(slidingMouseInputHandler);
-                    }
-                }
-            }
-        });
+        descriptor.getManager().addInternalPropertyChangeListener("temporarilyVisible", propertyChangeListener);
+        descriptor.getManager().addInternalPropertyChangeListener("managerWindowAncestor", propertyChangeListener);
 
         slidingMouseInputHandler = new SlidingMouseInputHandler(descriptor);
 
@@ -218,7 +183,6 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
         sheet.setBounds(point.x, point.y, mainPanel.getWidth(), height);
 
-        // TODO: use layered pane like floating live container...
         layeredPane.remove(sheet);
         layeredPane.setLayer(sheet, JLayeredPane.DEFAULT_LAYER + 2);
         layeredPane.add(sheet);
@@ -391,50 +355,55 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
     }
 
-    public class ActivePropertyChangeListener implements PropertyChangeListener, ActionListener {
-        protected TransparencyAnimation animation;
-        protected Timer timer;
+    public class ComponentResizer extends ComponentAdapter implements Cleaner {
 
-        public ActivePropertyChangeListener() {
-            this.animation = new TransparencyAnimation(sheet, sheet, 1.0f, 500f);
+        public ComponentResizer() {
+            descriptor.getCleaner().addBefore(SlidingContainer.this, this);
         }
 
-        public void propertyChange(PropertyChangeEvent evt) {
-            if (descriptor.getToolWindow().getType() == ToolWindowType.SLIDING) {
-                if (Boolean.TRUE.equals(evt.getNewValue())) {
-                    if (timer != null) {
-                        timer.stop();
-                        if (animation.isAnimating())
-                            animation.stop();
-                    }
-
-                    sheet.setAlphaModeRatio(1.0f);
-                } else {
-                    SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING);
-                    if (slidingTypeDescriptor.isTransparentMode()) {
-                        timer = new Timer(slidingTypeDescriptor.getTransparentDelay(), this);
-                        timer.start();
-                    }
-                }
-                SwingUtil.repaint(layeredPane);
-            }
+        public void cleanup() {
+            descriptor.getManager().removeComponentListener(this);
         }
 
-        public void actionPerformed(ActionEvent e) {
-            if (timer.isRunning()) {
-                timer.stop();
-
-                SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING);
-                animation.setAlpha(slidingTypeDescriptor.getTransparentRatio());
-                animation.show();
-            }
+        public void componentResized(ComponentEvent e) {
+            if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
+                update();
         }
     }
 
-    public class MaximizedPropertyChangeListener implements PropertyChangeListener {
+    public class PropertyListener extends DynamicPropertyChangeListener implements ActionListener {
         protected Rectangle oldBounds = null;
 
-        public void propertyChange(PropertyChangeEvent evt) {
+        protected TransparencyAnimation animation;
+        protected Timer timer;
+
+
+        public PropertyListener() {
+            this.animation = new TransparencyAnimation(sheet, sheet, 1.0f, 500f);
+        }
+
+
+        public void onAnchor(PropertyChangeEvent evt) {
+            ToolWindow evtToolWindow = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
+            if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible() && !evtToolWindow.isVisible())
+                update();
+        }
+
+        public void onType(PropertyChangeEvent evt) {
+            if (evt.getNewValue() == ToolWindowType.SLIDING) {
+                if (layeredPane != null) {
+                    sheet.addMouseMotionListener(slidingMouseInputHandler);
+                    sheet.addMouseListener(slidingMouseInputHandler);
+                }
+            } else {
+                if (layeredPane != null) {
+                    sheet.removeMouseMotionListener(slidingMouseInputHandler);
+                    sheet.removeMouseListener(slidingMouseInputHandler);
+                }
+            }
+        }
+
+        public void onMaximized(PropertyChangeEvent evt) {
             if (toolWindow.getType() == ToolWindowType.SLIDING) {
                 if ((Boolean) evt.getNewValue()) {
                     oldBounds = sheet.getBounds();
@@ -480,6 +449,66 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
             }
         }
 
+        public void onActive(PropertyChangeEvent evt) {
+            if (descriptor.getToolWindow().getType() == ToolWindowType.SLIDING) {
+                if (Boolean.TRUE.equals(evt.getNewValue())) {
+                    if (timer != null) {
+                        timer.stop();
+                        if (animation.isAnimating())
+                            animation.stop();
+                    }
+
+                    sheet.setAlphaModeRatio(1.0f);
+                } else {
+                    SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING);
+                    if (slidingTypeDescriptor.isTransparentMode()) {
+                        timer = new Timer(slidingTypeDescriptor.getTransparentDelay(), this);
+                        timer.start();
+                    }
+                }
+                SwingUtil.repaint(layeredPane);
+            }
+        }
+
+        public void onEnabled(PropertyChangeEvent evt) {
+            boolean newValue = (Boolean) evt.getNewValue();
+
+            if (!newValue && toolWindow.getType() == ToolWindowType.SLIDING)
+                toolWindow.setType(ToolWindowType.DOCKED);
+        }
+
+        public void onTemporarilyVisible(PropertyChangeEvent evt) {
+            if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
+                update();
+        }
+
+        public void onManagerWindowAncestor(PropertyChangeEvent evt) {
+            if (evt.getNewValue() != null) {
+                layeredPane = descriptor.getManager().getLayeredPane();
+
+                // Check type now...
+                if (toolWindow.getType() == ToolWindowType.SLIDING) {
+                    sheet.removeMouseMotionListener(slidingMouseInputHandler);
+                    sheet.removeMouseListener(slidingMouseInputHandler);
+
+                    sheet.addMouseMotionListener(slidingMouseInputHandler);
+                    sheet.addMouseListener(slidingMouseInputHandler);
+                }
+            }
+        }
+
+
+        public void actionPerformed(ActionEvent e) {
+            if (timer.isRunning()) {
+                timer.stop();
+
+                SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.SLIDING);
+                animation.setAlpha(slidingTypeDescriptor.getTransparentRatio());
+                animation.show();
+            }
+        }
+
+
         protected int calcFirstX() {
             return descriptor.getManagerBounds().x +
                    descriptor.getToolBar(ToolWindowAnchor.LEFT).getSize();
@@ -507,48 +536,4 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
     }
 
-    public class SlidingTypePropertyChangeListener implements PropertyChangeListener, Cleaner {
-
-        public SlidingTypePropertyChangeListener() {
-            descriptor.getCleaner().addBefore(SlidingContainer.this, this);
-        }
-
-        public void cleanup() {
-            descriptor.getTypeDescriptor(ToolWindowType.SLIDING).removePropertyChangeListener(this);
-        }
-
-        public void propertyChange(PropertyChangeEvent evt) {
-            if ("enabled".equals(evt.getPropertyName())) {
-                boolean newValue = (Boolean) evt.getNewValue();
-                if (!newValue && toolWindow.getType() == ToolWindowType.SLIDING)
-                    toolWindow.setType(ToolWindowType.DOCKED);
-            }
-        }
-
-    }
-
-    public class TempShownPropertyChangeListener implements PropertyChangeListener {
-
-        public void propertyChange(PropertyChangeEvent evt) {
-            if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
-                update();
-        }
-
-    }
-
-    public class ComponentResizer extends ComponentAdapter implements Cleaner {
-
-        public ComponentResizer() {
-            descriptor.getCleaner().addBefore(SlidingContainer.this, this);
-        }
-
-        public void cleanup() {
-            descriptor.getManager().removeComponentListener(this);
-        }
-
-        public void componentResized(ComponentEvent e) {
-            if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
-                update();
-        }
-    }
 }

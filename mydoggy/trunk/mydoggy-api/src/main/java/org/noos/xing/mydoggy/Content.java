@@ -175,31 +175,38 @@ public interface Content extends Dockable<ContentManager> {
     Dockable getDockableDelegator();
 
     /**
-     * TODO:..
-     * @param onContent
-     * @param onIndex
-     *@param onPosition @since 1.5.0
+     * Detach this content aggregating it on the passed content using the passed position.
+     *
+     * @param onContent the content used as relative position. It must be already visible.
+     * @param onIndex the relative index used if onPosition == DEFAULT.
+     * @param onPosition the position used to detach the content.
+     * @throws IllegalArgumentException if onContent is null.
+     * @since 1.5.0
      */
     void detach(Content onContent, int onIndex, AggregationPosition onPosition);
 
     /**
+     * Detach this content aggregating it on the passed content using the passed position.
      *
-     * @param onContent
-     * @param onPosition
+     * @param onContent the content used as relative position. It must be already visible.
+     * @param onPosition the position used to detach the content.
+     * @throws IllegalArgumentException if onContent is null.
      * @since 1.5.0
      */
     void detach(Content onContent, AggregationPosition onPosition);
 
     /**
-     * TODO
-     * @param refContent
-     * @param onPosition
+     * Detach this content aggregating it using the passed position into the content window that contains the refContent.
+     *
+     * @param refContent the refContent used to identify a content window.
+     * @param onPosition the position used to detach the content.
      */
     void detachByReference(Content refContent, AggregationPosition onPosition);
 
     /**
+     * Reattach a detached content using tha passed constraints.
      *
-     * @param constraints
+     * @param constraints the constraints used to reattach the content.
      */
     void reattach(Object... constraints);
 }

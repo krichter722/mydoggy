@@ -618,7 +618,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         );
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", focusListener);
         
-        manager.addInternalPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
+        manager.addInternalPropertyChangeListener("managerWindowAncestor", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 
@@ -712,6 +712,21 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         }
     }
 
+    public boolean containsToolWindowAction(ToolWindowTypeDescriptor except, String id) {
+        if (except != dockedTypeDescriptor && dockedTypeDescriptor.getToolWindowAction(id) != null)
+            return true;
+
+        if (except != slidingTypeDescriptor && slidingTypeDescriptor.getToolWindowAction(id) != null)
+            return true;
+
+        if (except != floatingTypeDescriptor && floatingTypeDescriptor.getToolWindowAction(id) != null)
+            return true;
+
+        if (except != floatingLiveTypeDescriptor && floatingLiveTypeDescriptor.getToolWindowAction(id) != null)
+            return true;
+
+        return false;
+    }
 
 
     public class ToolWindowDescriptorCleaner extends DefaultCleanerAggregator {
@@ -774,7 +789,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
             internalFocusValueAdjusting = true;
 
-//                System.out.println(toolWindow.getId() + " - cmp = " + component);
+                System.out.println(toolWindow.getId() + " - cmp = " + component);
 
             if (parentOf.getAnswer(component)) {
 

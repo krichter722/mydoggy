@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAction;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.util.DynamicPropertyChangeListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -14,9 +15,10 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class DockToolWindowAction extends ToolWindowAction implements PropertyChangeListener, PlafToolWindowAction  {
+public class DockToolWindowAction extends ToolWindowAction implements PlafToolWindowAction  {
 
     protected JCheckBoxMenuItem menuItem;
+    protected PropertyChangeListener propertyChangeListener;
 
     public DockToolWindowAction() {
         super(DOCK_ACTION_ID, UIManager.getIcon(MyDoggyKeySpace.DOCKED_INACTIVE));
@@ -25,38 +27,23 @@ public class DockToolWindowAction extends ToolWindowAction implements PropertyCh
 
 
     public void setToolWindow(final ToolWindow toolWindow) {
-        super.setToolWindow(toolWindow);
+        if (toolWindow == null) {
+            this.toolWindow.getTypeDescriptor(ToolWindowType.SLIDING).removePropertyChangeListener("enabled", propertyChangeListener);
+            this.toolWindow.removePropertyChangeListener("active", propertyChangeListener);
+            this.toolWindow.removePropertyChangeListener("type", propertyChangeListener);
+            this.propertyChangeListener = null;
 
-        setActionName("toolWindow.dockButton." + toolWindow.getId());
-        toolWindow.getTypeDescriptor(ToolWindowType.SLIDING).addPropertyChangeListener(
-                new PropertyChangeListener() {
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        if ("enabled".equals(evt.getPropertyName())) {
-                            boolean newValue = (Boolean) evt.getNewValue();
+            super.setToolWindow(toolWindow);
+        } else {
+            super.setToolWindow(toolWindow);
 
-                            setVisible(newValue);
-                        }
-                    }
-                }
-        );
-        toolWindow.addPropertyChangeListener("active", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                boolean active = (Boolean) evt.getNewValue();
+            propertyChangeListener = new PropertyListener();
+            setActionName("toolWindow.dockButton." + toolWindow.getId());
 
-                if (active) {
-                    if (toolWindow.getType() == ToolWindowType.SLIDING || toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
-                        setIcon(UIManager.getIcon(MyDoggyKeySpace.DOCKED));
-                    } else
-                        setIcon(UIManager.getIcon(MyDoggyKeySpace.SLIDING));
-                } else {
-                    if (toolWindow.getType() == ToolWindowType.SLIDING || toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
-                        setIcon(UIManager.getIcon(MyDoggyKeySpace.DOCKED_INACTIVE));
-                    } else
-                        setIcon(UIManager.getIcon(MyDoggyKeySpace.SLIDING_INACTIVE));
-                }
-            }
-        });
-        toolWindow.addPropertyChangeListener("type", this);
+            toolWindow.getTypeDescriptor(ToolWindowType.SLIDING).addPropertyChangeListener("enabled", propertyChangeListener);
+            toolWindow.addPropertyChangeListener("active", propertyChangeListener);
+            toolWindow.addPropertyChangeListener("type", propertyChangeListener);
+        }
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -90,37 +77,62 @@ public class DockToolWindowAction extends ToolWindowAction implements PropertyCh
         return menuItem;
     }
 
-    public void propertyChange(PropertyChangeEvent evt) {
-        ToolWindowType type = (ToolWindowType) evt.getNewValue();
 
-        if (menuItem != null) {
-            menuItem.setState(type == ToolWindowType.DOCKED);
-            menuItem.setVisible(type != ToolWindowType.FLOATING);
+
+    public class PropertyListener extends DynamicPropertyChangeListener {
+
+        public void onEnabled(PropertyChangeEvent evt) {
+            setVisible((Boolean) evt.getNewValue());
         }
 
-        switch (type) {
-            case DOCKED:
-                setIcon(UIManager.getIcon(MyDoggyKeySpace.SLIDING));
-                putValue(Action.SHORT_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.undock"));
+        public void onActive(PropertyChangeEvent evt) {
+            boolean active = (Boolean) evt.getNewValue();
 
-                setVisible(toolWindow.getTypeDescriptor(ToolWindowType.SLIDING).isEnabled());
-                break;
-            case FLOATING_LIVE:
-                setIcon(UIManager.getIcon(MyDoggyKeySpace.DOCKED));
-                putValue(Action.SHORT_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.dock"));
+            if (active) {
+                if (toolWindow.getType() == ToolWindowType.SLIDING || toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
+                    setIcon(UIManager.getIcon(MyDoggyKeySpace.DOCKED));
+                } else
+                    setIcon(UIManager.getIcon(MyDoggyKeySpace.SLIDING));
+            } else {
+                if (toolWindow.getType() == ToolWindowType.SLIDING || toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
+                    setIcon(UIManager.getIcon(MyDoggyKeySpace.DOCKED_INACTIVE));
+                } else
+                    setIcon(UIManager.getIcon(MyDoggyKeySpace.SLIDING_INACTIVE));
+            }
+        }
 
-                setVisible(toolWindow.getTypeDescriptor(ToolWindowType.SLIDING).isEnabled());
-                break;
-            case SLIDING:
-                putValue(Action.SHORT_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.dock"));
+        public void onType(PropertyChangeEvent evt) {
+            ToolWindowType type = (ToolWindowType) evt.getNewValue();
 
-                setVisible(toolWindow.getTypeDescriptor(ToolWindowType.SLIDING).isEnabled());
-                break;
-            case FLOATING:
-            case FLOATING_FREE:
+            if (menuItem != null) {
+                menuItem.setState(type == ToolWindowType.DOCKED);
+                menuItem.setVisible(type != ToolWindowType.FLOATING);
+            }
 
-                setVisible(false);
-                break;
+            switch (type) {
+                case DOCKED:
+                    setIcon(UIManager.getIcon(MyDoggyKeySpace.SLIDING));
+                    putValue(Action.SHORT_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.undock"));
+
+                    setVisible(toolWindow.getTypeDescriptor(ToolWindowType.SLIDING).isEnabled());
+                    break;
+                case FLOATING_LIVE:
+                    setIcon(UIManager.getIcon(MyDoggyKeySpace.DOCKED));
+                    putValue(Action.SHORT_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.dock"));
+
+                    setVisible(toolWindow.getTypeDescriptor(ToolWindowType.SLIDING).isEnabled());
+                    break;
+                case SLIDING:
+                    putValue(Action.SHORT_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.dock"));
+
+                    setVisible(toolWindow.getTypeDescriptor(ToolWindowType.SLIDING).isEnabled());
+                    break;
+                case FLOATING:
+                case FLOATING_FREE:
+
+                    setVisible(false);
+                    break;
+            }
         }
     }
 

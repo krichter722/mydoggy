@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.actions;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAction;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.util.DynamicPropertyChangeListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -15,6 +16,9 @@ import java.beans.PropertyChangeListener;
  */
 public class MaximizeToolWindowAction extends ToolWindowAction implements PlafToolWindowAction {
 
+    protected PropertyChangeListener propertyChangeListener;
+
+
     public MaximizeToolWindowAction() {
         super(MAXIMIZE_ACTION_ID, UIManager.getIcon(MyDoggyKeySpace.MAXIMIZE_INACTIVE));
         setTooltipText(SwingUtil.getString("@@tool.tooltip.maximize"));
@@ -22,39 +26,21 @@ public class MaximizeToolWindowAction extends ToolWindowAction implements PlafTo
 
 
     public void setToolWindow(final ToolWindow toolWindow) {
-        super.setToolWindow(toolWindow);
+        if (toolWindow == null) {
+            this.toolWindow.addPropertyChangeListener("maximizedBefore", propertyChangeListener);
+            this.toolWindow.addPropertyChangeListener("active", propertyChangeListener);
 
-        setActionName("toolWindow.maximizeButton." + toolWindow.getId());
-        toolWindow.addPropertyChangeListener("maximized.before", new PropertyChangeListener() {
-            private boolean flag = false;
+            this.propertyChangeListener = null;
+            super.setToolWindow(toolWindow);
+        } else {
+            super.setToolWindow(toolWindow);
+            propertyChangeListener = new PropertyListener();
 
-            public void propertyChange(PropertyChangeEvent evt) {
-                if ((Boolean) evt.getNewValue()) {
-                    setIcon(UIManager.getIcon(MyDoggyKeySpace.MINIMIZE));
-                    flag = true;
-                } else if (flag) {
-                    setIcon(UIManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
-                    flag = false;
-                }
-            }
-        });
-        toolWindow.addPropertyChangeListener("active", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                boolean active = (Boolean) evt.getNewValue();
+            setActionName("toolWindow.maximizeButton." + toolWindow.getId());
 
-                if (active) {
-                    if (toolWindow.isMaximized())
-                        setIcon(UIManager.getIcon(MyDoggyKeySpace.MINIMIZE));
-                    else
-                        setIcon(UIManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
-                } else {
-                    if (toolWindow.isMaximized())
-                        setIcon(UIManager.getIcon(MyDoggyKeySpace.MINIMIZE_INACTIVE));
-                    else
-                        setIcon(UIManager.getIcon(MyDoggyKeySpace.MAXIMIZE_INACTIVE));
-                }
-            }
-        });
+            toolWindow.addPropertyChangeListener("maximizedBefore", propertyChangeListener);
+            toolWindow.addPropertyChangeListener("active", propertyChangeListener);
+        }
     }
 
     public JMenuItem getMenuItem() {
@@ -78,4 +64,36 @@ public class MaximizeToolWindowAction extends ToolWindowAction implements PlafTo
         toolWindow.setMaximized(!toolWindow.isMaximized());
     }
 
+
+    public class PropertyListener extends DynamicPropertyChangeListener {
+
+        private boolean flag = false;
+
+        
+        public void onMaximizedBefore(PropertyChangeEvent evt) {
+            if ((Boolean) evt.getNewValue()) {
+                setIcon(UIManager.getIcon(MyDoggyKeySpace.MINIMIZE));
+                flag = true;
+            } else if (flag) {
+                setIcon(UIManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
+                flag = false;
+            }
+        }
+
+        public void onActive(PropertyChangeEvent evt) {
+            boolean active = (Boolean) evt.getNewValue();
+
+            if (active) {
+                if (toolWindow.isMaximized())
+                    setIcon(UIManager.getIcon(MyDoggyKeySpace.MINIMIZE));
+                else
+                    setIcon(UIManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
+            } else {
+                if (toolWindow.isMaximized())
+                    setIcon(UIManager.getIcon(MyDoggyKeySpace.MINIMIZE_INACTIVE));
+                else
+                    setIcon(UIManager.getIcon(MyDoggyKeySpace.MAXIMIZE_INACTIVE));
+            }
+        }
+    }
 }

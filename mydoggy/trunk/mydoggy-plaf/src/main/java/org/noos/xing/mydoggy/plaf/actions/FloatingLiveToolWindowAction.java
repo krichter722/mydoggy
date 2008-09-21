@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.actions;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAction;
 import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.plaf.ui.util.DynamicPropertyChangeListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -13,9 +14,10 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class FloatingLiveToolWindowAction extends ToolWindowAction implements PropertyChangeListener, PlafToolWindowAction  {
+public class FloatingLiveToolWindowAction extends ToolWindowAction implements PlafToolWindowAction  {
 
     protected JCheckBoxMenuItem menuItem;
+    protected PropertyChangeListener propertyChangeListener;
 
 
     public FloatingLiveToolWindowAction() {
@@ -27,16 +29,22 @@ public class FloatingLiveToolWindowAction extends ToolWindowAction implements Pr
 
 
     public void setToolWindow(final ToolWindow toolWindow) {
-        super.setToolWindow(toolWindow);
+        if (toolWindow == null) {
+            this.toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).removePropertyChangeListener("enabled", propertyChangeListener);
+            this.toolWindow.removePropertyChangeListener("type", propertyChangeListener);
+            this.propertyChangeListener = null;
 
-        setActionName("toolWindow.popup.floatingLive." + toolWindow.getId());
-        toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).addPropertyChangeListener("enabled", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                setVisibleOnMenuBar((Boolean) evt.getNewValue());
-            }
+            super.setToolWindow(toolWindow);
+        } else {
+            super.setToolWindow(toolWindow);
+
+            propertyChangeListener = new PropertyListener();
+            setActionName("toolWindow.popup.floatingLive." + toolWindow.getId());
+
+            toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE).addPropertyChangeListener("enabled", propertyChangeListener);
+            toolWindow.addPropertyChangeListener("type", propertyChangeListener);
         }
-        );
-        toolWindow.addPropertyChangeListener("type", this);
+
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -64,11 +72,20 @@ public class FloatingLiveToolWindowAction extends ToolWindowAction implements Pr
         return menuItem;
     }
 
-    public void propertyChange(PropertyChangeEvent evt) {
-        ToolWindowType type = (ToolWindowType) evt.getNewValue();
 
-        if (menuItem != null)
-            menuItem.setState(type == ToolWindowType.FLOATING_LIVE);
+
+    public class PropertyListener extends DynamicPropertyChangeListener {
+
+        public void onEnabled(PropertyChangeEvent evt) {
+            setVisibleOnMenuBar((Boolean) evt.getNewValue());
+        }
+
+        public void onType(PropertyChangeEvent evt) {
+            ToolWindowType type = (ToolWindowType) evt.getNewValue();
+
+            if (menuItem != null)
+                menuItem.setState(type == ToolWindowType.FLOATING_LIVE);
+        }
     }
 
 }

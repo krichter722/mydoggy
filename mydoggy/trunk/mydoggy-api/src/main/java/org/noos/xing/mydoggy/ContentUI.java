@@ -189,16 +189,20 @@ public interface ContentUI extends DockableUI {
     boolean isAddToTaskBarWhenDetached();
 
     /**
-     * TODO
-     * @param alwaysOnTop
+     * Changes the alwaysOnTop property value used for the window associated to the detache content.
+     *
+     * @param alwaysOnTop new value of always-on-top state of the window.
      * @since 1.5.0
      */
     void setAlwaysOnTop(boolean alwaysOnTop);
 
     /**
+     * Returns the value of the alwaysOnTop property.
      *
-     * @return
-     * @since 1.5.0
+     * @return <code>true</code>, if the content window is in always-on-top state,
+     *         <code>false</code> otherwise
+     * @see #setAlwaysOnTop
+     * @since 1.5
      */
     boolean isAlwaysOnTop();
 

@@ -116,12 +116,12 @@ public class ContentDialog extends JDialog implements ContentWindow {
     protected void installListeners(Frame parentFrame) {
         // Init Listener
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        addWindowListener(new ContentWindowListener());
+        addWindowListener(new ContentWindowAdapter());
         if (parentFrame == null)
             addWindowFocusListener(new ToFrontWindowFocusListener(this));
 
-        addComponentListener(new ContentComponentAdapter());
-        addWindowListener(new ContentWindowListener());
+        addComponentListener(new ContentWindowComponentAdapter());
+        addWindowListener(new ContentWindowAdapter());
 
         if (SwingUtil.getTransparencyManager().isServiceAvailable()) {
             WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(
@@ -135,22 +135,29 @@ public class ContentDialog extends JDialog implements ContentWindow {
     }
 
 
-    // TODO: check multi content bounds
-    public class ContentComponentAdapter extends ComponentAdapter {
+    public class ContentWindowComponentAdapter extends ComponentAdapter {
 
         public void componentResized(ComponentEvent e) {
-            if (isActive() && isVisible())
-                contentUI.setDetachedBounds(getBounds());
+            update();
         }
 
         public void componentMoved(ComponentEvent e) {
-            if (isActive() && isVisible())
-                contentUI.setDetachedBounds(getBounds());
+            update();
+        }
+
+
+        protected void update() {
+            if (isActive() && isVisible()) {
+                Rectangle bounds = getBounds();
+                for (MultiSplitDockableContainer.DockableEntry dockableEntry : multiSplitDockableContainer.getDockableEntries()) {
+                    ((Content) dockableEntry.dockable).getContentUI().setDetachedBounds(bounds);
+                }
+            }
         }
 
     }
 
-    public class ContentWindowListener extends WindowAdapter {
+    public class ContentWindowAdapter extends WindowAdapter {
 
         public void windowClosing(WindowEvent e) {
             for (MultiSplitDockableContainer.DockableEntry dockableEntry : multiSplitDockableContainer.getDockableEntries()) {
