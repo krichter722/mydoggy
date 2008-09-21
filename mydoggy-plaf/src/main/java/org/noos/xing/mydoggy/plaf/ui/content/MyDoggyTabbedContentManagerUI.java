@@ -382,7 +382,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
             internalPropertyChangeSupport.addPropertyChangeListener("detached.dispose", detachedListener);
             internalPropertyChangeSupport.addPropertyChangeListener("detached", detachedListener);
             MaximizedListener maximizedListener = new MaximizedListener();
-            internalPropertyChangeSupport.addPropertyChangeListener("maximized.before", maximizedListener);
+            internalPropertyChangeSupport.addPropertyChangeListener("maximizedBefore", maximizedListener);
             internalPropertyChangeSupport.addPropertyChangeListener("maximized", maximizedListener);
             internalPropertyChangeSupport.addPropertyChangeListener("minimized", new MinimizedListener());
             contentUIListener = new ContentUIListener();
@@ -393,7 +393,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
             );
         }
 
-        toolWindowManager.addInternalPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
+        toolWindowManager.addInternalPropertyChangeListener("managerWindowAncestor", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getNewValue() == null)
                     KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(
@@ -657,7 +657,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                 return;
             Content content = (Content) evt.getSource();
 
-            if ("maximized.before".equals(evt.getPropertyName())) {
+            if ("maximizedBefore".equals(evt.getPropertyName())) {
                 if ((Boolean) evt.getNewValue()) {
                     if (tmpWorkspace != null) {
                         // Restore...
@@ -726,7 +726,6 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                 if ((Boolean) evt.getNewValue()) {
                     valueAdjusting = true;
                     try {
-                        // TODO: add support for multi detaching..
                         if (evt instanceof UserPropertyChangeEvent) {
                             // We are here because a call ot the detach methods was made.
 
@@ -813,20 +812,14 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                     contentValueAdjusting = true;
                     try {
                         int index = 0;
-                        if (evt instanceof UserPropertyChangeEvent) {
-                            // We are here because a call ot the detach methods was made.
-                            UserPropertyChangeEvent userEvent = (UserPropertyChangeEvent) evt;
-                            if (userEvent.getUserObject() instanceof MultiSplitConstraint) {
-                                //  TODO: here we don't have MultiSplitConstraint...
-                                MultiSplitConstraint constraint = (MultiSplitConstraint) userEvent.getUserObject();
+                        Integer constraint = SwingUtil.getAt(evt, 0, null);
 
-                                addUIForContent(content, constraint);
-                            } else
-                                index = (Integer) addUIForContent(content, detachedContentUIMap.get(content));
+                        if (constraint != null) {
+                            // We are here because a call ot the detach methods was made.
+                            index = (Integer) addUIForContent(content, constraint);
                         } else {
                             index = (Integer) addUIForContent(content, detachedContentUIMap.get(content));
                         }
-
 
                         tabbedContentPane.setSelectedIndex(index);
                         componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));

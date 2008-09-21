@@ -120,7 +120,7 @@ public class ContentFrame extends JFrame implements ContentWindow {
         if (parentFrame == null)
             addWindowFocusListener(new ToFrontWindowFocusListener(this));
 
-        addComponentListener(new ContentDialogComponentAdapter());
+        addComponentListener(new ContentWindowComponentAdapter());
 
         if (SwingUtil.getTransparencyManager().isServiceAvailable()) {
             WindowTransparencyListener windowTransparencyListener = new WindowTransparencyListener(
@@ -147,15 +147,27 @@ public class ContentFrame extends JFrame implements ContentWindow {
         }
     }
 
-    public class ContentDialogComponentAdapter extends ComponentAdapter {
+    public class ContentWindowComponentAdapter extends ComponentAdapter {
+
 
         public void componentResized(ComponentEvent e) {
-            contentUI.setDetachedBounds(getBounds());
+            update();
         }
 
         public void componentMoved(ComponentEvent e) {
-            contentUI.setDetachedBounds(getBounds());
+            update();
         }
+
+
+        protected void update() {
+            if (isActive() && isVisible()) {
+                Rectangle bounds = getBounds();
+                for (MultiSplitDockableContainer.DockableEntry dockableEntry : multiSplitDockableContainer.getDockableEntries()) {
+                    ((Content) dockableEntry.dockable).getContentUI().setDetachedBounds(bounds);
+                }
+            }
+        }
+
     }
 
 }

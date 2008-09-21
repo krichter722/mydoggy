@@ -346,7 +346,7 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
 
         MyDoggyContent content = new MyDoggyContent(this, id, title, icon, component, tip, toolWindow);
         content.addPlafPropertyChangeListener("selected", new SelectedContentPropertyChangeListener());
-        content.addPlafPropertyChangeListener("maximized.before", new MaximizedBeforePropertyChangeListener());
+        content.addPlafPropertyChangeListener("maximizedBefore", new MaximizedBeforePropertyChangeListener());
 
         contents.add(content);
         contentMap.put(id, content);

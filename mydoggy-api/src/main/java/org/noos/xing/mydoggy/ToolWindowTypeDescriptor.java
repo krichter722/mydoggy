@@ -122,17 +122,21 @@ public interface ToolWindowTypeDescriptor extends Observable {
     boolean isHideRepresentativeButtonOnVisible();
 
     /**
-     * TODO
-     * @param toolWindowAction
+     * Register or replace, if an action with the same id is already registered, a new action.
+     *
+     * @param toolWindowAction the action to be registered or replaced.
      * @since 1.5.0
+     * @see org.noos.xing.mydoggy.ToolWindowAction
      */
     void addToolWindowAction(ToolWindowAction toolWindowAction);
 
     /**
+     * Register or replace, if an action with the same id is already registered, a new action.
      *
-     * @param toolWindowAction
-     * @param index
+     * @param toolWindowAction the action to be registered or replaced.
+     * @param index the index where to put the action.
      * @since 1.5.0
+     * @see org.noos.xing.mydoggy.ToolWindowAction
      */
     void addToolWindowAction(ToolWindowAction toolWindowAction, int index);
 

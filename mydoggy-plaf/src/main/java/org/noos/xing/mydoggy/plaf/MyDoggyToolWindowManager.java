@@ -207,7 +207,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         if (getDockable(id) != null)
             throw new IllegalArgumentException("Cannot register tool window with passed id. An already registered dockable exists. [id : " + id + "]");
 
-        // TODO: why resourceBundle is null???
         MyDoggyToolWindow toolWindow = new MyDoggyToolWindow(this,
                                                              id,
                                                              index,
@@ -466,7 +465,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         rootPaneContainer = (RootPaneContainer) windowAncestor;
 
         // Fire related event
-        propertyChangeSupport.firePropertyChange("manager.window.ancestor", null, windowAncestor);
+        propertyChangeSupport.firePropertyChange("managerWindowAncestor", null, windowAncestor);
 
 /*
         TODO: (-) introduce level
@@ -497,7 +496,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
 
         // Fire event
-        propertyChangeSupport.firePropertyChange("manager.window.ancestor", windowAncestor, null);
+        propertyChangeSupport.firePropertyChange("managerWindowAncestor", windowAncestor, null);
 
         // clean up
         windowAncestor = null;
@@ -661,11 +660,11 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public void addRemoveNotifyListener(PropertyChangeListener listener) {
-        addInternalPropertyChangeListener("manager.window.ancestor", listener);
+        addInternalPropertyChangeListener("managerWindowAncestor", listener);
     }
 
     public void removeRemoveNotifyListener(PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener("manager.window.ancestor", listener);
+        propertyChangeSupport.removePropertyChangeListener("managerWindowAncestor", listener);
     }
 
 
@@ -849,7 +848,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         MaximizedChangeListener maximizedChangeListener = new MaximizedChangeListener();
         propertyChangeSupport.addPropertyChangeListener("maximized", maximizedChangeListener);
-        propertyChangeSupport.addPropertyChangeListener("maximized.before", maximizedChangeListener);
+        propertyChangeSupport.addPropertyChangeListener("maximizedBefore", maximizedChangeListener);
         propertyChangeSupport.addPropertyChangeListener("index", new IndexChangeListener());
         propertyChangeSupport.addPropertyChangeListener("icon", new IconChangeListener());
         propertyChangeSupport.addPropertyChangeListener("temporarilyVisible", new PropertyChangeListener() {
@@ -876,7 +875,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     protected void initKeyboardFocusManagerListeners() {
-        propertyChangeSupport.addPropertyChangeListener("manager.window.ancestor", new PropertyChangeListener() {
+        propertyChangeSupport.addPropertyChangeListener("managerWindowAncestor", new PropertyChangeListener() {
             final ShortcutProcessor shortcutProcessor = new ShortcutProcessor(MyDoggyToolWindowManager.this,
                                                                               MyDoggyToolWindowManager.this);
             final FocusOwnerChangeListener focusOwnerChangeListener = new FocusOwnerChangeListener();

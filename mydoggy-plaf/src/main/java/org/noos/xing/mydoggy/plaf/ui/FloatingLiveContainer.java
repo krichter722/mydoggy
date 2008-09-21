@@ -2,11 +2,11 @@ package org.noos.xing.mydoggy.plaf.ui;
 
 import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.FloatingLiveTypeDescriptor;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.cmp.FloatingLiveWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingMoveMouseInputHandler;
+import org.noos.xing.mydoggy.plaf.ui.util.DynamicPropertyChangeListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -14,7 +14,6 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -61,7 +60,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
             JComponent floatingLiveComponent = (JComponent) floatingLiveWindow;
 
             // setup components
-            floatingLiveWindow.resetLayout();    // TODO: remove this call...
+            floatingLiveWindow.resetLayout();
             content.setVisible(true);
             floatingLiveWindow.addDockable(toolWindow, content);
 
@@ -177,157 +176,123 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
     }
 
     protected void initListeners() {
-        // Init tool window properties listeners
+        // Init property listeners
+        PropertyChangeListener propertyChangeListener = new PropertyListener();
+
         PropertyChangeEventSource toolWindowSource = descriptor.getToolWindow();
 
-        toolWindowSource.addPlafPropertyChangeListener("type", new PropertyChangeListener() {
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getSource() != descriptor)
-                    return;
-
-                assert "type".equals(evt.getPropertyName());
-                if (evt.getNewValue() == ToolWindowType.FLOATING_LIVE) {
-                    if (descriptor.getManager().getLayeredPane() != null) {
-
-                        // Remove listeners
-                        toolWindowTabPanel.removeEventDispatcherlListener(moveMouseInputHandler);
-
-                        toolWindowTitleBar.removeMouseMotionListener(moveMouseInputHandler);
-                        toolWindowTitleBar.removeMouseListener(moveMouseInputHandler);
-
-                        // Add listeners
-                        toolWindowTabPanel.addEventDispatcherlListener(moveMouseInputHandler);
-
-                        toolWindowTitleBar.addMouseMotionListener(moveMouseInputHandler);
-                        toolWindowTitleBar.addMouseListener(moveMouseInputHandler);
-
-                        settedListener = true;
-                    }
-                } else if (evt.getOldValue() == ToolWindowType.FLOATING_LIVE) {
-                    if (descriptor.getManager().getLayeredPane() != null) {
-                        if (settedListener)
-                            lastBounds = descriptor.getManager().getFloatingLiveWindow(toolWindow).getBounds();
-
-                        // Remove listeners
-                        toolWindowTabPanel.removeEventDispatcherlListener(moveMouseInputHandler);
-
-                        toolWindowTitleBar.removeMouseMotionListener(moveMouseInputHandler);
-                        toolWindowTitleBar.removeMouseListener(moveMouseInputHandler);
-
-                        settedListener = false;
-                    }
-                }
-            }
-        });
-        toolWindowSource.addPlafPropertyChangeListener("maximized", new PropertyChangeListener() {
-            protected Rectangle oldBounds = null;
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
-
-                    FloatingLiveWindow floatingLiveWindow = descriptor.getManager().getFloatingLiveWindow(toolWindow);
-                    if ((Boolean) evt.getNewValue()) {
-                        oldBounds = floatingLiveWindow.getBounds();
-
-                        Rectangle bounds = descriptor.getManager().getMainContainer().getBounds();
-                        bounds = SwingUtilities.convertRectangle(descriptor.getManager().getMainContainer(),
-                                                                 bounds,
-                                                                 descriptor.getManager().getRootPane().getLayeredPane());
-                        floatingLiveWindow.setBounds(bounds);
-                    } else {
-                        floatingLiveWindow.setBounds(oldBounds);
-                    }
-
-                    SwingUtil.repaint((Component) floatingLiveWindow);
-                }
-            }
-        });
+        toolWindowSource.addPlafPropertyChangeListener("type", propertyChangeListener);
+        toolWindowSource.addPlafPropertyChangeListener("maximized",propertyChangeListener);
 
         // Init floating live type desrciptor properties listeners
         PropertyChangeEventSource floatingLiveTypeDescriptorSource = (PropertyChangeEventSource) descriptor.getToolWindow().getTypeDescriptor(FloatingLiveTypeDescriptor.class);
-        floatingLiveTypeDescriptorSource.addPlafPropertyChangeListener("location", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE) != evt.getSource())
-                    return;
+        floatingLiveTypeDescriptorSource.addPlafPropertyChangeListener("location", propertyChangeListener);
+        floatingLiveTypeDescriptorSource.addPlafPropertyChangeListener("size", propertyChangeListener);
+        floatingLiveTypeDescriptorSource.addPlafPropertyChangeListener("enabled", propertyChangeListener);
 
-                if (valueAdjusting)
-                    return;
-
-                FloatingLiveWindow floatingLiveWindow = descriptor.getManager().getFloatingLiveWindow(toolWindow);
-                if (floatingLiveWindow.isVisible()) {
-                    Point location = (Point) evt.getNewValue();
-                    floatingLiveWindow.setLocation(location);
-                }
-                lastBounds = null;
-            }
-        });
-        floatingLiveTypeDescriptorSource.addPlafPropertyChangeListener("size", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE) != evt.getSource())
-                    return;
-
-                if (valueAdjusting)
-                    return;
-
-                FloatingLiveWindow floatingLiveWindow = descriptor.getManager().getFloatingLiveWindow(toolWindow);
-                if (floatingLiveWindow.isVisible()) {
-                    Dimension size = (Dimension) evt.getNewValue();
-                    floatingLiveWindow.setSize(size);
-                }
-                lastBounds = null;
-            }
-        });
-        floatingLiveTypeDescriptorSource.addPlafPropertyChangeListener("enabled", new TypeEnabledPropertyChangeListener());
-
-        moveMouseInputHandler = new FloatingLiveMoveMouseInputHandler(null);
+        moveMouseInputHandler = new FloatingMoveMouseInputHandler(null);
         livePanelComponentListener = new LivePanelComponentListener();
     }
 
 
-    public class TypeEnabledPropertyChangeListener implements PropertyChangeListener {
+    public class PropertyListener extends DynamicPropertyChangeListener {
 
-        public void propertyChange(PropertyChangeEvent evt) {
+        protected Rectangle oldBounds = null;
+
+
+        public void onType(PropertyChangeEvent evt) {
+            if (evt.getSource() != descriptor)
+                return;
+
+            assert "type".equals(evt.getPropertyName());
+            if (evt.getNewValue() == ToolWindowType.FLOATING_LIVE) {
+                if (descriptor.getManager().getLayeredPane() != null) {
+
+                    // Remove listeners
+                    toolWindowTabPanel.removeEventDispatcherlListener(moveMouseInputHandler);
+
+                    toolWindowTitleBar.removeMouseMotionListener(moveMouseInputHandler);
+                    toolWindowTitleBar.removeMouseListener(moveMouseInputHandler);
+
+                    // Add listeners
+                    toolWindowTabPanel.addEventDispatcherlListener(moveMouseInputHandler);
+
+                    toolWindowTitleBar.addMouseMotionListener(moveMouseInputHandler);
+                    toolWindowTitleBar.addMouseListener(moveMouseInputHandler);
+
+                    settedListener = true;
+                }
+            } else if (evt.getOldValue() == ToolWindowType.FLOATING_LIVE) {
+                if (descriptor.getManager().getLayeredPane() != null) {
+                    if (settedListener)
+                        lastBounds = descriptor.getManager().getFloatingLiveWindow(toolWindow).getBounds();
+
+                    // Remove listeners
+                    toolWindowTabPanel.removeEventDispatcherlListener(moveMouseInputHandler);
+
+                    toolWindowTitleBar.removeMouseMotionListener(moveMouseInputHandler);
+                    toolWindowTitleBar.removeMouseListener(moveMouseInputHandler);
+
+                    settedListener = false;
+                }
+            }
+        }
+
+        public void onMaximized(PropertyChangeEvent evt) {
+            if (toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
+
+                FloatingLiveWindow floatingLiveWindow = descriptor.getManager().getFloatingLiveWindow(toolWindow);
+                if ((Boolean) evt.getNewValue()) {
+                    oldBounds = floatingLiveWindow.getBounds();
+
+                    Rectangle bounds = descriptor.getManager().getMainContainer().getBounds();
+                    bounds = SwingUtilities.convertRectangle(descriptor.getManager().getMainContainer(),
+                                                             bounds,
+                                                             descriptor.getManager().getRootPane().getLayeredPane());
+                    floatingLiveWindow.setBounds(bounds);
+                } else {
+                    floatingLiveWindow.setBounds(oldBounds);
+                }
+
+                SwingUtil.repaint((Component) floatingLiveWindow);
+            }
+        }
+
+        public void onLocation(PropertyChangeEvent evt) {
+            if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE) != evt.getSource())
+                return;
+
+            if (valueAdjusting)
+                return;
+
+            FloatingLiveWindow floatingLiveWindow = descriptor.getManager().getFloatingLiveWindow(toolWindow);
+            if (floatingLiveWindow.isVisible()) {
+                Point location = (Point) evt.getNewValue();
+                floatingLiveWindow.setLocation(location);
+            }
+            lastBounds = null;
+        }
+
+        public void onSize(PropertyChangeEvent evt) {
+            if (descriptor.getTypeDescriptor(ToolWindowType.FLOATING_LIVE) != evt.getSource())
+                return;
+
+            if (valueAdjusting)
+                return;
+
+            FloatingLiveWindow floatingLiveWindow = descriptor.getManager().getFloatingLiveWindow(toolWindow);
+            if (floatingLiveWindow.isVisible()) {
+                Dimension size = (Dimension) evt.getNewValue();
+                floatingLiveWindow.setSize(size);
+            }
+            lastBounds = null;
+        }
+
+        public void onEnabled(PropertyChangeEvent evt) {
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (!newValue && toolWindow.getType() == ToolWindowType.FLOATING_LIVE)
                 toolWindow.setType(ToolWindowType.DOCKED);
-        }
-
-    }
-
-    public class FloatingLiveMoveMouseInputHandler extends FloatingMoveMouseInputHandler {
-        protected ToolWindowAnchor onAnchor;
-
-        public FloatingLiveMoveMouseInputHandler(Component floatingContainer) {
-            super(floatingContainer);
-        }
-
-        public void mouseDragged(MouseEvent ev) {
-            super.mouseDragged(ev);
-
-            if (isMovingWindow) {
-                // TODO: activate tempo shown
-                onAnchor = descriptor.getManager().getToolWindowAnchor(
-                        SwingUtilities.convertPoint(ev.getComponent(), ev.getPoint(), descriptor.getManager())
-                );
-
-            }
-        }
-
-        public void mouseReleased(MouseEvent ev) {
-            if (isMovingWindow) {
-                if (onAnchor != null) {
-                    try {
-//                        toolWindow.setAnchor(onAnchor);
-//                        toolWindow.setType(ToolWindowType.DOCKED);
-                    } finally {
-                        isMovingWindow = false;
-                        dragCursor = 0;
-                    }
-                } else
-                    super.mouseReleased(ev);
-            }
         }
     }
 

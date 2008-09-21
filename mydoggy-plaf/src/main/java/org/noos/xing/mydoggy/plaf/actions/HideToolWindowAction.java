@@ -17,6 +17,9 @@ import java.beans.PropertyChangeListener;
  */
 public class HideToolWindowAction extends ToolWindowAction implements PlafToolWindowAction {
 
+    protected PropertyChangeListener propertyChangeListener;
+
+
     public HideToolWindowAction() {
         super(HIDE_ACTION_ID, UIManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE));
         setTooltipText(SwingUtil.getString("@@tool.tooltip.hide"));
@@ -24,20 +27,19 @@ public class HideToolWindowAction extends ToolWindowAction implements PlafToolWi
 
 
     public void setToolWindow(ToolWindow toolWindow) {
-        super.setToolWindow(toolWindow);
+        if (toolWindow == null) {
+            this.toolWindow.removePropertyChangeListener("active", propertyChangeListener);
+            this.propertyChangeListener = null;
 
-        setActionName("toolWindow.hideButton." + toolWindow.getId());
-        toolWindow.addPropertyChangeListener("active", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                boolean active = (Boolean) evt.getNewValue();
+            super.setToolWindow(toolWindow);
+        } else {
+            super.setToolWindow(toolWindow);
 
-                if (active) {
-                    setIcon(UIManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW));
-                } else {
-                    setIcon(UIManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE));
-                }
-            }
-        });
+            propertyChangeListener = new PropertyListener();
+            setActionName("toolWindow.hideButton." + toolWindow.getId());
+
+            toolWindow.addPropertyChangeListener("active", propertyChangeListener);
+        }
     }
 
     public JMenuItem getMenuItem() {
@@ -76,6 +78,21 @@ public class HideToolWindowAction extends ToolWindowAction implements PlafToolWi
             toolWindowActionHandler.onHideButtonClick(toolWindow);
         else
             toolWindow.setVisible(false);
+    }
+
+
+    public class PropertyListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            boolean active = (Boolean) evt.getNewValue();
+
+            if (active) {
+                setIcon(UIManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW));
+            } else {
+                setIcon(UIManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE));
+            }
+        }
+
     }
 
 }

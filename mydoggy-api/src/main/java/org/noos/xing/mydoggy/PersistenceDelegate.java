@@ -46,10 +46,19 @@ public interface PersistenceDelegate {
     void save(OutputStream outputStream);
 
     /**
-     * TODO: 
-     * @param outputStream
-     * @param filter
+     * Writes all settings that the filter accept to the output stream in a format suitable
+     * for loading using the {@link #apply(java.io.InputStream)} method.
+     * <p>
+     * After the entries have been written, the output stream is flushed.  The
+     * output stream remains open after this method returns.
+     * <p>
+     * Look at the specific implementation for the data format.
+     *
+     * @param outputStream an output stream
+     * @param filter a filter used to accept or not each specific part.
+     * @throws RuntimeException if an error occurred when writing to the ouput stream.
      * @since 1.5.0
+     * @see PersistenceDelegateFilter
      */
     void save(OutputStream outputStream, PersistenceDelegateFilter filter);
 

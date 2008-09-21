@@ -162,16 +162,20 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
     boolean isAddToTaskBar();
 
     /**
-     * TODO
-     * @param alwaysOnTop
+     * Changes the alwaysOnTop property value used for a floating toolwindow.
+     *
+     * @param alwaysOnTop new value of always-on-top state of the window.
      * @since 1.5.0
      */
     void setAlwaysOnTop(boolean alwaysOnTop);
 
     /**
+     * Returns the value of the alwaysOnTop property.
      *
-     * @return
-     * @since 1.5.0
+     * @return <code>true</code>, if the floating toolwindow is in always-on-top state,
+     *         <code>false</code> otherwise
+     * @see #setAlwaysOnTop
+     * @since 1.5
      */
     boolean isAlwaysOnTop();
 

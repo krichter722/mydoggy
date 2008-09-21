@@ -12,7 +12,9 @@ package org.noos.xing.mydoggy;
 public interface PersistenceDelegateCallback {
 
     /**
-     * TODO: add javadoc
+     * Node interface used to analyze the properties of a reqeusted dockable.
+     * TODO
+     *
      * @since 1.5.0
      */
     interface PersistenceNode {
@@ -69,7 +71,7 @@ public interface PersistenceDelegateCallback {
      *
      * @param toolWindowManager a reference to.
      * @param toolWindowId the requested toolwindow id.
-     * @param node  TODO
+     * @param node a node instance to retrieve all the properties related to the requested toolwindow.
      * @return a instance of ToolWindow eventually registered.
      * @since 1.5.0
      */
@@ -81,7 +83,7 @@ public interface PersistenceDelegateCallback {
      *
      * @param toolWindowManager a reference to.
      * @param contentId the requested content id.
-     * @param node
+     * @param node a node instance to retrieve all the properties related to the requested content.
      * @return a instance of Content eventually registered.
      * @since 1.5.0
      */

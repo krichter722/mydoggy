@@ -477,6 +477,8 @@ public class MyDoggySet {
 //        UIManager.put("ToolWindowTitleBarUI", "org.noos.xing.mydoggy.mydoggyset.MyDoggySet$CustomToolWindowTitleBarUI");
 //        UIManager.put("ToolWindowRepresentativeAnchorUI", "org.noos.xing.mydoggy.mydoggyset.MyDoggySet$CustomToolWindowRepresentativeAnchorUI");
 
+        UIManager.put(MyDoggyKeySpace.MODAL_WINDOW_BORDER_LENGTH, 4);
+
 //        resourceManager.putObject("ToolWindowTabTitleUI.font", new Font("Verdana", Font.BOLD, 10));
 //        resourceManager.putObject("ToolWindowTitleBarUI.font", new Font("Verdana", Font.BOLD, 10));
 //        resourceManager.putObject("ToolWindowRepresentativeAnchorUI.font", new Font("Verdana", Font.BOLD, 10));
@@ -517,13 +519,21 @@ public class MyDoggySet {
             if (param == null)
                 return false;
 
+            System.out.println("--------------------------------");
+
             Component cursor = param;
-            while (cursor != null) {
-                if ((cursor instanceof JXMonthView && toolWindow.isActive()) || cursor == parent)
-                    return true;
-                cursor = cursor.getParent();
+            try {
+                while (cursor != null) {
+                    System.out.println("cursor = " + cursor);
+                    if ((cursor instanceof JXMonthView && toolWindow.isActive()) || cursor == parent)
+                        return true;
+                    cursor = cursor.getParent();
+                }
+                return false;
+            } finally {
+                System.out.println("--------------------------------");
+
             }
-            return false;
         }
 
     }

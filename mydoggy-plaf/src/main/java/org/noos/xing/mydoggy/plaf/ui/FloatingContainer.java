@@ -8,6 +8,7 @@ import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.animation.AnimationListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ModalWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingMoveMouseInputHandler;
+import org.noos.xing.mydoggy.plaf.ui.util.DynamicPropertyChangeListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -185,13 +186,14 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
     protected void initListeners() {
         // Init tool window properties listeners
+        PropertyChangeListener propertyChangeListener = new PropertyListener();
+
         PropertyChangeEventSource toolWindowSource = descriptor.getToolWindow();
-        toolWindowSource.addPlafPropertyChangeListener(new ToolWindowPropertyChangeListener(),
-                                                       "type", "maximized");
+        toolWindowSource.addPlafPropertyChangeListener(propertyChangeListener, "type", "maximized");
 
         // Init floating type descriptor properties listeners
         PropertyChangeEventSource floatingTypeDescriptorSource = (PropertyChangeEventSource) descriptor.getToolWindow().getTypeDescriptor(FloatingTypeDescriptor.class);
-        floatingTypeDescriptorSource.addPlafPropertyChangeListener(new FloatingDescriptorPropertyChangeListener());
+        floatingTypeDescriptorSource.addPlafPropertyChangeListener(propertyChangeListener);
 
         // Animation listener
         floatingAnimation.addAnimationListener(new AnimationListener() {
@@ -364,22 +366,10 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         }
     }
 
-    public class ToolWindowPropertyChangeListener implements PropertyChangeListener {
+    public class PropertyListener extends DynamicPropertyChangeListener {
 
-        public void propertyChange(PropertyChangeEvent evt) {
-            String property = evt.getPropertyName();
-
-            if ("type".equals(property))
-                onType(evt);
-            else if ("maximized".equals(property))
-                onMaximized(evt);
-            else if ("active".equals(property))
-                onActive(evt);
-        }
-
-
-        protected void onActive(PropertyChangeEvent evt) {
 /*
+        public void onActive(PropertyChangeEvent evt) {
             if (toolWindow.getType() == ToolWindowType.FLOATING ||
                 toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
 
@@ -393,9 +383,8 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 }
             }
 */
-        }
 
-        protected void onMaximized(PropertyChangeEvent evt) {
+        public void onMaximized(PropertyChangeEvent evt) {
             if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE) {
                 if ((Boolean) evt.getNewValue())
                     SwingUtil.setFullScreen(window.getWindow());
@@ -406,7 +395,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
         }
 
-        protected void onType(PropertyChangeEvent evt) {
+        public void onType(PropertyChangeEvent evt) {
             // TODO: reimplement this...
             if (evt.getSource() != descriptor || window == null)
                 return;
@@ -428,39 +417,14 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
         }
 
-    }
-
-    public class FloatingDescriptorPropertyChangeListener implements PropertyChangeListener {
-
-
-        public void propertyChange(PropertyChangeEvent evt) {
-            String property = evt.getPropertyName();
-
-            if ("enabled".equals(property))
-                onEnabled(evt);
-            else if ("location".equals(property))
-                onLocation(evt);
-            else if ("size".equals(property))
-                onSize(evt);
-            else if ("modal".equals(property))
-                onModal(evt);
-            else if ("addToTaskBar".equals(property))
-                onAddToTaskBar(evt);
-            else if ("osDecorated".equals(property))
-                onOSDecorated(evt);
-            else if ("alwaysOnTop".equals(property))
-                onAlwaysOnTop(evt);
-       }
-
-
-        protected void onEnabled(PropertyChangeEvent evt) {
+        public void onEnabled(PropertyChangeEvent evt) {
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (!newValue && toolWindow.getType() == ToolWindowType.FLOATING)
                 toolWindow.setType(ToolWindowType.DOCKED);
         }
 
-        protected void onSize(PropertyChangeEvent evt) {
+        public void onSize(PropertyChangeEvent evt) {
             if (window == null)
                 return;
 
@@ -474,7 +438,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
             lastBounds = null;
         }
 
-        protected void onLocation(PropertyChangeEvent evt) {
+        public void onLocation(PropertyChangeEvent evt) {
             if (window == null)
                 return;
 
@@ -488,7 +452,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
             lastBounds = null;
         }
 
-        protected void onModal(PropertyChangeEvent evt) {
+        public void onModal(PropertyChangeEvent evt) {
             if (window == null)
                 return;
 
@@ -499,7 +463,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
             }
         }
 
-        protected void onAddToTaskBar(PropertyChangeEvent evt) {
+        public void onAddToTaskBar(PropertyChangeEvent evt) {
             if (window == null)
                 return;
 
@@ -536,14 +500,15 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
             }
         }
 
-        protected void onOSDecorated(PropertyChangeEvent evt) {
+        public void onOsDecorated(PropertyChangeEvent evt) {
             window.dispose();
             window.setUndecorated(! (Boolean) evt.getNewValue());
             window.setVisible(true);
         }
 
-        protected void onAlwaysOnTop(PropertyChangeEvent evt) {
+        public void onAlwaysOnTop(PropertyChangeEvent evt) {
             // TODO
         }
     }
+
 }

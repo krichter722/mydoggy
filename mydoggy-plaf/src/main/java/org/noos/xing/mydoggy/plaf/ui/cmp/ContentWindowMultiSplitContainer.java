@@ -46,6 +46,7 @@ public class ContentWindowMultiSplitContainer extends MultiSplitTabbedContentCon
 
     protected Component forceWrapperForComponent(Dockable dockable, Component component) {
         final TabbedContentPane tabbedContentPane = (TabbedContentPane) super.forceWrapperForComponent(dockable, component);
+
         tabbedContentPane.setShowDetach(false);
         tabbedContentPane.setShowMaximize(false);
         tabbedContentPane.setShowMinimize(false);

@@ -44,7 +44,7 @@ public class DockedContainer extends MyDoggyToolWindowContainer {
         // Init tool window properties listeners
         PropertyChangeEventSource toolWindowSource = descriptor.getToolWindow();
         toolWindowSource.addPlafPropertyChangeListener("type", new TypePropertyChangeListener());
-        toolWindowSource.addPlafPropertyChangeListener("maximized.before", new MaximizedBeforePropertyChangeListener());
+        toolWindowSource.addPlafPropertyChangeListener("maximizedBefore", new MaximizedBeforePropertyChangeListener());
 
         toolWindow.addToolWindowListener(new DockedToolWindowListener());
     }
