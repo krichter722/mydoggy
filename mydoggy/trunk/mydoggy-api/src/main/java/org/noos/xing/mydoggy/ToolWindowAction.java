@@ -3,7 +3,8 @@ package org.noos.xing.mydoggy;
 import javax.swing.*;
 
 /**
- * TODO: add javadocs...
+ * This abstract class is used to define a new behaviour associated to one or more toolwindows.
+ *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.5.0
  */
@@ -22,8 +23,17 @@ public abstract class ToolWindowAction extends AbstractAction {
     public static final String TOOLS_MENU_ACTION_ID = "TOOLS_MENU_ACTION_ID";
 
 
+    /**
+     * Used to identify the actioon
+     */
     protected String id;
+    /**
+     * The action name.
+     */
     protected String actionName;
+    /**
+     *
+     */
     protected ToolWindow toolWindow;
     protected JMenuItem menuItem;
 

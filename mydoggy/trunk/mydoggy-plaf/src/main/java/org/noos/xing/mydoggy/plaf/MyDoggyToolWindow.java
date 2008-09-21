@@ -688,17 +688,11 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
     public void addToolWindowAction(ToolWindowAction toolWindowAction) {
-        getTypeDescriptor(DockedTypeDescriptor.class).addToolWindowAction(toolWindowAction);
-        getTypeDescriptor(SlidingTypeDescriptor.class).addToolWindowAction(toolWindowAction);
-        getTypeDescriptor(FloatingTypeDescriptor.class).addToolWindowAction(toolWindowAction);
-        getTypeDescriptor(FloatingLiveTypeDescriptor.class).addToolWindowAction(toolWindowAction);
+        descriptor.addCommonToolWindowAction(toolWindowAction);
     }
 
     public void removeToolWindowAction(String id) {
-        getTypeDescriptor(DockedTypeDescriptor.class).removeToolWindowAction(id);
-        getTypeDescriptor(SlidingTypeDescriptor.class).removeToolWindowAction(id);
-        getTypeDescriptor(FloatingTypeDescriptor.class).removeToolWindowAction(id);
-        getTypeDescriptor(FloatingLiveTypeDescriptor.class).removeToolWindowAction(id);
+        descriptor.removeCommonToolWindowAction(id);
     }
 
     public void addToolWindowListener(ToolWindowListener listener) {
