@@ -13,6 +13,7 @@ import org.noos.xing.mydoggy.plaf.cleaner.CleanerAggregator;
 import org.noos.xing.mydoggy.plaf.cleaner.DefaultCleanerAggregator;
 import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
 import org.noos.xing.mydoggy.plaf.descriptors.DefaultRepresentativeAnchorDescriptor;
+import org.noos.xing.mydoggy.plaf.descriptors.DefaultToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
@@ -595,6 +596,23 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     }
 
 
+    public void addCommonToolWindowAction(ToolWindowAction toolWindowAction) {
+        toolWindowAction.setToolWindow(toolWindow);
+
+        ((DefaultToolWindowTypeDescriptor) getTypeDescriptor(ToolWindowType.DOCKED)).addSharedToolWindowAction(toolWindowAction);
+        ((DefaultToolWindowTypeDescriptor) getTypeDescriptor(ToolWindowType.SLIDING)).addSharedToolWindowAction(toolWindowAction);
+        ((DefaultToolWindowTypeDescriptor) getTypeDescriptor(ToolWindowType.FLOATING)).addSharedToolWindowAction(toolWindowAction);
+        ((DefaultToolWindowTypeDescriptor) getTypeDescriptor(ToolWindowType.FLOATING_LIVE)).addSharedToolWindowAction(toolWindowAction);
+    }
+
+    public void removeCommonToolWindowAction(String id) {
+        getTypeDescriptor(ToolWindowType.DOCKED).removeToolWindowAction(id);
+        getTypeDescriptor(ToolWindowType.SLIDING).removeToolWindowAction(id);
+        getTypeDescriptor(ToolWindowType.FLOATING).removeToolWindowAction(id);
+        getTypeDescriptor(ToolWindowType.FLOATING_LIVE).removeToolWindowAction(id);
+    }
+
+
     protected void initContainers() {
         if (toolWindowPanel != null)
             return;
@@ -727,6 +745,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
         return false;
     }
+
 
 
     public class ToolWindowDescriptorCleaner extends DefaultCleanerAggregator {
