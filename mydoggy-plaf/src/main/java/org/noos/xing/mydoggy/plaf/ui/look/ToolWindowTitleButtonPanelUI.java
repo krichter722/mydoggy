@@ -155,6 +155,9 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
 
 
     protected void setType(ToolWindowType toolWindowType) {
+        if (toolWindowType == ToolWindowType.EXTERN)
+            return;
+
         // remove all actions from the container
         toolWindowTitleButtonPanel.removeAll();
         containerLayout.setColumn(new double[]{0,0});
