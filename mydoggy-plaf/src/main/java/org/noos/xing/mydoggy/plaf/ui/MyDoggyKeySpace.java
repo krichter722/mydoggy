@@ -85,13 +85,6 @@ public interface MyDoggyKeySpace {
     String TWTB_TAB_FOREGROUND_SELECTED = "ToolWindowTitleBarUI.tab.foreground.selected";
     String TWTB_TAB_FOREGROUND_UNSELECTED = "ToolWindowTitleBarUI.tab.foreground.unselected";
 
-    // Components, ComponentsUIs, Customizers
-
-    String TOOL_WINDOW_MANAGER = "TOOL_WINDOW_MANAGER";
-    String TOOL_WINDOW_MANAGER_CONTENT_CONTAINER = "TOOL_WINDOW_MANAGER_CONTENT_CONTAINER";
-
-    String DESKTOP_CONTENT_PANE = "DESKTOP_CONTENT_PANE";
-
     // Properties
 
     String PERSISTENCE_DELEGATE_PARSING = "PERSISTENCE_DELEGATE_PARSING";

@@ -4,7 +4,6 @@ import org.noos.common.context.Context;
 import org.noos.common.object.ObjectCreator;
 import org.noos.common.object.ObjectCustomizer;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
-import static org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace.TOOL_WINDOW_MANAGER;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.transparency.WindowTransparencyManager;
@@ -407,7 +406,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         cmpUiCreators = new Hashtable<String, ObjectCreator<ComponentUI>>();
 
         cmpCustomizers = new Hashtable<String, ObjectCustomizer<Component>>();
-        cmpCustomizers.put(TOOL_WINDOW_MANAGER, new MyDoggyManagerPanelComponentCustomizer());
 
         instanceCreators = new Hashtable<Class, ObjectCreator>();
         instanceCreators.put(ParentOfQuestion.class, new ParentOfQuestionInstanceCreator());
@@ -451,14 +449,6 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
         setTransparencyManager(new WindowTransparencyManager());
     }
 
-
-    public static class MyDoggyManagerPanelComponentCustomizer implements ObjectCustomizer<Component> {
-
-        public Component customize(Component component, Context context) {
-//            component.setBackground(Color.black);
-            return component;
-        }
-    }
 
     public static class ParentOfQuestionInstanceCreator implements ObjectCreator {
 
