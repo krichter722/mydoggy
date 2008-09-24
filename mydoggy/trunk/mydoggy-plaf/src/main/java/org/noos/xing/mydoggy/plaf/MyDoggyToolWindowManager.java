@@ -16,7 +16,6 @@ import org.noos.xing.mydoggy.plaf.support.CleanablePropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.*;
@@ -46,9 +45,9 @@ import java.util.List;
  */
 public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener {
 
-    protected static boolean firePublic = true;
+    protected static boolean firePublic = true; // TODO: ..This is not so good...
 
-    public final Object sync = new Object();    //  TODO: is public the right visibility?
+    protected final Object sync = new Object();
 
     protected ToolWindowGroup showingGroup;
 
@@ -775,9 +774,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         initContentManager();
 
-        // TODO: what is this....???
-        resourceManager.applyCustomization(MyDoggyKeySpace.TOOL_WINDOW_MANAGER, this, getContext());
-
         // Init data structures
         bars = new MyDoggyToolWindowBar[4];
         tools = new LinkedHashMap<Object, ToolWindowDescriptor>();
@@ -1183,7 +1179,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public void removeModalWindow(ToolWindow toolWindow) {
-        // TODO: when we call this?
         modalWindowMap.remove(toolWindow);
     }
 
@@ -1709,7 +1704,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
 
         protected boolean checkCondition(ToolWindow toolWindow) {
-            return true;    // TODO: it's always true........is it right?
+            return true;
         }
     }
 

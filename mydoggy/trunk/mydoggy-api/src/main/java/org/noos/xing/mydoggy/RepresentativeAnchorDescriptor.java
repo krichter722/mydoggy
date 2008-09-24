@@ -67,36 +67,41 @@ public interface RepresentativeAnchorDescriptor extends Observable {
     float getPreviewTransparentRatio();
 
     /**
-     * TODO
-     * @param anchor
+     * Add an anchor used to indicate where the dockable can be placed.
+     *
+     * @param anchor an anchor used to indicate where the dockable can be placed.
      * @since 1.5.0
      */
     void addLockingAnchor(ToolWindowAnchor anchor);
 
     /**
-     * TODO
-     * @param anchor
+     * Remove an anchor to indicate where the dockable cannot be placed.
+     *
+     * @param anchor an anchor to indicate where the dockable cannot be placed.
      * @since 1.5.0
      */
     void removeLockingAnchor(ToolWindowAnchor anchor);
 
     /**
+     * Remove all anchors so the dockable can stay only in the current position
      *
      * @since 1.5.0
      */
     void removeAllLockingAnchor();
 
     /**
-     * TODO
-     * @return
+     * Returns the anchors register as locking anchors.
+     *
+     * @return the anchors register as locking anchors.
      * @since 1.5.0
      */
     ToolWindowAnchor[] getLockingAnchors();
 
     /**
-     * TODO
-     * @param anchor
-     * @return
+     * Checks if the specified anchor is registered as a locking anchor.
+     *
+     * @param anchor the anchor whose presence must be checked. 
+     * @return <code>true</code> if the anchor is present, <code>false</code> otherwise. 
      * @since 1.5.0
      */
     boolean containsLockingAnchor(ToolWindowAnchor anchor);

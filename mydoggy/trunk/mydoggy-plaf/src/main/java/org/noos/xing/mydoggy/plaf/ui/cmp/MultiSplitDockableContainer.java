@@ -65,7 +65,8 @@ public class MultiSplitDockableContainer extends JPanel {
         this.useAlwaysContentWrapper = false;
 
         setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
-        setOpaque(false);
+        setBackground(Color.GRAY);
+        setOpaque(true);
         setFocusable(false);
     }
 
