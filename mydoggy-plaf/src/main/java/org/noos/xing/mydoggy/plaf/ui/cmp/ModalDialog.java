@@ -34,7 +34,6 @@ public class ModalDialog extends JDialog implements ModalWindow,
     protected Timer transparencyTimer;
     protected TransparencyManager<Window> transparencyManager;
     protected TransparencyAnimation transparencyAnimation;
-    protected ModalWindowListener modalWindowListener;
 
 
     public ModalDialog(MyDoggyToolWindowManager toolWindowManager, Window owner, boolean modal) {
@@ -146,12 +145,28 @@ public class ModalDialog extends JDialog implements ModalWindow,
         super.setVisible(visible);
     }
 
+    public void importFrom(ModalWindow oldWindow) {
+        setName(oldWindow.getName());
+        setBounds(oldWindow.getBounds());
+        setContentPane(oldWindow.getContentPane());
+
+        Component child = getContentPane().getComponent(0);
+        if (child instanceof ModalWindowDockableDropPanel) {
+            ModalWindowDockableDropPanel modalWindowDockableDropPanel = (ModalWindowDockableDropPanel) child;
+            modalWindowDockableDropPanel.setModalWindow(this);
+
+            this.dockableDropPanel = modalWindowDockableDropPanel;
+            this.multiSplitDockableContainer = (MultiSplitDockableContainer) dockableDropPanel.getComponent();
+        } else
+            throw new IllegalArgumentException("Cannot recognize old window.");
+    }
+
     public void setUndecorated(boolean undecorated) {
         super.setUndecorated(undecorated);
 
         if (undecorated) {
             // remove
-            removeWindowListener(modalWindowListener);
+//            removeWindowListener(modalWindowListener);
 
             TableLayout tableLayout = ((TableLayout) getContentPane().getLayout());
             int borderLength = SwingUtil.getInt(MyDoggyKeySpace.MODAL_WINDOW_BORDER_LENGTH, 2);
@@ -161,7 +176,7 @@ public class ModalDialog extends JDialog implements ModalWindow,
             SwingUtil.revalidate(this);
         } else {
             // add
-            addWindowListener(modalWindowListener);
+//            addWindowListener(modalWindowListener);
 
             TableLayout tableLayout = ((TableLayout) getContentPane().getLayout());
             tableLayout.setRow(new double[]{0, TableLayout.FILL, 0});
@@ -174,7 +189,6 @@ public class ModalDialog extends JDialog implements ModalWindow,
     public Window getWindow() {
         return this;
     }
-
 
     public void addDockable(ToolWindow toolWindow, Component content) {
         addDockable(toolWindow, content, null, AggregationPosition.DEFAULT);
@@ -238,8 +252,7 @@ public class ModalDialog extends JDialog implements ModalWindow,
 
         addMouseMotionListener(resizeMouseInputHandler);
         addMouseListener(resizeMouseInputHandler);
-
-        modalWindowListener = new ModalWindowListener();
+        addWindowListener(new ModalWindowListener());
     }
 
 

@@ -123,12 +123,13 @@ public class SwingUtil {
 
         Frame frames[] = Frame.getFrames();
         for (Frame frame : frames) {
-            Window[] windows = frame.getOwnedWindows();
+            if (frame instanceof ModalWindow || frame instanceof ContentWindow)
+                containers.add(frame);
 
+            Window[] windows = frame.getOwnedWindows();
             for (Window window : windows) {
                 if (window instanceof ModalWindow || window instanceof ContentWindow)
                     containers.add(window);
-
             }
         }
 

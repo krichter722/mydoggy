@@ -329,6 +329,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 slidingDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(slidingTypeDescriptor.isAnimating()));
                 slidingDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(slidingTypeDescriptor.isIdVisibleOnTitleBar()));
                 slidingDescriptorAttributes.addAttribute(null, "autoHide", null, null, String.valueOf(slidingTypeDescriptor.isAutoHide()));
+                slidingDescriptorAttributes.addAttribute(null, "hideRepresentativeButtonOnVisible", null, null, String.valueOf(dockedTypeDescriptor.isHideRepresentativeButtonOnVisible()));
                 writer.dataElement("sliding", slidingDescriptorAttributes);
 
                 // FloatingTypeDescriptor
@@ -344,6 +345,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 floatingDescriptorAttributes.addAttribute(null, "autoHide", null, null, String.valueOf(floatingTypeDescriptor.isAutoHide()));
                 floatingDescriptorAttributes.addAttribute(null, "addToTaskBar", null, null, String.valueOf(floatingTypeDescriptor.isAddToTaskBar()));
                 floatingDescriptorAttributes.addAttribute(null, "alwaysOnTop", null, null, String.valueOf(floatingTypeDescriptor.isAlwaysOnTop()));
+                floatingDescriptorAttributes.addAttribute(null, "osDecorated", null, null, String.valueOf(floatingTypeDescriptor.isOsDecorated()));
+                floatingDescriptorAttributes.addAttribute(null, "hideRepresentativeButtonOnVisible", null, null, String.valueOf(dockedTypeDescriptor.isHideRepresentativeButtonOnVisible()));
 
                 Point point = floatingTypeDescriptor.getLocation();
                 Dimension dimension = floatingTypeDescriptor.getSize();
@@ -378,6 +381,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 floatingLiveDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(floatingLiveTypeDescriptor.isAnimating()));
                 floatingLiveDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(floatingLiveTypeDescriptor.isIdVisibleOnTitleBar()));
                 floatingLiveDescriptorAttributes.addAttribute(null, "autoHide", null, null, String.valueOf(floatingLiveTypeDescriptor.isAutoHide()));
+                floatingLiveDescriptorAttributes.addAttribute(null, "hideRepresentativeButtonOnVisible", null, null, String.valueOf(dockedTypeDescriptor.isHideRepresentativeButtonOnVisible()));
 
                 point = floatingLiveTypeDescriptor.getLocation();
                 dimension = floatingLiveTypeDescriptor.getSize();
@@ -741,6 +745,12 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     writer.endElement("layout");
                 }
 
+                if (toolWindowBar.getVisibleWorkspace() != null) {
+                    writer.startElement("workspace");
+                    writer.cdata(Base64.byteArrayToBase64(toolWindowBar.getVisibleWorkspace().toByteArray()));
+                    writer.endElement("workspace");
+                }
+
                 writer.endElement("toolWindowBar");
             }
         }
@@ -970,6 +980,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     descriptor.setTransparentRatio(getFloat(typeElement, "transparentRatio", 0.7f));
                     descriptor.setAnimating(getBoolean(typeElement, "animating", true));
                     descriptor.setIdVisibleOnTitleBar(getBoolean(typeElement, "idVisibleOnTitleBar", true));
+                    descriptor.setHideRepresentativeButtonOnVisible(getBoolean(typeElement, "hideRepresentativeButtonOnVisible", false));
                     descriptor.setAutoHide(getBoolean(typeElement, "autoHide", false));
                 }
 
@@ -986,6 +997,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     descriptor.setAutoHide(getBoolean(typeElement, "autoHide", false));
                     descriptor.setAddToTaskBar(getBoolean(typeElement, "addToTaskBar", false));
                     descriptor.setAlwaysOnTop(getBoolean(typeElement, "alwaysOnTop", true));
+                    descriptor.setHideRepresentativeButtonOnVisible(getBoolean(typeElement, "hideRepresentativeButtonOnVisible", false));
+                    descriptor.setOsDecorated(getBoolean(typeElement, "osDecorated", false));
 
                     Element location = getElement(typeElement, "location");
                     if (location != null)
