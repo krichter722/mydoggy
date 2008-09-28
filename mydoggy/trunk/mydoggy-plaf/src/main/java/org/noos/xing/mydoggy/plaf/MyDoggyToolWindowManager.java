@@ -1383,6 +1383,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             for (ToolWindowDescriptor descriptor : tools.values()) {
                 descriptor.updateUI();
             }
+
+            for (FloatingLiveWindow floatingLiveWindow : livePanelMap.values()) {
+                floatingLiveWindow.updateUI();
+            }
         }
     }
 

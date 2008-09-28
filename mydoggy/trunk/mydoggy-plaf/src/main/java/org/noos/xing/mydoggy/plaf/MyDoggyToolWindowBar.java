@@ -280,6 +280,9 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         return valueAdjusting;
     }
 
+    public ByteArrayOutputStream getVisibleWorkspace() {
+        return visibleWorkspace;
+    }
 
     protected void initComponents() {
         splitPane.setName(anchor.toString());

@@ -124,7 +124,8 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
      * whose type is FLOATING, FLOATING_FREE or FLOATING_LIVE.
      *
      * @param refToolWindow TODO..
-     * @param onPosition the position used to aggregate the tool. @since 1.5.0
+     * @param onPosition the position used to aggregate the tool.
+     * @since 1.5.0
      */
     void aggregateByReference(ToolWindow refToolWindow, AggregationPosition onPosition);
 
@@ -432,7 +433,7 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
     <T extends ToolWindowTypeDescriptor> T getTypeDescriptor(Class<T> descriptorClass);
 
     /**
-     *
+     * TODO
      * @return
      * @since 1.5.0
      */

@@ -12,6 +12,8 @@ public interface ModalWindow extends MultiSplitWindow<ToolWindow> {
     Window getWindow();
 
 
+    String getName();
+
     void setName(String name);
 
     void setModal(boolean modal);
@@ -54,5 +56,7 @@ public interface ModalWindow extends MultiSplitWindow<ToolWindow> {
     void setSize(Dimension size);
 
     void setLocation(Point location);
+
+    void importFrom(ModalWindow oldWindow);
 
 }

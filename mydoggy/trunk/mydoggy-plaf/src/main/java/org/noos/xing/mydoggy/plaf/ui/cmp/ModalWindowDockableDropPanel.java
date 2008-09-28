@@ -160,6 +160,15 @@ public class ModalWindowDockableDropPanel extends DockableDropPanel {
     }
 
 
+    public ModalWindow getModalWindow() {
+        return modalWindow;
+    }
+
+    public void setModalWindow(ModalWindow modalWindow) {
+        this.modalWindow = modalWindow;
+    }
+
+    
     protected boolean checkCondition(ToolWindow toolWindow) {
         if (toolWindow.getAnchor() != ToolWindowAnchor.BOTTOM)
              return true;

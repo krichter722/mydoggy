@@ -6,6 +6,8 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTabPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleBar;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowTitleButtonPanel;
 
+import javax.swing.*;
+
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
@@ -34,7 +36,7 @@ public abstract class MyDoggyToolWindowContainer implements ToolWindowContainer 
 
 
     public void updateUI() {
-        // TODO: change this...
+        SwingUtilities.updateComponentTreeUI(toolWindowPanel);
     }
 
     public void cleanup() {

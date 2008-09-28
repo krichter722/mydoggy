@@ -181,10 +181,10 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
 
     /**
      *
-     * @param OSDecorated
+     * @param osDecorated
      * @since 1.5.0
      */
-    void setOsDecorated(boolean OSDecorated);
+    void setOsDecorated(boolean osDecorated);
 
     /**
      *

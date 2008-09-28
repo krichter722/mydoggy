@@ -26,7 +26,7 @@ public interface FloatingLiveWindow {
 
     void mount();
 
-    void unmount();
+    boolean unmount();
 
 
     boolean isVisible();
@@ -51,4 +51,5 @@ public interface FloatingLiveWindow {
 
     Rectangle getBounds();
 
+    void updateUI();
 }

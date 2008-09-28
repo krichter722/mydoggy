@@ -35,10 +35,6 @@ public class DockedContainer extends MyDoggyToolWindowContainer {
         descriptor = null;
     }
 
-    public void updateUI() {
-        SwingUtilities.updateComponentTreeUI(descriptor.getToolWindowPanel());
-    }
-
 
     protected void initListeners() {
         // Init tool window properties listeners

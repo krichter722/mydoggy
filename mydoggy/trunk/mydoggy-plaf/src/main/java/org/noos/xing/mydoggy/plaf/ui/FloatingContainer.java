@@ -210,24 +210,11 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         windowComponentAdapter = new WindowComponentAdapter();
     }
 
-    protected void reinitWindow(PropertyChangeEvent evt, ModalWindow oldWindow) {
+    protected void reinitWindow(ModalWindow oldWindow) {
         // Init new window
-/* TODO: remove this method
-        if ((Boolean) evt.getNewValue())
-            window = new ModalFrame(toolWindow, descriptor.getAncestorForWindow(), null, false);
-        else
-            window = new ModalDialog(descriptor.getManager(), descriptor.getAncestorForWindow(), null, false);
-
-        window.setName("toolWindow.floating.window." + toolWindow.getId());
-        window.setBounds(oldWindow.getBounds());
-        window.setContentPane(oldWindow.getContentPane());
-
-        resizeMouseInputHandler = new FloatingResizeMouseInputHandler(window.getWindow());
-        moveMouseInputHandler = new FloatingMoveMouseInputHandler(window.getWindow());
-        window.getWindow().addMouseMotionListener(resizeMouseInputHandler);
-        window.getWindow().addMouseListener(resizeMouseInputHandler);
-        window.getWindow().addComponentListener(windowComponentAdapter);
-*/
+        window = descriptor.getModalWindow();
+        window.importFrom(oldWindow);
+        installWindowListeners();
     }
 
     protected void installWindowListeners() {
@@ -395,28 +382,6 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
         }
 
-        public void onType(PropertyChangeEvent evt) {
-            // TODO: reimplement this...
-            if (evt.getSource() != descriptor || window == null)
-                return;
-
-            if (evt.getNewValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING_FREE) {
-//                initWindowListeners();
-            } else {
-//                if (settedListener)
-//                    lastBounds = window.getBounds();
-
-                // Remove listeners
-                toolWindowTabPanel.removeEventDispatcherlListener(moveMouseInputHandler);
-
-                toolWindowTitleBar.removeMouseMotionListener(moveMouseInputHandler);
-                toolWindowTitleBar.removeMouseListener(moveMouseInputHandler);
-
-//                settedListener = false;
-            }
-
-        }
-
         public void onEnabled(PropertyChangeEvent evt) {
             boolean newValue = (Boolean) evt.getNewValue();
 
@@ -471,12 +436,14 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 ModalWindow oldWindow = window;
 
                 // Clean
+                uninstallWindowListeners();
+                descriptor.removeModalWindow();
+
                 Component focusOwner = oldWindow.getWindow().getFocusOwner();
                 oldWindow.setVisible(false);
-                oldWindow.getWindow().removeComponentListener(windowComponentAdapter);
 
                 // Reinit window
-                reinitWindow(evt, oldWindow);
+                reinitWindow(oldWindow);
 
                 // Dispose old
                 oldWindow.getWindow().dispose();
@@ -490,10 +457,8 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 ModalWindow oldWindow = window;
 
                 // Clean old window
-                oldWindow.getWindow().removeComponentListener(windowComponentAdapter);
-
-                // Prepare for new
-                reinitWindow(evt, oldWindow);
+                uninstallWindowListeners();
+                descriptor.removeModalWindow();
 
                 // Finalize clean
                 oldWindow.getWindow().dispose();
@@ -507,7 +472,40 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         }
 
         public void onAlwaysOnTop(PropertyChangeEvent evt) {
-            // TODO
+            if (window == null)
+                return;
+
+            if (window.isVisible()) {
+                ModalWindow oldWindow = window;
+
+                // Clean
+                uninstallWindowListeners();
+                descriptor.removeModalWindow();
+
+                Component focusOwner = oldWindow.getWindow().getFocusOwner();
+                oldWindow.setVisible(false);
+
+                // Reinit window
+                reinitWindow(oldWindow);
+
+                // Dispose old
+                oldWindow.getWindow().dispose();
+
+                // Show new
+                window.setVisible(true);
+
+                if (focusOwner != null)
+                    SwingUtil.requestFocus(focusOwner);
+            } else {
+                ModalWindow oldWindow = window;
+
+                // Clean old window
+                uninstallWindowListeners();
+                descriptor.removeModalWindow();
+
+                // Finalize clean
+                oldWindow.getWindow().dispose();
+            }
         }
     }
 

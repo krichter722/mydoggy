@@ -138,6 +138,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
             // unmount
             floatingLiveWindow.unmount();
+            descriptor.removeFloatingLivePanel();
             
             floatingLiveWindow = null;
         }

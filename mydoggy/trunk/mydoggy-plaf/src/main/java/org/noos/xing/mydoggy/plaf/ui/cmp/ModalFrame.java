@@ -39,7 +39,6 @@ public class ModalFrame extends JFrame implements ModalWindow,
     protected Timer transparencyTimer;
     protected TransparencyManager<Window> transparencyManager;
     protected TransparencyAnimation transparencyAnimation;
-    protected ModalWindowListener modalWindowListener;
 
 
     public ModalFrame(MyDoggyToolWindowManager toolWindowManager, ToolWindow toolWindow, Window owner, boolean modal) {
@@ -169,13 +168,27 @@ public class ModalFrame extends JFrame implements ModalWindow,
         super.setVisible(visible);
     }
 
+    public void importFrom(ModalWindow oldWindow) {
+        setName(oldWindow.getName());
+        setBounds(oldWindow.getBounds());
+        setContentPane(oldWindow.getContentPane());
+
+        Component child = getContentPane().getComponent(0);
+        if (child instanceof ModalWindowDockableDropPanel) {
+            ModalWindowDockableDropPanel modalWindowDockableDropPanel = (ModalWindowDockableDropPanel) child;
+            modalWindowDockableDropPanel.setModalWindow(this);
+
+            this.dockableDropPanel = modalWindowDockableDropPanel;
+            this.multiSplitDockableContainer = (MultiSplitDockableContainer) dockableDropPanel.getComponent();
+        } else
+            throw new IllegalArgumentException("Cannot recognize old window.");
+    }
+
     public void setUndecorated(boolean undecorated) {
         super.setUndecorated(undecorated);
 
         if (undecorated) {
             // remove
-            removeWindowListener(modalWindowListener);
-
             TableLayout tableLayout = ((TableLayout) getContentPane().getLayout());
             int borderLength = SwingUtil.getInt(MyDoggyKeySpace.MODAL_WINDOW_BORDER_LENGTH, 2);
             tableLayout.setRow(new double[]{borderLength, TableLayout.FILL, borderLength});
@@ -184,8 +197,6 @@ public class ModalFrame extends JFrame implements ModalWindow,
             SwingUtil.revalidate(this);
         } else {
             // add
-            addWindowListener(modalWindowListener);
-
             TableLayout tableLayout = ((TableLayout) getContentPane().getLayout());
             tableLayout.setRow(new double[]{0, TableLayout.FILL, 0});
             tableLayout.setColumn(new double[]{0, TableLayout.FILL, 0});
@@ -293,8 +304,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
 
         addMouseMotionListener(resizeMouseInputHandler);
         addMouseListener(resizeMouseInputHandler);
-
-        modalWindowListener = new ModalWindowListener();
+        addWindowListener(new ModalWindowListener());
     }
 
     protected void restoreOwner() {

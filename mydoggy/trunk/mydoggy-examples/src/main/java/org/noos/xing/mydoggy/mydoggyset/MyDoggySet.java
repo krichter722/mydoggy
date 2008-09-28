@@ -520,19 +520,19 @@ public class MyDoggySet {
             if (param == null)
                 return false;
 
-            System.out.println("--------------------------------");
+//            System.out.println("--------------------------------");
 
             Component cursor = param;
             try {
                 while (cursor != null) {
-                    System.out.println("cursor = " + cursor);
+//                    System.out.println("cursor = " + cursor);
                     if ((cursor instanceof JXMonthView && toolWindow.isActive()) || cursor == parent)
                         return true;
                     cursor = cursor.getParent();
                 }
                 return false;
             } finally {
-                System.out.println("--------------------------------");
+//                System.out.println("--------------------------------");
 
             }
         }
