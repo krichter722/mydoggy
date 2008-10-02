@@ -10,10 +10,10 @@
     <body>
         <section name="Introduction">
             <div id="downloadbox">
-                <h5>Get MyDoggy 1.4.2 Now!!!</h5> 
-                <span style="display: block; text-align: right; font-size: smaller">Released: April 29, 2008</span>
+                <h5>Get MyDoggy 1.5.0 Now!!!</h5>
+                <span style="display: block; text-align: right; font-size: smaller">Released: October 15, 2008</span>
                 <p>
-                    <a href="download.html">MyDoggy 1.4.2</a>
+                    <a href="download.html">MyDoggy 1.5.0</a>
                     <small>(distro 5.0 Mb - core 775 Kb)</small>
                 </p>
                 <ul>

@@ -48,6 +48,12 @@ public class MultiSplitTester {
                         myDoggySet.getMyDoggySetContext().put(Content.class, null);
                     }
                 });
+                Thread.sleep(2000);
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        myDoggySet.getMyDoggySetContext().put(MyDoggySet.class, null);
+                    }
+                });
 
                 Thread.sleep(2000);
                 for (int i = 0; i < 200; i++) {

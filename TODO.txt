@@ -8,6 +8,7 @@ TODO: stopping animation before cleaning, in all ui class..
 TODO: move properties key like MyDoggyKeySpace.WINDOW_ALWAYS_ON_TOP into a class...
 TODO: How to make the representative anchor button of a tool window show the title of the tab which is currently active in the tool window.
 TODO: tab flashing doesn't work...when the tool is not visible...
+TODO: [mydoggy - Help] RE: Several horinotally aggregated windows le
 
 BY EMAIL:
 

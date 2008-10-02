@@ -49,25 +49,24 @@ public interface MyDoggyKeySpace {
     String CONTENT_PAGE_RESTORE = "mydoggy.icon.contentPageRestore";
     String CONTENT_POINTER = "mydoggy.image.contentPointer";
 
-
     String TCP_STAR = "TabbedContentPan.icon.star";
 
     // Images
 
     String DRAG = "mydoggy.image.drag";
 
-    // Representative Anchor Button - Colors
-
     String TOOL_SCROLL_BAR_UI_BCK_START = "ToolWindowScrollBarUI.arrow.background.start";
     String TOOL_SCROLL_BAR_UI_BCK_END = "ToolWindowScrollBarUI.arrow.background.end";
 
-    String RAB_MOUSE_IN_BORDER = "ToolWindowRepresentativeAnchorUI.border.mouseIn";
-    String RAB_MOUSE_OUT_BORDER = "ToolWindowRepresentativeAnchorUI.border.mouseOut";
-    String RAB_BACKGROUND_INACTIVE = "ToolWindowRepresentativeAnchorUI.background.inactive";
-    String RAB_BACKGROUND_ACTIVE_START = "ToolWindowRepresentativeAnchorUI.background.active.start";
-    String RAB_BACKGROUND_ACTIVE_END = "ToolWindowRepresentativeAnchorUI.background.active.end";
-    String RAB_FOREGROUND = "ToolWindowRepresentativeAnchorUI.foreground";
-    String RAB_FOREGROUND_UNAVAILABLE = "ToolWindowRepresentativeAnchorUI.foreground.unavailable";
+    // Representative Anchor Button - Colors
+
+    String TWRA_MOUSE_IN_BORDER = "ToolWindowRepresentativeAnchorUI.border.mouseIn";
+    String TWRA_MOUSE_OUT_BORDER = "ToolWindowRepresentativeAnchorUI.border.mouseOut";
+    String TWRA_BACKGROUND_INACTIVE = "ToolWindowRepresentativeAnchorUI.background.inactive";
+    String TWRA_BACKGROUND_ACTIVE_START = "ToolWindowRepresentativeAnchorUI.background.active.start";
+    String TWRA_BACKGROUND_ACTIVE_END = "ToolWindowRepresentativeAnchorUI.background.active.end";
+    String TWRA_FOREGROUND = "ToolWindowRepresentativeAnchorUI.foreground";
+    String TWRA_FOREGROUND_UNAVAILABLE = "ToolWindowRepresentativeAnchorUI.foreground.unavailable";
     
     // ToolWindow TitleBar - Colors
 
@@ -90,6 +89,8 @@ public interface MyDoggyKeySpace {
     String PERSISTENCE_DELEGATE_PARSING = "PERSISTENCE_DELEGATE_PARSING";
 
     // UI Properties
+
+    String DEBUG = "mydoggy.debug";
 
     String DRAG_ENABLED = "drag.enabled";
     String DRAG_USE_DEFAULT_ICON = "drag.icon.useDefault";

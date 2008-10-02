@@ -180,6 +180,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
             /// Init just once
             desktopPane = new JDesktopPane();
             desktopPane.setDesktopManager(new ContentDesktopManager());
+            desktopPane.setBackground(Color.GRAY);
 
             // Setup Actions...
             setupActions();

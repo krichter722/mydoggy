@@ -1447,11 +1447,9 @@ public class MultiSplitLayout implements LayoutManager {
             Split root = new Split();
             parseSplit(st, root);
             return root.getChildren().get(0);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.err.println(e);
-        }
-        finally {
+        } finally {
             try {
                 r.close();
             } catch (IOException ignore) {
