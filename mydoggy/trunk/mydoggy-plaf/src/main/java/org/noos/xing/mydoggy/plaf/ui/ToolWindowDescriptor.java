@@ -201,15 +201,15 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                     break;
                 case LEFT:
                     TextIcon textIcon = new TextIcon(parent, toolRepresentativeAnchorText, TextIcon.ROTATE_LEFT);
-                    textIcon.setForeground(toolWindow.isAvailable() ? UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND)
-                                           : UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
+                    textIcon.setForeground(toolWindow.isAvailable() ? UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND)
+                                           : UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND_UNAVAILABLE));
                     AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolIcon, SwingConstants.VERTICAL);
                     representativeAnchor = new ToolWindowRepresentativeAnchor(this, compositeIcon, JLabel.CENTER);
                     break;
                 case RIGHT:
                     textIcon = new TextIcon(parent, toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
-                    textIcon.setForeground(toolWindow.isAvailable() ? UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND)
-                                           : UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
+                    textIcon.setForeground(toolWindow.isAvailable() ? UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND)
+                                           : UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND_UNAVAILABLE));
                     compositeIcon = new AggregateIcon(toolIcon, textIcon, SwingConstants.VERTICAL);
                     representativeAnchor = new ToolWindowRepresentativeAnchor(this, compositeIcon, JLabel.CENTER);
                     break;
@@ -260,16 +260,16 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                     break;
                 case LEFT:
                     TextIcon textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getLeftIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_LEFT);
-                    textIcon.setForeground(toolWindow.isAvailable() ? UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND)
-                                           : UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
+                    textIcon.setForeground(toolWindow.isAvailable() ? UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND)
+                                           : UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND_UNAVAILABLE));
                     AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolIcon, SwingConstants.VERTICAL);
                     representativeAnchor.setText(null);
                     representativeAnchor.setIcon(compositeIcon);
                     break;
                 case RIGHT:
                     textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getRightIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
-                    textIcon.setForeground(toolWindow.isAvailable() ? UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND)
-                                           : UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND_UNAVAILABLE));
+                    textIcon.setForeground(toolWindow.isAvailable() ? UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND)
+                                           : UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND_UNAVAILABLE));
                     compositeIcon = new AggregateIcon(toolIcon, textIcon, SwingConstants.VERTICAL);
                     representativeAnchor.setText(null);
                     representativeAnchor.setIcon(compositeIcon);
@@ -821,7 +821,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
             internalFocusValueAdjusting = true;
 
-                System.out.println(toolWindow.getId() + " - cmp = " + component);
+//                System.out.println(toolWindow.getId() + " - cmp = " + component);
 
             if (parentOf.getAnswer(component)) {
 

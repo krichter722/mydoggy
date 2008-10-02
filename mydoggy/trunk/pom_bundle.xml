@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.sf.mydoggy</groupId>
     <artifactId>mydoggy</artifactId>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>1.5.0</version>
     <packaging>jar</packaging>
     <name>MyDoggy - My Java Docking Framework</name>
     <url>http://mydoggy.sourceforge.net/</url>

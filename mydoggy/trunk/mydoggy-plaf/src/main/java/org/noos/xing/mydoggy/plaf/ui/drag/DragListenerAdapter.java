@@ -178,7 +178,7 @@ public abstract class DragListenerAdapter implements DragListener, Cleaner {
             deepestCmp = SwingUtilities.getDeepestComponentAt(manager, location.x, location.y);
         }
 
-        System.out.println("deepestCmp = " + deepestCmp);
+//        System.out.println("deepestCmp = " + deepestCmp);
 
         if (deepestCmp != null) {
             DockableDropPanel dockableDropPanel = SwingUtil.getParent(deepestCmp, DockableDropPanel.class);

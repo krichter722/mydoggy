@@ -3,7 +3,7 @@ package org.noos.xing.mydoggy;
 import javax.swing.*;
 
 /**
- * This abstract class is used to define a new behaviour associated to one or more toolwindows.
+ * TODO: This abstract class is used to define a new behaviour associated to one or more toolwindows.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.5.0

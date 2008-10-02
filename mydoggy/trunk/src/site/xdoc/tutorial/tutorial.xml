@@ -14,7 +14,7 @@
                 <a href="./../mydoggy-plaf/index.html">default implementation</a>
                 of mydoggy.
                 We'll build a simple application based called
-                <strong style="color:green">TutorialApp</strong>
+                <strong style="color:green">TutorialSet</strong>
                 <br/>
                 In every step, pay attention to the code in green that highlights the new code introduced in that step.
             </p>
@@ -80,6 +80,33 @@
                                 <li>
                                     <a href="./step12.html">Step 12</a>
                                     : Work with a disabled ContentManager.
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Now we'll focus on the customization. It is based on the UI delegation model provided by the Swing Framework.
+            </p>
+
+            <table style="text-align: left;"
+                   border="0" cellpadding="2" cellspacing="2">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>
+                                <img style="width: 201px; height: 162px; float: right;"
+                                     src="./../images/tutorial/step10.png"
+                                     alt="Customized TutorialSet"/>
+                            </p>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>
+                                    <a href="./cstep1.html">Step 1</a>
+                                    : Customize the toolwindow representative anchor button.
                                 </li>
                             </ul>
                         </td>

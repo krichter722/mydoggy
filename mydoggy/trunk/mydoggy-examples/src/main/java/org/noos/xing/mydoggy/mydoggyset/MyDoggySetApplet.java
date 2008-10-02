@@ -288,12 +288,12 @@ public class MyDoggySetApplet extends JApplet {
 */
 
 /*
-        resourceManager.putColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START, Color.RED);
-        resourceManager.putColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END, Color.ORANGE);
+        resourceManager.putColor(MyDoggyKeySpace.TWRA_BACKGROUND_ACTIVE_START, Color.RED);
+        resourceManager.putColor(MyDoggyKeySpace.TWRA_BACKGROUND_ACTIVE_END, Color.ORANGE);
 */
 
 /*
-        resourceManager.putColor(MyDoggyKeySpace.RAB_FOREGROUND, Color.BLUE);
+        resourceManager.putColor(MyDoggyKeySpace.TWRA_FOREGROUND, Color.BLUE);
 */
 
 /*

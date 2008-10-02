@@ -59,14 +59,14 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
                     break;
                 case LEFT:
                     TextIcon textIcon = new TextIcon(parent, labelText, TextIcon.ROTATE_LEFT);
-                    textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
+                    textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND));
                     AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolIcon, SwingConstants.VERTICAL);
 
                     representativeAnchor = new ContentRepresentativeAnchor(this, compositeIcon, JLabel.CENTER);
                     break;
                 case RIGHT:
                     textIcon = new TextIcon(parent, labelText, TextIcon.ROTATE_RIGHT);
-                    textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
+                    textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND));
                     compositeIcon = new AggregateIcon(toolIcon, textIcon, SwingConstants.VERTICAL);
 
                     representativeAnchor = new ContentRepresentativeAnchor(this, compositeIcon, JLabel.CENTER);
@@ -117,7 +117,7 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
                     break;
                 case LEFT:
                     TextIcon textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeLabel.getIcon()).getLeftIcon()).getComponent(), labelText, TextIcon.ROTATE_LEFT);
-                    textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
+                    textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND));
                     AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolIcon, SwingConstants.VERTICAL);
 
                     representativeLabel.setText(null);
@@ -125,7 +125,7 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
                     break;
                 case RIGHT:
                     textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeLabel.getIcon()).getRightIcon()).getComponent(), labelText, TextIcon.ROTATE_RIGHT);
-                    textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.RAB_FOREGROUND));
+                    textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND));
                     compositeIcon = new AggregateIcon(toolIcon, textIcon, SwingConstants.VERTICAL);
 
                     representativeLabel.setText(null);

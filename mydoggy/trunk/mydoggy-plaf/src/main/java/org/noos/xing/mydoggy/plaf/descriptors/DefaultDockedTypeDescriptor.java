@@ -85,14 +85,6 @@ public class DefaultDockedTypeDescriptor extends DefaultToolWindowTypeDescriptor
         return dockLength;
     }
 
-    public void setDockSpace(int space) {
-        this.dockSpace = space;
-    }
-
-    public int getDockSpace() {
-        return dockSpace;
-    }
-
     public void setDockLength(int dockLength) {
         if (this.dockLength == dockLength || dockLength <= 0)
             return;

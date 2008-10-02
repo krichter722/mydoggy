@@ -296,6 +296,8 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
             loadFloat(name, value);
         } else if ("String".equals(prefix)) {
             loadString(name, value);
+        } else if ("Boolean".equals(prefix)) {
+            loadBoolean(name, value);
         }
     }
 
@@ -376,6 +378,14 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
     protected void loadObjects() {
         putObject(FindFocusableQuestion.class, new FindFocusableQuestion());
+    }
+
+    protected void loadBoolean(String name, String value) {
+        try {
+            putBoolean(name, Boolean.parseBoolean(value));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
 
     protected boolean isAlreadyLoaded() {

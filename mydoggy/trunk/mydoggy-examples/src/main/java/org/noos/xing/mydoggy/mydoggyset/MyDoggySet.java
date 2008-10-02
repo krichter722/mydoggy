@@ -128,7 +128,7 @@ public class MyDoggySet {
             }
 
             public void toolWindowUnregistered(ToolWindowManagerEvent event) {
-                System.out.println("event.getToolWindow().getComponent() = " + event.getToolWindow().getComponent());
+//                System.out.println("event.getToolWindow().getComponent() = " + event.getToolWindow().getComponent());
             }
 
             public void toolWindowGroupAdded(ToolWindowManagerEvent event) {
@@ -203,6 +203,9 @@ public class MyDoggySet {
     protected void initToolWindowManager() {
         // Setup type descriptor templates...
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);
+//        typeDescriptor.setAlwaysOnTop(false);
+//        typeDescriptor.setOsDecorated(true);
+//        typeDescriptor.setAddToTaskBar(true);
         typeDescriptor.setTransparentDelay(0);
 //        typeDescriptor.setAlwaysOnTop(false);
 
@@ -253,6 +256,9 @@ public class MyDoggySet {
 
         toolWindowManager.registerToolWindow("Paramètres", "Paramètres",
                                              null, new JButton("HELLOO"), ToolWindowAnchor.LEFT);
+        toolWindowManager.registerToolWindow("Vue gÃ©ometrique", "Vue gÃ©ometrique",
+                                             null, new JButton("Vue gÃ©ometrique"), ToolWindowAnchor.LEFT);
+
 
         // Make all available
         for (ToolWindow window : toolWindowManager.getToolWindows()) {
@@ -302,7 +308,7 @@ public class MyDoggySet {
         });
         dockedTypeDescriptor.getToolsMenu().add(menuItem);
         toolWindow.getRepresentativeAnchorDescriptor().setPreviewDelay(1500);
-        dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.HIDE_ACTION_ID).setVisible(false);
+        dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.HIDE_ACTION_ID).setVisibleOnTitleBar(false);
         dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.MAXIMIZE_ACTION_ID).setVisible(false);
 
         SlidingTypeDescriptor slidingTypeDescriptor = toolWindow.getTypeDescriptor(SlidingTypeDescriptor.class);
@@ -466,12 +472,12 @@ public class MyDoggySet {
 */
 
 /*
-        resourceManager.putColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_START, Color.RED);
-        resourceManager.putColor(MyDoggyKeySpace.RAB_BACKGROUND_ACTIVE_END, Color.ORANGE);
+        resourceManager.putColor(MyDoggyKeySpace.TWRA_BACKGROUND_ACTIVE_START, Color.RED);
+        resourceManager.putColor(MyDoggyKeySpace.TWRA_BACKGROUND_ACTIVE_END, Color.ORANGE);
 */
 
 /*
-        resourceManager.putColor(MyDoggyKeySpace.RAB_FOREGROUND, Color.BLUE);
+        resourceManager.putColor(MyDoggyKeySpace.TWRA_FOREGROUND, Color.BLUE);
 */
 
 //        UIManager.put("ToolWindowTitleButtonPanelUI", "org.noos.xing.mydoggy.plaf.ui.look.MenuToolWindowTitleButtonPanelUI");
@@ -616,7 +622,7 @@ public class MyDoggySet {
                                       null,
                                       GraphicsUtil.BOTTOM_TO_UP_GRADIENT);
             } else {
-                g.setColor(UIManager.getColor(MyDoggyKeySpace.RAB_BACKGROUND_INACTIVE));
+                g.setColor(UIManager.getColor(MyDoggyKeySpace.TWRA_BACKGROUND_INACTIVE));
                 g.fillRect(0, 0, r.width, r.height);
             }
         }

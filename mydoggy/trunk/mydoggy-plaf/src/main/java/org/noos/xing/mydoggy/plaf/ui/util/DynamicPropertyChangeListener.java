@@ -1,5 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui.util;
 
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+
+import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
@@ -22,12 +25,13 @@ public class DynamicPropertyChangeListener implements PropertyChangeListener {
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        Method method = null;
+        Method method;
         try {
             String propertyName = evt.getPropertyName();
             method = sourceClass.getMethod("on" + propertyName.substring(0,1).toUpperCase() + propertyName.substring(1), PropertyChangeEvent.class);
         } catch (NoSuchMethodException e) {
-            System.err.println("No method for event found. " + evt.getPropertyName() + " - " + this.getClass().getName());
+            if (UIManager.getBoolean(MyDoggyKeySpace.DEBUG))
+                System.err.println("No method for event found. " + evt.getPropertyName() + " - " + this.getClass().getName());
 //            e.printStackTrace();
             return;
         }
