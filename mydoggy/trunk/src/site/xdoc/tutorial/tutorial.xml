@@ -108,6 +108,10 @@
                                     <a href="./cstep1.html">Step 1</a>
                                     : Customize the toolwindow representative anchor button.
                                 </li>
+                                <li>
+                                    <a href="./cstep2.html">Step 2</a>
+                                    : Customize the toolwindow title bar.
+                                </li>
                             </ul>
                         </td>
                     </tr>
