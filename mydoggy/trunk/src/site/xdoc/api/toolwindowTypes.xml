@@ -1,0 +1,170 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy - My Java Docking Framework (API) : ToolWindowTypes</title>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="ToolWindow Types">
+            <p>
+                A tool window can be shown in several ways. A
+                <code>ToolWindowType</code>
+                is used to choose between different
+                viewing modes. Now we describe the types provided.
+            </p>
+
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <img src="../images/api/types/docked.png" alt="docked" border="0" hspace="18"/>
+                        </td>
+                        <td>
+                            <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
+                                <code>ToolWindowType.DOCKED</code>
+                            </a>
+                            - When DOCKED type is used, the tool window shares frame space and fixes to a docking
+                            area along one of the tool window bars (the one containing the corresponding representative
+                            button).
+
+                            <br/>To set
+                            <code>ToolWindowType.DOCKED</code>
+                            type use the following:
+                            <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
+toolWindow.setType(ToolWindowType.DOCKED);</source>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="../images/api/types/sliding.png" alt="sliding" border="0" hspace="18"/>
+                        </td>
+                        <td>
+                            <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
+                                <code>ToolWindowType.SLIDING</code>
+                            </a>
+                            - When SLIDING type is used, the tool window overlaps the main frame and/or other tool windows.
+                            When it loses focus, the tool window hides itself.
+
+                            <br/>To set ToolWindowType.SLIDING type use the following:
+                            <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
+toolWindow.setType(ToolWindowType.SLIDING);</source>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="../images/api/types/floating.png" alt="floating" border="0" hspace="18"/>
+                        </td>
+                        <td>
+                            <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
+                                <code>ToolWindowType.FLOATING</code>
+                            </a>
+                            - This type enables a tool window to be detached from the main window frame.
+                            When Floating type is used, the tool window detaches to the position where it was last floated
+                            (or screen center or location used in toolwindow's
+                            <a href="./apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">
+                                <code>FloatingTypeDescriptor</code>
+                            </a>
+                            , if never before floated)
+
+                            <br/>To set <code>ToolWindowType.FLOATING</code> type use the following:
+                            <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
+toolWindow.setType(ToolWindowType.FLOATING);</source>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="../images/api/types/floatingFree.png" alt="floating free" border="0" hspace="18"/>
+                        </td>
+                        <td>
+                            <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
+                                <code>ToolWindowType.FLOATING_FREE</code>
+                            </a>
+                            - This type differs from <code>FLOATING</code> type for the absence of the representative button
+                            on the tool window bar.
+
+                            <br/>To set <code>ToolWindowType.FLOATING_FREE</code> type use the following:
+                            <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
+toolWindow.setType(ToolWindowType.FLOATING_FREE);</source>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="../images/api/types/floatingLive.png" alt="floating live" border="0" hspace="18"/>
+                        </td>
+                        <td>
+                            <a name="floatingLive"/>
+                            <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
+                                <code>ToolWindowType.FLOATING_LIVE</code>
+                            </a>
+                            - This type enables a tool to be floating in the frame rather than having
+                            floating windows "out of the frame".
+
+                            <br/>To set <code>ToolWindowType.FLOATING_LIVE</code> type use the following:
+                            <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
+toolWindow.setType(ToolWindowType.FLOATING_LIVE);</source>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </section>
+
+        <section name="ToolWindow Type Descriptors">
+            <p>
+                A <code>ToolWindowTypeDescriptor</code> is an interface to modify the behaviours of a specific tool window type.
+                Go to the
+                <a href="./toolwindowUsing.html">Using</a>
+                page to see how to use these interfaces.
+            </p>
+
+            <ul>
+                    <li>
+                        <a href="./apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">
+                            <code>DockedTypeDescriptor</code>
+                        </a>
+                        This interface is used to modify the behaviours of <code>DOCKED</code> type.
+
+                        <br/>To get a <code>DockedTypeDescriptor</code> instance use the following:
+                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
+DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+// or
+DockedTypeDescriptor dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
+                        </source>
+                    </li>
+                    <li>
+                        <a href="./apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">
+                            <code>SlidingTypeDescriptor</code>
+                        </a>
+                        This interface is used to modify the behaviours of <code>SLIDING</code> type.
+
+                        <br/>To get a <code>SlidingTypeDescriptor</code> instance use the following:
+                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
+SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);</source>
+                    </li>
+                    <li>
+                        <a href="./apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">
+                            <code>FloatingTypeDescriptor</code>
+                        </a>
+                        This interface is used to modify the behaviours of <code>FLOATING</code> and <code>FLOATING_FREE</code> type.
+
+                        <br/>To get a <code>FloatingTypeDescriptor</code> instance use the following:
+                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
+FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);</source>
+                    </li>
+                <li>
+                    <a href="./apidocs/org/noos/xing/mydoggy/FloatingLiveTypeDescriptor.html">
+                        <code>FloatingLiveTypeDescriptor</code>
+                    </a>
+                    This interface is used to modify the behaviours of <code>FLOATING_LIVE</code> type.
+
+                    <br/>To get a <code>FloatingLiveTypeDescriptor</code> instance use the following:
+                    <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
+FloatingLiveTypeDescriptor typeDescriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);</source>
+                </li>
+                </ul>
+        </section>
+    </body>
+</document>

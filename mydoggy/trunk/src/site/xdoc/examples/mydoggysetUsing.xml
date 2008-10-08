@@ -14,7 +14,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <img src="./images/toolwindowShow.png" alt="To show tool window" border="0" hspace="18"/>
+                                <img src="./../images/examples/toolwindowShow.png" alt="To show tool window" border="0" hspace="18"/>
                             </td>
                             <td>
                                 <ul>
@@ -51,13 +51,13 @@
                     <tbody>
                         <tr>
                             <td>
-                                <img src="./images/toolwindowHide.png" alt="To hide a tool window" border="0" hspace="18"/>
+                                <img src="./../images/examples/toolwindowHide.png" alt="To hide a tool window" border="0" hspace="18"/>
                             </td>
                             <td>
                                 <ul>
                                     <li>
                                         Click
-                                        <img src="./images/toolwindowHideButton.png" alt="Hide Button"/>
+                                        <img src="./../images/examples/toolwindowHideButton.png" alt="Hide Button"/>
                                         button on the titlebar of the toolwindow to hide.
                                     </li>
                                     <li>
@@ -74,7 +74,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <img src="./images/toolwindowMove.png" alt="To move a tool window" border="0" hspace="18"/>
+                                <img src="./../images/examples/toolwindowMove.png" alt="To move a tool window" border="0" hspace="18"/>
                             </td>
                             <td>
                                 <ul>
@@ -96,18 +96,18 @@
                     <tbody>
                         <tr>
                             <td>
-                                <img src="./images/toolwindowTypes.png" alt="To change type of a tool window" border="0" hspace="18"/>
+                                <img src="./../images/examples/toolwindowTypes.png" alt="To change type of a tool window" border="0" hspace="18"/>
                             </td>
                             <td>
                                 <ul>
                                     <li>
                                         Click
-                                        <img src="./images/toolwindowFloatingButton.png" alt="Floating Button"/>
+                                        <img src="./../images/examples/toolwindowFloatingButton.png" alt="Floating Button"/>
                                         button on the titlebar of the toolwindow to set <code>ToolWindowType.FLOATING</code> type.
                                     </li>
                                     <li>
                                         Click
-                                        <img src="./images/toolwindowSlidingButton.png" alt="Sliding Button"/>
+                                        <img src="./../images/examples/toolwindowSlidingButton.png" alt="Sliding Button"/>
                                         button on the titlebar of the toolwindow to set <code>ToolWindowType.SLIDING</code> type.
                                     </li>
                                     <li>
@@ -124,18 +124,18 @@
                     <tbody>
                         <tr>
                             <td>
-                                <img src="./images/contentManager.png" alt="To hide or detach a content" border="0" hspace="18"/>
+                                <img src="./../images/examples/contentManager.png" alt="To hide or detach a content" border="0" hspace="18"/>
                             </td>
                             <td>
                                 <ul>
                                     <li>
                                         Click
-                                        <img src="./images/contentManagerContentClose.png" alt="Close Button"/>
+                                        <img src="./../images/examples/contentManagerContentClose.png" alt="Close Button"/>
                                         button to remove the content.
                                     </li>
                                     <li>
                                         Click
-                                        <img src="./images/contentManagerContentDetach.png" alt="Detach Button"/>
+                                        <img src="./../images/examples/contentManagerContentDetach.png" alt="Detach Button"/>
                                         button to detach the content from the window.
                                     </li>
                                 </ul>

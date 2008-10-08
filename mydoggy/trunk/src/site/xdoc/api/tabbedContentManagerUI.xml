@@ -1,0 +1,29 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy - My Java Docking Framework (API) : TabbedContentManagerUI</title>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="TabbedContentManagerUI">
+			<table>
+				<tbody>
+					<tr>
+						<td>
+							<img src="../images/api/tabbedContentManagerUI.png" alt="ContentManager" border="0" hspace="18"/>
+						</td>
+						<td>
+							<p>
+								This interface represents a ui that use a component that lets the user switch between
+								a group of components by clicking on a tab with a given title and/or icon (i.e. JTabbedPane). 
+							</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+        </section>
+    </body>
+</document>

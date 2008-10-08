@@ -81,6 +81,10 @@
                                     <a href="./step12.html">Step 12</a>
                                     : Work with a disabled ContentManager.
                                 </li>
+                                <li>
+                                    <a href="./step13.html">Step 13</a>
+                                    : Play with ToolWindowAction.
+                                </li>
                             </ul>
                         </td>
                     </tr>
@@ -111,6 +115,14 @@
                                 <li>
                                     <a href="./cstep2.html">Step 2</a>
                                     : Customize the toolwindow title bar.
+                                </li>
+                                <li>
+                                    <a href="./cstep3.html">Step 3</a>
+                                    : Customize the toolwindow title button panel. The panel that contains the ToolWindowAction.
+                                </li>
+                                <li>
+                                    <a href="./cstep4.html">Step 4</a>
+                                    : Customize the TransparencyManager.
                                 </li>
                             </ul>
                         </td>

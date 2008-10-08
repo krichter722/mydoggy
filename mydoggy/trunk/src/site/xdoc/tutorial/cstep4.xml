@@ -3,15 +3,15 @@
 		"http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
 	<properties>
-		<title>MyDoggy - My Java Docking Framework : Tutorial - Customization Step 2</title>
+		<title>MyDoggy - My Java Docking Framework : Tutorial - Customization Step 4</title>
 		<author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
 	</properties>
 
 
     <body>
-        <section name="Tutorial - Step 2">
+        <section name="Tutorial - Step 4">
             <p>
-                We'll start customizing the toolwindow title bar.
+                We'll start customizing the TransparencyManager using JNA.
             </p>
             <source>
 package org.noos.xing.mydoggy.tutorial;
@@ -22,6 +22,7 @@ import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTitleBarUI;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -31,6 +32,10 @@ import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map;
+import java.util.WeakHashMap;
+
+import com.sun.jna.examples.WindowUtils;
 
 public class TutorialSet {
     private JFrame frame;
@@ -101,26 +106,10 @@ public class TutorialSet {
     }
 
     protected void customize() {
-        // Customize the toolwindow title bar
-        // The releated UI is ToolWindowTitleBarUI
-
-        // Change colors
-        UIManager.put(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START, Color.BLUE);
-        UIManager.put(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END, Color.GREEN);
-        UIManager.put(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START, Color.BLACK);
-        UIManager.put(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END, Color.GREEN.darker());
-//        UIManager.put(MyDoggyKeySpace.TWTB_ID_BACKGROUND_FLASHING_ON,Color.BLACK);
-//        UIManager.put(MyDoggyKeySpace.TWTB_ID_BACKGROUND_FLASHING_OFF,Color.BLACK);
-//        UIManager.put(MyDoggyKeySpace.TWTB_ID_BACKGROUND_ANIMATING,Color.BLACK);
-//        UIManager.put(MyDoggyKeySpace.TWTB_ID_BACKGROUND_ACTIVE,Color.BLACK);
-//        UIManager.put(MyDoggyKeySpace.TWTB_ID_BACKGROUND_INACTIVE,Color.BLACK);
-//        UIManager.put(MyDoggyKeySpace.TWTB_ID_FOREGROUND_ACTIVE,Color.BLACK);
-//        UIManager.put(MyDoggyKeySpace.TWTB_ID_FOREGROUND_INACTIVE,Color.BLACK);
-//        UIManager.put(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED,Color.BLACK);
-//        UIManager.put(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED,Color.BLACK);
+        // Customize the TransparencyManager
 
         // Modify the UI class
-        UIManager.put("ToolWindowTitleBarUI", "org.noos.xing.mydoggy.tutorial.TutorialSet$CustomizedToolWindowTitleBarUI");
+        UIManager.put(TransparencyManager.class, new JNAWindowTransparencyManager());
     }
 
     public static void main(String[] args) {
@@ -132,58 +121,43 @@ public class TutorialSet {
         }
     }
 
+    public class JNAWindowTransparencyManager implements TransparencyManager<Window> {
 
-    public static class CustomizedToolWindowTitleBarUI extends ToolWindowTitleBarUI {
+        private boolean available;
+        private Map<Window, Float> windowTransparencies;
 
-        public static ComponentUI createUI(JComponent c) {
-            return new CustomizedToolWindowTitleBarUI();
+        public JNAWindowTransparencyManager() {
+            initTransparencyManager();
         }
 
-        protected void updateToolWindowTitleBar(Graphics g, JComponent c, Color backgroundStart, Color backgroundEnd, Color idBackgroundColor, Color idColor) {
-            Rectangle r = c.getBounds();
-            r.x = r.y = 0;
+        public boolean isServiceAvailable() {
+            return available;
+        }
 
-            GraphicsUtil.fillRect(g, r,
-                                  backgroundStart, backgroundEnd,
-                                  null,
-                                  GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-
-            if (descriptor.isIdVisibleOnTitleBar()) {
-                int columWidth = getTitleWidth(g);
-                if (columWidth != toolWindowTitleBarLayout.getColumn(0)) {
-                    toolWindowTitleBarLayout.setColumn(0, columWidth);
-                    SwingUtil.revalidate(toolWindowTitleBar);
-                }
-
-                String id = SwingUtil.getUserString(descriptor.getToolWindow().getRepresentativeAnchorButtonTitle());
-                r.width = g.getFontMetrics().stringWidth(id) + 8;
-
-                int halfHeigh = (r.height / 2);
-                GraphicsUtil.fillRect(g, r,
-                                      Color.WHITE,
-                                      idBackgroundColor,
-                                      new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
-                                                  new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
-                                                  4),
-                                      GraphicsUtil.UP_TO_BOTTOM_GRADIENT);
-
-                Polygon polygon = new Polygon();
-                polygon.addPoint(r.x + r.width - halfHeigh, r.y);
-                polygon.addPoint(r.x + r.width - halfHeigh + 8, r.y + (r.height / 2));
-                polygon.addPoint(r.x + r.width - halfHeigh, r.y + r.height);
-
-                GraphicsUtil.fillRect(g, r,
-                                      Color.WHITE,
-                                      idBackgroundColor,
-                                      polygon,
-                                      GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
-
-                g.setColor(idColor);
-                g.drawString(id,
-                             r.x + 2,
-                             r.y + ((r.height - g.getFontMetrics().getHeight()) / 2) + g.getFontMetrics().getAscent());
+        public void setAlphaModeRatio(Window component, float transparency) {
+            if (available) {
+                windowTransparencies.put(component, transparency);
+                WindowUtils.setWindowAlpha(component, transparency);
             }
+        }
 
+        public boolean isAlphaModeEnabled(Window component) {
+            if (available) {
+                Float transparency = windowTransparencies.get(component);
+                return transparency != null && transparency >= 0.0;
+            }
+            return false;
+        }
+
+        protected void initTransparencyManager() {
+            available = false;
+            try {
+                Class.forName("com.sun.jna.examples.WindowUtils");
+                available = WindowUtils.isWindowAlphaSupported();
+                if (available)
+                    this.windowTransparencies = new WeakHashMap<Window, Float>();
+            } catch (ClassNotFoundException e) {
+            }
         }
 
     }
