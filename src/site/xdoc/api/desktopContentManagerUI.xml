@@ -1,0 +1,29 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy - My Java Docking Framework (API) : DesktopContentManagerUI</title>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="DesktopContentManagerUI">
+			<table>
+				<tbody>
+					<tr>
+						<td>
+							<img src="../images/api/desktopContentManagerUI.png" alt="ContentManager" border="0" hspace="18"/>
+						</td>
+						<td>
+							<p>
+								This interface represents a ui that use a container to create a multiple-document interface
+								or a virtual desktop.
+							</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+        </section>
+    </body>
+</document>

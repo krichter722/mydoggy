@@ -1,0 +1,38 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>MyDoggy - My Java Docking Framework (EXAMPLES) : MyDoggySet</title>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="MyDoggySet">
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <img src="./../images/examples/mydoggyset.png" alt="MyDoggySet" border="0" hspace="18"/>
+                        </td>
+                        <td>
+                            <p>
+                                MyDoggySet is a sample application to see in action many functionalities of MyDoggy.
+                                You can modify tool window properties, show or hide groups and manage main window's
+                                contents.
+                                <br/>
+                                Launch
+                                <a href="./jnlp/mydoggyset/mydoggyset.jnlp">MyDoggySet</a>
+                                using Java Web Start.
+								<br/>
+								On Windows Platform to see in action the transparency you have to
+								<a href="./../download.html">download</a>
+								a distribution of mydoggy.
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </body>
+</document>

@@ -3,24 +3,26 @@
         "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
     <properties>
-        <title>MyDoggy - My Java Docking Framework (PLAF) : ContentManagerUI</title>
+        <title>MyDoggy - My Java Docking Framework (API) : ContentManagerUI</title>
         <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
     </properties>
 
     <body>
         <section name="ContentManagerUI">
             <p>
-                A ContentManagerUI is an interface to modify the ui behaviours of
-                a content manager. For example this is used to modify the way a content
-                is shown.
-            </p>
+                A ContentManagerUI is an interface to modify the ui behaviours of a content manager. See the related
+                <a href="./../mydoggy-plaf/contentManagerUI.html">page</a>
+                in the plaf module for the how-to mount a ContentManagerUI and how implement one by yourself.
+                <br/>
+                MyDoggy provides three kind of ContentManagerUI...</p>
+
             <a name="MyDoggyMultiSplitContentManagerUI"/>
             <subsection name="MyDoggyMultiSplitContentManagerUI">
                 <table>
                     <tbody>
                         <tr>
                             <td>
-                                <img src="./images/multisplitContentManagerUI.png" alt="MultisplitContentManagerUI"
+                                <img src="../images/api/multisplitContentManagerUI.png" alt="MultisplitContentManagerUI"
                                      border="0" hspace="18"/>
                             </td>
                             <td>
@@ -29,12 +31,7 @@
                                     between
                                     a group of components by clicking on a tab with a given title and/or icon. The
                                     position of each tab can be customized from the ui or by code.
-                                    <br/>To obtain and set a specific instance use the following (for example):
                                 </p>
-                                <source>import org.noos.xing.mydoggy.plaf.ui.content;
-...
-contentManager.setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
-                                </source>
                             </td>
                         </tr>
                     </tbody>
@@ -46,7 +43,7 @@ contentManager.setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
                     <tbody>
                         <tr>
                             <td>
-                                <img src="./images/tabbedContentManagerUI.png" alt="TabbedContentManagerUI" border="0"
+                                <img src="../images/api/tabbedContentManagerUI.png" alt="TabbedContentManagerUI" border="0"
                                      hspace="18"/>
                             </td>
                             <td>
@@ -55,12 +52,7 @@ contentManager.setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
                                     between
                                     a group of components by clicking on a tab with a given title and/or icon (i.e.
                                     JTabbedPane).
-                                    <br/>To obtain and set a specific instance use the following (for example):
                                 </p>
-                                <source>import org.noos.xing.mydoggy.plaf.ui.content;
-...
-contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
-                                </source>
                             </td>
                         </tr>
                     </tbody>
@@ -72,7 +64,7 @@ contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
                     <tbody>
                         <tr>
                             <td>
-                                <img src="./images/desktopContentManagerUI.png" alt="DesktopContentManagerUI" border="0"
+                                <img src="../images/api/desktopContentManagerUI.png" alt="DesktopContentManagerUI" border="0"
                                      hspace="18"/>
                             </td>
                             <td>
@@ -80,30 +72,37 @@ contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
                                     This interface represents a ui that use a container to create a multiple-document
                                     interface
                                     or a virtual desktop.
-                                    <br/>To obtain and set a specific instance use the following (for example):
                                 </p>
-                                <source>import org.noos.xing.mydoggy.plaf.ui.content;
-...
-contentManager.setContentManagerUI(new MyDoggyDesktopContentManagerUI());
-                                </source>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </subsection>
-        </section>
-        <section name="Your own implementation">
+
             <p>
-                If you want to implement your own
-                <code>ContentManageUI,</code>
-                your class must implement non only the
-                <code>ContentManageUI</code>
-                interface but also the
-                <code>PlafContentManagerUI</code>
-                interface in the
-                package<code>org.noos.xing.mydoggy.plaf.ui.content</code>.
-                <br/>
-                This is to provide all neccesary methods to use the manager.
+                If you want to change the ContentManagerUI use the following :
+            </p>
+            <source>ToolWindowManager toolWindowManager = new<a href="./../mydoggy-plaf/index.html">...</a>;
+ContentManager contentManager = toolWindowManager.getContentManager();
+ContentManagerUI contentManagerUI = new
+<a href="./../mydoggy-plaf/index.html#ContentManageUI">... TODO</a>
+contentManager.setContentManagerUI(contentManagerUI);
+            </source>
+        </section>
+
+        <section name="ContentUI">
+            <p>
+                This interface is used to modify the ui behaviours of a single content. When you define a new
+                ContentManagerUI you can also extend the ContentUI interface. In fact relative to
+                <a href="./apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html">TabbedContentManagerUI</a>,
+                <a href="./apidocs/org/noos/xing/mydoggy/DesktopContentManagerUI.html">DesktopContentManagerUI</a> and
+                <a href="./apidocs/org/noos/xing/mydoggy/MultiSplitContentManagerUI.html">MultiSplitContentManagerUI</a>
+                you can found
+                <a href="./apidocs/org/noos/xing/mydoggy/TabbedContentUI.html">TabbedContentUI</a>,
+                <a href="./apidocs/org/noos/xing/mydoggy/DesktopContentUI.html">DesktopContentUI</a> and
+                <a href="./apidocs/org/noos/xing/mydoggy/MultiSplitContentUI.html">MultiSplitContentUI </a>interfaces.
+                Using the default ContentUI interface you can manage transparent support and decide if a content is
+                closeable and/or detachable using the ui.
             </p>
         </section>
     </body>

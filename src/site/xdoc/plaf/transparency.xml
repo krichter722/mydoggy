@@ -13,7 +13,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <img src="./images/tw_transparency.png" alt="ToolWindow Transparency" border="0" hspace="18"/>
+                            <img src="./../images/plaf/tw_transparency.png" alt="ToolWindow Transparency" border="0" hspace="18"/>
                         </td>
                         <td>
                             <p>
