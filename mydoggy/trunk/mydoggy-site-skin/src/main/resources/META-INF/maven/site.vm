@@ -283,7 +283,7 @@
   <body class="composite">
     <div id="banner">
         <a href="http://mydoggy.sourceforge.net" id="bannerLeft">
-            <img id="bannerImage" src="http://mydoggy.sourceforge.net/images/banners/banner.jpg" alt="" width="1124"/>
+            <img id="bannerImage" src="http://mydoggy.sourceforge.net/images/banners/banner_1.jpg" alt="" width="1124"/>
         </a>
         <div class="clear">
         <hr/>
