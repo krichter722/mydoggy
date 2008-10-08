@@ -74,7 +74,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
                     synchronized (ModalFrame.this) {
                         if (transparencyManager.isAlphaModeEnabled(ModalFrame.this)) {
                             transparencyAnimation.stop();
-                            transparencyManager.setAlphaModeRatio(ModalFrame.this, 0.0f);
+                            transparencyManager.setAlphaModeRatio(ModalFrame.this, 1.0f);
                         }
                     }
                 }
@@ -101,7 +101,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
                         synchronized (ModalFrame.this) {
                             if (transparencyManager.isAlphaModeEnabled(ModalFrame.this)) {
                                 transparencyAnimation.stop();
-                                transparencyManager.setAlphaModeRatio(ModalFrame.this, 0.0f);
+                                transparencyManager.setAlphaModeRatio(ModalFrame.this, 1.0f);
                             }
                         }
                     }
@@ -151,7 +151,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
     public void setVisible(boolean visible) {
         if (!visible) {
             TransparencyManager<Window> transparencyManager = SwingUtil.getTransparencyManager();
-            transparencyManager.setAlphaModeRatio(this, 0.0f);
+            transparencyManager.setAlphaModeRatio(this, 1.0f);
 
             restoreOwner();
         } else {

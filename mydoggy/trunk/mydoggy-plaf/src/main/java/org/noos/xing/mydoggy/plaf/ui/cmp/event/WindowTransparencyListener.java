@@ -34,7 +34,7 @@ public class WindowTransparencyListener extends WindowAdapter implements ActionL
         if (transparencyManager.isAlphaModeEnabled(e.getWindow())) {
             timer.stop();
             animation.hide();
-            transparencyManager.setAlphaModeRatio(e.getWindow(), 0.0f);
+            transparencyManager.setAlphaModeRatio(e.getWindow(), 1.0f);
         }
     }
 
@@ -60,7 +60,7 @@ public class WindowTransparencyListener extends WindowAdapter implements ActionL
     public void windowClosing(WindowEvent event) {
         if (transparencyManager.isAlphaModeEnabled(event.getWindow())) {
             animation.hide();
-            transparencyManager.setAlphaModeRatio(window, 0.0f);
+            transparencyManager.setAlphaModeRatio(window, 1.0f);
         }
     }
 
