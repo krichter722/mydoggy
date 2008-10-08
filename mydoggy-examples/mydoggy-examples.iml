@@ -19,6 +19,17 @@
     <orderEntry type="library" exported="" name="Maven: org.swinglabs:swingx:0.9.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: com.jhlabs:filters:2.0.235" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:3.8.1" level="project" />
+    <orderEntry type="module-library">
+      <library name="jna">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib/jna/examples.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib/jna/jna.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib/jna/linux-i386.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 
