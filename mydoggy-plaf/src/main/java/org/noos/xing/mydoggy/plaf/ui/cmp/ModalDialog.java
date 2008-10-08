@@ -62,7 +62,7 @@ public class ModalDialog extends JDialog implements ModalWindow,
                     synchronized (transparencyManager) {
                         if (transparencyManager.isAlphaModeEnabled(ModalDialog.this)) {
                             transparencyAnimation.stop();
-                            transparencyManager.setAlphaModeRatio(ModalDialog.this, 0.0f);
+                            transparencyManager.setAlphaModeRatio(ModalDialog.this, 1.0f);
                         }
                     }
                 }
@@ -89,7 +89,7 @@ public class ModalDialog extends JDialog implements ModalWindow,
                         synchronized (transparencyManager) {
                             if (transparencyManager.isAlphaModeEnabled(ModalDialog.this)) {
                                 transparencyAnimation.stop();
-                                transparencyManager.setAlphaModeRatio(ModalDialog.this, 0.0f);
+                                transparencyManager.setAlphaModeRatio(ModalDialog.this, 1.0f);
                             }
                         }
                     }
@@ -139,7 +139,7 @@ public class ModalDialog extends JDialog implements ModalWindow,
     public void setVisible(boolean visible) {
         if (!visible) {
             TransparencyManager<Window> transparencyManager = SwingUtil.getTransparencyManager();
-            transparencyManager.setAlphaModeRatio(this, 0.0f);
+            transparencyManager.setAlphaModeRatio(this, 1.0f);
         } 
 
         super.setVisible(visible);
