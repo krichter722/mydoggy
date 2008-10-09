@@ -17,6 +17,7 @@ import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DockableDropPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout;
+import org.noos.xing.mydoggy.plaf.ui.content.ContentDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -516,6 +517,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         public void write(XMLWriter writer, Context context) {
             try {
                 // Start contentManager
+                MyDoggyToolWindowManager toolWindowManager = (MyDoggyToolWindowManager) context.get(ToolWindowManager.class);
                 ContentManager contentManager = context.get(ContentManager.class);
 
                 writer.startElement("contentManager");
@@ -525,6 +527,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 for (Content content : contentManager.getContents()) {
                     ContentUI contentUI = content.getContentUI();
 
+                    // Prepare "content" element
                     AttributesImpl contentAttributes = new AttributesImpl();
                     contentAttributes.addAttribute(null, "id", null, null, content.getId());
                     contentAttributes.addAttribute(null, "detached", null, null, String.valueOf(content.isDetached()));
@@ -546,6 +549,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                     writer.startElement("content", contentAttributes);
 
+                    // Prepare "detachedBounds" sub element if necessary
                     Rectangle detachedBounds = contentUI.getDetachedBounds();
                     if (detachedBounds != null) {
                         AttributesImpl attributes = new AttributesImpl();
@@ -554,6 +558,17 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                         attributes.addAttribute(null, "width", null, null, String.valueOf(detachedBounds.width));
                         attributes.addAttribute(null, "height", null, null, String.valueOf(detachedBounds.height));
                         writer.dataElement("detachedBounds", attributes);
+                    }
+
+                    // Prepare "minimizedState" sub element if necessary
+                    if (content.isMinimized()) {
+                        ContentDescriptor contentDescriptor = (ContentDescriptor) toolWindowManager.getDockableDescriptor(content.getId());
+
+                        AttributesImpl attributes = new AttributesImpl();
+                        attributes.addAttribute(null, "anchor", null, null, contentDescriptor.getAnchor().toString());
+                        attributes.addAttribute(null, "anchorIndex", null, null, String.valueOf(contentDescriptor.getAnchorIndex()));
+
+                        writer.dataElement("minimizedState", attributes);
                     }
 
                     writer.endElement("content");
@@ -819,12 +834,15 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
     }
 
+
     public abstract class ElementParserAdapter implements ElementParser<Element> {
         protected XMLPersistenceNode node;
+
 
         protected ElementParserAdapter() {
             this.node = new XMLPersistenceNode();
         }
+
 
         public Element getElement(Element root, String name) {
             NodeList list = root.getElementsByTagName(name);
@@ -862,6 +880,18 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 String attr = element.getAttribute(name);
                 if (attr != null && !"".equals(attr.trim()))
                     return Float.parseFloat(attr);
+                else
+                    return defaultValue;
+            } catch (Exception e) {
+                return defaultValue;
+            }
+        }
+
+        public ToolWindowAnchor getToolWindowAnchor(Element element, String name, ToolWindowAnchor defaultValue) {
+            try {
+                String attr = element.getAttribute(name);
+                if (attr != null && !"".equals(attr.trim()))
+                    return ToolWindowAnchor.valueOf(attr);
                 else
                     return defaultValue;
             } catch (Exception e) {
@@ -1251,9 +1281,20 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     content.setEnabled(getBoolean(contentElement, "enabled", true));
                     content.setDetached(getBoolean(contentElement, "detached", false));
                     content.setMaximized(false);
-                    content.setMaximized(getBoolean(contentElement, "minimized", false));
+                    content.setMinimized(getBoolean(contentElement, "minimized", false));
                     content.setFlashing(getBoolean(contentElement, "flashing", false));
 
+                    // Load "minimizedState" sub element if any
+                    Element minimizedStateElem = getElement(contentElement, "minimizedState");
+                    if (minimizedStateElem != null && content.isMinimized()) {
+                        ContentDescriptor contentDescriptor = (ContentDescriptor) toolWindowManager.getDockableDescriptor(content.getId());
+                        contentDescriptor.setAnchor(getToolWindowAnchor(minimizedStateElem, "anchor", ToolWindowAnchor.LEFT),
+                                                    getInteger(minimizedStateElem, "anchorIndex", -1)
+                        );
+                    }
+
+
+                    // Load contentUI
                     ContentUI contentUI = content.getContentUI();
                     contentUI.setCloseable(getBoolean(contentElement, "closeable", true));
                     contentUI.setDetachable(getBoolean(contentElement, "detachable", true));
@@ -1265,6 +1306,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     contentUI.setAddToTaskBarWhenDetached(getBoolean(contentElement, "addToTaskBarWhenDetached", false));
                     contentUI.setAlwaysOnTop(getBoolean(contentElement, "alwaysOnTop", false));
 
+                    // Load detachedBounds if any
                     NodeList list = contentElement.getElementsByTagName("detachedBounds");
                     if (list.getLength() > 0) {
                         Element detachedBoundsElm = (Element) list.item(0);
