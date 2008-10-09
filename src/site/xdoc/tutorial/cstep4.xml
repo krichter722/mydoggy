@@ -121,10 +121,10 @@ public class TutorialSet {
         }
     }
 
-    public class JNAWindowTransparencyManager implements TransparencyManager<Window> {
+    public class JNAWindowTransparencyManager implements TransparencyManager&lt;Window&gt; {
 
         private boolean available;
-        private Map<Window, Float> windowTransparencies;
+        private Map&lt;Window, Float&gt; windowTransparencies;
 
         public JNAWindowTransparencyManager() {
             initTransparencyManager();
@@ -144,7 +144,7 @@ public class TutorialSet {
         public boolean isAlphaModeEnabled(Window component) {
             if (available) {
                 Float transparency = windowTransparencies.get(component);
-                return transparency != null && transparency >= 0.0;
+                return transparency != null &amp;&amp; transparency &gt;= 0.0;
             }
             return false;
         }
@@ -155,7 +155,7 @@ public class TutorialSet {
                 Class.forName("com.sun.jna.examples.WindowUtils");
                 available = WindowUtils.isWindowAlphaSupported();
                 if (available)
-                    this.windowTransparencies = new WeakHashMap<Window, Float>();
+                    this.windowTransparencies = new WeakHashMap&lt;Window, Float&gt;();
             } catch (ClassNotFoundException e) {
             }
         }

@@ -19,7 +19,7 @@
             <item name="Download" href="download.html"/>
             <item name="Build Howto" href="buildHowto.html"/>
             <item name="Contact" href="contact.html"/>
-            <item name="Tutorial" href="/tutorial/tutorial.html"/>
+            <item icon="/images/new.png" name="Tutorial" href="/tutorial/tutorial.html"/>
         </menu>
 
         <menu name="Demos">
@@ -28,34 +28,28 @@
                 <item name="Videos" href="/examples/mydoggysetVideos.html"/>
                 <item name="Using" href="/examples/mydoggysetUsing.html"/>
             </item>
-            <item name="TutorialSet" href="/tutorial/tutorial.html"/>
         </menu>
 
         <menu name="Modules">
-            <item name="MyDoggy-Api" href="/api/index.html">
-                <item name="ToolWindowManager" href="/api/toolwindowManager.html"/>
-                <item name="ToolWindow" href="/api/toolwindow.html"/>
-                <item name="ToolWindowGroup" href="/api/toolwindowGroups.html"/>
-                <item name="ContentManager" href="/api/contentManager.html"/>
-                <item name="ContentManagerUI" href="/api/contentManagerUI.html"/>
-            </item>
-            <item name="MyDoggy-Plaf" href="/plaf/index.html">
-                <item img="/images/new.png" name="ResourceManager" href="/plaf/resourceManager.html"/>
-                <item name="TransparencyManager" href="/plaf/transparency.html"/>
+            <item name="MyDoggy-Api" href="/api/index.html"/>
+            <item name="MyDoggy-Plaf" href="/plaf/index.html"/>
+            <item name="MyDoggy-Res" href="/res/index.html"/>
+        </menu>
+
+        <menu name="Core Components">
+            <item name="ToolWindowManager" href="/api/toolwindowManager.html"/>
+            <item name="ToolWindow" href="/api/toolwindow.html"/>
+            <item name="ToolWindowGroup" href="/api/toolwindowGroups.html"/>
+            <item name="ContentManager" href="/api/contentManager.html"/>
+            <item name="ContentManagerUI" href="/api/contentManagerUI.html"/>
+
+            <item name="PersistenceDelgate" href="/plaf/persistenceDelegate.html"/>
+            <item name="TransparencyManager" href="/plaf/transparency.html"/>
+            <item name="ResourceManager" href="/plaf/resourceManager.html">
+                <item name="Using" href="/plaf/resourceManagerUsing.html"/>
             </item>
         </menu>
 
-<!--
-        <item name="Introduction" href="index.html"/>
-        <item name="ToolWindowManager" href="toolwindowManager.html"/>
-        <item name="PersistenceDelgate" href="persistenceDelegate.html"/>
-        <item name="ContentManageUI" href="contentManagerUI.html"/>
-        <item name="TransparencyManager" href="transparency.html"/>
-        <item name="ResourceManager" href="resourceManager.html">
-            <item name="Using" href="resourceManagerUsing.html"/>
-        </item>
--->
-        
         ${reports}
     </body>
 

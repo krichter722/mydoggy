@@ -76,7 +76,7 @@
             <outputDirectory>lib/win32</outputDirectory>
         </file>
         <file>
-            <source>mydoggy-site.iml</source>
+            <source>mydoggy.iml</source>
             <outputDirectory>.</outputDirectory>
         </file>
         <file>

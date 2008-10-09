@@ -8,10 +8,19 @@
     </properties>
 
     <body>
+
         <section name="PersistenceDelegate">
             <p>
-                PersistenceDelegate is available since 1.2.0 and it's an interface that provides useful methods to save
-                and load the tool window manager's workspace.
+                This interface provides useful methods to save and load the tool window manager's workspace.
+                When you request to save the workspace, all settings of ToolWindows with relative descriptors are saved.
+                To obtain an instance of PersistenceDelegate you have to invoke the method
+                <code>getPersistenceDelegate</code>
+                of
+                <code>ToolWindowManager</code>
+                interface. So you can obtain a persistence delegate specific to a
+                particular tool window manager.
+            </p>
+            <p>
                 When you request to save the workspace, all settings of toolwindows, and not only, with relative descriptors are saved.
                 See the specific DTD, relative to the version of mydoggy that you are using, to know all information saved.
                 <br/>

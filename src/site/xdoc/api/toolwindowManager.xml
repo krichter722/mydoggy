@@ -14,10 +14,40 @@
                 the user can register/unregister toolwindows, groups. The user can get the
                 content manager instance and type descriptor templates.
                 <br/>
-                To obtain an instance of ToolWindowManager interface see
-                <a href="./../mydoggy-plaf/index.html">mydoggy-plaf</a>
             </p>
             
+            <subsection name="MyDoggyToolWindowManager">
+                <p>
+                    To obtain an instance of <code>ToolWindowManager</code> interface you have to instantiate the
+                    <code>MyDoggyToolWindowManager</code> class. This is the default implementation.
+                    <br/>
+                    To obtain an instance use the following (for example):
+                </p>
+                <source>ToolWindowManager toolWindowManager = new MyDoggyToolWindowManager();
+                </source>
+                <p>or</p>
+                <source>ToolWindowManager toolWindowManager = new MyDoggyToolWindowManager(
+                  Locale.getDefault() // A Locale instance
+    );
+                </source>
+                <p>
+                    MyDoggyToolWindowManager is implemented like a JPanel so you can use it like any other component.
+                    <br/>
+                    For example:
+                </p>
+                <source>JFrame frame = new JFrame("MyDoggy-Set...");
+    ...
+    MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
+    ...
+    frame.getContentPane().add(myDoggyToolWindowManager);</source>
+                <p>
+                    To enable all toolwindow types (Sliding, Floating Live, etc.), MyDoggyToolWindowManager
+                    must be have as window ancestor an object implementing the <code>RootPaneContainer</code> interface
+                    (i.e. JFrame, JWindow, JApplet, ...).
+                </p>
+
+            </subsection>
+
             <subsection name="ToolWindowManagerDescriptor">
                 <p>
                     This interface is used to modify the behaviours of the ToolWindowManager.
@@ -27,28 +57,6 @@
                 </p>
             </subsection>
 
-            <subsection name="PersistenceDelegate">
-                <p>
-                    This interface provides useful methods to save and load the tool window manager's workspace.
-                    When you request to save the workspace, all settings of ToolWindows with relative descriptors are saved.
-                    To obtain an instance of PersistenceDelegate you have to invoke the method
-                    <code>getPersistenceDelegate</code>
-                    of
-                    <code>ToolWindowManager</code>
-                    interface. So you can obtain a persistence delegate specific to a
-                    particular tool window manager.
-                </p>
-                <p>
-                    Go to
-                    <a href="./toolwindowManagerUsing.html#PersistenceDelegate">Using</a> page
-                    to get more informations about how to use the PersistenceDelegate.
-                </p>
-                <p>
-                    Go to
-                    <a href="./../mydoggy-plaf/persistenceDelegate.html">MyDoggy-Plaf</a>
-                    to get more informations about default implementation.
-                </p>
-            </subsection>
         </section>
     </body>
 </document>
