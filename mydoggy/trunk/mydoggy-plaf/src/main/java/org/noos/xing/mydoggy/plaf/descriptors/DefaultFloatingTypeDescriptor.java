@@ -25,6 +25,8 @@ public class DefaultFloatingTypeDescriptor extends DefaultToolWindowTypeDescript
     private boolean addToTaskBar;
     private boolean alwaysOnTop;
     private boolean osDecorated;
+    private boolean resizable;
+
 
     public DefaultFloatingTypeDescriptor() {
         transparentMode = true;
@@ -35,6 +37,7 @@ public class DefaultFloatingTypeDescriptor extends DefaultToolWindowTypeDescript
         addToTaskBar = false;
         alwaysOnTop = true;
         osDecorated = false;
+        resizable = true;
     }
 
     public DefaultFloatingTypeDescriptor(ToolWindowDescriptor toolWindowDescriptor,
@@ -49,8 +52,9 @@ public class DefaultFloatingTypeDescriptor extends DefaultToolWindowTypeDescript
                                          boolean animating,
                                          boolean autoHide,
                                          boolean idVisibleOnTitleBar,
-                                         boolean hideRepresentativeButtonOnVisible) {
-        
+                                         boolean hideRepresentativeButtonOnVisible,
+                                         boolean resizable) {
+
         super(toolWindowDescriptor, parent, enabled, animating, autoHide, idVisibleOnTitleBar, hideRepresentativeButtonOnVisible);
 
         this.location = location;
@@ -62,6 +66,7 @@ public class DefaultFloatingTypeDescriptor extends DefaultToolWindowTypeDescript
         this.addToTaskBar = addToTaskBar;
         this.alwaysOnTop = alwaysOnTop;
         this.osDecorated = osDecorated;
+        this.resizable = resizable;
     }
 
 
@@ -201,6 +206,19 @@ public class DefaultFloatingTypeDescriptor extends DefaultToolWindowTypeDescript
         firePropertyChangeEvent("osDecorated", old, osDecorated);
     }
 
+    public boolean isResizable() {
+        return resizable;
+    }
+
+    public void setResizable(boolean resizable) {
+        if (this.resizable == resizable)
+            return;
+
+        boolean old = this.resizable;
+        this.resizable = resizable;
+        firePropertyChangeEvent("resizable", old, resizable);
+    }
+
 
     public ToolWindowTypeDescriptor cloneMe(ToolWindowDescriptor toolWindowDescriptor) {
         return new DefaultFloatingTypeDescriptor(toolWindowDescriptor,
@@ -208,10 +226,11 @@ public class DefaultFloatingTypeDescriptor extends DefaultToolWindowTypeDescript
                                                  transparentRatio, transparentMode,
                                                  modal, addToTaskBar, alwaysOnTop, osDecorated, enabled, animating, autoHide,
                                                  idVisibleOnTitleBar,
-                                                 hideRepresentativeButtonOnVisible);
+                                                 hideRepresentativeButtonOnVisible,
+                                                 resizable);
     }
 
-    public void propertyChange(PropertyChangeEvent evt) {        
+    public void propertyChange(PropertyChangeEvent evt) {
         super.propertyChange(evt);
 
         if ("location".equals(evt.getPropertyName())) {
@@ -232,6 +251,8 @@ public class DefaultFloatingTypeDescriptor extends DefaultToolWindowTypeDescript
             setAddToTaskBar((Boolean) evt.getNewValue());
         } else if ("alwaysOnTop".equals(evt.getPropertyName())) {
             setAlwaysOnTop((Boolean) evt.getNewValue());
+        } else if ("resizable".equals(evt.getPropertyName())) {
+            setResizable((Boolean) evt.getNewValue());
         }
     }
 

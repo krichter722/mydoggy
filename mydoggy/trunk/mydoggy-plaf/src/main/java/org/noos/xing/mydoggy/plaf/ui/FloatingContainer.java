@@ -77,6 +77,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
             if (typeDescriptor.getSize() == null) {
                 Component parentComponent = descriptor.getManager().getWindowAncestor();
                 window.setSize(parentComponent.getWidth() / 2, (int) (parentComponent.getHeight() / 1.5));
+//                window.getWindow().pack();
             } else {
                 window.setSize(typeDescriptor.getSize());
             }
@@ -84,6 +85,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
             // Set Location
             if (typeDescriptor.getLocation() == null) {
                 SwingUtil.centrePositionOnScreen(window.getWindow());
+                window.getWindow().setLocationRelativeTo(descriptor.getRepresentativeAnchor());
             } else
                 window.setLocation(typeDescriptor.getLocation());
 
@@ -95,7 +97,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
             } else {
                 window.setModal(typeDescriptor.isModal());
                 window.getContentPane().setVisible(true);
-                
+
                 SwingUtil.repaint(window.getWindow());
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
@@ -124,7 +126,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 if (window.getNumDockables() <= 0) {
                     window.getContentPane().setVisible(true);
                     window.setVisible(false);
-                    
+
                     descriptor.removeModalWindow();
                 }
 
@@ -467,7 +469,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
         public void onOsDecorated(PropertyChangeEvent evt) {
             window.dispose();
-            window.setUndecorated(! (Boolean) evt.getNewValue());
+            window.setUndecorated(!(Boolean) evt.getNewValue());
             window.setVisible(true);
         }
 
@@ -507,6 +509,14 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 oldWindow.getWindow().dispose();
             }
         }
+
+        public void onResizable(PropertyChangeEvent evt) {
+            if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE && window != null) {
+//                applyResizableBorder((Boolean) evt.getNewValue(), true);
+//                pack();
+            }
+        }
+
     }
 
 }

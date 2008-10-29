@@ -48,7 +48,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
 
         setFocusableWindowState(true);
         setTitle(toolWindow.getTitle());
-        
+
         synchronized (ModalFrame.this) {
             if (modal)
                 modalToWindow = owner;
@@ -244,6 +244,15 @@ public class ModalFrame extends JFrame implements ModalWindow,
                                                 -1,
                                                 aggregationPosition);
         toolWindow.addPropertyChangeListener(this);
+
+        // Update 'resizable'
+        boolean resizable = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).isResizable();
+        if (getNumDockables() == 1)
+            setResizable(resizable);
+        else {
+            if (resizable)
+                setResizable(resizable);
+        }
     }
 
     public void removeDockable(ToolWindow toolWindow) {
@@ -279,6 +288,11 @@ public class ModalFrame extends JFrame implements ModalWindow,
 
     public void setReturnFocus(Component returnFocus) {
         this.returnFocus = returnFocus;
+    }
+
+    public void setResizable(boolean resizable) {
+        super.setResizable(resizable);
+//        this.resizeMouseInputHandler.setResizable(resizable);
     }
 
 

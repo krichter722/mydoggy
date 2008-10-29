@@ -29,6 +29,7 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
     protected int dragHeight;
 
     protected Component floatingContainer;
+    protected boolean resizable;
     protected boolean isWindow;
 
     protected Dimension minimumSize;
@@ -37,13 +38,15 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
     public FloatingResizeMouseInputHandler(Component floatingContainer) {
         this.floatingContainer = floatingContainer;
         this.isWindow = floatingContainer instanceof Window;
-
         this.minimumSize = new Dimension(150, 24);
-        this.lastCursor = null;
+        this.resizable = true;
     }
 
 
     public void mousePressed(MouseEvent ev) {
+        if (isResizeSuppressed())
+            return;
+
         Point dragWindowOffset = ev.getPoint();
         Component w = (Component) ev.getSource();
 
@@ -58,6 +61,9 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
     }
 
     public void mouseReleased(MouseEvent ev) {
+        if (isResizeSuppressed())
+            return;
+
         if (dragCursor != 0 && floatingContainer != null && !floatingContainer.isValid()) {
             // Some Window systems validate as you resize, others won't,
             // thus the check for validity before repainting.
@@ -68,6 +74,9 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
     }
 
     public void mouseMoved(MouseEvent ev) {
+        if (isResizeSuppressed())
+            return;
+
         Component w = (Component) ev.getSource();
 
         int cursor = getCursor(calculateCorner(w, ev.getX(), ev.getY()));
@@ -79,6 +88,9 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
     }
 
     public void mouseDragged(MouseEvent ev) {
+        if (isResizeSuppressed())
+            return;
+
         Point pt = ev.getPoint();
 
         if (dragCursor != 0) {
@@ -157,6 +169,9 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
     }
 
     public void mouseExited(MouseEvent ev) {
+        if (isResizeSuppressed())
+            return;
+
         Component w = (Component) ev.getSource();
 
         if (lastCursor != null)
@@ -182,6 +197,18 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
     public void setFloatingContainer(Component floatingContainer) {
         this.floatingContainer = floatingContainer;
         this.isWindow = floatingContainer instanceof Window;
+    }
+
+    public boolean isResizable() {
+        return resizable;
+    }
+
+    public void setResizable(boolean resizable) {
+        this.resizable = resizable;
+    }
+
+    protected boolean isResizeSuppressed() {
+        return resizable;
     }
 
     protected void adjust(Rectangle bounds, Dimension min, int deltaX, int deltaY, int deltaWidth, int deltaHeight) {

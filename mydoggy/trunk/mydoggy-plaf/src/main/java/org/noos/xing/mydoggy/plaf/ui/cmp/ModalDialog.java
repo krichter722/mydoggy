@@ -30,6 +30,8 @@ public class ModalDialog extends JDialog implements ModalWindow,
     protected DockableDropPanel dockableDropPanel;
     protected MultiSplitDockableContainer multiSplitDockableContainer;
 
+    protected FloatingResizeMouseInputHandler resizeMouseInputHandler; 
+
     // Transparency support
     protected Timer transparencyTimer;
     protected TransparencyManager<Window> transparencyManager;
@@ -195,6 +197,15 @@ public class ModalDialog extends JDialog implements ModalWindow,
 
         if (getNumDockables() == 1)
             setTitle(toolWindow.getTitle());
+
+        // Update 'resizable'
+        boolean resizable = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).isResizable();
+        if (getNumDockables() == 1)
+            setResizable(resizable);
+        else {
+            if (resizable)
+                setResizable(resizable);
+        }
     }
 
     public void addDockable(ToolWindow toolWindow,
@@ -207,6 +218,15 @@ public class ModalDialog extends JDialog implements ModalWindow,
                                                 -1,
                                                 aggregationPosition);
         toolWindow.addPropertyChangeListener(this);
+
+        // Update 'resizable'
+        boolean resizable = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).isResizable();
+        if (getNumDockables() == 1)
+            setResizable(resizable);
+        else {
+            if (resizable)
+                setResizable(resizable);
+        }
     }
 
     public void removeDockable(ToolWindow toolWindow) {
@@ -227,6 +247,11 @@ public class ModalDialog extends JDialog implements ModalWindow,
 
     public boolean containsDockable(ToolWindow toolWindow) {
         return multiSplitDockableContainer.containsDockable(toolWindow);
+    }
+
+    public void setResizable(boolean resizable) {
+        super.setResizable(resizable);
+//        this.resizeMouseInputHandler.setResizable(resizable);
     }
 
     

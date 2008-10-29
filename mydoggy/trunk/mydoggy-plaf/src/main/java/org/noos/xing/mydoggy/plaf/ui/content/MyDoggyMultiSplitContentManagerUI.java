@@ -304,6 +304,11 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         if (multiSplitContainer == null) {
             /// Init just once
             multiSplitContainer = new MultiSplitContainer(toolWindowManager);
+
+//            JTabbedPane jTabbedPane = new JTabbedPane();
+//            jTabbedPane.addTab("Hello", new JButton("Hi"));
+//            multiSplitContainer.setRootComponent(jTabbedPane);
+            
             setupActions();
         }
     }
@@ -644,6 +649,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
         public void propertyChange(PropertyChangeEvent evt) {
             if (valudAdj)
                 return;
+
             Content content = (Content) evt.getSource();
 
             if ("maximizedBefore".equals(evt.getPropertyName())) {
@@ -904,6 +910,9 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 // Put on bar
                 descriptor.setAvailable(true);
             } else {
+                if (getMaximizedContent() != null)
+                    getMaximizedContent().setMaximized(false);
+
                 DockableDescriptor descriptor = toolWindowManager.getDockableDescriptor(content.getId());
 
                 // Remove from bar
@@ -975,6 +984,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                     }
                 }
             });
+
             return tabbedContentPane;
         }
 
@@ -1013,7 +1023,13 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 this.oldRoot = getRootComponent();
                 this.oldParent = (DockablePanel) dockable.getComponent().getParent();
 
-                setRootComponent(forceWrapperForComponent(dockable, dockable.getComponent()));
+//                JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{-1},{-1}}));
+//                panel.add(, "0,0,FULL,FULL");
+
+                //   TODO:
+                JComponent panel = (JComponent) forceWrapperForComponent(dockable, dockable.getComponent());
+                panel.setOpaque(true);
+                setRootComponent(panel);
             }
 
             SwingUtil.repaint(this);
