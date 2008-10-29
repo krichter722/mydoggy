@@ -147,7 +147,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * is added to the task bar of your operating system.
      *
      * @param addToTaskBar <tt>true</tt> if to the toolwindow is associated a button
-     * into the task bar when it is in floating mode, <tt>false</tt> otherwise.
+     *                     into the task bar when it is in floating mode, <tt>false</tt> otherwise.
      * @since 1.4.2
      */
     void setAddToTaskBar(boolean addToTaskBar);
@@ -156,7 +156,7 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
      * Returns the property value of "addToTaskBarWhenDetached".
      *
      * @return <tt>true</tt> if to the toolwindow is associated a button
-     * into the task bar when it is in floating mode, <tt>false</tt> otherwise. 
+     *         into the task bar when it is in floating mode, <tt>false</tt> otherwise.
      * @since 1.4.2
      */
     boolean isAddToTaskBar();
@@ -180,16 +180,28 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
     boolean isAlwaysOnTop();
 
     /**
-     *
      * @param osDecorated
      * @since 1.5.0
      */
     void setOsDecorated(boolean osDecorated);
 
     /**
-     *
      * @return
      * @since 1.5.0
      */
     boolean isOsDecorated();
+
+    /**
+     * When <tt>true</tt>, the floating mode window is not resizable by user mouse actions.
+     *
+     * @param resizable whether user resize is allowed
+     */
+    void setResizable(boolean resizable);
+
+    /**
+     * Returns whether the floating mode window is resizable by user mouse actions.
+     *
+     * @return true if user resize allowed.
+     */
+    boolean isResizable();
 }
