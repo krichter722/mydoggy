@@ -23,7 +23,8 @@ import java.awt.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class FloatingTypeDescriptorView extends ComponentView implements ViewContextChangeListener {
-    private JCheckBox enabledBox, modal, animating, idVisibleOnTitleBar, transparentMode, addToTaskBar, alwaysOnTop, osDecorated;
+    private JCheckBox enabledBox, modal, animating, idVisibleOnTitleBar, transparentMode,
+            addToTaskBar, alwaysOnTop, osDecorated, resizable;
     private JSpinner transparentDelay, transparentRatio;
 
     public FloatingTypeDescriptorView(ViewContext viewContext) {
@@ -31,7 +32,7 @@ public class FloatingTypeDescriptorView extends ComponentView implements ViewCon
     }
 
     protected Component initComponent() {
-        MatrixPanel panel = new MatrixPanel(5, 2);
+        MatrixPanel panel = new MatrixPanel(6, 2);
 
         // Left
         panel.addEntry(0, 0, "enabled : ", enabledBox = new JCheckBox());
@@ -64,6 +65,12 @@ public class FloatingTypeDescriptorView extends ComponentView implements ViewCon
                                                 "alwaysOnTop",
                                                 new ViewContextSource(viewContext, FloatingTypeDescriptor.class),
                                                 new ChecBoxSelectionSource(alwaysOnTop)));
+
+        panel.addEntry(5, 0, "resizable : ", resizable = new JCheckBox());
+        resizable.setAction(new DynamicAction(FloatingTypeDescriptor.class,
+                                                "resizable",
+                                                new ViewContextSource(viewContext, FloatingTypeDescriptor.class),
+                                                new ChecBoxSelectionSource(resizable)));
 
         // Right
         panel.add(new JLabel("transparentMode : "), "5,1,r,c");
@@ -99,9 +106,9 @@ public class FloatingTypeDescriptorView extends ComponentView implements ViewCon
 
         panel.addEntry(4, 1, "osDecorated : ", osDecorated = new JCheckBox());
         osDecorated.setAction(new DynamicAction(FloatingTypeDescriptor.class,
-                                                 "osDecorated",
-                                                 new ViewContextSource(viewContext, FloatingTypeDescriptor.class),
-                                                 new ChecBoxSelectionSource(osDecorated)));
+                                                "osDecorated",
+                                                new ViewContextSource(viewContext, FloatingTypeDescriptor.class),
+                                                new ChecBoxSelectionSource(osDecorated)));
         return panel;
     }
 
@@ -119,6 +126,7 @@ public class FloatingTypeDescriptorView extends ComponentView implements ViewCon
                 addToTaskBar.setSelected(descriptor.isAddToTaskBar());
                 alwaysOnTop.setSelected(descriptor.isAlwaysOnTop());
                 osDecorated.setSelected(descriptor.isOsDecorated());
+                resizable.setSelected(descriptor.isResizable());
 
                 transparentMode.setSelected(descriptor.isTransparentMode());
                 transparentDelay.setValue(descriptor.getTransparentDelay());

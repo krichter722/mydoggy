@@ -359,14 +359,14 @@ public class MyDoggySet {
         // Setup ContentManagerUI
         toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
 
-//        MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
+        MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
 //        contentManagerUI.setPopupMenuEnabled(false);
 //        contentManagerUI.setCloseable(false);
 //        contentManagerUI.setDetachable(false);
 //        contentManagerUI.setMinimizable(false);
 //        contentManagerUI.setMaximizable(false);
 
-//        contentManagerUI.setShowAlwaysTab(false);
+        contentManagerUI.setShowAlwaysTab(true);
 //        contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
 //        contentManagerUI.setTabLayout(TabbedContentManagerUI.TabLayout.WRAP);
 //        contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
