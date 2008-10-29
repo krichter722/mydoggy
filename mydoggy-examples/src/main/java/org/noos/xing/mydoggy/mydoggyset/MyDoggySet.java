@@ -46,7 +46,6 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Enumeration;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -122,7 +121,12 @@ public class MyDoggySet {
         this.frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
 
         // Init ToolWindowManager
-        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(Locale.US, null);
+        long start = System.currentTimeMillis();
+        final MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
+        long end = System.currentTimeMillis();
+        System.out.println("time: " + (end - start));
+        
+//        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(Locale.US, null);
         myDoggyToolWindowManager.addToolWindowManagerListener(new ToolWindowManagerListener() {
             public void toolWindowRegistered(ToolWindowManagerEvent event) {
             }
