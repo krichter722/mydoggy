@@ -348,6 +348,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 floatingDescriptorAttributes.addAttribute(null, "alwaysOnTop", null, null, String.valueOf(floatingTypeDescriptor.isAlwaysOnTop()));
                 floatingDescriptorAttributes.addAttribute(null, "osDecorated", null, null, String.valueOf(floatingTypeDescriptor.isOsDecorated()));
                 floatingDescriptorAttributes.addAttribute(null, "hideRepresentativeButtonOnVisible", null, null, String.valueOf(dockedTypeDescriptor.isHideRepresentativeButtonOnVisible()));
+                floatingDescriptorAttributes.addAttribute(null, "resizable", null, null, String.valueOf(floatingTypeDescriptor.isResizable()));
 
                 Point point = floatingTypeDescriptor.getLocation();
                 Dimension dimension = floatingTypeDescriptor.getSize();
@@ -1029,6 +1030,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     descriptor.setAlwaysOnTop(getBoolean(typeElement, "alwaysOnTop", true));
                     descriptor.setHideRepresentativeButtonOnVisible(getBoolean(typeElement, "hideRepresentativeButtonOnVisible", false));
                     descriptor.setOsDecorated(getBoolean(typeElement, "osDecorated", false));
+                    descriptor.setResizable(getBoolean(typeElement, "resizable", true));
 
                     Element location = getElement(typeElement, "location");
                     if (location != null)

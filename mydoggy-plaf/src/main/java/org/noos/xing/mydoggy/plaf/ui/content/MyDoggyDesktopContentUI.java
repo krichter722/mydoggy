@@ -115,7 +115,9 @@ public class MyDoggyDesktopContentUI extends MyDoggyContentUI implements Desktop
     public void cleanup() {
         super.cleanup();
 
+        uninstallInternalFrameListeners();
         myDoggyContentManagerUI = null;
+        internalFrame = null;
     }
 
 
@@ -131,16 +133,21 @@ public class MyDoggyDesktopContentUI extends MyDoggyContentUI implements Desktop
         internalFrame.setClosable(closable);
         internalFrame.setMaximizable(true);
 
-        initInternalFrameListeners();
+        installInternalFrameListeners();
     }
 
-    protected void initInternalFrameListeners() {
-        internalFrame.addInternalFrameListener(new InternalFrameAdapter() {
+
+    protected InternalFrameAdapter internalFrameAdapter;
+    protected VetoableChangeListener vetoableChangeListener;
+    protected PropertyChangeListener propertyChangeListener;
+
+    protected void installInternalFrameListeners() {
+        internalFrame.addInternalFrameListener(internalFrameAdapter = new InternalFrameAdapter() {
             public void internalFrameClosed(InternalFrameEvent e) {
                 contentManager.removeContent(content);
             }
         });
-        internalFrame.addVetoableChangeListener(new VetoableChangeListener() {
+        internalFrame.addVetoableChangeListener(vetoableChangeListener = new VetoableChangeListener() {
             public void vetoableChange(PropertyChangeEvent evt) throws PropertyVetoException {
                 if (JInternalFrame.IS_CLOSED_PROPERTY.equals(evt.getPropertyName())) {
                     if (Boolean.TRUE.equals(evt.getNewValue())) {
@@ -150,7 +157,7 @@ public class MyDoggyDesktopContentUI extends MyDoggyContentUI implements Desktop
                 }
             }
         });
-        internalFrame.addPropertyChangeListener(JInternalFrame.IS_SELECTED_PROPERTY, new PropertyChangeListener() {
+        internalFrame.addPropertyChangeListener(JInternalFrame.IS_SELECTED_PROPERTY, propertyChangeListener = new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (!myDoggyContentManagerUI.valueAdjusting && !myDoggyContentManagerUI.contentValueAdjusting) {
                     ContentUI contentUI = content.getContentUI();
@@ -173,7 +180,12 @@ public class MyDoggyDesktopContentUI extends MyDoggyContentUI implements Desktop
                 }
             }
         });
+    }
 
+    protected void uninstallInternalFrameListeners() {
+        internalFrame.removeInternalFrameListener(internalFrameAdapter);
+        internalFrame.removeVetoableChangeListener(vetoableChangeListener);
+        internalFrame.removePropertyChangeListener(JInternalFrame.IS_SELECTED_PROPERTY, propertyChangeListener);
     }
 
 }
