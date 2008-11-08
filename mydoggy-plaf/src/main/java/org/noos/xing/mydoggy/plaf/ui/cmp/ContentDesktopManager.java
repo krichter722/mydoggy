@@ -22,6 +22,9 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
 
 
     public void openFrame(JInternalFrame f) {
+        if (f == null)
+            return;
+
         if (f.getDesktopIcon().getParent() != null) {
             f.getDesktopIcon().getParent().add(f);
             removeIconFor(f);
@@ -29,6 +32,9 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
     }
 
     public void closeFrame(JInternalFrame f) {
+        if (f == null)
+            return;
+
         boolean findNext = f.isSelected();
         Container c = f.getParent();
         if (findNext)
@@ -49,6 +55,9 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
     }
 
     public void maximizeFrame(JInternalFrame f) {
+        if (f == null)
+            return;
+
         if (f.isIcon()) {
             try {
                 // In turn calls deiconifyFrame in the desktop manager.
@@ -71,6 +80,9 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
     }
 
     public void minimizeFrame(JInternalFrame f) {
+        if (f == null)
+            return;
+
         // If the frame was an icon restore it back to an icon.
         if (f.isIcon()) {
             iconifyFrame(f);
@@ -89,6 +101,9 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
     }
 
     public void iconifyFrame(JInternalFrame f) {
+        if (f == null)
+            return;
+
         JInternalFrame.JDesktopIcon desktopIcon;
         Container c = f.getParent();
         boolean findNext = f.isSelected();
@@ -130,6 +145,9 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
     }
 
     public void deiconifyFrame(JInternalFrame f) {
+        if (f == null)
+            return;
+
         JInternalFrame.JDesktopIcon desktopIcon = f.getDesktopIcon();
         Container c = desktopIcon.getParent();
         if (c != null) {
@@ -157,6 +175,9 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
     }
 
     public void activateFrame(JInternalFrame f) {
+        if (f == null)
+            return;
+
         Container p = f.getParent();
         JDesktopPane d = f.getDesktopPane();
         JInternalFrame currentlyActiveFrame = (d == null) ? null : d.getSelectedFrame();
@@ -189,6 +210,9 @@ public class ContentDesktopManager implements DesktopManager, java.io.Serializab
     }
 
     public void deactivateFrame(JInternalFrame f) {
+        if (f == null)
+            return;
+
         JDesktopPane d = f.getDesktopPane();
         JInternalFrame currentlyActiveFrame =
                 (d == null) ? null : d.getSelectedFrame();
