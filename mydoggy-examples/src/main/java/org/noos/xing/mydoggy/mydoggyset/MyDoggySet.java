@@ -489,6 +489,7 @@ public class MyDoggySet {
 //        UIManager.put("ToolWindowRepresentativeAnchorUI", "org.noos.xing.mydoggy.mydoggyset.MyDoggySet$CustomToolWindowRepresentativeAnchorUI");
 
         UIManager.put(MyDoggyKeySpace.MODAL_WINDOW_BORDER_LENGTH, 4);
+        UIManager.put(MyDoggyKeySpace.DND_CONTENT_OUTSIDE_FRAME, false);
 
 //        resourceManager.putObject("ToolWindowTabTitleUI.font", new Font("Verdana", Font.BOLD, 10));
 //        resourceManager.putObject("ToolWindowTitleBarUI.font", new Font("Verdana", Font.BOLD, 10));

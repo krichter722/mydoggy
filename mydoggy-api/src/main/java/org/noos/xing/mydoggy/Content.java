@@ -200,6 +200,7 @@ public interface Content extends Dockable<ContentManager> {
      *
      * @param refContent the refContent used to identify a content window.
      * @param onPosition the position used to detach the content.
+     * @since 1.5.0
      */
     void detachByReference(Content refContent, AggregationPosition onPosition);
 
@@ -207,6 +208,7 @@ public interface Content extends Dockable<ContentManager> {
      * Reattach a detached content using tha passed constraints.
      *
      * @param constraints the constraints used to reattach the content.
+     * @since 1.5.0
      */
     void reattach(Object... constraints);
 }
