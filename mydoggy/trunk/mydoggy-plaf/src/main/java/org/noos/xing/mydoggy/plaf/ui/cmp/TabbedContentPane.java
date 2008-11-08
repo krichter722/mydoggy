@@ -973,7 +973,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
                     // Finalize drag action...
                     if (lastDropPanel != null) {
                         lastDropPanel.drop(e.getDragSourceContext().getTransferable());
-                    } else if (lastBarAnchor == null) {
+                    } else if (lastBarAnchor == null  && SwingUtil.getBoolean(MyDoggyKeySpace.DND_CONTENT_OUTSIDE_FRAME, true)) {
                         // Detach content
 
                         Content content = getContentAt(dragTabIndex);

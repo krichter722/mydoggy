@@ -2,9 +2,11 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
@@ -103,13 +105,12 @@ public class ContentWindowMultiSplitContainer extends MultiSplitTabbedContentCon
                         int onIndex = getOnIndex();
 
                         if (onDockable == null) {
-                            if (refDockable != null) {
+                            if (refDockable != null && SwingUtil.getBoolean(MyDoggyKeySpace.DND_CONTENT_OUTSIDE_FRAME, true)) {
                                 content.detachByReference(refDockable,
                                                           (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()));
                                 return true;
                             }
                             return false;
-
                         } else {
                             if (content == onDockable) {
                                 if (onIndex == -1) {
@@ -137,7 +138,7 @@ public class ContentWindowMultiSplitContainer extends MultiSplitTabbedContentCon
                                 }
                             }
 
-                            if (!rejectDrop) {
+                            if (!rejectDrop && SwingUtil.getBoolean(MyDoggyKeySpace.DND_CONTENT_OUTSIDE_FRAME, true)) {
                                 content.detach(onDockable,
                                                onIndex,
                                                (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()));

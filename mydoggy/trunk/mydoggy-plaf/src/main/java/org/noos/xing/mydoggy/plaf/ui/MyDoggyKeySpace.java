@@ -101,4 +101,6 @@ public interface MyDoggyKeySpace {
 
     String MODAL_WINDOW_BORDER_LENGTH = "modawindow.border.length";
 
+    String DND_CONTENT_OUTSIDE_FRAME = "dnd.content.outside.frame";
+
 }
