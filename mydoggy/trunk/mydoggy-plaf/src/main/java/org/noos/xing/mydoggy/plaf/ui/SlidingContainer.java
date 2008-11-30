@@ -137,7 +137,6 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         slidingAnimation = new SlidingAnimation();
 
         layeredPane = descriptor.getManager().getLayeredPane();
-        descriptor.getManager().addComponentListener(new ComponentResizer());
     }
 
     protected void initListeners() {
@@ -154,8 +153,11 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         descriptor.getManager().addInternalPropertyChangeListener("temporarilyVisible", propertyChangeListener);
         descriptor.getManager().addInternalPropertyChangeListener("managerWindowAncestor", propertyChangeListener);
 
+        // Mouse Gesture
         slidingMouseInputHandler = new SlidingMouseInputHandler(descriptor);
 
+        // Window Gesture
+        descriptor.getManager().addComponentListener(new ComponentResizer());
     }
 
     protected void update() {

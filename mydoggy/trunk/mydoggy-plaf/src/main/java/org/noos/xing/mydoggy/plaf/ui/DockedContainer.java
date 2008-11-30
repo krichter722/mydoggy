@@ -11,6 +11,8 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
@@ -43,6 +45,9 @@ public class DockedContainer extends MyDoggyToolWindowContainer {
         toolWindowSource.addPlafPropertyChangeListener("maximizedBefore", new MaximizedBeforePropertyChangeListener());
 
         toolWindow.addToolWindowListener(new DockedToolWindowListener());
+
+        // Window Gesture
+        descriptor.getManager().addComponentListener(new ComponentResizer());
     }
 
 
@@ -151,4 +156,20 @@ public class DockedContainer extends MyDoggyToolWindowContainer {
 
     }
 
+    public class ComponentResizer extends ComponentAdapter implements Cleaner {
+
+        public ComponentResizer() {
+            descriptor.getCleaner().addBefore(DockedContainer.this, this);
+        }
+
+        public void cleanup() {
+            descriptor.getManager().removeComponentListener(this);
+        }
+
+        public void componentResized(ComponentEvent e) {
+            if (toolWindow.getType() == ToolWindowType.DOCKED && toolWindow.isVisible() && toolWindow.isMaximized()) {
+                descriptor.getToolBar().updateMaximizedToolSize();
+            }
+        }
+    }
 }
