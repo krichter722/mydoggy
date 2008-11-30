@@ -124,7 +124,7 @@ public class MyDoggySet {
         long start = System.currentTimeMillis();
         final MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
         long end = System.currentTimeMillis();
-        System.out.println("time: " + (end - start));
+        System.out.println("[MyDoggySet.initComponents] Time to init MyDoggyToolWindowManager object : " + (end - start));
         
 //        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(Locale.US, null);
         myDoggyToolWindowManager.addToolWindowManagerListener(new ToolWindowManagerListener() {
