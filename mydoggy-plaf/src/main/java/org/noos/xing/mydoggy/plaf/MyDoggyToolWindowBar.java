@@ -284,6 +284,12 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         return visibleWorkspace;
     }
 
+    public void updateMaximizedToolSize() {
+        setSplitDividerLocation(-1);
+        SwingUtil.repaintNow(splitPane);
+    }
+
+
     protected void initComponents() {
         splitPane.setName(anchor.toString());
 //        splitPane.setFocusCycleRoot(true);
@@ -1460,6 +1466,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
 
             if (descriptor.getToolWindow().getType() == ToolWindowType.DOCKED) {
+
                 if ((Boolean) evt.getNewValue()) {
                     descriptor.setTempDivederLocation(getSplitDividerLocation());
 
@@ -1477,6 +1484,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                     setSplitDividerLocation(descriptor.getTempDivederLocation());
                     SwingUtil.repaintNow(splitPane);
                 }
+
             }
         }
 
