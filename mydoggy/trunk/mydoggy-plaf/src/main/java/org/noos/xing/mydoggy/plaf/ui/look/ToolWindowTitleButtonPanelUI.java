@@ -51,8 +51,11 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
         if ("visibleOnTitleBar".equals(propertyName)) {
             ToolWindowAction toolWindowAction = (ToolWindowAction) evt.getSource();
 
-            setVisible((Component) toolWindowAction.getValue("component"),
-                       (Boolean) evt.getNewValue());
+            if (!setVisible((Component) toolWindowAction.getValue("component"), (Boolean) evt.getNewValue())) {
+                Integer index = (Integer) toolWindowAction.getValue("constraint");
+                addToolWindowAction(toolWindowAction, index != null ? index : -1);
+                setVisible((Component) toolWindowAction.getValue("component"), (Boolean) evt.getNewValue());
+            }
         } else if ("toolWindowAction".equals(propertyName)) {
             if (evt.getNewValue() != null) {
                 if (evt.getOldValue() == null) {
@@ -225,7 +228,8 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
             }
             containerLayout.setColumn(newCols);
         } else {
-            int colIndex = 1 + ((toolWindowTitleButtonPanel.getComponentCount() - 1 - index) * 2);
+            // TODO: modify this procedure....position should start from zero
+            int colIndex = 1 + ((toolWindowTitleButtonPanel.getComponentCount()  - index) * 2);
 
             for (Component component : toolWindowTitleButtonPanel.getComponents()) {
                 TableLayoutConstraints constraints = containerLayout.getConstraints(component);
@@ -324,9 +328,11 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
     }
 
 
-    protected void setVisible(Component component, boolean visible) {
+    protected boolean setVisible(Component component, boolean visible) {
+        boolean found = false;
         for (Component cmp : toolWindowTitleButtonPanel.getComponents()) {
             if (cmp == component) {
+                found = true;
                 if (visible) {
                     int col = containerLayout.getConstraints(component).col1;
                     containerLayout.setColumn(col, -2);
@@ -342,6 +348,7 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
         }
         SwingUtil.repaint(toolWindowTitleButtonPanel);
 
+        return found;
     }
 
 }

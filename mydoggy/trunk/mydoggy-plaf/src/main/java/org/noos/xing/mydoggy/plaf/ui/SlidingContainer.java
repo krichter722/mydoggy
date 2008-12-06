@@ -237,6 +237,42 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         }
     }
 
+    protected void ensureMaximized() {
+        sheet.setBounds(
+                calcFirstX(),
+                calcFirstY(),
+                calcMaxWidth(),
+                calcMaxHeight()
+        );
+
+        // TODO: update old bounds...
+    }
+
+    protected int calcFirstX() {
+        return descriptor.getManagerBounds().x +
+               descriptor.getToolBar(ToolWindowAnchor.LEFT).getSize();
+    }
+
+    protected int calcFirstY() {
+        return descriptor.getManagerBounds().y +
+               descriptor.getToolBar(ToolWindowAnchor.TOP).getSize() +
+               descriptor.getManager().getJMenuBarExtraHeight();
+    }
+
+    protected int calcMaxWidth() {
+        int width = descriptor.getManagerBounds().width;
+        width -= descriptor.getToolBar(ToolWindowAnchor.LEFT).getSize();
+        width -= descriptor.getToolBar(ToolWindowAnchor.RIGHT).getSize();
+        return width;
+    }
+
+    protected int calcMaxHeight() {
+        int height = descriptor.getManagerBounds().height;
+        height -= descriptor.getToolBar(ToolWindowAnchor.TOP).getSize();
+        height -= descriptor.getToolBar(ToolWindowAnchor.BOTTOM).getSize();
+        return height;
+    }
+
 
     public class SlidingAnimation extends AbstractAnimation {
         protected int length;
@@ -368,16 +404,20 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         }
 
         public void componentResized(ComponentEvent e) {
-            if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible())
-                update();
+            if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible()) {
+                if (toolWindow.isMaximized())
+                    ensureMaximized();
+                else
+                    update();
+            }
         }
     }
 
     public class PropertyListener extends DynamicPropertyChangeListener implements ActionListener {
-        protected Rectangle oldBounds = null;
 
         protected TransparencyAnimation animation;
         protected Timer timer;
+        protected Rectangle oldBounds = null;
 
 
         public PropertyListener() {
@@ -409,43 +449,10 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
             if (toolWindow.getType() == ToolWindowType.SLIDING) {
                 if ((Boolean) evt.getNewValue()) {
                     oldBounds = sheet.getBounds();
-
-                    switch (toolWindow.getAnchor()) {
-                        case LEFT:
-                            sheet.setBounds(
-                                    sheet.getX(),
-                                    sheet.getY(),
-                                    calcMaxWidth(),
-                                    sheet.getHeight()
-                            );
-                            break;
-                        case RIGHT:
-                            sheet.setBounds(
-                                    calcFirstX(),
-                                    sheet.getY(),
-                                    calcMaxWidth(),
-                                    sheet.getHeight()
-                            );
-                            break;
-                        case TOP:
-                            sheet.setBounds(
-                                    sheet.getX(),
-                                    sheet.getY(),
-                                    sheet.getWidth(),
-                                    calcMaxHeight()
-                            );
-                            break;
-                        case BOTTOM:
-                            sheet.setBounds(
-                                    sheet.getX(),
-                                    calcFirstY(),
-                                    sheet.getWidth(),
-                                    calcMaxHeight()
-                            );
-                            break;
-                    }
+                    ensureMaximized();
                 } else {
                     sheet.setBounds(oldBounds);
+                    update();
                 }
                 SwingUtil.repaint(sheet);
             }
@@ -508,32 +515,6 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
                 animation.setAlpha(slidingTypeDescriptor.getTransparentRatio());
                 animation.show();
             }
-        }
-
-
-        protected int calcFirstX() {
-            return descriptor.getManagerBounds().x +
-                   descriptor.getToolBar(ToolWindowAnchor.LEFT).getSize();
-        }
-
-        protected int calcFirstY() {
-            return descriptor.getManagerBounds().y +
-                   descriptor.getToolBar(ToolWindowAnchor.TOP).getSize() +
-                   descriptor.getManager().getJMenuBarExtraHeight();
-        }
-
-        protected int calcMaxWidth() {
-            int width = descriptor.getManagerBounds().width;
-            width -= descriptor.getToolBar(ToolWindowAnchor.LEFT).getSize();
-            width -= descriptor.getToolBar(ToolWindowAnchor.RIGHT).getSize();
-            return width;
-        }
-
-        protected int calcMaxHeight() {
-            int height = descriptor.getManagerBounds().height;
-            height -= descriptor.getToolBar(ToolWindowAnchor.TOP).getSize();
-            height -= descriptor.getToolBar(ToolWindowAnchor.BOTTOM).getSize();
-            return height;
         }
 
     }

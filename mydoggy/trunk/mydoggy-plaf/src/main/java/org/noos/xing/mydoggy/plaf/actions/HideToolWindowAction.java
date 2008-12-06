@@ -23,6 +23,7 @@ public class HideToolWindowAction extends ToolWindowAction implements PlafToolWi
     public HideToolWindowAction() {
         super(HIDE_ACTION_ID, UIManager.getIcon(MyDoggyKeySpace.HIDE_TOOL_WINDOW_INACTIVE));
         setTooltipText(SwingUtil.getString("@@tool.tooltip.hide"));
+        putValue("constraint", 0);
     }
 
 

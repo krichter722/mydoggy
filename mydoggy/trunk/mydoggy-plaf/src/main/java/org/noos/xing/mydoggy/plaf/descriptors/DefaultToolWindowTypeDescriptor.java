@@ -148,7 +148,8 @@ public abstract class DefaultToolWindowTypeDescriptor extends PropertyChangeEven
         if (!toolWindowDescriptor.containsToolWindowAction(this, toolWindowAction))
             toolWindowAction.setToolWindow(toolWindowDescriptor.getToolWindow());
 
-        toolWindowAction.putValue("constraint", index);
+        if (toolWindowAction.getValue("constraint") == null)
+            toolWindowAction.putValue("constraint", index);
         toolWindowActionMap.put(toolWindowAction.getId(), toolWindowAction);
 
         firePropertyChangeEvent("toolWindowAction", oldToolWindowAction, toolWindowAction);
@@ -186,24 +187,5 @@ public abstract class DefaultToolWindowTypeDescriptor extends PropertyChangeEven
         }
     }
 
-
-    public void addSharedToolWindowAction(ToolWindowAction toolWindowAction) {
-        if (toolWindowAction == null)
-            throw new IllegalArgumentException("The action cannot be null.");
-
-//        if (getToolWindowAction(toolWindowAction.getId()) != null)
-//            throw new IllegalArgumentException("The action is already registered.");
-
-        ToolWindowAction oldToolWindowAction = toolWindowActionMap.get(toolWindowAction.getId());
-        if (oldToolWindowAction != null) {
-            if (!toolWindowDescriptor.containsToolWindowAction(this, oldToolWindowAction.getId()))
-                oldToolWindowAction.setToolWindow(null);
-        }
-
-        toolWindowAction.putValue("constraint", -1);
-        toolWindowActionMap.put(toolWindowAction.getId(), toolWindowAction);
-
-        firePropertyChangeEvent("toolWindowAction", oldToolWindowAction, toolWindowAction);
-    }
 
 }

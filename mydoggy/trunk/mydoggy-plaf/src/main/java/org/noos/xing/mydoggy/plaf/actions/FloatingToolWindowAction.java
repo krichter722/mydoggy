@@ -26,6 +26,7 @@ public class FloatingToolWindowAction extends ToolWindowAction implements PlafTo
     public FloatingToolWindowAction() {
         super(FLOATING_ACTION_ID, UIManager.getIcon(MyDoggyKeySpace.FLOATING_INACTIVE));
         setTooltipText(SwingUtil.getString("@@tool.tooltip.float"));
+        putValue("constraint", 3);
     }
 
 
