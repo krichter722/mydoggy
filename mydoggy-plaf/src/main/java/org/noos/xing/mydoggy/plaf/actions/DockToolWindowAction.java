@@ -23,6 +23,7 @@ public class DockToolWindowAction extends ToolWindowAction implements PlafToolWi
     public DockToolWindowAction() {
         super(DOCK_ACTION_ID, UIManager.getIcon(MyDoggyKeySpace.DOCKED_INACTIVE));
         setTooltipText(SwingUtil.getString("@@tool.tooltip.undock"));
+        putValue("constraint", 4);
     }
 
 

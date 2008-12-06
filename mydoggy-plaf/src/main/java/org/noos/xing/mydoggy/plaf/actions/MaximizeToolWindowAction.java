@@ -22,6 +22,7 @@ public class MaximizeToolWindowAction extends ToolWindowAction implements PlafTo
     public MaximizeToolWindowAction() {
         super(MAXIMIZE_ACTION_ID, UIManager.getIcon(MyDoggyKeySpace.MAXIMIZE_INACTIVE));
         setTooltipText(SwingUtil.getString("@@tool.tooltip.maximize"));
+        putValue("constraint", 1);
     }
 
 

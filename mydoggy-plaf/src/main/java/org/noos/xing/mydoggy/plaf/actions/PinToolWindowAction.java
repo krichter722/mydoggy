@@ -24,6 +24,7 @@ public class PinToolWindowAction extends ToolWindowAction implements PlafToolWin
     public PinToolWindowAction() {
         super(PIN_ACTION_ID, UIManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF_INACTIVE));
         setTooltipText(SwingUtil.getString("@@tool.tooltip.unpin"));
+        putValue("constraint", 2);
     }
 
 
