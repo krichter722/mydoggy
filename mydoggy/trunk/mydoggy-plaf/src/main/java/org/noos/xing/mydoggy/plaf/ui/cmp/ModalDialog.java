@@ -275,8 +275,9 @@ public class ModalDialog extends JDialog implements ModalWindow,
     protected void initListeners()  {
         MouseInputListener resizeMouseInputHandler = new FloatingResizeMouseInputHandler(this);
 
-        addMouseMotionListener(resizeMouseInputHandler);
         addMouseListener(resizeMouseInputHandler);
+        addMouseMotionListener(resizeMouseInputHandler);
+
         addWindowListener(new ModalWindowListener());
     }
 

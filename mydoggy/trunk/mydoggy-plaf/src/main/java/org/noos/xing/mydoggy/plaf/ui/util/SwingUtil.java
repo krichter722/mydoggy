@@ -494,6 +494,10 @@ public class SwingUtil {
         }
     }
 
+    public static Rectangle getScreenWindowBounds(Window window) {
+        return fullScreenBounds.remove(window);
+    }
+
     // System support methods
 
     public static Properties loadPropertiesFile(String resourceName, ClassLoader classLoader) {

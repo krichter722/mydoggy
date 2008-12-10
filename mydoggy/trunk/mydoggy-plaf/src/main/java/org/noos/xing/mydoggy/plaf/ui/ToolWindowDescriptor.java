@@ -594,6 +594,10 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         return manager.getModalWindow(toolWindow);
     }
 
+    public Rectangle getScreenWindowBounds() {
+        return SwingUtil.getScreenWindowBounds(getModalWindow().getWindow());
+    }
+
 
     public void addCommonToolWindowAction(ToolWindowAction toolWindowAction) {
         getTypeDescriptor(ToolWindowType.DOCKED).addToolWindowAction(toolWindowAction);

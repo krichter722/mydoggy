@@ -208,7 +208,7 @@ public class FloatingResizeMouseInputHandler implements MouseInputListener {
     }
 
     protected boolean isResizeSuppressed() {
-        return resizable;
+        return !resizable;
     }
 
     protected void adjust(Rectangle bounds, Dimension min, int deltaX, int deltaY, int deltaWidth, int deltaHeight) {
