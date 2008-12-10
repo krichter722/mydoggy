@@ -190,7 +190,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
 
             aggregateIcon.setVisibleAt(2, contentUI.isMinimizable() && showMinimize);
-            if (content.isMaximized())
+            if (content.isMaximized() || getContentMaximized(content) != null)
                 aggregateIcon.setIconAt(3, UIManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_RESTORE));
             else
                 aggregateIcon.setIconAt(3, UIManager.getIcon(MyDoggyKeySpace.CONTENT_PAGE_MAXIMIZE));
@@ -537,6 +537,14 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             tabListener.tabbedContentPaneEventFired(event);
     }
 
+    protected Content getContentMaximized(Content content) {
+        for (Content c : content.getDockableManager().getContents()) {
+            if (c.isMaximized())
+                return c;
+        }
+        return null;
+    }
+
 
     public class MouseOverTabListener extends MouseInputAdapter {
         protected int mouseOverTab = -1;
@@ -579,8 +587,13 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
                         return;
                     }
 
-                    if ((e.getClickCount() == 2 && contentUI.isMaximizable()) || isMaximizeFired(contentUI, e.getPoint()))
-                        content.setMaximized(!content.isMaximized());
+                    if ((e.getClickCount() == 2 && contentUI.isMaximizable()) || isMaximizeFired(contentUI, e.getPoint())) {
+                        Content maximized = getContentMaximized(content);
+                        if (maximized != null)
+                            maximized.setMaximized(false);
+                        else
+                            content.setMaximized(!content.isMaximized());
+                    }
                 } else if (SwingUtilities.isRightMouseButton(e)) {
                     if (toolWindowManager.getContentManager().getContentManagerUI().isPopupMenuEnabled())
                         showPopupMenu(e);

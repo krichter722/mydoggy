@@ -28,7 +28,7 @@ public class MaximizeToolWindowAction extends ToolWindowAction implements PlafTo
 
     public void setToolWindow(final ToolWindow toolWindow) {
         if (toolWindow == null) {
-            this.toolWindow.addPropertyChangeListener("maximizedBefore", propertyChangeListener);
+            this.toolWindow.addPropertyChangeListener("maximized", propertyChangeListener);
             this.toolWindow.addPropertyChangeListener("active", propertyChangeListener);
 
             this.propertyChangeListener = null;
@@ -39,7 +39,7 @@ public class MaximizeToolWindowAction extends ToolWindowAction implements PlafTo
 
             setActionName("toolWindow.maximizeButton." + toolWindow.getId());
 
-            toolWindow.addPropertyChangeListener("maximizedBefore", propertyChangeListener);
+            toolWindow.addPropertyChangeListener("maximized", propertyChangeListener);
             toolWindow.addPropertyChangeListener("active", propertyChangeListener);
         }
     }
@@ -71,7 +71,7 @@ public class MaximizeToolWindowAction extends ToolWindowAction implements PlafTo
         private boolean flag = false;
 
         
-        public void onMaximizedBefore(PropertyChangeEvent evt) {
+        public void onMaximized(PropertyChangeEvent evt) {
             if ((Boolean) evt.getNewValue()) {
                 setIcon(UIManager.getIcon(MyDoggyKeySpace.MINIMIZE));
                 flag = true;

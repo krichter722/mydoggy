@@ -123,11 +123,12 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         try {
             XMLWriter writer = new XMLWriter(new OutputStreamWriter(outputStream));
 
-            MutableContext mutableContext = new DefaultMutableContext();
-            mutableContext.put(PersistenceDelegateFilter.class, (filter != null) ? filter : dummyFilter);
-            mutableContext.put("standalone", standalone);
+            MutableContext context = new DefaultMutableContext();
+            context.put(MyDoggyToolWindowManager.class, toolWindowManager);
+            context.put(PersistenceDelegateFilter.class, (filter != null) ? filter : dummyFilter);
+            context.put("standalone", standalone);
 
-            masterElementWriter.write(writer, mutableContext);
+            masterElementWriter.write(writer, context);
             writer.close();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -372,6 +373,17 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     writer.endElement("floating");
                 } else
                     writer.dataElement("floating", floatingDescriptorAttributes);
+
+                if (toolWindow.isMaximized() && (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE)) {
+                    Rectangle screenWindowBounds = context.get(MyDoggyToolWindowManager.class).getDescriptor(toolWindow).getScreenWindowBounds();
+
+                    AttributesImpl attributes = new AttributesImpl();
+                    attributes.addAttribute(null, "x", null, null, String.valueOf(screenWindowBounds.x));
+                    attributes.addAttribute(null, "y", null, null, String.valueOf(screenWindowBounds.y));
+                    attributes.addAttribute(null, "width", null, null, String.valueOf(screenWindowBounds.width));
+                    attributes.addAttribute(null, "height", null, null, String.valueOf(screenWindowBounds.height));
+                    writer.dataElement("screenWindowBounds", attributes);
+                }
 
                 // FloatingLiveTypeDescriptor
                 FloatingLiveTypeDescriptor floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
@@ -772,6 +784,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         }
 
     }
+
 
     // Reading
 

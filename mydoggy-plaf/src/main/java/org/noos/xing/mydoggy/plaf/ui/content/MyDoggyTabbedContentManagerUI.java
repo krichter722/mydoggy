@@ -431,7 +431,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         }
 
 
-        if (!showAlwaysTab && tabbedContentPane.getTabCount() == 0 && (contentValueAdjusting || toolWindowManager.getMainContent() == null)) {
+        if (!showAlwaysTab && tabbedContentPane.getTabCount() == 0 && (/*contentValueAdjusting || */toolWindowManager.getMainContent() == null)) {
             toolWindowManager.setMainContent(content.getComponent());
             return -1;
         } else {
