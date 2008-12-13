@@ -468,6 +468,9 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         }
 
         public void onOsDecorated(PropertyChangeEvent evt) {
+            if (window == null)
+                return;
+
             window.dispose();
             window.setUndecorated(!(Boolean) evt.getNewValue());
             window.setVisible(true);
@@ -512,6 +515,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
         public void onResizable(PropertyChangeEvent evt) {
             if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE && window != null) {
+                // TODO: what with this...
 //                applyResizableBorder((Boolean) evt.getNewValue(), true);
 //                pack();
             }
