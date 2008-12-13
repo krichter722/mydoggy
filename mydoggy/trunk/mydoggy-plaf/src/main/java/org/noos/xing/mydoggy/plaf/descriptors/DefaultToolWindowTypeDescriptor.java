@@ -152,7 +152,7 @@ public abstract class DefaultToolWindowTypeDescriptor extends PropertyChangeEven
             toolWindowAction.putValue("constraint", index);
         toolWindowActionMap.put(toolWindowAction.getId(), toolWindowAction);
 
-        firePropertyChangeEvent("toolWindowAction", oldToolWindowAction, toolWindowAction);
+        firePropertyChangeEvent("toolWindowAction", oldToolWindowAction, toolWindowAction, new Object[]{this});
     }
 
     public ToolWindowAction[] getToolWindowActions() {
@@ -169,7 +169,7 @@ public abstract class DefaultToolWindowTypeDescriptor extends PropertyChangeEven
                 toolWindowAction.setToolWindow(null);
         }
 
-        firePropertyChangeEvent("toolWindowAction", toolWindowAction, null);
+        firePropertyChangeEvent("toolWindowAction", toolWindowAction, null, new Object[]{this});
     }
 
 

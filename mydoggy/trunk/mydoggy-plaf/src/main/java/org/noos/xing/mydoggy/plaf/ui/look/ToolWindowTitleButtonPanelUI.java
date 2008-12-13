@@ -57,6 +57,9 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
                 setVisible((Component) toolWindowAction.getValue("component"), (Boolean) evt.getNewValue());
             }
         } else if ("toolWindowAction".equals(propertyName)) {
+            if (SwingUtil.getAt(evt, 0, null) != toolWindow.getTypeDescriptor(toolWindow.getType()))
+                return;
+
             if (evt.getNewValue() != null) {
                 if (evt.getOldValue() == null) {
                     // Add the action

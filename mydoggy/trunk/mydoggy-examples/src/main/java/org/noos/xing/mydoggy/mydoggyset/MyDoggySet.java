@@ -84,8 +84,7 @@ public class MyDoggySet {
         memoryMonitorDescriptor.setAnchor(ToolWindowAnchor.BOTTOM, 0);
         memoryMonitorDescriptor.setAnchorPositionLocked(true);
 
-        toolWindowManager.getToolWindow("Tool 1").getTypeDescriptor(DockedTypeDescriptor.class)
-                .addToolWindowAction(new CustomAction(), 0);
+        toolWindowManager.getToolWindow("Tool 1").addToolWindowAction(new CustomAction());
 
 
         if (runnable != null) {
@@ -783,7 +782,7 @@ public class MyDoggySet {
         public CustomAction() {
             super("CUSTOM ACTION", UIManager.getIcon(MyDoggyKeySpace.TOOL_SCROLL_BAR_UP));
             setText("HELLO WORLD");
-            setShowTextOnTitleBar(false);
+            setShowTextOnTitleBar(true);
 //            setVisibleOnMenuBar(false);
         }
 
