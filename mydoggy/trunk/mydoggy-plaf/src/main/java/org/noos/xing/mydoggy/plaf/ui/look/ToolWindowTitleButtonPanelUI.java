@@ -228,8 +228,7 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
             }
             containerLayout.setColumn(newCols);
         } else {
-            // TODO: modify this procedure....position should start from zero
-            int colIndex = 1 + ((toolWindowTitleButtonPanel.getComponentCount()  - index) * 2);
+            int colIndex = (index != 0 ? 1 : 0) + ((toolWindowTitleButtonPanel.getComponentCount()  - index) * 2);
 
             for (Component component : toolWindowTitleButtonPanel.getComponents()) {
                 TableLayoutConstraints constraints = containerLayout.getConstraints(component);

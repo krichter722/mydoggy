@@ -84,8 +84,8 @@ public class MyDoggySet {
         memoryMonitorDescriptor.setAnchor(ToolWindowAnchor.BOTTOM, 0);
         memoryMonitorDescriptor.setAnchorPositionLocked(true);
 
-        toolWindowManager.getToolWindow("Tool 3").getTypeDescriptor(DockedTypeDescriptor.class)
-                .addToolWindowAction(new CustomAction(), 2);
+        toolWindowManager.getToolWindow("Tool 1").getTypeDescriptor(DockedTypeDescriptor.class)
+                .addToolWindowAction(new CustomAction(), 0);
 
 
         if (runnable != null) {
