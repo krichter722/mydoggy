@@ -328,6 +328,7 @@ public class MyDoggySet {
 
         FloatingTypeDescriptor floatingTypeDescriptor = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class);
         floatingTypeDescriptor.setModal(true);
+        floatingTypeDescriptor.setOsDecorated(true);
         floatingTypeDescriptor.setAnimating(false);
 
         // Setup ContentManager
