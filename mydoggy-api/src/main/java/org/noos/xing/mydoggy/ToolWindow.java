@@ -274,36 +274,6 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
     ToolWindowType getType();
 
     /**
-     * Enable or disable the representative anchor button. The method throw an exception when it is called
-     * on a tool whose type is FLOATING_FREE.
-     *
-     * @param visible <tt>true</tt> to enable make visible the representative anchor button, false otherwise.
-     * @since 1.4.0
-     */
-    void setRepresentativeAnchorButtonVisible(boolean visible);
-
-    /**
-     * Returns <tt>true</tt> if the representative anchor button is visible, <tt>false</tt> otherwise.
-     *
-     * @return <tt>true</tt> if the representative anchor button is visible, <tt>false</tt> otherwise.
-     */
-    boolean isRepresentativeAnchorButtonVisible();
-
-    /**
-     *
-     * @param representativeAnchorButtonTitle
-     * @since 1.5.0
-     */
-    void setRepresentativeAnchorButtonTitle(String representativeAnchorButtonTitle);
-
-    /**
-     *
-     * @return
-     * @since 1.5.0
-     */
-    String getRepresentativeAnchorButtonTitle(); 
-
-    /**
      * Sets the "hideOnZeroTabs" property. When <code>true</code> is used this means that
      * the tool is hidden when no tabs are available on it.
      *

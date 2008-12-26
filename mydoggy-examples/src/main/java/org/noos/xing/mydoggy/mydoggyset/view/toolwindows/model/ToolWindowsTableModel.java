@@ -64,7 +64,7 @@ public final class ToolWindowsTableModel extends DefaultTableModel implements Pr
                 break;
             case 9:
                 if (toolWindows[row].getType() != ToolWindowType.FLOATING_FREE)
-                    toolWindows[row].setRepresentativeAnchorButtonVisible((Boolean) aValue);
+                    toolWindows[row].getRepresentativeAnchorDescriptor().setVisible((Boolean) aValue);
                 else
                     JOptionPane.showMessageDialog(null, "Cannot modify on FLOATING_FREE tools");
                 break;
@@ -105,7 +105,7 @@ public final class ToolWindowsTableModel extends DefaultTableModel implements Pr
                 return toolWindows[row].isFlashing();
 
             case 9:
-                return toolWindows[row].isRepresentativeAnchorButtonVisible();
+                return toolWindows[row].getRepresentativeAnchorDescriptor().isVisible();
             
             case 10:
                 return toolWindows[row].isLockedOnAnchor();

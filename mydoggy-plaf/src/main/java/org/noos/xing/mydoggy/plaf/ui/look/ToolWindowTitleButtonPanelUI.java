@@ -21,6 +21,8 @@ import javax.swing.plaf.basic.BasicPanelUI;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -80,7 +82,7 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
                 removeToolWindowAction((ToolWindowAction) evt.getOldValue());
             }
         } else if ("type".equals(propertyName)) {
-            setType((ToolWindowType) evt.getNewValue());
+            setType((ToolWindowType) evt.getOldValue(), (ToolWindowType) evt.getNewValue());
         }
     }
 
@@ -160,9 +162,12 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
     }
 
 
-    protected void setType(ToolWindowType toolWindowType) {
+    protected void setType(ToolWindowType oldType, ToolWindowType toolWindowType) {
         if (toolWindowType == ToolWindowType.EXTERN)
             return;
+
+        // Store Current Layout
+        storeCurrentLayout(oldType);
 
         // remove all actions from the container
         toolWindowTitleButtonPanel.removeAll();
@@ -188,6 +193,36 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
         }
     }
 
+    Map<ToolWindowType, Map<ToolWindowAction, Integer>> layouts = new HashMap<ToolWindowType, Map<ToolWindowAction, Integer>>();
+
+    protected void storeCurrentLayout(ToolWindowType toolWindowType) {
+        Map<ToolWindowAction, Integer> layout = layouts.get(toolWindowType);
+        if (layout == null) {
+            layout = new HashMap<ToolWindowAction, Integer>();
+            layouts.put(toolWindowType, layout);
+        }
+
+        layout.clear();
+
+        for (Component component : toolWindowTitleButtonPanel.getComponents()) {
+            ToolWindowTitleButton toolWindowTitleButton = (ToolWindowTitleButton) component;
+
+            layout.put((ToolWindowAction) toolWindowTitleButton.getAction(),
+                       toolWindowTitleButtonPanel.getComponentCount() - 1 - containerLayout.getConstraints(toolWindowTitleButton).col1 / 2);
+        }
+    }
+
+    private int a;
+
+    protected int loadFromLayout(ToolWindowAction toolWindowAction) {
+        Map<ToolWindowAction, Integer> layout = layouts.get(toolWindow.getType());
+        if (layout != null) {
+            Integer pos = layout.get(toolWindowAction);
+            return (pos != null) ? pos : -1;
+        }
+        return -1;
+    }
+
     protected Component addToolWindowAction(ToolWindowAction toolWindowAction) {
         return addToolWindowAction(toolWindowAction, -1);
     }
@@ -195,6 +230,9 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
     protected Component addToolWindowAction(ToolWindowAction toolWindowAction, int index) {
         if (!toolWindowAction.isVisibleOnTitleBar())
             return null;
+
+        if (index == -1)
+            index = loadFromLayout(toolWindowAction);
 
         int col;
 

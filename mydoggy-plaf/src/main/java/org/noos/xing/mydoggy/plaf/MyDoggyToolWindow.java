@@ -41,8 +41,6 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     protected boolean flash;
     protected boolean maximized;
     protected boolean aggregateEnabled;
-    protected String representativeAnchorButtonTitle;
-    protected boolean representativeAnchorButtonVisible;
     protected boolean lockedOnAnchor;
     protected boolean hideOnZeroTabs;
 
@@ -74,8 +72,6 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         this.type = type;
         this.available = this.active = this.visible = this.maximized = this.aggregateEnabled = false;
         this.hideOnZeroTabs = true;
-        this.representativeAnchorButtonVisible = true;
-        this.representativeAnchorButtonTitle = id;
 
         this.descriptor = (ToolWindowDescriptor) manager.createDescriptor(this);
 
@@ -454,10 +450,6 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         if (this.type == ToolWindowType.EXTERN && type != ToolWindowType.FLOATING_FREE)
             forceAvailable = true;
 
-        if (type == ToolWindowType.FLOATING_FREE) {
-            representativeAnchorButtonVisible = false;
-        }
-
         setTypeInternal(type);
 
         if (forceAvailable) {
@@ -522,45 +514,6 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             if (descriptor.getDockLength() < descriptor.getMinimumDockLength())
                 descriptor.setDockLength(descriptor.getMinimumDockLength());
         }
-    }
-
-    public void setRepresentativeAnchorButtonVisible(boolean visible) {
-        synchronized (getLock()) {
-            if (!isAvailable())
-                return;
-
-            if (type == ToolWindowType.FLOATING_FREE)
-                throw new IllegalArgumentException("Cannot call this method if the toolwindow has type FLOATING_FREE,");
-
-            if (this.representativeAnchorButtonVisible == visible)
-                return;
-
-            boolean old = this.representativeAnchorButtonVisible;
-            this.representativeAnchorButtonVisible = visible;
-
-            firePropertyChangeEvent("representativeAnchorButtonVisible", old, visible);
-        }
-    }
-
-    public boolean isRepresentativeAnchorButtonVisible() {
-        return representativeAnchorButtonVisible;
-    }
-
-    public void setRepresentativeAnchorButtonTitle(String representativeAnchorButtonTitle) {
-        if (representativeAnchorButtonTitle == null)
-            representativeAnchorButtonTitle = id;
-
-        if (representativeAnchorButtonTitle != null && representativeAnchorButtonTitle.equals(this.representativeAnchorButtonTitle))
-            return;
-
-        String old = this.representativeAnchorButtonTitle;
-        this.representativeAnchorButtonTitle = representativeAnchorButtonTitle;
-
-        firePropertyChangeEvent("representativeAnchorButtonTitle", old, representativeAnchorButtonTitle);
-    }
-
-    public String getRepresentativeAnchorButtonTitle() {
-        return representativeAnchorButtonTitle;
     }
 
     public void setMaximized(boolean maximized) {

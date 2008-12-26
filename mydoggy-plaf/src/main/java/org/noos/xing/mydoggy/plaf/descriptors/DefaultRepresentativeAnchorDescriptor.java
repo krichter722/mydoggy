@@ -1,7 +1,9 @@
 package org.noos.xing.mydoggy.plaf.descriptors;
 
 import org.noos.xing.mydoggy.RepresentativeAnchorDescriptor;
+import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 
 import java.util.HashSet;
@@ -12,17 +14,26 @@ import java.util.Set;
  */
 public class DefaultRepresentativeAnchorDescriptor extends PropertyChangeEventSource implements RepresentativeAnchorDescriptor {
 
+    protected ToolWindow toolWindow;
+
     protected boolean previewEnabled;
     protected int previewDelay;
     protected float previewTransparentRatio;
+
     protected Set<ToolWindowAnchor> lockingAnchors;
 
+    protected String title;
+    protected boolean visible;
 
-    public DefaultRepresentativeAnchorDescriptor() {
+
+    public DefaultRepresentativeAnchorDescriptor(ToolWindow toolWindow) {
+        this.toolWindow = toolWindow;
         this.previewEnabled = true;
         this.previewDelay = 1000;
         this.previewTransparentRatio = 0.65f;
         this.lockingAnchors = new HashSet<ToolWindowAnchor>();
+        this.visible = true;
+        this.title = toolWindow.getId();
     }
 
 
@@ -84,4 +95,43 @@ public class DefaultRepresentativeAnchorDescriptor extends PropertyChangeEventSo
     public boolean containsLockingAnchor(ToolWindowAnchor anchor) {
         return lockingAnchors.contains(anchor);
     }
+
+    public void setVisible(boolean visible) {
+        if (toolWindow.getType() == ToolWindowType.FLOATING_FREE)
+            return;
+
+        if (!toolWindow.isAvailable())
+            return;
+
+        if (this.visible == visible)
+            return;
+
+        boolean old = this.visible;
+        this.visible = visible;
+
+        firePropertyChangeEvent("visible", old, visible);
+    }
+
+    public boolean isVisible() {
+        return toolWindow.getType() != ToolWindowType.FLOATING_LIVE && visible;
+    }
+
+    public void setTitle(String title) {
+        if (title == null)
+            title = toolWindow.getId();
+
+        if (title != null && title.equals(this.title))
+            return;
+
+        String old = this.title;
+        this.title = title;
+
+        firePropertyChangeEvent("title", old, title);
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+
 }

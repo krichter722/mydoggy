@@ -12,7 +12,7 @@ import org.noos.xing.yasaf.plaf.component.ToolBarContentPanel;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.plaf.view.MapViewContext;
 import org.noos.xing.yasaf.plaf.view.listener.ContextPutItemListener;
-import org.noos.xing.yasaf.plaf.view.listener.ContextPutListSelectionListener;
+import org.noos.xing.yasaf.plaf.view.listener.ContextPutTableListSelectionListener;
 import org.noos.xing.yasaf.view.View;
 import org.noos.xing.yasaf.view.ViewContext;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
@@ -55,7 +55,7 @@ public class GroupsView implements View {
             groupsTable = new JTable(new ToolGroupsTableModel(viewContext));
 
             groupsTable.getSelectionModel().addListSelectionListener(
-                    new ContextPutListSelectionListener(viewContext, ToolWindowGroup.class, groupsTable, -1)
+                    new ContextPutTableListSelectionListener(viewContext, ToolWindowGroup.class, groupsTable, -1)
             );
 
             JCheckBox booleanEditor = new JCheckBox();
@@ -120,7 +120,7 @@ public class GroupsView implements View {
             JTable toolsInGroupTable = new JTable(new ToolsInGroupTableModel(viewContext));
             toolsInGroupTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             toolsInGroupTable.getSelectionModel().addListSelectionListener(
-                    new ContextPutListSelectionListener(viewContext, GroupKeySpace.TOOL_IN_GROUP_ID, toolsInGroupTable, 0)
+                    new ContextPutTableListSelectionListener(viewContext, GroupKeySpace.TOOL_IN_GROUP_ID, toolsInGroupTable, 0)
             );
 
             ToolBarContentPanel panel = new ToolBarContentPanel(new JScrollPane(toolsInGroupTable));

@@ -10,6 +10,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToolsOnBarMouseListener;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.drag.ToolWindowBarDropTarget;
+import org.noos.xing.mydoggy.plaf.ui.util.SourceFilterPropertyChangeListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -334,7 +335,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         propertyChangeSupport = new PropertyChangeSupport(this);
         AvailableListener availableListener = new AvailableListener();
         propertyChangeSupport.addPropertyChangeListener("available", availableListener);
-        propertyChangeSupport.addPropertyChangeListener("representativeAnchorButtonVisible", availableListener);
+        propertyChangeSupport.addPropertyChangeListener("visible", new SourceFilterPropertyChangeListener(availableListener, RepresentativeAnchorDescriptor.class));
         propertyChangeSupport.addPropertyChangeListener("showUnavailableTools", new ShowUnavailableToolsListener());
 
         propertyChangeSupport.addPropertyChangeListener("visible.before", new VisibleBeforeListener());
@@ -343,7 +344,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         propertyChangeSupport.addPropertyChangeListener("visible.FLOATING_FREE", new VisibleFloatingFreeListener());
         propertyChangeSupport.addPropertyChangeListener("visible.SLIDING", new VisibleSlidingListener());
         propertyChangeSupport.addPropertyChangeListener("visible.FLOATING_LIVE", new VisibleFloatingLiveListener());
-        propertyChangeSupport.addPropertyChangeListener("visible", new VisibleListener());
+        propertyChangeSupport.addPropertyChangeListener("visible", new SourceFilterPropertyChangeListener(new VisibleListener(), ToolWindowDescriptor.class));
 
         propertyChangeSupport.addPropertyChangeListener("active.before", new ActiveBeforeListener());
 
@@ -612,11 +613,11 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             DockableDescriptor descriptor = (DockableDescriptor) evt.getSource();
 
             if (isDockableDescriptorValid(descriptor)) {
-                boolean rabEvent = evt.getPropertyName().equals("representativeAnchorButtonVisible");
+                boolean rabEvent = evt.getPropertyName().equals("visible");
 
                 if (!rabEvent) {
                     if (descriptor.getDockableType() == DockableDescriptor.DockableType.TOOL_WINDOW &&
-                        !((ToolWindow) descriptor.getDockable()).isRepresentativeAnchorButtonVisible())
+                        !((ToolWindow) descriptor.getDockable()).getRepresentativeAnchorDescriptor().isVisible())
                         return;
                 }
 

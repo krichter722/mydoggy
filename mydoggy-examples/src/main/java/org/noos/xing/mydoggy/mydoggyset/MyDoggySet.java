@@ -273,11 +273,13 @@ public class MyDoggySet {
 
         // Setup Tool 1
         toolWindow = toolWindowManager.getToolWindow("Tool 1");
-        toolWindow.setRepresentativeAnchorButtonTitle("Hello  World 1!!!");
+        toolWindow.getRepresentativeAnchorDescriptor().setTitle("Hello  World 1!!!");
         toolWindow.setAutoHide(true);
         dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
 //        representativeAnchorDescriptor.setPopupMenuEnabled(false);
         dockedTypeDescriptor.setDockLength(200);
+
+//        UIManager.put(MyDoggyKeySpace.DEBUG, false);
 
         toolWindow.addToolWindowAction(new ToolWindowCloseAction());
 
@@ -300,7 +302,7 @@ public class MyDoggySet {
 
         // Setup Tool 3
         toolWindow = toolWindowManager.getToolWindow("Tool 3");
-        toolWindow.setRepresentativeAnchorButtonTitle("Tool 3 !!!");
+        toolWindow.getRepresentativeAnchorDescriptor().setTitle("Tool 3 !!!");
         dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
 
         JMenuItem menuItem = new JMenuItem("Hello World!!!");
