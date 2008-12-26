@@ -8,7 +8,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.plaf.component.ToolBarContentPanel;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
-import org.noos.xing.yasaf.plaf.view.listener.ContextPutListSelectionListener;
+import org.noos.xing.yasaf.plaf.view.listener.ContextPutTableListSelectionListener;
 import org.noos.xing.yasaf.view.ViewContext;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
 import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
@@ -34,7 +34,7 @@ public class ContentTableView extends ComponentView {
         JTable contentsTable = new JTable(new ContentsTableModel(viewContext.get(ToolWindowManager.class)));
         contentsTable.getTableHeader().setReorderingAllowed(false);
         contentsTable.getSelectionModel().addListSelectionListener(
-                new ContextPutListSelectionListener(viewContext, Content.class, contentsTable, -1)
+                new ContextPutTableListSelectionListener(viewContext, Content.class, contentsTable, -1)
         );
 
         JCheckBox booleanEditor = new JCheckBox();

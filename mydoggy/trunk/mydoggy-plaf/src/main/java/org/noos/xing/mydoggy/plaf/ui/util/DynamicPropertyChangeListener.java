@@ -28,13 +28,15 @@ public class DynamicPropertyChangeListener implements PropertyChangeListener {
         Method method;
         try {
             String propertyName = evt.getPropertyName();
-            method = sourceClass.getMethod("on" + propertyName.substring(0,1).toUpperCase() + propertyName.substring(1), PropertyChangeEvent.class);
+            method = sourceClass.getMethod("on" + propertyName.substring(0,1).toUpperCase() + propertyName.substring(1),
+                                           PropertyChangeEvent.class);
         } catch (NoSuchMethodException e) {
             if (UIManager.getBoolean(MyDoggyKeySpace.DEBUG))
                 System.err.println("No method for event found. " + evt.getPropertyName() + " - " + this.getClass().getName());
 //            e.printStackTrace();
             return;
         }
+
         if (method != null)
             try {
                 method.invoke(source, evt);

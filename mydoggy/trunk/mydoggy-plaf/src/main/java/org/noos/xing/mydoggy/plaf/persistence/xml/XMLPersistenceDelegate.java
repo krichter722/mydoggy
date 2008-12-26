@@ -296,12 +296,10 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 toolAttributes.addAttribute(null, "aggregateMode", null, null, String.valueOf(toolWindow.isAggregateMode()));
                 toolAttributes.addAttribute(null, "maximized", null, null, String.valueOf(toolWindow.isMaximized()));
                 toolAttributes.addAttribute(null, "index", null, null, String.valueOf(toolWindow.getIndex()));
-                toolAttributes.addAttribute(null, "representativeAnchorButtonVisible", null, null, String.valueOf(toolWindow.isRepresentativeAnchorButtonVisible()));
                 toolAttributes.addAttribute(null, "flashing", null, null, String.valueOf(toolWindow.isFlashing()));
 
                 // Properties from 1.5.0
                 toolAttributes.addAttribute(null, "lockedOnAnchor", null, null, String.valueOf(toolWindow.isLockedOnAnchor()));
-                toolAttributes.addAttribute(null, "representativeAnchorButtonTitle", null, null, toolWindow.getRepresentativeAnchorButtonTitle());
                 toolAttributes.addAttribute(null, "hideOnZeroTabs", null, null, String.valueOf(toolWindow.isHideOnZeroTabs()));
                 writer.startElement("toolWindow", toolAttributes);
 
@@ -425,6 +423,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 RepresentativeAnchorDescriptor anchorDescriptor = toolWindow.getRepresentativeAnchorDescriptor();
 
                 AttributesImpl anchorDescriptorAttributes = new AttributesImpl();
+                anchorDescriptorAttributes.addAttribute(null, "visible", null, null, String.valueOf(toolWindow.getRepresentativeAnchorDescriptor().isVisible()));
+                anchorDescriptorAttributes.addAttribute(null, "title", null, null, toolWindow.getRepresentativeAnchorDescriptor().getTitle());
                 anchorDescriptorAttributes.addAttribute(null, "previewEnabled", null, null, String.valueOf(anchorDescriptor.isPreviewEnabled()));
                 anchorDescriptorAttributes.addAttribute(null, "previewDelay", null, null, String.valueOf(anchorDescriptor.getPreviewDelay()));
                 anchorDescriptorAttributes.addAttribute(null, "previewTransparentRatio", null, null, String.valueOf(anchorDescriptor.getPreviewTransparentRatio()));
@@ -1090,6 +1090,9 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     descriptor.setPreviewEnabled(getBoolean(typeElement, "previewEnabled", true));
                     descriptor.setPreviewDelay(getInteger(typeElement, "previewDelay", 0));
                     descriptor.setPreviewTransparentRatio(getFloat(typeElement, "previewTransparentRatio", 0.7f));
+                    descriptor.setTitle(typeElement.getAttribute("title"));
+                    if (toolWindow.getType() != ToolWindowType.FLOATING_FREE)
+                        descriptor.setVisible(getBoolean(typeElement, "visible", true));
 
                     descriptor.removeAllLockingAnchor();
                     Element lockingAnchorsElement = getElement(typeElement, "lockingAnchors");
@@ -1104,6 +1107,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 }
 
 
+                // Set toolwindow properties
 
                 ToolWindowType type = ToolWindowType.valueOf(tool.getAttribute("type"));
                 if (type != ToolWindowType.EXTERN)
@@ -1115,13 +1119,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 if (index != -1)
                     toolWindow.setIndex(index);
                 toolWindow.setAggregateMode(getBoolean(tool, "aggregateMode", false));
-                if (toolWindow.getType() != ToolWindowType.FLOATING_FREE)
-                    toolWindow.setRepresentativeAnchorButtonVisible(
-                            getBoolean(tool, "representativeAnchorButtonVisible", true)
-                    );
                 toolWindow.setFlashing(getBoolean(tool, "flashing", false));
                 toolWindow.setLockedOnAnchor(getBoolean(tool, "lockedOnAnchor", false));
-                toolWindow.setRepresentativeAnchorButtonTitle(tool.getAttribute("representativeAnchorButtonTitle"));
                 toolWindow.setHideOnZeroTabs(getBoolean(tool, "hideOnZeroTabs", false));
 
                 // Load tabs

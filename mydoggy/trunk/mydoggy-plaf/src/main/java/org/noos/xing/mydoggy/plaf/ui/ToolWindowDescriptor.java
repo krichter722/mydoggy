@@ -117,7 +117,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
             updateRepresentativeAnchor();
         } else if ("icon".equals(propertyName)) {
             updateRepresentativeAnchor();
-        } else if ("representativeAnchorButtonTitle".equals(propertyName)) {
+        } else if (evt.getSource() instanceof RepresentativeAnchorDescriptor && "title".equals(propertyName)) {
             updateRepresentativeAnchor();
         } else if ("dockLength".equals(propertyName)) {
             if (!dockLengthValueAdjusting) {
@@ -132,7 +132,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
             }
         } else if ("hideRepresentativeButtonOnVisible".equals(propertyName)) {
             if (toolWindow.isVisible())
-                toolWindow.setRepresentativeAnchorButtonVisible(!(Boolean) evt.getNewValue());
+                toolWindow.getRepresentativeAnchorDescriptor().setVisible(!(Boolean) evt.getNewValue());
         } else if ("UI".equals(evt.getPropertyName())) {
             initPopupMenu();
             SwingUtilities.updateComponentTreeUI(popupMenu);
@@ -185,7 +185,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         if (representativeAnchor == null) {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
-            String labelText = SwingUtil.getUserString(toolWindow.getRepresentativeAnchorButtonTitle());
+            String labelText = SwingUtil.getUserString(toolWindow.getRepresentativeAnchorDescriptor().getTitle());
             String toolRepresentativeAnchorText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
                                                   ? toolWindow.getIndex() + " : " + labelText
                                                   : labelText;
@@ -243,7 +243,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         if (representativeAnchor != null) {
             ToolWindowAnchor anchor = toolWindow.getAnchor();
 
-            String labelText = SwingUtil.getUserString(toolWindow.getRepresentativeAnchorButtonTitle());
+            String labelText = SwingUtil.getUserString(toolWindow.getRepresentativeAnchorDescriptor().getTitle());
             String toolRepresentativeAnchorText = (toolWindow.getIndex() > 0 && getManager().getToolWindowManagerDescriptor().isNumberingEnabled())
                                                   ? toolWindow.getIndex() + " : " + labelText
                                                   : labelText;
@@ -742,7 +742,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         dockedTypeDescriptor = (DockedTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).cloneMe(this);
         dockedTypeDescriptor.addPropertyChangeListener(this);
 
-        representativeAnchorDescriptor = new DefaultRepresentativeAnchorDescriptor();
+        representativeAnchorDescriptor = new DefaultRepresentativeAnchorDescriptor(toolWindow);
+        representativeAnchorDescriptor.addPropertyChangeListener(this);
     }
 
     protected void initPopupMenu() {
@@ -762,7 +763,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                 popupMenu.add(menuItem);
         }
     }
-
 
 
     public class ToolWindowDescriptorCleaner extends DefaultCleanerAggregator {

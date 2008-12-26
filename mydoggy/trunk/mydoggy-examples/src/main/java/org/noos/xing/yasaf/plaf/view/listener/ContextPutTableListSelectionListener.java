@@ -9,21 +9,22 @@ import javax.swing.event.ListSelectionListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ContextPutListSelectionListener implements ListSelectionListener {
+public class ContextPutTableListSelectionListener implements ListSelectionListener {
     private ViewContext viewContext;
     private Object key;
     private int column;
-    private JList list;
+    private JTable table;
 
-    public ContextPutListSelectionListener(ViewContext viewContext, Object key, JList list) {
+    public ContextPutTableListSelectionListener(ViewContext viewContext, Object key, JTable table, int column) {
         this.viewContext = viewContext;
         this.key = key;
-        this.list = list;
+        this.table = table;
+        this.column = column;
     }
 
     public void valueChanged(ListSelectionEvent e) {
-        if (list.getSelectedIndex() != -1)
-            viewContext.put(key, list.getSelectedValue());
+        if (table.getSelectedRow() != -1)
+            viewContext.put(key, table.getValueAt(table.getSelectedRow(), column));
         else
             viewContext.put(key, null);
     }

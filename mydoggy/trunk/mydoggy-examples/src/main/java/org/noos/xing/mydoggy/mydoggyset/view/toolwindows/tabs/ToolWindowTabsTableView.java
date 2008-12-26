@@ -7,7 +7,7 @@ import org.noos.xing.mydoggy.mydoggyset.view.toolwindows.model.ToolWindowTabsTab
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.plaf.component.ToolBarContentPanel;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
-import org.noos.xing.yasaf.plaf.view.listener.ContextPutListSelectionListener;
+import org.noos.xing.yasaf.plaf.view.listener.ContextPutTableListSelectionListener;
 import org.noos.xing.yasaf.view.ViewContext;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
 import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
@@ -33,7 +33,7 @@ public class ToolWindowTabsTableView extends ComponentView {
         toolsTable.getTableHeader().setReorderingAllowed(false);
         toolsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         toolsTable.getSelectionModel().addListSelectionListener(
-                new ContextPutListSelectionListener(viewContext, ToolWindowTab.class, toolsTable, -1)
+                new ContextPutTableListSelectionListener(viewContext, ToolWindowTab.class, toolsTable, -1)
         );
 
         // Flashing columns...

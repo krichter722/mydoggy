@@ -26,6 +26,7 @@ import org.noos.xing.mydoggy.plaf.ui.drag.ContentManagerDropTarget;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.util.DockableManager2ToolWindowManagerWrapper;
+import org.noos.xing.mydoggy.plaf.ui.util.SourceFilterPropertyChangeListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -214,6 +215,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                                                              title, icon, component
         );
         toolWindow.addPlafPropertyChangeListener(this);
+        toolWindow.getRepresentativeAnchorDescriptor().addPropertyChangeListener(this);
 
         // fire Event
         fireRegisteredToolEvent(toolWindow);
@@ -233,7 +235,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
                 // Deactivate the tool
                 if (toolWindow.getType() != ToolWindowType.FLOATING_FREE)
-                    toolWindow.setRepresentativeAnchorButtonVisible(false);
+                    toolWindow.getRepresentativeAnchorDescriptor().setVisible(false);
                 toolWindow.setFlashing(false);
                 toolWindow.setMaximized(false);
                 toolWindow.setAvailable(false);
@@ -436,7 +438,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                    !(source instanceof MyDoggyToolWindowManager) &&
                    !(source instanceof MyDoggyToolWindowTab) &&
                    !(source instanceof ToolWindowTypeDescriptor) &&
-                   !(source instanceof ContentManager)) {
+                   !(source instanceof ContentManager) &&
+                   !(source instanceof RepresentativeAnchorDescriptor)) {
             throw new RuntimeException("Illegal Source : " + source);
         }
 
@@ -835,9 +838,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         // Init PropertyChange listeners
         AvailablePropertyChangeListener availablePropertyChangeListener = new AvailablePropertyChangeListener();
         propertyChangeSupport.addPropertyChangeListener("available", availablePropertyChangeListener);
-        propertyChangeSupport.addPropertyChangeListener("representativeAnchorButtonVisible", availablePropertyChangeListener);
+        propertyChangeSupport.addPropertyChangeListener("visible", new SourceFilterPropertyChangeListener(availablePropertyChangeListener, RepresentativeAnchorDescriptor.class));
         propertyChangeSupport.addPropertyChangeListener("showUnavailableTools", new ShowUnavailableToolsPropertyChangeListener());
-        propertyChangeSupport.addPropertyChangeListener("visible", new VisiblePropertyChangeListener());
+        propertyChangeSupport.addPropertyChangeListener("visible", new SourceFilterPropertyChangeListener(new VisiblePropertyChangeListener(), ToolWindowDescriptor.class));
         propertyChangeSupport.addPropertyChangeListener("active", new ActivePropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("anchor", new AnchorPropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("type", new TypePropertyChangeListener());

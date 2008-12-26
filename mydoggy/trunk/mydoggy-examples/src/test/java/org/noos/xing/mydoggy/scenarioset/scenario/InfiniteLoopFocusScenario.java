@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.mydoggyset;
+package org.noos.xing.mydoggy.scenarioset.scenario;
 
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
@@ -7,34 +7,43 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 
 /**
- * Test used to reproduce an infite-loop bug where two ToolWindows keep getting the focus alternatively.
- * <p/>
- * To produce the bug, just drag and drop the Tool_2 ToolWindow to the bottom of the Tool_1.
- * The Tool_2 must not have the focus when you start draging.
- *
- * @author Jean Morissette (jean.morissette@gmail.com)
+ * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class Test {
+public class InfiniteLoopFocusScenario implements Scenario {
+
 
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
 
+
+    public String getName() {
+        return this.getClass().getName();
+    }
+
+    public void launch() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                setUp();
+                start();
+            }
+        });
+    }
+
     protected void setUp() {
         initComponents();
-//        initToolWindowManager();
+        initToolWindowManager();
     }
 
     protected void start() {
         frame.setVisible(true);
 
-//        ToolWindow tw1 = toolWindowManager.getToolWindow("Tool_1");
-//        tw1.setActive(true);
+        ToolWindow tw1 = toolWindowManager.getToolWindow("Tool_1");
+        tw1.setActive(true);
 //
-//        ToolWindow tw2 = toolWindowManager.getToolWindow("Tool_2");
-//        tw2.setVisible(true);
+        ToolWindow tw2 = toolWindowManager.getToolWindow("Tool_2");
+        tw2.setVisible(true);
     }
 
     protected void initComponents() {
@@ -79,21 +88,4 @@ public class Test {
         this.frame.getContentPane().add(myDoggyToolWindowManager, BorderLayout.CENTER);
     }
 
-    public void run() {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                setUp();
-                start();
-            }
-        });
-    }
-
-    public static void main(String[] args) throws IOException {
-        Test test = new Test();
-        try {
-            test.run();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }
