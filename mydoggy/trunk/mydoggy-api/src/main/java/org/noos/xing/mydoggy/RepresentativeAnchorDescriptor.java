@@ -8,6 +8,8 @@ package org.noos.xing.mydoggy;
  */
 public interface RepresentativeAnchorDescriptor extends Observable {
 
+    Dockable getDockable();
+    
     /**
      * Enable or disable the representative anchor button. The method throw an exception when it is called
      * on a tool whose type is FLOATING_FREE.
@@ -136,5 +138,11 @@ public interface RepresentativeAnchorDescriptor extends Observable {
      * @since 1.5.0
      */
     boolean containsLockingAnchor(ToolWindowAnchor anchor);
+
+    /**
+     * TODO:...
+     * @param message
+     */
+    void showMessage(String message);
 
 }

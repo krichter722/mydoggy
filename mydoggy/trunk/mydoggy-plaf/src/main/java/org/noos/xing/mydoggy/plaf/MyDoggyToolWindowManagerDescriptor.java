@@ -2,7 +2,6 @@ package org.noos.xing.mydoggy.plaf;
 
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
-import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import java.awt.*;
@@ -110,8 +109,7 @@ public class MyDoggyToolWindowManagerDescriptor extends PropertyChangeEventSourc
     public void propertyChange(PropertyChangeEvent evt) {
         if ("visible".equals(evt.getPropertyName())) {
             if (((Boolean) evt.getNewValue())) {
-                ToolWindowAnchor target = ((ToolWindowDescriptor) evt.getSource()).getToolWindow().getAnchor();
-                addMostRecentAnchor(target);
+                addMostRecentAnchor(((ToolWindow) evt.getSource()).getAnchor());
 
                 if (pushAwayMode == PushAwayMode.MOST_RECENT)
                     changePushAwayMode(PushAwayMode.MOST_RECENT);

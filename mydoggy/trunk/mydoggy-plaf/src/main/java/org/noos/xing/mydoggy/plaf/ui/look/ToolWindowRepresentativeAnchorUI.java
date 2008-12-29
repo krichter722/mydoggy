@@ -10,6 +10,7 @@ import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.GlassPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.RepresentativeAnchorBalloonTip;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowRepresentativeAnchor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
@@ -62,6 +63,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     protected AbstractAnimation flashingAnimation;
 
     protected TranslucentPanel previewPanel;
+    protected RepresentativeAnchorBalloonTip balloonTip;
 
     // Drag fields
     protected RemoveNotifyDragListener removeNotifyDragListener;
@@ -99,7 +101,13 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                     SwingUtil.repaint(representativeAnchor);
                 }
             }
-        } 
+        } else if ("showMessage".equals(propertyName)) {
+//            System.out.println("ToolWindowRepresentativeAnchorUI.propertyChange");
+//
+//            balloonTip.setText((String) e.getNewValue());
+//            balloonTip.show(representativeAnchor.getX(), representativeAnchor.getY());
+
+        }
     }
 
     public void cleanup() {
@@ -195,7 +203,10 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
     protected void installDefaults(JLabel c) {
         super.installDefaults(c);
-        
+
+        this.balloonTip = new RepresentativeAnchorBalloonTip(descriptor.getManager().getRootPaneContainer());
+        balloonTip.setPreferredSize(new Dimension(120,50));
+
         // Flashing animation fields
         this.flashingAnimation = new GradientAnimation();
         this.flasingDuration = -1;

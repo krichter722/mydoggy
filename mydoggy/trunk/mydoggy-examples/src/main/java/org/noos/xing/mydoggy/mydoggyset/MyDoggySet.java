@@ -86,6 +86,11 @@ public class MyDoggySet {
 
         toolWindowManager.getToolWindow("Tool 1").addToolWindowAction(new CustomAction());
 
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                toolWindowManager.getToolWindow("Tool 1").getRepresentativeAnchorDescriptor().showMessage("Hello World!!!");
+            }
+        });
 
         if (runnable != null) {
             Thread t = new Thread(runnable);

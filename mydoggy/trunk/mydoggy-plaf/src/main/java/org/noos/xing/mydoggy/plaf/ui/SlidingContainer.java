@@ -426,7 +426,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
 
         public void onAnchor(PropertyChangeEvent evt) {
-            ToolWindow evtToolWindow = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
+            ToolWindow evtToolWindow = (ToolWindow) evt.getSource();
             if (toolWindow.getType() == ToolWindowType.SLIDING && toolWindow.isVisible() && !evtToolWindow.isVisible())
                 update();
         }

@@ -333,6 +333,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     protected void initListeners() {
         propertyChangeSupport = new PropertyChangeSupport(this);
+
         AvailableListener availableListener = new AvailableListener();
         propertyChangeSupport.addPropertyChangeListener("available", availableListener);
         propertyChangeSupport.addPropertyChangeListener("visible", new SourceFilterPropertyChangeListener(availableListener, RepresentativeAnchorDescriptor.class));
@@ -344,7 +345,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         propertyChangeSupport.addPropertyChangeListener("visible.FLOATING_FREE", new VisibleFloatingFreeListener());
         propertyChangeSupport.addPropertyChangeListener("visible.SLIDING", new VisibleSlidingListener());
         propertyChangeSupport.addPropertyChangeListener("visible.FLOATING_LIVE", new VisibleFloatingLiveListener());
-        propertyChangeSupport.addPropertyChangeListener("visible", new SourceFilterPropertyChangeListener(new VisibleListener(), ToolWindowDescriptor.class));
+        propertyChangeSupport.addPropertyChangeListener("visible", new SourceFilterPropertyChangeListener(new VisibleListener(), ToolWindow.class));
 
         propertyChangeSupport.addPropertyChangeListener("active.before", new ActiveBeforeListener());
 
@@ -610,7 +611,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            DockableDescriptor descriptor = (DockableDescriptor) evt.getSource();
+            DockableDescriptor descriptor = manager.getDockableDescriptorBySource(evt.getSource());
 
             if (isDockableDescriptorValid(descriptor)) {
                 boolean rabEvent = evt.getPropertyName().equals("visible");
@@ -713,6 +714,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             }
             return true;
         }
+
     }
 
     public class ShowUnavailableToolsListener implements PropertyChangeListener {
@@ -746,7 +748,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     public class ActiveBeforeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
+            ToolWindow sourceTool = (ToolWindow) evt.getSource();
             boolean newValue = (Boolean) evt.getNewValue();
 
             if (newValue) {
@@ -765,7 +767,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     public class TypeListener extends AvailableListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
+            ToolWindowDescriptor toolWindowDescriptor = manager.getDescriptor((ToolWindow)  evt.getSource());
 
             if (evt.getOldValue() == ToolWindowType.FLOATING_FREE) {
                 addRepresentativeAnchor(toolWindowDescriptor, toolWindowDescriptor.getRepresentativeAnchor(toolWindowBarContainer), -1);
@@ -786,7 +788,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     public class VisibleBeforeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
+            ToolWindow sourceTool = (ToolWindow) evt.getSource();
             if (sourceTool.getType() == ToolWindowType.FLOATING ||
                 sourceTool.getType() == ToolWindowType.FLOATING_FREE)
                 return;
@@ -831,7 +833,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     public class VisibleListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindow sourceTool = ((ToolWindowDescriptor) evt.getSource()).getToolWindow();
+            ToolWindow sourceTool = (ToolWindow) evt.getSource();
             boolean oldValue = (Boolean) evt.getOldValue();
             boolean newValue = (Boolean) evt.getNewValue();
 
@@ -894,7 +896,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 aggregationOnTool = (ToolWindow) args[2];
             }
 
-            ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
+            ToolWindowDescriptor descriptor = manager.getDescriptor((ToolWindow) evt.getSource());
             boolean visible = (Boolean) evt.getNewValue();
 
             // Check if we should hide the representative anchor button
@@ -1077,7 +1079,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         public void disabledContentManagerPropertyChange(PropertyChangeEvent evt) {
             MultiSplitDockableContainer managerDockableContainer = (MultiSplitDockableContainer) ((DockableDropPanel) manager.getMainContent()).getComponent();
 
-            ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
+            ToolWindowDescriptor descriptor = manager.getDescriptor((ToolWindow) evt.getSource());
             boolean visible = (Boolean) evt.getNewValue();
 
             if (visible) {
@@ -1236,7 +1238,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     public class VisibleSlidingListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
+            ToolWindowDescriptor toolWindowDescriptor = manager.getDescriptor((ToolWindow) evt.getSource());
             boolean visible = (Boolean) evt.getNewValue();
 
             Component content = (visible) ? toolWindowDescriptor.getComponent() : null;
@@ -1252,7 +1254,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     public class VisibleFloatingListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
+            ToolWindowDescriptor toolWindowDescriptor = manager.getDescriptor((ToolWindow) evt.getSource());
             boolean visible = (Boolean) evt.getNewValue();
 
             if (evt instanceof UserPropertyChangeEvent) {
@@ -1295,10 +1297,10 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     }
 
-    public static class VisibleFloatingFreeListener implements PropertyChangeListener {
+    public class VisibleFloatingFreeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
+            ToolWindowDescriptor toolWindowDescriptor = manager.getDescriptor((ToolWindow) evt.getSource());
             boolean visible = (Boolean) evt.getNewValue();
 
             Component content = (visible) ? toolWindowDescriptor.getComponent() : null;
@@ -1314,7 +1316,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     public class VisibleFloatingLiveListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowDescriptor toolWindowDescriptor = (ToolWindowDescriptor) evt.getSource();
+            ToolWindowDescriptor toolWindowDescriptor = manager.getDescriptor((ToolWindow) evt.getSource());
+
             boolean visible = (Boolean) evt.getNewValue();
 
             if (evt instanceof UserPropertyChangeEvent) {
@@ -1359,7 +1362,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     public class IndexListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
+            ToolWindowDescriptor descriptor = manager.getDescriptor((ToolWindow) evt.getSource());
+
             JLabel representativeAnchor = descriptor.getRepresentativeAnchor();
             if (representativeAnchor != null) {
                 TableLayoutConstraints constraints = getRepresentativeAnchorConstraints(representativeAnchor);
@@ -1464,7 +1468,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     public class MaximizedListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowDescriptor descriptor = (ToolWindowDescriptor) evt.getSource();
+            ToolWindowDescriptor descriptor = manager.getDescriptor((ToolWindow) evt.getSource());
 
             if (descriptor.getToolWindow().getType() == ToolWindowType.DOCKED) {
 
@@ -1472,7 +1476,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                     descriptor.setTempDivederLocation(getSplitDividerLocation());
 
                     ToolWindow maximizedTool = descriptor.getToolWindow();
-                    for (ToolWindow tool : descriptor.getManager().getToolWindows())
+                    for (ToolWindow tool : manager.getToolWindows())
                         if (tool != maximizedTool &&
                             tool.getType() != ToolWindowType.FLOATING &&
                             tool.getType() != ToolWindowType.FLOATING_FREE &&
