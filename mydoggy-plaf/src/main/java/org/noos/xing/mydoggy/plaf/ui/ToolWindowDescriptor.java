@@ -133,13 +133,13 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         } else if ("hideRepresentativeButtonOnVisible".equals(propertyName)) {
             if (toolWindow.isVisible())
                 toolWindow.getRepresentativeAnchorDescriptor().setVisible(!(Boolean) evt.getNewValue());
-        } else if ("UI".equals(evt.getPropertyName())) {
+        } else if ("UI".equals(propertyName)) {
             initPopupMenu();
             SwingUtilities.updateComponentTreeUI(popupMenu);
 
             DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
             SwingUtilities.updateComponentTreeUI(descriptor.getToolsMenu());
-        }
+        } 
     }
 
     public String toString() {

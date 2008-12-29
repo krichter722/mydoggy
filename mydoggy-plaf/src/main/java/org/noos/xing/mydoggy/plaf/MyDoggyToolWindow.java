@@ -521,7 +521,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
             return;
 
         synchronized (getLock()) {
-            firePlafPropertyChangeEvent(new PropertyChangeEvent(descriptor, "maximizedBefore", this.maximized, maximized));
+            firePlafPropertyChangeEvent("maximizedBefore", this.maximized, maximized);
 
             boolean old = this.maximized;
             this.maximized = maximized;
@@ -980,17 +980,17 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
 
 
     protected void firePropertyChangeEvent(String property, Object oldValue, Object newValue) {
-        PropertyChangeEvent event = new PropertyChangeEvent(descriptor, property, oldValue, newValue);
+//        PropertyChangeEvent event = new PropertyChangeEvent(descriptor, property, oldValue, newValue);
         PropertyChangeEvent publicEvent = new PropertyChangeEvent(this, property, oldValue, newValue);
 
-        firePropertyChangeEvent(event, publicEvent);
+        firePropertyChangeEvent(publicEvent, publicEvent);
     }
 
     protected void firePropertyChangeEvent(String property, Object oldValue, Object newValue, Object userObject) {
-        PropertyChangeEvent event = new UserPropertyChangeEvent(descriptor, property, oldValue, newValue, userObject);
+//        PropertyChangeEvent event = new UserPropertyChangeEvent(descriptor, property, oldValue, newValue, userObject);
         PropertyChangeEvent publicEvent = new UserPropertyChangeEvent(this, property, oldValue, newValue, userObject);
 
-        firePropertyChangeEvent(event, publicEvent);
+        firePropertyChangeEvent(publicEvent, publicEvent);
     }
 
     protected void fireAnchorEvent(ToolWindowAnchor oldValue, ToolWindowAnchor newValue, Object userObject) {

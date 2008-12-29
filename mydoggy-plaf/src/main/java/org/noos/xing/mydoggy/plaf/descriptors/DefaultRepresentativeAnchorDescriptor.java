@@ -1,9 +1,6 @@
 package org.noos.xing.mydoggy.plaf.descriptors;
 
-import org.noos.xing.mydoggy.RepresentativeAnchorDescriptor;
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 
 import java.util.HashSet;
@@ -36,6 +33,9 @@ public class DefaultRepresentativeAnchorDescriptor extends PropertyChangeEventSo
         this.title = toolWindow.getId();
     }
 
+    public Dockable getDockable() {
+        return toolWindow;
+    }
 
     public boolean isPreviewEnabled() {
         return previewEnabled;
@@ -94,6 +94,10 @@ public class DefaultRepresentativeAnchorDescriptor extends PropertyChangeEventSo
 
     public boolean containsLockingAnchor(ToolWindowAnchor anchor) {
         return lockingAnchors.contains(anchor);
+    }
+
+    public void showMessage(String message) {
+        firePropertyChangeEvent("showMessage", null, message);
     }
 
     public void setVisible(boolean visible) {
