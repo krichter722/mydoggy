@@ -1,10 +1,7 @@
 package org.noos.xing.mydoggy.scenarioset;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.scenarioset.scenario.OnForBarScenario;
-import org.noos.xing.mydoggy.scenarioset.scenario.SaveRestoreContentsScenario;
-import org.noos.xing.mydoggy.scenarioset.scenario.Scenario;
-import org.noos.xing.mydoggy.scenarioset.scenario.ToolWindowActionScenario;
+import org.noos.xing.mydoggy.scenarioset.scenario.*;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.plaf.view.listener.ContextPutListSelectionListener;
@@ -49,6 +46,7 @@ public class ScenarioSet {
         scenarios.add(new OnForBarScenario());
         scenarios.add(new SaveRestoreContentsScenario());
         scenarios.add(new ToolWindowActionScenario());
+        scenarios.add(new AllUnpinnedScenario());
         
     }
 
