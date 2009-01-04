@@ -37,26 +37,16 @@ public class AllUnpinnedScenario implements Scenario {
 
     protected void setUp() {
         if (!setup) {
-            final ToolWindow topOfTheWorld = toolWindowManager.registerToolWindow("topOfTheWorld", null, null,
-                                                                                  new JTextArea("I'm on top of the world!"), ToolWindowAnchor.LEFT);
-            topOfTheWorld.setAvailable(true);
-            topOfTheWorld.setAutoHide(true);
-
-            final ToolWindow leftWing = toolWindowManager.registerToolWindow("leftWing", null, null,
-                                                                             new JTextArea("Left Wing"), ToolWindowAnchor.LEFT);
-            leftWing.setAvailable(true);
-            leftWing.setAutoHide(true);
-            final ToolWindow rightWing = toolWindowManager.registerToolWindow("rightWing", null, null,
-                                                                              new JTextArea("Right Wing"), ToolWindowAnchor.RIGHT);
-            rightWing.setAvailable(true);
-            rightWing.setAutoHide(true);
-            final ToolWindow bottomDweller = toolWindowManager.registerToolWindow("bottomDweller", null, null,
-                                                                                  new JTextArea("Bottom dweller"), ToolWindowAnchor.BOTTOM);
-            bottomDweller.setAvailable(true);
-            bottomDweller.setAutoHide(true);
+            for (int i = 0; i < 5; i++) {
+                ToolWindow tool = toolWindowManager.registerToolWindow("tool_" + i,
+                                                                       null, null,
+                                                                       new JTextArea("Hello World!!!"), ToolWindowAnchor.LEFT);
+                tool.setAvailable(true);
+                tool.setAutoHide(true);
+            }
 
             frame.getContentPane().add(toolWindowManager);
-            frame.setSize(640,480);
+            frame.setSize(640, 480);
         }
     }
 
