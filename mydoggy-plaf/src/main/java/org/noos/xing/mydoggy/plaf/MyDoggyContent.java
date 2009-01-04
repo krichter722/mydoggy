@@ -120,6 +120,9 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
     }
 
     public void setEnabled(boolean enabled) {
+        if (!enabled && this.enabled && isSelected())
+            return;
+
         if (this.enabled != enabled) {
             boolean old = this.enabled;
             this.enabled = enabled;

@@ -85,7 +85,7 @@ public interface Content extends Dockable<ContentManager> {
     String getToolTipText();
 
     /**
-     * Sets whether or not the content is enabled.
+     * Sets whether or not the content is enabled. You cannot disable a selected content.
      *
      * @param enabled whether or not the content should be enabled.
      * @see #isEnabled()

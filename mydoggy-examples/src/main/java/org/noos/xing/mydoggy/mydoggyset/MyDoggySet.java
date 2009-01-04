@@ -11,7 +11,6 @@ import org.noos.common.object.ObjectCreator;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
-import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.mydoggyset.action.*;
 import org.noos.xing.mydoggy.mydoggyset.context.MyDoggySetContext;
@@ -52,6 +51,7 @@ import java.util.ResourceBundle;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggySet {
+
     protected JFrame frame;
 
     protected ToolWindowManager toolWindowManager;
@@ -66,31 +66,15 @@ public class MyDoggySet {
     }
 
     public void start(final Runnable runnable) {
-//        myDoggySetContext.put(MyDoggySet.class, null);
+        myDoggySetContext.put(MyDoggySet.class, null);
 
         SwingUtil.centrePositionOnScreen(frame);
 
-//        frame.pack();
-//        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
-
-//        SwingUtilities.invokeLater(new Runnable() {
-//            public void run() {
-//                myDoggySetContext.put("loadWorkspace", null);
-//            }
-//        });
 
         memoryMonitorDescriptor.setAvailable(true);
         memoryMonitorDescriptor.setAnchor(ToolWindowAnchor.BOTTOM, 0);
         memoryMonitorDescriptor.setAnchorPositionLocked(true);
-
-        toolWindowManager.getToolWindow("Tool 1").addToolWindowAction(new CustomAction());
-
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                toolWindowManager.getToolWindow("Tool 1").getRepresentativeAnchorDescriptor().showMessage("Hello World!!!");
-            }
-        });
 
         if (runnable != null) {
             Thread t = new Thread(runnable);
@@ -120,31 +104,12 @@ public class MyDoggySet {
     protected void initComponents() {
         // Init the frame
         this.frame = new JFrame("MyDoggy-Set 1.5.0 ...");
-        this.frame.setSize(640, 480);
+        this.frame.setSize(800, 600);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
 
         // Init ToolWindowManager
-        long start = System.currentTimeMillis();
         final MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
-        long end = System.currentTimeMillis();
-        System.out.println("[MyDoggySet.initComponents] Time to init MyDoggyToolWindowManager object : " + (end - start));
-        
-//        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(Locale.US, null);
-        myDoggyToolWindowManager.addToolWindowManagerListener(new ToolWindowManagerListener() {
-            public void toolWindowRegistered(ToolWindowManagerEvent event) {
-            }
-
-            public void toolWindowUnregistered(ToolWindowManagerEvent event) {
-//                System.out.println("event.getToolWindow().getComponent() = " + event.getToolWindow().getComponent());
-            }
-
-            public void toolWindowGroupAdded(ToolWindowManagerEvent event) {
-            }
-
-            public void toolWindowGroupRemoved(ToolWindowManagerEvent event) {
-            }
-        });
 
         // Add MyDoggyToolWindowManager to frame
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
@@ -781,34 +746,6 @@ public class MyDoggySet {
         }
 
 
-    }
-
-    public class CustomAction extends ToolWindowAction {
-        protected JMenuItem menuItem;
-
-        public CustomAction() {
-            super("CUSTOM ACTION", UIManager.getIcon(MyDoggyKeySpace.TOOL_SCROLL_BAR_UP));
-            setText("HELLO WORLD");
-            setShowTextOnTitleBar(true);
-//            setVisibleOnMenuBar(false);
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            toolWindowManager.getToolWindow("Tool 3").getTypeDescriptor(DockedTypeDescriptor.class).
-                    removeToolWindowAction(this.id);
-
-        }
-
-/*
-        @Override
-        public JMenuItem getMenuItem() {
-            if (menuItem == null) {
-                menuItem = new JMenuItem("Hello World");
-                menuItem.addActionListener(this);
-            }
-            return menuItem;
-        }
-*/
     }
 
     public class ToolWindowCloseAction extends HideToolWindowAction {
