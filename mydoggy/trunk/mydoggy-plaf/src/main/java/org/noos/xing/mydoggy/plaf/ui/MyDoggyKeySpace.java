@@ -40,16 +40,15 @@ public interface MyDoggyKeySpace {
     String TAB_MINIMIZE = "ToolWindowTabButtonUI.icon.tabMinimize";
     String TAB_MINIMIZE_INACTIVE = "ToolWindowTabButtonUI.icon.tabMinimize.inactive";
 
-    String CONTENT_PAGE_MINIMIZE = "mydoggy.icon.contentPageMinimize";
-    String CONTENT_PAGE_DETACH = "mydoggy.icon.contentPageDetach";
-    String CONTENT_PAGE_CLOSE = "mydoggy.icon.contentPageClose";
-    String CONTENT_PAGE_DETACH_INACTIVE = "mydoggy.icon.contentPageDetach.inactive";
-    String CONTENT_PAGE_CLOSE_INACTIVE = "mydoggy.icon.contentPageClose.inactive";
-    String CONTENT_PAGE_MAXIMIZE = "mydoggy.icon.contentPageMaximize";
-    String CONTENT_PAGE_RESTORE = "mydoggy.icon.contentPageRestore";
-    String CONTENT_POINTER = "mydoggy.image.contentPointer";
-
-    String TCP_STAR = "TabbedContentPan.icon.star";
+    String CONTENT_PAGE_MINIMIZE = "TabbedContentPane.icon.contentPageMinimize";
+    String CONTENT_PAGE_DETACH = "TabbedContentPane.icon.contentPageDetach";
+    String CONTENT_PAGE_CLOSE = "TabbedContentPane.icon.contentPageClose";
+    String CONTENT_PAGE_DETACH_INACTIVE = "TabbedContentPane.icon.contentPageDetach.inactive";
+    String CONTENT_PAGE_CLOSE_INACTIVE = "TabbedContentPane.icon.contentPageClose.inactive";
+    String CONTENT_PAGE_MAXIMIZE = "TabbedContentPane.icon.contentPageMaximize";
+    String CONTENT_PAGE_RESTORE = "TabbedContentPane.icon.contentPageRestore";
+    String CONTENT_POINTER = "TabbedContentPane.image.contentPointer";
+    String CONTENT_FLASHING = "TabbedContentPane.icon.contentFlashing";
 
     // Images
 

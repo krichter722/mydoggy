@@ -244,8 +244,6 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
                 calcMaxWidth(),
                 calcMaxHeight()
         );
-
-        // TODO: update old bounds...
     }
 
     protected int calcFirstX() {

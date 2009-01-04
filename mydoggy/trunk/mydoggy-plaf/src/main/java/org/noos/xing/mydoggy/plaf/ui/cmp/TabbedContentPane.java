@@ -206,7 +206,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             Content content = getContentAt(index);
             Object o = flashingContents.get(content);
             if (o == null) {
-                Icon icon = new AggregateIcon(UIManager.getIcon(MyDoggyKeySpace.TCP_STAR),
+                Icon icon = new AggregateIcon(UIManager.getIcon(MyDoggyKeySpace.CONTENT_FLASHING),
                                               super.getIconAt(index),
                                               SwingConstants.HORIZONTAL);
                 flashingContents.put(content, icon);
