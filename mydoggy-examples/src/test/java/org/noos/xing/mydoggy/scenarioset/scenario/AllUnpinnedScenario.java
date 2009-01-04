@@ -13,8 +13,7 @@ import javax.swing.*;
 public class AllUnpinnedScenario implements Scenario {
 
     protected MyDoggyToolWindowManager toolWindowManager = new MyDoggyToolWindowManager();
-    protected JFrame frame = new JFrame();
-    protected boolean setup = false;
+    protected JFrame frame;
 
     public String getName() {
         return this.getClass().getName();
@@ -36,23 +35,29 @@ public class AllUnpinnedScenario implements Scenario {
     }
 
     protected void setUp() {
-        if (!setup) {
-            for (int i = 0; i < 5; i++) {
-                ToolWindow tool = toolWindowManager.registerToolWindow("tool_" + i,
-                                                                       null, null,
-                                                                       new JTextArea("Hello World!!!"), ToolWindowAnchor.LEFT);
-                tool.setAvailable(true);
-                tool.setAutoHide(true);
-            }
+        frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(640, 480);
 
-            frame.getContentPane().add(toolWindowManager);
-            frame.setSize(640, 480);
+        for (int i = 0; i < 5; i++) {
+            ToolWindow tool = toolWindowManager.registerToolWindow("tool_" + i,
+                                                                   null, null,
+                                                                   new JTextArea("Hello World!!!"), ToolWindowAnchor.LEFT);
+            tool.setAvailable(true);
+            tool.setAutoHide(true);
         }
+
+        frame.getContentPane().add(toolWindowManager);
     }
 
     protected void start() {
         SwingUtil.centrePositionOnScreen(frame);
         frame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        Scenario  scenario = new AllUnpinnedScenario();
+        scenario.launch();
     }
 
 }
