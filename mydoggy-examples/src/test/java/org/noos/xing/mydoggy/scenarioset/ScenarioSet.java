@@ -4,6 +4,7 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.scenarioset.scenario.*;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
+import org.noos.xing.yasaf.plaf.view.listener.ContextListDoubleClickMouseListener;
 import org.noos.xing.yasaf.plaf.view.listener.ContextPutListSelectionListener;
 import org.noos.xing.yasaf.view.ViewContextChangeListener;
 import org.noos.xing.yasaf.view.event.ViewContextChangeEvent;
@@ -47,6 +48,7 @@ public class ScenarioSet {
         scenarios.add(new SaveRestoreContentsScenario());
         scenarios.add(new ToolWindowActionScenario());
         scenarios.add(new AllUnpinnedScenario());
+        scenarios.add(new RepresentativeAnchorScenario());
         
     }
 
@@ -105,6 +107,7 @@ public class ScenarioSet {
 
             scenariosList = new JList(new ListScenarioListModel());
             scenariosList.addListSelectionListener(new ContextPutListSelectionListener(viewContext, "Scenario", scenariosList));
+            scenariosList.addMouseListener(new ContextListDoubleClickMouseListener(viewContext, "Execute"));
             scenariosPanel.add(new JScrollPane(scenariosList), "1,1,FULL,FULL");
 
             // Descriptions Panel

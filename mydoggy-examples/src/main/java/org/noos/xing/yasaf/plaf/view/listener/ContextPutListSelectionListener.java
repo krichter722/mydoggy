@@ -12,7 +12,6 @@ import javax.swing.event.ListSelectionListener;
 public class ContextPutListSelectionListener implements ListSelectionListener {
     private ViewContext viewContext;
     private Object key;
-    private int column;
     private JList list;
 
     public ContextPutListSelectionListener(ViewContext viewContext, Object key, JList list) {
