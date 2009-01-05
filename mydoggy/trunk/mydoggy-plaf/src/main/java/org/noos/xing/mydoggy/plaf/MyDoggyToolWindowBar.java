@@ -896,8 +896,10 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 aggregationOnTool = (ToolWindow) args[2];
             }
 
-            ToolWindowDescriptor descriptor = manager.getDescriptor((ToolWindow) evt.getSource());
+            final ToolWindowDescriptor descriptor = manager.getDescriptor((ToolWindow) evt.getSource());
             boolean visible = (Boolean) evt.getNewValue();
+            if (visible)
+                descriptor.externalFocusValueAdjusting = true;
 
             // Check if we should hide the representative anchor button
             if (descriptor.getTypeDescriptor().isHideRepresentativeButtonOnVisible()) {
@@ -1074,6 +1076,12 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 SwingUtil.repaint(splitPane);
             }
 
+            // TODO: verify this...maybe it should also be moved to onFinishedAnimation method. 
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    descriptor.externalFocusValueAdjusting = false;
+                }
+            });
         }
 
         public void disabledContentManagerPropertyChange(PropertyChangeEvent evt) {

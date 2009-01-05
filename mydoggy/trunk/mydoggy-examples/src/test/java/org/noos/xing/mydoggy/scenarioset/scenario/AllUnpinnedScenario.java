@@ -39,7 +39,7 @@ public class AllUnpinnedScenario implements Scenario {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(640, 480);
 
-        toolWindowManager.getContentManager().addContent("content", "", null, new JTextArea("Hello World!!!"), "");
+        toolWindowManager.getContentManager().addContent("content", "", null, new JButton("HEello"), "");
         for (int i = 0; i < 5; i++) {
             ToolWindow tool = toolWindowManager.registerToolWindow("tool_" + i,
                                                                    null, null,

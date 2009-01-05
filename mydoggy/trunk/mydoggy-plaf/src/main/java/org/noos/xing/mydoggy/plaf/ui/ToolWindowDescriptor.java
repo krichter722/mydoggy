@@ -70,7 +70,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     // Field for adjusting
     boolean dockLengthValueAdjusting = false;
     boolean internalFocusValueAdjusting;
-    boolean externalFocusValueAdjusting = false;
+    public boolean externalFocusValueAdjusting = false;
 
     // Popup menu fiedls
     protected ToolWindowType oldType;
@@ -819,13 +819,16 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
             if (!toolWindow.isVisible() || internalFocusValueAdjusting || externalFocusValueAdjusting)
                 return;
 
+            System.out.println(toolWindow.getId() + " internalFocusValueAdjusting = " + internalFocusValueAdjusting);
+            System.out.println(toolWindow.getId() + " externalFocusValueAdjusting = " + externalFocusValueAdjusting);
+
             Component component = (Component) evt.getNewValue();
             if (component == null) return;
             if (component instanceof JRootPane) return;
 
             internalFocusValueAdjusting = true;
 
-//                System.out.println(toolWindow.getId() + " - cmp = " + component);
+                System.out.println(toolWindow.getId() + " - cmp = " + component);
 
             if (parentOf.getAnswer(component)) {
 
