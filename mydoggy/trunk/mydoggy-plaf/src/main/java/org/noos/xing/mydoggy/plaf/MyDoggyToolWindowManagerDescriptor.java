@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf;
 
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
+import org.noos.xing.mydoggy.plaf.ui.util.SourceFilterPropertyChangeListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import java.awt.*;
@@ -142,7 +143,7 @@ public class MyDoggyToolWindowManagerDescriptor extends PropertyChangeEventSourc
         mostRecentStack.push(BOTTOM);
         mostRecentStack.push(LEFT);
 
-        manager.addInternalPropertyChangeListener("visible", this);
+        manager.addInternalPropertyChangeListener("visible", new SourceFilterPropertyChangeListener(this, ToolWindow.class));
     }
 
     protected void addMostRecentAnchor(ToolWindowAnchor target) {
