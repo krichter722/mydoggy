@@ -99,6 +99,8 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
             if (descriptor.getTypeDescriptor(ToolWindowType.SLIDING).isAnimating())
                 slidingAnimation.show(sheet.getBounds());
+            else
+                descriptor.externalFocusValueAdjusting = false;
         } else {
             // Set Layout
             TableLayout layout = (TableLayout) sheet.getLayout();
