@@ -407,5 +407,5 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
      * @return
      * @since 1.5.0
      */
-    RepresentativeAnchorDescriptor getRepresentativeAnchorDescriptor();
+    RepresentativeAnchorDescriptor<ToolWindow> getRepresentativeAnchorDescriptor();
 }

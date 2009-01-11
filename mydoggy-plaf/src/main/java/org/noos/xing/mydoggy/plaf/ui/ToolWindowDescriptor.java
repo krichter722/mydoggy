@@ -12,8 +12,8 @@ import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.cleaner.CleanerAggregator;
 import org.noos.xing.mydoggy.plaf.cleaner.DefaultCleanerAggregator;
 import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
-import org.noos.xing.mydoggy.plaf.descriptors.DefaultRepresentativeAnchorDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
+import org.noos.xing.mydoggy.plaf.descriptors.ToolWindowRepresentativeAnchorDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
@@ -742,7 +742,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         dockedTypeDescriptor = (DockedTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).cloneMe(this);
         dockedTypeDescriptor.addPropertyChangeListener(this);
 
-        representativeAnchorDescriptor = new DefaultRepresentativeAnchorDescriptor(toolWindow);
+        representativeAnchorDescriptor = new ToolWindowRepresentativeAnchorDescriptor(toolWindow);
         representativeAnchorDescriptor.addPropertyChangeListener(this);
     }
 

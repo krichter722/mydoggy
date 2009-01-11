@@ -211,4 +211,12 @@ public interface Content extends Dockable<ContentManager> {
      * @since 1.5.0
      */
     void reattach(Object... constraints);
+
+    /**
+     * TODO
+     * @return
+     * @since 1.5.0
+     */
+    RepresentativeAnchorDescriptor<Content> getRepresentativeAnchorDescriptor();
+    
 }

@@ -169,10 +169,31 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
 
     
     protected void installDefaults(JLabel c) {
+        super.installDefaults(c);
+
+        // Flashing animation fields
+        this.flashingAnimation = new GradientAnimation();
+        this.flasingDuration = -1;
+        this.flashingAnimBackStart = new MutableColor(UIManager.getColor(MyDoggyKeySpace.TWRA_BACKGROUND_INACTIVE));
+        this.flashingAnimBackEnd = new MutableColor(UIManager.getColor(MyDoggyKeySpace.TWRA_BACKGROUND_INACTIVE));
+
+        // Basic settings
         labelBorder = new LineBorder(UIManager.getColor(MyDoggyKeySpace.TWRA_MOUSE_OUT_BORDER), 1, true, 3, 3);
 
         c.setBorder(labelBorder);
         c.setForeground(UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND));
+
+        String oldText = c.getText();
+        if (oldText != null) {
+            c.setText(null);
+            c.setText(oldText);
+        }
+
+        oldText = c.getToolTipText();
+        if (oldText != null) {
+            c.setToolTipText(null);
+            c.setToolTipText(oldText);
+        }
 
         SwingUtil.installFont(c, "ToolWindowRepresentativeAnchorUI.font");
     }

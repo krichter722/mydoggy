@@ -2,13 +2,14 @@ package org.noos.xing.mydoggy;
 
 /**
  * This interface is used to modify the behaviour of a dockable's representative anchor.
+ * TODO: add icon support...
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.5.0
  */
-public interface RepresentativeAnchorDescriptor extends Observable {
+public interface RepresentativeAnchorDescriptor<D extends Dockable> extends Observable {
 
-    Dockable getDockable();
+    D getDockable();
     
     /**
      * Enable or disable the representative anchor button. The method throw an exception when it is called

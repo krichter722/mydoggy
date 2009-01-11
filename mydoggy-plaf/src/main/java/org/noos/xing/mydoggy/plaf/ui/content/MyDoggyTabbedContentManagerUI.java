@@ -893,9 +893,6 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                 // Put on bar
                 descriptor.setAvailable(true);
             } else {
-                if (getMaximizedContent() != null)
-                    getMaximizedContent().setMaximized(false);
-
                 DockableDescriptor descriptor = toolWindowManager.getDockableDescriptor(content.getId());
 
                 // Remove from bar

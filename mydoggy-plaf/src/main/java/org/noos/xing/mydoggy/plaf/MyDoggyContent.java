@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf;
 
 import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.plaf.descriptors.ContentRepresentativeAnchorDescriptor;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.content.PlafContent;
 
@@ -30,6 +31,7 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
     protected boolean flash;
     protected boolean minimized;
 
+    protected RepresentativeAnchorDescriptor representativeAnchorDescriptor;
 
     public MyDoggyContent(MyDoggyContentManager contentManager,
                           String id, String title, Icon icon,
@@ -48,6 +50,7 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
         this.maximized = false;
         this.dockableDelegator = dockableDelegator;
         this.flash = false;
+        this.representativeAnchorDescriptor = new ContentRepresentativeAnchorDescriptor(this);
     }
 
 
@@ -250,8 +253,9 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
         if (this.minimized == minimized)
             return;
 
-        if (isMaximized())
-            setMaximized(false);
+        Content maximizedContent = contentManager.getMaximizedContent();
+        if (maximizedContent != null)
+            maximizedContent.setMaximized(false);
 
         boolean old = this.minimized;
         this.minimized = minimized;
@@ -352,6 +356,10 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
         this.detached = false;
 
         firePropertyChangeEvent(new UserPropertyChangeEvent(this, "detached", true, false, constraints));
+    }
+
+    public RepresentativeAnchorDescriptor<Content> getRepresentativeAnchorDescriptor() {
+        return representativeAnchorDescriptor;
     }
 
 

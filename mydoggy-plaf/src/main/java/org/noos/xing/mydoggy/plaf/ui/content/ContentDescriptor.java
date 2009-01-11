@@ -49,7 +49,7 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
         if (representativeAnchor == null) {
             ToolWindowAnchor anchor = getAnchor();
 
-            String labelText = SwingUtil.getUserString(content.getId());
+            String labelText = SwingUtil.getUserString(content.getRepresentativeAnchorDescriptor().getTitle());
             Icon toolIcon = content.getIcon();
 
             switch (anchor) {
@@ -105,7 +105,7 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
         if (representativeAnchor != null) {
             ToolWindowAnchor anchor = getAnchor();
 
-            String labelText = SwingUtil.getUserString(content.getId());
+            String labelText = SwingUtil.getUserString(content.getRepresentativeAnchorDescriptor().getTitle());
             Icon toolIcon = content.getIcon();
 
             JLabel representativeLabel = (JLabel) representativeAnchor;
