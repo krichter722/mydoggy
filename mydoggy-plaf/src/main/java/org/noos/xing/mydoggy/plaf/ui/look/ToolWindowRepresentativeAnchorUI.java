@@ -107,7 +107,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 //            balloonTip.setText((String) e.getNewValue());
 //            balloonTip.show(representativeAnchor.getX(), representativeAnchor.getY());
 
-        }
+        } 
     }
 
     public void cleanup() {

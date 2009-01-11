@@ -66,7 +66,8 @@ public interface MyDoggyKeySpace {
     String TWRA_BACKGROUND_ACTIVE_END = "ToolWindowRepresentativeAnchorUI.background.active.end";
     String TWRA_FOREGROUND = "ToolWindowRepresentativeAnchorUI.foreground";
     String TWRA_FOREGROUND_UNAVAILABLE = "ToolWindowRepresentativeAnchorUI.foreground.unavailable";
-    
+    String TWRA_ROTATE_ICON_ON_ANCHOR = "RepresentativeAnchorButton.icon.rotateOnAanchor";
+
     // ToolWindow TitleBar - Colors
 
     String TWTB_BACKGROUND_ACTIVE_START = "ToolWindowTitleBarUI.background.active.start";
