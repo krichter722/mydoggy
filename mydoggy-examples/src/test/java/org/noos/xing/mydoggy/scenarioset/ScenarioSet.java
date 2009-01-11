@@ -49,7 +49,7 @@ public class ScenarioSet {
         scenarios.add(new ToolWindowActionScenario());
         scenarios.add(new AllUnpinnedScenario());
         scenarios.add(new RepresentativeAnchorScenario());
-        
+        scenarios.add(new LotOfContentScenario());
     }
 
     protected void start() {
