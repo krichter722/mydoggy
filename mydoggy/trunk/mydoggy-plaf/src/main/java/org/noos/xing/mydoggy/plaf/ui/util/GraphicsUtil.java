@@ -270,6 +270,20 @@ public class GraphicsUtil {
         return result;
     }
 
+    public static Icon rotate(Icon icon, double angle) {
+        GraphicsConfiguration gc = getDefaultConfiguration();
+
+        BufferedImage result = gc.createCompatibleImage(icon.getIconWidth(), icon.getIconHeight(), Transparency.TRANSLUCENT);
+
+        Graphics2D g = result.createGraphics();
+
+        icon.paintIcon(null, g, 0, 0);
+
+        g.dispose();
+
+        return new ImageIcon(rotate(result, angle));
+    }
+
     public static BufferedImage scale(BufferedImage image, int width, int height) {
         Image scaledImage = image.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH);
 
@@ -301,4 +315,5 @@ public class GraphicsUtil {
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         return gd.getDefaultConfiguration();
     }
+
 }

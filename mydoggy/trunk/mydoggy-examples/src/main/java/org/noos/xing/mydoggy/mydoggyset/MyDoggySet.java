@@ -463,6 +463,8 @@ public class MyDoggySet {
         UIManager.put(MyDoggyKeySpace.MODAL_WINDOW_BORDER_LENGTH, 4);
         UIManager.put(MyDoggyKeySpace.DND_CONTENT_OUTSIDE_FRAME, false);
 
+        UIManager.put(MyDoggyKeySpace.TWRA_ROTATE_ICON_ON_ANCHOR, true);
+
 //        resourceManager.putObject("ToolWindowTabTitleUI.font", new Font("Verdana", Font.BOLD, 10));
 //        resourceManager.putObject("ToolWindowTitleBarUI.font", new Font("Verdana", Font.BOLD, 10));
 //        resourceManager.putObject("ToolWindowRepresentativeAnchorUI.font", new Font("Verdana", Font.BOLD, 10));

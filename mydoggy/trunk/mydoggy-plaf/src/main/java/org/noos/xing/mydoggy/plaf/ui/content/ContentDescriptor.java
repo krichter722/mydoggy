@@ -10,6 +10,7 @@ import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.AggregateIcon;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentRepresentativeAnchor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.TextIcon;
+import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -58,6 +59,9 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
                     representativeAnchor = new ContentRepresentativeAnchor(this, labelText, toolIcon, JLabel.CENTER);
                     break;
                 case LEFT:
+                    if (SwingUtil.getBoolean(MyDoggyKeySpace.TWRA_ROTATE_ICON_ON_ANCHOR, false) && toolIcon != null)
+                        toolIcon = GraphicsUtil.rotate(toolIcon, Math.PI/2);
+
                     TextIcon textIcon = new TextIcon(parent, labelText, TextIcon.ROTATE_LEFT);
                     textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND));
                     AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolIcon, SwingConstants.VERTICAL);
@@ -65,6 +69,9 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
                     representativeAnchor = new ContentRepresentativeAnchor(this, compositeIcon, JLabel.CENTER);
                     break;
                 case RIGHT:
+                    if (SwingUtil.getBoolean(MyDoggyKeySpace.TWRA_ROTATE_ICON_ON_ANCHOR, false) && toolIcon != null)
+                        toolIcon = GraphicsUtil.rotate(toolIcon, -Math.PI/2);
+
                     textIcon = new TextIcon(parent, labelText, TextIcon.ROTATE_RIGHT);
                     textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND));
                     compositeIcon = new AggregateIcon(toolIcon, textIcon, SwingConstants.VERTICAL);
@@ -116,6 +123,9 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
                     representativeLabel.setText(labelText);
                     break;
                 case LEFT:
+                    if (SwingUtil.getBoolean(MyDoggyKeySpace.TWRA_ROTATE_ICON_ON_ANCHOR, false) && toolIcon != null)
+                        toolIcon = GraphicsUtil.rotate(toolIcon, Math.PI/2);
+
                     TextIcon textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeLabel.getIcon()).getLeftIcon()).getComponent(), labelText, TextIcon.ROTATE_LEFT);
                     textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND));
                     AggregateIcon compositeIcon = new AggregateIcon(textIcon, toolIcon, SwingConstants.VERTICAL);
@@ -124,6 +134,9 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
                     representativeLabel.setIcon(compositeIcon);
                     break;
                 case RIGHT:
+                    if (SwingUtil.getBoolean(MyDoggyKeySpace.TWRA_ROTATE_ICON_ON_ANCHOR, false) && toolIcon != null)
+                        toolIcon = GraphicsUtil.rotate(toolIcon, -Math.PI/2);
+
                     textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeLabel.getIcon()).getRightIcon()).getComponent(), labelText, TextIcon.ROTATE_RIGHT);
                     textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND));
                     compositeIcon = new AggregateIcon(toolIcon, textIcon, SwingConstants.VERTICAL);
