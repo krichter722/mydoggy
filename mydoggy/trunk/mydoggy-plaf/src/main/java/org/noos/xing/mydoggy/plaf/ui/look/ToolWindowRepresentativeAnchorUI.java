@@ -213,6 +213,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         this.flashingAnimBackStart = new MutableColor(UIManager.getColor(MyDoggyKeySpace.TWRA_BACKGROUND_INACTIVE));
         this.flashingAnimBackEnd = new MutableColor(UIManager.getColor(MyDoggyKeySpace.TWRA_BACKGROUND_INACTIVE));
 
+        // Basic settings
         labelBorder = new LineBorder(UIManager.getColor(MyDoggyKeySpace.TWRA_MOUSE_OUT_BORDER), 1, true, 3, 3);
 
         c.setBorder(labelBorder);

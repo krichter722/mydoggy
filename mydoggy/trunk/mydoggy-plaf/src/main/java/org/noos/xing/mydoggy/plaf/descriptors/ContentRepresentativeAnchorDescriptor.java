@@ -1,6 +1,8 @@
 package org.noos.xing.mydoggy.plaf.descriptors;
 
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.RepresentativeAnchorDescriptor;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 
 import java.util.HashSet;
@@ -9,9 +11,9 @@ import java.util.Set;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class DefaultRepresentativeAnchorDescriptor extends PropertyChangeEventSource implements RepresentativeAnchorDescriptor {
+public class ContentRepresentativeAnchorDescriptor extends PropertyChangeEventSource implements RepresentativeAnchorDescriptor<Content> {
 
-    protected ToolWindow toolWindow;
+    protected Content content;
 
     protected boolean previewEnabled;
     protected int previewDelay;
@@ -23,18 +25,18 @@ public class DefaultRepresentativeAnchorDescriptor extends PropertyChangeEventSo
     protected boolean visible;
 
 
-    public DefaultRepresentativeAnchorDescriptor(ToolWindow toolWindow) {
-        this.toolWindow = toolWindow;
+    public ContentRepresentativeAnchorDescriptor(Content content) {
+        this.content = content;
         this.previewEnabled = true;
         this.previewDelay = 1000;
         this.previewTransparentRatio = 0.65f;
         this.lockingAnchors = new HashSet<ToolWindowAnchor>();
         this.visible = true;
-        this.title = toolWindow.getId();
+        this.title = content.getId();
     }
 
-    public Dockable getDockable() {
-        return toolWindow;
+    public Content getDockable() {
+        return content;
     }
 
     public boolean isPreviewEnabled() {
@@ -101,28 +103,15 @@ public class DefaultRepresentativeAnchorDescriptor extends PropertyChangeEventSo
     }
 
     public void setVisible(boolean visible) {
-        if (toolWindow.getType() == ToolWindowType.FLOATING_FREE)
-            return;
-
-        if (!toolWindow.isAvailable())
-            return;
-
-        if (this.visible == visible)
-            return;
-
-        boolean old = this.visible;
-        this.visible = visible;
-
-        firePropertyChangeEvent("visible", old, visible);
     }
 
     public boolean isVisible() {
-        return toolWindow.getType() != ToolWindowType.FLOATING_LIVE && visible;
+        return content.isMinimized();
     }
 
     public void setTitle(String title) {
         if (title == null)
-            title = toolWindow.getId();
+            title = content.getId();
 
         if (title != null && title.equals(this.title))
             return;
@@ -136,6 +125,5 @@ public class DefaultRepresentativeAnchorDescriptor extends PropertyChangeEventSo
     public String getTitle() {
         return title;
     }
-
 
 }

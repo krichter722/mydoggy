@@ -45,6 +45,9 @@ public class AddContentAction implements ActionListener, ViewContextChangeListen
                                                         icon,
                                                         component,
                                                         tooltip);
+            content.getRepresentativeAnchorDescriptor().setTitle(
+                title + " Minimized"        
+            );
             if (mnemonic != -1)
                 content.setMnemonic(mnemonic);
             content.setSelected(true);

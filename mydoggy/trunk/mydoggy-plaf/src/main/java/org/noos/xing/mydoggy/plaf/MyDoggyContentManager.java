@@ -329,6 +329,14 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
     }
 
 
+    protected Content getMaximizedContent() {
+        for (Content content : getContents()) {
+            if (content.isMaximized())
+                return content;
+        }
+        return null;
+    }
+
     protected void checkEnabled() {
         if (!isEnabled())
             throw new IllegalStateException("ContentManager is not enabled!. Enable it before call this method.");

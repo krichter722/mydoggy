@@ -463,6 +463,9 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
     public void setIcon(Icon icon) {
+        if (rootTab == null)
+            throw new IllegalArgumentException("Cannot call this method. There is no tab.");
+
         synchronized (getLock()) {
             if (toolWindowTabs.size() == 0)
                 return;
@@ -482,6 +485,9 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
     public void setTitle(String title) {
+        if (rootTab == null)
+            throw new IllegalArgumentException("Cannot call this method. There is no tab.");
+
         synchronized (getLock()) {
             if (toolWindowTabs.size() == 0)
                 return;
