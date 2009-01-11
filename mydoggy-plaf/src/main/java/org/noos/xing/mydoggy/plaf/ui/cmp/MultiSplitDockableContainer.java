@@ -1169,12 +1169,21 @@ public class MultiSplitDockableContainer extends JPanel {
 
         if (sum != 1.0d) {
             double w = 1.0 / ((children.size() / 2) + 1);
-            for (Node node : children) {
+
+            sum = 0;
+            for (int i = 0, size = children.size() - 1; i < size; i++) {
+                Node node = children.get(i);
                 node.resetBounds();
                 if (!(node instanceof Divider)) {
                     node.setWeight(w);
+                    sum+=w;
                 }
             }
+
+            Node lastNode = children.get(children.size()-1);
+            lastNode.resetBounds();
+            lastNode.setWeight(1.0d - sum);
+
             multiSplitPane.getMultiSplitLayout().setFloatingDividers(true);
         }
     }
