@@ -201,9 +201,9 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 content.setSelected(true);
             } else if (content.isDetached()) {
                 // If the content is detached request the focus for owner window
-                SwingUtil.requestFocus(
-                        SwingUtilities.windowForComponent(content.getComponent())
-                );
+                Window window = SwingUtilities.windowForComponent(content.getComponent());
+                window.toFront();
+                SwingUtil.requestFocus(window);
             } else {
                 // Restore an eventually maximized content
                 Content maximizedContent = getMaximizedContent();
