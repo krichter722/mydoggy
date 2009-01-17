@@ -238,9 +238,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                 content.setSelected(true);
             } else if (content.isDetached()) {
                 // If the content is detached request the focus for owner window
-                SwingUtil.requestFocus(
-                        SwingUtilities.windowForComponent(content.getComponent())
-                );
+                Window window = SwingUtilities.windowForComponent(content.getComponent());
+                window.toFront();
+                SwingUtil.requestFocus(window);
             } else {
                 // Choose the owner tab or check if the content is the main content
                 int index = tabbedContentPane.indexOfContent(content);

@@ -48,6 +48,7 @@ public class AddContentAction implements ActionListener, ViewContextChangeListen
             content.getRepresentativeAnchorDescriptor().setTitle(
                 title + " Minimized"        
             );
+            content.getContentUI().setAlwaysOnTop(false);
             if (mnemonic != -1)
                 content.setMnemonic(mnemonic);
             content.setSelected(true);
