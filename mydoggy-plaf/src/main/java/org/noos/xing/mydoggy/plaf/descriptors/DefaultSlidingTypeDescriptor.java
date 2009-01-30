@@ -32,8 +32,11 @@ public class DefaultSlidingTypeDescriptor extends DefaultToolWindowTypeDescripto
                                         boolean enabled,
                                         boolean animating,
                                         boolean autoHide,
-                                        boolean idVisibleOnTitleBar, boolean hideRepresentativeButtonOnVisible) {
-        super(toolWindowDescriptor, parent, enabled, animating, autoHide, idVisibleOnTitleBar, hideRepresentativeButtonOnVisible);
+                                        boolean idVisibleOnTitleBar,
+                                        boolean hideRepresentativeButtonOnVisible,
+                                        boolean titleBarButtonsVisible) {
+        super(toolWindowDescriptor, parent, enabled, animating, autoHide,
+                idVisibleOnTitleBar, hideRepresentativeButtonOnVisible, titleBarButtonsVisible);
 
         this.transparentDelay = transparentDelay;
         this.transparentRatio = transparentRatio;
@@ -96,7 +99,8 @@ public class DefaultSlidingTypeDescriptor extends DefaultToolWindowTypeDescripto
                                                 transparentDelay, transparentRatio,
                                                 transparentMode, enabled, animating,
                                                 autoHide,
-                                                idVisibleOnTitleBar, hideRepresentativeButtonOnVisible);
+                                                idVisibleOnTitleBar,
+                hideRepresentativeButtonOnVisible,titleBarButtonsVisible);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

@@ -60,6 +60,27 @@ public interface ToolWindowTypeDescriptor extends Observable {
     boolean isIdVisibleOnTitleBar();
 
     /**
+     * TODO: ..Sets if the toolwindow id has to be shown on the title bar when the toolwindow is docked (that is type == DOCKED).
+     *
+     * @param titleBarButtonsVisible <code>true</code> if the toolwindow id has to be shown on the title bar.
+     * tool has type ToolWindowType.DOCKED.<br><code>false</code> otherwise.
+     * @see #isIdVisibleOnTitleBar()
+     * @since 1.5.0
+     */
+    void setTitleBarButtonsVisible(boolean titleBarButtonsVisible);
+
+    /**
+     * Returns the "titleBarButtonsVisible" property value.
+     *
+     * @return <code>true</code> if the toolwindow id has to be shown on the title bar.
+     * tool has type ToolWindowType.DOCKED.<br>
+     *         <code>false</code> otherwise.
+     * @see #setIdVisibleOnTitleBar(boolean)
+     * @since 1.5.0
+     */
+    boolean isTitleBarButtonsVisible();
+
+    /**
      * This method is used to set the autoHide property for the tool.
      *
      * @param autoHide <code>true</code> to hide the tool when the tool losts focus;
