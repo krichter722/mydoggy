@@ -83,6 +83,12 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
             }
         } else if ("type".equals(propertyName)) {
             setType((ToolWindowType) evt.getOldValue(), (ToolWindowType) evt.getNewValue());
+        } else if ("titleBarButtonsVisible".equals(propertyName)) {
+            if (((ToolWindowTypeDescriptor)evt.getSource()).getType() == toolWindow.getType()) {
+                // modify the visible property value of the panel now...
+                toolWindowTitleButtonPanel.setVisible((Boolean) evt.getNewValue());
+            }
+            
         }
     }
 
@@ -191,6 +197,9 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
                 addToolWindowAction(toolWindowAction, index);
             }
         }
+
+        // ensure the visibility of the panel...
+        toolWindowTitleButtonPanel.setVisible(toolWindow.getTypeDescriptor(toolWindow.getType()).isTitleBarButtonsVisible());        
     }
 
     Map<ToolWindowType, Map<ToolWindowAction, Integer>> layouts = new HashMap<ToolWindowType, Map<ToolWindowAction, Integer>>();

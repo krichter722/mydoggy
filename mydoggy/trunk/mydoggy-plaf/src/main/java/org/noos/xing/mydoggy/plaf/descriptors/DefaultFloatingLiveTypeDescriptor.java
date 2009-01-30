@@ -40,8 +40,10 @@ public class DefaultFloatingLiveTypeDescriptor extends DefaultToolWindowTypeDesc
                                              boolean animating,
                                              boolean autoHide,
                                              boolean idVisibleOnTitleBar,
-                                             boolean hideRepresentativeButtonOnVisible) {
-        super(toolWindowDescriptor, parent, enabled, animating, autoHide, idVisibleOnTitleBar, hideRepresentativeButtonOnVisible);
+                                             boolean hideRepresentativeButtonOnVisible,
+                                             boolean titleBarButtonsVisible) {
+        super(toolWindowDescriptor, parent, enabled, animating, autoHide,
+                idVisibleOnTitleBar, hideRepresentativeButtonOnVisible, titleBarButtonsVisible);
 
         this.location = location;
         this.size = size;
@@ -136,7 +138,8 @@ public class DefaultFloatingLiveTypeDescriptor extends DefaultToolWindowTypeDesc
         return new DefaultFloatingLiveTypeDescriptor(toolWindowDescriptor,
                                                      this, location, size, transparentDelay,
                                                      transparentRatio, transparentMode,
-                                                     enabled, animating, autoHide, idVisibleOnTitleBar, hideRepresentativeButtonOnVisible);
+                                                     enabled, animating, autoHide,
+                idVisibleOnTitleBar, hideRepresentativeButtonOnVisible, titleBarButtonsVisible);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

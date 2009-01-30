@@ -1407,7 +1407,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     public class MaximizedChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
-            ToolWindowAnchor anchor = ((ToolWindow) evt).getAnchor();
+            ToolWindowAnchor anchor = ((ToolWindow) evt.getSource()).getAnchor();
 
             // Notify specific bar
             getBar(anchor).propertyChange(evt);

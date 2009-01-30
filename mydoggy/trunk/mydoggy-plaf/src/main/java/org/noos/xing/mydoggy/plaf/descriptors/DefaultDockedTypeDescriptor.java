@@ -45,8 +45,9 @@ public class DefaultDockedTypeDescriptor extends DefaultToolWindowTypeDescriptor
                                        boolean autoHide,
                                        boolean hideRepresentativeButtonOnVisible,
                                        boolean idVisibleOnTitleBar,
-                                       int minimumDockLength) {
-        super(toolWindowDescriptor, parent, true, animating, autoHide, idVisibleOnTitleBar, hideRepresentativeButtonOnVisible);
+                                       int minimumDockLength,
+                                       boolean titleBarButtonsVisible) {
+        super(toolWindowDescriptor, parent, true, animating, autoHide, idVisibleOnTitleBar, hideRepresentativeButtonOnVisible, titleBarButtonsVisible);
         
         this.toolsMenu = new JMenu(SwingUtil.getString("@@tool.toolsMenu"));
 
@@ -138,7 +139,8 @@ public class DefaultDockedTypeDescriptor extends DefaultToolWindowTypeDescriptor
                                                autoHide,
                                                hideRepresentativeButtonOnVisible,
                                                idVisibleOnTitleBar,
-                                               minimumDockLength
+                                               minimumDockLength,
+                titleBarButtonsVisible
         );
     }
 
